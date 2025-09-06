@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.module.thermal.ir.R
@@ -26,15 +27,18 @@ class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapt
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemView.tv_em_name.text = dataList[position].name
-        holder.itemView.tv_em_num.text = dataList[position].value
-        holder.itemView.tv_em_name.background = EmBgDrawable(false, position == dataList.size - 1)
-        holder.itemView.tv_em_num.background = EmBgDrawable(true, position == dataList.size - 1)
+        holder.tvEmName.text = dataList[position].name
+        holder.tvEmNum.text = dataList[position].value
+        holder.tvEmName.background = EmBgDrawable(false, position == dataList.size - 1)
+        holder.tvEmNum.background = EmBgDrawable(true, position == dataList.size - 1)
     }
 
     override fun getItemCount(): Int = dataList.size
 
-    class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)
+    class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
+        val tvEmName: TextView = rootView.findViewById(R.id.tv_em_name)
+        val tvEmNum: TextView = rootView.findViewById(R.id.tv_em_num)
+    }
 
     private class EmBgDrawable(val drawRight: Boolean, val drawBottom: Boolean) : Drawable() {
         private val paint = Paint()

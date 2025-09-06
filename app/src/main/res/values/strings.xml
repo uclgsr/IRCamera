@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TOPINFRARED</string>
+    
+    <!-- Clause/Privacy strings -->
+    <string name="version_year">Copyright %s TOPDON Technology Co.,Ltd.\nAll Rights Reserved.</string>
+    <string name="privacy_tips">If you disagree, you will not be able to use our product or service.</string>
+    <string name="privacy_confirm">Agree and Use</string>
+    <string name="privacy_cancel">Disagree and Cancel</string>
+    <string name="welcome_use_app">Welcome to %1$s</string>
+    <string name="set_version">Version</string>
+    <string name="privacy_agreement_tips_new">To enhance your experience with %s and ensure the secure and stable operation of our app, we have integrated a third-party software development kit (SDK) to enable certain functionalities. \nRest assured that we prioritize your data security and conduct rigorous testing on the SDK. We will not collect information in a coercive or bundled manner solely based on your agreement with the privacy policy. \nBy tapping the button, you agree to accept our services.</string>
+    
+    <!-- Network/Device strings -->
+    <string name="lms_setting_http_error">Network Error</string>
+    <string name="tc_connect_line">Wired Connection</string>
+    <string name="tc_connect_wifi">Wireless Connection</string>
+    
+    <!-- Report/Delete strings -->
+    <string name="report_delete">Delete</string>
+    
+    <!-- Device connection strings -->
+    <string name="tc_delete_device">Delete Device</string>
+    <string name="tc_delete_device_tips">Are you sure you want to delete this device?</string>
+    <string name="test_results_delete_success">Device deleted successfully</string>
+    <string name="app_cancel">Cancel</string>
+    <string name="tc_has_line_device">Wired Device</string>
+    
+    <!-- Common app strings -->
+    <string name="app_tip">Tip</string>
+    <string name="app_open">Open</string>
+    <string name="app_yes">Yes</string>
+    <string name="app_no">No</string>
+    <string name="app_confirm">Confirm</string>
+    <string name="app_got_it">Got it</string>
+    <string name="app_save_image">Save Image</string>
+    
+    <!-- Album/Gallery strings -->
+    <string name="app_album_content">Album access permission is required</string>
+    <string name="app_camera_content">Camera access permission is required</string>
+    
+    <!-- Device alert strings -->
+    <string name="device_reset_alert">Device has been reset</string>
+    <string name="device_disconnect_alert">Device disconnected</string>
+    
+    <!-- Exit strings -->
+    <string name="main_exit">Exit Application</string>
+    
+    <!-- OTG strings -->
+    <string name="tip_otg">OTG connection detected</string>
+    
+    <!-- Update/Download strings -->
+    <string name="updata_new_version_update">New version available for update</string>
+    <string name="installation_package_downloading">Installation package downloading</string>
+    <string name="installation_package_downloading_tips">Please wait for download to complete</string>
+    <string name="tips_download_information">Download Information</string>
+    <string name="installation_package_download_progress">Installation package download progress</string>
+    
+    <!-- WebView strings -->
+    <string name="testing_guidance">Testing Guidance</string>
+    <string name="loading_failed_hint">Loading failed, please check your network connection</string>
+    <string name="app_error_reload">Reload</string>
+    
+    <!-- Permission strings -->
+    <string name="permission_request_camera_app">Camera permission is required</string>
+    <string name="permission_request_storage_app">Storage permission is required</string>
+    
+    <!-- Photo save strings -->
+    <string name="tip_photo_saved">Photo saved successfully</string>
+    
+    <!-- Pseudo mode strings -->
+    <string name="tip_change_pseudo_mode">Change pseudo color mode</string>
+    
+    <!-- Navigation strings -->
+    <string name="app_next">Next</string>
+    <string name="person_save">Save</string>
+    
+    <!-- More Help Activity strings -->
+    <string name="ts004_guide_text6">Connection Guide</string>
+    <string name="ts004_guide_text8">How to Connect</string>
+    <string name="ts004_guide_text9">Step 1: Connect device</string>
+    <string name="ts004_guide_text10">Step 2: Open application</string>
+    <string name="ts004_guide_text12">Step 3: Start using</string>
+    <string name="ts004_disconnect_tips1">How to Disconnect</string>
+    <string name="ts004_disconnect_tips2">Disconnect from device</string>
+    <string name="ts004_disconnect_tips3">Close application</string>
+    <string name="ts004_disconnect_tips4">Go to Settings</string>
+    <string name="ts004_wlan_tips">WiFi is not enabled</string>
+    
+    <!-- Tab strings -->
+    <string name="tc_local_album">Album</string>
+    <string name="main_mine">Mine</string>
+    
+    <!-- Policy strings -->
+    <string name="user_services_agreement">User Service Agreement</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="third_party_components">Third Party Components</string>
+    
+    <!-- Manual strings -->
+    <string name="app_manual">Manual</string>
+</resources>

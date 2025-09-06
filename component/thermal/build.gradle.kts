@@ -1,15 +1,18 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    // Temporarily disable KAPT to fix compilation issues
-    // kotlin("kapt")
+    kotlin("kapt")
+    id("kotlin-parcelize")
 }
 
-// kapt {
-//     arguments {
-//         arg("AROUTER_MODULE_NAME", project.name)
-//     }
-// }
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.name)
+    }
+    // Enable Kotlin 2.1.0 compatibility
+    correctErrorTypes = true
+    useBuildCache = true
+}
 
 android {
     namespace = "com.topdon.module.thermal"
@@ -24,9 +27,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -39,6 +39,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     
     kotlinOptions {
@@ -46,46 +47,30 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
         dataBinding = true
-    }
-
-    flavorDimensions += "app"
-    productFlavors {
-        create("dev") {
-            dimension = "app"
-        }
-        create("beta") {
-            dimension = "app"
-        }
-        create("prod") {
-            dimension = "app"
-        }
-        create("prodTopdon") {
-            dimension = "app"
-        }
-        create("insideChina") {
-            dimension = "app"
-        }
-        create("prodTopdonInsideChina") {
-            dimension = "app"
-        }
+        // Enable synthetic views for Kotlin backward compatibility
+        viewBinding = true
     }
 }
 
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
     implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
     implementation(project(":libmenu"))
     
-    // Temporarily disable ARouter compiler until KAPT issues are resolved
-
+    // ARouter removed - now using NavigationManager instead
+    // implementation(libs.arouter.api)
+    // kapt(libs.arouter.compiler)
     
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    // Use shared UI bundle for common dependencies
+    implementation(libs.bundles.ui.common)
     implementation(libs.utilcode)
-    implementation(libs.glide)
+    implementation(libs.mn.image.browser)
+    
+    // Core library desugaring
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

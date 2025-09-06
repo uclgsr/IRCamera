@@ -49,6 +49,7 @@ import com.topdon.lib.ui.widget.BitmapConstraintLayout
 import com.topdon.lib.ui.widget.LiteSurfaceView
 import com.topdon.libcom.view.TempLayout
 import com.topdon.module.thermal.ir.R
+import com.topdon.lib.core.R as LibcoreR
 import com.topdon.module.thermal.ir.view.HikSurfaceView
 import com.topdon.module.thermal.ir.view.TemperatureHikView
 import com.topdon.module.thermal.ir.view.compass.LinearCompassView
@@ -117,9 +118,9 @@ class VideoRecordFFmpeg(
             if (!canStart) {
                 ThreadUtils.runOnUiThread {
                     TipDialog.Builder(context)
-                        .setTitleMessage(getString(R.string.app_tip))
-                        .setMessage(R.string.album_report_aleart)
-                        .setPositiveListener(R.string.app_confirm) {
+                        .setTitleMessage(getString(LibcoreR.string.app_tip))
+                        .setMessage(LibcoreR.string.album_report_aleart)
+                        .setPositiveListener(LibcoreR.string.app_confirm) {
 
                         }
                         .setCanceled(true)
@@ -490,9 +491,9 @@ class VideoRecordFFmpeg(
         if (!canStart) {
             ThreadUtils.runOnUiThread {
                 TipDialog.Builder(cameraView.context)
-                    .setTitleMessage(getString(R.string.app_tip))
-                    .setMessage(R.string.album_report_aleart)
-                    .setPositiveListener(R.string.app_confirm) {
+                    .setTitleMessage(getString(LibcoreR.string.app_tip))
+                    .setMessage(LibcoreR.string.album_report_aleart)
+                    .setPositiveListener(LibcoreR.string.app_confirm) {
 
                     }
                     .setCanceled(true)

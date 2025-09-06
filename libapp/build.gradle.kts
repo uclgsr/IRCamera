@@ -7,13 +7,14 @@ plugins {
 
 kapt {
     arguments {
-        // Disable ARouter KAPT processing - migrating to modern navigation
-        // arg("AROUTER_MODULE_NAME", project.name)
-        // arg("AROUTER_GENERATE_DOC", "enable")//生成doc文档
+        // Remove unrecognized AROUTER arguments to fix kapt warnings
         arg("room.schemaLocation", "$projectDir/schemas")
         arg("room.incremental", "true")
         arg("room.expandProjection", "true")
     }
+    // Enable Kotlin 2.1.0 compatibility
+    correctErrorTypes = true
+    useBuildCache = true
 }
 
 android {
@@ -28,9 +29,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -39,6 +37,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -69,8 +68,11 @@ android {
 //}
 
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     // Using only JAR files to avoid AGP 8.0+ AAR dependency issues
     api(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
+    // Note: AAR dependencies moved to app module to avoid AGP 8.0+ issues
     api(libs.androidx.appcompat)
     api(libs.fragment.ktx)
     api(libs.material)
@@ -118,7 +120,6 @@ dependencies {
 
     api(libs.logging.interceptor)
     api(libs.colorpickerview)
-    // api(libs.MNImageBrowser) // Temporary comment out
     api(libs.nifty)
     // api(libs.nifty.effect) // Temporary comment out
 
@@ -132,11 +133,19 @@ dependencies {
     // JavaCV
     api(libs.javacv)
     api(libs.javacpp)
-    // Local AAR dependencies - using proper flatDir repository approach
-    // These provide critical functionality (CommonBean, ResponseBean, LMS classes)
-    api("abtest:abtest:1.0.1@aar")
-    api("auth-number:auth-number:2.13.2.1@aar") 
-    api(files("libs/lms_international-3.90.009.0.aar"))  // Moved from LocalRepo to libs
-    api("logger:logger:2.2.1-release@aar")
-    api("main:main:2.2.1-release@aar")
+    
+    // Compile-time access to LMS SDK classes without packaging in AAR
+    // The app module provides the actual implementation
+    compileOnly(files("../shared/libs/lms_international-3.90.009.0.aar"))
+    
+    // NOTE: All local AAR dependencies MUST be handled at the app level due to AGP 8.0+ restrictions
+    // Library modules cannot include local AAR files when building AARs
+    // Classes from LMS SDK and other AARs will be available transitively from the app module
+    
+    // The following dependencies are now handled by the app module:
+    // - lms_international-3.90.009.0.aar (LMS SDK) - using compileOnly above for compilation
+    // - abtest-1.0.1.aar
+    // - auth-number-2.13.2.1.aar
+    // - logger-2.2.1-release.aar
+    // - main-2.2.1-release.aar
 }

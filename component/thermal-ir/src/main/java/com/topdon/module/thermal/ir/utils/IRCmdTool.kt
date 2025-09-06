@@ -243,8 +243,9 @@ object IRCmdTool {
         return try {
             if (dualView != null) {
                 dualView?.dualUVCCamera!!.setDisp(value)
+                0 // Return success
             } else {
-                0
+                -1 // Return error
             }
         } catch (e: Exception) {
             XLog.w("设置配准异常[${value}]: ${e.message}")
@@ -308,8 +309,8 @@ object IRCmdTool {
         lowData[1] = (lowTemp shr 8).toByte()
         val tempHFin = (highData[0].toInt() and 0x00ff) + (highData[1].toInt() and 0x00ff shl 8)
         val tempLFin = (lowData[0].toInt() and 0x00ff) + (lowData[1].toInt() and 0x00ff shl 8)
-        dualUVCCamera?.setTempL(tempLFin) //低温
-        dualUVCCamera?.setTempH(tempHFin) //高温
+        dualUVCCamera?.setTempL(tempLFin) //低温 - convert to Int
+        dualUVCCamera?.setTempH(tempHFin) //高温 - convert to Int
     }
 
     /**

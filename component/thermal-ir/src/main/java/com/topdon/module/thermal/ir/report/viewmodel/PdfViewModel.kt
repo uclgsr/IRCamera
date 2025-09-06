@@ -10,6 +10,7 @@ import com.topdon.lib.core.ktbase.BaseViewModel
 import com.topdon.lib.core.tools.TimeTool
 import com.topdon.lib.core.utils.HttpHelp
 import com.topdon.libcom.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.network.IResponseCallback
 import com.topdon.lms.sdk.utils.NetworkUtil
@@ -36,7 +37,7 @@ class PdfViewModel : BaseViewModel() {
     //获取报告列表
     fun getReportData(isTC007: Boolean, page: Int){
         if (!NetworkUtil.isConnected(Utils.getApp())) {
-            TToast.shortToast(Utils.getApp(), R.string.lms_setting_http_error)
+            TToast.shortToast(Utils.getApp(), LibR.string.http_code_z5004)
             listData.postValue(null)
             return
         }

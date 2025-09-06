@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.MeasureSpec
 import android.widget.PopupWindow
+import android.widget.TextView
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.module.thermal.ir.R
 
@@ -15,6 +16,11 @@ import com.topdon.module.thermal.ir.R
  * Created by LCG on 2024/1/5.
  */
 class GalleryChangePopup(private val context: Context) : PopupWindow() {
+
+    // View references using findViewById
+    private val tvLine: TextView by lazy { contentView.findViewById(R.id.tv_line) }
+    private val tvTs004: TextView by lazy { contentView.findViewById(R.id.tv_ts004) }
+    private val tvTc007: TextView by lazy { contentView.findViewById(R.id.tv_tc007) }
 
 
     /**
@@ -34,16 +40,15 @@ class GalleryChangePopup(private val context: Context) : PopupWindow() {
 
         isOutsideTouchable = true
 
-
-        contentView.tv_line.setOnClickListener {
+        tvLine.setOnClickListener {
             dismiss()
             onPickListener?.invoke(0, context.getString(R.string.tc_has_line_device))
         }
-        contentView.tv_ts004.setOnClickListener {
+        tvTs004.setOnClickListener {
             dismiss()
             onPickListener?.invoke(1, "TS004")
         }
-        contentView.tv_tc007.setOnClickListener {
+        tvTc007.setOnClickListener {
             dismiss()
             onPickListener?.invoke(2, "TC007")
         }

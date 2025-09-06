@@ -16,12 +16,23 @@ import com.topdon.module.thermal.ir.activity.BaseIRPlushFragment
  **/
 class IRPlushFragment : BaseIRPlushFragment() {
 
+    // findViewById declarations using proper view reference in onViewCreated
+    private lateinit var dualTextureViewNativeCamera: SurfaceView
+    private lateinit var temperatureView: TemperatureView
+    
+    override fun onViewCreated(view: android.view.View, savedInstanceState: android.os.Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Initialize findViewById in onViewCreated
+        dualTextureViewNativeCamera = view.findViewById(R.id.dualTextureViewNativeCamera)
+        temperatureView = view.findViewById(R.id.temperature_view)
+    }
+
     override fun getSurfaceView(): SurfaceView {
         return dualTextureViewNativeCamera
     }
 
     override fun getTemperatureDualView(): TemperatureView {
-        return temperature_view
+        return temperatureView
     }
 
     override suspend fun onDualViewCreate(dualView: DualViewWithExternalCameraCommonApi?) {

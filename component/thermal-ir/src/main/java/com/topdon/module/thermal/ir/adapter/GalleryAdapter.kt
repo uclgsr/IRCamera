@@ -134,16 +134,16 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             GlideLoader.load(holder.img, data.thumb)
             if (data.name.uppercase().endsWith(".MP4")) {
                 holder.info.text = TimeTool.showVideoTime(data.duration)
-                holder.itemView.iv_video_time.isVisible = true
+                holder.ivVideoTime.isVisible = true
             } else {
                 holder.info.text = ""
-                holder.itemView.iv_video_time.isVisible = false
+                holder.ivVideoTime.isVisible = false
             }
 
-            holder.itemView.iv_has_download.isVisible = isTS004Remote && data.hasDownload
+            holder.ivHasDownload.isVisible = isTS004Remote && data.hasDownload
 
-            holder.itemView.iv_check.isVisible = isEditMode
-            holder.itemView.iv_check.isSelected = selectList.contains(position)
+            holder.ivCheck.isVisible = isEditMode
+            holder.ivCheck.isSelected = selectList.contains(position)
 
             holder.img.setOnClickListener {
                 if (isEditMode) {
@@ -154,7 +154,7 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     }
                     selectCallback?.invoke(selectList)
 
-                    holder.itemView.iv_check.isSelected = selectList.contains(position)
+                    holder.ivCheck.isSelected = selectList.contains(position)
                 } else {
                     itemClickCallback?.invoke(position)
                 }
@@ -163,8 +163,8 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 if (!isEditMode) {
                     selectList.add(position)
                     selectCallback?.invoke(selectList)
-                    holder.itemView.iv_check.isVisible = true
-                    holder.itemView.iv_check.isSelected = true
+                    holder.ivCheck.isVisible = true
+                    holder.ivCheck.isSelected = true
                     isEditMode = true
                     onLongEditListener?.invoke()
                 }
@@ -181,12 +181,15 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     inner class ItemHeadView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val name: TextView = itemView.item_gallery_head_text
+        val name: TextView = itemView.findViewById(R.id.item_gallery_head_text)
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val img: ImageView = itemView.item_gallery_img
-        val info: TextView = itemView.item_gallery_text
+        val img: ImageView = itemView.findViewById(R.id.item_gallery_img)
+        val info: TextView = itemView.findViewById(R.id.item_gallery_text)
+        val ivVideoTime: ImageView = itemView.findViewById(R.id.iv_video_time)
+        val ivHasDownload: ImageView = itemView.findViewById(R.id.iv_has_download)
+        val ivCheck: ImageView = itemView.findViewById(R.id.iv_check)
     }
 
 

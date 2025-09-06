@@ -21,6 +21,9 @@ import com.topdon.module.thermal.ir.R
  */
 class OptionPickPopup(private val context: Context, private val strArray: Array<String>, private val resIdArray: Array<Int>? = null) : PopupWindow() {
 
+    // View references using findViewById  
+    private val recyclerView: RecyclerView by lazy { contentView.findViewById(R.id.recycler_view) }
+
     companion object {
         /**
          * 选项文字大小，单位 ***sp***
@@ -61,8 +64,8 @@ class OptionPickPopup(private val context: Context, private val strArray: Array<
             dismiss()
             onPickListener?.invoke(it, strArray[it])
         }
-        contentView.recycler_view.adapter = adapter
-        contentView.recycler_view.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     fun show(anchor: View) {

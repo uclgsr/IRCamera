@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.topdon.house.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lms.sdk.weiget.TToast
 
@@ -17,7 +18,7 @@ import com.topdon.lms.sdk.weiget.TToast
  * @param inputText 预输入的文字内容
  */
 class InputTextDialog(context: Context, private val inputText: String, private val onConfirmListener: (text: String) -> Unit) :
-    Dialog(context, R.style.TextInputDialog), View.OnClickListener {
+    Dialog(context, LibR.style.TextInputDialog), View.OnClickListener {
 
     private lateinit var contentView: View
 
@@ -27,11 +28,15 @@ class InputTextDialog(context: Context, private val inputText: String, private v
         setCanceledOnTouchOutside(true)
 
         contentView = LayoutInflater.from(context).inflate(R.layout.dialog_input_text, null)
-        contentView.et_input.setText(inputText)
-        contentView.et_input.setSelection(0, contentView.et_input.length())
-        contentView.et_input.requestFocus()
-        contentView.tv_cancel.setOnClickListener(this)
-        contentView.tv_confirm.setOnClickListener(this)
+        val etInput = contentView.findViewById<android.widget.EditText>(R.id.et_input)
+        val tvCancel = contentView.findViewById<android.widget.TextView>(R.id.tv_cancel)
+        val tvConfirm = contentView.findViewById<android.widget.TextView>(R.id.tv_confirm)
+        
+        etInput.setText(inputText)
+        etInput.setSelection(0, etInput.length())
+        etInput.requestFocus()
+        tvCancel.setOnClickListener(this)
+        tvConfirm.setOnClickListener(this)
         setContentView(contentView)
 
         window?.let {
@@ -43,17 +48,21 @@ class InputTextDialog(context: Context, private val inputText: String, private v
     }
 
     override fun onClick(v: View?) {
+        val tvCancel = contentView.findViewById<android.widget.TextView>(R.id.tv_cancel)
+        val tvConfirm = contentView.findViewById<android.widget.TextView>(R.id.tv_confirm)
+        val etInput = contentView.findViewById<android.widget.EditText>(R.id.et_input)
+        
         when (v) {
-            contentView.tv_cancel -> {
+            tvCancel -> {
                 dismiss()
             }
-            contentView.tv_confirm -> {
-                if (contentView.et_input.text.isEmpty()) {
-                    TToast.shortToast(context, R.string.album_report_input_name_tips)
+            tvConfirm -> {
+                if (etInput.text.isEmpty()) {
+                    TToast.shortToast(context, LibR.string.album_report_input_name_tips)
                     return
                 }
                 dismiss()
-                onConfirmListener.invoke(contentView.et_input.text.toString())
+                onConfirmListener.invoke(etInput.text.toString())
             }
         }
     }

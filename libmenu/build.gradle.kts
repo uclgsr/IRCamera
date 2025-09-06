@@ -14,9 +14,7 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-        }
+        
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -25,20 +23,23 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "17"
     }
     buildFeatures {
         dataBinding = true
+        viewBinding = true
     }
 }
 
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.material) // 需要 ConstraintLayout、ViewPager2
 
     implementation(libs.glide)
-    implementation(libs.utilcode)
 
     implementation(project(":libapp")) // 需要使用 string 资源
     

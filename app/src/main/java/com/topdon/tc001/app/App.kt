@@ -7,18 +7,17 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.elvishew.xlog.XLog
 import com.example.thermal_lite.IrConst
 import com.example.thermal_lite.util.CommonUtil
-import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.scwang.smart.refresh.header.MaterialHeader
-import com.scwang.smart.refresh.layout.SmartRefreshLayout
+
+// import com.scwang.smart.refresh.layout.SmartRefreshLayout
+// import com.scwang.smart.refresh.header.MaterialHeader
 import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.HttpConfig
-import com.topdon.lib.ui.recycler.LoadingFooter
 import com.topdon.lms.sdk.Config
 import com.topdon.lms.sdk.LMS.mContext
 import com.topdon.lms.sdk.UrlConstant
 import com.topdon.lms.sdk.utils.SPUtils
-import com.topdon.tc001.BuildConfig
+import com.csl.irCamera.BuildConfig
 import com.topdon.tc001.InitUtil.initJPush
 import com.topdon.tc001.InitUtil.initLms
 import com.topdon.tc001.InitUtil.initLog
@@ -34,16 +33,17 @@ import kotlinx.coroutines.launch
 
 class App : BaseApplication() {
 
-    init {
-        SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, _ ->
-            MaterialHeader(
-                context
-            )
-        }
-        SmartRefreshLayout.setDefaultRefreshFooterCreator { context, _ ->
-            LoadingFooter(context)
-        }
-    }
+    // Temporarily commented out due to dependency issues
+    // init {
+    //     SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, _ ->
+    //         MaterialHeader(
+    //             context
+    //         )
+    //     }
+    //     SmartRefreshLayout.setDefaultRefreshFooterCreator { context, _ ->
+    //         LoadingFooter(context)
+    //     }
+    // }
 
     companion object{
         lateinit var instance: App
@@ -84,20 +84,11 @@ class App : BaseApplication() {
             }
         }
         if (!isDomestic()) {
-            if (!BuildConfig.DEBUG) {
-                // 正式版本,服务地址强制转换正式地址,并且不可更换
-                // 测试版本,可自由切换
-                UrlConstant.setBaseUrl("${HttpConfig.HOST}/", false)
-            } else {
-                if (SharedManager.getHasShowClause()) {
-                    XLog.w("lms host: ${UrlConstant.BASE_URL}")
-                }
-            }
+            // Production version - force production URL and disable URL switching
+            UrlConstant.setBaseUrl("${HttpConfig.HOST}/", false)
             SharedManager.setBaseHost(UrlConstant.BASE_URL) //更新app服务地址
         }
-        if(BuildConfig.DEBUG) {
-            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false);
-        }
+
         CoroutineScope(Dispatchers.IO).launch {
             tau_data_H = CommonUtil.getAssetData(mContext, IrConst.TAU_HIGH_GAIN_ASSET_PATH)
             tau_data_L = CommonUtil.getAssetData(mContext, IrConst.TAU_LOW_GAIN_ASSET_PATH)

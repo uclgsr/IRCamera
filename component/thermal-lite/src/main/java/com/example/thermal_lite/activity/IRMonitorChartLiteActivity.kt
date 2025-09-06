@@ -122,9 +122,9 @@ class IRMonitorChartLiteActivity : BaseActivity(),ITsTempListener {
                 delay(1000)
                 if (irMonitorLiteFragment!=null){
                     val result: LibIRTemp.TemperatureSampleResult = when (selectBean.type) {
-                        1 -> irMonitorLiteFragment!!.getTemperatureView().getPointTemp(selectBean.startPosition)
-                        2 -> irMonitorLiteFragment!!.getTemperatureView().getLineTemp(Line(selectBean.startPosition, selectBean.endPosition))
-                        else -> irMonitorLiteFragment!!.getTemperatureView().getRectTemp(selectBean.getRect())
+                        1 -> irMonitorLiteFragment!!.temperatureView.getPointTemp(selectBean.startPosition)
+                        2 -> irMonitorLiteFragment!!.temperatureView.getLineTemp(Line(selectBean.startPosition, selectBean.endPosition))
+                        else -> irMonitorLiteFragment!!.temperatureView.getRectTemp(selectBean.getRect())
                     } ?: continue
                     if (isFirstRead) {
                         if (result.maxTemperature > 200f || result.minTemperature < -200f) {
@@ -224,7 +224,7 @@ class IRMonitorChartLiteActivity : BaseActivity(),ITsTempListener {
                     delay(100)
                 }
                 lifecycleScope.launch(Dispatchers.Main) {
-                    tv_time.text = TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
+                    binding.tvTime.text = TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
                 }
             }
             XLog.w("停止记录, 数据量:$time")

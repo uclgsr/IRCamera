@@ -12,6 +12,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.topdon.lib.core.db.entity.ThermalEntity;
+import com.topdon.lib.core.tools.NumberTools;
 import com.topdon.lib.core.tools.TimeTool;
 import com.topdon.module.thermal.R;
 
@@ -45,9 +46,9 @@ public class MyMarkerView extends MarkerView {
             tvContent.setText(Utils.formatNumber(ce.getHigh(), 0, true));
         } else {
             StringBuilder str = new StringBuilder();
-            String thermalStr = NumberTools.to02(data.getThermal());
-            String thermalMaxStr = NumberTools.to02(data.getThermalMax());
-            String thermalMinStr = NumberTools.to02(data.getThermalMin());
+            String thermalStr = NumberTools.INSTANCE.to02(data.getThermal());
+            String thermalMaxStr = NumberTools.INSTANCE.to02(data.getThermalMax());
+            String thermalMinStr = NumberTools.INSTANCE.to02(data.getThermalMin());
             if (index == 0) {
                 str.append("温度:").append(thermalStr);
             } else if (index == 1) {

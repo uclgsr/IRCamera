@@ -1,6 +1,6 @@
 [versions]
 # Android Configuration
-compileSdk = "34"
+compileSdk = "35"
 minSdk = "24"
 targetSdk = "34"
 versionCode = "1100"
@@ -26,7 +26,7 @@ appsecretTopinfraredCn = "9D33C48FD7CE4440B7D922FBF9B6DE2A"
 appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
 
 # Kotlin and Core
-kotlin = "1.9.24"
+kotlin = "2.1.0"
 agp = "8.11.0"
 androidxCore = "1.12.0"
 androidxAppcompat = "1.6.1"
@@ -56,8 +56,8 @@ okhttp = "4.11.0"
 rxjava = "2.2.21"
 rxandroid = "2.1.1"
 
-# Navigation - ARouter migration completed, using NavigationManager
-# arouter = "1.5.2"
+# Navigation - ARouter used by thermal component
+arouter = "1.5.2"
 
 # RxLifecycle
 rxpermissions = "0.10.2"
@@ -79,6 +79,11 @@ nifty = "2.4.0"
 
 # Image Loading
 glide = "4.15.1"
+mnImageBrowser = "V3.1.2X"
+gsyVideoPlayer = "v8.6.0-release-jitpack"
+
+# OpenGL
+opengl = "2.0.0"
 
 # Utils
 utilcode = "1.31.1"
@@ -89,7 +94,6 @@ eventbus = "3.3.1"
 
 # Compass and sensor libraries - Updated to latest versions from Maven Central
 andromeda = "16.0.1"
-andromedaUser = "6.2.0"
 
 # JavaCV
 javacv = "1.5.7"
@@ -106,9 +110,7 @@ wechatSdk = "6.8.0"
 umengApm = "1.9.0"
 zohoSalesiq = "7.0.0"
 
-# Firebase
-firebaseBom = "28.4.1"
-firebaseMessaging = "21.0.1"
+
 
 # UMeng - Updated to latest versions from Maven Central
 umengCommon = "9.8.8"
@@ -121,13 +123,14 @@ testExtJunit = "1.1.5"
 testEspressoCore = "3.5.1"
 
 # Google Services
-googleServices = "4.3.10"
-firebaseCrashlyticsGradle = "2.7.1"
+
+
 huaweiAgcp = "1.6.0.300"
 
 # Build Tools
 androidGradlePlugin = "8.11.0"
-kotlinGradlePlugin = "1.9.24"
+kotlinGradlePlugin = "2.1.0"
+desugarJdkLibs = "2.1.5"
 
 [libraries]
 # AndroidX Core
@@ -166,9 +169,9 @@ logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-intercep
 rxjava2 = { group = "io.reactivex.rxjava2", name = "rxjava", version.ref = "rxjava" }
 rxandroid = { group = "io.reactivex.rxjava2", name = "rxandroid", version.ref = "rxandroid" }
 
-# Navigation - ARouter migration completed, using NavigationManager
-# arouter-api = { group = "com.alibaba", name = "arouter-api", version.ref = "arouter" }
-# arouter-compiler = { group = "com.alibaba", name = "arouter-compiler", version.ref = "arouter" }
+# Navigation - ARouter used by thermal component
+arouter-api = { group = "com.alibaba", name = "arouter-api", version.ref = "arouter" }
+arouter-compiler = { group = "com.alibaba", name = "arouter-compiler", version.ref = "arouter" }
 
 # RxLifecycle
 rxpermissions = { group = "com.github.tbruyelle", name = "rxpermissions", version.ref = "rxpermissions" }
@@ -181,7 +184,7 @@ rxlifecycle-android-lifecycle-ktx = { group = "com.trello.rxlifecycle3", name = 
 # UI Libraries
 ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "ucrop" }
 play-app-update = { group = "com.google.android.play", name = "app-update", version.ref = "playAppUpdate" }
-immersionbar = { group = "com.gyf.immersionbar", name = "immersionbar", version.ref = "immersionbar" }
+immersionbar = { group = "com.geyifeng.immersionbar", name = "immersionbar", version.ref = "immersionbar" }
 xpopup = { group = "com.github.li-xiaojun", name = "XPopup", version.ref = "xpopup" }
 smart-refresh-layout = { group = "com.scwang.smartrefresh", name = "SmartRefreshLayout", version.ref = "smartRefreshLayout" }
 smart-refresh-header = { group = "com.scwang.smartrefresh", name = "SmartRefreshHeader", version.ref = "smartRefreshLayout" }
@@ -196,6 +199,11 @@ nifty = { group = "com.nineoldandroids", name = "library", version.ref = "nifty"
 # Image Loading
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+mn-image-browser = { group = "com.github.maning0303", name = "MNImageBrowser", version.ref = "mnImageBrowser" }
+gsy-video-player = { group = "com.github.CarGuo", name = "GSYVideoPlayer", version.ref = "gsyVideoPlayer" }
+
+# OpenGL
+opengl-android = { group = "org.khronos", name = "opengl-api", version.ref = "opengl" }
 
 # Utils
 utilcode = { group = "com.blankj", name = "utilcodex", version.ref = "utilcode" }
@@ -208,8 +216,6 @@ eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbu
 andromeda-core = { group = "com.kylecorry.andromeda", name = "core", version.ref = "andromeda" }
 andromeda-sense = { group = "com.kylecorry.andromeda", name = "sense", version.ref = "andromeda" }
 andromeda-views = { group = "com.kylecorry.andromeda", name = "views", version.ref = "andromeda" }
-compass-sense-user = { group = "com.github.kylecorry31.andromeda", name = "sense", version.ref = "andromedaUser" }
-compass-core-user = { group = "com.github.kylecorry31.andromeda", name = "core", version.ref = "andromedaUser" }
 
 # JavaCV
 javacv = { group = "org.bytedeco", name = "javacv", version.ref = "javacv" }
@@ -233,12 +239,7 @@ wechat-sdk = { group = "com.tencent.mm.opensdk", name = "wechat-sdk-android", ve
 umeng-apm = { group = "com.umeng.umsdk", name = "apm", version.ref = "umengApm" }
 zoho-salesiq = { group = "com.zoho.salesiq", name = "mobilisten", version.ref = "zohoSalesiq" }
 
-# Firebase
-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
-firebase-iid = { group = "com.google.firebase", name = "firebase-iid" }
+
 
 # UMeng
 umeng-common = { group = "com.umeng.umsdk", name = "common", version.ref = "umengCommon" }
@@ -253,8 +254,9 @@ test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core",
 # Build Tools (for buildscript classpath)
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
-google-services = { group = "com.google.gms", name = "google-services", version.ref = "googleServices" }
-firebase-crashlytics-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdkLibs" }
+
+
 huawei-agconnect = { group = "com.huawei.agconnect", name = "agcp", version.ref = "huaweiAgcp" }
 
 [bundles]
@@ -264,7 +266,12 @@ rx-lifecycle-ktx = ["rxlifecycle-ktx", "rxlifecycle-android-lifecycle-ktx"]
 retrofit = ["retrofit2", "converter-gson", "adapter-rxjava2", "logging-interceptor"]
 smart-refresh = ["smart-refresh-layout", "smart-refresh-header"]
 smart-refresh-v2 = ["refresh-layout-kernel", "refresh-header-classics", "refresh-header-material"]
-firebase-core = ["firebase-crashlytics", "firebase-analytics", "firebase-messaging", "firebase-iid"]
+
+# Common UI dependencies bundle to reduce duplication across modules
+ui-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide"]
+# Thermal camera common dependencies 
+thermal-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide", "xxpermissions", "eventbus"]
+
 umeng = ["umeng-common", "umeng-asms", "umeng-analytics"]
 andromeda = ["andromeda-core", "andromeda-sense", "andromeda-views"]
 javacv-core = ["javacv", "javacpp"]
@@ -275,6 +282,5 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
-google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsGradle" }
+
 huawei-agconnect = { id = "com.huawei.agconnect", version.ref = "huaweiAgcp" }

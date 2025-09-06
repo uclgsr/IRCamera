@@ -1,6 +1,7 @@
 package com.topdon.module.thermal.ir.activity
 
 import android.content.Intent
+import android.widget.TextView
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.module.thermal.ir.R
@@ -15,10 +16,16 @@ import org.greenrobot.eventbus.ThreadMode
 // Legacy ARouter route annotation - now using NavigationManager
 class ManualStep1Activity : BaseActivity() {
 
+    // View declarations
+    private lateinit var tvManual: TextView
+
     override fun initContentView(): Int = R.layout.activity_manual_step1
 
     override fun initView() {
-        tv_manual.setOnClickListener {
+        // Initialize views
+        tvManual = findViewById(R.id.tv_manual)
+        
+        tvManual.setOnClickListener {
             startActivity(Intent(this, ManualStep2Activity::class.java))
         }
     }

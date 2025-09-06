@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.topdon.tc001.R
+import com.csl.irCamera.R
 
 /**
  * Real-time status indicator for parallel multi-modal recording

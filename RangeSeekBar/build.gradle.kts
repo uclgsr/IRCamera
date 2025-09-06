@@ -15,9 +15,7 @@ android {
     }
     
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-        }
+        
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -29,6 +27,8 @@ android {
 }
 
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation("com.android.support:appcompat-v7:28.0.0")
     

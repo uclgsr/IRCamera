@@ -4,9 +4,12 @@ import android.Manifest
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.tools.PermissionTool
 import com.topdon.module.thermal.R
 import com.topdon.module.thermal.fragment.GalleryPictureFragment
 import com.topdon.module.thermal.fragment.GalleryVideoFragment
@@ -17,39 +20,47 @@ class GalleryActivity : BaseActivity() {
 
 //    override fun providerVMClass() = GalleryViewModel::class.java
 
-    private val permissionList by lazy{
+    private val permissionList by lazy {
         if (this.applicationInfo.targetSdkVersion >= 34){
             listOf(
-                Permission.READ_MEDIA_VIDEO,
-                Permission.READ_MEDIA_IMAGES,
-                Permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_MEDIA_VIDEO,
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
             )
         } else if (this.applicationInfo.targetSdkVersion >= 33){
-            mutableListOf(Permission.READ_MEDIA_VIDEO,
-                Permission.READ_MEDIA_IMAGES,
-                Permission.WRITE_EXTERNAL_STORAGE)
-        }else{
-            mutableListOf(Permission.READ_EXTERNAL_STORAGE,Permission.WRITE_EXTERNAL_STORAGE)
+            mutableListOf(
+                Manifest.permission.READ_MEDIA_VIDEO,
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        } else {
+            mutableListOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
         }
     }
 
     override fun initContentView() = R.layout.activity_gallery
 
     override fun initView() {
-        setTitleText(getString(R.string.gallery))
-        gallery_viewpager.adapter = ViewAdapter(this, supportFragmentManager)
-        gallery_tab.setupWithViewPager(gallery_viewpager)
+        // Use findViewById instead of synthetic views for Kotlin 2.1.0 compatibility
+        val galleryViewPager = findViewById<ViewPager>(R.id.gallery_viewpager)
+        val galleryTab = findViewById<TabLayout>(R.id.gallery_tab)
+        
+        galleryViewPager.adapter = ViewAdapter(this, supportFragmentManager)
+        galleryTab.setupWithViewPager(galleryViewPager)
 
-        mRxPermissions!!.request( permissionList)
-            .subscribe {
-
-            }
+        // Request media permissions using modern PermissionTool
+        PermissionTool.requestFile(this) {
+            // Permission granted, gallery can now access media files
+        }
     }
 
     override fun initData() {
     }
 
-    inner class ViewAdapter : FragmentPagerAdapter {
+    inner class ViewAdapter : FragmentStatePagerAdapter {
         private var titles: Array<String> = arrayOf()
 
         constructor (context: Context, fm: FragmentManager) : super(

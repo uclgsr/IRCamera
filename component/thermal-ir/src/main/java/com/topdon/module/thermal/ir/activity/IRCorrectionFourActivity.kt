@@ -29,14 +29,14 @@ class IRCorrectionFourActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        title_view.setLeftClickListener {
+        findViewById<com.topdon.lib.core.view.TitleView>(R.id.title_view).setLeftClickListener {
             TipDialog.Builder(this)
-                .setTitleMessage(getString(R.string.app_tip))
-                .setMessage(R.string.tips_cancel_correction)
-                .setPositiveListener(R.string.app_yes) {
+                .setTitleMessage(getString(com.topdon.lib.core.R.string.app_tip))
+                .setMessage(com.topdon.lib.core.R.string.tips_cancel_correction)
+                .setPositiveListener(com.topdon.lib.core.R.string.app_yes) {
                     EventBus.getDefault().post(CorrectionFinishEvent())
                     finish()
-                }.setCancelListener(R.string.app_no){
+                }.setCancelListener(com.topdon.lib.core.R.string.app_no){
                 }
                 .create().show()
         }
@@ -55,10 +55,11 @@ class IRCorrectionFourActivity : BaseActivity() {
         }
 
 
-        time_down_view.postDelayed({
+        val timeDownView = findViewById<TimeDownView>(R.id.time_down_view)
+        timeDownView.postDelayed({
             //开始矫正
-            if (time_down_view.downTimeWatcher == null){
-                time_down_view.setOnTimeDownListener(object : TimeDownView.DownTimeWatcher{
+            if (timeDownView.downTimeWatcher == null){
+                timeDownView.setOnTimeDownListener(object : TimeDownView.DownTimeWatcher{
                     override fun onTime(num: Int) {
                         if (num == 50){
                             lifecycleScope.launch(Dispatchers.IO) {
@@ -73,8 +74,8 @@ class IRCorrectionFourActivity : BaseActivity() {
                         try {
                             if (!this@IRCorrectionFourActivity.isFinishing){
                                 TipDialog.Builder(this@IRCorrectionFourActivity)
-                                    .setMessage(R.string.correction_complete)
-                                    .setPositiveListener(R.string.app_confirm) {
+                                    .setMessage(com.topdon.lib.core.R.string.correction_complete)
+                                    .setPositiveListener(com.topdon.lib.core.R.string.app_confirm) {
                                         EventBus.getDefault().post(CorrectionFinishEvent())
                                         finish()
                                     }
@@ -86,7 +87,7 @@ class IRCorrectionFourActivity : BaseActivity() {
                     }
                 })
             }
-            time_down_view.downSecond(time,false)
+            timeDownView.downSecond(time,false)
         },2000)
     }
 
@@ -95,19 +96,19 @@ class IRCorrectionFourActivity : BaseActivity() {
 
     override fun onBackPressed() {
         TipDialog.Builder(this)
-            .setTitleMessage(getString(R.string.app_tip))
-            .setMessage(R.string.tips_cancel_correction)
-            .setPositiveListener(R.string.app_yes) {
+            .setTitleMessage(getString(com.topdon.lib.core.R.string.app_tip))
+            .setMessage(com.topdon.lib.core.R.string.tips_cancel_correction)
+            .setPositiveListener(com.topdon.lib.core.R.string.app_yes) {
                 EventBus.getDefault().post(CorrectionFinishEvent())
                 super.onBackPressed()
-            }.setCancelListener(R.string.app_no){
+            }.setCancelListener(com.topdon.lib.core.R.string.app_no){
             }
             .create().show()
     }
 
     override fun disConnected() {
         super.disConnected()
-        time_down_view.cancel()
+        findViewById<TimeDownView>(R.id.time_down_view).cancel()
         EventBus.getDefault().post(CorrectionFinishEvent())
         finish()
     }
@@ -124,6 +125,6 @@ class IRCorrectionFourActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        time_down_view.cancel()
+        findViewById<TimeDownView>(R.id.time_down_view).cancel()
     }
 }

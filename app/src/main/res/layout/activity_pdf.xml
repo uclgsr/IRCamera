@@ -11,9 +11,13 @@
         android:background="#16131e"
         app:titleText="@string/app_manual" />
 
-    <com.github.barteksc.pdfviewer.PDFView
+    <TextView
         android:id="@+id/pdf_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white" />
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="PDF functionality will be available when library is added"
+        android:textSize="16sp" />
 </LinearLayout>

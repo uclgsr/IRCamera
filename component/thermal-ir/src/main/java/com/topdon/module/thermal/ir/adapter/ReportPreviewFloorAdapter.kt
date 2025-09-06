@@ -36,47 +36,49 @@ class ReportPreviewFloorAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val bean = dataList[position]
-        holder.itemView.iv_problem.visibility = if (position == 0) View.INVISIBLE else View.VISIBLE
-        holder.itemView.iv_repair.visibility = if (position == 0) View.INVISIBLE else View.VISIBLE
-        holder.itemView.iv_replace.visibility = if (position == 0) View.INVISIBLE else View.VISIBLE
-        holder.itemView.tv_problem.visibility = if (position == 0) View.VISIBLE else View.INVISIBLE
-        holder.itemView.tv_repair.visibility = if (position == 0) View.VISIBLE else View.INVISIBLE
-        holder.itemView.tv_replace.visibility = if (position == 0) View.VISIBLE else View.INVISIBLE
-        holder.itemView.rly_parent.setBackgroundColor(
-            if (position == 0) Color.parseColor("#393643") else Color.parseColor(
-                "#23202E"
+        if (holder is ItemView) {
+            holder.ivProblemState.visibility = if (position == 0) View.INVISIBLE else View.VISIBLE
+            holder.ivRepairState.visibility = if (position == 0) View.INVISIBLE else View.VISIBLE
+            holder.ivReplaceState.visibility = if (position == 0) View.INVISIBLE else View.VISIBLE
+            holder.tvProblem.visibility = if (position == 0) View.VISIBLE else View.INVISIBLE
+            holder.tvRepair.visibility = if (position == 0) View.VISIBLE else View.INVISIBLE
+            holder.tvReplace.visibility = if (position == 0) View.VISIBLE else View.INVISIBLE
+            holder.rlyParent.setBackgroundColor(
+                if (position == 0) Color.parseColor("#393643") else Color.parseColor(
+                    "#23202E"
+                )
             )
-        )
 
-        if (position == 0) {
-            holder.itemView.tv_project.text = cxt.getString(R.string.pdf_project_item)
-            holder.itemView.tv_remark.text = cxt.getString(R.string.report_remark)
-        } else {
-            holder.itemView.tv_project.text = bean.projectName
-            holder.itemView.tv_remark.text = bean.remark
-            when (bean.state) {
-                1 -> {
-                    holder.itemView.iv_problem.visibility = View.VISIBLE
-                    holder.itemView.iv_repair.visibility = View.INVISIBLE
-                    holder.itemView.iv_replace.visibility = View.INVISIBLE
-                }
+            if (position == 0) {
+                holder.tvProject.text = cxt.getString(R.string.pdf_project_item)
+                holder.tvRemark.text = cxt.getString(R.string.report_remark)
+            } else {
+                holder.tvProject.text = bean.projectName
+                holder.tvRemark.text = bean.remark
+                when (bean.state) {
+                    1 -> {
+                        holder.ivProblemState.visibility = View.VISIBLE
+                        holder.ivRepairState.visibility = View.INVISIBLE
+                        holder.ivReplaceState.visibility = View.INVISIBLE
+                    }
 
-                2 -> {
-                    holder.itemView.iv_problem.visibility = View.INVISIBLE
-                    holder.itemView.iv_repair.visibility = View.VISIBLE
-                    holder.itemView.iv_replace.visibility = View.INVISIBLE
-                }
+                    2 -> {
+                        holder.ivProblemState.visibility = View.INVISIBLE
+                        holder.ivRepairState.visibility = View.VISIBLE
+                        holder.ivReplaceState.visibility = View.INVISIBLE
+                    }
 
-                3 -> {
-                    holder.itemView.iv_problem.visibility = View.INVISIBLE
-                    holder.itemView.iv_repair.visibility = View.INVISIBLE
-                    holder.itemView.iv_replace.visibility = View.VISIBLE
-                }
+                    3 -> {
+                        holder.ivProblemState.visibility = View.INVISIBLE
+                        holder.ivRepairState.visibility = View.INVISIBLE
+                        holder.ivReplaceState.visibility = View.VISIBLE
+                    }
 
-                else -> {
-                    holder.itemView.iv_problem.visibility = View.INVISIBLE
-                    holder.itemView.iv_repair.visibility = View.INVISIBLE
-                    holder.itemView.iv_replace.visibility = View.INVISIBLE
+                    else -> {
+                        holder.ivProblemState.visibility = View.INVISIBLE
+                        holder.ivRepairState.visibility = View.INVISIBLE
+                        holder.ivReplaceState.visibility = View.INVISIBLE
+                    }
                 }
             }
         }
@@ -87,13 +89,14 @@ class ReportPreviewFloorAdapter(
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvProject: TextView = itemView.tv_project
-        val tvProblem: TextView = itemView.tv_problem
-        val ivProblemState: ImageView = itemView.iv_problem
-        val tvRepair: TextView = itemView.tv_repair
-        val ivRepairState: ImageView = itemView.iv_repair
-        val tvReplace: TextView = itemView.tv_replace
-        val ivReplaceState: ImageView = itemView.iv_replace
-        val tvRemark: TextView = itemView.tv_remark
+        val tvProject: TextView = itemView.findViewById(R.id.tv_project)
+        val tvProblem: TextView = itemView.findViewById(R.id.tv_problem)
+        val ivProblemState: ImageView = itemView.findViewById(R.id.iv_problem)
+        val tvRepair: TextView = itemView.findViewById(R.id.tv_repair)
+        val ivRepairState: ImageView = itemView.findViewById(R.id.iv_repair)
+        val tvReplace: TextView = itemView.findViewById(R.id.tv_replace)
+        val ivReplaceState: ImageView = itemView.findViewById(R.id.iv_replace)
+        val tvRemark: TextView = itemView.findViewById(R.id.tv_remark)
+        val rlyParent: View = itemView.findViewById(R.id.rly_parent)
     }
 }

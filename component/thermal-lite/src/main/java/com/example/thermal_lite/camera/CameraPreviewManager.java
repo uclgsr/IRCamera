@@ -30,8 +30,9 @@ import com.energy.ac020library.bean.UvcHandleParam;
 import com.energy.commoncomponent.Const;
 import com.energy.commoncomponent.bean.DeviceType;
 import com.energy.commoncomponent.bean.RotateDegree;
-import com.energy.commonlibrary.util.FileUtil;
-import com.energy.commonlibrary.util.SharedPreferencesUtils;
+// Use existing utilities instead of missing commonlibrary utils
+import com.infisense.usbir.utils.FileUtil;
+import com.blankj.utilcode.util.SPUtils;
 import com.energy.commonlibrary.view.SurfaceNativeWindow;
 import com.energy.irutilslibrary.LibIRParse;
 import com.energy.irutilslibrary.LibIRProcess;
@@ -41,7 +42,7 @@ import com.energy.irutilslibrary.bean.LogLevel;
 import com.energy.iruvccamera.bean.CameraSize;
 import com.energy.iruvccamera.bean.UvcParams;
 import com.energy.iruvccamera.usb.USBMonitor;
-import com.example.thermal_lite.BuildConfig;
+// BuildConfig import removed - use direct values if needed
 import com.example.thermal_lite.IrConst;
 import com.example.thermal_lite.ui.activity.IrDisplayActivity;
 import com.example.thermal_lite.util.CommonUtil;
@@ -544,7 +545,7 @@ public class CameraPreviewManager {
          */
         uvcHandleParam.setFps(fps);
 
-        float bandwidth = SharedPreferencesUtils.getFloat(Utils.getApp(),
+        float bandwidth = SPUtils.getInstance().getFloat(
                 IrConst.KEY_DEFAULT_STREAM_BANDWIDTH, IrConst.DEFAULT_STREAM_BANDWIDTH);
 
         /**

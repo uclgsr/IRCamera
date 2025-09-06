@@ -1604,7 +1604,7 @@
 //        if (showCameraSetting){
 //            ViewStubUtils.showViewStub(view_stub_camera,true, callback = { view : View? ->
 //                view?.let {
-//                    val recyclerView = it.findViewById<RecyclerView>(R.id.recycler_view)
+//                    val recyclerView = it.findViewById<RecyclerView>(R.id.recyclerView)
 //                    if (ScreenUtils.isPortrait()) {
 //                        recyclerView.layoutManager = GridLayoutManager(this, 5)
 //                    }else{

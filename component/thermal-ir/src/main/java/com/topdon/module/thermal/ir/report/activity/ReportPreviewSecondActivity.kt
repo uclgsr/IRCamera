@@ -4,6 +4,9 @@ import android.content.Intent
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -20,14 +23,19 @@ import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.socket.WebSocketProxy
 import com.topdon.lib.core.utils.NetWorkUtils
+import com.topdon.lib.core.view.TitleView
 import com.topdon.libcom.PDFHelp
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.utils.StringUtils
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.report.view.ReportIRShowView
+import com.topdon.module.thermal.ir.report.view.ReportInfoView
+import com.topdon.module.thermal.ir.report.view.WatermarkView
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.report.bean.ReportBean
 import com.topdon.module.thermal.ir.report.viewmodel.UpReportViewModel
+import com.topdon.lib.core.R as LibCoreR
+import com.topdon.lib.ui.R as UiR
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
@@ -59,39 +67,57 @@ class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), V
      */
     private var pdfFilePath: String? = null
 
+    // View references - migrated from synthetic views
+    private lateinit var titleView: TitleView
+    private lateinit var reportInfoView: ReportInfoView
+    private lateinit var llContent: LinearLayout
+    private lateinit var scrollView: ScrollView
+    private lateinit var watermarkView: WatermarkView
+    private lateinit var tvToPdf: TextView
+    private lateinit var tvComplete: TextView
+
 
     override fun initContentView() = R.layout.activity_report_preview_second
 
     override fun providerVMClass() = UpReportViewModel::class.java
 
     override fun initView() {
+        // Initialize views - migrated from synthetic views
+        titleView = findViewById(R.id.title_view)
+        reportInfoView = findViewById(R.id.report_info_view)
+        llContent = findViewById(R.id.ll_content)
+        scrollView = findViewById(R.id.scroll_view)
+        watermarkView = findViewById(R.id.watermark_view)
+        tvToPdf = findViewById(R.id.tv_to_pdf)
+        tvComplete = findViewById(R.id.tv_complete)
+        
         reportBean = intent.getParcelableExtra(ExtraKeyConfig.REPORT_BEAN)
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
-        title_view.setTitleText(R.string.album_edit_preview)
-        title_view.setLeftDrawable(R.drawable.svg_arrow_left_e8)
-        title_view.setRightDrawable(R.drawable.ic_report_exit_svg)
-        title_view.setLeftClickListener {
+        titleView.setTitleText(LibCoreR.string.album_edit_preview)
+        titleView.setLeftDrawable(UiR.drawable.svg_arrow_left_e8)
+        titleView.setRightDrawable(R.drawable.ic_report_exit_svg)
+        titleView.setLeftClickListener {
             finish()
         }
-        title_view.setRightClickListener {
+        titleView.setRightClickListener {
             TipDialog.Builder(this)
-                .setMessage(R.string.album_report_exit_tips)
-                .setPositiveListener(R.string.app_ok){
+                .setMessage(LibCoreR.string.album_report_exit_tips)
+                .setPositiveListener(UiR.string.app_ok){
                     EventBus.getDefault().post(ReportCreateEvent())
                     finish()
                 }
-                .setCancelListener(R.string.app_cancel){
+                .setCancelListener(UiR.string.app_cancel){
                 }
                 .setCanceled(false)
                 .create().show()
         }
 
-        report_info_view.refreshInfo(reportBean?.report_info)
-        report_info_view.refreshCondition(reportBean?.detection_condition)
+        reportInfoView.refreshInfo(reportBean?.report_info)
+        reportInfoView.refreshCondition(reportBean?.detection_condition)
 
         if (reportBean?.report_info?.is_report_watermark == 1) {
-            watermark_view.watermarkText = reportBean?.report_info?.report_watermark
+            watermarkView.watermarkText = reportBean?.report_info?.report_watermark
         }
 
         val irList = reportBean?.infrared_data
@@ -103,12 +129,12 @@ class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), V
                     val drawable = GlideLoader.getDrawable(this@ReportPreviewSecondActivity, irList[i].picture_url)
                     reportShowView.setImageDrawable(drawable)
                 }
-                ll_content.addView(reportShowView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                llContent.addView(reportShowView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             }
         }
 
-        tv_to_pdf.setOnClickListener(this)
-        tv_complete.setOnClickListener(this)
+        tvToPdf.setOnClickListener(this)
+        tvComplete.setOnClickListener(this)
         lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
                 // 要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
@@ -140,14 +166,14 @@ class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), V
 
     override fun onClick(v: View?) {
         when (v) {
-            tv_to_pdf -> {//生成PDF
+            tvToPdf -> {//生成PDF
                 saveWithPDF()
             }
-            tv_complete -> {//完成
+            tvComplete -> {//完成
 
                 if (LMS.getInstance().isLogin) {
                     if (!NetworkUtils.isConnected()) {
-                        TToast.shortToast(this, R.string.setting_http_error)
+                        TToast.shortToast(this, LibCoreR.string.http_code_z5004)
                         return
                     }
                     showCameraLoading()
@@ -175,9 +201,9 @@ class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), V
                     }
                 }
                 pdfFilePath = PDFHelp.savePdfFileByListView(name?:System.currentTimeMillis().toString(),
-                    scroll_view, getPrintViewList(),watermark_view)
+                    scrollView, getPrintViewList(),watermarkView)
                 lifecycleScope.launch {
-                    tv_to_pdf.text = getString(R.string.battery_share)
+                    tvToPdf.text = getString(LibCoreR.string.battery_share)
                     dismissCameraLoading()
                     actionShare()
                 }
@@ -193,7 +219,7 @@ class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), V
         shareIntent.action = Intent.ACTION_SEND
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
         shareIntent.type = "application/pdf"
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
+        startActivity(Intent.createChooser(shareIntent, getString(LibCoreR.string.battery_share)))
     }
 
     /**
@@ -202,10 +228,10 @@ class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), V
      */
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
-        result.add(report_info_view)
-        val childCount = ll_content.childCount
+        result.add(reportInfoView)
+        val childCount = llContent.childCount
         for (i in 0 until  childCount) {
-            val childView = ll_content.getChildAt(i)
+            val childView = llContent.getChildAt(i)
             if (childView is ReportIRShowView) {
                 result.addAll(childView.getPrintViewList())
             }

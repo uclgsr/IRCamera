@@ -5,10 +5,11 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
-import com.topdon.tc001.R
+import com.csl.irCamera.R
 
 /**
  * Dialog for selecting which sensors to include in multi-modal recording
@@ -22,6 +23,33 @@ class SensorSelectionDialog(
 
     companion object {
         private const val TAG = "SensorSelectionDialog"
+        
+        fun detectAvailableSensors(context: Context): Set<SensorType> {
+            val available = mutableSetOf<SensorType>()
+            
+            // Thermal camera is always available in this thermal camera app
+            available.add(SensorType.THERMAL)
+            
+            // Check RGB camera availability
+            if (context.packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_CAMERA_ANY)) {
+                available.add(SensorType.RGB)
+            }
+            
+            // GSR sensor availability - for now assume always available with fallback to simulated data
+            // In production, this would check for paired Shimmer devices
+            available.add(SensorType.GSR)
+            
+            Log.d(TAG, "Detected available sensors: $available")
+            return available
+        }
+
+        /**
+         * Show sensor selection dialog with auto-detected available sensors
+         */
+        fun show(context: Context, onSensorsSelected: (Set<SensorType>) -> Unit) {
+            val availableSensors = detectAvailableSensors(context)
+            SensorSelectionDialog(context, availableSensors, onSensorsSelected).show()
+        }
     }
 
     enum class SensorType(val displayName: String, val description: String) {
@@ -221,35 +249,4 @@ class SensorSelectionDialog(
         dismiss()
     }
 
-    /**
-     * Helper method to get available sensors for a context
-     */
-    companion object {
-        fun detectAvailableSensors(context: Context): Set<SensorType> {
-            val available = mutableSetOf<SensorType>()
-            
-            // Thermal camera is always available in this thermal camera app
-            available.add(SensorType.THERMAL)
-            
-            // Check RGB camera availability
-            if (context.packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_CAMERA_ANY)) {
-                available.add(SensorType.RGB)
-            }
-            
-            // GSR sensor availability - for now assume always available with fallback to simulated data
-            // In production, this would check for paired Shimmer devices
-            available.add(SensorType.GSR)
-            
-            Log.d(TAG, "Detected available sensors: $available")
-            return available
-        }
-
-        /**
-         * Show sensor selection dialog with auto-detected available sensors
-         */
-        fun show(context: Context, onSensorsSelected: (Set<SensorType>) -> Unit) {
-            val availableSensors = detectAvailableSensors(context)
-            SensorSelectionDialog(context, availableSensors, onSensorsSelected).show()
-        }
-    }
 }

@@ -4,9 +4,11 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.core.tools.GlideLoader
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.topdon.module.thermal.R
 
 class GalleryAdapter(val context: Context) :
@@ -46,8 +48,8 @@ class GalleryAdapter(val context: Context) :
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val lay = itemView.item_gallery_lay
-        val img = itemView.item_gallery_img
+        val lay = itemView.findViewById<ConstraintLayout>(R.id.item_gallery_lay)
+        val img = itemView.findViewById<ImageView>(R.id.item_gallery_img)
     }
 
 

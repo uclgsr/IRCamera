@@ -14,7 +14,7 @@
         app:isInitLeft="false"
         app:isTitleCenter="true" />
 
-    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/fragment_pdf_recycler_lay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,6 +27,6 @@
             android:layout_height="match_parent"
             android:overScrollMode="never"
             android:scrollbars="none" />
-    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 </LinearLayout>

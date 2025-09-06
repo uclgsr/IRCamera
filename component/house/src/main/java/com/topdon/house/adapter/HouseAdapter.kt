@@ -5,9 +5,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.house.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.lib.core.db.entity.HouseBase
 import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.lib.core.tools.TimeTool
@@ -70,37 +73,50 @@ internal class HouseAdapter(val context: Context, val isDetect: Boolean) : Recyc
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val houseBase: HouseBase = dataList[position]
 
-        holder.itemView.iv_menu_more.isVisible = !isEditMode
-        holder.itemView.iv_select.isVisible = isEditMode
-        holder.itemView.iv_select.isSelected = selectIndexList.contains(position)
+        holder.ivMenuMore.isVisible = !isEditMode
+        holder.ivSelect.isVisible = isEditMode
+        holder.ivSelect.isSelected = selectIndexList.contains(position)
 
-        holder.itemView.tv_address.text = houseBase.address
-        holder.itemView.tv_name.text = houseBase.name
-        holder.itemView.tv_detect_time.text = TimeTool.formatDetectTime(houseBase.detectTime)
+        holder.tvAddress.text = houseBase.address
+        holder.tvName.text = houseBase.name
+        holder.tvDetectTime.text = TimeTool.formatDetectTime(houseBase.detectTime)
 
-        holder.itemView.view_space_year.isVisible = houseBase.year != null || houseBase.houseSpace.isNotEmpty()
+        holder.viewSpaceYear.isVisible = houseBase.year != null || houseBase.houseSpace.isNotEmpty()
 
-        holder.itemView.tv_house_year.isVisible = houseBase.year != null
-        holder.itemView.tv_house_year.text = houseBase.year.toString()
+        holder.tvHouseYear.isVisible = houseBase.year != null
+        holder.tvHouseYear.text = houseBase.year.toString()
 
-        holder.itemView.tv_house_space.isVisible = houseBase.houseSpace.isNotEmpty()
-        holder.itemView.tv_house_space.text = "${houseBase.houseSpace}${houseBase.getSpaceUnitStr()}"
+        holder.tvHouseSpace.isVisible = houseBase.houseSpace.isNotEmpty()
+        holder.tvHouseSpace.text = "${houseBase.houseSpace}${houseBase.getSpaceUnitStr()}"
 
-        holder.itemView.tv_cost.isVisible = houseBase.cost.isNotEmpty()
-        holder.itemView.tv_cost_unit.isVisible = houseBase.cost.isNotEmpty()
-        holder.itemView.tv_cost.text = houseBase.cost
-        holder.itemView.tv_cost_unit.text = houseBase.getCostUnitStr()
+        holder.tvCost.isVisible = houseBase.cost.isNotEmpty()
+        holder.tvCostUnit.isVisible = houseBase.cost.isNotEmpty()
+        holder.tvCost.text = houseBase.cost
+        holder.tvCostUnit.text = houseBase.getCostUnitStr()
 
-        holder.itemView.tv_detect_share.setText(if (isDetect) R.string.app_detection else R.string.battery_share)
+        holder.tvDetectShare.setText(if (isDetect) LibR.string.app_detection else LibR.string.battery_share)
 
-        GlideLoader.load(holder.itemView.iv_house_image, houseBase.imagePath)
+        GlideLoader.load(holder.ivHouseImage, houseBase.imagePath)
     }
 
     override fun getItemCount(): Int = dataList.size
 
     inner class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
+        val ivMenuMore: ImageView = rootView.findViewById(R.id.iv_menu_more)
+        val ivSelect: ImageView = rootView.findViewById(R.id.iv_select)
+        val tvAddress: TextView = rootView.findViewById(R.id.tv_address)
+        val tvName: TextView = rootView.findViewById(R.id.tv_name)
+        val tvDetectTime: TextView = rootView.findViewById(R.id.tv_detect_time)
+        val viewSpaceYear: View = rootView.findViewById(R.id.view_space_year)
+        val tvHouseYear: TextView = rootView.findViewById(R.id.tv_house_year)
+        val tvHouseSpace: TextView = rootView.findViewById(R.id.tv_house_space)
+        val tvCost: TextView = rootView.findViewById(R.id.tv_cost)
+        val tvCostUnit: TextView = rootView.findViewById(R.id.tv_cost_unit)
+        val tvDetectShare: TextView = rootView.findViewById(R.id.tv_detect_share)
+        val ivHouseImage: ImageView = rootView.findViewById(R.id.iv_house_image)
+        
         init {
-            rootView.iv_menu_more.setOnClickListener {
+            ivMenuMore.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onMoreClickListener?.invoke(position, it)
@@ -112,10 +128,10 @@ internal class HouseAdapter(val context: Context, val isDetect: Boolean) : Recyc
                     if (position != RecyclerView.NO_POSITION) {
                         if (selectIndexList.contains(position)) {//选中->未选中
                             selectIndexList.remove(position)
-                            rootView.iv_select.isSelected = false
+                            ivSelect.isSelected = false
                         } else {//未选中->选中
                             selectIndexList.add(position)
-                            rootView.iv_select.isSelected = true
+                            ivSelect.isSelected = true
                         }
                         onSelectChangeListener?.invoke(selectIndexList.size)
                     }
@@ -127,7 +143,7 @@ internal class HouseAdapter(val context: Context, val isDetect: Boolean) : Recyc
                 }
             }
             if (!isDetect) {
-                rootView.tv_detect_share.setOnClickListener {
+                tvDetectShare.setOnClickListener {
                     if (!isEditMode) {//编辑模式不响应分享事件
                         val position = bindingAdapterPosition
                         if (position != RecyclerView.NO_POSITION) {

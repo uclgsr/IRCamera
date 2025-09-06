@@ -23,6 +23,7 @@ import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.UriUtils
 import com.bumptech.glide.Glide
 import com.topdon.house.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.db.entity.HouseReport
 import com.topdon.lib.core.utils.ScreenUtil
@@ -128,8 +129,8 @@ object PDFUtil {
 
                 //计算第1行item高度
                 val tabItemView = LayoutInflater.from(context).inflate(R.layout.pdf_tab_item, null)
-                tabItemView.tv_item_name.text = dirBean.itemList[0].itemName
-                tabItemView.tv_input.text = dirBean.itemList[0].inputText.ifEmpty { dirBean.itemList[0].getStateStr(context) }
+                tabItemView.findViewById<android.widget.TextView>(R.id.tv_item_name).text = dirBean.itemList[0].itemName
+                tabItemView.findViewById<android.widget.TextView>(R.id.tv_input).text = dirBean.itemList[0].inputText.ifEmpty { dirBean.itemList[0].getStateStr(context) }
                 tabItemView.measure(MeasureSpec.makeMeasureSpec(pageWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
                 tabItemView.layout(0, 0, tabItemView.measuredWidth, tabItemView.measuredHeight)
 
@@ -153,11 +154,11 @@ object PDFUtil {
                 hasUseHeight += tabTitleView.height
 
                 for (itemBean in dirBean.itemList) {
-                    tabItemView.tv_item_name.text = itemBean.itemName
-                    tabItemView.iv_good.isVisible = itemBean.state == 1
-                    tabItemView.iv_warn.isVisible = itemBean.state == 2
-                    tabItemView.iv_danger.isVisible = itemBean.state == 3
-                    tabItemView.tv_input.text = itemBean.inputText.ifEmpty { itemBean.getStateStr(context) }
+                    tabItemView.findViewById<android.widget.TextView>(R.id.tv_item_name).text = itemBean.itemName
+                    tabItemView.findViewById<android.widget.ImageView>(R.id.iv_good).isVisible = itemBean.state == 1
+                    tabItemView.findViewById<android.widget.ImageView>(R.id.iv_warn).isVisible = itemBean.state == 2
+                    tabItemView.findViewById<android.widget.ImageView>(R.id.iv_danger).isVisible = itemBean.state == 3
+                    tabItemView.findViewById<android.widget.TextView>(R.id.tv_input).text = itemBean.inputText.ifEmpty { itemBean.getStateStr(context) }
                     tabItemView.measure(MeasureSpec.makeMeasureSpec(pageWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
                     tabItemView.layout(0, 0, tabItemView.measuredWidth, tabItemView.measuredHeight)
 
@@ -167,9 +168,9 @@ object PDFUtil {
                         canvas = page.canvas
                         canvas.translate(0f, SizeUtils.dp2px(13f).toFloat())
                         hasUseHeight = SizeUtils.dp2px(13f)
-                        tabItemView.view_top_line.isVisible = true
+                        tabItemView.findViewById<View>(R.id.view_top_line).isVisible = true
                     } else {
-                        tabItemView.view_top_line.isVisible = false
+                        tabItemView.findViewById<View>(R.id.view_top_line).isVisible = false
                     }
 
                     tabItemView.draw(canvas)
@@ -202,17 +203,17 @@ object PDFUtil {
                 val photoText = TextView(context)
                 photoText.textSize = 8f
                 photoText.paint.isFakeBoldText = true
-                photoText.setText(R.string.album_menu_Photos)
+                photoText.setText(com.topdon.lib.core.R.string.album_menu_Photos)
                 photoText.setTextColor(0xff333333.toInt())
                 photoText.setPadding(SizeUtils.dp2px(13f), SizeUtils.dp2px(10f), SizeUtils.dp2px(13f), 0)
                 photoText.measure(MeasureSpec.makeMeasureSpec(pageWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
                 photoText.layout(0, 0, photoText.measuredWidth, photoText.measuredHeight)
 
                 val imgLineView = LayoutInflater.from(context).inflate(R.layout.pdf_image_line, null)
-                imgLineView.tv_item_name1.text = dataList[0].itemName
-                imgLineView.tv_item_name2.text = if (dataList.size > 1) dataList[1].itemName else ""
-                imgLineView.tv_item_name3.text = if (dataList.size > 2) dataList[2].itemName else ""
-                imgLineView.tv_item_name4.text = if (dataList.size > 3) dataList[3].itemName else ""
+                imgLineView.findViewById<TextView>(R.id.tv_item_name1).text = dataList[0].itemName
+                imgLineView.findViewById<TextView>(R.id.tv_item_name2).text = if (dataList.size > 1) dataList[1].itemName else ""
+                imgLineView.findViewById<TextView>(R.id.tv_item_name3).text = if (dataList.size > 2) dataList[2].itemName else ""
+                imgLineView.findViewById<TextView>(R.id.tv_item_name4).text = if (dataList.size > 3) dataList[3].itemName else ""
                 imgLineView.measure(MeasureSpec.makeMeasureSpec(pageWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
                 imgLineView.layout(0, 0, imgLineView.measuredWidth, imgLineView.measuredHeight)
 
@@ -250,14 +251,14 @@ object PDFUtil {
 
                 val lineCount = dataList.size / 4 + if (dataList.size % 4 == 0) 0 else 1
                 for (i in 0 until lineCount) {
-                    imgLineView.cl_image1.isVisible = dataList.size > i * 4
-                    imgLineView.cl_image2.isVisible = dataList.size > i * 4 + 1
-                    imgLineView.cl_image3.isVisible = dataList.size > i * 4 + 2
-                    imgLineView.cl_image4.isVisible = dataList.size > i * 4 + 3
-                    imgLineView.tv_item_name1.text = if (dataList.size > i * 4) dataList[i * 4].itemName else ""
-                    imgLineView.tv_item_name2.text = if (dataList.size > i * 4 + 1) dataList[i * 4 + 1].itemName else ""
-                    imgLineView.tv_item_name3.text = if (dataList.size > i * 4 + 2) dataList[i * 4 + 2].itemName else ""
-                    imgLineView.tv_item_name4.text = if (dataList.size > i * 4 + 3) dataList[i * 4 + 3].itemName else ""
+                    imgLineView.findViewById<android.view.View>(R.id.cl_image1).isVisible = dataList.size > i * 4
+                    imgLineView.findViewById<android.view.View>(R.id.cl_image2).isVisible = dataList.size > i * 4 + 1
+                    imgLineView.findViewById<android.view.View>(R.id.cl_image3).isVisible = dataList.size > i * 4 + 2
+                    imgLineView.findViewById<android.view.View>(R.id.cl_image4).isVisible = dataList.size > i * 4 + 3
+                    imgLineView.findViewById<android.widget.TextView>(R.id.tv_item_name1).text = if (dataList.size > i * 4) dataList[i * 4].itemName else ""
+                    imgLineView.findViewById<android.widget.TextView>(R.id.tv_item_name2).text = if (dataList.size > i * 4 + 1) dataList[i * 4 + 1].itemName else ""
+                    imgLineView.findViewById<android.widget.TextView>(R.id.tv_item_name3).text = if (dataList.size > i * 4 + 2) dataList[i * 4 + 2].itemName else ""
+                    imgLineView.findViewById<android.widget.TextView>(R.id.tv_item_name4).text = if (dataList.size > i * 4 + 3) dataList[i * 4 + 3].itemName else ""
 
                     imgLineView.measure(MeasureSpec.makeMeasureSpec(pageWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
                     imgLineView.layout(0, 0, imgLineView.measuredWidth, imgLineView.measuredHeight)
@@ -265,10 +266,10 @@ object PDFUtil {
                     for (j in 0 until 4) {
                         if (dataList.size > i * 4 + j) {
                             val imageView = when (j) {
-                                0 -> imgLineView.iv_image1
-                                1 -> imgLineView.iv_image2
-                                2 -> imgLineView.iv_image3
-                                else -> imgLineView.iv_image4
+                                0 -> imgLineView.findViewById<android.widget.ImageView>(R.id.iv_image1)
+                                1 -> imgLineView.findViewById<android.widget.ImageView>(R.id.iv_image2)
+                                2 -> imgLineView.findViewById<android.widget.ImageView>(R.id.iv_image3)
+                                else -> imgLineView.findViewById<android.widget.ImageView>(R.id.iv_image4)
                             }
                             val imagePath = dataList[i * 4 + j].imagePath
                             val drawable = Glide.with(context).asDrawable().load(imagePath).submit(imageView.width, imageView.height).get()
@@ -378,24 +379,24 @@ object PDFUtil {
         val pageWidth = ScreenUtil.getScreenWidth(context).coerceAtMost(ScreenUtil.getScreenHeight(context))
         val headView = LayoutInflater.from(context).inflate(R.layout.pdf_head, null)
 
-        headView.tv_inspector_name_title.text = "${context.getString(R.string.inspector_name)}:"
-        headView.tv_house_year_title.text = "${context.getString(R.string.house_build_time)}:"
-        headView.tv_house_space_title.text = "${context.getString(R.string.house_space)}:"
-        headView.tv_cost_title.text = "${context.getString(R.string.detection_cost)}:"
+        headView.findViewById<TextView>(R.id.tv_inspector_name_title).text = "${context.getString(LibR.string.inspector_name)}:"
+        headView.findViewById<TextView>(R.id.tv_house_year_title).text = "${context.getString(LibR.string.house_build_time)}:"
+        headView.findViewById<TextView>(R.id.tv_house_space_title).text = "${context.getString(LibR.string.house_space)}:"
+        headView.findViewById<TextView>(R.id.tv_cost_title).text = "${context.getString(LibR.string.detection_cost)}:"
 
-        headView.tv_report_name.text = houseReport.name
-        headView.tv_time.text = context.getString(R.string.detect_time) + ": " + TimeUtils.millis2String(houseReport.detectTime, "yyyy-MM-dd HH:mm")
-        headView.tv_house_address.text = houseReport.address
+        headView.findViewById<TextView>(R.id.tv_report_name).text = houseReport.name
+        headView.findViewById<TextView>(R.id.tv_time).text = context.getString(LibR.string.detect_time) + ": " + TimeUtils.millis2String(houseReport.detectTime, "yyyy-MM-dd HH:mm")
+        headView.findViewById<TextView>(R.id.tv_house_address).text = houseReport.address
 
-        headView.tv_inspector_name.text = houseReport.inspectorName
-        headView.tv_house_year.text = houseReport.year?.toString() ?: "--"
-        headView.tv_house_space.text = if (houseReport.houseSpace.isEmpty()) "--" else "${houseReport.houseSpace} ${houseReport.getSpaceUnitStr()}"
-        headView.tv_cost.text = if (houseReport.cost.isEmpty()) "--" else "${houseReport.getCostUnitStr()} ${houseReport.cost}"
+        headView.findViewById<TextView>(R.id.tv_inspector_name).text = houseReport.inspectorName
+        headView.findViewById<TextView>(R.id.tv_house_year).text = houseReport.year?.toString() ?: "--"
+        headView.findViewById<TextView>(R.id.tv_house_space).text = if (houseReport.houseSpace.isEmpty()) "--" else "${houseReport.houseSpace} ${houseReport.getSpaceUnitStr()}"
+        headView.findViewById<TextView>(R.id.tv_cost).text = if (houseReport.cost.isEmpty()) "--" else "${houseReport.getCostUnitStr()} ${houseReport.cost}"
 
         val ivWidth = pageWidth - SizeUtils.dp2px(13f + 13f)
         val ivHeight = (pageWidth * 129 / 358f).toInt()
         val drawable = Glide.with(context).asDrawable().load(houseReport.imagePath).submit(ivWidth, ivHeight).get()
-        headView.iv_house_image.setImageDrawable(drawable)
+        headView.findViewById<android.widget.ImageView>(R.id.iv_house_image).setImageDrawable(drawable)
 
         headView.measure(MeasureSpec.makeMeasureSpec(pageWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
         headView.layout(0, 0, headView.measuredWidth, headView.measuredHeight)
@@ -410,15 +411,17 @@ object PDFUtil {
         footView.measure(MeasureSpec.makeMeasureSpec(pageWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
         footView.layout(0, 0, footView.measuredWidth, footView.measuredHeight)
 
-        val inspectorWidth = footView.iv_inspector_signature.width
-        val inspectorHeight = footView.iv_inspector_signature.height
+        val inspectorSignatureView = footView.findViewById<android.widget.ImageView>(R.id.iv_inspector_signature)
+        val inspectorWidth = inspectorSignatureView.width
+        val inspectorHeight = inspectorSignatureView.height
         val inspectorDrawable = Glide.with(context).asDrawable().load(houseReport.inspectorBlackPath).submit(inspectorWidth, inspectorHeight).get()
-        footView.iv_inspector_signature.setImageDrawable(inspectorDrawable)
+        inspectorSignatureView.setImageDrawable(inspectorDrawable)
 
-        val ownerWidth = footView.iv_house_owner_signature.width
-        val ownerHeight = footView.iv_house_owner_signature.height
+        val ownerSignatureView = footView.findViewById<android.widget.ImageView>(R.id.iv_house_owner_signature)
+        val ownerWidth = ownerSignatureView.width
+        val ownerHeight = ownerSignatureView.height
         val ownerDrawable = Glide.with(context).asDrawable().load(houseReport.houseOwnerBlackPath).submit(ownerWidth, ownerHeight).get()
-        footView.iv_house_owner_signature.setImageDrawable(ownerDrawable)
+        ownerSignatureView.setImageDrawable(ownerDrawable)
 
         return footView
     }

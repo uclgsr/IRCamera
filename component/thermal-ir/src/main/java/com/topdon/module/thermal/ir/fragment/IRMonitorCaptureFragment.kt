@@ -1,7 +1,11 @@
 package com.topdon.module.thermal.ir.fragment
 
 import android.content.Intent
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.isVisible
+import com.airbnb.lottie.LottieAnimationView
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.RouterConfig
@@ -25,14 +29,26 @@ class IRMonitorCaptureFragment : BaseFragment() {
      * true-TC007 false-其他插件式设备
      */
     private var isTC007 = false
+    
+    // View properties
+    private lateinit var animationView: LottieAnimationView
+    private lateinit var viewStart: View
+    private lateinit var ivIcon: ImageView
+    private lateinit var tvStart: TextView
 
     override fun initContentView(): Int = R.layout.fragment_ir_monitor_capture
 
     override fun initView() {
         isTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
-        animation_view.setAnimation(if (isTC007) "TC007AnimationJSON.json" else "TDAnimationJSON.json")
+        
+        animationView = requireView().findViewById(R.id.animation_view)
+        viewStart = requireView().findViewById(R.id.view_start)
+        ivIcon = requireView().findViewById(R.id.iv_icon)
+        tvStart = requireView().findViewById(R.id.tv_start)
+        
+        animationView.setAnimation(if (isTC007) "TC007AnimationJSON.json" else "TDAnimationJSON.json")
 
-        view_start.setOnClickListener {
+        viewStart.setOnClickListener {
             if (isTC007) {
                 if (WebSocketProxy.getInstance().isTC007Connect()) {
                     NavigationManager.getInstance().build(RouterConfig.IR_MONITOR_CAPTURE_07).navigation(requireContext())
@@ -69,10 +85,10 @@ class IRMonitorCaptureFragment : BaseFragment() {
      * 刷新连接状态
      */
     private fun refreshUI(isConnect: Boolean) {
-        animation_view.isVisible = !isConnect
-        iv_icon.isVisible = isConnect
-        view_start.isVisible = isConnect
-        tv_start.isVisible = isConnect
+        animationView.isVisible = !isConnect
+        ivIcon.isVisible = isConnect
+        viewStart.isVisible = isConnect
+        tvStart.isVisible = isConnect
     }
 
     override fun connected() {

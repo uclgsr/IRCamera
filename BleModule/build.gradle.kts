@@ -11,10 +11,7 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-            buildConfigField("boolean", "DEBUG", "true")
-        }
+        
         release {
             isMinifyEnabled = false
             buildConfigField("boolean", "DEBUG", "false")
@@ -32,34 +29,19 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    flavorDimensions += "versionCode"
-    productFlavors {
-        create("nj1000pro") {
-            dimension = "versionCode"
-        }
-        // AD900
-        create("ultradiag") {
-            dimension = "versionCode"
-        }
-        // ArtiDiag900 ArtiDiag900Lite
-        // ArtiDiag900 ArtiDiag900Lite 打包时需要修改DiagnoseModule和BluetoothModule 中的进程名称 进程名：com.topdon.diagnose.adliteservice  Constants.mAppVersion  此字段也需要修改
-        create("artidiag900lite") {
-            dimension = "versionCode"
-        }
-        create("topscan") {
-            dimension = "versionCode"
-        }
-        create("keynow") {
-            dimension = "versionCode"
-        }
+        isCoreLibraryDesugaringEnabled = true
     }
 }
 
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+
     // Add libapp dependency to get access to LMS SDK
     api(project(":libapp"))
+    
+    // Compile-time access to LMS SDK for BleModule classes that directly import LMS classes
+    compileOnly(files("../shared/libs/lms_international-3.90.009.0.aar"))
     
     api("androidx.appcompat:appcompat:1.2.0")
     api("org.greenrobot:eventbus:3.2.0")

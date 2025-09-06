@@ -13,7 +13,8 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import java.nio.ByteBuffer;
 
-import static com.example.opengl.render.IROpen3DTools.IntArrayToByteArray;
+// TODO: Fix missing IROpen3DTools dependency
+// import static com.example.opengl.render.IROpen3DTools.IntArrayToByteArray;
 
 /**
  * @author: CaiSongL
@@ -60,7 +61,7 @@ public class ImageColorTools {
         src.put(0, 0, temp);
 
         Mat imageMat = new Mat(192, 256, CvType.CV_8UC2);
-        imageMat.put(0,0,IntArrayToByteArray(image));
+        imageMat.put(0,0,convertIntArrayToByteArray(image));
 //        for (int i = 0; i < image.length; i += 2) {
 //            imageMat.put(i / 512, (i / 2) % 256, image[i]);
 //            imageMat.put(i / 512, (i / 2) % 256 + 1, image[i + 1]);
@@ -154,7 +155,7 @@ public class ImageColorTools {
         src.put(0, 0, temp);
 
         Mat imageMat = new Mat(192, 256, CvType.CV_8UC2);
-        imageMat.put(0,0,IntArrayToByteArray(image));
+        imageMat.put(0,0,convertIntArrayToByteArray(image));
 //        for (int i = 0; i < image.length; i += 2) {
 //            imageMat.put(i / 512, (i / 2) % 256, image[i]);
 //            imageMat.put(i / 512, (i / 2) % 256 + 1, image[i + 1]);
@@ -413,5 +414,12 @@ public class ImageColorTools {
         } else {
             return null;
         }
+    }
+
+    // Helper method to replace missing IROpen3DTools.IntArrayToByteArray
+    private static byte[] convertIntArrayToByteArray(int[] intArray) {
+        byte[] byteArray = new byte[intArray.length * 4];
+        ByteBuffer.wrap(byteArray).asIntBuffer().put(intArray);
+        return byteArray;
     }
 }

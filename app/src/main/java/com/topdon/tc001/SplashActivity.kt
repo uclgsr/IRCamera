@@ -2,6 +2,7 @@ package com.topdon.tc001
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -11,17 +12,22 @@ import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.utils.CommUtils
 import com.topdon.lms.sdk.Config
 import com.topdon.lms.sdk.LMS
+import com.csl.irCamera.R
+import com.csl.irCamera.BuildConfig
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
+
+    // findViewById declarations
+    private val tvAppName by lazy { findViewById<TextView>(R.id.tv_app_name) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LMS.getInstance().screenOrientation = Config.SCREEN_PORTRAIT
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_splash)
-        window.navigationBarColor = ContextCompat.getColor(this, R.color.toolbar_16131E)
+        window.navigationBarColor = ContextCompat.getColor(this, android.R.color.black)
 
         lifecycleScope.launch {
             delay(if (BuildConfig.DEBUG) 3000 else 1000)
@@ -32,7 +38,7 @@ class SplashActivity : AppCompatActivity() {
             }
             finish()
         }
-        tv_app_name.text = CommUtils.getAppName()
+        tvAppName.text = CommUtils.getAppName()
     }
 
     override fun onBackPressed() {

@@ -5,6 +5,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.house.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.house.event.DetectItemListEvent
 import com.topdon.house.viewmodel.DetectViewModel
 import com.topdon.lib.core.config.ExtraKeyConfig
@@ -46,41 +50,88 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
     private val itemTouchCallback = MyItemTouchCallback()
 
     private val viewModel: DetectViewModel by viewModels()
+    
+    // View references
+    private lateinit var ivCopy: ImageView
+    private lateinit var tvCopy: TextView
+    private lateinit var ivDel: ImageView
+    private lateinit var tvDel: TextView
+    private lateinit var viewCopy: View
+    private lateinit var viewDel: View
+    private lateinit var ivExit: ImageView
+    private lateinit var ivSave: ImageView
+    private lateinit var clDir: View
+    private lateinit var viewSelectAll: View
+    private lateinit var etDirName: EditText
+    private lateinit var ivSelectAll: ImageView
+    private lateinit var tvSelectAll: TextView
+    private lateinit var tvTitle: TextView
+    private lateinit var tvGoodCount: TextView
+    private lateinit var tvWarnCount: TextView
+    private lateinit var tvDangerCount: TextView
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var ivTriangle: ImageView
+    private lateinit var clEmpty: View
+    private lateinit var clBottom: View
 
     override fun initContentView(): Int = R.layout.activity_item_edit
 
     override fun initView() {
-        iv_copy.isEnabled = false
-        tv_copy.isEnabled = false
-        iv_del.isEnabled = false
-        tv_del.isEnabled = false
-        view_copy.isEnabled = false
-        view_del.isEnabled = false
+        // Initialize view references
+        ivCopy = findViewById(R.id.iv_copy)
+        tvCopy = findViewById(R.id.tv_copy)
+        ivDel = findViewById(R.id.iv_del)
+        tvDel = findViewById(R.id.tv_del)
+        viewCopy = findViewById(R.id.view_copy)
+        viewDel = findViewById(R.id.view_del)
+        ivExit = findViewById(R.id.iv_exit)
+        ivSave = findViewById(R.id.iv_save)
+        clDir = findViewById(R.id.cl_dir)
+        viewSelectAll = findViewById(R.id.view_select_all)
+        etDirName = findViewById(R.id.et_dir_name)
+        ivSelectAll = findViewById(R.id.iv_select_all)
+        tvSelectAll = findViewById(R.id.tv_select_all)
+        tvTitle = findViewById(R.id.tv_title)
+        val tvGoodCount = findViewById<TextView>(R.id.tv_good_count)
+        val tvWarnCount = findViewById<TextView>(R.id.tv_warn_count)
+        val tvDangerCount = findViewById<TextView>(R.id.tv_danger_count)
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+        ivTriangle = findViewById(R.id.iv_triangle)
+        clEmpty = findViewById(R.id.cl_empty)
+        clBottom = findViewById(R.id.cl_bottom)
+        
+        ivCopy.isEnabled = false
+        tvCopy.isEnabled = false
+        ivDel.isEnabled = false
+        tvDel.isEnabled = false
+        viewCopy.isEnabled = false
+        viewDel.isEnabled = false
 
-        iv_exit.setOnClickListener(this)
-        iv_save.setOnClickListener(this)
-        cl_dir.setOnClickListener(this)
-        view_select_all.setOnClickListener(this)
-        view_copy.setOnClickListener(this)
-        view_del.setOnClickListener(this)
+        ivExit.setOnClickListener(this)
+        ivSave.setOnClickListener(this)
+        clDir.setOnClickListener(this)
+        viewSelectAll.setOnClickListener(this)
+        viewCopy.setOnClickListener(this)
+        viewDel.setOnClickListener(this)
 
-        et_dir_name.addTextChangedListener {
+        etDirName.addTextChangedListener {
             val dirDetect: DirDetect? = viewModel.dirLD.value
             if (dirDetect != null) {
                 dirDetect.dirName = it?.toString() ?: ""
             }
         }
 
+        
         adapter.onSelectChangeListener = {
-            iv_copy.isEnabled = it > 0
-            tv_copy.isEnabled = it > 0
-            iv_del.isEnabled = it > 0
-            tv_del.isEnabled = it > 0
-            view_copy.isEnabled = it > 0
-            view_del.isEnabled = it > 0
-            iv_select_all.isSelected = adapter.isSelectAll
-            tv_select_all.setText(if (adapter.isSelectAll) R.string.app_cancel_select_all else R.string.report_select_all)
-            tv_title.text = if (it > 0) getString(R.string.chosen_item, it) else getString(R.string.not_selected)
+            ivCopy.isEnabled = it > 0
+            tvCopy.isEnabled = it > 0
+            ivDel.isEnabled = it > 0
+            tvDel.isEnabled = it > 0
+            viewCopy.isEnabled = it > 0
+            viewDel.isEnabled = it > 0
+            ivSelectAll.isSelected = adapter.isSelectAll
+            tvSelectAll.setText(if (adapter.isSelectAll) R.string.app_cancel_select_all else R.string.report_select_all)
+            tvTitle.text = if (it > 0) getString(R.string.chosen_item, it) else getString(R.string.not_selected)
         }
         adapter.onStateChangeListener = { oldState, newState ->
             val dirDetect: DirDetect? = viewModel.dirLD.value
@@ -95,22 +146,22 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                     2 -> dirDetect.warnCount++
                     3 -> dirDetect.dangerCount++
                 }
-                tv_good_count.text = dirDetect.getGoodCountStr()
-                tv_warn_count.text = dirDetect.getWarnCountStr()
-                tv_danger_count.text = dirDetect.getDangerCountStr()
+                tvGoodCount.text = dirDetect.getGoodCountStr()
+                tvWarnCount.text = dirDetect.getWarnCountStr()
+                tvDangerCount.text = dirDetect.getDangerCountStr()
             }
         }
-        recycler_view.layoutManager = LinearLayoutManager(this)
-        recycler_view.adapter = adapter
-        recycler_view.addItemDecoration(MyItemDecoration(this).apply { wholeBottom = 16f })
-        ItemTouchHelper(itemTouchCallback).attachToRecyclerView(recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(MyItemDecoration(this).apply { wholeBottom = 16f })
+        ItemTouchHelper(itemTouchCallback).attachToRecyclerView(recyclerView)
 
         viewModel.dirLD.observe(this) {
             if (it != null) {
-                et_dir_name.setText(it.dirName)
-                tv_good_count.text = it.getGoodCountStr()
-                tv_warn_count.text = it.getWarnCountStr()
-                tv_danger_count.text = it.getDangerCountStr()
+                etDirName.setText(it.dirName)
+                tvGoodCount.text = it.getGoodCountStr()
+                tvWarnCount.text = it.getWarnCountStr()
+                tvDangerCount.text = it.getDangerCountStr()
                 adapter.refresh(it.itemList)
                 itemTouchCallback.refresh(it.itemList)
             }
@@ -129,8 +180,8 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            iv_exit -> showExitTipsDialog()
-            iv_save -> {//保存
+            ivExit -> showExitTipsDialog()
+            ivSave -> {//保存
                 val dirDetect: DirDetect = viewModel.dirLD.value ?: return
                 showLoadingDialog()
                 lifecycleScope.launch(Dispatchers.IO) {
@@ -144,33 +195,34 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
             }
-            cl_dir -> {//展开收起切换
+            clDir -> {//展开收起切换
                 adapter.isExpand = !adapter.isExpand
                 if (adapter.isExpand) {//切换到展开
-                    iv_triangle.setImageResource(R.drawable.svg_house_triangle_up)
-                    cl_dir.setBackgroundResource(R.drawable.bg_corners10_top_solid_23202e)
+                    ivTriangle.setImageResource(R.drawable.svg_house_triangle_up)
+                    clDir.setBackgroundResource(R.drawable.bg_corners10_top_solid_23202e)
                 } else {
-                    iv_triangle.setImageResource(R.drawable.svg_house_triangle_down)
-                    cl_dir.setBackgroundResource(R.drawable.bg_corners10_solid_23202e)
+                    ivTriangle.setImageResource(R.drawable.svg_house_triangle_down)
+                    clDir.setBackgroundResource(R.drawable.bg_corners10_solid_23202e)
                 }
+                adapter.notifyDataSetChanged()
             }
-            view_select_all -> {//全选、取消全选
+            viewSelectAll -> {//全选、取消全选
                 adapter.isSelectAll = !adapter.isSelectAll
             }
-            view_copy -> {//复制
+            viewCopy -> {//复制
                 adapter.copySelect()
                 TToast.shortToast(this@ItemEditActivity, R.string.ts004_copy_success)
             }
-            view_del -> {//删除
+            viewDel -> {//删除
                 TipDialog.Builder(this)
                     .setTitleMessage(getString(R.string.tips_del_item_title))
                     .setMessage(R.string.tips_del_item_content)
                     .setCancelListener(R.string.app_cancel) {
                     }
                     .setPositiveListener(R.string.report_delete) {
-                        cl_empty.isVisible = adapter.isSelectAll
-                        cl_bottom.isVisible = !adapter.isSelectAll
-                        cl_dir.isVisible = !adapter.isSelectAll
+                        clEmpty.isVisible = adapter.isSelectAll
+                        clBottom.isVisible = !adapter.isSelectAll
+                        clDir.isVisible = !adapter.isSelectAll
                         adapter.delSelect()
                         TToast.shortToast(this@ItemEditActivity, R.string.test_results_delete_success)
                     }
@@ -184,8 +236,8 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
      */
     private fun showExitTipsDialog() {
         TipDialog.Builder(this)
-            .setMessage(R.string.diy_tip_save)
-            .setPositiveListener(R.string.app_exit) {
+            .setMessage(LibR.string.diy_tip_save)
+            .setPositiveListener(LibR.string.app_exit) {
                 finish()
             }
             .setCancelListener(R.string.app_cancel)
@@ -341,18 +393,25 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val itemDetect: ItemDetect = dataList[position]
-            holder.itemView.iv_select.isSelected = itemDetect.hasSelect
-            holder.itemView.et_input_name.setText(itemDetect.itemName)
-            holder.itemView.tv_good.isSelected = itemDetect.state == 1
-            holder.itemView.tv_warn.isSelected = itemDetect.state == 2
-            holder.itemView.tv_danger.isSelected = itemDetect.state == 3
-            holder.itemView.tv_state.text = itemDetect.getStateStr(context)
+            holder.ivSelect.isSelected = itemDetect.hasSelect
+            holder.etInputName.setText(itemDetect.itemName)
+            holder.tvGood.isSelected = itemDetect.state == 1
+            holder.tvWarn.isSelected = itemDetect.state == 2
+            holder.tvDanger.isSelected = itemDetect.state == 3
+            holder.tvState.text = itemDetect.getStateStr(context)
             holder.refreshIsLast(position == dataList.size - 1)
         }
 
         override fun getItemCount(): Int = if (isExpand) dataList.size else 0
 
         inner class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
+            val ivSelect: ImageView = rootView.findViewById(R.id.iv_select)
+            val etInputName: EditText = rootView.findViewById(R.id.et_input_name)
+            val tvGood: TextView = rootView.findViewById(R.id.tv_good)
+            val tvWarn: TextView = rootView.findViewById(R.id.tv_warn)
+            val tvDanger: TextView = rootView.findViewById(R.id.tv_danger)
+            val tvState: TextView = rootView.findViewById(R.id.tv_state)
+            
             init {
                 rootView.setOnClickListener {
                     val position = bindingAdapterPosition
@@ -360,23 +419,23 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                         val item: ItemDetect = dataList[position]
                         item.hasSelect = !item.hasSelect
                         selectCount += if (item.hasSelect) 1 else -1
-                        rootView.iv_select.isSelected = item.hasSelect
+                        ivSelect.isSelected = item.hasSelect
                         onSelectChangeListener?.invoke(selectCount)
                     }
                 }
-                rootView.et_input_name.addTextChangedListener {
+                etInputName.addTextChangedListener {
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         dataList[position].itemName = it?.toString() ?: ""
                     }
                 }
-                rootView.tv_good.setOnClickListener {
+                tvGood.setOnClickListener {
                     handleStateChange(1)
                 }
-                rootView.tv_warn.setOnClickListener {
+                tvWarn.setOnClickListener {
                     handleStateChange(2)
                 }
-                rootView.tv_danger.setOnClickListener {
+                tvDanger.setOnClickListener {
                     handleStateChange(3)
                 }
             }
@@ -403,10 +462,10 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                 onStateChangeListener?.invoke(itemDetect.state, newState)
                 itemDetect.state = newState
 
-                itemView.tv_good.isSelected = itemDetect.state == 1
-                itemView.tv_warn.isSelected = itemDetect.state == 2
-                itemView.tv_danger.isSelected = itemDetect.state == 3
-                itemView.tv_state.text = itemDetect.getStateStr(context)
+                tvGood.isSelected = itemDetect.state == 1
+                tvWarn.isSelected = itemDetect.state == 2
+                tvDanger.isSelected = itemDetect.state == 3
+                tvState.text = itemDetect.getStateStr(context)
             }
         }
     }

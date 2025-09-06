@@ -7,6 +7,10 @@ import android.provider.Settings
 import android.text.*
 import android.text.style.UnderlineSpan
 import android.view.View
+import android.widget.TextView
+import com.topdon.tc001.view.ConnectionGuideView
+import com.topdon.lib.core.view.TitleView
+import com.csl.irCamera.R
 
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.TipDialog
@@ -17,6 +21,17 @@ import com.topdon.lib.core.utils.Constants
 class MoreHelpActivity:BaseActivity() {
     private var connectionType : Int = 0
     private lateinit var wifiManager: WifiManager
+    
+    // findViewById declarations
+    private val tvTitle: TextView by lazy { findViewById(R.id.tv_title) }
+    private val titleView: TitleView by lazy { findViewById(R.id.title_view) }
+    private val mainGuideTip1: ConnectionGuideView by lazy { findViewById(R.id.main_guide_tip1) }
+    private val mainGuideTip2: ConnectionGuideView by lazy { findViewById(R.id.main_guide_tip2) }
+    private val mainGuideTip4: ConnectionGuideView by lazy { findViewById(R.id.main_guide_tip4) }
+    private val disconnectTip1: ConnectionGuideView by lazy { findViewById(R.id.disconnect_tip1) }
+    private val disconnectTip2: ConnectionGuideView by lazy { findViewById(R.id.disconnect_tip2) }
+    private val ivTvSetting: TextView by lazy { findViewById(R.id.iv_tvSetting) }
+    
     override fun initContentView() = R.layout.activity_more_help
 
     override fun initView() {
@@ -27,30 +42,30 @@ class MoreHelpActivity:BaseActivity() {
     private fun initIntent() {
         connectionType = intent.getIntExtra(Constants.SETTING_CONNECTION_TYPE,0)
         if(connectionType == Constants.SETTING_CONNECTION){
-            tv_title.text = getString(R.string.ts004_guide_text8)
-            title_view.setTitleText(R.string.ts004_guide_text6)
-            main_guide_tip1.visibility = View.VISIBLE
-            main_guide_tip2.visibility = View.VISIBLE
-            main_guide_tip4.visibility = View.VISIBLE
-            disconnect_tip1.visibility = View.GONE
-            disconnect_tip2.visibility = View.GONE
-            iv_tvSetting.visibility = View.GONE
+            tvTitle.text = getString(R.string.ts004_guide_text8)
+            titleView.setTitleText(R.string.ts004_guide_text6)
+            mainGuideTip1.visibility = View.VISIBLE
+            mainGuideTip2.visibility = View.VISIBLE
+            mainGuideTip4.visibility = View.VISIBLE
+            disconnectTip1.visibility = View.GONE
+            disconnectTip2.visibility = View.GONE
+            ivTvSetting.visibility = View.GONE
         }else{
-            tv_title.text = getString(R.string.ts004_disconnect_tips1)
-            main_guide_tip1.visibility = View.GONE
-            main_guide_tip2.visibility = View.GONE
-            main_guide_tip4.visibility = View.GONE
-            disconnect_tip1.visibility = View.VISIBLE
-            disconnect_tip2.visibility = View.VISIBLE
-            iv_tvSetting.visibility = View.VISIBLE
+            tvTitle.text = getString(R.string.ts004_disconnect_tips1)
+            mainGuideTip1.visibility = View.GONE
+            mainGuideTip2.visibility = View.GONE
+            mainGuideTip4.visibility = View.GONE
+            disconnectTip1.visibility = View.VISIBLE
+            disconnectTip2.visibility = View.VISIBLE
+            ivTvSetting.visibility = View.VISIBLE
             val spannable = SpannableStringBuilder(getString(R.string.ts004_disconnect_tips4))
             spannable.setSpan(UnderlineSpan(), 0, getString(R.string.ts004_disconnect_tips4).length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            iv_tvSetting.text = spannable
+            ivTvSetting.text = spannable
         }
     }
 
     override fun initData() {
-        iv_tvSetting.setOnClickListener {
+        ivTvSetting.setOnClickListener {
             startWifiList()
         }
     }

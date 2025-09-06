@@ -33,8 +33,8 @@ import com.topdon.lib.core.tools.NumberTools
 import com.topdon.lib.core.tools.UnitTools
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.utils.CommUtils
-import com.topdon.module.thermal.ir.BuildConfig
 import com.topdon.module.thermal.ir.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.module.thermal.ir.report.bean.ImageTempBean
 import com.topdon.module.thermal.ir.report.bean.ReportConditionBean
 import com.topdon.module.thermal.ir.report.bean.ReportInfoBean
@@ -67,6 +67,29 @@ class ReportCreateFirstActivity: BaseActivity(), View.OnClickListener {
     private var locationManager: LocationManager? = null
     private var locationProvider: String? = null
 
+    // Views - using findViewById pattern
+    private val etReportName: android.widget.EditText by lazy { findViewById(R.id.et_report_name) }
+    private val etReportAuthor: android.widget.EditText by lazy { findViewById(R.id.et_report_author) }
+    private val switchReportAuthor: android.widget.Switch by lazy { findViewById(R.id.switch_report_author) }
+    private val tvReportDate: android.widget.TextView by lazy { findViewById(R.id.tv_report_date) }
+    private val switchReportDate: android.widget.Switch by lazy { findViewById(R.id.switch_report_date) }
+    private val etReportPlace: android.widget.EditText by lazy { findViewById(R.id.et_report_place) }
+    private val switchReportPlace: android.widget.Switch by lazy { findViewById(R.id.switch_report_place) }
+    private val etReportWatermark: android.widget.EditText by lazy { findViewById(R.id.et_report_watermark) }
+    private val switchReportWatermark: android.widget.Switch by lazy { findViewById(R.id.switch_report_watermark) }
+    private val etAmbientTemperature: android.widget.EditText by lazy { findViewById(R.id.et_ambient_temperature) }
+    private val tipSeekHumidity: com.topdon.lib.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_humidity) }
+    private val switchAmbientHumidity: android.widget.Switch by lazy { findViewById(R.id.switch_ambient_humidity) }
+    private val switchAmbientTemperature: android.widget.Switch by lazy { findViewById(R.id.switch_ambient_temperature) }
+    private val tipSeekEmissivity: com.topdon.lib.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_emissivity) }
+    private val switchEmissivity: android.widget.Switch by lazy { findViewById(R.id.switch_emissivity) }
+    private val etTestDistance: android.widget.EditText by lazy { findViewById(R.id.et_test_distance) }
+    private val switchTestDistance: android.widget.Switch by lazy { findViewById(R.id.switch_test_distance) }
+    // Chart start time view not found in current layout - commented out for now
+    // private val chartStartTime: android.widget.TextView by lazy { findViewById(R.id.chart_start_time) }
+    private val tvAmbientTemperature: android.widget.TextView by lazy { findViewById(R.id.tv_ambient_temperature) }
+    private val tvEmissivity: android.widget.TextView by lazy { findViewById(R.id.tv_emissivity) }
+
     override fun initContentView() = R.layout.activity_report_create_first
 
     private val permissionList = listOf(
@@ -78,52 +101,52 @@ class ReportCreateFirstActivity: BaseActivity(), View.OnClickListener {
     override fun initView() {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
-        et_report_name.setText("TC${TimeUtils.millis2String(System.currentTimeMillis(), "yyyyMMdd_HHmm")}")
-        et_report_author.setText(SaveSettingUtil.reportAuthorName)
-        tv_report_date.text = TimeUtils.millis2String(System.currentTimeMillis(), "yyyy.MM.dd HH:mm")
-        et_report_watermark.setText(SaveSettingUtil.reportWatermarkText)
-        tv_ambient_temperature.text = getString(R.string.thermal_config_environment) + "(${UnitTools.showUnit()})"
-        tv_emissivity.text = getString(R.string.album_report_emissivity) + "(0~1)"
+        etReportName.setText("TC${TimeUtils.millis2String(System.currentTimeMillis(), "yyyyMMdd_HHmm")}")
+        etReportAuthor.setText(SaveSettingUtil.reportAuthorName)
+        tvReportDate.text = TimeUtils.millis2String(System.currentTimeMillis(), "yyyy.MM.dd HH:mm")
+        etReportWatermark.setText(SaveSettingUtil.reportWatermarkText)
+        tvAmbientTemperature.text = getString(R.string.thermal_config_environment) + "(${UnitTools.showUnit()})"
+        tvEmissivity.text = getString(R.string.album_report_emissivity) + "(0~1)"
 
-        et_report_author.addTextChangedListener {
+        etReportAuthor.addTextChangedListener {
             SaveSettingUtil.reportAuthorName = it?.toString() ?: ""
         }
-        et_report_watermark.addTextChangedListener {
+        etReportWatermark.addTextChangedListener {
             SaveSettingUtil.reportWatermarkText = it?.toString() ?: ""
         }
 
-        switch_report_author.setOnCheckedChangeListener { _, isChecked ->
-            et_report_author.isVisible = isChecked
+        switchReportAuthor.setOnCheckedChangeListener { _, isChecked ->
+            etReportAuthor.isVisible = isChecked
         }
-        switch_report_date.setOnCheckedChangeListener { _, isChecked ->
-            tv_report_date.isVisible = isChecked
+        switchReportDate.setOnCheckedChangeListener { _, isChecked ->
+            tvReportDate.isVisible = isChecked
         }
-        switch_report_place.setOnCheckedChangeListener { _, isChecked ->
-            et_report_place.isVisible = isChecked
+        switchReportPlace.setOnCheckedChangeListener { _, isChecked ->
+            etReportPlace.isVisible = isChecked
         }
-        switch_report_watermark.setOnCheckedChangeListener { _, isChecked ->
-            et_report_watermark.isVisible = isChecked
+        switchReportWatermark.setOnCheckedChangeListener { _, isChecked ->
+            etReportWatermark.isVisible = isChecked
         }
-        switch_ambient_humidity.setOnCheckedChangeListener { _, isChecked ->
-            tip_seek_humidity.isVisible = isChecked
+        switchAmbientHumidity.setOnCheckedChangeListener { _, isChecked ->
+            tipSeekHumidity.isVisible = isChecked
         }
-        switch_ambient_temperature.setOnCheckedChangeListener { _, isChecked ->
-            et_ambient_temperature.isVisible = isChecked
+        switchAmbientTemperature.setOnCheckedChangeListener { _, isChecked ->
+            etAmbientTemperature.isVisible = isChecked
         }
-        switch_emissivity.setOnCheckedChangeListener { _, isChecked ->
-            tip_seek_emissivity.isVisible = isChecked
+        switchEmissivity.setOnCheckedChangeListener { _, isChecked ->
+            tipSeekEmissivity.isVisible = isChecked
         }
-        switch_test_distance.setOnCheckedChangeListener { _, isChecked ->
-            et_test_distance.isVisible = isChecked
+        switchTestDistance.setOnCheckedChangeListener { _, isChecked ->
+            etTestDistance.isVisible = isChecked
         }
-        tip_seek_humidity.progress = SaveSettingUtil.reportHumidity
-        tip_seek_humidity.onStopTrackingTouch = {
+        tipSeekHumidity.progress = SaveSettingUtil.reportHumidity
+        tipSeekHumidity.onStopTrackingTouch = {
             SaveSettingUtil.reportHumidity = it
         }
-        tip_seek_humidity.valueFormatListener = {
+        tipSeekHumidity.valueFormatListener = {
             if (it % 10 == 0) "${it / 10}%" else "${it / 10}.${it % 10}%"
         }
-        tip_seek_emissivity.valueFormatListener = {
+        tipSeekEmissivity.valueFormatListener = {
             when (it) {
                 0 -> "0"
                 100 -> "1"
@@ -131,10 +154,10 @@ class ReportCreateFirstActivity: BaseActivity(), View.OnClickListener {
             }
         }
 
-        tv_report_date.setOnClickListener(this)
-        tv_preview.setOnClickListener(this)
-        tv_next.setOnClickListener(this)
-        img_location.setOnClickListener(this)
+        tvReportDate.setOnClickListener(this)
+        findViewById<android.widget.TextView>(R.id.tv_preview).setOnClickListener(this)
+        findViewById<android.widget.TextView>(R.id.tv_next).setOnClickListener(this)
+        findViewById<android.widget.ImageView>(R.id.img_location).setOnClickListener(this)
 
         readConfig()
     }
@@ -148,9 +171,9 @@ class ReportCreateFirstActivity: BaseActivity(), View.OnClickListener {
         distance = config.distance
         radiation = config.radiation
         environment = config.environment
-        et_ambient_temperature.setText(NumberTools.to01(UnitTools.showUnitValue(environment)))
-        et_test_distance.setText(NumberTools.to02(distance) + "m")
-        tip_seek_emissivity.progress = (radiation * 100).toInt()
+        etAmbientTemperature.setText(NumberTools.to01(UnitTools.showUnitValue(environment)))
+        etTestDistance.setText(NumberTools.to02(distance) + "m")
+        tipSeekEmissivity.progress = (radiation * 100).toInt()
     }
 
     override fun initData() {
@@ -162,11 +185,11 @@ class ReportCreateFirstActivity: BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when (v) {
-            tv_report_date -> {//报告日期
+        when (v?.id) {
+            R.id.tv_report_date -> {//报告日期
                 selectTime()
             }
-            tv_preview -> {//预览
+            R.id.tv_preview -> {//预览
                 val reportInfoBean = buildReportInfo()
                 val reportConditionBean = buildReportCondition()
                 NavigationManager.getInstance().build(RouterConfig.REPORT_PREVIEW_FIRST)
@@ -174,19 +197,22 @@ class ReportCreateFirstActivity: BaseActivity(), View.OnClickListener {
                     .withParcelable(ExtraKeyConfig.REPORT_CONDITION, reportConditionBean)
                     .navigation(this)
             }
-            tv_next -> {//下一步
+            R.id.tv_next -> {//下一步
                 val reportInfoBean = buildReportInfo()
                 val reportConditionBean = buildReportCondition()
                 val imageTempBean: ImageTempBean? = intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN)
-                NavigationManager.getInstance().build(RouterConfig.REPORT_CREATE_SECOND)
-                    .withBoolean(ExtraKeyConfig.IS_TC007, isTC007)
-                    .withString(ExtraKeyConfig.FILE_ABSOLUTE_PATH, intent.getStringExtra(ExtraKeyConfig.FILE_ABSOLUTE_PATH))
-                    .withParcelable(ExtraKeyConfig.IMAGE_TEMP_BEAN, imageTempBean)
-                    .withParcelable(ExtraKeyConfig.REPORT_INFO, reportInfoBean)
-                    .withParcelable(ExtraKeyConfig.REPORT_CONDITION, reportConditionBean)
-                    .navigation(this)
+                val fileAbsolutePath = intent.getStringExtra(ExtraKeyConfig.FILE_ABSOLUTE_PATH)
+                if (fileAbsolutePath != null && imageTempBean != null) {
+                    NavigationManager.getInstance().build(RouterConfig.REPORT_CREATE_SECOND)
+                        .withBoolean(ExtraKeyConfig.IS_TC007, isTC007)
+                        .withString(ExtraKeyConfig.FILE_ABSOLUTE_PATH, fileAbsolutePath)
+                        .withParcelable(ExtraKeyConfig.IMAGE_TEMP_BEAN, imageTempBean)
+                        .withParcelable(ExtraKeyConfig.REPORT_INFO, reportInfoBean)
+                        .withParcelable(ExtraKeyConfig.REPORT_CONDITION, reportConditionBean)
+                        .navigation(this)
+                }
             }
-            img_location -> {
+            R.id.img_location -> {
                 checkLocationPermission()
             }
         }
@@ -262,32 +288,32 @@ class ReportCreateFirstActivity: BaseActivity(), View.OnClickListener {
     }
 
     private fun buildReportInfo(): ReportInfoBean = ReportInfoBean(
-        et_report_name.text.toString(),
-        et_report_author.text.toString(),
-        if (switch_report_author.isChecked && et_report_author.text.isNotEmpty()) 1 else 0,
-        tv_report_date.text.toString(),
-        if (switch_report_date.isChecked) 1 else 0,
-        et_report_place.text.toString(),
-        if (switch_report_place.isChecked && et_report_place.text.isNotEmpty()) 1 else 0,
-        et_report_watermark.text.toString(),
-        if (switch_report_watermark.isChecked && et_report_watermark.text.isNotEmpty()) 1 else 0
+        etReportName.text.toString(),
+        etReportAuthor.text.toString(),
+        if (switchReportAuthor.isChecked && etReportAuthor.text.isNotEmpty()) 1 else 0,
+        tvReportDate.text.toString(),
+        if (switchReportDate.isChecked) 1 else 0,
+        etReportPlace.text.toString(),
+        if (switchReportPlace.isChecked && etReportPlace.text.isNotEmpty()) 1 else 0,
+        etReportWatermark.text.toString(),
+        if (switchReportWatermark.isChecked && etReportWatermark.text.isNotEmpty()) 1 else 0
     )
 
     private fun buildReportCondition(): ReportConditionBean {
         val temperature = try {
-            "${et_ambient_temperature.text.toString().toFloat()}${UnitTools.showUnit()}"
+            "${etAmbientTemperature.text.toString().toFloat()}${UnitTools.showUnit()}"
         } catch (ignore: NumberFormatException) {
             null
         }
         return ReportConditionBean(
-            tip_seek_humidity.valueText,
-            if (switch_ambient_humidity.isChecked) 1 else 0,
+            tipSeekHumidity.valueText,
+            if (switchAmbientHumidity.isChecked) 1 else 0,
             temperature,
-            if (switch_ambient_temperature.isChecked && temperature != null) 1 else 0,
-            tip_seek_emissivity.valueText,
-            if (switch_emissivity.isChecked) 1 else 0,
-            et_test_distance.text.toString(),
-            if (switch_test_distance.isChecked && et_test_distance.text.isNotEmpty()) 1 else 0
+            if (switchAmbientTemperature.isChecked && temperature != null) 1 else 0,
+            tipSeekEmissivity.valueText,
+            if (switchEmissivity.isChecked) 1 else 0,
+            etTestDistance.text.toString(),
+            if (switchTestDistance.isChecked && etTestDistance.text.isNotEmpty()) 1 else 0
         )
     }
 
@@ -307,7 +333,7 @@ class ReportCreateFirstActivity: BaseActivity(), View.OnClickListener {
             val timeStr = "$year-$month-$day $hour:$minute:$second"
             val pattern = "yyyy-MM-dd HH:mm:ss"
             val time: Long = SimpleDateFormat(pattern, Locale.getDefault()).parse(timeStr, ParsePosition(0)).time
-            tv_report_date.text = TimeUtils.millis2String(time, "yyyy.MM.dd HH:mm")
+            tvReportDate.text = TimeUtils.millis2String(time, "yyyy.MM.dd HH:mm")
             startTime = time
         }
 
@@ -372,12 +398,12 @@ class ReportCreateFirstActivity: BaseActivity(), View.OnClickListener {
                             dismissLoadingDialog()
                             if (addressText == null){
                                 TipDialog.Builder(this@ReportCreateFirstActivity)
-                                    .setMessage(R.string.get_Location_failed)
+                                    .setMessage(LibR.string.get_Location_failed)
                                     .setPositiveListener(R.string.app_ok)
                                     .setCanceled(false)
                                     .create().show()
                             }else{
-                                et_report_place.setText(addressText)
+                                etReportPlace.setText(addressText)
                             }
                         }
                     }else{

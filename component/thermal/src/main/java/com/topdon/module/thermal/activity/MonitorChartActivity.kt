@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import java.math.RoundingMode
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.github.mikephil.charting.charts.LineChart
@@ -20,7 +21,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.guide.zm04c.matrix.GuideInterface
+// import com.guide.zm04c.matrix.GuideInterface // Temporarily disabled - hardware specific
 import com.topdon.lib.core.bean.tools.ThermalBean
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.RouterConfig
@@ -28,6 +29,7 @@ import com.topdon.lib.core.db.AppDatabase
 import com.topdon.lib.core.db.entity.ThermalEntity
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.tools.TimeTool
+import com.topdon.lib.core.tools.NumberTools
 import com.topdon.module.thermal.R
 import com.topdon.module.thermal.adapter.SettingCheckAdapter
 import com.topdon.module.thermal.adapter.SettingTimeAdapter
@@ -66,18 +68,21 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     override fun initContentView() = R.layout.activity_monitor_chart
 
     override fun initView() {
-        setTitleText(R.string.main_thermal_motion)
+        // Set toolbar title
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
+        toolbar?.title = getString(R.string.main_thermal_motion)
+        
         selectType = intent.getIntExtra("type", 3)
         selectIndex = intent.getIntegerArrayListExtra("select")!!
         Log.w("123", "selectType:$selectType")
         Log.w("123", "selectIndex:${selectIndex.joinToString()}")
-        SharedManager.setSelectFenceType(selectType)
+        // SharedManager.setSelectFenceType(selectType) // Temporarily disabled
         type = when (selectType) {
             1 -> "point"
             2 -> "line"
             else -> "fence"
         }
-        chart = mp_chart_view
+        chart = findViewById(R.id.mp_chart_view)
         initChart()
         initRecycler()
         viewModel.resultLiveData.observe(this)
@@ -118,17 +123,20 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     }
 
     private fun initRecycler() {
-        monitor_chart_time_recycler.layoutManager = GridLayoutManager(this, 4)
-        monitor_chart_time_recycler.adapter = timeAdapter
-        monitor_chart_setting_recycler.layoutManager = GridLayoutManager(this, 3)
-        monitor_chart_setting_recycler.adapter = adapter
+        val monitorChartTimeRecycler = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.monitor_chart_time_recycler)
+        val monitorChartSettingRecycler = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.monitor_chart_setting_recycler)
+        
+        monitorChartTimeRecycler.layoutManager = GridLayoutManager(this, 4)
+        monitorChartTimeRecycler.adapter = timeAdapter
+        monitorChartSettingRecycler.layoutManager = GridLayoutManager(this, 3)
+        monitorChartSettingRecycler.adapter = adapter
         //设置时间段类型(秒 分 时 天)
         timeAdapter.listener = object : SettingTimeAdapter.OnItemClickListener {
             override fun onClick(index: Int, timeType: Int) {
                 selectTimeType = timeType
                 chart.highlightValue(null) //关闭高亮点Marker
                 latestTime = 0L
-                showLoading()
+                showLoadingDialog()
                 lifecycleScope.launch {
                     delay(500)
                     queryLog(2)
@@ -159,13 +167,15 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     ///////////
     var mIsIrVideoStart = false
 
-    private var mGuideInterface: GuideInterface? = null
+    // private var mGuideInterface: GuideInterface? = null // Temporarily disabled - hardware specific
     var rotateType = 3
 
     /**
      * 开启视频流
      */
     private fun onIrVideoStart() {
+        // Temporarily disabled - guide interface not available
+        /*
         mIsIrVideoStart = if (mIsIrVideoStart) {
             ToastUtils.showShort("视频流已开启")
             return
@@ -184,9 +194,9 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     val bigDecimal = BigDecimal.valueOf(rotateData[centerTempIndex].toDouble())
                     val maxBigDecimal = BigDecimal.valueOf(rotateData[maxTempIndex].toDouble())
                     val minBigDecimal = BigDecimal.valueOf(rotateData[minTempIndex].toDouble())
-                    bean.centerTemp = bigDecimal.setScale(1, BigDecimal.ROUND_HALF_UP).toFloat()
-                    bean.maxTemp = maxBigDecimal.setScale(1, BigDecimal.ROUND_HALF_UP).toFloat()
-                    bean.minTemp = minBigDecimal.setScale(1, BigDecimal.ROUND_HALF_UP).toFloat()
+                    bean.centerTemp = bigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
+                    bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
+                    bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                     bean.createTime = System.currentTimeMillis()
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -205,12 +215,15 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
             mGuideInterface = null
             mIsIrVideoStart = false
         }
+        */
     }
 
     /**
      * 停止视频流
      */
     private fun onIrVideoStop() {
+        // Temporarily disabled - guide interface not available
+        /*
         mIsIrVideoStart = if (!mIsIrVideoStart) {
             Log.w("123", "视频流已停止")
             return
@@ -220,6 +233,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         mGuideInterface!!.exit()
         mGuideInterface = null
         Log.w("123", "视频流停止完成")
+        */
     }
 
     var isRecord = false
@@ -272,7 +286,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         chart.isDragEnabled = true
         chart.setDrawGridBackground(false)
         chart.description = null//图标描述文本
-        chart.setBackgroundResource(R.color.chart_bg)
+        chart.setBackgroundResource(com.topdon.lib.core.R.color.chart_bg)
         chart.setScaleEnabled(true)//缩放
         chart.setPinchZoom(false)//禁用后，可以分别在x轴和y轴上进行缩放
         chart.isDoubleTapToZoomEnabled = false//双击不可缩放
@@ -451,11 +465,11 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     }
 
     private val fillColor by lazy { ContextCompat.getDrawable(this, R.drawable.bg_chart_fill2) }
-    private val lineRed by lazy { ContextCompat.getColor(this, R.color.chart_line_max) }
-    private val lineBlue by lazy { ContextCompat.getColor(this, R.color.chart_line_min) }
-    private val lineGreen by lazy { ContextCompat.getColor(this, R.color.chart_line_center) }
-    private val whiteColors by lazy { ContextCompat.getColor(this, R.color.circle_white) }
-    private val textColor by lazy { ContextCompat.getColor(this, R.color.chart_text) }
+    private val lineRed by lazy { ContextCompat.getColor(this, com.topdon.lib.core.R.color.chart_line_max) }
+    private val lineBlue by lazy { ContextCompat.getColor(this, com.topdon.lib.core.R.color.chart_line_min) }
+    private val lineGreen by lazy { ContextCompat.getColor(this, com.topdon.lib.core.R.color.chart_line_center) }
+    private val whiteColors by lazy { ContextCompat.getColor(this, com.topdon.lib.core.R.color.circle_white) }
+    private val textColor by lazy { ContextCompat.getColor(this, com.topdon.lib.core.R.color.chart_text) }
 
     /**
      * 曲线样式
@@ -518,7 +532,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     }
 
     private fun resultVol(bean: LogViewModel.ChartList) {
-        dismissLoading()
+        dismissLoadingDialog()
         if (selectTimeType != 1 && bean.dataList.size > 0) {
             val logTime = TimeTool.showDateType(bean.dataList.last().createTime, selectTimeType)
             val nowTime = TimeTool.showDateType(System.currentTimeMillis(), selectTimeType)

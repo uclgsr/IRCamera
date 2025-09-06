@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,7 @@ import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.tools.DeviceTools
+import com.csl.irCamera.R
 
 /**
  * 设备类型选择.
@@ -25,11 +27,14 @@ class DeviceTypeActivity : BaseActivity() {
      */
     private var clientType: IRDeviceType? = null
 
+    // findViewById declarations
+    private val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
+
     override fun initContentView(): Int = R.layout.activity_device_type
 
     override fun initView() {
-        recycler_view.layoutManager = LinearLayoutManager(this)
-        recycler_view.adapter = MyAdapter(this).apply {
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = MyAdapter(this).apply {
             onItemClickListener = {
                 clientType = it
                 when (it) {
@@ -101,31 +106,34 @@ class DeviceTypeActivity : BaseActivity() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val firstType: IRDeviceType = dataList[position].firstType
             val secondType: IRDeviceType? = dataList[position].secondType
-            holder.itemView.tv_title.isVisible = dataList[position].isTitle
-            holder.itemView.tv_title.text = context.getString(if (firstType.isLine()) R.string.tc_connect_line else R.string.tc_connect_wifi)
+            val tvTitle = holder.itemView.findViewById<TextView>(R.id.tv_title)
+            tvTitle.isVisible = dataList[position].isTitle
+            tvTitle.text = context.getString(if (firstType.isLine()) R.string.tc_connect_line else R.string.tc_connect_wifi)
 
-            holder.itemView.tv_item1.text = firstType.getDeviceName()
+            val tvItem1 = holder.itemView.findViewById<TextView>(R.id.tv_item1)
+            tvItem1.text = firstType.getDeviceName()
             when (firstType) {
                 // TODO: 替换 TC002 Duo 图标
-                IRDeviceType.TC001 -> holder.itemView.iv_item1.setImageResource(R.drawable.ic_device_type_tc001)
-                IRDeviceType.TC001_PLUS -> holder.itemView.iv_item1.setImageResource(R.drawable.ic_device_type_tc001_plus)
-                IRDeviceType.TC002C_DUO -> holder.itemView.iv_item1.setImageResource(R.drawable.ic_device_type_tc001_plus)
-                IRDeviceType.TC007 -> holder.itemView.iv_item1.setImageResource(R.drawable.ic_device_type_tc007)
-                IRDeviceType.TS001 -> holder.itemView.iv_item1.setImageResource(R.drawable.ic_device_type_ts001)
-                IRDeviceType.TS004 -> holder.itemView.iv_item1.setImageResource(R.drawable.ic_device_type_ts004)
+                IRDeviceType.TC001 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_tc001)
+                IRDeviceType.TC001_PLUS -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_tc001_plus)
+                IRDeviceType.TC002C_DUO -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_tc001_plus)
+                IRDeviceType.TC007 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_tc007)
+                IRDeviceType.TS001 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_ts001)
+                IRDeviceType.TS004 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_ts004)
             }
 
-            holder.itemView.group_item2.isVisible = secondType != null
+            holder.itemView.findViewById<ViewGroup>(R.id.group_item2).isVisible = secondType != null
             if (secondType != null) {
-                holder.itemView.tv_item2.text = secondType.getDeviceName()
+                val tvItem2 = holder.itemView.findViewById<TextView>(R.id.tv_item2)
+                tvItem2.text = secondType.getDeviceName()
                 when (secondType) {
                     // TODO: 替换 TC002 Duo 图标
-                    IRDeviceType.TC001 -> holder.itemView.iv_item2.setImageResource(R.drawable.ic_device_type_tc001)
-                    IRDeviceType.TC001_PLUS -> holder.itemView.iv_item2.setImageResource(R.drawable.ic_device_type_tc001_plus)
-                    IRDeviceType.TC002C_DUO -> holder.itemView.iv_item2.setImageResource(R.drawable.ic_device_type_tc001_plus)
-                    IRDeviceType.TC007 -> holder.itemView.iv_item2.setImageResource(R.drawable.ic_device_type_tc007)
-                    IRDeviceType.TS001 -> holder.itemView.iv_item2.setImageResource(R.drawable.ic_device_type_ts001)
-                    IRDeviceType.TS004 -> holder.itemView.iv_item2.setImageResource(R.drawable.ic_device_type_ts004)
+                    IRDeviceType.TC001 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item2).setImageResource(R.drawable.ic_device_type_tc001)
+                    IRDeviceType.TC001_PLUS -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item2).setImageResource(R.drawable.ic_device_type_tc001_plus)
+                    IRDeviceType.TC002C_DUO -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item2).setImageResource(R.drawable.ic_device_type_tc001_plus)
+                    IRDeviceType.TC007 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item2).setImageResource(R.drawable.ic_device_type_tc007)
+                    IRDeviceType.TS001 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item2).setImageResource(R.drawable.ic_device_type_ts001)
+                    IRDeviceType.TS004 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item2).setImageResource(R.drawable.ic_device_type_ts004)
                 }
             }
         }
@@ -134,13 +142,13 @@ class DeviceTypeActivity : BaseActivity() {
 
         inner class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
             init {
-                rootView.view_bg_item1.setOnClickListener {
+                rootView.findViewById<View>(R.id.view_bg_item1).setOnClickListener {
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         onItemClickListener?.invoke(dataList[position].firstType)
                     }
                 }
-                rootView.view_bg_item2.setOnClickListener {
+                rootView.findViewById<View>(R.id.view_bg_item2).setOnClickListener {
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val irDeviceType: IRDeviceType = dataList[position].secondType ?: return@setOnClickListener

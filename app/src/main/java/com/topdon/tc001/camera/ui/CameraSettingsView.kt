@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.topdon.tc001.camera.RGBCameraRecorder
-import com.topdon.tc001.R
+import com.csl.irCamera.R
 
 /**
  * Samsung-style camera settings UI component

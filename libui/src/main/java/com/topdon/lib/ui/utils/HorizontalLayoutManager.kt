@@ -14,7 +14,8 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.ui.transform.HorizontalScrollItemTransformer
 import com.topdon.lib.ui.utils.Direction.Companion.fromDelta
-import java.util.*
+import java.util.ArrayList
+import java.util.Locale
 import kotlin.math.abs
 
 /**

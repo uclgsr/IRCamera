@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.BarUtils
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.ui.MenuFirstTabView
+import androidx.core.content.ContextCompat
+import com.topdon.lib.core.R as LibR
+import com.topdon.menu.MenuFirstTabView
 import com.topdon.module.thermal.R
 import com.topdon.module.thermal.adapter.MenuTabAdapter
 import com.topdon.module.thermal.fragment.event.ThermalActionEvent
@@ -21,18 +23,21 @@ class ThermalActivity : BaseActivity() {
     override fun initContentView() = R.layout.activity_thermal
 
     override fun initView() {
-        setTitleText(R.string.main_thermal)
-        mToolBar!!.setBackgroundColor(blackColor)
+        // Set toolbar title
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
+        toolbar?.title = getString(R.string.main_thermal)
+        
+        val blackColor = ContextCompat.getColor(this, LibR.color.black)
+        toolbar?.setBackgroundColor(blackColor)
         BarUtils.setStatusBarColor(this, blackColor)
         BarUtils.setNavBarColor(window, blackColor)
         initRecycler()
-        thermal_tab.setOnItemListener(object : MenuFirstTabView.OnItemListener {
-            override fun selectPosition(position: Int) {
-                //一级菜单选择
-                showRecycler(position)
-            }
-
-        })
+        
+        val thermalTab = findViewById<MenuFirstTabView>(R.id.thermal_tab)
+        thermalTab.onTabClickListener = { view ->
+            //一级菜单选择
+            showRecycler(view.selectPosition)
+        }
     }
 
     override fun initData() {
@@ -40,9 +45,10 @@ class ThermalActivity : BaseActivity() {
     }
 
     private fun initRecycler() {
-        thermal_recycler.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        thermal_recycler.adapter = menuAdapter
-        thermal_recycler.visibility = View.GONE
+        val thermalRecycler = findViewById<RecyclerView>(R.id.thermal_recycler)
+        thermalRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        thermalRecycler.adapter = menuAdapter
+        thermalRecycler.visibility = View.GONE
         menuAdapter.initType(1)
         menuAdapter.listener = object : MenuTabAdapter.OnItemClickListener {
             override fun onClick(index: Int) {
@@ -50,17 +56,17 @@ class ThermalActivity : BaseActivity() {
                 Log.w("123", "index: $index")
                 EventBus.getDefault().post(ThermalActionEvent(action = index))
             }
-
         }
     }
 
     fun showRecycler(select: Int) {
-        thermal_recycler.initType(select)
+        val thermalRecycler = findViewById<RecyclerView>(R.id.thermal_recycler)
+        menuAdapter.initType(select)
         if (select == 5) {
-            thermal_recycler.visibility = View.GONE
+            thermalRecycler.visibility = View.GONE
             EventBus.getDefault().post(ThermalActionEvent(action = 5000))
         } else {
-            thermal_recycler.visibility = View.VISIBLE
+            thermalRecycler.visibility = View.VISIBLE
         }
     }
 

@@ -24,7 +24,7 @@ import com.topdon.menu.constant.SettingType
 import com.topdon.menu.constant.TargetType
 import com.topdon.menu.constant.TempPointType
 import com.topdon.menu.constant.TwoLightType
-import com.topdon.menu.databinding.ViewMenuSecondBinding
+import com.topdon.menu.view.CameraMenuView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,7 +39,17 @@ class MenuSecondView : FrameLayout {
      */
     private val menuType: MenuType
 
-    private lateinit var binding: ViewMenuSecondBinding
+    // Views - using findViewById instead of data binding
+    private lateinit var cameraMenuView: CameraMenuView
+    private lateinit var recyclerFence: RecyclerView
+    private lateinit var recyclerTwoLight: RecyclerView
+    private lateinit var recyclerColor: RecyclerView
+    private lateinit var recyclerSettingTe: RecyclerView
+    private lateinit var recyclerTempLevel: RecyclerView
+    private lateinit var recyclerTempSource: RecyclerView
+    private lateinit var recyclerTarget: RecyclerView
+    private lateinit var recyclerTempPoint: RecyclerView
+    private lateinit var recyclerSettingOb: RecyclerView
 
 
     /* *********************************************  public 方法  ********************************************* */
@@ -64,17 +74,17 @@ class MenuSecondView : FrameLayout {
      *                    观测 14->高低温点
      */
     fun selectPosition(position: Int) {
-        binding.cameraMenuView.isVisible = position == 0 || position == 10
-        binding.recyclerFence.isVisible = position == 1
-        binding.recyclerTwoLight.isVisible = position == 2
-        binding.recyclerColor.isVisible = position == 3 || position == 12
-        binding.recyclerSettingTe.isVisible = position == 4
-        binding.recyclerTempLevel.isVisible = position == 5
+        cameraMenuView.isVisible = position == 0 || position == 10
+        recyclerFence.isVisible = position == 1
+        recyclerTwoLight.isVisible = position == 2
+        recyclerColor.isVisible = position == 3 || position == 12
+        recyclerSettingTe.isVisible = position == 4
+        recyclerTempLevel.isVisible = position == 5
 
-        binding.recyclerTempSource.isVisible = position == 11
-        binding.recyclerTarget.isVisible = position == 13
-        binding.recyclerTempPoint.isVisible = position == 14
-        binding.recyclerSettingOb.isVisible = position == 15
+        recyclerTempSource.isVisible = position == 11
+        recyclerTarget.isVisible = position == 13
+        recyclerTempPoint.isVisible = position == 14
+        recyclerSettingOb.isVisible = position == 15
     }
 
 
@@ -86,9 +96,9 @@ class MenuSecondView : FrameLayout {
      * actionCode: 0-拍照/录像  1-图库  2-更多菜单  3-切换到拍照  4-切换到录像
      */
     var onCameraClickListener: ((actionCode: Int) -> Unit)?
-        get() = binding.cameraMenuView.onCameraClickListener
+        get() = cameraMenuView.onCameraClickListener
         set(value) {
-            binding.cameraMenuView.onCameraClickListener = value
+            cameraMenuView.onCameraClickListener = value
         }
     /**
      * 测温模式-菜单2-点线面 切换事件监听。
@@ -249,51 +259,63 @@ class MenuSecondView : FrameLayout {
             settingTeAdapter = SettingAdapter(menuType)
             tempLevelAdapter = TempLevelAdapter(menuType)
         } else {
-            binding = ViewMenuSecondBinding.inflate(LayoutInflater.from(context), this, true)
+            LayoutInflater.from(context).inflate(R.layout.view_menu_second, this, true)
+            
+            // Initialize views using findViewById
+            cameraMenuView = findViewById(R.id.camera_menu_view)
+            recyclerFence = findViewById(R.id.recycler_fence)
+            recyclerTwoLight = findViewById(R.id.recycler_two_light)
+            recyclerColor = findViewById(R.id.recycler_color)
+            recyclerSettingTe = findViewById(R.id.recycler_setting_te)
+            recyclerTempLevel = findViewById(R.id.recycler_temp_level)
+            recyclerTempSource = findViewById(R.id.recycler_temp_source)
+            recyclerTarget = findViewById(R.id.recycler_target)
+            recyclerTempPoint = findViewById(R.id.recycler_temp_point)
+            recyclerSettingOb = findViewById(R.id.recycler_setting_ob)
 
             refreshImg(GalleryRepository.DirType.LINE)
 
             //初始化 测温模式-菜单2-点线面 菜单
             fenceAdapter = FenceAdapter(menuType)
-            binding.recyclerFence.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            binding.recyclerFence.adapter = fenceAdapter
+            recyclerFence.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            recyclerFence.adapter = fenceAdapter
 
             //初始化 测温模式-菜单3-双光 菜单
             twoLightAdapter = TwoLightAdapter(menuType)
-            binding.recyclerTwoLight.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            binding.recyclerTwoLight.adapter = twoLightAdapter
+            recyclerTwoLight.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            recyclerTwoLight.adapter = twoLightAdapter
 
             //初始化 测温模式-菜单4-伪彩 or 观测模式-菜单3-伪彩 菜单
-            binding.recyclerColor.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            binding.recyclerColor.adapter = colorAdapter
+            recyclerColor.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            recyclerColor.adapter = colorAdapter
 
             //初始化 测温模式-菜单5-设置 菜单
             settingTeAdapter = SettingAdapter(menuType)
-            binding.recyclerSettingTe.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            binding.recyclerSettingTe.adapter = settingTeAdapter
+            recyclerSettingTe.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            recyclerSettingTe.adapter = settingTeAdapter
 
             //初始化 测温模式-菜单6-高低温档 菜单
             tempLevelAdapter = TempLevelAdapter(menuType)
-            binding.recyclerTempLevel.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            binding.recyclerTempLevel.adapter = tempLevelAdapter
+            recyclerTempLevel.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            recyclerTempLevel.adapter = tempLevelAdapter
 
 
 
             //初始化 观测模式-菜单2-高低温源 菜单
-            binding.recyclerTempSource.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            binding.recyclerTempSource.adapter = tempSourceAdapter
+            recyclerTempSource.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            recyclerTempSource.adapter = tempSourceAdapter
 
             //初始化 观测模式-菜单4-标靶 菜单
-            binding.recyclerTarget.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            binding.recyclerTarget.adapter = targetAdapter
+            recyclerTarget.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            recyclerTarget.adapter = targetAdapter
 
             //初始化 观测模式-菜单5-高低温点 菜单
-            binding.recyclerTempPoint.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            binding.recyclerTempPoint.adapter = tempPointAdapter
+            recyclerTempPoint.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            recyclerTempPoint.adapter = tempPointAdapter
 
             //初始化 观测模式-菜单6-设置 菜单
-            binding.recyclerSettingOb.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            binding.recyclerSettingOb.adapter = settingObAdapter
+            recyclerSettingOb.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            recyclerSettingOb.adapter = settingObAdapter
         }
     }
 
@@ -305,18 +327,18 @@ class MenuSecondView : FrameLayout {
      * true-录像模式 false-拍照模式
      */
     var isVideoMode: Boolean
-        get() = binding.cameraMenuView.isVideoMode
+        get() = cameraMenuView.isVideoMode
         set(value) {
-            binding.cameraMenuView.isVideoMode = value
+            cameraMenuView.isVideoMode = value
         }
 
     /**
      * 仅 TS001，测温/观测 切换时，关闭延时拍照、连续拍照、录像后，需要重置为拍照状态.
      */
     fun switchToCamera() {
-        binding.cameraMenuView.canSwitchMode = true
-        binding.cameraMenuView.isVideoMode = false
-        binding.cameraMenuView.setToNormal()
+        cameraMenuView.canSwitchMode = true
+        cameraMenuView.isVideoMode = false
+        cameraMenuView.setToNormal()
     }
 
     /**
@@ -324,8 +346,8 @@ class MenuSecondView : FrameLayout {
      * 在各个热成像 Activity 的 start()，以及当前 View 中调用
      */
     fun updateCameraModel() {
-        binding.cameraMenuView.canSwitchMode = true
-        binding.cameraMenuView.setToNormal()
+        cameraMenuView.canSwitchMode = true
+        cameraMenuView.setToNormal()
     }
 
     fun refreshImg(type: GalleryRepository.DirType = GalleryRepository.DirType.LINE) {
@@ -333,7 +355,7 @@ class MenuSecondView : FrameLayout {
         CoroutineScope(Dispatchers.IO).launch {
             val path = GalleryRepository.readLatest(type)
             launch(Dispatchers.Main) {
-                binding.cameraMenuView.refreshGallery(path)
+                cameraMenuView.refreshGallery(path)
             }
         }
     }
@@ -342,15 +364,15 @@ class MenuSecondView : FrameLayout {
      * 将中间 拍照/录像 按钮设置为 拍照中-立即/拍照中-延迟/录像中
      */
     fun setToRecord(isDelay: Boolean) {
-        binding.cameraMenuView.canSwitchMode = false
-        binding.cameraMenuView.setToRecord(isDelay)
+        cameraMenuView.canSwitchMode = false
+        cameraMenuView.setToRecord(isDelay)
     }
 
     /**
      * 将中间 拍照/录像 按钮设置为 拍照中-立即 状态
      */
     fun setToCamera() {
-        binding.cameraMenuView.setToRecord(false)
+        cameraMenuView.setToRecord(false)
     }
 
 

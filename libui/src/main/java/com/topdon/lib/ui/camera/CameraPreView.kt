@@ -5,14 +5,26 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageFormat
 import android.graphics.SurfaceTexture
-import android.hardware.camera2.*
+import android.hardware.camera2.CameraAccessException
+import android.hardware.camera2.CameraCaptureSession
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraDevice
+import android.hardware.camera2.CameraManager
+import android.hardware.camera2.CaptureRequest
+import android.hardware.camera2.CaptureResult
+import android.hardware.camera2.TotalCaptureResult
 import android.media.ImageReader
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.util.Size
-import android.view.*
+import android.view.Surface
+import android.view.TextureView
+import android.view.View
+import android.view.ScaleGestureDetector
+import android.view.MotionEvent
+import android.view.GestureDetector
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.NonNull
@@ -25,7 +37,9 @@ import com.topdon.lib.core.listener.BitmapViewListener
 import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.core.R
 import com.topdon.menu.R as MenuR
-import java.util.*
+import java.util.Arrays
+import java.util.Collections
+import java.util.Locale
 
 
 /**

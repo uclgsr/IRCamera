@@ -50,6 +50,11 @@ gradle-app.setting
 .gradletasknamecache
 gradle/wrapper/gradle-wrapper.jar
 
+# Build artifacts and compiler cache that should not be committed
+.kotlin/
+*.log
+build_*.log
+
 
 # Local configuration
 # -------------------------------------------------------------------

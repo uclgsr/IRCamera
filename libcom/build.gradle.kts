@@ -9,6 +9,9 @@ kapt {
     arguments {
         // arg("AROUTER_MODULE_NAME", project.name)  // Removed for NavigationManager migration
     }
+    // Enable Kotlin 2.1.0 compatibility
+    correctErrorTypes = true
+    useBuildCache = true
 }
 
 android {
@@ -24,9 +27,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -35,6 +35,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -42,6 +43,8 @@ android {
 }
 
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
     implementation(project(":libui"))
 

@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.topdon.tc001.R
+import com.csl.irCamera.R
 
 /**
  * Session Detail Activity

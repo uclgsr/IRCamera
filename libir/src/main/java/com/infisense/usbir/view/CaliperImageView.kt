@@ -48,7 +48,7 @@ class CaliperImageView : AppCompatImageView {
         defStyleAttr
     )
     private fun initView() {
-        originalBitmap = (resources.getDrawable(R.drawable.svg_ic_target_horizontal_person_green) as BitmapDrawable).bitmap
+        originalBitmap = (androidx.core.content.ContextCompat.getDrawable(context, R.drawable.svg_ic_target_horizontal_person_green) as? BitmapDrawable)?.bitmap
         originalBitmapWidth = originalBitmap?.width?.toFloat() ?: 0f
         originalBitmapHeight = originalBitmap?.height?.toFloat() ?: 0f
         visibility = View.GONE

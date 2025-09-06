@@ -175,7 +175,7 @@ class MenuAdapter(val context: Context, val type: Type) : RecyclerView.Adapter<M
             }
 
             rootView.setOnClickListener {
-                val position = adapterPosition
+                val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     selectIndex = position
                     notifyDataSetChanged()

@@ -16,9 +16,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -31,6 +28,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     
     kotlinOptions {
@@ -44,6 +42,8 @@ android {
 }
 
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     // Core Android dependencies
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.appcompat:appcompat:1.5.0")

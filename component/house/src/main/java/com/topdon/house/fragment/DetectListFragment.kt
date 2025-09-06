@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.topdon.house.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.house.activity.DetectAddActivity
 import com.topdon.house.activity.ReportAddActivity
 import com.topdon.house.adapter.HouseAdapter
@@ -45,9 +46,15 @@ internal class DetectListFragment : BaseFragment(), View.OnClickListener {
     override fun initContentView(): Int = R.layout.fragment_detect_list
 
     override fun initView() {
-        cl_del.isEnabled = false
-        iv_del.isEnabled = false
-        tv_del.isEnabled = false
+        val clDel = requireView().findViewById<android.view.View>(R.id.cl_del)
+        val ivDel = requireView().findViewById<android.widget.ImageView>(R.id.iv_del)
+        val tvDel = requireView().findViewById<android.widget.TextView>(R.id.tv_del)
+        val recyclerView = requireView().findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view)
+        val tvAdd = requireView().findViewById<android.widget.TextView>(R.id.tv_add)
+        
+        clDel.isEnabled = false
+        ivDel.isEnabled = false
+        tvDel.isEnabled = false
 
         adapter = HouseAdapter(requireContext(), true)
         adapter.onItemClickListener = {
@@ -57,7 +64,7 @@ internal class DetectListFragment : BaseFragment(), View.OnClickListener {
             startActivity(intent)
         }
         adapter.onMoreClickListener = { position, v ->
-            ThreePickPopup(requireContext(), arrayListOf(R.string.app_edit, R.string.paste, R.string.report_delete)) {
+            ThreePickPopup(requireContext(), arrayListOf(LibR.string.app_edit, LibR.string.paste, LibR.string.report_delete)) {
                 when (it) {
                     0 -> {//编辑
                         val intent = Intent(requireContext(), DetectAddActivity::class.java)
@@ -69,10 +76,10 @@ internal class DetectListFragment : BaseFragment(), View.OnClickListener {
                     }
                     2 -> {//删除
                         TipDialog.Builder(requireContext())
-                            .setTitleMessage(getString(R.string.monitor_report_delete))
-                            .setMessage(R.string.report_delete_tips)
-                            .setCancelListener(R.string.app_cancel)
-                            .setPositiveListener(R.string.thermal_delete) {
+                            .setTitleMessage(getString(LibR.string.monitor_report_delete))
+                            .setMessage(LibR.string.report_delete_tips)
+                            .setCancelListener(LibR.string.app_cancel)
+                            .setPositiveListener(LibR.string.thermal_delete) {
                                 lifecycleScope.launch(Dispatchers.IO) {
                                     val houseDetect: HouseDetect = adapter.dataList[position] as HouseDetect
                                     AppDatabase.getInstance().houseDetectDao().deleteDetect(houseDetect)
@@ -94,26 +101,28 @@ internal class DetectListFragment : BaseFragment(), View.OnClickListener {
         adapter.onSelectChangeListener = {
             tabViewModel.selectSizeLD.value = it
         }
-        recycler_view.layoutManager = LinearLayoutManager(requireContext())
-        recycler_view.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
 
-        tv_add.setOnClickListener(this)
-        cl_del.setOnClickListener(this)
+        tvAdd.setOnClickListener(this)
+        clDel.setOnClickListener(this)
 
 
         tabViewModel.isEditModeLD.observe(viewLifecycleOwner) {
             adapter.isEditMode = it
-            cl_del.isVisible = it
+            clDel.isVisible = it
         }
         tabViewModel.selectSizeLD.observe(viewLifecycleOwner) {
-            cl_del.isEnabled = it > 0
-            iv_del.isEnabled = it > 0
-            tv_del.isEnabled = it > 0
+            clDel.isEnabled = it > 0
+            ivDel.isEnabled = it > 0
+            tvDel.isEnabled = it > 0
         }
 
+        val groupEmpty = requireView().findViewById<android.view.View>(R.id.group_empty)
+        
         viewModel.detectListLD.observe(viewLifecycleOwner) {
-            group_empty.isVisible = it.isEmpty()
-            recycler_view.isVisible = it.isNotEmpty()
+            groupEmpty.isVisible = it.isEmpty()
+            recyclerView.isVisible = it.isNotEmpty()
             adapter.refresh(it)
         }
         viewModel.detectLD.observe(viewLifecycleOwner) {
@@ -128,7 +137,7 @@ internal class DetectListFragment : BaseFragment(), View.OnClickListener {
             }
         }
         viewModel.copyDetectLD.observe(viewLifecycleOwner) {
-            TToast.shortToast(requireContext(), R.string.ts004_copy_success)
+            TToast.shortToast(requireContext(), LibR.string.ts004_copy_success)
             adapter.dataList.add(it.first + 1, it.second)
             adapter.notifyItemInserted(it.first + 1)
         }
@@ -149,19 +158,22 @@ internal class DetectListFragment : BaseFragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
+        val tvAdd = requireView().findViewById<android.widget.TextView>(R.id.tv_add)
+        val clDel = requireView().findViewById<android.view.View>(R.id.cl_del)
+        
         when (v) {
-            tv_add -> {//添加
+            tvAdd -> {//添加
                 val intent = Intent(requireContext(), DetectAddActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_TC007, arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false)
                 startActivity(intent)
             }
-            cl_del -> {//批量删除
+            clDel -> {//批量删除
                 if (adapter.selectIndexList.isNotEmpty()) {
                     TipDialog.Builder(requireContext())
-                        .setTitleMessage(getString(R.string.monitor_report_delete))
-                        .setMessage(R.string.report_delete_tips)
-                        .setCancelListener(R.string.app_cancel)
-                        .setPositiveListener(R.string.thermal_delete) {
+                        .setTitleMessage(getString(LibR.string.monitor_report_delete))
+                        .setMessage(LibR.string.report_delete_tips)
+                        .setCancelListener(LibR.string.app_cancel)
+                        .setPositiveListener(LibR.string.thermal_delete) {
                             val resultArray: Array<HouseDetect> = Array(adapter.selectIndexList.size) {
                                 adapter.dataList[adapter.selectIndexList[it]] as HouseDetect
                             }

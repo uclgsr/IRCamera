@@ -12,6 +12,9 @@ kapt {
         arg("room.incremental", "true")
         arg("room.expandProjection", "true")
     }
+    // Enable Kotlin 2.1.0 compatibility
+    correctErrorTypes = true
+    useBuildCache = true
 }
 
 android {
@@ -30,9 +33,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -41,6 +41,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -48,11 +49,16 @@ android {
 }
 
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+    
+    // Project dependencies
     implementation(project(":libapp"))
     implementation(project(":libmenu")) // 伪彩条用着 PseudoColorConfig
 
+    // Use shared UI bundle instead of individual dependencies
+    implementation(libs.bundles.ui.common)
     
-    // Smart Refresh Layout for LoadingFooter
-    implementation(libs.smart.refresh.layout)
-    implementation(libs.smart.refresh.header)
+    // Smart Refresh Layout for LoadingFooter - use shared bundle
+    implementation(libs.bundles.smart.refresh)
 }

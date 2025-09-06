@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.ImageView
 import androidx.annotation.FloatRange
 import com.topdon.module.thermal.ir.R
+import com.topdon.lib.ui.R as UiR
 import org.bytedeco.opencv.global.opencv_core.BORDER_DEFAULT
 import org.bytedeco.opencv.global.opencv_core.CV_16S
 import org.opencv.android.Utils
@@ -45,7 +46,7 @@ object IRImageUtil {
             }
             Log.w("123", "lookUpTableData: ${lookUpTableData[1].toUByte()}")
             lookUpTable.put(0, 0, lookUpTableData)
-            val srcMat = Utils.loadResource(com.blankj.utilcode.util.Utils.getApp(), R.drawable.ic_main_menu_battery) //BGR
+            val srcMat = Utils.loadResource(com.blankj.utilcode.util.Utils.getApp(), UiR.drawable.ic_main_menu_battery) //BGR
             val dstMat = Mat()
             Core.LUT(srcMat, lookUpTable, dstMat) //对比度
             Core.add(dstMat, Scalar(brightness, brightness, brightness), dstMat) //亮度
@@ -89,7 +90,7 @@ object IRImageUtil {
         val delta = 0.0
         val kernelSize = 3 //锐化程度
 
-        val srcMat = Utils.loadResource(com.blankj.utilcode.util.Utils.getApp(), R.drawable.ic_main_menu_battery) //BGR
+        val srcMat = Utils.loadResource(com.blankj.utilcode.util.Utils.getApp(), UiR.drawable.ic_main_menu_battery) //BGR
         val dstMat = Mat(srcMat.rows(), srcMat.cols(), srcMat.type())
         val preGray = Mat()
         val absDst = Mat()

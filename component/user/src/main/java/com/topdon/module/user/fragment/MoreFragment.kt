@@ -66,7 +66,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
     private lateinit var settingVersion: View
     private lateinit var settingDeviceInformation: SettingNightView
     private lateinit var settingReset: SettingNightView
-    private lateinit var settingItemConfigSelect: View
+    private lateinit var settingItemConfigSelect: androidx.appcompat.widget.SwitchCompat
     private lateinit var tvUpgradePoint: TextView
     private lateinit var itemSettingBottomText: TextView
     private lateinit var tvRightText: TextView
@@ -108,8 +108,9 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
             refresh07Connect(WebSocketProxy.getInstance().isTC007Connect())
         }
 
-        setting_item_auto_show.isChecked = if (isTC007) SharedManager.isConnect07AutoOpen else SharedManager.isConnectAutoOpen
-        setting_item_auto_show.setOnCheckedChangeListener { _, isChecked ->
+        val settingItemAutoShow = requireView().findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.setting_item_auto_show)
+        settingItemAutoShow.isChecked = if (isTC007) SharedManager.isConnect07AutoOpen else SharedManager.isConnectAutoOpen
+        settingItemAutoShow.setOnCheckedChangeListener { _, isChecked ->
             if (isTC007) {
                 SharedManager.isConnect07AutoOpen = isChecked
             } else {

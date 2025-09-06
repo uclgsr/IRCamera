@@ -266,11 +266,13 @@ class ParallelMultiModalRecorder(
                             SensorSelectionDialog.SensorType.GSR -> {
                                 // Stop thermal/GSR recording
                                 thermalRecorder.stopRecording()
+                                Unit
                             }
                             
                             SensorSelectionDialog.SensorType.RGB -> {
                                 // Stop RGB recording
                                 rgbCameraRecorder?.stopRecording()
+                                Unit
                             }
                         }
                     }

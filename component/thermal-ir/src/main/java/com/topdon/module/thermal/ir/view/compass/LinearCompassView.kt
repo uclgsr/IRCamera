@@ -77,7 +77,7 @@ class LinearCompassView : View {
         positionColor =
             attributes.getColor(R.styleable.LinearCompassView_positionColor, Color.WHITE)
         centerAzimuthColor =
-            attributes.getColor(R.styleable.LinearCompassView_markerColor, Color.WHITE)
+            attributes.getColor(R.styleable.LinearCompassView_compassMarkerColor, Color.WHITE)
         shortLineSize = attributes.getDimension(
             R.styleable.LinearCompassView_shortLineSize,
             SizeUtils.sp2px(0.5f).toFloat()

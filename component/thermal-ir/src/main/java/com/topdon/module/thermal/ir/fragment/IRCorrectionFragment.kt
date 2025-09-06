@@ -2,6 +2,8 @@ package com.topdon.module.thermal.ir.fragment
 
 import android.graphics.Bitmap
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.yt.jni.Usbcontorl
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +21,8 @@ import com.infisense.usbir.thread.ImageThreadTC
 import com.infisense.usbir.utils.USBMonitorCallback
 import com.infisense.usbir.view.ITsTempListener
 import com.infisense.usbir.view.TemperatureView.*
+import com.infisense.usbir.view.TemperatureView
+import com.infisense.usbir.view.CameraView
 import com.topdon.lib.core.bean.event.device.DeviceCameraEvent
 import com.topdon.lib.core.common.SaveSettingUtil
 import com.topdon.lib.core.config.DeviceConfig
@@ -40,6 +44,11 @@ class IRCorrectionFragment : BaseFragment(),ITsTempListener{
     protected var defaultDataFlowMode = CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT
 
     private var ircmd: IRCMD? = null
+    
+    // View references
+    private lateinit var temperatureView: TemperatureView
+    private var cameraView: CameraView? = null
+    private lateinit var thermalLay: ViewGroup
 
     override fun initContentView() = R.layout.fragment_ir_monitor_thermal
 
@@ -47,6 +56,12 @@ class IRCorrectionFragment : BaseFragment(),ITsTempListener{
 
     override fun initView() {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        
+        // Initialize views with findViewById  
+        temperatureView = requireView().findViewById<TemperatureView>(R.id.temperatureView)
+        cameraView = requireView().findViewById<CameraView>(R.id.cameraView)
+        thermalLay = requireView().findViewById<ViewGroup>(R.id.thermal_lay)
+        
         initDataIR()
     }
 
@@ -91,9 +106,11 @@ class IRCorrectionFragment : BaseFragment(),ITsTempListener{
             temperatureView.setImageSize(imageHeight, imageWidth,this@IRCorrectionFragment)
             rotateAngle = DeviceConfig.ROTATE_ANGLE
         }
-        cameraView!!.setSyncimage(syncimage)
-        cameraView!!.bitmap = bitmap
-        cameraView.isDrawLine = false
+        cameraView?.let { camera ->
+            camera.setSyncimage(syncimage)
+            camera.bitmap = bitmap
+            camera.isDrawLine = false
+        }
         temperatureView.setSyncimage(syncimage)
         temperatureView.setTemperature(temperature)
         temperatureView.isEnabled = false
@@ -235,18 +252,18 @@ class IRCorrectionFragment : BaseFragment(),ITsTempListener{
     }
 
     private fun setViewLay() {
-        thermal_lay.post {
+        thermalLay.post {
             if (ScreenUtil.isPortrait(requireContext())) {
-                val params = thermal_lay.layoutParams
+                val params = thermalLay.layoutParams
                 params.width = ScreenUtil.getScreenWidth(requireContext())
                 params.height = params.width * imageHeight / imageWidth
-                thermal_lay.layoutParams = params
+                thermalLay.layoutParams = params
             } else {
                 // 横屏
-                val params = thermal_lay.layoutParams
-                params.height = thermal_lay.height
+                val params = thermalLay.layoutParams
+                params.height = thermalLay.height
                 params.width = params.height * imageHeight / imageWidth
-                thermal_lay.layoutParams = params
+                thermalLay.layoutParams = params
             }
         }
     }

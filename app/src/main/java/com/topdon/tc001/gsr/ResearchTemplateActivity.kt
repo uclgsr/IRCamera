@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.gsr.model.ResearchTemplate
-import com.topdon.tc001.R
+import com.csl.irCamera.R
 
 /**
  * Research Template Selection Activity
@@ -145,7 +145,8 @@ class ResearchTemplateActivity : AppCompatActivity() {
                 append("🔧 Sensors: ${template.sensors.joinToString(", ") { it.name.replace("_", " ") }}\n")
                 
                 if (template.duration != null) {
-                    val minutes = template.duration / (60 * 1000)
+                    val durationMs = template.duration!!
+                    val minutes = durationMs / (60 * 1000)
                     append("⏱️ Duration: ${minutes} minutes\n")
                 } else {
                     append("⏱️ Duration: Unlimited\n")
@@ -251,7 +252,8 @@ class TemplateAdapter(
         
         // Duration
         holder.durationText.text = if (template.duration != null) {
-            "${template.duration / (60 * 1000)}min"
+            val durationMs = template.duration!!
+            "${durationMs / (60 * 1000)}min"
         } else {
             "∞"
         }

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.topdon.house.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.lib.core.utils.ScreenUtil
 
 /**
@@ -15,7 +16,7 @@ import com.topdon.lib.core.utils.ScreenUtil
  *
  * Created by LCG on 2024/1/23.
  */
-class ImagePickFromDialog(private val context: Context) : Dialog(context, R.style.InfoDialog), View.OnClickListener {
+class ImagePickFromDialog(private val context: Context) : Dialog(context, LibR.style.InfoDialog), View.OnClickListener {
 
     /**
      * 拾取事件监听.
@@ -24,6 +25,8 @@ class ImagePickFromDialog(private val context: Context) : Dialog(context, R.styl
     private var onSelectListener: ((type: Int) -> Unit)? = null
 
     private lateinit var contentView: View
+    private lateinit var tvGallery: View
+    private lateinit var tvLightCamera: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,8 +34,11 @@ class ImagePickFromDialog(private val context: Context) : Dialog(context, R.styl
         setCanceledOnTouchOutside(true)
 
         contentView = LayoutInflater.from(context).inflate(R.layout.dialog_image_pick_from, null)
-        contentView.tv_gallery.setOnClickListener(this)
-        contentView.tv_light_camera.setOnClickListener(this)
+        tvGallery = contentView.findViewById(R.id.tv_gallery)
+        tvLightCamera = contentView.findViewById(R.id.tv_light_camera)
+        
+        tvGallery.setOnClickListener(this)
+        tvLightCamera.setOnClickListener(this)
         setContentView(contentView)
 
         window?.let {
@@ -55,11 +61,11 @@ class ImagePickFromDialog(private val context: Context) : Dialog(context, R.styl
 
     override fun onClick(v: View?) {
         when (v) {
-            contentView.tv_gallery -> {//从相册获取
+            tvGallery -> {//从相册获取
                 dismiss()
                 onSelectListener?.invoke(0)
             }
-            contentView.tv_light_camera -> {//相机拍照
+            tvLightCamera -> {//相机拍照
                 dismiss()
                 onSelectListener?.invoke(1)
             }

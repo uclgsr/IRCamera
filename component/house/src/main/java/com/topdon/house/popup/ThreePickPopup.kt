@@ -18,13 +18,18 @@ internal class ThreePickPopup(val context: Context, strIdArray: List<Int>, priva
 
     init {
         contentView = LayoutInflater.from(context).inflate(R.layout.popup_three_pick, null)
-        contentView.tv_option1.text = context.getString(strIdArray[0])
-        contentView.tv_option2.text = context.getString(strIdArray[1])
+        val tvOption1 = contentView.findViewById<android.widget.TextView>(R.id.tv_option1)
+        val tvOption2 = contentView.findViewById<android.widget.TextView>(R.id.tv_option2)
+        val tvOption3 = contentView.findViewById<android.widget.TextView>(R.id.tv_option3)
+        val viewLine2 = contentView.findViewById<android.view.View>(R.id.view_line2)
+        
+        tvOption1.text = context.getString(strIdArray[0])
+        tvOption2.text = context.getString(strIdArray[1])
         if (strIdArray.size >= 3) {
-            contentView.tv_option3.text = context.getString(strIdArray[2])
+            tvOption3.text = context.getString(strIdArray[2])
         } else {
-            contentView.tv_option3.isVisible = false
-            contentView.view_line2.isVisible = false
+            tvOption3.isVisible = false
+            viewLine2.isVisible = false
         }
 
 
@@ -37,16 +42,20 @@ internal class ThreePickPopup(val context: Context, strIdArray: List<Int>, priva
 
         isOutsideTouchable = true
 
-        contentView.tv_option1.setOnClickListener(this)
-        contentView.tv_option2.setOnClickListener(this)
-        contentView.tv_option3.setOnClickListener(this)
+        tvOption1.setOnClickListener(this)
+        tvOption2.setOnClickListener(this)
+        tvOption3.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
+        val tvOption1 = contentView.findViewById<android.widget.TextView>(R.id.tv_option1)
+        val tvOption2 = contentView.findViewById<android.widget.TextView>(R.id.tv_option2)
+        val tvOption3 = contentView.findViewById<android.widget.TextView>(R.id.tv_option3)
+        
         when (v) {
-            contentView.tv_option1 -> onPickListener.invoke(0)
-            contentView.tv_option2 -> onPickListener.invoke(1)
-            contentView.tv_option3 -> onPickListener.invoke(2)
+            tvOption1 -> onPickListener.invoke(0)
+            tvOption2 -> onPickListener.invoke(1)
+            tvOption3 -> onPickListener.invoke(2)
         }
         dismiss()
     }

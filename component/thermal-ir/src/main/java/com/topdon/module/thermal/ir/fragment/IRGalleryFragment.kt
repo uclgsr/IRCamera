@@ -4,12 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.view.View
 import android.view.WindowManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.bean.GalleryBean
 import com.topdon.lib.core.bean.GalleryTitle
@@ -22,6 +25,7 @@ import com.topdon.lib.core.tools.ToastTools
 import com.topdon.lib.core.repository.GalleryRepository.DirType
 import com.topdon.lib.core.repository.TS004Repository
 import com.topdon.module.thermal.ir.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.module.thermal.ir.adapter.GalleryAdapter
 import com.topdon.lib.core.dialog.ConfirmSelectDialog
 import com.topdon.module.thermal.ir.event.GalleryAddEvent
@@ -53,6 +57,14 @@ class IRGalleryFragment : BaseFragment() {
     private val tabViewModel: IRGalleryTabViewModel by activityViewModels()
 
     private val adapter = GalleryAdapter()
+    
+    // View references
+    private lateinit var refreshLayout: SmartRefreshLayout
+    private lateinit var clDownload: View
+    private lateinit var clShare: View  
+    private lateinit var clDelete: View
+    private lateinit var clBottom: View
+    private lateinit var irGalleryRecycler: RecyclerView
 
     /**
      * 从上一界面传递过来的，当前是查看照片还是查看视频.
@@ -62,6 +74,14 @@ class IRGalleryFragment : BaseFragment() {
     override fun initContentView() = R.layout.fragment_ir_gallery
 
     override fun initView() {
+        // Initialize views with findViewById
+        refreshLayout = requireView().findViewById(R.id.refresh_layout)
+        clDownload = requireView().findViewById(R.id.cl_download)
+        clShare = requireView().findViewById(R.id.cl_share)
+        clDelete = requireView().findViewById(R.id.cl_delete)
+        clBottom = requireView().findViewById(R.id.cl_bottom)
+        irGalleryRecycler = requireView().findViewById(R.id.ir_gallery_recycler)
+        
         currentDirType = when (arguments?.getInt(ExtraKeyConfig.DIR_TYPE, 0) ?: 0) {
             DirType.TS004_LOCALE.ordinal -> DirType.TS004_LOCALE
             DirType.TS004_REMOTE.ordinal -> DirType.TS004_REMOTE
@@ -69,11 +89,11 @@ class IRGalleryFragment : BaseFragment() {
             else -> DirType.LINE
         }
 
-        cl_download.isVisible = currentDirType == DirType.TS004_REMOTE
+        clDownload.isVisible = currentDirType == DirType.TS004_REMOTE
 
         initRecycler()
 
-        cl_share.setOnClickListener {
+        clShare.setOnClickListener {
             val selectList = adapter.buildSelectList()
             if (selectList.size == 0) {
                 ToastTools.showShort(getString(R.string.tip_least_select))
@@ -85,10 +105,10 @@ class IRGalleryFragment : BaseFragment() {
             }
             downloadList(selectList, true)
         }
-        cl_delete.setOnClickListener {
+        clDelete.setOnClickListener {
             showDeleteDialog()
         }
-        cl_download.setOnClickListener {
+        clDownload.setOnClickListener {
             val selectList = adapter.buildSelectList()
             if (selectList.size == 0) {
                 ToastTools.showShort(getString(R.string.tip_least_select))
@@ -99,11 +119,11 @@ class IRGalleryFragment : BaseFragment() {
 
         viewModel.pageListLD.observe(this) {
             if (it == null) {
-                TToast.shortToast(requireContext(), R.string.operation_failed_tips)
+                TToast.shortToast(requireContext(), LibR.string.operation_failed_tips)
             }
-            refresh_layout.finishRefresh(it != null)
-            refresh_layout.finishLoadMore(it != null)
-            refresh_layout.setNoMoreData(it != null && it.size < IRGalleryViewModel.PAGE_COUNT)
+            refreshLayout.finishRefresh(it != null)
+            refreshLayout.finishLoadMore(it != null)
+            refreshLayout.setNoMoreData(it != null && it.size < IRGalleryViewModel.PAGE_COUNT)
         }
         viewModel.showListLD.observe(this) {
             adapter.refreshList(it)
@@ -116,12 +136,12 @@ class IRGalleryFragment : BaseFragment() {
                 MediaScannerConnection.scanFile(requireContext(), arrayOf(FileConfig.lineGalleryDir, FileConfig.ts004GalleryDir), null, null)
                 EventBus.getDefault().post(GalleryDelEvent())
             } else {
-                TToast.shortToast(requireContext(), R.string.test_results_delete_failed)
+                TToast.shortToast(requireContext(), LibR.string.test_results_delete_failed)
             }
         }
         tabViewModel.isEditModeLD.observe(this) {
             adapter.isEditMode = it
-            cl_bottom.isVisible = it
+            clBottom.isVisible = it
         }
         tabViewModel.selectAllIndex.observe(this) {
             if ((isVideo && it == 1) || (!isVideo && it == 0)) {
@@ -174,13 +194,13 @@ class IRGalleryFragment : BaseFragment() {
                 return if (adapter.dataList[position] is GalleryTitle) spanCount else 1
             }
         }
-        ir_gallery_recycler.adapter = adapter
-        ir_gallery_recycler.layoutManager = gridLayoutManager
+        irGalleryRecycler.adapter = adapter
+        irGalleryRecycler.layoutManager = gridLayoutManager
 
         adapter.isTS004Remote = currentDirType == DirType.TS004_REMOTE
         adapter.onLongEditListener = {
             tabViewModel.isEditModeLD.value = true
-            cl_bottom.isVisible = true
+            clBottom.isVisible = true
         }
         adapter.selectCallback = {
             tabViewModel.selectSizeLD.value = it.size
@@ -220,19 +240,19 @@ class IRGalleryFragment : BaseFragment() {
         }
 
 
-        refresh_layout.setOnRefreshListener {
+        refreshLayout.setOnRefreshListener {
             refresh()
         }
-        refresh_layout.setOnLoadMoreListener {
+        refreshLayout.setOnLoadMoreListener {
             viewModel.queryGalleryByPage(isVideo, currentDirType)
         }
-        refresh_layout.setEnableScrollContentWhenLoaded(false)
+        refreshLayout.setEnableScrollContentWhenLoaded(false)
 
-        refresh_layout.autoRefresh()
+        refreshLayout.autoRefresh()
     }
 
     private fun refresh() {
-        refresh_layout.setEnableLoadMore(true)
+        refreshLayout.setEnableLoadMore(true)
         viewModel.hasLoadPage = 0
         viewModel.queryGalleryByPage(isVideo, currentDirType)
     }
@@ -309,7 +329,7 @@ class IRGalleryFragment : BaseFragment() {
                     tabViewModel.isEditModeLD.value = false
                 } else {
                     dismissLoadingDialog()
-                    ToastTools.showShort(R.string.liveData_save_error)
+                    ToastTools.showShort(LibR.string.liveData_save_error)
                 }
                 MediaScannerConnection.scanFile(requireContext(), arrayOf(FileConfig.lineGalleryDir, FileConfig.ts004GalleryDir), null, null)
                 (context as? Activity)?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

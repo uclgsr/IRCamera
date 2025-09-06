@@ -17,6 +17,7 @@ class MyValueFormatter(private val startTime: Long, private val type: Int = 1) :
         const val TYPE_TIME_DAY = 4
     }
 
+    @Deprecated("This method overrides a deprecated member")
     override fun getFormattedValue(value: Float, axis: AxisBase?): String {
         val time = startTime + value.toLong()
         return showDateSecond(time)
@@ -34,7 +35,7 @@ class MyValueFormatter(private val startTime: Long, private val type: Int = 1) :
             else -> "HH:mm:ss"
         }
         val dateFormat = SimpleDateFormat(pattern)
-        val timeZone = TimeZone.getTimeZone(SharedManager.getShowZone())
+        val timeZone = TimeZone.getDefault()
         dateFormat.timeZone = timeZone
         return dateFormat.format(date)
     }

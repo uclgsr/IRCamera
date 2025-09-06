@@ -5,8 +5,6 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
 }
 
 val dayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
@@ -36,8 +34,10 @@ android {
         manifestPlaceholders["JPUSH_PKGNAME"] = applicationId!!
         manifestPlaceholders["JPUSH_APPKEY"] = "cbd4eafc9049d751fc5a8c58"
         manifestPlaceholders["JPUSH_CHANNEL"] = "developer-default"
+    }
 
-        setProperty("archivesBaseName", "TC001-v${libs.versions.versionName.get()}.google")
+    base {
+        archivesName = "TC001-v${libs.versions.versionName.get()}.google"
     }
 
     bundle {
@@ -47,10 +47,6 @@ android {
     }
 
     signingConfigs {
-        getByName("debug") {
-            // Use default debug keystore - no need to specify custom keystore for debug builds
-            // This allows development without requiring production keystores
-        }
         create("release") {
             storeFile = file("artibox_key/ArtiBox.jks")
             keyAlias = "Artibox"
@@ -64,14 +60,6 @@ android {
     }
 
     buildTypes {
-        getByName("debug") {
-            signingConfig = signingConfigs.getByName("debug")
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android.txt"),
-                "proguard-rules.pro"
-            )
-        }
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
@@ -85,6 +73,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     
     kotlinOptions {
@@ -137,25 +126,43 @@ android {
         viewBinding = true
     }
     
+    packaging {
+        resources {
+            excludes += listOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/license.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/notice.txt",
+                "META-INF/ASL2.0"
+            )
+        }
+        jniLibs {
+            pickFirsts += listOf(
+                "lib/arm64-v8a/libijkffmpeg.so",
+                "lib/arm64-v8a/libijkplayer.so",
+                "lib/arm64-v8a/libijksdl.so",
+                "lib/armeabi/libijkffmpeg.so",
+                "lib/armeabi/libijkplayer.so",
+                "lib/armeabi/libijksdl.so",
+                "lib/armeabi-v7a/libijkffmpeg.so",
+                "lib/armeabi-v7a/libijkplayer.so",
+                "lib/armeabi-v7a/libijksdl.so",
+                "lib/x86/libijkffmpeg.so",
+                "lib/x86/libijkplayer.so",
+                "lib/x86/libijksdl.so",
+                "lib/x86_64/libijkffmpeg.so",
+                "lib/x86_64/libijkplayer.so",
+                "lib/x86_64/libijksdl.so"
+            )
+        }
+    }
+    
     flavorDimensions += "app"
 
     productFlavors {
-        create("dev") {
-            dimension = "app"
-            buildConfigField("int", "ENV_TYPE", "0")
-            buildConfigField("String", "SOFT_CODE", "\"${libs.versions.softcodeTopinfrared.get()}\"")
-            buildConfigField("String", "APP_KEY", "\"${libs.versions.appkeyTopinfrared.get()}\"")
-            buildConfigField("String", "APP_SECRET", "\"${libs.versions.appsecretTopinfrared.get()}\"")
-            manifestPlaceholders["app_name"] = "TopInfrared"
-        }
-        create("beta") {
-            dimension = "app"
-            buildConfigField("int", "ENV_TYPE", "0")
-            buildConfigField("String", "SOFT_CODE", "\"${libs.versions.softcodeTopinfrared.get()}\"")
-            buildConfigField("String", "APP_KEY", "\"${libs.versions.appkeyTopinfrared.get()}\"")
-            buildConfigField("String", "APP_SECRET", "\"${libs.versions.appsecretTopinfrared.get()}\"")
-            manifestPlaceholders["app_name"] = "IRCamera"
-        }
         create("prod") {
             dimension = "app"
             buildConfigField("int", "ENV_TYPE", "0")
@@ -163,34 +170,6 @@ android {
             buildConfigField("String", "APP_KEY", "\"${libs.versions.appkeyTopinfrared.get()}\"")
             buildConfigField("String", "APP_SECRET", "\"${libs.versions.appsecretTopinfrared.get()}\"")
             manifestPlaceholders["app_name"] = "IRCamera"
-        }
-        create("prodTopdon") {
-            dimension = "app"
-            targetSdk = 27
-            buildConfigField("int", "ENV_TYPE", "0")
-            buildConfigField("String", "SOFT_CODE", "\"${libs.versions.softcodeTopinfrared10.get()}\"")
-            buildConfigField("String", "APP_KEY", "\"${libs.versions.appkeyTopinfrared10.get()}\"")
-            buildConfigField("String", "APP_SECRET", "\"${libs.versions.appsecretTopinfrared10.get()}\"")
-            manifestPlaceholders["app_name"] = "IRCamera"
-        }
-        create("insideChina") {
-            dimension = "app"
-            buildConfigField("int", "ENV_TYPE", "1")
-            buildConfigField("String", "SOFT_CODE", "\"${libs.versions.softcodeTopinfraredCn.get()}\"")
-            buildConfigField("String", "APP_KEY", "\"${libs.versions.appkeyTopinfraredCn.get()}\"")
-            buildConfigField("String", "APP_SECRET", "\"${libs.versions.appsecretTopinfraredCn.get()}\"")
-            manifestPlaceholders["app_name"] = "热视界"
-        }
-        create("prodTopdonInsideChina") {
-            dimension = "app"
-            targetSdk = 27
-            buildConfigField("int", "ENV_TYPE", "1")
-            buildConfigField("String", "SOFT_CODE", "\"${libs.versions.softcodeTopinfraredCn10.get()}\"")
-            buildConfigField("String", "APP_KEY", "\"${libs.versions.appkeyTopinfraredCn10.get()}\"")
-            buildConfigField("String", "APP_SECRET", "\"${libs.versions.appsecretTopinfraredCn10.get()}\"")
-            val currentYear = SimpleDateFormat("yy", Locale.getDefault()).format(Date()).toInt()
-            versionCode = libs.versions.versionCode.get().toInt() + currentYear * 10000
-            manifestPlaceholders["app_name"] = "热视界"
         }
     }
 }
@@ -204,22 +183,11 @@ configurations.all {
     }
 }
 
-// APK naming function - Updated to use Variant instead of deprecated ApplicationVariant
+// APK naming function - Simplified for prodRelease only
 fun getApkName(variantName: String, versionName: String): String {
     val nameStr = "TopInfrared_${versionName}.$dayStr"
     return when (variantName) {
-        "devDebug" -> "TopInfrared-v$versionName-debug.apk"
-        "devRelease" -> "$nameStr-release.apk"
-        "betaDebug" -> "${nameStr}_beta_debug.apk"
-        "betaRelease" -> "${nameStr}_beta.apk"
-        "prodDebug" -> "${nameStr}_debug.apk"
         "prodRelease" -> "$nameStr.apk"
-        "prodTopdonDebug" -> "TopInfrared_Android10_${versionName}.${dayStr}_debug.apk"
-        "prodTopdonRelease" -> "TopInfrared_Android10_${versionName}.$dayStr.apk"
-        "insideChinaDebug" -> "${nameStr}_debug.apk"
-        "insideChinaRelease" -> "$nameStr.apk"
-        "prodTopdonInsideChinaDebug" -> "${nameStr}_debug.apk"
-        "prodTopdonInsideChinaRelease" -> "$nameStr.apk"
         else -> "TopInfrared.apk"
     }
 }
@@ -234,6 +202,8 @@ fun getApkName(variantName: String, versionName: String): String {
 // }
 
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":component:edit3d"))
     implementation(project(":component:pseudo"))
     implementation(project(":component:thermal-ir"))
@@ -247,10 +217,24 @@ dependencies {
     implementation(project(":libmenu"))
     implementation(project(":libui"))
 
-    // LocalRepo AAR files moved to app/libs (excluding lms_international which stays in libapp)
+    // LocalRepo AAR files moved to app/libs
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))
     implementation(files("libs/libcommon_1.2.0_24052117.aar"))
+    
+    // libapp AAR dependencies - now handled at app level due to AGP 8.0+ restrictions
+    implementation(files("libs/lms_international-3.90.009.0.aar"))  // LMS SDK for libapp
+    implementation(files("libs/abtest-1.0.1.aar"))
+    implementation(files("libs/auth-number-2.13.2.1.aar"))
+    implementation(files("libs/logger-2.2.1-release.aar"))
+    implementation(files("libs/main-2.2.1-release.aar"))
+    
+    // Additional AAR dependencies from libir module - all libir AAR files now handled at app level  
+    implementation(fileTree(mapOf("include" to listOf("opengl_1.3.2_standard.aar"), "dir" to "component/edit3d/libs")))
+    implementation(fileTree(mapOf("include" to listOf("*.aar"), "dir" to "libir/libs")))  // All libir AAR files
+    
+    // Explicit AAR dependencies for app module compilation (ensuring classpath resolution)
+    implementation(files("../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))  // Required for iruvc classes in app module
 
     implementation(libs.jsbridge)
     implementation(libs.fastjson)
@@ -258,45 +242,15 @@ dependencies {
     implementation(libs.play.app.update)
     implementation(libs.immersionbar)
     implementation(libs.xpopup)
-    implementation(libs.smart.refresh.layout)
-    implementation(libs.smart.refresh.header)
+    // implementation(libs.bundles.smart.refresh) // Temporarily commented out due to jitpack.io issues
     implementation(libs.wechat.sdk)
     implementation(libs.umeng.apm)
     implementation(libs.zoho.salesiq)
 
-    // Firebase - International versions
-    implementation(platform(libs.firebase.bom))
-    "devImplementation"(libs.firebase.crashlytics)
-    "devImplementation"(libs.firebase.analytics)
-    "devImplementation"(libs.firebase.messaging)
-    "devImplementation"(libs.firebase.iid)
-    "betaImplementation"(libs.firebase.crashlytics)
-    "betaImplementation"(libs.firebase.analytics)
-    "betaImplementation"(libs.firebase.messaging)
-    "betaImplementation"(libs.firebase.iid)
-    "prodImplementation"(libs.firebase.crashlytics)
-    "prodImplementation"(libs.firebase.analytics)
-    "prodImplementation"(libs.firebase.messaging)
-    "prodImplementation"(libs.firebase.iid)
-    "prodTopdonImplementation"(libs.firebase.crashlytics)
-    "prodTopdonImplementation"(libs.firebase.analytics)
-    "prodTopdonImplementation"(libs.firebase.messaging)
-    "prodTopdonImplementation"(libs.firebase.iid)
+    // Core library desugaring for Java 8+ APIs on older Android versions
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    // UMeng - Google customized version
-    "betaImplementation"(files("libs/umeng-common-9.4.4+000.jar"))
-    "devImplementation"(files("libs/umeng-common-9.4.4+000.jar"))
-    "prodImplementation"(files("libs/umeng-common-9.4.4+000.jar"))
-    "prodTopdonImplementation"(files("libs/umeng-common-9.4.4+000.jar"))
-
-    // UMeng - China versions
-    "insideChinaImplementation"(libs.umeng.common)
-    "insideChinaImplementation"(libs.umeng.asms)
+    // UMeng - Referenced directly from Maven Central
+    implementation(libs.umeng.common)
 }
 
-// Fix Google Services task dependency issue for Gradle 8.0+
-tasks.whenTaskAdded {
-    if (name.contains("merge") && name.contains("Resources")) {
-        mustRunAfter(tasks.matching { it.name.contains("processGoogleServices") })
-    }
-}

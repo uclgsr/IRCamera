@@ -103,9 +103,9 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener , ITsTem
                 delay(1000)
                 if (irMonitorLiteFragment!=null){
                     val result: LibIRTemp.TemperatureSampleResult = when (selectBean.type) {
-                        1 -> irMonitorLiteFragment!!.getTemperatureView().getPointTemp(selectBean.startPosition)
-                        2 -> irMonitorLiteFragment!!.getTemperatureView().getLineTemp(Line(selectBean.startPosition, selectBean.endPosition))
-                        else -> irMonitorLiteFragment!!.getTemperatureView().getRectTemp(selectBean.getRect())
+                        1 -> irMonitorLiteFragment!!.temperatureView.getPointTemp(selectBean.startPosition)
+                        2 -> irMonitorLiteFragment!!.temperatureView.getLineTemp(Line(selectBean.startPosition, selectBean.endPosition))
+                        else -> irMonitorLiteFragment!!.temperatureView.getRectTemp(selectBean.getRect())
                     } ?: continue
                     if (isFirstRead) {
                         if (result.maxTemperature > 200f || result.minTemperature < -200f) {
@@ -177,14 +177,14 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener , ITsTem
                     AppDatabase.getInstance().thermalDao().insert(entity)
                     time++
                     launch(Dispatchers.Main) {
-                        mp_chart_view.addPointToChart(bean = entity, selectType = selectBean.type)
+                        binding.mpChartView.addPointToChart(bean = entity, selectType = selectBean.type)
                     }
                     delay(timeMillis)
                 } else {
                     delay(100)
                 }
                 lifecycleScope.launch(Dispatchers.Main) {
-                    tv_time.text = TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
+                    binding.tvTime.text = TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
                 }
             }
             XLog.w("停止记录, 数据量:$time")
@@ -201,8 +201,8 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener , ITsTem
     }
 
     override fun onClick(v: View?) {
-        when (v) {
-            motion_start_btn -> {
+        when (v?.id) {
+            R.id.motion_start_btn -> {
                 if (selectIndex == null) {
                     MonitorSelectDialog.Builder(this)
                         .setPositiveListener {
@@ -223,18 +223,18 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener , ITsTem
                                 return@launch
                             }
                             irMonitorLiteFragment?.stopTask()
-                            thermal_fragment.getViewTreeObserver().addOnGlobalLayoutListener(object :
+                            binding.thermalFragment.getViewTreeObserver().addOnGlobalLayoutListener(object :
                                 ViewTreeObserver.OnGlobalLayoutListener {
                                 override fun onGlobalLayout() {
                                     // 移除监听器以避免重复调用
-                                    thermal_fragment.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                                    binding.thermalFragment.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                                     irMonitorLiteFragment?.restTempView()
                                     irMonitorLiteFragment?.addTempLine(selectIndex!!)
                                     // 进行需要的操作
                                 }
                             })
-                            motion_action_lay.isVisible = false
-                            chart_lay.isVisible = true
+                            binding.motionActionLay.isVisible = false
+                            binding.chartLay.isVisible = true
                             showCameraLoading()
                             delay(500)
                             dismissCameraLoading()
@@ -252,8 +252,8 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener , ITsTem
     }
 
     private fun updateUI() {
-        motion_start_btn.visibility = View.VISIBLE
-        motion_btn.visibility = View.GONE
+        binding.motionStartBtn.visibility = View.VISIBLE
+        binding.motionBtn.visibility = View.GONE
     }
 
     override fun disConnected() {

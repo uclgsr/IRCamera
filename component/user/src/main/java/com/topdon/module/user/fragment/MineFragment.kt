@@ -16,6 +16,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.topdon.lib.core.navigation.NavigationManager
+import com.topdon.lib.core.R as LibAppR  // Import libapp R class for resources
 import com.blankj.utilcode.util.CleanUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.request.RequestOptions
@@ -48,7 +49,7 @@ import com.topdon.lms.sdk.feedback.activity.FeedbackActivity
 import com.topdon.lms.sdk.utils.LanguageUtil
 import com.topdon.module.user.R
 import com.topdon.module.user.activity.MoreActivity
-import com.zoho.salesiqembed.ZohoSalesIQ
+// import com.zoho.salesiqembed.ZohoSalesIQ  // ZohoSalesIQ dependency not available
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -89,18 +90,18 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
     override fun initView() {
         // Initialize views
-        ivWinter = requireView().findViewById(R.id.ivWinter)
-        settingItemVersion = requireView().findViewById(R.id.settingItemVersion)
-        settingItemClear = requireView().findViewById(R.id.settingItemClear)
-        settingUserLay = requireView().findViewById(R.id.settingUserLay)
-        settingUserImgNight = requireView().findViewById(R.id.settingUserImgNight)
-        settingUserText = requireView().findViewById(R.id.settingUserText)
-        settingElectronicManual = requireView().findViewById(R.id.settingElectronicManual)
-        settingFaq = requireView().findViewById(R.id.settingFaq)
-        settingFeedback = requireView().findViewById(R.id.settingFeedback)
-        settingItemUnit = requireView().findViewById(R.id.settingItemUnit)
-        dragCustomerView = requireView().findViewById(R.id.dragCustomerView)
-        viewWinterPoint = requireView().findViewById(R.id.viewWinterPoint)
+        ivWinter = requireView().findViewById(R.id.iv_winter)
+        settingItemVersion = requireView().findViewById(R.id.setting_item_version)
+        settingItemClear = requireView().findViewById(R.id.setting_item_clear)
+        settingUserLay = requireView().findViewById(R.id.setting_user_lay)
+        settingUserImgNight = requireView().findViewById(R.id.setting_user_img_night)
+        settingUserText = requireView().findViewById(R.id.setting_user_text)
+        settingElectronicManual = requireView().findViewById(R.id.setting_electronic_manual)
+        settingFaq = requireView().findViewById(R.id.setting_faq)
+        settingFeedback = requireView().findViewById(R.id.setting_feedback)
+        settingItemUnit = requireView().findViewById(R.id.setting_item_unit)
+        dragCustomerView = requireView().findViewById(R.id.drag_customer_view)
+        viewWinterPoint = requireView().findViewById(R.id.view_winter_point)
         
         ivWinter.setOnClickListener(this)
         settingItemVersion.setOnClickListener(this)
@@ -222,11 +223,12 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             dragCustomerView -> {//客服
 //                ActivityUtil.goSystemCustomer(requireContext())
                 val sn = SharedManager.getDeviceSn()
+                // ZohoSalesIQ functionality disabled - dependency not available
                 if (!TextUtils.isEmpty(sn)) {
-                    ZohoSalesIQ.Visitor.addInfo("SN", sn)
+                    // ZohoSalesIQ.Visitor.addInfo("SN", sn)
                 }
-                ZohoSalesIQ.Visitor.addInfo("Model", "Topinfrared")
-                ZohoSalesIQ.Chat.show()
+                // ZohoSalesIQ.Visitor.addInfo("Model", "Topinfrared")
+                // ZohoSalesIQ.Chat.show()
             }
         }
     }
@@ -234,7 +236,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
     private fun loginAction() {
         isNeedRefreshLogin = true
         //activityLogin()回调不可靠，但必然触发onResume()
-        val bgBitmap = BitmapFactory.decodeResource(resources, R.mipmap.bg_login)
+        val bgBitmap = BitmapFactory.decodeResource(resources, LibAppR.mipmap.ic_default_user_head) // Use available resource from libapp
         LMS.getInstance().activityLogin(null, null, false, null, bgBitmap)
     }
 
@@ -264,14 +266,14 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             //登录失败
             XLog.e(" 登录失败")
             changeLoginStyle()
-            settingUserImgNight.setImageResource(R.mipmap.ic_default_user_head)//恢复默认头像
+            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head)//恢复默认头像
         }
     }
 
     private fun changeLoginStyle() {
         if (LMS.getInstance().isLogin) {
             val layoutParams = ConstraintLayout.LayoutParams(0, ConstraintLayout.LayoutParams.WRAP_CONTENT)
-            layoutParams.startToEnd = R.id.settingUserImgNight
+            layoutParams.startToEnd = R.id.setting_user_img_night
             layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
             layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
             layoutParams.marginStart = SizeUtils.dp2px(16f)
@@ -279,26 +281,27 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             settingUserText.setPadding(0,0,0,0)
             settingUserText.gravity = Gravity.LEFT
             settingUserText.layoutParams = layoutParams
-            val drawable = ContextCompat.getDrawable(requireContext(), R.color.transparent)
+            val drawable = ContextCompat.getDrawable(requireContext(), android.R.color.transparent)
             drawable!!.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
             settingUserText.setCompoundDrawables(null, null, drawable, null)
             settingUserText.text = SharedManager.getNickname()
-            tv_email.text = SharedManager.getUsername()
+            val tvEmail = requireView().findViewById<TextView>(R.id.tv_email)
+            tvEmail.text = SharedManager.getUsername()
             settingUserLay.visibility = View.VISIBLE
 
             if (settingUserImgNight != null) {
                 GlideLoader.loadCircle(
                     settingUserImgNight,
                     SharedManager.getHeadIcon(),
-                    R.mipmap.ic_default_user_head,
+                    LibAppR.mipmap.ic_default_user_head,
                     RequestOptions().optionalCircleCrop()
                 )
             }
         } else {
             val layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
-            layoutParams.startToEnd = R.id.settingUserImgNight
-            layoutParams.topToTop = R.id.settingUserImgNight
-            layoutParams.bottomToBottom = R.id.settingUserImgNight
+            layoutParams.startToEnd = R.id.setting_user_img_night
+            layoutParams.topToTop = R.id.setting_user_img_night
+            layoutParams.bottomToBottom = R.id.setting_user_img_night
             settingUserText.setPadding(SizeUtils.dp2px(16f), SizeUtils.dp2px(16f), SizeUtils.dp2px(16f), SizeUtils.dp2px(16f))
             settingUserText.gravity = Gravity.CENTER
             settingUserText.layoutParams = layoutParams
@@ -309,8 +312,9 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             drawable!!.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
             settingUserText.setCompoundDrawables(null, null, drawable, null)
             settingUserLay.visibility = View.GONE
-            tv_email.text = ""
-            settingUserImgNight.setImageResource(R.mipmap.ic_default_user_head)//恢复默认头像
+            val tvEmail = requireView().findViewById<TextView>(R.id.tv_email)
+            tvEmail.text = ""
+            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head)//恢复默认头像
         }
     }
 

@@ -4,6 +4,17 @@
         <item name="android:windowEnterAnimation">@anim/default_dialog_in</item>
         <item name="android:windowExitAnimation">@anim/default_dialog_out</item>
     </style>
+    
+    <style name="TextInputDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="TransparentDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 
     <style name="TempTitleStyle">
         <item name="android:textColor">@color/temp_font_color</item>

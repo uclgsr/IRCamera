@@ -1,14 +1,19 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    kotlin("kapt")
+    // Disable kapt since ARouter annotations are commented out in this module
+    // kotlin("kapt")
 }
 
-kapt {
-    arguments {
-        // arg("AROUTER_MODULE_NAME", project.name)  // Removed for NavigationManager migration
-    }
-}
+
+// kapt {
+//     arguments {
+//         // arg("AROUTER_MODULE_NAME", project.name)  // Removed for NavigationManager migration
+//     }
+//     // Enable Kotlin 2.1.0 compatibility
+//     correctErrorTypes = true
+//     useBuildCache = true
+// }
 
 android {
     namespace = "com.topdon.module.user"
@@ -23,9 +28,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -38,6 +40,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     
     kotlinOptions {
@@ -46,44 +49,27 @@ android {
 
     buildFeatures {
         viewBinding = true
-        dataBinding = true
-    }
-
-    flavorDimensions += "app"
-    productFlavors {
-        create("dev") {
-            dimension = "app"
-        }
-        create("beta") {
-            dimension = "app"
-        }
-        create("prod") {
-            dimension = "app"
-        }
-        create("prodTopdon") {
-            dimension = "app"
-        }
-        create("insideChina") {
-            dimension = "app"
-        }
-        create("prodTopdonInsideChina") {
-            dimension = "app"
-        }
     }
 }
 
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
     implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
     implementation(project(":libmenu"))
     
+    // Compile-time access to LMS SDK for user component classes that import LMS classes
+    compileOnly(files("../../shared/libs/lms_international-3.90.009.0.aar"))
 
-    
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.utilcode)
     implementation(libs.glide)
+    
+    // Core library desugaring
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

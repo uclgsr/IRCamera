@@ -212,6 +212,8 @@ timestamp_ms,utc_timestamp_ms,event_type,session_id,metadata
 Add to `app/build.gradle`:
 ```gradle
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation project(':component:gsr-recording')
 }
 ```

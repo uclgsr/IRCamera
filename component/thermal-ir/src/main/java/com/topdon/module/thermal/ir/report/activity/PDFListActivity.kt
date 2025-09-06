@@ -2,8 +2,11 @@ package com.topdon.module.thermal.ir.report.activity
 
 import android.text.TextUtils
 import android.util.Log
+import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.topdon.lib.core.navigation.NavigationManager
 import com.blankj.utilcode.util.Utils
 import com.topdon.lib.core.config.ExtraKeyConfig
@@ -13,6 +16,7 @@ import com.topdon.lib.core.ktbase.BaseViewModelActivity
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.socket.WebSocketProxy
 import com.topdon.lib.core.utils.NetWorkUtils
+import com.topdon.lib.core.view.TitleView
 import com.topdon.libcom.PDFHelp
 import com.topdon.libcom.view.CommLoadMoreView
 import com.topdon.lms.sdk.LMS
@@ -41,6 +45,11 @@ import java.io.File
 // Legacy ARouter route annotation - now using NavigationManager
 class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
 
+    // View references using findViewById
+    private val titleView: TitleView by lazy { findViewById(R.id.title_view) }
+    private val fragmentPdfRecyclerLay: SmartRefreshLayout by lazy { findViewById(R.id.fragment_pdf_recycler_lay) }
+    private val fragmentPdfRecycler: RecyclerView by lazy { findViewById(R.id.fragment_pdf_recycler) }
+
     /**
      * 从上一界面传递过来的，当前是否为 TC007 设备类型.
      * true-TC007 false-其他插件式设备
@@ -65,7 +74,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
             }
             if (it == null) {
                 if (page == 1) {
-                    fragment_pdf_recycler_lay.finishRefresh(false)
+                    fragmentPdfRecyclerLay.finishRefresh(false)
                 } else {
                     reportAdapter.loadMoreModule.loadMoreComplete()
                 }
@@ -75,9 +84,9 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                     //刷新
                     if (data.code == LMS.SUCCESS){
                         reportAdapter.loadMoreModule.isEnableLoadMore = !data.data?.records.isNullOrEmpty()
-                        fragment_pdf_recycler_lay.finishRefresh()
+                        fragmentPdfRecyclerLay.finishRefresh()
                     }else{
-                        fragment_pdf_recycler_lay.finishRefresh(false)
+                        fragmentPdfRecyclerLay.finishRefresh(false)
                     }
                     reportAdapter.setNewInstance(data.data?.records)
                 } else {
@@ -107,23 +116,25 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
     }
 
     private fun initRecycler() {
-        fragment_pdf_recycler.layoutManager = LinearLayoutManager(this)
-        fragment_pdf_recycler_lay.setOnRefreshListener {
+        fragmentPdfRecycler.layoutManager = LinearLayoutManager(this)
+        fragmentPdfRecyclerLay.setOnRefreshListener {
             //刷新
             page = 1
             viewModel.getReportData(isTC007, page)
         }
-        fragment_pdf_recycler_lay.setEnableLoadMore(false)
+        fragmentPdfRecyclerLay.setEnableLoadMore(false)
         reportAdapter.loadMoreModule.loadMoreView = CommLoadMoreView()
-        fragment_pdf_recycler_lay.autoRefresh()
+        fragmentPdfRecyclerLay.autoRefresh()
         reportAdapter.loadMoreModule.setOnLoadMoreListener {
             //加载更多
             viewModel.getReportData(isTC007, ++page)
         }
         reportAdapter.jumpDetailListener = {item, position ->
-            NavigationManager.getInstance().build(RouterConfig.REPORT_DETAIL)
-                .withParcelable(ExtraKeyConfig.REPORT_BEAN,reportAdapter.data[position]?.reportContent)
-                .navigation(this)
+            reportAdapter.data[position]?.reportContent?.let { reportContent ->
+                NavigationManager.getInstance().build(RouterConfig.REPORT_DETAIL)
+                    .withParcelable(ExtraKeyConfig.REPORT_BEAN, reportContent)
+                    .navigation(this)
+            }
         }
         reportAdapter.isUseEmpty = true
         reportAdapter.delListener = {item, position ->
@@ -189,7 +200,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                 .create().show()
         }
 
-        fragment_pdf_recycler.adapter = reportAdapter
+        fragmentPdfRecycler.adapter = reportAdapter
 //        viewModel.getReportData(1)
     }
 }

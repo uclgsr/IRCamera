@@ -34,8 +34,8 @@ import com.topdon.lib.core.utils.CommUtils
 import com.topdon.lib.core.utils.NetWorkUtils
 import com.topdon.lib.core.utils.PermissionUtils
 import com.topdon.lms.sdk.LMS
-import com.topdon.module.thermal.ir.BuildConfig
 import com.topdon.module.thermal.ir.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.module.thermal.ir.dialog.HomeGuideDialog
 import com.topdon.module.thermal.ir.fragment.IRGalleryTabFragment
 import com.topdon.module.thermal.ir.fragment.IRThermalFragment
@@ -89,7 +89,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
     override fun initView() {
         // Initialize views - migrated from synthetic views
         viewPage = findViewById(R.id.view_page)
-        clRoot = findViewById(R.id.clRoot)
+        // clRoot = findViewById(R.id.clRoot)  // TODO: Verify this ID exists in layout
         ivMainBg = findViewById(R.id.iv_main_bg)
         clIconMonitor = findViewById(R.id.cl_icon_monitor)
         clIconGallery = findViewById(R.id.cl_icon_gallery)
@@ -155,7 +155,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
 
     override fun connected() {
         if (!isTC007) {
-            iv_main_bg.setImageResource(R.drawable.ic_ir_main_bg_connect)
+            ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
         }
     }
 
@@ -248,16 +248,16 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
         }
 
         when (SharedManager.homeGuideStep) {
-            1 -> view_page.setCurrentItem(0, false)
-            2 -> view_page.setCurrentItem(4, false)
-            3 -> view_page.setCurrentItem(2, false)
+            1 -> viewPage.setCurrentItem(0, false)
+            2 -> viewPage.setCurrentItem(4, false)
+            3 -> viewPage.setCurrentItem(2, false)
         }
 
         val guideDialog = HomeGuideDialog(this, SharedManager.homeGuideStep)
         guideDialog.onNextClickListener = {
             when (it) {
                 1 -> {
-                    view_page.setCurrentItem(4, false)
+                    viewPage.setCurrentItem(4, false)
                     if (Build.VERSION.SDK_INT < 31) {
                         lifecycleScope.launch {
                             delay(100)
@@ -267,7 +267,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
                     SharedManager.homeGuideStep = 2
                 }
                 2 -> {
-                    view_page.setCurrentItem(2, false)
+                    viewPage.setCurrentItem(2, false)
                     if (Build.VERSION.SDK_INT < 31) {
                         lifecycleScope.launch {
                             delay(100)
@@ -331,9 +331,9 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
         if (!XXPermissions.isGranted(this, permissionList)) {
             if (BaseApplication.instance.isDomestic()) {
                 TipDialog.Builder(this)
-                    .setMessage(getString(R.string.permission_request_storage_app, CommUtils.getAppName()))
-                    .setCancelListener(R.string.app_cancel)
-                    .setPositiveListener(R.string.app_confirm) {
+                    .setMessage(getString(LibR.string.permission_request_storage_app, CommUtils.getAppName()))
+                    .setCancelListener(LibR.string.app_cancel)
+                    .setPositiveListener(LibR.string.app_confirm) {
                         initStoragePermission(permissionList)
                     }
                     .create().show()
@@ -350,7 +350,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
      */
     private fun initStoragePermission(permissionList: List<String>) {
         if (PermissionUtils.isVisualUser()){
-            view_page.setCurrentItem(1, false)
+            viewPage.setCurrentItem(1, false)
             return
         }
         XXPermissions.with(this)
@@ -358,7 +358,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
             .request(object : OnPermissionCallback {
                 override fun onGranted(permissions: MutableList<String>, allGranted: Boolean) {
                     if (allGranted) {
-                        view_page.setCurrentItem(1, false)
+                        viewPage.setCurrentItem(1, false)
                     }
                 }
 
@@ -366,12 +366,12 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
                     if (doNotAskAgain) {
                         //拒绝授权并且不再提醒
                         TipDialog.Builder(this@IRMainActivity)
-                            .setTitleMessage(getString(R.string.app_tip))
-                            .setMessage(getString(R.string.app_album_content))
-                            .setPositiveListener(R.string.app_open) {
+                            .setTitleMessage(getString(LibR.string.app_tip))
+                            .setMessage(getString(LibR.string.app_album_content))
+                            .setPositiveListener(LibR.string.app_open) {
                                 AppUtils.launchAppDetailsSettings()
                             }
-                            .setCancelListener(R.string.app_cancel) {
+                            .setCancelListener(LibR.string.app_cancel) {
                             }
                             .setCanceled(true)
                             .create().show()
@@ -382,7 +382,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
 
 
 
-    private class ViewPagerAdapter(activity: FragmentActivity, val isTC007: Boolean) : FragmentStateAdapter(activity) {
+    private class ViewPagerAdapter(val activity: FragmentActivity, val isTC007: Boolean) : FragmentStateAdapter(activity) {
         override fun getItemCount() = 5
 
         override fun createFragment(position: Int): Fragment {
@@ -400,7 +400,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
                     0 -> AbilityFragment()
                     2 -> IRThermalFragment()
                     3 -> PDFListFragment()
-                    else -> NavigationManager.getInstance().build(RouterConfig.TC_MORE).navigation() as Fragment
+                    else -> NavigationManager.getInstance().build(RouterConfig.TC_MORE).navigation(activity) as Fragment
                 }
                 fragment.arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
                 return fragment

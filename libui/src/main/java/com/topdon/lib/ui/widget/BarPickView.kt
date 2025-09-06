@@ -80,7 +80,7 @@ class BarPickView : View {
     /**
      * 条条当前进度.
      */
-    private var progress: Int
+    private var progress: Int = 0
         set(value) {
             if (field != value) {
                 field = value.coerceAtLeast(min).coerceAtMost(max)

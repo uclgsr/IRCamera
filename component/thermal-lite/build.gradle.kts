@@ -26,9 +26,7 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-        }
+        
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -41,6 +39,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     
     kotlinOptions {
@@ -51,47 +50,34 @@ android {
         viewBinding = true
         dataBinding = true
     }
-
-    flavorDimensions += "app"
-    productFlavors {
-        create("dev") {
-            dimension = "app"
-        }
-        create("beta") {
-            dimension = "app"
-        }
-        create("prod") {
-            dimension = "app"
-        }
-        create("prodTopdon") {
-            dimension = "app"
-        }
-        create("insideChina") {
-            dimension = "app"
-        }
-        create("prodTopdonInsideChina") {
-            dimension = "app"
-        }
-    }
 }
 
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
     implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
     implementation(project(":libmenu"))
+    implementation(project(":component:CommonComponent"))
+    implementation(project(":component:pseudo"))
     // Re-add thermal-ir dependency - needed for thermal-lite functionality
     implementation(project(":component:thermal-ir"))
+    // Add commonlibrary dependency for thermal-lite
+    implementation(project(":commonlibrary"))
+    
+    // AAR dependencies as compileOnly for compilation but not packaging
+    compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))  // AC020 SDK for thermal-lite functionality
+    compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar"))  // IR utilities for thermal-lite
+    compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))  // Required for iruvc classes
+    compileOnly(files("../../shared/libs/lms_international-3.90.009.0.aar"))  // LMS SDK for thermal-lite classes
     
     // Temporarily disable ARouter compiler until KAPT issues are resolved
 
-    
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    // Use shared UI bundle for common dependencies
+    implementation(libs.bundles.ui.common)
     implementation(libs.utilcode)
-    implementation(libs.glide)
     
     // Test dependencies
     testImplementation(libs.junit)

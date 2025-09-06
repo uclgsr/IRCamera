@@ -23,6 +23,8 @@ import com.topdon.lib.core.bean.tools.ThermalBean
 import com.topdon.lib.core.db.entity.ThermalEntity
 import com.topdon.lib.core.tools.TimeTool
 import com.topdon.module.thermal.ir.R
+import com.topdon.lib.core.R as LibR
+import com.topdon.module.thermal.R as ThermalR
 import com.topdon.module.thermal.ir.chart.IRMyValueFormatter
 import com.topdon.module.thermal.ir.chart.YValueFormatter
 import com.topdon.module.thermal.ir.utils.ChartTools
@@ -49,9 +51,9 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
         mHandler.removeCallbacksAndMessages(null)
     }
 
-    private val textColor by lazy { ContextCompat.getColor(context, R.color.chart_text) }
-    private val axisChartColors by lazy { ContextCompat.getColor(context, R.color.chart_axis) }
-    private val axisLine by lazy { ContextCompat.getColor(context, R.color.circle_white) }
+    private val textColor by lazy { ContextCompat.getColor(context, LibR.color.chart_text) }
+    private val axisChartColors by lazy { ContextCompat.getColor(context, LibR.color.chart_axis) }
+    private val axisLine by lazy { ContextCompat.getColor(context, LibR.color.circle_white) }
 
     //MPChart
     private fun initChart() {
@@ -61,7 +63,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             this.isDragEnabled = true
             this.setDrawGridBackground(false)
             this.description = null//图标描述文本
-            this.setBackgroundResource(R.color.chart_bg)
+            this.setBackgroundResource(LibR.color.chart_bg)
             this.setScaleEnabled(true)//缩放
             this.setPinchZoom(false)//禁用后，可以分别在x轴和y轴上进行缩放
             this.isDoubleTapToZoomEnabled = false//双击不可缩放
@@ -73,8 +75,8 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                 SizeUtils.dp2px(8f).toFloat(),
                 SizeUtils.dp2px(4f).toFloat()
             )//图表区域偏移
-            setNoDataText(context.getString(R.string.http_code998))
-            setNoDataTextColor(ContextCompat.getColor(context, R.color.chart_text))
+            setNoDataText(context.getString(ThermalR.string.lms_http_code998))
+            setNoDataTextColor(ContextCompat.getColor(context, LibR.color.chart_text))
             val mv = MyMarkerView(context, R.layout.marker_lay)
             mv.chartView = this
             marker = mv//设置点击坐标显示提示框
@@ -220,14 +222,14 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
         R.drawable.bg_chart_fill3
     )
     private val lineChartColors = intArrayOf(
-        R.color.chart_line_max,
-        R.color.chart_line_min,
-        R.color.chart_line_center
+        LibR.color.chart_line_max,
+        LibR.color.chart_line_min,
+        LibR.color.chart_line_center
     )
     private val linePointColors = intArrayOf(
-        R.color.chart_point_max,
-        R.color.chart_point_min,
-        R.color.chart_point_center
+        LibR.color.chart_point_max,
+        LibR.color.chart_point_min,
+        LibR.color.chart_point_center
     )
 
     /**

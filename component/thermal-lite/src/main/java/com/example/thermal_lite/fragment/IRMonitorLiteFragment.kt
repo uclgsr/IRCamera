@@ -72,6 +72,10 @@ import java.util.ResourceBundle.getBundle
  **/
 class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
+    // View references (migrated from synthetic views)
+    lateinit var temperatureView: com.infisense.usbir.view.TemperatureView
+    protected lateinit var cameraView: com.topdon.lib.ui.widget.LiteSurfaceView
+
     private var configJob: Job ?= null
     protected var isConfigWait = true
     protected var temperatureBytes = ByteArray(192 * 256 * 2) //温度数据
@@ -117,6 +121,10 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
     }
 
     override fun initView() {
+        // Initialize view references
+        temperatureView = requireView().findViewById(R.id.temperatureView)
+        cameraView = requireView().findViewById(R.id.cameraView)
+        
         lifecycleScope.launch {
             showLoadingDialog()
             delay(1000)
@@ -413,10 +421,6 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
     fun restTempView(){
         temperatureView.restView()
         temperatureView.clear()
-    }
-
-    fun getTemperatureView() : TemperatureView{
-        return temperatureView
     }
 
     /**

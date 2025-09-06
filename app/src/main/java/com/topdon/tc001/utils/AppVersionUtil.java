@@ -27,7 +27,7 @@ import com.topdon.lms.sdk.weiget.TToast;
 import com.topdon.lms.sdk.xutils.common.Callback;
 import com.topdon.lms.sdk.xutils.common.task.PriorityExecutor;
 import com.topdon.lms.sdk.xutils.http.RequestParams;
-import com.topdon.tc001.R;
+import com.csl.irCamera.R;
 import com.topdon.tc001.tools.VersionTools;
 
 import java.io.File;

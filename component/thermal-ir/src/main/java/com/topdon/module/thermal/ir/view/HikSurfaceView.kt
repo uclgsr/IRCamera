@@ -14,7 +14,8 @@ import com.infisense.usbir.utils.IRImageHelp
 import com.infisense.usbir.utils.OpencvTools
 import com.infisense.usbir.utils.PseudocodeUtils
 import com.topdon.lib.core.bean.AlarmBean
-import com.topdon.pseudo.bean.CustomPseudoBean
+// import com.topdon.pseudo.bean.CustomPseudoBean  // Temporarily disabled - pseudo component dependency
+import com.topdon.module.thermal.ir.bean.DataBean // Use local data bean instead
 import java.nio.ByteBuffer
 
 /**
@@ -53,7 +54,7 @@ class HikSurfaceView : SurfaceView {
             val isPortrait = value == 90 || value == 270
             val width = (if (isPortrait) 192 else 256) * (if (isOpenAmplify) MULTIPLE else 1)
             val height = (if (isPortrait) 256 else 192) * (if (isOpenAmplify) MULTIPLE else 1)
-            bitmap.reconfigure(width, height, bitmap.config)
+            bitmap.reconfigure(width, height, bitmap.config ?: Bitmap.Config.ARGB_8888)
         }
 
     /**
@@ -79,8 +80,9 @@ class HikSurfaceView : SurfaceView {
     /**
      * 刷新自定义渲染配置
      */
-    fun refreshCustomPseudo(it: CustomPseudoBean) {
-        irImageHelp.setColorList(it.getColorList(), it.getPlaceList(), it.isUseGray, it.maxTemp, it.minTemp)
+    fun refreshCustomPseudo(it: DataBean) {
+        // Temporarily disabled - pseudo component dependency
+        // irImageHelp.setColorList(it.getColorList(), it.getPlaceList(), it.isUseGray, it.maxTemp, it.minTemp)
     }
 
 

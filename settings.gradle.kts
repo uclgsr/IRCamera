@@ -1,10 +1,6 @@
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
-        maven { url = uri("https://maven.aliyun.com/repository/central") }
-        maven { url = uri("https://maven.aliyun.com/repository/public") }
-        maven { url = uri("https://maven.aliyun.com/repository/google") }
         google()
         mavenCentral()
         maven { url = uri("https://www.jitpack.io") }
@@ -12,6 +8,11 @@ dependencyResolutionManagement {
         maven { url = uri("https://maven.google.com") }
         maven { url = uri("https://repo1.maven.org/maven2/") }
         maven { url = uri("https://maven.zohodl.com") }
+        // Aliyun repositories as fallback
+        maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
+        maven { url = uri("https://maven.aliyun.com/repository/central") }
+        maven { url = uri("https://maven.aliyun.com/repository/public") }
+        maven { url = uri("https://maven.aliyun.com/repository/google") }
         // Local AAR files directories
         flatDir {
             dirs("libir/libs")

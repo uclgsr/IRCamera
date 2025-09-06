@@ -1,0 +1,1153 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Calculating task graph as no cached configuration is available for tasks: clean :app:compileProdDebugKotlin
+> Task :libmatrix:clean UP-TO-DATE
+> Task :clean
+> Task :libhik:clean UP-TO-DATE
+> Task :BleModule:clean UP-TO-DATE
+> Task :RangeSeekBar:clean
+> Task :libcom:clean
+> Task :component:CommonComponent:clean
+> Task :libmenu:clean
+> Task :component:edit3d:clean
+> Task :libir:clean
+> Task :component:gsr-recording:clean
+> Task :libui:clean
+> Task :component:pseudo:clean
+> Task :component:house:clean
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preProdDebugBuild UP-TO-DATE
+> Task :libapp:preBuild UP-TO-DATE
+> Task :libapp:preDebugBuild UP-TO-DATE
+> Task :component:transfer:clean
+> Task :libapp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :libmenu:preBuild UP-TO-DATE
+> Task :libmenu:preDebugBuild UP-TO-DATE
+> Task :libmenu:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :component:CommonComponent:preBuild UP-TO-DATE
+> Task :component:thermal-lite:clean
+> Task :component:CommonComponent:preDebugBuild UP-TO-DATE
+> Task :component:thermal:clean
+> Task :component:user:clean
+> Task :libmenu:generateDebugResValues FROM-CACHE
+> Task :component:CommonComponent:generateDebugResValues FROM-CACHE
+> Task :component:CommonComponent:dataBindingTriggerDebug
+> Task :libmenu:dataBindingTriggerDebug
+> Task :libcom:preBuild UP-TO-DATE
+> Task :libcom:preDebugBuild UP-TO-DATE
+> Task :libcom:generateDebugResValues FROM-CACHE
+> Task :component:CommonComponent:generateDebugResources FROM-CACHE
+> Task :component:CommonComponent:javaPreCompileDebug FROM-CACHE
+> Task :libir:preBuild UP-TO-DATE
+> Task :libir:preDebugBuild UP-TO-DATE
+> Task :libmenu:generateDebugResources FROM-CACHE
+> Task :libir:generateDebugResValues FROM-CACHE
+> Task :libcom:generateDebugResources FROM-CACHE
+> Task :libir:generateDebugResources FROM-CACHE
+> Task :libui:preBuild UP-TO-DATE
+> Task :app:clean
+> Task :libui:preDebugBuild UP-TO-DATE
+> Task :RangeSeekBar:preBuild UP-TO-DATE
+> Task :RangeSeekBar:preDebugBuild UP-TO-DATE
+> Task :RangeSeekBar:generateDebugResValues FROM-CACHE
+> Task :libui:generateDebugResValues FROM-CACHE
+> Task :RangeSeekBar:generateDebugResources FROM-CACHE
+> Task :component:edit3d:preBuild UP-TO-DATE
+> Task :component:edit3d:preDebugBuild UP-TO-DATE
+> Task :component:edit3d:generateDebugResValues FROM-CACHE
+> Task :component:thermal-ir:clean
+> Task :component:CommonComponent:packageDebugResources FROM-CACHE
+> Task :libcom:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :component:edit3d:generateDebugResources FROM-CACHE
+> Task :libui:generateDebugResources FROM-CACHE
+> Task :libui:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :libmenu:javaPreCompileDebug FROM-CACHE
+> Task :libui:javaPreCompileDebug FROM-CACHE
+> Task :RangeSeekBar:javaPreCompileDebug FROM-CACHE
+> Task :libir:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :libcom:javaPreCompileDebug FROM-CACHE
+> Task :component:edit3d:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :libir:javaPreCompileDebug FROM-CACHE
+> Task :component:house:preBuild UP-TO-DATE
+> Task :component:house:preDebugBuild UP-TO-DATE
+> Task :component:house:generateDebugResValues FROM-CACHE
+> Task :component:edit3d:dataBindingTriggerDebug
+> Task :component:house:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :libmenu:packageDebugResources FROM-CACHE
+> Task :component:house:dataBindingTriggerDebug
+> Task :component:CommonComponent:parseDebugLocalResources FROM-CACHE
+> Task :component:house:generateDebugResources FROM-CACHE
+> Task :component:pseudo:preBuild UP-TO-DATE
+> Task :component:pseudo:preDebugBuild UP-TO-DATE
+> Task :libcom:packageDebugResources FROM-CACHE
+> Task :libmenu:parseDebugLocalResources FROM-CACHE
+> Task :libir:packageDebugResources FROM-CACHE
+> Task :libapp:clean
+> Task :component:pseudo:generateDebugResValues FROM-CACHE
+> Task :component:CommonComponent:generateDebugRFile FROM-CACHE
+> Task :libir:parseDebugLocalResources FROM-CACHE
+> Task :libapp:generateDebugResValues FROM-CACHE
+> Task :libcom:parseDebugLocalResources FROM-CACHE
+> Task :libmenu:generateDebugRFile FROM-CACHE
+> Task :libapp:dataBindingTriggerDebug
+> Task :libapp:generateDebugBuildConfig FROM-CACHE
+> Task :libir:generateDebugRFile FROM-CACHE
+> Task :libapp:generateDebugResources FROM-CACHE
+> Task :component:pseudo:generateDebugResources FROM-CACHE
+> Task :component:pseudo:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :component:pseudo:dataBindingTriggerDebug
+> Task :component:thermal:preBuild UP-TO-DATE
+> Task :component:thermal:preDebugBuild UP-TO-DATE
+> Task :libapp:javaPreCompileDebug FROM-CACHE
+> Task :component:thermal:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :libcom:generateDebugRFile FROM-CACHE
+> Task :component:thermal:generateDebugResValues FROM-CACHE
+> Task :RangeSeekBar:packageDebugResources FROM-CACHE
+> Task :component:thermal:dataBindingTriggerDebug
+> Task :component:house:javaPreCompileDebug FROM-CACHE
+> Task :component:thermal:generateDebugResources FROM-CACHE
+> Task :component:edit3d:packageDebugResources FROM-CACHE
+> Task :component:pseudo:javaPreCompileDebug FROM-CACHE
+> Task :RangeSeekBar:parseDebugLocalResources FROM-CACHE
+> Task :component:thermal:javaPreCompileDebug FROM-CACHE
+> Task :component:thermal-ir:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :component:thermal-ir:preBuild UP-TO-DATE
+> Task :component:thermal-ir:preDebugBuild UP-TO-DATE
+> Task :component:edit3d:parseDebugLocalResources FROM-CACHE
+> Task :RangeSeekBar:generateDebugRFile FROM-CACHE
+> Task :component:thermal-ir:generateDebugResValues FROM-CACHE
+> Task :component:edit3d:generateDebugRFile FROM-CACHE
+> Task :component:thermal-ir:generateDebugResources FROM-CACHE
+> Task :component:thermal-ir:javaPreCompileDebug FROM-CACHE
+> Task :component:thermal-ir:dataBindingTriggerDebug
+> Task :component:thermal-lite:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :component:thermal-lite:preBuild UP-TO-DATE
+> Task :component:thermal-lite:preDebugBuild UP-TO-DATE
+> Task :libui:packageDebugResources FROM-CACHE
+> Task :libui:parseDebugLocalResources FROM-CACHE
+> Task :component:thermal-lite:generateDebugResValues FROM-CACHE
+> Task :libapp:packageDebugResources FROM-CACHE
+> Task :component:thermal-lite:generateDebugResources FROM-CACHE
+> Task :libapp:parseDebugLocalResources FROM-CACHE
+> Task :component:house:packageDebugResources FROM-CACHE
+> Task :component:pseudo:packageDebugResources FROM-CACHE
+> Task :libui:generateDebugRFile FROM-CACHE
+> Task :component:house:parseDebugLocalResources FROM-CACHE
+> Task :component:pseudo:parseDebugLocalResources FROM-CACHE
+> Task :libapp:generateDebugRFile FROM-CACHE
+> Task :component:pseudo:generateDebugRFile FROM-CACHE
+> Task :component:house:generateDebugRFile FROM-CACHE
+> Task :component:thermal-lite:dataBindingTriggerDebug
+> Task :component:transfer:preBuild UP-TO-DATE
+> Task :component:transfer:preDebugBuild UP-TO-DATE
+> Task :component:thermal-lite:javaPreCompileDebug FROM-CACHE
+> Task :component:transfer:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :component:transfer:generateDebugResValues FROM-CACHE
+> Task :component:thermal-lite:packageDebugResources FROM-CACHE
+> Task :component:transfer:dataBindingTriggerDebug
+> Task :component:thermal-lite:parseDebugLocalResources FROM-CACHE
+> Task :component:transfer:generateDebugResources FROM-CACHE
+> Task :component:thermal:packageDebugResources FROM-CACHE
+> Task :app:generateProdDebugResValues FROM-CACHE
+> Task :component:thermal-lite:generateDebugRFile FROM-CACHE
+> Task :component:gsr-recording:preBuild UP-TO-DATE
+> Task :component:gsr-recording:preDebugBuild UP-TO-DATE
+> Task :component:thermal:parseDebugLocalResources FROM-CACHE
+> Task :component:transfer:packageDebugResources FROM-CACHE
+> Task :component:gsr-recording:generateDebugResValues FROM-CACHE
+> Task :component:thermal:generateDebugRFile FROM-CACHE
+> Task :component:user:preBuild UP-TO-DATE
+> Task :component:user:preDebugBuild UP-TO-DATE
+> Task :component:gsr-recording:generateDebugResources FROM-CACHE
+> Task :component:transfer:parseDebugLocalResources FROM-CACHE
+> Task :component:user:generateDebugResValues FROM-CACHE
+> Task :app:generateProdDebugResources FROM-CACHE
+> Task :component:gsr-recording:packageDebugResources FROM-CACHE
+> Task :component:transfer:generateDebugRFile FROM-CACHE
+> Task :component:user:generateDebugResources FROM-CACHE
+> Task :component:gsr-recording:parseDebugLocalResources FROM-CACHE
+> Task :component:gsr-recording:generateDebugRFile FROM-CACHE
+> Task :app:dataBindingTriggerProdDebug
+> Task :app:generateProdDebugBuildConfig FROM-CACHE
+> Task :component:user:packageDebugResources FROM-CACHE
+> Task :component:thermal-ir:packageDebugResources FROM-CACHE
+> Task :component:user:parseDebugLocalResources FROM-CACHE
+> Task :component:thermal-ir:parseDebugLocalResources FROM-CACHE
+> Task :component:thermal-ir:generateDebugRFile FROM-CACHE
+> Task :component:user:generateDebugRFile FROM-CACHE
+> Task :app:packageProdDebugResources FROM-CACHE
+> Task :app:parseProdDebugLocalResources FROM-CACHE
+> Task :libir:writeDebugAarMetadata
+> Task :libmenu:writeDebugAarMetadata
+> Task :libapp:writeDebugAarMetadata
+> Task :libcom:writeDebugAarMetadata
+> Task :libui:writeDebugAarMetadata
+> Task :RangeSeekBar:compileDebugJavaWithJavac FROM-CACHE
+> Task :component:edit3d:writeDebugAarMetadata
+> Task :component:CommonComponent:writeDebugAarMetadata
+> Task :component:house:writeDebugAarMetadata
+> Task :component:gsr-recording:writeDebugAarMetadata
+> Task :component:thermal:writeDebugAarMetadata
+> Task :component:CommonComponent:dataBindingMergeDependencyArtifactsDebug
+> Task :component:thermal-ir:writeDebugAarMetadata
+> Task :RangeSeekBar:writeDebugAarMetadata
+> Task :component:pseudo:writeDebugAarMetadata
+> Task :libapp:dataBindingMergeDependencyArtifactsDebug
+> Task :component:transfer:writeDebugAarMetadata
+> Task :component:gsr-recording:dataBindingMergeDependencyArtifactsDebug
+> Task :component:thermal-lite:writeDebugAarMetadata
+> Task :component:user:writeDebugAarMetadata
+> Task :app:createProdDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksProdDebug FROM-CACHE
+> Task :app:mapProdDebugSourceSetPaths
+> Task :libapp:extractDeepLinksDebug FROM-CACHE
+> Task :libcom:extractDeepLinksDebug FROM-CACHE
+> Task :libapp:processDebugManifest FROM-CACHE
+> Task :libir:extractDeepLinksDebug FROM-CACHE
+> Task :libir:processDebugManifest FROM-CACHE
+> Task :libcom:processDebugManifest FROM-CACHE
+> Task :RangeSeekBar:bundleLibCompileToJarDebug
+> Task :libmenu:extractDeepLinksDebug FROM-CACHE
+> Task :libui:extractDeepLinksDebug FROM-CACHE
+> Task :RangeSeekBar:extractDeepLinksDebug FROM-CACHE
+> Task :libui:processDebugManifest FROM-CACHE
+> Task :libmenu:processDebugManifest FROM-CACHE
+> Task :component:CommonComponent:extractDeepLinksDebug FROM-CACHE
+> Task :component:edit3d:extractDeepLinksDebug FROM-CACHE
+> Task :component:CommonComponent:processDebugManifest FROM-CACHE
+> Task :RangeSeekBar:processDebugManifest FROM-CACHE
+> Task :component:gsr-recording:extractDeepLinksDebug FROM-CACHE
+> Task :component:edit3d:processDebugManifest FROM-CACHE
+> Task :component:house:extractDeepLinksDebug FROM-CACHE
+> Task :component:house:processDebugManifest FROM-CACHE
+> Task :component:pseudo:extractDeepLinksDebug FROM-CACHE
+> Task :component:gsr-recording:processDebugManifest FROM-CACHE
+> Task :component:thermal:extractDeepLinksDebug FROM-CACHE
+> Task :component:pseudo:processDebugManifest FROM-CACHE
+> Task :component:thermal-ir:extractDeepLinksDebug FROM-CACHE
+> Task :component:thermal-lite:extractDeepLinksDebug FROM-CACHE
+> Task :component:thermal:processDebugManifest FROM-CACHE
+> Task :component:thermal-ir:processDebugManifest FROM-CACHE
+> Task :component:transfer:extractDeepLinksDebug FROM-CACHE
+> Task :component:user:extractDeepLinksDebug FROM-CACHE
+> Task :component:thermal-lite:processDebugManifest FROM-CACHE
+> Task :component:transfer:processDebugManifest FROM-CACHE
+> Task :component:gsr-recording:dataBindingGenBaseClassesDebug FROM-CACHE
+> Task :component:CommonComponent:dataBindingGenBaseClassesDebug FROM-CACHE
+> Task :component:user:processDebugManifest FROM-CACHE
+> Task :component:edit3d:javaPreCompileDebug FROM-CACHE
+> Task :component:gsr-recording:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :libcom:compileDebugLibraryResources FROM-CACHE
+> Task :libapp:compileDebugLibraryResources FROM-CACHE
+> Task :libir:compileDebugLibraryResources FROM-CACHE
+> Task :libmenu:compileDebugLibraryResources FROM-CACHE
+> Task :RangeSeekBar:compileDebugLibraryResources FROM-CACHE
+> Task :component:CommonComponent:compileDebugLibraryResources FROM-CACHE
+> Task :app:checkProdDebugAarMetadata
+> Task :component:edit3d:compileDebugLibraryResources FROM-CACHE
+> Task :component:gsr-recording:javaPreCompileDebug FROM-CACHE
+> Task :component:gsr-recording:compileDebugLibraryResources FROM-CACHE
+> Task :component:transfer:javaPreCompileDebug FROM-CACHE
+> Task :component:user:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :libapp:dataBindingGenBaseClassesDebug FROM-CACHE
+> Task :libui:compileDebugLibraryResources FROM-CACHE
+> Task :component:user:javaPreCompileDebug FROM-CACHE
+> Task :component:pseudo:compileDebugLibraryResources FROM-CACHE
+> Task :component:house:compileDebugLibraryResources FROM-CACHE
+> Task :component:thermal:compileDebugLibraryResources FROM-CACHE
+> Task :component:thermal-lite:compileDebugLibraryResources FROM-CACHE
+> Task :component:transfer:compileDebugLibraryResources FROM-CACHE
+> Task :component:user:compileDebugLibraryResources FROM-CACHE
+> Task :app:mergeProdDebugResources FROM-CACHE
+> Task :component:CommonComponent:compileDebugJavaWithJavac FROM-CACHE
+> Task :component:thermal-ir:compileDebugLibraryResources FROM-CACHE
+> Task :component:gsr-recording:compileDebugKotlin FROM-CACHE
+> Task :component:gsr-recording:compileDebugJavaWithJavac NO-SOURCE
+> Task :component:gsr-recording:bundleLibCompileToJarDebug
+> Task :component:CommonComponent:bundleLibCompileToJarDebug
+> Task :app:processProdDebugMainManifest FROM-CACHE
+> Task :app:processProdDebugManifest FROM-CACHE
+> Task :app:processProdDebugManifestForPackage FROM-CACHE
+> Task :libapp:kaptGenerateStubsDebugKotlin FROM-CACHE
+> Task :libapp:kaptDebugKotlin FROM-CACHE
+> Task :libmenu:dataBindingMergeDependencyArtifactsDebug
+> Task :libmenu:dataBindingGenBaseClassesDebug FROM-CACHE
+> Task :libapp:compileDebugKotlin FROM-CACHE
+> Task :libapp:compileDebugJavaWithJavac FROM-CACHE
+> Task :libapp:bundleLibCompileToJarDebug
+> Task :libmenu:kaptGenerateStubsDebugKotlin FROM-CACHE
+> Task :libmenu:kaptDebugKotlin FROM-CACHE
+> Task :libir:compileDebugKotlin FROM-CACHE
+> Task :component:pseudo:dataBindingMergeDependencyArtifactsDebug
+> Task :component:thermal:dataBindingMergeDependencyArtifactsDebug
+> Task :component:house:dataBindingMergeDependencyArtifactsDebug
+> Task :libmenu:compileDebugKotlin FROM-CACHE
+> Task :libui:dataBindingMergeDependencyArtifactsDebug
+> Task :component:edit3d:dataBindingMergeDependencyArtifactsDebug
+> Task :libir:compileDebugJavaWithJavac FROM-CACHE
+> Task :libmenu:compileDebugJavaWithJavac FROM-CACHE
+> Task :component:user:dataBindingMergeDependencyArtifactsDebug
+> Task :component:transfer:dataBindingMergeDependencyArtifactsDebug
+> Task :libui:dataBindingGenBaseClassesDebug FROM-CACHE
+> Task :libmenu:bundleLibCompileToJarDebug
+> Task :libui:kaptGenerateStubsDebugKotlin SKIPPED
+> Task :libui:kaptDebugKotlin SKIPPED
+> Task :libir:bundleLibCompileToJarDebug
+> Task :app:processProdDebugResources FROM-CACHE
+> Task :component:pseudo:dataBindingGenBaseClassesDebug FROM-CACHE
+> Task :component:transfer:dataBindingGenBaseClassesDebug FROM-CACHE
+> Task :component:edit3d:dataBindingGenBaseClassesDebug FROM-CACHE
+> Task :component:thermal:dataBindingGenBaseClassesDebug FROM-CACHE
+> Task :component:house:dataBindingGenBaseClassesDebug FROM-CACHE
+> Task :component:user:dataBindingGenBaseClassesDebug FROM-CACHE
+> Task :libui:compileDebugKotlin FROM-CACHE
+> Task :libui:compileDebugJavaWithJavac FROM-CACHE
+> Task :libui:bundleLibCompileToJarDebug
+> Task :libcom:kaptGenerateStubsDebugKotlin SKIPPED
+> Task :libcom:kaptDebugKotlin SKIPPED
+> Task :libcom:compileDebugKotlin FROM-CACHE
+> Task :libcom:compileDebugJavaWithJavac FROM-CACHE
+> Task :libcom:bundleLibCompileToJarDebug
+> Task :component:edit3d:kaptGenerateStubsDebugKotlin FROM-CACHE
+> Task :component:user:compileDebugKotlin FROM-CACHE
+> Task :component:transfer:kaptGenerateStubsDebugKotlin FROM-CACHE
+> Task :component:pseudo:kaptGenerateStubsDebugKotlin FROM-CACHE
+> Task :component:house:kaptGenerateStubsDebugKotlin FROM-CACHE
+> Task :component:user:compileDebugJavaWithJavac FROM-CACHE
+> Task :component:user:bundleLibCompileToJarDebug
+> Task :component:thermal:kaptGenerateStubsDebugKotlin FROM-CACHE
+> Task :component:pseudo:kaptDebugKotlin FROM-CACHE
+> Task :component:edit3d:kaptDebugKotlin FROM-CACHE
+> Task :component:house:kaptDebugKotlin FROM-CACHE
+> Task :component:transfer:kaptDebugKotlin FROM-CACHE
+> Task :component:edit3d:compileDebugKotlin FROM-CACHE
+> Task :component:pseudo:compileDebugKotlin FROM-CACHE
+> Task :component:thermal:kaptDebugKotlin FROM-CACHE
+> Task :component:transfer:compileDebugKotlin FROM-CACHE
+> Task :component:pseudo:compileDebugJavaWithJavac FROM-CACHE
+> Task :component:transfer:compileDebugJavaWithJavac FROM-CACHE
+> Task :component:edit3d:compileDebugJavaWithJavac FROM-CACHE
+> Task :component:house:compileDebugKotlin FROM-CACHE
+> Task :component:pseudo:bundleLibCompileToJarDebug
+> Task :component:edit3d:bundleLibCompileToJarDebug
+> Task :component:transfer:bundleLibCompileToJarDebug
+> Task :component:house:compileDebugJavaWithJavac FROM-CACHE
+> Task :component:thermal-ir:dataBindingMergeDependencyArtifactsDebug
+> Task :component:thermal:compileDebugKotlin FROM-CACHE
+> Task :component:house:bundleLibCompileToJarDebug
+> Task :component:thermal:compileDebugJavaWithJavac FROM-CACHE
+> Task :component:thermal-ir:dataBindingGenBaseClassesDebug FROM-CACHE
+> Task :component:thermal:bundleLibCompileToJarDebug
+> Task :component:thermal-ir:compileDebugKotlin FROM-CACHE
+> Task :component:thermal-ir:compileDebugJavaWithJavac FROM-CACHE
+> Task :component:thermal-lite:dataBindingMergeDependencyArtifactsDebug
+> Task :component:thermal-lite:dataBindingGenBaseClassesDebug FROM-CACHE
+> Task :component:thermal-ir:bundleLibCompileToJarDebug
+> Task :component:thermal-lite:compileDebugKotlin FROM-CACHE
+> Task :component:thermal-lite:compileDebugJavaWithJavac FROM-CACHE
+> Task :component:thermal-lite:bundleLibCompileToJarDebug
+> Task :app:dataBindingMergeDependencyArtifactsProdDebug
+> Task :app:dataBindingGenBaseClassesProdDebug FROM-CACHE
+> Task :app:kaptGenerateStubsProdDebugKotlin FROM-CACHE
+> Task :app:kaptProdDebugKotlin FROM-CACHE
+
+> Task :app:compileProdDebugKotlin
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:37:64 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:38:63 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:39:66 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:40:57 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:41:58 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:42:58 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:43:60 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:44:60 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:45:60 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:46:61 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:50:24 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:62:40 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:70:39 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:71:38 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:74:18 Unresolved reference 'setCancelListener'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:74:36 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:83:41 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:95:41 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:108:41 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:119:47 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:123:36 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/ClauseActivity.kt:124:39 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:28:43 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:31:9 Unresolved reference 'recycler_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:32:9 Unresolved reference 'recycler_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:98:75 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:104:29 Unresolved reference 'tv_title'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:105:29 Unresolved reference 'tv_title'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:105:87 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:105:117 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:107:29 Unresolved reference 'tv_item1'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:110:55 Unresolved reference 'iv_item1'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:110:81 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:111:60 Unresolved reference 'iv_item1'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:111:86 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:112:60 Unresolved reference 'iv_item1'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:112:86 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:113:55 Unresolved reference 'iv_item1'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:113:81 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:114:55 Unresolved reference 'iv_item1'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:114:81 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:115:55 Unresolved reference 'iv_item1'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:115:81 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:118:29 Unresolved reference 'group_item2'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:120:33 Unresolved reference 'tv_item2'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:123:59 Unresolved reference 'iv_item2'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:123:85 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:124:64 Unresolved reference 'iv_item2'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:124:90 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:125:64 Unresolved reference 'iv_item2'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:125:90 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:126:59 Unresolved reference 'iv_item2'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:126:85 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:127:59 Unresolved reference 'iv_item2'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:127:85 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:128:59 Unresolved reference 'iv_item2'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:128:85 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:137:26 Unresolved reference 'view_bg_item1'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt:143:26 Unresolved reference 'view_bg_item2'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:107:43 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:135:9 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:136:9 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:137:9 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:138:9 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:140:13 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:155:9 Unresolved reference 'edit_recycler_first'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:156:9 Unresolved reference 'color_bar_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:160:9 Unresolved reference 'temperature_iv_lock'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:161:9 Unresolved reference 'temperature_iv_input'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:166:13 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:168:13 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:199:17 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:205:13 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:206:13 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:207:13 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:209:13 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:210:13 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:211:13 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:212:45 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:213:13 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:214:13 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:254:13 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:256:17 Unresolved reference 'tv_temp_content'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:257:17 Unresolved reference 'tv_temp_content'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:260:17 Unresolved reference 'temperature_iv_input'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:260:55 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:261:17 Unresolved reference 'temperature_iv_lock'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:262:17 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:263:17 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:265:17 Unresolved reference 'tv_temp_content'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:266:17 Unresolved reference 'tv_temp_content'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:269:17 Unresolved reference 'temperature_iv_input'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:269:55 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:270:17 Unresolved reference 'temperature_iv_lock'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:272:13 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:273:13 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:275:17 Unresolved reference 'color_bar_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:284:17 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:284:17 Not enough information to infer type argument for 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:285:26 Unresolved reference 'ir_image_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:288:17 Unresolved reference 'ir_image_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:290:13 Not enough information to infer type argument for 'K'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:293:17 Unresolved reference 'ir_image_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:299:29 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:300:29 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:307:17 Unresolved reference 'ir_image_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:316:9 Unresolved reference 'edit_recycler_first'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:317:19 Unresolved reference 'it'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:318:22 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:319:22 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:320:22 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:323:9 Unresolved reference 'edit_recycler_first'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:324:13 Unresolved reference 'color_bar_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:324:40 Unresolved reference 'it'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:327:9 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:327:50 An explicit type is required on a value parameter.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:327:61 An explicit type is required on a value parameter.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:329:36 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:330:35 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:331:35 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:332:34 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:333:35 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:339:9 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:339:50 An explicit type is required on a value parameter.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:339:53 An explicit type is required on a value parameter.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:339:57 An explicit type is required on a value parameter.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:342:48 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:343:33 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:344:22 Unresolved reference 'setPositiveListener'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:344:42 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:349:41 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:357:9 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:357:52 An explicit type is required on a value parameter.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:357:58 An explicit type is required on a value parameter.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:369:9 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:370:9 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:376:9 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:389:9 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:390:9 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:391:9 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:402:25 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:423:61 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:423:88 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:425:21 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:427:21 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:428:21 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:438:25 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:461:9 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:462:9 Unresolved reference 'temperature_iv_lock'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:463:9 Unresolved reference 'temperature_iv_lock'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:465:13 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:466:13 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:468:13 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:469:13 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:475:13 Unresolved reference 'temperature_iv_lock'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:476:21 Unresolved reference 'temperature_iv_lock'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:479:25 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:484:53 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:487:13 Unresolved reference 'temperature_iv_input'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:502:17 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:503:17 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:511:27 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:523:17 Unresolved reference 'temperature_iv_lock'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:524:17 Unresolved reference 'tv_temp_content'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:525:49 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:526:17 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:531:17 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:532:17 Unresolved reference 'temperature_iv_input'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:532:55 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:534:17 Unresolved reference 'temperature_iv_lock'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:538:17 Unresolved reference 'tv_temp_content'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:539:17 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:540:17 Unresolved reference 'temperature_iv_input'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:540:55 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:543:13 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:544:13 Unresolved reference 'temperature_seekbar'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:555:9 Unresolved reference 'title_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:562:9 Unresolved reference 'title_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:562:51 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:562:74 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:563:9 Unresolved reference 'title_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:574:25 Unresolved reference 'ir_image_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:576:25 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:578:70 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:581:25 Unresolved reference 'color_bar_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:582:70 Unresolved reference 'color_bar_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:599:77 Argument type mismatch: actual type is 'android.os.Parcelable!', but 'android.os.Parcelable' was expected.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:599:84 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:600:82 Argument type mismatch: actual type is 'android.os.Parcelable!', but 'android.os.Parcelable' was expected.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:600:89 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:601:89 Argument type mismatch: actual type is 'java.util.ArrayList<T!>?', but 'java.util.ArrayList<out android.os.Parcelable>' was expected.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:601:96 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:608:9 Unresolved reference 'edit_recycler_second'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:622:13 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:623:13 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:623:40 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:623:44 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:624:55 Unresolved reference 'maxTemperature'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:625:55 Unresolved reference 'minTemperature'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:631:22 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:631:52 Method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:638:22 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:638:52 Method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:648:22 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:648:52 Method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:663:40 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:664:25 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:665:14 Unresolved reference 'setPositiveListener'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:665:34 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:667:33 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:681:17 Unresolved reference 'ir_image_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:683:17 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:685:62 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:688:17 Unresolved reference 'color_bar_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:689:62 Unresolved reference 'color_bar_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:697:34 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:721:31 Unresolved reference 'color_bar_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt:722:25 Unresolved reference 'temperature_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/InitUtil.kt:81:27 Unresolved reference 'BuildConfig'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/InitUtil.kt:82:30 Unresolved reference 'BuildConfig'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:24:20 Unresolved reference 'suplib'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:29:19 Unresolved reference 'hik'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:77:38 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:84:35 Unresolved reference 'BuildConfig'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:85:41 Unresolved reference 'BuildConfig'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:86:41 Unresolved reference 'BuildConfig'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:87:41 Unresolved reference 'BuildConfig'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:107:13 Unresolved reference 'SupHelp'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:109:9 Unresolved reference 'view_page'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:110:9 Unresolved reference 'view_page'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:111:9 Unresolved reference 'view_page'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:112:9 Unresolved reference 'view_page'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:118:13 Unresolved reference 'view_page'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:121:9 Unresolved reference 'view_mine_point'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:123:9 Unresolved reference 'cl_icon_gallery'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:124:9 Unresolved reference 'view_main'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:125:9 Unresolved reference 'cl_icon_mine'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:220:29 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:221:18 Unresolved reference 'setPositiveListener'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:221:38 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:236:29 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:237:18 Unresolved reference 'setPositiveListener'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:237:38 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:280:13 Unresolved reference 'cl_icon_gallery'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:284:13 Unresolved reference 'view_main'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:285:17 Unresolved reference 'view_page'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:287:13 Unresolved reference 'cl_icon_mine'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:288:17 Unresolved reference 'view_page'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:297:39 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:298:36 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:299:18 Unresolved reference 'setPositiveListener'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:299:38 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:316:9 Unresolved reference 'view_mine_point'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:324:9 Unresolved reference 'iv_icon_gallery'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:325:9 Unresolved reference 'tv_icon_gallery'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:326:9 Unresolved reference 'iv_icon_mine'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:327:9 Unresolved reference 'tv_icon_mine'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:328:9 Unresolved reference 'iv_bottom_main_bg'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:328:44 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:332:17 Unresolved reference 'iv_icon_gallery'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:333:17 Unresolved reference 'tv_icon_gallery'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:336:17 Unresolved reference 'iv_bottom_main_bg'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:336:52 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:339:17 Unresolved reference 'iv_icon_mine'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:340:17 Unresolved reference 'tv_icon_mine'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:364:29 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:365:18 Unresolved reference 'setPositiveListener'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:365:38 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:366:47 Unresolved reference 'it'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:419:28 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:435:32 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:443:41 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:452:43 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:453:40 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:454:22 Unresolved reference 'setPositiveListener'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:454:42 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:471:49 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:486:56 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:488:43 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:489:48 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:490:50 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:493:30 Unresolved reference 'setCancelListener'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:493:48 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:503:68 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:506:43 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:507:40 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:508:22 Unresolved reference 'setPositiveListener'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:508:42 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:530:41 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:543:56 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:544:51 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:545:50 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:548:30 Unresolved reference 'setCancelListener'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:548:48 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:564:17 Unresolved reference 'view_page'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:576:48 Unresolved reference 'IRThermalHikActivity'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:576:76 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MainActivity.kt:576:76 Unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+val <T> KClass<T>.java: Class<T>
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:20:38 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:30:13 Unresolved reference 'tv_title'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:30:39 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:31:13 Unresolved reference 'title_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:31:37 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:32:13 Unresolved reference 'main_guide_tip1'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:33:13 Unresolved reference 'main_guide_tip2'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:34:13 Unresolved reference 'main_guide_tip4'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:35:13 Unresolved reference 'disconnect_tip1'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:36:13 Unresolved reference 'disconnect_tip2'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:37:13 Unresolved reference 'iv_tvSetting'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:39:13 Unresolved reference 'tv_title'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:39:39 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:40:13 Unresolved reference 'main_guide_tip1'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:41:13 Unresolved reference 'main_guide_tip2'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:42:13 Unresolved reference 'main_guide_tip4'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:43:13 Unresolved reference 'disconnect_tip1'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:44:13 Unresolved reference 'disconnect_tip2'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:45:13 Unresolved reference 'iv_tvSetting'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:46:62 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:47:61 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:48:13 Unresolved reference 'iv_tvSetting'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:53:9 Unresolved reference 'iv_tvSetting'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:75:44 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:76:29 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:77:18 Unresolved reference 'setPositiveListener'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:77:38 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt:92:36 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PdfActivity.kt:18:38 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PdfActivity.kt:22:9 Unresolved reference 'pdf_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:45:38 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:55:28 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:56:28 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:57:28 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:58:31 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:61:9 Unresolved reference 'title_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:67:26 Unresolved reference 'policy_web'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:72:33 Unresolved reference 'policy_web'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:89:17 Unresolved reference 'policy_web'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:103:9 Unresolved reference 'policy_web'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:104:40 Unresolved reference 'policy_web'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:107:9 Unresolved reference 'policy_web'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:119:9 Unresolved reference 'policy_web'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:132:25 Unresolved reference 'policy_web'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:139:9 Unresolved reference 'policy_web'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:140:9 Unresolved reference 'policy_web'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/PolicyActivity.kt:161:18 Unresolved reference 'policy_web'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/SplashActivity.kt:23:24 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/SplashActivity.kt:24:66 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/SplashActivity.kt:27:23 Unresolved reference 'BuildConfig'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/SplashActivity.kt:35:9 Unresolved reference 'tv_app_name'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:19:38 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:22:9 Unresolved reference 'version_code_text'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:22:47 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:24:9 Unresolved reference 'version_year_txt'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:24:43 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:25:9 Unresolved reference 'version_statement_private_txt'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:26:9 Unresolved reference 'version_statement_policy_txt'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:27:9 Unresolved reference 'version_statement_copyright_txt'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:29:9 Unresolved reference 'setting_version_img'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:30:17 Unresolved reference 'BuildConfig'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:34:9 Unresolved reference 'cl_new_version'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:39:9 Unresolved reference 'setting_version_txt'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:55:13 Unresolved reference 'version_statement_private_txt'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:60:13 Unresolved reference 'version_statement_policy_txt'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:65:13 Unresolved reference 'version_statement_copyright_txt'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:78:21 Unresolved reference 'cl_new_version'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/VersionActivity.kt:82:21 Unresolved reference 'tv_new_version'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:15:25 Unresolved reference 'databinding'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:26:45 Unresolved reference 'ActivityWebViewBinding'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:28:47 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:37:17 Unresolved reference 'tvReload'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:39:21 Unresolved reference 'viewCover'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:40:21 Unresolved reference 'clError'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:41:21 Unresolved reference 'webView'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:44:48 Unresolved reference 'webView'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:54:17 Unresolved reference 'webView'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:54:78 Unresolved reference 'webView'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:58:25 Unresolved reference 'viewCover'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:63:25 Unresolved reference 'viewCover'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:65:29 Unresolved reference 'clError'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:70:17 Unresolved reference 'webView'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:70:53 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:70:56 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:71:22 Unresolved reference 'onCallBack'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/WebViewActivity.kt:74:17 Unresolved reference 'webView'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/app/App.kt:11:19 Unresolved reference 'smart'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/app/App.kt:12:19 Unresolved reference 'smart'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/app/App.kt:21:25 Unresolved reference 'BuildConfig'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/app/App.kt:38:9 Unresolved reference 'SmartRefreshLayout'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/app/App.kt:38:61 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/app/App.kt:38:70 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/app/App.kt:39:13 Unresolved reference 'MaterialHeader'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/app/App.kt:43:9 Unresolved reference 'SmartRefreshLayout'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/app/App.kt:43:61 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/app/App.kt:43:70 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/app/App.kt:65:46 Unresolved reference 'BuildConfig'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/app/App.kt:67:42 Unresolved reference 'BuildConfig'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/camera/ParallelMultiModalRecorder.kt:277:34 Argument type mismatch: actual type is 'kotlinx.coroutines.Deferred<kotlin.Any?>', but 'kotlinx.coroutines.Deferred<kotlin.Unit>' was expected.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/camera/ui/CameraSettingsView.kt:10:25 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/camera/ui/RecordingStatusIndicator.kt:11:25 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/camera/ui/SensorSelectionDialog.kt:11:25 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/camera/ui/SensorSelectionDialog.kt:23:15 Conflicting declarations:
+companion object Companion : Any
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/camera/ui/SensorSelectionDialog.kt:107:22 Unresolved reference 'View'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/camera/ui/SensorSelectionDialog.kt:107:36 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/camera/ui/SensorSelectionDialog.kt:107:42 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/camera/ui/SensorSelectionDialog.kt:108:13 Unresolved reference 'layoutParams'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/camera/ui/SensorSelectionDialog.kt:227:5 Only one companion object is allowed per class.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/camera/ui/SensorSelectionDialog.kt:227:15 Conflicting declarations:
+companion object Companion : Any
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/camera/ui/SensorSelectionDialog.kt:251:36 Unresolved reference 'detectAvailableSensors'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:36:25 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:55:43 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:59:9 Unresolved reference 'tv_connect_device'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:60:9 Unresolved reference 'iv_add'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:63:9 Unresolved reference 'tv_no_device_title'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:67:9 Unresolved reference 'tv_has_device_title'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:106:71 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:107:33 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:108:22 Unresolved reference 'setPositiveListener'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:108:42 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:115:61 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:117:40 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:123:9 Unresolved reference 'recycler_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:124:9 Unresolved reference 'recycler_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:155:9 Unresolved reference 'cl_has_device'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:156:9 Unresolved reference 'cl_no_device'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:199:13 Unresolved reference 'tv_connect_device'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:199:32 Unresolved reference 'iv_add'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:264:75 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:281:29 Unresolved reference 'tv_title'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:282:29 Unresolved reference 'tv_title'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:284:58 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:284:88 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:286:29 Unresolved reference 'iv_bg'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:287:29 Unresolved reference 'tv_device_name'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:288:29 Unresolved reference 'view_device_state'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:289:29 Unresolved reference 'tv_device_state'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:290:29 Unresolved reference 'tv_device_state'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:291:29 Unresolved reference 'tv_battery'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:292:29 Unresolved reference 'battery_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:296:37 Unresolved reference 'tv_device_name'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:298:36 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:300:41 Unresolved reference 'iv_image'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:300:67 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:302:41 Unresolved reference 'iv_image'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:302:67 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:306:37 Unresolved reference 'tv_device_name'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:308:41 Unresolved reference 'iv_image'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:308:67 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:310:41 Unresolved reference 'iv_image'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:310:67 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:314:37 Unresolved reference 'tv_device_name'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:316:41 Unresolved reference 'iv_image'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:316:67 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:318:41 Unresolved reference 'iv_image'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:318:67 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:320:37 Unresolved reference 'tv_battery'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:321:37 Unresolved reference 'battery_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:322:37 Unresolved reference 'battery_view'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:343:26 Unresolved reference 'iv_bg'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:349:26 Unresolved reference 'iv_bg'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt:371:57 Unresolved reference 'it'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/EnhancedThermalRecorder.kt:127:29 Suspend function 'suspend fun startRecording(sessionId: String, participantId: String? = ..., studyName: String? = ...): Boolean' should be called only from a coroutine or another suspend function.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/EnhancedThermalRecorder.kt:165:39 Expression 'isRecording' of type 'java.util.concurrent.atomic.AtomicBoolean' cannot be invoked as a function. Function 'invoke()' is not found.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/EnhancedThermalRecorder.kt:181:29 Expression 'isRecording' of type 'java.util.concurrent.atomic.AtomicBoolean' cannot be invoked as a function. Function 'invoke()' is not found.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/EnhancedThermalRecorder.kt:192:29 Unresolved reference 'addSyncMark'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/EnhancedThermalRecorder.kt:248:28 Unresolved reference 'getSessionDirectory'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/EnhancedThermalRecorder.kt:277:50 Expression 'isRecording' of type 'java.util.concurrent.atomic.AtomicBoolean' cannot be invoked as a function. Function 'invoke()' is not found.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/EnhancedThermalRecorder.kt:277:77 Unresolved reference 'getCurrentSession'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/GSRDemoActivity.kt:58:46 Unresolved reference 'getSessionDirectory'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/GSRDemoActivity.kt:81:42 Unresolved reference 'getCurrentSession'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/GSRDemoActivity.kt:184:25 Suspend function 'suspend fun startRecording(sessionId: String, participantId: String? = ..., studyName: String? = ...): Boolean' should be called only from a coroutine or another suspend function.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/GSRDemoActivity.kt:201:25 Unresolved reference 'addSyncMark'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/MultiModalRecordingActivity.kt:23:25 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/MultiModalRecordingActivity.kt:88:46 Unresolved reference 'getSessionDirectory'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/MultiModalRecordingActivity.kt:339:25 Suspend function 'suspend fun startRecording(sessionId: String, participantId: String? = ..., studyName: String? = ...): Boolean' should be called only from a coroutine or another suspend function.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/MultiModalRecordingActivity.kt:359:25 Unresolved reference 'addSyncMark'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:14:25 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:44:24 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:53:40 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:54:46 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:55:34 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:56:50 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:57:46 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:58:52 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:59:53 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:60:45 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:148:35 Smart cast to 'kotlin.Long' is impossible, because 'duration' is a public API property declared in different module.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:220:52 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:221:52 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:222:56 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:223:55 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:224:56 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:225:58 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:229:57 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/ResearchTemplateActivity.kt:254:16 Smart cast to 'kotlin.Long' is impossible, because 'duration' is a public API property declared in different module.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionDetailActivity.kt:8:25 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionExportActivity.kt:8:25 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:17:25 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:53:24 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:63:37 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:64:34 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:65:36 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:66:35 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:67:38 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:188:40 Function 'component1()' is ambiguous for this expression: 
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:188:40 Function 'component2()' is ambiguous for this expression: 
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:188:45 None of the following candidates is applicable:
+fun CharSequence.split(regex: Pattern, limit: Int = ...): List<String>
+fun CharSequence.split(vararg delimiters: String, ignoreCase: Boolean = ..., limit: Int = ...): List<String>
+fun CharSequence.split(vararg delimiters: Char, ignoreCase: Boolean = ..., limit: Int = ...): List<String>
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:362:53 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:363:56 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:364:54 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:365:57 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:366:59 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:367:59 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/gsr/SessionManagerActivity.kt:372:57 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/popup/DelPopup.kt:13:25 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/popup/DelPopup.kt:28:26 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/popup/DelPopup.kt:32:75 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/popup/DelPopup.kt:43:59 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/view/ConnectionGuideView.kt:17:25 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/view/ConnectionGuideView.kt:30:68 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/view/ConnectionGuideView.kt:33:17 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/view/ConnectionGuideView.kt:34:38 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/view/ConnectionGuideView.kt:35:16 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/view/ConnectionGuideView.kt:36:34 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/view/ConnectionGuideView.kt:37:17 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/view/ConnectionGuideView.kt:38:35 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/view/ConnectionGuideView.kt:52:26 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/view/ConnectionGuideView.kt:53:36 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/view/ConnectionGuideView.kt:54:34 Unresolved reference 'R'.
+e: file:///home/runner/work/IRCamera/IRCamera/app/src/main/java/com/topdon/tc001/view/ConnectionGuideView.kt:80:44 Unresolved reference 'R'.
+
+> Task :app:compileProdDebugKotlin FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileProdDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+* Exception is:
+org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:compileProdDebugKotlin'.
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.lambda$executeIfValid$1(ExecuteActionsTaskExecuter.java:130)
+	at org.gradle.internal.Try$Failure.ifSuccessfulOrElse(Try.java:293)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:128)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+	at org.gradle.api.internal.tasks.execution.ProblemsTaskPathTrackingTaskExecuter.execute(ProblemsTaskPathTrackingTaskExecuter.java:41)
+	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+Caused by: org.gradle.workers.internal.DefaultWorkerExecutor$WorkExecutionException: A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+	at org.gradle.workers.internal.DefaultWorkerExecutor$WorkItemExecution.waitForCompletion(DefaultWorkerExecutor.java:287)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.lambda$waitForItemsAndGatherFailures$2(DefaultAsyncWorkTracker.java:130)
+	at org.gradle.internal.Factories$1.create(Factories.java:31)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLocks(DefaultWorkerLeaseService.java:335)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLocks(DefaultWorkerLeaseService.java:318)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLock(DefaultWorkerLeaseService.java:323)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForItemsAndGatherFailures(DefaultAsyncWorkTracker.java:126)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForItemsAndGatherFailures(DefaultAsyncWorkTracker.java:92)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForAll(DefaultAsyncWorkTracker.java:78)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForCompletion(DefaultAsyncWorkTracker.java:66)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:252)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:30)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:27)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.run(DefaultBuildOperationRunner.java:48)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeAction(TaskExecution.java:229)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeActions(TaskExecution.java:212)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeWithPreviousOutputFiles(TaskExecution.java:195)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.execute(TaskExecution.java:162)
+	at org.gradle.internal.execution.steps.ExecuteStep.executeInternal(ExecuteStep.java:105)
+	at org.gradle.internal.execution.steps.ExecuteStep.access$000(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:59)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:56)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:56)
+	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.CancelExecutionStep.execute(CancelExecutionStep.java:42)
+	at org.gradle.internal.execution.steps.TimeoutStep.executeWithoutTimeout(TimeoutStep.java:75)
+	at org.gradle.internal.execution.steps.TimeoutStep.execute(TimeoutStep.java:55)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:50)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:28)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:67)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:37)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:61)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:26)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:69)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:46)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:40)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:29)
+	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithoutCache(BuildCacheStep.java:189)
+	at org.gradle.internal.execution.steps.BuildCacheStep.executeAndStoreInCache(BuildCacheStep.java:145)
+	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$executeWithCache$4(BuildCacheStep.java:101)
+	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$executeWithCache$5(BuildCacheStep.java:101)
+	at org.gradle.internal.Try$Success.map(Try.java:175)
+	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithCache(BuildCacheStep.java:85)
+	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$execute$0(BuildCacheStep.java:74)
+	at org.gradle.internal.Either$Left.fold(Either.java:115)
+	at org.gradle.internal.execution.caching.CachingState.fold(CachingState.java:62)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:73)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:48)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:46)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:35)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.executeBecause(SkipUpToDateStep.java:75)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.lambda$execute$2(SkipUpToDateStep.java:53)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:53)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:35)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:37)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:27)
+	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:49)
+	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:27)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:71)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:39)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:65)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:36)
+	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:107)
+	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:56)
+	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:64)
+	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:43)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.executeWithNonEmptySources(AbstractSkipEmptyWorkStep.java:125)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:61)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:36)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsStartedStep.execute(MarkSnapshottingInputsStartedStep.java:38)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:36)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:23)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:75)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:41)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.lambda$execute$0(AssignMutableWorkspaceStep.java:35)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$4.withWorkspace(TaskExecution.java:289)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:31)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:22)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:40)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:23)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.lambda$execute$2(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:39)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:46)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:34)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:48)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:35)
+	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:64)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:127)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+	at org.gradle.api.internal.tasks.execution.ProblemsTaskPathTrackingTaskExecuter.execute(ProblemsTaskPathTrackingTaskExecuter.java:41)
+	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+Caused by: org.jetbrains.kotlin.gradle.tasks.CompilationErrorException: Compilation error. See log for more details
+	at org.jetbrains.kotlin.gradle.tasks.TasksUtilsKt.throwExceptionIfCompilationFailed(tasksUtils.kt:21)
+	at org.jetbrains.kotlin.compilerRunner.GradleKotlinCompilerWork.run(GradleKotlinCompilerWork.kt:119)
+	at org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction.execute(GradleCompilerRunnerWithWorkers.kt:76)
+	at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:63)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:66)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:62)
+	at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:100)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:62)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:44)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:41)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.workers.internal.AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:59)
+	at org.gradle.workers.internal.DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:174)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:194)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQueue.java:127)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.java:169)
+	at org.gradle.internal.Factories$1.create(Factories.java:31)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:263)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:127)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:132)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:164)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:133)
+	... 2 more
+
+
+BUILD FAILED in 37s
+297 actionable tasks: 79 executed, 215 from cache, 3 up-to-date
+Configuration cache entry stored.

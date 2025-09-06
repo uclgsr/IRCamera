@@ -5,6 +5,8 @@ import android.graphics.Rect
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.TextView
 import android.yt.jni.Usbcontorl
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -26,8 +28,11 @@ import com.infisense.usbir.event.PreviewComplete
 import com.infisense.usbir.thread.ImageThreadTC
 import com.infisense.usbir.utils.PseudocodeUtils
 import com.infisense.usbir.utils.USBMonitorCallback
+import com.infisense.usbir.view.CameraView
 import com.infisense.usbir.view.ITsTempListener
+import com.infisense.usbir.view.TemperatureView
 import com.infisense.usbir.view.TemperatureView.*
+import com.topdon.lib.core.view.TitleView
 import com.topdon.lib.core.bean.event.device.DeviceCameraEvent
 import com.topdon.lib.core.bean.tools.ThermalBean
 import com.topdon.lib.core.common.SaveSettingUtil
@@ -41,9 +46,11 @@ import com.topdon.lib.core.tools.NumberTools
 import com.topdon.lib.core.tools.TimeTool
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.module.thermal.ir.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.module.thermal.ir.bean.SelectPositionBean
 import com.topdon.module.thermal.ir.event.MonitorSaveEvent
 import com.topdon.module.thermal.ir.repository.ConfigRepository
+import com.topdon.module.thermal.ir.view.ChartMonitorView
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -68,6 +75,14 @@ class IRMonitorChartActivity : BaseActivity(),ITsTempListener {
      */
     private var selectBean: SelectPositionBean = SelectPositionBean()
 
+    // View properties - migrated from synthetic views
+    private lateinit var temperatureView: TemperatureView
+    private lateinit var llTime: View
+    private lateinit var mpChartView: ChartMonitorView
+    private lateinit var cameraView: CameraView
+    private lateinit var tvTime: TextView
+    private lateinit var thermalLay: View
+
     private var ircmd: IRCMD?= null
     private val bean = ThermalBean()
     private var ts_data_H: ByteArray? = null
@@ -75,7 +90,7 @@ class IRMonitorChartActivity : BaseActivity(),ITsTempListener {
     override fun initContentView() = R.layout.activity_ir_monitor_chart
 
     override fun initView() {
-        title_view.setRightClickListener {
+        findViewById<TitleView>(R.id.title_view).setRightClickListener {
             recordJob?.cancel()
             lifecycleScope.launch {
                 delay(200)
@@ -86,10 +101,18 @@ class IRMonitorChartActivity : BaseActivity(),ITsTempListener {
         ts_data_L = CommonUtils.getTauData(this@IRMonitorChartActivity, "ts/TS001_L.bin")
         selectBean = intent.getParcelableExtra("select")!!
 
-        monitor_current_vol.text = getString(if (selectBean.type == 1) R.string.chart_temperature else R.string.chart_temperature_high)
-        monitor_real_vol.visibility = if (selectBean.type == 1) View.GONE else View.VISIBLE
-        monitor_real_img.visibility = if (selectBean.type == 1) View.GONE else View.VISIBLE
+        findViewById<TextView>(R.id.monitor_current_vol).text = getString(if (selectBean.type == 1) LibR.string.chart_temperature else LibR.string.chart_temperature_high)
+        findViewById<TextView>(R.id.monitor_real_vol).visibility = if (selectBean.type == 1) View.GONE else View.VISIBLE
+        findViewById<ImageView>(R.id.monitor_real_img).visibility = if (selectBean.type == 1) View.GONE else View.VISIBLE
 
+        // Initialize view properties
+        temperatureView = findViewById(R.id.temperatureView)
+        llTime = findViewById(R.id.ll_time)
+        mpChartView = findViewById(R.id.mp_chart_view)
+        cameraView = findViewById(R.id.cameraView)
+        tvTime = findViewById(R.id.tv_time)
+        thermalLay = findViewById(R.id.thermal_lay)
+        
         temperatureView.isEnabled = false
         temperatureView.setTextSize(SaveSettingUtil.tempTextSize)
 
@@ -131,7 +154,7 @@ class IRMonitorChartActivity : BaseActivity(),ITsTempListener {
                     } else {
                         isFirstRead = false
                         lifecycleScope.launch(Dispatchers.Main) {
-                            ll_time.isVisible = true
+                            llTime.isVisible = true
                         }
                     }
                 }
@@ -177,7 +200,7 @@ class IRMonitorChartActivity : BaseActivity(),ITsTempListener {
     override fun onResume() {
         super.onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        mp_chart_view.highlightValue(null) //关闭高亮点Marker
+        mpChartView.highlightValue(null) //关闭高亮点Marker
     }
 
     override fun onPause() {
@@ -249,14 +272,14 @@ class IRMonitorChartActivity : BaseActivity(),ITsTempListener {
                         AppDatabase.getInstance().thermalDao().insert(entity)
                         time++
                         launch(Dispatchers.Main) {
-                            mp_chart_view.addPointToChart(bean = entity, selectType = selectBean.type)
+                            mpChartView.addPointToChart(bean = entity, selectType = selectBean.type)
                         }
                         delay(timeMillis)
                     } else {
                         delay(100)
                     }
                     lifecycleScope.launch(Dispatchers.Main) {
-                        tv_time.text = TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
+                        tvTime.text = TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
                     }
                 }
             }
@@ -542,20 +565,20 @@ class IRMonitorChartActivity : BaseActivity(),ITsTempListener {
     }
 
     private fun setViewLay() {
-        thermal_lay.post {
-            val params = thermal_lay.layoutParams
+        thermalLay.post {
+            val params = thermalLay.layoutParams
             if (ScreenUtil.isPortrait(this)) {
-                params.height = thermal_lay.height
+                params.height = thermalLay.height
                 var w = params.height * imageWidth / imageHeight
                 if (w > ScreenUtil.getScreenWidth(this)) {
                     w = ScreenUtil.getScreenWidth(this)
                 }
                 params.width = w
             } else {
-                params.width = thermal_lay.width
+                params.width = thermalLay.width
                 params.height = params.width * imageWidth / imageHeight
             }
-            thermal_lay.layoutParams = params
+            thermalLay.layoutParams = params
         }
     }
 

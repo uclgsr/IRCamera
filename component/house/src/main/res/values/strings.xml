@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">House</string>
+    <string name="app_cancel_select_all">Cancel Select All</string>
+    <string name="report_select_all">Select All</string>
+    <string name="chosen_item">%d items selected</string>
+    <string name="not_selected">No items selected</string>
+    <string name="tip_save_success">Save successful</string>
+    <string name="ts004_copy_success">Copy successful</string>
+    <string name="tips_del_item_title">Delete Items</string>
+    <string name="tips_del_item_content">Are you sure you want to delete the selected items?</string>
+    <string name="app_cancel">Cancel</string>
+    <string name="report_delete">Delete</string>
+    <string name="test_results_delete_success">Delete successful</string>
+</resources>

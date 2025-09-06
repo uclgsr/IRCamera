@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import com.blankj.utilcode.util.SizeUtils
 import com.kylecorry.andromeda.core.ui.setCompoundDrawables
-import com.topdon.tc001.R
+import com.csl.irCamera.R
 
 /**
  * 首页-设备列表-删除设备确认 PopupWindow.

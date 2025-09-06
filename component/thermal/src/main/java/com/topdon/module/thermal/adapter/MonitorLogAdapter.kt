@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.core.db.entity.ThermalEntity
 import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.lib.core.tools.TimeTool
+import android.widget.TextView
 import com.topdon.module.thermal.R
 
 class MonitorLogAdapter(val context: Context) :
@@ -48,9 +49,9 @@ class MonitorLogAdapter(val context: Context) :
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val lay = itemView.item_log_lay
-        val indexText = itemView.item_log_index_text
-        val timeText = itemView.item_log_time_text
+        val lay = itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_log_lay)
+        val indexText = itemView.findViewById<TextView>(R.id.item_log_index_text)
+        val timeText = itemView.findViewById<TextView>(R.id.item_log_time_text)
     }
 
 

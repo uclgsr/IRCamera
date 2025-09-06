@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView as AndroidRecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -32,12 +32,16 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Calendar
+import androidx.recyclerview.widget.RecyclerView
 
 class IRMonitorHistoryFragment : Fragment() {
 
     private val adapter = MyAdapter(ArrayList())
 
     private val viewModel: IRMonitorViewModel by viewModels()
+
+    // findViewById declarations 
+    private lateinit var recyclerView: AndroidRecyclerView
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -48,6 +52,10 @@ class IRMonitorHistoryFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        // Initialize findViewById
+        recyclerView = view.findViewById(R.id.recycler_view)
+        
         adapter.loadMoreModule.loadMoreView = CommLoadMoreView()
         adapter.onItemClickListener = {
             val record: ThermalDao.Record = adapter.data[it]
@@ -71,8 +79,8 @@ class IRMonitorHistoryFragment : Fragment() {
         adapter.loadMoreModule.setOnLoadMoreListener {
             adapter.loadMoreModule.loadMoreEnd()
         }
-        view.recycler_view.layoutManager = LinearLayoutManager(context)
-        view.recycler_view.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = adapter
         adapter.isUseEmpty = true
         viewModel.recordListLD.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
@@ -137,34 +145,43 @@ class IRMonitorHistoryFragment : Fragment() {
             val month = calendar.get(Calendar.MONTH) + 1
             val day =  calendar.get(Calendar.DAY_OF_MONTH)
 
+            // Use findViewById for views
+            val groupTitle = holder.itemView.findViewById<View>(R.id.group_title)
+            val viewLineTop = holder.itemView.findViewById<View>(R.id.view_line_top)
+            val tvDate = holder.itemView.findViewById<View>(R.id.tv_date)
+            val tvTime = holder.itemView.findViewById<View>(R.id.tv_time)
+            val tvDuration = holder.itemView.findViewById<View>(R.id.tv_duration)
+            val tvType = holder.itemView.findViewById<View>(R.id.tv_type)
+            val viewContentBg = holder.itemView.findViewById<View>(R.id.view_content_bg)
+
             if (item.showTitle || position == 0 || data.size == 1) {
-                holder.itemView.group_title.isVisible = true
-                holder.itemView.view_line_top.isVisible = false
+                groupTitle?.isVisible = true
+                viewLineTop?.isVisible = false
             } else {
                 val beforeCalendar = Calendar.getInstance()
                 beforeCalendar.timeInMillis = data[position - 1].startTime
                 val beforeYear = beforeCalendar.get(Calendar.YEAR)
                 val beforeMonth = beforeCalendar.get(Calendar.MONTH) + 1
-                holder.itemView.group_title.isVisible = beforeMonth != month && beforeYear != year
-                holder.itemView.view_line_top.isVisible = beforeMonth != month && beforeYear != year
+                groupTitle?.isVisible = beforeMonth != month && beforeYear != year
+                viewLineTop?.isVisible = beforeMonth != month && beforeYear != year
             }
 
-            holder.itemView.tv_date.text = "$year-$month"
-            holder.itemView.tv_time.text = "$month-$day"
-            holder.itemView.tv_duration.text = TimeTool.showVideoTime(record.duration * 1000L)
+            (tvDate as? android.widget.TextView)?.text = "$year-$month"
+            (tvTime as? android.widget.TextView)?.text = "$month-$day"
+            (tvDuration as? android.widget.TextView)?.text = TimeTool.showVideoTime(record.duration * 1000L)
             when (record.type) {
-                "point" -> holder.itemView.tv_type.setText(R.string.thermal_point)
-                "line" -> holder.itemView.tv_type.setText(R.string.thermal_line)
-                "fence" -> holder.itemView.tv_type.setText(R.string.thermal_rect)
+                "point" -> (tvType as? android.widget.TextView)?.setText(R.string.thermal_point)
+                "line" -> (tvType as? android.widget.TextView)?.setText(R.string.thermal_line)
+                "fence" -> (tvType as? android.widget.TextView)?.setText(R.string.thermal_rect)
             }
 
-            holder.itemView.view_content_bg.setOnClickListener {
-                if (position != RecyclerView.NO_POSITION) {
+            viewContentBg?.setOnClickListener {
+                if (position != AndroidRecyclerView.NO_POSITION) {
                     onItemClickListener?.invoke(position)
                 }
             }
-            holder.itemView.view_content_bg.setOnLongClickListener {
-                if (position != RecyclerView.NO_POSITION) {
+            viewContentBg?.setOnLongClickListener {
+                if (position != AndroidRecyclerView.NO_POSITION) {
                     onItemLongClickListener?.invoke(position)
                 }
                 return@setOnLongClickListener true

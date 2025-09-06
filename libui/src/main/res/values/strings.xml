@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">TOPINFRARED</string>
     <string name="tip_export_data">Exporting data</string>
     <string name="app_cancel">Cancel</string>
     <string name="app_ok">OK</string>

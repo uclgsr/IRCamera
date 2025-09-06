@@ -7,6 +7,8 @@ import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -33,7 +35,7 @@ import com.topdon.lib.core.utils.NetWorkUtils
 import com.topdon.lib.core.utils.WsCmdConstants
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.tc001.DeviceTypeActivity
-import com.topdon.tc001.R
+import com.csl.irCamera.R
 import com.topdon.tc001.popup.DelPopup
 import kotlinx.coroutines.launch
 import org.bytedeco.librealsense.context
@@ -51,20 +53,38 @@ import org.json.JSONObject
 class MainFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var adapter : MyAdapter
+    
+    // View references
+    private lateinit var tvConnectDevice: TextView
+    private lateinit var ivAdd: ImageView
+    private lateinit var tvNoDeviceTitle: TextView
+    private lateinit var tvHasDeviceTitle: TextView
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var clHasDevice: View
+    private lateinit var clNoDevice: View
 
     override fun initContentView(): Int = R.layout.fragment_main
 
     override fun initView() {
+        // Initialize views using view?.findViewById since this is a fragment
+        tvConnectDevice = view?.findViewById(R.id.tv_connect_device)!!
+        ivAdd = view?.findViewById(R.id.iv_add)!!
+        tvNoDeviceTitle = view?.findViewById(R.id.tv_no_device_title)!!
+        tvHasDeviceTitle = view?.findViewById(R.id.tv_has_device_title)!!
+        recyclerView = view?.findViewById(R.id.recycler_view)!!
+        clHasDevice = view?.findViewById(R.id.cl_has_device)!!
+        clNoDevice = view?.findViewById(R.id.cl_no_device)!!
+        
         adapter = MyAdapter()
-        tv_connect_device.setOnClickListener(this)
-        iv_add.setOnClickListener(this)
+        tvConnectDevice.setOnClickListener(this)
+        ivAdd.setOnClickListener(this)
         
         // GSR Multi-modal Recording Access (long press on titles for research features)
-        tv_no_device_title?.setOnLongClickListener {
+        tvNoDeviceTitle.setOnLongClickListener {
             showGSROptions()
             true
         }
-        tv_has_device_title?.setOnLongClickListener {
+        tvHasDeviceTitle.setOnLongClickListener {
             showGSROptions()
             true
         }
@@ -120,8 +140,8 @@ class MainFragment : BaseFragment(), View.OnClickListener {
             popup.show(view)
         }
 
-        recycler_view.layoutManager = LinearLayoutManager(requireContext())
-        recycler_view.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
 
         if (WebSocketProxy.getInstance().isTC007Connect()) {
             lifecycleScope.launch {
@@ -152,8 +172,8 @@ class MainFragment : BaseFragment(), View.OnClickListener {
 
     private fun refresh() {
         val hasAnyDevice = SharedManager.hasTcLine || SharedManager.hasTS004 || SharedManager.hasTC007
-        cl_has_device.isVisible = hasAnyDevice
-        cl_no_device.isVisible = !hasAnyDevice
+        clHasDevice.isVisible = hasAnyDevice
+        clNoDevice.isVisible = !hasAnyDevice
         adapter.hasConnectLine = DeviceTools.isConnect(isAutoRequest = false)
         adapter.hasConnectTS004 = WebSocketProxy.getInstance().isTS004Connect()
         adapter.hasConnectTC007 = WebSocketProxy.getInstance().isTC007Connect()
@@ -196,7 +216,7 @@ class MainFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            tv_connect_device, iv_add -> {//添加设备
+            tvConnectDevice, ivAdd -> {//添加设备
                 startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
 //                NavigationManager.getInstance().build(RoutePath.UsbIrModule.PAGE_IR_MAIN_ACTIVITY)
 //                    .navigation()
@@ -277,51 +297,8 @@ class MainFragment : BaseFragment(), View.OnClickListener {
                 ConnectType.TS004 -> hasConnectTS004
                 ConnectType.TC007 -> hasConnectTC007
             }
-
-            holder.itemView.tv_title.isVisible = hasTitle
-            holder.itemView.tv_title.text = AppLanguageUtils.attachBaseContext(
-                holder.itemView.context, ConstantLanguages.ENGLISH)
-                .getString(if (type == ConnectType.LINE) R.string.tc_connect_line else R.string.tc_connect_wifi)
-
-            holder.itemView.iv_bg.isSelected = hasConnect
-            holder.itemView.tv_device_name.isSelected = hasConnect
-            holder.itemView.view_device_state.isSelected = hasConnect
-            holder.itemView.tv_device_state.isSelected = hasConnect
-            holder.itemView.tv_device_state.text = if (hasConnect) "online" else "offline"
-            holder.itemView.tv_battery.isVisible = type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
-            holder.itemView.battery_view.isVisible = type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
-
-            when (type) {
-                ConnectType.LINE -> {
-                    holder.itemView.tv_device_name.setText(AppLanguageUtils.attachBaseContext(
-                        holder.itemView.context, ConstantLanguages.ENGLISH)
-                        .getString(R.string.tc_has_line_device))
-                    if (hasConnect) {
-                        holder.itemView.iv_image.setImageResource(R.drawable.ic_main_device_line_connect)
-                    } else {
-                        holder.itemView.iv_image.setImageResource(R.drawable.ic_main_device_line_disconnect)
-                    }
-                }
-                ConnectType.TS004 -> {
-                    holder.itemView.tv_device_name.text = "TS004"
-                    if (hasConnect) {
-                        holder.itemView.iv_image.setImageResource(R.drawable.ic_main_device_ts004_connect)
-                    } else {
-                        holder.itemView.iv_image.setImageResource(R.drawable.ic_main_device_ts004_disconnect)
-                    }
-                }
-                ConnectType.TC007 -> {
-                    holder.itemView.tv_device_name.text = "TC007"
-                    if (hasConnect) {
-                        holder.itemView.iv_image.setImageResource(R.drawable.ic_main_device_tc007_connect)
-                    } else {
-                        holder.itemView.iv_image.setImageResource(R.drawable.ic_main_device_tc007_disconnect)
-                    }
-                    holder.itemView.tv_battery.text = "${tc007Battery?.getBattery()}%"
-                    holder.itemView.battery_view.battery = tc007Battery?.getBattery() ?: 0
-                    holder.itemView.battery_view.isCharging = tc007Battery?.isCharging() ?: false
-                }
-            }
+            
+            holder.bind(type, hasTitle, hasConnect, hasConnectTC007, tc007Battery)
         }
 
         override fun getItemCount(): Int {
@@ -339,14 +316,24 @@ class MainFragment : BaseFragment(), View.OnClickListener {
         }
 
         inner class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
+            // View references
+            private val ivBg: View = rootView.findViewById(R.id.iv_bg)
+            private val tvTitle: TextView = rootView.findViewById(R.id.tv_title)
+            private val tvDeviceName: TextView = rootView.findViewById(R.id.tv_device_name)
+            private val tvDeviceState: TextView = rootView.findViewById(R.id.tv_device_state)
+            private val tvBattery: TextView = rootView.findViewById(R.id.tv_battery)
+            private val ivImage: ImageView = rootView.findViewById(R.id.iv_image)
+            private val batteryView: com.topdon.lib.ui.widget.BatteryView = rootView.findViewById(R.id.battery_view)
+            private val viewDeviceState: View = rootView.findViewById(R.id.view_device_state)
+            
             init {
-                rootView.iv_bg.setOnClickListener {
+                ivBg.setOnClickListener {
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         onItemClickListener?.invoke(getConnectType(position))
                     }
                 }
-                rootView.iv_bg.setOnLongClickListener {
+                ivBg.setOnLongClickListener {
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         //只有离线设备才能长按删除
@@ -368,9 +355,56 @@ class MainFragment : BaseFragment(), View.OnClickListener {
                                 }
                             }
                         }
-                        onItemLongClickListener?.invoke(it, deviceType)
+                        onItemLongClickListener?.invoke(ivBg, deviceType)
                     }
                     true
+                }
+            }
+            
+            fun bind(type: ConnectType, hasTitle: Boolean, hasConnect: Boolean, hasConnectTC007: Boolean, tc007Battery: BatteryInfo?) {
+                tvTitle.isVisible = hasTitle
+                tvTitle.text = AppLanguageUtils.attachBaseContext(
+                    itemView.context, ConstantLanguages.ENGLISH)
+                    .getString(if (type == ConnectType.LINE) R.string.tc_connect_line else R.string.tc_connect_wifi)
+
+                ivBg.isSelected = hasConnect
+                tvDeviceName.isSelected = hasConnect
+                viewDeviceState.isSelected = hasConnect
+                tvDeviceState.isSelected = hasConnect
+                tvDeviceState.text = if (hasConnect) "online" else "offline"
+                tvBattery.isVisible = type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
+                batteryView.isVisible = type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
+
+                when (type) {
+                    ConnectType.LINE -> {
+                        tvDeviceName.setText(AppLanguageUtils.attachBaseContext(
+                            itemView.context, ConstantLanguages.ENGLISH)
+                            .getString(R.string.tc_has_line_device))
+                        if (hasConnect) {
+                            ivImage.setImageResource(R.drawable.ic_main_device_line_connect)
+                        } else {
+                            ivImage.setImageResource(R.drawable.ic_main_device_line_disconnect)
+                        }
+                    }
+                    ConnectType.TS004 -> {
+                        tvDeviceName.text = "TS004"
+                        if (hasConnect) {
+                            ivImage.setImageResource(R.drawable.ic_main_device_ts004_connect)
+                        } else {
+                            ivImage.setImageResource(R.drawable.ic_main_device_ts004_disconnect)
+                        }
+                    }
+                    ConnectType.TC007 -> {
+                        tvDeviceName.text = "TC007"
+                        if (hasConnect) {
+                            ivImage.setImageResource(R.drawable.ic_main_device_tc007_connect)
+                        } else {
+                            ivImage.setImageResource(R.drawable.ic_main_device_tc007_disconnect)
+                        }
+                        tvBattery.text = "${tc007Battery?.getBattery()}%"
+                        batteryView.battery = tc007Battery?.getBattery() ?: 0
+                        batteryView.isCharging = tc007Battery?.isCharging() ?: false
+                    }
                 }
             }
 

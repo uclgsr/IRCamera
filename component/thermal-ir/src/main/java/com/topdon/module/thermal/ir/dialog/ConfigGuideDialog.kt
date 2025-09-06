@@ -12,8 +12,12 @@ import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.tools.NumberTools
 import com.topdon.lib.core.tools.UnitTools
@@ -32,6 +36,20 @@ import kotlinx.coroutines.launch
  */
 class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: DataBean) : Dialog(context, R.style.TransparentDialog) {
 
+    // Initialize views with findViewById
+    private lateinit var tvDefaultTempTitle: TextView
+    private lateinit var tvDefaultDisTitle: TextView
+    private lateinit var tvSpaceEmTitle: TextView
+    private lateinit var tvDefaultEmTitle: TextView
+    private lateinit var tvDefaultEmValue: TextView
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var clStep1: ConstraintLayout
+    private lateinit var clStep2Top: ConstraintLayout
+    private lateinit var clStep2Bottom: ConstraintLayout
+    private lateinit var tvNext: TextView
+    private lateinit var tvIKnow: TextView
+    private lateinit var ivBlurBg: ImageView
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,32 +57,46 @@ class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: Da
         setCanceledOnTouchOutside(false)
         setContentView(LayoutInflater.from(context).inflate(R.layout.dialog_config_guide, null))
 
-        tv_default_temp_title.text = "${context.getString(R.string.thermal_config_environment)} ${UnitTools.showConfigC(-10, if (isTC007) 50 else 55)}"
-        tv_default_dis_title.text = "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)"
-        tv_space_em_title.text = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
+        // Initialize views
+        tvDefaultTempTitle = findViewById(R.id.tv_default_temp_title)
+        tvDefaultDisTitle = findViewById(R.id.tv_default_dis_title)
+        tvSpaceEmTitle = findViewById(R.id.tv_space_em_title)
+        tvDefaultEmTitle = findViewById(R.id.tv_default_em_title)
+        tvDefaultEmValue = findViewById(R.id.tv_default_em_value)
+        recyclerView = findViewById(R.id.recycler_view)
+        clStep1 = findViewById(R.id.cl_step1)
+        clStep2Top = findViewById(R.id.cl_step2_top)
+        clStep2Bottom = findViewById(R.id.cl_step2_bottom)
+        tvNext = findViewById(R.id.tv_next)
+        tvIKnow = findViewById(R.id.tv_i_know)
+        ivBlurBg = findViewById(R.id.iv_blur_bg)
 
-        tv_default_em_title.text = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
-        tv_default_em_value.text = NumberTools.to02(dataBean.radiation)
+        tvDefaultTempTitle.text = "${context.getString(R.string.thermal_config_environment)} ${UnitTools.showConfigC(-10, if (isTC007) 50 else 55)}"
+        tvDefaultDisTitle.text = "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)"
+        tvSpaceEmTitle.text = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
+
+        tvDefaultEmTitle.text = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
+        tvDefaultEmValue.text = NumberTools.to02(dataBean.radiation)
 
 
         val itemDecoration = MyItemDecoration(context)
         itemDecoration.wholeBottom = 20f
 
-        recycler_view.addItemDecoration(itemDecoration)
-        recycler_view.layoutManager = LinearLayoutManager(context)
-        recycler_view.adapter = ConfigEmAdapter(context)
+        recyclerView.addItemDecoration(itemDecoration)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = ConfigEmAdapter(context)
 
-        cl_step1.isVisible = SharedManager.configGuideStep == 1
-        cl_step2_top.isVisible = SharedManager.configGuideStep == 2
-        cl_step2_bottom.isVisible = SharedManager.configGuideStep == 2
+        clStep1.isVisible = SharedManager.configGuideStep == 1
+        clStep2Top.isVisible = SharedManager.configGuideStep == 2
+        clStep2Bottom.isVisible = SharedManager.configGuideStep == 2
 
-        tv_next.setOnClickListener {
-            cl_step1.isVisible = false
-            cl_step2_top.isVisible = true
-            cl_step2_bottom.isVisible = true
+        tvNext.setOnClickListener {
+            clStep1.isVisible = false
+            clStep2Top.isVisible = true
+            clStep2Bottom.isVisible = true
             SharedManager.configGuideStep = 2
         }
-        tv_i_know.setOnClickListener {
+        tvIKnow.setOnClickListener {
             dismiss()
             SharedManager.configGuideStep = 0
         }
@@ -90,8 +122,8 @@ class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: Da
                 renderScript.destroy()
 
                 launch(Dispatchers.Main) {
-                    iv_blur_bg.isVisible = true
-                    iv_blur_bg.setImageBitmap(outputBitmap)
+                    ivBlurBg.isVisible = true
+                    ivBlurBg.setImageBitmap(outputBitmap)
                 }
             } catch (_: Exception) {
 

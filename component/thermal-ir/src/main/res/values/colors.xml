@@ -7,4 +7,7 @@
     <color name="temp_bg_line_color">#5B5961</color>
     <color name="font_four_unit_color">#EEEEEE</color>
     <color name="ir_bg_color">#FF16131E</color>
+    <color name="color_23202E">#23202E</color>
+    <color name="white">#FFFFFF</color>
+    <color name="font_third_color">#666666</color>
 </resources>

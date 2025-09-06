@@ -3,6 +3,8 @@ package com.topdon.module.thermal.ir.activity
 import android.content.Intent
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.AppUtils
@@ -24,6 +26,7 @@ import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.libcom.ExcelUtil
 import com.topdon.lms.sdk.BuildConfig
 import com.topdon.module.thermal.ir.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.module.thermal.ir.viewmodel.IRMonitorViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -63,24 +66,25 @@ class IRLogMPChartActivity : BaseActivity() {
             dismissLoadingDialog()
 
             val isPoint = it?.isNotEmpty() == true && it.first().type == "point"
-            monitor_current_vol.text = getString(if (isPoint) R.string.chart_temperature else R.string.chart_temperature_high)
-            monitor_real_vol.visibility = if (isPoint) View.GONE else View.VISIBLE
-            monitor_real_img.visibility = if (isPoint) View.GONE else View.VISIBLE
+            findViewById<TextView>(R.id.monitor_current_vol).text = getString(if (isPoint) LibR.string.chart_temperature else LibR.string.chart_temperature_high)
+            findViewById<TextView>(R.id.monitor_real_vol).visibility = if (isPoint) View.GONE else View.VISIBLE
+            findViewById<ImageView>(R.id.monitor_real_img).visibility = if (isPoint) View.GONE else View.VISIBLE
 
             try {
-                log_chart_time_chart.initEntry(it as ArrayList<ThermalEntity>)
+                val chartView = findViewById<com.topdon.module.thermal.ir.view.ChartLogView>(R.id.log_chart_time_chart)
+                chartView.initEntry(it as ArrayList<ThermalEntity>)
             } catch (e: Exception) {
                 XLog.e("刷新图表异常:${e.message}")
             }
         }
 
-        btn_ex?.setOnClickListener {
+        findViewById<View>(R.id.btn_ex)?.setOnClickListener {
             TipDialog.Builder(this)
-                .setMessage(R.string.tip_album_temp_exportfile)
-                .setPositiveListener(R.string.app_confirm) {
+                .setMessage(LibR.string.tip_album_temp_exportfile)
+                .setPositiveListener(LibR.string.app_confirm) {
                     val tempData = viewModel.detailListLD.value
                     if (tempData?.isEmpty() == true) {
-                        ToastTools.showShort(R.string.http_code998)
+                        ToastTools.showShort("No data available")
                     } else {
                         XXPermissions.with(this)
                             .permission(
@@ -102,18 +106,18 @@ class IRLogMPChartActivity : BaseActivity() {
                                             }
                                             dismissLoadingDialog()
                                             if (filePath.isNullOrEmpty()) {
-                                                ToastTools.showShort(R.string.liveData_save_error)
+                                                ToastTools.showShort(LibR.string.liveData_save_error)
                                             } else {
                                                 val uri = FileTools.getUri(File(filePath))
                                                 val shareIntent = Intent()
                                                 shareIntent.action = Intent.ACTION_SEND
                                                 shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
                                                 shareIntent.type = "application/xlsx"
-                                                startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
+                                                startActivity(Intent.createChooser(shareIntent, getString(LibR.string.battery_share)))
                                             }
                                         }
                                     } else {
-                                        ToastTools.showShort(R.string.scan_ble_tip_authorize)
+                                        ToastTools.showShort(LibR.string.scan_ble_tip_authorize)
                                     }
                                 }
 
@@ -124,16 +128,16 @@ class IRLogMPChartActivity : BaseActivity() {
                                     if (doNotAskAgain) {
                                         //拒绝授权并且不再提醒
                                         if (BaseApplication.instance.isDomestic()){
-                                            ToastUtils.showShort(getString(R.string.app_storage_content))
+                                            ToastUtils.showShort(getString(LibR.string.app_storage_content))
                                             return
                                         }
                                         TipDialog.Builder(this@IRLogMPChartActivity)
-                                            .setTitleMessage(getString(R.string.app_tip))
-                                            .setMessage(getString(R.string.app_storage_content))
-                                            .setPositiveListener(R.string.app_open) {
+                                            .setTitleMessage(getString(LibR.string.app_tip))
+                                            .setMessage(getString(LibR.string.app_storage_content))
+                                            .setPositiveListener(LibR.string.app_open) {
                                                 AppUtils.launchAppDetailsSettings()
                                             }
-                                            .setCancelListener(R.string.app_cancel) {
+                                            .setCancelListener(LibR.string.app_cancel) {
                                             }
                                             .setCanceled(true)
                                             .create().show()
@@ -142,12 +146,12 @@ class IRLogMPChartActivity : BaseActivity() {
 
                             })
                     }
-                }.setCancelListener(R.string.app_cancel){
+                }.setCancelListener(LibR.string.app_cancel){
                 }
                 .setCanceled(true)
                 .create().show()
         }
-        tv_save_path?.text = getString(R.string.temp_export_path) + ": " + FileConfig.excelDir
+        findViewById<TextView>(R.id.tv_save_path)?.text = getString(LibR.string.temp_export_path) + ": " + FileConfig.excelDir
         viewModel.queryDetail(startTime)
 
     }

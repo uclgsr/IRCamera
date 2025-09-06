@@ -12,6 +12,8 @@ import android.util.Log
 import android.view.SurfaceView
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
@@ -129,6 +131,12 @@ class ManualStep2Activity : BaseActivity(), OnUSBConnectListener,
         seek_bar = findViewById(R.id.seek_bar)
         dualTextureView = findViewById(R.id.dualTextureView)
         moveImageView = findViewById(R.id.moveImageView)
+        
+        // Initialize missing views
+        val tvTips: TextView = findViewById(R.id.tv_tips)
+        val ivTips: ImageView = findViewById(R.id.iv_tips)
+        val llSeekBar: LinearLayout = findViewById(R.id.ll_seek_bar)
+        
         mThisActivity = this
         ivTakePhoto?.setVisibility(View.VISIBLE)
         ivTakePhoto?.setOnClickListener(View.OnClickListener {
@@ -136,9 +144,9 @@ class ManualStep2Activity : BaseActivity(), OnUSBConnectListener,
                 //拍照
                 takePhoto()
                 ivTakePhoto?.setText(R.string.app_ok)
-                tv_tips.text = getString(R.string.dual_light_correction_tips_3)
-                iv_tips.visibility = View.GONE
-                ll_seek_bar.visibility = View.VISIBLE
+                tvTips.text = getString(R.string.dual_light_correction_tips_3)
+                ivTips.visibility = View.GONE
+                llSeekBar.visibility = View.VISIBLE
             }else{
                 SharedManager.setManualAngle(snStr,seek_bar!!.progress)
                 val byteArray = ByteArray(24)
@@ -166,7 +174,7 @@ class ManualStep2Activity : BaseActivity(), OnUSBConnectListener,
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
-        ll_seek_bar.visibility = View.GONE
+        llSeekBar.visibility = View.GONE
         seek_bar?.max = 2000
         seek_bar?.setEnabled(false)
         moveImageView?.setEnabled(false)

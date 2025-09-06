@@ -37,6 +37,9 @@ import com.topdon.module.thermal.ir.repository.ConfigRepository
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import com.infisense.usbir.view.TemperatureView
+import com.infisense.usbir.view.CameraView
+import android.widget.FrameLayout
 
 /**
  * 热成像选取点
@@ -48,6 +51,11 @@ class IRMonitorThermalFragment : BaseFragment(),ITsTempListener {
 
     private var ircmd: IRCMD? = null
     private var gainStatus = CommonParams.GainStatus.HIGH_GAIN
+
+    // findViewById declarations
+    private lateinit var temperatureView: TemperatureView
+    private lateinit var thermalLay: FrameLayout
+    private lateinit var cameraView: CameraView
 
     override fun initContentView() = R.layout.fragment_ir_monitor_thermal
 
@@ -67,6 +75,11 @@ class IRMonitorThermalFragment : BaseFragment(),ITsTempListener {
     }
 
     override fun initView() {
+        // Initialize findViewById using view
+        temperatureView = view!!.findViewById(R.id.temperatureView)
+        thermalLay = view!!.findViewById(R.id.thermal_lay)
+        cameraView = view!!.findViewById(R.id.cameraView)
+        
         ts_data_H = CommonUtils.getTauData(context, "ts/TS001_H.bin")
         ts_data_L = CommonUtils.getTauData(context, "ts/TS001_L.bin")
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -391,18 +404,18 @@ class IRMonitorThermalFragment : BaseFragment(),ITsTempListener {
     }
 
     private fun setViewLay() {
-        thermal_lay.post {
+        thermalLay.post {
             if (ScreenUtil.isPortrait(requireContext())) {
-                val params = thermal_lay.layoutParams
+                val params = thermalLay.layoutParams
                 params.width = ScreenUtil.getScreenWidth(requireContext())
                 params.height = params.width * imageHeight / imageWidth
-                thermal_lay.layoutParams = params
+                thermalLay.layoutParams = params
             } else {
                 // 横屏
-                val params = thermal_lay.layoutParams
-                params.height = thermal_lay.height
+                val params = thermalLay.layoutParams
+                params.height = thermalLay.height
                 params.width = params.height * imageHeight / imageWidth
-                thermal_lay.layoutParams = params
+                thermalLay.layoutParams = params
             }
         }
     }

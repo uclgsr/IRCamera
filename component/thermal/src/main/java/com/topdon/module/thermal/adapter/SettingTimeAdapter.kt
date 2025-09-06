@@ -39,10 +39,10 @@ class SettingTimeAdapter(val context: Context) :
             holder.btn.text = datas[position]
             if (position == select) {
                 holder.btn.setBackgroundResource(R.drawable.ui_btn_round_theme)
-                holder.btn.setTextColor(ContextCompat.getColor(context, R.color.white))
+                holder.btn.setTextColor(ContextCompat.getColor(context, com.topdon.lib.core.R.color.white))
             } else {
                 holder.btn.background = null
-                holder.btn.setTextColor(ContextCompat.getColor(context, R.color.font_gray))
+                holder.btn.setTextColor(ContextCompat.getColor(context, com.topdon.lib.core.R.color.font_third_color))
             }
             holder.btn.setOnClickListener {
                 listener?.onClick(position, dataTimes[position])
@@ -57,7 +57,7 @@ class SettingTimeAdapter(val context: Context) :
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val btn: Button = itemView.item_setting_time_btn
+        val btn: Button = itemView.findViewById(R.id.item_setting_time_btn)
     }
 
 

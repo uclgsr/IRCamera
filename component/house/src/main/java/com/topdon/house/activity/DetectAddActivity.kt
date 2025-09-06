@@ -19,6 +19,7 @@ import com.github.gzuliyujiang.wheelpicker.entity.DateEntity
 import com.github.gzuliyujiang.wheelpicker.entity.DatimeEntity
 import com.github.gzuliyujiang.wheelpicker.entity.TimeEntity
 import com.topdon.house.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.house.dialog.ImagePickFromDialog
 import com.topdon.house.event.HouseDetectAddEvent
 import com.topdon.house.event.HouseDetectEditEvent
@@ -56,6 +57,18 @@ import java.util.Locale
 class DetectAddActivity : BaseActivity(), View.OnClickListener {
     private val viewModel: DetectViewModel  by viewModels()
 
+    // View references for performance
+    private val titleView by lazy { findViewById<com.topdon.lib.core.view.TitleView>(R.id.title_view) }
+    private val tvCreateReport by lazy { findViewById<android.widget.TextView>(R.id.tv_create_report) }
+    private val etDetectName by lazy { findViewById<android.widget.EditText>(R.id.et_detect_name) }
+    private val etInspectorName by lazy { findViewById<android.widget.EditText>(R.id.et_inspector_name) }
+    private val tvDetectTime by lazy { findViewById<android.widget.TextView>(R.id.tv_detect_time) }
+    private val etHouseAddress by lazy { findViewById<android.widget.EditText>(R.id.et_house_address) }
+    private val ivHouseImage by lazy { findViewById<android.widget.ImageView>(R.id.iv_house_image) }
+    private val ivHouseImageCamera by lazy { findViewById<android.widget.ImageView>(R.id.iv_house_image_camera) }
+    private val tvHouseImageCamera by lazy { findViewById<android.widget.TextView>(R.id.tv_house_image_camera) }
+    private val tvHouseYear by lazy { findViewById<android.widget.TextView>(R.id.tv_house_year) }
+
     /**
      * 仅当编辑模式时，从上一界面传递过来的，要编辑的房屋检测 Id.
      */
@@ -76,30 +89,30 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
     override fun initView() {
         editId = intent.getLongExtra(ExtraKeyConfig.DETECT_ID, 0)
 
-        title_view.setTitleText(if (editId > 0) R.string.edit_detection_report else R.string.add_detection_report)
-        title_view.setLeftClickListener { showExitTipsDialog() }
+        titleView.setTitleText(if (editId > 0) LibR.string.edit_detection_report else LibR.string.add_detection_report)
+        titleView.setLeftClickListener { showExitTipsDialog() }
 
-        tv_create_report.setText(if (editId > 0) R.string.person_save else R.string.create_report)
+        tvCreateReport.setText(if (editId > 0) LibR.string.person_save else LibR.string.create_report)
 
         viewModel.detectLD.observe(this) {
             houseDetect = it ?: return@observe
             inputDetectTime = houseDetect.detectTime
-            et_detect_name.setText(houseDetect.name)
-            et_inspector_name.setText(houseDetect.inspectorName)
-            tv_detect_time.text = TimeUtils.millis2String(houseDetect.detectTime, "yyyy-MM-dd HH:mm")
-            et_house_address.setText(houseDetect.address)
+            etDetectName.setText(houseDetect.name)
+            etInspectorName.setText(houseDetect.inspectorName)
+            tvDetectTime.text = TimeUtils.millis2String(houseDetect.detectTime, "yyyy-MM-dd HH:mm")
+            etHouseAddress.setText(houseDetect.address)
 
-            Glide.with(iv_house_image).load(houseDetect.imagePath).into(iv_house_image)
-            iv_house_image_camera.isVisible = false
-            tv_house_image_camera.isVisible = false
+            Glide.with(ivHouseImage).load(houseDetect.imagePath).into(ivHouseImage)
+            ivHouseImageCamera.isVisible = false
+            tvHouseImageCamera.isVisible = false
 
-            tv_house_year.text = houseDetect.year?.toString() ?: ""
+            tvHouseYear.text = houseDetect.year?.toString() ?: ""
 
-            et_house_space.setText(houseDetect.houseSpace)
-            tv_house_space_unit.text = resources.getStringArray(R.array.area)[houseDetect.houseSpaceUnit]
+            findViewById<android.widget.EditText>(R.id.et_house_space).setText(houseDetect.houseSpace)
+            findViewById<android.widget.TextView>(R.id.tv_house_space_unit).text = resources.getStringArray(R.array.area)[houseDetect.houseSpaceUnit]
 
-            et_cost.setText(houseDetect.cost)
-            tv_cost_unit.text = resources.getStringArray(R.array.currency)[houseDetect.costUnit]
+            findViewById<android.widget.EditText>(R.id.et_cost).setText(houseDetect.cost)
+            findViewById<android.widget.TextView>(R.id.tv_cost_unit).text = resources.getStringArray(R.array.currency)[houseDetect.costUnit]
         }
 
         if (editId > 0) {
@@ -107,25 +120,25 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
         } else {
             houseDetect.houseSpaceUnit = SharedManager.houseSpaceUnit
             houseDetect.costUnit = SharedManager.costUnit
-            tv_house_space_unit.text = resources.getStringArray(R.array.area)[houseDetect.houseSpaceUnit]
-            tv_cost_unit.text = resources.getStringArray(R.array.currency)[houseDetect.costUnit]
+            findViewById<android.widget.TextView>(R.id.tv_house_space_unit).text = resources.getStringArray(R.array.area)[houseDetect.houseSpaceUnit]
+            findViewById<android.widget.TextView>(R.id.tv_cost_unit).text = resources.getStringArray(R.array.currency)[houseDetect.costUnit]
         }
 
 
-        tv_detect_time.setOnClickListener(this)
-        iv_address_location.setOnClickListener(this)
-        iv_house_image.setOnClickListener(this)
-        tv_house_year.setOnClickListener(this)
-        tv_house_space_unit.setOnClickListener(this)
-        tv_cost_unit.setOnClickListener(this)
-        tv_create_report.setOnClickListener(this)
+        findViewById<android.widget.TextView>(R.id.tv_detect_time).setOnClickListener(this)
+        findViewById<android.widget.ImageView>(R.id.iv_address_location).setOnClickListener(this)
+        findViewById<android.widget.ImageView>(R.id.iv_house_image).setOnClickListener(this)
+        findViewById<android.widget.TextView>(R.id.tv_house_year).setOnClickListener(this)
+        findViewById<android.widget.TextView>(R.id.tv_house_space_unit).setOnClickListener(this)
+        findViewById<android.widget.TextView>(R.id.tv_cost_unit).setOnClickListener(this)
+        findViewById<android.widget.TextView>(R.id.tv_create_report).setOnClickListener(this)
 
         // 给各个标题添加红色*号
-        tv_detect_name_title.text = SpanBuilder().appendColor("*", 0xffff4848.toInt()).append(getString(R.string.album_report_name))
-        tv_inspector_name_title.text = SpanBuilder().appendColor("*", 0xffff4848.toInt()).append(getString(R.string.inspector_name))
-        tv_detect_time_title.text = SpanBuilder().appendColor("*", 0xffff4848.toInt()).append(getString(R.string.detect_time))
-        tv_house_address_title.text = SpanBuilder().appendColor("*", 0xffff4848.toInt()).append(getString(R.string.house_detail_address))
-        tv_house_image_title.text = SpanBuilder().appendColor("*", 0xffff4848.toInt()).append(getString(R.string.house_image))
+        findViewById<android.widget.TextView>(R.id.tv_detect_name_title).text = SpanBuilder().appendColor("*", 0xffff4848.toInt()).append(getString(LibR.string.album_report_name))
+        findViewById<android.widget.TextView>(R.id.tv_inspector_name_title).text = SpanBuilder().appendColor("*", 0xffff4848.toInt()).append(getString(LibR.string.inspector_name))
+        findViewById<android.widget.TextView>(R.id.tv_detect_time_title).text = SpanBuilder().appendColor("*", 0xffff4848.toInt()).append(getString(LibR.string.detect_time))
+        findViewById<android.widget.TextView>(R.id.tv_house_address_title).text = SpanBuilder().appendColor("*", 0xffff4848.toInt()).append(getString(LibR.string.house_detail_address))
+        findViewById<android.widget.TextView>(R.id.tv_house_image_title).text = SpanBuilder().appendColor("*", 0xffff4848.toInt()).append(getString(LibR.string.house_image))
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -139,13 +152,13 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            tv_detect_time -> {//检测时间
+            findViewById<android.widget.TextView>(R.id.tv_detect_time) -> {//检测时间
                 showDetectTimeDialog()
             }
-            iv_address_location -> {//房屋地址定位图标
+            findViewById<android.widget.ImageView>(R.id.iv_address_location) -> {//房屋地址定位图标
                 getLocation()
             }
-            iv_house_image -> {//房屋图片
+            findViewById<android.widget.ImageView>(R.id.iv_house_image) -> {//房屋图片
                 ImagePickFromDialog(this)
                     .setSelectListener {
                         if (it == 0) {//相册
@@ -162,62 +175,62 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
                     }
                     .show()
             }
-            tv_house_year -> {//建筑年份
+            findViewById<android.widget.TextView>(R.id.tv_house_year) -> {//建筑年份
                 YearPicker(this, houseDetect.year).also {
-                    it.setTitle(R.string.year_built)
+                    it.setTitle(LibR.string.year_built)
                     it.setOnYearPickedListener { year ->
                         houseDetect.year = year
-                        tv_house_year.text = houseDetect.year?.toString()
+                        findViewById<android.widget.TextView>(R.id.tv_house_year).text = houseDetect.year?.toString()
                     }
                 }.show()
             }
-            tv_house_space_unit -> {//建筑面积单位
+            findViewById<android.widget.TextView>(R.id.tv_house_space_unit) -> {//建筑面积单位
                 StrArrayPicker(this, resources.getStringArray(R.array.area), SharedManager.houseSpaceUnit).also {
-                    it.setTitle(R.string.area)
+                    it.setTitle(LibR.string.area)
                     it.setOnOptionPickedListener { position, item ->
                         SharedManager.houseSpaceUnit = position
                         houseDetect.houseSpaceUnit = position
-                        tv_house_space_unit.text = item.toString()
+                        findViewById<android.widget.TextView>(R.id.tv_house_space_unit).text = item.toString()
                     }
                 }.show()
             }
-            tv_cost_unit -> {//检测费用单位
+            findViewById<android.widget.TextView>(R.id.tv_cost_unit) -> {//检测费用单位
                 StrArrayPicker(this, resources.getStringArray(R.array.currency), SharedManager.costUnit).also {
-                    it.setTitle(R.string.diagnosis_unit)
+                    it.setTitle(LibR.string.diagnosis_unit)
                     it.setOnOptionPickedListener { position, item ->
                         SharedManager.costUnit = position
                         houseDetect.costUnit = position
-                        tv_cost_unit.text = item.toString()
+                        findViewById<android.widget.TextView>(R.id.tv_cost_unit).text = item.toString()
                     }
                 }.show()
             }
-            tv_create_report -> {//创建报告 or 编辑报告
-                val reportName = et_detect_name.text.toString()
+            findViewById<android.widget.TextView>(R.id.tv_create_report) -> {//创建报告 or 编辑报告
+                val reportName = findViewById<android.widget.EditText>(R.id.et_detect_name).text.toString()
                 if (reportName.isEmpty()) {
-                    TToast.shortToast(this, R.string.album_report_input_name_tips)
+                    TToast.shortToast(this, LibR.string.album_report_input_name_tips)
                     return
                 }
 
-                val inspectorName = et_inspector_name.text.toString()
+                val inspectorName = findViewById<android.widget.EditText>(R.id.et_inspector_name).text.toString()
                 if (inspectorName.isEmpty()) {
-                    TToast.shortToast(this, R.string.inspector_name_input_hint)
+                    TToast.shortToast(this, LibR.string.inspector_name_input_hint)
                     return
                 }
 
                 val detectTime = this.inputDetectTime
                 if (detectTime == null) {
-                    TToast.shortToast(this, R.string.please_select_detect_time)
+                    TToast.shortToast(this, LibR.string.please_select_detect_time)
                     return
                 }
 
-                val address = et_house_address.text.toString()
+                val address = findViewById<android.widget.EditText>(R.id.et_house_address).text.toString()
                 if (address.isEmpty()) {
-                    TToast.shortToast(this, R.string.house_detail_address_input_hint)
+                    TToast.shortToast(this, LibR.string.house_detail_address_input_hint)
                     return
                 }
 
                 if (houseDetect.imagePath.isEmpty()) {
-                    TToast.shortToast(this, R.string.house_image_input_hint)
+                    TToast.shortToast(this, LibR.string.house_image_input_hint)
                     return
                 }
 
@@ -228,8 +241,8 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
                         houseDetect.name = reportName
                         houseDetect.inspectorName = inspectorName
                         houseDetect.address = address
-                        houseDetect.houseSpace = et_house_space.text.toString()
-                        houseDetect.cost = et_cost.text.toString()
+                        houseDetect.houseSpace = findViewById<android.widget.EditText>(R.id.et_house_space).text.toString()
+                        houseDetect.cost = findViewById<android.widget.EditText>(R.id.et_cost).text.toString()
                         houseDetect.createTime = if (editId > 0) houseDetect.createTime else currentTime
                         houseDetect.updateTime = currentTime
 
@@ -261,14 +274,14 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
     private fun getLocation() {
         PermissionTool.requestLocation(this) {
             lifecycleScope.launch {
-                showLoadingDialog(R.string.get_current_address)
+                showLoadingDialog(LibR.string.get_current_address)
                 val addressText = LocationUtil.getLastLocationStr(this@DetectAddActivity)
                 dismissLoadingDialog()
                 if (addressText == null) {
-                    TToast.shortToast(this@DetectAddActivity, R.string.get_Location_failed)
+                    TToast.shortToast(this@DetectAddActivity, LibR.string.get_Location_failed)
                 } else {
                     houseDetect.address = addressText
-                    et_house_address.setText(addressText)
+                    findViewById<android.widget.EditText>(R.id.et_house_address).setText(addressText)
                 }
             }
         }
@@ -283,9 +296,9 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
             val copyFile = FileConfig.getDetectImageDir(this, "Cover${System.currentTimeMillis()}.png")
             FileUtils.copy(srcFile, copyFile)
             houseDetect.imagePath = copyFile.absolutePath
-            Glide.with(iv_house_image).load(copyFile.absolutePath).into(iv_house_image)
-            iv_house_image_camera.isVisible = false
-            tv_house_image_camera.isVisible = false
+            Glide.with(findViewById<android.widget.ImageView>(R.id.iv_house_image)).load(copyFile.absolutePath).into(findViewById<android.widget.ImageView>(R.id.iv_house_image))
+            findViewById<android.widget.ImageView>(R.id.iv_house_image_camera).isVisible = false
+            findViewById<android.widget.TextView>(R.id.tv_house_image_camera).isVisible = false
         }
     }
 
@@ -295,9 +308,9 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
     private val lightPhotoResult = registerForActivityResult(TakePhotoResult()) {
         if (it != null) {
             houseDetect.imagePath = it.absolutePath
-            Glide.with(iv_house_image).load(it.absolutePath).into(iv_house_image)
-            iv_house_image_camera.isVisible = false
-            tv_house_image_camera.isVisible = false
+            Glide.with(findViewById<android.widget.ImageView>(R.id.iv_house_image)).load(it.absolutePath).into(findViewById<android.widget.ImageView>(R.id.iv_house_image))
+            findViewById<android.widget.ImageView>(R.id.iv_house_image_camera).isVisible = false
+            findViewById<android.widget.TextView>(R.id.tv_house_image_camera).isVisible = false
         }
     }
 
@@ -306,11 +319,11 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
      */
     private fun showExitTipsDialog() {
         TipDialog.Builder(this)
-            .setMessage(R.string.diy_tip_save)
-            .setPositiveListener(R.string.app_exit) {
+            .setMessage(LibR.string.diy_tip_save)
+            .setPositiveListener(LibR.string.app_exit) {
                 finish()
             }
-            .setCancelListener(R.string.app_cancel)
+            .setCancelListener(LibR.string.app_cancel)
             .create().show()
     }
 
@@ -319,12 +332,12 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
      */
     private fun showDetectTimeDialog() {
         val picker = DatimePicker(this)
-        picker.setTitle(R.string.detect_time)
+        picker.setTitle(LibR.string.detect_time)
         picker.setOnDatimePickedListener { year, month, day, hour, minute, second ->
             val timeStr = "$year-$month-$day $hour:$minute:$second"
             val pattern = "yyyy-MM-dd HH:mm:ss"
             val time: Long = SimpleDateFormat(pattern, Locale.getDefault()).parse(timeStr, ParsePosition(0))?.time ?: 0
-            tv_detect_time.text = TimeUtils.millis2String(time, "yyyy-MM-dd HH:mm")
+            findViewById<android.widget.TextView>(R.id.tv_detect_time).text = TimeUtils.millis2String(time, "yyyy-MM-dd HH:mm")
             inputDetectTime = time
             houseDetect.detectTime = time
         }

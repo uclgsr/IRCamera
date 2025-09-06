@@ -1,6 +1,6 @@
 package com.infisense.usbir.utils
 
-import java.util.*
+import java.util.Locale
 
 
 /**

@@ -13,9 +13,9 @@ import com.energy.ac020library.bean.IFileHandleCallback;
 import com.energy.ac020library.bean.IrcmdError;
 import com.energy.commoncomponent.Const;
 import com.energy.commoncomponent.bean.DeviceType;
-import com.energy.commonlibrary.util.CommonUtils;
-import com.energy.commonlibrary.util.FileUtil;
-import com.energy.commonlibrary.util.SharedPreferencesUtils;
+// Use existing utilities instead of missing commonlibrary utils
+import com.infisense.usbir.utils.FileUtil;
+import com.blankj.utilcode.util.SPUtils;
 import com.energy.irutilslibrary.LibIRTemp;
 import com.example.thermal_lite.util.CommonUtil;
 import com.topdon.lib.core.BaseApplication;
@@ -90,7 +90,7 @@ public class TempCompensation {
         }
         byte[] snData = new byte[64];
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine().basicDeviceInfoGet(CommonParams.DeviceInfoType.TYPE_DEVICE_SN, snData);
-        String sn = CommonUtils.byteToString(snData);
+        String sn = new String(snData).trim().replace("\0", "");
         File file = new File(BaseApplication.instance.getExternalCacheDir(), "NUC_T_HIGH_" + sn + ".bin");
         if (file.exists()) {
             Log.d(TAG, "File exists, reading from: " + file.getAbsolutePath());
@@ -144,11 +144,11 @@ public class TempCompensation {
         }
 
         // 方便调参使用，最终落地方案固定数值即可
-        param1 = Double.parseDouble(SharedPreferencesUtils.getString(BaseApplication.instance.getApplicationContext(),
+        param1 = Double.parseDouble(SPUtils.getInstance().getString(
                 KEY_PARAM1, DEFAULT_PARAM1));
-        param2 = Double.parseDouble(SharedPreferencesUtils.getString(BaseApplication.instance.getApplicationContext(),
+        param2 = Double.parseDouble(SPUtils.getInstance().getString(
                 KEY_PARAM2, DEFAULT_PARAM2));
-        param3 = Double.parseDouble(SharedPreferencesUtils.getString(BaseApplication.instance.getApplicationContext(),
+        param3 = Double.parseDouble(SPUtils.getInstance().getString(
                 KEY_PARAM3, DEFAULT_PARAM3));
         Log.d(TAG, "param1:" + param1 + "--param2:" + param2 + "--param3:" + param3);
 

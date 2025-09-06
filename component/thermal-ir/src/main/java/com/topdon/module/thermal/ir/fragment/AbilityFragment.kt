@@ -2,6 +2,7 @@ package com.topdon.module.thermal.ir.fragment
 
 import android.content.Intent
 import android.view.View
+import android.widget.ImageView
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.house.activity.HouseHomeActivity
 import com.topdon.lib.core.bean.event.WinterClickEvent
@@ -28,15 +29,28 @@ import org.greenrobot.eventbus.EventBus
  */
 class AbilityFragment : BaseFragment(), View.OnClickListener {
     private var mIsTC007 = false
+    
+    // View references
+    private lateinit var ivWinter: ImageView
+    private lateinit var viewMonitory: View
+    private lateinit var viewHouse: View
+    private lateinit var viewCar: View
 
     override fun initContentView() = R.layout.fragment_ability
 
     override fun initView() {
         mIsTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
-        iv_winter.setOnClickListener(this)
-        view_monitory.setOnClickListener(this)
-        view_house.setOnClickListener(this)
-        view_car.setOnClickListener(this)
+        
+        // Initialize views with findViewById
+        ivWinter = requireView().findViewById(R.id.iv_winter)
+        viewMonitory = requireView().findViewById(R.id.view_monitory) 
+        viewHouse = requireView().findViewById(R.id.view_house)
+        viewCar = requireView().findViewById(R.id.view_car)
+        
+        ivWinter.setOnClickListener(this)
+        viewMonitory.setOnClickListener(this)
+        viewHouse.setOnClickListener(this)
+        viewCar.setOnClickListener(this)
     }
 
     override fun initData() {
@@ -44,7 +58,7 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            iv_winter -> {//冬季特辑入口
+            ivWinter -> {//冬季特辑入口
                 SharedManager.hasClickWinter = true
                 EventBus.getDefault().post(WinterClickEvent())
                 val url = if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
@@ -57,19 +71,19 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
                     .withString(ExtraKeyConfig.URL, url)
                     .navigation(requireContext())
             }
-            view_monitory -> {//温度监控
+            viewMonitory -> {//温度监控
                 val intent = Intent(requireContext(), MonitoryHomeActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
                 startActivity(intent)
             }
 
-            view_house -> {//房屋检测
+            viewHouse -> {//房屋检测
                 val intent = Intent(requireContext(), HouseHomeActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
                 startActivity(intent)
             }
 
-            view_car -> {//汽车检测
+            viewCar -> {//汽车检测
                 if (mIsTC007) {
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07)
@@ -84,11 +98,11 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
                     } else if (DeviceTools.isTC001LiteConnect()) {
                         NavigationManager.getInstance().build(RouterConfig.IR_TCLITE)
                             .withBoolean(ExtraKeyConfig.IS_CAR_DETECT_ENTER, true)
-                            .navigation(activity)
+                            .navigation(requireActivity())
                     } else if (DeviceTools.isHikConnect()) {
                         NavigationManager.getInstance().build(RouterConfig.IR_HIK_MAIN)
                             .withBoolean(ExtraKeyConfig.IS_CAR_DETECT_ENTER, true)
-                            .navigation(activity)
+                            .navigation(requireActivity())
                     } else if (DeviceTools.isConnect(isSendConnectEvent = false, true)) {
                         var intent = Intent(requireContext(), IRThermalNightActivity::class.java)
                         intent.putExtra(ExtraKeyConfig.IS_CAR_DETECT_ENTER, true)

@@ -38,10 +38,12 @@ class ReportPreviewAlbumAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val bean = dataList[position]
-        Glide.with(cxt).load(bean.photoPath).into(holder.itemView.riv_photo)
-        holder.itemView.tv_name.text = bean.title
-        holder.itemView.riv_photo.setOnClickListener {
-            jumpListener?.invoke(bean,position)
+        if (holder is ItemView) {
+            Glide.with(cxt).load(bean.photoPath).into(holder.rivPhoto)
+            holder.tvName.text = bean.title
+            holder.rivPhoto.setOnClickListener {
+                jumpListener?.invoke(bean, position)
+            }
         }
     }
 
@@ -50,7 +52,7 @@ class ReportPreviewAlbumAdapter(
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val rivPhoto: RoundImageView = itemView.riv_photo
-        val tvName: TextView = itemView.tv_name
+        val rivPhoto: ImageView = itemView.findViewById(R.id.riv_photo)
+        val tvName: TextView = itemView.findViewById(R.id.tv_name)
     }
 }

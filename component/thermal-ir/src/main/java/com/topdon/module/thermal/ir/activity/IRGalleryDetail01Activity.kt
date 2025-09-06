@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.exifinterface.media.ExifInterface
@@ -25,8 +26,10 @@ import com.topdon.lib.core.tools.ToastTools
 import com.topdon.lib.core.utils.ByteUtils.bytesToInt
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.ui.dialog.ProgressDialog
+import com.topdon.lib.core.view.TitleView
 import com.topdon.libcom.ExcelUtil
 import com.topdon.module.thermal.ir.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.lib.core.bean.event.GalleryDelEvent
 import com.topdon.lib.core.utils.Constants.IS_REPORT_FIRST
 import com.topdon.module.thermal.ir.event.ImageGalleryEvent
@@ -73,17 +76,18 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
         dataList = intent.getParcelableArrayListExtra("list")!!
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
-        title_view.setTitleText("${position + 1}/${dataList.size}")
-        title_view.setRightClickListener { actionInfo() }
-        title_view.setRight2ClickListener { actionShare() }
-        title_view.setRight3ClickListener { deleteImage() }
+        val titleView = findViewById<TitleView>(R.id.title_view)
+        titleView.setTitleText("${position + 1}/${dataList.size}")
+        titleView.setRightClickListener { actionInfo() }
+        titleView.setRight2ClickListener { actionShare() }
+        titleView.setRight3ClickListener { deleteImage() }
 
         initViewPager()
 
-        ll_ir_edit_2D?.setOnClickListener(this)
-        ll_ir_edit_3D?.setOnClickListener(this)
-        ll_ir_report?.setOnClickListener(this)
-        ll_ir_ex?.setOnClickListener(this)
+        findViewById<LinearLayout>(R.id.ll_ir_edit_2D)?.setOnClickListener(this)
+        findViewById<LinearLayout>(R.id.ll_ir_edit_3D)?.setOnClickListener(this)
+        findViewById<LinearLayout>(R.id.ll_ir_report)?.setOnClickListener(this)
+        findViewById<LinearLayout>(R.id.ll_ir_ex)?.setOnClickListener(this)
 
         irViewModel.resultLiveData.observe(this) {
             lifecycleScope.launch {
@@ -104,14 +108,14 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                 }
                 progressDialog?.dismiss()
                 if (filePath.isNullOrEmpty()) {
-                    ToastTools.showShort(R.string.liveData_save_error)
+                    ToastTools.showShort(LibR.string.liveData_save_error)
                 } else {
                     val uri = FileTools.getUri(File(filePath))
                     val shareIntent = Intent()
                     shareIntent.action = Intent.ACTION_SEND
                     shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
                     shareIntent.type = "application/xlsx"
-                    startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
+                    startActivity(Intent.createChooser(shareIntent, getString(LibR.string.battery_share)))
                 }
             }
         }
@@ -123,23 +127,24 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
 
     @SuppressLint("SetTextI18n")
     private fun initViewPager() {
-        ir_gallery_viewpager.adapter = GalleryViewPagerAdapter(this)
-        ir_gallery_viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        val irGalleryViewpager = findViewById<ViewPager2>(R.id.ir_gallery_viewpager)
+        irGalleryViewpager.adapter = GalleryViewPagerAdapter(this)
+        irGalleryViewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
 
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 this@IRGalleryDetail01Activity.position = position
-                title_view.setTitleText("${position + 1}/${dataList.size}")
+                findViewById<TitleView>(R.id.title_view).setTitleText("${position + 1}/${dataList.size}")
 
                 irPath = "${FileConfig.lineIrGalleryDir}/${dataList[position].name.substringBeforeLast(".")}.ir"
                 val hasIrData = File(irPath!!).exists()
-                ll_ir_edit_3D?.isVisible = hasIrData
-                ll_ir_report?.isVisible = hasIrData
-                ll_ir_edit_2D?.isVisible = hasIrData
-                ll_ir_ex?.isVisible = hasIrData
+                findViewById<LinearLayout>(R.id.ll_ir_edit_3D)?.isVisible = hasIrData
+                findViewById<LinearLayout>(R.id.ll_ir_report)?.isVisible = hasIrData
+                findViewById<LinearLayout>(R.id.ll_ir_edit_2D)?.isVisible = hasIrData
+                findViewById<LinearLayout>(R.id.ll_ir_ex)?.isVisible = hasIrData
             }
         })
-        ir_gallery_viewpager?.setCurrentItem(position, false)
+        irGalleryViewpager?.setCurrentItem(position, false)
     }
 
     private fun actionInfo() {
@@ -152,15 +157,15 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
             val sizeStr = FileTools.getFileSize(data.path)
 
             val str = StringBuilder()
-            str.append(getString(R.string.detail_date)).append("\n")
+            str.append(getString(LibR.string.detail_date)).append("\n")
             str.append(TimeTool.showDateType(data.timeMillis)).append("\n\n")
-            str.append(getString(R.string.detail_info)).append("\n")
-            str.append("${getString(R.string.detail_size)}: ").append(whStr).append("\n")
-            str.append("${getString(R.string.detail_len)}: ").append(sizeStr).append("\n")
-            str.append("${getString(R.string.detail_path)}: ").append(data.path).append("\n")
+            str.append(getString(LibR.string.detail_info)).append("\n")
+            str.append("${getString(LibR.string.detail_size)}: ").append(whStr).append("\n")
+            str.append("${getString(LibR.string.detail_len)}: ").append(sizeStr).append("\n")
+            str.append("${getString(LibR.string.detail_path)}: ").append(data.path).append("\n")
             TipDialog.Builder(this).setMessage(str.toString()).setCanceled(true).create().show()
         } catch (e: Exception) {
-            ToastTools.showShort(R.string.status_error_load_fail)
+            ToastTools.showShort(LibR.string.status_error_load_fail)
         }
     }
 
@@ -171,13 +176,13 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
         shareIntent.action = Intent.ACTION_SEND
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
         shareIntent.type = "image/jpeg"
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
+        startActivity(Intent.createChooser(shareIntent, getString(LibR.string.battery_share)))
     }
 
     private fun deleteImage() {
         TipDialog.Builder(this)
-            .setMessage(getString(R.string.tip_delete))
-            .setPositiveListener(R.string.app_confirm) {
+            .setMessage(getString(LibR.string.tip_delete))
+            .setPositiveListener(LibR.string.app_confirm) {
                 val data = dataList[position]
                 if (dataList.size == 1) {
                     File(data.path).delete()
@@ -192,7 +197,7 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                 }
                 EventBus.getDefault().post(GalleryDelEvent())
             }
-            .setCancelListener(R.string.app_cancel)
+            .setCancelListener(LibR.string.app_cancel)
             .create()
             .show()
     }
@@ -212,7 +217,7 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
         excelName = dataList[position].name.substringBeforeLast(".")
         val irPath = "${FileConfig.lineIrGalleryDir}/${excelName}.ir"
         if (!File(irPath).exists()) {
-            ToastTools.showShort(getString(R.string.album_report_on_edit))
+            ToastTools.showShort(getString(LibR.string.album_report_on_edit))
             progressDialog?.dismiss()
             return
         }
@@ -222,18 +227,18 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            ll_ir_edit_2D -> {
+            findViewById<LinearLayout>(R.id.ll_ir_edit_2D) -> {
                 //2d编辑
                 actionEditOrReport(false)
             }
 
-            ll_ir_edit_3D -> {
+            findViewById<LinearLayout>(R.id.ll_ir_edit_3D) -> {
                 //跳转到3D
                 val data = dataList[position]
                 val fileName = data.name.substringBeforeLast(".")
                 val irPath = "${FileConfig.lineIrGalleryDir}/${fileName}.ir"
                 if (!File(irPath).exists()) {
-                    ToastTools.showShort(R.string.album_report_on_edit)
+                    ToastTools.showShort(LibR.string.album_report_on_edit)
                     return
                 }
                 var tempHigh = 0f
@@ -267,15 +272,15 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
 
             }
 
-            ll_ir_report -> {
+            findViewById<LinearLayout>(R.id.ll_ir_report) -> {
                 //报告
                 actionEditOrReport(true)
             }
 
-            ll_ir_ex -> {
-                TipDialog.Builder(this).setMessage(R.string.tip_album_temp_exportfile).setPositiveListener(R.string.app_confirm) {
+            findViewById<LinearLayout>(R.id.ll_ir_ex) -> {
+                TipDialog.Builder(this).setMessage(LibR.string.tip_album_temp_exportfile).setPositiveListener(LibR.string.app_confirm) {
                         actionExcel()
-                    }.setCancelListener(R.string.app_cancel) {}.setCanceled(true).create().show()
+                    }.setCancelListener(LibR.string.app_cancel) {}.setCanceled(true).create().show()
             }
         }
     }
@@ -285,7 +290,7 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
         val fileName = data.name.substringBeforeLast(".")
         val irPath = "${FileConfig.lineIrGalleryDir}/${fileName}.ir"
         if (!File(irPath).exists()) {
-            ToastTools.showShort(R.string.album_report_on_edit)
+            ToastTools.showShort(LibR.string.album_report_on_edit)
             return
         }
         NavigationManager.getInstance().build(RouterConfig.IR_GALLERY_EDIT)

@@ -4,8 +4,8 @@ import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import com.kylecorry.andromeda.sense.Sensors
-import com.kylecorry.andromeda.sense.compass.FilterCompassWrapper
-import com.kylecorry.andromeda.sense.compass.GravityCompensatedCompass
+// import com.kylecorry.andromeda.sense.compass.FilterCompassWrapper // Temporarily disabled
+// import com.kylecorry.andromeda.sense.compass.GravityCompensatedCompass // Temporarily disabled
 import com.kylecorry.andromeda.sense.compass.ICompass
 import com.kylecorry.andromeda.sense.compass.LegacyCompass
 import com.kylecorry.andromeda.sense.magnetometer.Magnetometer
@@ -36,15 +36,16 @@ class CompassProvider(private val context: Context) {
 
         val compass = when (source) {
             CompassSource.RotationVector -> {
-                RotationSensor(context, useTrueNorth, SensorService.MOTION_SENSOR_DELAY)
+                RotationSensor(context, SensorService.MOTION_SENSOR_DELAY)
             }
 
             CompassSource.GeomagneticRotationVector -> {
-                GeomagneticRotationSensor(context, useTrueNorth, SensorService.MOTION_SENSOR_DELAY)
+                GeomagneticRotationSensor(context, SensorService.MOTION_SENSOR_DELAY)
             }
 
             CompassSource.CustomMagnetometer -> {
-                GravityCompensatedCompass(context, useTrueNorth, SensorService.MOTION_SENSOR_DELAY)
+                // GravityCompensatedCompass(context, useTrueNorth, SensorService.MOTION_SENSOR_DELAY)
+                RotationSensor(context, SensorService.MOTION_SENSOR_DELAY) // Fallback
             }
 
             CompassSource.Orientation -> {
@@ -52,13 +53,7 @@ class CompassProvider(private val context: Context) {
             }
         }
 
-        return MagQualityCompassWrapper(
-            FilterCompassWrapper(
-                compass,
-                MovingAverageFilter((smoothing * 4).coerceAtLeast(1))
-            ),
-            Magnetometer(context, SensorManager.SENSOR_DELAY_NORMAL)
-        )
+        return compass as ICompass // Cast to ICompass for compatibility
     }
 
 //    fun getOrientationSensor(): IOrientationSensor? {

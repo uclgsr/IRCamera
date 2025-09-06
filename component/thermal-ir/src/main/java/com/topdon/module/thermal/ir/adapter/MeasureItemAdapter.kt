@@ -23,10 +23,10 @@ class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
     }
 
     private val secondBean = arrayListOf(
-        ColorBean(R.drawable.ic_menu_thermal7001, "1.8m", ObserveBean.TYPE_MEASURE_PERSON),
-        ColorBean(R.drawable.ic_menu_thermal7002, "1.0m", ObserveBean.TYPE_MEASURE_SHEEP),
-        ColorBean(R.drawable.ic_menu_thermal7003, "0.5m", ObserveBean.TYPE_MEASURE_DOG),
-        ColorBean(R.drawable.ic_menu_thermal7004, "0.2m", ObserveBean.TYPE_MEASURE_BIRD),
+        ColorBean(R.drawable.ic_info_svg, "1.8m", ObserveBean.TYPE_MEASURE_PERSON),
+        ColorBean(R.drawable.ic_info_svg, "1.0m", ObserveBean.TYPE_MEASURE_SHEEP),
+        ColorBean(R.drawable.ic_info_svg, "0.5m", ObserveBean.TYPE_MEASURE_DOG),
+        ColorBean(R.drawable.ic_info_svg, "0.2m", ObserveBean.TYPE_MEASURE_BIRD),
     )
 
 
@@ -59,9 +59,9 @@ class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val lay: View = itemView.item_menu_tab_lay
-        val img: ImageView = itemView.item_menu_tab_img
-        val name: TextView = itemView.item_menu_tab_text
+        val lay: View = itemView.findViewById(R.id.item_menu_tab_lay)
+        val img: ImageView = itemView.findViewById(R.id.item_menu_tab_img)
+        val name: TextView = itemView.findViewById(R.id.item_menu_tab_text)
 //        init {
 //            val canSeeCount = 4
 //            val with = (ScreenUtils.getScreenWidth() / canSeeCount)

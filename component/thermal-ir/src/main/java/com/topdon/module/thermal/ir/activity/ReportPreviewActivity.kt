@@ -45,6 +45,28 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
     private val detectViewModel: DetectViewModel by viewModels()
     private val reportViewModel: ReportViewModel by viewModels()
 
+    // View declarations
+    private lateinit var tvSave: android.widget.TextView
+    private lateinit var rlyInspectorSignature: android.widget.RelativeLayout
+    private lateinit var rlyHouseOwnerSignature: android.widget.RelativeLayout
+    private lateinit var toolbarBackImg: android.widget.ImageView
+    private lateinit var clSign: androidx.constraintlayout.widget.ConstraintLayout
+    private lateinit var layAppbar: com.google.android.material.appbar.AppBarLayout
+    private lateinit var layToolbar: androidx.appcompat.widget.Toolbar
+    private lateinit var llSave: android.widget.LinearLayout
+    private lateinit var scrollView: androidx.core.widget.NestedScrollView
+    private lateinit var ivHeaderBg: android.widget.ImageView
+    private lateinit var tvAddress: android.widget.TextView
+    private lateinit var tvHouseName: android.widget.TextView
+    private lateinit var tvDetectTime: android.widget.TextView
+    private lateinit var ivInspectorSignature: android.widget.ImageView
+    private lateinit var ivHouseOwnerSignature: android.widget.ImageView
+    private lateinit var tvInspector: android.widget.TextView
+    private lateinit var tvBuildYear: android.widget.TextView
+    private lateinit var tvArea: android.widget.TextView
+    private lateinit var tvCost: android.widget.TextView
+    private lateinit var rcyFloor: androidx.recyclerview.widget.RecyclerView
+
     /**
      * true-查看报告即查看 false-查看检测即生成
      */
@@ -55,25 +77,47 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
     override fun initContentView() = R.layout.activity_report_preview
 
     override fun initView() {
+        // Initialize views
+        tvSave = findViewById(R.id.tv_save)
+        rlyInspectorSignature = findViewById(R.id.rly_inspector_signature)
+        rlyHouseOwnerSignature = findViewById(R.id.rly_house_owner_signature)
+        toolbarBackImg = findViewById(R.id.toolbar_back_img)
+        clSign = findViewById(R.id.cl_sign)
+        layAppbar = findViewById(R.id.lay_appbar)
+        layToolbar = findViewById(R.id.lay_toolbar)
+        llSave = findViewById(R.id.ll_save)
+        scrollView = findViewById(R.id.scroll_view)
+        ivHeaderBg = findViewById(R.id.iv_header_bg)
+        tvAddress = findViewById(R.id.tv_address)
+        tvHouseName = findViewById(R.id.tv_house_name)
+        tvDetectTime = findViewById(R.id.tv_detect_time)
+        ivInspectorSignature = findViewById(R.id.iv_inspector_signature)
+        ivHouseOwnerSignature = findViewById(R.id.iv_house_owner_signature)
+        tvInspector = findViewById(R.id.tv_inspector)
+        tvBuildYear = findViewById(R.id.tv_build_year)
+        tvArea = findViewById(R.id.tv_area)
+        tvCost = findViewById(R.id.tv_cost)
+        rcyFloor = findViewById(R.id.rcy_floor)
+        
         showLoadingDialog("")
         isReport = intent.getBooleanExtra(ExtraKeyConfig.IS_REPORT, false)
-        tv_save.isEnabled = false
-        rly_inspector_signature.isEnabled = !isReport
-        rly_house_owner_signature.isEnabled = !isReport
-        tv_save.text = if (isReport) getString(R.string.battery_share) else getString(R.string.finalize_and_save)
-        toolbar_back_img.setOnClickListener(this)
-        tv_save.setOnClickListener(this)
-        rly_inspector_signature.setOnClickListener(this)
-        rly_house_owner_signature.setOnClickListener(this)
+        tvSave.isEnabled = false
+        rlyInspectorSignature.isEnabled = !isReport
+        rlyHouseOwnerSignature.isEnabled = !isReport
+        tvSave.text = if (isReport) getString(R.string.battery_share) else getString(R.string.finalize_and_save)
+        toolbarBackImg.setOnClickListener(this)
+        tvSave.setOnClickListener(this)
+        rlyInspectorSignature.setOnClickListener(this)
+        rlyHouseOwnerSignature.setOnClickListener(this)
 
-        if(cl_sign.isShown){
-            val mAppBarChildAt: View = lay_appbar.getChildAt(0)
+        if(clSign.isShown){
+            val mAppBarChildAt: View = layAppbar.getChildAt(0)
             val mAppBarParams = mAppBarChildAt.layoutParams as AppBarLayout.LayoutParams
             mAppBarParams.scrollFlags = 0
         }
 
         detectViewModel.detectLD.observe(this) {
-            tv_save.isEnabled = it != null
+            tvSave.isEnabled = it != null
             if (it != null) {
                 houseReport = it.toHouseReport()
                 mPreviewBean = convertDataModel(houseReport)
@@ -82,7 +126,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             dismissLoadingDialog()
         }
         reportViewModel.reportLD.observe(this) {
-            tv_save.isEnabled = it != null
+            tvSave.isEnabled = it != null
             if (it != null) {
                 houseReport = it
                 mPreviewBean = convertDataModel(it)
@@ -104,10 +148,10 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun setAvatorChange() {
-        lay_appbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+        layAppbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             //verticalOffset始终为0以下的负数
             val percent = abs(verticalOffset * 1.0f) / appBarLayout.totalScrollRange
-            lay_toolbar.setBackgroundColor(changeAlpha(getColor(R.color.color_23202E), percent))
+            layToolbar.setBackgroundColor(changeAlpha(getColor(R.color.color_23202E), percent))
         }
     }
 
@@ -121,23 +165,23 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            toolbar_back_img -> {
+            toolbarBackImg -> {
                 finish()
             }
 
-            rly_inspector_signature -> {
+            rlyInspectorSignature -> {
                 var intent = Intent(this, SignInputActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_PICK_INSPECTOR, true)
                 startActivityForResult(intent, 1000)
             }
 
-            rly_house_owner_signature -> {
+            rlyHouseOwnerSignature -> {
                 var intent = Intent(this, SignInputActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_PICK_INSPECTOR, false)
                 startActivityForResult(intent, 1001)
             }
 
-            tv_save -> {
+            tvSave -> {
                 if (isReport) {//分享
                     lifecycleScope.launch {
                         showLoadingDialog()
@@ -154,9 +198,9 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
                     }
                 } else {//定稿并保存
                     if (houseReport.inspectorWhitePath.isEmpty() || houseReport.houseOwnerWhitePath.isEmpty()) {
-                        if (cl_sign.bottom + lay_appbar.height > ll_save.top) {
-                            lay_appbar.setExpanded(false, true)
-                            scroll_view.smoothScrollTo(0, cl_sign.top)
+                        if (clSign.bottom + layAppbar.height > llSave.top) {
+                            layAppbar.setExpanded(false, true)
+                            scrollView.smoothScrollTo(0, clSign.top)
                         }
                         TToast.shortToast(this, R.string.pdf_sign_tips)
                         return
@@ -187,14 +231,14 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             when (requestCode) {
                 1000 -> {
                     //检测师签名
-                    Glide.with(this).load(whitePath).into(iv_inspector_signature)
+                    Glide.with(this).load(whitePath).into(ivInspectorSignature)
                     houseReport.inspectorWhitePath = whitePath
                     houseReport.inspectorBlackPath = blackPath
                 }
 
                 1001 -> {
                     //房主签名
-                    Glide.with(this).load(whitePath).into(iv_house_owner_signature)
+                    Glide.with(this).load(whitePath).into(ivHouseOwnerSignature)
                     houseReport.houseOwnerWhitePath = whitePath
                     houseReport.houseOwnerBlackPath = blackPath
                 }
@@ -280,22 +324,22 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
 
     private fun setAdapter() {
         mPreviewBean?.let {
-            Glide.with(this).load(it.housePhoto).into(iv_header_bg)
-            tv_address.text = it.houseAddress
-            tv_house_name.text = it.houseName
-            tv_detect_time.text = it.detectTime
-            tv_inspector.text = it.inspectorName
-            tv_build_year.text = it.houseYear
-            tv_area.text = it.houseArea
-            tv_cost.text = it.expenses
+            Glide.with(this).load(it.housePhoto).into(ivHeaderBg)
+            tvAddress.text = it.houseAddress
+            tvHouseName.text = it.houseName
+            tvDetectTime.text = it.detectTime
+            tvInspector.text = it.inspectorName
+            tvBuildYear.text = it.houseYear
+            tvArea.text = it.houseArea
+            tvCost.text = it.expenses
 
-            rcy_floor.layoutManager = LinearLayoutManager(this)
+            rcyFloor.layoutManager = LinearLayoutManager(this)
             val reportPreviewAdapter = ReportPreviewAdapter(this, it.itemBeans)
-            rcy_floor.isNestedScrollingEnabled = false
-            rcy_floor?.adapter = reportPreviewAdapter
+            rcyFloor.isNestedScrollingEnabled = false
+            rcyFloor.adapter = reportPreviewAdapter
 
-            Glide.with(this).load(it.inspectorWhitePath).into(iv_inspector_signature)
-            Glide.with(this).load(it.houseOwnerWhitePath).into(iv_house_owner_signature)
+            Glide.with(this).load(it.inspectorWhitePath).into(ivInspectorSignature)
+            Glide.with(this).load(it.houseOwnerWhitePath).into(ivHouseOwnerSignature)
         }
     }
 }

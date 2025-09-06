@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -58,7 +59,10 @@ public class ZoomableDraggableView extends View {
     private void init(Context context) {
         scaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
         gestureDetector = new GestureDetector(context, new GestureListener());
-        originalBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.svg_ic_target_horizontal_person_green)).getBitmap();
+        Drawable drawable = androidx.core.content.ContextCompat.getDrawable(getContext(), R.drawable.svg_ic_target_horizontal_person_green);
+        if (drawable instanceof BitmapDrawable) {
+            originalBitmap = ((BitmapDrawable) drawable).getBitmap();
+        }
         originalBitmapWidth = originalBitmap.getWidth();
         originalBitmapHeight = originalBitmap.getHeight();
     }

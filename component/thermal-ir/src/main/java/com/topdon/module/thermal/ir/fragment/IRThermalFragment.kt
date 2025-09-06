@@ -21,7 +21,6 @@ import com.topdon.lib.core.ktbase.BaseFragment
 import com.topdon.lib.core.tools.DeviceTools
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.utils.CommUtils
-import com.topdon.module.thermal.ir.BuildConfig
 import com.topdon.lib.core.socket.WebSocketProxy
 import com.topdon.lib.core.utils.NetWorkUtils
 import com.topdon.module.thermal.ir.R
@@ -36,27 +35,47 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
      */
     private var isTC007 = false
 
+    // View declarations
+    private lateinit var titleView: com.topdon.lib.core.view.TitleView
+    private lateinit var clOpenThermal: androidx.constraintlayout.widget.ConstraintLayout
+    private lateinit var tvMainEnter: android.widget.TextView
+    private lateinit var cl07ConnectTips: androidx.constraintlayout.widget.ConstraintLayout
+    private lateinit var tv07Connect: android.widget.TextView
+    private lateinit var animationView: com.airbnb.lottie.LottieAnimationView
+    private lateinit var clNotConnect: androidx.constraintlayout.widget.ConstraintLayout
+    private lateinit var clConnect: androidx.constraintlayout.widget.ConstraintLayout
+
     override fun initContentView() = R.layout.fragment_thermal_ir
 
     override fun initView() {
+        // Initialize views
+        titleView = requireView().findViewById(R.id.title_view)
+        clOpenThermal = requireView().findViewById(R.id.cl_open_thermal)
+        tvMainEnter = requireView().findViewById(R.id.tv_main_enter)
+        cl07ConnectTips = requireView().findViewById(R.id.cl_07_connect_tips)
+        tv07Connect = requireView().findViewById(R.id.tv_07_connect)
+        animationView = requireView().findViewById(R.id.animation_view)
+        clNotConnect = requireView().findViewById(R.id.cl_not_connect)
+        clConnect = requireView().findViewById(R.id.cl_connect)
+        
         isTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
-        title_view.setTitleText(if (isTC007) "TC007" else getString(R.string.tc_has_line_device))
+        titleView.setTitleText(if (isTC007) "TC007" else getString(R.string.tc_has_line_device))
 
-        cl_open_thermal.setOnClickListener(this)
-        tv_main_enter.setOnClickListener(this)
-        cl_07_connect_tips.setOnClickListener(this)
-        tv_07_connect.setOnClickListener(this)
+        clOpenThermal.setOnClickListener(this)
+        tvMainEnter.setOnClickListener(this)
+        cl07ConnectTips.setOnClickListener(this)
+        tv07Connect.setOnClickListener(this)
 
-        tv_main_enter.isVisible = !isTC007
-        cl_07_connect_tips.isVisible = isTC007
-        tv_07_connect.isVisible = isTC007
+        tvMainEnter.isVisible = !isTC007
+        cl07ConnectTips.isVisible = isTC007
+        tv07Connect.isVisible = isTC007
 
         if (isTC007) {
-            animation_view.setAnimation("TC007AnimationJSON.json")
-            cl_not_connect.isVisible = !WebSocketProxy.getInstance().isTC007Connect()
-            cl_connect.isVisible = WebSocketProxy.getInstance().isTC007Connect()
+            animationView.setAnimation("TC007AnimationJSON.json")
+            clNotConnect.isVisible = !WebSocketProxy.getInstance().isTC007Connect()
+            clConnect.isVisible = WebSocketProxy.getInstance().isTC007Connect()
         } else {
-            animation_view.setAnimation("TDAnimationJSON.json")
+            animationView.setAnimation("TDAnimationJSON.json")
             checkConnect()
         }
         viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
@@ -85,29 +104,29 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
     override fun connected() {
         SharedManager.hasTcLine = true
         if (!isTC007) {
-            cl_connect.isVisible = true
-            cl_not_connect.isVisible = false
+            clConnect.isVisible = true
+            clNotConnect.isVisible = false
         }
     }
 
     override fun disConnected() {
         if (!isTC007) {
-            cl_connect.isVisible = false
-            cl_not_connect.isVisible = true
+            clConnect.isVisible = false
+            clNotConnect.isVisible = true
         }
     }
 
     override fun onSocketConnected(isTS004: Boolean) {
         if (isTC007 && !isTS004) {
-            cl_connect.isVisible = true
-            cl_not_connect.isVisible = false
+            clConnect.isVisible = true
+            clNotConnect.isVisible = false
         }
     }
 
     override fun onSocketDisConnected(isTS004: Boolean) {
         if (isTC007 && !isTS004) {
-            cl_connect.isVisible = false
-            cl_not_connect.isVisible = true
+            clConnect.isVisible = false
+            clNotConnect.isVisible = true
         }
     }
 
@@ -127,22 +146,22 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            cl_open_thermal -> {
+            clOpenThermal -> {
                 if (isTC007) {
                     NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07).navigation(requireContext())
                 } else {
                     if (DeviceTools.isTC001PlusConnect()) {
                         startActivityForResult(Intent(requireContext(), IRThermalPlusActivity::class.java), 101)
                     }else if(DeviceTools.isTC001LiteConnect()){
-                        NavigationManager.getInstance().build(RouterConfig.IR_TCLITE).navigation(activity,101)
+                        NavigationManager.getInstance().build(RouterConfig.IR_TCLITE).navigation(requireActivity(),101)
                     } else if (DeviceTools.isHikConnect()) {
-                        NavigationManager.getInstance().build(RouterConfig.IR_HIK_MAIN).navigation(activity)
+                        NavigationManager.getInstance().build(RouterConfig.IR_HIK_MAIN).navigation(requireActivity())
                     } else {
                         startActivityForResult(Intent(requireContext(), IRThermalNightActivity::class.java), 101)
                     }
                 }
             }
-            tv_main_enter -> {
+            tvMainEnter -> {
                 if (!DeviceTools.isConnect()) {
                     //没有接入设备不需要提示，有系统授权提示框
                     if (DeviceTools.findUsbDevice() == null) {
@@ -185,12 +204,12 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                     }
                 }
             }
-            cl_07_connect_tips -> {//TC007 连接提示
+            cl07ConnectTips -> {//TC007 连接提示
                 NavigationManager.getInstance().build(RouterConfig.IR_CONNECT_TIPS)
                     .withBoolean(ExtraKeyConfig.IS_TC007, true)
                     .navigation(requireContext())
             }
-            tv_07_connect -> {//TC007 连接设备
+            tv07Connect -> {//TC007 连接设备
                 NavigationManager.getInstance()
                     .build(RouterConfig.IR_DEVICE_ADD)
                     .withBoolean("isTS004", false)

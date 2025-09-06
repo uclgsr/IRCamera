@@ -7,6 +7,9 @@ import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.topdon.house.R
+import com.topdon.lib.core.R as LibR
+import com.topdon.lib.core.view.TitleView
+import com.topdon.house.view.SignView
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.ktbase.BaseActivity
@@ -28,18 +31,28 @@ import kotlinx.coroutines.withContext
  * Created by LCG on 2024/8/28.
  */
 class SignInputActivity : BaseActivity(), View.OnClickListener {
+    private lateinit var titleView: TitleView
+    private lateinit var clSave: View
+    private lateinit var clClear: View
+    private lateinit var signView: SignView
+    
     override fun isLockPortrait(): Boolean = false
 
     override fun initContentView(): Int = R.layout.activity_sign_input
 
     override fun initView() {
-        title_view.setTitleText(if (intent.getBooleanExtra(ExtraKeyConfig.IS_PICK_INSPECTOR, false)) R.string.inspector_signature else R.string.house_owner_signature)
+        titleView = findViewById(R.id.title_view)
+        clSave = findViewById(R.id.cl_save)
+        clClear = findViewById(R.id.cl_clear)
+        signView = findViewById(R.id.sign_view)
+        
+        titleView.setTitleText(if (intent.getBooleanExtra(ExtraKeyConfig.IS_PICK_INSPECTOR, false)) LibR.string.inspector_signature else LibR.string.house_owner_signature)
 
-        cl_save.setOnClickListener(this)
-        cl_clear.setOnClickListener(this)
+        clSave.setOnClickListener(this)
+        clClear.setOnClickListener(this)
 
-        sign_view.onSignChangeListener = {
-            cl_save.alpha = if (it) 1f else 0.5f
+        signView.onSignChangeListener = {
+            clSave.alpha = if (it) 1f else 0.5f
         }
     }
 
@@ -48,13 +61,13 @@ class SignInputActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            cl_save -> {//保存
-                if (!sign_view.hasSign) {
-                    ToastUtils.showShort(getString(R.string.house_sign_finish_tips))
+            clSave -> {//保存
+                if (!signView.hasSign) {
+                    ToastUtils.showShort(getString(LibR.string.house_sign_finish_tips))
                     return
                 }
 
-                val whiteBitmap: Bitmap = sign_view.bitmap ?: return
+                val whiteBitmap: Bitmap = signView.bitmap ?: return
                 showLoadingDialog()
                 lifecycleScope.launch(Dispatchers.IO) {
                     val currentTime = System.currentTimeMillis()
@@ -83,8 +96,8 @@ class SignInputActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
             }
-            cl_clear -> {//重签
-                sign_view.clear()
+            clClear -> {//重签
+                signView.clear()
             }
         }
     }

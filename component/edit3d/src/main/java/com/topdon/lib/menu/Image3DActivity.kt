@@ -59,12 +59,12 @@ class Image3DActivity : BaseActivity() {
         barPickViewX = findViewById(R.id.bar_pick_view_x)
         barPickViewY = findViewById(R.id.bar_pick_view_y)
 
-        ir_path = intent.getStringExtra(ExtraKeyConfig.IR_PATH).toString()
+        ir_path = intent.getStringExtra(ExtraKeyConfig.IR_PATH) ?: ""
         temp_high = intent.getFloatExtra(ExtraKeyConfig.TEMP_HIGH,0f)
         temp_low = intent.getFloatExtra(ExtraKeyConfig.TEMP_LOW,0f)
         lifecycleScope.launch {
             withContext(Dispatchers.IO){
-                val file = File(ir_path)
+                val file = File(ir_path ?: "")
                 if (!file.exists()) {
                     XLog.w("IR文件不存在: ${file.absolutePath}")
                     return@withContext

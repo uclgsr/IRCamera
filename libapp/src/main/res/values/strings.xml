@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">TOPINFRARED</string>
     <string name="top_infrared_up_case" translatable="false">TOPINFRARED</string>
     <string name="see_more_than" translatable="false">See More Than Human Eye Can</string>
 

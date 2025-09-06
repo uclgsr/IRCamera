@@ -10,22 +10,34 @@ import com.blankj.utilcode.util.Utils
 import com.topdon.lib.core.db.dao.HouseDetectDao
 import com.topdon.lib.core.db.dao.HouseReportDao
 import com.topdon.lib.core.db.dao.ThermalDao
+import com.topdon.lib.core.db.dao.ThermalMinuteDao
+import com.topdon.lib.core.db.dao.ThermalHourDao
+import com.topdon.lib.core.db.dao.ThermalDayDao
 import com.topdon.lib.core.db.entity.*
 
 @Database(
     entities = [
         ThermalEntity::class,
+        ThermalMinuteEntity::class,
+        ThermalHourEntity::class,
+        ThermalDayEntity::class,
         HouseDetect::class,
         HouseReport::class,
         DirDetect::class,
         DirReport::class,
         ItemDetect::class,
         ItemReport::class,
-    ], version = 5
+    ], version = 6
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun thermalDao(): ThermalDao
+
+    abstract fun thermalMinDao(): ThermalMinuteDao
+
+    abstract fun thermalHourDao(): ThermalHourDao
+
+    abstract fun thermalDayDao(): ThermalDayDao
 
     abstract fun houseDetectDao(): HouseDetectDao
 
@@ -64,6 +76,14 @@ abstract class AppDatabase : RoomDatabase() {
                         database.execSQL("CREATE INDEX IF NOT EXISTS `index_DirReport_parentId` ON `DirReport` (`parentId`)")
                         database.execSQL("CREATE INDEX IF NOT EXISTS `index_ItemDetect_parentId` ON `ItemDetect` (`parentId`)")
                         database.execSQL("CREATE INDEX IF NOT EXISTS `index_ItemReport_parentId` ON `ItemReport` (`parentId`)")
+                    }
+                })
+                .addMigrations(object : Migration(5, 6) {
+                    override fun migrate(database: SupportSQLiteDatabase) {
+                        // Re-create thermal minute, hour, and day tables
+                        database.execSQL("CREATE TABLE IF NOT EXISTS `thermal_minute` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `thermal_id` TEXT NOT NULL, `user_id` TEXT NOT NULL, `thermal` REAL NOT NULL, `thermal_max` REAL NOT NULL, `thermal_min` REAL NOT NULL, `sn` TEXT NOT NULL, `info` TEXT NOT NULL, `type` TEXT NOT NULL, `start_time` INTEGER NOT NULL, `create_time` INTEGER NOT NULL, `update_time` INTEGER NOT NULL)")
+                        database.execSQL("CREATE TABLE IF NOT EXISTS `thermal_hour` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `thermal_id` TEXT NOT NULL, `user_id` TEXT NOT NULL, `thermal` REAL NOT NULL, `thermal_max` REAL NOT NULL, `thermal_min` REAL NOT NULL, `sn` TEXT NOT NULL, `info` TEXT NOT NULL, `type` TEXT NOT NULL, `start_time` INTEGER NOT NULL, `create_time` INTEGER NOT NULL, `update_time` INTEGER NOT NULL)")
+                        database.execSQL("CREATE TABLE IF NOT EXISTS `thermal_day` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `thermal_id` TEXT NOT NULL, `user_id` TEXT NOT NULL, `thermal` REAL NOT NULL, `thermal_max` REAL NOT NULL, `thermal_min` REAL NOT NULL, `sn` TEXT NOT NULL, `info` TEXT NOT NULL, `type` TEXT NOT NULL, `start_time` INTEGER NOT NULL, `create_time` INTEGER NOT NULL, `update_time` INTEGER NOT NULL)")
                     }
                 })
                 .fallbackToDestructiveMigration()

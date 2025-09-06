@@ -7,4 +7,26 @@
     <string name="app_yes">Yes</string>
     <string name="app_no">No</string>
     <string name="app_confirm">Confirm</string>
+    <string name="app_cancel">Cancel</string>
+    <string name="app_open">Open</string>
+    <string name="permission_request_storage_app">Storage permission required</string>
+    <string name="app_storage_content">Please grant storage permission</string>
+    
+    <!-- Chart temperature strings -->
+    <string name="chart_temperature">Temperature</string>
+    <string name="chart_temperature_high">High Temperature</string>
+    <string name="chart_temperature_low">Low Temperature</string>
+    <string name="thermal_trend_tips">Thermal trend analysis</string>
+    
+    <!-- Monitor strings -->
+    <string name="monitor_finish">Monitoring Complete</string>
+    
+    <!-- View references -->
+    <string name="tv_time">Time</string>
+    <string name="mp_chart_view">Chart View</string>
+    <string name="motion_start_btn">Start Motion</string>
+    <string name="thermal_fragment">Thermal Fragment</string>
+    <string name="motion_action_lay">Motion Action Layout</string>
+    <string name="scan_ble_tip_authorize">Please authorize BLE access</string>
+    <string name="abnormal_item1">Abnormal temperature detected: </string>
 </resources>

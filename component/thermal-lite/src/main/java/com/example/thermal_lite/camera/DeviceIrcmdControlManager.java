@@ -6,7 +6,8 @@ import com.energy.ac020library.IrcamEngine;
 import com.energy.ac020library.IrcmdEngine;
 import com.energy.ac020library.bean.IrcmdError;
 import com.energy.commoncomponent.Const;
-import com.energy.commonlibrary.util.FileUtil;
+// Use existing FileUtil instead of missing commonlibrary util
+import com.infisense.usbir.utils.FileUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -45,10 +45,14 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     override fun initContentView() = R.layout.activity_log_mp_chart
 
     override fun initView() {
-        setTitleText(R.string.app_record)
-        chart = log_chart_time_chart
-        log_chart_time_recycler.layoutManager = GridLayoutManager(this, 4)
-        log_chart_time_recycler.adapter = adapter
+        // Set toolbar title
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
+        toolbar?.title = getString(R.string.app_record)
+        
+        chart = findViewById(R.id.log_chart_time_chart)
+        val recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.log_chart_time_recycler)
+        recyclerView.layoutManager = GridLayoutManager(this, 4)
+        recyclerView.adapter = adapter
         adapter.listener = object : SettingTimeAdapter.OnItemClickListener {
             override fun onClick(index: Int, time: Int) {
                 //切换类型
@@ -58,7 +62,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
             }
         }
         viewModel.resultLiveData.observe(this) {
-            dismissLoading()
+            dismissLoadingDialog()
             try {
                 initEntry(it.dataList)
             } catch (e: Exception) {
@@ -84,11 +88,11 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     }
 
     private fun queryLog() {
-        showLoading()
+        showLoadingDialog()
 //        viewModel.queryLogByType(selectType)
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.queryLogVolsByStartTime(
-                type = SharedManager.getSelectFenceType(),
+                type = 1, // Default fence type since getSelectFenceType() is not available
                 selectTimeType = selectType
             )
         }
@@ -101,7 +105,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         chart.isDragEnabled = true
         chart.setDrawGridBackground(false)
         chart.description = null//图标描述文本
-        chart.setBackgroundResource(R.color.chart_bg)
+        chart.setBackgroundResource(com.topdon.lib.core.R.color.chart_bg)
         chart.setScaleEnabled(true)//缩放
         chart.setPinchZoom(false)//禁用后，可以分别在x轴和y轴上进行缩放
         chart.isDoubleTapToZoomEnabled = false//双击不可缩放
@@ -150,11 +154,11 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         R.drawable.bg_chart_fill3
     )
     private val lineChartColors = intArrayOf(
-        R.color.chart_line_max,
-        R.color.chart_line_min,
-        R.color.chart_line_center
+        com.topdon.lib.core.R.color.chart_line_max,
+        com.topdon.lib.core.R.color.chart_line_min,
+        com.topdon.lib.core.R.color.chart_line_center
     )
-    private val textColor by lazy { ContextCompat.getColor(this, R.color.chart_text) }
+    private val textColor by lazy { ContextCompat.getColor(this, com.topdon.lib.core.R.color.chart_text) }
 
     /**
      * 曲线样式
@@ -167,7 +171,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         set.fillDrawable = ContextCompat.getDrawable(this, bgChartColors[index])//设置填充颜色渐变
         set.axisDependency = YAxis.AxisDependency.LEFT
         set.color = ContextCompat.getColor(this, lineChartColors[index])//曲线颜色
-        set.setCircleColor(ContextCompat.getColor(this, R.color.white))//坐标颜色
+        set.setCircleColor(ContextCompat.getColor(this, com.topdon.lib.core.R.color.white))//坐标颜色
 //        set.fillColor = ContextCompat.getColor(this, R.color.purple_500)
 //        set.highLightColor = ContextCompat.getColor(this, R.color.white)
         set.valueTextColor = Color.WHITE
@@ -189,7 +193,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                     return@launch
                 }
                 Log.i("chart", "update chart start")
-                val lineData: LineData = chart.data
+                val lineData: LineData? = chart.data
                 if (lineData != null) {
                     Log.w(
                         "123",

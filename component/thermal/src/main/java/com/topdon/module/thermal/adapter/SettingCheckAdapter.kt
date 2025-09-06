@@ -35,11 +35,11 @@ class SettingCheckAdapter(val context: Context) :
         if (holder is ItemView) {
             holder.btn.text = datas[position]
             if (position == selectTime) {
-                holder.btn.setBackgroundResource(R.drawable.ui_radio_active_btn)
-                holder.btn.setTextColor(ContextCompat.getColor(context, R.color.white))
+                holder.btn.setBackgroundResource(com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg)
+                holder.btn.setTextColor(ContextCompat.getColor(context, com.topdon.lib.core.R.color.white))
             } else {
-                holder.btn.setBackgroundResource(R.drawable.ui_radio_btn)
-                holder.btn.setTextColor(ContextCompat.getColor(context, R.color.font_gray))
+                holder.btn.setBackgroundResource(com.topdon.lib.ui.R.drawable.ic_menu_thermal7002_svg)
+                holder.btn.setTextColor(ContextCompat.getColor(context, com.topdon.lib.core.R.color.font_third_color))
             }
             holder.btn.setOnClickListener {
                 Log.w("123", "文件: ${datas[position]}")
@@ -54,7 +54,7 @@ class SettingCheckAdapter(val context: Context) :
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val btn: Button = itemView.item_setting_check_btn
+        val btn: Button = itemView.findViewById(R.id.item_setting_check_btn)
     }
 
 

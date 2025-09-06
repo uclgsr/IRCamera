@@ -75,7 +75,11 @@ object TimeUtil {
             deviceModel = android.os.Build.MODEL
             val deviceBrand = android.os.Build.MANUFACTURER
             val hardware = android.os.Build.HARDWARE
-            val soc = android.os.Build.SOC_MANUFACTURER
+            val soc = if (android.os.Build.VERSION.SDK_INT >= 31) {
+                android.os.Build.SOC_MANUFACTURER
+            } else {
+                "unknown"
+            }
             
             when {
                 // SM-S901E (International) - typically Exynos 2200

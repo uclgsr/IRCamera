@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -27,7 +28,10 @@ class GalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         path = requireArguments().getString("path")!!
-        Glide.with(this).load(path).into(fragment_gallery_img)
+        
+        // Initialize view with findViewById
+        val fragmentGalleryImg: ImageView = view.findViewById(R.id.fragment_gallery_img)
+        Glide.with(this).load(path).into(fragmentGalleryImg)
     }
 
 }

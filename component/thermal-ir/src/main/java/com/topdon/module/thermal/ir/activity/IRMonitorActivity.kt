@@ -60,7 +60,7 @@ class IRMonitorActivity : BaseActivity(), View.OnClickListener {
                 }
                 //开始温度监听
                 NavigationManager.getInstance().build(RouterConfig.IR_MONITOR_CHART)
-                    .withParcelable("select", selectIndex)
+                    .withParcelable("select", selectIndex as android.os.Parcelable)
                     .navigation(this)
                 finish()
             }

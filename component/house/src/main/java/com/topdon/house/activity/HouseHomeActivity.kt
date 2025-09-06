@@ -11,7 +11,12 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.tabs.TabLayout
 import com.topdon.house.R
+import com.topdon.lib.core.R as LibR
 import com.topdon.house.event.HouseReportAddEvent
 import com.topdon.house.fragment.DetectListFragment
 import com.topdon.house.fragment.ReportListFragment
@@ -41,11 +46,16 @@ class HouseHomeActivity : BaseActivity(), View.OnClickListener {
     override fun initContentView(): Int = R.layout.activity_house_home
 
     override fun initView() {
-        iv_edit.isEnabled = false
-        iv_back.setOnClickListener(this)
-        iv_edit.setOnClickListener(this)
-        iv_add.setOnClickListener(this)
-        iv_exit_edit.setOnClickListener(this)
+        val ivEdit = findViewById<ImageView>(R.id.iv_edit)
+        val ivBack = findViewById<ImageView>(R.id.iv_back)
+        val ivAdd = findViewById<ImageView>(R.id.iv_add)
+        val ivExitEdit = findViewById<ImageView>(R.id.iv_exit_edit)
+        
+        ivEdit.isEnabled = false
+        ivBack.setOnClickListener(this)
+        ivEdit.setOnClickListener(this)
+        ivAdd.setOnClickListener(this)
+        ivExitEdit.setOnClickListener(this)
 
         val backCallback = object : OnBackPressedCallback(false) {
             override fun handleOnBackPressed() {
@@ -55,39 +65,52 @@ class HouseHomeActivity : BaseActivity(), View.OnClickListener {
         onBackPressedDispatcher.addCallback(this, backCallback)
 
         tabViewModel.isEditModeLD.observe(this) {
+            val clTitleBar = findViewById<ConstraintLayout>(R.id.cl_title_bar)
+            val clEditBar = findViewById<ConstraintLayout>(R.id.cl_edit_bar)
+            val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
+            val viewPager2 = findViewById<ViewPager2>(R.id.view_pager2)
+            
             backCallback.isEnabled = it
-            cl_title_bar.isVisible = !it
-            cl_edit_bar.isVisible = it
-            tab_layout.isVisible = !it
-            view_pager2.isUserInputEnabled = !it
+            clTitleBar.isVisible = !it
+            clEditBar.isVisible = it
+            tabLayout.isVisible = !it
+            viewPager2.isUserInputEnabled = !it
         }
         tabViewModel.selectSizeLD.observe(this) {
-            tv_edit_title.text = if (it > 0) getString(R.string.chosen_item, it) else getString(R.string.not_selected)
+            val tvEditTitle = findViewById<TextView>(R.id.tv_edit_title)
+            tvEditTitle.text = if (it > 0) getString(R.string.chosen_item, it) else getString(R.string.not_selected)
         }
 
         detectViewModel.detectListLD.observe(this) {
-            if (view_pager2.currentItem == 0) {
-                iv_edit.isEnabled = !it.isNullOrEmpty()
+            val viewPager2 = findViewById<ViewPager2>(R.id.view_pager2)
+            val ivEdit = findViewById<ImageView>(R.id.iv_edit)
+            if (viewPager2.currentItem == 0) {
+                ivEdit.isEnabled = !it.isNullOrEmpty()
             }
         }
         reportViewModel.reportListLD.observe(this) {
-            if (view_pager2.currentItem == 1) {
-                iv_edit.isEnabled = !it.isNullOrEmpty()
+            val viewPager2 = findViewById<ViewPager2>(R.id.view_pager2)
+            val ivEdit = findViewById<ImageView>(R.id.iv_edit)
+            if (viewPager2.currentItem == 1) {
+                ivEdit.isEnabled = !it.isNullOrEmpty()
             }
         }
 
-        view_pager2.adapter = ViewPagerAdapter(this)
-        view_pager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        val viewPager2 = findViewById<ViewPager2>(R.id.view_pager2)
+        val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
+        
+        viewPager2.adapter = ViewPagerAdapter(this)
+        viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 if (position == 0) {//检测
-                    iv_edit.isEnabled = !detectViewModel.detectListLD.value.isNullOrEmpty()
+                    ivEdit.isEnabled = !detectViewModel.detectListLD.value.isNullOrEmpty()
                 } else {//报告
-                    iv_edit.isEnabled = !reportViewModel.reportListLD.value.isNullOrEmpty()
+                    ivEdit.isEnabled = !reportViewModel.reportListLD.value.isNullOrEmpty()
                 }
             }
         })
-        TabLayoutMediator(tab_layout, view_pager2) { tab, position ->
-            tab.setText(if (position == 0) R.string.app_detection else R.string.app_report)
+        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+            tab.setText(if (position == 0) LibR.string.app_detection else LibR.string.app_report)
         }.attach()
     }
 
@@ -97,21 +120,26 @@ class HouseHomeActivity : BaseActivity(), View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDetectCreate(event: HouseReportAddEvent) {
         //有新报告被创建时，切到报告页
-        view_pager2.currentItem = 1
+        findViewById<ViewPager2>(R.id.view_pager2).currentItem = 1
     }
 
     override fun onClick(v: View?) {
+        val ivBack = findViewById<ImageView>(R.id.iv_back)
+        val ivEdit = findViewById<ImageView>(R.id.iv_edit)
+        val ivAdd = findViewById<ImageView>(R.id.iv_add)
+        val ivExitEdit = findViewById<ImageView>(R.id.iv_exit_edit)
+        
         when (v) {
-            iv_back -> finish()
-            iv_edit -> {//编辑
+            ivBack -> finish()
+            ivEdit -> {//编辑
                 tabViewModel.isEditModeLD.value = true
             }
-            iv_add -> {//添加
+            ivAdd -> {//添加
                 val newIntent = Intent(this, DetectAddActivity::class.java)
                 newIntent.putExtra(ExtraKeyConfig.IS_TC007, intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false))
                 startActivity(newIntent)
             }
-            iv_exit_edit -> {//退出编辑
+            ivExitEdit -> {//退出编辑
                 tabViewModel.isEditModeLD.value = false
             }
         }

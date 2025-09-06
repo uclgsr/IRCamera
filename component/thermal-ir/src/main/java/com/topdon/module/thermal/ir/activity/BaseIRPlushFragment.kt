@@ -27,14 +27,17 @@ import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvc.uvc.ConnectCallback
 import com.energy.iruvc.uvc.UVCCamera
 import com.infisense.usbdual.Const
+import com.infisense.usbir.extension.setMirror
+import com.infisense.usbir.extension.setAutoShutter
+import com.infisense.usbir.extension.setPropDdeLevel
+import com.infisense.usbir.extension.setContrast
+// import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi // Temporarily disabled - hardware specific
+// import com.infisense.usbdual.camera.IRUVCDual // Temporarily disabled - hardware specific
+// import com.infisense.usbdual.camera.USBMonitorManager // Temporarily disabled - hardware specific
 import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi
 import com.infisense.usbdual.camera.IRUVCDual
 import com.infisense.usbdual.camera.USBMonitorManager
 import com.infisense.usbdual.inf.OnUSBConnectListener
-import com.infisense.usbir.extension.setAutoShutter
-import com.infisense.usbir.extension.setContrast
-import com.infisense.usbir.extension.setMirror
-import com.infisense.usbir.extension.setPropDdeLevel
 import com.infisense.usbir.utils.FileUtil
 import com.infisense.usbir.utils.PseudocodeUtils
 import com.infisense.usbir.utils.ScreenUtils
@@ -497,7 +500,7 @@ abstract class BaseIRPlushFragment : BaseFragment(), OnUSBConnectListener,ITsTem
         )
         vlUVCCamera = IRUVCDual(cameraWidth,
             cameraHeight,
-            context,
+            requireContext(),
             pid,
             fps,
             object : ConnectCallback {

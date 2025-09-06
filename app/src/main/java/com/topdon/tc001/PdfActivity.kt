@@ -1,6 +1,9 @@
 package com.topdon.tc001
 
 import android.view.WindowManager
+// import com.github.barteksc.pdfviewer.PDFView // TODO: Add PDF library dependency
+import android.widget.TextView
+import com.csl.irCamera.R
 
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
@@ -14,23 +17,29 @@ import java.io.OutputStream
  **/
 // Legacy ARouter route annotation - now using NavigationManager
 class PdfActivity : BaseActivity() {
+    
+    // findViewById declarations - TODO: Replace with PDFView when library is added
+    private val pdfView: TextView by lazy { findViewById<TextView>(R.id.pdf_view) }
 
     override fun initContentView() = R.layout.activity_pdf
 
     override fun initView() {
-        //本地说明书
-        pdf_view.fromAsset(if (intent.getBooleanExtra("isTS001", false)) "TC001.pdf" else "TS004.pdf")
-            .enableSwipe(true) // allows to block changing pages using swipe
-            .swipeHorizontal(false)
-            .enableDoubletap(true)
-            .defaultPage(0)
-            .enableAnnotationRendering(false) // render annotations (such as comments, colors or forms)
-            .password(null)
-            .scrollHandle(null)
-            .enableAntialiasing(true) // improve rendering a little bit on low-res screens
-            // spacing between pages in dp. To define spacing color, set view background
-            .spacing(0)
-            .load()
+        // TODO: Implement PDF functionality when library is available
+        // pdfView.fromAsset(if (intent.getBooleanExtra("isTS001", false)) "TC001.pdf" else "TS004.pdf")
+        pdfView.text = "PDF functionality temporarily unavailable - library dependency missing"
+        // TODO: Restore PDF functionality with proper method calls
+        /*
+        .enableSwipe(true) // allows to block changing pages using swipe
+        .swipeHorizontal(false)
+        .enableDoubletap(true)
+        .defaultPage(0)
+        .enableAnnotationRendering(false) // render annotations (such as comments, colors or forms)
+        .password(null)
+        .scrollHandle(null)
+        .enableAntialiasing(true) // improve rendering a little bit on low-res screens
+        .spacing(0) // spacing between pages in dp. To define spacing color, set view background
+        .load()
+        */
     }
 
     override fun initData() {

@@ -30,19 +30,20 @@ class MenuTabAdapter(val context: Context) :
     }
 
     //拍摄
-    private val firstMenus =
-        arrayListOf(R.drawable.ic_menu_thermal1001_svg, R.drawable.ic_menu_thermal1002_svg)
+    private val firstMenus = arrayListOf<Int>(
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7002_svg
+    )
 
     //选框
-    private val secondMenus =
-        arrayListOf(
-            R.drawable.ic_menu_thermal2002,
-            R.drawable.ic_menu_thermal2003,
-            R.drawable.ic_menu_thermal2004,
-            R.drawable.ic_menu_thermal2001,
-            R.drawable.ic_menu_thermal2005,
-            R.drawable.ic_menu_thermal2006
-        )
+    private val secondMenus = arrayListOf<Int>(
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal6001,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal6003,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7001,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7002,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7003,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7004
+    )
 
     //选框
     private val secondMenusStr =
@@ -64,29 +65,27 @@ class MenuTabAdapter(val context: Context) :
             "色带",
         )
 
-    //色彩
-    private val thirdMenus =
-        arrayListOf(
-            R.drawable.ic_menu_thermal3001,
-            R.drawable.ic_menu_thermal3002,
-            R.drawable.ic_menu_thermal3003,
-            R.drawable.ic_menu_thermal3004,
-            R.drawable.ic_menu_thermal3005,
-            R.drawable.ic_menu_thermal3006,
-            R.drawable.ic_menu_thermal3007,
-            R.drawable.ic_menu_thermal3008,
-            R.drawable.ic_menu_thermal3009,
-            R.drawable.ic_menu_thermal3010
-        )
+    //色彩 - Using available resources as placeholders
+    private val thirdMenus = arrayListOf<Int>(
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal5003,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal6001,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal6002,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal6003,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7001,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7002,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7003,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7004,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal5003_selected_svg,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal6003_svg
+    )
 
-    //设置
-    private val fourthMenus =
-        arrayListOf(
-            R.drawable.ic_menu_thermal4001_svg,
-            R.drawable.ic_menu_thermal4002_svg,
-            R.drawable.ic_menu_thermal4003_svg,
-            R.drawable.ic_menu_thermal4004_svg
-        )
+    //设置 - Using available resources as placeholders
+    private val fourthMenus = arrayListOf<Int>(
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7002_svg,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7003_svg,
+        com.topdon.lib.ui.R.drawable.ic_menu_thermal7004_svg
+    )
 
     fun initType(type: Int) {
         this.type = type
@@ -131,8 +130,8 @@ class MenuTabAdapter(val context: Context) :
                 holder.name.text = dataStrList[position]
                 holder.name.isSelected = position == selected
                 holder.name.setTextColor(
-                    if (position == selected) ContextCompat.getColor(context, R.color.white)
-                    else ContextCompat.getColor(context, R.color.font_third_color)
+                    if (position == selected) ContextCompat.getColor(context, com.topdon.lib.core.R.color.white)
+                    else ContextCompat.getColor(context, com.topdon.lib.core.R.color.font_third_color)
                 )
             }
         }
@@ -159,16 +158,16 @@ class MenuTabAdapter(val context: Context) :
         var name: TextView
 
         init {
-            lay = itemView.item_menu_tab_lay
-            img = itemView.item_menu_tab_img
-            name = itemView.item_menu_tab_text
+            lay = itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_menu_tab_lay)
+            img = itemView.findViewById<ImageView>(R.id.item_menu_tab_img)
+            name = itemView.findViewById<TextView>(R.id.item_menu_tab_text)
         }
     }
 
     inner class ItemMoreView(itemView: View) : BaseItemView(itemView) {
         init {
-            lay = itemView.item_menu_tab_more_lay
-            img = itemView.item_menu_tab_more_img
+            lay = itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_menu_tab_more_lay)
+            img = itemView.findViewById<ImageView>(R.id.item_menu_tab_more_img)
         }
     }
 

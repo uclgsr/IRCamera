@@ -3,6 +3,8 @@ package com.topdon.module.thermal.ir.activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.ktbase.BaseActivity
@@ -28,8 +30,11 @@ class MonitoryHomeActivity : BaseActivity() {
 
     override fun initView() {
         val isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
-        view_pager2.adapter = ViewPagerAdapter(this, isTC007)
-        TabLayoutMediator(tab_layout, view_pager2) { tab, position ->
+        val viewPager2 = findViewById<ViewPager2>(R.id.view_pager2)
+        val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
+        
+        viewPager2.adapter = ViewPagerAdapter(this, isTC007)
+        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
             tab.setText(if (position == 0) R.string.chart_history else R.string.chart_real_time)
         }.attach()
     }
@@ -39,7 +44,7 @@ class MonitoryHomeActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMonitorCreate(event: MonitorSaveEvent) {
-        view_pager2.currentItem = 0
+        findViewById<ViewPager2>(R.id.view_pager2).currentItem = 0
     }
 
     private class ViewPagerAdapter(activity: MonitoryHomeActivity, val isTC007: Boolean) : FragmentStateAdapter(activity) {

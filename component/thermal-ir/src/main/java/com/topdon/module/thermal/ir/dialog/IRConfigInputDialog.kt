@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
 import androidx.core.view.isVisible
 import com.topdon.lib.core.tools.UnitTools
 import com.topdon.lib.core.utils.ScreenUtil
@@ -47,31 +49,38 @@ class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean
 
         setContentView(R.layout.dialog_ir_config_input)
 
+        // Initialize views with findViewById
+        val tvTitle: TextView = findViewById(R.id.tv_title)
+        val tvUnit: TextView = findViewById(R.id.tv_unit)
+        val etInput: EditText = findViewById(R.id.et_input)
+        val tvCancel: TextView = findViewById(R.id.tv_cancel)
+        val tvConfirm: TextView = findViewById(R.id.tv_confirm)
+
         when (type) {
             Type.TEMP -> {
-                tv_title.text = "${context.getString(R.string.thermal_config_environment)} ${UnitTools.showConfigC(-10, if (isTC007) 50 else 55)}"
-                tv_unit.text = UnitTools.showUnit()
-                tv_unit.isVisible = true
+                tvTitle.text = "${context.getString(R.string.thermal_config_environment)} ${UnitTools.showConfigC(-10, if (isTC007) 50 else 55)}"
+                tvUnit.text = UnitTools.showUnit()
+                tvUnit.isVisible = true
             }
             Type.DIS -> {
-                tv_title.text = "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)"
-                tv_unit.text = "m"
-                tv_unit.isVisible = true
+                tvTitle.text = "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)"
+                tvUnit.text = "m"
+                tvUnit.isVisible = true
             }
             Type.EM -> {
-                tv_title.text = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
-                tv_unit.text = ""
-                tv_unit.isVisible = false
+                tvTitle.text = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
+                tvUnit.text = ""
+                tvUnit.isVisible = false
             }
         }
-        et_input.setText(if (value == null) "" else value.toString())
-        et_input.setSelection(0, et_input.length())
-        et_input.requestFocus()
+        etInput.setText(if (value == null) "" else value.toString())
+        etInput.setSelection(0, etInput.length())
+        etInput.requestFocus()
 
-        tv_cancel.setOnClickListener { dismiss() }
-        tv_confirm.setOnClickListener {
+        tvCancel.setOnClickListener { dismiss() }
+        tvConfirm.setOnClickListener {
             try {
-                val input: Float = et_input.text.toString().toFloat()
+                val input: Float = etInput.text.toString().toFloat()
                 val isRight = when (type) {
                     Type.TEMP -> input in UnitTools.showUnitValue(-10f) .. UnitTools.showUnitValue(if (isTC007) 50f else 55f)
                     Type.DIS -> input in 0.2f .. if (isTC007) 4f else 5f

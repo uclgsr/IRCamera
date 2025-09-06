@@ -8,6 +8,9 @@ kapt {
     arguments {
         // arg("AROUTER_MODULE_NAME", project.name)  // Removed for NavigationManager migration
     }
+    // Enable Kotlin 2.1.0 compatibility
+    correctErrorTypes = true
+    useBuildCache = true
 }
 
 android {
@@ -23,9 +26,7 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-        }
+        
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -38,6 +39,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     
     kotlinOptions {
@@ -48,39 +50,19 @@ android {
         viewBinding = true
         dataBinding = true
     }
-
-    flavorDimensions += "app"
-    productFlavors {
-        create("dev") {
-            dimension = "app"
-        }
-        create("beta") {
-            dimension = "app"
-        }
-        create("prod") {
-            dimension = "app"
-        }
-        create("prodTopdon") {
-            dimension = "app"
-        }
-        create("insideChina") {
-            dimension = "app"
-        }
-        create("prodTopdonInsideChina") {
-            dimension = "app"
-        }
-    }
 }
 
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
     implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
     implementation(project(":libmenu"))
     
-    // Local AAR dependency for OpenGL functionality
-    implementation(files("libs/opengl_1.3.2_standard.aar"))
+    // AAR dependency as compileOnly to avoid packaging issues
+    compileOnly(files("libs/opengl_1.3.2_standard.aar"))
     
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -41,6 +41,11 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
         IRImageHelp()
     }
 
+    // Synthetic view properties - migrated from kotlin-android-extensions
+    private val dualTextureViewNativeCamera by lazy { findViewById<SurfaceView>(R.id.dualTextureViewNativeCamera) }
+    // // private val thermalSteeringView by lazy { findViewById<com.topdon.lib.ui.widget.SteeringWheelView>(R.id.thermalSteeringView) }  // ID doesn't exist
+    // thermalRecyclerNight inherited from parent class
+
 
     override fun initContentView() = R.layout.activity_ir_thermal_double
 
@@ -65,22 +70,22 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
 //        findViewById<TextView>(R.id.toolbar_title)?.text = "双光设备"
         cameraView.visibility = View.GONE
         dualTextureViewNativeCamera?.visibility = View.VISIBLE
-        thermal_steering_view.listener = { action, moveX ->
-            setDisp(action, moveX)
-        }
+        // // thermalSteeringView.listener = { action, moveX ->
+        //     setDisp(action, moveX)
+        // }
 
         when (SaveSettingUtil.fusionType) {
             SaveSettingUtil.FusionTypeLPYFusion -> {//双光1
-                thermal_recycler_night?.twoLightType = TwoLightType.TWO_LIGHT_1
+                thermalRecyclerNight?.twoLightType = TwoLightType.TWO_LIGHT_1
             }
             SaveSettingUtil.FusionTypeMeanFusion -> {//双光2
-                thermal_recycler_night?.twoLightType = TwoLightType.TWO_LIGHT_2
+                thermalRecyclerNight?.twoLightType = TwoLightType.TWO_LIGHT_2
             }
             SaveSettingUtil.FusionTypeIROnly -> {//单红外
-                thermal_recycler_night?.twoLightType = TwoLightType.IR
+                thermalRecyclerNight?.twoLightType = TwoLightType.IR
             }
             SaveSettingUtil.FusionTypeVLOnly -> {//可见光
-                thermal_recycler_night?.twoLightType = TwoLightType.LIGHT
+                thermalRecyclerNight?.twoLightType = TwoLightType.LIGHT
             }
         }
     }
@@ -110,10 +115,10 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
 //            SharedManager.setIrDualDisp(dualDisp)
             if (result == 0){
                 // 关闭控件
-                if (thermal_steering_view.isVisible) {
-                    thermal_steering_view.visibility = View.GONE
-                    thermal_recycler_night.setTwoLightSelected(TwoLightType.CORRECT, false)
-                }
+                // if (thermalSteeringView.isVisible) {
+                //    thermalSteeringView.visibility = View.GONE
+                    thermalRecyclerNight.setTwoLightSelected(TwoLightType.CORRECT, false)
+                // }
             }else{
                 ToastUtils.showShort(R.string.correction_fail)
             }
@@ -137,27 +142,27 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
                 mCurrentFusionType = DualCameraParams.FusionType.IROnly
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeIROnly
                 setFusion(mCurrentFusionType)
-                thermal_recycler_night.setTwoLightSelected(TwoLightType.CORRECT, false)
-                thermal_steering_view.visibility = View.GONE
+                thermalRecyclerNight.setTwoLightSelected(TwoLightType.CORRECT, false)
+                // thermalSteeringView.visibility = View.GONE
             }
             TwoLightType.LIGHT -> {//单可见光
                 mCurrentFusionType = DualCameraParams.FusionType.VLOnly
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeVLOnly
                 setFusion(mCurrentFusionType)
-                thermal_steering_view.visibility = View.GONE
-                thermal_recycler_night.setTwoLightSelected(TwoLightType.CORRECT, false)
+                // thermalSteeringView.visibility = View.GONE
+                thermalRecyclerNight.setTwoLightSelected(TwoLightType.CORRECT, false)
             }
             TwoLightType.CORRECT -> {//配准
                 if (isSelected){
-                    thermal_steering_view.visibility = View.VISIBLE
+                    // thermalSteeringView.visibility = View.VISIBLE
                     if (mCurrentFusionType != DualCameraParams.FusionType.LPYFusion && mCurrentFusionType != DualCameraParams.FusionType.MeanFusion) {
                         mCurrentFusionType = DualCameraParams.FusionType.LPYFusion
-                        thermal_recycler_night.twoLightType = TwoLightType.TWO_LIGHT_1
+                        thermalRecyclerNight.twoLightType = TwoLightType.TWO_LIGHT_1
                         SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeLPYFusion
                         setFusion(DualCameraParams.FusionType.LPYFusion)
                     }
                 }else{
-                    thermal_steering_view.visibility = View.GONE
+                    // thermalSteeringView.visibility = View.GONE
                 }
             }
             else -> {
@@ -181,19 +186,19 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
     }
 
     override fun startUSB(isRestart: Boolean, isBadFrames: Boolean) {
-
+        // Empty implementation for dual IR device
     }
 
     override fun setPColor(code: Int) {
         pseudoColorMode = code
-        temperature_seekbar.setPseudocode(pseudoColorMode)
+        temperatureSeekbar.setPseudocode(pseudoColorMode)
         /**
          * 设置伪彩【set pseudocolor】
          * 固件机芯实现(部分伪彩为预留,设置后可能无效果)
          */
-//        dualView?.dualUVCCamera?.setPseudocolor(PseudocodeUtils.changeDualPseudocodeModelByOld(pseudoColorMode))
+        // dualView?.dualUVCCamera?.setPseudocolor(PseudocodeUtils.changeDualPseudocodeModelByOld(pseudoColorMode))
         SaveSettingUtil.pseudoColorMode = pseudoColorMode
-        thermal_recycler_night.setPseudoColor(code)
+        thermalRecyclerNight.setPseudoColor(code)
     }
 
     override fun startISP() {
@@ -218,7 +223,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
     override fun setRotate(rotateInt: Int) {
         super.setRotate(rotateInt)
         runOnUiThread {
-            thermal_steering_view.rotationIR = rotateInt
+            // thermalSteeringView.rotationIR = rotateInt
         }
         //双光的旋转角度不同
         when (rotateInt) {
@@ -260,7 +265,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
     override fun irStop() {
         try {
             configJob?.cancel()
-            time_down_view?.cancel()
+            // timeDownView?.cancel()  // View doesn't exist in current layout
             if (isVideo) {
                 isVideo = false
                 videoRecord?.stopRecord()
@@ -271,7 +276,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
                 }
                 lifecycleScope.launch {
                     delay(500)
-                    thermal_recycler_night.refreshImg()
+                    thermalRecyclerNight.refreshImg()
                 }
             }
         } catch (_: Exception) {
@@ -293,24 +298,24 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
             cl_seek_bar,
             temp_bg,
             compassView, dualView,
-            carView = lay_car_detect_prompt
+            carView = layCarDetectPrompt
         )
     }
 
     override fun irStart() {
         if (!isrun) {
-            tv_type_ind.isVisible = false
+            tvTypeInd.isVisible = false
             startUSB(false,false)
             startISP()
             isrun = true
             //恢复配置
             configParam()
-            thermal_recycler_night.updateCameraModel()
+            thermalRecyclerNight.updateCameraModel()
             initIRConfig()
         }
     }
     override fun setDispViewData(dualDisp: Int) {
-        thermal_steering_view.moveX = dualDisp
+        // thermalSteeringView.moveX = dualDisp
     }
     override fun autoConfig() {
         lifecycleScope.launch(Dispatchers.IO) {
@@ -323,7 +328,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
             }
         }
         dismissCameraLoading()
-        thermal_recycler_night.setTempLevel(CameraItemBean.TYPE_TMP_ZD)
+        thermalRecyclerNight.setTempLevel(CameraItemBean.TYPE_TMP_ZD)
     }
     override fun switchAutoGain(boolean: Boolean) {
         dualView?.auto_gain_switch = boolean

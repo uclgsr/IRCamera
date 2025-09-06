@@ -24,6 +24,9 @@ import com.energy.iruvc.uvc.ConnectCallback
 import com.energy.iruvc.uvc.UVCCamera
 import com.example.suplib.wrapper.SupHelp
 import com.infisense.usbdual.Const
+// import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi // Temporarily disabled - hardware specific
+// import com.infisense.usbdual.camera.IRUVCDual // Temporarily disabled - hardware specific
+// import com.infisense.usbdual.camera.USBMonitorManager // Temporarily disabled - hardware specific
 import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi
 import com.infisense.usbdual.camera.IRUVCDual
 import com.infisense.usbdual.camera.USBMonitorManager
@@ -456,8 +459,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
                     runOnUiThread {
                         TipDialog.Builder(this@BaseIRPlushActivity)
                             .setMessage(R.string.tips_tisr_fail)
-                            .setPositiveListener(R.string.app_got_it) {
-                            }
+                            .setPositiveListener(R.string.app_got_it) { }
                             .create().show()
                     }
                     XLog.e("超分初始化失败")
@@ -469,7 +471,8 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
             isOpenAmplify = !isOpenAmplify
             dualView?.isOpenAmplify = isOpenAmplify
 
-            title_view.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)
+            val titleView = findViewById<com.topdon.lib.core.view.TitleView>(com.topdon.lib.core.R.id.title_view)
+            titleView?.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)
             SaveSettingUtil.isOpenAmplify = isOpenAmplify
             if (isOpenAmplify){
                 ToastUtils.showShort(R.string.tips_tisr_on)
@@ -481,7 +484,8 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
 
     override fun initAmplify(show: Boolean) {
         lifecycleScope.launch {
-            title_view.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)
+            val titleView = findViewById<com.topdon.lib.core.view.TitleView>(com.topdon.lib.core.R.id.title_view)
+            titleView?.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)
             withContext(Dispatchers.IO){
                 if (isOpenAmplify){
                     SupHelp.getInstance().initA4KCPP()

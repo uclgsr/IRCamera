@@ -19,9 +19,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -34,6 +31,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
 
     buildFeatures {
@@ -43,6 +41,8 @@ android {
 }
 
 dependencies {
+    // Core library desugaring support
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation("androidx.multidex:multidex:2.0.1")

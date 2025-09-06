@@ -23,13 +23,16 @@ class ImagesDetailActivity : BaseActivity() {
 
     override fun initView() {
         val imageList: List<String> = intent.getStringArrayListExtra(ExtraKeyConfig.IMAGE_PATH_LIST) ?: return
-        view_pager2.adapter = MyAdapter(imageList)
-        view_pager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        val viewPager2 = findViewById<ViewPager2>(R.id.view_pager2)
+        val titleView = findViewById<com.topdon.lib.core.view.TitleView>(R.id.title_view)
+        
+        viewPager2.adapter = MyAdapter(imageList)
+        viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                title_view.setTitleText("${position + 1}/${imageList.size}")
+                titleView.setTitleText("${position + 1}/${imageList.size}")
             }
         })
-        view_pager2.setCurrentItem(intent.getIntExtra(ExtraKeyConfig.CURRENT_ITEM, 0), false)
+        viewPager2.setCurrentItem(intent.getIntExtra(ExtraKeyConfig.CURRENT_ITEM, 0), false)
     }
 
     override fun initData() {

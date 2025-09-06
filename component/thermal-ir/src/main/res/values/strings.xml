@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Compass direction strings -->
+    <string name="compass_north">North</string>
+    <string name="compass_northeast">Northeast</string>
+    <string name="compass_east">East</string>
+    <string name="compass_southeast">Southeast</string>
+    <string name="compass_south">South</string>
+    <string name="compass_southwest">Southwest</string>
+    <string name="compass_west">West</string>
+    <string name="compass_northwest">Northwest</string>
+    
+    <!-- Error messages -->
+    <string name="tips_tisr_fail">Super resolution initialization failed</string>
+    <string name="tips_tisr_on">Super resolution enabled</string>
+    <string name="tips_tisr_off">Super resolution disabled</string>
+    <string name="app_got_it">Got it</string>
+    <string name="album_edit_report">Edit Report</string>
+    
+    <string name="thermal_config_environment">Environment Temperature</string>
+    <string name="thermal_config_distance">Distance</string>
+    <string name="thermal_config_radiation">Emissivity</string>
+    <string name="tip_input_format">Please enter a valid number</string>
+    <string name="album_menu_Photos">Photos</string>
+    <string name="app_video">Video</string>
+    <string name="ts004_download_complete">Download complete</string>
+    
+    <!-- Dialog and tip strings -->
+    <string name="app_tip">Tip</string>
+    <string name="tips_observe_photo_content">Switch to observation mode to capture images with enhanced thermal analysis features.</string>
+    <string name="app_yes">Yes</string>
+    <string name="app_no">No</string>
+    <string name="app_ok">OK</string>
+    <string name="tip_change_pseudo_mode">Change pseudo color mode?</string>
+    <string name="tc_high_temp_test_tips1">High temperature test mode</string>
+    <string name="tc_high_temp_test_tips2">Test mode activated</string>
+    <string name="tc_high_temp_test">High Temperature Test</string>
+    <string name="tips_ai">AI Detection</string>
+    <string name="tips_ai_content">AI detection mode enabled for enhanced thermal analysis</string>
+    
+    <!-- Location and permissions -->
+    <string name="permission_request_location_app">%s needs location permission to get current address</string>
+    <string name="get_current_address">Getting current address</string>
+    <string name="app_location_content">Location service is not available</string>
+    <string name="coordinate_mode">Coordinate Mode</string>
+    <string name="coordinate_tips">Display coordinates for precise thermal measurement</string>
+    <string name="app_cancel">Cancel</string>
+    <string name="app_confirm">Confirm</string>
+    
+    <!-- Missing string resources -->
+    <!-- Chart temperature strings -->
+    <string name="chart_temperature">Temperature</string>
+    <string name="chart_temperature_high">High Temperature</string>
+    <string name="chart_temperature_low">Low Temperature</string>
+    <string name="tc_temp_test_materials">Test Materials</string>
+    
+    <!-- Additional thermal strings -->
+    <string name="thermal_trend_tips">Thermal trend analysis</string>
+    <string name="off_photography">Off Photography</string>
+    <string name="seconds_dalay_3">3 Second Delay</string>
+    <string name="seconds_dalay_6">6 Second Delay</string>
+    <string name="app_Manual_Shutter">Manual Shutter</string>
+    <string name="shutter_tips">Shutter Tips</string>
+    <string name="tip_video_record">Video Recording</string>
+    <string name="auto_open">Auto Open</string>
+    <string name="tip_config_delete">Delete report "%s"?</string>
+    <string name="chart_start_time">Chart Start Time</string>
+    <string name="album_report_emissivity">Report Emissivity</string>
+    <string name="tc_has_line_device">Wired Device</string>
+    <string name="auto_close">Auto Close</string>
+    <string name="thermal_threshold_setting">Thermal Threshold Setting</string>
+    <string name="app_close">Close</string>
+    <string name="permission_request_camera_app">Camera permission required</string>
+    <string name="scan_ble_tip_authorize">Bluetooth authorization required</string>
+    <string name="app_storage_content">Storage permission required</string>
+    <string name="app_camera_content">Camera permission required</string>
+    <string name="app_microphone_content">Microphone permission required</string>
+    <string name="app_open">Open</string>
+    <string name="abnormal_item">Abnormal Item</string>
+    <string name="permission_request_storage_app">Storage permission required for app</string>
+    <string name="abnormal_item1">Abnormal Item 1</string>
+    <string name="correction_fail">Correction Failed</string>
+    <string name="album_report_max_image_tips">Maximum number of images reached</string>
+    <string name="tip_save_success">Save successful</string>
+    <string name="detail_date">time</string>
+    <string name="detail_info">info</string>
+    <string name="detail_len">size</string>
+    <string name="detail_path">path</string>
+    <string name="battery_share">Share</string>
+    <string name="tip_delete">Delete</string>
+    <string name="also_del_from_phone_album">Also delete from phone album</string>
+    <string name="test_results_delete_success">Delete successful</string>
+    <string name="chosen_item">Chosen item</string>
+    <string name="app_gallery">Gallery</string>
+    <string name="svg_x_cc">Close</string>
+    <string name="ic_back_white_svg">Back</string>
+    <string name="report_select_all">Select All</string>
+    <string name="dual_light_correction_tips_3">Dual light correction tips 3</string>
+    <string name="chart_history">Chart History</string>
+    <string name="chart_real_time">Chart Real Time</string>
+    <string name="album_report_on_edit">Report On Edit</string>
+    <string name="tip_delete_chosen">Delete Chosen</string>
+    
+    <!-- Additional missing strings -->
+    <string name="tip_least_select">Please select at least one image</string>
+    <string name="Limite_di_9carte">Limited to 9 cards maximum</string>
+    <string name="finalize_and_save">Finalize and Save</string>
+    <string name="color_23202E">#23202E</string>
+    <string name="pdf_sign_tips">PDF signature tips</string>
+    <string name="pdf_saved_tips">PDF saved successfully</string>
+    <string name="detect_time">Detection Time</string>
+    <string name="year">Year</string>
+    <string name="device_connect_tip">Please connect device</string>
+    <string name="tip_target_sdk">Target SDK version</string>
+    <string name="request_fail">Request failed</string>
+    <string name="tip_no_more_data">No more data available</string>
+    
+    <!-- Additional adapter resources -->
+    <string name="menu_3d_calibrate">3D Calibrate</string>
+    <string name="thermal_false_color">False Color</string>
+    <string name="app_setting">Settings</string>
+    <string name="func_temper_ruler">Temperature Ruler</string>
+    <string name="thermal_point">点</string>
+    <string name="thermal_line">线</string>
+    <string name="thermal_rect">矩形</string>
+    <string name="pdf_project_item">Project Item</string>
+    <string name="report_remark">Remark</string>
+    <string name="currency">Currency</string>
+</resources>
