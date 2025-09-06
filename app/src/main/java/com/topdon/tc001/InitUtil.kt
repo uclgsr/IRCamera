@@ -48,8 +48,12 @@ object InitUtil {
             .cleanStrategy(cleanStrategy) //指定日志文件清除策略
             .flattener(PatternFlattener(pattern)) //自定义日志格式
             .build()
-        // Release build - only use file logging, not logcat
-        XLog.init(config, filePrinter)
+        if (BuildConfig.DEBUG) {
+            XLog.init(config, androidPrinter, filePrinter)
+        } else {
+            // release不使用logcat
+            XLog.init(config, filePrinter)
+        }
     }
 
     fun initLms(){
