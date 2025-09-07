@@ -4,7 +4,7 @@ chcp 65001
 call gradlew clean
 
 echo "开始编译google测试版本"
-call gradlew :app:assembleProdDebug
+call gradlew :app:assembleDebug
 
 
 @rem call gradlew :app:assembleProdDebug

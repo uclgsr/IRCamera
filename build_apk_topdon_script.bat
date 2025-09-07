@@ -5,7 +5,7 @@ call gradlew clean
 
 
 echo "开始编译Topdon测试版本"
-call gradlew :app:assembleProdTopdonDebug
+call gradlew :app:assembleDebug
 
 @rem call gradlew :app:assembleProdDebug
 

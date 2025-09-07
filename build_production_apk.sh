@@ -11,7 +11,7 @@ echo "========================================="
 
 # Build configuration
 BUILD_TYPE="release"
-FLAVOR="prod"
+FLAVOR=""  # No product flavors - simplified build
 OUTPUT_DIR="./production_artifacts"
 TIMESTAMP=$(date "+%Y%m%d_%H%M")
 LOG_FILE="./build_logs/production_build_${TIMESTAMP}.log"
@@ -60,11 +60,11 @@ clean_build() {
 # Function to build APK with optimization
 build_apk() {
     log "🔨 Building production APK..."
-    log "   Flavor: ${FLAVOR}"
+    log "   Flavor: ${FLAVOR:-"none (simplified build)"}"
     log "   Build Type: ${BUILD_TYPE}"
     
     # Build with optimizations
-    ./gradlew ":app:assemble${FLAVOR^}${BUILD_TYPE^}" \
+    ./gradlew ":app:assemble${BUILD_TYPE^}" \
         --build-cache \
         --parallel \
         --quiet \
@@ -138,7 +138,7 @@ Build Information
 =================
 Build Timestamp: ${TIMESTAMP}
 Build Type: ${BUILD_TYPE}
-Flavor: ${FLAVOR}
+Flavor: ${FLAVOR:-"none (simplified build)"}
 Git Commit: $(git rev-parse HEAD)
 Git Branch: $(git branch --show-current)
 Build Machine: $(uname -a)
