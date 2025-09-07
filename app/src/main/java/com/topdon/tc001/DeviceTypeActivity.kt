@@ -132,7 +132,7 @@ class DeviceTypeActivity : BaseActivity() {
                 IRDeviceType.TC007 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_tc007)
                 IRDeviceType.TS001 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_ts001)
                 IRDeviceType.TS004 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_ts004)
-                IRDeviceType.SHIMMER3_GSR -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_ts004)
+                IRDeviceType.SHIMMER3_GSR -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_shimmer_gsr) // TODO: Add a specific icon for the GSR device
             }
 
             holder.itemView.findViewById<ViewGroup>(R.id.group_item2).isVisible = secondType != null
