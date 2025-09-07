@@ -36,7 +36,7 @@ security:
   require_tls: true
 session:
   auto_backup: true
-  data_root: /tmp/tmps38kxkj_
+  data_root: /tmp/tmpo8rur6oq
   max_session_duration: 7200
   metadata_format: json
 test:
