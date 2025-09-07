@@ -72,6 +72,8 @@ dependencies {
     compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar"))  // IR utilities for thermal-lite
     compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))  // Required for iruvc classes
     compileOnly(files("../../shared/libs/lms_international-3.90.009.0.aar"))  // LMS SDK for thermal-lite classes
+    // Add libcommon dependency for SurfaceNativeWindow class
+    implementation(files("../../app/libs/libcommon_1.2.0_24052117.aar"))
     
     // Temporarily disable ARouter compiler until KAPT issues are resolved
 

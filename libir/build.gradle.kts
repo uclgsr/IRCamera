@@ -30,9 +30,17 @@ android {
     }
 
     buildTypes {
+        // Only release build type - no debug variants
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+    
+    // Disable all debug variants completely
+    variantFilter {
+        if (buildType.name == "debug") {
+            ignore = true
         }
     }
     compileOptions {
@@ -76,5 +84,6 @@ dependencies {
     api(libs.javacpp)  // JavaCV native dependencies
     
     implementation(project(":libapp"))
-    // LocalRepo:libcommon moved to app/libs - will be available transitively through app module
+    // libcommon needs to be available directly to libir since it uses SurfaceNativeWindow
+    implementation(files("../app/libs/libcommon_1.2.0_24052117.aar"))
 }

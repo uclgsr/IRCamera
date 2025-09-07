@@ -16,12 +16,20 @@ android {
     }
 
     buildTypes {
+        // Only release build type - no debug variants
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+    
+    // Disable all debug variants completely
+    variantFilter {
+        if (buildType.name == "debug") {
+            ignore = true
         }
     }
     

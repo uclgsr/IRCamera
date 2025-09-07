@@ -66,6 +66,7 @@ android {
     }
 
     buildTypes {
+        // Only release build type - no debug variants
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
@@ -73,6 +74,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+    
+    // Disable all debug variants completely
+    variantFilter {
+        if (buildType.name == "debug") {
+            ignore = true
         }
     }
 

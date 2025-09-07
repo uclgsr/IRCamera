@@ -1,0 +1,19 @@
+Build Information
+=================
+Build Timestamp: 20250907_2037
+Build Type: release
+Flavor: none (simplified build)
+Git Commit: dcc94ccadfa2191570969cba422826d6c9c5542e
+Git Branch: copilot/fix-8ace35e5-b918-44a6-bb68-cd33d85a68d9
+Build Machine: Linux pkrvm7jw40e0xgp 6.11.0-1018-azure #18~24.04.1-Ubuntu SMP Sat Jun 28 04:46:03 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+Build User: runner
+Gradle Version: Gradle 8.14
+
+APK Files:
+app-release.apk
+
+Build Configuration:
+- Multi-modal recording: RGB + Thermal + GSR
+- Samsung S22 ground truth timing
+- Shimmer3 GSR integration
+- Production-signed and optimized
