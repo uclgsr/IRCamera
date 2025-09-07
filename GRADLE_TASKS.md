@@ -1,39 +1,48 @@
 # Gradle Tasks Guide
 
-This project uses product flavors, which affects the available Gradle task names.
+This project has been simplified to use **release-only builds** with no product flavors or debug variants.
 
-## Product Flavors
+## Build Configuration
 
-The app module has a "prod" product flavor defined, which means all build tasks include the flavor name.
+The build system has been streamlined:
+- **No product flavors** - simplified build configuration
+- **Release builds only** - debug variants disabled for production focus
+- **Single APK output** - optimized for deployment
 
-## Common Task Names
+## Available Build Tasks
 
-Instead of generic task names, use the flavor-specific variants:
+### Release Build (Production)
+- ✅ `:app:assembleRelease` - Build production APK
+- ✅ `:app:bundleRelease` - Build AAB bundle for Play Store
 
-### Compilation Tasks
-- ❌ `:app:compileDebugSources` (ambiguous - doesn't exist)
-- ✅ `:app:compileProdDebugSources` (correct)
+### Common Tasks
+- ✅ `:app:clean` - Clean build artifacts
+- ✅ `:app:tasks` - List all available tasks
 
-### Build Tasks  
-- ❌ `:app:assembleDebug` (ambiguous - doesn't exist)
-- ✅ `:app:assembleProdDebug` (correct)
-
-### Full Build
-- ✅ `:app:assembleProdRelease` (release build)
-
-## Available Tasks
+## Build Commands
 
 To see all available tasks for the app module:
 ```bash
 ./gradlew :app:tasks --all
 ```
 
-To build debug variant:
+To build release APK:
 ```bash
-./gradlew assembleProdDebug
+./gradlew :app:assembleRelease
 ```
 
-To build release variant:
+To build release bundle:
 ```bash
-./gradlew assembleProdRelease
+./gradlew :app:bundleRelease
 ```
+
+To clean and build:
+```bash
+./gradlew clean :app:assembleRelease
+```
+
+## Build Scripts
+
+Use the provided build scripts for convenience:
+- `build_apk_google_script.bat` - Windows release build
+- `build_production_apk.sh` - Linux/macOS release build with full verification
