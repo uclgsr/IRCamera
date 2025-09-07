@@ -794,15 +794,7 @@ class RGBCameraRecorder(
                 saveRawImageAsDng(image, captureResult)
                 Log.d(TAG, "Successfully paired image with capture result for timestamp: $imageTimestamp")
             } else {
-                Log.w(TAG, "No matching capture result found for image timestamp: $imageTimestamp")
-                // Fallback: try to use any available result if map is not empty
-                val fallbackResult = captureResultMap.values.firstOrNull()
-                if (fallbackResult != null) {
-                    Log.w(TAG, "Using fallback capture result for DNG creation")
-                    saveRawImageAsDng(image, fallbackResult)
-                } else {
-                    Log.e(TAG, "No capture result available - cannot create DNG file")
-                }
+                Log.e(TAG, "No matching capture result found for image timestamp: $imageTimestamp. Discarding image to ensure data integrity.")
             }
             
             image.close()
