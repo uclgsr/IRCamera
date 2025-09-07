@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TOPINFRARED</string>
+    <string name="app_name">MPDC4GSR</string>
     
     <!-- Clause/Privacy strings -->
     <string name="version_year">Copyright %s TOPDON Technology Co.,Ltd.\nAll Rights Reserved.</string>

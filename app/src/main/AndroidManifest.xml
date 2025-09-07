@@ -78,20 +78,6 @@
             android:screenOrientation="userPortrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".SplashActivity"
-            android:exported="true"
-            android:theme="@style/Splash"
-            android:screenOrientation="userPortrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
-
-
-
-        <activity
             android:name=".BlankDevActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Blank"
@@ -112,6 +98,7 @@
             android:screenOrientation="userPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
         </activity>

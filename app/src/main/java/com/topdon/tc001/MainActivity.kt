@@ -119,6 +119,13 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun initView() {
+        // Check if clause needs to be shown (moved from SplashActivity)
+        if (!SharedManager.getHasShowClause()) {
+            NavigationManager.build(RouterConfig.CLAUSE).navigation(this)
+            finish()
+            return
+        }
+        
         logInfo()
         lifecycleScope.launch(Dispatchers.IO){
             // TODO: Fix SupHelp library access
