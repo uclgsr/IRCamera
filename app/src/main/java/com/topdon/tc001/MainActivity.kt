@@ -98,7 +98,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         try {
             val str = StringBuilder()
             str.append("Info").append("\n")
-            str.append("FLAVOR: ${BuildConfig.FLAVOR}").append("\n")
+            str.append("FLAVOR: release").append("\n")
             str.append("VERSION_CODE: ${BuildConfig.VERSION_CODE}").append("\n")
             str.append("VERSION_NAME: ${BuildConfig.VERSION_NAME}").append("\n")
             str.append("VERSION_DATE: ${BuildConfig.VERSION_DATE}").append("\n")

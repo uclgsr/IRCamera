@@ -64,7 +64,7 @@ class App : BaseApplication() {
 
     override fun getSoftWareCode(): String = BuildConfig.SOFT_CODE
 
-    override fun isDomestic(): Boolean = BuildConfig.ENV_TYPE == 1
+    override fun isDomestic(): Boolean = false // Default to international since flavors were removed
 
     val activityNameList : MutableList<String> = mutableListOf()
 

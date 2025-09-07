@@ -27,7 +27,7 @@ import java.io.IOException
 import java.nio.ByteBuffer
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
-import android.media.DngCreator
+import android.hardware.camera2.DngCreator
 
 /**
  * RGB Camera Recorder with Samsung-style recording options
@@ -775,10 +775,13 @@ class RGBCameraRecorder(
         }
     }
 
+    // Store latest capture result for DNG creation
+    private var latestCaptureResult: TotalCaptureResult? = null
+    
     private val rawImageAvailableListener = ImageReader.OnImageAvailableListener { reader ->
         val image = reader.acquireLatestImage()
         if (image != null) {
-            saveRawImageAsDng(image)
+            saveRawImageAsDng(image, latestCaptureResult)
             image.close()
         }
     }
@@ -789,6 +792,8 @@ class RGBCameraRecorder(
             request: CaptureRequest,
             result: TotalCaptureResult
         ) {
+            // Store the capture result for DNG creation
+            latestCaptureResult = result
             // RAW image capture completed successfully
             rawCaptureCount++
         }
@@ -802,7 +807,7 @@ class RGBCameraRecorder(
         }
     }
 
-    private fun saveRawImageAsDng(image: Image) {
+    private fun saveRawImageAsDng(image: Image, captureResult: TotalCaptureResult?) {
         try {
             // Generate timestamp with ground truth precision
             val timestamp = System.nanoTime()
@@ -817,9 +822,9 @@ class RGBCameraRecorder(
             val characteristics = manager.getCameraCharacteristics(cameraId)
             
             // Create DNG file using Android's DngCreator
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && captureResult != null) {
                 FileOutputStream(dngFile).use { output ->
-                    val dngCreator = DngCreator(characteristics, null) // No capture result for now
+                    val dngCreator = DngCreator(characteristics, captureResult)
                     dngCreator.writeImage(output, image)
                     dngCreator.close()
                 }
@@ -828,7 +833,7 @@ class RGBCameraRecorder(
                 onRawImageCaptured?.invoke(dngFile)
                 
             } else {
-                Log.w(TAG, "DNG creation requires Android 5.0+")
+                Log.w(TAG, "Cannot create DNG: API level ${Build.VERSION.SDK_INT} or missing capture result")
             }
             
         } catch (e: Exception) {
