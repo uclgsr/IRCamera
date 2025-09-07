@@ -185,17 +185,13 @@ configurations.all {
 dependencies {
     // Core library desugaring support
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(project(":component:edit3d"))
-    implementation(project(":component:pseudo"))
-    implementation(project(":component:thermal-ir"))
-    implementation(project(":component:thermal-lite"))
-    implementation(project(":component:transfer"))
-    implementation(project(":component:user"))
+    
+    // Core consolidated modules
+    implementation(project(":component:thermal"))      // Consolidated thermal functionality
     implementation(project(":component:gsr-recording"))
     implementation(project(":libapp"))
     implementation(project(":libcom"))
     implementation(project(":libir"))
-    implementation(project(":libmenu"))
     implementation(project(":libui"))
 
     // ARouter configuration
@@ -230,7 +226,7 @@ dependencies {
     // implementation(libs.bundles.smart.refresh) // Temporarily commented out due to jitpack.io issues
     implementation(libs.wechat.sdk)
     implementation(libs.umeng.apm)
-    implementation(libs.zoho.salesiq)
+    // implementation(libs.zoho.salesiq) // Commented out - not essential for MPDC4GSR
 
     // UMeng - Simplified single implementation
     implementation(libs.umeng.common)

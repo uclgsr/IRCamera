@@ -54,11 +54,11 @@ dependencies {
     
     // Project dependencies
     implementation(project(":libapp"))
-    implementation(project(":libmenu")) // 伪彩条用着 PseudoColorConfig
+    // Removed libmenu dependency - PseudoColorConfig moved to this module
 
     // Use shared UI bundle instead of individual dependencies
     implementation(libs.bundles.ui.common)
     
-    // Smart Refresh Layout for LoadingFooter - use shared bundle
-    implementation(libs.bundles.smart.refresh)
+    // Smart Refresh Layout for LoadingFooter - temporarily commented out due to jitpack.io issues
+    // implementation(libs.bundles.smart.refresh)
 }

@@ -60,7 +60,7 @@ dependencies {
     implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
-    implementation(project(":libmenu"))
+    // Removed libmenu dependency - functionality consolidated into libui
     
     // ARouter removed - now using NavigationManager instead
     // implementation(libs.arouter.api)
@@ -70,7 +70,4 @@ dependencies {
     implementation(libs.bundles.ui.common)
     implementation(libs.utilcode)
     implementation(libs.mn.image.browser)
-    
-    // Core library desugaring
-    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
