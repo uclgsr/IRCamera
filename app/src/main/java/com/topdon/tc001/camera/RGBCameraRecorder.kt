@@ -27,6 +27,7 @@ import java.io.IOException
 import java.nio.ByteBuffer
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.ConcurrentHashMap
 import android.hardware.camera2.DngCreator
 
 /**
@@ -293,6 +294,9 @@ class RGBCameraRecorder(
             rawCaptureRunnable?.let { rawCaptureHandler?.removeCallbacks(it) }
             rawImageReader?.close()
             rawImageReader = null
+            
+            // Clear capture result map to prevent memory leaks
+            captureResultMap.clear()
             
             Log.i(TAG, "RAW image capture stopped. Captured $rawCaptureCount frames")
             
@@ -775,13 +779,32 @@ class RGBCameraRecorder(
         }
     }
 
-    // Store latest capture result for DNG creation
-    private var latestCaptureResult: TotalCaptureResult? = null
+    // Store latest capture result for DNG creation - FIXED race condition with proper pairing
+    private val captureResultMap = ConcurrentHashMap<Long, TotalCaptureResult>()
+    private val captureResultTimeout = 5000L // 5 seconds timeout for cleanup
     
     private val rawImageAvailableListener = ImageReader.OnImageAvailableListener { reader ->
         val image = reader.acquireLatestImage()
         if (image != null) {
-            saveRawImageAsDng(image, latestCaptureResult)
+            // Get the image timestamp to find the corresponding capture result
+            val imageTimestamp = image.timestamp
+            val captureResult = captureResultMap.remove(imageTimestamp)
+            
+            if (captureResult != null) {
+                saveRawImageAsDng(image, captureResult)
+                Log.d(TAG, "Successfully paired image with capture result for timestamp: $imageTimestamp")
+            } else {
+                Log.w(TAG, "No matching capture result found for image timestamp: $imageTimestamp")
+                // Fallback: try to use any available result if map is not empty
+                val fallbackResult = captureResultMap.values.firstOrNull()
+                if (fallbackResult != null) {
+                    Log.w(TAG, "Using fallback capture result for DNG creation")
+                    saveRawImageAsDng(image, fallbackResult)
+                } else {
+                    Log.e(TAG, "No capture result available - cannot create DNG file")
+                }
+            }
+            
             image.close()
         }
     }
@@ -792,8 +815,18 @@ class RGBCameraRecorder(
             request: CaptureRequest,
             result: TotalCaptureResult
         ) {
-            // Store the capture result for DNG creation
-            latestCaptureResult = result
+            // Store the capture result with frame timestamp for proper pairing
+            val frameTimestamp = result.get(CaptureResult.SENSOR_TIMESTAMP)
+            if (frameTimestamp != null) {
+                captureResultMap[frameTimestamp] = result
+                Log.d(TAG, "Stored capture result for timestamp: $frameTimestamp")
+                
+                // Clean up old entries to prevent memory leaks
+                cleanupOldCaptureResults()
+            } else {
+                Log.w(TAG, "No sensor timestamp available in capture result")
+            }
+            
             // RAW image capture completed successfully
             rawCaptureCount++
         }
@@ -838,6 +871,26 @@ class RGBCameraRecorder(
             
         } catch (e: Exception) {
             Log.e(TAG, "Failed to save RAW image", e)
+        }
+    }
+
+    /**
+     * Clean up old capture results to prevent memory leaks
+     * Removes entries older than captureResultTimeout
+     */
+    private fun cleanupOldCaptureResults() {
+        val currentTime = System.nanoTime()
+        val iterator = captureResultMap.iterator()
+        
+        while (iterator.hasNext()) {
+            val entry = iterator.next()
+            val timestamp = entry.key
+            
+            // Remove entries older than timeout (convert nanoseconds to milliseconds for comparison)
+            if ((currentTime - timestamp) / 1_000_000 > captureResultTimeout) {
+                iterator.remove()
+                Log.d(TAG, "Cleaned up old capture result for timestamp: $timestamp")
+            }
         }
     }
 
