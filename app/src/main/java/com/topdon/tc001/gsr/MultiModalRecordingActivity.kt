@@ -21,6 +21,7 @@ import com.topdon.gsr.service.SessionManager
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.lib.core.config.RouterConfig
 import com.csl.irCamera.R
+import com.topdon.tc001.camera.RGBCameraRecorder
 import java.io.File
 
 /**
@@ -37,6 +38,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.CAMERA,
             // Android 12+ Bluetooth permissions for Shimmer3 GSR devices
             Manifest.permission.BLUETOOTH_SCAN,
             Manifest.permission.BLUETOOTH_CONNECT
@@ -67,10 +69,18 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     private lateinit var sessionDurationText: TextView
     private lateinit var fileLocationText: TextView
     private lateinit var progressBar: ProgressBar
+    private lateinit var cameraPreview: android.view.TextureView
+    
+    // Recording options
+    private lateinit var enableVideoSwitch: Switch
+    private lateinit var enable4KSwitch: Switch
+    private lateinit var enableRawCaptureSwitch: Switch
+    private lateinit var rawFrameRateSpinner: Spinner
     
     // Recording components
     private lateinit var gsrRecorder: GSRRecorder
     private lateinit var sessionManager: SessionManager
+    private var rgbCameraRecorder: RGBCameraRecorder? = null
     private var isRecording = false
     private var currentSession: SessionInfo? = null
     private var sampleCount = 0L
@@ -148,11 +158,101 @@ class MultiModalRecordingActivity : AppCompatActivity() {
         
         // Title
         val title = TextView(this).apply {
-            text = "Multi-Modal GSR Recording"
+            text = "Multi-Modal Physiological Recording"
             textSize = 20f
-            setPadding(0, 0, 0, 32)
+            setPadding(0, 0, 0, 16)
         }
         layout.addView(title)
+        
+        // Camera preview section
+        val cameraSection = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(0, 0, 0, 16)
+        }
+        
+        val cameraTitle = TextView(this).apply {
+            text = "RGB Camera Preview"
+            textSize = 16f
+            setTypeface(null, android.graphics.Typeface.BOLD)
+        }
+        cameraSection.addView(cameraTitle)
+        
+        cameraPreview = android.view.TextureView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                400
+            )
+        }
+        cameraSection.addView(cameraPreview)
+        layout.addView(cameraSection)
+        
+        // Recording options section
+        val optionsSection = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(0, 0, 0, 16)
+        }
+        
+        val optionsTitle = TextView(this).apply {
+            text = "Recording Options"
+            textSize = 16f
+            setTypeface(null, android.graphics.Typeface.BOLD)
+        }
+        optionsSection.addView(optionsTitle)
+        
+        // Video recording toggle
+        val videoLayout = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        videoLayout.addView(TextView(this).apply { 
+            text = "Record Video: "
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        })
+        enableVideoSwitch = Switch(this).apply { isChecked = true }
+        videoLayout.addView(enableVideoSwitch)
+        optionsSection.addView(videoLayout)
+        
+        // 4K recording toggle
+        val resolution4KLayout = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        resolution4KLayout.addView(TextView(this).apply { 
+            text = "4K Recording: "
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        })
+        enable4KSwitch = Switch(this).apply { isChecked = false }
+        resolution4KLayout.addView(enable4KSwitch)
+        optionsSection.addView(resolution4KLayout)
+        
+        // RAW capture toggle  
+        val rawLayout = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        rawLayout.addView(TextView(this).apply { 
+            text = "RAW Image Capture: "
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        })
+        enableRawCaptureSwitch = Switch(this).apply { 
+            isChecked = false
+            setOnCheckedChangeListener { _, isChecked ->
+                rawFrameRateSpinner.isEnabled = isChecked
+            }
+        }
+        rawLayout.addView(enableRawCaptureSwitch)
+        optionsSection.addView(rawLayout)
+        
+        // RAW frame rate selection
+        val frameRateLayout = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        frameRateLayout.addView(TextView(this).apply { 
+            text = "RAW Frame Rate: "
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        })
+        rawFrameRateSpinner = Spinner(this).apply {
+            adapter = ArrayAdapter(
+                this@MultiModalRecordingActivity,
+                android.R.layout.simple_spinner_item,
+                listOf("30 fps", "15 fps", "10 fps", "5 fps")
+            ).apply {
+                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            }
+            isEnabled = false
+        }
+        frameRateLayout.addView(rawFrameRateSpinner)
+        optionsSection.addView(frameRateLayout)
+        layout.addView(optionsSection)
         
         // Session ID input
         layout.addView(TextView(this).apply { text = "Session ID:" })
@@ -218,6 +318,34 @@ class MultiModalRecordingActivity : AppCompatActivity() {
         // Initialize recording components
         gsrRecorder = GSRRecorder(this)
         sessionManager = SessionManager.getInstance(this)
+        
+        // Initialize RGB camera recorder
+        rgbCameraRecorder = RGBCameraRecorder(this, cameraPreview).apply {
+            onRecordingStarted = {
+                runOnUiThread {
+                    statusText.text = "Recording RGB video + GSR..."
+                }
+            }
+            onRecordingStopped = { videoFile ->
+                runOnUiThread {
+                    statusText.text = "RGB recording stopped. Video: ${videoFile?.name ?: "None"}"
+                }
+            }
+            onRawImageCaptured = { dngFile ->
+                runOnUiThread {
+                    Log.d(TAG, "RAW image captured: ${dngFile.name}")
+                }
+            }
+            onError = { error ->
+                runOnUiThread {
+                    Toast.makeText(this@MultiModalRecordingActivity, 
+                        "Camera Error: $error", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        
+        // Initialize camera
+        rgbCameraRecorder?.initialize()
         gsrRecorder.addListener(gsrListener)
         
         // Check permissions
@@ -336,6 +464,43 @@ class MultiModalRecordingActivity : AppCompatActivity() {
         val participantId = participantIdEdit.text.toString().trim().takeIf { it.isNotEmpty() }
         val studyName = studyNameEdit.text.toString().trim().takeIf { it.isNotEmpty() }
         
+        // Start RGB camera recording if enabled
+        if (enableVideoSwitch.isChecked) {
+            val resolution = if (enable4KSwitch.isChecked) {
+                RGBCameraRecorder.VideoResolution.UHD_4K
+            } else {
+                RGBCameraRecorder.VideoResolution.HD_1080P
+            }
+            
+            val rawFrameRate = when (rawFrameRateSpinner.selectedItemPosition) {
+                0 -> 30
+                1 -> 15
+                2 -> 10
+                3 -> 5
+                else -> 30
+            }
+            
+            val cameraSettings = RGBCameraRecorder.RecordingSettings(
+                resolution = resolution,
+                frameRate = 60, // Video frame rate
+                bitRate = if (resolution == RGBCameraRecorder.VideoResolution.UHD_4K) 12_000_000 else 8_000_000,
+                enableStabilization = true,
+                enableFlash = false,
+                audioEnabled = true,
+                enableRawCapture = enableRawCaptureSwitch.isChecked,
+                rawCaptureFrameRate = rawFrameRate
+            )
+            
+            rgbCameraRecorder?.updateSettings(cameraSettings)
+            
+            val cameraStarted = rgbCameraRecorder?.startRecording(sessionId) ?: false
+            if (!cameraStarted) {
+                statusText.text = "Failed to start camera recording"
+                Toast.makeText(this, "Failed to start RGB camera recording", Toast.LENGTH_LONG).show()
+                return
+            }
+        }
+        
         // TODO: Fix suspend function call
         // if (gsrRecorder.startRecording(sessionId, participantId, studyName)) {
         if (true) { // Placeholder
@@ -343,18 +508,50 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             sampleCount = 0
             syncMarkCount = 0
             
+            isRecording = true
+            updateUI()
+            
+            val recordingModes = mutableListOf<String>()
+            if (enableVideoSwitch.isChecked) {
+                recordingModes.add(if (enable4KSwitch.isChecked) "4K Video" else "1080p Video")
+                if (enableRawCaptureSwitch.isChecked) {
+                    recordingModes.add("RAW Images (${rawFrameRateSpinner.selectedItem})")
+                }
+            }
+            recordingModes.add("GSR (128Hz)")
+            
+            statusText.text = "Recording: ${recordingModes.joinToString(", ")}"
+            
             Log.i(TAG, "Multi-modal recording started: $sessionId")
         } else {
+            // Stop camera if GSR fails
+            rgbCameraRecorder?.stopRecording()
             statusText.text = "Failed to start recording"
             Toast.makeText(this, "Failed to start GSR recording", Toast.LENGTH_LONG).show()
         }
     }
     
     private fun stopRecording() {
+        // Stop RGB camera recording
+        val videoFile = rgbCameraRecorder?.stopRecording()
+        
         val session = gsrRecorder.stopRecording()
         session?.let {
             Log.i(TAG, "Multi-modal recording stopped: ${it.sessionId}")
+            
+            val recordingInfo = mutableListOf<String>()
+            videoFile?.let { file -> recordingInfo.add("Video: ${file.name}") }
+            rgbCameraRecorder?.getRawImagesDirectory()?.let { dir ->
+                val rawCount = rgbCameraRecorder?.getRawCaptureCount() ?: 0
+                recordingInfo.add("RAW images: $rawCount in ${dir.name}")
+            }
+            recordingInfo.add("GSR samples: ${it.sampleCount}")
+            
+            statusText.text = "Recording completed. ${recordingInfo.joinToString(", ")}"
         }
+        
+        isRecording = false
+        updateUI()
     }
     
     private fun triggerSyncEvent() {
@@ -380,5 +577,6 @@ class MultiModalRecordingActivity : AppCompatActivity() {
         if (isRecording) {
             stopRecording()
         }
+        rgbCameraRecorder?.cleanup()
     }
 }
