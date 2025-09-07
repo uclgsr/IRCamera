@@ -1,4 +1,4 @@
-package com.topdon.tc001
+package com.csl.irCamera
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
@@ -12,8 +12,6 @@ import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.utils.CommUtils
 import com.topdon.lms.sdk.Config
 import com.topdon.lms.sdk.LMS
-import com.csl.irCamera.R
-import com.csl.irCamera.BuildConfig
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

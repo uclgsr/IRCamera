@@ -1,4 +1,4 @@
-package com.topdon.tc001
+package com.csl.irCamera
 
 import android.app.ActivityManager
 import android.content.Context
