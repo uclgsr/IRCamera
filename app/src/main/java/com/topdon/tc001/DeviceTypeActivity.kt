@@ -56,6 +56,10 @@ class DeviceTypeActivity : BaseActivity() {
                             .navigation(this@DeviceTypeActivity)
                         finish()
                     }
+                    IRDeviceType.PC_CONTROLLER -> {
+                        // Launch device pairing activity
+                        com.topdon.tc001.network.DevicePairingActivity.start(this@DeviceTypeActivity)
+                    }
                     else -> {
                         NavigationManager.getInstance()
                             .build(RouterConfig.IR_MAIN)
@@ -104,6 +108,7 @@ class DeviceTypeActivity : BaseActivity() {
 //            ItemInfo(true, IRDeviceType.TS004, IRDeviceType.TC007),
             ItemInfo(true, IRDeviceType.TS004, null),
             ItemInfo(true, IRDeviceType.SHIMMER3_GSR, null),
+            ItemInfo(true, IRDeviceType.PC_CONTROLLER, null),
         )
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -118,6 +123,7 @@ class DeviceTypeActivity : BaseActivity() {
             tvTitle.text = context.getString(
                 when (firstType) {
                     IRDeviceType.SHIMMER3_GSR -> R.string.tc_connect_bluetooth
+                    IRDeviceType.PC_CONTROLLER -> R.string.tc_connect_wifi
                     else -> if (firstType.isLine()) R.string.tc_connect_line else R.string.tc_connect_wifi
                 }
             )
@@ -132,7 +138,8 @@ class DeviceTypeActivity : BaseActivity() {
                 IRDeviceType.TC007 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_tc007)
                 IRDeviceType.TS001 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_ts001)
                 IRDeviceType.TS004 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_ts004)
-                IRDeviceType.SHIMMER3_GSR -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_shimmer_gsr) // TODO: Add a specific icon for the GSR device
+                IRDeviceType.SHIMMER3_GSR -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_shimmer_gsr)
+                IRDeviceType.PC_CONTROLLER -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_pc)
             }
 
             holder.itemView.findViewById<ViewGroup>(R.id.group_item2).isVisible = secondType != null
@@ -204,6 +211,10 @@ class DeviceTypeActivity : BaseActivity() {
         SHIMMER3_GSR {
             override fun isLine(): Boolean = false  // Bluetooth connection
             override fun getDeviceName(): String = "Shimmer3 GSR"
+        },
+        PC_CONTROLLER {
+            override fun isLine(): Boolean = false  // Network connection
+            override fun getDeviceName(): String = "PC Controller"
         };
 
         abstract fun isLine(): Boolean

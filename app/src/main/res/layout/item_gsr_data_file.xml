@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="2dp">
+    app:cardElevation="2dp"
+        app:cardBackgroundColor="#2a2a2a">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="gsr_data_session001_participant001.csv"
-                android:textColor="@android:color/black"
+                android:textColor="#ffffff"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -46,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Session: 001 | Participant: 001"
-                android:textColor="#666666"
+                android:textColor="#ccffffff"
                 android:textSize="14sp"
                 android:layout_marginTop="4dp" />
 
@@ -98,7 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="2024-01-15 14:30:25"
-                android:textColor="#999999"
+                android:textColor="#aaffffff"
                 android:textSize="12sp"
                 android:layout_marginTop="4dp" />
 

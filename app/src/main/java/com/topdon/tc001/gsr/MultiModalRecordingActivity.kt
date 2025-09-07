@@ -83,6 +83,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     private lateinit var gsrRecorder: GSRRecorder
     private lateinit var sessionManager: SessionManager
     private var rgbCameraRecorder: RGBCameraRecorder? = null
+    private var networkClient: com.topdon.tc001.network.NetworkClient? = null
     private var isRecording = false
     private var isStartingRecording = false  // Guard against double taps
     private var currentSession: SessionInfo? = null
@@ -118,6 +119,23 @@ class MultiModalRecordingActivity : AppCompatActivity() {
         
         override fun onSampleRecorded(sample: GSRSample) {
             sampleCount = sample.sampleIndex
+            
+            // Send data to PC Controller if connected
+            networkClient?.let { client ->
+                if (client.isConnected()) {
+                    currentSession?.let { session ->
+                        lifecycleScope.launch {
+                            val data = org.json.JSONObject().apply {
+                                put("gsr_value", sample.gsrValue)
+                                put("ppg_value", sample.ppgValue)
+                                put("timestamp", sample.timestamp)
+                                put("sample_index", sample.sampleIndex)
+                            }
+                            client.sendMeasurementData(session.sessionId, data)
+                        }
+                    }
+                }
+            }
             
             // Update UI every second (128 samples)
             if (sampleCount % 128 == 0L) {
@@ -321,6 +339,58 @@ class MultiModalRecordingActivity : AppCompatActivity() {
         // Initialize recording components
         gsrRecorder = GSRRecorder(this)
         sessionManager = SessionManager.getInstance(this)
+        
+        // Initialize network client for PC Controller communication
+        networkClient = com.topdon.tc001.network.NetworkClient(this).apply {
+            setEventListener(object : com.topdon.tc001.network.NetworkClient.NetworkEventListener {
+                override fun onControllerDiscovered(controller: com.topdon.tc001.network.NetworkClient.ControllerInfo) {}
+                override fun onConnected(controller: com.topdon.tc001.network.NetworkClient.ControllerInfo) {}
+                override fun onDisconnected(reason: String) {}
+                
+                override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
+                    runOnUiThread {
+                        // Auto-fill session info from remote request
+                        sessionIdEdit.setText(sessionInfo.sessionId)
+                        participantIdEdit.setText(sessionInfo.participantId)
+                        studyNameEdit.setText(sessionInfo.sessionName)
+                        
+                        // Auto-start recording if requested
+                        if (!isRecording) {
+                            startRecording()
+                        }
+                    }
+                }
+                
+                override fun onSyncFlash(durationMs: Int) {
+                    runOnUiThread {
+                        // Flash screen for sync
+                        val overlay = android.view.View(this@MultiModalRecordingActivity).apply {
+                            setBackgroundColor(android.graphics.Color.WHITE)
+                            alpha = 1.0f
+                        }
+                        
+                        val frameLayout = findViewById<android.widget.FrameLayout>(android.R.id.content)
+                        frameLayout.addView(overlay, android.widget.FrameLayout.LayoutParams(
+                            android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                            android.widget.FrameLayout.LayoutParams.MATCH_PARENT
+                        ))
+                        
+                        overlay.animate()
+                            .alpha(0.0f)
+                            .setDuration(durationMs.toLong())
+                            .withEndAction { frameLayout.removeView(overlay) }
+                            .start()
+                    }
+                }
+                
+                override fun onError(operation: String, error: String) {
+                    runOnUiThread {
+                        Toast.makeText(this@MultiModalRecordingActivity, 
+                            "Network error: $error", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            })
+        }
         
         // Initialize RGB camera recorder
         rgbCameraRecorder = RGBCameraRecorder(this, cameraPreview).apply {
@@ -673,5 +743,6 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             stopRecording()
         }
         rgbCameraRecorder?.cleanup()
+        networkClient?.disconnect()
     }
 }

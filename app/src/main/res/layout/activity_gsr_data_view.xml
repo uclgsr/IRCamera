@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#f5f5f5">
+    android:background="#16131e">
 
     <!-- File Information Card -->
     <androidx.cardview.widget.CardView
@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="2dp">
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="#2a2a2a">
 
         <TextView
             android:id="@+id/file_info_text"
@@ -20,7 +21,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="Loading file information..."
-            android:textColor="@android:color/black"
+            android:textColor="#ffffff"
             android:textSize="14sp"
             android:fontFamily="monospace" />
 
@@ -33,7 +34,8 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="16dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="2dp">
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="#2a2a2a">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="GSR Data Statistics"
-                android:textColor="@android:color/black"
+                android:textColor="#ffffff"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp" />
@@ -55,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Calculating statistics..."
-                android:textColor="#666666"
+                android:textColor="#ccffffff"
                 android:textSize="14sp"
                 android:fontFamily="monospace" />
 
@@ -71,7 +73,8 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="16dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="2dp">
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="#2a2a2a">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Data Preview (First 100 rows)"
-                android:textColor="@android:color/black"
+                android:textColor="#ffffff"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:padding="16dp"

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f5f5f5">
+    android:background="#16131e">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="8dp"
-            app:cardElevation="2dp">
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="#2a2a2a">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -29,7 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="GSR Sensor Settings"
-                    android:textColor="@android:color/black"
+                    android:textColor="#ffffff"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
@@ -46,7 +47,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Sampling Rate"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Spinner
@@ -69,7 +70,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Measurement Range"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Spinner
@@ -91,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Auto Calibration"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Switch
@@ -111,7 +112,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="8dp"
-            app:cardElevation="2dp">
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="#2a2a2a">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -123,7 +125,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Video Recording Settings"
-                    android:textColor="@android:color/black"
+                    android:textColor="#ffffff"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
@@ -140,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Enable Video Recording"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Switch
@@ -162,7 +164,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Video Resolution"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Spinner
@@ -185,7 +187,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Frame Rate"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Spinner
@@ -207,7 +209,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Video Stabilization"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Switch
@@ -227,7 +229,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="8dp"
-            app:cardElevation="2dp">
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="#2a2a2a">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -239,7 +242,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="RAW Image Capture Settings"
-                    android:textColor="@android:color/black"
+                    android:textColor="#ffffff"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
@@ -256,7 +259,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Enable RAW Capture"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Switch
@@ -278,7 +281,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="RAW Frame Rate"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Spinner
@@ -300,7 +303,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="RAW Quality"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Spinner
@@ -321,7 +324,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="8dp"
-            app:cardElevation="2dp">
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="#2a2a2a">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -333,7 +337,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Session Management"
-                    android:textColor="@android:color/black"
+                    android:textColor="#ffffff"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
@@ -350,7 +354,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Session Prefix"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <EditText
@@ -375,7 +379,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Auto Export"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Switch
@@ -396,7 +400,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Data Retention"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Spinner
@@ -416,7 +420,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="8dp"
-            app:cardElevation="2dp">
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="#2a2a2a">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -428,7 +433,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Synchronization Settings"
-                    android:textColor="@android:color/black"
+                    android:textColor="#ffffff"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
@@ -445,7 +450,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Enable Time Sync"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Switch
@@ -466,7 +471,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Sync Tolerance"
-                        android:textColor="#666666"
+                        android:textColor="#ccffffff"
                         android:textSize="14sp" />
 
                     <Spinner
