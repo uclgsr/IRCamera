@@ -110,7 +110,7 @@ class GSRDataViewActivity : AppCompatActivity() {
 
                     statisticsText.text = """
                         Total Samples: ${rows.size}
-                        Duration: ${formatDuration(rows.size / 128)} (@ 128 Hz)
+                        Duration: ${formatDuration((rows.size / 128).toLong())} (@ 128 Hz)
                         
                         GSR Statistics:
                         • Min: %.3f μS

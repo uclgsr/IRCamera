@@ -23,8 +23,9 @@ import com.topdon.tc001.InitUtil.initLms
 import com.topdon.tc001.InitUtil.initLog
 import com.topdon.tc001.InitUtil.initReceiver
 import com.topdon.tc001.InitUtil.initUM
-import com.zoho.livechat.android.listeners.InitListener
-import com.zoho.salesiqembed.ZohoSalesIQ
+// Zoho dependencies commented out - not available in build
+// import com.zoho.livechat.android.listeners.InitListener
+// import com.zoho.salesiqembed.ZohoSalesIQ
 import io.reactivex.plugins.RxJavaPlugins
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -121,13 +122,15 @@ class App : BaseApplication() {
             }
 
         })
-        initZoho()
+        // initZoho() // Commented out - Zoho dependency not available
     }
 
     /**
-     * 初始化客服ZOHO
+     * 初始化客服ZOHO - commented out as dependency not available
      */
     private fun initZoho() {
+        // ZohoSalesIQ initialization commented out - dependency not available in build
+        /*
         ZohoSalesIQ.init(
             this,
             "IjGWlJ%2FAnwvKPO0yHSMeLDRbq9%2Bcumf0TA6lWzHNybOq7Ew5UI7135B1F4y60Vwh",
@@ -144,6 +147,7 @@ class App : BaseApplication() {
                     XLog.e("bcf", "ZohoSalesIQ失敗")
                 }
             })
+        */
     }
 }
 

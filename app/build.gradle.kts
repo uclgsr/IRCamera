@@ -190,6 +190,7 @@ dependencies {
     implementation(project(":component:thermal"))      // Consolidated thermal functionality
     implementation(project(":component:thermal-ir"))   // Thermal IR resources needed by app
     implementation(project(":component:thermal-lite")) // Thermal Lite functionality
+    implementation(project(":component:pseudo"))       // Pseudo color functionality needed by app
     implementation(project(":component:gsr-recording"))
     implementation(project(":libapp"))
     implementation(project(":libcom"))
