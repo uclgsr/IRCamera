@@ -59,12 +59,13 @@ Successful builds generate:
 
 ## Common Issues & Solutions
 
-### ❌ Error: "Cannot locate tasks that match ':app:assembleProdDebug'"
+### ❌ Error: "Cannot locate tasks that match ':app:assembleDevDebug' or ':app:assembleProdDebug'"
 **Cause**: Using outdated task names from previous product flavor configuration.
 
 **Solution**: Use the correct release-only task names:
 ```bash
 # ❌ Wrong (old product flavor tasks)
+./gradlew :app:assembleDevDebug
 ./gradlew :app:assembleProdDebug
 ./gradlew :app:assembleProdRelease
 

@@ -35,6 +35,13 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+    
+    // Disable all debug variants completely - release-only configuration
+    variantFilter {
+        if (buildType.name == "debug") {
+            ignore = true
+        }
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

@@ -156,13 +156,13 @@ python pc_controller/system_test.py
 
 # Build application
 cd android_sensor_node
-./gradlew build
+./gradlew assembleRelease
 
 # Install on connected device
-./gradlew installDevDebug
+adb install app/build/outputs/apk/release/app-release.apk
 
-# Or install pre-built APK
-adb install app-debug.apk
+# Or install pre-built APK directly
+adb install app-release.apk
 ```
 
 \textbf{Production Deployment:}

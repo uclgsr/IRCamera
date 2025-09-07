@@ -38,6 +38,13 @@ android {
             )
         }
     }
+    
+    // Disable all debug variants completely - release-only configuration
+    variantFilter {
+        if (buildType.name == "debug") {
+            ignore = true
+        }
+    }
 
     
     compileOptions {
