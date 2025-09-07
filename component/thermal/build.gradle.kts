@@ -38,13 +38,7 @@ android {
             )
         }
     }
-    
-    // Disable all debug variants completely
-    variantFilter {
-        if (buildType.name == "debug") {
-            ignore = true
-        }
-    }
+
     
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
