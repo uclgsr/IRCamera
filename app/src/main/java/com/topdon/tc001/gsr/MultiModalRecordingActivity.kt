@@ -11,6 +11,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 // Removed ARouter import - using NavigationManager instead
 import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.model.SessionInfo
@@ -95,7 +97,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                 statusText.text = "Recording GSR data at 128 Hz..."
                 progressBar.visibility = View.VISIBLE
                 
-                val sessionDir = "Unknown" // TODO: Fix getSessionDirectory method
+                val sessionDir = gsrRecorder.getSessionDirectory()?.absolutePath ?: "Unknown"
                 fileLocationText.text = "Files: $sessionDir"
             }
         }
@@ -501,33 +503,36 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             }
         }
         
-        // TODO: Fix suspend function call
-        // if (gsrRecorder.startRecording(sessionId, participantId, studyName)) {
-        if (true) { // Placeholder
-            // Reset counters
-            sampleCount = 0
-            syncMarkCount = 0
+        // Start GSR recording
+        lifecycleScope.launch {
+            val success = gsrRecorder.startRecording(sessionId, participantId, studyName)
             
-            isRecording = true
-            updateUI()
-            
-            val recordingModes = mutableListOf<String>()
-            if (enableVideoSwitch.isChecked) {
-                recordingModes.add(if (enable4KSwitch.isChecked) "4K Video" else "1080p Video")
-                if (enableRawCaptureSwitch.isChecked) {
-                    recordingModes.add("RAW Images (${rawFrameRateSpinner.selectedItem})")
+            if (success) {
+                // Reset counters
+                sampleCount = 0
+                syncMarkCount = 0
+                
+                isRecording = true
+                updateUI()
+                
+                val recordingModes = mutableListOf<String>()
+                if (enableVideoSwitch.isChecked) {
+                    recordingModes.add(if (enable4KSwitch.isChecked) "4K Video" else "1080p Video")
+                    if (enableRawCaptureSwitch.isChecked) {
+                        recordingModes.add("RAW Images (${rawFrameRateSpinner.selectedItem})")
+                    }
                 }
+                recordingModes.add("GSR (128Hz)")
+                
+                statusText.text = "Recording: ${recordingModes.joinToString(", ")}"
+                
+                Log.i(TAG, "Multi-modal recording started: $sessionId")
+            } else {
+                // Stop camera if GSR fails
+                rgbCameraRecorder?.stopRecording()
+                statusText.text = "Failed to start recording"
+                Toast.makeText(this@MultiModalRecordingActivity, "Failed to start GSR recording", Toast.LENGTH_LONG).show()
             }
-            recordingModes.add("GSR (128Hz)")
-            
-            statusText.text = "Recording: ${recordingModes.joinToString(", ")}"
-            
-            Log.i(TAG, "Multi-modal recording started: $sessionId")
-        } else {
-            // Stop camera if GSR fails
-            rgbCameraRecorder?.stopRecording()
-            statusText.text = "Failed to start recording"
-            Toast.makeText(this, "Failed to start GSR recording", Toast.LENGTH_LONG).show()
         }
     }
     
@@ -555,10 +560,14 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     }
     
     private fun triggerSyncEvent() {
-        // TODO: Fix addSyncMark method
-        // if (gsrRecorder.addSyncMark("USER_TRIGGER")) {
-        if (true) { // Placeholder
-            Log.d(TAG, "User sync event triggered")
+        lifecycleScope.launch {
+            if (gsrRecorder.addSyncMark("USER_TRIGGER", "Manual sync event triggered from UI")) {
+                Log.d(TAG, "User sync event triggered successfully")
+                statusText.text = "Sync event added at ${System.currentTimeMillis()}"
+            } else {
+                Log.w(TAG, "Failed to trigger sync event")
+                statusText.text = "Failed to add sync event"
+            }
         }
     }
     

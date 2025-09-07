@@ -6,6 +6,7 @@ import com.topdon.gsr.service.GSRRecorder
 import com.topdon.gsr.service.SessionManager
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.gsr.model.SessionInfo
+import kotlinx.coroutines.runBlocking
 import java.io.File
 
 /**
@@ -123,28 +124,30 @@ class EnhancedThermalRecorder private constructor(
         Log.d(TAG, "Using ${TimeUtil.getDetectedProcessor()} processor timing for maximum precision")
         
         if (enableGsr) {
-            // Start GSR recording automatically with unified timing  
-            // TODO: Fix suspend function call - need to use coroutine or runBlocking
-            // if (gsrRecorder.startRecording(sessionId, participantId, "Thermal_GSR_Study")) {
-            if (true) { // Placeholder for GSR recording start
-                isRecordingState = true
+            // Start GSR recording automatically with unified timing using coroutine
+            return runBlocking {
+                val gsrStarted = gsrRecorder.startRecording(sessionId, participantId, "Thermal_GSR_Study")
                 
-                // Verify timing synchronization
-                val timingValidation = TimeUtil.validateTimingSystem()
-                Log.i(TAG, "Enhanced thermal recording started with GSR: $sessionId")
-                Log.d(TAG, "Samsung S22 timing system validation: $timingValidation")
-                
-                // Add initial synchronization verification mark
-                triggerSyncEvent("RECORDING_INITIALIZATION", mapOf(
-                    "unified_start_timestamp" to unifiedStartTimestamp.toString(),
-                    "samsung_s22_ground_truth" to "established",
-                    "timing_validation" to timingValidation.toString()
-                ))
-                
-                return true
-            } else {
-                Log.e(TAG, "Failed to start GSR recording for thermal session")
-                return false
+                if (gsrStarted) {
+                    isRecordingState = true
+                    
+                    // Verify timing synchronization
+                    val timingValidation = TimeUtil.validateTimingSystem()
+                    Log.i(TAG, "Enhanced thermal recording started with GSR: $sessionId")
+                    Log.d(TAG, "Samsung S22 timing system validation: $timingValidation")
+                    
+                    // Add initial synchronization verification mark
+                    triggerSyncEvent("RECORDING_INITIALIZATION", mapOf(
+                        "unified_start_timestamp" to unifiedStartTimestamp.toString(),
+                        "samsung_s22_ground_truth" to "established",
+                        "timing_validation" to timingValidation.toString()
+                    ))
+                    
+                    true
+                } else {
+                    Log.e(TAG, "Failed to start GSR recording for thermal session")
+                    false
+                }
             }
         } else {
             // Create session without GSR recording
@@ -164,7 +167,7 @@ class EnhancedThermalRecorder private constructor(
             return currentSession
         }
         
-        val session = if (true) { // gsrRecorder.isRecording() // TODO: Add isRecording() method to GSRRecorder
+        val session = if (gsrRecorder.isRecording()) {
             gsrRecorder.stopRecording()
         } else {
             currentSession?.let { sessionManager.completeSession(it.sessionId) }
@@ -180,7 +183,7 @@ class EnhancedThermalRecorder private constructor(
      */
     fun triggerSyncEvent(eventType: String = "THERMAL_CAPTURE", metadata: Map<String, String> = emptyMap()): Boolean {
         return if (isRecordingState) {
-            if (true) { // gsrRecorder.isRecording() // TODO: Add isRecording() method to GSRRecorder
+            if (gsrRecorder.isRecording()) {
                 // Add unified timing metadata with Samsung S22 high-precision synchronization
                 val synchronizedTimestamp = TimeUtil.getHighPrecisionTimestamp()
                 val enhancedMetadata = mutableMapOf<String, String>().apply {
@@ -191,8 +194,10 @@ class EnhancedThermalRecorder private constructor(
                     put("thermal_ground_truth", "samsung_s22_snapdragon_8_gen_1")
                     put("timing_validation", TimeUtil.validateTimingSystem().toString())
                 }
-                // gsrRecorder.addSyncMark(eventType, enhancedMetadata) // TODO: Implement addSyncMark method
-                true // Return success for now
+                
+                runBlocking {
+                    gsrRecorder.addSyncMark(eventType, enhancedMetadata.toString())
+                }
             } else {
                 // Add sync mark to session manager for thermal-only sessions
                 currentSession?.let { session ->
@@ -248,8 +253,7 @@ class EnhancedThermalRecorder private constructor(
      * Get session directory for file storage
      */
     fun getSessionDirectory(): File? {
-        // return gsrRecorder.getSessionDirectory() // TODO: Implement getSessionDirectory method
-        return null // Temporary placeholder
+        return gsrRecorder.getSessionDirectory()
     }
     
     /**
@@ -278,7 +282,7 @@ class EnhancedThermalRecorder private constructor(
             RecordingStats(
                 sessionId = session.sessionId,
                 duration = session.getDurationMs(),
-                gsrSampleCount = 0, // if (gsrRecorder.isRecording()) gsrRecorder.getCurrentSession()?.sampleCount ?: 0 else 0, // TODO: Fix getCurrentSession
+                gsrSampleCount = if (gsrRecorder.isRecording()) gsrRecorder.getCurrentSession()?.sampleCount ?: 0 else 0,
                 syncEventCount = session.syncMarks.size,
                 isActive = session.isActive()
             )

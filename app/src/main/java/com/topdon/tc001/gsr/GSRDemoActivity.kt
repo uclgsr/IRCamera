@@ -3,10 +3,13 @@ package com.topdon.tc001.gsr
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 // Removed ARouter import - using NavigationManager instead
 import com.csl.irCamera.R
 import com.topdon.gsr.model.GSRSample
@@ -56,7 +59,7 @@ class GSRDemoActivity : AppCompatActivity() {
                 updateButtonStates()
                 statusText.text = "Recording stopped. ${sessionInfo.sampleCount} samples recorded."
                 
-                val sessionDir = null // gsrRecorder.getSessionDirectory()?.absolutePath // TODO: Fix getSessionDirectory method
+                val sessionDir = gsrRecorder.getSessionDirectory()?.absolutePath
                 dataText.text = "Session saved to:\n$sessionDir\n\n" +
                     "Files created:\n" +
                     "- signals.csv (GSR data)\n" +
@@ -79,7 +82,7 @@ class GSRDemoActivity : AppCompatActivity() {
                         append("Rate: 128 Hz\n\n")
                         
                         val duration = (System.currentTimeMillis() - 
-                            0L) / 1000 // TODO: Fix getCurrentSession method
+                            (gsrRecorder.getCurrentSession()?.startTime ?: System.currentTimeMillis())) / 1000
                         append("Recording Duration: ${duration}s")
                     }
                 }
@@ -182,12 +185,14 @@ class GSRDemoActivity : AppCompatActivity() {
     private fun startRecording() {
         val sessionId = TimeUtil.generateSessionId("GSRDemo")
         
-        // TODO: Fix suspend function call
-        // if (gsrRecorder.startRecording(sessionId, "demo_participant", "GSR_Demo_Study")) {
-        if (true) { // Placeholder
-            Toast.makeText(this, "GSR recording started", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "Failed to start recording", Toast.LENGTH_LONG).show()
+        lifecycleScope.launch {
+            val success = gsrRecorder.startRecording(sessionId, "demo_participant", "GSR_Demo_Study")
+            
+            if (success) {
+                Toast.makeText(this@GSRDemoActivity, "GSR recording started", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this@GSRDemoActivity, "Failed to start recording", Toast.LENGTH_LONG).show()
+            }
         }
     }
     
@@ -201,10 +206,15 @@ class GSRDemoActivity : AppCompatActivity() {
             "timestamp" to TimeUtil.formatTimestamp(System.currentTimeMillis())
         )
         
-        // TODO: Fix addSyncMark method
-        // if (gsrRecorder.addSyncMark("DEMO_SYNC_EVENT", metadata)) {
-        if (true) { // Placeholder
-            // Success feedback is handled in the listener
+        lifecycleScope.launch {
+            val success = gsrRecorder.addSyncMark("DEMO_SYNC_EVENT", metadata.toString())
+            
+            if (success) {
+                // Success feedback is handled in the listener
+                Log.d(TAG, "Demo sync event triggered successfully")
+            } else {
+                Log.w(TAG, "Failed to trigger demo sync event")
+            }
         }
     }
     

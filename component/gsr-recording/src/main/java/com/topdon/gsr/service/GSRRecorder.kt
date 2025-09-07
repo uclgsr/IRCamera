@@ -49,8 +49,8 @@ class GSRRecorder(
     private val sampleIndex = AtomicLong(0)
     
     private var currentSession: SessionInfo? = null
-    private var recordingJob: Job? = null
     private var sessionDirectory: File? = null
+    private var recordingJob: Job? = null
     private var signalsWriter: CSVWriter? = null
     private var syncMarksWriter: CSVWriter? = null
     
@@ -431,6 +431,43 @@ class GSRRecorder(
             shimmerRecorder.isDeviceConnected()
         } else {
             true // Simulated mode is always "connected"
+        }
+    }
+    
+    /**
+     * Check if GSR recording is currently active
+     */
+    fun isRecording(): Boolean {
+        return isRecording.get()
+    }
+    
+    /**
+     * Get the current recording session information
+     */
+    fun getCurrentSession(): SessionInfo? {
+        return currentSession
+    }
+    
+    /**
+     * Get the current session directory where data is being stored
+     */
+    fun getSessionDirectory(): File? {
+        return sessionDirectory
+    }
+    
+    /**
+     * Add a synchronization mark for cross-modal data alignment
+     */
+    suspend fun addSyncMark(eventType: String, metadata: String = ""): Boolean = withContext(Dispatchers.IO) {
+        if (!isRecording.get()) {
+            Log.w(TAG, "Cannot add sync mark - recording not active")
+            return@withContext false
+        }
+        
+        return@withContext if (useShimmerDevice) {
+            shimmerRecorder.triggerSyncEvent(eventType, metadata)
+        } else {
+            triggerSimulatedSyncEvent(eventType, metadata)
         }
     }
 }
