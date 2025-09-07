@@ -55,7 +55,8 @@ import com.example.thermal_lite.camera.DeviceIrcmdControlManager
 import com.example.thermal_lite.camera.OnUSBConnectListener
 import com.example.thermal_lite.camera.TempCompensation
 import com.example.thermal_lite.camera.USBMonitorManager
-import com.topdon.module.thermal.ir.activity.BaseIRActivity
+import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.libcom.bean.SaveSettingBean
 import com.topdon.pseudo.bean.CustomPseudoBean
 import com.topdon.lib.core.bean.CameraItemBean
 import com.topdon.pseudo.activity.PseudoSetActivity
@@ -139,7 +140,12 @@ import kotlin.math.abs
  * Created by LCG on 2024/4/28.
  */
 // Legacy ARouter route annotation - now using NavigationManager
-class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
+class IRThermalLiteActivity : BaseActivity(), ITsTempListener, ILiteListener {
+
+    /**
+     * 保存设置开关影响的相关配置项.
+     */
+    protected val saveSetBean = SaveSettingBean()
 
     companion object {
         // Handler message constants

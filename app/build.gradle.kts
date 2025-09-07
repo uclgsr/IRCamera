@@ -188,11 +188,14 @@ dependencies {
     
     // Core consolidated modules
     implementation(project(":component:thermal"))      // Consolidated thermal functionality
+    implementation(project(":component:thermal-ir"))   // Thermal IR resources needed by app
+    implementation(project(":component:thermal-lite")) // Thermal Lite functionality
     implementation(project(":component:gsr-recording"))
     implementation(project(":libapp"))
     implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
+    implementation(project(":libmenu"))               // Menu resources needed by app
 
     // ARouter configuration
     implementation(libs.arouter.api)
