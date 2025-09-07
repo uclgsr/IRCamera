@@ -13,7 +13,7 @@ import com.topdon.pseudo.bean.CustomPseudoBean
  * 首部结构，数值均为大端
  * ```
  * len                 [ 0,  2)    2 byte   首部长度，目前固定为 1024
- * name                [ 2, 18)   16 byte   名称(老数据有叫 TopInfrared 的，新的只有TC001、TS001 或 TC007)
+ * name                [ 2, 18)   16 byte   名称(老数据有叫 TopInfrared 的，现已更名为MPDC4GSR，新的只有TC001、TS001 或 TC007)
  * ver                 [18, 26)    6 byte   APP版本名称(versionName)
  * width               [26, 28)    2 byte   宽 256 或 192(未使用)
  * height              [28, 30)    2 byte   高 256 或 192(未使用)
