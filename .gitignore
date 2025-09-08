@@ -134,3 +134,49 @@ pc-controller/.pytest_cache/
 pc-controller/venv/
 pc-controller/.env
 
+# Documentation temporary and generated files
+# -------------------------------------------------------------------
+# Prevent accumulation of outdated documentation
+docs/tmp/
+docs/temp/
+docs/backup/
+docs/generated/
+docs/*_backup_*/
+docs/*_old_*/
+docs/legacy/
+docs/archive/
+
+# Generated documentation artifacts
+*.html
+*.pdf
+!docs/**/*.html  # Allow HTML docs if intentionally added
+!docs/**/*.pdf   # Allow PDF docs if intentionally added
+
+# Documentation tool artifacts
+.markdownlint-cache
+.vale/
+vale-logs/
+docs/.doctrees/
+docs/_build/
+
+# Temporary files from editors
+*~
+*.swp
+*.swo
+.#*
+\#*#
+
+# Documentation that should be consolidated into main docs
+*README*.md       # Prevent scattered README files
+!README.md        # Allow main README
+!docs/README.md   # Allow docs index
+!docs/*/README.md # Allow specific module READMEs if needed
+
+# Analysis and status reports that become outdated
+*_ANALYSIS_*.md
+*_STATUS_*.md
+*_REPORT_*.md
+BUILD_*.md
+GRADLE_*.md
+*MIGRATION*.md
+
