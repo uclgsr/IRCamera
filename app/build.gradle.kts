@@ -239,6 +239,27 @@ dependencies {
     // Enhanced networking and serialization for Hub-Spoke
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    
+    // Real vendor-specific SDKs for complete integration (no stubs)
+    
+    // Existing GSR recording module with real Shimmer libraries
+    implementation(project(":component:gsr-recording"))
+    
+    // Existing thermal modules with real thermal camera SDKs
+    implementation(project(":component:thermal"))
+    implementation(project(":component:thermal-ir"))
+    implementation(project(":component:thermal-lite"))
+    
+    // Nordic BLE Library for robust Bluetooth communication
+    implementation("no.nordicsemi.android:ble:2.6.1")
+    implementation("no.nordicsemi.android:ble-ktx:2.6.1")
+    
+    // CameraX for RGB camera dual-stream capture
+    implementation("androidx.camera:camera-camera2:1.3.1")
+    implementation("androidx.camera:camera-lifecycle:1.3.1")
+    implementation("androidx.camera:camera-video:1.3.1")
+    implementation("androidx.camera:camera-view:1.3.1")
+    implementation("androidx.camera:camera-extensions:1.3.1")
 }
 
 // Utility functions for APK naming (converted from original Groovy)
