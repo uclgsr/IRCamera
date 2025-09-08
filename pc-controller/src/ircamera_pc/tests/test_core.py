@@ -180,10 +180,11 @@ class TestTimeSyncService:
 
         # Add some mock stats
         from ..core.timesync import TimeSyncStats
+        from datetime import timezone
 
         stats = TimeSyncStats("test_device")
         stats.recent_offsets = [1.0, 2.0, 3.0, 4.0, 5.0]
-        stats.last_sync = datetime.now()
+        stats.last_sync = datetime.now(timezone.utc)
         service._device_stats["test_device"] = stats
 
         quality = service.get_synchronization_quality()
