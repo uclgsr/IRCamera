@@ -746,7 +746,7 @@ class NetworkClient(private val context: Context) {
      * Start device discovery with callback
      */
     fun startDiscovery(callback: (Boolean) -> Unit) {
-        lifecycleScope.launch {
+        heartbeatScope.launch {
             try {
                 val controllers = discoverControllers()
                 callback(true)
@@ -761,7 +761,7 @@ class NetworkClient(private val context: Context) {
      * Connect to controller with callback
      */
     fun connectToController(address: String, port: Int, callback: (Boolean) -> Unit) {
-        lifecycleScope.launch {
+        heartbeatScope.launch {
             try {
                 val result = connectToController(address, port)
                 callback(result)
