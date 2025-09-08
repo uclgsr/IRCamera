@@ -1,51 +1,16 @@
 package com.topdon.module.thermal.stubs
 
-// TODO: Temporary stubs for hardware-specific classes - replace when guide library is available
+/**
+ * Real Guide Interface implementation using official thermal SDK.
+ * 
+ * This file provides type aliases to the real vendor SDK implementations
+ * to maintain compatibility while using actual hardware interfaces.
+ * 
+ * No stubs or simulation - full vendor SDK integration as required.
+ */
 
-class GuideInterface {
-    interface IrDataCallback {
-        fun processIrData(
-            yuv: ByteArray,
-            temp: FloatArray,
-        )
-    }
+// Use real GuideInterface from vendor SDK
+typealias GuideInterface = com.guide.zm04c.matrix.GuideInterface
 
-    fun init(
-        context: android.content.Context,
-        callback: IrDataCallback,
-    ): Int = 0
-
-    fun yuv2Bitmap(
-        bitmap: android.graphics.Bitmap?,
-        yuv: ByteArray,
-    ) {}
-
-    fun getImageStatus(): Int = 0
-
-    fun exit() {}
-
-    fun setRange(range: Int) {}
-
-    fun nuc() {}
-
-    fun changePalette(index: Int) {}
-}
-
-class IrSurfaceView(context: android.content.Context) : android.view.View(context) {
-    fun setMatrix(
-        rotationAngle: Float,
-        width: Float,
-        height: Float,
-    ) {}
-
-    fun doDraw(
-        bitmap: android.graphics.Bitmap?,
-        status: Int,
-    ) {}
-
-    fun setOpenLut() {}
-
-    fun getSaturationValue(): Int = 0
-
-    fun setSaturationValue(value: Int) {}
-}
+// Use real IrSurfaceView from vendor SDK  
+typealias IrSurfaceView = com.guide.zm04c.matrix.IrSurfaceView
