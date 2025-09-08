@@ -348,7 +348,7 @@ class CameraNetworkIntegration(
     /**
      * Compress thermal data for efficient transmission
      */
-    private fun compressThermalData(thermalData: FloatArray): ByteArray {
+    private fun serializeThermalData(thermalData: FloatArray): ByteArray {
         // Convert float array to byte array for transmission
         val byteBuffer = ByteBuffer.allocate(thermalData.size * 4)
         thermalData.forEach { temp ->
