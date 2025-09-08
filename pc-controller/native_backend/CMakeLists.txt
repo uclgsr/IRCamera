@@ -8,8 +8,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 find_package(OpenCV REQUIRED)
 
-# Add pybind11
-add_subdirectory(pybind11)
+# Add pybind11 - handle both system installation and bundled version
+find_package(pybind11 QUIET)
+if(NOT pybind11_FOUND)
+    # If pybind11 is not found system-wide, add the bundled version
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pybind11/CMakeLists.txt")
+        add_subdirectory(pybind11)
+    else()
+        message(FATAL_ERROR "pybind11 not found. Please install pybind11 or add the pybind11 submodule.")
+    endif()
+endif()
 
 # Include directories
 include_directories(include)

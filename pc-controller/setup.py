@@ -2,9 +2,35 @@ from setuptools import setup, find_packages
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 from pybind11.setup_helpers import ParallelCompile
 import pybind11
+import platform
+import os
 
 # Enable parallel compilation
 ParallelCompile("NPY_NUM_BUILD_JOBS").install()
+
+# Platform-specific OpenCV library configuration
+def get_opencv_libs():
+    """Get appropriate OpenCV library names for the current platform."""
+    if platform.system() == "Windows":
+        return ["opencv_world"]  # Windows often uses unified opencv_world
+    else:
+        # Linux/macOS - use individual libraries
+        return ["opencv_core", "opencv_imgproc", "opencv_videoio", "opencv_imgcodecs"]
+
+# Check if pybind11 directory exists
+pybind11_include_dirs = [pybind11.get_cmake_dir() + "/../include"]
+
+# Try to find additional OpenCV include directories
+opencv_include_dirs = []
+common_opencv_paths = [
+    "/usr/include/opencv4",
+    "/usr/local/include/opencv4", 
+    "/opt/homebrew/include/opencv4",  # macOS Homebrew
+    "C:/opencv/build/include"  # Windows common path
+]
+for path in common_opencv_paths:
+    if os.path.exists(path):
+        opencv_include_dirs.append(path)
 
 # Define the C++ extension
 ext_modules = [
@@ -17,10 +43,10 @@ ext_modules = [
         ],
         include_dirs=[
             "native_backend/include",
-            pybind11.get_cmake_dir() + "/../include",
-        ],
-        libraries=["opencv_core", "opencv_imgproc", "opencv_videoio", "opencv_imgcodecs"],
+        ] + pybind11_include_dirs + opencv_include_dirs,
+        libraries=get_opencv_libs(),
         cxx_std=17,
+        define_macros=[("VERSION_INFO", '"1.0.0"')],
     ),
 ]
 

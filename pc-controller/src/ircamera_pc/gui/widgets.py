@@ -3,16 +3,36 @@ PyQt6-based GUI widgets for IRCamera PC Controller
 
 This module contains all the user interface widgets for the PC Controller
 application, providing device management, network control, and system
-integration.
+integration with enhanced error handling and real-time status monitoring.
 """
 
-from typing import Dict, List, Optional
-from PyQt6.QtCore import pyqtSignal, QTimer
+import logging
+from typing import Dict, List, Optional, Any
+from PyQt6.QtCore import pyqtSignal, QTimer, QThread, pyqtSlot
 from PyQt6.QtWidgets import (
     QLabel, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,
-    QPushButton, QProgressBar, QGroupBox, QTextEdit, QComboBox
+    QPushButton, QProgressBar, QGroupBox, QTextEdit, QComboBox, QMessageBox,
+    QFrame, QSplitter
 )
-from .plotting_widgets import MultiModalDashboard, DataAggregationWidget
+from PyQt6.QtGui import QFont, QPalette, QColor
+from PyQt6.QtCore import Qt
+
+try:
+    from .plotting_widgets import MultiModalDashboard, DataAggregationWidget
+except ImportError:
+    # Fallback in case plotting widgets are not available
+    logging.warning("Plotting widgets not available - using placeholder classes")
+    
+    class MultiModalDashboard(QWidget):
+        def __init__(self):
+            super().__init__()
+            self.setMinimumSize(400, 300)
+            
+    class DataAggregationWidget(QWidget):
+        def __init__(self):
+            super().__init__()
+            self.setMinimumSize(200, 150)
+        def set_sync_quality(self, quality): pass
 
 
 class DeviceListWidget(QWidget):
@@ -314,6 +334,180 @@ class BluetoothControlWidget(QWidget):
         """Set error status."""
         self.status_label.setText(f"Error: {error}")
         self.status_label.setStyleSheet("color: red;")
+
+
+class IntegrationManagementWidget(QWidget):
+    """Enhanced widget for managing Hub-Spoke integration with comprehensive error handling."""
+    
+    integration_status_changed = pyqtSignal(str, bool)  # status, is_error
+    hub_connection_requested = pyqtSignal()
+    spoke_discovery_requested = pyqtSignal()
+    sync_test_requested = pyqtSignal()
+    
+    def __init__(self):
+        super().__init__()
+        self.logger = logging.getLogger(__name__)
+        self._setup_ui()
+        self._setup_monitoring()
+        
+    def _setup_ui(self):
+        """Set up the integration management UI."""
+        layout = QVBoxLayout(self)
+        
+        # Title
+        title = QLabel("Hub-Spoke Integration Manager")
+        title.setFont(QFont("Arial", 12, QFont.Weight.Bold))
+        layout.addWidget(title)
+        
+        # Connection Status Panel
+        conn_group = QGroupBox("Connection Status")
+        conn_layout = QVBoxLayout(conn_group)
+        
+        self.hub_status_label = QLabel("Hub: Disconnected")
+        self.spoke_count_label = QLabel("Active Spokes: 0")
+        self.sync_status_label = QLabel("Time Sync: Not Available")
+        
+        conn_layout.addWidget(self.hub_status_label)
+        conn_layout.addWidget(self.spoke_count_label) 
+        conn_layout.addWidget(self.sync_status_label)
+        
+        layout.addWidget(conn_group)
+        
+        # Control Buttons
+        btn_group = QGroupBox("Integration Controls")
+        btn_layout = QHBoxLayout(btn_group)
+        
+        self.hub_connect_btn = QPushButton("Connect to Hub")
+        self.hub_connect_btn.clicked.connect(self.hub_connection_requested.emit)
+        
+        self.discover_spokes_btn = QPushButton("Discover Spokes")
+        self.discover_spokes_btn.clicked.connect(self.spoke_discovery_requested.emit)
+        
+        self.sync_test_btn = QPushButton("Test Sync")
+        self.sync_test_btn.clicked.connect(self.sync_test_requested.emit)
+        
+        btn_layout.addWidget(self.hub_connect_btn)
+        btn_layout.addWidget(self.discover_spokes_btn)
+        btn_layout.addWidget(self.sync_test_btn)
+        
+        layout.addWidget(btn_group)
+        
+        # Real-time Metrics
+        metrics_group = QGroupBox("Real-time Metrics")
+        metrics_layout = QVBoxLayout(metrics_group)
+        
+        self.data_rate_label = QLabel("Data Rate: -- MB/s")
+        self.latency_label = QLabel("Network Latency: -- ms")
+        self.error_count_label = QLabel("Error Count: 0")
+        
+        metrics_layout.addWidget(self.data_rate_label)
+        metrics_layout.addWidget(self.latency_label)
+        metrics_layout.addWidget(self.error_count_label)
+        
+        layout.addWidget(metrics_group)
+        
+        # Status Log (compact view)
+        log_group = QGroupBox("Status Log")
+        log_layout = QVBoxLayout(log_group)
+        
+        self.status_log = QTextEdit()
+        self.status_log.setMaximumHeight(100)
+        self.status_log.setReadOnly(True)
+        log_layout.addWidget(self.status_log)
+        
+        layout.addWidget(log_group)
+        
+    def _setup_monitoring(self):
+        """Set up real-time monitoring timer."""
+        self.monitor_timer = QTimer()
+        self.monitor_timer.timeout.connect(self._update_metrics)
+        self.monitor_timer.start(1000)  # Update every second
+        
+    @pyqtSlot()
+    def _update_metrics(self):
+        """Update real-time metrics display."""
+        # This would be connected to actual metric sources in production
+        pass
+        
+    def update_hub_status(self, connected: bool, address: str = ""):
+        """Update Hub connection status."""
+        if connected:
+            self.hub_status_label.setText(f"Hub: Connected ({address})")
+            self.hub_status_label.setStyleSheet("color: green;")
+            self.hub_connect_btn.setText("Disconnect Hub")
+        else:
+            self.hub_status_label.setText("Hub: Disconnected")
+            self.hub_status_label.setStyleSheet("color: red;")
+            self.hub_connect_btn.setText("Connect to Hub")
+            
+    def update_spoke_count(self, count: int, active_spokes: List[str] = None):
+        """Update active spoke count and list."""
+        self.spoke_count_label.setText(f"Active Spokes: {count}")
+        if count > 0:
+            self.spoke_count_label.setStyleSheet("color: green;")
+            if active_spokes:
+                tooltip = "Active Spokes:\n" + "\n".join(active_spokes)
+                self.spoke_count_label.setToolTip(tooltip)
+        else:
+            self.spoke_count_label.setStyleSheet("color: gray;")
+            
+    def update_sync_status(self, synchronized: bool, max_offset_ms: float = 0):
+        """Update time synchronization status."""
+        if synchronized:
+            self.sync_status_label.setText(f"Time Sync: Active (±{max_offset_ms:.1f}ms)")
+            if max_offset_ms <= 5.0:  # Within 5ms requirement
+                self.sync_status_label.setStyleSheet("color: green;")
+            else:
+                self.sync_status_label.setStyleSheet("color: orange;")
+        else:
+            self.sync_status_label.setText("Time Sync: Not Available")
+            self.sync_status_label.setStyleSheet("color: red;")
+            
+    def update_metrics(self, data_rate_mbps: float, latency_ms: float, error_count: int):
+        """Update real-time performance metrics."""
+        self.data_rate_label.setText(f"Data Rate: {data_rate_mbps:.2f} MB/s")
+        self.latency_label.setText(f"Network Latency: {latency_ms:.1f} ms")
+        self.error_count_label.setText(f"Error Count: {error_count}")
+        
+        # Color coding based on performance
+        if latency_ms < 10:
+            self.latency_label.setStyleSheet("color: green;")
+        elif latency_ms < 50:
+            self.latency_label.setStyleSheet("color: orange;")  
+        else:
+            self.latency_label.setStyleSheet("color: red;")
+            
+    def add_status_message(self, message: str, level: str = "INFO"):
+        """Add a status message to the log."""
+        timestamp = QTimer().time().toString("hh:mm:ss")
+        formatted_msg = f"[{timestamp}] {level}: {message}"
+        
+        # Color coding by level
+        if level == "ERROR":
+            color = "red"
+        elif level == "WARNING":
+            color = "orange"
+        else:
+            color = "black"
+            
+        self.status_log.append(f"<span style='color: {color};'>{formatted_msg}</span>")
+        
+        # Auto-scroll to bottom
+        cursor = self.status_log.textCursor()
+        cursor.movePosition(cursor.MoveOperation.End)
+        self.status_log.setTextCursor(cursor)
+        
+        # Emit status change signal
+        self.integration_status_changed.emit(message, level == "ERROR")
+        
+    def set_integration_error(self, error: str):
+        """Handle integration errors."""
+        self.add_status_message(f"Integration Error: {error}", "ERROR")
+        self.logger.error(f"Integration error: {error}")
+        
+        # Show error dialog for critical errors
+        if "critical" in error.lower() or "fatal" in error.lower():
+            QMessageBox.critical(self, "Critical Integration Error", error)
 
 
 class WiFiControlWidget(QWidget):
