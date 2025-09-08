@@ -1,10 +1,14 @@
 package com.topdon.tc001.gsr
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.os.Binder
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
@@ -29,6 +33,8 @@ import com.topdon.gsr.service.SessionManager
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.tc001.camera.RGBCameraRecorder
 import kotlinx.coroutines.launch
+
+// Note: EnhancedRecordingService is referenced with full package name since it's in a different module
 
 /**
  * Full multi-modal recording interface with GSR and thermal coordination
@@ -80,6 +86,14 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     private lateinit var fileLocationText: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var cameraPreview: android.view.TextureView
+    
+    // Network status UI components
+    private lateinit var networkStatusText: TextView
+    private lateinit var discoveredDevicesText: TextView
+    private lateinit var streamingQueueText: TextView
+    private lateinit var networkMetricsText: TextView
+    private lateinit var connectToDeviceButton: Button
+    private lateinit var startDiscoveryButton: Button
 
     // Recording options
     private lateinit var enableVideoSwitch: Switch
@@ -97,6 +111,14 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     private var currentSession: SessionInfo? = null
     private var sampleCount = 0L
     private var syncMarkCount = 0
+    
+    // Enhanced service integration
+    private var enhancedRecordingService: com.topdon.gsr.service.EnhancedRecordingService? = null
+    private var isServiceBound = false
+    private var discoveredDevices = mutableListOf<com.topdon.tc001.network.NetworkClient.ControllerInfo>()
+    
+    // UI update timer
+    private var uiUpdateJob: kotlinx.coroutines.Job? = null
 
     private val gsrListener =
         object : GSRRecorder.GSRRecordingListener {
@@ -187,6 +209,24 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                 }
             }
         }
+
+    // Service connection for EnhancedRecordingService
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as? com.topdon.gsr.service.EnhancedRecordingService.LocalBinder
+            enhancedRecordingService = binder?.getService()
+            isServiceBound = true
+            Log.d(TAG, "Enhanced recording service connected")
+            updateNetworkStatusUI()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            enhancedRecordingService = null
+            isServiceBound = false
+            Log.d(TAG, "Enhanced recording service disconnected")
+            updateNetworkStatusUI()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -379,6 +419,78 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             }
         layout.addView(fileLocationText)
 
+        // Network Status Section
+        val networkSection =
+            LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(0, 16, 0, 16)
+                setBackgroundColor(android.graphics.Color.LTGRAY)
+            }
+
+        val networkTitle =
+            TextView(this).apply {
+                text = "Network & Device Status"
+                textSize = 16f
+                setTypeface(null, android.graphics.Typeface.BOLD)
+                setPadding(8, 8, 8, 8)
+            }
+        networkSection.addView(networkTitle)
+
+        // Network status display
+        networkStatusText =
+            TextView(this).apply {
+                text = "Network: Disconnected"
+                textSize = 14f
+                setPadding(8, 4, 8, 4)
+            }
+        networkSection.addView(networkStatusText)
+
+        // Discovered devices display
+        discoveredDevicesText =
+            TextView(this).apply {
+                text = "Discovered Devices: None"
+                textSize = 14f
+                setPadding(8, 4, 8, 4)
+            }
+        networkSection.addView(discoveredDevicesText)
+
+        // Streaming queue status
+        streamingQueueText =
+            TextView(this).apply {
+                text = "Streaming Queue: 0 items"
+                textSize = 14f
+                setPadding(8, 4, 8, 4)
+            }
+        networkSection.addView(streamingQueueText)
+
+        // Network metrics
+        networkMetricsText =
+            TextView(this).apply {
+                text = "Latency: -- ms | Throughput: -- KB/s"
+                textSize = 12f
+                setPadding(8, 4, 8, 4)
+            }
+        networkSection.addView(networkMetricsText)
+
+        // Device discovery button
+        startDiscoveryButton =
+            Button(this).apply {
+                text = "Start Device Discovery"
+                setOnClickListener { startDeviceDiscovery() }
+            }
+        networkSection.addView(startDiscoveryButton)
+
+        // Connect to device button
+        connectToDeviceButton =
+            Button(this).apply {
+                text = "Connect to PC Controller"
+                isEnabled = false
+                setOnClickListener { connectToSelectedDevice() }
+            }
+        networkSection.addView(connectToDeviceButton)
+
+        layout.addView(networkSection)
+
         setContentView(layout)
 
         // Initialize recording components
@@ -390,11 +502,40 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             com.topdon.tc001.network.NetworkClient(this).apply {
                 setEventListener(
                     object : com.topdon.tc001.network.NetworkClient.NetworkEventListener {
-                        override fun onControllerDiscovered(controller: com.topdon.tc001.network.NetworkClient.ControllerInfo) {}
+                        override fun onControllerDiscovered(controller: com.topdon.tc001.network.NetworkClient.ControllerInfo) {
+                            runOnUiThread {
+                                discoveredDevices.add(controller)
+                                updateNetworkStatusUI()
+                                connectToDeviceButton.isEnabled = true
+                                Toast.makeText(
+                                    this@MultiModalRecordingActivity,
+                                    "Found PC Controller: ${controller.name} (${controller.address})",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
 
-                        override fun onConnected(controller: com.topdon.tc001.network.NetworkClient.ControllerInfo) {}
+                        override fun onConnected(controller: com.topdon.tc001.network.NetworkClient.ControllerInfo) {
+                            runOnUiThread {
+                                updateNetworkStatusUI()
+                                Toast.makeText(
+                                    this@MultiModalRecordingActivity,
+                                    "Connected to ${controller.name}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
 
-                        override fun onDisconnected(reason: String) {}
+                        override fun onDisconnected(reason: String) {
+                            runOnUiThread {
+                                updateNetworkStatusUI()
+                                Toast.makeText(
+                                    this@MultiModalRecordingActivity,
+                                    "Disconnected: $reason",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
 
                         override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
                             runOnUiThread {
@@ -685,6 +826,20 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                     isRecording = true
                     isStartingRecording = false
 
+                    // Start enhanced recording service for background operation
+                    try {
+                        com.topdon.gsr.service.EnhancedRecordingService.startRecording(
+                            this@MultiModalRecordingActivity,
+                            sessionId,
+                            participantId,
+                            studyName
+                        )
+                        Log.i(TAG, "Enhanced recording service started")
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Failed to start enhanced recording service", e)
+                        // Continue without service - not critical
+                    }
+
                     runOnUiThread {
                         updateUI()
                         startStopButton.isEnabled = true
@@ -737,6 +892,15 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     }
 
     private fun stopRecording() {
+        // Stop enhanced recording service
+        try {
+            com.topdon.gsr.service.EnhancedRecordingService.stopRecording(this)
+            Log.i(TAG, "Enhanced recording service stopped")
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to stop enhanced recording service", e)
+            // Continue - not critical
+        }
+
         // Stop RGB camera recording
         val videoFile = rgbCameraRecorder?.stopRecording()
 
@@ -815,13 +979,148 @@ class MultiModalRecordingActivity : AppCompatActivity() {
         SessionManagerActivity.startActivity(this)
     }
 
+    // Network status UI update method
+    private fun updateNetworkStatusUI() {
+        runOnUiThread {
+            // Update network connection status
+            val connectionStatus = when {
+                networkClient?.isConnected() == true -> "Connected"
+                isServiceBound -> "Service Bound"
+                else -> "Disconnected"
+            }
+            networkStatusText.text = "Network: $connectionStatus"
+
+            // Update discovered devices
+            val deviceCount = discoveredDevices.size
+            val deviceText = if (deviceCount > 0) {
+                val firstDevice = discoveredDevices.first()
+                "Devices: $deviceCount found (${firstDevice.name})"
+            } else {
+                "Discovered Devices: None"
+            }
+            discoveredDevicesText.text = deviceText
+
+            // Update streaming queue (get total from all queue types)
+            enhancedRecordingService?.let { service ->
+                val queueSizes = service.getQueueSizes()
+                val totalItems = queueSizes.values.sum()
+                val queueText = if (queueSizes.isNotEmpty()) {
+                    val details = queueSizes.entries.joinToString(", ") { "${it.key}: ${it.value}" }
+                    "Streaming Queue: $totalItems items ($details)"
+                } else {
+                    "Streaming Queue: 0 items"
+                }
+                streamingQueueText.text = queueText
+            } ?: run {
+                streamingQueueText.text = "Streaming Queue: Service not bound"
+            }
+
+            // Update network metrics (simulate metrics)
+            networkClient?.let { client ->
+                if (client.isConnected()) {
+                    val latency = client.getLatencyMs()
+                    val throughput = client.getThroughputKBps()
+                    networkMetricsText.text = "Latency: ${latency} ms | Throughput: ${throughput} KB/s"
+                } else {
+                    networkMetricsText.text = "Latency: -- ms | Throughput: -- KB/s"
+                }
+            }
+        }
+    }
+
+    // Start device discovery
+    private fun startDeviceDiscovery() {
+        discoveredDevices.clear()
+        connectToDeviceButton.isEnabled = false
+        startDiscoveryButton.text = "Searching..."
+        startDiscoveryButton.isEnabled = false
+
+        networkClient?.startDiscovery { success ->
+            runOnUiThread {
+                startDiscoveryButton.text = "Start Device Discovery"
+                startDiscoveryButton.isEnabled = true
+                if (!success) {
+                    Toast.makeText(this, "Failed to start discovery", Toast.LENGTH_SHORT).show()
+                }
+                updateNetworkStatusUI()
+            }
+        }
+    }
+
+    // Connect to selected device
+    private fun connectToSelectedDevice() {
+        if (discoveredDevices.isNotEmpty()) {
+            val selectedDevice = discoveredDevices.first() // For simplicity, connect to first device
+            networkClient?.connectToController(selectedDevice.address, selectedDevice.port) { success ->
+                runOnUiThread {
+                    if (success) {
+                        Toast.makeText(this, "Connection successful", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Connection failed", Toast.LENGTH_SHORT).show()
+                    }
+                    updateNetworkStatusUI()
+                }
+            }
+        }
+    }
+
+    // Service binding methods
+    private fun bindEnhancedRecordingService() {
+        try {
+            val intent = Intent(this, com.topdon.gsr.service.EnhancedRecordingService::class.java)
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to bind enhanced recording service", e)
+            Toast.makeText(this, "Enhanced recording service not available", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun unbindEnhancedRecordingService() {
+        if (isServiceBound) {
+            unbindService(serviceConnection)
+            isServiceBound = false
+            enhancedRecordingService = null
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        bindEnhancedRecordingService()
+        startUIUpdates()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopUIUpdates()
+        unbindEnhancedRecordingService()
+    }
+
+    // Start periodic UI updates
+    private fun startUIUpdates() {
+        uiUpdateJob?.cancel()
+        uiUpdateJob = lifecycleScope.launch {
+            while (true) {
+                updateNetworkStatusUI()
+                kotlinx.coroutines.delay(2000) // Update every 2 seconds
+            }
+        }
+    }
+
+    // Stop periodic UI updates
+    private fun stopUIUpdates() {
+        uiUpdateJob?.cancel()
+        uiUpdateJob = null
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        stopUIUpdates()
         gsrRecorder.removeListener(gsrListener)
         if (isRecording) {
             stopRecording()
         }
         rgbCameraRecorder?.cleanup()
         networkClient?.disconnect()
+        unbindEnhancedRecordingService()
     }
 }
