@@ -1,6 +1,5 @@
 loguru
-PyQt6
-pyqt6-tools
+PyQt6>=6.4.0
 psutil
 zeroconf
 cryptography
@@ -10,3 +9,5 @@ numpy
 opencv-python
 matplotlib
 pyqtgraph
+pytest
+pytest-asyncio
