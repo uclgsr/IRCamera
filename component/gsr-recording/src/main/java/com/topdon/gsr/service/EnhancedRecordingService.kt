@@ -303,6 +303,26 @@ class EnhancedRecordingService : Service() {
                 Log.e(TAG, "Network error in $operation: $error")
                 eventListener?.onServiceError("network_$operation", error)
             }
+            
+            override fun onPairingRequested(controllerId: String, controllerName: String) {
+                Log.i(TAG, "Pairing requested by controller: $controllerName ($controllerId)")
+                updateNotification("Pairing requested by $controllerName")
+            }
+
+            override fun onPairingCompleted(controllerId: String, success: Boolean) {
+                if (success) {
+                    Log.i(TAG, "Pairing completed successfully with controller: $controllerId")
+                    updateNotification("Paired with controller")
+                } else {
+                    Log.w(TAG, "Pairing failed with controller: $controllerId")
+                    updateNotification("Pairing failed")
+                }
+            }
+
+            override fun onAuthenticationRequired(controllerId: String) {
+                Log.w(TAG, "Authentication required for controller: $controllerId")
+                updateNotification("Authentication required")
+            }
         })
 
         // Data streaming service listener

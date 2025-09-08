@@ -51,6 +51,9 @@ class NetworkClient(private val context: Context) {
     
     // Error recovery integration
     private lateinit var errorRecoveryManager: NetworkErrorRecoveryManager
+    
+    // Authentication manager
+    private val authManager = DeviceAuthenticationManager(context)
 
     data class ControllerInfo(
         val ipAddress: String,
@@ -81,6 +84,11 @@ class NetworkClient(private val context: Context) {
             operation: String,
             error: String,
         )
+        
+        // Authentication events
+        fun onPairingRequested(controllerId: String, controllerName: String)
+        fun onPairingCompleted(controllerId: String, success: Boolean)
+        fun onAuthenticationRequired(controllerId: String)
     }
 
     private var eventListener: NetworkEventListener? = null
@@ -89,6 +97,7 @@ class NetworkClient(private val context: Context) {
         // Initialize error recovery manager
         errorRecoveryManager = NetworkErrorRecoveryManager(context, this)
         setupErrorRecoveryListener()
+        setupAuthenticationListener()
     }
 
     fun setEventListener(listener: NetworkEventListener?) {
@@ -122,6 +131,32 @@ class NetworkClient(private val context: Context) {
             override fun onRapidFailureDetected(failureCount: Int) {
                 Log.w(TAG, "Rapid failure detected: $failureCount failures")
                 eventListener?.onError("rapid_failure", "Detected $failureCount rapid failures")
+            }
+        })
+    }
+    
+    private fun setupAuthenticationListener() {
+        authManager.setAuthEventListener(object : DeviceAuthenticationManager.AuthEventListener {
+            override fun onPairingRequested(controllerId: String, controllerName: String) {
+                eventListener?.onPairingRequested(controllerId, controllerName)
+            }
+
+            override fun onPairingCompleted(controllerId: String, success: Boolean) {
+                eventListener?.onPairingCompleted(controllerId, success)
+            }
+
+            override fun onAuthTokenReceived(token: DeviceAuthenticationManager.AuthToken) {
+                Log.d(TAG, "Authentication token received for controller: ${token.controllerId}")
+            }
+
+            override fun onAuthTokenExpired(controllerId: String) {
+                Log.w(TAG, "Authentication token expired for controller: $controllerId")
+                eventListener?.onAuthenticationRequired(controllerId)
+            }
+
+            override fun onAuthenticationFailed(controllerId: String, reason: String) {
+                Log.e(TAG, "Authentication failed for controller $controllerId: $reason")
+                eventListener?.onError("authentication", "Failed to authenticate with $controllerId: $reason")
             }
         })
     }
@@ -812,4 +847,108 @@ class NetworkClient(private val context: Context) {
      * Get current clock offset for time synchronization
      */
     fun getClockOffset(): Long = clockOffset
+
+    // Authentication methods
+
+    /**
+     * Generate and get pairing PIN for device discovery
+     */
+    fun generatePairingPin(): String {
+        return authManager.generatePairingPin()
+    }
+
+    /**
+     * Get current pairing PIN
+     */
+    fun getCurrentPairingPin(): String? {
+        return authManager.getCurrentPairingPin()
+    }
+
+    /**
+     * Initiate pairing with PC Controller
+     */
+    suspend fun initiatePairing(controllerInfo: ControllerInfo): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val pairingRequest = authManager.createPairingRequest()
+            val message = JSONObject().apply {
+                put("message_type", "pairing_request")
+                put("device_id", pairingRequest.deviceId)
+                put("device_name", pairingRequest.deviceName)
+                put("device_type", pairingRequest.deviceType)
+                put("pairing_pin", pairingRequest.pairingPin)
+                put("timestamp", pairingRequest.timestamp)
+                put("capabilities", org.json.JSONArray(pairingRequest.capabilities))
+            }
+
+            sendMessage(message)
+            Log.d(TAG, "Pairing request sent to ${controllerInfo.ipAddress}")
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initiate pairing", e)
+            false
+        }
+    }
+
+    /**
+     * Process pairing response from PC Controller
+     */
+    fun processPairingResponse(response: JSONObject): Boolean {
+        return authManager.processPairingResponse(response)
+    }
+
+    /**
+     * Get authentication token for controller
+     */
+    fun getAuthToken(controllerId: String): DeviceAuthenticationManager.AuthToken? {
+        return authManager.getAuthToken(controllerId)
+    }
+
+    /**
+     * Check if device is paired with controller
+     */
+    fun isPairedWith(controllerId: String): Boolean {
+        return authManager.isPairedWith(controllerId)
+    }
+
+    /**
+     * Get list of paired controllers
+     */
+    fun getPairedControllers(): Set<String> {
+        return authManager.getPairedControllers()
+    }
+
+    /**
+     * Unpair from specific controller
+     */
+    fun unpairController(controllerId: String) {
+        authManager.unpairController(controllerId)
+    }
+
+    /**
+     * Clear all pairing data
+     */
+    fun clearAllPairings() {
+        authManager.clearAllPairings()
+    }
+
+    /**
+     * Send authenticated message to PC Controller
+     */
+    suspend fun sendAuthenticatedMessage(messageType: String, data: JSONObject, controllerId: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val authenticatedMessage = authManager.createAuthenticatedMessage(messageType, data, controllerId)
+            sendMessage(authenticatedMessage)
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to send authenticated message", e)
+            false
+        }
+    }
+
+    /**
+     * Validate incoming message authentication
+     */
+    fun validateMessageAuthentication(message: JSONObject, controllerId: String): Boolean {
+        return authManager.validateMessageAuthentication(message, controllerId)
+    }
 }

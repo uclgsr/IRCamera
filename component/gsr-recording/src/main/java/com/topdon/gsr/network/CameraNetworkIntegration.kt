@@ -301,6 +301,64 @@ class CameraNetworkIntegration(
     }
 
     /**
+     * Compress thermal data for efficient transmission
+     */
+    private fun compressThermalData(thermalData: FloatArray): ByteArray {
+        return try {
+            // Convert float array to byte array for transmission
+            val byteBuffer = ByteBuffer.allocate(thermalData.size * 4)
+            for (value in thermalData) {
+                byteBuffer.putFloat(value)
+            }
+            val thermalBytes = byteBuffer.array()
+            
+            // Apply simple run-length encoding for similar adjacent values
+            val compressed = ByteArrayOutputStream()
+            var i = 0
+            while (i < thermalBytes.size) {
+                val currentByte = thermalBytes[i]
+                var count = 1
+                
+                // Count consecutive identical bytes (up to 255)
+                while (i + count < thermalBytes.size && 
+                       thermalBytes[i + count] == currentByte && 
+                       count < 255) {
+                    count++
+                }
+                
+                if (count > 3) {
+                    // Use run-length encoding for sequences > 3
+                    compressed.write(0xFF) // Escape byte
+                    compressed.write(count)
+                    compressed.write(currentByte.toInt())
+                    i += count
+                } else {
+                    // Write bytes directly
+                    for (j in 0 until count) {
+                        if (currentByte.toInt() == 0xFF) {
+                            // Escape the escape byte
+                            compressed.write(0xFF)
+                            compressed.write(0x00)
+                        } else {
+                            compressed.write(currentByte.toInt())
+                        }
+                    }
+                    i += count
+                }
+            }
+            compressed.toByteArray()
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to compress thermal data, using float-to-byte conversion", e)
+            // Fallback: simple float to byte conversion
+            val byteBuffer = ByteBuffer.allocate(thermalData.size * 4)
+            for (value in thermalData) {
+                byteBuffer.putFloat(value)
+            }
+            byteBuffer.array()
+        }
+    }
+
+    /**
      * Process thermal frame queue and send frames to PC Controller
      */
     private suspend fun processThermalFrameQueue() {
