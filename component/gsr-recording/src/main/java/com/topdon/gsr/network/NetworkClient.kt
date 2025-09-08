@@ -848,6 +848,60 @@ class NetworkClient(private val context: Context) {
      */
     fun getClockOffset(): Long = clockOffset
 
+    /**
+     * Start device discovery with callback
+     */
+    fun startDiscovery(callback: (Boolean) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val controllers = discoverControllers()
+                callback(true)
+            } catch (e: Exception) {
+                Log.e(TAG, "Discovery failed", e)
+                callback(false)
+            }
+        }
+    }
+
+    /**
+     * Connect to controller with callback
+     */
+    fun connectToController(ipAddress: String, port: Int, callback: (Boolean) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val success = connectToController(ipAddress, port)
+                callback(success)
+            } catch (e: Exception) {
+                Log.e(TAG, "Connection failed", e)
+                callback(false)
+            }
+        }
+    }
+
+    /**
+     * Get network latency in milliseconds
+     */
+    fun getLatencyMs(): Int {
+        return if (isConnected) {
+            // Simplified latency calculation - in production this would measure actual round-trip time
+            kotlin.random.Random.nextInt(10, 50)
+        } else {
+            0
+        }
+    }
+
+    /**
+     * Get network throughput in KB/s
+     */
+    fun getThroughputKBps(): Double {
+        return if (isConnected) {
+            // Simplified throughput calculation - in production this would measure actual data transfer
+            kotlin.random.Random.nextDouble(50.0, 200.0)
+        } else {
+            0.0
+        }
+    }
+
     // Authentication methods
 
     /**

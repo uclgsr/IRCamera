@@ -105,7 +105,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     private lateinit var gsrRecorder: GSRRecorder
     private lateinit var sessionManager: SessionManager
     private var rgbCameraRecorder: RGBCameraRecorder? = null
-    private var networkClient: com.topdon.tc001.network.NetworkClient? = null
+    private var networkClient: com.topdon.gsr.network.NetworkClient? = null
     private var isRecording = false
     private var isStartingRecording = false // Guard against double taps
     private var currentSession: SessionInfo? = null
@@ -115,10 +115,28 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     // Enhanced service integration
     private var enhancedRecordingService: com.topdon.gsr.service.EnhancedRecordingService? = null
     private var isServiceBound = false
-    private var discoveredDevices = mutableListOf<com.topdon.tc001.network.NetworkClient.ControllerInfo>()
+    private var discoveredDevices = mutableListOf<com.topdon.gsr.network.NetworkClient.ControllerInfo>()
     
     // UI update timer
     private var uiUpdateJob: kotlinx.coroutines.Job? = null
+
+    // Service connection for enhanced recording service
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as? com.topdon.gsr.service.EnhancedRecordingService.EnhancedRecordingBinder
+            enhancedRecordingService = binder?.getService()
+            isServiceBound = true
+            Log.i(TAG, "Enhanced recording service connected")
+            updateNetworkStatusUI()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            enhancedRecordingService = null
+            isServiceBound = false
+            Log.i(TAG, "Enhanced recording service disconnected")
+            updateNetworkStatusUI()
+        }
+    }
 
     private val gsrListener =
         object : GSRRecorder.GSRRecordingListener {
@@ -499,10 +517,10 @@ class MultiModalRecordingActivity : AppCompatActivity() {
 
         // Initialize network client for PC Controller communication
         networkClient =
-            com.topdon.tc001.network.NetworkClient(this).apply {
+            com.topdon.gsr.network.NetworkClient(this).apply {
                 setEventListener(
-                    object : com.topdon.tc001.network.NetworkClient.NetworkEventListener {
-                        override fun onControllerDiscovered(controller: com.topdon.tc001.network.NetworkClient.ControllerInfo) {
+                    object : com.topdon.gsr.network.NetworkClient.NetworkEventListener {
+                        override fun onControllerDiscovered(controller: com.topdon.gsr.network.NetworkClient.ControllerInfo) {
                             runOnUiThread {
                                 discoveredDevices.add(controller)
                                 updateNetworkStatusUI()
@@ -515,7 +533,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                             }
                         }
 
-                        override fun onConnected(controller: com.topdon.tc001.network.NetworkClient.ControllerInfo) {
+                        override fun onConnected(controller: com.topdon.gsr.network.NetworkClient.ControllerInfo) {
                             runOnUiThread {
                                 updateNetworkStatusUI()
                                 Toast.makeText(
@@ -585,6 +603,52 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                                 Toast.makeText(
                                     this@MultiModalRecordingActivity,
                                     "Network error: $error", Toast.LENGTH_SHORT,
+                                ).show()
+                            }
+                        }
+
+                        // Additional methods for enhanced NetworkClient
+                        override fun onTimeSynchronized(offsetNanoseconds: Long) {
+                            runOnUiThread {
+                                statusText.text = "Time synchronized with PC Controller (offset: ${offsetNanoseconds}ns)"
+                            }
+                        }
+
+                        override fun onDataStreamingStarted() {
+                            runOnUiThread {
+                                statusText.text = "Real-time data streaming active"
+                            }
+                        }
+
+                        override fun onDataStreamingStopped() {
+                            runOnUiThread {
+                                statusText.text = "Data streaming stopped"
+                            }
+                        }
+
+                        override fun onPairingRequested(controllerId: String, controllerName: String) {
+                            runOnUiThread {
+                                Toast.makeText(
+                                    this@MultiModalRecordingActivity,
+                                    "Pairing requested by: $controllerName",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+
+                        override fun onPairingCompleted(controllerId: String, success: Boolean) {
+                            runOnUiThread {
+                                val message = if (success) "Device pairing successful" else "Device pairing failed"
+                                Toast.makeText(this@MultiModalRecordingActivity, message, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                        override fun onAuthenticationRequired(controllerId: String) {
+                            runOnUiThread {
+                                Toast.makeText(
+                                    this@MultiModalRecordingActivity,
+                                    "Authentication required for PC Controller",
+                                    Toast.LENGTH_SHORT
                                 ).show()
                             }
                         }
