@@ -27,3 +27,29 @@ line_length = 88
 max-line-length = 88
 extend-ignore = "E203,W503"
 exclude = ".git,__pycache__,build,dist,.eggs"
+
+[tool.pytest.ini_options]
+testpaths = ["pc-controller"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = """
+    -v
+    --tb=short
+    --strict-markers
+    --disable-warnings
+    --color=yes
+"""
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "gui: marks tests that require GUI/display",
+]
+# Configure asyncio mode for async tests
+asyncio_mode = "auto"
+# Set environment variables for headless PyQt6 testing
+env = [
+    "QT_QPA_PLATFORM=offscreen",
+    "DISPLAY=:99",
+]
