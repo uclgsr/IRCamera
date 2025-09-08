@@ -214,12 +214,28 @@ class BluetoothManager(BaseManager):
             self._emit_signal("error_occurred", "scan", str(e))
 
     def _periodic_scan(self) -> None:
-        """Periodic scan callback."""
+        """
+        Periodic scan callback.
+        
+        Initiates device scanning if scanning is currently active.
+        Called automatically by the scan timer to maintain device discovery.
+        """
         if self._scanning:
             asyncio.create_task(self._scan_devices())
 
     def _should_update_device(self, device: BLEDevice) -> bool:
-        """Check if device information should be updated."""
+        """
+        Check if device information should be updated.
+        
+        Determines whether a discovered device's information has changed
+        enough to warrant updating the stored device record.
+        
+        Args:
+            device: BLE device to check for updates
+            
+        Returns:
+            True if device should be updated, False otherwise
+        """
         if device.address not in self._devices:
             return True
 
@@ -230,7 +246,18 @@ class BluetoothManager(BaseManager):
         )
 
     def _create_bluetooth_device(self, device: BLEDevice) -> BluetoothDevice:
-        """Create BluetoothDevice from BLEDevice."""
+        """
+        Create BluetoothDevice from BLEDevice.
+        
+        Converts a BLEDevice from the bleak library into our internal
+        BluetoothDevice representation with additional metadata.
+        
+        Args:
+            device: BLE device from bleak scan results
+            
+        Returns:
+            BluetoothDevice with enhanced information and IRCamera detection
+        """
         # Check if this could be an IRCamera device
         is_ircamera = self._is_ircamera_device(device)
 

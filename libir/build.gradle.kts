@@ -79,5 +79,6 @@ dependencies {
     
     implementation(project(":libapp"))
     // libcommon needs to be available directly to libir since it uses SurfaceNativeWindow
-    implementation(files("../app/libs/libcommon_1.2.0_24052117.aar"))
+    // Changed to compileOnly since library modules cannot include AAR dependencies directly
+    compileOnly(files("../app/libs/libcommon_1.2.0_24052117.aar"))
 }

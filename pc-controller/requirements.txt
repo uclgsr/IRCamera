@@ -13,6 +13,9 @@ pandas>=2.0.0
 # Computer vision for calibration
 opencv-python>=4.8.0
 
+# Real-time plotting and data visualization
+pyqtgraph>=0.13.0
+
 # Configuration management
 pyyaml>=6.0
 

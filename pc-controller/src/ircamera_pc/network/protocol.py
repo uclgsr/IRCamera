@@ -173,16 +173,18 @@ class ProtocolManager:
             return True
 
         except (jsonschema.ValidationError, ValidationError) as e:
+            error_msg = f"Message validation failed: {e}"
             if strict:
-                raise ValidationError(f"Message validation failed: {e}")
+                raise ValidationError(error_msg)
             else:
-                logger.warning(f"Message validation failed: {e}")
+                logger.warning(error_msg)
                 return False
         except (OSError, ValueError, RuntimeError) as e:
+            error_msg = f"Unexpected validation error: {e}"
             if strict:
-                raise ValidationError(f"Unexpected validation error: {e}")
+                raise ValidationError(error_msg)
             else:
-                logger.error(f"Unexpected validation error: {e}")
+                logger.error(error_msg)
                 return False
 
     def _get_validator(
