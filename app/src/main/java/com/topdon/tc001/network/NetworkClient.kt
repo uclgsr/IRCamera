@@ -12,6 +12,8 @@ import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.*
 import java.net.*
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -38,6 +40,8 @@ class NetworkClient(private val context: Context) {
     private var inputStream: DataInputStream? = null
     private var isConnected = false
     private var isSecureConnection = false
+    private var useTLS = true // Enable TLS by default
+    private var clockOffset: Long = 0 // Time synchronization offset in nanoseconds
     private var deviceId: String =
         android.provider.Settings.Secure.getString(
             context.contentResolver,
