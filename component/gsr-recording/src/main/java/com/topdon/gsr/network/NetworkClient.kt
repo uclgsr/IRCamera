@@ -1,4 +1,4 @@
-package com.topdon.tc001.network
+package com.topdon.gsr.network
 
 import android.content.Context
 import android.net.wifi.WifiManager
