@@ -34,6 +34,21 @@ try:
 
 except ImportError:
     PYQT_AVAILABLE = False
+    
+    # Fallback signal implementation for when PyQt is not available
+    class pyqtSignal:
+        def __init__(self, *args):
+            self._callbacks = []
+        def emit(self, *args):
+            for callback in self._callbacks:
+                callback(*args)
+        def connect(self, callback):
+            self._callbacks.append(callback)
+    
+    def pyqtSlot(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
 
     class BaseThread:
         def __init__(self):

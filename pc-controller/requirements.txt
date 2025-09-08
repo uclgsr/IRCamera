@@ -41,7 +41,6 @@ typing-extensions>=4.8.0
 
 # Enhanced networking and discovery
 zeroconf>=0.132.2
-python-zeroconf>=0.132.2
 
 # Network security dependencies - LATEST SECURE VERSIONS
 urllib3>=2.5.0

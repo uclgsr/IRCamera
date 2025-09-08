@@ -9,6 +9,7 @@ import ssl
 import hashlib
 import secrets
 import time
+import ipaddress
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -363,8 +364,8 @@ class SecurityManager:
         ).add_extension(
             x509.SubjectAlternativeName([
                 x509.DNSName("localhost"),
-                x509.IPAddress("127.0.0.1"),
-                x509.IPAddress("192.168.1.1"),
+                x509.IPAddress(ipaddress.IPv4Address("127.0.0.1")),
+                x509.IPAddress(ipaddress.IPv4Address("192.168.1.1")),
             ]), critical=False,
         ).sign(ca_key, hashes.SHA256())
         

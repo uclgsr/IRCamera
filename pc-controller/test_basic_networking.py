@@ -11,6 +11,7 @@ import tempfile
 import time
 import uuid
 from pathlib import Path
+import pytest
 
 # Add the src directory to Python path for imports
 sys.path.insert(0, str(Path(__file__).parent / "src"))
@@ -55,6 +56,9 @@ except ImportError as e:
     messaging_available = False
 
 
+import pytest
+
+@pytest.mark.asyncio
 async def test_security_manager():
     """Test SecurityManager basic functionality."""
     if not security_available:
@@ -103,6 +107,7 @@ async def test_security_manager():
         return False
 
 
+@pytest.mark.asyncio
 async def test_reliable_messaging():
     """Test ReliableMessageService basic functionality."""
     if not messaging_available:

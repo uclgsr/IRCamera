@@ -44,6 +44,9 @@ except ImportError:
     BLUETOOTH_AVAILABLE = False
     # Create fallback type for when bleak is not available
     BLEDevice = object
+    BleakClient = object
+    BleakGATTCharacteristic = object
+    BleakScanner = object
 
 try:
     if platform.system() == "Windows":
