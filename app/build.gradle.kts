@@ -77,10 +77,12 @@ android {
         }
     }
     
-    // Disable all debug variants completely - release-only configuration
-    variantFilter {
-        if (buildType.name == "debug") {
-            ignore = true
+    // Configure variants using modern API - release-only configuration
+    androidComponents {
+        beforeVariants { variantBuilder ->
+            if (variantBuilder.buildType == "debug") {
+                variantBuilder.enable = false
+            }
         }
     }
 

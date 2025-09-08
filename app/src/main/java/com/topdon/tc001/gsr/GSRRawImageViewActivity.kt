@@ -6,12 +6,16 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.exifinterface.media.ExifInterface
 import com.csl.irCamera.R
 import java.io.File
 
@@ -221,7 +225,33 @@ class GSRRawImageViewActivity : AppCompatActivity() {
     }
 
     private fun exportImage() {
-        // TODO: Implement RAW image export functionality
+        // Implement RAW image export functionality
+        try {
+            val sourceFile = File(gsrItem.filePath)
+            if (sourceFile.exists()) {
+                val exportDir = File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "GSR_Export")
+                exportDir.mkdirs()
+                
+                val exportFile = File(exportDir, "exported_${sourceFile.name}")
+                sourceFile.copyTo(exportFile, overwrite = true)
+                
+                Toast.makeText(this, "RAW image exported to: ${exportFile.absolutePath}", Toast.LENGTH_LONG).show()
+                
+                // Also share the file
+                val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", exportFile)
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "image/*"
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                startActivity(Intent.createChooser(shareIntent, "Export RAW Image"))
+            } else {
+                Toast.makeText(this, "Source file not found", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Log.e("GSRRawImageView", "Error exporting RAW image", e)
+            Toast.makeText(this, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
         // Could offer options to export as JPEG, TIFF, or keep as DNG
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Export RAW Image")
@@ -231,7 +261,46 @@ class GSRRawImageViewActivity : AppCompatActivity() {
     }
 
     private fun showDetailedInfo() {
-        // TODO: Extract actual EXIF data from DNG file
+        // Extract EXIF data from DNG file using ExifInterface
+        try {
+            val exifInterface = ExifInterface(gsrItem.filePath)
+            val info = StringBuilder()
+            
+            // Core EXIF data
+            exifInterface.getAttribute(ExifInterface.TAG_MAKE)?.let { 
+                info.append("Camera: $it\n") 
+            }
+            exifInterface.getAttribute(ExifInterface.TAG_MODEL)?.let { 
+                info.append("Model: $it\n") 
+            }
+            exifInterface.getAttribute(ExifInterface.TAG_DATETIME)?.let { 
+                info.append("Date: $it\n") 
+            }
+            
+            // Technical details
+            exifInterface.getAttribute(ExifInterface.TAG_EXPOSURE_TIME)?.let { 
+                info.append("Exposure: $it\n") 
+            }
+            exifInterface.getAttribute(ExifInterface.TAG_F_NUMBER)?.let { 
+                info.append("F-Number: $it\n") 
+            }
+            exifInterface.getAttribute(ExifInterface.TAG_ISO_SPEED)?.let { 
+                info.append("ISO: $it\n") 
+            }
+            
+            // Image dimensions
+            val width = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, 0)
+            val height = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, 0)
+            if (width > 0 && height > 0) {
+                info.append("Dimensions: ${width}x${height}\n")
+            }
+            
+            return if (info.isNotEmpty()) info.toString() else "No EXIF data available"
+            
+        } catch (e: Exception) {
+            Log.e("GSRRawImageView", "Error reading EXIF data", e)
+            return "Error reading EXIF data: ${e.message}"
+        }
         val detailedInfo =
             """
             Technical Details:

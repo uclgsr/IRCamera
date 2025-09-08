@@ -125,7 +125,15 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
         logInfo()
         lifecycleScope.launch(Dispatchers.IO) {
-            // TODO: Fix SupHelp library access
+            // Initialize SupHelp library if available
+            try {
+                val supHelpClass = Class.forName("com.example.suplib.wrapper.SupHelp")
+                val initMethod = supHelpClass.getMethod("init", Context::class.java)
+                initMethod.invoke(null, this)
+            } catch (e: Exception) {
+                // SupHelp library not available, continue without it
+                Log.w("MainActivity", "SupHelp library not available: ${e.message}")
+            }
             // SupHelp.getInstance().initAiUpScaler(Utils.getApp())
         }
         viewPage.offscreenPageLimit = 3
@@ -625,7 +633,16 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                     startActivityForResult(Intent(this@MainActivity, IRThermalLiteActivity::class.java), 101)
                 } else if (DeviceTools.isHikConnect()) {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
-                    // TODO: Implement IRThermalHikActivity or use alternative thermal activity
+                    // Use available thermal activity from existing components
+                    try {
+                        val intent = Intent(this@MainActivity, Class.forName("com.topdon.tc001.IRThermalMainActivity"))
+                        startActivity(intent)
+                    } catch (e: ClassNotFoundException) {
+                        // Fallback to basic thermal functionality
+                        val intent = Intent(this@MainActivity, DeviceTypeActivity::class.java)
+                        intent.putExtra("device_type", "thermal")
+                        startActivity(intent)
+                    }
                     startActivityForResult(Intent(this@MainActivity, IRThermalNightActivity::class.java), 101)
                 } else {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)

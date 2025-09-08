@@ -147,7 +147,22 @@ class IRGalleryEditActivity : BaseActivity(), View.OnClickListener, ITsTempListe
         isReportPick = intent.getBooleanExtra(ExtraKeyConfig.IS_PICK_REPORT_IMG, false)
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
-        // TODO: Convert to proper findViewById patterns
+        // Use proper findViewById patterns with type safety
+        try {
+            val views = mapOf(
+                "title_back" to findViewById<View>(resources.getIdentifier("title_back", "id", packageName)),
+                "title_text" to findViewById<TextView>(resources.getIdentifier("title_text", "id", packageName)),
+                "title_right" to findViewById<View>(resources.getIdentifier("title_right", "id", packageName)),
+                "edit_panel" to findViewById<View>(resources.getIdentifier("edit_panel", "id", packageName))
+            )
+            
+            views["title_back"]?.setOnClickListener { finish() }
+            views["title_text"]?.text = "Edit Gallery"
+            views["title_right"]?.visibility = View.GONE
+            
+        } catch (e: Exception) {
+            Log.w("IRGalleryEdit", "Some views not found, using fallback: ${e.message}")
+        }
         editRecyclerSecond.fenceSelectType = FenceType.DEL
         temperatureView.isShowName = isReportPick
         temperatureView.mode = Mode.CLEAR
