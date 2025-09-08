@@ -1120,7 +1120,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             stopRecording()
         }
         rgbCameraRecorder?.cleanup()
-        networkClient?.disconnect()
+        networkClient?.cleanup()
         unbindEnhancedRecordingService()
     }
 }
