@@ -14,9 +14,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from ..utils.simple_logger import get_logger
-
-logger = get_logger(__name__)
+from loguru import logger
 
 
 class GSRMode(Enum):

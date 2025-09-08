@@ -18,10 +18,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import cv2
 import numpy as np
-
-from ..utils.simple_logger import get_logger
-
-logger = get_logger(__name__)
+from loguru import logger
 
 
 class CameraType(Enum):
