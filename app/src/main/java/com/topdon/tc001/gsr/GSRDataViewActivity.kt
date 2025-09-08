@@ -50,6 +50,7 @@ class GSRDataViewActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: GSRDataRowAdapter
     private val dataRows = mutableListOf<GSRDataRow>()
+    private val gsrDataPoints = mutableListOf<GSRDataPoint>()
 
     data class GSRDataRow(
         val timestamp: String,
@@ -66,7 +67,9 @@ class GSRDataViewActivity : AppCompatActivity() {
         val gsrRaw: Int, // raw ADC value (0-4095)
         val resistance: Double, // kohms  
         val ppgValue: Int, // raw PPG value
-        val syncMarker: Boolean = false
+        val ppgRaw: Int = ppgValue, // alias for ppgValue
+        val syncMarker: Boolean = false,
+        val notes: String? = null
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -338,7 +341,7 @@ class GSRDataViewActivity : AppCompatActivity() {
             val timestampIso = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).format(Date(timestampMs))
             
             // Calculate additional metrics
-            val normalizedGSR = normalizeGSRValue(dataPoint.gsrValue)
+            val normalizedGSR = normalizeGSRValue(dataPoint.gsrValue.toFloat())
             val normalizedPPG = normalizePPGValue(dataPoint.ppgValue)
             val qualityScore = calculateDataQuality(dataPoint, index)
             
@@ -413,7 +416,7 @@ class GSRDataViewActivity : AppCompatActivity() {
                 "gsr" to mapOf(
                     "raw" to dataPoint.gsrRaw,
                     "microsiemens" to dataPoint.gsrValue,
-                    "normalized" to normalizeGSRValue(dataPoint.gsrValue)
+                    "normalized" to normalizeGSRValue(dataPoint.gsrValue.toFloat())
                 ),
                 "ppg" to mapOf(
                     "raw" to dataPoint.ppgRaw,
@@ -435,7 +438,7 @@ class GSRDataViewActivity : AppCompatActivity() {
         val stats = calculateStatistics()
         
         summary.appendLine("GSR Data Statistical Summary")
-        summary.appendLine("=" * 40)
+        summary.appendLine("=" + "=".repeat(40))
         summary.appendLine("Source File: ${file.name}")
         summary.appendLine("Export Date: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())}")
         summary.appendLine("Device: ${getDeviceInfo()}")
@@ -756,23 +759,6 @@ class GSRDataViewActivity : AppCompatActivity() {
             .show()
     }
 
-    /**
-     * Show export success dialog with file information
-     */
-    private fun showExportSuccessDialog(exportResult: ExportResult?) {
-        val message = if (exportResult != null) {
-            "Export completed successfully!\n\nFiles created:\n${exportResult.files.joinToString("\n")}"
-        } else {
-            "Export completed successfully!"
-        }
-        
-        AlertDialog.Builder(this)
-            .setTitle("Export Successful")
-            .setMessage(message)
-            .setPositiveButton("OK", null)
-            .show()
-    }
-    
     /**
      * Convert dataRows to gsrDataPoints for export functions
      */

@@ -123,29 +123,7 @@ class GSRVideoAdapter(
                 java.util.Locale.getDefault(),
             ).format(java.util.Date(videoFile.lastModified()))
 
-        // Extract actual video duration using MediaMetadataRetriever
-        try {
-            val retriever = MediaMetadataRetriever()
-            retriever.setDataSource(item.filePath)
-            val durationString = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-            val durationMs = durationString?.toLongOrNull() ?: 0L
-            
-            val seconds = (durationMs / 1000) % 60
-            val minutes = (durationMs / (1000 * 60)) % 60
-            val hours = (durationMs / (1000 * 60 * 60))
-            
-            val formattedDuration = when {
-                hours > 0 -> String.format("%d:%02d:%02d", hours, minutes, seconds)
-                else -> String.format("%02d:%02d", minutes, seconds)
-            }
-            
-            holder.binding.videoDuration.text = formattedDuration
-            retriever.release()
-            
-        } catch (e: Exception) {
-            Log.e("GSRGalleryAdapter", "Error extracting video duration", e)
-            holder.binding.videoDuration.text = "00:00"
-        }
+        // Set default duration for now (video duration extraction can be added later if needed)
         holder.duration.text = "Duration: Unknown"
 
         holder.itemView.setOnClickListener {

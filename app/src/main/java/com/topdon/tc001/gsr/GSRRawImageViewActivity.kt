@@ -227,7 +227,7 @@ class GSRRawImageViewActivity : AppCompatActivity() {
     private fun exportImage() {
         // Implement RAW image export functionality
         try {
-            val sourceFile = File(gsrItem.filePath)
+            val sourceFile = imageFile
             if (sourceFile.exists()) {
                 val exportDir = File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "GSR_Export")
                 exportDir.mkdirs()
@@ -263,7 +263,7 @@ class GSRRawImageViewActivity : AppCompatActivity() {
     private fun showDetailedInfo() {
         // Extract EXIF data from DNG file using ExifInterface
         val exifData = try {
-            val exifInterface = ExifInterface(gsrItem.filePath)
+            val exifInterface = ExifInterface(imageFile.absolutePath)
             val info = StringBuilder()
             
             // Core EXIF data
@@ -288,9 +288,9 @@ class GSRRawImageViewActivity : AppCompatActivity() {
                 info.append("ISO: $it\n") 
             }
             
-            // Image dimensions
-            val width = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, 0)
-            val height = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, 0)
+            // Image dimensions - use getAttribute and convert to int
+            val width = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)?.toIntOrNull() ?: 0
+            val height = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH)?.toIntOrNull() ?: 0
             if (width > 0 && height > 0) {
                 info.append("Dimensions: ${width}x${height}\n")
             }
