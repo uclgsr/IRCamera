@@ -253,9 +253,6 @@ dependencies {
     implementation("com.opencsv:opencsv:5.7.1")
     implementation("com.google.code.gson:gson:2.10.1")
     
-    // PDF viewer library - TODO: Add when stable library is available
-    // implementation("com.github.barteksc:AndroidPdfViewer:2.8.2")
-    
     // Enhanced networking and serialization for Hub-Spoke
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
