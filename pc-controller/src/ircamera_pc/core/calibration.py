@@ -14,7 +14,7 @@ import time
 from dataclasses import asdict, dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import cv2
 import numpy as np
@@ -444,6 +444,82 @@ class CameraCalibrator:
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Failed to finalize calibration: {e}")
             return None
+
+    def get_calibration_status(self, device_id: str, session_id: str, camera_type: Union[CameraType, str]) -> Dict[str, Any]:
+        """
+        Get calibration session status
+        
+        Args:
+            device_id: Device identifier
+            session_id: Session identifier
+            camera_type: Camera type (CameraType enum or string)
+            
+        Returns:
+            Dictionary containing session status
+        """
+        # Handle both string and CameraType enum
+        if isinstance(camera_type, CameraType):
+            camera_type_str = camera_type.value
+        else:
+            camera_type_str = str(camera_type)
+            
+        calibration_id = f"{device_id}_{camera_type_str}_{session_id}"
+        
+        if calibration_id not in self.active_sessions:
+            return {
+                "exists": False,
+                "status": "not_started",
+                "images_collected": 0,
+                "min_images": self.min_images
+            }
+        
+        session_data = self.active_sessions[calibration_id]
+        return {
+            "exists": True,
+            "status": "active",
+            "images_collected": session_data["images_collected"],
+            "min_images": self.min_images,
+            "session_data": {
+                "start_time": session_data["start_time"],
+                "image_resolution": session_data["image_resolution"]
+            }
+        }
+
+    def cancel_calibration(self, device_id: str, session_id: str, camera_type: Union[CameraType, str]) -> bool:
+        """
+        Cancel an active calibration session
+        
+        Args:
+            device_id: Device identifier
+            session_id: Session identifier
+            camera_type: Camera type (CameraType enum or string)
+            
+        Returns:
+            True if session was canceled, False if not found
+        """
+        # Handle both string and CameraType enum
+        if isinstance(camera_type, CameraType):
+            camera_type_str = camera_type.value
+        else:
+            camera_type_str = str(camera_type)
+            
+        calibration_id = f"{device_id}_{camera_type_str}_{session_id}"
+        
+        if calibration_id in self.active_sessions:
+            del self.active_sessions[calibration_id]
+            logger.info(f"Canceled calibration session: {calibration_id}")
+            return True
+        
+        return False
+
+    def get_active_calibrations(self) -> List[str]:
+        """
+        Get list of active calibration session IDs
+        
+        Returns:
+            List of calibration session identifiers
+        """
+        return list(self.active_sessions.keys())
 
     async def calibrate_stereo_pair(
         self,

@@ -615,3 +615,64 @@ class CalibrationUtilityWidget(QWidget):
         self._status_label.setText(f"Status: {message}")
         color = "red" if is_error else "black"
         self._status_label.setStyleSheet(f"color: {color};")
+
+
+class GenericIconLabel(QLabel):
+    """
+    Generic icon label widget that displays professional icons for GUI placeholders.
+    
+    This widget provides consistent visual representation across the PC controller
+    interface, including settings, calibration, camera, and network icons.
+    """
+    
+    ICON_SETTINGS = "settings"
+    ICON_CALIBRATION = "calibration" 
+    ICON_CAMERA = "camera"
+    ICON_NETWORK = "network"
+    
+    def __init__(self, icon_type: str = ICON_SETTINGS, size: int = 48, parent=None):
+        super().__init__(parent)
+        self.icon_type = icon_type
+        self.icon_size = size
+        self._setup_icon()
+    
+    def _setup_icon(self):
+        """Setup the icon display"""
+        self.setFixedSize(self.icon_size, self.icon_size)
+        self.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        # Create text-based icon representation
+        icon_chars = {
+            self.ICON_SETTINGS: "⚙️",
+            self.ICON_CALIBRATION: "🎯", 
+            self.ICON_CAMERA: "📷",
+            self.ICON_NETWORK: "🌐"
+        }
+        
+        icon_char = icon_chars.get(self.icon_type, "⚙️")
+        
+        # Set the icon text with styling
+        self.setText(icon_char)
+        self.setStyleSheet(f"""
+            QLabel {{
+                font-size: {self.icon_size // 2}px;
+                border: 2px solid #cccccc;
+                border-radius: {self.icon_size // 8}px;
+                background-color: #f5f5f5;
+                color: #333333;
+            }}
+            QLabel:hover {{
+                background-color: #e5e5e5;
+                border-color: #999999;
+            }}
+        """)
+    
+    def set_icon_type(self, icon_type: str):
+        """Change the icon type"""
+        self.icon_type = icon_type
+        self._setup_icon()
+    
+    def set_size(self, size: int):
+        """Change the icon size"""
+        self.icon_size = size
+        self._setup_icon()
