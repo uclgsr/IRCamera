@@ -59,6 +59,7 @@ public class EasyBLE {
     private final Map<String, Connection> connectionMap = new ConcurrentHashMap<>();
     //已连接的设备MAC地址集合
     private final List<String> addressList = new CopyOnWriteArrayList<>();
+    private final boolean useNordicBleBackend;
     private final boolean internalObservable;
 
     private EasyBLE() {
@@ -69,6 +70,7 @@ public class EasyBLE {
         tryGetApplication();
         bondController = builder.bondController;
         scannerType = builder.scannerType;
+        useNordicBleBackend = builder.useNordicBleBackend;
         deviceCreator = builder.deviceCreator == null ? new DefaultDeviceCreator() : builder.deviceCreator;
         scanConfiguration = builder.scanConfiguration == null ? new ScanConfiguration() : builder.scanConfiguration;
         logger = builder.logger == null ? new DefaultLogger("EasyBLE") : builder.logger;
@@ -561,7 +563,16 @@ public class EasyBLE {
                         connectDelay = createBond(device.getAddress()) ? 1500 : 0;
                     }
                 }
-                connection = new ConnectionImpl(this, bluetoothAdapter, device, configuration, connectDelay, observer);
+                // Choose connection implementation based on configuration
+                if (useNordicBleBackend) {
+                    logger.log(Log.INFO, Logger.TYPE_CONNECTION_STATE, 
+                        "Creating Nordic BLE-enhanced connection for improved reliability: " + device.getAddress());
+                    connection = new NordicConnectionImpl(this, bluetoothAdapter, device, configuration, connectDelay, observer);
+                } else {
+                    logger.log(Log.DEBUG, Logger.TYPE_CONNECTION_STATE, 
+                        "Creating standard EasyBLE connection: " + device.getAddress());
+                    connection = new ConnectionImpl(this, bluetoothAdapter, device, configuration, connectDelay, observer);
+                }
                 connectionMap.put(device.address, connection);
                 addressList.add(device.address);
                 return connection;
