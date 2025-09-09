@@ -71,6 +71,9 @@ dependencies {
     implementation(project(":libir"))
     implementation(project(":libui"))
     implementation(project(":libmenu"))
+    
+    // Enhanced BLE Module for systematic harmonization (future BLE transfer capabilities)
+    implementation(project(":BleModule"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

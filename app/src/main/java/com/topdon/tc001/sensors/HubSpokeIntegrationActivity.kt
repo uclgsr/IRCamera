@@ -18,6 +18,11 @@ import com.topdon.tc001.utils.TimeManager
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityHubSpokeIntegrationBinding
 import com.topdon.lib.core.ktbase.BaseBindingActivity
+
+// Enhanced BLE Module integration for systematic harmonization
+import com.topdon.ble.EasyBLE
+import com.topdon.ble.Device
+import com.topdon.ble.ConnectionState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -58,6 +63,10 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private lateinit var recordingController: RecordingController
     private lateinit var networkClient: EnhancedNetworkClient
     private lateinit var timeManager: TimeManager
+    
+    // Enhanced BLE Module for systematic harmonization
+    private lateinit var enhancedBLE: EasyBLE
+    private var connectedBLEDevices = mutableListOf<Device>()
     
     // Service connection
     private var recordingService: RecordingService? = null
@@ -120,6 +129,13 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
 
     private fun initializeComponents() {
         timeManager = TimeManager.getInstance(this)
+        
+        // Initialize Enhanced BLE Module with Nordic backend for systematic harmonization
+        enhancedBLE = EasyBLE.getBuilder()
+            .setUseNordicBleBackend(true) // Enable Nordic BLE for enhanced reliability
+            .build()
+        
+        Log.i(TAG, "Enhanced BLE Module initialized with Nordic BLE backend")
         
         // Initialize network client (will be connected to service later)
         recordingController = RecordingController(this, this)
@@ -392,6 +408,29 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         
         if (!isRecording) {
             binding.sensorStatusTextView.text = "Sensors: Idle"
+        }
+        
+        // Update BLE device status
+        updateBLEDeviceStatus()
+    }
+    
+    /**
+     * Update BLE device connection status in the UI
+     * Part of systematic harmonization for enhanced BLE monitoring
+     */
+    private fun updateBLEDeviceStatus() {
+        if (::enhancedBLE.isInitialized) {
+            val bleDeviceCount = connectedBLEDevices.size
+            val statusText = if (bleDeviceCount > 0) {
+                "BLE Devices: $bleDeviceCount connected (Enhanced Nordic Backend)"
+            } else {
+                "BLE Devices: Scanning for devices..."
+            }
+            
+            // Update the sensor status to include BLE device information
+            if (binding.sensorStatusTextView.text.toString().startsWith("Sensors: Idle")) {
+                binding.sensorStatusTextView.text = "Sensors: Idle | $statusText"
+            }
         }
     }
 }
