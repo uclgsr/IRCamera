@@ -154,12 +154,12 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
 
     private lateinit var binding: ActivityIrThermalLiteBinding
     
-    // View declarations using findViewById pattern
-    private val spaceChart by lazy { findViewById<View>(R.id.space_chart) }
-    // private val thermalTrendTips by lazy { findViewById<View>(R.id.thermal_trend_tips) } // View not found in layout
-    private val tvTypeInd by lazy { findViewById<TextView>(R.id.tv_type_ind) }
-    private val popTimeText by lazy { findViewById<TextView>(R.id.pop_time_text) }
-    private val popTimeLay by lazy { findViewById<View>(R.id.pop_time_lay) }
+    // View declarations using binding pattern - converted from findViewById
+    private val spaceChart by lazy { binding.spaceChart }
+    // private val thermalTrendTips by lazy { binding.thermalTrendTips } // View not found in layout
+    private val tvTypeInd by lazy { binding.tvTypeInd }
+    private val popTimeText by lazy { binding.popTimeText }
+    private val popTimeLay by lazy { binding.popTimeLay }
     private var mPreviewWidth = 256
     private var mPreviewHeight = 192
     private var mPreviewLayoutParams: RelativeLayout.LayoutParams? = null
