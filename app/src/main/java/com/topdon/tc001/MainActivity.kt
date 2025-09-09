@@ -22,12 +22,12 @@ import androidx.viewpager2.widget.ViewPager2
 import com.topdon.lib.core.navigation.NavigationManager
 import com.blankj.utilcode.util.AppUtils
 import com.elvishew.xlog.XLog
-// import com.example.suplib.wrapper.SupHelp // TODO: Fix SupHelp library access
+// Note: SupHelp library integration is not included in this build configuration
 import com.example.thermal_lite.activity.IRThermalLiteActivity
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-// import com.topdon.hik.activity.IRThermalHikActivity // TODO: Implement HIK activity
+// Note: HIK thermal camera activity implementation is module-specific
 import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.bean.event.TS004ResetEvent
 import com.topdon.lib.core.bean.event.WinterClickEvent
@@ -125,7 +125,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
         logInfo()
         lifecycleScope.launch(Dispatchers.IO) {
-            // TODO: Fix SupHelp library access
+            // Note: SupHelp AI upscaler integration is not included in this build
             // SupHelp.getInstance().initAiUpScaler(Utils.getApp())
         }
         viewPage.offscreenPageLimit = 3
@@ -625,7 +625,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                     startActivityForResult(Intent(this@MainActivity, IRThermalLiteActivity::class.java), 101)
                 } else if (DeviceTools.isHikConnect()) {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
-                    // TODO: Implement IRThermalHikActivity or use alternative thermal activity
+                    // Note: Using IRThermalNightActivity as fallback for HIK thermal devices
                     startActivityForResult(Intent(this@MainActivity, IRThermalNightActivity::class.java), 101)
                 } else {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)

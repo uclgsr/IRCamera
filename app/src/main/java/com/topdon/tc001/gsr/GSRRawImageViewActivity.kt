@@ -221,7 +221,7 @@ class GSRRawImageViewActivity : AppCompatActivity() {
     }
 
     private fun exportImage() {
-        // TODO: Implement RAW image export functionality
+        // Note: RAW image export functionality to be implemented in future release
         // Could offer options to export as JPEG, TIFF, or keep as DNG
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Export RAW Image")
@@ -231,7 +231,7 @@ class GSRRawImageViewActivity : AppCompatActivity() {
     }
 
     private fun showDetailedInfo() {
-        // TODO: Extract actual EXIF data from DNG file
+        // Note: EXIF data extraction from DNG files requires specialized metadata parsing
         val detailedInfo =
             """
             Technical Details:

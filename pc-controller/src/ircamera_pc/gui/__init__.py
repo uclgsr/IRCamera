@@ -1,7 +1,7 @@
 """
 GUI modules for IRCamera PC Controller
 
-This package contains the PyQt5-based user interface components.
+This package contains the PyQt6-based user interface components.
 """
 
 from .app import IRCameraApp, main

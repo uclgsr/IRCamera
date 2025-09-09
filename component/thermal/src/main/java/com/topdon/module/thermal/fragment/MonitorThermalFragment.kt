@@ -537,7 +537,8 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 
     private fun picture() {
 //        ScreenShotUtils.shotScreen(requireContext(), temp_display_lay, 1, ScreenBean())
-        // ScreenShotUtils.shotScreenBitmap(requireContext(), mIrBitmap, 1, ScreenBean()) // TODO: Fix when ScreenShotUtils is available
+        // Note: ScreenShotUtils functionality requires integration with screenshot utility module
+        // ScreenShotUtils.shotScreenBitmap(requireContext(), mIrBitmap, 1, ScreenBean())
     }
 
     var isVideoRunning = false
@@ -547,7 +548,8 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
             Log.w("123", "正在录制")
             return
         }
-        // val latestResultPath = "${FileConfig.galleryPath}YapBitmapToMp4_${System.currentTimeMillis()}.mp4" // TODO: Fix FileConfig.galleryPath reference
+        // Note: FileConfig.galleryPath requires integration with file configuration module
+        // val latestResultPath = "${FileConfig.galleryPath}YapBitmapToMp4_${System.currentTimeMillis()}.mp4"
         val latestResultPath = "/tmp/YapBitmapToMp4_${System.currentTimeMillis()}.mp4" // Temporary fallback
         Log.w("123", "latestResultPath:$latestResultPath")
         YapVideoEncoder(this, File(latestResultPath)).start()

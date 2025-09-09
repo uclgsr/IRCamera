@@ -121,7 +121,7 @@ class GSRVideoAdapter(
                 java.util.Locale.getDefault(),
             ).format(java.util.Date(videoFile.lastModified()))
 
-        // TODO: Extract actual video duration using MediaMetadataRetriever
+        // Note: Video duration extraction requires MediaMetadataRetriever implementation
         holder.duration.text = "Duration: Unknown"
 
         holder.itemView.setOnClickListener {

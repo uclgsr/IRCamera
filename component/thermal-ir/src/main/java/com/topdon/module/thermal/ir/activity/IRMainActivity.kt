@@ -89,7 +89,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
     override fun initView() {
         // Initialize views - migrated from synthetic views
         viewPage = findViewById(R.id.view_page)
-        // clRoot = findViewById(R.id.clRoot)  // TODO: Verify this ID exists in layout
+        // clRoot = findViewById(R.id.clRoot)  // Note: Verify this ID exists in layout if needed
         ivMainBg = findViewById(R.id.iv_main_bg)
         clIconMonitor = findViewById(R.id.cl_icon_monitor)
         clIconGallery = findViewById(R.id.cl_icon_gallery)

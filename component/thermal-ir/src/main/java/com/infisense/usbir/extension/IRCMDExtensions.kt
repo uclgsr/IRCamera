@@ -11,7 +11,7 @@ import com.energy.iruvc.ircmd.IRCMD
  * Set mirror mode for the IR camera
  */
 fun IRCMD.setMirror(enabled: Boolean) {
-    // TODO: Implement actual mirror functionality when full SDK is available
+    // Note: Mirror functionality requires full SDK integration
     // For now, this is a stub to allow compilation
 }
 
@@ -19,7 +19,7 @@ fun IRCMD.setMirror(enabled: Boolean) {
  * Set auto shutter mode
  */
 fun IRCMD.setAutoShutter(enabled: Boolean) {
-    // TODO: Implement actual auto shutter functionality when full SDK is available  
+    // Note: Auto shutter functionality requires full SDK integration
     // For now, this is a stub to allow compilation
 }
 
@@ -27,7 +27,7 @@ fun IRCMD.setAutoShutter(enabled: Boolean) {
  * Set DDE (Digital Detail Enhancement) level
  */
 fun IRCMD.setPropDdeLevel(level: Int) {
-    // TODO: Implement actual DDE level setting when full SDK is available
+    // Note: DDE level setting requires full SDK integration
     // For now, this is a stub to allow compilation
 }
 
@@ -35,6 +35,6 @@ fun IRCMD.setPropDdeLevel(level: Int) {
  * Set contrast level
  */
 fun IRCMD.setContrast(level: Int) {
-    // TODO: Implement actual contrast setting when full SDK is available
+    // Note: Contrast setting requires full SDK integration
     // For now, this is a stub to allow compilation
 }

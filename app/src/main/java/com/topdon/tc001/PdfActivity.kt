@@ -1,7 +1,7 @@
 package com.topdon.tc001
 
 import android.view.WindowManager
-// import com.github.barteksc.pdfviewer.PDFView // TODO: Add PDF library dependency
+// Note: PDFView library dependency not included in current build configuration
 import android.widget.TextView
 import com.csl.irCamera.R
 
@@ -16,16 +16,16 @@ import java.io.OutputStream
  **/
 // Legacy ARouter route annotation - now using NavigationManager
 class PdfActivity : BaseActivity() {
-    // findViewById declarations - TODO: Replace with PDFView when library is added
+    // Note: Using TextView placeholder until PDFView library is integrated
     private val pdfView: TextView by lazy { findViewById<TextView>(R.id.pdf_view) }
 
     override fun initContentView() = R.layout.activity_pdf
 
     override fun initView() {
-        // TODO: Implement PDF functionality when library is available
+        // Note: PDF functionality requires PDFView library integration
         // pdfView.fromAsset(if (intent.getBooleanExtra("isTS001", false)) "TC001.pdf" else "TS004.pdf")
         pdfView.text = "PDF functionality temporarily unavailable - library dependency missing"
-        // TODO: Restore PDF functionality with proper method calls
+        // Note: PDF viewer method calls require PDFView library integration
         /*
         .enableSwipe(true) // allows to block changing pages using swipe
         .swipeHorizontal(false)

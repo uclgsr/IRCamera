@@ -14,6 +14,7 @@ import com.elvishew.xlog.XLog
 import com.hjq.permissions.XXPermissions
 import com.topdon.lib.core.bean.event.SocketStateEvent
 import com.topdon.lib.core.config.DeviceConfig
+import com.topdon.lib.core.security.CertificateManager
 import com.topdon.lib.core.utils.WifiUtil
 import com.topdon.lib.core.utils.WsCmdConstants
 import okhttp3.Interceptor
@@ -26,9 +27,13 @@ import org.greenrobot.eventbus.EventBus
 
 class WebSocketProxy {
     companion object {
-        private const val TS004_URL = "ws://192.168.40.1:888"
-
-        private const val TC007_URL = "ws://192.168.40.1:63206/v1/thermal/temp/template/data"
+        // TLS-enabled URLs (wss://) for secure communication
+        private const val TS004_URL = "wss://192.168.40.1:888"
+        private const val TC007_URL = "wss://192.168.40.1:63206/v1/thermal/temp/template/data"
+        
+        // Fallback to plaintext for compatibility (can be disabled in production)
+        private const val TS004_URL_FALLBACK = "ws://192.168.40.1:888"
+        private const val TC007_URL_FALLBACK = "ws://192.168.40.1:63206/v1/thermal/temp/template/data"
 
         @JvmStatic
         private var mWebSocketProxy: WebSocketProxy? = null
@@ -50,6 +55,19 @@ class WebSocketProxy {
     private var webSocketListener: MyWebSocketListener? = null
     private var reconnectHandler = ReconnectHandler()
     private var network: Network? = null
+    private var certificateManager: CertificateManager? = null
+    private var useSecureConnection = true // Default to secure connections
+
+    fun initializeSecurity(context: android.content.Context) {
+        certificateManager = CertificateManager(context)
+        val initialized = certificateManager?.initialize() ?: false
+        if (!initialized) {
+            XLog.tag("WebSocket").w("Failed to initialize certificate manager, falling back to insecure connections")
+            useSecureConnection = false
+        } else {
+            XLog.tag("WebSocket").i("Certificate manager initialized successfully")
+        }
+    }
 
     private fun getOKHttpClient(): OkHttpClient {
         val builder =
@@ -58,16 +76,49 @@ class WebSocketProxy {
                 .addInterceptor(
                     Interceptor { chain ->
                         val originalRequest = chain.request()
-                        val builder: Request.Builder = originalRequest.newBuilder()
-                        val compressedRequest: Request = builder.build()
+                        val requestBuilder: Request.Builder = originalRequest.newBuilder()
+                        
+                        // Add authentication header if certificate manager is available
+                        certificateManager?.let { certManager ->
+                            val authToken = certManager.generateAuthToken()
+                            requestBuilder.addHeader("Authorization", "Bearer $authToken")
+                        }
+                        
+                        val compressedRequest: Request = requestBuilder.build()
                         XLog.tag("WebSocket").d("request:$compressedRequest")
                         chain.proceed(compressedRequest)
                     },
                 )
                 .retryOnConnectionFailure(true)
-        network?.socketFactory?.let {
-            builder.socketFactory(it)
+        
+        // Configure TLS/SSL if certificate manager is available and secure connection is enabled
+        if (useSecureConnection && certificateManager != null) {
+            try {
+                val sslSocketFactory = certificateManager?.createSSLSocketFactory()
+                val trustManager = certificateManager?.getTrustManager()
+                val hostnameVerifier = certificateManager?.createHostnameVerifier()
+                
+                if (sslSocketFactory != null && trustManager != null && hostnameVerifier != null) {
+                    builder.sslSocketFactory(sslSocketFactory, trustManager)
+                    builder.hostnameVerifier(hostnameVerifier)
+                    XLog.tag("WebSocket").d("Configured secure WebSocket connection")
+                } else {
+                    XLog.tag("WebSocket").w("SSL configuration incomplete, falling back to insecure connection")
+                    useSecureConnection = false
+                }
+            } catch (e: Exception) {
+                XLog.tag("WebSocket").e("Failed to configure SSL, falling back to insecure connection", e)
+                useSecureConnection = false
+            }
         }
+        
+        // Apply network-specific socket factory if available
+        network?.socketFactory?.let {
+            if (!useSecureConnection) { // Only apply if not using SSL
+                builder.socketFactory(it)
+            }
+        }
+        
         return builder.build()
     }
 
@@ -126,7 +177,7 @@ class WebSocketProxy {
             mWsManager =
                 WsManager.Builder()
                     .client(getOKHttpClient())
-                    .wsUrl(if (ssid.startsWith(DeviceConfig.TS004_NAME_START)) TS004_URL else TC007_URL)
+                    .wsUrl(getWebSocketUrl(ssid))
                     .setWsStatusListener(webSocketListener)
                     .build()
         }
@@ -157,6 +208,22 @@ class WebSocketProxy {
 
     fun sendMessage(cmd: String?) {
         mWsManager?.sendMessage(cmd)
+    }
+
+    /**
+     * Determine appropriate WebSocket URL based on device type and security settings
+     */
+    private fun getWebSocketUrl(ssid: String): String {
+        val isTS004 = ssid.startsWith(DeviceConfig.TS004_NAME_START)
+        
+        return if (useSecureConnection) {
+            // Use secure WebSocket (wss://)
+            if (isTS004) TS004_URL else TC007_URL
+        } else {
+            // Fall back to plaintext WebSocket (ws://)
+            XLog.tag("WebSocket").w("Using insecure WebSocket connection for $ssid")
+            if (isTS004) TS004_URL_FALLBACK else TC007_URL_FALLBACK
+        }
     }
 
     private class MyWebSocketListener(

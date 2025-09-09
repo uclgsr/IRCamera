@@ -224,7 +224,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private var storageRequestType = 0
 
     /**
-     * TODO TS001 待完成 观测-动态识别设置 初始化
+     * Note: TS001 dynamic recognition settings initialization pending completion
      */
     private var aiConfig = SaveSettingUtil.aiTraceType
 

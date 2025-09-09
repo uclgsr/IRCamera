@@ -124,7 +124,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
         adapter.isEditMode = isEditMode
         groupBottom.isVisible = isEditMode
         titleView.setTitleText(if (isEditMode) getString(R.string.chosen_item, adapter.selectList.size) else getString(R.string.app_gallery))
-        titleView.setLeftDrawable(if (isEditMode) 0 else 0)  // TODO: Add appropriate drawables
+        titleView.setLeftDrawable(if (isEditMode) 0 else 0)  // Note: Add appropriate drawables for edit mode states
         titleView.setLeftClickListener {
             if (isEditMode) {
                 setEditMode(false)
@@ -170,7 +170,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
             // adapter 里面的切换编辑太乱了，先这么顶着
             groupBottom.isVisible = true
             titleView.setTitleText(getString(R.string.chosen_item, adapter.selectList.size))
-            titleView.setLeftDrawable(0)  // TODO: Add appropriate drawable
+            titleView.setLeftDrawable(0)  // Note: Add appropriate drawable for cancel/back action
             titleView.setLeftClickListener {
                 setEditMode(false)
             }

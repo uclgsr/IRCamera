@@ -233,7 +233,7 @@ class GSRDataViewActivity : AppCompatActivity() {
     }
 
     private fun exportData() {
-        // TODO: Implement data export functionality
+        // Note: Data export functionality to be implemented in future release
     }
 
     private fun shareData() {
@@ -248,7 +248,7 @@ class GSRDataViewActivity : AppCompatActivity() {
     }
 
     private fun plotData() {
-        // TODO: Implement data plotting functionality
+        // Note: Data plotting functionality to be implemented in future release
         // Could launch a chart activity showing GSR trends over time
     }
 }

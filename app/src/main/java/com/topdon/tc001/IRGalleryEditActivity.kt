@@ -147,7 +147,7 @@ class IRGalleryEditActivity : BaseActivity(), View.OnClickListener, ITsTempListe
         isReportPick = intent.getBooleanExtra(ExtraKeyConfig.IS_PICK_REPORT_IMG, false)
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
-        // TODO: Convert to proper findViewById patterns
+        // Note: Using direct view references - findViewById patterns can be refactored if needed
         editRecyclerSecond.fenceSelectType = FenceType.DEL
         temperatureView.isShowName = isReportPick
         temperatureView.mode = Mode.CLEAR

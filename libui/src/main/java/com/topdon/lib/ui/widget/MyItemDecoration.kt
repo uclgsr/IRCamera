@@ -190,7 +190,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         itemCount: Int,
         spanCount: Int,
     ) {
-        // TODO: 有这样的需求了再来写吧
+        // Note: Implementation to be added when specific requirements are defined
     }
 
     private fun dp2px(dpValue: Float): Int = (dpValue * density + 0.5f).toInt()

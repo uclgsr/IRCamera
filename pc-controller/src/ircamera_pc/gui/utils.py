@@ -7,7 +7,7 @@ Utility functions and classes for GUI components.
 import sys
 
 from loguru import logger
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt6.QtCore import QObject, pyqtSignal
 
 from ..core.config import config
 
@@ -335,14 +335,14 @@ def confirm_action(parent, title: str, message: str) -> bool:
     Returns:
         True if user confirmed, False otherwise
     """
-    from PyQt5.QtWidgets import QMessageBox
+    from PyQt6.QtWidgets import QMessageBox
 
     reply = QMessageBox.question(
         parent,
         title,
         message,
-        QMessageBox.Yes | QMessageBox.No,
-        QMessageBox.No,
+        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+        QMessageBox.StandardButton.No,
     )
 
-    return reply == QMessageBox.Yes
+    return reply == QMessageBox.StandardButton.Yes

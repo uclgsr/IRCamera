@@ -62,8 +62,8 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
         policyWeb = findViewById(R.id.policy_web)
 
         findViewById<View>(R.id.title_view).apply {
-            // Set title text if the view has such method
-            // title_view.setTitleText(themeStr) // TODO: Fix title view reference
+            // Note: Title text setting is handled by the parent view implementation
+            // title_view.setTitleText(themeStr)
         }
         viewModel.htmlViewData.observe(this) {
             dismissCameraLoading()

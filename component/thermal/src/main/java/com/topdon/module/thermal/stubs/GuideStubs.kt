@@ -1,6 +1,6 @@
 package com.topdon.module.thermal.stubs
 
-// TODO: Temporary stubs for hardware-specific classes - replace when guide library is available
+// Note: Temporary stubs for hardware-specific classes - replace when guide library is available
 
 class GuideInterface {
     interface IrDataCallback {

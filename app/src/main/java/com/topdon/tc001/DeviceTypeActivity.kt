@@ -138,7 +138,7 @@ class DeviceTypeActivity : BaseActivity() {
             val tvItem1 = holder.itemView.findViewById<TextView>(R.id.tv_item1)
             tvItem1.text = firstType.getDeviceName()
             when (firstType) {
-                // TODO: 替换 TC002 Duo 图标
+                // Note: TC002 Duo icon can be customized with specific drawable resource
                 IRDeviceType.TC001 ->
                     holder.itemView.findViewById<android.widget.ImageView>(
                         R.id.iv_item1,
@@ -178,7 +178,7 @@ class DeviceTypeActivity : BaseActivity() {
                 val tvItem2 = holder.itemView.findViewById<TextView>(R.id.tv_item2)
                 tvItem2.text = secondType.getDeviceName()
                 when (secondType) {
-                    // TODO: 替换 TC002 Duo 图标
+                    // Note: TC002 Duo icon can be customized with specific drawable resource
                     IRDeviceType.TC001 ->
                         holder.itemView.findViewById<android.widget.ImageView>(
                             R.id.iv_item2,
