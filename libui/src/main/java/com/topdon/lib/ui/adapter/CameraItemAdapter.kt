@@ -80,7 +80,7 @@ class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapt
         }
 
         override fun onClick(v: View) {
-            parentRecycler!!.smoothScrollToPosition(adapterPosition)
+            parentRecycler!!.smoothScrollToPosition(bindingAdapterPosition)
         }
     }
 }

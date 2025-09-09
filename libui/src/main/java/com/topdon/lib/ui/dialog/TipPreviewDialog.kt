@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.topdon.lib.ui.dialog
 
 import android.app.Dialog
@@ -147,8 +149,9 @@ class TipPreviewDialog : DialogFragment() {
         }
     }
 
+    @Suppress("DEPRECATION")
     inner class PageAdapter(fragmentManager: FragmentManager) :
-        FragmentPagerAdapter(fragmentManager) {
+        FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getCount(): Int {
             return pageCount
         }

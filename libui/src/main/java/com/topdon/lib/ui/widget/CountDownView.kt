@@ -85,7 +85,7 @@ class CountDownView : View {
                     mProgressTextColor =
                         ta.getColor(
                             UiR.styleable.CountDownView_progressTextColor,
-                            context.resources.getColor(UiR.color.colorAccent),
+                            ContextCompat.getColor(context, UiR.color.colorAccent),
                         )
                 UiR.styleable.CountDownView_countdownTime ->
                     mCountdownTime =

@@ -31,12 +31,12 @@ class LiteSurfaceView
                 if (tmpData == null) {
                     tmpData = ByteArray(mIrRotateData!!.size)
                 }
-                System.arraycopy(mIrRotateData, 0, tmpData, 0, mIrRotateData!!.size)
+                System.arraycopy(mIrRotateData!!, 0, tmpData!!, 0, mIrRotateData!!.size)
                 if (imageBitmap == null || imageBitmap!!.getWidth() != mFinalImageWidth) {
                     imageBitmap =
                         Bitmap.createBitmap(mFinalImageWidth, mFinalImageHeight, Bitmap.Config.ARGB_8888)
                 }
-                imageBitmap?.copyPixelsFromBuffer(ByteBuffer.wrap(tmpData))
+                imageBitmap?.copyPixelsFromBuffer(ByteBuffer.wrap(tmpData!!))
                 return Bitmap.createScaledBitmap(
                     imageBitmap!!,
                     measuredWidth,

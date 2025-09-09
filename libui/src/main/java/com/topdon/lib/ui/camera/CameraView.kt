@@ -220,6 +220,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
             // 将previewSurface添加到预览请求中
             mCameraCaptureBuilder.addTarget(previewSurface)
             // 创建会话
+            @Suppress("DEPRECATION")
             mCameraDevice!!.createCaptureSession(
                 listOf(
                     previewSurface,

@@ -89,6 +89,7 @@ class TempAlarmSetDialog(
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         dismiss()
     }

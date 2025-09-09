@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.topdon.lib.ui.dialog
 
 import android.graphics.Color
@@ -147,11 +149,12 @@ class TipGuideDialog : DialogFragment() {
         }
     }
 
+    @Suppress("DEPRECATION")
     inner class PageAdapter(
         fragmentManager: FragmentManager,
         private val imgResList: ArrayList<Int>,
     ) :
-        FragmentPagerAdapter(fragmentManager) {
+        FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getCount(): Int {
             return imgResList.size
         }
