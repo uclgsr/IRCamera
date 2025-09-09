@@ -110,6 +110,10 @@ dependencies {
     api(libs.javacpp)  // JavaCV native dependencies
     
     implementation(project(":libapp"))
+    
+    // Add unified BLE module for comprehensive Shimmer Nordic and Topdon BLE support
+    implementation(project(":BleModule"))
+    
     // libcommon needs to be available directly to libir since it uses SurfaceNativeWindow
     // Changed to compileOnly since library modules cannot include AAR dependencies directly
     compileOnly(files("../app/libs/libcommon_1.2.0_24052117.aar"))

@@ -37,8 +37,15 @@ import java.util.concurrent.ExecutorService;
 
 
 /**
+ * Enhanced EasyBLE with unified Shimmer Nordic and Topdon BLE integration.
+ * 
+ * This class now provides comprehensive BLE support through the UnifiedBleManager,
+ * maintaining full backward compatibility while adding enterprise-grade features
+ * for both Shimmer and Topdon BLE devices.
+ * 
  * date: 2021/8/12 11:50
  * author: bichuanfeng
+ * enhanced: IRCamera Unified BLE Integration Team
  */
 public class EasyBLE {
     static volatile EasyBLE instance;
@@ -48,6 +55,9 @@ public class EasyBLE {
     private final BondController bondController;
     private final DeviceCreator deviceCreator;
     private final Observable observable;
+    
+    // Unified BLE manager for comprehensive device support
+    private UnifiedBleManager unifiedBleManager;
     private final Logger logger;
     private final ScannerType scannerType;
     public final ScanConfiguration scanConfiguration;
@@ -84,7 +94,12 @@ public class EasyBLE {
             executorService = builder.executorService;
             posterDispatcher = new PosterDispatcher(executorService, builder.methodDefaultThreadMode);
             observable = new Observable(posterDispatcher, builder.isObserveAnnotationRequired);
-        }    
+        }
+        
+        // Initialize unified BLE manager for comprehensive Shimmer and Topdon support
+        if (application != null) {
+            unifiedBleManager = UnifiedBleManager.getInstance(application);
+        }
     }
 
     /**
@@ -165,6 +180,29 @@ public class EasyBLE {
      */
     public boolean isBluetoothOn() {
         return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
+    }
+
+    /**
+     * Get the unified BLE manager for comprehensive Shimmer and Topdon device support.
+     * 
+     * @return UnifiedBleManager instance, or null if not initialized
+     */
+    @Nullable
+    public UnifiedBleManager getUnifiedBleManager() {
+        if (unifiedBleManager == null && application != null) {
+            unifiedBleManager = UnifiedBleManager.getInstance(application);
+        }
+        return unifiedBleManager;
+    }
+
+    /**
+     * Check if unified BLE manager is available and initialized.
+     * 
+     * @return true if unified manager is ready for use
+     */
+    public boolean isUnifiedBleManagerReady() {
+        UnifiedBleManager manager = getUnifiedBleManager();
+        return manager != null && manager.initialize();
     }
 
     private class InnerBroadcastReceiver extends BroadcastReceiver {

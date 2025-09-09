@@ -44,9 +44,6 @@ dependencies {
     // Core library desugaring support
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    // Add libapp dependency to get access to LMS SDK
-    api(project(":libapp"))
-    
     // Compile-time access to LMS SDK for BleModule classes that directly import LMS classes
     compileOnly(files("../shared/libs/lms_international-3.90.009.0.aar"))
     

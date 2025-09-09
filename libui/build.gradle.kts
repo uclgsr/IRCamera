@@ -69,6 +69,9 @@ dependencies {
     // Project dependencies
     implementation(project(":libapp"))
     implementation(project(":libmenu"))  // Required for menu references in widget files
+    
+    // Add unified BLE module for comprehensive Shimmer Nordic and Topdon BLE support
+    implementation(project(":BleModule"))
 
     // Use shared UI bundle instead of individual dependencies
     implementation(libs.bundles.ui.common)

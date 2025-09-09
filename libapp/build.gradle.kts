@@ -186,6 +186,9 @@ dependencies {
     api(libs.javacv)
     api(libs.javacpp)
     
+    // Add unified BLE module for comprehensive Shimmer Nordic and Topdon BLE support
+    api(project(":BleModule"))
+    
     // Compile-time access to LMS SDK classes without packaging in AAR
     // The app module provides the actual implementation
     compileOnly(files("../shared/libs/lms_international-3.90.009.0.aar"))

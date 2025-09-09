@@ -57,6 +57,9 @@ dependencies {
 
     implementation(project(":libapp")) // Requires string resources
     
+    // Add unified BLE module for comprehensive Shimmer Nordic and Topdon BLE support
+    implementation(project(":BleModule"))
+    
     // Testing dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.test.ext.junit)
