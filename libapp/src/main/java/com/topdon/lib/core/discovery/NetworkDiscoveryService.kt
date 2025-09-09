@@ -289,10 +289,13 @@ class NetworkDiscoveryService(private val context: Context) {
                 val deviceType = determineDeviceType(serviceInfo)
                 val attributes = extractAttributes(serviceInfo)
                 
+                @Suppress("DEPRECATION")
+                val ipAddress = serviceInfo.host?.hostAddress ?: "unknown"
+                
                 val discoveredDevice = DiscoveredDevice(
                     serviceName = serviceInfo.serviceName,
                     serviceType = serviceInfo.serviceType,
-                    ipAddress = serviceInfo.host.hostAddress ?: "unknown",
+                    ipAddress = ipAddress,
                     port = serviceInfo.port,
                     deviceType = deviceType,
                     attributes = attributes
@@ -305,6 +308,7 @@ class NetworkDiscoveryService(private val context: Context) {
             }
         }
 
+        @Suppress("DEPRECATION")
         nsdManager.resolveService(serviceInfo, resolveListener)
     }
 

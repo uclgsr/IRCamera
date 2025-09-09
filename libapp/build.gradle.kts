@@ -15,6 +15,8 @@ kapt {
     // Enable Kotlin 2.1.0 compatibility
     correctErrorTypes = true
     useBuildCache = true
+    // Support for Kotlin 2.0+ in kapt
+    includeCompileClasspath = false
 }
 
 android {
@@ -83,6 +85,7 @@ dependencies {
     api(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
     // Note: AAR dependencies moved to app module to avoid AGP 8.0+ issues
     api(libs.androidx.appcompat)
+    api(libs.androidx.preference)
     api(libs.fragment.ktx)
     api(libs.material)
 

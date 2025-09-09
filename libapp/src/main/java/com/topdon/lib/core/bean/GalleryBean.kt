@@ -5,7 +5,7 @@ import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.repository.FileBean
 import com.topdon.lib.core.tools.TimeTool
 import com.topdon.lib.core.tools.VideoTools
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.io.File
 import java.util.TimeZone
 

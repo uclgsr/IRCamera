@@ -43,7 +43,7 @@ object TimeTool {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val timeZone = TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
             dateFormat.timeZone = timeZone
-            dateFormat.parse(timeStr, ParsePosition(0)).time
+            dateFormat.parse(timeStr, ParsePosition(0))?.time ?: 1609430400000
         } catch (e: Exception) {
             // 2021-01-01 00:00:00
             1609430400000

@@ -5,6 +5,13 @@ plugins {
     id("kotlin-parcelize")
 }
 
+kapt {
+    // Support for Kotlin 2.0+ in kapt
+    correctErrorTypes = true
+    useBuildCache = true
+    includeCompileClasspath = false
+}
+
 android {
     namespace = "com.topdon.menu"
     compileSdk = libs.versions.compileSdk.get().toInt()
