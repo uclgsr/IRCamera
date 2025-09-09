@@ -18,15 +18,7 @@ android {
         }
     }
 
-    buildTypes {
-        debug {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-        release {
+    buildTypes {release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -35,11 +27,11 @@ android {
         }
     }
     
-    // Enable debug and release variants for flexible development
+    // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
-            // Enable both debug and release variants
-            variant.enable = variant.buildType in listOf("debug", "release")
+            // Only enable release variant for single-developer maintenance
+            variant.enable = variant.buildType == "release"
         }
     }
 
