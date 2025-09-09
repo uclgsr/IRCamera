@@ -31,6 +31,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
 import com.topdon.lib.core.listener.BitmapViewListener
+import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.ui.databinding.CameraLayBinding
 import java.util.Collections
 import android.view.LayoutInflater
@@ -166,14 +167,14 @@ class CameraPreView :
                     if (scale > 0.1)
                         {
                             scale += scaleFactor
-                            mTextureView.scaleX = scale
-                            mTextureView.scaleY = scale
+                            binding.cameraTexture.scaleX = scale
+                            binding.cameraTexture.scaleY = scale
                         }
                 } else
                 {
                     scale += scaleFactor
-                    mTextureView.scaleX = scale
-                    mTextureView.scaleY = scale
+                    binding.cameraTexture.scaleX = scale
+                    binding.cameraTexture.scaleY = scale
                 }
         }
         return true
@@ -273,10 +274,10 @@ class CameraPreView :
     private fun updateRotation()  {
         if (isReverse)
             {
-                mTextureView.rotation = 180f
+                binding.cameraTexture.rotation = 180f
             } else
             {
-                mTextureView.rotation = 0f
+                binding.cameraTexture.rotation = 0f
             }
     }
 
@@ -291,10 +292,10 @@ class CameraPreView :
 //        val layoutParams = mTextureView.layoutParams
 //        layoutParams.width = cameraWidth / 2
 //        mTextureView.layoutParams = layoutParams
-        val surfaceTexture = mTextureView.surfaceTexture
+        val surfaceTexture = binding.cameraTexture.surfaceTexture
         // 设置默认的缓冲大小
-        surfaceTexture!!.setDefaultBufferSize(mPreviewSize!!.width, mPreviewSize!!.height)
-        // 创建Surface
+        surfaceTexture?.setDefaultBufferSize(mPreviewSize!!.width, mPreviewSize!!.height)
+        // 创建Surface  
         val previewSurface = Surface(surfaceTexture)
         try {
             // 创建预览请求
@@ -340,7 +341,7 @@ class CameraPreView :
     }
 
     private fun onResumeView() {
-        mTextureView.surfaceTextureListener =
+        binding.cameraTexture.surfaceTextureListener =
             object : TextureView.SurfaceTextureListener {
                 override fun onSurfaceTextureAvailable(
                     surface: SurfaceTexture,
@@ -404,9 +405,9 @@ class CameraPreView :
 
                 mPreviewSize = getOptimalSize(mapList, width, height)
                 val constraintSet = ConstraintSet()
-                constraintSet.clone(findViewById<ConstraintLayout>(UiR.id.camera_lay_root))
-                constraintSet.constrainHeight(mTextureView.id, width * mPreviewSize!!.width / mPreviewSize!!.height)
-                constraintSet.applyTo(findViewById<ConstraintLayout>(UiR.id.camera_lay_root))
+                constraintSet.clone(binding.cameraLayRoot)
+                constraintSet.constrainHeight(binding.cameraTexture.id, width * mPreviewSize!!.width / mPreviewSize!!.height)
+                constraintSet.applyTo(binding.cameraLayRoot)
                 XLog.w("mPreviewSize:$mPreviewSize")
                 // 获取相机支持的最大拍照尺寸
                 val sizes = map.getOutputSizes(ImageFormat.JPEG)
@@ -490,10 +491,10 @@ class CameraPreView :
         try {
             mCameraDevice?.close()
             // 恢复原始状态
-            mTextureView.x = 0f
-            mTextureView.y = 0f
-            mTextureView.scaleX = 1f
-            mTextureView.scaleY = 1f
+            binding.cameraTexture.x = 0f
+            binding.cameraTexture.y = 0f
+            binding.cameraTexture.scaleX = 1f
+            binding.cameraTexture.scaleY = 1f
             scale = 1f
 //            isReverse = false
         } catch (e: Exception) {
@@ -503,26 +504,26 @@ class CameraPreView :
     }
 
     override val viewX: Float
-        get() = mTextureView.x - (viewWidth - mTextureView.width) / 2
+        get() = binding.cameraTexture.x - (viewWidth - binding.cameraTexture.width) / 2
     override val viewY: Float
-        get() = mTextureView.y - (viewHeight - mTextureView.height) / 2
+        get() = binding.cameraTexture.y - (viewHeight - binding.cameraTexture.height) / 2
     override val viewAlpha: Float
-        get() = mTextureView.alpha
+        get() = binding.cameraTexture.alpha
     override val viewWidth: Float
-        get() = mTextureView.width * scale
+        get() = binding.cameraTexture.width * scale
     override val viewHeight: Float
-        get() = mTextureView.height * scale
+        get() = binding.cameraTexture.height * scale
     override val viewScale: Float
         get() = scale
 
     fun setCameraAlpha(alpha: Float)  {
-        mTextureView?.alpha = 1 - alpha
+        binding.cameraTexture.alpha = 1 - alpha
     }
 
     fun setZoom(zoomLeve: Int)  {
         scale = zoomLeve * 0.5f
-        mTextureView.scaleX = scale
-        mTextureView.scaleY = scale
+        binding.cameraTexture.scaleX = scale
+        binding.cameraTexture.scaleY = scale
         invalidate()
     }
 }
