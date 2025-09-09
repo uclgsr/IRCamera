@@ -7,26 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityResearchTemplateBinding
 import com.topdon.gsr.model.ResearchTemplate
+import com.topdon.lib.core.base.BaseBindingActivity
 
 /**
  * Research Template Selection Activity
  * Allows users to choose from predefined research templates or create custom configurations
  */
-class ResearchTemplateActivity : AppCompatActivity() {
-    private lateinit var categorySpinner: Spinner
-    private lateinit var templatesRecyclerView: RecyclerView
+class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBinding>() {
     private lateinit var templateAdapter: TemplateAdapter
-    private lateinit var emptyView: View
-    private lateinit var selectedTemplateContainer: LinearLayout
-    private lateinit var selectedTemplateTitle: TextView
-    private lateinit var selectedTemplateDescription: TextView
-    private lateinit var selectedTemplateInstructions: TextView
-    private lateinit var startRecordingButton: Button
 
     private var selectedTemplate: ResearchTemplate? = null
     private val allTemplates = ResearchTemplate.PREDEFINED_TEMPLATES
@@ -38,9 +31,10 @@ class ResearchTemplateActivity : AppCompatActivity() {
         }
     }
 
+    override fun getLayoutId() = R.layout.activity_research_template
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_research_template)
 
         initializeViews()
         setupCategoryFilter()
@@ -49,19 +43,10 @@ class ResearchTemplateActivity : AppCompatActivity() {
     }
 
     private fun initializeViews() {
-        categorySpinner = findViewById(R.id.category_spinner)
-        templatesRecyclerView = findViewById(R.id.templates_recycler_view)
-        emptyView = findViewById(R.id.empty_view)
-        selectedTemplateContainer = findViewById(R.id.selected_template_container)
-        selectedTemplateTitle = findViewById(R.id.selected_template_title)
-        selectedTemplateDescription = findViewById(R.id.selected_template_description)
-        selectedTemplateInstructions = findViewById(R.id.selected_template_instructions)
-        startRecordingButton = findViewById(R.id.start_recording_button)
-
         supportActionBar?.title = "Research Templates"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        startRecordingButton.setOnClickListener {
+        binding.startRecordingButton.setOnClickListener {
             selectedTemplate?.let { template ->
                 startRecordingWithTemplate(template)
             }
@@ -80,9 +65,9 @@ class ResearchTemplateActivity : AppCompatActivity() {
 
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        categorySpinner.adapter = spinnerAdapter
+        binding.categorySpinner.adapter = spinnerAdapter
 
-        categorySpinner.onItemSelectedListener =
+        binding.categorySpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -105,8 +90,8 @@ class ResearchTemplateActivity : AppCompatActivity() {
                 onTemplateSelected = { template -> selectTemplate(template) },
             )
 
-        templatesRecyclerView.layoutManager = GridLayoutManager(this, 2)
-        templatesRecyclerView.adapter = templateAdapter
+        binding.templatesRecyclerView.layoutManager = GridLayoutManager(this, 2)
+        binding.templatesRecyclerView.adapter = templateAdapter
     }
 
     private fun loadTemplates() {
@@ -174,11 +159,11 @@ class ResearchTemplateActivity : AppCompatActivity() {
                     }
                 }
 
-            selectedTemplateInstructions.text = details
-            startRecordingButton.isEnabled = true
+            binding.selectedTemplateInstructions.text = details
+            binding.startRecordingButton.isEnabled = true
         } ?: run {
-            selectedTemplateContainer.visibility = View.GONE
-            startRecordingButton.isEnabled = false
+            binding.selectedTemplateContainer.visibility = View.GONE
+            binding.startRecordingButton.isEnabled = false
         }
     }
 
@@ -189,8 +174,8 @@ class ResearchTemplateActivity : AppCompatActivity() {
     }
 
     private fun updateEmptyView() {
-        emptyView.visibility = if (filteredTemplates.isEmpty()) View.VISIBLE else View.GONE
-        templatesRecyclerView.visibility = if (filteredTemplates.isEmpty()) View.GONE else View.VISIBLE
+        binding.emptyView.visibility = if (filteredTemplates.isEmpty()) View.VISIBLE else View.GONE
+        binding.templatesRecyclerView.visibility = if (filteredTemplates.isEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun startRecordingWithTemplate(template: ResearchTemplate) {
