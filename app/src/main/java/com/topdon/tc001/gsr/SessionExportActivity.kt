@@ -3,14 +3,14 @@ package com.topdon.tc001.gsr
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.csl.irCamera.databinding.ActivitySessionExportBinding
 
 /**
  * Session Export Activity
  * Export session data in various research formats
  */
-class SessionExportActivity : AppCompatActivity() {
+class SessionExportActivity : BaseBindingActivity<ActivitySessionExportBinding>() {
     companion object {
         private const val EXTRA_SESSION_ID = "session_id"
 
@@ -26,18 +26,15 @@ class SessionExportActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // Create simple layout programmatically
-        val textView =
-            TextView(this).apply {
-                text = "Session Export\n\nSession ID: ${intent.getStringExtra(EXTRA_SESSION_ID)}\n\nExport Options:\n• CSV Format\n• JSON Format\n• Research-grade metadata\n• Synchronized timestamps\n\nExport functionality coming soon..."
-                setPadding(32, 32, 32, 32)
-                textSize = 16f
-            }
-
-        setContentView(textView)
+    override fun initView() {
+        val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
+        
+        // Set the content programmatically
+        binding.root.apply {
+            text = "Session Export\n\nSession ID: $sessionId\n\nExport Options:\n• CSV Format\n• JSON Format\n• Research-grade metadata\n• Synchronized timestamps\n\nExport functionality coming soon..."
+            setPadding(32, 32, 32, 32)
+            textSize = 16f
+        }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Export Session"
