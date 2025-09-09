@@ -29,6 +29,7 @@ import com.topdon.lib.core.tools.ToastTools
 import com.topdon.lib.core.tools.UnitTools
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.adapter.ColorSelectAdapter
+import com.topdon.lib.ui.databinding.DialogThermalInputBinding
 import java.math.BigDecimal
 import com.topdon.lib.ui.R as UiR
 
@@ -198,6 +199,7 @@ class ThermalInputDialog : Dialog {
         }
 
         private val adapter by lazy { ColorSelectAdapter(context!!) }
+        private lateinit var binding: DialogThermalInputBinding
 
         fun create(): ThermalInputDialog {
             if (dialog == null) {
@@ -205,36 +207,38 @@ class ThermalInputDialog : Dialog {
             }
             val inflater =
                 context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val view = inflater.inflate(UiR.layout.dialog_thermal_input, null)
-            messageText = view.findViewById(UiR.id.dialog_tip_msg_text)
-            successBtn = view.findViewById(UiR.id.dialog_tip_success_btn)
-            cancelBtn = view.findViewById(UiR.id.dialog_tip_cancel_btn)
-            upEdit = view.findViewById(UiR.id.dialog_up_edit)
-            downEdit = view.findViewById(UiR.id.dialog_down_edit)
-            upUnit = view.findViewById(UiR.id.dialog_up_unit_text)
-            downUnit = view.findViewById(UiR.id.dialog_down_unit_text)
-            colorPickerView = view.findViewById(UiR.id.color_picker_view)
-            recycler = view.findViewById(UiR.id.color_picker_recycler)
-            view.findViewById<View>(UiR.id.color_picker_view_lay).visibility = View.GONE
-            view.findViewById<View>(UiR.id.dialog_input_lay).visibility = View.VISIBLE
+            binding = DialogThermalInputBinding.inflate(inflater)
+            
+            // Initialize views using binding
+            messageText = binding.dialogTipMsgText
+            successBtn = binding.dialogTipSuccessBtn
+            cancelBtn = binding.dialogTipCancelBtn
+            upEdit = binding.dialogUpEdit
+            downEdit = binding.dialogDownEdit
+            upUnit = binding.dialogUpUnitText
+            downUnit = binding.dialogDownUnitText
+            colorPickerView = binding.colorPickerView
+            recycler = binding.colorPickerRecycler
+            
+            binding.colorPickerViewLay.visibility = View.GONE
+            binding.dialogInputLay.visibility = View.VISIBLE
+            
             // 隐藏颜色
-            if (isIconEdit)
-                {
-                    view.findViewById<View>(UiR.id.dialog_up_color).visibility = View.GONE
-                    view.findViewById<View>(UiR.id.dialog_down_color).visibility = View.GONE
-                } else
-                {
-                    view.findViewById<View>(UiR.id.dialog_up_color).visibility = View.VISIBLE
-                    view.findViewById<View>(UiR.id.dialog_down_color).visibility = View.VISIBLE
-                }
+            if (isIconEdit) {
+                binding.dialogUpColor.visibility = View.GONE
+                binding.dialogDownColor.visibility = View.GONE
+            } else {
+                binding.dialogUpColor.visibility = View.VISIBLE
+                binding.dialogDownColor.visibility = View.VISIBLE
+            }
             messageText.text = message
             // 初始化颜色
             if (maxColor != 0) upColor = maxColor
             if (minColor != 0) downColor = minColor
             upUnit.text = UnitTools.showUnit()
             downUnit.text = UnitTools.showUnit()
-            view.findViewById<ImageView>(UiR.id.dialog_up_color).setColorFilter(upColor)
-            view.findViewById<ImageView>(UiR.id.dialog_down_color).setColorFilter(downColor)
+            binding.dialogUpColor.setColorFilter(upColor)
+            binding.dialogDownColor.setColorFilter(downColor)
             colorPickerView.setInitialColor(upColor)
 
             recycler.layoutManager = GridLayoutManager(context!!, 6)
@@ -245,7 +249,7 @@ class ThermalInputDialog : Dialog {
             }
 
             dialog!!.addContentView(
-                view,
+                binding.root,
                 LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT),
             )
             val lp = dialog!!.window!!.attributes
@@ -262,22 +266,22 @@ class ThermalInputDialog : Dialog {
 
             dialog!!.setCanceledOnTouchOutside(canceled)
             successBtn.setOnClickListener {
-                if (view.findViewById<View>(UiR.id.color_picker_view_lay).isVisible) {
+                if (binding.colorPickerViewLay.isVisible) {
                     // 选取颜色,返回上一步
-                    view.findViewById<View>(UiR.id.color_picker_view_lay).visibility = View.GONE
-                    view.findViewById<View>(UiR.id.dialog_input_lay).visibility = View.VISIBLE
+                    binding.colorPickerViewLay.visibility = View.GONE
+                    binding.dialogInputLay.visibility = View.VISIBLE
                     messageText.text = message
                     if (dialog!!.action == 201) {
                         if (selectColor != 0) {
                             upColor = selectColor
                         }
-                        view.findViewById<ImageView>(UiR.id.dialog_up_color).setColorFilter(upColor)
+                        binding.dialogUpColor.setColorFilter(upColor)
                     }
                     if (dialog!!.action == 301) {
                         if (selectColor != 0) {
                             downColor = selectColor
                         }
-                        view.findViewById<ImageView>(UiR.id.dialog_down_color).setColorFilter(downColor)
+                        binding.dialogDownColor.setColorFilter(downColor)
                     }
                     dialog!!.action = 100
                     return@setOnClickListener
@@ -345,10 +349,10 @@ class ThermalInputDialog : Dialog {
                     }
             }
             cancelBtn.setOnClickListener {
-                if (view.findViewById<View>(UiR.id.color_picker_view_lay).isVisible) {
+                if (binding.colorPickerViewLay.isVisible) {
                     // 返回上一步
-                    view.findViewById<View>(UiR.id.color_picker_view_lay).visibility = View.GONE
-                    view.findViewById<View>(UiR.id.dialog_input_lay).visibility = View.VISIBLE
+                    binding.colorPickerViewLay.visibility = View.GONE
+                    binding.dialogInputLay.visibility = View.VISIBLE
                     messageText.text = message
                     dialog!!.action = 100
                     return@setOnClickListener
@@ -356,17 +360,17 @@ class ThermalInputDialog : Dialog {
                 dismiss()
                 cancelEvent?.invoke()
             }
-            view.findViewById<ImageView>(UiR.id.dialog_up_color).setOnClickListener {
+            binding.dialogUpColor.setOnClickListener {
                 dialog!!.action = 201
-                view.findViewById<View>(UiR.id.color_picker_view_lay).visibility = View.VISIBLE
-                view.findViewById<View>(UiR.id.dialog_input_lay).visibility = View.GONE
+                binding.colorPickerViewLay.visibility = View.VISIBLE
+                binding.dialogInputLay.visibility = View.GONE
                 messageText.text = context!!.getString(R.string.color_board)
                 colorPickerView.setInitialColor(upColor)
             }
-            view.findViewById<ImageView>(UiR.id.dialog_down_color).setOnClickListener {
+            binding.dialogDownColor.setOnClickListener {
                 dialog!!.action = 301
-                view.findViewById<View>(UiR.id.color_picker_view_lay).visibility = View.VISIBLE
-                view.findViewById<View>(UiR.id.dialog_input_lay).visibility = View.GONE
+                binding.colorPickerViewLay.visibility = View.VISIBLE
+                binding.dialogInputLay.visibility = View.GONE
                 messageText.text = context!!.getString(R.string.color_board)
                 colorPickerView.setInitialColor(downColor)
             }

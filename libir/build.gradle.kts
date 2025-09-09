@@ -57,6 +57,20 @@ android {
             jniLibs.srcDirs("libs", "src/main/jnilibs")
         }
     }
+    
+    packagingOptions {
+        pickFirst("**/libc++_shared.so")
+        pickFirst("**/libSRImage.so") 
+        // Handle corrupted native libraries by excluding them
+        excludes += listOf(
+            "**/libSRImage.so", // Exclude corrupted libSRImage.so - will be handled by app module
+            "META-INF/DEPENDENCIES",
+            "META-INF/LICENSE",
+            "META-INF/LICENSE.txt",
+            "META-INF/NOTICE",
+            "META-INF/NOTICE.txt"
+        )
+    }
 }
 
 dependencies {

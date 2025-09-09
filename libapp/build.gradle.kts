@@ -75,6 +75,32 @@ android {
             jniLibs.srcDirs("src/main/jniLibs")
         }
     }
+    
+    packagingOptions {
+        pickFirst("**/libc++_shared.so")
+        // Handle native library conflicts and stripping issues
+        excludes += listOf(
+            "**/libavcodec.so",    // Exclude FFmpeg libraries that can't be stripped
+            "**/libavdevice.so", 
+            "**/libavfilter.so",
+            "**/libavformat.so",
+            "**/libavutil.so",
+            "**/libjniavcodec.so",
+            "**/libjniavdevice.so",
+            "**/libjniavfilter.so", 
+            "**/libjniavformat.so",
+            "**/libjniavutil.so",
+            "**/libjniswresample.so",
+            "**/libjniswscale.so",
+            "**/libswresample.so",
+            "**/libswscale.so",
+            "META-INF/DEPENDENCIES",
+            "META-INF/LICENSE",
+            "META-INF/LICENSE.txt", 
+            "META-INF/NOTICE",
+            "META-INF/NOTICE.txt"
+        )
+    }
 }
 
 //kotlin {

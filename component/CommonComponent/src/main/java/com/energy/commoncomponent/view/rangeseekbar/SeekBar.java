@@ -26,6 +26,8 @@ import androidx.core.content.ContextCompat;
 
 import com.energy.commoncomponent.R;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
@@ -37,6 +39,7 @@ public class SeekBar {
     public static final int INDICATOR_ALWAYS_SHOW = 3;
 
     @IntDef({INDICATOR_SHOW_WHEN_TOUCH, INDICATOR_ALWAYS_HIDE, INDICATOR_ALWAYS_SHOW_AFTER_TOUCH, INDICATOR_ALWAYS_SHOW})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface IndicatorModeDef {
     }
 

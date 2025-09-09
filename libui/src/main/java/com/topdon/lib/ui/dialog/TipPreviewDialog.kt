@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.topdon.lib.core.R
+import com.topdon.lib.ui.databinding.DialogTipPreviewBinding
 import com.topdon.lib.ui.widget.IndicateView
 import io.reactivex.disposables.Disposable
 import java.util.Timer
@@ -31,6 +32,8 @@ class TipPreviewDialog : DialogFragment() {
     var closeEvent: ((check: Boolean) -> Unit)? = null
     private var canceled = false
     private var hasCheck = false
+    private var _binding: DialogTipPreviewBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var tvContent: TextView
     private lateinit var checkBox: CheckBox
@@ -53,8 +56,9 @@ class TipPreviewDialog : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(UiR.layout.dialog_tip_preview, container, false)
+    ): View {
+        _binding = DialogTipPreviewBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(
@@ -67,11 +71,14 @@ class TipPreviewDialog : DialogFragment() {
                 getString(R.string.preview_step_1),
                 getString(R.string.preview_step_2),
             )
-        checkBox = view.findViewById(UiR.id.dialog_tip_check)
-        imgClose = view.findViewById(UiR.id.img_close)
-        viewPager = view.findViewById(UiR.id.view_pager)
-        tvContent = view.findViewById(UiR.id.tv_content)
-        indicateView = view.findViewById(UiR.id.indicate_view)
+            
+        // Initialize views using binding
+        checkBox = binding.dialogTipCheck
+        imgClose = binding.imgClose
+        viewPager = binding.viewPager
+        tvContent = binding.tvContent
+        indicateView = binding.indicateView
+        
         val adapter = PageAdapter(childFragmentManager)
         indicateView.itemCount = adapter.count
         viewPager.adapter = adapter
@@ -82,7 +89,7 @@ class TipPreviewDialog : DialogFragment() {
             closeEvent?.invoke(hasCheck)
             dismiss()
         }
-        view.findViewById<TextView>(UiR.id.tv_i_know).setOnClickListener {
+        binding.tvIKnow.setOnClickListener {
             closeEvent?.invoke(hasCheck)
             dismiss()
         }
@@ -130,6 +137,14 @@ class TipPreviewDialog : DialogFragment() {
         params.height = -1
         dialog?.window?.attributes = params as WindowManager.LayoutParams
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+    
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        timer?.cancel()
+        timer = null
+        dis?.dispose()
     }
 
     override fun show(

@@ -93,6 +93,11 @@ android {
     
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs += listOf(
+            "-Xopt-in=kotlin.RequiresOptIn",
+            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi", 
+            "-Xopt-in=kotlinx.coroutines.FlowPreview"
+        )
     }
 
     java {
@@ -165,6 +170,12 @@ android {
         buildConfig = true
         dataBinding = true
         viewBinding = true
+    }
+    
+    // Handle D8 compilation issues
+    dexOptions {
+        preDexLibraries = false
+        javaMaxHeapSize = "4g"
     }
 }
 
