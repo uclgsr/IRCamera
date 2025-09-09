@@ -6,9 +6,6 @@ import android.graphics.Shader
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -25,7 +22,8 @@ import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.topdon.module.thermal.ir.databinding.ActivityIrMainBinding
 import com.topdon.lib.core.repository.GalleryRepository.DirType
 import com.topdon.lib.core.repository.TC007Repository
 import com.topdon.lib.core.socket.WebSocketProxy
@@ -54,7 +52,7 @@ import org.greenrobot.eventbus.EventBus
  * Created by LCG on 2024/4/18.
  */
 // Legacy ARouter route annotation - now using NavigationManager
-class IRMainActivity : BaseActivity(), View.OnClickListener {
+class IRMainActivity : BaseBindingActivity<ActivityIrMainBinding>(), View.OnClickListener {
 
     /**
      * 从上一界面传递过来的，当前是否为 TC007 设备类型.
@@ -62,65 +60,36 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
      */
     private var isTC007 = false
 
-    // View references - migrated from synthetic views  
-    private lateinit var viewPage: ViewPager2
-    private lateinit var clRoot: ConstraintLayout
-    private lateinit var ivMainBg: ImageView
-    private lateinit var clIconMonitor: ConstraintLayout
-    private lateinit var clIconGallery: ConstraintLayout
-    private lateinit var clIconReport: ConstraintLayout
-    private lateinit var clIconMine: ConstraintLayout
-    private lateinit var ivIconMonitor: ImageView
-    private lateinit var ivIconGallery: ImageView
-    private lateinit var ivIconReport: ImageView
-    private lateinit var ivIconMine: ImageView
-    private lateinit var tvIconMonitor: TextView
-    private lateinit var tvIconGallery: TextView
-    private lateinit var tvIconReport: TextView
-    private lateinit var tvIconMine: TextView
+    override fun initContentLayoutId(): Int = R.layout.activity_ir_main
 
-    override fun initContentView(): Int = R.layout.activity_ir_main
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+    }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         initView()
     }
 
-    override fun initView() {
-        // Initialize views - migrated from synthetic views
-        viewPage = findViewById(R.id.view_page)
-        // clRoot = findViewById(R.id.clRoot)  // Note: Verify this ID exists in layout if needed
-        ivMainBg = findViewById(R.id.iv_main_bg)
-        clIconMonitor = findViewById(R.id.cl_icon_monitor)
-        clIconGallery = findViewById(R.id.cl_icon_gallery)
-        clIconReport = findViewById(R.id.cl_icon_report)
-        clIconMine = findViewById(R.id.cl_icon_mine)
-        ivIconMonitor = findViewById(R.id.iv_icon_monitor)
-        ivIconGallery = findViewById(R.id.iv_icon_gallery)
-        ivIconReport = findViewById(R.id.iv_icon_report)
-        ivIconMine = findViewById(R.id.iv_icon_mine)
-        tvIconMonitor = findViewById(R.id.tv_icon_monitor)
-        tvIconGallery = findViewById(R.id.tv_icon_gallery)
-        tvIconReport = findViewById(R.id.tv_icon_report)
-        tvIconMine = findViewById(R.id.tv_icon_mine)
-
+    private fun initView() {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
-        viewPage.offscreenPageLimit = 5
-        viewPage.isUserInputEnabled = false
-        viewPage.adapter = ViewPagerAdapter(this, isTC007)
-        viewPage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        binding.binding.viewPage.offscreenPageLimit = 5
+        binding.binding.viewPage.isUserInputEnabled = false
+        binding.binding.viewPage.adapter = ViewPagerAdapter(this, isTC007)
+        binding.binding.viewPage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 refreshTabSelect(position)
             }
         })
-        viewPage.setCurrentItem(2, false)
+        binding.binding.viewPage.setCurrentItem(2, false)
 
-        clIconMonitor.setOnClickListener(this)
-        clIconGallery.setOnClickListener(this)
+        binding.binding.clIconMonitor.setOnClickListener(this)
+        binding.binding.clIconGallery.setOnClickListener(this)
         // view_main_thermal.setOnClickListener(this) // Not found in view declarations, likely unused
-        clIconReport.setOnClickListener(this)
-        clIconMine.setOnClickListener(this)
+        binding.binding.clIconReport.setOnClickListener(this)
+        binding.binding.clIconMine.setOnClickListener(this)
 
         showGuideDialog()
     }
@@ -131,7 +100,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
         if (isTC007) {
             if (WebSocketProxy.getInstance().isTC007Connect()) {
                 NetWorkUtils.switchNetwork(false)
-                ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
+                binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
                 lifecycleScope.launch {
                     TC007Repository.syncTime()
                 }
@@ -139,13 +108,13 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
                     NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07).navigation(this)
                 }
             } else {
-                ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
+                binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
             }
         } else {
             if (DeviceTools.isConnect(isAutoRequest = false)) {
-                ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
+                binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
             } else {
-                ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
+                binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
             }
         }
     }
@@ -155,53 +124,53 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
 
     override fun connected() {
         if (!isTC007) {
-            ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
+            binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
         }
     }
 
     override fun disConnected() {
         if (!isTC007) {
-            ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
+            binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
         }
     }
 
     override fun onSocketConnected(isTS004: Boolean) {
         if (!isTS004 && isTC007) {
-            ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
+            binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
         }
     }
 
     override fun onSocketDisConnected(isTS004: Boolean) {
         if (!isTS004 && isTC007) {
-            ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
+            binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
         }
     }
 
     override fun onClick(v: View?) {
         when (v) {
-            clIconMonitor -> {//监控
-                viewPage.setCurrentItem(0, false)
+            binding.clIconMonitor -> {//监控
+                binding.viewPage.setCurrentItem(0, false)
             }
-            clIconGallery -> {//图库
+            binding.clIconGallery -> {//图库
                 checkStoragePermission()
             }
             // view_main_thermal -> {//首页 - Commented out as not in view declarations
-            //     viewPage.setCurrentItem(2, false)  
+            //     binding.viewPage.setCurrentItem(2, false)  
             // }
-            clIconReport -> {//报告
+            binding.clIconReport -> {//报告
                 if (LMS.getInstance().isLogin) {
-                    viewPage.setCurrentItem(3, false)
+                    binding.viewPage.setCurrentItem(3, false)
                 } else {
                     LMS.getInstance().activityLogin(null) {
                         if (it) {
-                            viewPage.setCurrentItem(3, false)
+                            binding.viewPage.setCurrentItem(3, false)
                             EventBus.getDefault().post(PDFEvent())
                         }
                     }
                 }
             }
-            clIconMine -> {//我的
-                viewPage.setCurrentItem(4, false)
+            binding.clIconMine -> {//我的
+                binding.viewPage.setCurrentItem(4, false)
             }
         }
     }
@@ -211,30 +180,30 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
      * @param index 当前选中哪个 tab，`[0, 4]`
      */
     private fun refreshTabSelect(index: Int) {
-        ivIconMonitor.isSelected = false
-        tvIconMonitor.isSelected = false
-        ivIconGallery.isSelected = false
-        tvIconGallery.isSelected = false
-        ivIconReport.isSelected = false
-        tvIconReport.isSelected = false
-        ivIconMine.isSelected = false
-        tvIconMine.isSelected = false
+        binding.ivIconMonitor.isSelected = false
+        binding.tvIconMonitor.isSelected = false
+        binding.ivIconGallery.isSelected = false
+        binding.tvIconGallery.isSelected = false
+        binding.ivIconReport.isSelected = false
+        binding.tvIconReport.isSelected = false
+        binding.ivIconMine.isSelected = false
+        binding.tvIconMine.isSelected = false
         when (index) {
             0 -> {
-                ivIconMonitor.isSelected = true
-                tvIconMonitor.isSelected = true
+                binding.ivIconMonitor.isSelected = true
+                binding.tvIconMonitor.isSelected = true
             }
             1 -> {
-                ivIconGallery.isSelected = true
-                tvIconGallery.isSelected = true
+                binding.ivIconGallery.isSelected = true
+                binding.tvIconGallery.isSelected = true
             }
             3 -> {
-                ivIconReport.isSelected = true
-                tvIconReport.isSelected = true
+                binding.ivIconReport.isSelected = true
+                binding.tvIconReport.isSelected = true
             }
             4 -> {
-                ivIconMine.isSelected = true
-                tvIconMine.isSelected = true
+                binding.ivIconMine.isSelected = true
+                binding.tvIconMine.isSelected = true
             }
         }
     }
@@ -248,16 +217,16 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
         }
 
         when (SharedManager.homeGuideStep) {
-            1 -> viewPage.setCurrentItem(0, false)
-            2 -> viewPage.setCurrentItem(4, false)
-            3 -> viewPage.setCurrentItem(2, false)
+            1 -> binding.viewPage.setCurrentItem(0, false)
+            2 -> binding.viewPage.setCurrentItem(4, false)
+            3 -> binding.viewPage.setCurrentItem(2, false)
         }
 
         val guideDialog = HomeGuideDialog(this, SharedManager.homeGuideStep)
         guideDialog.onNextClickListener = {
             when (it) {
                 1 -> {
-                    viewPage.setCurrentItem(4, false)
+                    binding.viewPage.setCurrentItem(4, false)
                     if (Build.VERSION.SDK_INT < 31) {
                         lifecycleScope.launch {
                             delay(100)
@@ -267,7 +236,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
                     SharedManager.homeGuideStep = 2
                 }
                 2 -> {
-                    viewPage.setCurrentItem(2, false)
+                    binding.viewPage.setCurrentItem(2, false)
                     if (Build.VERSION.SDK_INT < 31) {
                         lifecycleScope.launch {
                             delay(100)
@@ -350,7 +319,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
      */
     private fun initStoragePermission(permissionList: List<String>) {
         if (PermissionUtils.isVisualUser()){
-            viewPage.setCurrentItem(1, false)
+            binding.viewPage.setCurrentItem(1, false)
             return
         }
         XXPermissions.with(this)
@@ -358,7 +327,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
             .request(object : OnPermissionCallback {
                 override fun onGranted(permissions: MutableList<String>, allGranted: Boolean) {
                     if (allGranted) {
-                        viewPage.setCurrentItem(1, false)
+                        binding.viewPage.setCurrentItem(1, false)
                     }
                 }
 

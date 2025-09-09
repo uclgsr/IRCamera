@@ -18,7 +18,8 @@ import com.topdon.component.transfer.R as TransferR  // Module-specific resource
 import com.topdon.lib.core.R  // Shared resources from libapp
 import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.topdon.transfer.databinding.ActivityTransferBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,19 +35,19 @@ import java.util.zip.ZipFile
  *
  * Created by LCG on 2024/3/28.
  */
-class TransferActivity : BaseActivity() {
+class TransferActivity : BaseBindingActivity<ActivityTransferBinding>() {
 
     private lateinit var transferDialog: TransferDialog
-    private lateinit var ivBack: ImageView
-    private lateinit var clSuccess: ConstraintLayout
 
-    override fun initContentView(): Int = TransferR.layout.activity_transfer
+    override fun initContentLayoutId(): Int = TransferR.layout.activity_transfer
 
-    override fun initView() {
-        ivBack = findViewById(TransferR.id.iv_back)
-        clSuccess = findViewById(TransferR.id.cl_success)
-        
-        ivBack.setOnClickListener {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {        
+        binding.ivBack.setOnClickListener {
             finish()
         }
 
@@ -107,7 +108,7 @@ class TransferActivity : BaseActivity() {
             window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
             transferDialog.dismiss()
-            clSuccess.isVisible = true
+            binding.clSuccess.isVisible = true
         }
     }
 
