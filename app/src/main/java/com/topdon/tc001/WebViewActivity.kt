@@ -1,19 +1,16 @@
 package com.topdon.tc001
 
 import android.annotation.SuppressLint
-import android.view.View
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.csl.irCamera.R
-import com.github.lzyzsd.jsbridge.BridgeWebView
+import com.csl.irCamera.databinding.ActivityWebViewBinding
 import com.github.lzyzsd.jsbridge.BridgeWebViewClient
 import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 
 /**
  * 使用 WebView 加载网页的 Activity.
@@ -24,21 +21,13 @@ import com.topdon.lib.core.ktbase.BaseActivity
  * Created by LCG on 2024/12/18.
  */
 // Legacy ARouter route annotation - now using NavigationManager
-class WebViewActivity : BaseActivity() {
-    // View declarations
-    private lateinit var tvReload: TextView
-    private lateinit var viewCover: View
-    private lateinit var clError: ConstraintLayout
-    private lateinit var webView: BridgeWebView
+class WebViewActivity : BaseBindingActivity<ActivityWebViewBinding>() {
 
-    override fun initContentView(): Int = R.layout.activity_web_view
+    override fun getViewBinding(): ActivityWebViewBinding = 
+        ActivityWebViewBinding.inflate(layoutInflater)
 
     override fun initView() {
-        // Initialize views using findViewById
-        tvReload = findViewById(R.id.tv_reload)
-        viewCover = findViewById(R.id.view_cover)
-        clError = findViewById(R.id.cl_error)
-        webView = findViewById(R.id.web_view)
+        // Views are now accessible via binding
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -47,14 +36,14 @@ class WebViewActivity : BaseActivity() {
 
         val url: String = intent.extras?.getString(ExtraKeyConfig.URL) ?: ""
 
-        tvReload.setOnClickListener {
+        binding.tvReload.setOnClickListener {
             showLoadingDialog()
-            viewCover.isVisible = true
-            clError.isVisible = false
-            webView.loadUrl(url)
+            binding.viewCover.isVisible = true
+            binding.clError.isVisible = false
+            binding.webView.loadUrl(url)
         }
 
-        val webSettings: WebSettings = webView.settings
+        val webSettings: WebSettings = binding.webView.settings
         webSettings.setSupportZoom(false) // 设置不支持字体缩放
         webSettings.useWideViewPort = true
         webSettings.javaScriptCanOpenWindowsAutomatically = true // 允许js弹出窗口
@@ -64,15 +53,15 @@ class WebViewActivity : BaseActivity() {
         webSettings.cacheMode = WebSettings.LOAD_NO_CACHE
         webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 
-        webView.webViewClient =
-            object : BridgeWebViewClient(webView) {
+        binding.webView.webViewClient =
+            object : BridgeWebViewClient(binding.webView) {
                 override fun onPageFinished(
                     view: WebView?,
                     url: String?,
                 ) {
                     super.onPageFinished(view, url)
                     dismissLoadingDialog()
-                    viewCover.isVisible = false
+                    binding.viewCover.isVisible = false
                 }
 
                 override fun onReceivedError(
@@ -82,18 +71,18 @@ class WebViewActivity : BaseActivity() {
                 ) {
                     super.onReceivedError(view, request, error)
                     dismissLoadingDialog()
-                    viewCover.isVisible = false
+                    binding.viewCover.isVisible = false
                     if (request?.isForMainFrame == true) {
-                        clError.isVisible = true
+                        binding.clError.isVisible = true
                     }
                 }
             }
 
-        webView.registerHandler("goBack") { _, function ->
+        binding.webView.registerHandler("goBack") { _, function ->
             function.onCallBack("android")
         }
 
-        webView.loadUrl(url)
-        webView.isScrollContainer = false
+        binding.webView.loadUrl(url)
+        binding.webView.isScrollContainer = false
     }
 }

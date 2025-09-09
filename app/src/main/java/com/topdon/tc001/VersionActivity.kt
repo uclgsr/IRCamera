@@ -1,15 +1,13 @@
 package com.topdon.tc001
 
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityVersionBinding
 import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.tools.CheckDoubleClick
 import com.topdon.lib.core.utils.CommUtils
@@ -20,49 +18,31 @@ import com.topdon.tc001.utils.VersionUtils
 import java.util.*
 
 // Legacy ARouter route annotation - now using NavigationManager
-class VersionActivity : BaseActivity(), View.OnClickListener {
-    // View declarations using findViewById pattern
-    private lateinit var versionYearTxt: TextView
-    private lateinit var versionStatementPrivateTxt: TextView
-    private lateinit var versionStatementPolicyTxt: TextView
-    private lateinit var versionStatementCopyrightTxt: TextView
-    private lateinit var settingVersionImg: ImageView
-    private lateinit var clNewVersion: ConstraintLayout
-    private lateinit var settingVersionTxt: TextView
-    private lateinit var tvNewVersion: TextView
+class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnClickListener {
 
-    override fun initContentView() = R.layout.activity_version
+    override fun getViewBinding(): ActivityVersionBinding = 
+        ActivityVersionBinding.inflate(layoutInflater)
 
     override fun initView() {
-        // Initialize views using findViewById
-        versionYearTxt = findViewById(R.id.version_year_txt)
-        versionStatementPrivateTxt = findViewById(R.id.version_statement_private_txt)
-        versionStatementPolicyTxt = findViewById(R.id.version_statement_policy_txt)
-        versionStatementCopyrightTxt = findViewById(R.id.version_statement_copyright_txt)
-        settingVersionImg = findViewById(R.id.setting_version_img)
-        clNewVersion = findViewById(R.id.cl_new_version)
-        settingVersionTxt = findViewById(R.id.setting_version_txt)
-        tvNewVersion = findViewById(R.id.tv_new_version)
-
-        // Set up views
-        findViewById<TextView>(R.id.version_code_text).text = "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
+        // Set up views using binding
+        binding.versionCodeText.text = "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
         val year = Calendar.getInstance().get(Calendar.YEAR)
-        versionYearTxt.text = getString(R.string.version_year, "2023-$year")
-        versionStatementPrivateTxt.setOnClickListener(this)
-        versionStatementPolicyTxt.setOnClickListener(this)
-        versionStatementCopyrightTxt.setOnClickListener(this)
+        binding.versionYearTxt.text = getString(R.string.version_year, "2023-$year")
+        binding.versionStatementPrivateTxt.setOnClickListener(this)
+        binding.versionStatementPolicyTxt.setOnClickListener(this)
+        binding.versionStatementCopyrightTxt.setOnClickListener(this)
 
-        settingVersionImg.setOnClickListener {
+        binding.settingVersionImg.setOnClickListener {
             if (BuildConfig.DEBUG && CheckDoubleClick.isFastDoubleClick()) {
                 LMS.getInstance().activityEnv()
             }
         }
-        clNewVersion.setOnClickListener {
+        binding.clNewVersion.setOnClickListener {
             if (!CheckDoubleClick.isFastDoubleClick()) {
                 checkAppVersion(true)
             }
         }
-        settingVersionTxt.text = CommUtils.getAppName()
+        binding.settingVersionTxt.text = CommUtils.getAppName()
     }
 
     override fun initData() {
@@ -78,17 +58,17 @@ class VersionActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            versionStatementPrivateTxt -> {
+            binding.versionStatementPrivateTxt -> {
                 NavigationManager.build(RouterConfig.POLICY)
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 1)
                     .navigation(this)
             }
-            versionStatementPolicyTxt -> {
+            binding.versionStatementPolicyTxt -> {
                 NavigationManager.build(RouterConfig.POLICY)
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 2)
                     .navigation(this)
             }
-            versionStatementCopyrightTxt -> {
+            binding.versionStatementCopyrightTxt -> {
                 NavigationManager.build(RouterConfig.POLICY)
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 3)
                     .navigation(this)
@@ -105,11 +85,11 @@ class VersionActivity : BaseActivity(), View.OnClickListener {
                     this,
                     object : AppVersionUtil.DotIsShowListener {
                         override fun isShow(show: Boolean) {
-                            clNewVersion.visibility = View.VISIBLE
+                            binding.clNewVersion.visibility = View.VISIBLE
                         }
 
                         override fun version(version: String) {
-                            tvNewVersion.text = "$version"
+                            binding.tvNewVersion.text = "$version"
                         }
                     },
                 )
