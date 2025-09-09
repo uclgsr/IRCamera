@@ -105,7 +105,7 @@ class EnhancedNetworkingExample(private val context: Context) {
     private suspend fun demonstrateReliableMessaging(targetHost: String, targetPort: Int) {
         Log.i(TAG, "6. Demonstrating reliable messaging...")
 
-        val reliableMessaging = ReliableMessageService()
+        val reliableMessaging = ReliableMessageService(context)
         reliableMessaging.setTransport(object : ReliableMessageService.MessageTransport {
             override suspend fun sendMessage(host: String, port: Int, message: JSONObject): Boolean {
                 // This would use the actual network connection

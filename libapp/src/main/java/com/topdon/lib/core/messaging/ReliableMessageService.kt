@@ -1,5 +1,6 @@
 package com.topdon.lib.core.messaging
 
+import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.*
 import org.json.JSONObject
@@ -11,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong
  * Reliable message delivery service with acknowledgments, retry logic, and ordered delivery.
  * Ensures critical messages are delivered even in unreliable network conditions.
  */
-class ReliableMessageService {
+class ReliableMessageService(private val context: Context? = null) {
     companion object {
         private const val TAG = "ReliableMessage"
         private const val DEFAULT_TIMEOUT_MS = 10000L // 10 seconds
@@ -403,7 +404,17 @@ class ReliableMessageService {
     }
 
     private fun getSenderId(): String {
-        return "${android.os.Build.MODEL}-${android.os.Build.SERIAL}"
+        return if (context != null) {
+            // Use Settings.Secure.ANDROID_ID as a stable device identifier
+            val androidId = android.provider.Settings.Secure.getString(
+                context.contentResolver,
+                android.provider.Settings.Secure.ANDROID_ID
+            )
+            "${android.os.Build.MODEL}-${androidId ?: UUID.randomUUID().toString()}"
+        } else {
+            // Fallback for backwards compatibility - use a generated UUID
+            "${android.os.Build.MODEL}-${UUID.randomUUID().toString()}"
+        }
     }
 
     /**

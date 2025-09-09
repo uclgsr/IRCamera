@@ -60,7 +60,7 @@ class NetworkClient(private val context: Context) {
     private val certificateManager = CertificateManager(context)
     private val discoveryService = NetworkDiscoveryService(context)
     private val timeSyncService = TimeSyncService()
-    private val reliableMessaging = ReliableMessageService()
+    private val reliableMessaging = ReliableMessageService(context)
 
     data class ControllerInfo(
         val ipAddress: String,

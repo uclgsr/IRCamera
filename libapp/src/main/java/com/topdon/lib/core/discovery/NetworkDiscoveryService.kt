@@ -26,7 +26,7 @@ class NetworkDiscoveryService(private val context: Context) {
     }
 
     private val discoveredServices = ConcurrentHashMap<String, DiscoveredDevice>()
-    private var discoveryListener: NsdManager.DiscoveryListener? = null
+    private val activeDiscoveryListeners = ConcurrentHashMap<String, NsdManager.DiscoveryListener>()
     private var registrationListener: NsdManager.RegistrationListener? = null
     private var isDiscovering = false
     private var isRegistered = false
@@ -109,10 +109,14 @@ class NetworkDiscoveryService(private val context: Context) {
         if (!isDiscovering) return
 
         try {
-            discoveryListener?.let { listener ->
-                nsdManager.stopServiceDiscovery(listener)
-                discoveryListener = null
+            activeDiscoveryListeners.values.forEach { listener ->
+                try {
+                    nsdManager.stopServiceDiscovery(listener)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error stopping individual discovery listener", e)
+                }
             }
+            activeDiscoveryListeners.clear()
             
             isDiscovering = false
             eventListener?.onDiscoveryStopped()
@@ -232,7 +236,7 @@ class NetworkDiscoveryService(private val context: Context) {
     }
 
     private fun startServiceDiscovery(serviceType: String) {
-        discoveryListener = object : NsdManager.DiscoveryListener {
+        val discoveryListener = object : NsdManager.DiscoveryListener {
             override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) {
                 Log.e(TAG, "Discovery start failed for $serviceType: $errorCode")
                 eventListener?.onError("start_discovery", "Failed to start discovery: $errorCode")
@@ -249,6 +253,7 @@ class NetworkDiscoveryService(private val context: Context) {
 
             override fun onDiscoveryStopped(serviceType: String) {
                 Log.d(TAG, "Discovery stopped for $serviceType")
+                activeDiscoveryListeners.remove(serviceType)
             }
 
             override fun onServiceFound(serviceInfo: NsdServiceInfo) {
@@ -267,6 +272,8 @@ class NetworkDiscoveryService(private val context: Context) {
             }
         }
 
+        // Store the listener for this service type
+        activeDiscoveryListeners[serviceType] = discoveryListener
         nsdManager.discoverServices(serviceType, NsdManager.PROTOCOL_DNS_SD, discoveryListener)
     }
 
@@ -336,5 +343,6 @@ class NetworkDiscoveryService(private val context: Context) {
         unregisterService()
         discoveryScope.cancel()
         discoveredServices.clear()
+        activeDiscoveryListeners.clear()
     }
 }
