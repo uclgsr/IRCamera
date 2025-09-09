@@ -118,30 +118,36 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             mAppBarParams.scrollFlags = 0
         }
 
-        detectViewModel.detectLD.observe(this) {
-            tvSave.isEnabled = it != null
-            if (it != null) {
-                houseReport = it.toHouseReport()
-                mPreviewBean = convertDataModel(houseReport)
-                setAdapter()
-            }
-            dismissLoadingDialog()
-        }
-        reportViewModel.reportLD.observe(this) {
-            tvSave.isEnabled = it != null
-            if (it != null) {
-                houseReport = it
-                mPreviewBean = convertDataModel(it)
-                setAdapter()
-            }
-            dismissLoadingDialog()
-        }
+        // Disabled - ViewModels from removed house module
+        // detectViewModel.detectLD.observe(this) {
+        //     tvSave.isEnabled = it != null
+        //     if (it != null) {
+        //         houseReport = it.toHouseReport()
+        //         mPreviewBean = convertDataModel(houseReport)
+        //         setAdapter()
+        //     }
+        //     dismissLoadingDialog()
+        // }
+        // reportViewModel.reportLD.observe(this) {
+        //     tvSave.isEnabled = it != null
+        //     if (it != null) {
+        //         houseReport = it
+        //         mPreviewBean = convertDataModel(it)
+        //         setAdapter()
+        //     }
+        //     dismissLoadingDialog()
+        // }
 
-        if (isReport) {//查看报告
-            reportViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
-        } else {//生成报告
-            detectViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
-        }
+        // Disabled - ViewModels from removed house module
+        // if (isReport) {//查看报告
+        //     reportViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
+        // } else {//生成报告
+        //     detectViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
+        // }
+        
+        // Temporary stub - disable save functionality without ViewModels
+        tvSave.isEnabled = false
+        dismissLoadingDialog()
     }
 
     override fun initData() {
@@ -193,14 +199,18 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
                         // PDFUtil.delAllPDF(this@ReportPreviewActivity)
                         // val pdfUri: Uri? = PDFUtil.savePDF(this@ReportPreviewActivity, houseReport)
                         dismissLoadingDialog()
-                        // Disabled PDF functionality
+                        
+                        // Disabled PDF functionality - house module removed
+                        TToast.shortToast(this@ReportPreviewActivity, "PDF sharing disabled - house module removed")
+                        
+                        // Original PDF sharing code commented out:
                         // if (pdfUri != null) {
-                            val shareIntent = Intent()
-                            shareIntent.action = Intent.ACTION_SEND
-                            shareIntent.putExtra(Intent.EXTRA_STREAM, pdfUri)
-                            shareIntent.type = "application/pdf"
-                            startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
-                        }
+                        //     val shareIntent = Intent()
+                        //     shareIntent.action = Intent.ACTION_SEND
+                        //     shareIntent.putExtra(Intent.EXTRA_STREAM, pdfUri)
+                        //     shareIntent.type = "application/pdf"
+                        //     startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
+                        // }
                     }
                 } else {//定稿并保存
                     if (houseReport.inspectorWhitePath.isEmpty() || houseReport.houseOwnerWhitePath.isEmpty()) {

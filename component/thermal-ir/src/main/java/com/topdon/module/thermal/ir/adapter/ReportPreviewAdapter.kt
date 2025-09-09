@@ -17,6 +17,7 @@ import com.blankj.utilcode.util.CollectionUtils
 // import com.topdon.house.activity.ImagesDetailActivity
 import com.topdon.lib.core.bean.HouseRepPreviewItemBean
 import com.topdon.lib.core.config.ExtraKeyConfig
+import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.view.DetectHorizontalScrollView.OnScrollStopListner
 
@@ -63,13 +64,16 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
             albumAdapter.jumpListener = { _, position ->
                 // Disabled - ImagesDetailActivity from removed house module  
                 // var intent = Intent(cxt, ImagesDetailActivity::class.java)
-                var photos = ArrayList<String>()
-                data.albumItemBeans.forEach {
-                    photos.add(it.photoPath)
-                }
-                intent.putExtra(ExtraKeyConfig.IMAGE_PATH_LIST, photos)
-                intent.putExtra(ExtraKeyConfig.CURRENT_ITEM, position)
-                cxt.startActivity(intent)
+                // var photos = ArrayList<String>()
+                // data.albumItemBeans.forEach {
+                //     photos.add(it.photoPath)
+                // }
+                // intent.putExtra(ExtraKeyConfig.IMAGE_PATH_LIST, photos)
+                // intent.putExtra(ExtraKeyConfig.CURRENT_ITEM, position)
+                // cxt.startActivity(intent)
+                
+                // Temporary stub - show toast instead of navigating
+                TToast.shortToast(cxt, "Image detail view disabled - house module removed")
             }
         } else {
             holder.llyAlbum.visibility = View.GONE
