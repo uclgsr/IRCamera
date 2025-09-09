@@ -7,14 +7,15 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityGsrSettingsBinding
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 
 /**
  * GSR Recording Settings Activity
  * Configure recording parameters, device settings, and data collection options
  */
-class GSRSettingsActivity : AppCompatActivity() {
+class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, GSRSettingsActivity::class.java))
@@ -23,30 +24,10 @@ class GSRSettingsActivity : AppCompatActivity() {
 
     private lateinit var prefs: SharedPreferences
 
-    // GSR Settings
-    private lateinit var gsrSamplingRateSpinner: Spinner
-    private lateinit var gsrRangeSpinner: Spinner
-    private lateinit var gsrCalibrationSwitch: Switch
+    override fun initContentLayoutId() = R.layout.activity_gsr_settings
 
-    // Video Settings
-    private lateinit var videoResolutionSpinner: Spinner
-    private lateinit var videoFrameRateSpinner: Spinner
-    private lateinit var enableVideoSwitch: Switch
-    private lateinit var enableStabilizationSwitch: Switch
-
-    // RAW Capture Settings
-    private lateinit var enableRawCaptureSwitch: Switch
-    private lateinit var rawFrameRateSpinner: Spinner
-    private lateinit var rawQualitySpinner: Spinner
-
-    // Session Settings
-    private lateinit var autoExportSwitch: Switch
-    private lateinit var dataRetentionSpinner: Spinner
-    private lateinit var sessionPrefixEdit: EditText
-
-    // Sync Settings
-    private lateinit var enableTimeSyncSwitch: Switch
-    private lateinit var syncToleranceSpinner: Spinner
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,30 +55,8 @@ class GSRSettingsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GSR Recording Settings"
 
-        // GSR Settings
-        gsrSamplingRateSpinner = findViewById(R.id.gsr_sampling_rate_spinner)
-        gsrRangeSpinner = findViewById(R.id.gsr_range_spinner)
-        gsrCalibrationSwitch = findViewById(R.id.gsr_calibration_switch)
-
-        // Video Settings
-        videoResolutionSpinner = findViewById(R.id.video_resolution_spinner)
-        videoFrameRateSpinner = findViewById(R.id.video_frame_rate_spinner)
-        enableVideoSwitch = findViewById(R.id.enable_video_switch)
-        enableStabilizationSwitch = findViewById(R.id.enable_stabilization_switch)
-
-        // RAW Capture Settings
-        enableRawCaptureSwitch = findViewById(R.id.enable_raw_capture_switch)
-        rawFrameRateSpinner = findViewById(R.id.raw_frame_rate_spinner)
-        rawQualitySpinner = findViewById(R.id.raw_quality_spinner)
-
-        // Session Settings
-        autoExportSwitch = findViewById(R.id.auto_export_switch)
-        dataRetentionSpinner = findViewById(R.id.data_retention_spinner)
-        sessionPrefixEdit = findViewById(R.id.session_prefix_edit)
-
-        // Sync Settings
-        enableTimeSyncSwitch = findViewById(R.id.enable_time_sync_switch)
-        syncToleranceSpinner = findViewById(R.id.sync_tolerance_spinner)
+        // All UI components are now accessible via binding
+        // No findViewById calls needed - view binding provides type-safe access
 
         setupSpinners()
     }
