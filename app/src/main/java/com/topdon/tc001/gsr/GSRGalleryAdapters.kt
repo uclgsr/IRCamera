@@ -3,12 +3,11 @@ package com.topdon.tc001.gsr
 import android.media.MediaMetadataRetriever
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ItemGsrDataFileBinding
+import com.csl.irCamera.databinding.ItemGsrVideoFileBinding
+import com.csl.irCamera.databinding.ItemGsrRawImageFileBinding
 import java.io.File
 
 /**
@@ -18,24 +17,26 @@ class GSRDataAdapter(
     private val dataFiles: List<GSRDataFragment.GSRDataFile>,
     private val onItemClick: (GSRDataFragment.GSRDataFile) -> Unit,
 ) : RecyclerView.Adapter<GSRDataAdapter.ViewHolder>() {
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val fileIcon: ImageView = view.findViewById(R.id.file_icon)
-        val fileName: TextView = view.findViewById(R.id.file_name)
-        val sessionInfo: TextView = view.findViewById(R.id.session_info)
-        val fileSize: TextView = view.findViewById(R.id.file_size)
-        val sampleCount: TextView = view.findViewById(R.id.sample_count)
-        val duration: TextView = view.findViewById(R.id.duration)
-        val createdDate: TextView = view.findViewById(R.id.created_date)
+    class ViewHolder(private val binding: ItemGsrDataFileBinding) : RecyclerView.ViewHolder(binding.root) {
+        val fileIcon = binding.fileIcon
+        val fileName = binding.fileName
+        val sessionInfo = binding.sessionInfo
+        val fileSize = binding.fileSize
+        val sampleCount = binding.sampleCount
+        val duration = binding.duration
+        val createdDate = binding.createdDate
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_gsr_data_file, parent, false)
-        return ViewHolder(view)
+        val binding = ItemGsrDataFileBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(
@@ -80,23 +81,25 @@ class GSRVideoAdapter(
     private val videoFiles: List<File>,
     private val onItemClick: (File) -> Unit,
 ) : RecyclerView.Adapter<GSRVideoAdapter.ViewHolder>() {
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val videoThumbnail: ImageView = view.findViewById(R.id.video_thumbnail)
-        val fileName: TextView = view.findViewById(R.id.file_name)
-        val fileSize: TextView = view.findViewById(R.id.file_size)
-        val duration: TextView = view.findViewById(R.id.duration)
-        val resolution: TextView = view.findViewById(R.id.resolution)
-        val createdDate: TextView = view.findViewById(R.id.created_date)
+    class ViewHolder(private val binding: ItemGsrVideoFileBinding) : RecyclerView.ViewHolder(binding.root) {
+        val videoThumbnail = binding.videoThumbnail
+        val fileName = binding.fileName
+        val fileSize = binding.fileSize
+        val duration = binding.duration
+        val resolution = binding.resolution
+        val createdDate = binding.createdDate
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_gsr_video_file, parent, false)
-        return ViewHolder(view)
+        val binding = ItemGsrVideoFileBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(
@@ -151,23 +154,25 @@ class GSRRawImageAdapter(
     private val rawImageFiles: List<File>,
     private val onItemClick: (File) -> Unit,
 ) : RecyclerView.Adapter<GSRRawImageAdapter.ViewHolder>() {
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageThumbnail: ImageView = view.findViewById(R.id.image_thumbnail)
-        val fileName: TextView = view.findViewById(R.id.file_name)
-        val fileSize: TextView = view.findViewById(R.id.file_size)
-        val resolution: TextView = view.findViewById(R.id.resolution)
-        val captureInfo: TextView = view.findViewById(R.id.capture_info)
-        val createdDate: TextView = view.findViewById(R.id.created_date)
+    class ViewHolder(private val binding: ItemGsrRawImageFileBinding) : RecyclerView.ViewHolder(binding.root) {
+        val imageThumbnail = binding.imageThumbnail
+        val fileName = binding.fileName
+        val fileSize = binding.fileSize
+        val resolution = binding.resolution
+        val captureInfo = binding.captureInfo
+        val createdDate = binding.createdDate
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_gsr_raw_image_file, parent, false)
-        return ViewHolder(view)
+        val binding = ItemGsrRawImageFileBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(

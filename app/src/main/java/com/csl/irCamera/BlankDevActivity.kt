@@ -4,9 +4,10 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.csl.irCamera.databinding.ActivityBlankDevBinding
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.RouterConfig
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.module.thermal.ir.activity.IRMainActivity
 import com.topdon.tc001.app.App
@@ -16,7 +17,7 @@ import com.topdon.tc001.app.App
  * author: CaiSongL
  * date: 2024/3/25 16:50
  **/
-class BlankDevActivity : AppCompatActivity() {
+class BlankDevActivity : BaseBindingActivity<ActivityBlankDevBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (SharedManager.getHasShowClause()) {

@@ -43,7 +43,7 @@ import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.FirmwareUpDialog
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.dialog.TipOtgDialog
-import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.repository.GalleryRepository
 import com.topdon.lib.core.socket.WebSocketProxy
 import com.topdon.lib.core.tools.DeviceTools
@@ -61,6 +61,7 @@ import com.topdon.tc001.fragment.MainFragment
 import com.topdon.tc001.utils.AppVersionUtil
 import com.csl.irCamera.R
 import com.csl.irCamera.BuildConfig
+import com.csl.irCamera.databinding.ActivityMainBinding
 // Zoho dependencies commented out - not available in build
 // import com.zoho.commons.LauncherModes
 // import com.zoho.commons.LauncherProperties
@@ -73,24 +74,10 @@ import java.io.IOException
 import java.io.OutputStream
 
 // Legacy ARouter route annotation - now using NavigationManager
-class MainActivity : BaseActivity(), View.OnClickListener {
+class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
     private val versionViewModel: VersionViewModel by viewModels()
 
-    // findViewById declarations
-    private val viewPage: ViewPager2 by lazy { findViewById(R.id.view_page) }
-    private val viewMain: View by lazy { findViewById(R.id.view_main) }
-    private val clIconGallery: ConstraintLayout by lazy { findViewById(R.id.cl_icon_gallery) }
-    private val clIconMine: ConstraintLayout by lazy { findViewById(R.id.cl_icon_mine) }
-    private val ivIconGallery: ImageView by lazy { findViewById(R.id.iv_icon_gallery) }
-    private val ivIconMine: ImageView by lazy { findViewById(R.id.iv_icon_mine) }
-    private val tvIconMine: TextView by lazy { findViewById(R.id.tv_icon_mine) }
-    private val tvIconGallery: TextView by lazy { findViewById(R.id.tv_icon_gallery) }
-    private val ivBottomMainBg: ImageView by lazy { findViewById(R.id.iv_bottom_main_bg) }
-    private val viewMinePoint: View by lazy { findViewById(R.id.view_mine_point) }
-
     private var checkPermissionType: Int = -1 // 0 initData数据 1 图库  2 connect方法
-
-    override fun initContentView() = R.layout.activity_main
 
     // 记录设备信息
     private fun logInfo() {
@@ -130,10 +117,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             // Note: SupHelp AI upscaler integration is not included in this build
             // SupHelp.getInstance().initAiUpScaler(Utils.getApp())
         }
-        viewPage.offscreenPageLimit = 3
-        viewPage.isUserInputEnabled = false
-        viewPage.adapter = ViewPagerAdapter(this)
-        viewPage.registerOnPageChangeCallback(
+        binding.viewPage.offscreenPageLimit = 3
+        binding.viewPage.isUserInputEnabled = false
+        binding.viewPage.adapter = ViewPagerAdapter(this)
+        binding.viewPage.registerOnPageChangeCallback(
             object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     refreshTabSelect(position)
@@ -141,14 +128,14 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             },
         )
         if (savedInstanceState == null) {
-            viewPage.setCurrentItem(1, false)
+            binding.viewPage.setCurrentItem(1, false)
         }
 
-        viewMinePoint.isVisible = !SharedManager.hasClickWinter
+        binding.viewMinePoint.isVisible = !SharedManager.hasClickWinter
 
-        clIconGallery.setOnClickListener(this)
-        viewMain.setOnClickListener(this)
-        clIconMine.setOnClickListener(this)
+        binding.clIconGallery.setOnClickListener(this)
+        binding.viewMain.setOnClickListener(this)
+        binding.clIconMine.setOnClickListener(this)
         App.instance.initWebSocket()
         copyFile("SR.pb", File(filesDir, "SR.pb"))
         BaseApplication.instance.clearDb()
@@ -309,15 +296,15 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            clIconGallery -> { // 图库
+            binding.clIconGallery -> { // 图库
                 checkPermissionType = 1
                 checkStoragePermission()
             }
-            viewMain -> { // 首页
-                viewPage.setCurrentItem(1, false)
+            binding.viewMain -> { // 首页
+                binding.viewPage.setCurrentItem(1, false)
             }
-            clIconMine -> { // 我的
-                viewPage.setCurrentItem(2, false)
+            binding.clIconMine -> { // 我的
+                binding.viewPage.setCurrentItem(2, false)
             }
         }
     }
@@ -355,23 +342,23 @@ class MainActivity : BaseActivity(), View.OnClickListener {
      * @param index 当前选中哪个 tab，`[0, 2]`
      */
     private fun refreshTabSelect(index: Int) {
-        ivIconGallery.isSelected = false
-        tvIconGallery.isSelected = false
-        ivIconMine.isSelected = false
-        tvIconMine.isSelected = false
-        ivBottomMainBg.setImageResource(R.drawable.ic_main_bg_not_select)
+        binding.ivIconGallery.isSelected = false
+        binding.tvIconGallery.isSelected = false
+        binding.ivIconMine.isSelected = false
+        binding.tvIconMine.isSelected = false
+        binding.ivBottomMainBg.setImageResource(R.drawable.ic_main_bg_not_select)
 
         when (index) {
             0 -> { // 图库
-                ivIconGallery.isSelected = true
-                tvIconGallery.isSelected = true
+                binding.ivIconGallery.isSelected = true
+                binding.tvIconGallery.isSelected = true
             }
             1 -> {
-                ivBottomMainBg.setImageResource(R.drawable.ic_main_bg_select)
+                binding.ivBottomMainBg.setImageResource(R.drawable.ic_main_bg_select)
             }
             2 -> { // 我的
-                ivIconMine.isSelected = true
-                tvIconMine.isSelected = true
+                binding.ivIconMine.isSelected = true
+                binding.tvIconMine.isSelected = true
             }
         }
     }

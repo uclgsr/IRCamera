@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.topdon.lib.ui.dialog
 
 import android.graphics.Color
@@ -15,6 +17,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.topdon.lib.core.R
+import com.topdon.lib.ui.databinding.DialogTipGuideBinding
 import com.topdon.lib.ui.widget.IndicateView
 import kotlin.collections.ArrayList
 import com.topdon.lib.ui.R as UiR
@@ -23,6 +26,9 @@ class TipGuideDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
     private lateinit var imgList: ArrayList<Int>
     var closeEvent: ((check: Boolean) -> Unit)? = null
+
+    private var _binding: DialogTipGuideBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var tvContent1: TextView
     private lateinit var tvContent2: TextView
@@ -36,8 +42,9 @@ class TipGuideDialog : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(UiR.layout.dialog_tip_guide, container, false)
+    ): View {
+        _binding = DialogTipGuideBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(
@@ -59,16 +66,19 @@ class TipGuideDialog : DialogFragment() {
                 UiR.drawable.target_guide_pic_3,
                 UiR.drawable.target_guide_pic_4,
             )
-        viewPager = view.findViewById(UiR.id.view_pager)
-        tvContent1 = view.findViewById(UiR.id.tv_content_1)
-        tvContent2 = view.findViewById(UiR.id.tv_content_2)
-        tvContent3 = view.findViewById(UiR.id.tv_content_3)
-        indicateView = view.findViewById(UiR.id.indicate_view)
-        ivTarget = view.findViewById(UiR.id.iv_target)
+            
+        // Initialize views using binding
+        viewPager = binding.viewPager
+        tvContent1 = binding.tvContent1
+        tvContent2 = binding.tvContent2
+        tvContent3 = binding.tvContent3
+        indicateView = binding.indicateView
+        ivTarget = binding.ivTarget
+        
         val adapter = PageAdapter(childFragmentManager, imgList)
         indicateView.itemCount = adapter.count
         viewPager.adapter = adapter
-        view.findViewById<TextView>(UiR.id.tv_i_know).setOnClickListener {
+        binding.tvIKnow.setOnClickListener {
             closeEvent?.invoke(true)
             dismiss()
         }
@@ -120,6 +130,11 @@ class TipGuideDialog : DialogFragment() {
         tvContent2.text = titleList[position]
         index = position
     }
+    
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onResume() {
         super.onResume()
@@ -147,11 +162,12 @@ class TipGuideDialog : DialogFragment() {
         }
     }
 
+    @Suppress("DEPRECATION")
     inner class PageAdapter(
         fragmentManager: FragmentManager,
         private val imgResList: ArrayList<Int>,
     ) :
-        FragmentPagerAdapter(fragmentManager) {
+        FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getCount(): Int {
             return imgResList.size
         }

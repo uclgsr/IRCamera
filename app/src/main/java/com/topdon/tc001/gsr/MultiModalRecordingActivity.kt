@@ -12,25 +12,19 @@ import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.Spinner
-import android.widget.Switch
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityMultiModalRecordingBinding
 import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.model.SyncMark
 import com.topdon.gsr.service.GSRRecorder
 import com.topdon.gsr.service.SessionManager
 import com.topdon.gsr.util.TimeUtil
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.tc001.camera.RGBCameraRecorder
 import kotlinx.coroutines.launch
 
@@ -40,7 +34,7 @@ import kotlinx.coroutines.launch
  * Full multi-modal recording interface with GSR and thermal coordination
  * Navigation: Use NavigationManager.getInstance().build(RouterConfig.GSR_MULTI_MODAL).navigation(context)
  */
-class MultiModalRecordingActivity : AppCompatActivity() {
+class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecordingBinding>() {
     companion object {
         private const val TAG = "MultiModalActivity"
         private const val REQUEST_PERMISSIONS = 100
@@ -72,34 +66,6 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             context.startActivity(intent)
         }
     }
-
-    // UI Components
-    private lateinit var sessionIdEdit: EditText
-    private lateinit var participantIdEdit: EditText
-    private lateinit var studyNameEdit: EditText
-    private lateinit var startStopButton: Button
-    private lateinit var syncEventButton: Button
-    private lateinit var statusText: TextView
-    private lateinit var sampleCountText: TextView
-    private lateinit var syncCountText: TextView
-    private lateinit var sessionDurationText: TextView
-    private lateinit var fileLocationText: TextView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var cameraPreview: android.view.TextureView
-    
-    // Network status UI components
-    private lateinit var networkStatusText: TextView
-    private lateinit var discoveredDevicesText: TextView
-    private lateinit var streamingQueueText: TextView
-    private lateinit var networkMetricsText: TextView
-    private lateinit var connectToDeviceButton: Button
-    private lateinit var startDiscoveryButton: Button
-
-    // Recording options
-    private lateinit var enableVideoSwitch: Switch
-    private lateinit var enable4KSwitch: Switch
-    private lateinit var enableRawCaptureSwitch: Switch
-    private lateinit var rawFrameRateSpinner: Spinner
 
     // Recording components
     private lateinit var gsrRecorder: GSRRecorder
@@ -145,11 +111,11 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                     isRecording = true
                     currentSession = sessionInfo
                     updateUI()
-                    statusText.text = "Recording GSR data at 128 Hz..."
-                    progressBar.visibility = View.VISIBLE
+                    binding.statusText.text = "Recording GSR data at 128 Hz..."
+                    binding.progressBar.visibility = View.VISIBLE
 
                     val sessionDir = gsrRecorder.getSessionDirectory()?.absolutePath ?: "Unknown"
-                    fileLocationText.text = "Files: $sessionDir"
+                    binding.dataText.text = "Files: $sessionDir"
                 }
             }
 
@@ -158,8 +124,8 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                     isRecording = false
                     currentSession = null
                     updateUI()
-                    statusText.text = "Recording completed. ${sessionInfo.sampleCount} samples recorded."
-                    progressBar.visibility = View.GONE
+                    binding.statusText.text = "Recording completed. ${sessionInfo.sampleCount} samples recorded."
+                    binding.progressBar.visibility = View.GONE
 
                     Toast.makeText(
                         this@MultiModalRecordingActivity,
@@ -194,10 +160,10 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                 // Update UI every second (128 samples)
                 if (sampleCount % 128 == 0L) {
                     runOnUiThread {
-                        sampleCountText.text = "Samples: $sampleCount"
+                        binding.dataText.text = "Samples: $sampleCount"
                         currentSession?.let { session ->
                             val duration = (System.currentTimeMillis() - session.startTime) / 1000
-                            sessionDurationText.text = "Duration: ${duration}s"
+                            binding.dataText.text = "${binding.dataText.text} | Duration: ${duration}s"
                         }
                     }
                 }
@@ -206,7 +172,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             override fun onSyncMarkAdded(syncMark: SyncMark) {
                 syncMarkCount++
                 runOnUiThread {
-                    syncCountText.text = "Sync Events: $syncMarkCount"
+                    binding.dataText.text = "${binding.dataText.text} | Sync Events: $syncMarkCount"
                     Toast.makeText(
                         this@MultiModalRecordingActivity,
                         "Sync: ${syncMark.eventType}",
@@ -217,8 +183,8 @@ class MultiModalRecordingActivity : AppCompatActivity() {
 
             override fun onError(error: String) {
                 runOnUiThread {
-                    statusText.text = "Error: $error"
-                    progressBar.visibility = View.GONE
+                    binding.statusText.text = "Error: $error"
+                    binding.progressBar.visibility = View.GONE
                     Toast.makeText(
                         this@MultiModalRecordingActivity,
                         "GSR Error: $error",
@@ -233,280 +199,54 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Create simple layout programmatically since we don't have access to layout files
-        val layout =
-            LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL
-                setPadding(32, 32, 32, 32)
-            }
-
-        // Title
-        val title =
-            TextView(this).apply {
-                text = "Multi-Modal Physiological Recording"
-                textSize = 20f
-                setPadding(0, 0, 0, 16)
-            }
-        layout.addView(title)
-
-        // Camera preview section
-        val cameraSection =
-            LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL
-                setPadding(0, 0, 0, 16)
-            }
-
-        val cameraTitle =
-            TextView(this).apply {
-                text = "RGB Camera Preview"
-                textSize = 16f
-                setTypeface(null, android.graphics.Typeface.BOLD)
-            }
-        cameraSection.addView(cameraTitle)
-
-        cameraPreview =
-            android.view.TextureView(this).apply {
-                layoutParams =
-                    LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        400,
-                    )
-            }
-        cameraSection.addView(cameraPreview)
-        layout.addView(cameraSection)
-
-        // Recording options section
-        val optionsSection =
-            LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL
-                setPadding(0, 0, 0, 16)
-            }
-
-        val optionsTitle =
-            TextView(this).apply {
-                text = "Recording Options"
-                textSize = 16f
-                setTypeface(null, android.graphics.Typeface.BOLD)
-            }
-        optionsSection.addView(optionsTitle)
-
-        // Video recording toggle
-        val videoLayout = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        videoLayout.addView(
-            TextView(this).apply {
-                text = "Record Video: "
-                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            },
-        )
-        enableVideoSwitch = Switch(this).apply { isChecked = true }
-        videoLayout.addView(enableVideoSwitch)
-        optionsSection.addView(videoLayout)
-
-        // 4K recording toggle
-        val resolution4KLayout = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        resolution4KLayout.addView(
-            TextView(this).apply {
-                text = "4K Recording: "
-                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            },
-        )
-        enable4KSwitch = Switch(this).apply { isChecked = false }
-        resolution4KLayout.addView(enable4KSwitch)
-        optionsSection.addView(resolution4KLayout)
-
-        // RAW capture toggle
-        val rawLayout = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        rawLayout.addView(
-            TextView(this).apply {
-                text = "RAW Image Capture: "
-                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            },
-        )
-        enableRawCaptureSwitch =
-            Switch(this).apply {
-                isChecked = false
-                setOnCheckedChangeListener { _, isChecked ->
-                    rawFrameRateSpinner.isEnabled = isChecked
-                }
-            }
-        rawLayout.addView(enableRawCaptureSwitch)
-        optionsSection.addView(rawLayout)
-
-        // RAW frame rate selection
-        val frameRateLayout = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        frameRateLayout.addView(
-            TextView(this).apply {
-                text = "RAW Frame Rate: "
-                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            },
-        )
-        rawFrameRateSpinner =
-            Spinner(this).apply {
-                adapter =
-                    ArrayAdapter(
-                        this@MultiModalRecordingActivity,
-                        android.R.layout.simple_spinner_item,
-                        listOf("30 fps", "15 fps", "10 fps", "5 fps"),
-                    ).apply {
-                        setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    }
-                isEnabled = false
-            }
-        frameRateLayout.addView(rawFrameRateSpinner)
-        optionsSection.addView(frameRateLayout)
-        layout.addView(optionsSection)
-
-        // Session ID input
-        layout.addView(TextView(this).apply { text = "Session ID:" })
-        sessionIdEdit =
-            EditText(this).apply {
-                setText(TimeUtil.generateSessionId("MultiModal"))
-            }
-        layout.addView(sessionIdEdit)
-
-        // Participant ID input
-        layout.addView(TextView(this).apply { text = "Participant ID (optional):" })
-        participantIdEdit = EditText(this)
-        layout.addView(participantIdEdit)
-
-        // Study name input
-        layout.addView(TextView(this).apply { text = "Study Name (optional):" })
-        studyNameEdit = EditText(this)
-        layout.addView(studyNameEdit)
-
-        // Start/Stop button
-        startStopButton =
-            Button(this).apply {
-                text = "Start Recording"
-                setOnClickListener { toggleRecording() }
-            }
-        layout.addView(startStopButton)
-
-        // Sync event button
-        syncEventButton =
-            Button(this).apply {
-                text = "Trigger Sync Event"
-                isEnabled = false
-                setOnClickListener { triggerSyncEvent() }
-            }
-        layout.addView(syncEventButton)
-
-        // Hub-Spoke Integration Demo button
-        val hubSpokeButton = Button(this).apply {
-            text = "Hub-Spoke Integration Demo"
-            setOnClickListener { 
-                startActivity(Intent(this@MultiModalRecordingActivity, com.topdon.tc001.sensors.HubSpokeIntegrationActivity::class.java))
-            }
-        }
-        layout.addView(hubSpokeButton)
-
-        // Status and progress
-        progressBar =
-            ProgressBar(this).apply {
-                visibility = View.GONE
-            }
-        layout.addView(progressBar)
-
-        statusText =
-            TextView(this).apply {
-                text = "Ready to record"
-            }
-        layout.addView(statusText)
-
-        // Statistics
-        sampleCountText = TextView(this).apply { text = "Samples: 0" }
-        layout.addView(sampleCountText)
-
-        syncCountText = TextView(this).apply { text = "Sync Events: 0" }
-        layout.addView(syncCountText)
-
-        sessionDurationText = TextView(this).apply { text = "Duration: 0s" }
-        layout.addView(sessionDurationText)
-
-        fileLocationText =
-            TextView(this).apply {
-                text = "Files: Not started"
-                textSize = 12f
-            }
-        layout.addView(fileLocationText)
-
-        // Network Status Section
-        val networkSection =
-            LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL
-                setPadding(0, 16, 0, 16)
-                setBackgroundColor(android.graphics.Color.LTGRAY)
-            }
-
-        val networkTitle =
-            TextView(this).apply {
-                text = "Network & Device Status"
-                textSize = 16f
-                setTypeface(null, android.graphics.Typeface.BOLD)
-                setPadding(8, 8, 8, 8)
-            }
-        networkSection.addView(networkTitle)
-
-        // Network status display
-        networkStatusText =
-            TextView(this).apply {
-                text = "Network: Disconnected"
-                textSize = 14f
-                setPadding(8, 4, 8, 4)
-            }
-        networkSection.addView(networkStatusText)
-
-        // Discovered devices display
-        discoveredDevicesText =
-            TextView(this).apply {
-                text = "Discovered Devices: None"
-                textSize = 14f
-                setPadding(8, 4, 8, 4)
-            }
-        networkSection.addView(discoveredDevicesText)
-
-        // Streaming queue status
-        streamingQueueText =
-            TextView(this).apply {
-                text = "Streaming Queue: 0 items"
-                textSize = 14f
-                setPadding(8, 4, 8, 4)
-            }
-        networkSection.addView(streamingQueueText)
-
-        // Network metrics
-        networkMetricsText =
-            TextView(this).apply {
-                text = "Latency: -- ms | Throughput: -- KB/s"
-                textSize = 12f
-                setPadding(8, 4, 8, 4)
-            }
-        networkSection.addView(networkMetricsText)
-
-        // Device discovery button
-        startDiscoveryButton =
-            Button(this).apply {
-                text = "Start Device Discovery"
-                setOnClickListener { startDeviceDiscovery() }
-            }
-        networkSection.addView(startDiscoveryButton)
-
-        // Connect to device button
-        connectToDeviceButton =
-            Button(this).apply {
-                text = "Connect to PC Controller"
-                isEnabled = false
-                setOnClickListener { connectToSelectedDevice() }
-            }
-        networkSection.addView(connectToDeviceButton)
-
-        layout.addView(networkSection)
-
-        setContentView(layout)
-
         // Initialize recording components
         gsrRecorder = GSRRecorder(this)
         sessionManager = SessionManager.getInstance(this)
+
+        // Set up view references using binding
+        with(binding) {
+            // Configure session ID input
+            participantIdInput.setText(TimeUtil.generateSessionId("MultiModal"))
+
+            // Configure switches
+            enableVideoSwitch.isChecked = true
+            enable4KSwitch.isChecked = false
+            enableRawCaptureSwitch.isChecked = false
+            
+            // Set up raw frame rate spinner
+            val frameRateAdapter = ArrayAdapter(
+                this@MultiModalRecordingActivity,
+                android.R.layout.simple_spinner_item,
+                listOf("30 fps", "15 fps", "10 fps", "5 fps")
+            ).apply {
+                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            }
+            rawFrameRateSpinner.adapter = frameRateAdapter
+            rawFrameRateSpinner.isEnabled = false
+
+            // Configure raw capture switch listener
+            enableRawCaptureSwitch.setOnCheckedChangeListener { _, isChecked ->
+                rawFrameRateSpinner.isEnabled = isChecked
+            }
+
+            // Set up control buttons
+            startButton.setOnClickListener { toggleRecording() }
+            stopButton.setOnClickListener { stopRecording() }
+            syncButton.setOnClickListener { triggerSyncEvent() }
+            flashSyncButton.setOnClickListener { triggerFlashSync() }
+
+            // Network control buttons
+            startDiscoveryButton.setOnClickListener { startDeviceDiscovery() }
+            connectToDeviceButton.setOnClickListener { connectToSelectedDevice() }
+
+            // Initial UI state
+            statusText.text = "Ready to record"
+            dataText.text = "No data recorded yet"
+            networkStatusText.text = "Network: Disconnected"
+            discoveredDevicesText.text = "Discovered Devices: None"
+            streamingQueueText.text = "Streaming Queue: 0 items"
+            networkMetricsText.text = "Latency: -- ms | Throughput: -- KB/s"
+        }
 
         // Initialize network client for PC Controller communication
         networkClient =
@@ -551,9 +291,8 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                         override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
                             runOnUiThread {
                                 // Auto-fill session info from remote request
-                                sessionIdEdit.setText(sessionInfo.sessionId)
-                                participantIdEdit.setText(sessionInfo.participantId)
-                                studyNameEdit.setText(sessionInfo.studyName)
+                                binding.participantIdInput.setText(sessionInfo.sessionId)
+                                binding.participantIdInput.setText(sessionInfo.participantId)
 
                                 // Auto-start recording if requested
                                 if (!isRecording) {
@@ -603,19 +342,19 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                         // Additional methods for enhanced NetworkClient
                         override fun onTimeSynchronized(offsetNanoseconds: Long) {
                             runOnUiThread {
-                                statusText.text = "Time synchronized with PC Controller (offset: ${offsetNanoseconds}ns)"
+                                binding.statusText.text = "Time synchronized with PC Controller (offset: ${offsetNanoseconds}ns)"
                             }
                         }
 
                         override fun onDataStreamingStarted() {
                             runOnUiThread {
-                                statusText.text = "Real-time data streaming active"
+                                binding.statusText.text = "Real-time data streaming active"
                             }
                         }
 
                         override fun onDataStreamingStopped() {
                             runOnUiThread {
-                                statusText.text = "Data streaming stopped"
+                                binding.statusText.text = "Data streaming stopped"
                             }
                         }
 
@@ -650,32 +389,37 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             }
 
         // Initialize RGB camera recorder
-        rgbCameraRecorder =
-            RGBCameraRecorder(this, cameraPreview).apply {
-                onRecordingStarted = {
-                    runOnUiThread {
-                        statusText.text = "Recording RGB video + GSR..."
-                    }
-                }
-                onRecordingStopped = { videoFile ->
-                    runOnUiThread {
-                        statusText.text = "RGB recording stopped. Video: ${videoFile?.name ?: "None"}"
-                    }
-                }
-                onRawImageCaptured = { dngFile ->
-                    runOnUiThread {
-                        Log.d(TAG, "RAW image captured: ${dngFile.name}")
-                    }
-                }
-                onError = { error ->
-                    runOnUiThread {
-                        Toast.makeText(
-                            this@MultiModalRecordingActivity,
-                            "Camera Error: $error", Toast.LENGTH_LONG,
-                        ).show()
-                    }
+        // Pass the camera preview component from the binding if it exists, otherwise null
+        val cameraPreviewView = try {
+            binding.cameraPreview // Replace with the actual preview view ID from your layout/binding
+        } catch (e: Exception) {
+            null
+        }
+        rgbCameraRecorder = RGBCameraRecorder(this, cameraPreviewView).apply {
+            onRecordingStarted = {
+                runOnUiThread {
+                    binding.statusText.text = "Recording RGB video + GSR..."
                 }
             }
+            onRecordingStopped = { videoFile ->
+                runOnUiThread {
+                    binding.statusText.text = "RGB recording stopped. Video: ${videoFile?.name ?: "None"}"
+                }
+            }
+            onRawImageCaptured = { dngFile ->
+                runOnUiThread {
+                    Log.d(TAG, "RAW image captured: ${dngFile.name}")
+                }
+            }
+            onError = { error ->
+                runOnUiThread {
+                    Toast.makeText(
+                        this@MultiModalRecordingActivity,
+                        "Camera Error: $error", Toast.LENGTH_LONG,
+                    ).show()
+                }
+            }
+        }
 
         // Initialize camera
         rgbCameraRecorder?.initialize()
@@ -814,46 +558,40 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     private fun startRecording() {
         // Set guard flag and disable button immediately to prevent double taps
         isStartingRecording = true
-        startStopButton.isEnabled = false
-        startStopButton.text = "Starting..."
+        binding.startButton.isEnabled = false
+        binding.startButton.text = "Starting..."
 
-        val sessionId =
-            sessionIdEdit.text.toString().trim().ifEmpty {
-                TimeUtil.generateSessionId("MultiModal")
-            }
-        val participantId = participantIdEdit.text.toString().trim().takeIf { it.isNotEmpty() }
-        val studyName = studyNameEdit.text.toString().trim().takeIf { it.isNotEmpty() }
+        val sessionId = binding.participantIdInput.text.toString().trim().ifEmpty {
+            TimeUtil.generateSessionId("MultiModal")
+        }
+        val participantId = binding.participantIdInput.text.toString().trim().takeIf { it.isNotEmpty() }
 
         // Start RGB camera recording if enabled
-        if (enableVideoSwitch.isChecked) {
-            val resolution =
-                if (enable4KSwitch.isChecked) {
-                    RGBCameraRecorder.VideoResolution.UHD_4K
-                } else {
-                    RGBCameraRecorder.VideoResolution.HD_1080P
-                }
+        if (binding.enableVideoSwitch.isChecked) {
+            val resolution = if (binding.enable4KSwitch.isChecked) {
+                RGBCameraRecorder.VideoResolution.UHD_4K
+            } else {
+                RGBCameraRecorder.VideoResolution.HD_1080P
+            }
 
-            val rawFrameRate =
-                when (rawFrameRateSpinner.selectedItemPosition) {
-                    0 -> 30
-                    1 -> 15
-                    2 -> 10
-                    3 -> 5
-                    else -> 30
-                }
+            val rawFrameRate = when (binding.rawFrameRateSpinner.selectedItemPosition) {
+                0 -> 30
+                1 -> 15
+                2 -> 10
+                3 -> 5
+                else -> 30
+            }
 
-            val cameraSettings =
-                RGBCameraRecorder.RecordingSettings(
-                    resolution = resolution,
-                    // Video frame rate
-                    frameRate = 60,
-                    bitRate = if (resolution == RGBCameraRecorder.VideoResolution.UHD_4K) 12_000_000 else 8_000_000,
-                    enableStabilization = true,
-                    enableFlash = false,
-                    audioEnabled = true,
-                    enableRawCapture = enableRawCaptureSwitch.isChecked,
-                    rawCaptureFrameRate = rawFrameRate,
-                )
+            val cameraSettings = RGBCameraRecorder.RecordingSettings(
+                resolution = resolution,
+                frameRate = 60, // Video frame rate
+                bitRate = if (resolution == RGBCameraRecorder.VideoResolution.UHD_4K) 12_000_000 else 8_000_000,
+                enableStabilization = true,
+                enableFlash = false,
+                audioEnabled = true,
+                enableRawCapture = binding.enableRawCaptureSwitch.isChecked,
+                rawCaptureFrameRate = rawFrameRate,
+            )
 
             rgbCameraRecorder?.updateSettings(cameraSettings)
 
@@ -861,9 +599,9 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             if (!cameraStarted) {
                 // Reset guard flags on failure
                 isStartingRecording = false
-                startStopButton.isEnabled = true
-                startStopButton.text = "Start Recording"
-                statusText.text = "Failed to start camera recording"
+                binding.startButton.isEnabled = true
+                binding.startButton.text = "Start Recording"
+                binding.statusText.text = "Failed to start camera recording"
                 Toast.makeText(this, "Failed to start RGB camera recording", Toast.LENGTH_LONG).show()
                 return
             }
@@ -872,7 +610,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
         // Start GSR recording asynchronously
         lifecycleScope.launch {
             try {
-                val success = gsrRecorder.startRecording(sessionId, participantId, studyName)
+                val success = gsrRecorder.startRecording(sessionId, participantId, null)
 
                 if (success) {
                     // Reset counters
@@ -889,7 +627,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                             this@MultiModalRecordingActivity,
                             sessionId,
                             participantId,
-                            studyName
+                            null
                         )
                         Log.i(TAG, "Enhanced recording service started")
                     } catch (e: Exception) {
@@ -899,21 +637,22 @@ class MultiModalRecordingActivity : AppCompatActivity() {
 
                     runOnUiThread {
                         updateUI()
-                        startStopButton.isEnabled = true
-                        startStopButton.text = "Stop Recording"
+                        binding.startButton.isEnabled = true
+                        binding.startButton.text = "Start Recording"
+                        binding.stopButton.isEnabled = true
                     }
 
                     val recordingModes = mutableListOf<String>()
-                    if (enableVideoSwitch.isChecked) {
-                        recordingModes.add(if (enable4KSwitch.isChecked) "4K Video" else "1080p Video")
-                        if (enableRawCaptureSwitch.isChecked) {
-                            recordingModes.add("RAW Images (${rawFrameRateSpinner.selectedItem})")
+                    if (binding.enableVideoSwitch.isChecked) {
+                        recordingModes.add(if (binding.enable4KSwitch.isChecked) "4K Video" else "1080p Video")
+                        if (binding.enableRawCaptureSwitch.isChecked) {
+                            recordingModes.add("RAW Images (${binding.rawFrameRateSpinner.selectedItem})")
                         }
                     }
                     recordingModes.add("GSR (128Hz)")
 
                     runOnUiThread {
-                        statusText.text = "Recording: ${recordingModes.joinToString(", ")}"
+                        binding.statusText.text = "Recording: ${recordingModes.joinToString(", ")}"
                     }
 
                     Log.i(TAG, "Multi-modal recording started: $sessionId")
@@ -922,9 +661,9 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                     isStartingRecording = false
 
                     runOnUiThread {
-                        startStopButton.isEnabled = true
-                        startStopButton.text = "Start Recording"
-                        statusText.text = "Failed to start recording"
+                        binding.startButton.isEnabled = true
+                        binding.startButton.text = "Start Recording"
+                        binding.statusText.text = "Failed to start recording"
                     }
 
                     // Stop camera if GSR fails
@@ -936,9 +675,9 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                 isStartingRecording = false
 
                 runOnUiThread {
-                    startStopButton.isEnabled = true
-                    startStopButton.text = "Start Recording"
-                    statusText.text = "Error starting recording"
+                    binding.startButton.isEnabled = true
+                    binding.startButton.text = "Start Recording"
+                    binding.statusText.text = "Error starting recording"
                 }
 
                 Log.e(TAG, "Error starting recording", e)
@@ -973,7 +712,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             }
             recordingInfo.add("GSR samples: ${it.sampleCount}")
 
-            statusText.text = "Recording completed. ${recordingInfo.joinToString(", ")}"
+            binding.statusText.text = "Recording completed. ${recordingInfo.joinToString(", ")}"
         }
 
         isRecording = false
@@ -984,21 +723,48 @@ class MultiModalRecordingActivity : AppCompatActivity() {
         lifecycleScope.launch {
             if (gsrRecorder.addSyncMark("USER_TRIGGER", "Manual sync event triggered from UI")) {
                 Log.d(TAG, "User sync event triggered successfully")
-                statusText.text = "Sync event added at ${System.currentTimeMillis()}"
+                binding.statusText.text = "Sync event added at ${System.currentTimeMillis()}"
             } else {
                 Log.w(TAG, "Failed to trigger sync event")
-                statusText.text = "Failed to add sync event"
+                binding.statusText.text = "Failed to add sync event"
             }
         }
     }
 
-    private fun updateUI() {
-        startStopButton.text = if (isRecording) "Stop Recording" else "Start Recording"
-        syncEventButton.isEnabled = isRecording
+    private fun triggerFlashSync() {
+        // Trigger a visual flash for synchronization
+        val overlay = android.view.View(this).apply {
+            setBackgroundColor(android.graphics.Color.WHITE)
+            alpha = 1.0f
+        }
 
-        sessionIdEdit.isEnabled = !isRecording
-        participantIdEdit.isEnabled = !isRecording
-        studyNameEdit.isEnabled = !isRecording
+        val frameLayout = findViewById<android.widget.FrameLayout>(android.R.id.content)
+        frameLayout.addView(
+            overlay,
+            android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+            ),
+        )
+
+        overlay.animate()
+            .alpha(0.0f)
+            .setDuration(200)
+            .withEndAction { 
+                frameLayout.removeView(overlay)
+                // Also add a sync mark
+                triggerSyncEvent()
+            }
+            .start()
+    }
+
+    private fun updateUI() {
+        binding.startButton.text = if (isRecording) "Recording..." else "Start Recording"
+        binding.stopButton.isEnabled = isRecording
+        binding.syncButton.isEnabled = isRecording
+        binding.flashSyncButton.isEnabled = isRecording
+
+        binding.participantIdInput.isEnabled = !isRecording
     }
 
     override fun onCreateOptionsMenu(menu: android.view.Menu?): Boolean {
@@ -1045,7 +811,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                 isServiceBound -> "Service Bound"
                 else -> "Disconnected"
             }
-            networkStatusText.text = "Network: $connectionStatus"
+            binding.networkStatusText.text = "Network: $connectionStatus"
 
             // Update discovered devices
             val deviceCount = discoveredDevices.size
@@ -1055,7 +821,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             } else {
                 "Discovered Devices: None"
             }
-            discoveredDevicesText.text = deviceText
+            binding.discoveredDevicesText.text = deviceText
 
             // Update streaming queue (get total from all queue types)
             enhancedRecordingService?.let { service ->
@@ -1067,9 +833,9 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                 } else {
                     "Streaming Queue: 0 items"
                 }
-                streamingQueueText.text = queueText
+                binding.streamingQueueText.text = queueText
             } ?: run {
-                streamingQueueText.text = "Streaming Queue: Service not bound"
+                binding.streamingQueueText.text = "Streaming Queue: Service not bound"
             }
 
             // Update network metrics (simulate metrics)
@@ -1077,9 +843,9 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                 if (client.isConnected()) {
                     val latency = client.getLatencyMs()
                     val throughput = client.getThroughputKBps()
-                    networkMetricsText.text = "Latency: ${latency} ms | Throughput: ${throughput} KB/s"
+                    binding.networkMetricsText.text = "Latency: ${latency} ms | Throughput: ${throughput} KB/s"
                 } else {
-                    networkMetricsText.text = "Latency: -- ms | Throughput: -- KB/s"
+                    binding.networkMetricsText.text = "Latency: -- ms | Throughput: -- KB/s"
                 }
             }
         }
@@ -1088,14 +854,14 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     // Start device discovery
     private fun startDeviceDiscovery() {
         discoveredDevices.clear()
-        connectToDeviceButton.isEnabled = false
-        startDiscoveryButton.text = "Searching..."
-        startDiscoveryButton.isEnabled = false
+        binding.connectToDeviceButton.isEnabled = false
+        binding.startDiscoveryButton.text = "Searching..."
+        binding.startDiscoveryButton.isEnabled = false
 
         networkClient?.startDiscovery { success ->
             runOnUiThread {
-                startDiscoveryButton.text = "Start Device Discovery"
-                startDiscoveryButton.isEnabled = true
+                binding.startDiscoveryButton.text = "Start Device Discovery"
+                binding.startDiscoveryButton.isEnabled = true
                 if (!success) {
                     Toast.makeText(this, "Failed to start discovery", Toast.LENGTH_SHORT).show()
                 }

@@ -3,28 +3,31 @@ package com.topdon.lib.ui
 import android.content.Context
 import android.content.res.TypedArray
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
+import com.topdon.lib.ui.databinding.UiSettingViewNightBinding
 import com.topdon.lib.ui.R as UiR
 
 class SettingNightView : LinearLayout {
+    private lateinit var binding: UiSettingViewNightBinding
+    
     var isRightArrowVisible: Boolean
-        get() = endImg.isVisible
+        get() = binding.itemSettingEndImage.isVisible
         set(value) {
-            endImg.isVisible = value
+            binding.itemSettingEndImage.isVisible = value
         }
 
     fun setRightTextId(
         @StringRes resId: Int,
     ) {
-        val tvEnd: TextView = findViewById(UiR.id.tv_end)
-        tvEnd.isVisible = resId != 0
+        binding.tvEnd.isVisible = resId != 0
         if (resId != 0) {
-            tvEnd.setText(resId)
+            binding.tvEnd.setText(resId)
         }
     }
 
@@ -34,13 +37,11 @@ class SettingNightView : LinearLayout {
     private var lineShow: Boolean = false
     private var iconShow: Boolean = false
 
-    private lateinit var headImg: ImageView
-    private lateinit var endImg: ImageView
-    private lateinit var contentText: TextView
-
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        binding = UiSettingViewNightBinding.inflate(LayoutInflater.from(context), this, true)
+        
         val ta: TypedArray = context.obtainStyledAttributes(attrs, UiR.styleable.SettingNightView)
         for (i in 0 until ta.indexCount) {
             when (ta.getIndex(i)) {
@@ -75,23 +76,19 @@ class SettingNightView : LinearLayout {
     )
 
     private fun initView() {
-        inflate(context, UiR.layout.ui_setting_view_night, this)
-        contentText = findViewById(UiR.id.item_setting_text)
-        headImg = findViewById(UiR.id.item_setting_image)
-        endImg = findViewById(UiR.id.item_setting_end_image)
-
-        headImg.setImageResource(iconRes)
+        // Views are already inflated in constructor via binding
+        binding.itemSettingImage.setImageResource(iconRes)
         if (iconShow) {
-            headImg.visibility = View.VISIBLE
+            binding.itemSettingImage.visibility = View.VISIBLE
         } else {
-            headImg.visibility = View.GONE
+            binding.itemSettingImage.visibility = View.GONE
         }
-        contentText.text = contentStr
+        binding.itemSettingText.text = contentStr
         if (moreShow) {
-            endImg.visibility = View.VISIBLE
+            binding.itemSettingEndImage.visibility = View.VISIBLE
         } else {
-            endImg.visibility = View.GONE
+            binding.itemSettingEndImage.visibility = View.GONE
         }
-        findViewById<View>(UiR.id.item_setting_line).visibility = if (lineShow) View.VISIBLE else View.GONE
+        binding.itemSettingLine.visibility = if (lineShow) View.VISIBLE else View.GONE
     }
 }

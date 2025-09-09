@@ -21,7 +21,12 @@ object WifiUtil {
     /**
      * 不带双引号的 SSID.
      */
-    fun ScanResult.getWifiName(): String = if (Build.VERSION.SDK_INT < 33) SSID else removeQuotation(wifiSsid.toString())
+    fun ScanResult.getWifiName(): String = if (Build.VERSION.SDK_INT < 33) {
+        @Suppress("DEPRECATION")
+        SSID
+    } else {
+        removeQuotation(wifiSsid.toString())
+    }
 
     fun WifiInfo.getWifiName(): String = removeQuotation(ssid)
 
@@ -45,6 +50,7 @@ object WifiUtil {
             return null
         }
         val wifiManager: WifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        @Suppress("DEPRECATION")
         return wifiManager.connectionInfo?.getWifiName()
     }
 

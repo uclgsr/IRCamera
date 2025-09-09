@@ -24,6 +24,8 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.IntDef;
 import androidx.core.content.ContextCompat;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.text.DecimalFormat;
 
 
@@ -46,6 +48,7 @@ public class SeekBar {
     private float stepsPaddingRight;
 
     @IntDef({INDICATOR_SHOW_WHEN_TOUCH, INDICATOR_ALWAYS_HIDE, INDICATOR_ALWAYS_SHOW_AFTER_TOUCH, INDICATOR_ALWAYS_SHOW})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface IndicatorModeDef {
     }
 

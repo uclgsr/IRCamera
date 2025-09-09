@@ -3,31 +3,28 @@ package com.topdon.tc001.gsr
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.csl.irCamera.R
-import com.github.mikephil.charting.charts.LineChart
+import com.csl.irCamera.databinding.ActivityGsrPlotBinding
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.topdon.lib.core.base.BaseBindingActivity
 
 /**
  * GSR Plot Activity
  * Advanced visualization of GSR data with multiple analysis views
  */
-class GSRPlotActivity : AppCompatActivity() {
+class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     
-    private lateinit var gsrChart: LineChart
-    private lateinit var ppgChart: LineChart
-    private lateinit var statsTextView: TextView
     private lateinit var plotData: GSRDataViewActivity.GSRPlotData
+    
+    override fun getLayoutId() = R.layout.activity_gsr_plot
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gsr_plot)
         
         // Setup toolbar
         supportActionBar?.apply {
@@ -35,16 +32,9 @@ class GSRPlotActivity : AppCompatActivity() {
             title = "GSR Data Analysis"
         }
         
-        initializeViews()
         loadPlotData()
         setupCharts()
         displayStatistics()
-    }
-    
-    private fun initializeViews() {
-        gsrChart = findViewById(R.id.gsr_chart)
-        ppgChart = findViewById(R.id.ppg_chart)
-        statsTextView = findViewById(R.id.stats_text_view)
     }
     
     private fun loadPlotData() {
@@ -58,7 +48,7 @@ class GSRPlotActivity : AppCompatActivity() {
     
     private fun setupGSRChart() {
         // Configure GSR chart
-        gsrChart.apply {
+        binding.gsrChart.apply {
             description = Description().apply {
                 text = "GSR (µS) over Time"
                 textSize = 12f
@@ -168,8 +158,8 @@ class GSRPlotActivity : AppCompatActivity() {
         }
         
         // Set data to chart
-        ppgChart.data = LineData(ppgDataSet, ppgAvgDataSet)
-        ppgChart.invalidate()
+        binding.ppgChart.data = LineData(ppgDataSet, ppgAvgDataSet)
+        binding.ppgChart.invalidate()
     }
     
     private fun displayStatistics() {
@@ -220,7 +210,7 @@ class GSRPlotActivity : AppCompatActivity() {
         stats.appendLine("GSR Decreases: $decreases")
         stats.appendLine("Total Events: ${plotData.gsrEvents.size}")
         
-        statsTextView.text = stats.toString()
+        binding.statsTextView.text = stats.toString()
     }
     
     private fun calculateStandardDeviation(values: List<Double>): Double {

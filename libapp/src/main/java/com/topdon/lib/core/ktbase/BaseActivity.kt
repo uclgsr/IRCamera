@@ -57,6 +57,7 @@ abstract class BaseActivity : AppCompatActivity() {
         if (isLockPortrait()) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
+        @Suppress("DEPRECATION")
         window.navigationBarColor = ContextCompat.getColor(this, R.color.toolbar_16131E)
         setContentView(initContentView())
         initView()

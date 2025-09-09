@@ -15,9 +15,9 @@ import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.SizeUtils
+import com.csl.irCamera.databinding.ActivityIrGalleryEditBinding
 import com.csl.irCamera.R
 import com.elvishew.xlog.XLog
-import com.energy.iruvc.ircmd.IRCMDType
 import com.energy.iruvc.ircmd.IRUtils
 import com.energy.iruvc.utils.CommonParams
 import com.example.thermal_lite.IrConst
@@ -36,7 +36,7 @@ import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.dialog.TipWaterMarkDialog
-import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.tools.ScreenTool
 import com.topdon.lib.core.tools.TimeTool
@@ -79,7 +79,7 @@ import com.topdon.module.thermal.ir.R as ThermalIrR
  * 图片二次编辑
  */
 // Legacy ARouter route annotation - now using NavigationManager
-class IRGalleryEditActivity : BaseActivity(), View.OnClickListener, ITsTempListener {
+class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(), View.OnClickListener, ITsTempListener {
     private var isShowC: Boolean = false
 
     /**
@@ -108,20 +108,25 @@ class IRGalleryEditActivity : BaseActivity(), View.OnClickListener, ITsTempListe
     private var ts_data_H: ByteArray? = null
     private var ts_data_L: ByteArray? = null
 
-    // findViewById declarations
-    private val titleView by lazy { findViewById<com.topdon.lib.core.view.TitleView>(R.id.title_view) }
-    private val editRecyclerSecond by lazy { findViewById<com.topdon.menu.MenuSecondView>(R.id.edit_recycler_second) }
-    private val editRecyclerFirst by lazy { findViewById<com.topdon.menu.MenuEditView>(R.id.edit_recycler_first) }
-    private val irImageView by lazy { findViewById<android.widget.ImageView>(R.id.ir_image_view) }
-    private val temperatureView by lazy { findViewById<com.topdon.module.thermal.ir.view.TemperatureEditView>(R.id.temperature_view) }
-    private val temperatureSeekbar by lazy { findViewById<com.topdon.lib.ui.widget.seekbar.VerticalRangeSeekBar>(R.id.temperature_seekbar) }
-    private val temperatureIvLock by lazy { findViewById<android.widget.ImageView>(R.id.temperature_iv_lock) }
-    private val temperatureIvInput by lazy { findViewById<android.widget.ImageView>(R.id.temperature_iv_input) }
-    private val tvTempContent by lazy { findViewById<android.widget.TextView>(R.id.tv_temp_content) }
-    private val colorBarView by lazy { findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.color_bar_view) }
-    private val llBottom by lazy { findViewById<android.widget.LinearLayout>(R.id.ll_bottom) }
+    // findViewById declarations - replaced with binding
+    private val titleView get() = binding.titleView
+    private val editRecyclerSecond get() = binding.editRecyclerSecond
+    private val editRecyclerFirst get() = binding.editRecyclerFirst
+    private val irImageView get() = binding.irImageView
+    private val temperatureView get() = binding.temperatureView
+    private val temperatureSeekbar get() = binding.temperatureSeekbar
+    private val temperatureIvLock get() = binding.temperatureIvLock
+    private val temperatureIvInput get() = binding.temperatureIvInput
+    private val tvTempContent get() = binding.tvTempContent
+    private val colorBarView get() = binding.colorBarView
+    private val llBottom get() = binding.llBottom
 
-    override fun initContentView(): Int = R.layout.activity_ir_gallery_edit
+    override fun initContentLayoutId() = R.layout.activity_ir_gallery_edit
+
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+    }
 
     override fun initView() {
         initIntent()

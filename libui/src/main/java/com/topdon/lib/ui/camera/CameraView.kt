@@ -33,11 +33,13 @@ import com.topdon.lib.core.utils.ScreenUtil
 import java.nio.ByteBuffer
 import java.util.Collections
 import kotlin.concurrent.thread
-import com.topdon.lib.ui.R as UiR
+import android.view.LayoutInflater
+import com.topdon.lib.ui.databinding.CameraLayBinding
 
 class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     /**预览 */
     lateinit var mTextureView: TextureView
+    private lateinit var binding: CameraLayBinding
 
     constructor(context: Context) : this(context, null)
 
@@ -52,8 +54,8 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     )
 
     private fun initView() {
-        inflate(context, UiR.layout.camera_lay, this)
-        mTextureView = findViewById(UiR.id.camera_texture)
+        binding = CameraLayBinding.inflate(LayoutInflater.from(context), this, true)
+        mTextureView = binding.cameraTexture
         mTextureView.alpha = 0.4f
         lis = ScaleGestureDetector(context, this)
 
@@ -220,6 +222,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
             // 将previewSurface添加到预览请求中
             mCameraCaptureBuilder.addTarget(previewSurface)
             // 创建会话
+            @Suppress("DEPRECATION")
             mCameraDevice!!.createCaptureSession(
                 listOf(
                     previewSurface,

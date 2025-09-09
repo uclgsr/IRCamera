@@ -2,31 +2,27 @@ package com.topdon.lib.ui.recycler
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import com.topdon.lib.ui.R as UiR
+import com.topdon.lib.ui.databinding.UiFooterViewBinding
 
 /**
- * 自定义FooterView - Simplified version without SmartRefreshLayout dependency
+ * 自定义FooterView - Modernized with view binding
  */
 class LoadingFooter : LinearLayout {
-    private val llLoading: LinearLayout
-    private val clLoadEnd: ConstraintLayout
+    private val binding: UiFooterViewBinding
 
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0) {
-        inflate(context, UiR.layout.ui_footer_view, this)
-
-        llLoading = findViewById(UiR.id.ll_loading)
-        clLoadEnd = findViewById(UiR.id.cl_load_end)
+        binding = UiFooterViewBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     fun setNoMoreData(noMoreData: Boolean): Boolean {
-        llLoading.isVisible = !noMoreData
-        clLoadEnd.isVisible = noMoreData
+        binding.llLoading.isVisible = !noMoreData
+        binding.clLoadEnd.isVisible = noMoreData
         return true
     }
 

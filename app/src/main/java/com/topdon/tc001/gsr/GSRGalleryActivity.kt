@@ -4,13 +4,12 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.viewpager.widget.ViewPager
 import com.csl.irCamera.R
-import com.google.android.material.tabs.TabLayout
+import com.csl.irCamera.databinding.ActivityGsrGalleryBinding
+import com.topdon.lib.core.base.BaseBindingActivity
 import com.topdon.lib.core.tools.PermissionTool
 
 /**
@@ -18,7 +17,7 @@ import com.topdon.lib.core.tools.PermissionTool
  * Provides tabbed interface for browsing GSR data files, videos, and RAW images
  * Consistent with thermal camera gallery interface
  */
-class GSRGalleryActivity : AppCompatActivity() {
+class GSRGalleryActivity : BaseBindingActivity<ActivityGsrGalleryBinding>() {
     companion object {
         private const val TAG = "GSRGalleryActivity"
 
@@ -48,23 +47,21 @@ class GSRGalleryActivity : AppCompatActivity() {
         }
     }
 
+    override fun getLayoutId() = R.layout.activity_gsr_gallery
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gsr_gallery)
 
         initView()
         requestPermissions()
     }
 
     private fun initView() {
-        val galleryViewPager = findViewById<ViewPager>(R.id.gsr_gallery_viewpager)
-        val galleryTab = findViewById<TabLayout>(R.id.gsr_gallery_tab)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GSR Recording Gallery"
 
-        galleryViewPager.adapter = ViewAdapter(this, supportFragmentManager)
-        galleryTab.setupWithViewPager(galleryViewPager)
+        binding.gsrGalleryViewpager.adapter = ViewAdapter(this, supportFragmentManager)
+        binding.gsrGalleryTab.setupWithViewPager(binding.gsrGalleryViewpager)
     }
 
     private fun requestPermissions() {

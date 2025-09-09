@@ -2,24 +2,21 @@ package com.topdon.tc001.fragment
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.view.LayoutInflater
+import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.FragmentMainBinding
 import com.topdon.lib.core.bean.event.SocketMsgEvent
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseFragment
+import com.topdon.lib.core.ktbase.BaseBindingFragment
 import com.topdon.lib.core.repository.BatteryInfo
 import com.topdon.lib.core.repository.TC007Repository
 import com.topdon.lib.core.socket.SocketCmdUtil
@@ -34,7 +31,6 @@ import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.tc001.DeviceTypeActivity
 import com.topdon.tc001.popup.DelPopup
 import kotlinx.coroutines.launch
-import org.bytedeco.librealsense.context
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
@@ -45,40 +41,22 @@ import org.json.JSONObject
  * Created by LCG on 2024/4/18.
  */
 @SuppressLint("NotifyDataSetChanged")
-class MainFragment : BaseFragment(), View.OnClickListener {
+class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickListener {
     private lateinit var adapter: MyAdapter
 
-    // View references
-    private lateinit var tvConnectDevice: TextView
-    private lateinit var ivAdd: ImageView
-    private lateinit var tvNoDeviceTitle: TextView
-    private lateinit var tvHasDeviceTitle: TextView
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var clHasDevice: View
-    private lateinit var clNoDevice: View
+    override fun initContentLayoutId(): Int = R.layout.fragment_main
 
-    override fun initContentView(): Int = R.layout.fragment_main
-
-    override fun initView() {
-        // Initialize views using view?.findViewById since this is a fragment
-        tvConnectDevice = view?.findViewById(R.id.tv_connect_device)!!
-        ivAdd = view?.findViewById(R.id.iv_add)!!
-        tvNoDeviceTitle = view?.findViewById(R.id.tv_no_device_title)!!
-        tvHasDeviceTitle = view?.findViewById(R.id.tv_has_device_title)!!
-        recyclerView = view?.findViewById(R.id.recycler_view)!!
-        clHasDevice = view?.findViewById(R.id.cl_has_device)!!
-        clNoDevice = view?.findViewById(R.id.cl_no_device)!!
-
+    override fun initView(savedInstanceState: Bundle?) {
         adapter = MyAdapter()
-        tvConnectDevice.setOnClickListener(this)
-        ivAdd.setOnClickListener(this)
+        binding.tvConnectDevice.setOnClickListener(this)
+        binding.ivAdd.setOnClickListener(this)
 
         // GSR Multi-modal Recording Access (long press on titles for research features)
-        tvNoDeviceTitle.setOnLongClickListener {
+        binding.tvNoDeviceTitle.setOnLongClickListener {
             showGSROptions()
             true
         }
-        tvHasDeviceTitle.setOnLongClickListener {
+        binding.tvHasDeviceTitle.setOnLongClickListener {
             showGSROptions()
             true
         }
@@ -137,8 +115,8 @@ class MainFragment : BaseFragment(), View.OnClickListener {
             popup.show(view)
         }
 
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = adapter
 
         if (WebSocketProxy.getInstance().isTC007Connect()) {
             lifecycleScope.launch {
@@ -160,9 +138,6 @@ class MainFragment : BaseFragment(), View.OnClickListener {
         )
     }
 
-    override fun initData() {
-    }
-
     override fun onResume() {
         super.onResume()
         refresh()
@@ -171,8 +146,8 @@ class MainFragment : BaseFragment(), View.OnClickListener {
 
     private fun refresh() {
         val hasAnyDevice = SharedManager.hasTcLine || SharedManager.hasTS004 || SharedManager.hasTC007
-        clHasDevice.isVisible = hasAnyDevice
-        clNoDevice.isVisible = !hasAnyDevice
+        binding.clHasDevice.isVisible = hasAnyDevice
+        binding.clNoDevice.isVisible = !hasAnyDevice
         adapter.hasConnectLine = DeviceTools.isConnect(isAutoRequest = false)
         adapter.hasConnectTS004 = WebSocketProxy.getInstance().isTS004Connect()
         adapter.hasConnectTC007 = WebSocketProxy.getInstance().isTC007Connect()
@@ -215,7 +190,7 @@ class MainFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            tvConnectDevice, ivAdd -> { // 添加设备
+            binding.tvConnectDevice, binding.ivAdd -> { // 添加设备
                 startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
 //                NavigationManager.getInstance().build(RoutePath.UsbIrModule.PAGE_IR_MAIN_ACTIVITY)
 //                    .navigation()

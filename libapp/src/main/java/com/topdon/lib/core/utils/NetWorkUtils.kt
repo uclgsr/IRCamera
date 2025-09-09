@@ -34,6 +34,7 @@ object NetWorkUtils {
         prefixes: List<String>,
     ): Boolean {
         val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        @Suppress("DEPRECATION")
         val wifiInfo = wifiManager.connectionInfo
         val ssid = wifiInfo.ssid.replace("\"", "") // 移除双引号
         for (prefix in prefixes) {
@@ -106,12 +107,19 @@ object NetWorkUtils {
                 }
             connectivityManager.registerNetworkCallback(request, callback)
 
+            @Suppress("DEPRECATION")
             val configuration = WifiConfiguration()
+            @Suppress("DEPRECATION")
             configuration.SSID = "\"$ssid\""
+            @Suppress("DEPRECATION")
             configuration.preSharedKey = "\"$password\""
+            @Suppress("DEPRECATION")
             configuration.hiddenSSID = false
+            @Suppress("DEPRECATION")
             configuration.status = WifiConfiguration.Status.ENABLED
+            @Suppress("DEPRECATION")
             val id = wifiManager.addNetwork(configuration)
+            @Suppress("DEPRECATION")
             val isSuccess = wifiManager.enableNetwork(id, true)
             if (!isSuccess) {
                 connectivityManager.unregisterNetworkCallback(callback)

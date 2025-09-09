@@ -279,6 +279,7 @@ class TipWaterMarkDialog : Dialog {
             try {
                 if (location != null) {
                     val gc = Geocoder(context!!, Locale.getDefault())
+                    @Suppress("DEPRECATION")
                     result =
                         gc.getFromLocation(
                             location.latitude,

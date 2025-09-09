@@ -45,6 +45,7 @@ class DeviceBroadcastReceiver : BroadcastReceiver() {
     private fun handleUsbEvent(intent: Intent) {
         val usbDevice: UsbDevice?
         try {
+            @Suppress("DEPRECATION")
             usbDevice = intent.extras!!["device"] as UsbDevice?
         } catch (e: Exception) {
             e.printStackTrace()

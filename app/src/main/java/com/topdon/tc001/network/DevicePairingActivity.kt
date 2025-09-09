@@ -5,12 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityDevicePairingBinding
 import com.topdon.gsr.model.SessionInfo
+import com.topdon.lib.core.base.BaseBindingActivity
 import com.topdon.tc001.gsr.MultiModalRecordingActivity
 import kotlinx.coroutines.launch
 
@@ -18,7 +19,7 @@ import kotlinx.coroutines.launch
  * Device Pairing Activity for connecting to PC Controllers
  * Allows discovery, pairing, and remote measurement initiation
  */
-class DevicePairingActivity : AppCompatActivity(), NetworkClient.NetworkEventListener {
+class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(), NetworkClient.NetworkEventListener {
     companion object {
         private const val TAG = "DevicePairingActivity"
 
@@ -31,20 +32,13 @@ class DevicePairingActivity : AppCompatActivity(), NetworkClient.NetworkEventLis
     private lateinit var networkClient: NetworkClient
     private lateinit var controllersAdapter: ControllersAdapter
 
-    // UI Components
-    private lateinit var scanButton: Button
-    private lateinit var statusText: TextView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var controllersRecyclerView: RecyclerView
-    private lateinit var connectionStatusText: TextView
-    private lateinit var disconnectButton: Button
-
     private val discoveredControllers = mutableListOf<NetworkClient.ControllerInfo>()
     private var connectedController: NetworkClient.ControllerInfo? = null
 
+    override fun getLayoutId() = R.layout.activity_device_pairing
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_device_pairing)
 
         initializeViews()
         setupNetworkClient()
@@ -53,15 +47,8 @@ class DevicePairingActivity : AppCompatActivity(), NetworkClient.NetworkEventLis
     }
 
     private fun initializeViews() {
-        scanButton = findViewById(R.id.scan_button)
-        statusText = findViewById(R.id.status_text)
-        progressBar = findViewById(R.id.progress_bar)
-        controllersRecyclerView = findViewById(R.id.controllers_recycler_view)
-        connectionStatusText = findViewById(R.id.connection_status_text)
-        disconnectButton = findViewById(R.id.disconnect_button)
-
-        scanButton.setOnClickListener { startControllerScan() }
-        disconnectButton.setOnClickListener { disconnectFromController() }
+        binding.scanButton.setOnClickListener { startControllerScan() }
+        binding.disconnectButton.setOnClickListener { disconnectFromController() }
     }
 
     private fun setupNetworkClient() {
@@ -75,14 +62,14 @@ class DevicePairingActivity : AppCompatActivity(), NetworkClient.NetworkEventLis
                 connectToController(controller)
             }
 
-        controllersRecyclerView.layoutManager = LinearLayoutManager(this)
-        controllersRecyclerView.adapter = controllersAdapter
+        binding.controllersRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.controllersRecyclerView.adapter = controllersAdapter
     }
 
     private fun startControllerScan() {
-        scanButton.isEnabled = false
-        progressBar.visibility = View.VISIBLE
-        statusText.text = "Scanning for PC Controllers..."
+        binding.scanButton.isEnabled = false
+        binding.progressBar.visibility = View.VISIBLE
+        binding.statusText.text = "Scanning for PC Controllers..."
 
         discoveredControllers.clear()
         controllersAdapter.notifyDataSetChanged()
@@ -94,36 +81,36 @@ class DevicePairingActivity : AppCompatActivity(), NetworkClient.NetworkEventLis
                     discoveredControllers.addAll(controllers)
                     controllersAdapter.notifyDataSetChanged()
 
-                    statusText.text =
+                    binding.statusText.text =
                         if (controllers.isNotEmpty()) {
                             "Found ${controllers.size} PC Controller(s)"
                         } else {
                             "No PC Controllers found. Make sure you're on the same network."
                         }
 
-                    progressBar.visibility = View.GONE
-                    scanButton.isEnabled = true
+                    binding.progressBar.visibility = View.GONE
+                    binding.scanButton.isEnabled = true
                 }
             } catch (e: Exception) {
                 runOnUiThread {
-                    statusText.text = "Scan failed: ${e.message}"
-                    progressBar.visibility = View.GONE
-                    scanButton.isEnabled = true
+                    binding.statusText.text = "Scan failed: ${e.message}"
+                    binding.progressBar.visibility = View.GONE
+                    binding.scanButton.isEnabled = true
                 }
             }
         }
     }
 
     private fun connectToController(controller: NetworkClient.ControllerInfo) {
-        statusText.text = "Connecting to ${controller.deviceName}..."
-        progressBar.visibility = View.VISIBLE
+        binding.statusText.text = "Connecting to ${controller.deviceName}..."
+        binding.progressBar.visibility = View.VISIBLE
 
         lifecycleScope.launch {
             val success = networkClient.connectToController(controller.ipAddress, controller.port)
             runOnUiThread {
-                progressBar.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
                 if (!success) {
-                    statusText.text = "Failed to connect to ${controller.deviceName}"
+                    binding.statusText.text = "Failed to connect to ${controller.deviceName}"
                 }
             }
         }
@@ -136,11 +123,11 @@ class DevicePairingActivity : AppCompatActivity(), NetworkClient.NetworkEventLis
     private fun updateUI() {
         val isConnected = networkClient.isConnected()
 
-        scanButton.isEnabled = isConnected.not()
-        disconnectButton.visibility = if (isConnected) View.VISIBLE else View.GONE
-        controllersRecyclerView.visibility = if (isConnected) View.GONE else View.VISIBLE
+        binding.scanButton.isEnabled = isConnected.not()
+        binding.disconnectButton.visibility = if (isConnected) View.VISIBLE else View.GONE
+        binding.controllersRecyclerView.visibility = if (isConnected) View.GONE else View.VISIBLE
 
-        connectionStatusText.text =
+        binding.connectionStatusText.text =
             if (isConnected) {
                 "Connected to: ${connectedController?.deviceName ?: "PC Controller"}"
             } else {
@@ -166,7 +153,7 @@ class DevicePairingActivity : AppCompatActivity(), NetworkClient.NetworkEventLis
     override fun onConnected(controller: NetworkClient.ControllerInfo) {
         runOnUiThread {
             connectedController = controller
-            statusText.text = "Connected to ${controller.deviceName}"
+            binding.statusText.text = "Connected to ${controller.deviceName}"
             updateUI()
 
             Toast.makeText(this, "Device paired successfully!", Toast.LENGTH_SHORT).show()
@@ -176,7 +163,7 @@ class DevicePairingActivity : AppCompatActivity(), NetworkClient.NetworkEventLis
     override fun onDisconnected(reason: String) {
         runOnUiThread {
             connectedController = null
-            statusText.text = "Disconnected: $reason"
+            binding.statusText.text = "Disconnected: $reason"
             updateUI()
         }
     }
@@ -204,7 +191,7 @@ class DevicePairingActivity : AppCompatActivity(), NetworkClient.NetworkEventLis
     override fun onSyncFlash(durationMs: Int) {
         runOnUiThread {
             // Flash the screen for synchronization
-            val flashView = findViewById<View>(R.id.flash_overlay)
+            val flashView = binding.flashOverlay
             flashView.visibility = View.VISIBLE
             flashView.alpha = 1.0f
 
@@ -223,7 +210,7 @@ class DevicePairingActivity : AppCompatActivity(), NetworkClient.NetworkEventLis
         error: String,
     ) {
         runOnUiThread {
-            statusText.text = "Error in $operation: $error"
+            binding.statusText.text = "Error in $operation: $error"
             Toast.makeText(this, "Network error: $error", Toast.LENGTH_LONG).show()
         }
     }

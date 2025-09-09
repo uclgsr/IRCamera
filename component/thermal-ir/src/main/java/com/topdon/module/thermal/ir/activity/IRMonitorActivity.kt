@@ -1,9 +1,11 @@
 package com.topdon.module.thermal.ir.activity
 
+import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.ktbase.BaseActivity
+import androidx.appcompat.app.AppCompatActivity
+import com.topdon.module.thermal.ir.databinding.ActivityIrMonitorBinding
 import com.topdon.lib.ui.dialog.MonitorSelectDialog
 import com.topdon.libcom.navigation.NavigationManager
 import com.topdon.module.thermal.ir.R
@@ -15,24 +17,26 @@ import org.greenrobot.eventbus.EventBus
 /**
  * 选取区域监听
  */
-class IRMonitorActivity : BaseActivity(), View.OnClickListener {
+class IRMonitorActivity : AppCompatActivity(), View.OnClickListener {
 
+    private lateinit var binding: ActivityIrMonitorBinding
     private var selectIndex: SelectPositionBean? = null//选取点
 
-    override fun initContentView() = R.layout.activity_ir_monitor
-
-    override fun initView() {
-        findViewById<Button>(R.id.motion_btn).setOnClickListener(this)
-        findViewById<Button>(R.id.motion_start_btn).setOnClickListener(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityIrMonitorBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        initView()
     }
 
-    override fun initData() {
-
+    private fun initView() {
+        binding.motionBtn.setOnClickListener(this)
+        binding.motionStartBtn.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v) {
-            findViewById<Button>(R.id.motion_btn) -> {
+            binding.motionBtn -> {
                 MonitorSelectDialog.Builder(this)
                     .setPositiveListener {
                         updateUI()
@@ -44,7 +48,7 @@ class IRMonitorActivity : BaseActivity(), View.OnClickListener {
                     }
                     .create().show()
             }
-            findViewById<Button>(R.id.motion_start_btn) -> {
+            binding.motionStartBtn -> {
                 if (selectIndex == null) {
                     MonitorSelectDialog.Builder(this)
                         .setPositiveListener {
@@ -72,12 +76,11 @@ class IRMonitorActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun updateUI() {
-        findViewById<Button>(R.id.motion_start_btn).visibility = View.VISIBLE
-        findViewById<Button>(R.id.motion_btn).visibility = View.GONE
+        binding.motionStartBtn.visibility = View.VISIBLE
+        binding.motionBtn.visibility = View.GONE
     }
 
-    override fun disConnected() {
-        super.disConnected()
+    private fun disConnected() {
         finish()
     }
 

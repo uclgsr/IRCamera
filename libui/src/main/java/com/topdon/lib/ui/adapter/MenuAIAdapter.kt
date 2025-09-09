@@ -2,20 +2,18 @@ package com.topdon.lib.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.core.R
 import com.topdon.lib.core.bean.ObserveBean
 import com.topdon.lib.ui.bean.ColorBean
+import com.topdon.lib.ui.databinding.UiItemMenuSecondViewBinding
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
 @Deprecated("旧的高低温源菜单，已重构过了")
-class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.ItemView>() {
     /**
      * 当前选中的选项 code.
      *
@@ -60,25 +58,25 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(UiR.layout.ui_item_menu_second_view, parent, false)
-        return ItemView(view)
+    ): ItemView {
+        val binding = UiItemMenuSecondViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ItemView(binding)
     }
 
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: ItemView,
         position: Int,
     ) {
-        if (holder is ItemView) {
-            holder.img.setImageResource(secondBean[position].res)
-            holder.lay.setOnClickListener {
+        with(holder.binding) {
+            itemMenuTabImg.setImageResource(secondBean[position].res)
+            itemMenuTabLay.setOnClickListener {
                 selectCode = secondBean[position].code
                 onTempSourceListener?.invoke(secondBean[position].code)
             }
-            holder.img.isSelected = secondBean[position].code == selectCode
-            holder.name.text = secondBean[position].name
-            holder.name.isSelected = secondBean[position].code == selectCode
-            holder.name.setTextColor(
+            itemMenuTabImg.isSelected = secondBean[position].code == selectCode
+            itemMenuTabText.text = secondBean[position].name
+            itemMenuTabText.isSelected = secondBean[position].code == selectCode
+            itemMenuTabText.setTextColor(
                 if (secondBean[position].code == selectCode) {
                     ContextCompat.getColor(context, UiR.color.white)
                 } else {
@@ -92,19 +90,5 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
         return secondBean.size
     }
 
-    inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        init {
-//            val canSeeCount = itemCount.toFloat() //一屏可见的 item 数量，目前都是全都显示完
-//            val with = (ScreenUtils.getScreenWidth() / canSeeCount).toInt()
-//            itemView.layoutParams = ViewGroup.LayoutParams(with, ViewGroup.LayoutParams.WRAP_CONTENT)
-//            val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()
-//            val layoutParams = itemView.item_menu_tab_img.layoutParams
-//            layoutParams.width = imageSize
-//            layoutParams.height = imageSize
-//            itemView.item_menu_tab_img.layoutParams = layoutParams
-//        }
-        val lay: View = itemView.findViewById(UiR.id.item_menu_tab_lay)
-        val img: ImageView = itemView.findViewById(UiR.id.item_menu_tab_img)
-        val name: TextView = itemView.findViewById(UiR.id.item_menu_tab_text)
-    }
+    inner class ItemView(val binding: UiItemMenuSecondViewBinding) : RecyclerView.ViewHolder(binding.root)
 }

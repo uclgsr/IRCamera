@@ -166,10 +166,12 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
+    @Deprecated("This method is deprecated")
     override fun onBackPressed() {
         if (hasTakePhoto) {
             switchPhotoState(false)
         } else {
+            @Suppress("DEPRECATION")
             super.onBackPressed()
         }
     }

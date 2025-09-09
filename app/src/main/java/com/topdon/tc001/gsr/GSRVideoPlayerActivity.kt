@@ -9,17 +9,17 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.MediaController
-import android.widget.VideoView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityGsrVideoPlayerBinding
+import com.topdon.lib.core.base.BaseBindingActivity
 import java.io.File
 
 /**
  * GSR Video Player Activity
  * Video playback for recorded videos from multi-modal sessions
  */
-class GSRVideoPlayerActivity : AppCompatActivity() {
+class GSRVideoPlayerActivity : BaseBindingActivity<ActivityGsrVideoPlayerBinding>() {
     companion object {
         private const val TAG = "GSRVideoPlayerActivity"
         private const val EXTRA_VIDEO_PATH = "video_path"
@@ -37,11 +37,11 @@ class GSRVideoPlayerActivity : AppCompatActivity() {
     }
 
     private lateinit var videoPath: String
-    private lateinit var videoView: VideoView
+
+    override fun getLayoutId() = R.layout.activity_gsr_video_player
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gsr_video_player)
 
         videoPath = intent.getStringExtra(EXTRA_VIDEO_PATH) ?: ""
         val videoFile = File(videoPath)
@@ -58,8 +58,6 @@ class GSRVideoPlayerActivity : AppCompatActivity() {
     private fun setupUI(videoFile: File) {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = videoFile.name
-
-        videoView = findViewById(R.id.video_view)
     }
 
     private fun playVideo(videoFile: File) {
@@ -75,9 +73,9 @@ class GSRVideoPlayerActivity : AppCompatActivity() {
 
         Log.w(TAG, "Video URI: $uri")
 
-        videoView.setVideoURI(uri)
-        videoView.setMediaController(MediaController(this))
-        videoView.setOnPreparedListener { mediaPlayer ->
+        binding.videoView.setVideoURI(uri)
+        binding.videoView.setMediaController(MediaController(this))
+        binding.videoView.setOnPreparedListener { mediaPlayer ->
             Log.i(TAG, "Video prepared, starting playback")
             // Video is ready to play
             mediaPlayer.setVideoScalingMode(android.media.MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
@@ -166,8 +164,8 @@ class GSRVideoPlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (videoView.isPlaying) {
-            videoView.pause()
+        if (binding.videoView.isPlaying) {
+            binding.videoView.pause()
         }
     }
 
@@ -178,6 +176,6 @@ class GSRVideoPlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        videoView.stopPlayback()
+        binding.videoView.stopPlayback()
     }
 }

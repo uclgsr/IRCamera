@@ -105,15 +105,18 @@ abstract class BaseApplication : Application() {
                 },
             )
         } else {
-            // Fallback for older Android versions
-            if (Build.VERSION.SDK_INT < 33) {
-                registerReceiver(NetworkChangedReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-            } else {
+            // Fallback for older Android versions - use modern Intent filter approach
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 registerReceiver(
                     NetworkChangedReceiver(),
-                    IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
+                    IntentFilter().apply {
+                        addAction("android.net.conn.CONNECTIVITY_CHANGE")
+                    },
                     Context.RECEIVER_NOT_EXPORTED,
                 )
+            } else {
+                @Suppress("DEPRECATION")
+                registerReceiver(NetworkChangedReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
             }
         }
     }
@@ -184,7 +187,7 @@ abstract class BaseApplication : Application() {
             context: Context?,
             intent: Intent?,
         ) {
-            if (ConnectivityManager.CONNECTIVITY_ACTION == intent?.action) {
+            if (intent?.action == "android.net.conn.CONNECTIVITY_CHANGE") {
                 val manager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
                 // Use modern API for Android M+ (API 23+)
@@ -201,6 +204,7 @@ abstract class BaseApplication : Application() {
                     // Fallback for API < 23 (Android 6.0)
                     @Suppress("DEPRECATION")
                     val activeNetwork = manager.activeNetworkInfo
+                    @Suppress("DEPRECATION")
                     if (activeNetwork?.isConnected == true && activeNetwork.type == ConnectivityManager.TYPE_WIFI) {
                         connectWebSocket()
                         Log.i("WebSocket", "WiFi network connected (legacy): ${activeNetwork.type}")

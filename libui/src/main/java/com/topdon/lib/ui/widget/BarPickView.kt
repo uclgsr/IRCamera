@@ -217,10 +217,8 @@ class BarPickView : View {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        if (canvas == null) {
-            return
-        }
-
+        // Canvas is never null in onDraw, removing unnecessary null check
+        
         computeBarRect()
         computeThumbRect()
 

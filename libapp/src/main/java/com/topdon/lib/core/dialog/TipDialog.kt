@@ -22,6 +22,7 @@ class TipDialog : Dialog {
 
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
 
+    @Deprecated("This method is deprecated")
     override fun onBackPressed() {
     }
 

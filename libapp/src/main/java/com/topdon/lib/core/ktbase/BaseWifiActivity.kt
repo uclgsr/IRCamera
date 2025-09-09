@@ -2,7 +2,7 @@ package com.topdon.lib.core.ktbase
 
 import android.os.Build
 import android.os.Bundle
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import android.view.WindowManager
 import com.hjq.permissions.Permission
 import com.topdon.lib.core.utils.NetWorkUtils

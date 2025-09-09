@@ -15,12 +15,12 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivitySessionManagerBinding
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.service.SessionManager
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -35,14 +35,9 @@ import java.util.Locale
  * Production-Ready Session Management UI
  * Browse, manage, and delete recording sessions with comprehensive file cleanup
  */
-class SessionManagerActivity : AppCompatActivity() {
-    private lateinit var recyclerView: RecyclerView
+class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding>() {
     private lateinit var adapter: SessionAdapter
-    private lateinit var emptyView: View
-    private lateinit var loadingView: View
     private lateinit var sessionManager: SessionManager
-    private lateinit var searchView: SearchView
-    private lateinit var filterSpinner: Spinner
 
     private val sessions = mutableListOf<SessionInfo>()
     private val filteredSessions = mutableListOf<SessionInfo>()
@@ -57,10 +52,11 @@ class SessionManagerActivity : AppCompatActivity() {
         }
     }
 
+    override fun initContentLayoutId() = R.layout.activity_session_manager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_session_manager)
-
+        
         initializeViews()
         setupSessionManager()
         setupRecyclerView()
@@ -69,12 +65,8 @@ class SessionManagerActivity : AppCompatActivity() {
     }
 
     private fun initializeViews() {
-        recyclerView = findViewById(R.id.sessions_recycler_view)
-        emptyView = findViewById(R.id.empty_view)
-        loadingView = findViewById(R.id.loading_view)
-        searchView = findViewById(R.id.search_view)
-        filterSpinner = findViewById(R.id.filter_spinner)
 
+    private fun initializeViews() {
         // Setup toolbar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Session Manager"
@@ -94,13 +86,13 @@ class SessionManagerActivity : AppCompatActivity() {
                 onSessionExport = { session -> exportSession(session) },
             )
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
+        binding.sessionsRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.sessionsRecyclerView.adapter = adapter
     }
 
     private fun setupSearchAndFilter() {
-        // Search functionality
-        searchView.setOnQueryTextListener(
+        // Setup search functionality
+        binding.searchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     filterSessions(query)
@@ -114,24 +106,31 @@ class SessionManagerActivity : AppCompatActivity() {
             },
         )
 
-        // Filter spinner setup
-        val filterOptions = arrayOf("All Sessions", "Active Sessions", "Completed Sessions", "With GSR", "With RGB", "With Thermal")
-        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filterOptions)
+        // Setup filter spinner
+        val filterOptions = arrayOf("All Sessions", "Recent", "Completed", "With Data")
+        val spinnerAdapter =
+            ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_item,
+                filterOptions,
+            )
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        filterSpinner.adapter = spinnerAdapter
+        binding.filterSpinner.adapter = spinnerAdapter
 
-        filterSpinner.onItemSelectedListener =
+        binding.filterSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
-                    parent: AdapterView<*>?,
+                    parent: AdapterView<*>,
                     view: View?,
                     position: Int,
                     id: Long,
                 ) {
-                    applyFilter(position)
+                    filterSessionsByType(position)
                 }
 
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Do nothing
+                }
             }
     }
 
@@ -271,12 +270,12 @@ class SessionManagerActivity : AppCompatActivity() {
     }
 
     private fun showLoading(show: Boolean) {
-        loadingView.visibility = if (show) View.VISIBLE else View.GONE
-        recyclerView.visibility = if (show) View.GONE else View.VISIBLE
+        binding.loadingView.visibility = if (show) View.VISIBLE else View.GONE
+        binding.sessionsRecyclerView.visibility = if (show) View.GONE else View.VISIBLE
     }
 
     private fun updateEmptyView() {
-        emptyView.visibility = if (filteredSessions.isEmpty()) View.VISIBLE else View.GONE
+        binding.emptyView.visibility = if (filteredSessions.isEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun showError(message: String) {

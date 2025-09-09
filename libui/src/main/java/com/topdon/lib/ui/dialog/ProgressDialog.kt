@@ -9,35 +9,36 @@ import android.view.ViewGroup.LayoutParams
 import android.widget.ProgressBar
 import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
+import com.topdon.lib.ui.databinding.DialogProgressBinding
 import com.topdon.lib.ui.R as UiR
 
 /**
  * 带进度条的提示弹框.
  */
 class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
+    private val binding: DialogProgressBinding = DialogProgressBinding.inflate(LayoutInflater.from(context))
+    
     var max: Int = 100
         set(value) {
-            rootView.findViewById<ProgressBar>(UiR.id.progress_bar).max = value
+            binding.progressBar.max = value
             field = value
         }
 
     var progress: Int = 0
         set(value) {
-            rootView.findViewById<ProgressBar>(UiR.id.progress_bar).progress = value
+            binding.progressBar.progress = value
             field = value
         }
 
-    private val rootView: View
-
     init {
-        rootView = LayoutInflater.from(context).inflate(UiR.layout.dialog_progress, null)
+        // Binding is initialized in constructor
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCancelable(false)
         setCanceledOnTouchOutside(false)
-        setContentView(rootView)
+        setContentView(binding.root)
 
         window?.let {
             val layoutParams = it.attributes
@@ -49,8 +50,7 @@ class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
 
     override fun show() {
         super.show()
-        val progressBar = rootView.findViewById<ProgressBar>(UiR.id.progress_bar)
-        progressBar.max = max
-        progressBar.progress = progress
+        binding.progressBar.max = max
+        binding.progressBar.progress = progress
     }
 }

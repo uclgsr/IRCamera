@@ -6,16 +6,15 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityGsrDataViewBinding
 import com.opencsv.CSVWriter
 import com.google.gson.Gson
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileWriter
@@ -27,7 +26,7 @@ import java.util.*
  * GSR Data View Activity
  * Detailed view of GSR CSV data files with statistics and export options
  */
-class GSRDataViewActivity : AppCompatActivity() {
+class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     companion object {
         private const val EXTRA_FILE_PATH = "file_path"
 
@@ -45,9 +44,6 @@ class GSRDataViewActivity : AppCompatActivity() {
 
     private lateinit var filePath: String
     private lateinit var file: File
-    private lateinit var fileInfoText: TextView
-    private lateinit var statisticsText: TextView
-    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: GSRDataRowAdapter
     private val dataRows = mutableListOf<GSRDataRow>()
     private val gsrDataPoints = mutableListOf<GSRDataPoint>()
@@ -72,10 +68,11 @@ class GSRDataViewActivity : AppCompatActivity() {
         val notes: String? = null
     )
 
+    override fun initContentLayoutId() = R.layout.activity_gsr_data_view
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gsr_data_view)
-
+        
         filePath = intent.getStringExtra(EXTRA_FILE_PATH) ?: ""
         file = File(filePath)
 
@@ -92,13 +89,10 @@ class GSRDataViewActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = file.name
 
-        fileInfoText = findViewById(R.id.file_info_text)
-        statisticsText = findViewById(R.id.statistics_text)
-        recyclerView = findViewById(R.id.data_recycler_view)
-
+        // Use view binding instead of findViewById
         adapter = GSRDataRowAdapter(dataRows)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
+        binding.dataRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.dataRecyclerView.adapter = adapter
 
         // Display basic file info
         val fileSize =
@@ -108,7 +102,7 @@ class GSRDataViewActivity : AppCompatActivity() {
                 "%.1f KB".format(file.length() / 1024.0)
             }
 
-        fileInfoText.text =
+        binding.fileInfoText.text =
             """
             File: ${file.name}
             Size: $fileSize
@@ -136,7 +130,7 @@ class GSRDataViewActivity : AppCompatActivity() {
                     dataRows.addAll(rows)
                     adapter.notifyDataSetChanged()
 
-                    statisticsText.text =
+                    binding.statisticsText.text =
                         """
                         Total Samples: ${rows.size}
                         Duration: ${formatDuration((rows.size / 128).toLong())} (@ 128 Hz)
@@ -161,7 +155,7 @@ class GSRDataViewActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    statisticsText.text = "Error loading GSR data: ${e.message}"
+                    binding.statisticsText.text = "Error loading GSR data: ${e.message}"
                 }
             }
         }

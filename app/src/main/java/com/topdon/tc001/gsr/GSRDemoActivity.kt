@@ -4,24 +4,25 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 // Removed ARouter import - using NavigationManager instead
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityGsrDemoBinding
 import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.model.SyncMark
 import com.topdon.gsr.service.GSRRecorder
 import com.topdon.gsr.util.TimeUtil
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 
 /**
  * Simple GSR demonstration activity showing basic functionality
  * Navigation: Use NavigationManager.getInstance().build(RouterConfig.GSR_DEMO).navigation(context)
  */
-class GSRDemoActivity : AppCompatActivity() {
+class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
     companion object {
         private const val TAG = "GSRDemoActivity"
 
@@ -32,11 +33,6 @@ class GSRDemoActivity : AppCompatActivity() {
     }
 
     private lateinit var gsrRecorder: GSRRecorder
-    private lateinit var startButton: Button
-    private lateinit var stopButton: Button
-    private lateinit var syncButton: Button
-    private lateinit var statusText: TextView
-    private lateinit var dataText: TextView
 
     private var isRecording = false
     private var lastSample: GSRSample? = null
@@ -47,7 +43,7 @@ class GSRDemoActivity : AppCompatActivity() {
                 runOnUiThread {
                     isRecording = true
                     updateButtonStates()
-                    statusText.text = "Recording started: ${sessionInfo.sessionId}"
+                    binding.statusText.text = "Recording started: ${sessionInfo.sessionId}"
                 }
             }
 
@@ -72,7 +68,7 @@ class GSRDemoActivity : AppCompatActivity() {
                 // Update display every 32 samples (4 times per second at 128Hz)
                 if (sample.sampleIndex % 32 == 0L) {
                     runOnUiThread {
-                        dataText.text =
+                        binding.dataText.text =
                             buildString {
                                 append("Latest Sample #${sample.sampleIndex}:\n")
                                 append("Conductance: ${"%.3f".format(sample.conductance)} µS\n")
@@ -103,97 +99,21 @@ class GSRDemoActivity : AppCompatActivity() {
 
             override fun onError(error: String) {
                 runOnUiThread {
-                    statusText.text = "Error: $error"
+                    binding.statusText.text = "Error: $error"
                     Toast.makeText(this@GSRDemoActivity, error, Toast.LENGTH_LONG).show()
                 }
             }
         }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setupUI()
+    override fun initView() {
+        // Setup click listeners
+        binding.startButton.setOnClickListener { startRecording() }
+        binding.stopButton.setOnClickListener { stopRecording() }
+        binding.syncButton.setOnClickListener { triggerSyncEvent() }
 
         gsrRecorder = GSRRecorder(this)
         gsrRecorder.addListener(gsrListener)
         updateButtonStates()
-    }
-
-    private fun setupUI() {
-        val layout =
-            LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL
-                setPadding(32, 32, 32, 32)
-            }
-
-        // Title
-        val title =
-            TextView(this).apply {
-                text = "GSR Recording Demo"
-                textSize = 24f
-                setPadding(0, 0, 0, 32)
-            }
-        layout.addView(title)
-
-        // Description
-        val description =
-            TextView(this).apply {
-                text = "Demonstrates 128 Hz GSR data recording with CSV export and sync events."
-                setPadding(0, 0, 0, 24)
-            }
-        layout.addView(description)
-
-        // Control buttons
-        val buttonLayout =
-            LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-            }
-
-        startButton =
-            Button(this).apply {
-                text = "Start Recording"
-                setOnClickListener { startRecording() }
-            }
-        buttonLayout.addView(startButton)
-
-        stopButton =
-            Button(this).apply {
-                text = "Stop Recording"
-                setOnClickListener { stopRecording() }
-                isEnabled = false
-            }
-        buttonLayout.addView(stopButton)
-
-        syncButton =
-            Button(this).apply {
-                text = "Sync Event"
-                setOnClickListener { triggerSyncEvent() }
-                isEnabled = false
-            }
-        buttonLayout.addView(syncButton)
-
-        layout.addView(buttonLayout)
-
-        // Status
-        statusText =
-            TextView(this).apply {
-                text = "Ready to record"
-                setPadding(0, 32, 0, 16)
-                textSize = 16f
-            }
-        layout.addView(statusText)
-
-        // Data display
-        dataText =
-            TextView(this).apply {
-                text = "No data yet. Press 'Start Recording' to begin."
-                background = ContextCompat.getDrawable(this@GSRDemoActivity, android.R.drawable.editbox_background)
-                setPadding(16, 16, 16, 16)
-                typeface = android.graphics.Typeface.MONOSPACE
-            }
-        layout.addView(dataText)
-
-        setContentView(layout)
     }
 
     private fun startRecording() {
@@ -235,9 +155,9 @@ class GSRDemoActivity : AppCompatActivity() {
     }
 
     private fun updateButtonStates() {
-        startButton.isEnabled = !isRecording
-        stopButton.isEnabled = isRecording
-        syncButton.isEnabled = isRecording
+        binding.startButton.isEnabled = !isRecording
+        binding.stopButton.isEnabled = isRecording
+        binding.syncButton.isEnabled = isRecording
     }
 
     override fun onDestroy() {

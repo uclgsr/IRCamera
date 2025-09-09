@@ -19,7 +19,7 @@ import com.topdon.lib.core.bean.ObserveBean
 
 
 /**
- * 缩放view基类
+ * 缩放view基类 - Optimized findViewById usage
  */
 class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener{
     private var centerX: Float = Float.MAX_VALUE
@@ -49,6 +49,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
 
     private fun initView() {
         inflate(context, R.layout.zoom_bb, this)
+        // Cache view reference instead of repeated findViewById calls
         mTextureView = findViewById(R.id.camera_texture)
         lis = ScaleGestureDetector(context, this)
         originalBitmap = (androidx.core.content.ContextCompat.getDrawable(context, R.drawable.svg_ic_target_horizontal_person_green) as? BitmapDrawable)?.bitmap

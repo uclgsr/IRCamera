@@ -10,20 +10,19 @@ import android.os.Environment
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityGsrRawImageViewBinding
+import com.topdon.lib.core.base.BaseBindingActivity
 import java.io.File
 
 /**
  * GSR RAW Image View Activity
  * Viewer for captured RAW DNG images with metadata display
  */
-class GSRRawImageViewActivity : AppCompatActivity() {
+class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBinding>() {
     companion object {
         private const val EXTRA_IMAGE_PATH = "image_path"
 
@@ -41,12 +40,11 @@ class GSRRawImageViewActivity : AppCompatActivity() {
 
     private lateinit var imagePath: String
     private lateinit var imageFile: File
-    private lateinit var imageView: ImageView
-    private lateinit var metadataText: TextView
+
+    override fun getLayoutId() = R.layout.activity_gsr_raw_image_view
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gsr_raw_image_view)
 
         imagePath = intent.getStringExtra(EXTRA_IMAGE_PATH) ?: ""
         imageFile = File(imagePath)
@@ -64,9 +62,6 @@ class GSRRawImageViewActivity : AppCompatActivity() {
     private fun setupUI() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = imageFile.name
-
-        imageView = findViewById(R.id.raw_image_view)
-        metadataText = findViewById(R.id.metadata_text)
     }
 
     private fun loadImage() {
@@ -89,14 +84,14 @@ class GSRRawImageViewActivity : AppCompatActivity() {
 
             val bitmap = BitmapFactory.decodeFile(imagePath, options)
             if (bitmap != null) {
-                imageView.setImageBitmap(bitmap)
+                binding.rawImageView.setImageBitmap(bitmap)
             } else {
                 // If DNG can't be decoded directly, show a placeholder
-                imageView.setImageResource(R.drawable.ic_camera_alt)
+                binding.rawImageView.setImageResource(R.drawable.ic_camera_alt)
                 showDNGMessage()
             }
         } catch (e: Exception) {
-            imageView.setImageResource(R.drawable.ic_camera_alt)
+            binding.rawImageView.setImageResource(R.drawable.ic_camera_alt)
             showDNGMessage()
         }
     }
@@ -149,7 +144,7 @@ class GSRRawImageViewActivity : AppCompatActivity() {
         val filename = imageFile.nameWithoutExtension
         val captureNumber = filename.substringAfterLast("_", "Unknown")
 
-        metadataText.text =
+        binding.metadataText.text =
             """
             RAW DNG Image Metadata
             

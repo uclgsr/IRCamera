@@ -15,6 +15,8 @@ kapt {
     // Enable Kotlin 2.1.0 compatibility
     correctErrorTypes = true
     useBuildCache = true
+    // Support for Kotlin 2.0+ in kapt
+    includeCompileClasspath = false
 }
 
 android {
@@ -50,6 +52,11 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs += listOf(
+            "-opt-in=kotlin.RequiresOptIn",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-opt-in=kotlinx.coroutines.FlowPreview"
+        )
     }
     
     java {
@@ -68,6 +75,41 @@ android {
             jniLibs.srcDirs("src/main/jniLibs")
         }
     }
+    
+    packaging {
+        jniLibs {
+            // Enhanced native library conflict resolution
+            pickFirsts += listOf("**/libc++_shared.so")
+            // Exclude FFmpeg and other libraries that cause stripping issues
+            excludes += listOf(
+                "**/libavcodec.so",     // FFmpeg libraries with stripping issues
+                "**/libavdevice.so", 
+                "**/libavfilter.so",
+                "**/libavformat.so",
+                "**/libavutil.so",
+                "**/libjniavcodec.so",
+                "**/libjniavdevice.so",
+                "**/libjniavfilter.so", 
+                "**/libjniavformat.so",
+                "**/libjniavutil.so",
+                "**/libjniswresample.so",
+                "**/libjniswscale.so",
+                "**/libswresample.so",
+                "**/libswscale.so"
+            )
+            // Keep debug symbols for remaining libraries
+            keepDebugSymbols += listOf("**/*.so")
+        }
+        resources {
+            excludes += listOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt", 
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt"
+            )
+        }
+    }
 }
 
 //kotlin {
@@ -83,6 +125,7 @@ dependencies {
     api(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
     // Note: AAR dependencies moved to app module to avoid AGP 8.0+ issues
     api(libs.androidx.appcompat)
+    api(libs.androidx.preference)
     api(libs.fragment.ktx)
     api(libs.material)
 

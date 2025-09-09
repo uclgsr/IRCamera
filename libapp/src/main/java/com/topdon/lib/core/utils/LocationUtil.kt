@@ -38,6 +38,7 @@ object LocationUtil {
                 return@withContext null
             }
             try {
+                @Suppress("DEPRECATION")
                 val resultList = Geocoder(context, Locale.getDefault()).getFromLocation(location.latitude, location.longitude, 1)
                 if (resultList.isNullOrEmpty()) {
                     return@withContext null

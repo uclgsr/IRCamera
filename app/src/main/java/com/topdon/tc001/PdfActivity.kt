@@ -5,7 +5,8 @@ import android.view.WindowManager
 import android.widget.TextView
 import com.csl.irCamera.R
 
-import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.csl.irCamera.databinding.ActivityPdfBinding
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -15,13 +16,19 @@ import java.io.OutputStream
  * create by fylder on 2018/8/9
  **/
 // Legacy ARouter route annotation - now using NavigationManager
-class PdfActivity : BaseActivity() {
+class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
     // Note: Using TextView placeholder until PDFView library is integrated
-    private val pdfView: TextView by lazy { findViewById<TextView>(R.id.pdf_view) }
+    private val pdfView get() = binding.pdfView
 
-    override fun initContentView() = R.layout.activity_pdf
+    override fun initContentLayoutId() = R.layout.activity_pdf
 
-    override fun initView() {
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+        initData()
+    }
+
+    private fun initView() {
         // Note: PDF functionality requires PDFView library integration
         val pdfFileName = if (intent.getBooleanExtra("isTS001", false)) "TC001.pdf" else "TS004.pdf"
         pdfView.text = "PDF functionality temporarily unavailable - $pdfFileName will be displayed here when PDF library is available"
@@ -42,7 +49,7 @@ class PdfActivity : BaseActivity() {
          */
     }
 
-    override fun initData() {
+    private fun initData() {
         val tc001File = File(getExternalFilesDir("pdf")!!, "TC001.pdf")
         if (!tc001File.exists()) {
             copyBigDataToSD("TC001.pdf", tc001File)

@@ -270,6 +270,7 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 var selectCarDetect = SharedManager.getCarDetectInfo()
                 carDetects.forEachIndexed { index, carDetectBean ->
                     carDetectBean.detectChildBeans.forEachIndexed { childIndex, carDetectChildBean ->
+                        // Intentionally check for null to provide default selection
                         if (selectCarDetect == null) {
                             carDetectChildBean.isSelected = (index == 0 && childIndex == 0)
                         } else {

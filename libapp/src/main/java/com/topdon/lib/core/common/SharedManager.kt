@@ -1,7 +1,7 @@
 package com.topdon.lib.core.common
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import android.util.Base64
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.SPUtils

@@ -8,9 +8,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.View
-import android.widget.*
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.controller.RecordingState
@@ -18,6 +16,8 @@ import com.topdon.tc001.network.EnhancedNetworkClient
 import com.topdon.tc001.service.RecordingService
 import com.topdon.tc001.utils.TimeManager
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityHubSpokeIntegrationBinding
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -44,26 +44,15 @@ import java.util.*
  * 
  * @author IRCamera Android Sensor Node (Spoke)
  */
-class HubSpokeIntegrationActivity : AppCompatActivity() {
+class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrationBinding>() {
 
     companion object {
         private const val TAG = "HubSpokeIntegration"
         private const val DEFAULT_PC_CONTROLLER_PORT = 8080
     }
 
-    // UI Components
-    private lateinit var statusTextView: TextView
-    private lateinit var connectionStatusTextView: TextView
-    private lateinit var syncQualityTextView: TextView
-    private lateinit var sensorStatusTextView: TextView
-    private lateinit var pcAddressEditText: EditText
-    private lateinit var connectButton: Button
-    private lateinit var disconnectButton: Button
-    private lateinit var startRecordingButton: Button
-    private lateinit var stopRecordingButton: Button
-    private lateinit var addSyncMarkerButton: Button
-    private lateinit var sessionDirectoryEditText: EditText
-    private lateinit var progressBar: ProgressBar
+    override fun getViewBinding(): ActivityHubSpokeIntegrationBinding = 
+        ActivityHubSpokeIntegrationBinding.inflate(layoutInflater)
 
     // Core components
     private lateinit var recordingController: RecordingController
@@ -95,7 +84,6 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_hub_spoke_integration)
         
         initializeViews()
         initializeComponents()
@@ -124,23 +112,10 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
     }
 
     private fun initializeViews() {
-        statusTextView = findViewById(R.id.statusTextView)
-        connectionStatusTextView = findViewById(R.id.connectionStatusTextView)
-        syncQualityTextView = findViewById(R.id.syncQualityTextView)
-        sensorStatusTextView = findViewById(R.id.sensorStatusTextView)
-        pcAddressEditText = findViewById(R.id.pcAddressEditText)
-        connectButton = findViewById(R.id.connectButton)
-        disconnectButton = findViewById(R.id.disconnectButton)
-        startRecordingButton = findViewById(R.id.startRecordingButton)
-        stopRecordingButton = findViewById(R.id.stopRecordingButton)
-        addSyncMarkerButton = findViewById(R.id.addSyncMarkerButton)
-        sessionDirectoryEditText = findViewById(R.id.sessionDirectoryEditText)
-        progressBar = findViewById(R.id.progressBar)
-        
-        // Set default session directory
+        // Set default session directory using binding
         val timestamp = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault()).format(Date())
         val defaultSessionDir = "${getExternalFilesDir(null)}/hub_spoke_sessions/session_$timestamp"
-        sessionDirectoryEditText.setText(defaultSessionDir)
+        binding.sessionDirectoryEditText.setText(defaultSessionDir)
     }
 
     private fun initializeComponents() {
@@ -152,23 +127,23 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        connectButton.setOnClickListener {
+        binding.connectButton.setOnClickListener {
             connectToPCController()
         }
         
-        disconnectButton.setOnClickListener {
+        binding.disconnectButton.setOnClickListener {
             disconnectFromPCController()
         }
         
-        startRecordingButton.setOnClickListener {
+        binding.startRecordingButton.setOnClickListener {
             startCoordinatedRecording()
         }
         
-        stopRecordingButton.setOnClickListener {
+        binding.stopRecordingButton.setOnClickListener {
             stopCoordinatedRecording()
         }
         
-        addSyncMarkerButton.setOnClickListener {
+        binding.addSyncMarkerButton.setOnClickListener {
             addSyncMarker()
         }
     }
@@ -179,34 +154,34 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
     }
 
     private fun connectToPCController() {
-        val pcAddress = pcAddressEditText.text.toString().trim()
+        val pcAddress = binding.pcAddressEditText.text.toString().trim()
         if (pcAddress.isEmpty()) {
-            Toast.makeText(this, "Please enter PC Controller IP address", Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(this, "Please enter PC Controller IP address", android.widget.Toast.LENGTH_SHORT).show()
             return
         }
         
         lifecycleScope.launch {
             try {
-                progressBar.visibility = View.VISIBLE
-                statusTextView.text = "Connecting to PC Controller..."
+                binding.progressBar.visibility = View.VISIBLE
+                binding.statusTextView.text = "Connecting to PC Controller..."
                 
                 val connected = networkClient.connectToController(pcAddress, DEFAULT_PC_CONTROLLER_PORT)
                 
                 if (connected) {
-                    statusTextView.text = "Connected to PC Controller successfully"
-                    Toast.makeText(this@HubSpokeIntegrationActivity, "Connected successfully", Toast.LENGTH_SHORT).show()
+                    binding.statusTextView.text = "Connected to PC Controller successfully"
+                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Connected successfully", android.widget.Toast.LENGTH_SHORT).show()
                     setupNetworkMonitoring()
                 } else {
-                    statusTextView.text = "Failed to connect to PC Controller"
-                    Toast.makeText(this@HubSpokeIntegrationActivity, "Connection failed", Toast.LENGTH_SHORT).show()
+                    binding.statusTextView.text = "Failed to connect to PC Controller"
+                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Connection failed", android.widget.Toast.LENGTH_SHORT).show()
                 }
                 
             } catch (e: Exception) {
                 Log.e(TAG, "Connection error", e)
-                statusTextView.text = "Connection error: ${e.message}"
-                Toast.makeText(this@HubSpokeIntegrationActivity, "Connection error", Toast.LENGTH_SHORT).show()
+                binding.statusTextView.text = "Connection error: ${e.message}"
+                android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Connection error", android.widget.Toast.LENGTH_SHORT).show()
             } finally {
-                progressBar.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
                 updateUI()
             }
         }
@@ -215,13 +190,13 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
     private fun disconnectFromPCController() {
         lifecycleScope.launch {
             try {
-                statusTextView.text = "Disconnecting from PC Controller..."
+                binding.statusTextView.text = "Disconnecting from PC Controller..."
                 networkClient.disconnect()
-                statusTextView.text = "Disconnected from PC Controller"
-                Toast.makeText(this@HubSpokeIntegrationActivity, "Disconnected", Toast.LENGTH_SHORT).show()
+                binding.statusTextView.text = "Disconnected from PC Controller"
+                android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Disconnected", android.widget.Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Log.e(TAG, "Disconnect error", e)
-                statusTextView.text = "Disconnect error: ${e.message}"
+                binding.statusTextView.text = "Disconnect error: ${e.message}"
             } finally {
                 updateUI()
             }
@@ -229,16 +204,16 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
     }
 
     private fun startCoordinatedRecording() {
-        val sessionDirectory = sessionDirectoryEditText.text.toString().trim()
+        val sessionDirectory = binding.sessionDirectoryEditText.text.toString().trim()
         if (sessionDirectory.isEmpty()) {
-            Toast.makeText(this, "Please enter session directory", Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(this, "Please enter session directory", android.widget.Toast.LENGTH_SHORT).show()
             return
         }
         
         lifecycleScope.launch {
             try {
-                progressBar.visibility = View.VISIBLE
-                statusTextView.text = "Starting coordinated recording session..."
+                binding.progressBar.visibility = View.VISIBLE
+                binding.statusTextView.text = "Starting coordinated recording session..."
                 
                 // Create session directory
                 val sessionDir = File(sessionDirectory)
@@ -255,19 +230,19 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
                 }
                 
                 if (success) {
-                    statusTextView.text = "Coordinated recording session started"
-                    Toast.makeText(this@HubSpokeIntegrationActivity, "Recording started", Toast.LENGTH_SHORT).show()
+                    binding.statusTextView.text = "Coordinated recording session started"
+                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Recording started", android.widget.Toast.LENGTH_SHORT).show()
                 } else {
-                    statusTextView.text = "Failed to start recording session"
-                    Toast.makeText(this@HubSpokeIntegrationActivity, "Recording failed to start", Toast.LENGTH_SHORT).show()
+                    binding.statusTextView.text = "Failed to start recording session"
+                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Recording failed to start", android.widget.Toast.LENGTH_SHORT).show()
                 }
                 
             } catch (e: Exception) {
                 Log.e(TAG, "Recording start error", e)
-                statusTextView.text = "Recording start error: ${e.message}"
-                Toast.makeText(this@HubSpokeIntegrationActivity, "Recording error", Toast.LENGTH_SHORT).show()
+                binding.statusTextView.text = "Recording start error: ${e.message}"
+                android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Recording error", android.widget.Toast.LENGTH_SHORT).show()
             } finally {
-                progressBar.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
                 updateUI()
             }
         }
@@ -276,8 +251,8 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
     private fun stopCoordinatedRecording() {
         lifecycleScope.launch {
             try {
-                progressBar.visibility = View.VISIBLE
-                statusTextView.text = "Stopping coordinated recording session..."
+                binding.progressBar.visibility = View.VISIBLE
+                binding.statusTextView.text = "Stopping coordinated recording session..."
                 
                 val success = if (networkClient.isConnected()) {
                     // Stop coordinated session
@@ -288,18 +263,18 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
                 }
                 
                 if (success) {
-                    statusTextView.text = "Coordinated recording session stopped"
-                    Toast.makeText(this@HubSpokeIntegrationActivity, "Recording stopped", Toast.LENGTH_SHORT).show()
+                    binding.statusTextView.text = "Coordinated recording session stopped"
+                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Recording stopped", android.widget.Toast.LENGTH_SHORT).show()
                 } else {
-                    statusTextView.text = "Failed to stop recording session"
-                    Toast.makeText(this@HubSpokeIntegrationActivity, "Recording stop failed", Toast.LENGTH_SHORT).show()
+                    binding.statusTextView.text = "Failed to stop recording session"
+                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Recording stop failed", android.widget.Toast.LENGTH_SHORT).show()
                 }
                 
             } catch (e: Exception) {
                 Log.e(TAG, "Recording stop error", e)
-                statusTextView.text = "Recording stop error: ${e.message}"
+                binding.statusTextView.text = "Recording stop error: ${e.message}"
             } finally {
-                progressBar.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
                 updateUI()
             }
         }
@@ -323,12 +298,12 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
                     recordingController.addSyncMarker(markerType, timestampNs, metadata)
                 }
                 
-                Toast.makeText(this@HubSpokeIntegrationActivity, "Sync marker added", Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Sync marker added", android.widget.Toast.LENGTH_SHORT).show()
                 Log.i(TAG, "Sync marker added: $markerType")
                 
             } catch (e: Exception) {
                 Log.e(TAG, "Sync marker error", e)
-                Toast.makeText(this@HubSpokeIntegrationActivity, "Sync marker failed", Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Sync marker failed", android.widget.Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -341,11 +316,11 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
             .onEach { state ->
                 runOnUiThread {
                     when (state) {
-                        RecordingState.STARTING -> statusTextView.text = "Starting sensors..."
-                        RecordingState.RECORDING -> statusTextView.text = "Recording in progress"
-                        RecordingState.STOPPING -> statusTextView.text = "Stopping sensors..."
-                        RecordingState.STOPPED -> statusTextView.text = "Recording stopped"
-                        RecordingState.ERROR -> statusTextView.text = "Recording error"
+                        RecordingState.STARTING -> binding.statusTextView.text = "Starting sensors..."
+                        RecordingState.RECORDING -> binding.statusTextView.text = "Recording in progress"
+                        RecordingState.STOPPING -> binding.statusTextView.text = "Stopping sensors..."
+                        RecordingState.STOPPED -> binding.statusTextView.text = "Recording stopped"
+                        RecordingState.ERROR -> binding.statusTextView.text = "Recording error"
                     }
                     updateUI()
                 }
@@ -364,7 +339,7 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
                             append("${String.format("%.1f", status.storageUsedMB)}MB)\n")
                         }
                     }
-                    sensorStatusTextView.text = statusText.trim()
+                    binding.sensorStatusTextView.text = statusText.trim()
                 }
             }
             .launchIn(lifecycleScope)
@@ -375,7 +350,7 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
         networkClient.connectionStateFlow
             .onEach { state ->
                 runOnUiThread {
-                    connectionStatusTextView.text = "Connection: $state"
+                    binding.connectionStatusTextView.text = "Connection: $state"
                     updateUI()
                 }
             }
@@ -386,7 +361,7 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
             while (networkClient.isConnected()) {
                 val syncQuality = timeManager.getSyncQuality()
                 runOnUiThread {
-                    syncQualityTextView.text = buildString {
+                    binding.syncQualityTextView.text = buildString {
                         append("Sync: ${syncQuality.level}")
                         syncQuality.qualityMs?.let { append(" (${it}ms)") }
                         syncQuality.timeSinceSyncMs?.let { append(" - ${it / 1000}s ago") }
@@ -401,22 +376,22 @@ class HubSpokeIntegrationActivity : AppCompatActivity() {
         val isConnected = ::networkClient.isInitialized && networkClient.isConnected()
         val isRecording = ::recordingController.isInitialized && recordingController.isRecording
         
-        connectButton.isEnabled = !isConnected
-        disconnectButton.isEnabled = isConnected
-        startRecordingButton.isEnabled = !isRecording
-        stopRecordingButton.isEnabled = isRecording
-        addSyncMarkerButton.isEnabled = isRecording
+        binding.connectButton.isEnabled = !isConnected
+        binding.disconnectButton.isEnabled = isConnected
+        binding.startRecordingButton.isEnabled = !isRecording
+        binding.stopRecordingButton.isEnabled = isRecording
+        binding.addSyncMarkerButton.isEnabled = isRecording
         
-        pcAddressEditText.isEnabled = !isConnected
-        sessionDirectoryEditText.isEnabled = !isRecording
+        binding.pcAddressEditText.isEnabled = !isConnected
+        binding.sessionDirectoryEditText.isEnabled = !isRecording
         
         if (!isConnected) {
-            connectionStatusTextView.text = "Connection: Disconnected"
-            syncQualityTextView.text = "Sync: Not Available"
+            binding.connectionStatusTextView.text = "Connection: Disconnected"
+            binding.syncQualityTextView.text = "Sync: Not Available"
         }
         
         if (!isRecording) {
-            sensorStatusTextView.text = "Sensors: Idle"
+            binding.sensorStatusTextView.text = "Sensors: Idle"
         }
     }
 }

@@ -2,8 +2,6 @@ package com.topdon.lib.ui.core
 
 import android.view.View
 import androidx.annotation.IntDef
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 
 /**
  * @author: CaiSongL
@@ -73,7 +71,7 @@ class Pivot(
     }
 
     @IntDef(AXIS_X, AXIS_Y)
-    @Retention(RetentionPolicy.SOURCE)
+    @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
     annotation class Axis
 
     companion object {

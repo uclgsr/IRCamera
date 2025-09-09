@@ -1,6 +1,7 @@
 package com.topdon.lib.core.tools
 
 import android.content.Context
+import android.os.Build
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.TextView
@@ -39,12 +40,20 @@ object ToastTools {
             val view = inflater.inflate(R.layout.toast_tip, null)
             val text = view.findViewById(R.id.toast_tip_text) as TextView
             text.text = textStr
-            if (mPublicToast == null) {
-                mPublicToast = Toast(Utils.getApp())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // Use simple text toast for Android 11+ (API 30+) since custom views are deprecated
+                mPublicToast = Toast.makeText(Utils.getApp(), textStr, duration)
+                mPublicToast?.setGravity(Gravity.BOTTOM, 0, ScreenUtils.getScreenHeight() / 8)
+            } else {
+                // Use custom view for older Android versions
+                if (mPublicToast == null) {
+                    mPublicToast = Toast(Utils.getApp())
+                }
+                mPublicToast?.duration = duration
+                mPublicToast?.setGravity(Gravity.BOTTOM, 0, ScreenUtils.getScreenHeight() / 8)
+                @Suppress("DEPRECATION")
+                mPublicToast?.view = view
             }
-            mPublicToast?.duration = duration
-            mPublicToast?.setGravity(Gravity.BOTTOM, 0, ScreenUtils.getScreenHeight() / 8)
-            mPublicToast?.view = view
             mPublicToast?.show()
         }
     }

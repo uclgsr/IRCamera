@@ -2,6 +2,7 @@ package com.topdon.lib.core.utils
 
 import java.util.*
 
+@OptIn(ExperimentalUnsignedTypes::class)
 object ByteUtils {
     /**
      * byte[] => string

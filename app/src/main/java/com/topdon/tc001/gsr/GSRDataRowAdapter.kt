@@ -1,11 +1,9 @@
 package com.topdon.tc001.gsr
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ItemGsrDataRowBinding
 
 /**
  * Adapter for displaying GSR data rows in detailed view
@@ -13,22 +11,24 @@ import com.csl.irCamera.R
 class GSRDataRowAdapter(
     private val dataRows: List<GSRDataViewActivity.GSRDataRow>,
 ) : RecyclerView.Adapter<GSRDataRowAdapter.ViewHolder>() {
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val rowNumber: TextView = view.findViewById(R.id.row_number)
-        val timestamp: TextView = view.findViewById(R.id.timestamp)
-        val gsrValue: TextView = view.findViewById(R.id.gsr_value)
-        val resistance: TextView = view.findViewById(R.id.resistance)
-        val conductance: TextView = view.findViewById(R.id.conductance)
+    class ViewHolder(private val binding: ItemGsrDataRowBinding) : RecyclerView.ViewHolder(binding.root) {
+        val rowNumber = binding.rowNumber
+        val timestamp = binding.timestamp
+        val gsrValue = binding.gsrValue
+        val resistance = binding.resistance
+        val conductance = binding.conductance
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_gsr_data_row, parent, false)
-        return ViewHolder(view)
+        val binding = ItemGsrDataRowBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(

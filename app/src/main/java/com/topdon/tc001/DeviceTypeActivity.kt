@@ -9,9 +9,10 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityDeviceTypeBinding
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.tools.DeviceTools
 
@@ -20,20 +21,15 @@ import com.topdon.lib.core.tools.DeviceTools
  *
  * Created by LCG on 2024/4/22.
  */
-class DeviceTypeActivity : BaseActivity() {
+class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
     /**
      * 当前点击的设备类型.
      */
     private var clientType: IRDeviceType? = null
 
-    // findViewById declarations
-    private val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
-
-    override fun initContentView(): Int = R.layout.activity_device_type
-
     override fun initView() {
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter =
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter =
             MyAdapter(this).apply {
                 onItemClickListener = {
                     clientType = it
