@@ -2,25 +2,29 @@ package com.topdon.lib.ui.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.LinearLayout
+import com.topdon.lib.ui.databinding.UiWifiSteeringWheelViewBinding
 import com.topdon.lib.ui.R as UiR
 
 /**
  * 校准方向
  */
 class WifiSteeringWheelView : LinearLayout, OnClickListener {
+    private val binding: UiWifiSteeringWheelViewBinding
+    
     var listener: ((action: Int, moveX: Int, moveY: Int) -> Unit)? = null
     var moveX = 0
     var moveY = 0
 
-    private val steeringWheelStartBtn by lazy { findViewById<View>(UiR.id.steering_wheel_start_btn) }
-    private val steeringWheelCenterBtn by lazy { findViewById<View>(UiR.id.steering_wheel_center_btn) }
-    private val steeringWheelEndBtn by lazy { findViewById<View>(UiR.id.steering_wheel_end_btn) }
-    private val steeringWheelTopBtn by lazy { findViewById<View>(UiR.id.steering_wheel_top_btn) }
-    private val steeringWheelBottomBtn by lazy { findViewById<View>(UiR.id.steering_wheel_bottom_btn) }
-    private val tvConfirm by lazy { findViewById<View>(UiR.id.tv_confirm) }
+    private val steeringWheelStartBtn by lazy { binding.steeringWheelStartBtn }
+    private val steeringWheelCenterBtn by lazy { binding.steeringWheelCenterBtn }
+    private val steeringWheelEndBtn by lazy { binding.steeringWheelEndBtn }
+    private val steeringWheelTopBtn by lazy { binding.steeringWheelTopBtn }
+    private val steeringWheelBottomBtn by lazy { binding.steeringWheelBottomBtn }
+    private val tvConfirm by lazy { binding.tvConfirm }
 
     var rotationIR = 270
         set(value) {
@@ -40,6 +44,7 @@ class WifiSteeringWheelView : LinearLayout, OnClickListener {
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        binding = UiWifiSteeringWheelViewBinding.inflate(LayoutInflater.from(context), this, true)
         initView()
     }
 
@@ -47,10 +52,13 @@ class WifiSteeringWheelView : LinearLayout, OnClickListener {
         context,
         attrs,
         defStyleAttr,
-    )
+    ) {
+        binding = UiWifiSteeringWheelViewBinding.inflate(LayoutInflater.from(context), this, true)
+        initView()
+    }
 
     private fun initView() {
-        inflate(context, UiR.layout.ui_wifi_steering_wheel_view, this)
+        // Views are already inflated via binding in constructor
         steeringWheelStartBtn.setOnClickListener(this)
         steeringWheelCenterBtn.setOnClickListener(this)
         steeringWheelEndBtn.setOnClickListener(this)
