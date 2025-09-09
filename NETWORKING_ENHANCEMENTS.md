@@ -85,7 +85,7 @@ messaging.sendMessage(
 ## 🌐 Network Discovery
 
 ### mDNS/Zeroconf Support
-- **Service Types**: `_topdon-pc._tcp` for PC Controllers, `_topdon-thermal._tcp` for cameras
+- **Service Types**: `_topdon-pc._tcp.local.` for PC Controllers, `_topdon-thermal._tcp.local.` for cameras
 - **Automatic Resolution**: Resolves service names to IP addresses and ports
 - **Attribute Exchange**: Custom attributes for device capabilities and metadata
 
