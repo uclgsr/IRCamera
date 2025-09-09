@@ -239,7 +239,21 @@ class WiFiScanWorker(BaseThread):
         return networks
 
     def _parse_windows_scan(self, output: str) -> List[WiFiNetwork]:
-        """Parse Windows netsh scan output."""
+        """
+        Parse Windows netsh scan output.
+        
+        Processes the text output from Windows netsh command to extract
+        WiFi network information including SSID, signal strength, and security.
+        
+        Args:
+            output: Raw text output from netsh wlan show networks command
+            
+        Returns:
+            List of WiFiNetwork objects parsed from the command output
+            
+        Raises:
+            ValueError: If output format is unexpected or unparseable
+        """
         networks = []
         lines = output.split("\n")
 

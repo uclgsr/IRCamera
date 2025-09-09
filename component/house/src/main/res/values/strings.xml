@@ -12,4 +12,5 @@
     <string name="app_cancel">Cancel</string>
     <string name="report_delete">Delete</string>
     <string name="test_results_delete_success">Delete successful</string>
+    <string name="tips_no_data">No data available</string>
 </resources>
