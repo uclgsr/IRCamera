@@ -18,6 +18,8 @@ import com.topdon.tc001.app.App
  * date: 2024/3/25 16:50
  **/
 class BlankDevActivity : BaseBindingActivity<ActivityBlankDevBinding>() {
+    
+    override fun initContentLayoutId() = R.layout.activity_blank_dev
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (SharedManager.getHasShowClause()) {

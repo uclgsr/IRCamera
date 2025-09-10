@@ -6,7 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityClauseBinding
 import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.base.BaseBindingActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.TipDialog
@@ -31,7 +31,7 @@ import com.topdon.lib.core.R as LibCoreR
 class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
     private lateinit var dialog: TipProgressDialog
 
-    override fun getLayoutId() = R.layout.activity_clause
+    override fun initContentLayoutId() = R.layout.activity_clause
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +77,7 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
                     .navigation(this)
             }
         }
-        clauseItem2.setOnClickListener {
+        binding.clauseItem2.setOnClickListener {
             if (!NetworkUtil.isConnected(this)) {
                 TToast.shortToast(this, R.string.lms_setting_http_error)
             } else {
