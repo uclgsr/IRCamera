@@ -30,7 +30,7 @@ include(":component:CommonComponent")
 include(":component:edit3d")
 include(":component:house")
 include(":component:pseudo")
-include(":component:transfer")
+
 include(":component:user")
 include(":BleModule")
 
