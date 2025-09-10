@@ -148,6 +148,12 @@ public class ShimmerBleController {
         }
         
         try {
+            // Check BLUETOOTH_SCAN permission before starting scan
+            if (!BluetoothPermissionUtils.hasBluetoothScanPermission(context)) {
+                Log.w(TAG, "Missing BLUETOOTH_SCAN permission for device discovery");
+                return false;
+            }
+            
             this.currentScanListener = listener;
             
             // Configure scan settings for optimal Shimmer device discovery
@@ -160,7 +166,13 @@ public class ShimmerBleController {
                 .build();
             
             isScanning.set(true);
-            leScanner.startScan(null, scanSettings, shimmerScanCallback);
+            try {
+                leScanner.startScan(null, scanSettings, shimmerScanCallback);
+            } catch (SecurityException e) {
+                Log.e(TAG, "SecurityException during scan start: " + e.getMessage());
+                isScanning.set(false);
+                return false;
+            }
             
             // Auto-stop scan after 30 seconds
             mainHandler.postDelayed(() -> {
@@ -191,7 +203,18 @@ public class ShimmerBleController {
         }
         
         try {
-            leScanner.stopScan(shimmerScanCallback);
+            // Check BLUETOOTH_SCAN permission before stopping scan
+            if (!BluetoothPermissionUtils.hasBluetoothScanPermission(context)) {
+                Log.w(TAG, "Missing BLUETOOTH_SCAN permission for stopping scan");
+                isScanning.set(false);
+                return;
+            }
+            
+            try {
+                leScanner.stopScan(shimmerScanCallback);
+            } catch (SecurityException e) {
+                Log.e(TAG, "SecurityException during scan stop: " + e.getMessage());
+            }
             isScanning.set(false);
             currentScanListener = null;
             
@@ -260,7 +283,7 @@ public class ShimmerBleController {
         public void onScanResult(int callbackType, ScanResult result) {
             try {
                 BluetoothDevice device = result.getDevice();
-                String deviceName = device.getName();
+                String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
                 
                 if (deviceName != null && isShimmerDevice(deviceName)) {
                     UnifiedBleManager.DeviceType deviceType = determineShimmerDeviceType(deviceName, result.getScanRecord());

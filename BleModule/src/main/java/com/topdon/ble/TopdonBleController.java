@@ -153,7 +153,13 @@ public class TopdonBleController {
             return false;
         }
         
-        try {
+        try {    
+            // Check BLUETOOTH_SCAN permission before starting scan
+            if (!BluetoothPermissionUtils.hasBluetoothScanPermission(context)) {
+                Log.w(TAG, "Missing BLUETOOTH_SCAN permission for device discovery");
+                return false;
+            }
+            
             this.currentScanListener = listener;
             
             // Configure scan settings for optimal Topdon device discovery
@@ -166,7 +172,13 @@ public class TopdonBleController {
                 .build();
             
             isScanning.set(true);
-            leScanner.startScan(null, scanSettings, topdonScanCallback);
+            try {
+                leScanner.startScan(null, scanSettings, topdonScanCallback);
+            } catch (SecurityException e) {
+                Log.e(TAG, "SecurityException during scan start: " + e.getMessage());
+                isScanning.set(false);
+                return false;
+            }
             
             // Auto-stop scan after 30 seconds
             mainHandler.postDelayed(() -> {
@@ -197,7 +209,18 @@ public class TopdonBleController {
         }
         
         try {
-            leScanner.stopScan(topdonScanCallback);
+            // Check BLUETOOTH_SCAN permission before stopping scan
+            if (!BluetoothPermissionUtils.hasBluetoothScanPermission(context)) {
+                Log.w(TAG, "Missing BLUETOOTH_SCAN permission for stopping scan");
+                isScanning.set(false);
+                return;
+            }
+            
+            try {
+                leScanner.stopScan(topdonScanCallback);
+            } catch (SecurityException e) {
+                Log.e(TAG, "SecurityException during scan stop: " + e.getMessage());
+            }
             isScanning.set(false);
             currentScanListener = null;
             
@@ -266,7 +289,7 @@ public class TopdonBleController {
         public void onScanResult(int callbackType, ScanResult result) {
             try {
                 BluetoothDevice device = result.getDevice();
-                String deviceName = device.getName();
+                String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
                 
                 if (deviceName != null && isTopdonDevice(deviceName)) {
                     UnifiedBleManager.DeviceType deviceType = determineTopdonDeviceType(deviceName, result.getScanRecord());
