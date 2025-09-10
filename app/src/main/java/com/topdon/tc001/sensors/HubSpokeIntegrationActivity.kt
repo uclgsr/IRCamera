@@ -181,7 +181,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 launch {
                     while (isServiceBound || !isDestroyed) {
                         try {
-                            val systemStatus = unifiedManager.getSystemStatus()
+                            val systemStatus = enhancedManager.getSystemStatus()
                             updateBleStatusUI(systemStatus)
                             
                             // Log system status for debugging
@@ -234,7 +234,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                             
                             runOnUiThread {
                                 binding.statusTextView.text = "GSR sensor found: ${device.name}"
-                                updateDiscoveredDevicesUI(device, device.rssi) // Use device.rssi instead of separate parameter
+                                updateDiscoveredDevicesUI(device, device.getRssi())
                             }
                         }
                     }
