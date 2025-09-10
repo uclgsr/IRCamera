@@ -27,6 +27,7 @@ include(":component:thermal-ir")
 include(":component:thermal-lite")
 include(":component:pseudo")
 include(":component:user")
+include(":component:CommonComponent")
 
 // Active library modules
 include(":libapp")
