@@ -331,7 +331,21 @@ public class ShimmerDevice implements UnifiedDevice {
                     connectionState.set(ConnectionState.CONNECTED);
                     
                     // Discover services
-                    gatt.discoverServices();
+                    if (BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+                        try {
+                            gatt.discoverServices();
+                        } catch (SecurityException e) {
+                            Log.e(TAG, "Permission error discovering services: " + e.getMessage());
+                            if (connectionListener != null) {
+                                connectionListener.onConnectionError(ShimmerDevice.this, 0, "Permission error: " + e.getMessage());
+                            }
+                        }
+                    } else {
+                        Log.e(TAG, "Missing Bluetooth permissions for service discovery");
+                        if (connectionListener != null) {
+                            connectionListener.onConnectionError(ShimmerDevice.this, 0, "Missing Bluetooth permissions");
+                        }
+                    }
                     
                 } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
                     Log.i(TAG, "Disconnected from Shimmer device: " + getAddress());
@@ -361,12 +375,26 @@ public class ShimmerDevice implements UnifiedDevice {
                         
                         if (dataCharacteristic != null && commandCharacteristic != null) {
                             // Enable notifications for data characteristic
-                            gatt.setCharacteristicNotification(dataCharacteristic, true);
-                            
-                            BluetoothGattDescriptor descriptor = dataCharacteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
-                            if (descriptor != null) {
-                                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                                gatt.writeDescriptor(descriptor);
+                            if (BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+                                try {
+                                    gatt.setCharacteristicNotification(dataCharacteristic, true);
+                                    
+                                    BluetoothGattDescriptor descriptor = dataCharacteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
+                                    if (descriptor != null) {
+                                        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                                        gatt.writeDescriptor(descriptor);
+                                    }
+                                } catch (SecurityException e) {
+                                    Log.e(TAG, "Permission error enabling notifications: " + e.getMessage());
+                                    if (connectionListener != null) {
+                                        connectionListener.onConnectionError(ShimmerDevice.this, 0, "Permission error: " + e.getMessage());
+                                    }
+                                }
+                            } else {
+                                Log.e(TAG, "Missing Bluetooth permissions for notifications");
+                                if (connectionListener != null) {
+                                    connectionListener.onConnectionError(ShimmerDevice.this, 0, "Missing Bluetooth permissions");
+                                }
                             }
                             
                             Log.i(TAG, "Shimmer device ready: " + getAddress());

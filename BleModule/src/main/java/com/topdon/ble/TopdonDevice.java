@@ -134,7 +134,20 @@ public class TopdonDevice implements UnifiedDevice {
             Log.i(TAG, "Connecting to Topdon device: " + getAddress());
             connectionState.set(ConnectionState.CONNECTING);
             
-            bluetoothGatt = bluetoothDevice.connectGatt(null, config.isAutoReconnectEnabled(), gattCallback);
+            if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+                Log.e(TAG, "Missing Bluetooth permissions for connection");
+                connectionState.set(ConnectionState.ERROR);
+                notifyConnectionError(0, "Missing Bluetooth permissions");
+                return;
+            }
+            
+            try {
+                bluetoothGatt = bluetoothDevice.connectGatt(null, config.isAutoReconnectEnabled(), gattCallback);
+            } catch (SecurityException e) {
+                Log.e(TAG, "Permission error connecting to device: " + e.getMessage());
+                connectionState.set(ConnectionState.ERROR);
+                notifyConnectionError(0, "Permission error: " + e.getMessage());
+            }
             
         } catch (Exception e) {
             Log.e(TAG, "Failed to connect to Topdon device", e);
@@ -155,8 +168,14 @@ public class TopdonDevice implements UnifiedDevice {
             connectionState.set(ConnectionState.DISCONNECTING);
             
             if (bluetoothGatt != null) {
-                bluetoothGatt.disconnect();
-                bluetoothGatt.close();
+                if (BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+                    try {
+                        bluetoothGatt.disconnect();
+                        bluetoothGatt.close();
+                    } catch (SecurityException e) {
+                        Log.e(TAG, "Permission error during disconnect: " + e.getMessage());
+                    }
+                }
                 bluetoothGatt = null;
             }
             
@@ -266,8 +285,19 @@ public class TopdonDevice implements UnifiedDevice {
         }
         
         try {
+            if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+                Log.e(TAG, "Missing Bluetooth permissions for command write");
+                return false;
+            }
+            
             commandCharacteristic.setValue(command);
-            boolean success = bluetoothGatt.writeCharacteristic(commandCharacteristic);
+            boolean success;
+            try {
+                success = bluetoothGatt.writeCharacteristic(commandCharacteristic);
+            } catch (SecurityException e) {
+                Log.e(TAG, "Permission error writing command: " + e.getMessage());
+                return false;
+            }
             
             Log.d(TAG, "Sent Topdon command: " + Arrays.toString(command) + " success: " + success);
             return success;
@@ -312,7 +342,17 @@ public class TopdonDevice implements UnifiedDevice {
                     connectionState.set(ConnectionState.CONNECTED);
                     
                     // Discover services
-                    gatt.discoverServices();
+                    if (BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+                        try {
+                            gatt.discoverServices();
+                        } catch (SecurityException e) {
+                            Log.e(TAG, "Permission error discovering services: " + e.getMessage());
+                            notifyConnectionError(0, "Permission error: " + e.getMessage());
+                        }
+                    } else {
+                        Log.e(TAG, "Missing Bluetooth permissions for service discovery");
+                        notifyConnectionError(0, "Missing Bluetooth permissions");
+                    }
                     
                 } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
                     Log.i(TAG, "Disconnected from Topdon device: " + getAddress());
@@ -351,12 +391,24 @@ public class TopdonDevice implements UnifiedDevice {
                         
                         if (dataCharacteristic != null && commandCharacteristic != null) {
                             // Enable notifications for data characteristic
-                            gatt.setCharacteristicNotification(dataCharacteristic, true);
-                            
-                            BluetoothGattDescriptor descriptor = dataCharacteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
-                            if (descriptor != null) {
-                                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                                gatt.writeDescriptor(descriptor);
+                            if (BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+                                try {
+                                    gatt.setCharacteristicNotification(dataCharacteristic, true);
+                                    
+                                    BluetoothGattDescriptor descriptor = dataCharacteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
+                                    if (descriptor != null) {
+                                        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                                        gatt.writeDescriptor(descriptor);
+                                    }
+                                } catch (SecurityException e) {
+                                    Log.e(TAG, "Permission error enabling notifications: " + e.getMessage());
+                                    notifyConnectionError(0, "Permission error: " + e.getMessage());
+                                    return;
+                                }
+                            } else {
+                                Log.e(TAG, "Missing Bluetooth permissions for notifications");
+                                notifyConnectionError(0, "Missing Bluetooth permissions");
+                                return;
                             }
                             
                             Log.i(TAG, "Topdon device ready: " + getAddress());

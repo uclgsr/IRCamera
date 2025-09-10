@@ -679,8 +679,17 @@ class ConnectionImpl implements Connection, ScanListener {
             handleFailedCallback(request, REQUEST_FAIL_TYPE_GATT_IS_NULL, true);
             return false;
         }
-        if (!bluetoothGatt.writeCharacteristic(characteristic)) {
-            handleWriteFailed(request);
+        if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+            handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
+            return false;
+        }
+        try {
+            if (!bluetoothGatt.writeCharacteristic(characteristic)) {
+                handleWriteFailed(request);
+                return false;
+            }
+        } catch (SecurityException e) {
+            handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
             return false;
         }
         return true;
@@ -693,8 +702,16 @@ class ConnectionImpl implements Connection, ScanListener {
     }
 
     private boolean enableNotificationOrIndicationFail(boolean enable, boolean notification, BluetoothGattCharacteristic characteristic) {
-        if (!bluetoothAdapter.isEnabled() || bluetoothGatt == null || !bluetoothGatt
-                .setCharacteristicNotification(characteristic, enable)) {
+        if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext()) ||
+            !bluetoothAdapter.isEnabled() || bluetoothGatt == null) {
+            return true;
+        }
+        
+        try {
+            if (!bluetoothGatt.setCharacteristicNotification(characteristic, enable)) {
+                return true;
+            }
+        } catch (SecurityException e) {
             return true;
         }
         BluetoothGattDescriptor descriptor = characteristic.getDescriptor(clientCharacteristicConfig);
@@ -720,13 +737,21 @@ class ConnectionImpl implements Connection, ScanListener {
         // characteristic's write type, instead of always Write With Response, as the spec says.
         int writeType = characteristic.getWriteType();
         characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-        boolean result = bluetoothGatt.writeDescriptor(descriptor);
-        if (!enable) {
-            //还原原始值
-            descriptor.setValue(originValue);
+        if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+            return true;
         }
-        characteristic.setWriteType(writeType);
-        return !result;
+        
+        try {
+            boolean result = bluetoothGatt.writeDescriptor(descriptor);
+            if (!enable) {
+                //还原原始值
+                descriptor.setValue(originValue);
+            }
+            characteristic.setWriteType(writeType);
+            return !result;
+        } catch (SecurityException e) {
+            return true;
+        }
     }
 
     private static class ConnHandler extends Handler {
@@ -838,26 +863,58 @@ class ConnectionImpl implements Connection, ScanListener {
             if (bluetoothGatt != null) {
                 switch (request.type) {
                     case READ_RSSI:
-                        if (!bluetoothGatt.readRemoteRssi()) {
-                            handleFailedCallback(request, REQUEST_FAIL_TYPE_REQUEST_FAILED, true);
+                        if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+                            handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
+                            return;
+                        }
+                        try {
+                            if (!bluetoothGatt.readRemoteRssi()) {
+                                handleFailedCallback(request, REQUEST_FAIL_TYPE_REQUEST_FAILED, true);
+                            }
+                        } catch (SecurityException e) {
+                            handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
                         }
                         break;
                     case CHANGE_MTU:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            if (!bluetoothGatt.requestMtu((int) request.value)) {
-                                handleFailedCallback(request, REQUEST_FAIL_TYPE_REQUEST_FAILED, true);
+                            if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+                                handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
+                                return;
+                            }
+                            try {
+                                if (!bluetoothGatt.requestMtu((int) request.value)) {
+                                    handleFailedCallback(request, REQUEST_FAIL_TYPE_REQUEST_FAILED, true);
+                                }
+                            } catch (SecurityException e) {
+                                handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
                             }
                         }
                         break;
                     case READ_PHY:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            bluetoothGatt.readPhy();
+                            if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+                                handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
+                                return;
+                            }
+                            try {
+                                bluetoothGatt.readPhy();
+                            } catch (SecurityException e) {
+                                handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
+                            }
                         }
                         break;
                     case SET_PREFERRED_PHY:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            int[] options = (int[]) request.value;
-                            bluetoothGatt.setPreferredPhy(options[0], options[1], options[2]);
+                            if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+                                handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
+                                return;
+                            }
+                            try {
+                                int[] options = (int[]) request.value;
+                                bluetoothGatt.setPreferredPhy(options[0], options[1], options[2]);
+                            } catch (SecurityException e) {
+                                handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
+                            }
                         }
                         break;
                     default:
@@ -971,8 +1028,16 @@ class ConnectionImpl implements Connection, ScanListener {
     private void executeReadDescriptor(GenericRequest request, BluetoothGattCharacteristic characteristic) {
         BluetoothGattDescriptor gattDescriptor = characteristic.getDescriptor(request.descriptor);
         if (gattDescriptor != null) {
-            if (!bluetoothGatt.readDescriptor(gattDescriptor)) {
-                handleFailedCallback(request, REQUEST_FAIL_TYPE_REQUEST_FAILED, true);
+            if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+                handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
+                return;
+            }
+            try {
+                if (!bluetoothGatt.readDescriptor(gattDescriptor)) {
+                    handleFailedCallback(request, REQUEST_FAIL_TYPE_REQUEST_FAILED, true);
+                }
+            } catch (SecurityException e) {
+                handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
             }
         } else {
             handleFailedCallback(request, REQUEST_FAIL_TYPE_DESCRIPTOR_NOT_EXIST, true);
@@ -980,12 +1045,16 @@ class ConnectionImpl implements Connection, ScanListener {
     }
 
     private void executeReadCharacteristic(GenericRequest request, BluetoothGattCharacteristic characteristic) {
-        if (!hasBluetoothPermission()) {
-            handleFailedCallback(request, REQUEST_FAIL_TYPE_NO_PERMISSION, true);
+        if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+            handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
             return;
         }
-        if (!bluetoothGatt.readCharacteristic(characteristic)) {
-            handleFailedCallback(request, REQUEST_FAIL_TYPE_REQUEST_FAILED, true);
+        try {
+            if (!bluetoothGatt.readCharacteristic(characteristic)) {
+                handleFailedCallback(request, REQUEST_FAIL_TYPE_REQUEST_FAILED, true);
+            }
+        } catch (SecurityException e) {
+            handleFailedCallback(request, ERROR_LACK_BLUETOOTH_PERMISSION, true);
         }
     }
 
