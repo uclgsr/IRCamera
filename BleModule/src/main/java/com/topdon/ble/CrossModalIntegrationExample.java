@@ -5,6 +5,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.topdon.ble.util.BluetoothPermissionUtils;
+
 import java.util.List;
 import java.util.Map;
 
@@ -287,7 +289,8 @@ public class CrossModalIntegrationExample {
         @Override
         public void onShimmerDeviceFound(android.bluetooth.BluetoothDevice device, 
                                        UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord) {
-            Log.i(TAG, "Shimmer device discovered: " + device.getName() + " [" + type + "] RSSI: " + rssi);
+            String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
+            Log.i(TAG, "Shimmer device discovered: " + deviceName + " [" + type + "] RSSI: " + rssi);
             
             // Auto-register Shimmer devices for cross-modal sync
             try {
@@ -300,8 +303,8 @@ public class CrossModalIntegrationExample {
                     );
                 
                 syncManager.registerDevice(
-                    device.getAddress(),
-                    device.getName() != null ? device.getName() : "Shimmer Device",
+                    BluetoothPermissionUtils.getDeviceAddress(context, device),
+                    deviceName != null && !deviceName.isEmpty() ? deviceName : "Shimmer Device",
                     CrossModalSyncManager.DeviceCategory.BLE_SENSOR,
                     device,
                     capabilities
@@ -317,7 +320,8 @@ public class CrossModalIntegrationExample {
         @Override
         public void onTopdonDeviceFound(android.bluetooth.BluetoothDevice device, 
                                       UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord) {
-            Log.i(TAG, "Topdon device discovered: " + device.getName() + " [" + type + "] RSSI: " + rssi);
+            String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
+            Log.i(TAG, "Topdon device discovered: " + deviceName + " [" + type + "] RSSI: " + rssi);
             
             // Auto-register Topdon devices for cross-modal sync
             try {
@@ -330,8 +334,8 @@ public class CrossModalIntegrationExample {
                     );
                 
                 syncManager.registerDevice(
-                    device.getAddress(),
-                    device.getName() != null ? device.getName() : "Topdon Device",
+                    BluetoothPermissionUtils.getDeviceAddress(context, device),
+                    deviceName != null && !deviceName.isEmpty() ? deviceName : "Topdon Device",
                     CrossModalSyncManager.DeviceCategory.BLE_SENSOR,
                     device,
                     capabilities
@@ -346,7 +350,8 @@ public class CrossModalIntegrationExample {
         
         @Override
         public void onUnknownDeviceFound(android.bluetooth.BluetoothDevice device, int rssi, byte[] scanRecord) {
-            Log.d(TAG, "Unknown device discovered: " + device.getName() + " RSSI: " + rssi);
+            String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
+            Log.d(TAG, "Unknown device discovered: " + deviceName + " RSSI: " + rssi);
         }
         
         @Override

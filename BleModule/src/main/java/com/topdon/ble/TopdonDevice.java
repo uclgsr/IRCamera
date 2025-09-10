@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.topdon.ble.util.BluetoothPermissionUtils;
+
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -73,17 +75,21 @@ public class TopdonDevice implements UnifiedDevice {
         this.config = config;
         this.connectionListener = listener;
         
-        // Create device info
+        // Create device info with permission-safe access
+        Context context = EasyBLE.getInstance().getContext();
+        String deviceName = BluetoothPermissionUtils.getDeviceName(context, bluetoothDevice);
+        String deviceAddress = BluetoothPermissionUtils.getDeviceAddress(context, bluetoothDevice);
+        
         this.deviceInfo = new DeviceInfo(
-            bluetoothDevice.getName() != null ? bluetoothDevice.getName() : "Topdon Device",
-            bluetoothDevice.getAddress(),
+            deviceName != null && !deviceName.isEmpty() ? deviceName : "Topdon Device",
+            deviceAddress,
             config.getDeviceType(),
             "1.0", // Hardware version
             "1.0", // Firmware version
-            bluetoothDevice.getAddress() // Serial number based on MAC
+            deviceAddress // Serial number based on MAC
         );
         
-        Log.i(TAG, "Created TopdonDevice: " + bluetoothDevice.getAddress());
+        Log.i(TAG, "Created TopdonDevice: " + deviceAddress);
     }
     
     @Override
@@ -107,7 +113,8 @@ public class TopdonDevice implements UnifiedDevice {
     @Override
     @Nullable
     public String getName() {
-        return bluetoothDevice.getName();
+        Context context = EasyBLE.getInstance().getContext();
+        return BluetoothPermissionUtils.getDeviceName(context, bluetoothDevice);
     }
     
     @Override

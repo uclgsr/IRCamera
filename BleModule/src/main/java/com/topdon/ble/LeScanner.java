@@ -5,11 +5,13 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.topdon.ble.callback.ScanListener;
+import com.topdon.ble.util.BluetoothPermissionUtils;
 import com.topdon.ble.util.Logger;
 
 /**
@@ -19,6 +21,7 @@ import com.topdon.ble.util.Logger;
  * author: bichuanfeng
  */
 class LeScanner extends AbstractScanner {
+    private static final String TAG = "LeScanner";
     private BluetoothLeScanner bleScanner;
 
     LeScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {
@@ -54,6 +57,14 @@ class LeScanner extends AbstractScanner {
 
     @Override
     protected void performStartScan() {
+        Context context = EasyBLE.getInstance().getContext();
+        if (!BluetoothPermissionUtils.hasBluetoothScanPermission(context)) {
+            Log.w(TAG, "Missing BLUETOOTH_SCAN permission for startScan()");
+            handleScanCallback(false, null, false, ScanListener.ERROR_LACK_BLUETOOTH_PERMISSION, 
+                "Missing Bluetooth scan permission");
+            return;
+        }
+        
         ScanSettings settings;
         if (configuration.scanSettings == null) {
             settings = new ScanSettings.Builder()
@@ -62,13 +73,30 @@ class LeScanner extends AbstractScanner {
         } else {
             settings = configuration.scanSettings;
         }
-        bleScanner.startScan(configuration.filters, settings, scanCallback);
+        
+        try {
+            bleScanner.startScan(configuration.filters, settings, scanCallback);
+        } catch (SecurityException e) {
+            Log.e(TAG, "SecurityException in startScan(): " + e.getMessage());
+            handleScanCallback(false, null, false, ScanListener.ERROR_LACK_BLUETOOTH_PERMISSION, 
+                "Bluetooth permission denied: " + e.getMessage());
+        }
     }
 
     @Override
     protected void performStopScan() {
         if (bleScanner != null) {
-            bleScanner.stopScan(scanCallback);
+            Context context = EasyBLE.getInstance().getContext();
+            if (!BluetoothPermissionUtils.hasBluetoothScanPermission(context)) {
+                Log.w(TAG, "Missing BLUETOOTH_SCAN permission for stopScan()");
+                return;
+            }
+            
+            try {
+                bleScanner.stopScan(scanCallback);
+            } catch (SecurityException e) {
+                Log.e(TAG, "SecurityException in stopScan(): " + e.getMessage());
+            }
         }
     }
 

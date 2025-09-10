@@ -2,6 +2,7 @@ package com.topdon.ble;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.ScanResult;
+import android.content.Context;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,6 +11,8 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.topdon.ble.util.BluetoothPermissionUtils;
 
 import java.util.Objects;
 
@@ -33,8 +36,9 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
 
     public Device(BluetoothDevice originDevice) {
         this.originDevice = originDevice;
-        this.name = originDevice.getName() == null ? "" : originDevice.getName();
-        this.address = originDevice.getAddress();
+        Context context = EasyBLE.getInstance().getContext();
+        this.name = BluetoothPermissionUtils.getDeviceName(context, originDevice);
+        this.address = BluetoothPermissionUtils.getDeviceAddress(context, originDevice);
     }
 
     @NonNull

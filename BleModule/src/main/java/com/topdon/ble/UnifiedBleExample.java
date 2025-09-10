@@ -6,6 +6,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.topdon.ble.util.BluetoothPermissionUtils;
+
 import java.util.List;
 
 /**
@@ -61,7 +63,9 @@ public class UnifiedBleExample {
         unifiedBleManager.startUnifiedDeviceDiscovery(new UnifiedBleManager.UnifiedScanListener() {
             @Override
             public void onShimmerDeviceFound(BluetoothDevice device, UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord) {
-                Log.i(TAG, "Found Shimmer device: " + device.getName() + " (" + device.getAddress() + ") Type: " + type + " RSSI: " + rssi);
+                String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
+                String deviceAddress = BluetoothPermissionUtils.getDeviceAddress(context, device);
+                Log.i(TAG, "Found Shimmer device: " + deviceName + " (" + deviceAddress + ") Type: " + type + " RSSI: " + rssi);
                 
                 // Connect to first GSR device found
                 if (type == UnifiedBleManager.DeviceType.SHIMMER_GSR && shimmerGSRDevice == null) {
@@ -71,7 +75,9 @@ public class UnifiedBleExample {
             
             @Override
             public void onTopdonDeviceFound(BluetoothDevice device, UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord) {
-                Log.i(TAG, "Found Topdon device: " + device.getName() + " (" + device.getAddress() + ") Type: " + type + " RSSI: " + rssi);
+                String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
+                String deviceAddress = BluetoothPermissionUtils.getDeviceAddress(context, device);
+                Log.i(TAG, "Found Topdon device: " + deviceName + " (" + deviceAddress + ") Type: " + type + " RSSI: " + rssi);
                 
                 // Connect to first thermal device found
                 if (type == UnifiedBleManager.DeviceType.TOPDON_THERMAL && topdonThermalDevice == null) {
@@ -81,7 +87,9 @@ public class UnifiedBleExample {
             
             @Override
             public void onUnknownDeviceFound(BluetoothDevice device, int rssi, byte[] scanRecord) {
-                Log.d(TAG, "Found unknown BLE device: " + device.getName() + " (" + device.getAddress() + ")");
+                String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
+                String deviceAddress = BluetoothPermissionUtils.getDeviceAddress(context, device);
+                Log.d(TAG, "Found unknown BLE device: " + deviceName + " (" + deviceAddress + ")");
             }
             
             @Override

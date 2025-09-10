@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.topdon.ble.callback.ScanListener;
+import com.topdon.ble.util.BluetoothPermissionUtils;
 import com.topdon.ble.util.DefaultLogger;
 import com.topdon.ble.util.Logger;
 import com.topdon.commons.observer.Observable;
@@ -597,8 +598,18 @@ public class EasyBLE {
                 int connectDelay = 0;
                 if (bondController != null && bondController.accept(device)) {
                     BluetoothDevice remoteDevice = bluetoothAdapter.getRemoteDevice(device.getAddress());
-                    if (remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
-                        connectDelay = createBond(device.getAddress()) ? 1500 : 0;
+                    if (BluetoothPermissionUtils.hasBluetoothConnectPermission(getContext())) {
+                        try {
+                            if (remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
+                                connectDelay = createBond(device.getAddress()) ? 1500 : 0;
+                            }
+                        } catch (SecurityException e) {
+                            logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, 
+                                "SecurityException checking bond state: " + e.getMessage());
+                        }
+                    } else {
+                        logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, 
+                            "Missing BLUETOOTH_CONNECT permission for bonding operations");
                     }
                 }
                 // Choose connection implementation based on configuration
@@ -782,8 +793,18 @@ public class EasyBLE {
      */
     public int getBondState(String address) {
         checkStatus();
+        if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(getContext())) {
+            logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, 
+                "Missing BLUETOOTH_CONNECT permission for getBondState()");
+            return BluetoothDevice.BOND_NONE;
+        }
+        
         try {
             return bluetoothAdapter.getRemoteDevice(address).getBondState();
+        } catch (SecurityException e) {
+            logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, 
+                "SecurityException getting bond state: " + e.getMessage());
+            return BluetoothDevice.BOND_NONE;
         } catch (Exception e) {
             return BluetoothDevice.BOND_NONE;
         }
@@ -796,9 +817,19 @@ public class EasyBLE {
      */
     public boolean createBond(String address) {
         checkStatus();
+        if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(getContext())) {
+            logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, 
+                "Missing BLUETOOTH_CONNECT permission for createBond()");
+            return false;
+        }
+        
         try {
             BluetoothDevice remoteDevice = bluetoothAdapter.getRemoteDevice(address);
             return remoteDevice.getBondState() != BluetoothDevice.BOND_NONE || remoteDevice.createBond();
+        } catch (SecurityException e) {
+            logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, 
+                "SecurityException creating bond: " + e.getMessage());
+            return false;
         } catch (Exception ignore) {
             return false;
         }

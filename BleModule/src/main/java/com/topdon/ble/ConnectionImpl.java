@@ -25,6 +25,7 @@ import androidx.core.util.Pair;
 
 import com.topdon.ble.callback.RequestCallback;
 import com.topdon.ble.callback.ScanListener;
+import com.topdon.ble.util.BluetoothPermissionUtils;
 import com.topdon.ble.util.HexUtil;
 import com.topdon.ble.util.Logger;
 
@@ -399,9 +400,23 @@ class ConnectionImpl implements Connection, ScanListener {
 
     private void doDiscoverServices() {
         if (bluetoothGatt != null) {
-            bluetoothGatt.discoverServices();
-            device.connectionState = ConnectionState.SERVICE_DISCOVERING;
-            sendConnectionCallback();
+            Context context = easyBle.getContext();
+            if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(context)) {
+                logger.log(Log.ERROR, Logger.TYPE_CONNECTION_STATE, 
+                    "Missing BLUETOOTH_CONNECT permission for discoverServices()");
+                notifyDisconnected();
+                return;
+            }
+            
+            try {
+                bluetoothGatt.discoverServices();
+                device.connectionState = ConnectionState.SERVICE_DISCOVERING;
+                sendConnectionCallback();
+            } catch (SecurityException e) {
+                logger.log(Log.ERROR, Logger.TYPE_CONNECTION_STATE, 
+                    "SecurityException in discoverServices(): " + e.getMessage());
+                notifyDisconnected();
+            }
         } else {
             notifyDisconnected();
         }
@@ -459,14 +474,24 @@ class ConnectionImpl implements Connection, ScanListener {
             if (!isReleased && hasBluetoothPermission()) {
                 //连接之前必须先停止搜索
                 easyBle.stopScan();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback,
-                            configuration.transport, configuration.phy);
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback,
-                            configuration.transport);
-                } else {
-                    bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback);
+                
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback,
+                                configuration.transport, configuration.phy);
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback,
+                                configuration.transport);
+                    } else {
+                        bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback);
+                    }
+                } catch (SecurityException e) {
+                    logE(Logger.TYPE_CONNECTION_STATE, "SecurityException in connectGatt(): %s [name: %s, addr: %s]",
+                            e.getMessage(), device.name, device.address);
+                    if (observer != null) {
+                        posterDispatcher.post(observer, MethodInfoGenerator.onConnectFailed(device, CONNECT_FAIL_TYPE_NO_PERMISSION));
+                    }
+                    observable.notifyObservers(MethodInfoGenerator.onConnectFailed(device, CONNECT_FAIL_TYPE_NO_PERMISSION));
                 }
             } else if (!hasBluetoothPermission()) {
                 logE(Logger.TYPE_CONNECTION_STATE, "connect failed! [type: no bluetooth permission, name: %s, addr: %s]",
@@ -525,9 +550,16 @@ class ConnectionImpl implements Connection, ScanListener {
         logD(Logger.TYPE_CONNECTION_STATE, "refresh GATT! [name: %s, addr: %s]", device.name, device.address);
         connStartTime = System.currentTimeMillis();
         if (bluetoothGatt != null) {
-            try {
-                bluetoothGatt.disconnect();
-            } catch (Exception ignore) {
+            Context context = easyBle.getContext();
+            if (BluetoothPermissionUtils.hasBluetoothConnectPermission(context)) {
+                try {
+                    bluetoothGatt.disconnect();
+                } catch (SecurityException e) {
+                    logE(Logger.TYPE_CONNECTION_STATE, "SecurityException in disconnect(): %s", e.getMessage());
+                } catch (Exception ignore) {
+                }
+            } else {
+                logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, "Missing BLUETOOTH_CONNECT permission for disconnect()");
             }
 
             if (isAuto) {
@@ -597,13 +629,22 @@ class ConnectionImpl implements Connection, ScanListener {
     }
 
     private void closeGatt(BluetoothGatt gatt) {
-        try {
-            gatt.disconnect();
-        } catch (Exception ignore) {
-        }
-        try {
-            gatt.close();
-        } catch (Exception ignore) {
+        Context context = easyBle.getContext();
+        if (BluetoothPermissionUtils.hasBluetoothConnectPermission(context)) {
+            try {
+                gatt.disconnect();
+            } catch (SecurityException e) {
+                logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, "SecurityException in disconnect(): " + e.getMessage());
+            } catch (Exception ignore) {
+            }
+            try {
+                gatt.close();
+            } catch (SecurityException e) {
+                logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, "SecurityException in close(): " + e.getMessage());
+            } catch (Exception ignore) {
+            }
+        } else {
+            logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, "Missing BLUETOOTH_CONNECT permission for closeGatt()");
         }
     }
 

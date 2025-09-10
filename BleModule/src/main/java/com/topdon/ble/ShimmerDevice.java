@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.topdon.ble.util.BluetoothPermissionUtils;
+
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -67,14 +69,18 @@ public class ShimmerDevice implements UnifiedDevice {
         this.config = config;
         this.connectionListener = listener;
         
-        // Create device info
+        // Create device info with permission-safe access
+        Context context = EasyBLE.getInstance().getContext();
+        String deviceName = BluetoothPermissionUtils.getDeviceName(context, bluetoothDevice);
+        String deviceAddress = BluetoothPermissionUtils.getDeviceAddress(context, bluetoothDevice);
+        
         this.deviceInfo = new DeviceInfo(
-            bluetoothDevice.getName() != null ? bluetoothDevice.getName() : "Shimmer Device",
-            bluetoothDevice.getAddress(),
+            deviceName != null && !deviceName.isEmpty() ? deviceName : "Shimmer Device",
+            deviceAddress,
             config.getDeviceType(),
             "3.0", // Hardware version
             "1.0", // Firmware version
-            bluetoothDevice.getAddress() // Serial number based on MAC
+            deviceAddress // Serial number based on MAC
         );
         
         Log.i(TAG, "Created ShimmerDevice: " + bluetoothDevice.getAddress());
