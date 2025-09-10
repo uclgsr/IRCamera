@@ -7,7 +7,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class DeviceControlWorker {
     private static final String TAG = "DeviceControlWorker";
     private Thread mThread;
-    private ArrayBlockingQueue<BaseTask> mEventQueue = new ArrayBlockingQueue(2);
+    private ArrayBlockingQueue<BaseTask> mEventQueue = new ArrayBlockingQueue<>(2);
     private DeviceState mDeviceState = DeviceState.NONE;
     private IDeviceConnectListener mDeviceControlCallback;
     private boolean isStartPreviewing = false;

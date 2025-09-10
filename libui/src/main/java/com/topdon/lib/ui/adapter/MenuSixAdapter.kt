@@ -69,8 +69,11 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
             holder.lay.setOnClickListener(
                 object : SingleClickListener() {
                     override fun onSingleClick() {
-                        listener?.invoke(position, bean.code)
-                        selected(bean.code)
+                        val adapterPosition = holder.adapterPosition
+                        if (adapterPosition != RecyclerView.NO_POSITION) {
+                            listener?.invoke(adapterPosition, bean.code)
+                            selected(bean.code)
+                        }
                     }
                 },
             )
