@@ -143,7 +143,7 @@ class FileTransferProtocol(
         while (transferQueue.isNotEmpty() && activeTransfers.size < MAX_CONCURRENT_TRANSFERS) {
             val request = synchronized(transferQueue) {
                 if (transferQueue.isEmpty()) return@synchronized null
-                transferQueue.removeFirst()
+                transferQueue.removeAt(0)  // Use removeAt(0) instead of removeFirst() for API compatibility
             } ?: break
             
             startFileTransfer(request)
