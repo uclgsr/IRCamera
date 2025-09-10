@@ -35,6 +35,7 @@ public interface Connection {
     int REQUEST_FAIL_TYPE_REQUEST_TIMEOUT = 7;
     int REQUEST_FAIL_TYPE_CONNECTION_DISCONNECTED = 8;
     int REQUEST_FAIL_TYPE_CONNECTION_RELEASED = 9;
+    int REQUEST_FAIL_TYPE_NO_PERMISSION = 10;
 
     //----------连接超时类型---------
     int TIMEOUT_TYPE_CANNOT_DISCOVER_DEVICE = 0;
@@ -56,6 +57,10 @@ public interface Connection {
      * 不支持连接
      */
     int CONNECT_FAIL_TYPE_CONNECTION_IS_UNSUPPORTED = 2;
+    /**
+     * 缺少蓝牙权限
+     */
+    int CONNECT_FAIL_TYPE_NO_PERMISSION = 3;
 
     @NonNull
     Device getDevice();

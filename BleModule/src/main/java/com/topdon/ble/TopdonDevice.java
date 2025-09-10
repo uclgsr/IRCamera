@@ -1,6 +1,6 @@
 package com.topdon.ble;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
@@ -8,10 +8,13 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -26,7 +29,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * 
  * @author IRCamera Topdon Integration Team
  */
-@SuppressLint("MissingPermission")
 public class TopdonDevice implements UnifiedDevice {
     private static final String TAG = "TopdonDevice";
     

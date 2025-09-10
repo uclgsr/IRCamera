@@ -6,7 +6,8 @@ public class Topdon {
     private static Context app;
 
     public static void init(Context context) {
-        app = context;
+        // Use application context to prevent memory leaks
+        app = context.getApplicationContext();
     }
 
     public static Context getApp() {

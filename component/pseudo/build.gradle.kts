@@ -79,6 +79,9 @@ dependencies {
     implementation(libs.utilcode)
     implementation(libs.glide)
     
+    // Enhanced unified BLE system integration for cross-modal coordination
+    implementation(project(":BleModule"))
+    
     // Test dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.test.ext.junit)

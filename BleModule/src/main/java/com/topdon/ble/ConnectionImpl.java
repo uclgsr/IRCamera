@@ -1,5 +1,6 @@
 package com.topdon.ble;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
@@ -8,6 +9,8 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,6 +20,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
 import com.topdon.ble.callback.RequestCallback;
@@ -45,7 +49,6 @@ import com.topdon.commons.util.StringUtils;
  * date: 2021/8/12 19:47
  * author: bichuanfeng
  */
-@SuppressLint("MissingPermission")
 class ConnectionImpl implements Connection, ScanListener {
     private static final int MSG_REQUEST_TIMEOUT = 0;
     private static final int MSG_CONNECT = 1;
@@ -453,7 +456,7 @@ class ConnectionImpl implements Connection, ScanListener {
     private Runnable connectRunnable = new Runnable() {
         @Override
         public void run() {
-            if (!isReleased) {
+            if (!isReleased && hasBluetoothPermission()) {
                 //连接之前必须先停止搜索
                 easyBle.stopScan();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -465,6 +468,13 @@ class ConnectionImpl implements Connection, ScanListener {
                 } else {
                     bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback);
                 }
+            } else if (!hasBluetoothPermission()) {
+                logE(Logger.TYPE_CONNECTION_STATE, "connect failed! [type: no bluetooth permission, name: %s, addr: %s]",
+                        device.name, device.address);
+                if (observer != null) {
+                    posterDispatcher.post(observer, MethodInfoGenerator.onConnectFailed(device, CONNECT_FAIL_TYPE_NO_PERMISSION));
+                }
+                observable.notifyObservers(MethodInfoGenerator.onConnectFailed(device, CONNECT_FAIL_TYPE_NO_PERMISSION));
             }
         }
     };
@@ -575,6 +585,17 @@ class ConnectionImpl implements Connection, ScanListener {
         return false;
     }
 
+    private boolean hasBluetoothPermission() {
+        Context context = easyBle.getContext();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // API 31+ 需要新的蓝牙权限
+            return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED;
+        } else {
+            // API 30及以下使用旧的蓝牙权限
+            return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED;
+        }
+    }
+
     private void closeGatt(BluetoothGatt gatt) {
         try {
             gatt.disconnect();
@@ -602,6 +623,10 @@ class ConnectionImpl implements Connection, ScanListener {
     }
 
     private boolean write(GenericRequest request, BluetoothGattCharacteristic characteristic, byte[] value) {
+        if (!hasBluetoothPermission()) {
+            handleFailedCallback(request, REQUEST_FAIL_TYPE_NO_PERMISSION, true);
+            return false;
+        }
         characteristic.setValue(value);
         int writeType = request.writeOptions.writeType;
         if ((writeType == BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE ||
@@ -914,6 +939,10 @@ class ConnectionImpl implements Connection, ScanListener {
     }
 
     private void executeReadCharacteristic(GenericRequest request, BluetoothGattCharacteristic characteristic) {
+        if (!hasBluetoothPermission()) {
+            handleFailedCallback(request, REQUEST_FAIL_TYPE_NO_PERMISSION, true);
+            return;
+        }
         if (!bluetoothGatt.readCharacteristic(characteristic)) {
             handleFailedCallback(request, REQUEST_FAIL_TYPE_REQUEST_FAILED, true);
         }

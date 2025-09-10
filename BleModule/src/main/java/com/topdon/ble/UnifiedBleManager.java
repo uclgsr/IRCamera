@@ -44,7 +44,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * 
  * @author IRCamera Unified BLE Integration Team
  */
-@SuppressLint("MissingPermission")
 public class UnifiedBleManager {
     private static final String TAG = "UnifiedBleManager";
     
