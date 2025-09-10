@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.csl.irCamera.databinding.ActivitySessionDetailBinding
+import com.csl.irCamera.R
 
 /**
  * Session Detail Activity
@@ -26,11 +27,18 @@ class SessionDetailActivity : BaseBindingActivity<ActivitySessionDetailBinding>(
         }
     }
 
-    override fun initView() {
+    override fun initContentLayoutId() = R.layout.activity_session_detail
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
         
         // Set the content programmatically since we don't have a complex layout
-        binding.root.apply {
+        (binding.root as? android.widget.TextView)?.apply {
             text = "Session Details\n\nSession ID: $sessionId\n\nDetailed session analysis coming soon..."
             setPadding(32, 32, 32, 32)
             textSize = 16f

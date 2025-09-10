@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.csl.irCamera.databinding.ActivitySessionExportBinding
+import com.csl.irCamera.R
 
 /**
  * Session Export Activity
@@ -26,11 +27,18 @@ class SessionExportActivity : BaseBindingActivity<ActivitySessionExportBinding>(
         }
     }
 
-    override fun initView() {
+    override fun initContentLayoutId() = R.layout.activity_session_export
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
         
         // Set the content programmatically
-        binding.root.apply {
+        (binding.root as? android.widget.TextView)?.apply {
             text = "Session Export\n\nSession ID: $sessionId\n\nExport Options:\n• CSV Format\n• JSON Format\n• Research-grade metadata\n• Synchronized timestamps\n\nExport functionality coming soon..."
             setPadding(32, 32, 32, 32)
             textSize = 16f

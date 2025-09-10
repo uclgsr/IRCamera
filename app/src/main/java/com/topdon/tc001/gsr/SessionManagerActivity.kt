@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivitySessionManagerBinding
 import com.topdon.gsr.model.SessionInfo
@@ -63,8 +64,6 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
         setupSearchAndFilter()
         loadSessions()
     }
-
-    private fun initializeViews() {
 
     private fun initializeViews() {
         // Setup toolbar
@@ -150,7 +149,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
 
                 sessions.clear()
                 sessions.addAll(loadedSessions.sortedByDescending { it.startTime })
-                filterSessions(searchView.query?.toString())
+                filterSessions(binding.searchView.query?.toString())
 
                 Log.i(TAG, "Loaded ${sessions.size} sessions")
             } catch (e: Exception) {
@@ -248,8 +247,8 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
         updateEmptyView()
     }
 
-    private fun applyFilter(filterIndex: Int) {
-        val baseList = if (searchView.query.isNullOrEmpty()) sessions else filteredSessions.toList()
+    private fun filterSessionsByType(filterIndex: Int) {
+        val baseList = if (binding.searchView.query.isNullOrEmpty()) sessions else filteredSessions.toList()
 
         filteredSessions.clear()
 
@@ -453,5 +452,4 @@ class SessionAdapter(
     }
 
     override fun getItemCount(): Int = sessions.size
-}
 }
