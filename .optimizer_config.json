@@ -1,0 +1,44 @@
+{
+  "file_types": {
+    "kotlin": {
+      "extensions": [
+        ".kt"
+      ],
+      "max_complexity": 15,
+      "max_violations": 5
+    },
+    "java": {
+      "extensions": [
+        ".java"
+      ],
+      "max_complexity": 20,
+      "max_violations": 10
+    },
+    "python": {
+      "extensions": [
+        ".py"
+      ],
+      "max_complexity": 10,
+      "max_violations": 3
+    },
+    "javascript": {
+      "extensions": [
+        ".js",
+        ".ts"
+      ],
+      "max_complexity": 12,
+      "max_violations": 5
+    }
+  },
+  "optimization": {
+    "enable_parallel_processing": true,
+    "enable_incremental_analysis": true,
+    "enable_ml_insights": true,
+    "quality_threshold": 75
+  },
+  "reporting": {
+    "generate_html": true,
+    "generate_trends": true,
+    "retention_days": 30
+  }
+}
