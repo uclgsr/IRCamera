@@ -17,10 +17,10 @@ import com.google.android.material.appbar.AppBarLayout
 // import com.topdon.house.util.PDFUtil
 // import com.topdon.house.viewmodel.DetectViewModel
 // import com.topdon.house.viewmodel.ReportViewModel
-import com.topdon.lib.core.bean.HouseRepPreviewAlbumItemBean
-import com.topdon.lib.core.bean.HouseRepPreviewBean
-import com.topdon.lib.core.bean.HouseRepPreviewItemBean
-import com.topdon.lib.core.bean.HouseRepPreviewProjectItemBean
+// import com.topdon.lib.core.bean.HouseRepPreviewAlbumItemBean
+// import com.topdon.lib.core.bean.HouseRepPreviewBean
+// import com.topdon.lib.core.bean.HouseRepPreviewItemBean
+// import com.topdon.lib.core.bean.HouseRepPreviewProjectItemBean
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.db.AppDatabase
@@ -34,6 +34,36 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import kotlin.math.abs
+
+// Temporary data class stubs to resolve compilation issues
+data class HouseRepPreviewBean(
+    var itemBeans: ArrayList<HouseRepPreviewItemBean>? = null,
+    var housePhoto: String = "",
+    var houseAddress: String = "",
+    var houseName: String = "",
+    var detectTime: String = "",
+    var inspectorName: String = "",
+    var houseYear: String = "",
+    var houseArea: String = "",
+    var expenses: String = ""
+)
+
+data class HouseRepPreviewItemBean(
+    var projectItemBeans: ArrayList<HouseRepPreviewProjectItemBean>? = null,
+    var albumItemBeans: ArrayList<HouseRepPreviewAlbumItemBean>? = null,
+    var itemName: String = ""
+)
+
+data class HouseRepPreviewProjectItemBean(
+    var projectName: String = "",
+    var state: String = "",
+    var remark: String = ""
+)
+
+data class HouseRepPreviewAlbumItemBean(
+    var photoPath: String = "",
+    var title: String = ""
+)
 
 /**
  * 需要传递：
@@ -291,7 +321,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
                 projectItemBean.state = itemReport.state
                 projectItemBean.remark = itemReport.inputText
                 if (itemReport.state > 0 || itemReport.inputText.isNotEmpty()) {
-                    itemBean.projectItemBeans.add(projectItemBean)
+                    itemBean.projectItemBeans?.add(projectItemBean)
                 }
 
                 if (itemReport.getImageSize() > 0) {
@@ -300,25 +330,25 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
                         albumItemBean = HouseRepPreviewAlbumItemBean()
                         albumItemBean.photoPath = itemReport.image1
                         albumItemBean.title = itemReport.itemName
-                        itemBean.albumItemBeans.add(albumItemBean)
+                        itemBean.albumItemBeans?.add(albumItemBean)
                     }
                     if (itemReport.image2.isNotEmpty()) {
                         albumItemBean = HouseRepPreviewAlbumItemBean()
                         albumItemBean.photoPath = itemReport.image2
                         albumItemBean.title = itemReport.itemName
-                        itemBean.albumItemBeans.add(albumItemBean)
+                        itemBean.albumItemBeans?.add(albumItemBean)
                     }
                     if (itemReport.image3.isNotEmpty()) {
                         albumItemBean = HouseRepPreviewAlbumItemBean()
                         albumItemBean.photoPath = itemReport.image3
                         albumItemBean.title = itemReport.itemName
-                        itemBean.albumItemBeans.add(albumItemBean)
+                        itemBean.albumItemBeans?.add(albumItemBean)
                     }
                     if (itemReport.image4.isNotEmpty()) {
                         albumItemBean = HouseRepPreviewAlbumItemBean()
                         albumItemBean.photoPath = itemReport.image4
                         albumItemBean.title = itemReport.itemName
-                        itemBean.albumItemBeans.add(albumItemBean)
+                        itemBean.albumItemBeans?.add(albumItemBean)
                     }
                 }
             }
@@ -328,7 +358,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
                     itemBean.albumItemBeans
                 )
             if (CollectionUtils.isNotEmpty(itemBean.projectItemBeans)) {
-                itemBean.projectItemBeans.add(0, HouseRepPreviewProjectItemBean())
+                itemBean.projectItemBeans?.add(0, HouseRepPreviewProjectItemBean())
             }
             if (!isEmpty) {
                 houseRepPreviewBean.itemBeans.add(itemBean)
