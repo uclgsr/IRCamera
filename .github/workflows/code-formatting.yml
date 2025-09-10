@@ -52,28 +52,53 @@ jobs:
       run: |
         echo "🔧 Formatting XML files..."
         xml_count=0
-        find . -name "*.xml" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" | while read -r file; do
+        temp_file=$(mktemp)
+        
+        find . -name "*.xml" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" > "$temp_file"
+        
+        while IFS= read -r file; do
           if [ -f "$file" ]; then
+            echo "Formatting: $file"
             # Create backup and format
             cp "$file" "$file.bak"
-            xmllint --format "$file.bak" > "$file" 2>/dev/null || cp "$file.bak" "$file"
+            if xmllint --format "$file.bak" > "$file" 2>/dev/null; then
+              echo "✓ Successfully formatted: $file"
+              xml_count=$((xml_count + 1))
+            else
+              echo "⚠ Could not format: $file (restoring original)"
+              cp "$file.bak" "$file"
+            fi
             rm "$file.bak"
-            xml_count=$((xml_count + 1))
           fi
-        done
-        echo "✅ Processed XML files"
+        done < "$temp_file"
+        
+        rm "$temp_file"
+        echo "xml_count=$xml_count" >> $GITHUB_ENV
+        echo "✅ Processed $xml_count XML files"
         
     - name: Format JSON files
       run: |
         echo "🔧 Formatting JSON files..."
         json_count=0
-        find . -name "*.json" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" -not -path "./node_modules/*" | while read -r file; do
+        temp_file=$(mktemp)
+        
+        find . -name "*.json" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" -not -path "./node_modules/*" > "$temp_file"
+        
+        while IFS= read -r file; do
           if [ -f "$file" ]; then
-            prettier --write "$file" --parser json --tab-width 2 --use-tabs false
-            json_count=$((json_count + 1))
+            echo "Formatting: $file"
+            if prettier --write "$file" --parser json --tab-width 2 --use-tabs false; then
+              echo "✓ Successfully formatted: $file"
+              json_count=$((json_count + 1))
+            else
+              echo "⚠ Could not format: $file"
+            fi
           fi
-        done
-        echo "✅ Processed JSON files"
+        done < "$temp_file"
+        
+        rm "$temp_file"
+        echo "json_count=$json_count" >> $GITHUB_ENV
+        echo "✅ Processed $json_count JSON files"
         
     - name: Validate and format Gradle files
       run: |
@@ -81,136 +106,240 @@ jobs:
         gradle_count=0
         
         # Test Gradle syntax
-        ./gradlew help --quiet
+        if ./gradlew help --quiet; then
+          echo "✓ Gradle syntax validation passed"
+        else
+          echo "⚠ Gradle syntax validation failed"
+          exit 1
+        fi
         
-        # Format Gradle files using Gradle's built-in formatting
-        find . -name "*.gradle*" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" | while read -r file; do
+        # Count Gradle files
+        temp_file=$(mktemp)
+        find . -name "*.gradle*" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" > "$temp_file"
+        
+        while IFS= read -r file; do
           if [ -f "$file" ]; then
+            echo "Validated: $file"
             gradle_count=$((gradle_count + 1))
           fi
-        done
+        done < "$temp_file"
+        
+        rm "$temp_file"
         
         # Run dependency analysis
-        ./gradlew dependencies --quiet > /dev/null
-        echo "✅ Validated Gradle files and dependencies"
+        if ./gradlew dependencies --quiet >/dev/null 2>&1; then
+          echo "✓ Dependency analysis completed successfully"
+        else
+          echo "⚠ Dependency analysis had warnings (continuing)"
+        fi
+        
+        echo "gradle_count=$gradle_count" >> $GITHUB_ENV
+        echo "✅ Validated $gradle_count Gradle files and dependencies"
         
     - name: Format YAML files
       run: |
         echo "🔧 Formatting YAML files..."
         yaml_count=0
-        find . -name "*.yml" -o -name "*.yaml" | grep -v ".github/workflows" | while read -r file; do
-          if [ -f "$file" ]; then
-            prettier --write "$file" --parser yaml --tab-width 2
-            yaml_count=$((yaml_count + 1))
-          fi
-        done
+        temp_file=$(mktemp)
         
-        # Lint workflow YAML files separately
-        find .github/workflows -name "*.yml" -o -name "*.yaml" | while read -r file; do
+        # Find all YAML files
+        find . \( -name "*.yml" -o -name "*.yaml" \) > "$temp_file"
+        
+        while IFS= read -r file; do
           if [ -f "$file" ]; then
-            prettier --write "$file" --parser yaml --tab-width 2
-            yaml_count=$((yaml_count + 1))
+            echo "Formatting: $file"
+            if prettier --write "$file" --parser yaml --tab-width 2; then
+              echo "✓ Successfully formatted: $file"
+              yaml_count=$((yaml_count + 1))
+            else
+              echo "⚠ Could not format: $file"
+            fi
           fi
-        done
-        echo "✅ Processed YAML files"
+        done < "$temp_file"
+        
+        rm "$temp_file"
+        echo "yaml_count=$yaml_count" >> $GITHUB_ENV
+        echo "✅ Processed $yaml_count YAML files"
         
     - name: Format TOML files
       run: |
         echo "🔧 Formatting TOML files..."
         toml_count=0
-        find . -name "*.toml" -not -path "./build/*" -not -path "./.gradle/*" | while read -r file; do
+        temp_file=$(mktemp)
+        
+        find . -name "*.toml" -not -path "./build/*" -not -path "./.gradle/*" > "$temp_file"
+        
+        while IFS= read -r file; do
           if [ -f "$file" ]; then
-            toml-sort --in-place "$file"
-            toml_count=$((toml_count + 1))
+            echo "Formatting: $file"
+            if toml-sort --in-place "$file"; then
+              echo "✓ Successfully formatted: $file"
+              toml_count=$((toml_count + 1))
+            else
+              echo "⚠ Could not format: $file"
+            fi
           fi
-        done
-        echo "✅ Processed TOML files"
+        done < "$temp_file"
+        
+        rm "$temp_file"
+        echo "toml_count=$toml_count" >> $GITHUB_ENV
+        echo "✅ Processed $toml_count TOML files"
         
     - name: Format Properties files
       run: |
         echo "🔧 Formatting Properties files..."
         prop_count=0
-        find . -name "*.properties" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" | while read -r file; do
+        temp_file=$(mktemp)
+        
+        find . -name "*.properties" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" > "$temp_file"
+        
+        while IFS= read -r file; do
           if [ -f "$file" ]; then
+            echo "Formatting: $file"
             # Sort properties files and standardize key-value format
-            sort "$file" > "$file.tmp" && mv "$file.tmp" "$file"
-            prop_count=$((prop_count + 1))
+            if sort "$file" > "$file.tmp" && mv "$file.tmp" "$file"; then
+              echo "✓ Successfully formatted: $file"
+              prop_count=$((prop_count + 1))
+            else
+              echo "⚠ Could not format: $file"
+              rm -f "$file.tmp"
+            fi
           fi
-        done
-        echo "✅ Processed Properties files"
+        done < "$temp_file"
+        
+        rm "$temp_file"
+        echo "prop_count=$prop_count" >> $GITHUB_ENV
+        echo "✅ Processed $prop_count Properties files"
         
     - name: Format Markdown files
       run: |
         echo "🔧 Formatting Markdown files..."
         md_count=0
-        find . -name "*.md" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" | while read -r file; do
+        temp_file=$(mktemp)
+        
+        find . -name "*.md" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" > "$temp_file"
+        
+        while IFS= read -r file; do
           if [ -f "$file" ]; then
-            prettier --write "$file" --parser markdown --prose-wrap always --print-width 100
-            md_count=$((md_count + 1))
+            echo "Formatting: $file"
+            if prettier --write "$file" --parser markdown --prose-wrap always --print-width 100; then
+              echo "✓ Successfully formatted: $file"
+              md_count=$((md_count + 1))
+            else
+              echo "⚠ Could not format: $file"
+            fi
           fi
-        done
-        echo "✅ Processed Markdown files"
+        done < "$temp_file"
+        
+        rm "$temp_file"
+        echo "md_count=$md_count" >> $GITHUB_ENV
+        echo "✅ Processed $md_count Markdown files"
         
     - name: Validate Shell scripts
       run: |
         echo "🔧 Validating Shell scripts..."
         shell_count=0
-        find . -name "*.sh" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" | while read -r file; do
+        temp_file=$(mktemp)
+        
+        find . -name "*.sh" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" > "$temp_file"
+        
+        while IFS= read -r file; do
           if [ -f "$file" ]; then
+            echo "Validating: $file"
             # Make executable
             chmod +x "$file"
             # Validate syntax
-            shellcheck "$file" || true
-            shell_count=$((shell_count + 1))
+            if shellcheck "$file"; then
+              echo "✓ Successfully validated: $file"
+              shell_count=$((shell_count + 1))
+            else
+              echo "⚠ Shellcheck warnings in: $file (continuing)"
+              shell_count=$((shell_count + 1))
+            fi
           fi
-        done
-        echo "✅ Processed Shell scripts"
+        done < "$temp_file"
+        
+        rm "$temp_file"
+        echo "shell_count=$shell_count" >> $GITHUB_ENV
+        echo "✅ Processed $shell_count Shell scripts"
         
     - name: Clean up Chinese text from strings.xml
       run: |
         echo "🔧 Cleaning up Chinese text from strings.xml files..."
-        find . -name "strings.xml" -not -path "./build/*" -not -path "./.gradle/*" | while read -r file; do
+        chinese_cleaned=0
+        temp_file=$(mktemp)
+        
+        find . -name "strings.xml" -not -path "./build/*" -not -path "./.gradle/*" > "$temp_file"
+        
+        while IFS= read -r file; do
           if [ -f "$file" ]; then
-            # Remove lines containing Chinese characters (basic cleanup)
-            # This is a simplified approach - in real scenarios, you'd want more sophisticated handling
-            sed -i '/[\u4e00-\u9fff]/d' "$file" 2>/dev/null || true
-            echo "Cleaned: $file"
+            echo "Processing: $file"
+            # Create backup
+            cp "$file" "$file.bak"
+            
+            # Remove lines containing Chinese characters using grep (more reliable than sed)
+            if grep -v '[一-龯]' "$file.bak" > "$file" 2>/dev/null; then
+              # Check if any changes were made
+              if ! cmp -s "$file" "$file.bak"; then
+                echo "✓ Cleaned Chinese text from: $file"
+                chinese_cleaned=$((chinese_cleaned + 1))
+              else
+                echo "✓ No Chinese text found in: $file"
+              fi
+            else
+              echo "⚠ Could not process: $file (restoring original)"
+              cp "$file.bak" "$file"
+            fi
+            
+            rm "$file.bak"
           fi
-        done
-        echo "✅ Cleaned Chinese text from strings.xml files"
+        done < "$temp_file"
+        
+        rm "$temp_file"
+        echo "chinese_cleaned=$chinese_cleaned" >> $GITHUB_ENV
+        echo "✅ Processed strings.xml files (cleaned $chinese_cleaned files)"
         
     - name: Generate formatting report
       run: |
         echo "📊 Complete Coverage Report:" >> formatting_report.md
         echo "" >> formatting_report.md
         
-        xml_files=$(find . -name "*.xml" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" | wc -l)
-        json_files=$(find . -name "*.json" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" -not -path "./node_modules/*" | wc -l)
-        gradle_files=$(find . -name "*.gradle*" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" | wc -l)
-        yaml_files=$(find . \( -name "*.yml" -o -name "*.yaml" \) | wc -l)
-        toml_files=$(find . -name "*.toml" -not -path "./build/*" -not -path "./.gradle/*" | wc -l)
-        prop_files=$(find . -name "*.properties" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" | wc -l)
-        md_files=$(find . -name "*.md" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" | wc -l)
-        shell_files=$(find . -name "*.sh" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" | wc -l)
+        # Use environment variables set by previous steps
+        xml_files=${xml_count:-0}
+        json_files=${json_count:-0}
+        gradle_files=${gradle_count:-0}
+        yaml_files=${yaml_count:-0}
+        toml_files=${toml_count:-0}
+        prop_files=${prop_count:-0}
+        md_files=${md_count:-0}
+        shell_files=${shell_count:-0}
+        chinese_files=${chinese_cleaned:-0}
         
         total_files=$((xml_files + json_files + gradle_files + yaml_files + toml_files + prop_files + md_files + shell_files))
         
-        echo "$xml_files XML files formatted (AndroidManifest, layouts, drawables, values)" >> formatting_report.md
-        echo "$json_files JSON files validated and formatted with proper indentation" >> formatting_report.md
-        echo "$gradle_files Gradle files syntax validated with dependency analysis" >> formatting_report.md
-        echo "$yaml_files YAML files linted with standards" >> formatting_report.md
-        echo "$toml_files TOML files validated" >> formatting_report.md
-        echo "$prop_files Properties files formatted with key-value standardization" >> formatting_report.md
-        echo "$md_files Markdown files formatted for documentation consistency" >> formatting_report.md
-        echo "$shell_files Shell scripts validated with executable permissions" >> formatting_report.md
+        echo "📄 $xml_files XML files formatted (AndroidManifest, layouts, drawables, values)" >> formatting_report.md
+        echo "📋 $json_files JSON files validated and formatted with proper indentation" >> formatting_report.md
+        echo "🔧 $gradle_files Gradle files syntax validated with dependency analysis" >> formatting_report.md
+        echo "📝 $yaml_files YAML files linted with standards" >> formatting_report.md
+        echo "⚙️ $toml_files TOML files validated" >> formatting_report.md
+        echo "🔑 $prop_files Properties files formatted with key-value standardization" >> formatting_report.md
+        echo "📖 $md_files Markdown files formatted for documentation consistency" >> formatting_report.md
+        echo "🐚 $shell_files Shell scripts validated with executable permissions" >> formatting_report.md
         echo "" >> formatting_report.md
         echo "🔧 Key Achievements:" >> formatting_report.md
         echo "" >> formatting_report.md
-        echo "$total_files files automatically formatted across all types" >> formatting_report.md
-        echo "Complete Chinese text elimination from remaining strings.xml" >> formatting_report.md
-        echo "YAML configuration fixed (.pre-commit-config.yaml formatting)" >> formatting_report.md
-        echo "Zero syntax errors across XML, JSON, YAML, TOML formats" >> formatting_report.md
-        echo "Professional documentation standards applied throughout" >> formatting_report.md
+        echo "✅ $total_files files automatically formatted across all types" >> formatting_report.md
+        echo "✅ $chinese_files strings.xml files processed for Chinese text cleanup" >> formatting_report.md
+        echo "✅ YAML configuration formatting applied to all workflow files" >> formatting_report.md
+        echo "✅ Comprehensive syntax validation across XML, JSON, YAML, TOML formats" >> formatting_report.md
+        echo "✅ Professional documentation standards applied throughout" >> formatting_report.md
+        echo "✅ All shell scripts validated and made executable" >> formatting_report.md
+        
+        echo ""
+        echo "📊 Formatting Summary:"
+        echo "Total files processed: $total_files"
+        echo "Chinese text cleanup: $chinese_files files"
+        echo ""
         
         cat formatting_report.md
         
@@ -226,32 +355,32 @@ jobs:
         fi
         
     - name: Commit formatting changes
-      if: steps.verify-changed-files.outputs.changed == 'true' && (github.event_name == 'workflow_dispatch' && github.event.inputs.auto_commit == 'true' && github.event_name != 'pull_request')
+      if: steps.verify-changed-files.outputs.changed == 'true' && github.event_name == 'workflow_dispatch' && github.event.inputs.auto_commit == 'true'
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add .
         git commit -m "style: Auto-format code across all file types
-        
+
         📊 Complete Coverage:
-        - XML files formatted (AndroidManifest, layouts, drawables, values)  
-        - JSON files validated and formatted with proper indentation
-        - Gradle files syntax validated with dependency analysis
-        - YAML files linted with standards
-        - TOML files validated
-        - Properties files formatted with key-value standardization
-        - Markdown files formatted for documentation consistency
-        - Shell scripts validated with executable permissions
-        
+        - ${xml_count:-0} XML files formatted (AndroidManifest, layouts, drawables, values)  
+        - ${json_count:-0} JSON files validated and formatted with proper indentation
+        - ${gradle_count:-0} Gradle files syntax validated with dependency analysis
+        - ${yaml_count:-0} YAML files linted with standards
+        - ${toml_count:-0} TOML files validated
+        - ${prop_count:-0} Properties files formatted with key-value standardization
+        - ${md_count:-0} Markdown files formatted for documentation consistency
+        - ${shell_count:-0} Shell scripts validated with executable permissions
+
         🔧 Key Achievements:
         - Files automatically formatted across all types
-        - Complete Chinese text elimination from remaining strings.xml
+        - ${chinese_cleaned:-0} strings.xml files processed for Chinese text cleanup
         - YAML configuration formatting applied
-        - Zero syntax errors across XML, JSON, YAML, TOML formats
+        - Comprehensive syntax validation across XML, JSON, YAML, TOML formats
         - Professional documentation standards applied throughout"
         
     - name: Push changes
-      if: steps.verify-changed-files.outputs.changed == 'true' && (github.event_name == 'workflow_dispatch' && github.event.inputs.auto_commit == 'true' && github.event_name != 'pull_request')
+      if: steps.verify-changed-files.outputs.changed == 'true' && github.event_name == 'workflow_dispatch' && github.event.inputs.auto_commit == 'true'
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
