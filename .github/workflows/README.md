@@ -58,6 +58,23 @@ This directory contains the CI/CD workflows for the IRCamera Android project.
 - Integration with existing build scripts
 - Comprehensive build outputs
 
+### 6. `code-formatting.yml` - Code Formatting & Validation
+**Trigger:** Push to main branches, Pull Requests, Manual dispatch
+**Purpose:** Comprehensive code formatting and validation across all file types
+
+**Features:**
+- XML file formatting (AndroidManifest, layouts, drawables, values)
+- JSON file validation and formatting with proper indentation
+- Gradle file syntax validation with dependency analysis
+- YAML file linting with standards compliance
+- TOML file validation and formatting
+- Properties file standardization with key-value formatting
+- Markdown file formatting for documentation consistency
+- Shell script validation with executable permissions
+- Chinese text cleanup from strings.xml files
+- Automated commit functionality for formatting changes
+- Comprehensive formatting reports with statistics
+
 ## Secrets Configuration
 
 For full functionality, configure these secrets in your repository:
@@ -99,6 +116,26 @@ Each workflow generates relevant artifacts:
 2. Select "Build Variants"
 3. Choose variant (google/topdon) and build type
 4. Monitor build progress and download results
+
+### Comprehensive Code Formatting
+1. Go to Actions tab
+2. Select "Code Formatting & Validation"
+3. Click "Run workflow"
+4. Enable "Auto-commit formatting changes" if desired
+5. Review the formatting report in artifacts
+
+**Local Formatting:**
+Run the local formatting script:
+```bash
+./format_all_files.sh
+```
+
+Or use pre-commit hooks:
+```bash
+pip install pre-commit
+pre-commit install
+pre-commit run --all-files
+```
 
 ## Integration with Existing Scripts
 

@@ -1,0 +1,72 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-xml
+      - id: check-merge-conflict
+      - id: check-executables-have-shebangs
+      - id: mixed-line-ending
+
+  - repo: https://github.com/psf/black
+    rev: 23.7.0
+    hooks:
+      - id: black
+        language_version: python3
+
+  - repo: https://github.com/prettier/prettier
+    rev: v3.0.0
+    hooks:
+      - id: prettier
+        types_or: [json, yaml, markdown]
+        args: [--tab-width=2, --use-tabs=false]
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.32.0
+    hooks:
+      - id: yamllint
+        args: [-d=relaxed]
+
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.9.0
+    hooks:
+      - id: shellcheck
+
+  - repo: https://github.com/pappasam/toml-sort
+    rev: v0.23.1
+    hooks:
+      - id: toml-sort-fix
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.35.0
+    hooks:
+      - id: markdownlint
+        args: [--fix]
+
+  - repo: local
+    hooks:
+      - id: xml-format
+        name: Format XML files
+        entry: xmllint
+        language: system
+        files: \.xml$
+        args: [--format, --output]
+
+      - id: gradle-validate
+        name: Validate Gradle files
+        entry: ./gradlew
+        language: system
+        files: \.gradle(\.kts)?$
+        args: [help, --quiet]
+        pass_filenames: false
+
+      - id: remove-chinese-strings
+        name: Remove Chinese text from strings.xml
+        entry: sed
+        language: system
+        files: strings\.xml$
+        args: [-i, '/[\u4e00-\u9fff]/d']
