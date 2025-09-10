@@ -15,7 +15,7 @@ class MyValueFormatter(private val startTime: Long, private val type: Int = 1) :
         const val TYPE_TIME_DAY = 4
     }
 
-    @Deprecated("This method overrides a deprecated member")
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun getFormattedValue(
         value: Float,
         axis: AxisBase?,

@@ -227,7 +227,8 @@ dependencies {
     implementation(files("libs/main-2.2.1-release.aar"))
     
     // Additional AAR dependencies from libir module - all libir AAR files now handled at app level  
-    implementation(fileTree(mapOf("include" to listOf("opengl_1.3.2_standard.aar"), "dir" to "component/edit3d/libs")))
+    // Removed edit3d AAR dependency - module removed as unused
+    // implementation(fileTree(mapOf("include" to listOf("opengl_1.3.2_standard.aar"), "dir" to "component/edit3d/libs")))
     implementation(fileTree(mapOf("include" to listOf("*.aar"), "dir" to "libir/libs")))  // All libir AAR files
     
     // Explicit AAR dependencies for app module compilation (ensuring classpath resolution)
@@ -251,9 +252,6 @@ dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.opencsv:opencsv:5.7.1")
     implementation("com.google.code.gson:gson:2.10.1")
-    
-    // PDF viewer library - TODO: Add when stable library is available
-    // implementation("com.github.barteksc:AndroidPdfViewer:2.8.2")
     
     // Enhanced networking and serialization for Hub-Spoke
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")

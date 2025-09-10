@@ -71,12 +71,11 @@ dependencies {
     implementation(project(":libir"))
     implementation(project(":libui"))
     implementation(project(":libmenu"))
-    implementation(project(":component:CommonComponent"))
+    // Removed CommonComponent dependency - module removed as unused
     implementation(project(":component:pseudo"))
     // Re-add thermal-ir dependency - needed for thermal-lite functionality
     implementation(project(":component:thermal-ir"))
-    // Add commonlibrary dependency for thermal-lite
-    implementation(project(":commonlibrary"))
+    // Removed commonlibrary dependency - module removed as unused
     
     // AAR dependencies as compileOnly for compilation but not packaging
     compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))  // AC020 SDK for thermal-lite functionality

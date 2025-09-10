@@ -4,7 +4,8 @@ import android.content.Intent
 import android.view.View
 import android.widget.ImageView
 import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.house.activity.HouseHomeActivity
+// Removed house module import - module removed as unused
+// import com.topdon.house.activity.HouseHomeActivity
 import com.topdon.lib.core.bean.event.WinterClickEvent
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.ExtraKeyConfig
@@ -78,9 +79,10 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
             }
 
             viewHouse -> {//房屋检测
-                val intent = Intent(requireContext(), HouseHomeActivity::class.java)
-                intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
-                startActivity(intent)
+                // Disabled - HouseHomeActivity from removed house module
+                // val intent = Intent(requireContext(), HouseHomeActivity::class.java)
+                // intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
+                // startActivity(intent)
             }
 
             viewCar -> {//汽车检测
