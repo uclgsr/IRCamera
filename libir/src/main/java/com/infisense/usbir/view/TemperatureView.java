@@ -1147,7 +1147,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     /* **************************************** 面 **************************************** */
     private Rect movingRect;
 
-
+    
     private enum RectMoveType { ALL, EDGE, CORNER }
     /**
      * 面移动方式：点击面内部-整体移动、点击面4条边-边移动、点击面4个角-角移动。
@@ -1160,8 +1160,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
      * 仅边移动模式时，移动的是哪条边.
      */
     private RectMoveEdge rectMoveEdge = RectMoveEdge.LEFT;
-
-
+    
+    
     private enum RectMoveCorner { LT, RT, RB, LB }
     /**
      * 仅角移动模式时，移动的是哪个角.
