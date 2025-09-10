@@ -211,6 +211,18 @@ class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(
         }
     }
 
+    override fun onDataStreamingStarted() {
+        runOnUiThread {
+            binding.statusText.text = "Data streaming started"
+        }
+    }
+
+    override fun onDataStreamingStopped() {
+        runOnUiThread {
+            binding.statusText.text = "Data streaming stopped"
+        }
+    }
+
     override fun onError(
         operation: String,
         error: String,

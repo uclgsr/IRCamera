@@ -301,9 +301,9 @@ class DataStreamingService(
             val sampleJson = JSONObject().apply {
                 put("timestamp", sample.timestamp)
                 put("sample_index", sample.sampleIndex)
-                put("gsr_microsiemens", sample.gsrMicrosiemens)
-                put("gsr_raw", sample.gsrRaw)
-                put("ppg_raw", sample.ppgRaw)
+                put("gsr_microsiemens", sample.conductance)
+                put("gsr_raw", sample.rawValue)
+                put("resistance", sample.resistance)
                 put("session_id", sample.sessionId)
             }
             samplesArray.put(sampleJson)

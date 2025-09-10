@@ -42,6 +42,10 @@ class NetworkErrorRecoveryManager(
     private var lastDataTransferTime = 0L
     private var bytesTransferred = 0L
     private val maxMeasurements = 50 // Keep last 50 measurements
+    
+    // Connection health and success tracking
+    private var isHealthy = false
+    private val successfulConnections = AtomicInteger(0)
 
     interface RecoveryEventListener {
         fun onRecoveryStarted(reason: String)
@@ -105,6 +109,8 @@ class NetworkErrorRecoveryManager(
         lastKnownGoodController = controller
         reconnectionAttempts.set(0)
         rapidFailureCount.set(0)
+        successfulConnections.incrementAndGet()
+        isHealthy = true
         Log.i(TAG, "Recorded successful connection: ${controller.deviceName}")
     }
 
@@ -134,7 +140,8 @@ class NetworkErrorRecoveryManager(
         healthCheckJob = recoveryScope.launch {
             while (isRecoveryActive.get() && isActive) {
                 try {
-                    val isHealthy = performHealthCheck()
+                    val healthCheckResult = performHealthCheck()
+                    isHealthy = healthCheckResult
                     eventListener?.onConnectionHealthChanged(isHealthy)
 
                     if (!isHealthy && isRecoveryActive.get()) {
@@ -375,7 +382,7 @@ class NetworkErrorRecoveryManager(
                 latencyMeasurements.average().toLong()
             } else if (isHealthy) {
                 // Fallback for healthy connection when no measurements available
-                when (successfulConnections) {
+                when (successfulConnections.get()) {
                     0 -> 0L
                     in 1..5 -> 50L
                     else -> 30L
@@ -395,7 +402,7 @@ class NetworkErrorRecoveryManager(
                 throughputMeasurements.average()
             } else if (isHealthy) {
                 // Fallback for healthy connection when no measurements available
-                when (successfulConnections) {
+                when (successfulConnections.get()) {
                     0 -> 0.0
                     in 1..5 -> 50.0
                     else -> 80.0
