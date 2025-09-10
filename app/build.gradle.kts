@@ -251,8 +251,7 @@ dependencies {
     // UMeng - Simplified single implementation
     implementation(libs.umeng.common)
     
-    // Enhanced charting and data visualization
-    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    // Enhanced charting and data visualization (provided by libui module)
     implementation("com.opencsv:opencsv:5.7.1")
     implementation("com.google.code.gson:gson:2.10.1")
     
