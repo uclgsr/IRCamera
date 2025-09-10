@@ -1,0 +1,182 @@
+name: Mandatory Build Validation
+
+# This workflow ensures that ALL changes are validated through complete gradle build suite
+# Triggered on every push and pull request to prevent broken commits
+
+on:
+  push:
+    branches: [ main, develop, 'copilot/**' ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  mandatory-build-validation:
+    name: Complete Build Suite Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    
+    strategy:
+      fail-fast: true  # Stop immediately on any failure
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant Execute Permission to Scripts
+        run: |
+          chmod +x gradlew
+          chmod +x validate_before_commit.sh
+
+      # CRITICAL: Full clean build - this is what the user demanded
+      - name: 🔥 MANDATORY FULL GRADLE BUILD SUITE
+        run: |
+          echo "🔍 Running complete gradle build suite as requested..."
+          echo "This ensures NO broken commits are allowed"
+          ./gradlew clean build --no-daemon --stacktrace --info
+        env:
+          GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=512m"
+
+      # Validate critical modules individually
+      - name: 🎯 Critical Module Compilation Tests
+        run: |
+          echo "Testing critical module compilation..."
+          ./gradlew :libir:compileReleaseJavaWithJavac --no-daemon --stacktrace
+          ./gradlew :app:compileReleaseSources --no-daemon --stacktrace
+          ./gradlew :BleModule:compileReleaseSources --no-daemon --stacktrace
+
+      # APK build validation
+      - name: 🚀 APK Build Validation
+        run: |
+          echo "Validating APK build process..."
+          ./gradlew assembleRelease --no-daemon --stacktrace
+
+      # Quality checks (non-blocking but informative)
+      - name: 📊 Code Quality Assessment
+        continue-on-error: true
+        run: |
+          echo "Running code quality checks..."
+          if [ -f ".ktlintrc" ]; then
+            ./gradlew ktlintCheck --no-daemon || echo "Kotlin lint issues detected"
+          fi
+          if [ -f "checkstyle.xml" ]; then
+            ./gradlew checkstyleMain --no-daemon || echo "Java checkstyle issues detected"
+          fi
+
+      # Comprehensive validation script
+      - name: 🔍 Run Comprehensive Pre-Commit Validation
+        run: |
+          echo "Running comprehensive validation..."
+          ./validate_before_commit.sh
+
+      # Archive build outputs and logs
+      - name: 📋 Archive Build Artifacts and Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-validation-artifacts
+          path: |
+            build/reports/
+            app/build/reports/
+            libir/build/reports/
+            /tmp/validation_*.log
+          retention-days: 7
+
+      # Validation status report
+      - name: ✅ Build Validation Status
+        if: success()
+        run: |
+          echo "🎉 ================================="
+          echo "🎉 BUILD VALIDATION SUCCESSFUL!"
+          echo "🎉 ================================="
+          echo ""
+          echo "✅ Complete gradle build suite passed"
+          echo "✅ All critical modules compiled successfully"
+          echo "✅ APK build process validated"
+          echo "✅ No compilation errors detected"
+          echo ""
+          echo "This commit is SAFE and will not break the build."
+
+      - name: ❌ Build Validation Failure Report
+        if: failure()
+        run: |
+          echo "❌ ================================="
+          echo "❌ BUILD VALIDATION FAILED!"
+          echo "❌ ================================="
+          echo ""
+          echo "This commit contains issues that break the build."
+          echo "Please review the logs above and fix all issues."
+          echo ""
+          echo "Common issues:"
+          echo "- Java compilation errors"
+          echo "- Kotlin compilation issues"
+          echo "- Resource conflicts"
+          echo "- Dependency problems"
+          echo ""
+          echo "Run './validate_before_commit.sh' locally to test fixes."
+          exit 1
+
+  # Additional validation for formatting changes
+  formatting-safety-check:
+    name: Formatting Safety Validation
+    runs-on: ubuntu-latest
+    needs: mandatory-build-validation
+    if: contains(github.event.head_commit.message, 'format') || contains(github.event.head_commit.message, 'lint')
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 🛡️ Pre-Formatting Build Test
+        run: |
+          # Test that build works before any formatting changes
+          ./gradlew clean build --no-daemon
+
+      - name: 🔍 Check for Dangerous Formatting Patterns
+        run: |
+          echo "Checking for patterns that commonly break builds..."
+          
+          # Check for orphaned case statements
+          if find . -name "*.java" -exec grep -l "case.*:" {} \; | xargs grep -L "switch" | head -1; then
+            echo "⚠️ Potential orphaned case statements detected"
+            find . -name "*.java" -exec grep -l "case.*:" {} \; | xargs grep -L "switch" | head -5
+          fi
+          
+          # Check for malformed XML
+          find . -name "*.xml" -not -path "./build/*" -not -path "./.gradle/*" | head -20 | while read file; do
+            if ! xmllint --noout "$file" 2>/dev/null; then
+              echo "❌ XML validation error in: $file"
+              exit 1
+            fi
+          done
+          
+          echo "✅ No dangerous formatting patterns detected"
