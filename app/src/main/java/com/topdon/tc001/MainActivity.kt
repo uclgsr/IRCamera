@@ -28,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 // Note: SupHelp library integration is not included in this build configuration
 import com.example.thermal_lite.activity.IRThermalLiteActivity
+import com.csl.irCamera.R
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
@@ -78,6 +79,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private val versionViewModel: VersionViewModel by viewModels()
 
     private var checkPermissionType: Int = -1 // 0 initData数据 1 图库  2 connect方法
+    
+    override fun initContentLayoutId(): Int = R.layout.activity_main
 
     // 记录设备信息
     private fun logInfo() {
@@ -104,7 +107,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
-    override fun initView() {
+    private fun initView() {
         // Check if clause needs to be shown (moved from SplashActivity)
         if (!SharedManager.getHasShowClause()) {
             NavigationManager.build(RouterConfig.CLAUSE).navigation(this)

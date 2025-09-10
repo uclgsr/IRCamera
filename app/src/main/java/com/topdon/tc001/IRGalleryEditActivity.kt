@@ -81,6 +81,9 @@ import com.topdon.module.thermal.ir.R as ThermalIrR
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(), View.OnClickListener, ITsTempListener {
+    
+    private val TAG = "IRGalleryEditActivity"
+    
     private var isShowC: Boolean = false
 
     /**
