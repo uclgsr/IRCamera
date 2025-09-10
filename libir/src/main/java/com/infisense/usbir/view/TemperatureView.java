@@ -1356,10 +1356,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                                 movingRect.top = newTop;
                                 movingRect.bottom = newBottom;
                                 break;
-                        }
-                                int biasY = y < downY ? Math.max(y - downY, rect.top - movingRect.top) : Math.min(y - downY, rect.bottom - movingRect.bottom);
-                                movingRect.offset(biasX, biasY);
-                                break;
                             case EDGE:
                                 switch (rectMoveEdge) {
                                     case LEFT:
