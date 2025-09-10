@@ -104,6 +104,9 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
                     binding.statusText.text = "Error: $error"
                     Toast.makeText(this@GSRDemoActivity, error, Toast.LENGTH_LONG).show()
                 }
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()

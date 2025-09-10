@@ -15,7 +15,7 @@ import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrRawImageViewBinding
-import com.topdon.lib.core.base.BaseBindingActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import java.io.File
 
 /**
@@ -41,7 +41,7 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
     private lateinit var imagePath: String
     private lateinit var imageFile: File
 
-    override fun getLayoutId() = R.layout.activity_gsr_raw_image_view
+    override fun initContentLayoutId() = R.layout.activity_gsr_raw_image_view
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

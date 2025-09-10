@@ -11,7 +11,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.topdon.lib.core.base.BaseBindingActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 
 /**
  * GSR Plot Activity
@@ -21,7 +21,7 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     
     private lateinit var plotData: GSRDataViewActivity.GSRPlotData
     
-    override fun getLayoutId() = R.layout.activity_gsr_plot
+    override fun initContentLayoutId() = R.layout.activity_gsr_plot
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,13 +100,13 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
         }
         
         // Set data to chart
-        gsrChart.data = LineData(gsrDataSet, gsrAvgDataSet)
-        gsrChart.invalidate()
+        binding.gsrChart.data = LineData(gsrDataSet, gsrAvgDataSet)
+        binding.gsrChart.invalidate()
     }
     
     private fun setupPPGChart() {
         // Configure PPG chart
-        ppgChart.apply {
+        binding.ppgChart.apply {
             description = Description().apply {
                 text = "PPG Signal over Time"
                 textSize = 12f
