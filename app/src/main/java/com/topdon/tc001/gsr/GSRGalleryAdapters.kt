@@ -3,8 +3,12 @@ package com.topdon.tc001.gsr
 import android.media.MediaMetadataRetriever
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ItemGsrDataFileBinding
 import com.csl.irCamera.databinding.ItemGsrVideoFileBinding
 import com.csl.irCamera.databinding.ItemGsrRawImageFileBinding

@@ -32,6 +32,8 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
         }
     }
 
+    override fun initContentLayoutId() = R.layout.activity_gsr_demo
+
     private lateinit var gsrRecorder: GSRRecorder
 
     private var isRecording = false
@@ -51,10 +53,10 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
                 runOnUiThread {
                     isRecording = false
                     updateButtonStates()
-                    statusText.text = "Recording stopped. ${sessionInfo.sampleCount} samples recorded."
+                    binding.statusText.text = "Recording stopped. ${sessionInfo.sampleCount} samples recorded."
 
                     val sessionDir = gsrRecorder.getSessionDirectory()?.absolutePath
-                    dataText.text = "Session saved to:\n$sessionDir\n\n" +
+                    binding.dataText.text = "Session saved to:\n$sessionDir\n\n" +
                         "Files created:\n" +
                         "- signals.csv (GSR data)\n" +
                         "- sync_marks.csv (sync events)\n" +
@@ -102,10 +104,12 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
                     binding.statusText.text = "Error: $error"
                     Toast.makeText(this@GSRDemoActivity, error, Toast.LENGTH_LONG).show()
                 }
-            }
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+    }
 
-    override fun initView() {
+    private fun initView() {
         // Setup click listeners
         binding.startButton.setOnClickListener { startRecording() }
         binding.stopButton.setOnClickListener { stopRecording() }

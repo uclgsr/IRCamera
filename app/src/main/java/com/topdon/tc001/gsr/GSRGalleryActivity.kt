@@ -3,13 +3,14 @@ package com.topdon.tc001.gsr
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrGalleryBinding
-import com.topdon.lib.core.base.BaseBindingActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.tools.PermissionTool
 
 /**
@@ -26,14 +27,16 @@ class GSRGalleryActivity : BaseBindingActivity<ActivityGsrGalleryBinding>() {
         }
     }
 
+    override fun initContentLayoutId() = R.layout.activity_gsr_gallery
+
     private val permissionList by lazy {
-        if (this.applicationInfo.targetSdkVersion >= 34) {
+        if (applicationContext.applicationInfo.targetSdkVersion >= 34) {
             listOf(
                 Manifest.permission.READ_MEDIA_VIDEO,
                 Manifest.permission.READ_MEDIA_IMAGES,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
             )
-        } else if (this.applicationInfo.targetSdkVersion >= 33) {
+        } else if (applicationContext.applicationInfo.targetSdkVersion >= 33) {
             mutableListOf(
                 Manifest.permission.READ_MEDIA_VIDEO,
                 Manifest.permission.READ_MEDIA_IMAGES,
@@ -46,8 +49,6 @@ class GSRGalleryActivity : BaseBindingActivity<ActivityGsrGalleryBinding>() {
             )
         }
     }
-
-    override fun getLayoutId() = R.layout.activity_gsr_gallery
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
