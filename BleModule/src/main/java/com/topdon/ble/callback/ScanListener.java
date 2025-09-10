@@ -25,6 +25,10 @@ public interface ScanListener {
      * 搜索错误
      */
     int ERROR_SCAN_FAILED = 2;
+    /**
+     * 缺少蓝牙权限。 {@link Manifest.permission#BLUETOOTH_SCAN} 或者 {@link Manifest.permission#BLUETOOTH_CONNECT}
+     */
+    int ERROR_LACK_BLUETOOTH_PERMISSION = 3;
 
     /**
      * 蓝牙搜索开始
@@ -56,7 +60,7 @@ public interface ScanListener {
     /**
      * 搜索错误
      *
-     * @param errorCode {@link #ERROR_LACK_LOCATION_PERMISSION}, {@link #ERROR_LOCATION_SERVICE_CLOSED}
+     * @param errorCode {@link #ERROR_LACK_LOCATION_PERMISSION}, {@link #ERROR_LOCATION_SERVICE_CLOSED}, {@link #ERROR_LACK_BLUETOOTH_PERMISSION}
      */
     void onScanError(int errorCode, String errorMsg);
 }

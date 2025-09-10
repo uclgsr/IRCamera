@@ -1,6 +1,6 @@
 package com.topdon.ble;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
@@ -8,10 +8,13 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -26,7 +29,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * 
  * @author IRCamera Shimmer Integration Team
  */
-@SuppressLint("MissingPermission")
 public class ShimmerDevice implements UnifiedDevice {
     private static final String TAG = "ShimmerDevice";
     
@@ -78,6 +80,21 @@ public class ShimmerDevice implements UnifiedDevice {
         Log.i(TAG, "Created ShimmerDevice: " + bluetoothDevice.getAddress());
     }
     
+    /**
+     * Check if Bluetooth permissions are available for device operations
+     */
+    private boolean hasBluetoothPermission(Context context) {
+        if (context == null) return false;
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // API 31+ requires BLUETOOTH_CONNECT permission for device operations
+            return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED;
+        } else {
+            // API 30 and below use legacy BLUETOOTH permission
+            return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED;
+        }
+    }
+    
     @Override
     @NonNull
     public BluetoothDevice getBluetoothDevice() {
@@ -99,7 +116,17 @@ public class ShimmerDevice implements UnifiedDevice {
     @Override
     @Nullable
     public String getName() {
-        return bluetoothDevice.getName();
+        try {
+            if (hasBluetoothPermission(EasyBLE.getInstance().getContext())) {
+                return bluetoothDevice.getName();
+            } else {
+                Log.w(TAG, "Missing Bluetooth permissions to access device name");
+                return "Shimmer Device (Name Unavailable)";
+            }
+        } catch (SecurityException e) {
+            Log.w(TAG, "SecurityException accessing device name: " + e.getMessage());
+            return "Shimmer Device (Permission Denied)";
+        }
     }
     
     @Override
@@ -115,12 +142,25 @@ public class ShimmerDevice implements UnifiedDevice {
             return;
         }
         
+        // Check Bluetooth permissions before attempting connection
+        Context context = EasyBLE.getInstance().getContext();
+        if (!hasBluetoothPermission(context)) {
+            Log.e(TAG, "Missing Bluetooth permissions to connect to Shimmer device");
+            connectionState.set(ConnectionState.ERROR);
+            notifyConnectionError(Connection.CONNECT_FAIL_TYPE_NO_PERMISSION, "Missing Bluetooth permissions");
+            return;
+        }
+        
         try {
             Log.i(TAG, "Connecting to Shimmer device: " + getAddress());
             connectionState.set(ConnectionState.CONNECTING);
             
-            bluetoothGatt = bluetoothDevice.connectGatt(null, config.isAutoReconnectEnabled(), gattCallback);
+            bluetoothGatt = bluetoothDevice.connectGatt(context, config.isAutoReconnectEnabled(), gattCallback);
             
+        } catch (SecurityException e) {
+            Log.e(TAG, "SecurityException during Shimmer connection", e);
+            connectionState.set(ConnectionState.ERROR);
+            notifyConnectionError(Connection.CONNECT_FAIL_TYPE_NO_PERMISSION, e.getMessage());
         } catch (Exception e) {
             Log.e(TAG, "Failed to connect to Shimmer device", e);
             connectionState.set(ConnectionState.ERROR);
@@ -140,15 +180,25 @@ public class ShimmerDevice implements UnifiedDevice {
             connectionState.set(ConnectionState.DISCONNECTING);
             
             if (bluetoothGatt != null) {
-                bluetoothGatt.disconnect();
-                bluetoothGatt.close();
+                // Permission check for BLE operations  
+                Context context = EasyBLE.getInstance().getContext();
+                if (hasBluetoothPermission(context)) {
+                    bluetoothGatt.disconnect();
+                    bluetoothGatt.close();
+                } else {
+                    Log.w(TAG, "Missing Bluetooth permissions for proper disconnect");
+                }
                 bluetoothGatt = null;
             }
             
             connectionState.set(ConnectionState.DISCONNECTED);
             
+        } catch (SecurityException e) {
+            Log.w(TAG, "SecurityException during disconnect: " + e.getMessage());
+            connectionState.set(ConnectionState.DISCONNECTED);
         } catch (Exception e) {
             Log.e(TAG, "Error disconnecting from Shimmer device", e);
+            connectionState.set(ConnectionState.DISCONNECTED);
         }
     }
     
@@ -218,6 +268,13 @@ public class ShimmerDevice implements UnifiedDevice {
             return false;
         }
         
+        // Check Bluetooth permissions before sending command
+        Context context = EasyBLE.getInstance().getContext();
+        if (!hasBluetoothPermission(context)) {
+            Log.w(TAG, "Missing Bluetooth permissions to send command");
+            return false;
+        }
+        
         try {
             commandCharacteristic.setValue(command);
             boolean success = bluetoothGatt.writeCharacteristic(commandCharacteristic);
@@ -225,6 +282,9 @@ public class ShimmerDevice implements UnifiedDevice {
             Log.d(TAG, "Sent Shimmer command: " + Arrays.toString(command) + " success: " + success);
             return success;
             
+        } catch (SecurityException e) {
+            Log.e(TAG, "SecurityException sending Shimmer command: " + e.getMessage());
+            return false;
         } catch (Exception e) {
             Log.e(TAG, "Failed to send Shimmer command", e);
             return false;

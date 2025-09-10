@@ -49,7 +49,6 @@ import com.topdon.commons.util.StringUtils;
  * date: 2021/8/12 19:47
  * author: bichuanfeng
  */
-@SuppressLint("MissingPermission")
 class ConnectionImpl implements Connection, ScanListener {
     private static final int MSG_REQUEST_TIMEOUT = 0;
     private static final int MSG_CONNECT = 1;
