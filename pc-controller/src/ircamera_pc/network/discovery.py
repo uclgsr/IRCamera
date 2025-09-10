@@ -7,10 +7,10 @@ the Android implementation and enable automatic device discovery.
 
 import asyncio
 import socket
-from datetime import datetime
-from typing import Dict, List, Optional, Set
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
+from typing import Dict, List, Optional, Set
 
 try:
     from zeroconf import ServiceInfo, Zeroconf
@@ -30,10 +30,18 @@ except ImportError:
     except ImportError:
         # Fallback logger for testing
         class FallbackLogger:
-            def info(self, msg): print(f"INFO: {msg}")
-            def debug(self, msg): print(f"DEBUG: {msg}")
-            def warning(self, msg): print(f"WARNING: {msg}")
-            def error(self, msg): print(f"ERROR: {e}")
+            def info(self, msg):
+                print(f"INFO: {msg}")
+
+            def debug(self, msg):
+                print(f"DEBUG: {msg}")
+
+            def warning(self, msg):
+                print(f"WARNING: {msg}")
+
+            def error(self, msg):
+                print(f"ERROR: {e}")
+
         logger = FallbackLogger()
 
 try:
@@ -47,11 +55,13 @@ except ImportError:
                 "version": "1.0.0",
             }
             return config_map.get(key, default)
+
     config = FallbackConfig()
 
 
 class DeviceType(Enum):
     """Device types for discovery."""
+
     PC_CONTROLLER = "PC_CONTROLLER"
     THERMAL_CAMERA_TS004 = "THERMAL_CAMERA_TS004"
     THERMAL_CAMERA_TC007 = "THERMAL_CAMERA_TC007"
@@ -62,6 +72,7 @@ class DeviceType(Enum):
 @dataclass
 class DiscoveredDevice:
     """Represents a discovered device on the network."""
+
     service_name: str
     service_type: str
     ip_address: str
@@ -169,10 +180,13 @@ class NetworkDiscoveryService:
         """Get list of all discovered devices."""
         return list(self.discovered_devices.values())
 
-    async def get_devices_by_type(self, device_type: DeviceType) -> List[DiscoveredDevice]:
+    async def get_devices_by_type(
+        self, device_type: DeviceType
+    ) -> List[DiscoveredDevice]:
         """Get discovered devices of a specific type."""
         return [
-            device for device in self.discovered_devices.values()
+            device
+            for device in self.discovered_devices.values()
             if device.device_type == device_type
         ]
 
@@ -193,15 +207,17 @@ class NetworkDiscoveryService:
             port = config.get("network.discovery_port", 8081)
 
             properties = {
-                'device_type': DeviceType.PC_CONTROLLER.value,
-                'hostname': self.hostname,
-                'version': config.get("version", "1.0.0"),
-                'capabilities': 'session_control,time_sync,file_transfer',
-                'secure': 'true',
+                "device_type": DeviceType.PC_CONTROLLER.value,
+                "hostname": self.hostname,
+                "version": config.get("version", "1.0.0"),
+                "capabilities": "session_control,time_sync,file_transfer",
+                "secure": "true",
             }
 
             # Convert properties to bytes
-            properties_bytes = {k: str(v).encode('utf-8') for k, v in properties.items()}
+            properties_bytes = {
+                k: str(v).encode("utf-8") for k, v in properties.items()
+            }
 
             service_info = ServiceInfo(
                 self.SERVICE_TYPE_PC_CONTROLLER,
@@ -209,13 +225,15 @@ class NetworkDiscoveryService:
                 addresses=[socket.inet_aton(self.local_ip)],
                 port=port,
                 properties=properties_bytes,
-                server=f"{self.hostname}.local."
+                server=f"{self.hostname}.local.",
             )
 
             await self.zeroconf.async_register_service(service_info)
             self.registered_services.append(service_info)
 
-            logger.info(f"Registered PC controller service: {service_name} at {self.local_ip}:{port}")
+            logger.info(
+                f"Registered PC controller service: {service_name} at {self.local_ip}:{port}"
+            )
 
         except Exception as e:
             logger.error(f"Failed to register PC controller service: {e}")
@@ -234,9 +252,7 @@ class NetworkDiscoveryService:
                 handlers.append(handler)
 
             self.service_browser = AsyncServiceBrowser(
-                self.zeroconf.zeroconf,
-                service_types,
-                handlers=handlers
+                self.zeroconf.zeroconf, service_types, handlers=handlers
             )
 
             logger.debug(f"Started browsing for service types: {service_types}")
@@ -250,7 +266,9 @@ class NetworkDiscoveryService:
 
         # This would implement subnet scanning as a fallback
         # For now, just log that it would be implemented
-        logger.warning("Fallback discovery not fully implemented - install zeroconf for full functionality")
+        logger.warning(
+            "Fallback discovery not fully implemented - install zeroconf for full functionality"
+        )
 
         self.is_running = True
         return True
@@ -265,12 +283,14 @@ class NetworkDiscoveryService:
         except Exception:
             return "127.0.0.1"
 
-    def _determine_device_type(self, service_type: str, properties: Dict[str, bytes]) -> DeviceType:
+    def _determine_device_type(
+        self, service_type: str, properties: Dict[str, bytes]
+    ) -> DeviceType:
         """Determine device type from service information."""
         try:
             # Check explicit device type property
-            if b'device_type' in properties:
-                device_type_str = properties[b'device_type'].decode('utf-8')
+            if b"device_type" in properties:
+                device_type_str = properties[b"device_type"].decode("utf-8")
                 try:
                     return DeviceType(device_type_str)
                 except ValueError:
@@ -281,11 +301,11 @@ class NetworkDiscoveryService:
                 return DeviceType.PC_CONTROLLER
             elif self.SERVICE_TYPE_THERMAL_CAMERA in service_type:
                 # Check for specific thermal camera models
-                if b'model' in properties:
-                    model = properties[b'model'].decode('utf-8').upper()
-                    if 'TS004' in model:
+                if b"model" in properties:
+                    model = properties[b"model"].decode("utf-8").upper()
+                    if "TS004" in model:
                         return DeviceType.THERMAL_CAMERA_TS004
-                    elif 'TC007' in model:
+                    elif "TC007" in model:
                         return DeviceType.THERMAL_CAMERA_TC007
                 return DeviceType.THERMAL_CAMERA_TS004  # Default
             elif self.SERVICE_TYPE_ANDROID_NODE in service_type:
@@ -310,12 +330,14 @@ class NetworkDiscoveryService:
             properties = {}
             if service_info.properties:
                 properties = {
-                    k.decode('utf-8'): v.decode('utf-8')
+                    k.decode("utf-8"): v.decode("utf-8")
                     for k, v in service_info.properties.items()
                     if isinstance(k, bytes) and isinstance(v, bytes)
                 }
 
-            device_type = self._determine_device_type(service_type, service_info.properties or {})
+            device_type = self._determine_device_type(
+                service_type, service_info.properties or {}
+            )
 
             # Create device record
             device = DiscoveredDevice(
@@ -326,22 +348,24 @@ class NetworkDiscoveryService:
                 device_type=device_type,
                 attributes=properties,
                 discovered_at=datetime.now(),
-                last_seen=datetime.now()
+                last_seen=datetime.now(),
             )
 
             # Store device
             device_key = f"{ip_address}:{port}"
             self.discovered_devices[device_key] = device
 
-            logger.info(f"Discovered device: {service_name} ({device_type.value}) at {ip_address}:{port}")
+            logger.info(
+                f"Discovered device: {service_name} ({device_type.value}) at {ip_address}:{port}"
+            )
 
             # Notify listeners
             for callback in self.discovery_listeners:
                 try:
                     if asyncio.iscoroutinefunction(callback):
-                        await callback('discovered', device)
+                        await callback("discovered", device)
                     else:
-                        callback('discovered', device)
+                        callback("discovered", device)
                 except Exception as e:
                     logger.error(f"Discovery listener error: {e}")
 
@@ -369,9 +393,9 @@ class NetworkDiscoveryService:
                 for callback in self.discovery_listeners:
                     try:
                         if asyncio.iscoroutinefunction(callback):
-                            await callback('lost', device_to_remove)
+                            await callback("lost", device_to_remove)
                         else:
-                            callback('lost', device_to_remove)
+                            callback("lost", device_to_remove)
                     except Exception as e:
                         logger.error(f"Discovery listener error: {e}")
 

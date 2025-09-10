@@ -9,13 +9,14 @@ This script tests the newly implemented components:
 - Enhanced GUI components
 """
 
+import asyncio
 import sys
 import time
-import asyncio
 from pathlib import Path
 
 # Add src directory to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
+
 
 def test_imports():
     """Test that all new components can be imported."""
@@ -24,22 +25,36 @@ def test_imports():
     try:
         # Test PyQtGraph plotting widgets
         from ircamera_pc.gui.plotting_widgets import (
-            GSRPlotWidget, VideoPreviewWidget, MultiModalDashboard, DataAggregationWidget
+            DataAggregationWidget,
+            GSRPlotWidget,
+            MultiModalDashboard,
+            VideoPreviewWidget,
         )
+
         print("✓ Plotting widgets imported successfully")
 
         # Test enhanced GUI widgets
         from ircamera_pc.gui.widgets import (
-            DeviceListWidget, SessionControlWidget, StatusDisplayWidget,
-            SystemIntegrationWidget, BluetoothControlWidget, WiFiControlWidget
+            BluetoothControlWidget,
+            DeviceListWidget,
+            SessionControlWidget,
+            StatusDisplayWidget,
+            SystemIntegrationWidget,
+            WiFiControlWidget,
         )
+
         print("✓ Enhanced GUI widgets imported successfully")
 
         # Test data aggregation engine
         from ircamera_pc.data import (
-            DataAggregationEngine, DataStream, SyncEvent, AggregationStats,
-            calculate_temporal_alignment, validate_data_synchronization
+            AggregationStats,
+            DataAggregationEngine,
+            DataStream,
+            SyncEvent,
+            calculate_temporal_alignment,
+            validate_data_synchronization,
         )
+
         print("✓ Data aggregation engine imported successfully")
 
         return True
@@ -95,7 +110,9 @@ def test_data_aggregation():
 
         # Get statistics
         stats = engine.get_statistics()
-        print(f"✓ Statistics: {stats.total_devices} devices, {stats.active_streams} streams")
+        print(
+            f"✓ Statistics: {stats.total_devices} devices, {stats.active_streams} streams"
+        )
 
         # Clean up
         engine.stop()
@@ -113,8 +130,8 @@ def test_plotting_widgets():
     print("\nTesting plotting widgets...")
 
     try:
-        from PyQt6.QtWidgets import QApplication
         from ircamera_pc.gui.plotting_widgets import GSRPlotWidget, MultiModalDashboard
+        from PyQt6.QtWidgets import QApplication
 
         # Create minimal QApplication for testing
         app = QApplication.instance()
@@ -159,7 +176,7 @@ def test_native_backend_structure():
             "include/native_webcam.h",
             "src/native_shimmer.cpp",
             "src/native_webcam.cpp",
-            "src/pybind_module.cpp"
+            "src/pybind_module.cpp",
         ]
 
         for file_path in required_files:
@@ -182,10 +199,12 @@ def test_gui_widgets():
     print("\nTesting enhanced GUI widgets...")
 
     try:
-        from PyQt6.QtWidgets import QApplication
         from ircamera_pc.gui.widgets import (
-            DeviceListWidget, SessionControlWidget, StatusDisplayWidget
+            DeviceListWidget,
+            SessionControlWidget,
+            StatusDisplayWidget,
         )
+        from PyQt6.QtWidgets import QApplication
 
         # Create minimal QApplication for testing
         app = QApplication.instance()
@@ -196,7 +215,7 @@ def test_gui_widgets():
         device_list = DeviceListWidget()
         test_devices = [
             {"device_id": "device_1", "device_type": "GSR", "status": "connected"},
-            {"device_id": "device_2", "device_type": "RGB", "status": "recording"}
+            {"device_id": "device_2", "device_type": "RGB", "status": "recording"},
         ]
         device_list.update_devices(test_devices)
         print("✓ Device list widget created and tested")
@@ -207,7 +226,11 @@ def test_gui_widgets():
 
         # Test status display widget
         status_display = StatusDisplayWidget()
-        test_stats = {"synchronization_rate": 0.95, "max_offset_ms": 2.5, "total_devices": 2}
+        test_stats = {
+            "synchronization_rate": 0.95,
+            "max_offset_ms": 2.5,
+            "total_devices": 2,
+        }
         status_display.update_time_sync_stats(test_stats)
         print("✓ Status display widget created and tested")
 

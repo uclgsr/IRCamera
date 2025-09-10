@@ -179,8 +179,9 @@ class TestTimeSyncService:
         assert quality["synchronization_rate"] == 0.0
 
         # Add some mock stats
-        from ..core.timesync import TimeSyncStats
         from datetime import timezone
+
+        from ..core.timesync import TimeSyncStats
 
         stats = TimeSyncStats("test_device")
         stats.recent_offsets = [1.0, 2.0, 3.0, 4.0, 5.0]

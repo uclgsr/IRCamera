@@ -11,11 +11,10 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import pyqtgraph as pg
+from loguru import logger
 from PyQt6.QtCore import QTimer, pyqtSignal
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QGridLayout, QLabel, QVBoxLayout, QWidget
-
-from loguru import logger
 
 
 class GSRPlotWidget(pg.PlotWidget):
@@ -46,7 +45,9 @@ class GSRPlotWidget(pg.PlotWidget):
         self.time_window = time_window
 
         # Data storage
-        self.gsr_data: Dict[str, deque] = {}  # device_id -> deque of (timestamp, gsr_value)
+        self.gsr_data: Dict[str, deque] = (
+            {}
+        )  # device_id -> deque of (timestamp, gsr_value)
         self.plot_items: Dict[str, pg.PlotDataItem] = {}
         self.sync_markers: List[pg.InfiniteLine] = []
 
@@ -59,16 +60,16 @@ class GSRPlotWidget(pg.PlotWidget):
 
     def _setup_plot(self) -> None:
         """Set up the plot appearance and configuration."""
-        self.setLabel('left', 'GSR (µS)', color='white', size='12pt')
-        self.setLabel('bottom', 'Time (s)', color='white', size='12pt')
-        self.setTitle('Real-time GSR Data', color='white', size='14pt')
+        self.setLabel("left", "GSR (µS)", color="white", size="12pt")
+        self.setLabel("bottom", "Time (s)", color="white", size="12pt")
+        self.setTitle("Real-time GSR Data", color="white", size="14pt")
 
         # Configure plot appearance
         self.showGrid(x=True, y=True, alpha=0.3)
-        self.setBackground('black')
+        self.setBackground("black")
 
         # Enable auto-range
-        self.enableAutoRange(axis='y')
+        self.enableAutoRange(axis="y")
         self.setXRange(-self.time_window, 0)
 
         # Add legend
@@ -89,14 +90,13 @@ class GSRPlotWidget(pg.PlotWidget):
 
         # Auto-assign color if not specified
         if color is None:
-            colors = ['cyan', 'yellow', 'magenta', 'green', 'red', 'blue']
+            colors = ["cyan", "yellow", "magenta", "green", "red", "blue"]
             color_idx = len(self.plot_items) % len(colors)
             color = colors[color_idx]
 
         # Create plot item
         plot_item = self.plot(
-            pen=pg.mkPen(color=color, width=2),
-            name=f'GSR {device_id}'
+            pen=pg.mkPen(color=color, width=2), name=f"GSR {device_id}"
         )
         self.plot_items[device_id] = plot_item
 
@@ -117,7 +117,9 @@ class GSRPlotWidget(pg.PlotWidget):
 
         logger.info(f"Removed GSR device {device_id}")
 
-    def add_gsr_data(self, device_id: str, timestamp_ns: int, gsr_microsiemens: float) -> None:
+    def add_gsr_data(
+        self, device_id: str, timestamp_ns: int, gsr_microsiemens: float
+    ) -> None:
         """
         Add new GSR data point.
 
@@ -138,7 +140,9 @@ class GSRPlotWidget(pg.PlotWidget):
 
         self.data_updated.emit(relative_time, gsr_microsiemens)
 
-    def add_sync_marker(self, timestamp_ns: int, label: str = "Sync", color: str = "white") -> None:
+    def add_sync_marker(
+        self, timestamp_ns: int, label: str = "Sync", color: str = "white"
+    ) -> None:
         """
         Add synchronization marker to the plot.
 
@@ -154,7 +158,7 @@ class GSRPlotWidget(pg.PlotWidget):
             pos=relative_time,
             angle=90,
             pen=pg.mkPen(color=color, width=2, style=2),  # Dashed line
-            label=label
+            label=label,
         )
 
         self.addItem(marker)
@@ -252,16 +256,20 @@ class VideoPreviewWidget(QLabel):
     def _setup_widget(self) -> None:
         """Set up widget appearance."""
         self.setMinimumSize(320, 240)
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QLabel {
                 border: 2px solid #333;
                 background-color: #111;
                 color: white;
                 text-align: center;
             }
-        """)
+        """
+        )
 
-        self.setText(f"{self.device_type} Camera\n{self.device_id}\nWaiting for frames...")
+        self.setText(
+            f"{self.device_type} Camera\n{self.device_id}\nWaiting for frames..."
+        )
 
     def update_frame(self, frame_data: np.ndarray) -> None:
         """
@@ -289,15 +297,13 @@ class VideoPreviewWidget(QLabel):
                     )
             else:
                 # Grayscale image
-                pixmap = QPixmap.fromImage(
-                    pg.makeQImage(frame_data, transpose=False)
-                )
+                pixmap = QPixmap.fromImage(pg.makeQImage(frame_data, transpose=False))
 
             # Scale pixmap to fit widget while preserving aspect ratio
             scaled_pixmap = pixmap.scaled(
                 self.size(),
                 aspectRatioMode=1,  # KeepAspectRatio
-                transformMode=1     # SmoothTransformation
+                transformMode=1,  # SmoothTransformation
             )
 
             self.setPixmap(scaled_pixmap)
@@ -323,7 +329,9 @@ class VideoPreviewWidget(QLabel):
         self.last_fps_time = current_time
 
         # Update tooltip with FPS info
-        self.setToolTip(f"{self.device_type} Camera {self.device_id}\\nFPS: {self.current_fps:.1f}")
+        self.setToolTip(
+            f"{self.device_type} Camera {self.device_id}\\nFPS: {self.current_fps:.1f}"
+        )
 
     def get_fps(self) -> float:
         """Get current frame rate."""
@@ -367,12 +375,16 @@ class MultiModalDashboard(QWidget):
         if self.gsr_plot:
             self.gsr_plot.add_device(device_id, color)
 
-    def add_gsr_data(self, device_id: str, timestamp_ns: int, gsr_microsiemens: float) -> None:
+    def add_gsr_data(
+        self, device_id: str, timestamp_ns: int, gsr_microsiemens: float
+    ) -> None:
         """Add GSR data point."""
         if self.gsr_plot:
             self.gsr_plot.add_gsr_data(device_id, timestamp_ns, gsr_microsiemens)
 
-    def add_video_device(self, device_id: str, device_type: str = "RGB") -> VideoPreviewWidget:
+    def add_video_device(
+        self, device_id: str, device_type: str = "RGB"
+    ) -> VideoPreviewWidget:
         """
         Add video preview widget for a device.
 
@@ -483,7 +495,7 @@ class DataAggregationWidget(QWidget):
             "Data Rate (MB/s)",
             "Buffer Usage (%)",
             "Dropped Frames",
-            "Last Sync (s ago)"
+            "Last Sync (s ago)",
         ]
 
         for stat in stats:
@@ -513,4 +525,6 @@ class DataAggregationWidget(QWidget):
                 color = "red"
 
             label.setText(f"Sync Quality: {quality_percent:.1f}%")
-            label.setStyleSheet(f"color: {color}; font-size: 12px; padding: 2px; font-weight: bold;")
+            label.setStyleSheet(
+                f"color: {color}; font-size: 12px; padding: 2px; font-weight: bold;"
+            )

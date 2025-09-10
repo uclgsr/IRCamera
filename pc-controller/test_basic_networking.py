@@ -11,19 +11,30 @@ import tempfile
 import time
 import uuid
 from pathlib import Path
+
 import pytest
 
 # Add the src directory to Python path for imports
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
+
 # Simple logger fallback
 class SimpleLogger:
-    def info(self, msg): print(f"INFO: {msg}")
-    def debug(self, msg): print(f"DEBUG: {msg}")
-    def warning(self, msg): print(f"WARNING: {msg}")
-    def error(self, msg): print(f"ERROR: {msg}")
+    def info(self, msg):
+        print(f"INFO: {msg}")
+
+    def debug(self, msg):
+        print(f"DEBUG: {msg}")
+
+    def warning(self, msg):
+        print(f"WARNING: {msg}")
+
+    def error(self, msg):
+        print(f"ERROR: {msg}")
+
 
 logger = SimpleLogger()
+
 
 # Mock config for testing
 class MockConfig:
@@ -39,15 +50,19 @@ class MockConfig:
         }
         return config_map.get(key, default)
 
+
 config = MockConfig()
 
 # Import our modules with mocked dependencies
-sys.modules['ircamera_pc.core.config'] = type('module', (), {'config': config})()
-sys.modules['ircamera_pc.utils.simple_logger'] = type('module', (), {'logger': logger})()
+sys.modules["ircamera_pc.core.config"] = type("module", (), {"config": config})()
+sys.modules["ircamera_pc.utils.simple_logger"] = type(
+    "module", (), {"logger": logger}
+)()
 
 try:
+    from ircamera_pc.network.messaging import MessagePriority, ReliableMessageService
     from ircamera_pc.network.security import SecurityManager
-    from ircamera_pc.network.messaging import ReliableMessageService, MessagePriority
+
     security_available = True
     messaging_available = True
 except ImportError as e:
@@ -57,6 +72,7 @@ except ImportError as e:
 
 
 import pytest
+
 
 @pytest.mark.asyncio
 async def test_security_manager():
@@ -74,8 +90,12 @@ async def test_security_manager():
             security_manager.cert_dir = Path(temp_dir)
             security_manager.ca_cert_path = security_manager.cert_dir / "ca_cert.pem"
             security_manager.ca_key_path = security_manager.cert_dir / "ca_key.pem"
-            security_manager.server_cert_path = security_manager.cert_dir / "server_cert.pem"
-            security_manager.server_key_path = security_manager.cert_dir / "server_key.pem"
+            security_manager.server_cert_path = (
+                security_manager.cert_dir / "server_cert.pem"
+            )
+            security_manager.server_key_path = (
+                security_manager.cert_dir / "server_key.pem"
+            )
             security_manager.device_certificates = {}
             security_manager.auth_tokens = {}
 
@@ -90,8 +110,12 @@ async def test_security_manager():
                 logger.info(f"✓ Generated auth token: {token[:20]}...")
 
                 # Test token validation
-                is_valid, validated_device_id = security_manager.validate_auth_token(token)
-                logger.info(f"✓ Token validation: {is_valid}, Device: {validated_device_id}")
+                is_valid, validated_device_id = security_manager.validate_auth_token(
+                    token
+                )
+                logger.info(
+                    f"✓ Token validation: {is_valid}, Device: {validated_device_id}"
+                )
 
                 # Test SSL context
                 ssl_context = security_manager.create_ssl_context()
@@ -121,6 +145,7 @@ async def test_reliable_messaging():
 
         # Set up mock transport
         sent_messages = []
+
         async def mock_transport(host, port, message):
             sent_messages.append((host, port, message))
             return True
@@ -146,7 +171,7 @@ async def test_reliable_messaging():
                 target_port=8080,
                 message_type="test_message",
                 content={"test_data": "hello"},
-                priority=MessagePriority.HIGH
+                priority=MessagePriority.HIGH,
             )
             logger.info(f"✓ Message sent: {message_id}")
 

@@ -20,15 +20,20 @@ from unittest.mock import AsyncMock, MagicMock, patch
 # Add the src directory to Python path for imports
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
+from ircamera_pc.network.discovery import DeviceType, NetworkDiscoveryService
+from ircamera_pc.network.messaging import (
+    MessageCallback,
+    MessagePriority,
+    ReliableMessageService,
+)
 from ircamera_pc.network.security import SecurityManager
-from ircamera_pc.network.discovery import NetworkDiscoveryService, DeviceType
-from ircamera_pc.network.messaging import ReliableMessageService, MessagePriority, MessageCallback
 from ircamera_pc.network.server import NetworkServer
 
 try:
     from loguru import logger
 except ImportError:
     import logging
+
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
 
@@ -66,23 +71,35 @@ class EnhancedNetworkingTests:
 
         try:
             # Initialize security manager with test directory
-            with patch.object(SecurityManager, '__init__', self._mock_security_init):
+            with patch.object(SecurityManager, "__init__", self._mock_security_init):
                 security_manager = SecurityManager()
                 security_manager.cert_dir = Path(self.temp_dir)
-                security_manager.ca_cert_path = security_manager.cert_dir / "ca_cert.pem"
+                security_manager.ca_cert_path = (
+                    security_manager.cert_dir / "ca_cert.pem"
+                )
                 security_manager.ca_key_path = security_manager.cert_dir / "ca_key.pem"
-                security_manager.server_cert_path = security_manager.cert_dir / "server_cert.pem"
-                security_manager.server_key_path = security_manager.cert_dir / "server_key.pem"
+                security_manager.server_cert_path = (
+                    security_manager.cert_dir / "server_cert.pem"
+                )
+                security_manager.server_key_path = (
+                    security_manager.cert_dir / "server_key.pem"
+                )
                 security_manager.device_certificates = {}
                 security_manager.auth_tokens = {}
 
             # Test initialization
-            assert security_manager.initialize(), "Security manager initialization failed"
+            assert (
+                security_manager.initialize()
+            ), "Security manager initialization failed"
             logger.info("✓ Security manager initialization")
 
             # Test certificate generation
-            assert security_manager.ca_cert_path.exists(), "CA certificate not generated"
-            assert security_manager.server_cert_path.exists(), "Server certificate not generated"
+            assert (
+                security_manager.ca_cert_path.exists()
+            ), "CA certificate not generated"
+            assert (
+                security_manager.server_cert_path.exists()
+            ), "Server certificate not generated"
             logger.info("✓ Certificate generation")
 
             # Test SSL context creation
@@ -101,7 +118,9 @@ class EnhancedNetworkingTests:
             logger.info("✓ Auth token generation and validation")
 
             # Test token expiry
-            expired_token = security_manager.generate_auth_token(device_id, duration_minutes=-1)
+            expired_token = security_manager.generate_auth_token(
+                device_id, duration_minutes=-1
+            )
             is_valid, _ = security_manager.validate_auth_token(expired_token)
             assert not is_valid, "Expired token should be invalid"
             logger.info("✓ Token expiry handling")
@@ -110,12 +129,12 @@ class EnhancedNetworkingTests:
             security_manager.cleanup_expired_tokens()
             logger.info("✓ Token cleanup")
 
-            self.test_results['security_manager'] = True
+            self.test_results["security_manager"] = True
             logger.info("✅ Security Manager tests passed")
 
         except Exception as e:
             logger.error(f"❌ Security Manager tests failed: {e}")
-            self.test_results['security_manager'] = False
+            self.test_results["security_manager"] = False
 
     async def test_discovery_service(self):
         """Test NetworkDiscoveryService functionality."""
@@ -125,15 +144,18 @@ class EnhancedNetworkingTests:
             discovery_service = NetworkDiscoveryService()
 
             # Test initialization
-            assert not discovery_service.is_running, "Discovery service should not be running initially"
+            assert (
+                not discovery_service.is_running
+            ), "Discovery service should not be running initially"
             logger.info("✓ Initial state")
 
             # Test device type determination
             device_type = discovery_service._determine_device_type(
-                "_topdon-thermal._tcp.local.",
-                {b'device_type': b'THERMAL_CAMERA_TS004'}
+                "_topdon-thermal._tcp.local.", {b"device_type": b"THERMAL_CAMERA_TS004"}
             )
-            assert device_type == DeviceType.THERMAL_CAMERA_TS004, "Device type determination failed"
+            assert (
+                device_type == DeviceType.THERMAL_CAMERA_TS004
+            ), "Device type determination failed"
             logger.info("✓ Device type determination")
 
             # Test local IP detection
@@ -145,10 +167,14 @@ class EnhancedNetworkingTests:
             # Test discovery listener management
             test_callback = lambda event, device: None
             discovery_service.add_discovery_listener(test_callback)
-            assert test_callback in discovery_service.discovery_listeners, "Listener not added"
+            assert (
+                test_callback in discovery_service.discovery_listeners
+            ), "Listener not added"
 
             discovery_service.remove_discovery_listener(test_callback)
-            assert test_callback not in discovery_service.discovery_listeners, "Listener not removed"
+            assert (
+                test_callback not in discovery_service.discovery_listeners
+            ), "Listener not removed"
             logger.info("✓ Discovery listener management")
 
             # Test fallback discovery (since zeroconf might not be available)
@@ -160,12 +186,12 @@ class EnhancedNetworkingTests:
             else:
                 logger.info("✓ Zeroconf available for full testing")
 
-            self.test_results['discovery_service'] = True
+            self.test_results["discovery_service"] = True
             logger.info("✅ Discovery Service tests passed")
 
         except Exception as e:
             logger.error(f"❌ Discovery Service tests failed: {e}")
-            self.test_results['discovery_service'] = False
+            self.test_results["discovery_service"] = False
 
     async def test_reliable_messaging(self):
         """Test ReliableMessageService functionality."""
@@ -175,10 +201,13 @@ class EnhancedNetworkingTests:
             messaging_service = ReliableMessageService()
 
             # Test initialization
-            assert not messaging_service.is_running, "Messaging service should not be running initially"
+            assert (
+                not messaging_service.is_running
+            ), "Messaging service should not be running initially"
 
             # Set up mock transport
             sent_messages = []
+
             async def mock_transport(host, port, message):
                 sent_messages.append((host, port, message))
                 return True
@@ -188,18 +217,23 @@ class EnhancedNetworkingTests:
             logger.info("✓ Transport configuration")
 
             # Test service initialization
-            assert await messaging_service.initialize(), "Messaging service initialization failed"
+            assert (
+                await messaging_service.initialize()
+            ), "Messaging service initialization failed"
             assert messaging_service.is_running, "Messaging service should be running"
             logger.info("✓ Service initialization")
 
             # Test message handler registration
             response_messages = []
+
             def test_handler(message):
                 response_messages.append(message)
                 return {"status": "handled", "message_id": message.get("test_id")}
 
             messaging_service.register_message_handler("test_message", test_handler)
-            assert "test_message" in messaging_service.message_handlers, "Handler not registered"
+            assert (
+                "test_message" in messaging_service.message_handlers
+            ), "Handler not registered"
             logger.info("✓ Message handler registration")
 
             # Test message sending
@@ -208,7 +242,7 @@ class EnhancedNetworkingTests:
                 target_port=8080,
                 message_type="test_message",
                 content={"test_data": "hello"},
-                priority=MessagePriority.HIGH
+                priority=MessagePriority.HIGH,
             )
             assert message_id is not None, "Message ID not returned"
             assert len(messaging_service.pending_messages) > 0, "Message not queued"
@@ -221,14 +255,16 @@ class EnhancedNetworkingTests:
 
             # Test acknowledgment handling
             await messaging_service.handle_acknowledgment(message_id, True)
-            assert message_id not in messaging_service.pending_messages, "Message not removed after ACK"
+            assert (
+                message_id not in messaging_service.pending_messages
+            ), "Message not removed after ACK"
             logger.info("✓ Acknowledgment handling")
 
             # Test incoming message handling
             test_message = {
                 "message_id": str(uuid.uuid4()),
                 "message_type": "test_message",
-                "test_id": "test_123"
+                "test_id": "test_123",
             }
             response = await messaging_service.handle_incoming_message(test_message)
             assert len(response_messages) > 0, "Incoming message not handled"
@@ -241,15 +277,17 @@ class EnhancedNetworkingTests:
 
             # Test service shutdown
             await messaging_service.shutdown()
-            assert not messaging_service.is_running, "Service should not be running after shutdown"
+            assert (
+                not messaging_service.is_running
+            ), "Service should not be running after shutdown"
             logger.info("✓ Service shutdown")
 
-            self.test_results['reliable_messaging'] = True
+            self.test_results["reliable_messaging"] = True
             logger.info("✅ Reliable Messaging tests passed")
 
         except Exception as e:
             logger.error(f"❌ Reliable Messaging tests failed: {e}")
-            self.test_results['reliable_messaging'] = False
+            self.test_results["reliable_messaging"] = False
 
     async def test_network_server_integration(self):
         """Test NetworkServer integration with enhanced features."""
@@ -257,9 +295,15 @@ class EnhancedNetworkingTests:
 
         try:
             # Create server with mocked enhanced services
-            with patch('ircamera_pc.network.server.SecurityManager') as MockSecurity, \
-                 patch('ircamera_pc.network.server.NetworkDiscoveryService') as MockDiscovery, \
-                 patch('ircamera_pc.network.server.ReliableMessageService') as MockMessaging:
+            with (
+                patch("ircamera_pc.network.server.SecurityManager") as MockSecurity,
+                patch(
+                    "ircamera_pc.network.server.NetworkDiscoveryService"
+                ) as MockDiscovery,
+                patch(
+                    "ircamera_pc.network.server.ReliableMessageService"
+                ) as MockMessaging,
+            ):
 
                 # Configure mocks
                 mock_security = MockSecurity.return_value
@@ -278,37 +322,55 @@ class EnhancedNetworkingTests:
                 server = NetworkServer()
 
                 # Test enhanced service setup
-                assert hasattr(server, '_security_manager'), "Security manager not initialized"
-                assert hasattr(server, '_discovery_service'), "Discovery service not initialized"
-                assert hasattr(server, '_messaging_service'), "Messaging service not initialized"
+                assert hasattr(
+                    server, "_security_manager"
+                ), "Security manager not initialized"
+                assert hasattr(
+                    server, "_discovery_service"
+                ), "Discovery service not initialized"
+                assert hasattr(
+                    server, "_messaging_service"
+                ), "Messaging service not initialized"
                 logger.info("✓ Enhanced services initialization")
 
                 # Test server configuration
-                assert server._secure_port == server._port + 1, "Secure port not configured correctly"
+                assert (
+                    server._secure_port == server._port + 1
+                ), "Secure port not configured correctly"
                 logger.info("✓ Server configuration")
 
                 # Test message handlers setup
-                expected_handlers = ['device_auth', 'message_ack', 'message_nack']
+                expected_handlers = ["device_auth", "message_ack", "message_nack"]
                 for handler in expected_handlers:
-                    assert handler in server._message_handlers, f"Handler {handler} not registered"
+                    assert (
+                        handler in server._message_handlers
+                    ), f"Handler {handler} not registered"
                 logger.info("✓ Enhanced message handlers")
 
                 # Test service integration methods
-                assert hasattr(server, '_handle_secure_client'), "Secure client handler missing"
-                assert hasattr(server, '_send_message_to_device'), "Message transport method missing"
-                assert hasattr(server, '_on_device_discovered'), "Discovery callback missing"
+                assert hasattr(
+                    server, "_handle_secure_client"
+                ), "Secure client handler missing"
+                assert hasattr(
+                    server, "_send_message_to_device"
+                ), "Message transport method missing"
+                assert hasattr(
+                    server, "_on_device_discovered"
+                ), "Discovery callback missing"
                 logger.info("✓ Integration methods")
 
                 # Test reliable messaging integration
-                assert hasattr(server, 'send_reliable_message_to_device'), "Reliable messaging method missing"
+                assert hasattr(
+                    server, "send_reliable_message_to_device"
+                ), "Reliable messaging method missing"
                 logger.info("✓ Reliable messaging integration")
 
-            self.test_results['network_server_integration'] = True
+            self.test_results["network_server_integration"] = True
             logger.info("✅ Network Server Integration tests passed")
 
         except Exception as e:
             logger.error(f"❌ Network Server Integration tests failed: {e}")
-            self.test_results['network_server_integration'] = False
+            self.test_results["network_server_integration"] = False
 
     def _mock_security_init(self, *args, **kwargs):
         """Mock SecurityManager __init__ to avoid config dependencies."""
@@ -326,7 +388,9 @@ class EnhancedNetworkingTests:
             status = "✅ PASS" if passed else "❌ FAIL"
             logger.info(f"{test_name}: {status}")
 
-        logger.info(f"\nTotal: {total_tests}, Passed: {passed_tests}, Failed: {failed_tests}")
+        logger.info(
+            f"\nTotal: {total_tests}, Passed: {passed_tests}, Failed: {failed_tests}"
+        )
 
         if passed_tests == total_tests:
             logger.info("🎉 All tests passed!")

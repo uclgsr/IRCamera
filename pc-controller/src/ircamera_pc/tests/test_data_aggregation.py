@@ -3,19 +3,20 @@ Comprehensive unit tests for PC Controller data aggregation components
 Tests data processing, synchronization, and export functionality
 """
 
-import unittest
-import tempfile
-import os
 import json
-import pandas as pd
-import numpy as np
-import h5py
-from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
-from typing import Dict, List, Any
-
+import os
 import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+import tempfile
+import unittest
+from pathlib import Path
+from typing import Any, Dict, List
+from unittest.mock import MagicMock, Mock, patch
+
+import h5py
+import numpy as np
+import pandas as pd
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from ircamera_pc.data.aggregator import DataAggregator
 from ircamera_pc.data.exporter import DataExporter, ExportFormat
@@ -33,25 +34,35 @@ class TestDataAggregator(unittest.TestCase):
 
         # Sample sensor data
         self.sample_gsr_data = [
-            {'timestamp': 1000000000, 'gsr_microsiemens': 25.5, 'raw_adc': 2048},
-            {'timestamp': 1000001000, 'gsr_microsiemens': 26.2, 'raw_adc': 2100},
-            {'timestamp': 1000002000, 'gsr_microsiemens': 24.8, 'raw_adc': 1980}
+            {"timestamp": 1000000000, "gsr_microsiemens": 25.5, "raw_adc": 2048},
+            {"timestamp": 1000001000, "gsr_microsiemens": 26.2, "raw_adc": 2100},
+            {"timestamp": 1000002000, "gsr_microsiemens": 24.8, "raw_adc": 1980},
         ]
 
         self.sample_thermal_data = [
-            {'timestamp': 1000000000, 'temperature_matrix': [[25.5, 26.0], [25.8, 26.2]]},
-            {'timestamp': 1000001000, 'temperature_matrix': [[25.6, 26.1], [25.9, 26.3]]},
-            {'timestamp': 1000002000, 'temperature_matrix': [[25.7, 26.2], [26.0, 26.4]]}
+            {
+                "timestamp": 1000000000,
+                "temperature_matrix": [[25.5, 26.0], [25.8, 26.2]],
+            },
+            {
+                "timestamp": 1000001000,
+                "temperature_matrix": [[25.6, 26.1], [25.9, 26.3]],
+            },
+            {
+                "timestamp": 1000002000,
+                "temperature_matrix": [[25.7, 26.2], [26.0, 26.4]],
+            },
         ]
 
         self.sample_sync_markers = [
-            {'timestamp': 1000000500, 'id': 'STIMULUS_1', 'type': 'visual'},
-            {'timestamp': 1000001500, 'id': 'STIMULUS_2', 'type': 'auditory'}
+            {"timestamp": 1000000500, "id": "STIMULUS_1", "type": "visual"},
+            {"timestamp": 1000001500, "id": "STIMULUS_2", "type": "auditory"},
         ]
 
     def tearDown(self):
         """Clean up test files"""
         import shutil
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_initialization(self):
@@ -65,7 +76,7 @@ class TestDataAggregator(unittest.TestCase):
         session_id = self.aggregator.create_session(
             session_name="TestSession",
             participant_id="P001",
-            devices=["ANDROID_001", "ANDROID_002"]
+            devices=["ANDROID_001", "ANDROID_002"],
         )
 
         self.assertIsNotNone(session_id)
@@ -73,7 +84,7 @@ class TestDataAggregator(unittest.TestCase):
 
         sessions = self.aggregator.get_active_sessions()
         self.assertEqual(len(sessions), 1)
-        self.assertEqual(sessions[0]['participant_id'], "P001")
+        self.assertEqual(sessions[0]["participant_id"], "P001")
 
     def test_data_ingestion(self):
         """Test multi-modal data ingestion"""
@@ -108,15 +119,17 @@ class TestDataAggregator(unittest.TestCase):
         # Verify sync markers are stored
         markers = self.aggregator.get_sync_markers(session_id)
         self.assertEqual(len(markers), 2)
-        self.assertEqual(markers[0]['id'], 'STIMULUS_1')
+        self.assertEqual(markers[0]["id"], "STIMULUS_1")
 
     def test_temporal_alignment(self):
         """Test temporal alignment of multi-modal data"""
         session_id = self.aggregator.create_session("AlignmentTest", "P001")
 
         # Ingest data from multiple devices with slight timing differences
-        device1_data = [{'timestamp': 1000000000, 'gsr_microsiemens': 25.5}]
-        device2_data = [{'timestamp': 1000000050, 'gsr_microsiemens': 26.0}]  # 50ms offset
+        device1_data = [{"timestamp": 1000000000, "gsr_microsiemens": 25.5}]
+        device2_data = [
+            {"timestamp": 1000000050, "gsr_microsiemens": 26.0}
+        ]  # 50ms offset
 
         self.aggregator.ingest_sensor_data(session_id, "DEVICE_1", "gsr", device1_data)
         self.aggregator.ingest_sensor_data(session_id, "DEVICE_2", "gsr", device2_data)
@@ -133,21 +146,33 @@ class TestDataAggregator(unittest.TestCase):
 
         # Test with good data
         good_data = [
-            {'timestamp': 1000000000, 'gsr_microsiemens': 25.5, 'raw_adc': 2048},
-            {'timestamp': 1000001000, 'gsr_microsiemens': 26.2, 'raw_adc': 2100}
+            {"timestamp": 1000000000, "gsr_microsiemens": 25.5, "raw_adc": 2048},
+            {"timestamp": 1000001000, "gsr_microsiemens": 26.2, "raw_adc": 2100},
         ]
 
-        quality_report = self.aggregator.validate_data_quality(session_id, "gsr", good_data)
-        self.assertGreater(quality_report['quality_score'], 0.8)
+        quality_report = self.aggregator.validate_data_quality(
+            session_id, "gsr", good_data
+        )
+        self.assertGreater(quality_report["quality_score"], 0.8)
 
         # Test with problematic data
         bad_data = [
-            {'timestamp': 1000000000, 'gsr_microsiemens': -1.0, 'raw_adc': -1},  # Invalid values
-            {'timestamp': 999999999, 'gsr_microsiemens': 25.5, 'raw_adc': 2048}   # Out of order
+            {
+                "timestamp": 1000000000,
+                "gsr_microsiemens": -1.0,
+                "raw_adc": -1,
+            },  # Invalid values
+            {
+                "timestamp": 999999999,
+                "gsr_microsiemens": 25.5,
+                "raw_adc": 2048,
+            },  # Out of order
         ]
 
-        bad_quality_report = self.aggregator.validate_data_quality(session_id, "gsr", bad_data)
-        self.assertLess(bad_quality_report['quality_score'], 0.5)
+        bad_quality_report = self.aggregator.validate_data_quality(
+            session_id, "gsr", bad_data
+        )
+        self.assertLess(bad_quality_report["quality_score"], 0.5)
 
     def test_real_time_processing(self):
         """Test real-time data processing capabilities"""
@@ -173,14 +198,18 @@ class TestDataAggregator(unittest.TestCase):
         # Create multiple sessions
         sessions = []
         for i in range(5):
-            session_id = self.aggregator.create_session(f"ConcurrentSession_{i}", f"P00{i}")
+            session_id = self.aggregator.create_session(
+                f"ConcurrentSession_{i}", f"P00{i}"
+            )
             sessions.append(session_id)
 
         # Ingest data to all sessions concurrently
         import threading
 
         def ingest_to_session(session_id):
-            self.aggregator.ingest_sensor_data(session_id, "ANDROID_001", "gsr", self.sample_gsr_data)
+            self.aggregator.ingest_sensor_data(
+                session_id, "ANDROID_001", "gsr", self.sample_gsr_data
+            )
 
         threads = []
         for session_id in sessions:
@@ -203,14 +232,18 @@ class TestDataAggregator(unittest.TestCase):
         # Generate large dataset
         large_dataset = []
         for i in range(10000):
-            large_dataset.append({
-                'timestamp': 1000000000 + i * 1000,
-                'gsr_microsiemens': 25.0 + np.sin(i * 0.1),
-                'raw_adc': 2048 + int(100 * np.sin(i * 0.1))
-            })
+            large_dataset.append(
+                {
+                    "timestamp": 1000000000 + i * 1000,
+                    "gsr_microsiemens": 25.0 + np.sin(i * 0.1),
+                    "raw_adc": 2048 + int(100 * np.sin(i * 0.1)),
+                }
+            )
 
         # Ingest large dataset
-        result = self.aggregator.ingest_sensor_data(session_id, "ANDROID_001", "gsr", large_dataset)
+        result = self.aggregator.ingest_sensor_data(
+            session_id, "ANDROID_001", "gsr", large_dataset
+        )
         self.assertTrue(result)
 
         # Verify memory usage is reasonable
@@ -228,26 +261,31 @@ class TestDataExporter(unittest.TestCase):
 
         # Sample session data
         self.session_data = {
-            'session_id': 'TEST_SESSION_001',
-            'participant_id': 'P001',
-            'gsr_data': pd.DataFrame({
-                'timestamp': [1000000000, 1000001000, 1000002000],
-                'gsr_microsiemens': [25.5, 26.2, 24.8],
-                'raw_adc': [2048, 2100, 1980]
-            }),
-            'thermal_data': pd.DataFrame({
-                'timestamp': [1000000000, 1000001000, 1000002000],
-                'avg_temperature': [25.5, 25.8, 26.0]
-            }),
-            'sync_markers': [
-                {'timestamp': 1000000500, 'id': 'STIMULUS_1', 'type': 'visual'},
-                {'timestamp': 1000001500, 'id': 'STIMULUS_2', 'type': 'auditory'}
-            ]
+            "session_id": "TEST_SESSION_001",
+            "participant_id": "P001",
+            "gsr_data": pd.DataFrame(
+                {
+                    "timestamp": [1000000000, 1000001000, 1000002000],
+                    "gsr_microsiemens": [25.5, 26.2, 24.8],
+                    "raw_adc": [2048, 2100, 1980],
+                }
+            ),
+            "thermal_data": pd.DataFrame(
+                {
+                    "timestamp": [1000000000, 1000001000, 1000002000],
+                    "avg_temperature": [25.5, 25.8, 26.0],
+                }
+            ),
+            "sync_markers": [
+                {"timestamp": 1000000500, "id": "STIMULUS_1", "type": "visual"},
+                {"timestamp": 1000001500, "id": "STIMULUS_2", "type": "auditory"},
+            ],
         }
 
     def tearDown(self):
         """Clean up test files"""
         import shutil
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_csv_export(self):
@@ -261,7 +299,7 @@ class TestDataExporter(unittest.TestCase):
         # Verify CSV content
         exported_df = pd.read_csv(output_file)
         self.assertEqual(len(exported_df), 3)
-        self.assertIn('gsr_microsiemens', exported_df.columns)
+        self.assertIn("gsr_microsiemens", exported_df.columns)
 
     def test_excel_export(self):
         """Test Excel export with multiple sheets"""
@@ -273,9 +311,9 @@ class TestDataExporter(unittest.TestCase):
 
         # Verify Excel content
         with pd.ExcelFile(output_file) as xl:
-            self.assertIn('GSR_Data', xl.sheet_names)
-            self.assertIn('Thermal_Data', xl.sheet_names)
-            self.assertIn('Sync_Markers', xl.sheet_names)
+            self.assertIn("GSR_Data", xl.sheet_names)
+            self.assertIn("Thermal_Data", xl.sheet_names)
+            self.assertIn("Sync_Markers", xl.sheet_names)
 
     def test_hdf5_export(self):
         """Test HDF5 export for large datasets"""
@@ -286,10 +324,10 @@ class TestDataExporter(unittest.TestCase):
         self.assertTrue(os.path.exists(output_file))
 
         # Verify HDF5 content
-        with h5py.File(output_file, 'r') as f:
-            self.assertIn('gsr_data', f.keys())
-            self.assertIn('thermal_data', f.keys())
-            self.assertEqual(len(f['gsr_data']), 3)
+        with h5py.File(output_file, "r") as f:
+            self.assertIn("gsr_data", f.keys())
+            self.assertIn("thermal_data", f.keys())
+            self.assertEqual(len(f["gsr_data"]), 3)
 
     def test_json_export(self):
         """Test JSON export for metadata and annotations"""
@@ -300,14 +338,19 @@ class TestDataExporter(unittest.TestCase):
         self.assertTrue(os.path.exists(output_file))
 
         # Verify JSON content
-        with open(output_file, 'r') as f:
+        with open(output_file, "r") as f:
             exported_data = json.load(f)
-            self.assertEqual(exported_data['session_id'], 'TEST_SESSION_001')
-            self.assertIn('sync_markers', exported_data)
+            self.assertEqual(exported_data["session_id"], "TEST_SESSION_001")
+            self.assertIn("sync_markers", exported_data)
 
     def test_export_format_validation(self):
         """Test export format validation"""
-        valid_formats = [ExportFormat.CSV, ExportFormat.EXCEL, ExportFormat.HDF5, ExportFormat.JSON]
+        valid_formats = [
+            ExportFormat.CSV,
+            ExportFormat.EXCEL,
+            ExportFormat.HDF5,
+            ExportFormat.JSON,
+        ]
 
         for fmt in valid_formats:
             self.assertTrue(self.exporter.is_format_supported(fmt))
@@ -320,7 +363,7 @@ class TestDataExporter(unittest.TestCase):
         sessions = []
         for i in range(3):
             session = self.session_data.copy()
-            session['session_id'] = f'BATCH_SESSION_{i:03d}'
+            session["session_id"] = f"BATCH_SESSION_{i:03d}"
             sessions.append(session)
 
         output_dir = os.path.join(self.temp_dir, "batch_export")
@@ -343,38 +386,38 @@ class TestDataProcessor(unittest.TestCase):
 
         # Generate synthetic physiological data
         timestamps = np.arange(0, 60000, 100)  # 10 minutes at 10Hz
-        self.gsr_data = pd.DataFrame({
-            'timestamp': timestamps,
-            'gsr_microsiemens': 25.0 + 5.0 * np.sin(timestamps / 10000) + np.random.normal(0, 0.5, len(timestamps))
-        })
+        self.gsr_data = pd.DataFrame(
+            {
+                "timestamp": timestamps,
+                "gsr_microsiemens": 25.0
+                + 5.0 * np.sin(timestamps / 10000)
+                + np.random.normal(0, 0.5, len(timestamps)),
+            }
+        )
 
     def test_signal_filtering(self):
         """Test signal filtering and noise reduction"""
         # Apply low-pass filter
         filtered_data = self.processor.apply_lowpass_filter(
-            self.gsr_data['gsr_microsiemens'],
-            cutoff_freq=1.0,
-            sampling_rate=10.0
+            self.gsr_data["gsr_microsiemens"], cutoff_freq=1.0, sampling_rate=10.0
         )
 
         self.assertEqual(len(filtered_data), len(self.gsr_data))
 
         # Filtered signal should have reduced noise
-        original_std = np.std(self.gsr_data['gsr_microsiemens'])
+        original_std = np.std(self.gsr_data["gsr_microsiemens"])
         filtered_std = np.std(filtered_data)
         self.assertLess(filtered_std, original_std)
 
     def test_artifact_detection(self):
         """Test artifact detection in physiological signals"""
         # Introduce artificial artifacts
-        corrupted_data = self.gsr_data['gsr_microsiemens'].copy()
+        corrupted_data = self.gsr_data["gsr_microsiemens"].copy()
         corrupted_data.iloc[100:105] = 100.0  # Spike artifact
-        corrupted_data.iloc[200:210] = 0.0    # Drop artifact
+        corrupted_data.iloc[200:210] = 0.0  # Drop artifact
 
         artifacts = self.processor.detect_artifacts(
-            corrupted_data,
-            method='statistical',
-            threshold=3.0
+            corrupted_data, method="statistical", threshold=3.0
         )
 
         self.assertGreater(len(artifacts), 0)
@@ -384,11 +427,17 @@ class TestDataProcessor(unittest.TestCase):
 
     def test_feature_extraction(self):
         """Test physiological feature extraction"""
-        features = self.processor.extract_features(self.gsr_data['gsr_microsiemens'])
+        features = self.processor.extract_features(self.gsr_data["gsr_microsiemens"])
 
         expected_features = [
-            'mean', 'std', 'min', 'max', 'median',
-            'peak_count', 'zero_crossings', 'energy'
+            "mean",
+            "std",
+            "min",
+            "max",
+            "median",
+            "peak_count",
+            "zero_crossings",
+            "energy",
         ]
 
         for feature in expected_features:
@@ -411,11 +460,19 @@ class TestDataProcessor(unittest.TestCase):
 
     def test_statistical_analysis(self):
         """Test statistical analysis of sensor data"""
-        stats = self.processor.compute_statistics(self.gsr_data['gsr_microsiemens'])
+        stats = self.processor.compute_statistics(self.gsr_data["gsr_microsiemens"])
 
         expected_stats = [
-            'count', 'mean', 'std', 'min', 'max', 'median',
-            'q25', 'q75', 'skewness', 'kurtosis'
+            "count",
+            "mean",
+            "std",
+            "min",
+            "max",
+            "median",
+            "q25",
+            "q75",
+            "skewness",
+            "kurtosis",
         ]
 
         for stat in expected_stats:
@@ -424,15 +481,15 @@ class TestDataProcessor(unittest.TestCase):
     def test_quality_metrics(self):
         """Test data quality metrics calculation"""
         quality_metrics = self.processor.calculate_quality_metrics(
-            self.gsr_data['gsr_microsiemens'],
+            self.gsr_data["gsr_microsiemens"],
             expected_range=(15.0, 35.0),
-            sampling_rate=10.0
+            sampling_rate=10.0,
         )
 
-        self.assertIn('completeness', quality_metrics)
-        self.assertIn('validity', quality_metrics)
-        self.assertIn('consistency', quality_metrics)
-        self.assertBetween(quality_metrics['completeness'], 0.0, 1.0)
+        self.assertIn("completeness", quality_metrics)
+        self.assertIn("validity", quality_metrics)
+        self.assertIn("consistency", quality_metrics)
+        self.assertBetween(quality_metrics["completeness"], 0.0, 1.0)
 
     def assertBetween(self, value, min_val, max_val):
         """Helper assertion for range checking"""
@@ -452,81 +509,96 @@ class TestDataValidator(unittest.TestCase):
         # Valid timestamps
         valid_timestamps = [1000000000, 1000001000, 1000002000]
         result = self.validator.validate_timestamps(valid_timestamps)
-        self.assertTrue(result['is_valid'])
-        self.assertTrue(result['is_monotonic'])
+        self.assertTrue(result["is_valid"])
+        self.assertTrue(result["is_monotonic"])
 
         # Invalid timestamps (out of order)
         invalid_timestamps = [1000001000, 1000000000, 1000002000]
         result = self.validator.validate_timestamps(invalid_timestamps)
-        self.assertFalse(result['is_monotonic'])
+        self.assertFalse(result["is_monotonic"])
 
     def test_gsr_data_validation(self):
         """Test GSR-specific data validation"""
         # Valid GSR data
         valid_gsr = [
-            {'timestamp': 1000000000, 'gsr_microsiemens': 25.5, 'raw_adc': 2048},
-            {'timestamp': 1000001000, 'gsr_microsiemens': 26.2, 'raw_adc': 2100}
+            {"timestamp": 1000000000, "gsr_microsiemens": 25.5, "raw_adc": 2048},
+            {"timestamp": 1000001000, "gsr_microsiemens": 26.2, "raw_adc": 2100},
         ]
 
         result = self.validator.validate_gsr_data(valid_gsr)
-        self.assertTrue(result['is_valid'])
-        self.assertEqual(result['invalid_count'], 0)
+        self.assertTrue(result["is_valid"])
+        self.assertEqual(result["invalid_count"], 0)
 
         # Invalid GSR data
         invalid_gsr = [
-            {'timestamp': 1000000000, 'gsr_microsiemens': -5.0, 'raw_adc': -1},  # Negative values
-            {'timestamp': 1000001000, 'gsr_microsiemens': 150.0, 'raw_adc': 5000}  # Out of range
+            {
+                "timestamp": 1000000000,
+                "gsr_microsiemens": -5.0,
+                "raw_adc": -1,
+            },  # Negative values
+            {
+                "timestamp": 1000001000,
+                "gsr_microsiemens": 150.0,
+                "raw_adc": 5000,
+            },  # Out of range
         ]
 
         result = self.validator.validate_gsr_data(invalid_gsr)
-        self.assertFalse(result['is_valid'])
-        self.assertEqual(result['invalid_count'], 2)
+        self.assertFalse(result["is_valid"])
+        self.assertEqual(result["invalid_count"], 2)
 
     def test_thermal_data_validation(self):
         """Test thermal camera data validation"""
         # Valid thermal data
         valid_thermal = [
             {
-                'timestamp': 1000000000,
-                'temperature_matrix': [[25.5, 26.0], [25.8, 26.2]]
+                "timestamp": 1000000000,
+                "temperature_matrix": [[25.5, 26.0], [25.8, 26.2]],
             }
         ]
 
         result = self.validator.validate_thermal_data(valid_thermal)
-        self.assertTrue(result['is_valid'])
+        self.assertTrue(result["is_valid"])
 
         # Invalid thermal data (wrong matrix dimensions)
         invalid_thermal = [
             {
-                'timestamp': 1000000000,
-                'temperature_matrix': [[25.5, 26.0, 27.0], [25.8]]  # Inconsistent dimensions
+                "timestamp": 1000000000,
+                "temperature_matrix": [
+                    [25.5, 26.0, 27.0],
+                    [25.8],
+                ],  # Inconsistent dimensions
             }
         ]
 
         result = self.validator.validate_thermal_data(invalid_thermal)
-        self.assertFalse(result['is_valid'])
+        self.assertFalse(result["is_valid"])
 
     def test_sync_marker_validation(self):
         """Test sync marker validation"""
         # Valid sync markers
         valid_markers = [
-            {'timestamp': 1000000500, 'id': 'STIMULUS_1', 'type': 'visual'},
-            {'timestamp': 1000001500, 'id': 'STIMULUS_2', 'type': 'auditory'}
+            {"timestamp": 1000000500, "id": "STIMULUS_1", "type": "visual"},
+            {"timestamp": 1000001500, "id": "STIMULUS_2", "type": "auditory"},
         ]
 
         result = self.validator.validate_sync_markers(valid_markers)
-        self.assertTrue(result['is_valid'])
-        self.assertTrue(result['unique_ids'])
+        self.assertTrue(result["is_valid"])
+        self.assertTrue(result["unique_ids"])
 
         # Invalid sync markers (duplicate IDs)
         invalid_markers = [
-            {'timestamp': 1000000500, 'id': 'STIMULUS_1', 'type': 'visual'},
-            {'timestamp': 1000001500, 'id': 'STIMULUS_1', 'type': 'auditory'}  # Duplicate ID
+            {"timestamp": 1000000500, "id": "STIMULUS_1", "type": "visual"},
+            {
+                "timestamp": 1000001500,
+                "id": "STIMULUS_1",
+                "type": "auditory",
+            },  # Duplicate ID
         ]
 
         result = self.validator.validate_sync_markers(invalid_markers)
-        self.assertFalse(result['unique_ids'])
+        self.assertFalse(result["unique_ids"])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -22,35 +22,55 @@ Features Demonstrated:
     • Cross-platform compatibility
 """
 
+import argparse
+import asyncio
+import json
 import sys
 import time
-import asyncio
-import argparse
-from pathlib import Path
-from typing import Optional, Dict, List
-import numpy as np
-import json
 from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Optional
+
+import numpy as np
 
 # Add src directory to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from PyQt6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QHBoxLayout,
-                             QWidget, QPushButton, QLabel, QTextEdit, QTabWidget,
-                             QSplitter, QGroupBox, QGridLayout, QProgressBar,
-                             QMessageBox, QDialog, QDialogButtonBox)
-from PyQt6.QtCore import QTimer, pyqtSignal, QThread, QObject
-from PyQt6.QtGui import QFont, QPixmap, QPalette, QColor
-
-from ircamera_pc.gui.plotting_widgets import MultiModalDashboard, EnhancedGSRPlotWidget
-from ircamera_pc.gui.widgets import DeviceListWidget, SessionControlWidget, StatusDisplayWidget, EnhancedStatusWidget
-from ircamera_pc.data import DataAggregationEngine, AggregationStats
 from ircamera_pc.core.session import SessionManager
-from ircamera_pc.network.server import NetworkServer
 from ircamera_pc.core.timesync import TimeSyncService
+from ircamera_pc.data import AggregationStats, DataAggregationEngine
+from ircamera_pc.gui.plotting_widgets import EnhancedGSRPlotWidget, MultiModalDashboard
+from ircamera_pc.gui.widgets import (
+    DeviceListWidget,
+    EnhancedStatusWidget,
+    SessionControlWidget,
+    StatusDisplayWidget,
+)
+from ircamera_pc.network.server import NetworkServer
+from PyQt6.QtCore import QObject, QThread, QTimer, pyqtSignal
+from PyQt6.QtGui import QColor, QFont, QPalette, QPixmap
+from PyQt6.QtWidgets import (
+    QApplication,
+    QDialog,
+    QDialogButtonBox,
+    QGridLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QMessageBox,
+    QProgressBar,
+    QPushButton,
+    QSplitter,
+    QTabWidget,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
 try:
     import native_backend
+
     NATIVE_BACKEND_AVAILABLE = True
     print("✓ Enhanced native backend available - High-performance mode enabled")
 except ImportError:
@@ -76,7 +96,13 @@ class EnhancedPCController(QMainWindow):
     data_received = pyqtSignal(str, dict)
     sync_event = pyqtSignal(str, dict)
 
-    def __init__(self, session_dir: Path, demo_mode: bool = False, enable_native: bool = True, server_port: int = 8080):
+    def __init__(
+        self,
+        session_dir: Path,
+        demo_mode: bool = False,
+        enable_native: bool = True,
+        server_port: int = 8080,
+    ):
         super().__init__()
 
         self.session_dir = session_dir
@@ -91,8 +117,8 @@ class EnhancedPCController(QMainWindow):
         self.data_aggregation = DataAggregationEngine(session_dir, buffer_size_mb=1000)
 
         # Native backend components (if available)
-        self.native_shimmer: Optional['native_backend.NativeShimmer'] = None
-        self.native_webcam: Optional['native_backend.NativeWebcam'] = None
+        self.native_shimmer: Optional["native_backend.NativeShimmer"] = None
+        self.native_webcam: Optional["native_backend.NativeWebcam"] = None
 
         # Enhanced state management
         self.connected_devices: Dict[str, Dict] = {}
@@ -100,10 +126,10 @@ class EnhancedPCController(QMainWindow):
         self.sync_quality_scores: Dict[str, float] = {}
         self.error_count = 0
         self.session_stats = {
-            'start_time': None,
-            'data_points_received': 0,
-            'devices_connected': 0,
-            'sync_events_sent': 0
+            "start_time": None,
+            "data_points_received": 0,
+            "devices_connected": 0,
+            "sync_events_sent": 0,
         }
 
         # GUI components
@@ -259,8 +285,16 @@ class EnhancedPCController(QMainWindow):
         demo_devices = [
             {"device_id": "demo_gsr_1", "device_type": "GSR", "status": "connected"},
             {"device_id": "demo_gsr_2", "device_type": "GSR", "status": "connected"},
-            {"device_id": "demo_rgb_1", "device_type": "RGB Camera", "status": "connected"},
-            {"device_id": "demo_thermal_1", "device_type": "Thermal Camera", "status": "connected"}
+            {
+                "device_id": "demo_rgb_1",
+                "device_type": "RGB Camera",
+                "status": "connected",
+            },
+            {
+                "device_id": "demo_thermal_1",
+                "device_type": "Thermal Camera",
+                "status": "connected",
+            },
         ]
 
         if self.device_list:
@@ -313,11 +347,17 @@ class EnhancedPCController(QMainWindow):
             def __init__(self, gsr_value):
                 self.raw_gsr_value = int(gsr_value * 200)  # Mock raw value
                 self.gsr_microsiemens = gsr_value
-                self.raw_ppg_value = int(1500 + 100 * np.sin(self.gsr_demo_counter * 0.2))
+                self.raw_ppg_value = int(
+                    1500 + 100 * np.sin(self.gsr_demo_counter * 0.2)
+                )
 
         # Add to data aggregation engine
-        self.data_aggregation.add_data("demo_gsr_1_gsr", timestamp_ns, MockGSRData(gsr_1))
-        self.data_aggregation.add_data("demo_gsr_2_gsr", timestamp_ns, MockGSRData(gsr_2))
+        self.data_aggregation.add_data(
+            "demo_gsr_1_gsr", timestamp_ns, MockGSRData(gsr_1)
+        )
+        self.data_aggregation.add_data(
+            "demo_gsr_2_gsr", timestamp_ns, MockGSRData(gsr_2)
+        )
 
         # Generate simulated video frames occasionally
         if self.gsr_demo_counter % 20 == 0:  # Every second at 20fps demo rate
@@ -351,9 +391,7 @@ class EnhancedPCController(QMainWindow):
         """Handle GSR data from native backend."""
         # Add to dashboard
         self.dashboard.add_gsr_data(
-            device_id,
-            gsr_data.timestamp_ns,
-            gsr_data.gsr_microsiemens
+            device_id, gsr_data.timestamp_ns, gsr_data.gsr_microsiemens
         )
 
         # Add to data aggregation
@@ -374,9 +412,11 @@ class EnhancedPCController(QMainWindow):
         video_metadata = {
             "frame_number": frame_data.frame_number,
             "width": frame_data.width,
-            "height": frame_data.height
+            "height": frame_data.height,
         }
-        self.data_aggregation.add_data(stream_id, frame_data.timestamp_ns, video_metadata)
+        self.data_aggregation.add_data(
+            stream_id, frame_data.timestamp_ns, video_metadata
+        )
 
     def _start_session(self):
         """Start recording session."""
@@ -418,19 +458,23 @@ class EnhancedPCController(QMainWindow):
 
         # Update status widget
         if self.status_display:
-            self.status_display.data_aggregation.update_stats({
-                "Total Devices": stats.total_devices,
-                "Active Streams": stats.active_streams,
-                "Data Rate (MB/s)": stats.data_rate_mbps,
-                "Sync Quality": f"{stats.sync_quality_percent:.1f}%",
-                "Buffer Usage (%)": stats.buffer_usage_percent,
-                "Dropped Frames": stats.dropped_frames_total,
-                "Last Sync (s ago)": stats.last_sync_seconds_ago,
-                "Session Duration": f"{stats.session_duration_seconds:.1f}s"
-            })
+            self.status_display.data_aggregation.update_stats(
+                {
+                    "Total Devices": stats.total_devices,
+                    "Active Streams": stats.active_streams,
+                    "Data Rate (MB/s)": stats.data_rate_mbps,
+                    "Sync Quality": f"{stats.sync_quality_percent:.1f}%",
+                    "Buffer Usage (%)": stats.buffer_usage_percent,
+                    "Dropped Frames": stats.dropped_frames_total,
+                    "Last Sync (s ago)": stats.last_sync_seconds_ago,
+                    "Session Duration": f"{stats.session_duration_seconds:.1f}s",
+                }
+            )
 
             # Update sync quality
-            self.status_display.data_aggregation.set_sync_quality(stats.sync_quality_percent)
+            self.status_display.data_aggregation.set_sync_quality(
+                stats.sync_quality_percent
+            )
 
     def closeEvent(self, event):
         """Handle application close."""
@@ -458,11 +502,18 @@ class EnhancedPCController(QMainWindow):
 
 def main():
     """Main application entry point."""
-    parser = argparse.ArgumentParser(description="IRCamera PC Controller Integration Demo")
-    parser.add_argument("--demo-mode", action="store_true",
-                       help="Run in demo mode with simulated data")
-    parser.add_argument("--session-dir", type=Path, default=Path("./demo_session"),
-                       help="Session directory for data storage")
+    parser = argparse.ArgumentParser(
+        description="IRCamera PC Controller Integration Demo"
+    )
+    parser.add_argument(
+        "--demo-mode", action="store_true", help="Run in demo mode with simulated data"
+    )
+    parser.add_argument(
+        "--session-dir",
+        type=Path,
+        default=Path("./demo_session"),
+        help="Session directory for data storage",
+    )
 
     args = parser.parse_args()
 

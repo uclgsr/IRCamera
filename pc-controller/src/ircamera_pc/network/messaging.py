@@ -9,11 +9,11 @@ import asyncio
 import json
 import time
 import uuid
-from dataclasses import dataclass, asdict
+from collections import defaultdict, deque
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Callable, Any
-from collections import defaultdict, deque
+from typing import Any, Callable, Dict, List, Optional
 
 try:
     from loguru import logger
@@ -23,10 +23,18 @@ except ImportError:
     except ImportError:
         # Fallback logger for testing
         class FallbackLogger:
-            def info(self, msg): print(f"INFO: {msg}")
-            def debug(self, msg): print(f"DEBUG: {msg}")
-            def warning(self, msg): print(f"WARNING: {msg}")
-            def error(self, msg): print(f"ERROR: {msg}")
+            def info(self, msg):
+                print(f"INFO: {msg}")
+
+            def debug(self, msg):
+                print(f"DEBUG: {msg}")
+
+            def warning(self, msg):
+                print(f"WARNING: {msg}")
+
+            def error(self, msg):
+                print(f"ERROR: {msg}")
+
         logger = FallbackLogger()
 
 try:
@@ -42,11 +50,13 @@ except ImportError:
                 "messaging.cleanup_interval": 60.0,
             }
             return config_map.get(key, default)
+
     config = FallbackConfig()
 
 
 class MessagePriority(Enum):
     """Message priority levels."""
+
     LOW = 1
     NORMAL = 2
     HIGH = 3
@@ -55,6 +65,7 @@ class MessagePriority(Enum):
 
 class MessageStatus(Enum):
     """Message delivery status."""
+
     PENDING = "pending"
     SENT = "sent"
     ACKNOWLEDGED = "acknowledged"
@@ -65,6 +76,7 @@ class MessageStatus(Enum):
 @dataclass
 class ReliableMessage:
     """Represents a reliable message."""
+
     message_id: str
     target_host: str
     target_port: int
@@ -83,6 +95,7 @@ class ReliableMessage:
 @dataclass
 class MessageCallback:
     """Callback configuration for message delivery events."""
+
     on_acknowledged: Optional[Callable[[str], None]] = None
     on_failed: Optional[Callable[[str, str], None]] = None
     on_retrying: Optional[Callable[[str, int], None]] = None
@@ -98,7 +111,9 @@ class ReliableMessageService:
         """Initialize the reliable messaging service."""
         self.pending_messages: Dict[str, ReliableMessage] = {}
         self.message_callbacks: Dict[str, MessageCallback] = {}
-        self.message_handlers: Dict[str, Callable[[Dict[str, Any]], Optional[Dict[str, Any]]]] = {}
+        self.message_handlers: Dict[
+            str, Callable[[Dict[str, Any]], Optional[Dict[str, Any]]]
+        ] = {}
         self.priority_queues: Dict[MessagePriority, deque] = {
             priority: deque() for priority in MessagePriority
         }
@@ -126,7 +141,11 @@ class ReliableMessageService:
         """
         self.transport = transport
 
-    def register_message_handler(self, message_type: str, handler: Callable[[Dict[str, Any]], Optional[Dict[str, Any]]]):
+    def register_message_handler(
+        self,
+        message_type: str,
+        handler: Callable[[Dict[str, Any]], Optional[Dict[str, Any]]],
+    ):
         """
         Register a handler for incoming messages of a specific type.
 
@@ -214,7 +233,7 @@ class ReliableMessageService:
         priority: MessagePriority = MessagePriority.NORMAL,
         timeout_seconds: float = None,
         max_retries: int = 3,
-        callback: Optional[MessageCallback] = None
+        callback: Optional[MessageCallback] = None,
     ) -> str:
         """
         Send a reliable message with automatic retry logic.
@@ -256,7 +275,7 @@ class ReliableMessageService:
             priority=priority,
             created_at=current_time,
             expires_at=current_time + timeout_seconds,
-            max_retries=max_retries
+            max_retries=max_retries,
         )
 
         # Store message and callback
@@ -267,10 +286,14 @@ class ReliableMessageService:
         # Add to priority queue
         self.priority_queues[priority].append(message_id)
 
-        logger.debug(f"Queued reliable message {message_id} to {target_host}:{target_port} (priority: {priority.name})")
+        logger.debug(
+            f"Queued reliable message {message_id} to {target_host}:{target_port} (priority: {priority.name})"
+        )
         return message_id
 
-    async def handle_acknowledgment(self, message_id: str, success: bool, error_message: str = None):
+    async def handle_acknowledgment(
+        self, message_id: str, success: bool, error_message: str = None
+    ):
         """
         Handle an acknowledgment for a sent message.
 
@@ -298,7 +321,9 @@ class ReliableMessageService:
         # Remove from pending messages
         self._remove_pending_message(message_id)
 
-    async def handle_incoming_message(self, message_data: Dict[str, Any], sender_info: Dict[str, Any] = None) -> Optional[Dict[str, Any]]:
+    async def handle_incoming_message(
+        self, message_data: Dict[str, Any], sender_info: Dict[str, Any] = None
+    ) -> Optional[Dict[str, Any]]:
         """
         Handle an incoming message from a remote device.
 
@@ -310,16 +335,16 @@ class ReliableMessageService:
             Optional[Dict[str, Any]]: Response message or None
         """
         try:
-            message_type = message_data.get('message_type')
+            message_type = message_data.get("message_type")
             if not message_type:
                 logger.warning("Received message without message_type")
                 return self._create_error_response("Missing message_type")
 
             # Check for acknowledgment messages
-            if message_type == 'message_ack':
+            if message_type == "message_ack":
                 await self._handle_ack_message(message_data)
                 return None
-            elif message_type == 'message_nack':
+            elif message_type == "message_nack":
                 await self._handle_nack_message(message_data)
                 return None
 
@@ -339,16 +364,22 @@ class ReliableMessageService:
                     logger.error(f"Handler error for {message_type}: {e}")
 
                     # Send negative acknowledgment
-                    await self._send_acknowledgment(message_data, False, sender_info, str(e))
+                    await self._send_acknowledgment(
+                        message_data, False, sender_info, str(e)
+                    )
 
                     return self._create_error_response(f"Handler error: {e}")
             else:
                 logger.warning(f"No handler for message type: {message_type}")
 
                 # Send negative acknowledgment
-                await self._send_acknowledgment(message_data, False, sender_info, f"No handler for {message_type}")
+                await self._send_acknowledgment(
+                    message_data, False, sender_info, f"No handler for {message_type}"
+                )
 
-                return self._create_error_response(f"No handler for message type: {message_type}")
+                return self._create_error_response(
+                    f"No handler for message type: {message_type}"
+                )
 
         except Exception as e:
             logger.error(f"Error handling incoming message: {e}")
@@ -402,8 +433,7 @@ class ReliableMessageService:
         # Check if we should retry yet (exponential backoff)
         if message.last_attempt:
             retry_delay = min(
-                self.base_retry_delay * (2 ** message.retry_count),
-                self.max_retry_delay
+                self.base_retry_delay * (2**message.retry_count), self.max_retry_delay
             )
 
             if current_time - message.last_attempt < retry_delay:
@@ -415,18 +445,16 @@ class ReliableMessageService:
         try:
             # Create message payload
             payload = {
-                'message_id': message.message_id,
-                'message_type': message.message_type,
-                'timestamp': current_time,
-                'content': message.content,
-                'requires_ack': True
+                "message_id": message.message_id,
+                "message_type": message.message_type,
+                "timestamp": current_time,
+                "content": message.content,
+                "requires_ack": True,
             }
 
             # Attempt delivery
             success = await self.transport(
-                message.target_host,
-                message.target_port,
-                payload
+                message.target_host, message.target_port, payload
             )
 
             message.last_attempt = current_time
@@ -455,14 +483,18 @@ class ReliableMessageService:
             # Schedule retry
             await self._notify_message_retrying(message_id, message.retry_count)
             self.priority_queues[message.priority].append(message_id)
-            logger.debug(f"Retrying message {message_id} (attempt {message.retry_count}/{message.max_retries})")
+            logger.debug(
+                f"Retrying message {message_id} (attempt {message.retry_count}/{message.max_retries})"
+            )
         else:
             # Max retries exceeded
             message.status = MessageStatus.FAILED
             message.error_message = f"Max retries exceeded: {error}"
             await self._notify_message_failed(message_id, message.error_message)
             self._remove_pending_message(message_id)
-            logger.warning(f"Message {message_id} failed permanently: {message.error_message}")
+            logger.warning(
+                f"Message {message_id} failed permanently: {message.error_message}"
+            )
 
     async def _cleanup_processor(self):
         """Background task that cleans up expired messages and callbacks."""
@@ -477,7 +509,10 @@ class ReliableMessageService:
 
                 # Find expired messages
                 for message_id, message in self.pending_messages.items():
-                    if current_time >= message.expires_at and message.status in [MessageStatus.PENDING, MessageStatus.SENT]:
+                    if current_time >= message.expires_at and message.status in [
+                        MessageStatus.PENDING,
+                        MessageStatus.SENT,
+                    ]:
                         expired_messages.append(message_id)
 
                 # Clean up expired messages
@@ -497,42 +532,46 @@ class ReliableMessageService:
 
     async def _handle_ack_message(self, message_data: Dict[str, Any]):
         """Handle positive acknowledgment message."""
-        original_message_id = message_data.get('original_message_id')
+        original_message_id = message_data.get("original_message_id")
         if original_message_id:
             await self.handle_acknowledgment(original_message_id, True)
 
     async def _handle_nack_message(self, message_data: Dict[str, Any]):
         """Handle negative acknowledgment message."""
-        original_message_id = message_data.get('original_message_id')
-        error_message = message_data.get('error_message', 'Remote processing failed')
+        original_message_id = message_data.get("original_message_id")
+        error_message = message_data.get("error_message", "Remote processing failed")
         if original_message_id:
             await self.handle_acknowledgment(original_message_id, False, error_message)
 
-    async def _send_acknowledgment(self, original_message: Dict[str, Any], success: bool, sender_info: Dict[str, Any] = None, error_message: str = None):
+    async def _send_acknowledgment(
+        self,
+        original_message: Dict[str, Any],
+        success: bool,
+        sender_info: Dict[str, Any] = None,
+        error_message: str = None,
+    ):
         """Send acknowledgment for a received message."""
         if not self.transport or not sender_info:
             return
 
-        original_message_id = original_message.get('message_id')
+        original_message_id = original_message.get("message_id")
         if not original_message_id:
             return
 
-        ack_type = 'message_ack' if success else 'message_nack'
+        ack_type = "message_ack" if success else "message_nack"
         ack_payload = {
-            'message_id': str(uuid.uuid4()),
-            'message_type': ack_type,
-            'original_message_id': original_message_id,
-            'timestamp': time.time()
+            "message_id": str(uuid.uuid4()),
+            "message_type": ack_type,
+            "original_message_id": original_message_id,
+            "timestamp": time.time(),
         }
 
         if not success and error_message:
-            ack_payload['error_message'] = error_message
+            ack_payload["error_message"] = error_message
 
         try:
             await self.transport(
-                sender_info.get('host'),
-                sender_info.get('port'),
-                ack_payload
+                sender_info.get("host"), sender_info.get("port"), ack_payload
             )
         except Exception as e:
             logger.error(f"Failed to send acknowledgment: {e}")
@@ -540,10 +579,10 @@ class ReliableMessageService:
     def _create_error_response(self, error_message: str) -> Dict[str, Any]:
         """Create a standard error response."""
         return {
-            'message_type': 'error',
-            'message_id': str(uuid.uuid4()),
-            'timestamp': time.time(),
-            'error': error_message
+            "message_type": "error",
+            "message_id": str(uuid.uuid4()),
+            "timestamp": time.time(),
+            "error": error_message,
         }
 
     def _remove_pending_message(self, message_id: str):
@@ -584,4 +623,6 @@ class ReliableMessageService:
 
     def get_queue_sizes(self) -> Dict[MessagePriority, int]:
         """Get the size of each priority queue."""
-        return {priority: len(queue) for priority, queue in self.priority_queues.items()}
+        return {
+            priority: len(queue) for priority, queue in self.priority_queues.items()
+        }

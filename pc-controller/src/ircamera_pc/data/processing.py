@@ -9,17 +9,20 @@ multi-modal physiological sensing data including GSR, thermal, and RGB camera da
 import asyncio
 import json
 import time
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Union
-from dataclasses import dataclass, asdict
-from loguru import logger
+from typing import Any, Dict, List, Optional, Union
+
 import numpy as np
+from loguru import logger
 
 try:
     import pandas as pd
 except ImportError:
     pd = None
-    logger.warning("pandas not available - some data processing features will be limited")
+    logger.warning(
+        "pandas not available - some data processing features will be limited"
+    )
 
 try:
     import h5py
@@ -31,9 +34,10 @@ except ImportError:
 @dataclass
 class GSRDataPoint:
     """GSR data point with timestamp and metadata"""
+
     timestamp: float
     gsr_value: float  # in microsiemens
-    raw_value: int    # raw ADC value (12-bit: 0-4095)
+    raw_value: int  # raw ADC value (12-bit: 0-4095)
     device_id: str
     session_id: str
     quality: str = "good"  # good, fair, poor, invalid
@@ -42,6 +46,7 @@ class GSRDataPoint:
 @dataclass
 class ThermalDataPoint:
     """Thermal camera data point"""
+
     timestamp: float
     temperature_data: List[List[float]]  # 2D temperature matrix
     min_temp: float
@@ -55,6 +60,7 @@ class ThermalDataPoint:
 @dataclass
 class RGBDataPoint:
     """RGB camera data point"""
+
     timestamp: float
     image_path: str
     frame_number: int
@@ -79,7 +85,9 @@ class GSRIngestor:
 
         logger.info("GSRIngestor initialized")
 
-    async def process_gsr_batch(self, device_id: str, session_id: str, gsr_data: List[Dict[str, Any]]) -> bool:
+    async def process_gsr_batch(
+        self, device_id: str, session_id: str, gsr_data: List[Dict[str, Any]]
+    ) -> bool:
         """
         Process a batch of GSR data from an Android device
 
@@ -92,7 +100,9 @@ class GSRIngestor:
             True if processed successfully, False otherwise
         """
         try:
-            logger.debug(f"Processing GSR batch: {len(gsr_data)} points from {device_id}")
+            logger.debug(
+                f"Processing GSR batch: {len(gsr_data)} points from {device_id}"
+            )
 
             # Convert raw GSR data to structured data points
             processed_points = []
@@ -111,7 +121,7 @@ class GSRIngestor:
                     raw_value=raw_value,
                     device_id=device_id,
                     session_id=session_id,
-                    quality=self._assess_signal_quality(raw_value)
+                    quality=self._assess_signal_quality(raw_value),
                 )
 
                 processed_points.append(point)
@@ -121,15 +131,17 @@ class GSRIngestor:
 
             # Maintain buffer size limit
             if len(self.data_buffer) > self.buffer_size:
-                self.data_buffer = self.data_buffer[-self.buffer_size:]
+                self.data_buffer = self.data_buffer[-self.buffer_size :]
 
             # Queue for async processing
-            await self.processing_queue.put({
-                "type": "gsr_batch",
-                "device_id": device_id,
-                "session_id": session_id,
-                "points": processed_points
-            })
+            await self.processing_queue.put(
+                {
+                    "type": "gsr_batch",
+                    "device_id": device_id,
+                    "session_id": session_id,
+                    "points": processed_points,
+                }
+            )
 
             logger.debug(f"Successfully processed {len(processed_points)} GSR points")
             return True
@@ -182,7 +194,8 @@ class GSRIngestor:
         """Get recent GSR data for a session"""
         cutoff_time = time.time() - seconds
         return [
-            point for point in self.data_buffer
+            point
+            for point in self.data_buffer
             if point.session_id == session_id and point.timestamp >= cutoff_time
         ]
 
@@ -198,13 +211,11 @@ class DataProcessor:
 
         self.gsr_ingestor = GSRIngestor()
         self.active_sessions: Dict[str, Dict] = {}
-        self.data_streams: Dict[str, List] = {
-            "gsr": [],
-            "thermal": [],
-            "rgb": []
-        }
+        self.data_streams: Dict[str, List] = {"gsr": [], "thermal": [], "rgb": []}
 
-        logger.info(f"DataProcessor initialized with output directory: {self.output_dir}")
+        logger.info(
+            f"DataProcessor initialized with output directory: {self.output_dir}"
+        )
 
     async def start_session(self, session_id: str, devices: List[str]) -> bool:
         """Start a new data processing session"""
@@ -212,25 +223,27 @@ class DataProcessor:
             self.active_sessions[session_id] = {
                 "start_time": time.time(),
                 "devices": devices,
-                "data_points": {
-                    "gsr": [],
-                    "thermal": [],
-                    "rgb": []
-                }
+                "data_points": {"gsr": [], "thermal": [], "rgb": []},
             }
 
-            logger.info(f"Started data processing session {session_id} for devices: {devices}")
+            logger.info(
+                f"Started data processing session {session_id} for devices: {devices}"
+            )
             return True
 
         except Exception as e:
             logger.error(f"Error starting session {session_id}: {e}")
             return False
 
-    async def process_gsr_data(self, device_id: str, session_id: str, data: List[Dict]) -> bool:
+    async def process_gsr_data(
+        self, device_id: str, session_id: str, data: List[Dict]
+    ) -> bool:
         """Process GSR data through the ingestor"""
         return await self.gsr_ingestor.process_gsr_batch(device_id, session_id, data)
 
-    async def process_thermal_data(self, device_id: str, session_id: str, thermal_frame: Dict) -> bool:
+    async def process_thermal_data(
+        self, device_id: str, session_id: str, thermal_frame: Dict
+    ) -> bool:
         """Process thermal camera frame data"""
         try:
             point = ThermalDataPoint(
@@ -241,7 +254,7 @@ class DataProcessor:
                 avg_temp=thermal_frame.get("avg_temp", 25.0),
                 device_id=device_id,
                 session_id=session_id,
-                frame_number=thermal_frame.get("frame_number", 0)
+                frame_number=thermal_frame.get("frame_number", 0),
             )
 
             if session_id in self.active_sessions:
@@ -254,7 +267,9 @@ class DataProcessor:
             logger.error(f"Error processing thermal data: {e}")
             return False
 
-    async def process_rgb_data(self, device_id: str, session_id: str, rgb_frame: Dict) -> bool:
+    async def process_rgb_data(
+        self, device_id: str, session_id: str, rgb_frame: Dict
+    ) -> bool:
         """Process RGB camera frame data"""
         try:
             point = RGBDataPoint(
@@ -264,7 +279,7 @@ class DataProcessor:
                 device_id=device_id,
                 session_id=session_id,
                 image_width=rgb_frame.get("width", 1920),
-                image_height=rgb_frame.get("height", 1080)
+                image_height=rgb_frame.get("height", 1080),
             )
 
             if session_id in self.active_sessions:
@@ -277,7 +292,9 @@ class DataProcessor:
             logger.error(f"Error processing RGB data: {e}")
             return False
 
-    async def export_session_data(self, session_id: str, format: str = "json") -> Optional[str]:
+    async def export_session_data(
+        self, session_id: str, format: str = "json"
+    ) -> Optional[str]:
         """Export session data to specified format"""
         try:
             if session_id not in self.active_sessions:
@@ -296,14 +313,21 @@ class DataProcessor:
                         "session_id": session_id,
                         "start_time": session_data["start_time"],
                         "devices": session_data["devices"],
-                        "export_time": time.time()
+                        "export_time": time.time(),
                     },
-                    "gsr_data": [asdict(point) for point in session_data["data_points"]["gsr"]],
-                    "thermal_data": [asdict(point) for point in session_data["data_points"]["thermal"]],
-                    "rgb_data": [asdict(point) for point in session_data["data_points"]["rgb"]]
+                    "gsr_data": [
+                        asdict(point) for point in session_data["data_points"]["gsr"]
+                    ],
+                    "thermal_data": [
+                        asdict(point)
+                        for point in session_data["data_points"]["thermal"]
+                    ],
+                    "rgb_data": [
+                        asdict(point) for point in session_data["data_points"]["rgb"]
+                    ],
                 }
 
-                with open(output_file, 'w') as f:
+                with open(output_file, "w") as f:
                     json.dump(export_data, f, indent=2, default=str)
 
                 logger.info(f"Exported session {session_id} to {output_file}")
@@ -312,30 +336,44 @@ class DataProcessor:
             elif format.lower() == "hdf5" and h5py:
                 output_file = self.output_dir / f"session_{session_id}_{timestamp}.h5"
 
-                with h5py.File(output_file, 'w') as f:
+                with h5py.File(output_file, "w") as f:
                     # Session metadata
-                    f.attrs['session_id'] = session_id
-                    f.attrs['start_time'] = session_data["start_time"]
-                    f.attrs['export_time'] = time.time()
+                    f.attrs["session_id"] = session_id
+                    f.attrs["start_time"] = session_data["start_time"]
+                    f.attrs["export_time"] = time.time()
 
                     # GSR data group
                     if session_data["data_points"]["gsr"]:
                         gsr_group = f.create_group("gsr_data")
                         gsr_points = session_data["data_points"]["gsr"]
 
-                        gsr_group.create_dataset("timestamps", data=[p.timestamp for p in gsr_points])
-                        gsr_group.create_dataset("gsr_values", data=[p.gsr_value for p in gsr_points])
-                        gsr_group.create_dataset("raw_values", data=[p.raw_value for p in gsr_points])
+                        gsr_group.create_dataset(
+                            "timestamps", data=[p.timestamp for p in gsr_points]
+                        )
+                        gsr_group.create_dataset(
+                            "gsr_values", data=[p.gsr_value for p in gsr_points]
+                        )
+                        gsr_group.create_dataset(
+                            "raw_values", data=[p.raw_value for p in gsr_points]
+                        )
 
                     # Thermal data group
                     if session_data["data_points"]["thermal"]:
                         thermal_group = f.create_group("thermal_data")
                         thermal_points = session_data["data_points"]["thermal"]
 
-                        thermal_group.create_dataset("timestamps", data=[p.timestamp for p in thermal_points])
-                        thermal_group.create_dataset("min_temps", data=[p.min_temp for p in thermal_points])
-                        thermal_group.create_dataset("max_temps", data=[p.max_temp for p in thermal_points])
-                        thermal_group.create_dataset("avg_temps", data=[p.avg_temp for p in thermal_points])
+                        thermal_group.create_dataset(
+                            "timestamps", data=[p.timestamp for p in thermal_points]
+                        )
+                        thermal_group.create_dataset(
+                            "min_temps", data=[p.min_temp for p in thermal_points]
+                        )
+                        thermal_group.create_dataset(
+                            "max_temps", data=[p.max_temp for p in thermal_points]
+                        )
+                        thermal_group.create_dataset(
+                            "avg_temps", data=[p.avg_temp for p in thermal_points]
+                        )
 
                 logger.info(f"Exported session {session_id} to HDF5: {output_file}")
                 return str(output_file)
@@ -363,16 +401,25 @@ class DataProcessor:
             "data_counts": {
                 "gsr": len(data_points["gsr"]),
                 "thermal": len(data_points["thermal"]),
-                "rgb": len(data_points["rgb"])
+                "rgb": len(data_points["rgb"]),
             },
             "latest_gsr": data_points["gsr"][-1] if data_points["gsr"] else None,
             "data_rate": {
-                "gsr": len(data_points["gsr"]) / max(1, time.time() - session_data["start_time"]),
-                "thermal": len(data_points["thermal"]) / max(1, time.time() - session_data["start_time"]),
-                "rgb": len(data_points["rgb"]) / max(1, time.time() - session_data["start_time"])
-            }
+                "gsr": len(data_points["gsr"])
+                / max(1, time.time() - session_data["start_time"]),
+                "thermal": len(data_points["thermal"])
+                / max(1, time.time() - session_data["start_time"]),
+                "rgb": len(data_points["rgb"])
+                / max(1, time.time() - session_data["start_time"]),
+            },
         }
 
 
 # Export the main classes
-__all__ = ["DataProcessor", "GSRIngestor", "GSRDataPoint", "ThermalDataPoint", "RGBDataPoint"]
+__all__ = [
+    "DataProcessor",
+    "GSRIngestor",
+    "GSRDataPoint",
+    "ThermalDataPoint",
+    "RGBDataPoint",
+]

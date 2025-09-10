@@ -2,12 +2,12 @@
 Setup script for IRCamera PC Controller with native backend
 """
 
-from setuptools import setup, find_packages
-from pybind11.setup_helpers import Pybind11Extension, build_ext
-from pybind11.setup_helpers import ParallelCompile
-import pybind11
-import platform
 import os
+import platform
+
+import pybind11
+from pybind11.setup_helpers import ParallelCompile, Pybind11Extension, build_ext
+from setuptools import find_packages, setup
 
 # Enable parallel compilation
 ParallelCompile("NPY_NUM_BUILD_JOBS").install()
@@ -24,6 +24,7 @@ elif platform.system() in ["Linux", "Darwin"]:
 # OpenCV configuration
 try:
     import cv2
+
     opencv_include_dirs = [cv2.includes()]
     opencv_libs = []
 except ImportError:
@@ -42,7 +43,8 @@ ext_modules = [
         include_dirs=[
             "native_backend/include",
             pybind11.get_cmake_dir() + "/../../../include",
-        ] + opencv_include_dirs,
+        ]
+        + opencv_include_dirs,
         libraries=opencv_libs,
         extra_compile_args=extra_compile_args,
         extra_link_args=extra_link_args,
@@ -59,12 +61,9 @@ setup(
     description="Multi-Modal Physiological Sensing Platform - PC Controller",
     long_description=open("README.md").read() if os.path.exists("README.md") else "",
     long_description_content_type="text/markdown",
-
     ext_modules=ext_modules,
     cmdclass={"build_ext": build_ext},
-
     python_requires=">=3.11",
-
     install_requires=[
         "PyQt6>=6.4.0",
         "pyqtgraph>=0.13.0",
@@ -78,7 +77,6 @@ setup(
         "asyncio-mqtt>=0.13.0",
         "pyyaml>=6.0",
     ],
-
     extras_require={
         "dev": [
             "pytest>=7.0.0",
@@ -93,16 +91,13 @@ setup(
             "pytest-cov>=4.0.0",
         ],
     },
-
     package_dir={"": "src"},
     packages=find_packages("src"),
-
     entry_points={
         "console_scripts": [
             "ircamera-pc=ircamera_pc.main:main",
         ],
     },
-
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",
@@ -115,11 +110,9 @@ setup(
         "Topic :: System :: Hardware",
         "Topic :: Multimedia :: Video :: Capture",
     ],
-
     package_data={
         "ircamera_pc": ["*.yaml", "*.json"],
     },
-
     include_package_data=True,
     zip_safe=False,
 )

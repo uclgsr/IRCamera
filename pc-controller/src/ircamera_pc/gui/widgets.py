@@ -7,18 +7,29 @@ integration with enhanced error handling and real-time status monitoring.
 """
 
 import logging
-from typing import Dict, List, Optional, Any
-from PyQt6.QtCore import pyqtSignal, QTimer, QThread, pyqtSlot
+from typing import Any, Dict, List, Optional
+
+from PyQt6.QtCore import Qt, QThread, QTimer, pyqtSignal, pyqtSlot
+from PyQt6.QtGui import QColor, QFont, QPalette
 from PyQt6.QtWidgets import (
-    QLabel, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,
-    QPushButton, QProgressBar, QGroupBox, QTextEdit, QComboBox, QMessageBox,
-    QFrame, QSplitter
+    QComboBox,
+    QFrame,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QListWidget,
+    QListWidgetItem,
+    QMessageBox,
+    QProgressBar,
+    QPushButton,
+    QSplitter,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
 )
-from PyQt6.QtGui import QFont, QPalette, QColor
-from PyQt6.QtCore import Qt
 
 try:
-    from .plotting_widgets import MultiModalDashboard, DataAggregationWidget
+    from .plotting_widgets import DataAggregationWidget, MultiModalDashboard
 except ImportError:
     # Fallback in case plotting widgets are not available
     logging.warning("Plotting widgets not available - using placeholder classes")
@@ -32,7 +43,9 @@ except ImportError:
         def __init__(self):
             super().__init__()
             self.setMinimumSize(200, 150)
-        def set_sync_quality(self, quality): pass
+
+        def set_sync_quality(self, quality):
+            pass
 
 
 class DeviceListWidget(QWidget):
@@ -64,9 +77,9 @@ class DeviceListWidget(QWidget):
         self.devices.clear()
 
         for device in devices:
-            device_id = device.get('device_id', 'Unknown')
-            device_type = device.get('device_type', 'Unknown')
-            status = device.get('status', 'Unknown')
+            device_id = device.get("device_id", "Unknown")
+            device_type = device.get("device_type", "Unknown")
+            status = device.get("status", "Unknown")
 
             self.devices[device_id] = device
 
@@ -75,9 +88,9 @@ class DeviceListWidget(QWidget):
             item = QListWidgetItem(item_text)
 
             # Color coding based on status
-            if status == 'connected':
+            if status == "connected":
                 item.setStyleSheet("color: green;")
-            elif status == 'recording':
+            elif status == "recording":
                 item.setStyleSheet("color: cyan;")
             else:
                 item.setStyleSheet("color: red;")
@@ -86,12 +99,12 @@ class DeviceListWidget(QWidget):
 
         # Update status summary
         count = len(devices)
-        connected_count = sum(1 for d in devices if d.get('status') == 'connected')
+        connected_count = sum(1 for d in devices if d.get("status") == "connected")
         self.status_label.setText(f"{count} devices ({connected_count} connected)")
 
     def _on_item_clicked(self, item):
         """Handle device selection."""
-        device_id = item.text().split(' ')[0]  # Extract device ID
+        device_id = item.text().split(" ")[0]  # Extract device ID
         self.device_selected.emit(device_id)
 
 
@@ -138,7 +151,7 @@ class SessionControlWidget(QWidget):
         if session:
             self.session_label.setText(f"Session: {session.name}")
 
-            if session.state == 'recording':
+            if session.state == "recording":
                 self.start_btn.setEnabled(False)
                 self.stop_btn.setEnabled(True)
                 self.new_session_btn.setEnabled(False)
@@ -200,9 +213,9 @@ class StatusDisplayWidget(QWidget):
     def update_time_sync_stats(self, stats):
         """Update time synchronization statistics."""
         if stats:
-            quality = stats.get('synchronization_rate', 0) * 100
-            max_offset = stats.get('max_offset_ms', 0)
-            device_count = stats.get('total_devices', 0)
+            quality = stats.get("synchronization_rate", 0) * 100
+            max_offset = stats.get("max_offset_ms", 0)
+            device_count = stats.get("total_devices", 0)
 
             self.sync_quality_label.setText(f"Quality: {quality:.1f}%")
             self.sync_offset_label.setText(f"Max Offset: {max_offset:.1f}ms")
@@ -215,7 +228,9 @@ class StatusDisplayWidget(QWidget):
         """Update session information."""
         if session:
             self.session_name_label.setText(f"Name: {session.name}")
-            self.session_duration_label.setText(f"Duration: {session.duration_seconds:.1f}s")
+            self.session_duration_label.setText(
+                f"Duration: {session.duration_seconds:.1f}s"
+            )
             # Data size would need to be calculated based on actual data
             self.session_data_size_label.setText("Data Size: --")
 
@@ -252,7 +267,9 @@ class SystemIntegrationWidget(QWidget):
     def update_permissions(self, permissions: Dict):
         """Update permission status."""
         # Show permission status in tooltip or separate area
-        perm_text = "\n".join([f"{k}: {'✓' if v else '✗'}" for k, v in permissions.items()])
+        perm_text = "\n".join(
+            [f"{k}: {'✓' if v else '✗'}" for k, v in permissions.items()]
+        )
         self.setToolTip(f"Permissions:\n{perm_text}")
 
     def set_status_message(self, message: str, is_error: bool = False):
@@ -307,22 +324,22 @@ class BluetoothControlWidget(QWidget):
         """Handle connect button click."""
         current_item = self.device_list.currentItem()
         if current_item:
-            device_addr = current_item.text().split(' ')[0]
+            device_addr = current_item.text().split(" ")[0]
             self.connect_requested.emit(device_addr)
 
     def _on_disconnect_clicked(self):
         """Handle disconnect button click."""
         current_item = self.device_list.currentItem()
         if current_item:
-            device_addr = current_item.text().split(' ')[0]
+            device_addr = current_item.text().split(" ")[0]
             self.disconnect_requested.emit(device_addr)
 
     def update_devices(self, devices):
         """Update discovered devices list."""
         self.device_list.clear()
         for device in devices:
-            addr = device.get('address', 'Unknown')
-            name = device.get('name', 'Unknown Device')
+            addr = device.get("address", "Unknown")
+            name = device.get("name", "Unknown Device")
             self.device_list.addItem(f"{addr} - {name}")
 
     def set_connection_status(self, device_addr: str, connected: bool):
@@ -454,7 +471,9 @@ class IntegrationManagementWidget(QWidget):
     def update_sync_status(self, synchronized: bool, max_offset_ms: float = 0):
         """Update time synchronization status."""
         if synchronized:
-            self.sync_status_label.setText(f"Time Sync: Active (±{max_offset_ms:.1f}ms)")
+            self.sync_status_label.setText(
+                f"Time Sync: Active (±{max_offset_ms:.1f}ms)"
+            )
             if max_offset_ms <= 5.0:  # Within 5ms requirement
                 self.sync_status_label.setStyleSheet("color: green;")
             else:
@@ -463,7 +482,9 @@ class IntegrationManagementWidget(QWidget):
             self.sync_status_label.setText("Time Sync: Not Available")
             self.sync_status_label.setStyleSheet("color: red;")
 
-    def update_metrics(self, data_rate_mbps: float, latency_ms: float, error_count: int):
+    def update_metrics(
+        self, data_rate_mbps: float, latency_ms: float, error_count: int
+    ):
         """Update real-time performance metrics."""
         self.data_rate_label.setText(f"Data Rate: {data_rate_mbps:.2f} MB/s")
         self.latency_label.setText(f"Network Latency: {latency_ms:.1f} ms")
@@ -563,8 +584,8 @@ class WiFiControlWidget(QWidget):
         """Update available networks list."""
         self.network_list.clear()
         for network in networks:
-            ssid = network.get('ssid', 'Unknown')
-            signal = network.get('signal_strength', 0)
+            ssid = network.get("ssid", "Unknown")
+            signal = network.get("signal_strength", 0)
             self.network_list.addItem(f"{ssid} ({signal}%)")
 
     def set_connection_status(self, ssid: str, connected: bool, ip: str = ""):

@@ -12,10 +12,12 @@ from pathlib import Path
 # Add the src directory to Python path for imports
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
+from ircamera_pc.network.discovery import NetworkDiscoveryService
+from ircamera_pc.network.messaging import MessagePriority, ReliableMessageService
+
 # Import core networking components directly
 from ircamera_pc.network.security import SecurityManager
-from ircamera_pc.network.messaging import ReliableMessageService, MessagePriority
-from ircamera_pc.network.discovery import NetworkDiscoveryService
+
 
 async def test_basic_integration():
     """Test basic integration of networking components."""
@@ -28,7 +30,9 @@ async def test_basic_integration():
         security_manager.cert_dir = Path(temp_dir)
         security_manager.ca_cert_path = security_manager.cert_dir / "ca_cert.pem"
         security_manager.ca_key_path = security_manager.cert_dir / "ca_key.pem"
-        security_manager.server_cert_path = security_manager.cert_dir / "server_cert.pem"
+        security_manager.server_cert_path = (
+            security_manager.cert_dir / "server_cert.pem"
+        )
         security_manager.server_key_path = security_manager.cert_dir / "server_key.pem"
         security_manager.device_certificates = {}
         security_manager.auth_tokens = {}
@@ -54,6 +58,7 @@ async def test_basic_integration():
 
     # Mock transport for testing
     sent_messages = []
+
     async def mock_transport(host, port, message):
         sent_messages.append((host, port, message))
         return True
@@ -76,7 +81,7 @@ async def test_basic_integration():
             target_port=8080,
             message_type="test_type",
             content={"test": "data"},
-            priority=MessagePriority.NORMAL
+            priority=MessagePriority.NORMAL,
         )
         print(f"   ✅ Test message sent: {message_id}")
 
@@ -122,10 +127,12 @@ async def test_basic_integration():
 
     return True
 
+
 async def main():
     """Run the integration test."""
     success = await test_basic_integration()
     return 0 if success else 1
+
 
 if __name__ == "__main__":
     try:

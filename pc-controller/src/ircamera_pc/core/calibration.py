@@ -445,7 +445,9 @@ class CameraCalibrator:
             logger.error(f"Failed to finalize calibration: {e}")
             return None
 
-    def get_calibration_status(self, device_id: str, session_id: str, camera_type: Union[CameraType, str]) -> Dict[str, Any]:
+    def get_calibration_status(
+        self, device_id: str, session_id: str, camera_type: Union[CameraType, str]
+    ) -> Dict[str, Any]:
         """
         Get calibration session status
 
@@ -470,7 +472,7 @@ class CameraCalibrator:
                 "exists": False,
                 "status": "not_started",
                 "images_collected": 0,
-                "min_images": self.min_images
+                "min_images": self.min_images,
             }
 
         session_data = self.active_sessions[calibration_id]
@@ -481,11 +483,13 @@ class CameraCalibrator:
             "min_images": self.min_images,
             "session_data": {
                 "start_time": session_data["start_time"],
-                "image_resolution": session_data["image_resolution"]
-            }
+                "image_resolution": session_data["image_resolution"],
+            },
         }
 
-    def cancel_calibration(self, device_id: str, session_id: str, camera_type: Union[CameraType, str]) -> bool:
+    def cancel_calibration(
+        self, device_id: str, session_id: str, camera_type: Union[CameraType, str]
+    ) -> bool:
         """
         Cancel an active calibration session
 
@@ -548,21 +552,31 @@ class CameraCalibrator:
             right_intrinsics = right_result.intrinsics
 
             # Create camera matrices from intrinsics
-            camera_matrix_left = np.array([
-                [left_intrinsics.fx, 0, left_intrinsics.cx],
-                [0, left_intrinsics.fy, left_intrinsics.cy],
-                [0, 0, 1]
-            ], dtype=np.float64)
+            camera_matrix_left = np.array(
+                [
+                    [left_intrinsics.fx, 0, left_intrinsics.cx],
+                    [0, left_intrinsics.fy, left_intrinsics.cy],
+                    [0, 0, 1],
+                ],
+                dtype=np.float64,
+            )
 
-            camera_matrix_right = np.array([
-                [right_intrinsics.fx, 0, right_intrinsics.cx],
-                [0, right_intrinsics.fy, right_intrinsics.cy],
-                [0, 0, 1]
-            ], dtype=np.float64)
+            camera_matrix_right = np.array(
+                [
+                    [right_intrinsics.fx, 0, right_intrinsics.cx],
+                    [0, right_intrinsics.fy, right_intrinsics.cy],
+                    [0, 0, 1],
+                ],
+                dtype=np.float64,
+            )
 
             # Distortion coefficients
-            dist_coeffs_left = np.array(left_intrinsics.distortion_coeffs, dtype=np.float64)
-            dist_coeffs_right = np.array(right_intrinsics.distortion_coeffs, dtype=np.float64)
+            dist_coeffs_left = np.array(
+                left_intrinsics.distortion_coeffs, dtype=np.float64
+            )
+            dist_coeffs_right = np.array(
+                right_intrinsics.distortion_coeffs, dtype=np.float64
+            )
 
             # For stereo calibration, we need corresponding object and image points
             # In a real implementation, you'd collect synchronized stereo image pairs
@@ -583,31 +597,44 @@ class CameraCalibrator:
 
             # Create 3D object points for chessboard
             objp = np.zeros((pattern_size[0] * pattern_size[1], 3), np.float32)
-            objp[:,:2] = np.mgrid[0:pattern_size[0], 0:pattern_size[1]].T.reshape(-1,2) * square_size
+            objp[:, :2] = (
+                np.mgrid[0 : pattern_size[0], 0 : pattern_size[1]].T.reshape(-1, 2)
+                * square_size
+            )
 
             # Simulate stereo correspondences (would be real detections in production)
-            num_stereo_pairs = max(15, min(left_result.num_images_used, right_result.num_images_used))
+            num_stereo_pairs = max(
+                15, min(left_result.num_images_used, right_result.num_images_used)
+            )
 
             for i in range(num_stereo_pairs):
                 # Add object points (same for both cameras)
                 object_points_stereo.append(objp)
 
                 # Simulate detected corners with realistic noise and stereo offset
-                base_corners_left = self._generate_realistic_corners(pattern_size, image_size, i)
-                base_corners_right = self._generate_stereo_corners(base_corners_left, baseline_offset=100)
+                base_corners_left = self._generate_realistic_corners(
+                    pattern_size, image_size, i
+                )
+                base_corners_right = self._generate_stereo_corners(
+                    base_corners_left, baseline_offset=100
+                )
 
                 image_points_left_stereo.append(base_corners_left)
                 image_points_right_stereo.append(base_corners_right)
 
             # Perform stereo calibration using OpenCV
-            logger.info(f"Performing stereo calibration with {len(object_points_stereo)} image pairs")
+            logger.info(
+                f"Performing stereo calibration with {len(object_points_stereo)} image pairs"
+            )
 
             # Stereo calibration flags
-            flags = (cv2.CALIB_FIX_INTRINSIC +
-                    cv2.CALIB_RATIONAL_MODEL +
-                    cv2.CALIB_FIX_ASPECT_RATIO +
-                    cv2.CALIB_ZERO_TANGENT_DIST +
-                    cv2.CALIB_SAME_FOCAL_LENGTH)
+            flags = (
+                cv2.CALIB_FIX_INTRINSIC
+                + cv2.CALIB_RATIONAL_MODEL
+                + cv2.CALIB_FIX_ASPECT_RATIO
+                + cv2.CALIB_ZERO_TANGENT_DIST
+                + cv2.CALIB_SAME_FOCAL_LENGTH
+            )
 
             # Run stereo calibration
             ret, _, _, _, _, R, T, E, F = cv2.stereoCalibrate(
@@ -620,18 +647,26 @@ class CameraCalibrator:
                 dist_coeffs_right,
                 image_size,
                 flags=flags,
-                criteria=(cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 1e-5)
+                criteria=(
+                    cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER,
+                    100,
+                    1e-5,
+                ),
             )
 
             logger.info(f"Stereo calibration completed with RMS error: {ret:.3f}")
 
             # Compute rectification transforms
             R1, R2, P1, P2, Q, roi_left, roi_right = cv2.stereoRectify(
-                camera_matrix_left, dist_coeffs_left,
-                camera_matrix_right, dist_coeffs_right,
-                image_size, R, T,
+                camera_matrix_left,
+                dist_coeffs_left,
+                camera_matrix_right,
+                dist_coeffs_right,
+                image_size,
+                R,
+                T,
                 flags=cv2.CALIB_ZERO_DISPARITY,
-                alpha=0.9  # 0=crop everything, 1=keep everything
+                alpha=0.9,  # 0=crop everything, 1=keep everything
             )
 
             # Create stereo calibration result
@@ -648,7 +683,9 @@ class CameraCalibrator:
                 roi_left=roi_left,
                 roi_right=roi_right,
                 baseline=float(np.linalg.norm(T)),
-                convergence_angle=float(np.arccos(np.clip(np.trace(R) - 1) / 2, -1, 1)) * 180 / np.pi
+                convergence_angle=float(np.arccos(np.clip(np.trace(R) - 1) / 2, -1, 1))
+                * 180
+                / np.pi,
             )
 
             # Update calibration results with stereo information
@@ -657,7 +694,9 @@ class CameraCalibrator:
 
             logger.info(f"Stereo calibration completed successfully")
             logger.info(f"Baseline: {stereo_calibration.baseline:.2f}mm")
-            logger.info(f"Convergence angle: {stereo_calibration.convergence_angle:.2f}°")
+            logger.info(
+                f"Convergence angle: {stereo_calibration.convergence_angle:.2f}°"
+            )
 
             return stereo_calibration
 
@@ -665,7 +704,9 @@ class CameraCalibrator:
             logger.error(f"Failed to perform stereo calibration: {e}")
             return None
 
-    def _generate_realistic_corners(self, pattern_size: tuple, image_size: tuple, seed: int) -> np.ndarray:
+    def _generate_realistic_corners(
+        self, pattern_size: tuple, image_size: tuple, seed: int
+    ) -> np.ndarray:
         """Generate realistic chessboard corner points with noise."""
         np.random.seed(seed)
 
@@ -692,7 +733,9 @@ class CameraCalibrator:
 
         return np.array(corners, dtype=np.float32)
 
-    def _generate_stereo_corners(self, left_corners: np.ndarray, baseline_offset: float) -> np.ndarray:
+    def _generate_stereo_corners(
+        self, left_corners: np.ndarray, baseline_offset: float
+    ) -> np.ndarray:
         """Generate corresponding right camera corners with stereo disparity."""
         right_corners = left_corners.copy()
 

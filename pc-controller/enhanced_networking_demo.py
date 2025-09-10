@@ -17,16 +17,21 @@ from pathlib import Path
 # Add the src directory to Python path for imports
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from ircamera_pc.network.server import NetworkServer
-from ircamera_pc.network.security import SecurityManager
-from ircamera_pc.network.discovery import NetworkDiscoveryService, DeviceType
-from ircamera_pc.network.messaging import ReliableMessageService, MessagePriority, MessageCallback
 from ircamera_pc.core.timesync import TimeSyncService
+from ircamera_pc.network.discovery import DeviceType, NetworkDiscoveryService
+from ircamera_pc.network.messaging import (
+    MessageCallback,
+    MessagePriority,
+    ReliableMessageService,
+)
+from ircamera_pc.network.security import SecurityManager
+from ircamera_pc.network.server import NetworkServer
 
 try:
     from loguru import logger
 except ImportError:
     import logging
+
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
 
@@ -68,7 +73,9 @@ class EnhancedNetworkingDemo:
             if await self.discovery_service.start_discovery():
                 logger.info("✓ mDNS/Zeroconf discovery service started")
             else:
-                logger.warning("Discovery service failed - continuing without discovery")
+                logger.warning(
+                    "Discovery service failed - continuing without discovery"
+                )
 
             # Step 4: Initialize reliable messaging
             logger.info("4. Initializing reliable messaging...")
@@ -117,11 +124,15 @@ class EnhancedNetworkingDemo:
         while asyncio.get_event_loop().time() - start_time < demo_duration:
             try:
                 # Check for discovered devices
-                discovered_devices = await self.discovery_service.get_discovered_devices()
+                discovered_devices = (
+                    await self.discovery_service.get_discovered_devices()
+                )
                 if discovered_devices:
                     logger.info(f"Discovered {len(discovered_devices)} devices:")
                     for device in discovered_devices:
-                        logger.info(f"  - {device.service_name} ({device.device_type.value}) at {device.ip_address}:{device.port}")
+                        logger.info(
+                            f"  - {device.service_name} ({device.device_type.value}) at {device.ip_address}:{device.port}"
+                        )
 
                 # Check connected devices
                 connected_devices = self.server.get_connected_devices()
@@ -131,15 +142,21 @@ class EnhancedNetworkingDemo:
                     # Demonstrate reliable messaging
                     for device in connected_devices:
                         try:
-                            message_id = await self.server.send_reliable_message_to_device(
-                                device.device_id,
-                                "heartbeat_check",
-                                {"timestamp": asyncio.get_event_loop().time()},
-                                MessagePriority.NORMAL
+                            message_id = (
+                                await self.server.send_reliable_message_to_device(
+                                    device.device_id,
+                                    "heartbeat_check",
+                                    {"timestamp": asyncio.get_event_loop().time()},
+                                    MessagePriority.NORMAL,
+                                )
                             )
-                            logger.debug(f"Sent reliable heartbeat to {device.device_id}: {message_id}")
+                            logger.debug(
+                                f"Sent reliable heartbeat to {device.device_id}: {message_id}"
+                            )
                         except Exception as e:
-                            logger.warning(f"Failed to send reliable message to {device.device_id}: {e}")
+                            logger.warning(
+                                f"Failed to send reliable message to {device.device_id}: {e}"
+                            )
 
                 # Check messaging service health
                 pending_count = self.messaging_service.get_pending_message_count()
@@ -162,7 +179,9 @@ class EnhancedNetworkingDemo:
         try:
             # This would normally send the message via the actual network connection
             # For demo purposes, we'll just log it
-            logger.debug(f"Transport: Sending message to {host}:{port} - {message.get('message_type')}")
+            logger.debug(
+                f"Transport: Sending message to {host}:{port} - {message.get('message_type')}"
+            )
 
             # Simulate successful delivery
             return True
@@ -193,17 +212,25 @@ class EnhancedNetworkingDemo:
         logger.info("=== Discovery Features Demo ===")
 
         # Get discovered devices by type
-        thermal_cameras = await self.discovery_service.get_devices_by_type(DeviceType.THERMAL_CAMERA_TS004)
-        android_nodes = await self.discovery_service.get_devices_by_type(DeviceType.ANDROID_SENSOR_NODE)
+        thermal_cameras = await self.discovery_service.get_devices_by_type(
+            DeviceType.THERMAL_CAMERA_TS004
+        )
+        android_nodes = await self.discovery_service.get_devices_by_type(
+            DeviceType.ANDROID_SENSOR_NODE
+        )
 
         logger.info(f"Thermal cameras: {len(thermal_cameras)}")
         logger.info(f"Android sensor nodes: {len(android_nodes)}")
 
         for camera in thermal_cameras:
-            logger.info(f"  Thermal: {camera.service_name} at {camera.ip_address}:{camera.port}")
+            logger.info(
+                f"  Thermal: {camera.service_name} at {camera.ip_address}:{camera.port}"
+            )
 
         for node in android_nodes:
-            logger.info(f"  Android: {node.service_name} at {node.ip_address}:{node.port}")
+            logger.info(
+                f"  Android: {node.service_name} at {node.ip_address}:{node.port}"
+            )
 
 
 async def main():

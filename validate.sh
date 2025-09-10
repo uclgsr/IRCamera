@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Unified Validation Script - Consolidates all validation functionality
-# Usage: ./validate.sh [quick|core|full] [--auto-fix]
+# Unified Validation Script - Enterprise-Grade Quality Validation
+# Usage: ./validate.sh [quick|core|full|enterprise] [--auto-fix]
 
 set -e
 
@@ -10,19 +10,22 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
 NC='\033[0m'
 
 # Configuration
 MODE="${1:-core}"
 AUTO_FIX="${2:-}"
 START_TIME=$(date +%s)
+QUALITY_THRESHOLD=85
 
 print_header() {
-    echo -e "${BLUE}=================================================${NC}"
-    echo -e "${BLUE}🔍 IRCamera Unified Validation System${NC}"
-    echo -e "${BLUE}=================================================${NC}"
+    echo -e "${PURPLE}================================================================${NC}"
+    echo -e "${PURPLE}🏆 IRCamera Enterprise Validation System${NC}"
+    echo -e "${PURPLE}================================================================${NC}"
     echo -e "Mode: ${YELLOW}$MODE${NC}"
     echo -e "Auto-fix: ${YELLOW}${AUTO_FIX:-disabled}${NC}"
+    echo -e "Quality Threshold: ${YELLOW}$QUALITY_THRESHOLD/100${NC}"
     echo ""
 }
 
@@ -137,8 +140,42 @@ main() {
             validate_build || exit_code=1
             validate_tests || exit_code=1
             ;;
+        "enterprise")
+            print_status "🚀 Starting enterprise-grade quality analysis..."
+            
+            # Run comprehensive quality analysis
+            if [[ -f "enterprise_quality_enforcer.py" ]]; then
+                chmod +x enterprise_quality_enforcer.py
+                
+                if python3 enterprise_quality_enforcer.py --all; then
+                    print_status "✅ Enterprise quality analysis completed successfully"
+                    
+                    # Check quality gates
+                    if [[ -f "quality_reports/quality_dashboard.json" ]]; then
+                        local quality_score
+                        quality_score=$(grep -o '"overall_score": [0-9]\+' quality_reports/quality_dashboard.json | grep -o '[0-9]\+' || echo "0")
+                        
+                        if [[ $quality_score -ge $QUALITY_THRESHOLD ]]; then
+                            print_status "🏆 Quality gates passed: $quality_score/100"
+                        else
+                            print_error "🚫 Quality gates failed: $quality_score/100 (required: $QUALITY_THRESHOLD)"
+                            echo "💡 View detailed report: quality_reports/enterprise_quality_report.html"
+                            exit_code=1
+                        fi
+                    fi
+                else
+                    print_error "❌ Enterprise quality analysis failed"
+                    exit_code=1
+                fi
+            else
+                print_warning "Enterprise quality enforcer not found, falling back to full validation"
+                validate_syntax || exit_code=1
+                validate_build || exit_code=1
+                validate_tests || exit_code=1
+            fi
+            ;;
         *)
-            print_error "Invalid mode: $MODE. Use: quick|core|full"
+            print_error "Invalid mode: $MODE. Use: quick|core|full|enterprise"
             exit 1
             ;;
     esac

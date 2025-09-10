@@ -4,15 +4,16 @@ Comprehensive Test Runner for Hub-and-Spoke Multi-Modal Physiological Sensing Pl
 Executes unit tests, integration tests, and performance tests across both Android and PC Controller
 """
 
-import os
-import sys
-import subprocess
-import json
-import time
-from pathlib import Path
-from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
 import argparse
+import json
+import os
+import subprocess
+import sys
+import time
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+
 
 @dataclass
 class TestResult:
@@ -22,6 +23,7 @@ class TestResult:
     details: str
     coverage: Optional[float] = None
 
+
 @dataclass
 class TestSuite:
     name: str
@@ -29,6 +31,7 @@ class TestSuite:
     command: str
     working_dir: str
     timeout: int = 300  # 5 minutes default
+
 
 class ComprehensiveTestRunner:
     """Main test runner that orchestrates all test suites"""
@@ -49,77 +52,72 @@ class ComprehensiveTestRunner:
                 description="Android Unit Tests (RecordingController, TimeManager, NetworkClient, GSRSensorRecorder)",
                 command="./gradlew test --info",
                 working_dir=str(self.project_root),
-                timeout=600
+                timeout=600,
             ),
-
             # Android Integration Tests
             TestSuite(
                 name="android_integration_tests",
                 description="Android Integration Tests (Hub-Spoke Communication, Multi-Modal Coordination)",
                 command="./gradlew connectedAndroidTest --info",
                 working_dir=str(self.project_root),
-                timeout=900
+                timeout=900,
             ),
-
             # Android Performance Tests
             TestSuite(
                 name="android_performance_tests",
                 description="Android Performance Tests (Throughput, Latency, Resource Usage)",
                 command="./gradlew connectedBenchmarkAndroidTest --info",
                 working_dir=str(self.project_root),
-                timeout=1200
+                timeout=1200,
             ),
-
             # PC Controller Unit Tests
             TestSuite(
                 name="pc_unit_tests",
                 description="PC Controller Unit Tests (Network Server, Data Aggregation, Protocol)",
                 command="python -m pytest src/ircamera_pc/tests/test_network.py src/ircamera_pc/tests/test_data_aggregation.py -v --cov=ircamera_pc --cov-report=html",
                 working_dir=str(self.project_root / "pc-controller"),
-                timeout=300
+                timeout=300,
             ),
-
             # PC Controller Integration Tests
             TestSuite(
                 name="pc_integration_tests",
                 description="PC Controller Integration Tests (End-to-End Hub-Spoke Workflows)",
                 command="python -m pytest src/ircamera_pc/tests/test_integration.py -v --cov=ircamera_pc --cov-append",
                 working_dir=str(self.project_root / "pc-controller"),
-                timeout=600
+                timeout=600,
             ),
-
             # Cross-Platform Integration Tests
             TestSuite(
                 name="cross_platform_tests",
                 description="Cross-Platform Integration Tests (Android-PC Communication)",
                 command="python integration_example.py --test-mode",
                 working_dir=str(self.project_root / "pc-controller"),
-                timeout=300
+                timeout=300,
             ),
-
             # Vendor SDK Integration Validation
             TestSuite(
                 name="vendor_sdk_validation",
                 description="Vendor SDK Integration Validation (Shimmer, IR Camera, Real Hardware)",
                 command="./gradlew testDebugUnitTest --tests '*GSRSensorRecorderTest*' --info",
                 working_dir=str(self.project_root),
-                timeout=300
+                timeout=300,
             ),
-
             # System Validation Tests
             TestSuite(
                 name="system_validation",
                 description="System Validation (Component Verification, Build Validation)",
                 command="python test_components.py",
                 working_dir=str(self.project_root / "pc-controller"),
-                timeout=120
-            )
+                timeout=120,
+            ),
         ]
 
-    def run_all_tests(self,
-                     include_performance: bool = True,
-                     include_integration: bool = True,
-                     parallel: bool = False) -> Tuple[int, int]:
+    def run_all_tests(
+        self,
+        include_performance: bool = True,
+        include_integration: bool = True,
+        parallel: bool = False,
+    ) -> Tuple[int, int]:
         """
         Run all test suites
 
@@ -135,7 +133,9 @@ class ComprehensiveTestRunner:
         print("=" * 80)
 
         # Filter test suites based on options
-        suites_to_run = self._filter_test_suites(include_performance, include_integration)
+        suites_to_run = self._filter_test_suites(
+            include_performance, include_integration
+        )
 
         start_time = time.time()
         passed_count = 0
@@ -168,7 +168,9 @@ class ComprehensiveTestRunner:
 
         return passed_count, len(suites_to_run)
 
-    def _filter_test_suites(self, include_performance: bool, include_integration: bool) -> List[TestSuite]:
+    def _filter_test_suites(
+        self, include_performance: bool, include_integration: bool
+    ) -> List[TestSuite]:
         """Filter test suites based on execution options"""
         filtered_suites = []
 
@@ -200,7 +202,7 @@ class ComprehensiveTestRunner:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
-                universal_newlines=True
+                universal_newlines=True,
             )
 
             stdout, _ = process.communicate(timeout=suite.timeout)
@@ -217,7 +219,7 @@ class ComprehensiveTestRunner:
                 passed=passed,
                 duration=duration,
                 details=stdout[-1000:] if stdout else "",  # Last 1000 chars
-                coverage=coverage
+                coverage=coverage,
             )
 
         except subprocess.TimeoutExpired:
@@ -226,7 +228,7 @@ class ComprehensiveTestRunner:
                 name=suite.name,
                 passed=False,
                 duration=duration,
-                details=f"Test suite timed out after {suite.timeout} seconds"
+                details=f"Test suite timed out after {suite.timeout} seconds",
             )
 
         except Exception as e:
@@ -235,17 +237,18 @@ class ComprehensiveTestRunner:
                 name=suite.name,
                 passed=False,
                 duration=duration,
-                details=f"Error executing test suite: {str(e)}"
+                details=f"Error executing test suite: {str(e)}",
             )
 
     def _extract_coverage(self, output: str) -> Optional[float]:
         """Extract coverage percentage from test output"""
-        lines = output.split('\n')
+        lines = output.split("\n")
         for line in lines:
-            if 'coverage' in line.lower() and '%' in line:
+            if "coverage" in line.lower() and "%" in line:
                 # Try to extract percentage
                 import re
-                match = re.search(r'(\d+(?:\.\d+)?)%', line)
+
+                match = re.search(r"(\d+(?:\.\d+)?)%", line)
                 if match:
                     return float(match.group(1))
         return None
@@ -263,7 +266,7 @@ class ComprehensiveTestRunner:
                 "total_suites": len(self.results),
                 "passed": sum(1 for r in self.results if r.passed),
                 "failed": sum(1 for r in self.results if not r.passed),
-                "average_coverage": self._calculate_average_coverage()
+                "average_coverage": self._calculate_average_coverage(),
             },
             "results": [
                 {
@@ -271,20 +274,20 @@ class ComprehensiveTestRunner:
                     "passed": r.passed,
                     "duration": r.duration,
                     "coverage": r.coverage,
-                    "details": r.details[:500] if r.details else None
+                    "details": r.details[:500] if r.details else None,
                 }
                 for r in self.results
-            ]
+            ],
         }
 
         json_file = report_dir / "comprehensive_test_report.json"
-        with open(json_file, 'w') as f:
+        with open(json_file, "w") as f:
             json.dump(json_report, f, indent=2)
 
         # Generate HTML report
         html_report = self._generate_html_report(json_report)
         html_file = report_dir / "comprehensive_test_report.html"
-        with open(html_file, 'w') as f:
+        with open(html_file, "w") as f:
             f.write(html_report)
 
         print(f"\n📊 Reports Generated:")
@@ -345,9 +348,9 @@ class ComprehensiveTestRunner:
     <h2>Test Results</h2>
     """
 
-        for result in json_report['results']:
-            status_class = "passed" if result['passed'] else "failed"
-            status_icon = "✅" if result['passed'] else "❌"
+        for result in json_report["results"]:
+            status_class = "passed" if result["passed"] else "failed"
+            status_icon = "✅" if result["passed"] else "❌"
 
             html += f"""
     <div class="test-result {status_class}">
@@ -374,26 +377,24 @@ def main():
     parser.add_argument(
         "--no-performance",
         action="store_true",
-        help="Skip performance tests (faster execution)"
+        help="Skip performance tests (faster execution)",
     )
 
     parser.add_argument(
         "--no-integration",
         action="store_true",
-        help="Skip integration tests (unit tests only)"
+        help="Skip integration tests (unit tests only)",
     )
 
     parser.add_argument(
-        "--parallel",
-        action="store_true",
-        help="Run tests in parallel (experimental)"
+        "--parallel", action="store_true", help="Run tests in parallel (experimental)"
     )
 
     parser.add_argument(
         "--project-root",
         type=Path,
         default=Path(__file__).parent,
-        help="Root directory of the project"
+        help="Root directory of the project",
     )
 
     args = parser.parse_args()
@@ -404,7 +405,7 @@ def main():
     passed_count, total_count = runner.run_all_tests(
         include_performance=not args.no_performance,
         include_integration=not args.no_integration,
-        parallel=args.parallel
+        parallel=args.parallel,
     )
 
     # Exit with appropriate code

@@ -11,6 +11,7 @@ from pathlib import Path
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
+
 def test_imports_and_basic_functionality():
     """Test that all core modules import and basic functionality works."""
     print("🔍 Testing imports and basic functionality...")
@@ -18,12 +19,16 @@ def test_imports_and_basic_functionality():
     try:
         # Test core imports
         from ircamera_pc.core import (
-            ConfigManager, SessionManager,
-            FileTransferManager, CameraCalibrator,
-            GSRIngestor, TimeSyncService
+            CameraCalibrator,
+            ConfigManager,
+            FileTransferManager,
+            GSRIngestor,
+            SessionManager,
+            TimeSyncService,
         )
-        from ircamera_pc.network import NetworkServer
         from ircamera_pc.gui.icons import IconRegistry
+        from ircamera_pc.network import NetworkServer
+
         print("✅ All imports successful")
 
         # Test instantiation
@@ -51,15 +56,17 @@ def test_imports_and_basic_functionality():
     except Exception as e:
         print(f"❌ Error: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 def test_android_build():
     """Test that Android build is successful."""
     print("\n📱 Testing Android build...")
 
-    import subprocess
     import os
+    import subprocess
 
     try:
         # Change to root directory
@@ -70,7 +77,7 @@ def test_android_build():
             ["./gradlew", ":libapp:assembleRelease", "--quiet"],
             capture_output=True,
             text=True,
-            timeout=300  # 5 minutes
+            timeout=300,  # 5 minutes
         )
 
         if result.returncode == 0:
@@ -87,28 +94,36 @@ def test_android_build():
         print(f"❌ Android build error: {e}")
         return False
 
+
 def test_python_tests():
     """Run Python test suite."""
     print("\n🧪 Testing Python test suite...")
 
-    import subprocess
     import os
+    import subprocess
 
     try:
         os.chdir(Path(__file__).parent)
 
         # Set environment variables for headless testing
         env = os.environ.copy()
-        env['QT_QPA_PLATFORM'] = 'offscreen'
-        env['DISPLAY'] = ':99'
+        env["QT_QPA_PLATFORM"] = "offscreen"
+        env["DISPLAY"] = ":99"
 
         # Run pytest
         result = subprocess.run(
-            [sys.executable, "-m", "pytest", "src/ircamera_pc/tests/", "-v", "--tb=short"],
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                "src/ircamera_pc/tests/",
+                "-v",
+                "--tb=short",
+            ],
             capture_output=True,
             text=True,
             env=env,
-            timeout=180  # 3 minutes
+            timeout=180,  # 3 minutes
         )
 
         if result.returncode == 0:
@@ -121,6 +136,7 @@ def test_python_tests():
     except Exception as e:
         print(f"❌ Python test error: {e}")
         return False
+
 
 def main():
     """Run all validation tests."""
@@ -152,7 +168,9 @@ def main():
     if all_passed:
         print("\n🎉 ALL VALIDATION TESTS PASSED")
         print("✅ IRCamera PC Controller is stable with no errors or warnings")
-        print("✅ Enhanced networking, GUI icons, and data processing pipeline complete")
+        print(
+            "✅ Enhanced networking, GUI icons, and data processing pipeline complete"
+        )
         print("✅ Cross-platform compatibility achieved")
         print("✅ Production-ready implementation")
     else:
@@ -160,6 +178,7 @@ def main():
         print("Please review the output above for details")
 
     return 0 if all_passed else 1
+
 
 if __name__ == "__main__":
     sys.exit(main())
