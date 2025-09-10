@@ -3,6 +3,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.os.Bundle
 import android.provider.Settings
 import android.text.*
 import android.text.style.UnderlineSpan
@@ -17,8 +18,16 @@ import com.topdon.lib.core.utils.Constants
 class MoreHelpActivity : BaseBindingActivity<ActivityMoreHelpBinding>() {
     private var connectionType: Int = 0
     private lateinit var wifiManager: WifiManager
+    
+    override fun initContentLayoutId(): Int = R.layout.activity_more_help
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+        initData()
+    }
 
-    override fun initView() {
+    private fun initView() {
         initIntent()
         wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
     }
@@ -48,7 +57,7 @@ class MoreHelpActivity : BaseBindingActivity<ActivityMoreHelpBinding>() {
         }
     }
 
-    override fun initData() {
+    private fun initData() {
         binding.ivTvSetting.setOnClickListener {
             startWifiList()
         }

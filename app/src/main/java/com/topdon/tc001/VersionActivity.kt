@@ -1,5 +1,6 @@
 package com.topdon.tc001
 
+import android.os.Bundle
 import android.view.View
 import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
@@ -20,10 +21,15 @@ import java.util.*
 // Legacy ARouter route annotation - now using NavigationManager
 class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnClickListener {
 
-    override fun getViewBinding(): ActivityVersionBinding = 
-        ActivityVersionBinding.inflate(layoutInflater)
+    override fun initContentLayoutId(): Int = R.layout.activity_version
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+        initData()
+    }
 
-    override fun initView() {
+    private fun initView() {
         // Set up views using binding
         binding.versionCodeText.text = "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
         val year = Calendar.getInstance().get(Calendar.YEAR)
@@ -45,7 +51,7 @@ class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnCl
         binding.settingVersionTxt.text = CommUtils.getAppName()
     }
 
-    override fun initData() {
+    private fun initData() {
         if (BaseApplication.instance.isDomestic()) {
             checkAppVersion(false)
         }
