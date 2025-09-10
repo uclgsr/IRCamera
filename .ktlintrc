@@ -1,0 +1,68 @@
+# KtLint configuration file
+# Based on Kotlin Coding Conventions and Android Style Guide
+
+[*.{kt,kts}]
+
+# Disable rules that conflict with Android development patterns
+disabled_rules=no-wildcard-imports,package-name,import-ordering
+
+# Enable Android-specific rules
+android=true
+
+# Indentation settings
+indent_size=4
+continuation_indent_size=8
+
+# Line length
+max_line_length=120
+
+# Import organization
+ij_kotlin_imports_layout=*,java.**,javax.**,kotlin.**,^
+
+# Code style
+ij_kotlin_allow_trailing_comma=true
+ij_kotlin_allow_trailing_comma_on_call_site=true
+
+# Parameter wrapping
+ij_kotlin_parameter_annotation_wrap=off
+ij_kotlin_variable_annotation_wrap=off
+
+# Chain call wrapping
+ij_kotlin_call_parameters_wrap=on_every_item
+ij_kotlin_call_parameters_lparen_on_next_line=false
+ij_kotlin_call_parameters_rparen_on_line=false
+
+# Method declaration parameters
+ij_kotlin_method_parameters_wrap=on_every_item
+ij_kotlin_method_parameters_lparen_on_next_line=false
+ij_kotlin_method_parameters_rparen_on_line=false
+
+# Assignment wrap
+ij_kotlin_assignment_wrap=normal
+
+# Class annotation formatting
+ij_kotlin_class_annotation_wrap=split_into_lines
+
+# Align in columns case
+ij_kotlin_align_in_columns_case_branch=false
+
+# Blank lines
+ij_kotlin_keep_blank_lines_before_right_brace=0
+ij_kotlin_keep_blank_lines_in_code=2
+ij_kotlin_keep_blank_lines_in_declarations=2
+
+# Spaces
+ij_kotlin_space_around_assignment_operators=true
+ij_kotlin_space_around_equality_operators=true
+ij_kotlin_space_around_logical_operators=true
+ij_kotlin_space_around_relational_operators=true
+ij_kotlin_space_after_comma=true
+ij_kotlin_space_after_comma_in_type_arguments=true
+ij_kotlin_space_before_comma=false
+ij_kotlin_space_around_range=false
+
+# Function declaration spacing
+ij_kotlin_space_before_type_colon=false
+ij_kotlin_space_after_type_colon=true
+ij_kotlin_space_before_extend_colon=true
+ij_kotlin_space_after_extend_colon=true

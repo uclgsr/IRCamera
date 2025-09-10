@@ -1,0 +1,376 @@
+name: Advanced Quality Check & Linting
+
+on:
+  push:
+    branches: [main, develop, master]
+  pull_request:
+    branches: [main, develop, master]
+  workflow_dispatch:
+    inputs:
+      auto_commit:
+        description: "Auto-commit quality improvements"
+        required: false
+        default: "true"
+        type: boolean
+      rollback_on_failure:
+        description: "Rollback changes if compilation breaks"
+        required: false
+        default: "true"
+        type: boolean
+
+jobs:
+  quality-analysis:
+    runs-on: ubuntu-latest
+    
+    outputs:
+      quality-report: ${{ steps.quality-check.outputs.report }}
+      compilation-status: ${{ steps.compilation.outputs.status }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.cache/pip
+            ~/.npm
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/*.gradle*', '**/pyproject.toml', '**/package*.json') }}
+          restore-keys: |
+            ${{ runner.os }}-deps-
+            
+      - name: Install advanced linting tools
+        run: |
+          echo "🔧 Installing comprehensive linting toolchain..."
+          
+          # Install ktlint for Kotlin
+          echo "Installing ktlint..."
+          curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.50.0/ktlint
+          chmod a+x ktlint
+          sudo mv ktlint /usr/local/bin/
+          
+          # Install Checkstyle for Java
+          echo "Installing Checkstyle..."
+          wget -q https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.12.4/checkstyle-10.12.4-all.jar -O checkstyle.jar
+          sudo mv checkstyle.jar /usr/local/bin/
+          echo '#!/bin/bash' | sudo tee /usr/local/bin/checkstyle > /dev/null
+          echo 'java -jar /usr/local/bin/checkstyle.jar "$@"' | sudo tee -a /usr/local/bin/checkstyle > /dev/null
+          sudo chmod +x /usr/local/bin/checkstyle
+          
+          # Install Python linting tools
+          echo "Installing Python tools..."
+          pip install black flake8 isort autopep8 mypy
+          
+          # Install ESLint for JavaScript/TypeScript
+          echo "Installing ESLint..."
+          npm install -g eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin prettier
+          
+          # Install other formatting tools
+          npm install -g prettier markdownlint-cli
+          pip install tomli-w toml-sort yamllint
+          
+          # Install system tools
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils shellcheck bc
+          
+      - name: Make scripts executable
+        run: |
+          chmod +x gradlew
+          chmod +x format_all_files.sh
+          chmod +x quality_check.sh
+          
+      - name: Create backup for rollback capability
+        run: |
+          echo "📦 Creating backup branch for rollback..."
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Create backup branch
+          backup_branch="backup-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$backup_branch"
+          git push origin "$backup_branch" || true
+          git checkout ${{ github.ref_name }}
+          echo "backup_branch=$backup_branch" >> $GITHUB_ENV
+          
+      - name: Run baseline quality analysis
+        id: baseline
+        run: |
+          echo "🔍 Collecting baseline quality metrics..."
+          
+          # Count violations before formatting
+          kotlin_violations_before=0
+          java_violations_before=0
+          python_violations_before=0
+          
+          # Kotlin violations
+          if command -v ktlint >/dev/null 2>&1; then
+            kotlin_violations_before=$(find . -name "*.kt" -not -path "./build/*" -not -path "./.gradle/*" | head -100 | xargs -I {} ktlint {} 2>&1 | grep -c ":" || echo "0")
+          fi
+          
+          # Java violations  
+          if command -v checkstyle >/dev/null 2>&1 && [ -f "checkstyle.xml" ]; then
+            java_violations_before=$(find . -name "*.java" -not -path "./build/*" -not -path "./.gradle/*" | head -100 | xargs -I {} checkstyle -c checkstyle.xml {} 2>&1 | grep -c "\[ERROR\]" || echo "0")
+          fi
+          
+          # Python violations
+          if command -v flake8 >/dev/null 2>&1; then
+            python_violations_before=$(find . -name "*.py" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./.*" | head -50 | xargs -I {} flake8 {} 2>&1 | grep -c ":" || echo "0")
+          fi
+          
+          echo "kotlin_violations_before=$kotlin_violations_before" >> $GITHUB_OUTPUT
+          echo "java_violations_before=$java_violations_before" >> $GITHUB_OUTPUT  
+          echo "python_violations_before=$python_violations_before" >> $GITHUB_OUTPUT
+          
+          echo "📊 Baseline Metrics:"
+          echo "  Kotlin violations: $kotlin_violations_before"
+          echo "  Java violations: $java_violations_before" 
+          echo "  Python violations: $python_violations_before"
+          
+      - name: Run advanced formatting with linting
+        id: formatting
+        run: |
+          echo "🚀 Running advanced formatting with integrated linting..."
+          
+          # Run the enhanced formatting script
+          ./format_all_files.sh 2>&1 | tee formatting_output.log
+          
+          # Extract metrics from output
+          files_processed=$(grep -o "files automatically formatted" formatting_output.log | head -1 | grep -o "[0-9]*" || echo "0")
+          echo "files_processed=$files_processed" >> $GITHUB_OUTPUT
+          
+      - name: Check compilation status
+        id: compilation
+        run: |
+          echo "🔨 Validating compilation after formatting..."
+          
+          compilation_errors=0
+          
+          # Check Android/Kotlin/Java compilation
+          if [ -f "gradlew" ]; then
+            echo "Checking Kotlin compilation..."
+            if ! ./gradlew compileDebugKotlin >/dev/null 2>&1; then
+              echo "❌ Kotlin compilation failed"
+              compilation_errors=$((compilation_errors + 1))
+            else
+              echo "✅ Kotlin compilation successful"
+            fi
+            
+            echo "Checking Java compilation..."
+            if ! ./gradlew compileDebugJavaWithJavac >/dev/null 2>&1; then
+              echo "❌ Java compilation failed"
+              compilation_errors=$((compilation_errors + 1))
+            else
+              echo "✅ Java compilation successful" 
+            fi
+          fi
+          
+          # Check Python syntax
+          echo "Checking Python syntax..."
+          python_errors=0
+          for py_file in $(find . -name "*.py" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./.*" | head -20); do
+            if [ -f "$py_file" ]; then
+              if ! python -m py_compile "$py_file" >/dev/null 2>&1; then
+                python_errors=$((python_errors + 1))
+              fi
+            fi
+          done
+          
+          if [ $python_errors -gt 0 ]; then
+            echo "❌ Python syntax errors: $python_errors files"
+            compilation_errors=$((compilation_errors + 1))
+          else
+            echo "✅ Python syntax validation passed"
+          fi
+          
+          echo "compilation_errors=$compilation_errors" >> $GITHUB_OUTPUT
+          echo "status=$([ $compilation_errors -eq 0 ] && echo 'success' || echo 'failure')" >> $GITHUB_OUTPUT
+          
+      - name: Run post-formatting quality analysis
+        id: post-analysis
+        run: |
+          echo "📊 Collecting post-formatting quality metrics..."
+          
+          # Count violations after formatting
+          kotlin_violations_after=0
+          java_violations_after=0
+          python_violations_after=0
+          
+          # Kotlin violations
+          if command -v ktlint >/dev/null 2>&1; then
+            kotlin_violations_after=$(find . -name "*.kt" -not -path "./build/*" -not -path "./.gradle/*" | head -100 | xargs -I {} ktlint {} 2>&1 | grep -c ":" || echo "0")
+          fi
+          
+          # Java violations
+          if command -v checkstyle >/dev/null 2>&1 && [ -f "checkstyle.xml" ]; then
+            java_violations_after=$(find . -name "*.java" -not -path "./build/*" -not -path "./.gradle/*" | head -100 | xargs -I {} checkstyle -c checkstyle.xml {} 2>&1 | grep -c "\[ERROR\]" || echo "0")
+          fi
+          
+          # Python violations
+          if command -v flake8 >/dev/null 2>&1; then
+            python_violations_after=$(find . -name "*.py" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./.*" | head -50 | xargs -I {} flake8 {} 2>&1 | grep -c ":" || echo "0")
+          fi
+          
+          echo "kotlin_violations_after=$kotlin_violations_after" >> $GITHUB_OUTPUT
+          echo "java_violations_after=$java_violations_after" >> $GITHUB_OUTPUT
+          echo "python_violations_after=$python_violations_after" >> $GITHUB_OUTPUT
+          
+          echo "📊 Post-Formatting Metrics:"
+          echo "  Kotlin violations: $kotlin_violations_after"
+          echo "  Java violations: $java_violations_after"
+          echo "  Python violations: $python_violations_after"
+          
+      - name: Generate quality improvement report
+        id: quality-report
+        run: |
+          echo "📊 Generating comprehensive quality report..."
+          
+          # Calculate improvements
+          kotlin_improvement=$((${{ steps.baseline.outputs.kotlin_violations_before }} - ${{ steps.post-analysis.outputs.kotlin_violations_after }}))
+          java_improvement=$((${{ steps.baseline.outputs.java_violations_before }} - ${{ steps.post-analysis.outputs.java_violations_after }}))
+          python_improvement=$((${{ steps.baseline.outputs.python_violations_before }} - ${{ steps.post-analysis.outputs.python_violations_after }}))
+          
+          total_before=$((${{ steps.baseline.outputs.kotlin_violations_before }} + ${{ steps.baseline.outputs.java_violations_before }} + ${{ steps.baseline.outputs.python_violations_before }}))
+          total_after=$((${{ steps.post-analysis.outputs.kotlin_violations_after }} + ${{ steps.post-analysis.outputs.java_violations_after }} + ${{ steps.post-analysis.outputs.python_violations_after }}))
+          total_improvement=$((total_before - total_after))
+          
+          # Create detailed report
+          cat > quality_improvement_report.md << EOF
+          # 📊 Quality Improvement Report
+          
+          ## 🔍 Linting Results
+          
+          | Language | Before | After | Improvement |
+          |----------|--------|-------|-------------|
+          | Kotlin   | ${{ steps.baseline.outputs.kotlin_violations_before }} | ${{ steps.post-analysis.outputs.kotlin_violations_after }} | $kotlin_improvement |
+          | Java     | ${{ steps.baseline.outputs.java_violations_before }} | ${{ steps.post-analysis.outputs.java_violations_after }} | $java_improvement |
+          | Python   | ${{ steps.baseline.outputs.python_violations_before }} | ${{ steps.post-analysis.outputs.python_violations_after }} | $python_improvement |
+          
+          ## 🔨 Compilation Status
+          
+          - **Status**: ${{ steps.compilation.outputs.status }}
+          - **Errors**: ${{ steps.compilation.outputs.compilation_errors }}
+          
+          ## 📈 Overall Improvement
+          
+          - **Total Violations Before**: $total_before
+          - **Total Violations After**: $total_after  
+          - **Total Improvement**: $total_improvement violations fixed
+          
+          ## 📝 Files Processed
+          
+          - **Files Processed**: ${{ steps.formatting.outputs.files_processed }}
+          - **Backup Branch**: ${{ env.backup_branch }}
+          
+          EOF
+          
+          echo "report_path=quality_improvement_report.md" >> $GITHUB_OUTPUT
+          echo "total_improvement=$total_improvement" >> $GITHUB_OUTPUT
+          
+      - name: Handle compilation failures with rollback
+        if: steps.compilation.outputs.status == 'failure' && github.event.inputs.rollback_on_failure == 'true'
+        run: |
+          echo "💥 Compilation failed after formatting - performing rollback..."
+          
+          # Reset to backup branch
+          git reset --hard "origin/${{ env.backup_branch }}"
+          
+          echo "🔄 Rollback completed - compilation issues prevented"
+          exit 1
+          
+      - name: Upload quality report
+        uses: actions/upload-artifact@v3
+        with:
+          name: quality-improvement-report
+          path: |
+            quality_improvement_report.md
+            formatting_output.log
+            quality_report.json
+            
+      - name: Auto-commit improvements
+        if: github.event.inputs.auto_commit == 'true' && steps.compilation.outputs.status == 'success'
+        run: |
+          echo "💾 Auto-committing quality improvements..."
+          
+          # Configure Git
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Check for changes
+          if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+            # Add changes
+            git add .
+            
+            # Create commit message with metrics
+            commit_msg="feat: Advanced quality improvements with linting integration
+
+            📊 Quality Metrics:
+            - Total violations fixed: ${{ steps.quality-report.outputs.total_improvement }}
+            - Files processed: ${{ steps.formatting.outputs.files_processed }}
+            - Kotlin violations: ${{ steps.baseline.outputs.kotlin_violations_before }} → ${{ steps.post-analysis.outputs.kotlin_violations_after }}
+            - Java violations: ${{ steps.baseline.outputs.java_violations_before }} → ${{ steps.post-analysis.outputs.java_violations_after }}
+            - Python violations: ${{ steps.baseline.outputs.python_violations_before }} → ${{ steps.post-analysis.outputs.python_violations_after }}
+            
+            🔧 Advanced Features:
+            - ktlint integration for Kotlin code style
+            - Checkstyle validation for Java formatting
+            - Black/flake8/isort for Python code quality
+            - Compilation validation with rollback protection
+            - Comprehensive quality metrics collection"
+            
+            git commit -m "$commit_msg"
+            git push
+            
+            echo "✅ Quality improvements committed successfully"
+          else
+            echo "✨ No changes needed - code quality is already optimal!"
+          fi
+          
+      - name: Cleanup backup branch
+        if: always()
+        run: |
+          echo "🧹 Cleaning up backup branch..."
+          git push origin --delete "${{ env.backup_branch }}" || true
+          
+      - name: Comment on PR with quality report
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const reportPath = '${{ steps.quality-report.outputs.report_path }}';
+            
+            if (fs.existsSync(reportPath)) {
+              const report = fs.readFileSync(reportPath, 'utf8');
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `## 🔍 Advanced Quality Check Results\n\n${report}\n\n---\n*Generated by Advanced Quality Check & Linting workflow*`
+              });
+            }

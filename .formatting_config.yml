@@ -76,6 +76,54 @@ advanced:
     size_threshold: "100KB"
     parallel_processing: false
 
+# Linting integration
+linting:
+  kotlin:
+    enabled: true
+    tool: "ktlint"
+    config_file: ".ktlintrc"
+    auto_fix: true
+    
+  java:
+    enabled: true
+    tool: "checkstyle"
+    config_file: "checkstyle.xml"
+    auto_fix: false
+    
+  python:
+    enabled: true
+    tools: ["black", "flake8", "isort"]
+    auto_fix: true
+    
+  javascript:
+    enabled: true
+    tool: "eslint"
+    config_file: ".eslintrc.js"
+    auto_fix: true
+
+# Quality metrics
+quality:
+  before_after_comparison:
+    enabled: true
+    collect_metrics: true
+    
+  compilation_check:
+    enabled: true
+    kotlin: true
+    java: true
+    python: true
+    
+  rollback_on_failure:
+    enabled: true
+    create_backup: true
+    restore_on_error: true
+    
+  metrics_collection:
+    lint_violations: true
+    formatting_changes: true
+    compilation_errors: true
+    file_size_changes: true
+
 # Exclusion patterns
 exclude:
   paths:

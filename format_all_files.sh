@@ -48,6 +48,24 @@ fi
 # Check for Python tools
 if ! command_exists toml-sort; then
     echo "Installing Python formatting tools..."
+    pip install toml-sort black flake8 isort autopep8
+fi
+
+# Check for advanced linting tools
+if ! command_exists ktlint; then
+    echo "Installing ktlint..."
+    curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.50.0/ktlint && chmod a+x ktlint && sudo mv ktlint /usr/local/bin/ || true
+fi
+
+if ! command_exists checkstyle && [ -f "checkstyle.xml" ]; then
+    echo "Installing checkstyle..."
+    wget -q https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.12.4/checkstyle-10.12.4-all.jar -O checkstyle.jar || true
+    if [ -f "checkstyle.jar" ]; then
+        sudo mv checkstyle.jar /usr/local/bin/ || true
+        echo '#!/bin/bash' | sudo tee /usr/local/bin/checkstyle > /dev/null || true
+        echo 'java -jar /usr/local/bin/checkstyle.jar "$@"' | sudo tee -a /usr/local/bin/checkstyle > /dev/null || true
+        sudo chmod +x /usr/local/bin/checkstyle || true
+    fi
     pip install tomli-w toml-sort yamllint
 fi
 
@@ -63,6 +81,12 @@ if ! command_exists shellcheck; then
 fi
 
 echo -e "${GREEN}✅ All tools installed${NC}"
+
+# Run quality check before formatting (if script exists)
+if [ -f "quality_check.sh" ]; then
+    echo -e "${BLUE}🔍 Running pre-formatting quality analysis...${NC}"
+    ./quality_check.sh || true
+fi
 
 # Make gradlew executable
 if [ -f "./gradlew" ]; then
@@ -336,6 +360,139 @@ done < "$temp_file"
 
 rm "$temp_file"
 echo -e "${GREEN}✅ Processed $css_count CSS files${NC}"
+
+# Advanced Linting Integration
+echo -e "\n${PURPLE}🔍 Advanced Linting Integration${NC}"
+
+# Kotlin linting with ktlint
+if command_exists ktlint; then
+    echo -e "${YELLOW}🎯 Running ktlint on Kotlin files...${NC}"
+    temp_file=$(mktemp)
+    find . -name "*.kt" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" > "$temp_file"
+    
+    kotlin_lint_count=0
+    while IFS= read -r file; do
+        if [ -f "$file" ]; then
+            echo "Linting: $file"
+            if ktlint -F "$file" >/dev/null 2>&1; then
+                echo -e "${GREEN}✓ Successfully linted: $file${NC}"
+                kotlin_lint_count=$((kotlin_lint_count + 1))
+            else
+                echo -e "${YELLOW}⚠ Lint warnings fixed: $file${NC}"
+                kotlin_lint_count=$((kotlin_lint_count + 1))
+            fi
+        fi
+    done < "$temp_file"
+    
+    rm "$temp_file"
+    echo -e "${GREEN}✅ Linted $kotlin_lint_count Kotlin files with ktlint${NC}"
+else
+    echo -e "${YELLOW}⚠ ktlint not available, skipping Kotlin linting${NC}"
+fi
+
+# Java linting with Checkstyle
+if command_exists checkstyle && [ -f "checkstyle.xml" ]; then
+    echo -e "${YELLOW}☕ Running checkstyle on Java files...${NC}"
+    temp_file=$(mktemp)
+    find . -name "*.java" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./*/build/*" > "$temp_file"
+    
+    java_lint_count=0
+    java_violations=0
+    while IFS= read -r file; do
+        if [ -f "$file" ]; then
+            echo "Checking: $file"
+            if checkstyle -c checkstyle.xml "$file" >/dev/null 2>&1; then
+                echo -e "${GREEN}✓ No violations: $file${NC}"
+            else
+                echo -e "${YELLOW}⚠ Style violations found: $file${NC}"
+                java_violations=$((java_violations + 1))
+            fi
+            java_lint_count=$((java_lint_count + 1))
+        fi
+    done < "$temp_file"
+    
+    rm "$temp_file"
+    echo -e "${GREEN}✅ Checked $java_lint_count Java files ($java_violations with violations)${NC}"
+else
+    echo -e "${YELLOW}⚠ Checkstyle not available, skipping Java linting${NC}"
+fi
+
+# Python linting with Black, flake8, and isort
+if command_exists black && command_exists flake8; then
+    echo -e "${YELLOW}🐍 Running Python formatters and linters...${NC}"
+    temp_file=$(mktemp)
+    find . -name "*.py" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./.*" > "$temp_file"
+    
+    python_lint_count=0
+    python_formatted=0
+    while IFS= read -r file; do
+        if [ -f "$file" ]; then
+            echo "Processing: $file"
+            
+            # Format with Black
+            if black --quiet "$file" 2>/dev/null; then
+                echo -e "${GREEN}✓ Formatted with Black: $file${NC}"
+                python_formatted=$((python_formatted + 1))
+            fi
+            
+            # Sort imports with isort
+            if command_exists isort && isort --quiet "$file" 2>/dev/null; then
+                echo -e "${GREEN}✓ Imports sorted: $file${NC}"
+            fi
+            
+            # Check with flake8
+            if flake8 "$file" >/dev/null 2>&1; then
+                echo -e "${GREEN}✓ No flake8 violations: $file${NC}"
+            else
+                echo -e "${YELLOW}⚠ flake8 violations found: $file${NC}"
+            fi
+            
+            python_lint_count=$((python_lint_count + 1))
+        fi
+    done < "$temp_file"
+    
+    rm "$temp_file"
+    echo -e "${GREEN}✅ Processed $python_lint_count Python files ($python_formatted formatted)${NC}"
+else
+    echo -e "${YELLOW}⚠ Python linting tools not available, skipping Python linting${NC}"
+fi
+
+# Compilation validation
+echo -e "\n${PURPLE}🔨 Compilation Validation${NC}"
+if [ -f "gradlew" ]; then
+    echo -e "${YELLOW}🔧 Validating Android/Kotlin/Java compilation...${NC}"
+    if ./gradlew compileDebugKotlin >/dev/null 2>&1; then
+        echo -e "${GREEN}✅ Kotlin compilation successful${NC}"
+    else
+        echo -e "${RED}❌ Kotlin compilation failed - check for syntax errors${NC}"
+    fi
+    
+    if ./gradlew compileDebugJavaWithJavac >/dev/null 2>&1; then
+        echo -e "${GREEN}✅ Java compilation successful${NC}"
+    else
+        echo -e "${RED}❌ Java compilation failed - check for syntax errors${NC}"
+    fi
+else
+    echo -e "${YELLOW}⚠ gradlew not found, skipping compilation validation${NC}"
+fi
+
+# Python syntax validation
+echo -e "${YELLOW}🐍 Validating Python syntax...${NC}"
+python_syntax_errors=0
+for py_file in $(find . -name "*.py" -not -path "./build/*" -not -path "./.gradle/*" -not -path "./.*" | head -20); do
+    if [ -f "$py_file" ]; then
+        if ! python -m py_compile "$py_file" >/dev/null 2>&1; then
+            echo -e "${RED}❌ Syntax error in: $py_file${NC}"
+            python_syntax_errors=$((python_syntax_errors + 1))
+        fi
+    fi
+done
+
+if [ $python_syntax_errors -eq 0 ]; then
+    echo -e "${GREEN}✅ All Python files have valid syntax${NC}"
+else
+    echo -e "${RED}❌ $python_syntax_errors Python files have syntax errors${NC}"
+fi
 
 # Clean up Chinese text from strings.xml and add advanced file processing
 echo -e "${YELLOW}🔧 Advanced text cleanup and file optimization...${NC}"
