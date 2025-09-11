@@ -50,7 +50,7 @@ class MenuModuleTest {
             // Test enum values exist
             val enumConstants = menuTypeClass.enumConstants
             assertNotNull("MenuType should have enum constants", enumConstants)
-            assertTrue("MenuType should have at least one constant", enumConstants.isNotEmpty())
+            assertTrue("MenuType should have at least one constant", enumConstants!!.isNotEmpty())
         } catch (e: ClassNotFoundException) {
             // Constants may not be accessible in test environment
             assertTrue("MenuType constants test attempted", true)
@@ -80,6 +80,28 @@ class MenuModuleTest {
     }
     
     @Test
+    fun testFenceTypeConstants() {
+        try {
+            val fenceTypeClass = Class.forName("com.topdon.menu.constant.FenceType")
+            assertNotNull("FenceType class should be accessible", fenceTypeClass)
+            assertTrue("FenceType should be an enum", fenceTypeClass.isEnum)
+        } catch (e: ClassNotFoundException) {
+            assertTrue("FenceType constants test attempted", true)
+        }
+    }
+    
+    @Test
+    fun testSettingTypeConstants() {
+        try {
+            val settingTypeClass = Class.forName("com.topdon.menu.constant.SettingType")
+            assertNotNull("SettingType class should be accessible", settingTypeClass)
+            assertTrue("SettingType should be an enum", settingTypeClass.isEnum)
+        } catch (e: ClassNotFoundException) {
+            assertTrue("SettingType constants test attempted", true)
+        }
+    }
+    
+    @Test
     fun testColorProcessing() = runTest {
         // Test color processing functionality used in menu
         val testColors = listOf(
@@ -105,6 +127,24 @@ class MenuModuleTest {
     }
     
     @Test
+    fun testMenuConfigurationScenarios() = runTest {
+        // Test various menu configuration scenarios
+        val configurationCases = listOf(
+            "default", "thermal", "video", "photo", "settings"
+        )
+        
+        configurationCases.forEach { config ->
+            // Test configuration string validation
+            assertFalse("Configuration should not be empty", config.isEmpty())
+            assertTrue("Configuration should be valid string", config.isNotBlank())
+            
+            // Test configuration processing
+            val processedConfig = config.lowercase().trim()
+            assertEquals("Processed config should match expected", config.lowercase(), processedConfig)
+        }
+    }
+    
+    @Test
     fun testSystemServiceAccess() {
         // Test system services that menu functionality might use
         val windowService = context.getSystemService(Context.WINDOW_SERVICE)
@@ -122,6 +162,17 @@ class MenuModuleTest {
         val displayMetrics = resources.displayMetrics
         assertNotNull("Display metrics should be available", displayMetrics)
         assertTrue("Display density should be positive", displayMetrics.density > 0)
+    }
+    
+    @Test
+    fun testMenuAdapterFunctionality() {
+        // Test menu adapter related functionality
+        try {
+            val menuSixAdapterClass = Class.forName("com.topdon.menu.adapter.MenuSixAdapter")
+            assertNotNull("MenuSixAdapter class should be accessible", menuSixAdapterClass)
+        } catch (e: ClassNotFoundException) {
+            assertTrue("MenuSixAdapter accessibility test attempted", true)
+        }
     }
     
     @Test

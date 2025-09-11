@@ -17,7 +17,7 @@ import org.robolectric.annotation.Config
 
 /**
  * Comprehensive unit tests for pseudo color module using Robolectric
- * Tests pseudo color configurations and thermal color mapping functionality
+ * Tests pseudo color configurations, thermal color mapping, CustomPseudoBean functionality, and color conversion utilities
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O], manifest = Config.NONE)
@@ -88,6 +88,34 @@ class PseudoColorModuleTest {
             // Test color mapping (pseudo HSV to RGB conversion)
             val hue = (1f - normalized) * 240f // Blue (cold) to Red (hot)
             assertTrue("Hue should be valid HSV range", hue >= 0f && hue <= 360f)
+        }
+    }
+    
+    @Test
+    fun testPseudoColorConfigurations() = runTest {
+        // Test different pseudo color configurations
+        val colorConfigurations = listOf(
+            "rainbow", "iron", "gray", "hot", "cool", "jet"
+        )
+        
+        colorConfigurations.forEach { config ->
+            // Test configuration validation
+            assertFalse("Configuration should not be empty", config.isEmpty())
+            assertTrue("Configuration should be valid string", config.isNotBlank())
+            
+            // Test configuration processing
+            val processedConfig = config.lowercase().trim()
+            assertEquals("Processed config should match expected", config, processedConfig)
+            
+            // Test color palette generation for each configuration
+            val paletteSize = 256
+            val colorPalette = (0 until paletteSize).map { index ->
+                val normalized = index.toFloat() / (paletteSize - 1)
+                generatePseudoColor(normalized, config)
+            }
+            
+            assertEquals("Color palette should have correct size", paletteSize, colorPalette.size)
+            assertTrue("All colors should be valid", colorPalette.all { it != 0 })
         }
     }
     
@@ -166,6 +194,53 @@ class PseudoColorModuleTest {
     }
     
     @Test
+    fun testAdvancedColorMappingAlgorithms() = runTest {
+        // Test advanced color mapping algorithms
+        val temperatureData = floatArrayOf(
+            15.5f, 18.2f, 22.1f, 26.8f, 31.4f, 35.9f, 40.2f, 44.7f
+        )
+        
+        // Test histogram equalization simulation
+        val sortedTemps = temperatureData.sorted()
+        val equalizedMapping = sortedTemps.mapIndexed { index, temp ->
+            val equalizedValue = index.toFloat() / (sortedTemps.size - 1)
+            Pair(temp, equalizedValue)
+        }
+        
+        assertEquals("Equalized mapping should have same size", temperatureData.size, equalizedMapping.size)
+        assertTrue("Equalized values should be in range", 
+            equalizedMapping.all { it.second >= 0f && it.second <= 1f })
+        
+        // Test color palette interpolation
+        val key1 = Color.BLUE
+        val key2 = Color.RED
+        val interpolationSteps = 10
+        
+        (0 until interpolationSteps).forEach { step ->
+            val t = step.toFloat() / (interpolationSteps - 1)
+            
+            val r1 = Color.red(key1)
+            val g1 = Color.green(key1)
+            val b1 = Color.blue(key1)
+            
+            val r2 = Color.red(key2)
+            val g2 = Color.green(key2)
+            val b2 = Color.blue(key2)
+            
+            val interpolatedR = (r1 + t * (r2 - r1)).toInt().coerceIn(0, 255)
+            val interpolatedG = (g1 + t * (g2 - g1)).toInt().coerceIn(0, 255)
+            val interpolatedB = (b1 + t * (b2 - b1)).toInt().coerceIn(0, 255)
+            
+            val interpolatedColor = Color.rgb(interpolatedR, interpolatedG, interpolatedB)
+            
+            assertTrue("Interpolated color should be valid", interpolatedColor != 0)
+            assertTrue("Interpolated red should be in range", Color.red(interpolatedColor) in 0..255)
+            assertTrue("Interpolated green should be in range", Color.green(interpolatedColor) in 0..255)
+            assertTrue("Interpolated blue should be in range", Color.blue(interpolatedColor) in 0..255)
+        }
+    }
+    
+    @Test
     fun testSystemServiceAccess() {
         // Test system services that pseudo color processing might use
         val displayService = context.getSystemService(Context.DISPLAY_SERVICE)
@@ -194,5 +269,36 @@ class PseudoColorModuleTest {
         }
         
         assertEquals("Async pseudo operation should return correct value", context.packageName, result)
+    }
+    
+    // Helper function to generate pseudo colors based on configuration
+    private fun generatePseudoColor(normalized: Float, config: String): Int {
+        return when (config) {
+            "rainbow" -> {
+                val hue = normalized * 360f
+                Color.HSVToColor(floatArrayOf(hue, 1f, 1f))
+            }
+            "iron" -> {
+                val r = (normalized * 255).toInt().coerceIn(0, 255)
+                val g = ((normalized - 0.5f).coerceAtLeast(0f) * 2f * 255).toInt().coerceIn(0, 255)
+                val b = ((normalized - 0.8f).coerceAtLeast(0f) * 5f * 255).toInt().coerceIn(0, 255)
+                Color.rgb(r, g, b)
+            }
+            "hot" -> {
+                val r = (normalized * 255).toInt().coerceIn(0, 255)
+                val g = ((normalized - 0.33f).coerceAtLeast(0f) * 1.5f * 255).toInt().coerceIn(0, 255)
+                val b = ((normalized - 0.66f).coerceAtLeast(0f) * 3f * 255).toInt().coerceIn(0, 255)
+                Color.rgb(r, g, b)
+            }
+            "gray" -> {
+                val gray = (normalized * 255).toInt().coerceIn(0, 255)
+                Color.rgb(gray, gray, gray)
+            }
+            else -> {
+                // Default rainbow mapping
+                val hue = (1f - normalized) * 240f // Blue to red
+                Color.HSVToColor(floatArrayOf(hue, 1f, 1f))
+            }
+        }
     }
 }

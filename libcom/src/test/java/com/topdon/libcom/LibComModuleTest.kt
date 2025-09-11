@@ -189,6 +189,22 @@ class LibComModuleTest {
     }
     
     @Test
+    fun testFileUtilities() = runTest {
+        // Test file utility operations
+        val filesDir = context.filesDir
+        assertNotNull("Files directory should be accessible", filesDir)
+        assertTrue("Files directory should exist", filesDir.exists())
+        
+        val cacheDir = context.cacheDir
+        assertNotNull("Cache directory should be accessible", cacheDir)
+        assertTrue("Cache directory should exist", cacheDir.exists())
+        
+        // Test directory operations
+        assertTrue("Files directory should be readable", filesDir.canRead())
+        assertTrue("Cache directory should be readable", cacheDir.canRead())
+    }
+    
+    @Test
     fun testSystemServiceAccess() {
         // Test system services that common utilities might use
         val displayService = context.getSystemService(Context.DISPLAY_SERVICE)
@@ -199,6 +215,32 @@ class LibComModuleTest {
         
         val resources = context.resources
         assertNotNull("Resources should be available", resources)
+    }
+    
+    @Test
+    fun testStorageOperations() = runTest {
+        // Test storage operations that common utilities might perform
+        val sharedPrefs = context.getSharedPreferences("test_prefs", Context.MODE_PRIVATE)
+        assertNotNull("Shared preferences should be available", sharedPrefs)
+        
+        // Test preference operations
+        val editor = sharedPrefs.edit()
+        editor.putString("test_key", "test_value")
+        editor.putInt("test_int", 42)
+        editor.putBoolean("test_bool", true)
+        
+        val result = editor.commit()
+        assertTrue("Preferences should be saved successfully", result)
+        
+        // Test retrieval
+        val retrievedString = sharedPrefs.getString("test_key", "default")
+        assertEquals("Retrieved string should match", "test_value", retrievedString)
+        
+        val retrievedInt = sharedPrefs.getInt("test_int", 0)
+        assertEquals("Retrieved int should match", 42, retrievedInt)
+        
+        val retrievedBool = sharedPrefs.getBoolean("test_bool", false)
+        assertTrue("Retrieved boolean should be true", retrievedBool)
     }
     
     @Test
