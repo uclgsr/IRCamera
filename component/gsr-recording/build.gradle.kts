@@ -63,7 +63,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.5.0")
     implementation("com.google.android.material:material:1.6.1")
     implementation("androidx.lifecycle:lifecycle-service:2.5.1")
-    implementation("androidx.work:work-runtime-ktx:2.7.1")
+    implementation("androidx.work:work-runtime-ktx:2.10.4")
     implementation("com.google.code.gson:gson:2.8.9")
     
     // Enhanced BLE Module with Nordic BLE backend
