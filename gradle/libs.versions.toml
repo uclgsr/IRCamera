@@ -104,7 +104,7 @@ lmsInternational = "3.90.009.0"
 lmsChina = "3.90.076"
 
 # FFmpeg
-ffmpeg = "5.0-1.5.7"
+ffmpeg = "7.1.1-1.5.12"
 
 # Third-party services
 wechatSdk = "6.8.0"
