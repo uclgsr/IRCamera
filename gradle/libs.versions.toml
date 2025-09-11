@@ -61,7 +61,7 @@ rxandroid = "2.1.1"
 arouter = "1.5.2"
 
 # RxLifecycle
-rxpermissions = "0.10.2"
+rxpermissions = "2.x.v0.9.3"
 rxlifecycle2 = "2.2.2"
 rxlifecycle3 = "3.1.0"
 
