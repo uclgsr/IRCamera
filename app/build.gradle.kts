@@ -256,15 +256,15 @@ dependencies {
     
     // Enhanced charting and data visualization (provided by libui module)
     implementation("com.opencsv:opencsv:5.7.1")
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.13.2")
     
     // Enhanced networking and serialization for Hub-Spoke
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     
     // Nordic BLE Library for robust Bluetooth communication
-    implementation("no.nordicsemi.android:ble:2.6.1")
-    implementation("no.nordicsemi.android:ble-ktx:2.6.1")
+    implementation("no.nordicsemi.android:ble:2.11.0")
+    implementation("no.nordicsemi.android:ble-ktx:2.11.0")
     
     // CameraX for RGB camera dual-stream capture
     implementation("androidx.camera:camera-camera2:1.3.1")
@@ -280,8 +280,8 @@ dependencies {
     testImplementation("org.hamcrest:hamcrest:2.2")
     
     // Mocking framework
-    testImplementation("io.mockk:mockk:1.13.4")
-    testImplementation("io.mockk:mockk-android:1.13.4")
+    testImplementation("io.mockk:mockk:1.14.5")
+    testImplementation("io.mockk:mockk-android:1.14.5")
     
     // Kotlin coroutines testing
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")

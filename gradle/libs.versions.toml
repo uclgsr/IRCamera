@@ -32,7 +32,7 @@ androidxCore = "1.12.0"
 androidxAppcompat = "1.6.1"
 fragmentKtx = "1.6.2"
 androidxPreference = "1.2.1"
-material = "1.11.0"
+material = "1.13.0"
 multidex = "2.0.1"
 
 # Lifecycle
@@ -42,13 +42,13 @@ lifecycle = "2.7.0"
 room = "2.5.2"
 
 # Work Manager
-work = "2.9.0"
+work = "2.10.4"
 
 # Coroutines
 coroutines = "1.7.3"
 
 # Networking
-fastjson = "1.2.78"
+fastjson = "2.0.58"
 jsbridge = "1.0.4"
 retrofit = "2.10.0"
 okhttp = "4.11.0"
@@ -61,7 +61,7 @@ rxandroid = "2.1.1"
 arouter = "1.5.2"
 
 # RxLifecycle
-rxpermissions = "0.10.2"
+rxpermissions = "2.x.v0.9.3"
 rxlifecycle2 = "2.2.2"
 rxlifecycle3 = "3.1.0"
 
