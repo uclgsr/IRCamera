@@ -76,6 +76,7 @@ dependencies {
     implementation(project(":libmenu"))
     implementation(project(":component:pseudo"))
     implementation(project(":component:thermal"))
+    implementation(project(":component:user"))
     // Removed house dependency - module removed as unused
     
     // AAR dependencies as compileOnly for compilation but not packaging

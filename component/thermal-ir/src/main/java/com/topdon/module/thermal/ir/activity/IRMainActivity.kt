@@ -39,6 +39,7 @@ import com.topdon.module.thermal.ir.fragment.IRGalleryTabFragment
 import com.topdon.module.thermal.ir.fragment.IRThermalFragment
 import com.topdon.module.thermal.ir.fragment.AbilityFragment
 import com.topdon.module.thermal.ir.fragment.PDFListFragment
+import com.topdon.module.user.fragment.MoreFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
@@ -371,7 +372,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                     0 -> AbilityFragment()
                     2 -> IRThermalFragment()
                     3 -> PDFListFragment()
-                    else -> NavigationManager.getInstance().build(RouterConfig.TC_MORE).navigation(activity) as Fragment
+                    else -> MoreFragment()
                 }
                 fragment.arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
                 return fragment
