@@ -255,7 +255,7 @@ dependencies {
     implementation(libs.umeng.common)
     
     // Enhanced charting and data visualization (provided by libui module)
-    implementation("com.opencsv:opencsv:5.7.1")
+    implementation("com.opencsv:opencsv:5.12.0")
     implementation("com.google.code.gson:gson:2.13.2")
     
     // Enhanced networking and serialization for Hub-Spoke
