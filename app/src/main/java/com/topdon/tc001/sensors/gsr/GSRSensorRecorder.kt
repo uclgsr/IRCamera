@@ -1,7 +1,9 @@
 package com.topdon.tc001.sensors.gsr
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.topdon.gsr.service.GSRRecorder as LegacyGSRRecorder
 import com.topdon.gsr.service.ShimmerGSRRecorder
 import com.topdon.gsr.model.GSRSample
@@ -20,6 +22,7 @@ import com.shimmerresearch.driver.Configuration
 import com.topdon.ble.UnifiedBleManager
 import com.topdon.ble.ShimmerDeviceConfig
 import com.topdon.ble.UnifiedDevice
+import com.topdon.ble.util.BluetoothPermissionUtils
 
 /**
  * GSR (Galvanic Skin Response) sensor recorder using Shimmer3 GSR+ device with unified BLE support.
@@ -94,6 +97,13 @@ class GSRSensorRecorder(
         try {
             Log.i(TAG, "Initializing Enhanced GSR sensor with unified BLE backend (Shimmer Nordic + Topdon) for $sensorId")
             
+            // Check Bluetooth permissions first (critical for Shimmer GSR device connection)
+            if (!BluetoothPermissionUtils.hasBluetoothPermissions(context)) {
+                Log.e(TAG, "Missing required Bluetooth permissions for Shimmer GSR device")
+                emitError(ErrorType.PERMISSION_DENIED, "Bluetooth permissions required for Shimmer GSR sensor")
+                return@withContext false
+            }
+            
             // Initialize unified BLE manager for comprehensive device support
             unifiedBleManager = UnifiedBleManager.getInstance(context)
             if (!unifiedBleManager!!.initialize()) {
@@ -104,6 +114,22 @@ class GSRSensorRecorder(
             
             // Initialize real Shimmer GSR recorder using the existing module with enhanced BLE backend
             realShimmerGSRRecorder = ShimmerGSRRecorder(context, samplingRateHz)
+            
+            // Pre-validate Shimmer device connection (but don't fail initialization if not available)
+            val shimmerRecorder = realShimmerGSRRecorder
+            if (shimmerRecorder != null) {
+                try {
+                    // Try to initialize the Shimmer device connection
+                    val deviceInitialized = shimmerRecorder.initializeDevice()
+                    if (deviceInitialized) {
+                        Log.i(TAG, "Shimmer GSR device initialized and ready")
+                    } else {
+                        Log.w(TAG, "Shimmer GSR device not available, but sensor recorder initialized (may work with paired devices)")
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Shimmer GSR device initialization failed, but continuing: ${e.message}")
+                }
+            }
             
             // Create legacy GSR recorder instance for backward compatibility
             legacyGSRRecorder = LegacyGSRRecorder(context, samplingRateHz)
@@ -193,6 +219,25 @@ class GSRSensorRecorder(
             this@GSRSensorRecorder.sessionDirectory = sessionDirectory
             recordingStartTime = System.nanoTime()
             
+    override suspend fun startRecording(sessionDirectory: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            if (_isRecording.get()) {
+                Log.w(TAG, "Real Shimmer GSR sensor already recording")
+                return@withContext true
+            }
+            
+            // Re-check Bluetooth permissions (user might have revoked them)
+            if (!BluetoothPermissionUtils.hasBluetoothPermissions(context)) {
+                Log.e(TAG, "Bluetooth permissions not available for Shimmer GSR recording")
+                emitError(ErrorType.PERMISSION_DENIED, "Bluetooth permissions required for Shimmer GSR recording")
+                return@withContext false
+            }
+            
+            this@GSRSensorRecorder.sessionDirectory = sessionDirectory
+            recordingStartTime = System.nanoTime()
+            
+            var shimmerRecordingStarted = false
+            
             // Start enhanced Shimmer GSR recording using merged BLE backend (best of both worlds)
             val shimmerRecorder = realShimmerGSRRecorder
             if (shimmerRecorder != null) {
@@ -200,8 +245,14 @@ class GSRSensorRecorder(
                 
                 // Initialize and connect using enhanced BLE backend
                 val connectionSuccess = try {
-                    // Initialize device with enhanced backend
-                    shimmerRecorder.initializeDevice()
+                    // Try to connect to Shimmer device if not already connected
+                    if (!shimmerRecorder.isDeviceConnected()) {
+                        Log.i(TAG, "Shimmer device not connected, attempting connection...")
+                        shimmerRecorder.initializeDevice()
+                    } else {
+                        Log.i(TAG, "Shimmer device already connected")
+                        true
+                    }
                 } catch (e: Exception) {
                     Log.e(TAG, "Enhanced Shimmer GSR connection failed", e)
                     false
@@ -217,27 +268,26 @@ class GSRSensorRecorder(
                         false
                     }
                     
-                    if (!success) {
-                        Log.e(TAG, "Failed to start Enhanced Shimmer GSR recording")
-                        emitError(ErrorType.RECORDING_FAILED, "Enhanced Shimmer GSR recording failed to start")
-                        return@withContext false
+                    if (success) {
+                        shimmerRecordingStarted = true
+                        Log.i(TAG, "Enhanced Shimmer GSR recording started successfully with merged BLE backend")
+                    } else {
+                        Log.w(TAG, "Enhanced Shimmer GSR recording failed to start, but continuing")
                     }
-                    
-                    Log.i(TAG, "Enhanced Shimmer GSR recording started successfully with merged BLE backend")
                 } else {
                     Log.w(TAG, "Enhanced Shimmer connection failed, will continue without Shimmer GSR")
                 }
                 
             } else {
                 Log.e(TAG, "Enhanced Shimmer GSR recorder not initialized")
-                emitError(ErrorType.DEVICE_ERROR, "Enhanced Shimmer GSR recorder not available")
-                return@withContext false
+                // Don't fail completely - attempt legacy recording
+                Log.w(TAG, "Attempting to continue with legacy GSR recording only")
             }
             
             // Start legacy GSR recording for compatibility
             val legacyRecorder = legacyGSRRecorder
             if (legacyRecorder != null) {
-                val success = withContext(Dispatchers.Main) {
+                val legacySuccess = withContext(Dispatchers.Main) {
                     try {
                         startLegacyRecording(legacyRecorder, sessionDirectory)
                     } catch (e: Exception) {
@@ -246,16 +296,24 @@ class GSRSensorRecorder(
                     }
                 }
                 
-                if (!success) {
+                if (!legacySuccess && !shimmerRecordingStarted) {
+                    Log.e(TAG, "Both Shimmer and legacy GSR recording failed to start")
+                    emitError(ErrorType.RECORDING_FAILED, "All GSR recording methods failed to start")
+                    return@withContext false
+                } else if (!legacySuccess) {
                     Log.w(TAG, "Legacy GSR recording failed, continuing with real Shimmer only")
                 }
+            } else if (!shimmerRecordingStarted) {
+                Log.e(TAG, "No GSR recording method available")
+                emitError(ErrorType.DEVICE_ERROR, "No GSR recording device available")
+                return@withContext false
             }
             
             _isRecording.set(true)
             sampleCount.set(0)
             syncMarkerCount.set(0)
             
-            Log.i(TAG, "Real Shimmer GSR sensor recording started using existing implementation")
+            Log.i(TAG, "GSR sensor recording started (Shimmer: $shimmerRecordingStarted)")
             emitStatus()
             return@withContext true
             
