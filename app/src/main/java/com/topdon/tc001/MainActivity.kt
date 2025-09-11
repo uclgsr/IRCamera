@@ -3,15 +3,19 @@ package com.topdon.tc001
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.ComponentName
+import android.content.ServiceConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.util.SparseArray
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
@@ -62,6 +66,11 @@ import com.topdon.tc001.fragment.MainFragment
 import com.topdon.tc001.utils.AppVersionUtil
 import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.databinding.ActivityMainBinding
+// Network integration imports
+import com.topdon.tc001.network.NetworkClient
+import com.topdon.tc001.service.RecordingService
+import com.topdon.tc001.controller.RecordingController
+import com.topdon.gsr.model.SessionInfo
 // Zoho dependencies commented out - not available in build
 // import com.zoho.commons.LauncherModes
 // import com.zoho.commons.LauncherProperties
@@ -79,7 +88,47 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private var checkPermissionType: Int = -1 // 0 initData数据 1 图库  2 connect方法
     
+    // PC-to-phone control networking
+    private var networkClient: NetworkClient? = null
+    private var recordingService: RecordingService? = null
+    private var isServiceBound = false
+    private var connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
+    
+    // UI elements for network status
+    private var networkStatusIndicator: ImageView? = null
+    private var networkStatusText: TextView? = null
+    
+    enum class ConnectionStatus {
+        DISCONNECTED,
+        DISCOVERING,
+        CONNECTING,
+        CONNECTED,
+        ERROR
+    }
+    
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as RecordingService.RecordingServiceBinder
+            recordingService = binder.getService()
+            isServiceBound = true
+            Log.i(TAG, "Recording service connected")
+            
+            // Now that we have the service, we can set up remote control
+            setupRemoteControl()
+        }
+        
+        override fun onServiceDisconnected(name: ComponentName?) {
+            recordingService = null
+            isServiceBound = false
+            Log.i(TAG, "Recording service disconnected")
+        }
+    }
+    
     override fun initContentLayoutId(): Int = R.layout.activity_main
+    
+    companion object {
+        private const val TAG = "MainActivity"
+    }
 
     // 记录设备信息
     private fun logInfo() {
@@ -110,6 +159,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         super.onCreate(savedInstanceState)
         initView()
         initData()
+        
+        // Initialize PC-to-phone control networking
+        initNetworking()
     }
 
     private fun initView() {
@@ -121,6 +173,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
 
         logInfo()
+        
+        // Initialize network status UI elements
+        networkStatusIndicator = binding.networkStatusIndicator
+        networkStatusText = binding.networkStatusText
+        
         lifecycleScope.launch(Dispatchers.IO) {
             // Note: SupHelp AI upscaler integration is not included in this build
             // SupHelp.getInstance().initAiUpScaler(Utils.getApp())
@@ -142,6 +199,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.clIconGallery.setOnClickListener(this)
         binding.viewMain.setOnClickListener(this)
         binding.clIconMine.setOnClickListener(this)
+        
+        // Add click listener for network status (for manual connection)
+        binding.networkStatusBar.setOnClickListener {
+            handleNetworkStatusClick()
+        }
+        
         App.instance.initWebSocket()
         copyFile("SR.pb", File(filesDir, "SR.pb"))
         BaseApplication.instance.clearDb()
@@ -648,5 +711,392 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 )
         }
         appVersionUtil?.checkVersion(isShow)
+    }
+    
+    // ==================== PC-to-Phone Control Networking ====================
+    
+    /**
+     * Initialize the PC-to-phone control networking system
+     */
+    private fun initNetworking() {
+        Log.i(TAG, "Initializing PC-to-phone control networking")
+        
+        try {
+            // Initialize network client
+            networkClient = NetworkClient(this).apply {
+                // Initialize the enhanced network client
+                val initSuccess = initialize()
+                if (!initSuccess) {
+                    Log.w(TAG, "Network client initialization failed")
+                    updateConnectionStatus(ConnectionStatus.ERROR)
+                    return
+                }
+                
+                // Set up event listener for network events
+                setEventListener(createNetworkEventListener())
+            }
+            
+            // Bind to recording service for remote control capability
+            bindRecordingService()
+            
+            // Start automatic discovery and connection
+            startNetworkDiscovery()
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize networking", e)
+            updateConnectionStatus(ConnectionStatus.ERROR)
+            showNetworkError("Network initialization failed: ${e.message}")
+        }
+    }
+    
+    /**
+     * Create network event listener to handle PC controller events
+     */
+    private fun createNetworkEventListener(): NetworkClient.NetworkEventListener {
+        return object : NetworkClient.NetworkEventListener {
+            override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
+                Log.i(TAG, "PC Controller discovered: ${controller.deviceName} at ${controller.ipAddress}")
+                
+                runOnUiThread {
+                    updateConnectionStatus(ConnectionStatus.CONNECTING)
+                    Toast.makeText(this@MainActivity, 
+                        "Found PC Controller: ${controller.deviceName}", 
+                        Toast.LENGTH_SHORT).show()
+                }
+                
+                // Automatically connect to discovered controller
+                networkClient?.connectToController(controller.ipAddress, controller.port) { success ->
+                    runOnUiThread {
+                        if (success) {
+                            Log.i(TAG, "Successfully connected to PC Controller")
+                        } else {
+                            Log.w(TAG, "Failed to connect to PC Controller")
+                            updateConnectionStatus(ConnectionStatus.ERROR)
+                        }
+                    }
+                }
+            }
+            
+            override fun onConnected(controller: NetworkClient.ControllerInfo) {
+                Log.i(TAG, "Connected to PC Controller: ${controller.deviceName}")
+                
+                runOnUiThread {
+                    updateConnectionStatus(ConnectionStatus.CONNECTED)
+                    Toast.makeText(this@MainActivity, 
+                        "Connected to PC: ${controller.deviceName}", 
+                        Toast.LENGTH_LONG).show()
+                }
+            }
+            
+            override fun onDisconnected(reason: String) {
+                Log.i(TAG, "Disconnected from PC Controller: $reason")
+                
+                runOnUiThread {
+                    updateConnectionStatus(ConnectionStatus.DISCONNECTED)
+                    Toast.makeText(this@MainActivity, 
+                        "Disconnected from PC: $reason", 
+                        Toast.LENGTH_SHORT).show()
+                }
+            }
+            
+            override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
+                Log.i(TAG, "Remote measurement request received: ${sessionInfo.sessionId}")
+                
+                runOnUiThread {
+                    handleRemoteRecordingRequest(sessionInfo)
+                }
+            }
+            
+            override fun onSyncFlash(durationMs: Int) {
+                Log.i(TAG, "Sync flash requested: ${durationMs}ms")
+                
+                runOnUiThread {
+                    performSyncFlash(durationMs)
+                }
+            }
+            
+            override fun onTimeSynchronized(offsetNanoseconds: Long) {
+                Log.i(TAG, "Time synchronized with PC (offset: ${offsetNanoseconds}ns)")
+            }
+            
+            override fun onDataStreamingStarted() {
+                Log.i(TAG, "Data streaming to PC started")
+            }
+            
+            override fun onDataStreamingStopped() {
+                Log.i(TAG, "Data streaming to PC stopped")
+            }
+            
+            override fun onError(operation: String, error: String) {
+                Log.e(TAG, "Network error in $operation: $error")
+                
+                runOnUiThread {
+                    updateConnectionStatus(ConnectionStatus.ERROR)
+                    showNetworkError("Network error: $error")
+                }
+            }
+        }
+    }
+    
+    /**
+     * Bind to the recording service for remote control capability
+     */
+    private fun bindRecordingService() {
+        val intent = Intent(this, RecordingService::class.java)
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+    
+    /**
+     * Start network discovery to find PC controllers
+     */
+    private fun startNetworkDiscovery() {
+        Log.i(TAG, "Starting network discovery for PC controllers")
+        updateConnectionStatus(ConnectionStatus.DISCOVERING)
+        
+        networkClient?.startDiscovery { success ->
+            runOnUiThread {
+                if (success) {
+                    Log.i(TAG, "Network discovery completed successfully")
+                    
+                    val controllers = networkClient?.getDiscoveredControllers()
+                    if (controllers.isNullOrEmpty()) {
+                        Log.i(TAG, "No PC controllers found during discovery")
+                        updateConnectionStatus(ConnectionStatus.DISCONNECTED)
+                        Toast.makeText(this@MainActivity, 
+                            "No PC controllers found. Ensure PC app is running on same network.", 
+                            Toast.LENGTH_LONG).show()
+                    }
+                } else {
+                    Log.w(TAG, "Network discovery failed")
+                    updateConnectionStatus(ConnectionStatus.ERROR)
+                    showNetworkError("Discovery failed. Check network connection.")
+                }
+            }
+        }
+    }
+    
+    /**
+     * Handle remote recording request from PC controller
+     */
+    private fun handleRemoteRecordingRequest(sessionInfo: SessionInfo) {
+        Log.i(TAG, "Processing remote recording request for session: ${sessionInfo.sessionId}")
+        
+        if (!isServiceBound || recordingService == null) {
+            Log.e(TAG, "Recording service not available for remote request")
+            showNetworkError("Recording service not ready")
+            return
+        }
+        
+        try {
+            // Create session directory
+            val baseDir = File(getExternalFilesDir(null), "recordings")
+            val sessionDir = File(baseDir, sessionInfo.sessionId)
+            
+            if (!sessionDir.exists()) {
+                sessionDir.mkdirs()
+            }
+            
+            // Start recording via service
+            RecordingService.startRecording(this, sessionDir.absolutePath)
+            
+            Toast.makeText(this, 
+                "Remote recording started: ${sessionInfo.studyName}", 
+                Toast.LENGTH_LONG).show()
+                
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start remote recording", e)
+            showNetworkError("Failed to start recording: ${e.message}")
+        }
+    }
+    
+    /**
+     * Perform screen flash for synchronization
+     */
+    private fun performSyncFlash(durationMs: Int) {
+        Log.i(TAG, "Performing sync flash for ${durationMs}ms")
+        
+        // Flash the screen white for synchronization
+        val originalBackground = window.decorView.background
+        
+        try {
+            // Set screen to white
+            window.decorView.setBackgroundColor(android.graphics.Color.WHITE)
+            
+            // Add sync marker to recording if active
+            recordingService?.getRecordingController()?.addSyncMarker("pc_sync_flash", System.nanoTime())
+            
+            // Restore original background after duration
+            window.decorView.postDelayed({
+                window.decorView.background = originalBackground
+            }, durationMs.toLong())
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to perform sync flash", e)
+            // Ensure we restore the background even if there's an error
+            window.decorView.background = originalBackground
+        }
+    }
+    
+    /**
+     * Update connection status and UI
+     */
+    private fun updateConnectionStatus(status: ConnectionStatus) {
+        connectionStatus = status
+        
+        // Update UI elements if they exist
+        networkStatusIndicator?.let { indicator ->
+            networkStatusText?.let { text ->
+                when (status) {
+                    ConnectionStatus.DISCONNECTED -> {
+                        indicator.setColorFilter(android.graphics.Color.GRAY)
+                        text.text = "PC: Disconnected"
+                    }
+                    ConnectionStatus.DISCOVERING -> {
+                        indicator.setColorFilter(android.graphics.Color.YELLOW)
+                        text.text = "PC: Discovering..."
+                    }
+                    ConnectionStatus.CONNECTING -> {
+                        indicator.setColorFilter(android.graphics.Color.YELLOW)
+                        text.text = "PC: Connecting..."
+                    }
+                    ConnectionStatus.CONNECTED -> {
+                        indicator.setColorFilter(android.graphics.Color.GREEN)
+                        text.text = "PC: Connected"
+                    }
+                    ConnectionStatus.ERROR -> {
+                        indicator.setColorFilter(android.graphics.Color.RED)
+                        text.text = "PC: Error"
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     * Show network error to user
+     */
+    private fun showNetworkError(message: String) {
+        Toast.makeText(this, "Network Error: $message", Toast.LENGTH_LONG).show()
+    }
+    
+    /**
+     * Manual connection to PC by IP address
+     */
+    fun connectToPC(ipAddress: String) {
+        if (networkClient == null) {
+            showNetworkError("Network client not initialized")
+            return
+        }
+        
+        Log.i(TAG, "Manual connection to PC at $ipAddress")
+        updateConnectionStatus(ConnectionStatus.CONNECTING)
+        
+        networkClient?.connectToController(ipAddress, 8080) { success ->
+            runOnUiThread {
+                if (success) {
+                    Log.i(TAG, "Manual connection successful")
+                    Toast.makeText(this@MainActivity, 
+                        "Connected to PC at $ipAddress", 
+                        Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.w(TAG, "Manual connection failed")
+                    updateConnectionStatus(ConnectionStatus.ERROR)
+                    showNetworkError("Failed to connect to PC at $ipAddress")
+                }
+            }
+        }
+    }
+    
+    /**
+     * Get current connection status
+     */
+    fun getConnectionStatus(): ConnectionStatus = connectionStatus
+    
+    /**
+     * Get network performance metrics
+     */
+    fun getNetworkMetrics(): String {
+        val client = networkClient ?: return "Network client not available"
+        
+        return "Latency: ${client.getLatencyMs()}ms, " +
+               "Throughput: ${String.format("%.1f", client.getThroughputKBps())}KB/s, " +
+               "Secure: ${client.isSecureConnection()}"
+    }
+    
+    /**
+     * Handle network status bar click for manual connection
+     */
+    private fun handleNetworkStatusClick() {
+        when (connectionStatus) {
+            ConnectionStatus.DISCONNECTED, ConnectionStatus.ERROR -> {
+                // Show dialog for manual IP connection
+                showManualConnectionDialog()
+            }
+            ConnectionStatus.DISCOVERING, ConnectionStatus.CONNECTING -> {
+                // Show discovery progress
+                Toast.makeText(this, "Discovery in progress...", Toast.LENGTH_SHORT).show()
+            }
+            ConnectionStatus.CONNECTED -> {
+                // Show connection info
+                val metrics = getNetworkMetrics()
+                Toast.makeText(this, "Connected: $metrics", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+    
+    /**
+     * Show dialog for manual PC connection
+     */
+    private fun showManualConnectionDialog() {
+        val builder = TipDialog.Builder(this)
+            .setTitleMessage("Connect to PC")
+            .setMessage("Enter PC IP address for manual connection:")
+            .setCancelListener("Cancel")
+            .setPositiveListener("Connect") {
+                // For now, try common default IP addresses
+                val commonIPs = listOf("192.168.1.100", "192.168.0.100", "10.0.0.100")
+                
+                lifecycleScope.launch {
+                    for (ip in commonIPs) {
+                        Log.i(TAG, "Trying to connect to $ip")
+                        updateConnectionStatus(ConnectionStatus.CONNECTING)
+                        
+                        val success = networkClient?.connectToController(ip, 8080, true) ?: false
+                        if (success) {
+                            Log.i(TAG, "Successfully connected to $ip")
+                            break
+                        } else {
+                            Log.w(TAG, "Failed to connect to $ip")
+                        }
+                    }
+                    
+                    // If all failed, restart discovery
+                    if (connectionStatus != ConnectionStatus.CONNECTED) {
+                        updateConnectionStatus(ConnectionStatus.DISCONNECTED)
+                        startNetworkDiscovery()
+                    }
+                }
+            }
+        
+        builder.create().show()
+    }
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        
+        // Cleanup networking
+        try {
+            networkClient?.disconnect()
+            networkClient?.cleanup()
+            networkClient = null
+            
+            if (isServiceBound) {
+                unbindService(serviceConnection)
+                isServiceBound = false
+            }
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during networking cleanup", e)
+        }
     }
 }

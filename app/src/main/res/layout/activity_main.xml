@@ -17,8 +17,39 @@
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/network_status_bar"
             app:layout_constraintBottom_toTopOf="@+id/cl_bottom" />
+
+        <!-- Network Status Indicator -->
+        <LinearLayout
+            android:id="@+id/network_status_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:background="#AA000000"
+            android:gravity="end"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            
+            <ImageView
+                android:id="@+id/network_status_indicator"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginEnd="4dp"
+                android:src="@android:drawable/presence_invisible"
+                android:contentDescription="Network status" />
+                
+            <TextView
+                android:id="@+id/network_status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PC: Disconnected"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp" />
+                
+        </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_bottom"
