@@ -213,7 +213,7 @@ def main():
     parser = argparse.ArgumentParser(description="Test PC-to-Phone communication for IRCamera")
     parser.add_argument("--android-ip", required=True, help="IP address of Android device")
     parser.add_argument("--port", type=int, default=8080, help="Port number (default: 8080)")
-    parser.add_argument("--test", choices=["all", "connect", "register", "record", "sync", "ping"], 
+    parser.add_argument("--test", choices=["all", "connect", "register", "record", "sync", "ping", "stress"], 
                        default="all", help="Which test to run")
     
     args = parser.parse_args()
@@ -262,6 +262,23 @@ def main():
                 
                 if controller.test_stop_recording():
                     success_count += 1
+        
+        if args.test in ["all", "stress"]:
+            print("🔥 Testing stress communication (20 rapid ping/pong cycles)...")
+            total_tests += 1
+            stress_success = True
+            
+            for i in range(20):
+                if not controller.test_ping_pong():
+                    stress_success = False
+                    break
+                time.sleep(0.1)  # Brief delay between stress tests
+                
+            if stress_success:
+                success_count += 1
+                print("✅ Stress test passed!")
+            else:
+                print("❌ Stress test failed!")
         
         if args.test == "connect":
             print("✅ Connection test successful!")
