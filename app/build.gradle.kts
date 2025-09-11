@@ -256,7 +256,7 @@ dependencies {
     
     // Enhanced charting and data visualization (provided by libui module)
     implementation("com.opencsv:opencsv:5.7.1")
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.google.code.gson:gson:2.13.2")
     
     // Enhanced networking and serialization for Hub-Spoke
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
