@@ -276,7 +276,7 @@ dependencies {
     // Comprehensive Testing Dependencies
     // Unit testing framework
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
     testImplementation("org.hamcrest:hamcrest:2.2")
     
     // Mocking framework
