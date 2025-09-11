@@ -263,8 +263,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     
     // Nordic BLE Library for robust Bluetooth communication
-    implementation("no.nordicsemi.android:ble:2.6.1")
-    implementation("no.nordicsemi.android:ble-ktx:2.6.1")
+    implementation("no.nordicsemi.android:ble:2.11.0")
+    implementation("no.nordicsemi.android:ble-ktx:2.11.0")
     
     // CameraX for RGB camera dual-stream capture
     implementation("androidx.camera:camera-camera2:1.3.1")

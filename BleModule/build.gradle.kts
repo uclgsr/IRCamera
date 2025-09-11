@@ -54,8 +54,8 @@ dependencies {
     api("com.elvishew:xlog:1.10.1")
     
     // Nordic BLE Library integration for enhanced reliability
-    api("no.nordicsemi.android:ble:2.6.1")
-    api("no.nordicsemi.android:ble-ktx:2.6.1")
+    api("no.nordicsemi.android:ble:2.11.0")
+    api("no.nordicsemi.android:ble-ktx:2.11.0")
     
     // UMeng Analytics - now available via version catalog
     // api(libs.umeng.analytics) 
