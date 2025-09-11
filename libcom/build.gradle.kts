@@ -63,7 +63,7 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.4.0")
     implementation("org.apache.xmlbeans:xmlbeans:3.1.0")
     implementation("javax.xml.stream:stax-api:1.0")
-    implementation("com.fasterxml:aalto-xml:1.2.2")
+    implementation("com.fasterxml:aalto-xml:1.3.3")
     implementation(project(":RangeSeekBar"))
     
     // Test dependencies - using Robolectric for context-based testing
