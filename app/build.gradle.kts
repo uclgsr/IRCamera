@@ -280,8 +280,8 @@ dependencies {
     testImplementation("org.hamcrest:hamcrest:2.2")
     
     // Mocking framework
-    testImplementation("io.mockk:mockk:1.13.4")
-    testImplementation("io.mockk:mockk-android:1.13.4")
+    testImplementation("io.mockk:mockk:1.14.5")
+    testImplementation("io.mockk:mockk-android:1.14.5")
     
     // Kotlin coroutines testing
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
