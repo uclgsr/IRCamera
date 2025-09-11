@@ -126,7 +126,10 @@ android {
                 "META-INF/NOTICE",
                 "META-INF/NOTICE.txt",
                 "META-INF/notice.txt",
-                "META-INF/ASL2.0"
+                "META-INF/ASL2.0",
+                // Exclude problematic baseline profiles to avoid INSTALL_BASELINE_PROFILE_FAILED
+                "META-INF/com.android.art/baseline.prof",
+                "META-INF/com.android.art/baseline.profm"
             )
         }
         jniLibs {
