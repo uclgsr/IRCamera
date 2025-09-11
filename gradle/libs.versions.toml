@@ -121,7 +121,7 @@ umengAnalytics = "9.8.8"
 # Testing
 junit = "4.13.2"
 testExtJunit = "1.1.5"
-testEspressoCore = "3.5.1"
+testEspressoCore = "3.7.0"
 
 # Google Services
 
