@@ -18,9 +18,6 @@
             android:name=".activity.VideoActivity"
             android:screenOrientation="behind" />
         <activity
-            android:name=".activity.temp.ChartActivity"
-            android:screenOrientation="behind" />
-        <activity
             android:name=".activity.MonitorChartActivity"
             android:screenOrientation="behind" />
         <activity
