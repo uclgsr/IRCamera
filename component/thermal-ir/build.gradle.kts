@@ -114,8 +114,8 @@ dependencies {
     }
     
     // SmartRefreshLayout for pull-to-refresh functionality
-    implementation("io.github.scwang90:refresh-layout-kernel:2.1.0")
-    implementation("io.github.scwang90:refresh-header-classics:2.1.0")
+    implementation("io.github.scwang90:refresh-layout-kernel:2.1.1")
+    implementation("io.github.scwang90:refresh-header-classics:2.1.1")
     
     // Enhanced unified BLE system integration for cross-modal coordination
     implementation(project(":BleModule"))
