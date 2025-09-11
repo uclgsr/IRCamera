@@ -105,7 +105,7 @@ dependencies {
     implementation(libs.mn.image.browser)
     
     // GSY VideoPlayer for video playback - using standard version
-    implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.6.0-release-jitpack") {
+    implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v11.1.0") {
         exclude(group = "androidx.media3", module = "media3-cast")
         exclude(group = "androidx.media3", module = "media3-session")
         exclude(group = "androidx.media3", module = "media3-ui")
@@ -114,8 +114,8 @@ dependencies {
     }
     
     // SmartRefreshLayout for pull-to-refresh functionality
-    implementation("io.github.scwang90:refresh-layout-kernel:2.1.0")
-    implementation("io.github.scwang90:refresh-header-classics:2.1.0")
+    implementation("io.github.scwang90:refresh-layout-kernel:2.1.1")
+    implementation("io.github.scwang90:refresh-header-classics:2.1.1")
     
     // Enhanced unified BLE system integration for cross-modal coordination
     implementation(project(":BleModule"))
