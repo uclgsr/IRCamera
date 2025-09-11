@@ -27,6 +27,10 @@ import com.energy.iruvc.uvc.UVCCamera
 import com.topdon.lib.core.tools.DeviceTools
 import com.topdon.lib.core.config.DeviceConfig.isTcTsDevice
 import com.topdon.lib.core.broadcast.DeviceBroadcastReceiver
+import com.topdon.lib.core.bean.event.device.DeviceConnectEvent
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * Thermal Camera recorder using real IR Camera integration.
@@ -118,6 +122,11 @@ class ThermalCameraRecorder(
     override suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
         try {
             Log.i(TAG, "Initializing thermal camera for sensor $sensorId")
+            
+            // Register for USB device lifecycle events
+            if (!EventBus.getDefault().isRegistered(this@ThermalCameraRecorder)) {
+                EventBus.getDefault().register(this@ThermalCameraRecorder)
+            }
             
             // Initialize USB manager for thermal camera detection
             usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
@@ -754,6 +763,11 @@ class ThermalCameraRecorder(
                 stopRecording()
             }
             
+            // Unregister from USB device lifecycle events
+            if (EventBus.getDefault().isRegistered(this@ThermalCameraRecorder)) {
+                EventBus.getDefault().unregister(this@ThermalCameraRecorder)
+            }
+            
             // Unregister USB permission receiver
             usbPermissionReceiver?.let { receiver ->
                 try {
@@ -778,6 +792,83 @@ class ThermalCameraRecorder(
             
         } catch (e: Exception) {
             Log.e(TAG, "Thermal camera cleanup failed", e)
+        }
+    }
+
+    /**
+     * Handle USB device connection events from EventBus
+     */
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onDeviceConnectEvent(event: DeviceConnectEvent) {
+        try {
+            Log.d(TAG, "USB device connection event: connected=${event.isConnect}, device=${event.device?.productName}")
+            
+            if (event.isConnect) {
+                val connectedDevice = event.device
+                if (connectedDevice != null) {
+                    // Check if this is a thermal camera device
+                    if (connectedDevice.isTcTsDevice()) {
+                        Log.i(TAG, "Thermal camera device connected: ${connectedDevice.productName}")
+                        
+                        // If we were in simulation mode, try to switch to real hardware
+                        if (isSimulationMode) {
+                            recordingScope.launch {
+                                val previousDevice = thermalCameraDevice
+                                thermalCameraDevice = connectedDevice
+                                
+                                // Check permission for new device
+                                val manager = usbManager
+                                if (manager != null) {
+                                    hasUsbPermission = manager.hasPermission(connectedDevice)
+                                    
+                                    if (hasUsbPermission) {
+                                        Log.i(TAG, "Attempting to switch from simulation to real thermal camera")
+                                        val success = initializeRealThermalCamera(connectedDevice)
+                                        
+                                        if (success) {
+                                            isSimulationMode = false
+                                            Log.i(TAG, "Successfully switched to real thermal camera")
+                                            emitStatus()
+                                        } else {
+                                            Log.w(TAG, "Failed to initialize newly connected thermal camera")
+                                            thermalCameraDevice = previousDevice
+                                        }
+                                    } else {
+                                        Log.i(TAG, "New thermal camera device needs permission")
+                                        requestUsbPermission(connectedDevice)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else if (!event.isConnect) {
+                // Device disconnected
+                val disconnectedDevice = thermalCameraDevice
+                if (disconnectedDevice != null) {
+                    Log.w(TAG, "Thermal camera device disconnected, switching to simulation mode")
+                    
+                    recordingScope.launch {
+                        // Switch to simulation mode
+                        isSimulationMode = true
+                        isIRCameraConnected = false
+                        hasUsbPermission = false
+                        thermalCameraDevice = null
+                        
+                        // If recording, continue in simulation mode
+                        if (_isRecording.get()) {
+                            Log.i(TAG, "Continuing recording in simulation mode after device disconnect")
+                            startSimulatedThermalRecording()
+                        }
+                        
+                        emitError(ErrorType.DEVICE_ERROR, "Thermal camera disconnected - switched to simulation mode")
+                        emitStatus()
+                    }
+                }
+            }
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling device connection event", e)
         }
     }
 
