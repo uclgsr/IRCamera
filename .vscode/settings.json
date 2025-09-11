@@ -1,0 +1,41 @@
+{
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.compile.nullAnalysis.mode": "automatic",
+  "kotlin.languageServer.enabled": true,
+  "files.exclude": {
+    "**/build": true,
+    "**/.gradle": true,
+    "**/.idea": true,
+    "**/captures": true,
+    "**/.navigation": true,
+    "**/.kotlin": true
+  },
+  "files.watcherExclude": {
+    "**/build/**": true,
+    "**/.gradle/**": true
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll": "explicit"
+  },
+  "python.defaultInterpreterPath": "./pc-controller/venv/bin/python",
+  "python.linting.enabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.formatting.provider": "black",
+  "[kotlin]": {
+    "editor.defaultFormatter": "fwcd.kotlin"
+  },
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java"
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "recommendations": [
+    "redhat.java",
+    "fwcd.kotlin",
+    "ms-python.python",
+    "ms-python.black-formatter",
+    "ms-python.flake8",
+    "redhat.vscode-xml",
+    "redhat.vscode-yaml", 
+    "esbenp.prettier-vscode",
+    "ms-vscode.gradle",
+    "vscjava.vscode-java-pack",
+    "ms-vscode.vscode-json",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.live-server"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.vscode-typescript-next"
+  ]
+}

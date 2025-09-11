@@ -33,6 +33,33 @@ The platform uses a modular architecture with the following components:
 - **Multi-Device Management**: Centralized control for thermal cameras
 - **Data Analytics**: Comprehensive analysis and reporting tools
 
+## 🚀 Quick Start
+
+1. **Check project status**:
+   ```bash
+   ./status.sh
+   ```
+
+2. **Setup development environment**:
+   ```bash
+   ./dev.sh setup
+   # or
+   make setup
+   ```
+
+3. **Build the project**:
+   ```bash
+   ./dev.sh validate    # Run all validation checks
+   ./dev.sh build       # Build only
+   ```
+
+4. **Development workflow**:
+   ```bash
+   ./dev.sh format      # Format code
+   ./dev.sh lint        # Run linting
+   ./dev.sh test        # Run tests
+   ```
+
 ## 🔧 Development
 
 ### Prerequisites
@@ -41,33 +68,32 @@ The platform uses a modular architecture with the following components:
 - Android SDK 34
 - Python 3.11+ (for PC controller)
 
-### Building the Project
+### Development Tools
+The project includes a unified development script and IDE integration:
 
+| Tool | Description |
+|------|-------------|
+| `./dev.sh` | Main development script |
+| `./status.sh` | Project health overview |
+| `Makefile` | Make targets for common tasks |
+| `.vscode/` | VS Code configuration |
+| `.pre-commit-config.yaml` | Git hooks |
+
+### Available Commands
 ```bash
-# Format and validate code
-./dev.sh validate
+./dev.sh help       # Show all available commands
+./dev.sh validate   # Run complete validation (recommended)
+./dev.sh format     # Format all code files
+./dev.sh lint       # Run linting checks
+./dev.sh build      # Build the Android app
+./dev.sh test       # Run tests
+./dev.sh clean      # Clean build artifacts
+./dev.sh setup      # Setup development environment
 
-# Build debug APK
-./dev.sh build
-
-# Run linting
-./dev.sh lint
-
-# Format code
-./dev.sh format
-```
-
-### Project Structure
-```
-├── app/                    # Main Android application
-├── component/              # Feature modules
-│   ├── thermal-ir/        # Advanced thermal processing
-│   ├── thermal-lite/      # Lightweight thermal features
-│   ├── gsr-recording/     # Physiological data recording
-│   └── ...
-├── lib*/                  # Core libraries
-├── pc-controller/         # Python PC application (WIP)
-└── dev.sh                 # Development tools
+# Alternative using Make
+make validate       # Same as ./dev.sh validate
+make build          # Same as ./dev.sh build
+make help           # Show Makefile targets
 ```
 
 ## 📱 Supported Devices

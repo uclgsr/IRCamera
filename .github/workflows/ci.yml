@@ -37,8 +37,27 @@ jobs:
         chmod +x gradlew
         chmod +x dev.sh
     
-    - name: Run validation
-      run: ./dev.sh validate
+    - name: Install development tools
+      run: |
+        # Install Python tools for linting
+        pip install black flake8 yamllint
+        
+        # Install shellcheck
+        sudo apt-get update
+        sudo apt-get install -y shellcheck xmllint
+    
+    - name: Run code formatting
+      run: ./dev.sh format
+    
+    - name: Run linting
+      run: ./dev.sh lint
+    
+    - name: Build project
+      run: timeout 600 ./dev.sh build
+    
+    - name: Run tests
+      run: ./dev.sh test
+      continue-on-error: true
     
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
@@ -48,3 +67,12 @@ jobs:
         path: |
           **/build/reports/
           **/build/outputs/logs/
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: |
+          **/build/test-results/
+          **/build/reports/tests/

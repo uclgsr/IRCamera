@@ -1,0 +1,113 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Format Code",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": ["format"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Linting",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": ["lint"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Project",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": ["build"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [
+        "$gradle"
+      ]
+    },
+    {
+      "label": "Run Tests",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": ["test"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Full Validation",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": ["validate"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      },
+      "problemMatcher": [
+        "$gradle"
+      ]
+    },
+    {
+      "label": "Clean Build",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": ["clean"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Setup Development Environment",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": ["setup"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
