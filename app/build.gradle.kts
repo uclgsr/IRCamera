@@ -241,7 +241,7 @@ dependencies {
     implementation(files("../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))  // Required for iruvc classes in app module
 
     implementation(libs.jsbridge)
-    implementation(libs.fastjson)
+    implementation(libs.fastjson2)
     implementation(libs.ucrop)
     implementation(libs.play.app.update)
     implementation(libs.immersionbar)

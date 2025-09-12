@@ -93,6 +93,7 @@ dependencies {
     
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
     implementation(libs.material)
     implementation(libs.utilcode)
     implementation(libs.glide)
