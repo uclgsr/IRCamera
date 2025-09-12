@@ -757,6 +757,27 @@ class NetworkClient(private val context: Context) {
     fun getSynchronizedTimestamp(): Long {
         return System.nanoTime() + clockOffset
     }
+    
+    /**
+     * Send a message to the connected PC Controller
+     */
+    suspend fun sendMessage(message: JSONObject): Boolean = 
+        withContext(Dispatchers.IO) {
+            try {
+                if (!isConnected) {
+                    Log.w(TAG, "Cannot send message - not connected to PC Controller")
+                    return@withContext false
+                }
+                
+                sendMessage(message)
+                Log.d(TAG, "Message sent successfully: ${message.optString("message_type", "unknown")}")
+                true
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to send message", e)
+                errorRecoveryManager.handleNetworkError("send_message", e.message ?: "Send failed")
+                false
+            }
+        }
 
     /**
      * Start continuous data streaming to PC Controller
