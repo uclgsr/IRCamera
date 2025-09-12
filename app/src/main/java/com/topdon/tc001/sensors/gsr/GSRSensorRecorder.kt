@@ -111,6 +111,10 @@ class GSRSensorRecorder(
     // Legacy GSR components integration for backward compatibility
     private var legacyGSRRecorder: LegacyGSRRecorder? = null
     
+    // Network streaming for hub-spoke communication
+    private var gsrNetworkStreamer: GSRNetworkStreamer? = null
+    private var isNetworkStreamingEnabled = true
+    
     // Recording state
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var sessionDirectory: String = ""
@@ -170,10 +174,24 @@ class GSRSensorRecorder(
             // Create legacy GSR recorder instance for backward compatibility
             legacyGSRRecorder = LegacyGSRRecorder(context, samplingRateHz)
             
+            // Initialize network streaming if enabled
+            if (isNetworkStreamingEnabled) {
+                try {
+                    // Will be initialized properly when recording starts with actual session ID
+                    Log.i(TAG, "Network streaming will be initialized during recording start")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Network streaming setup failed, continuing without streaming: ${e.message}")
+                    isNetworkStreamingEnabled = false
+                }
+            }
+            
             // Start data monitoring
             startDataMonitoring()
             
-            Log.i(TAG, "GSR sensor initialized successfully (Shimmer connected: $isShimmerConnected)")
+            // Setup GSR sample callbacks for real-time streaming
+            setupGSRSampleCallback()
+            
+            Log.i(TAG, "GSR sensor initialized successfully (Shimmer connected: $isShimmerConnected, Network streaming: $isNetworkStreamingEnabled)")
             emitStatus()
             return@withContext true
             
@@ -338,6 +356,31 @@ class GSRSensorRecorder(
                 sampleCount.set(0)
                 syncMarkerCount.set(0)
                 
+                // Initialize network streaming for hub-spoke communication
+                if (isNetworkStreamingEnabled) {
+                    try {
+                        val sessionId = sessionDirectory.substringAfterLast("/").ifEmpty { 
+                            "session_${System.currentTimeMillis()}" 
+                        }
+                        
+                        gsrNetworkStreamer = GSRNetworkStreamer(context, sessionId)
+                        val networkInitialized = gsrNetworkStreamer?.initialize() ?: false
+                        
+                        if (networkInitialized) {
+                            val streamingStarted = gsrNetworkStreamer?.startStreaming() ?: false
+                            if (streamingStarted) {
+                                Log.i(TAG, "GSR network streaming started successfully")
+                            } else {
+                                Log.w(TAG, "GSR network streaming failed to start")
+                            }
+                        } else {
+                            Log.w(TAG, "GSR network streaming initialization failed")
+                        }
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Failed to initialize GSR network streaming", e)
+                    }
+                }
+                
                 Log.i(TAG, "GSR sensor recording started (Shimmer: $shimmerRecordingStarted, Legacy: $legacyRecordingStarted)")
                 emitStatus()
                 return@withContext true
@@ -444,6 +487,25 @@ class GSRSensorRecorder(
                 stopLegacyRecording(recorder)
             }
             
+            // Stop network streaming
+            gsrNetworkStreamer?.let { streamer ->
+                try {
+                    val streamingStopped = streamer.stopStreaming()
+                    if (streamingStopped) {
+                        Log.i(TAG, "GSR network streaming stopped successfully")
+                    } else {
+                        Log.w(TAG, "GSR network streaming stop encountered issues")
+                    }
+                    
+                    // Cleanup network streamer resources
+                    streamer.cleanup()
+                    gsrNetworkStreamer = null
+                    
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to stop GSR network streaming", e)
+                }
+            }
+            
             _isRecording.set(false)
             
             Log.i(TAG, "Real Shimmer GSR sensor recording stopped")
@@ -529,6 +591,55 @@ class GSRSensorRecorder(
         } catch (e: Exception) {
             Log.w(TAG, "Failed to add GSR sync marker", e)
             emitError(ErrorType.SYNC_FAILED, "GSR sync marker failed: ${e.message}")
+        }
+    }
+    
+    /**
+     * Callback for processing GSR samples and streaming to PC hub
+     * This method is called whenever a new GSR sample is available
+     */
+    private fun onGSRSampleReceived(sample: GSRSample) {
+        try {
+            // Update sample count
+            sampleCount.incrementAndGet()
+            
+            // Stream to PC hub if network streaming is enabled
+            gsrNetworkStreamer?.let { streamer ->
+                if (streamer.isStreaming) {
+                    streamer.addSample(sample)
+                }
+            }
+            
+            // Log sample for debugging (reduce frequency for performance)
+            if (sampleCount.get() % 100 == 0L) {
+                Log.d(TAG, "GSR sample processed: ${sample.gsrValue} µS (${sampleCount.get()} total)")
+            }
+            
+        } catch (e: Exception) {
+            Log.w(TAG, "Error processing GSR sample", e)
+        }
+    }
+    
+    /**
+     * Configure GSR sample callback for real-time streaming
+     * This integrates with the existing GSR recording modules
+     */
+    private fun setupGSRSampleCallback() {
+        try {
+            // Setup callback for Enhanced Shimmer recorder
+            realShimmerGSRRecorder?.setDataCallback { sample ->
+                onGSRSampleReceived(sample)
+            }
+            
+            // Setup callback for legacy recorder
+            legacyGSRRecorder?.setDataCallback { sample ->
+                onGSRSampleReceived(sample)
+            }
+            
+            Log.i(TAG, "GSR sample callbacks configured for real-time streaming")
+            
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to setup GSR sample callbacks", e)
         }
     }
 
