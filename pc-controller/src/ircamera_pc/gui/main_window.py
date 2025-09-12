@@ -101,6 +101,10 @@ class MainWindow(QMainWindow):
         self.status_display_widget: Optional[StatusDisplayWidget] = None
         self.log_display: Optional[QTextEdit] = None
 
+        # Sync control buttons
+        self.sync_flash_btn: Optional[QPushButton] = None
+        self.sync_mark_btn: Optional[QPushButton] = None
+
         # New GUI components for system integration
         self.bluetooth_control_widget = None
         self.wifi_control_widget = None
@@ -155,8 +159,8 @@ class MainWindow(QMainWindow):
         # Status bar
         self._setup_status_bar()
 
-        # Set initial state
-        self._update_ui_state()
+        # Set initial state - will be updated by timer once UI is fully initialized
+        # self._update_ui_state()
 
     def _create_left_pane(self) -> QWidget:
         """Create the left pane with device management and session controls."""
@@ -266,7 +270,9 @@ class MainWindow(QMainWindow):
 
         self.log_display = QTextEdit()
         self.log_display.setReadOnly(True)
-        self.log_display.setMaximumBlockCount(1000)  # Limit log lines
+        # Use setDocument to limit log lines for QTextEdit
+        doc = self.log_display.document()
+        doc.setMaximumBlockCount(1000)
         self.log_display.setFont(QFont("Consolas", 9))
         log_layout.addWidget(self.log_display)
 
@@ -511,8 +517,11 @@ class MainWindow(QMainWindow):
             and has_devices
         )
 
-        self.sync_flash_btn.setEnabled(can_sync)
-        self.sync_mark_btn.setEnabled(can_sync)
+        # Only update buttons if they exist and are not None
+        if hasattr(self, 'sync_flash_btn') and self.sync_flash_btn is not None:
+            self.sync_flash_btn.setEnabled(can_sync)
+        if hasattr(self, 'sync_mark_btn') and self.sync_mark_btn is not None:
+            self.sync_mark_btn.setEnabled(can_sync)
 
     # Event handlers
     def _on_start_session_requested(self) -> None:

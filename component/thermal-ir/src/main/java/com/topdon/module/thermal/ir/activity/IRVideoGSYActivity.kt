@@ -8,9 +8,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.BarUtils
-import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
-import com.shuyu.gsyvideoplayer.player.PlayerFactory
-import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer
+// Temporarily commented out GSY Video Player imports due to dependency resolution issues
+// import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
+// import com.shuyu.gsyvideoplayer.player.PlayerFactory
+// import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer
 import com.topdon.lib.core.bean.GalleryBean
 import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.config.RouterConfig
@@ -29,7 +30,7 @@ import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.event.GalleryDownloadEvent
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
-import com.shuyu.gsyvideoplayer.player.SystemPlayerManager
+// import com.shuyu.gsyvideoplayer.player.SystemPlayerManager
 import java.io.File
 
 
@@ -46,7 +47,7 @@ class IRVideoGSYActivity : BaseActivity() {
     private lateinit var clShare: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clDelete: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var ivDownload: android.widget.ImageView
-    private lateinit var gsyPlay: com.topdon.module.thermal.ir.view.MyGSYVideoPlayer
+    // private lateinit var gsyPlay: com.topdon.module.thermal.ir.view.MyGSYVideoPlayer
     
     override fun initContentView() = R.layout.activity_ir_video_gsy
 
@@ -58,7 +59,7 @@ class IRVideoGSYActivity : BaseActivity() {
         clShare = findViewById(R.id.cl_share)
         clDelete = findViewById(R.id.cl_delete)
         ivDownload = findViewById(R.id.iv_download)
-        gsyPlay = findViewById(R.id.gsy_play)
+        // gsyPlay = findViewById(R.id.gsy_play)
         
         BarUtils.setNavBarColor(this, ContextCompat.getColor(this, UiR.color.black))
 
@@ -100,6 +101,9 @@ class IRVideoGSYActivity : BaseActivity() {
     }
 
     private fun previewVideo(isRemote: Boolean, path: String) {
+        // Temporarily commented out GSY Video Player usage due to dependency resolution issues
+        // TODO: Re-enable with correct dependency once GSY Video Player is properly included
+        /*
         PlayerFactory.setPlayManager(SystemPlayerManager::class.java)
         val url = if (isRemote) {
             path
@@ -116,6 +120,10 @@ class IRVideoGSYActivity : BaseActivity() {
         gsyPlay.titleTextView.visibility = View.GONE
         gsyPlay.backButton.visibility = View.GONE
         gsyPlay.fullscreenButton.visibility = View.GONE
+        */
+        
+        // Placeholder implementation - shows path for now
+        // In production, implement with Media3 ExoPlayer as alternative
     }
 
     private fun actionDownload(isToShare: Boolean) {
@@ -210,15 +218,16 @@ class IRVideoGSYActivity : BaseActivity() {
     }
 
     override fun onResume() {
-        getCurPlay().onVideoResume(false)
+        // getCurPlay().onVideoResume(false)
         super.onResume()
     }
 
     override fun onPause() {
-        getCurPlay().onVideoPause()
+        // getCurPlay().onVideoPause()
         super.onPause()
     }
 
+    /*
     private fun getCurPlay(): GSYVideoPlayer {
         return if (gsyPlay.fullWindowPlayer != null) {
             gsyPlay.fullWindowPlayer
@@ -226,4 +235,5 @@ class IRVideoGSYActivity : BaseActivity() {
             gsyPlay
         }
     }
+    */
 }

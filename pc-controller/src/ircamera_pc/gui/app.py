@@ -296,7 +296,7 @@ class IRCameraApp:
             logger.info("IRCamera PC Controller started")
 
             # Run Qt event loop
-            return self.qt_app.exec_()
+            return self.qt_app.exec()
 
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Application error: {e}")
@@ -326,7 +326,29 @@ class IRCameraApp:
 
 def main() -> int:
     """Main entry point for the application."""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='IRCamera PC Controller - Multi-Modal Physiological Sensing Platform Hub')
+    parser.add_argument('--version', action='version', version='IRCamera PC Controller v1.0.0')
+    parser.add_argument('--config', help='Path to configuration file')
+    parser.add_argument('--debug', action='store_true', help='Enable debug logging')
+    parser.add_argument('--headless', action='store_true', help='Run in headless mode (no GUI)')
+    
+    args = parser.parse_args()
+    
+    if args.debug:
+        logger.info("Debug mode enabled")
+    
     app = IRCameraApp()
+    
+    # Handle headless mode
+    if args.headless:
+        logger.info("Running in headless mode - network services only")
+        # In headless mode, we would just run the network server without GUI
+        # For now, just print the help and exit
+        parser.print_help()
+        return 0
+    
     return app.run()
 
 

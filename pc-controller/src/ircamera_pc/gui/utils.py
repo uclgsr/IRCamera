@@ -78,10 +78,20 @@ def setup_logging() -> LogHandler:
 
     # Add custom sink for GUI integration
     def gui_sink(record):
-        level = record["level"].name
-        message = record["message"]
-        timestamp = record["time"].strftime("%H:%M:%S")
-        gui_handler.log_message.emit(level, message, timestamp)
+        try:
+            # Handle both dict and Record object formats
+            if hasattr(record, 'level'):
+                level = record.level.name
+                message = record.message
+                timestamp = record.time.strftime("%H:%M:%S")
+            else:
+                level = record.get("level", {}).get("name", "INFO")
+                message = record.get("message", "")
+                timestamp = record.get("time", "").strftime("%H:%M:%S") if record.get("time") else ""
+            gui_handler.log_message.emit(level, message, timestamp)
+        except Exception:
+            # Fallback for any formatting issues
+            gui_handler.log_message.emit("INFO", str(record), "")
 
     logger.add(gui_sink, level=log_level)
 
