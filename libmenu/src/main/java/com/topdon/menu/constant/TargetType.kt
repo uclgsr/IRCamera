@@ -1,33 +1,33 @@
 package com.topdon.menu.constant
 
 /**
- * 观测模式-菜单4-标靶 菜单类型.
+ * Observation mode - Menu 4 - Target menu type.
  *
  * Created by LCG on 2024/11/29.
  */
 enum class TargetType {
     /**
-     * 测量模式：人(默认)、羊、狗、鸟.
+     * Measurement mode: Human (default), Sheep, Dog, Bird.
      */
     MODE,
 
     /**
-     * 标靶风格
+     * Target style
      */
     STYLE,
 
     /**
-     * 标靶颜色
+     * Target color
      */
     COLOR,
 
     /**
-     * 删除
+     * Delete
      */
     DELETE,
 
     /**
-     * 帮助
+     * Help
      */
     HELP,
 }
