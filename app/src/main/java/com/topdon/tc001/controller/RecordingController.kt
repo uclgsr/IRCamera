@@ -352,6 +352,13 @@ class RecordingController(
     }
 
     /**
+     * Get count of currently active (recording) sensors
+     */
+    fun getActiveSensorCount(): Int {
+        return sensorRecorders.values.count { it.isRecording }
+    }
+
+    /**
      * Clean up all resources
      */
     suspend fun cleanup() {

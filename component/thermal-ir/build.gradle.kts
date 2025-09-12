@@ -93,6 +93,7 @@ dependencies {
     
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
     implementation(libs.material)
     implementation(libs.utilcode)
     implementation(libs.glide)
@@ -103,7 +104,7 @@ dependencies {
     implementation("com.github.anzaizai:EasySwipeMenuLayout:1.1.4")
     // Image browser library
     implementation(libs.mn.image.browser)
-    
+
     // GSY VideoPlayer for video playback - temporarily disabled due to dependency resolution issues
     // TODO: Re-enable with correct version once dependency issues are resolved
     // implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v10.2.1") {

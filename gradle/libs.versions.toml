@@ -48,7 +48,7 @@ work = "2.10.4"
 coroutines = "1.7.3"
 
 # Networking
-fastjson = "2.0.58"
+fastjson2 = "2.0.58"
 jsbridge = "1.0.4"
 retrofit = "2.10.0"
 okhttp = "4.11.0"
@@ -160,7 +160,7 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 
 # Networking
-fastjson = { group = "com.alibaba", name = "fastjson", version.ref = "fastjson" }
+fastjson2 = { group = "com.alibaba.fastjson2", name = "fastjson2", version.ref = "fastjson2" }
 jsbridge = { group = "com.github.lzyzsd", name = "jsbridge", version.ref = "jsbridge" }
 retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }

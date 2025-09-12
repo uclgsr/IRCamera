@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.controller.RecordingState
 import com.topdon.tc001.network.EnhancedNetworkClient
+import com.topdon.tc001.network.NetworkServer
 import com.topdon.tc001.service.RecordingService
 import com.topdon.tc001.utils.TimeManager
 import com.csl.irCamera.R
@@ -60,7 +61,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
 
     // Core components
     private lateinit var recordingController: RecordingController
-    private lateinit var networkClient: EnhancedNetworkClient
+    private lateinit var networkServer: NetworkServer
     private lateinit var timeManager: TimeManager
     
     // Enhanced BLE Module for systematic harmonization
@@ -81,6 +82,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             
             Log.i(TAG, "Connected to RecordingService")
             setupRecordingMonitoring()
+            setupNetworkMonitoring()
             updateUI()
         }
 
@@ -107,8 +109,8 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         
         lifecycleScope.launch {
             try {
-                if (::networkClient.isInitialized) {
-                    networkClient.cleanup()
+                if (::networkServer.isInitialized) {
+                    networkServer.cleanup()
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error during cleanup", e)
@@ -140,9 +142,9 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         // Initialize Enhanced BLE Manager for advanced multi-device coordination
         initializeAdvancedBleCoordination()
         
-        // Initialize network client (will be connected to service later)
+        // Initialize network server (will be managed by service later)
         recordingController = RecordingController(this, this)
-        networkClient = EnhancedNetworkClient(this, recordingController)
+        networkServer = NetworkServer(this, 8080)
     }
     
     /**
@@ -274,7 +276,8 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     
                     // Update connection indicator based on active connections
                     val hasActiveDevices = systemStatus.activeConnections > 0
-                    binding.connectButton.isEnabled = !hasActiveDevices || !networkClient.isConnected()
+                    val networkConnected = recordingService?.isConnectedToPC() ?: false
+                    binding.connectButton.isEnabled = !networkConnected
                     
                     Log.d(TAG, "BLE Status UI updated: $statusText")
                 } else {
@@ -336,32 +339,39 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     }
 
     private fun connectToPCController() {
-        val pcAddress = binding.pcAddressEditText.text.toString().trim()
-        if (pcAddress.isEmpty()) {
-            android.widget.Toast.makeText(this, "Please enter PC Controller IP address", android.widget.Toast.LENGTH_SHORT).show()
-            return
-        }
-        
+        // In the new server architecture, we don't connect TO the PC
+        // Instead, we ensure our server is ready and display connection info
         lifecycleScope.launch {
             try {
                 binding.progressBar.visibility = View.VISIBLE
-                binding.statusTextView.text = "Connecting to PC Controller..."
+                binding.statusTextView.text = "Preparing to accept PC Controller connections..."
                 
-                val connected = networkClient.connectToController(pcAddress, DEFAULT_PC_CONTROLLER_PORT)
-                
-                if (connected) {
-                    binding.statusTextView.text = "Connected to PC Controller successfully"
-                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Connected successfully", android.widget.Toast.LENGTH_SHORT).show()
-                    setupNetworkMonitoring()
+                // Use RecordingService to ensure the network server is ready
+                if (isServiceBound) {
+                    // The service automatically starts the network server
+                    // Just ensure it's running and display connection info
+                    RecordingService.connectToPC(this@HubSpokeIntegrationActivity, "0.0.0.0", 8080)
+                    
+                    // Give a moment for server to be ready
+                    kotlinx.coroutines.delay(1000)
+                    
+                    // Display connection information
+                    val deviceIP = getLocalIPAddress()
+                    binding.statusTextView.text = "Network server ready!\nPC can connect to: $deviceIP:8080"
+                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, 
+                        "Ready for PC connections on $deviceIP:8080", android.widget.Toast.LENGTH_LONG).show()
+                    Log.i(TAG, "Network server ready for PC Controller connections at $deviceIP:8080")
+                    
                 } else {
-                    binding.statusTextView.text = "Failed to connect to PC Controller"
-                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Connection failed", android.widget.Toast.LENGTH_SHORT).show()
+                    binding.statusTextView.text = "Recording service not available"
+                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Recording service not ready", android.widget.Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, "Recording service not bound")
                 }
                 
             } catch (e: Exception) {
-                Log.e(TAG, "Connection error", e)
-                binding.statusTextView.text = "Connection error: ${e.message}"
-                android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Connection error", android.widget.Toast.LENGTH_SHORT).show()
+                binding.statusTextView.text = "Server setup error: ${e.message}"
+                android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Server error: ${e.message}", android.widget.Toast.LENGTH_LONG).show()
+                Log.e(TAG, "Error setting up network server", e)
             } finally {
                 binding.progressBar.visibility = View.GONE
                 updateUI()
@@ -373,9 +383,22 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         lifecycleScope.launch {
             try {
                 binding.statusTextView.text = "Disconnecting from PC Controller..."
-                networkClient.disconnect()
-                binding.statusTextView.text = "Disconnected from PC Controller"
-                android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Disconnected", android.widget.Toast.LENGTH_SHORT).show()
+                
+                // Use RecordingService to handle the disconnection
+                if (isServiceBound) {
+                    RecordingService.disconnectFromPC(this@HubSpokeIntegrationActivity)
+                    
+                    // Give some time for disconnection
+                    kotlinx.coroutines.delay(1000)
+                    
+                    binding.statusTextView.text = "Disconnected from PC Controller"
+                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Disconnected", android.widget.Toast.LENGTH_SHORT).show()
+                    Log.i(TAG, "Disconnected from PC Controller via RecordingService")
+                } else {
+                    binding.statusTextView.text = "Recording service not available"
+                    Log.e(TAG, "Recording service not bound")
+                }
+                
             } catch (e: Exception) {
                 Log.e(TAG, "Disconnect error", e)
                 binding.statusTextView.text = "Disconnect error: ${e.message}"
@@ -383,6 +406,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 updateUI()
             }
         }
+    }
     }
 
     private fun startCoordinatedRecording() {
@@ -403,9 +427,10 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     sessionDir.mkdirs()
                 }
                 
-                val success = if (networkClient.isConnected()) {
-                    // Start coordinated session with PC Controller
-                    networkClient.startCoordinatedSession(sessionDirectory)
+                val success = if (recordingService?.isConnectedToPC() == true) {
+                    // Use recording service for coordinated session
+                    RecordingService.startRecording(this@HubSpokeIntegrationActivity, sessionDirectory)
+                    true // The service handles the coordination
                 } else {
                     // Start local recording only
                     recordingController.startRecording(sessionDirectory)
@@ -436,9 +461,10 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 binding.progressBar.visibility = View.VISIBLE
                 binding.statusTextView.text = "Stopping coordinated recording session..."
                 
-                val success = if (networkClient.isConnected()) {
-                    // Stop coordinated session
-                    networkClient.stopCoordinatedSession()
+                val success = if (recordingService?.isConnectedToPC() == true) {
+                    // Use recording service for coordinated session
+                    RecordingService.stopRecording(this@HubSpokeIntegrationActivity)
+                    true // The service handles the coordination
                 } else {
                     // Stop local recording only
                     recordingController.stopRecording()
@@ -471,9 +497,9 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     "user_initiated" to "true"
                 )
                 
-                if (networkClient.isConnected()) {
-                    // Distribute sync marker through PC Controller
-                    networkClient.distributeSyncMarker(markerType, metadata)
+                if (recordingService?.isConnectedToPC() == true) {
+                    // Add sync marker through recording service (will distribute to PC)
+                    RecordingService.addSyncMarker(this@HubSpokeIntegrationActivity, markerType, System.nanoTime())
                 } else {
                     // Add local sync marker only
                     val timestampNs = timeManager.getCurrentTimestampNs()
@@ -528,34 +554,43 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     }
 
     private fun setupNetworkMonitoring() {
-        // Monitor connection state
-        networkClient.connectionStateFlow
-            .onEach { state ->
-                runOnUiThread {
-                    binding.connectionStatusTextView.text = "Connection: $state"
-                    updateUI()
-                }
-            }
-            .launchIn(lifecycleScope)
-        
-        // Monitor time sync quality
+        // Monitor connection state through recording service
         lifecycleScope.launch {
-            while (networkClient.isConnected()) {
-                val syncQuality = timeManager.getSyncQuality()
-                runOnUiThread {
-                    binding.syncQualityTextView.text = buildString {
-                        append("Sync: ${syncQuality.level}")
-                        syncQuality.qualityMs?.let { append(" (${it}ms)") }
-                        syncQuality.timeSinceSyncMs?.let { append(" - ${it / 1000}s ago") }
+            while (!isDestroyed) {
+                try {
+                    val isConnected = recordingService?.isConnectedToPC() ?: false
+                    runOnUiThread {
+                        binding.connectionStatusTextView.text = "Connection: ${if (isConnected) "Connected" else "Waiting for PC"}"
+                        updateUI()
                     }
+                    
+                    // Monitor time sync quality if connected
+                    if (isConnected) {
+                        val syncQuality = timeManager.getSyncQuality()
+                        runOnUiThread {
+                            binding.syncQualityTextView.text = buildString {
+                                append("Sync: ${syncQuality.level}")
+                                syncQuality.qualityMs?.let { append(" (${it}ms)") }
+                                syncQuality.timeSinceSyncMs?.let { append(" - ${it / 1000}s ago") }
+                            }
+                        }
+                    } else {
+                        runOnUiThread {
+                            binding.syncQualityTextView.text = "Sync: Not Available"
+                        }
+                    }
+                    
+                    kotlinx.coroutines.delay(2000) // Update every 2 seconds
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error in network monitoring", e)
+                    break
                 }
-                kotlinx.coroutines.delay(2000) // Update every 2 seconds
             }
         }
     }
 
     private fun updateUI() {
-        val isConnected = ::networkClient.isInitialized && networkClient.isConnected()
+        val isConnected = recordingService?.isConnectedToPC() ?: false
         val isRecording = ::recordingController.isInitialized && recordingController.isRecording
         
         binding.connectButton.isEnabled = !isConnected
@@ -568,7 +603,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         binding.sessionDirectoryEditText.isEnabled = !isRecording
         
         if (!isConnected) {
-            binding.connectionStatusTextView.text = "Connection: Disconnected"
+            binding.connectionStatusTextView.text = "Connection: Waiting for PC Controller"
             binding.syncQualityTextView.text = "Sync: Not Available"
         }
         
@@ -598,5 +633,27 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 binding.sensorStatusTextView.text = "Sensors: Idle | $statusText"
             }
         }
+    }
+    
+    /**
+     * Get the local IP address of this device
+     */
+    private fun getLocalIPAddress(): String {
+        try {
+            val interfaces = java.net.NetworkInterface.getNetworkInterfaces()
+            while (interfaces.hasMoreElements()) {
+                val networkInterface = interfaces.nextElement()
+                val addresses = networkInterface.inetAddresses
+                while (addresses.hasMoreElements()) {
+                    val address = addresses.nextElement()
+                    if (!address.isLoopbackAddress && address is java.net.Inet4Address) {
+                        return address.hostAddress ?: "Unknown"
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting local IP address", e)
+        }
+        return "Unknown IP"
     }
 }

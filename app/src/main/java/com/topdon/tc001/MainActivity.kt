@@ -288,6 +288,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private fun initData() {
         checkPermissionType = 0
         checkCameraPermission()
+        
+        // Log that PC-to-Phone communication support is available
+        Log.i("MainActivity", "✅ PC-to-Phone communication integration available - RecordingService supports network control")
     }
 
     override fun onResume() {
