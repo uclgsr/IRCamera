@@ -97,6 +97,9 @@ dependencies {
     implementation(libs.utilcode)
     implementation(libs.glide)
     
+    // LocalBroadcastManager dependency
+    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
+    
     // Lottie animation library
     implementation(libs.lottie)
     // EasySwipeMenuLayout

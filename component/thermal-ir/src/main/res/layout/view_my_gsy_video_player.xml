@@ -116,8 +116,9 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <moe.codeest.enviews.ENDownloadView
+    <ProgressBar
         android:id="@+id/loading"
+        style="?android:attr/progressBarStyle"
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_centerHorizontal="true"

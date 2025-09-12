@@ -15,4 +15,9 @@ object PlayerFactory {
     fun setPlayManager(playerType: Int) {
         // Stub implementation
     }
+    
+    @JvmStatic
+    fun setPlayManager(clazz: Class<*>) {
+        // Stub implementation for Class parameter
+    }
 }
