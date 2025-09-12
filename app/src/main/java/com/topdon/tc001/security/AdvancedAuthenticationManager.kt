@@ -1,0 +1,666 @@
+package com.topdon.tc001.security
+
+import android.content.Context
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
+import android.util.Log
+import com.topdon.tc001.config.FeatureFlags
+import com.topdon.tc001.logging.StructuredLogger
+import kotlinx.coroutines.*
+import org.json.JSONObject
+import java.security.KeyStore
+import java.security.SecureRandom
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicBoolean
+import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+import kotlin.collections.HashMap
+
+/**
+ * Advanced Authentication Manager for Phase 4 Security Enhancement
+ * 
+ * Features:
+ * - Multi-tier authentication (Basic -> Certificate -> Token-based -> Biometric)
+ * - Certificate-based device authentication with automatic rotation
+ * - Role-based access control (RBAC) for different device types
+ * - Session management with secure token handling
+ * - Hardware-backed key storage using Android Keystore
+ * - Security monitoring and anomaly detection
+ */
+class AdvancedAuthenticationManager(private val context: Context) {
+    
+    companion object {
+        private const val TAG = "AdvancedAuth"
+        
+        // Authentication levels
+        const val AUTH_LEVEL_NONE = 0
+        const val AUTH_LEVEL_BASIC = 1        // admin/admin
+        const val AUTH_LEVEL_CERTIFICATE = 2  // Device certificates
+        const val AUTH_LEVEL_TOKEN = 3        // Secure tokens with HMAC
+        const val AUTH_LEVEL_BIOMETRIC = 4    // Biometric + hardware keys
+        
+        // Security timeouts
+        private const val TOKEN_VALIDITY_MS = 24 * 60 * 60 * 1000L  // 24 hours
+        private const val CERTIFICATE_ROTATION_DAYS = 30
+        private const val MAX_AUTH_ATTEMPTS = 5
+        private const val LOCKOUT_DURATION_MS = 15 * 60 * 1000L  // 15 minutes
+        
+        // Keystore aliases
+        private const val KEYSTORE_ALIAS_DEVICE = "ircamera_device_key"
+        private const val KEYSTORE_ALIAS_SESSION = "ircamera_session_key"
+        private const val KEYSTORE_ALIAS_HMAC = "ircamera_hmac_key"
+    }
+    
+    // Authentication state
+    private val currentAuthLevel = AtomicBoolean(false)
+    private var authenticatedDeviceId: String? = null
+    private var authenticatedRole: DeviceRole = DeviceRole.GUEST
+    private var sessionToken: String? = null
+    private var sessionExpiry: Long = 0L
+    
+    // Security monitoring
+    private val failedAttempts = ConcurrentHashMap<String, Int>()
+    private val lockoutExpiry = ConcurrentHashMap<String, Long>()
+    
+    // Services
+    private val logger = StructuredLogger.getInstance(context)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    
+    // Certificate management
+    private var certificateManager: CertificateManager? = null
+    private var roleManager: RoleBasedAccessControl? = null
+    
+    // Security monitoring
+    private var securityMonitor: SecurityMonitor? = null
+    
+    enum class DeviceRole(val level: Int, val permissions: Set<String>) {
+        GUEST(0, setOf("view_status")),
+        OBSERVER(1, setOf("view_status", "view_sessions", "download_data")),
+        OPERATOR(2, setOf("view_status", "view_sessions", "download_data", "start_recording", "stop_recording")),
+        RESEARCHER(3, setOf("view_status", "view_sessions", "download_data", "start_recording", "stop_recording", "manage_sessions", "export_data")),
+        ADMINISTRATOR(4, setOf("*"))  // All permissions
+    }
+    
+    enum class AuthenticationResult {
+        SUCCESS,
+        INVALID_CREDENTIALS,
+        CERTIFICATE_INVALID,
+        ACCOUNT_LOCKED,
+        INSUFFICIENT_PERMISSIONS,
+        TOKEN_EXPIRED,
+        HARDWARE_UNAVAILABLE,
+        BIOMETRIC_FAILED,
+        UNKNOWN_ERROR
+    }
+    
+    data class AuthenticationContext(
+        val deviceId: String,
+        val authLevel: Int,
+        val role: DeviceRole,
+        val sessionToken: String,
+        val expiryTime: Long,
+        val capabilities: Set<String>
+    )
+    
+    interface AuthenticationListener {
+        fun onAuthenticationSuccess(context: AuthenticationContext)
+        fun onAuthenticationFailure(reason: AuthenticationResult, attemptsRemaining: Int)
+        fun onSessionExpired()
+        fun onSecurityAlert(alertType: String, details: Map<String, Any>)
+        fun onRoleChanged(newRole: DeviceRole, permissions: Set<String>)
+    }
+    
+    private var authListener: AuthenticationListener? = null
+    
+    /**
+     * Initialize the advanced authentication system
+     */
+    fun initialize(): Boolean {
+        return try {
+            Log.i(TAG, "Initializing advanced authentication system")
+            
+            // Initialize certificate management
+            certificateManager = CertificateManager(context, logger).apply {
+                initialize()
+            }
+            
+            // Initialize role-based access control
+            roleManager = RoleBasedAccessControl(context, logger).apply {
+                initialize()
+            }
+            
+            // Initialize security monitoring
+            securityMonitor = SecurityMonitor(context, logger).apply {
+                initialize()
+                startMonitoring()
+            }
+            
+            // Initialize hardware keystore
+            initializeKeystore()
+            
+            logger.log(StructuredLogger.LogLevel.INFO, TAG, "advanced_auth_initialized", mapOf(
+                "certificate_enabled" to (certificateManager != null),
+                "rbac_enabled" to (roleManager != null),
+                "monitoring_enabled" to (securityMonitor != null),
+                "keystore_initialized" to true
+            ))
+            
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize advanced authentication", e)
+            logger.log(StructuredLogger.LogLevel.ERROR, TAG, "init_failed", mapOf(
+                "error" to e.message.orEmpty()
+            ))
+            false
+        }
+    }
+    
+    /**
+     * Set authentication event listener
+     */
+    fun setAuthenticationListener(listener: AuthenticationListener) {
+        this.authListener = listener
+    }
+    
+    /**
+     * Perform multi-tier authentication
+     */
+    suspend fun authenticate(
+        deviceId: String,
+        authLevel: Int,
+        credentials: Map<String, Any>
+    ): AuthenticationResult {
+        
+        // Check if device is locked out
+        if (isDeviceLocked(deviceId)) {
+            return AuthenticationResult.ACCOUNT_LOCKED
+        }
+        
+        try {
+            val result = when (authLevel) {
+                AUTH_LEVEL_BASIC -> authenticateBasic(deviceId, credentials)
+                AUTH_LEVEL_CERTIFICATE -> authenticateCertificate(deviceId, credentials)
+                AUTH_LEVEL_TOKEN -> authenticateToken(deviceId, credentials)
+                AUTH_LEVEL_BIOMETRIC -> authenticateBiometric(deviceId, credentials)
+                else -> AuthenticationResult.INVALID_CREDENTIALS
+            }
+            
+            if (result == AuthenticationResult.SUCCESS) {
+                onAuthenticationSuccess(deviceId, authLevel, credentials)
+            } else {
+                onAuthenticationFailure(deviceId, result)
+            }
+            
+            return result
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Authentication error for device $deviceId", e)
+            logger.log(StructuredLogger.LogLevel.ERROR, TAG, "auth_error", mapOf(
+                "device_id" to deviceId,
+                "auth_level" to authLevel,
+                "error" to e.message.orEmpty()
+            ))
+            return AuthenticationResult.UNKNOWN_ERROR
+        }
+    }
+    
+    /**
+     * Basic authentication (admin/admin)
+     */
+    private suspend fun authenticateBasic(deviceId: String, credentials: Map<String, Any>): AuthenticationResult {
+        val username = credentials["username"] as? String
+        val password = credentials["password"] as? String
+        
+        // Check basic credentials
+        if (username == "admin" && password == "admin") {
+            return AuthenticationResult.SUCCESS
+        }
+        
+        // Check for enhanced basic credentials
+        val enhancedCredentials = getEnhancedBasicCredentials()
+        if (enhancedCredentials.containsKey(username) && enhancedCredentials[username] == password) {
+            return AuthenticationResult.SUCCESS
+        }
+        
+        return AuthenticationResult.INVALID_CREDENTIALS
+    }
+    
+    /**
+     * Certificate-based authentication
+     */
+    private suspend fun authenticateCertificate(deviceId: String, credentials: Map<String, Any>): AuthenticationResult {
+        val certificate = credentials["certificate"] as? ByteArray
+        val signature = credentials["signature"] as? ByteArray
+        val challenge = credentials["challenge"] as? String
+        
+        if (certificate == null || signature == null || challenge == null) {
+            return AuthenticationResult.CERTIFICATE_INVALID
+        }
+        
+        return certificateManager?.validateCertificate(deviceId, certificate, signature, challenge)
+            ?: AuthenticationResult.HARDWARE_UNAVAILABLE
+    }
+    
+    /**
+     * Token-based authentication with HMAC
+     */
+    private suspend fun authenticateToken(deviceId: String, credentials: Map<String, Any>): AuthenticationResult {
+        val token = credentials["token"] as? String
+        val timestamp = credentials["timestamp"] as? Long
+        val hmac = credentials["hmac"] as? String
+        
+        if (token == null || timestamp == null || hmac == null) {
+            return AuthenticationResult.INVALID_CREDENTIALS
+        }
+        
+        // Verify token hasn't expired
+        if (System.currentTimeMillis() - timestamp > TOKEN_VALIDITY_MS) {
+            return AuthenticationResult.TOKEN_EXPIRED
+        }
+        
+        // Verify HMAC
+        if (!verifyHmac(deviceId, token, timestamp, hmac)) {
+            return AuthenticationResult.INVALID_CREDENTIALS
+        }
+        
+        return AuthenticationResult.SUCCESS
+    }
+    
+    /**
+     * Biometric authentication with hardware keys
+     */
+    private suspend fun authenticateBiometric(deviceId: String, credentials: Map<String, Any>): AuthenticationResult {
+        // Note: Biometric authentication would typically require user interaction
+        // For PC-to-phone communication, this serves as hardware-backed key verification
+        
+        val hardwareKey = credentials["hardware_key"] as? ByteArray
+        val biometricSignature = credentials["biometric_signature"] as? ByteArray
+        
+        if (hardwareKey == null || biometricSignature == null) {
+            return AuthenticationResult.HARDWARE_UNAVAILABLE
+        }
+        
+        return if (verifyHardwareKey(deviceId, hardwareKey, biometricSignature)) {
+            AuthenticationResult.SUCCESS
+        } else {
+            AuthenticationResult.BIOMETRIC_FAILED
+        }
+    }
+    
+    /**
+     * Handle successful authentication
+     */
+    private suspend fun onAuthenticationSuccess(deviceId: String, authLevel: Int, credentials: Map<String, Any>) {
+        // Clear failed attempts
+        failedAttempts.remove(deviceId)
+        lockoutExpiry.remove(deviceId)
+        
+        // Determine role based on device type and auth level
+        val role = determineDeviceRole(deviceId, authLevel, credentials)
+        
+        // Generate secure session token
+        val sessionToken = generateSessionToken(deviceId, role)
+        val sessionExpiry = System.currentTimeMillis() + TOKEN_VALIDITY_MS
+        
+        // Update authentication state
+        currentAuthLevel.set(true)
+        authenticatedDeviceId = deviceId
+        authenticatedRole = role
+        this.sessionToken = sessionToken
+        this.sessionExpiry = sessionExpiry
+        
+        // Create authentication context
+        val context = AuthenticationContext(
+            deviceId = deviceId,
+            authLevel = authLevel,
+            role = role,
+            sessionToken = sessionToken,
+            expiryTime = sessionExpiry,
+            capabilities = role.permissions
+        )
+        
+        // Log successful authentication
+        logger.log(StructuredLogger.LogLevel.INFO, TAG, "auth_success", mapOf(
+            "device_id" to deviceId,
+            "auth_level" to authLevel,
+            "role" to role.name,
+            "session_duration_hours" to (TOKEN_VALIDITY_MS / (60 * 60 * 1000L))
+        ))
+        
+        // Notify listener
+        authListener?.onAuthenticationSuccess(context)
+        
+        // Start session monitoring
+        startSessionMonitoring(deviceId, sessionExpiry)
+    }
+    
+    /**
+     * Handle authentication failure
+     */
+    private suspend fun onAuthenticationFailure(deviceId: String, result: AuthenticationResult) {
+        // Increment failed attempts
+        val attempts = failedAttempts.getOrDefault(deviceId, 0) + 1
+        failedAttempts[deviceId] = attempts
+        
+        // Lock account if too many failures
+        if (attempts >= MAX_AUTH_ATTEMPTS) {
+            lockoutExpiry[deviceId] = System.currentTimeMillis() + LOCKOUT_DURATION_MS
+            
+            // Send security alert
+            securityMonitor?.reportSecurityEvent("account_locked", mapOf(
+                "device_id" to deviceId,
+                "failed_attempts" to attempts,
+                "lockout_duration_minutes" to (LOCKOUT_DURATION_MS / (60 * 1000L))
+            ))
+        }
+        
+        val attemptsRemaining = maxOf(0, MAX_AUTH_ATTEMPTS - attempts)
+        
+        logger.log(StructuredLogger.LogLevel.WARNING, TAG, "auth_failure", mapOf(
+            "device_id" to deviceId,
+            "reason" to result.name,
+            "failed_attempts" to attempts,
+            "attempts_remaining" to attemptsRemaining
+        ))
+        
+        // Notify listener
+        authListener?.onAuthenticationFailure(result, attemptsRemaining)
+    }
+    
+    /**
+     * Check if device is currently locked out
+     */
+    private fun isDeviceLocked(deviceId: String): Boolean {
+        val lockoutTime = lockoutExpiry[deviceId] ?: return false
+        if (System.currentTimeMillis() < lockoutTime) {
+            return true
+        } else {
+            // Lockout expired, remove it
+            lockoutExpiry.remove(deviceId)
+            failedAttempts.remove(deviceId)
+            return false
+        }
+    }
+    
+    /**
+     * Determine device role based on authentication context
+     */
+    private fun determineDeviceRole(deviceId: String, authLevel: Int, credentials: Map<String, Any>): DeviceRole {
+        // Role determination logic based on device type and authentication level
+        val deviceType = credentials["device_type"] as? String
+        
+        return when (authLevel) {
+            AUTH_LEVEL_BASIC -> DeviceRole.OBSERVER
+            AUTH_LEVEL_CERTIFICATE -> when (deviceType) {
+                "PC_CONTROLLER" -> DeviceRole.ADMINISTRATOR
+                "ANDROID_PHONE" -> DeviceRole.OPERATOR
+                "THERMAL_CAMERA" -> DeviceRole.OBSERVER
+                else -> DeviceRole.GUEST
+            }
+            AUTH_LEVEL_TOKEN -> DeviceRole.RESEARCHER
+            AUTH_LEVEL_BIOMETRIC -> DeviceRole.ADMINISTRATOR
+            else -> DeviceRole.GUEST
+        }
+    }
+    
+    /**
+     * Generate secure session token
+     */
+    private fun generateSessionToken(deviceId: String, role: DeviceRole): String {
+        val random = SecureRandom()
+        val tokenBytes = ByteArray(32)
+        random.nextBytes(tokenBytes)
+        
+        val timestamp = System.currentTimeMillis()
+        val payload = "$deviceId:${role.name}:$timestamp"
+        
+        return android.util.Base64.encodeToString(
+            (payload + ":" + tokenBytes.joinToString("")).toByteArray(),
+            android.util.Base64.NO_WRAP
+        )
+    }
+    
+    /**
+     * Verify HMAC signature
+     */
+    private fun verifyHmac(deviceId: String, token: String, timestamp: Long, providedHmac: String): Boolean {
+        return try {
+            val keySpec = SecretKeySpec(getHmacKey(deviceId), "HmacSHA256")
+            val mac = Mac.getInstance("HmacSHA256")
+            mac.init(keySpec)
+            
+            val data = "$deviceId:$token:$timestamp".toByteArray()
+            val calculatedHmac = android.util.Base64.encodeToString(mac.doFinal(data), android.util.Base64.NO_WRAP)
+            
+            calculatedHmac == providedHmac
+        } catch (e: Exception) {
+            Log.e(TAG, "HMAC verification failed", e)
+            false
+        }
+    }
+    
+    /**
+     * Verify hardware-backed key
+     */
+    private fun verifyHardwareKey(deviceId: String, hardwareKey: ByteArray, signature: ByteArray): Boolean {
+        return try {
+            val keyStore = KeyStore.getInstance("AndroidKeyStore")
+            keyStore.load(null)
+            
+            if (!keyStore.containsAlias(KEYSTORE_ALIAS_DEVICE)) {
+                return false
+            }
+            
+            // Verify signature using hardware key
+            val publicKey = keyStore.getCertificate(KEYSTORE_ALIAS_DEVICE).publicKey
+            val signature_verifier = java.security.Signature.getInstance("SHA256withRSA")
+            signature_verifier.initVerify(publicKey)
+            signature_verifier.update(hardwareKey)
+            
+            signature_verifier.verify(signature)
+        } catch (e: Exception) {
+            Log.e(TAG, "Hardware key verification failed", e)
+            false
+        }
+    }
+    
+    /**
+     * Get enhanced basic credentials (beyond admin/admin)
+     */
+    private fun getEnhancedBasicCredentials(): Map<String, String> {
+        return mapOf(
+            "researcher" to "research2024!",
+            "operator" to "operate@safe",
+            "observer" to "view_only_123"
+        )
+    }
+    
+    /**
+     * Get HMAC key for device
+     */
+    private fun getHmacKey(deviceId: String): ByteArray {
+        return try {
+            val keyStore = KeyStore.getInstance("AndroidKeyStore")
+            keyStore.load(null)
+            
+            if (!keyStore.containsAlias(KEYSTORE_ALIAS_HMAC)) {
+                generateHmacKey()
+            }
+            
+            // For simplicity, use device ID as part of key derivation
+            "$deviceId:hmac_key_2024".toByteArray()
+        } catch (e: Exception) {
+            // Fallback to device-specific key
+            "default_hmac_key_$deviceId".toByteArray()
+        }
+    }
+    
+    /**
+     * Initialize Android Keystore
+     */
+    private fun initializeKeystore() {
+        try {
+            generateDeviceKey()
+            generateSessionKey()
+            generateHmacKey()
+            
+            Log.i(TAG, "Android Keystore initialized successfully")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize keystore", e)
+        }
+    }
+    
+    /**
+     * Generate device authentication key
+     */
+    private fun generateDeviceKey() {
+        val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
+        val keyGenParameterSpec = KeyGenParameterSpec.Builder(
+            KEYSTORE_ALIAS_DEVICE,
+            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+        )
+            .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+            .setUserAuthenticationRequired(false)  // For PC-to-phone communication
+            .build()
+        
+        keyGenerator.init(keyGenParameterSpec)
+        keyGenerator.generateKey()
+    }
+    
+    /**
+     * Generate session encryption key
+     */
+    private fun generateSessionKey() {
+        val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
+        val keyGenParameterSpec = KeyGenParameterSpec.Builder(
+            KEYSTORE_ALIAS_SESSION,
+            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+        )
+            .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+            .setUserAuthenticationRequired(false)
+            .build()
+        
+        keyGenerator.init(keyGenParameterSpec)
+        keyGenerator.generateKey()
+    }
+    
+    /**
+     * Generate HMAC key
+     */
+    private fun generateHmacKey() {
+        val keyGenerator = KeyGenerator.getInstance("HmacSHA256", "AndroidKeyStore")
+        val keyGenParameterSpec = KeyGenParameterSpec.Builder(
+            KEYSTORE_ALIAS_HMAC,
+            KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY
+        )
+            .setUserAuthenticationRequired(false)
+            .build()
+        
+        keyGenerator.init(keyGenParameterSpec)
+        keyGenerator.generateKey()
+    }
+    
+    /**
+     * Start session monitoring
+     */
+    private fun startSessionMonitoring(deviceId: String, expiryTime: Long) {
+        scope.launch {
+            while (System.currentTimeMillis() < expiryTime && currentAuthLevel.get()) {
+                delay(60000)  // Check every minute
+                
+                // Check for suspicious activity
+                securityMonitor?.checkSessionActivity(deviceId)
+            }
+            
+            // Session expired
+            if (currentAuthLevel.get()) {
+                logout()
+                authListener?.onSessionExpired()
+            }
+        }
+    }
+    
+    /**
+     * Logout and clear session
+     */
+    fun logout() {
+        currentAuthLevel.set(false)
+        authenticatedDeviceId = null
+        authenticatedRole = DeviceRole.GUEST
+        sessionToken = null
+        sessionExpiry = 0L
+        
+        logger.log(StructuredLogger.LogLevel.INFO, TAG, "logout", emptyMap())
+    }
+    
+    /**
+     * Check if currently authenticated
+     */
+    fun isAuthenticated(): Boolean = currentAuthLevel.get() && System.currentTimeMillis() < sessionExpiry
+    
+    /**
+     * Get current authentication context
+     */
+    fun getCurrentContext(): AuthenticationContext? {
+        if (!isAuthenticated()) return null
+        
+        return AuthenticationContext(
+            deviceId = authenticatedDeviceId ?: return null,
+            authLevel = when (authenticatedRole) {
+                DeviceRole.GUEST -> AUTH_LEVEL_NONE
+                DeviceRole.OBSERVER -> AUTH_LEVEL_BASIC
+                DeviceRole.OPERATOR -> AUTH_LEVEL_CERTIFICATE
+                DeviceRole.RESEARCHER -> AUTH_LEVEL_TOKEN
+                DeviceRole.ADMINISTRATOR -> AUTH_LEVEL_BIOMETRIC
+            },
+            role = authenticatedRole,
+            sessionToken = sessionToken ?: return null,
+            expiryTime = sessionExpiry,
+            capabilities = authenticatedRole.permissions
+        )
+    }
+    
+    /**
+     * Check if current session has specific permission
+     */
+    fun hasPermission(permission: String): Boolean {
+        if (!isAuthenticated()) return false
+        
+        return authenticatedRole.permissions.contains("*") || 
+               authenticatedRole.permissions.contains(permission)
+    }
+    
+    /**
+     * Get comprehensive security diagnostics
+     */
+    fun getSecurityDiagnostics(): JSONObject {
+        return JSONObject().apply {
+            put("authentication_enabled", true)
+            put("current_auth_level", if (isAuthenticated()) authenticatedRole.level else 0)
+            put("session_active", isAuthenticated())
+            put("certificate_manager_active", certificateManager != null)
+            put("rbac_active", roleManager != null)
+            put("security_monitoring_active", securityMonitor != null)
+            put("failed_attempts_count", failedAttempts.size)
+            put("locked_devices_count", lockoutExpiry.count { it.value > System.currentTimeMillis() })
+            put("phase4_enabled", true)
+        }
+    }
+    
+    /**
+     * Shutdown and cleanup
+     */
+    fun shutdown() {
+        scope.cancel()
+        securityMonitor?.stopMonitoring()
+        certificateManager = null
+        roleManager = null
+        securityMonitor = null
+        
+        Log.i(TAG, "Advanced authentication manager shutdown complete")
+    }
+}

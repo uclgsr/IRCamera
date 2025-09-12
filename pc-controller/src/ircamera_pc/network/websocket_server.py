@@ -30,6 +30,7 @@ except ImportError:
 from ..core.config import config
 from .protocol import create_message, validate_message, get_protocol_manager
 from .security import SecurityManager
+from .enhanced_security import EnhancedSecurityManager, AuthLevel
 from .discovery import NetworkDiscoveryService
 from ..sync import EnhancedTimeSyncServer
 
@@ -41,6 +42,8 @@ class ClientConnection:
     device_id: str
     device_type: str
     authenticated: bool = False
+    auth_level: AuthLevel = AuthLevel.NONE
+    auth_context: Optional[Any] = None  # Enhanced authentication context
     last_ping: float = 0
     connected_at: float = 0
     capabilities: Set[str] = None
@@ -78,6 +81,7 @@ class WebSocketServer:
         
         # Services
         self.security_manager = SecurityManager()
+        self.enhanced_security = EnhancedSecurityManager()  # Phase 4
         self.discovery_service = NetworkDiscoveryService()
         self.protocol_manager = get_protocol_manager()
         
@@ -115,7 +119,7 @@ class WebSocketServer:
             logger.warning("Running without TLS encryption")
 
     def _setup_message_handlers(self):
-        """Setup message type handlers with Phase 3 enhancements"""
+        """Setup message type handlers with Phase 4 enhancements"""
         self.message_handlers = {
             "protocol_handshake": self._handle_handshake,
             "auth_request": self._handle_auth,
@@ -135,7 +139,15 @@ class WebSocketServer:
             "upload_check_existing": self._handle_upload_check_existing,
             "file_chunk_response": self._handle_file_chunk_response,
             "data_export_request": self._handle_data_export_request,
-            "session_manifest_request": self._handle_session_manifest_request
+            "session_manifest_request": self._handle_session_manifest_request,
+            # Phase 4 - Advanced Authentication & Security
+            "enhanced_auth_request": self._handle_enhanced_auth,
+            "certificate_auth_request": self._handle_certificate_auth,
+            "token_auth_request": self._handle_token_auth,
+            "biometric_auth_request": self._handle_biometric_auth,
+            "security_alert": self._handle_security_alert,
+            "permission_request": self._handle_permission_request,
+            "role_change_request": self._handle_role_change_request
         }
 
     async def start(self):
@@ -146,6 +158,9 @@ class WebSocketServer:
             
         try:
             logger.info(f"Starting WebSocket Secure server on {self.host}:{self.port}")
+            
+            # Initialize enhanced security (Phase 4)
+            await self.enhanced_security.initialize()
             
             # Start mDNS advertising
             await self._start_mdns_advertising()
@@ -916,4 +931,305 @@ class WebSocketServer:
 # Convenience function to create server instance
 def create_websocket_server(host: str = "0.0.0.0", port: int = 8443) -> WebSocketServer:
     """Create a WebSocket Secure server instance"""
+    return WebSocketServer(host, port)
+
+# Phase 4 - Advanced Authentication & Security Handler Extensions
+class WebSocketServerPhase4Extension:
+    """Extension methods for Phase 4 security features"""
+    
+    def __init__(self, server: WebSocketServer):
+        self.server = server
+    
+    async def _handle_enhanced_auth(self, client_id: str, message: dict):
+        """Handle enhanced authentication request"""
+        try:
+            auth_level_value = message.get("auth_level", 1)
+            credentials = message.get("credentials", {})
+            device_id = credentials.get("device_id", "")
+            
+            # Map auth level value to enum
+            auth_level = AuthLevel(auth_level_value) if auth_level_value <= 4 else AuthLevel.BASIC
+            
+            # Authenticate with enhanced security manager
+            success, context, reason = await self.server.enhanced_security.authenticate_device(
+                device_id, auth_level, credentials
+            )
+            
+            if success and context:
+                # Update client connection with enhanced context
+                async with self.server.client_lock:
+                    client = self.server.clients.get(client_id)
+                    if client:
+                        client.authenticated = True
+                        client.auth_level = auth_level
+                        client.auth_context = context
+                        client.device_id = device_id
+                
+                # Send success response
+                response = create_message("enhanced_auth_response", {
+                    "success": True,
+                    "auth_level": auth_level.value,
+                    "role": context.role.name,
+                    "session_token": context.session_token,
+                    "expiry_time": context.expiry_time,
+                    "capabilities": list(context.capabilities)
+                })
+                await self.server._send_message(client_id, response)
+                
+                logger.info(f"Enhanced authentication successful for {device_id} at level {auth_level.name}")
+            else:
+                await self.server._send_error(client_id, "enhanced_auth_failed", reason)
+                
+        except Exception as e:
+            logger.error(f"Error in enhanced authentication for {client_id}: {e}")
+            await self.server._send_error(client_id, "enhanced_auth_error", str(e))
+    
+    async def _handle_certificate_auth(self, client_id: str, message: dict):
+        """Handle certificate-based authentication"""
+        try:
+            certificate_data = message.get("certificate")
+            signature = message.get("signature")
+            challenge = message.get("challenge")
+            device_id = message.get("device_id", "")
+            
+            credentials = {
+                "device_id": device_id,
+                "device_type": message.get("device_type", "ANDROID_PHONE"),
+                "certificate": certificate_data,
+                "signature": signature,
+                "challenge": challenge
+            }
+            
+            success, context, reason = await self.server.enhanced_security.authenticate_device(
+                device_id, AuthLevel.CERTIFICATE, credentials
+            )
+            
+            if success and context:
+                # Update client with certificate auth context
+                async with self.server.client_lock:
+                    client = self.server.clients.get(client_id)
+                    if client:
+                        client.authenticated = True
+                        client.auth_level = AuthLevel.CERTIFICATE
+                        client.auth_context = context
+                        client.device_id = device_id
+                
+                response = create_message("certificate_auth_response", {
+                    "success": True,
+                    "auth_level": AuthLevel.CERTIFICATE.value,
+                    "session_token": context.session_token,
+                    "certificate_valid": True
+                })
+                await self.server._send_message(client_id, response)
+                
+                logger.info(f"Certificate authentication successful for {device_id}")
+            else:
+                await self.server._send_error(client_id, "certificate_auth_failed", reason)
+                
+        except Exception as e:
+            logger.error(f"Error in certificate authentication for {client_id}: {e}")
+            await self.server._send_error(client_id, "certificate_auth_error", str(e))
+    
+    async def _handle_token_auth(self, client_id: str, message: dict):
+        """Handle token-based authentication"""
+        try:
+            token = message.get("token")
+            timestamp = message.get("timestamp")
+            hmac_signature = message.get("hmac")
+            device_id = message.get("device_id", "")
+            
+            credentials = {
+                "device_id": device_id,
+                "device_type": message.get("device_type", "ANDROID_PHONE"),
+                "token": token,
+                "timestamp": timestamp,
+                "hmac": hmac_signature
+            }
+            
+            success, context, reason = await self.server.enhanced_security.authenticate_device(
+                device_id, AuthLevel.TOKEN, credentials
+            )
+            
+            if success and context:
+                async with self.server.client_lock:
+                    client = self.server.clients.get(client_id)
+                    if client:
+                        client.authenticated = True
+                        client.auth_level = AuthLevel.TOKEN
+                        client.auth_context = context
+                        client.device_id = device_id
+                
+                response = create_message("token_auth_response", {
+                    "success": True,
+                    "auth_level": AuthLevel.TOKEN.value,
+                    "session_token": context.session_token,
+                    "token_valid": True
+                })
+                await self.server._send_message(client_id, response)
+                
+                logger.info(f"Token authentication successful for {device_id}")
+            else:
+                await self.server._send_error(client_id, "token_auth_failed", reason)
+                
+        except Exception as e:
+            logger.error(f"Error in token authentication for {client_id}: {e}")
+            await self.server._send_error(client_id, "token_auth_error", str(e))
+    
+    async def _handle_biometric_auth(self, client_id: str, message: dict):
+        """Handle biometric/hardware key authentication"""
+        try:
+            hardware_key = message.get("hardware_key")
+            biometric_signature = message.get("biometric_signature")
+            device_id = message.get("device_id", "")
+            
+            credentials = {
+                "device_id": device_id,
+                "device_type": message.get("device_type", "ANDROID_PHONE"),
+                "hardware_key": hardware_key,
+                "biometric_signature": biometric_signature
+            }
+            
+            success, context, reason = await self.server.enhanced_security.authenticate_device(
+                device_id, AuthLevel.BIOMETRIC, credentials
+            )
+            
+            if success and context:
+                async with self.server.client_lock:
+                    client = self.server.clients.get(client_id)
+                    if client:
+                        client.authenticated = True
+                        client.auth_level = AuthLevel.BIOMETRIC
+                        client.auth_context = context
+                        client.device_id = device_id
+                
+                response = create_message("biometric_auth_response", {
+                    "success": True,
+                    "auth_level": AuthLevel.BIOMETRIC.value,
+                    "session_token": context.session_token,
+                    "hardware_verified": True
+                })
+                await self.server._send_message(client_id, response)
+                
+                logger.info(f"Biometric authentication successful for {device_id}")
+            else:
+                await self.server._send_error(client_id, "biometric_auth_failed", reason)
+                
+        except Exception as e:
+            logger.error(f"Error in biometric authentication for {client_id}: {e}")
+            await self.server._send_error(client_id, "biometric_auth_error", str(e))
+    
+    async def _handle_security_alert(self, client_id: str, message: dict):
+        """Handle security alert from device"""
+        try:
+            alert_type = message.get("alert_type", "")
+            device_id = message.get("device_id", "")
+            timestamp = message.get("timestamp", time.time())
+            severity = message.get("severity", "LOW")
+            details = message.get("details", {})
+            
+            logger.warning(f"Security alert received from {device_id}: {alert_type} ({severity})")
+            
+            # Log security alert
+            alert_details = {
+                "client_id": client_id,
+                "device_id": device_id,
+                "alert_type": alert_type,
+                "severity": severity,
+                "timestamp": timestamp,
+                "details": details
+            }
+            
+            # Report to security monitor
+            self.server.enhanced_security.security_monitor.report_connection_attempt(
+                device_id, False, alert_details
+            )
+            
+            # Send acknowledgment
+            response = create_message("security_alert_response", {
+                "alert_received": True,
+                "timestamp": time.time(),
+                "action_taken": "logged"
+            })
+            await self.server._send_message(client_id, response)
+            
+        except Exception as e:
+            logger.error(f"Error handling security alert from {client_id}: {e}")
+            await self.server._send_error(client_id, "security_alert_error", str(e))
+    
+    async def _handle_permission_request(self, client_id: str, message: dict):
+        """Handle permission request from device"""
+        try:
+            requested_permission = message.get("permission", "")
+            device_id = message.get("device_id", "")
+            
+            # Get authentication context
+            async with self.server.client_lock:
+                client = self.server.clients.get(client_id)
+                if not client or not client.auth_context:
+                    await self.server._send_error(client_id, "auth_required", "Authentication required")
+                    return
+            
+            # Check permission with enhanced security
+            has_permission = self.server.enhanced_security.check_permission(
+                client.auth_context.session_token, requested_permission
+            )
+            
+            response = create_message("permission_response", {
+                "permission": requested_permission,
+                "granted": has_permission,
+                "current_role": client.auth_context.role.name
+            })
+            await self.server._send_message(client_id, response)
+            
+            logger.debug(f"Permission check for {device_id}: {requested_permission} = {has_permission}")
+            
+        except Exception as e:
+            logger.error(f"Error handling permission request from {client_id}: {e}")
+            await self.server._send_error(client_id, "permission_error", str(e))
+    
+    async def _handle_role_change_request(self, client_id: str, message: dict):
+        """Handle role change request from device"""
+        try:
+            requested_role = message.get("requested_role", "")
+            device_id = message.get("device_id", "")
+            justification = message.get("justification", "")
+            
+            # Get current authentication context
+            async with self.server.client_lock:
+                client = self.server.clients.get(client_id)
+                if not client or not client.auth_context:
+                    await self.server._send_error(client_id, "auth_required", "Authentication required")
+                    return
+            
+            # For security reasons, role changes require administrator approval
+            # For now, reject all role change requests
+            response = create_message("role_change_response", {
+                "success": False,
+                "current_role": client.auth_context.role.name,
+                "requested_role": requested_role,
+                "reason": "Role changes require administrator approval"
+            })
+            await self.server._send_message(client_id, response)
+            
+            logger.warning(f"Role change request denied for {device_id}: {requested_role}")
+            
+        except Exception as e:
+            logger.error(f"Error handling role change request from {client_id}: {e}")
+            await self.server._send_error(client_id, "role_change_error", str(e))
+
+# Monkey patch the Phase 4 handlers into the main WebSocket server
+def extend_websocket_server_with_phase4(server: WebSocketServer):
+    """Extend WebSocket server with Phase 4 security handlers"""
+    extension = WebSocketServerPhase4Extension(server)
+    
+    # Add Phase 4 handlers to the server
+    server._handle_enhanced_auth = extension._handle_enhanced_auth
+    server._handle_certificate_auth = extension._handle_certificate_auth
+    server._handle_token_auth = extension._handle_token_auth
+    server._handle_biometric_auth = extension._handle_biometric_auth
+    server._handle_security_alert = extension._handle_security_alert
+    server._handle_permission_request = extension._handle_permission_request
+    server._handle_role_change_request = extension._handle_role_change_request
+    
+    logger.info("WebSocket server extended with Phase 4 security handlers")
     return WebSocketServer(host, port)
