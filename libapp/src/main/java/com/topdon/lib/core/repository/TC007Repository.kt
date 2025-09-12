@@ -285,10 +285,9 @@ object TC007Repository {
         withContext(Dispatchers.IO) {
             try {
                 val data = getTC007Service().getTempFrame()
-                if (data.isSuccess())
-                    {
-                        tempFrameParam = data.Data
-                    }
+                if (data.isSuccess()) {
+                    tempFrameParam = data.Data
+                }
                 data.isSuccess()
             } catch (_: Exception) {
                 false
@@ -301,16 +300,14 @@ object TC007Repository {
     suspend fun setTempFrame(boolean: Boolean): Boolean =
         withContext(Dispatchers.IO) {
             try {
-                if (tempFrameParam != null)
-                    {
-                        tempFrameParam!!.FrameLow.Enable = boolean
-                        tempFrameParam!!.FrameCenter.Enable = boolean
-                        tempFrameParam!!.FrameHigh.Enable = boolean
-                        getTC007Service().setTempFrame(tempFrameParam!!.toBody()).isSuccess()
-                    } else
-                    {
-                        false
-                    }
+                if (tempFrameParam != null) {
+                    tempFrameParam!!.FrameLow.Enable = boolean
+                    tempFrameParam!!.FrameCenter.Enable = boolean
+                    tempFrameParam!!.FrameHigh.Enable = boolean
+                    getTC007Service().setTempFrame(tempFrameParam!!.toBody()).isSuccess()
+                } else {
+                    false
+                }
             } catch (_: Exception) {
                 false
             }
@@ -403,10 +400,9 @@ object TC007Repository {
 
     suspend fun setRatio(data: Any?): TC007Response<Any?>? =
         withContext(Dispatchers.IO) {
-            if (data == null)
-                {
-                    return@withContext null
-                }
+            if (data == null) {
+                return@withContext null
+            }
             try {
                 getTC007Service().setRatio(data.toBody())
             } catch (e: Exception) {
@@ -426,10 +422,9 @@ object TC007Repository {
 
     suspend fun setRegistration(data: Any?): TC007Response<Any?>? =
         withContext(Dispatchers.IO) {
-            if (data == null)
-                {
-                    return@withContext null
-                }
+            if (data == null) {
+                return@withContext null
+            }
             try {
                 getTC007Service().setRegistration(data.toBody())
             } catch (e: Exception) {
@@ -440,10 +435,9 @@ object TC007Repository {
 
     suspend fun setPallete(data: Any?): TC007Response<Any?>? =
         withContext(Dispatchers.IO) {
-            if (data == null)
-                {
-                    return@withContext null
-                }
+            if (data == null) {
+                return@withContext null
+            }
             try {
                 getTC007Service().setPallete(data.toBody())
             } catch (e: Exception) {
@@ -454,10 +448,9 @@ object TC007Repository {
 
     suspend fun setParam(data: Any?): TC007Response<Any?>? =
         withContext(Dispatchers.IO) {
-            if (data == null)
-                {
-                    return@withContext null
-                }
+            if (data == null) {
+                return@withContext null
+            }
             try {
                 getTC007Service().setParam(data.toBody())
             } catch (e: Exception) {
@@ -468,10 +461,9 @@ object TC007Repository {
 
     suspend fun setFont(data: Any?): TC007Response<Any?>? =
         withContext(Dispatchers.IO) {
-            if (data == null)
-                {
-                    return@withContext null
-                }
+            if (data == null) {
+                return@withContext null
+            }
             try {
                 getTC007Service().setFont(data.toBody())
             } catch (e: Exception) {
@@ -492,10 +484,9 @@ object TC007Repository {
 
     suspend fun setIsotherm(data: Any?): TC007Response<Any?>? =
         withContext(Dispatchers.IO) {
-            if (data == null)
-                {
-                    return@withContext null
-                }
+            if (data == null) {
+                return@withContext null
+            }
             try {
                 getTC007Service().setIsotherm(data.toBody())
             } catch (e: Exception) {

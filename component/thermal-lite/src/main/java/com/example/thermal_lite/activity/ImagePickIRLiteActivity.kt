@@ -1,10 +1,7 @@
 package com.example.thermal_lite.activity
 
 import android.graphics.Bitmap
-import android.view.View
 import com.example.thermal_lite.fragment.IRMonitorLiteFragment
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.ktbase.BasePickImgActivity
 import com.topdon.module.thermal.ir.R
 
@@ -15,23 +12,21 @@ import com.topdon.module.thermal.ir.R
  **/
 // Legacy ARouter route annotation - now using NavigationManager
 class ImagePickIRLiteActivity : BasePickImgActivity() {
-
-
-    var irFragment : IRMonitorLiteFragment ?= null
+    var irFragment: IRMonitorLiteFragment? = null
 
     override fun initView() {
-        irFragment = if (savedInstanceState == null) {
-            IRMonitorLiteFragment.newInstance(true)
-        } else {
-            supportFragmentManager.findFragmentById(R.id.fragment_container_view) as IRMonitorLiteFragment
-        }
+        irFragment =
+            if (savedInstanceState == null) {
+                IRMonitorLiteFragment.newInstance(true)
+            } else {
+                supportFragmentManager.findFragmentById(R.id.fragment_container_view) as IRMonitorLiteFragment
+            }
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .setReorderingAllowed(true)
                 .add(R.id.fragment_container_view, irFragment!!)
                 .commit()
         }
-
     }
 
     override suspend fun getPickBitmap(): Bitmap? {
@@ -39,8 +34,5 @@ class ImagePickIRLiteActivity : BasePickImgActivity() {
     }
 
     override fun initData() {
-
     }
-
-
 }

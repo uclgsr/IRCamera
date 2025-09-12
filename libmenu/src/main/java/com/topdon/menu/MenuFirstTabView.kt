@@ -10,12 +10,11 @@ import com.topdon.menu.databinding.ViewMenuFirstTabBinding
 /**
  * Bottom menu bar for thermal imaging interface.
  *
- * Two available modes: 
+ * Two available modes:
  * - Temperature measurement mode: photo capture, point/line/area measurement, dual light, pseudo color, settings, high/low temperature range
  * - Observation mode: photo capture, high/low temperature source, pseudo color, target, high/low temperature points, settings
  */
 class MenuFirstTabView : FrameLayout, View.OnClickListener {
-
     /**
      * Currently selected tab, Range `[0,5]`
      */
@@ -39,9 +38,13 @@ class MenuFirstTabView : FrameLayout, View.OnClickListener {
         set(value) {
             if (field != value) {
                 field = value
-                binding.ivMenu2.setImageResource(if (value) R.drawable.selector_menu_first_observe_2 else R.drawable.selector_menu_first_2_5)
+                binding.ivMenu2.setImageResource(
+                    if (value) R.drawable.selector_menu_first_observe_2 else R.drawable.selector_menu_first_2_5,
+                )
                 binding.ivMenu3.setImageResource(if (value) R.drawable.selector_menu_first_4_3 else R.drawable.selector_menu_first_normal_3)
-                binding.ivMenu4.setImageResource(if (value) R.drawable.selector_menu_first_observe_4 else R.drawable.selector_menu_first_4_3)
+                binding.ivMenu4.setImageResource(
+                    if (value) R.drawable.selector_menu_first_observe_4 else R.drawable.selector_menu_first_4_3,
+                )
                 binding.ivMenu5.setImageResource(if (value) R.drawable.selector_menu_first_2_5 else R.drawable.selector_menu_first_5_6)
                 binding.ivMenu6.setImageResource(if (value) R.drawable.selector_menu_first_5_6 else R.drawable.selector_menu_first_normal_6)
                 selectPosition = 0
@@ -49,8 +52,6 @@ class MenuFirstTabView : FrameLayout, View.OnClickListener {
         }
 
     var onTabClickListener: ((v: MenuFirstTabView) -> Unit)? = null
-
-
 
     private lateinit var binding: ViewMenuFirstTabBinding
 
@@ -60,7 +61,12 @@ class MenuFirstTabView : FrameLayout, View.OnClickListener {
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int): super(context, attrs, defStyleAttr, defStyleRes) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes,
+    ) {
         if (isInEditMode) {
             LayoutInflater.from(context).inflate(R.layout.view_menu_first_tab, this, true)
         } else {

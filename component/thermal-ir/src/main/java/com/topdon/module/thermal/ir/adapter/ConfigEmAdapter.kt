@@ -22,11 +22,17 @@ import com.topdon.module.thermal.ir.utils.IRConfigData
 class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapter.ViewHolder>() {
     private val dataList: ArrayList<IRConfigData> = IRConfigData.irConfigData(context)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_ir_config_emissivity, parent, false))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         holder.tvEmName.text = dataList[position].name
         holder.tvEmNum.text = dataList[position].value
         holder.tvEmName.background = EmBgDrawable(false, position == dataList.size - 1)

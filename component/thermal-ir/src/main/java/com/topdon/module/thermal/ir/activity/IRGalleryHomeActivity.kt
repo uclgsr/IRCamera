@@ -4,10 +4,8 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.repository.GalleryRepository.DirType
-import com.topdon.lib.core.utils.NetWorkUtils
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.fragment.IRGalleryTabFragment
 import com.topdon.module.thermal.ir.viewmodel.IRGalleryTabViewModel
@@ -44,11 +42,12 @@ class IRGalleryHomeActivity : BaseActivity() {
                 .commit()
         }
 
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                viewModel.isEditModeLD.value = false
+        val callback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    viewModel.isEditModeLD.value = false
+                }
             }
-        }
         onBackPressedDispatcher.addCallback(this, callback)
 
         viewModel.isEditModeLD.observe(this) {
@@ -57,7 +56,6 @@ class IRGalleryHomeActivity : BaseActivity() {
     }
 
     override fun initView() {
-
     }
 
     override fun initData() {

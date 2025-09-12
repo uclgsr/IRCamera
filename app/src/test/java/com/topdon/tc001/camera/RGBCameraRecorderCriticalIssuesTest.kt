@@ -11,23 +11,22 @@ import androidx.core.content.ContextCompat
 import com.hjq.permissions.XXPermissions
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.junit.Assert.*
-import org.robolectric.RobolectricTestRunner
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 /**
  * Unit tests for critical camera integration issues fixes
  * Tests for:
  * 1. Runtime permission handling
- * 2. Camera switching functionality  
+ * 2. Camera switching functionality
  * 3. Proper lifecycle management
  * 4. Error handling and user feedback
  */
 @RunWith(RobolectricTestRunner::class)
 class RGBCameraRecorderCriticalIssuesTest {
-
     private lateinit var mockContext: Context
     private lateinit var mockActivity: Activity
     private lateinit var mockTextureView: TextureView
@@ -43,15 +42,15 @@ class RGBCameraRecorderCriticalIssuesTest {
 
         // Mock system service
         every { mockContext.getSystemService(Context.CAMERA_SERVICE) } returns mockCameraManager
-        
+
         // Mock camera manager basic methods
         every { mockCameraManager.cameraIdList } returns arrayOf("0", "1")
-        
+
         // Mock characteristics for back camera (ID: 0)
         val backCameraCharacteristics = mockk<CameraCharacteristics>()
         every { backCameraCharacteristics.get(CameraCharacteristics.LENS_FACING) } returns CameraCharacteristics.LENS_FACING_BACK
         every { mockCameraManager.getCameraCharacteristics("0") } returns backCameraCharacteristics
-        
+
         // Mock characteristics for front camera (ID: 1)
         val frontCameraCharacteristics = mockk<CameraCharacteristics>()
         every { frontCameraCharacteristics.get(CameraCharacteristics.LENS_FACING) } returns CameraCharacteristics.LENS_FACING_FRONT
@@ -71,7 +70,7 @@ class RGBCameraRecorderCriticalIssuesTest {
         // Given: Camera permission is not granted
         mockkStatic(ContextCompat::class)
         every { ContextCompat.checkSelfPermission(mockContext, Manifest.permission.CAMERA) } returns PackageManager.PERMISSION_DENIED
-        
+
         mockkStatic(XXPermissions::class)
         val mockPermissionRequest = mockk<XXPermissions>()
         every { XXPermissions.with(mockActivity) } returns mockPermissionRequest
@@ -125,16 +124,18 @@ class RGBCameraRecorderCriticalIssuesTest {
         // Given: Mock camera characteristics with capabilities
         val backCameraCharacteristics = mockk<CameraCharacteristics>()
         every { backCameraCharacteristics.get(CameraCharacteristics.LENS_FACING) } returns CameraCharacteristics.LENS_FACING_BACK
-        every { backCameraCharacteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES) } returns intArrayOf(
-            CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_RAW
-        )
-        
+        every { backCameraCharacteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES) } returns
+            intArrayOf(
+                CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_RAW,
+            )
+
         val mockStreamConfigMap = mockk<android.hardware.camera2.params.StreamConfigurationMap>()
         every { backCameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP) } returns mockStreamConfigMap
-        every { mockStreamConfigMap.getOutputSizes(android.media.MediaRecorder::class.java) } returns arrayOf(
-            android.util.Size(3840, 2160), // 4K support
-            android.util.Size(1920, 1080)
-        )
+        every { mockStreamConfigMap.getOutputSizes(android.media.MediaRecorder::class.java) } returns
+            arrayOf(
+                android.util.Size(3840, 2160), // 4K support
+                android.util.Size(1920, 1080),
+            )
 
         every { mockCameraManager.getCameraCharacteristics("0") } returns backCameraCharacteristics
 
@@ -142,7 +143,7 @@ class RGBCameraRecorderCriticalIssuesTest {
         rgbCameraRecorder.onCameraListUpdated = { cameras ->
             cameraListUpdated = true
             assertTrue("Should find at least one camera", cameras.isNotEmpty())
-            
+
             val backCamera = cameras.find { it.cameraId == "0" }
             assertNotNull("Should find back camera", backCamera)
             assertTrue("Back camera should support RAW", backCamera!!.supportsRaw)
@@ -157,75 +158,79 @@ class RGBCameraRecorderCriticalIssuesTest {
     }
 
     @Test
-    fun `should switch between cameras by ID`() = runTest {
-        // Given: Mock successful camera switch
-        mockkStatic(ContextCompat::class)
-        every { ContextCompat.checkSelfPermission(mockContext, Manifest.permission.CAMERA) } returns PackageManager.PERMISSION_GRANTED
+    fun `should switch between cameras by ID`() =
+        runTest {
+            // Given: Mock successful camera switch
+            mockkStatic(ContextCompat::class)
+            every { ContextCompat.checkSelfPermission(mockContext, Manifest.permission.CAMERA) } returns PackageManager.PERMISSION_GRANTED
 
-        var cameraSwitched = false
-        var switchedCameraId = ""
-        rgbCameraRecorder.onCameraSwitched = { facing, cameraId ->
-            cameraSwitched = true
-            switchedCameraId = cameraId
+            var cameraSwitched = false
+            var switchedCameraId = ""
+            rgbCameraRecorder.onCameraSwitched = { facing, cameraId ->
+                cameraSwitched = true
+                switchedCameraId = cameraId
+            }
+
+            // When: Switch to front camera
+            val result = rgbCameraRecorder.switchCamera("1")
+
+            // Then: Should switch successfully
+            assertTrue("Camera switch should succeed", result)
+            assertTrue("Camera switched callback should be called", cameraSwitched)
+            assertEquals("Should switch to correct camera ID", "1", switchedCameraId)
         }
-
-        // When: Switch to front camera
-        val result = rgbCameraRecorder.switchCamera("1")
-
-        // Then: Should switch successfully
-        assertTrue("Camera switch should succeed", result)
-        assertTrue("Camera switched callback should be called", cameraSwitched)
-        assertEquals("Should switch to correct camera ID", "1", switchedCameraId)
-    }
 
     @Test
-    fun `should handle invalid camera ID gracefully`() = runTest {
-        // Given: Invalid camera ID
-        mockkStatic(ContextCompat::class)
-        every { ContextCompat.checkSelfPermission(mockContext, Manifest.permission.CAMERA) } returns PackageManager.PERMISSION_GRANTED
+    fun `should handle invalid camera ID gracefully`() =
+        runTest {
+            // Given: Invalid camera ID
+            mockkStatic(ContextCompat::class)
+            every { ContextCompat.checkSelfPermission(mockContext, Manifest.permission.CAMERA) } returns PackageManager.PERMISSION_GRANTED
 
-        var errorCalled = false
-        rgbCameraRecorder.onError = { message ->
-            errorCalled = true
-            assertTrue("Should provide meaningful error", message.contains("Camera switch failed"))
+            var errorCalled = false
+            rgbCameraRecorder.onError = { message ->
+                errorCalled = true
+                assertTrue("Should provide meaningful error", message.contains("Camera switch failed"))
+            }
+
+            // When: Try to switch to invalid camera
+            val result = rgbCameraRecorder.switchCamera("invalid_id")
+
+            // Then: Should fail gracefully
+            assertFalse("Invalid camera switch should fail", result)
+            // Note: Error callback might not be called immediately in the mock environment
         }
-
-        // When: Try to switch to invalid camera
-        val result = rgbCameraRecorder.switchCamera("invalid_id")
-
-        // Then: Should fail gracefully
-        assertFalse("Invalid camera switch should fail", result)
-        // Note: Error callback might not be called immediately in the mock environment
-    }
 
     @Test
-    fun `should switch camera by facing direction`() = runTest {
-        // Given: Mock cameras available
-        mockkStatic(ContextCompat::class)
-        every { ContextCompat.checkSelfPermission(mockContext, Manifest.permission.CAMERA) } returns PackageManager.PERMISSION_GRANTED
+    fun `should switch camera by facing direction`() =
+        runTest {
+            // Given: Mock cameras available
+            mockkStatic(ContextCompat::class)
+            every { ContextCompat.checkSelfPermission(mockContext, Manifest.permission.CAMERA) } returns PackageManager.PERMISSION_GRANTED
 
-        var cameraSwitched = false
-        rgbCameraRecorder.onCameraSwitched = { facing, cameraId ->
-            cameraSwitched = true
-            assertEquals("Should switch to front camera", RGBCameraRecorder.CameraFacing.FRONT, facing)
+            var cameraSwitched = false
+            rgbCameraRecorder.onCameraSwitched = { facing, cameraId ->
+                cameraSwitched = true
+                assertEquals("Should switch to front camera", RGBCameraRecorder.CameraFacing.FRONT, facing)
+            }
+
+            // When: Switch to front camera by facing
+            val result = rgbCameraRecorder.switchCamera(RGBCameraRecorder.CameraFacing.FRONT)
+
+            // Then: Should switch successfully
+            assertTrue("Camera switch by facing should succeed", result)
+            assertTrue("Camera switched callback should be called", cameraSwitched)
         }
-
-        // When: Switch to front camera by facing
-        val result = rgbCameraRecorder.switchCamera(RGBCameraRecorder.CameraFacing.FRONT)
-
-        // Then: Should switch successfully
-        assertTrue("Camera switch by facing should succeed", result)
-        assertTrue("Camera switched callback should be called", cameraSwitched)
-    }
 
     // ===== CRITICAL ISSUE 3: Proper Error Handling =====
 
     @Test
     fun `should handle camera access exceptions gracefully`() {
         // Given: Camera access will fail
-        every { mockCameraManager.cameraIdList } throws android.hardware.camera2.CameraAccessException(
-            android.hardware.camera2.CameraAccessException.CAMERA_ERROR
-        )
+        every { mockCameraManager.cameraIdList } throws
+            android.hardware.camera2.CameraAccessException(
+                android.hardware.camera2.CameraAccessException.CAMERA_ERROR,
+            )
 
         var errorCalled = false
         rgbCameraRecorder.onError = { message ->
@@ -246,12 +251,13 @@ class RGBCameraRecorderCriticalIssuesTest {
         val limitedCameraCharacteristics = mockk<CameraCharacteristics>()
         every { limitedCameraCharacteristics.get(CameraCharacteristics.LENS_FACING) } returns CameraCharacteristics.LENS_FACING_BACK
         every { limitedCameraCharacteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES) } returns intArrayOf()
-        
+
         val mockStreamConfigMap = mockk<android.hardware.camera2.params.StreamConfigurationMap>()
         every { limitedCameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP) } returns mockStreamConfigMap
-        every { mockStreamConfigMap.getOutputSizes(android.media.MediaRecorder::class.java) } returns arrayOf(
-            android.util.Size(1920, 1080) // No 4K support
-        )
+        every { mockStreamConfigMap.getOutputSizes(android.media.MediaRecorder::class.java) } returns
+            arrayOf(
+                android.util.Size(1920, 1080), // No 4K support
+            )
 
         every { mockCameraManager.getCameraCharacteristics("0") } returns limitedCameraCharacteristics
 
@@ -281,17 +287,18 @@ class RGBCameraRecorderCriticalIssuesTest {
     }
 
     @Test
-    fun `should prevent mode switching while recording`() = runTest {
-        // Given: Recording is active (mock the state)
-        // This would require more complex setup to properly test the recording state
-        
-        // When: Try to switch modes while recording
-        val result = rgbCameraRecorder.switchMode(RGBCameraRecorder.CameraMode.RAW_50MP)
+    fun `should prevent mode switching while recording`() =
+        runTest {
+            // Given: Recording is active (mock the state)
+            // This would require more complex setup to properly test the recording state
 
-        // Then: Should handle gracefully
-        // Note: The actual behavior depends on the internal recording state
-        assertTrue("Mode switch should be handled appropriately", true)
-    }
+            // When: Try to switch modes while recording
+            val result = rgbCameraRecorder.switchMode(RGBCameraRecorder.CameraMode.RAW_50MP)
+
+            // Then: Should handle gracefully
+            // Note: The actual behavior depends on the internal recording state
+            assertTrue("Mode switch should be handled appropriately", true)
+        }
 
     // ===== INTEGRATION TESTS =====
 
@@ -324,7 +331,7 @@ class RGBCameraRecorderCriticalIssuesTest {
 
         // Then: Should provide useful information for UI
         assertTrue("Should have camera information structure", cameraInfo.isNotEmpty() || cameraInfo.isEmpty()) // Structure test
-        
+
         // Each camera info should have required fields
         cameraInfo.forEach { info ->
             assertNotNull("Camera ID should not be null", info.cameraId)

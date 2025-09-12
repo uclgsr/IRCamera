@@ -21,7 +21,6 @@ import com.topdon.module.thermal.ir.databinding.PopSeekBarBinding
  */
 @SuppressLint("SetTextI18n")
 class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() {
-
     var progress: Int
         get() = binding.seekBar.progress
         set(value) {
@@ -46,7 +45,6 @@ class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() 
      */
     var onValuePickListener: ((progress: Int) -> Unit)? = null
 
-
     private val binding: PopSeekBarBinding = PopSeekBarBinding.inflate(LayoutInflater.from(context))
 
     init {
@@ -54,22 +52,28 @@ class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() 
         val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(context.resources.displayMetrics.heightPixels, View.MeasureSpec.AT_MOST)
         binding.tvTitle.isVisible = hasTitle
         binding.root.measure(widthMeasureSpec, heightMeasureSpec)
-        binding.tvValue.text = "${progress}%"
-        binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                binding.tvValue.text = "${progress}%"
-                if (isRealTimeTrigger) {
-                    onValuePickListener?.invoke(progress)
+        binding.tvValue.text = "$progress%"
+        binding.seekBar.setOnSeekBarChangeListener(
+            object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean,
+                ) {
+                    binding.tvValue.text = "$progress%"
+                    if (isRealTimeTrigger) {
+                        onValuePickListener?.invoke(progress)
+                    }
                 }
-            }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                onValuePickListener?.invoke(seekBar.progress)
-            }
-        })
+                override fun onStopTrackingTouch(seekBar: SeekBar) {
+                    onValuePickListener?.invoke(seekBar.progress)
+                }
+            },
+        )
 
         contentView = binding.root
         width = contentView.measuredWidth
@@ -80,7 +84,10 @@ class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() 
     /**
      * @param isDropDown true-放置于anchor下方 false-底边缘与anchor对齐
      */
-    fun show(anchor: View, isDropDown: Boolean) {
+    fun show(
+        anchor: View,
+        isDropDown: Boolean,
+    ) {
         if (isDropDown) {
             showAsDropDown(anchor)
         } else {

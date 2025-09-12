@@ -17,7 +17,6 @@ import org.greenrobot.eventbus.EventBus
 
 @Route(path = RouterConfig.THERMAL_MAIN)
 class ThermalActivity : BaseActivity() {
-
     private val menuAdapter by lazy { MenuTabAdapter(this) }
 
     override fun initContentView() = R.layout.activity_thermal
@@ -28,17 +27,17 @@ class ThermalActivity : BaseActivity() {
         BarUtils.setStatusBarColor(this, blackColor)
         BarUtils.setNavBarColor(window, blackColor)
         initRecycler()
-        thermal_tab.setOnItemListener(object : MenuFirstTabView.OnItemListener {
-            override fun selectPosition(position: Int) {
-                //一级菜单选择
-                showRecycler(position)
-            }
-
-        })
+        thermal_tab.setOnItemListener(
+            object : MenuFirstTabView.OnItemListener {
+                override fun selectPosition(position: Int) {
+                    // 一级菜单选择
+                    showRecycler(position)
+                }
+            },
+        )
     }
 
     override fun initData() {
-
     }
 
     private fun initRecycler() {
@@ -46,14 +45,14 @@ class ThermalActivity : BaseActivity() {
         thermal_recycler.adapter = menuAdapter
         thermal_recycler.visibility = View.GONE
         menuAdapter.initType(1)
-        menuAdapter.listener = object : MenuTabAdapter.OnItemClickListener {
-            override fun onClick(index: Int) {
-                //二级菜单选择
-                Log.w("123", "index: $index")
-                EventBus.getDefault().post(ThermalActionEvent(action = index))
+        menuAdapter.listener =
+            object : MenuTabAdapter.OnItemClickListener {
+                override fun onClick(index: Int) {
+                    // 二级菜单选择
+                    Log.w("123", "index: $index")
+                    EventBus.getDefault().post(ThermalActionEvent(action = index))
+                }
             }
-
-        }
     }
 
     fun showRecycler(select: Int) {
@@ -65,5 +64,4 @@ class ThermalActivity : BaseActivity() {
             thermal_recycler.visibility = View.VISIBLE
         }
     }
-
 }

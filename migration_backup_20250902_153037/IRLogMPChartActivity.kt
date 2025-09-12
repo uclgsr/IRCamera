@@ -13,17 +13,15 @@ import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.db.entity.ThermalEntity
+import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.tools.FileTools
 import com.topdon.lib.core.tools.ToastTools
-import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.libcom.ExcelUtil
-import com.topdon.lms.sdk.BuildConfig
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.viewmodel.IRMonitorViewModel
 import kotlinx.android.synthetic.main.activity_ir_log_mp_chart.*
@@ -35,7 +33,6 @@ import kotlin.collections.ArrayList
 
 @Route(path = RouterConfig.IR_THERMAL_LOG_MP_CHART)
 class IRLogMPChartActivity : BaseActivity() {
-
     private val viewModel: IRMonitorViewModel by viewModels()
 
     /**
@@ -44,13 +41,14 @@ class IRLogMPChartActivity : BaseActivity() {
     private var startTime = 0L
 
     private val permissionList by lazy {
-        if (this.applicationInfo.targetSdkVersion >= 34){
-            listOf(
-                Permission.WRITE_EXTERNAL_STORAGE,
-            )
-        } else if (this.applicationInfo.targetSdkVersion == 33) {
+        if (this.applicationInfo.targetSdkVersion >= 34)
+            {
+                listOf(
+                    Permission.WRITE_EXTERNAL_STORAGE,
+                )
+            } else if (this.applicationInfo.targetSdkVersion == 33) {
             mutableListOf(
-                Permission.WRITE_EXTERNAL_STORAGE
+                Permission.WRITE_EXTERNAL_STORAGE,
             )
         } else {
             mutableListOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
@@ -86,76 +84,76 @@ class IRLogMPChartActivity : BaseActivity() {
                     } else {
                         XXPermissions.with(this)
                             .permission(
-                                permissionList
+                                permissionList,
                             )
-                            .request(object : OnPermissionCallback {
-                                override fun onGranted(
-                                    permissions: MutableList<String>,
-                                    allGranted: Boolean
-                                ) {
-                                    if (allGranted) {
-                                        lifecycleScope.launch {
-                                            showLoadingDialog()
-                                            var filePath: String? = null
-                                            withContext(Dispatchers.IO) {
-                                                tempData?.get(0)?.let {
-                                                    filePath = ExcelUtil.exportExcel(tempData as java.util.ArrayList<ThermalEntity>?, "point" == it.type)
+                            .request(
+                                object : OnPermissionCallback {
+                                    override fun onGranted(
+                                        permissions: MutableList<String>,
+                                        allGranted: Boolean,
+                                    ) {
+                                        if (allGranted) {
+                                            lifecycleScope.launch {
+                                                showLoadingDialog()
+                                                var filePath: String? = null
+                                                withContext(Dispatchers.IO) {
+                                                    tempData?.get(0)?.let {
+                                                        filePath = ExcelUtil.exportExcel(tempData as java.util.ArrayList<ThermalEntity>?, "point" == it.type)
+                                                    }
+                                                }
+                                                dismissLoadingDialog()
+                                                if (filePath.isNullOrEmpty()) {
+                                                    ToastTools.showShort(R.string.liveData_save_error)
+                                                } else {
+                                                    val uri = FileTools.getUri(File(filePath))
+                                                    val shareIntent = Intent()
+                                                    shareIntent.action = Intent.ACTION_SEND
+                                                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                                                    shareIntent.type = "application/xlsx"
+                                                    startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
                                                 }
                                             }
-                                            dismissLoadingDialog()
-                                            if (filePath.isNullOrEmpty()) {
-                                                ToastTools.showShort(R.string.liveData_save_error)
-                                            } else {
-                                                val uri = FileTools.getUri(File(filePath))
-                                                val shareIntent = Intent()
-                                                shareIntent.action = Intent.ACTION_SEND
-                                                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-                                                shareIntent.type = "application/xlsx"
-                                                startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
-                                            }
+                                        } else {
+                                            ToastTools.showShort(R.string.scan_ble_tip_authorize)
                                         }
-                                    } else {
-                                        ToastTools.showShort(R.string.scan_ble_tip_authorize)
                                     }
-                                }
 
-                                override fun onDenied(
-                                    permissions: MutableList<String>,
-                                    doNotAskAgain: Boolean
-                                ) {
-                                    if (doNotAskAgain) {
-                                        //拒绝授权并且不再提醒
-                                        if (BaseApplication.instance.isDomestic()){
-                                            ToastUtils.showShort(getString(R.string.app_storage_content))
-                                            return
+                                    override fun onDenied(
+                                        permissions: MutableList<String>,
+                                        doNotAskAgain: Boolean,
+                                    ) {
+                                        if (doNotAskAgain) {
+                                            // 拒绝授权并且不再提醒
+                                            if (BaseApplication.instance.isDomestic())
+                                                {
+                                                    ToastUtils.showShort(getString(R.string.app_storage_content))
+                                                    return
+                                                }
+                                            TipDialog.Builder(this@IRLogMPChartActivity)
+                                                .setTitleMessage(getString(R.string.app_tip))
+                                                .setMessage(getString(R.string.app_storage_content))
+                                                .setPositiveListener(R.string.app_open) {
+                                                    AppUtils.launchAppDetailsSettings()
+                                                }
+                                                .setCancelListener(R.string.app_cancel) {
+                                                }
+                                                .setCanceled(true)
+                                                .create().show()
                                         }
-                                        TipDialog.Builder(this@IRLogMPChartActivity)
-                                            .setTitleMessage(getString(R.string.app_tip))
-                                            .setMessage(getString(R.string.app_storage_content))
-                                            .setPositiveListener(R.string.app_open) {
-                                                AppUtils.launchAppDetailsSettings()
-                                            }
-                                            .setCancelListener(R.string.app_cancel) {
-                                            }
-                                            .setCanceled(true)
-                                            .create().show()
                                     }
-                                }
-
-                            })
+                                },
+                            )
                     }
-                }.setCancelListener(R.string.app_cancel){
+                }.setCancelListener(R.string.app_cancel) {
                 }
                 .setCanceled(true)
                 .create().show()
         }
         tv_save_path?.text = getString(R.string.temp_export_path) + ": " + FileConfig.excelDir
         viewModel.queryDetail(startTime)
-
     }
 
     override fun initData() {
-
     }
 
     override fun onResume() {

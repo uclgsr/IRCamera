@@ -16,18 +16,15 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
-import com.topdon.lib.core.tools.UnitTools
-import com.topdon.libcom.AlarmHelp
-import com.topdon.libcom.R
 import com.topdon.lib.core.bean.AlarmBean
-import com.topdon.lib.core.common.SaveSettingUtil
 import com.topdon.lib.core.tools.ToastTools
+import com.topdon.lib.core.tools.UnitTools
+import com.topdon.libcom.R
 
 class TempAlarmSetDialog(
     context: Context,
     private val isEdit: Boolean,
 ) : Dialog(context, R.style.app_compat_dialog), CompoundButton.OnCheckedChangeListener {
-
     var alarmBean = AlarmBean()
         set(value) {
             field = value.copy()
@@ -72,7 +69,6 @@ class TempAlarmSetDialog(
     private lateinit var clRingtoneSelect: ConstraintLayout
     private lateinit var tvAlarmRingtone: TextView
     private lateinit var tvAlarmMark: TextView
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -184,11 +180,12 @@ class TempAlarmSetDialog(
         clRingtoneSelect.isVisible = !isEdit && switchAlarmRingtone.isChecked
         tvAlarmRingtone.isVisible = !isEdit
         switchAlarmRingtone.isVisible = !isEdit
-        if (hideAlarmMark){
-            tvAlarmMark.visibility = View.GONE
-            switchAlarmMark.visibility = View.GONE
-            clAlarmMark.visibility = View.GONE
-        }
+        if (hideAlarmMark)
+            {
+                tvAlarmMark.visibility = View.GONE
+                switchAlarmMark.visibility = View.GONE
+                clAlarmMark.visibility = View.GONE
+            }
         switchAlarmMark.isVisible = !isEdit
         if (alarmBean.highTemp == Float.MAX_VALUE) {
             etAlarmHigh.setText("")
@@ -216,16 +213,18 @@ class TempAlarmSetDialog(
 
     private fun save() {
         try {
-            val inputHigh = if (switchAlarmHigh.isChecked) {
-                if (etAlarmHigh.text.isNotEmpty()) UnitTools.showToCValue(etAlarmHigh.text.toString().toFloat()) else null
-            } else {
-                null
-            }
-            val inputLow = if (switchAlarmLow.isChecked) {
-                if (etAlarmLow.text.isNotEmpty()) UnitTools.showToCValue(etAlarmLow.text.toString().toFloat()) else null
-            } else {
-                null
-            }
+            val inputHigh =
+                if (switchAlarmHigh.isChecked) {
+                    if (etAlarmHigh.text.isNotEmpty()) UnitTools.showToCValue(etAlarmHigh.text.toString().toFloat()) else null
+                } else {
+                    null
+                }
+            val inputLow =
+                if (switchAlarmLow.isChecked) {
+                    if (etAlarmLow.text.isNotEmpty()) UnitTools.showToCValue(etAlarmLow.text.toString().toFloat()) else null
+                } else {
+                    null
+                }
             if (inputHigh != null && inputLow != null && inputLow > inputHigh) {
                 ToastTools.showShort(com.topdon.lib.ui.R.string.tip_input_format)
                 return
@@ -243,7 +242,6 @@ class TempAlarmSetDialog(
             highValue = if (inputHigh.isNotEmpty()) UnitTools.showToCValue(inputHigh.toFloat()) else null
             lowValue = if (inputLow.isNotEmpty()) UnitTools.showToCValue(inputLow.toFloat()) else null
         } catch (_: Exception) {
-
         }
         alarmBean.highTemp = highValue ?: Float.MAX_VALUE
         alarmBean.lowTemp = lowValue ?: Float.MIN_VALUE
@@ -257,7 +255,7 @@ class TempAlarmSetDialog(
     }
 
     private fun showColorDialog(isHigh: Boolean) {
-        val colorPickDialog = ColorPickDialog(context, if (isHigh) alarmBean.highColor else alarmBean.lowColor,-1)
+        val colorPickDialog = ColorPickDialog(context, if (isHigh) alarmBean.highColor else alarmBean.lowColor, -1)
         colorPickDialog.onPickListener = { it: Int, i1: Int ->
             if (isHigh) {
                 alarmBean.highColor = it
@@ -279,29 +277,30 @@ class TempAlarmSetDialog(
             mediaPlayer?.release()
             mediaPlayer = null
         } catch (_: Exception) {
-
         }
-
     }
 
-    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+    override fun onCheckedChanged(
+        buttonView: CompoundButton?,
+        isChecked: Boolean,
+    ) {
         when (buttonView?.id) {
-            R.id.switch_alarm_high -> {//高温报警
+            R.id.switch_alarm_high -> { // 高温报警
                 etAlarmHigh.isEnabled = isChecked
                 alarmBean.isHighOpen = isChecked
             }
 
-            R.id.switch_alarm_low -> {//低温报警
+            R.id.switch_alarm_low -> { // 低温报警
                 etAlarmLow.isEnabled = isChecked
                 alarmBean.isLowOpen = isChecked
             }
 
-            R.id.switch_alarm_mark -> {//区域标记
+            R.id.switch_alarm_mark -> { // 区域标记
                 clAlarmMark.isVisible = isChecked
                 alarmBean.isMarkOpen = isChecked
             }
 
-            R.id.switch_alarm_ringtone -> {//报警铃声
+            R.id.switch_alarm_ringtone -> { // 报警铃声
                 clRingtoneSelect.isVisible = isChecked
                 if (isChecked) {
                     selectRingtone(alarmBean.ringtoneType)

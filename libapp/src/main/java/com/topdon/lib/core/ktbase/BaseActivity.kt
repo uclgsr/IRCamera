@@ -49,10 +49,9 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         BaseApplication.instance.activitys.add(this)
         this.savedInstanceState = savedInstanceState
-        if (!EventBus.getDefault().isRegistered(this))
-            {
-                EventBus.getDefault().register(this)
-            }
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
 
         if (isLockPortrait()) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -71,10 +70,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (!EventBus.getDefault().isRegistered(this))
-            {
-                EventBus.getDefault().register(this)
-            }
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
     }
 
     override fun onResume() {
@@ -88,10 +86,9 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onDestroy() {
         cameraDialog?.dismiss()
         super.onDestroy()
-        if (EventBus.getDefault().isRegistered(this))
-            {
-                EventBus.getDefault().unregister(this)
-            }
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
+        }
         BaseApplication.instance.activitys.remove(this)
     }
 

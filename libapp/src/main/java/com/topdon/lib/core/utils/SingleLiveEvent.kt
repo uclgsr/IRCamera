@@ -1,7 +1,6 @@
 package com.topdon.lib.core.utils
 
 import androidx.annotation.MainThread
-import androidx.annotation.Nullable
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -26,9 +25,7 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
     }
 
     @MainThread
-    override fun setValue(
-        t: T?,
-    ) {
+    override fun setValue(t: T?) {
         mPending.set(true)
         super.setValue(t)
     }

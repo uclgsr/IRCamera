@@ -17,14 +17,13 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
 class EnhancedRecordingServiceTest {
-    
     private lateinit var context: Context
-    
+
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
     }
-    
+
     @Test
     fun testServiceCreation() {
         // Test that service class can be referenced
@@ -32,7 +31,7 @@ class EnhancedRecordingServiceTest {
         assertNotNull("Service class should be accessible", serviceClass)
         assertEquals("Service class name should match", "EnhancedRecordingService", serviceClass.simpleName)
     }
-    
+
     @Test
     fun testServiceBinder() {
         // Test that binder classes exist
@@ -44,17 +43,19 @@ class EnhancedRecordingServiceTest {
             assertTrue("Service structure test completed", true)
         }
     }
-    
+
     @Test
     fun testServiceLifecycle() {
         // Test service lifecycle intent creation
         val intent = Intent(context, EnhancedRecordingService::class.java)
         assertNotNull("Service intent should be created", intent)
-        assertEquals("Intent component should match service", 
-            EnhancedRecordingService::class.java.name, 
-            intent.component?.className)
+        assertEquals(
+            "Intent component should match service",
+            EnhancedRecordingService::class.java.name,
+            intent.component?.className,
+        )
     }
-    
+
     @Test
     fun testStartRecordingIntent() {
         // Test recording intent structure
@@ -63,22 +64,22 @@ class EnhancedRecordingServiceTest {
         intent.putExtra("extra_session_id", "test_session_123")
         intent.putExtra("extra_participant_id", "participant_001")
         intent.putExtra("extra_study_name", "test_study")
-        
+
         assertNotNull("Start recording intent should be created", intent)
         assertEquals("Action should be set", "action_start_recording", intent.action)
         assertEquals("Session ID should be set", "test_session_123", intent.getStringExtra("extra_session_id"))
     }
-    
+
     @Test
     fun testStopRecordingIntent() {
         // Test stop recording intent structure
         val intent = Intent(context, EnhancedRecordingService::class.java)
         intent.action = "action_stop_recording"
-        
+
         assertNotNull("Stop recording intent should be created", intent)
         assertEquals("Action should be set", "action_stop_recording", intent.action)
     }
-    
+
     @Test
     fun testPCConnectionIntent() {
         // Test PC connection intent structure
@@ -86,30 +87,30 @@ class EnhancedRecordingServiceTest {
         intent.action = "action_connect_pc"
         intent.putExtra("extra_pc_ip", "192.168.1.100")
         intent.putExtra("extra_pc_port", 8080)
-        
+
         assertNotNull("PC connection intent should be created", intent)
         assertEquals("Action should be set", "action_connect_pc", intent.action)
         assertEquals("PC IP should be set", "192.168.1.100", intent.getStringExtra("extra_pc_ip"))
         assertEquals("PC port should be set", 8080, intent.getIntExtra("extra_pc_port", 0))
     }
-    
+
     @Test
     fun testDiscoveryIntent() {
         // Test discovery intent structure
         val intent = Intent(context, EnhancedRecordingService::class.java)
         intent.action = "action_start_discovery"
-        
+
         assertNotNull("Discovery intent should be created", intent)
         assertEquals("Action should be set", "action_start_discovery", intent.action)
     }
-    
+
     @Test
     fun testServiceState() {
         // Test that service state enums/classes exist
         try {
             val serviceClass = EnhancedRecordingService::class.java
             assertNotNull("Service class should be accessible", serviceClass)
-            
+
             // Test method existence through reflection
             val methods = serviceClass.declaredMethods
             assertTrue("Service should have methods", methods.isNotEmpty())
@@ -118,14 +119,14 @@ class EnhancedRecordingServiceTest {
             assertTrue("Service state test attempted", true)
         }
     }
-    
+
     @Test
     fun testNotificationChannelCreation() {
         // Test notification channel ID and setup
         val channelId = "gsr_recording_channel"
         assertNotNull("Channel ID should be defined", channelId)
         assertTrue("Channel ID should not be empty", channelId.isNotEmpty())
-        
+
         // Test that context has notification manager
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE)
         assertNotNull("NotificationManager should be available", notificationManager)

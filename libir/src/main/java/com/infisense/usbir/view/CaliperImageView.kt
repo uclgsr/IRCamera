@@ -16,7 +16,6 @@ import com.infisense.usbir.R
  * @date: 2023/10/25 13:31
  */
 class CaliperImageView : AppCompatImageView {
-
     private var showBitmapWidth: Float = 0f
     private var showBitmapHeight: Float = 0F
     private var yscale: Float = 1f
@@ -40,32 +39,41 @@ class CaliperImageView : AppCompatImageView {
         initView()
     }
 
-
-
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     )
+
     private fun initView() {
         originalBitmap = (androidx.core.content.ContextCompat.getDrawable(context, R.drawable.svg_ic_target_horizontal_person_green) as? BitmapDrawable)?.bitmap
         originalBitmapWidth = originalBitmap?.width?.toFloat() ?: 0f
         originalBitmapHeight = originalBitmap?.height?.toFloat() ?: 0f
         visibility = View.GONE
     }
-    fun setImageSize(imageWidth: Int, imageHeight: Int, parentViewWidth: Int, parentViewHeight: Int) {
+
+    fun setImageSize(
+        imageWidth: Int,
+        imageHeight: Int,
+        parentViewWidth: Int,
+        parentViewHeight: Int,
+    ) {
         this.imageWidth = imageWidth
         this.imageHeight = imageHeight
-        if (parentViewWidth > 0){
-            this.parentViewWidth = parentViewWidth.toFloat()
-        }else{
-            this.parentViewWidth = (parent as ViewGroup).measuredWidth.toFloat()
-        }
-        if (parentViewHeight > 0){
-            this.parentViewHeight = parentViewHeight.toFloat()
-        }else{
-            this.parentViewHeight = (parent as ViewGroup).measuredHeight.toFloat()
-        }
+        if (parentViewWidth > 0)
+            {
+                this.parentViewWidth = parentViewWidth.toFloat()
+            } else
+            {
+                this.parentViewWidth = (parent as ViewGroup).measuredWidth.toFloat()
+            }
+        if (parentViewHeight > 0)
+            {
+                this.parentViewHeight = parentViewHeight.toFloat()
+            } else
+            {
+                this.parentViewHeight = (parent as ViewGroup).measuredHeight.toFloat()
+            }
         if (parentViewWidth > 0) {
             xscale = parentViewWidth.toFloat() / imageWidth.toFloat()
         }
@@ -75,21 +83,27 @@ class CaliperImageView : AppCompatImageView {
         showBitmapHeight = pxBitmapHeight * yscale
         showBitmapWidth = pxBitmapHeight * originalBitmapWidth / originalBitmapHeight * xscale
         visibility = View.VISIBLE
-        val layoutParams =  this.layoutParams
-        layoutParams.width  = showBitmapWidth.toInt()
+        val layoutParams = this.layoutParams
+        layoutParams.width = showBitmapWidth.toInt()
         layoutParams.height = showBitmapHeight.toInt()
         this.layoutParams = layoutParams
-        if (l== 0 && t == 0 && r == 0 && b == 0){
-            l = (parentViewWidth/2 - showBitmapWidth / 2).toInt()
-            r = (parentViewWidth/2 + showBitmapWidth / 2).toInt()
-            t = (parentViewHeight/2 - showBitmapHeight / 2).toInt()
-            b = (parentViewHeight/2 + showBitmapHeight / 2).toInt()
-        }
+        if (l == 0 && t == 0 && r == 0 && b == 0)
+            {
+                l = (parentViewWidth / 2 - showBitmapWidth / 2).toInt()
+                r = (parentViewWidth / 2 + showBitmapWidth / 2).toInt()
+                t = (parentViewHeight / 2 - showBitmapHeight / 2).toInt()
+                b = (parentViewHeight / 2 + showBitmapHeight / 2).toInt()
+            }
         layout(l, t, r, b)
         requestLayout()
     }
 
-    override fun layout(l: Int, t: Int, r: Int, b: Int) {
+    override fun layout(
+        l: Int,
+        t: Int,
+        r: Int,
+        b: Int,
+    ) {
         super.layout(l, t, r, b)
     }
 

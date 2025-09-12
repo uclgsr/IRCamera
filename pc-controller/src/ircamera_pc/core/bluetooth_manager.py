@@ -219,7 +219,7 @@ class BluetoothManager(BaseManager):
     def _periodic_scan(self) -> None:
         """
         Periodic scan callback.
-        
+
         Initiates device scanning if scanning is currently active.
         Called automatically by the scan timer to maintain device discovery.
         """
@@ -229,13 +229,13 @@ class BluetoothManager(BaseManager):
     def _should_update_device(self, device: BLEDevice) -> bool:
         """
         Check if device information should be updated.
-        
+
         Determines whether a discovered device's information has changed
         enough to warrant updating the stored device record.
-        
+
         Args:
             device: BLE device to check for updates
-            
+
         Returns:
             True if device should be updated, False otherwise
         """
@@ -251,13 +251,13 @@ class BluetoothManager(BaseManager):
     def _create_bluetooth_device(self, device: BLEDevice) -> BluetoothDevice:
         """
         Create BluetoothDevice from BLEDevice.
-        
+
         Converts a BLEDevice from the bleak library into our internal
         BluetoothDevice representation with additional metadata.
-        
+
         Args:
             device: BLE device from bleak scan results
-            
+
         Returns:
             BluetoothDevice with enhanced information and IRCamera detection
         """

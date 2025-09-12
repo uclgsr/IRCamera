@@ -15,14 +15,11 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
 import kotlinx.android.synthetic.main.dialog_tip_otg.view.*
 
-
 /**
  * 提示窗
  * create by fylder on 2018/6/15
  **/
 class TipOtgDialog : Dialog {
-
-
     constructor(context: Context) : super(context)
 
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
@@ -52,29 +49,40 @@ class TipOtgDialog : Dialog {
             return this
         }
 
-        fun setMessage(@StringRes message: Int): Builder {
+        fun setMessage(
+            @StringRes message: Int,
+        ): Builder {
             this.message = context!!.getString(message)
             return this
         }
 
         fun setPositiveListener(
             @StringRes strRes: Int,
-            event: ((check: Boolean) -> Unit)? = null
+            event: ((check: Boolean) -> Unit)? = null,
         ): Builder {
             return setPositiveListener(context!!.getString(strRes), event)
         }
 
-        fun setPositiveListener(str: String, event: ((check: Boolean) -> Unit)? = null): Builder {
+        fun setPositiveListener(
+            str: String,
+            event: ((check: Boolean) -> Unit)? = null,
+        ): Builder {
             this.positiveStr = str
             this.positiveEvent = event
             return this
         }
 
-        fun setCancelListener(@StringRes strRes: Int, event: (() -> Unit)? = null): Builder {
+        fun setCancelListener(
+            @StringRes strRes: Int,
+            event: (() -> Unit)? = null,
+        ): Builder {
             return setCancelListener(context!!.getString(strRes), event)
         }
 
-        fun setCancelListener(str: String, event: (() -> Unit)? = null): Builder {
+        fun setCancelListener(
+            str: String,
+            event: (() -> Unit)? = null,
+        ): Builder {
             this.cancelStr = str
             this.cancelEvent = event
             return this
@@ -89,7 +97,6 @@ class TipOtgDialog : Dialog {
             this.dialog!!.dismiss()
         }
 
-
         fun create(): TipOtgDialog {
             if (dialog == null) {
                 dialog = TipOtgDialog(context!!, R.style.InfoDialog)
@@ -103,18 +110,18 @@ class TipOtgDialog : Dialog {
             cancelBtn = view.dialog_tip_cancel_btn
             dialog!!.addContentView(
                 view,
-                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT),
             )
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    //竖屏
+                    // 竖屏
                     0.85
                 } else {
-                    //横屏
+                    // 横屏
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() //设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceled)
@@ -142,7 +149,7 @@ class TipOtgDialog : Dialog {
                 cancelBtn.visibility = View.GONE
                 cancelBtn.text = ""
             }
-            //msg
+            // msg
             if (message != null) {
                 messageText.visibility = View.VISIBLE
                 messageText.setText(message, TextView.BufferType.NORMAL)
@@ -154,5 +161,4 @@ class TipOtgDialog : Dialog {
             return dialog as TipOtgDialog
         }
     }
-
 }

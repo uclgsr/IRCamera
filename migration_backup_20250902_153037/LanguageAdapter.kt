@@ -11,7 +11,6 @@ import com.topdon.module.user.R
 import kotlinx.android.synthetic.main.item_language.view.*
 
 class LanguageAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     var listener: ItemOnClickListener? = null
 
     private var selectIndex = 0
@@ -22,11 +21,17 @@ class LanguageAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         return ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.item_language, parent, false))
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         if (holder is ItemViewHolder) {
             if (position == selectIndex) {
                 holder.img.visibility = View.VISIBLE

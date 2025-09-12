@@ -7,16 +7,15 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.repository.ProductBean
 import com.topdon.lib.core.repository.TC007Repository
 import com.topdon.lib.core.repository.TS004Repository
-import com.topdon.lib.core.R as RCore
 import com.topdon.lms.sdk.utils.TLog
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.user.R
 import kotlinx.coroutines.launch
+import com.topdon.lib.core.R as RCore
 
 /**
  * TS004、TC007 设备信息
@@ -26,7 +25,6 @@ import kotlinx.coroutines.launch
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
-
     // View references - migrated from synthetic views
     private lateinit var clLayoutCopy: ConstraintLayout
     private lateinit var tvSnValue: TextView
@@ -49,7 +47,7 @@ class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
         tvDeviceModelValue = findViewById(R.id.tv_device_model_value)
         tvSn = findViewById(R.id.tv_sn)
         tvDeviceModel = findViewById(R.id.tv_device_model)
-        
+
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
         clLayoutCopy.setOnClickListener(this)
     }
@@ -83,7 +81,7 @@ class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            clLayoutCopy -> {//复制信息
+            clLayoutCopy -> { // 复制信息
                 val text = "${tvSn.text}:${tvSnValue.text}  ${tvDeviceModel.text}:${tvDeviceModelValue.text}"
                 val cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?
                 val mClipData = ClipData.newPlainText("text", text)
@@ -92,5 +90,4 @@ class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
 }

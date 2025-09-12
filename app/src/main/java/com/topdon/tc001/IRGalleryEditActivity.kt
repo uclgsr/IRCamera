@@ -5,9 +5,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.os.Parcelable
-import android.util.Log
 import android.view.View
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -15,11 +13,11 @@ import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.SizeUtils
-import com.csl.irCamera.databinding.ActivityIrGalleryEditBinding
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityIrGalleryEditBinding
 import com.elvishew.xlog.XLog
-import com.energy.iruvc.ircmd.IRUtils
 import com.energy.iruvc.ircmd.IRCMDType
+import com.energy.iruvc.ircmd.IRUtils
 import com.energy.iruvc.utils.CommonParams
 import com.example.thermal_lite.IrConst
 import com.example.thermal_lite.util.CommonUtil
@@ -81,9 +79,8 @@ import com.topdon.module.thermal.ir.R as ThermalIrR
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(), View.OnClickListener, ITsTempListener {
-    
     private val TAG = "IRGalleryEditActivity"
-    
+
     private var isShowC: Boolean = false
 
     /**
@@ -129,7 +126,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
-        initView()  
+        initView()
         initData()
     }
 

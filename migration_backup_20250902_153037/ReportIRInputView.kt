@@ -15,13 +15,12 @@ import com.topdon.module.thermal.ir.report.bean.ImageTempBean
 import kotlinx.android.synthetic.main.item_report_ir_input.view.*
 import kotlinx.android.synthetic.main.view_report_ir_input.view.*
 
-class ReportIRInputView: LinearLayout {
-
+class ReportIRInputView : LinearLayout {
     companion object {
-        private const val TYPE_FULL = 0 //全图
-        private const val TYPE_POINT = 1//点
-        private const val TYPE_LINE = 2 //线
-        private const val TYPE_RECT = 3 //面
+        private const val TYPE_FULL = 0 // 全图
+        private const val TYPE_POINT = 1 // 点
+        private const val TYPE_LINE = 2 // 线
+        private const val TYPE_RECT = 3 // 面
     }
 
     constructor(context: Context) : this(context, null)
@@ -86,13 +85,19 @@ class ReportIRInputView: LinearLayout {
     }
 
     fun isSwitchMaxCheck() = cl_max.switch_item.isChecked
+
     fun isSwitchMinCheck() = cl_min.switch_item.isChecked
+
     fun isSwitchAverageCheck() = cl_average.switch_item.isChecked
+
     fun isSwitchExplainCheck() = cl_explain.switch_item.isChecked
 
     fun getMaxInput() = cl_max.et_item.text.toString()
+
     fun getMinInput() = cl_min.et_item.text.toString()
+
     fun getAverageInput() = cl_average.et_item.text.toString()
+
     fun getExplainInput() = cl_explain.et_item.text.toString()
 
     fun refreshData(tempBean: ImageTempBean.TempBean?) {
@@ -108,7 +113,10 @@ class ReportIRInputView: LinearLayout {
         cl_explain.et_item.setText("")
     }
 
-    private fun setSwitchListener(switchCompat: SwitchCompat, editText: EditText) {
+    private fun setSwitchListener(
+        switchCompat: SwitchCompat,
+        editText: EditText,
+    ) {
         switchCompat.setOnCheckedChangeListener { _, isChecked ->
             editText.isVisible = isChecked
         }

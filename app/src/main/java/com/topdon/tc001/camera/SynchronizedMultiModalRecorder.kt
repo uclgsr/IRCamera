@@ -233,12 +233,13 @@ class SynchronizedMultiModalRecorder(
      */
     fun switchRGBCamera(): RGBCameraRecorder.CameraFacing? {
         val currentFacing = rgbCameraRecorder?.getCurrentCameraFacing()
-        val newFacing = if (currentFacing == RGBCameraRecorder.CameraFacing.BACK) {
-            RGBCameraRecorder.CameraFacing.FRONT
-        } else {
-            RGBCameraRecorder.CameraFacing.BACK
-        }
-        
+        val newFacing =
+            if (currentFacing == RGBCameraRecorder.CameraFacing.BACK) {
+                RGBCameraRecorder.CameraFacing.FRONT
+            } else {
+                RGBCameraRecorder.CameraFacing.BACK
+            }
+
         // Switch to the new facing
         val success = runBlocking { rgbCameraRecorder?.switchCamera(newFacing) ?: false }
         return if (success) newFacing else currentFacing

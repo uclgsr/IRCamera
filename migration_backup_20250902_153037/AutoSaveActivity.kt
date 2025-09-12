@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_auto_save.*
  * 自动保存到手机
  */
 @Route(path = RouterConfig.AUTO_SAVE)
-class AutoSaveActivity :BaseActivity(){
+class AutoSaveActivity : BaseActivity() {
 
     override fun initContentView() = R.layout.activity_auto_save
 

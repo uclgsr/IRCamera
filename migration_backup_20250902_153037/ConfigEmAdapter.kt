@@ -22,11 +22,17 @@ import kotlinx.android.synthetic.main.item_ir_config_emissivity.view.*
 class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapter.ViewHolder>() {
     private val dataList: ArrayList<IRConfigData> = IRConfigData.irConfigData(context)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_ir_config_emissivity, parent, false))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         holder.itemView.tv_em_name.text = dataList[position].name
         holder.itemView.tv_em_num.text = dataList[position].value
         holder.itemView.tv_em_name.background = EmBgDrawable(false, position == dataList.size - 1)

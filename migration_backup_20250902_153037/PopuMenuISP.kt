@@ -1,23 +1,23 @@
-//package com.infisense.usbir.view
+// package com.infisense.usbir.view
 //
-//import android.content.Context
-//import android.graphics.drawable.ColorDrawable
-//import android.util.Log
-//import android.view.Gravity
-//import android.view.LayoutInflater
-//import android.view.View
-//import android.view.ViewGroup
-//import android.widget.*
-//import androidx.recyclerview.widget.LinearLayoutManager
-//import com.infisense.iruvc.sdkisp.Libircmd
-//import com.infisense.usbir.R
-//import com.infisense.usbir.activity.IRDisplayActivity
-//import com.infisense.usbir.camera.IRUVC
-//import kotlinx.android.synthetic.main.isp.view.*
+// import android.content.Context
+// import android.graphics.drawable.ColorDrawable
+// import android.util.Log
+// import android.view.Gravity
+// import android.view.LayoutInflater
+// import android.view.View
+// import android.view.ViewGroup
+// import android.widget.*
+// import androidx.recyclerview.widget.LinearLayoutManager
+// import com.infisense.iruvc.sdkisp.Libircmd
+// import com.infisense.usbir.R
+// import com.infisense.usbir.activity.IRDisplayActivity
+// import com.infisense.usbir.camera.IRUVC
+// import kotlinx.android.synthetic.main.isp.view.*
 //
 //
-////图像参数
-//class PopuMenuISP(context: Context, mainActivity: IRDisplayActivity) {
+// //图像参数
+// class PopuMenuISP(context: Context, mainActivity: IRDisplayActivity) {
 //
 //    private val popupWindow: PopupWindow
 //
@@ -150,8 +150,8 @@
 //    }
 //
 //    init {
-////        adapterm4 = ArrayAdapter(context, R.layout.simple_spinner_item, m4)
-////        adapterm7 = ArrayAdapter(context, R.layout.simple_spinner_item, m7)
+// //        adapterm4 = ArrayAdapter(context, R.layout.simple_spinner_item, m4)
+// //        adapterm7 = ArrayAdapter(context, R.layout.simple_spinner_item, m7)
 //        adapterm4 = ArrayAdapter(context, R.layout.support_simple_spinner_dropdown_item, m4)
 //        adapterm7 = ArrayAdapter(context, R.layout.support_simple_spinner_dropdown_item, m7)
 //        this.mainActivity = mainActivity
@@ -195,7 +195,7 @@
 //                    )
 //                    imageParam
 //                }
-////                R.id.more -> context.startActivity(Intent(context, ToolActivity::class.java))
+// //                R.id.more -> context.startActivity(Intent(context, ToolActivity::class.java))
 //                R.id.zoomdown -> Libircmd.zoom_center_down(0, 2, usbcamera!!.uvcCamera.nativePtr)
 //                R.id.zoomup -> Libircmd.zoom_center_up(0, 2, usbcamera!!.uvcCamera.nativePtr)
 //                R.id.setagc -> {
@@ -258,4 +258,4 @@
 //        val layoutManager = LinearLayoutManager(context)
 //        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
 //    }
-//}
+// }

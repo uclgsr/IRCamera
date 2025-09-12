@@ -14,8 +14,7 @@ import kotlinx.android.synthetic.main.view_report_info.view.*
 /**
  * 报告信息 - 预览 View.
  */
-class ReportInfoView: LinearLayout {
-
+class ReportInfoView : LinearLayout {
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -44,15 +43,15 @@ class ReportInfoView: LinearLayout {
      * 根据指定的检测条件信息刷新对应 View.
      */
     fun refreshCondition(conditionBean: ReportConditionBean?) {
-        cl_report_condition.isVisible = conditionBean?.is_ambient_humidity == 1
-                || conditionBean?.is_ambient_temperature == 1
-                || conditionBean?.is_test_distance == 1
-                || conditionBean?.is_emissivity == 1
+        cl_report_condition.isVisible = conditionBean?.is_ambient_humidity == 1 ||
+            conditionBean?.is_ambient_temperature == 1 ||
+            conditionBean?.is_test_distance == 1 ||
+            conditionBean?.is_emissivity == 1
 
         group_ambient_temperature.isVisible = conditionBean?.is_ambient_temperature == 1
         tv_ambient_temperature.text = conditionBean?.ambient_temperature
         view_line_1.isVisible = conditionBean?.is_ambient_temperature == 1 &&
-                (conditionBean.is_ambient_humidity == 1 || conditionBean.is_test_distance == 1 || conditionBean.is_emissivity == 1)
+            (conditionBean.is_ambient_humidity == 1 || conditionBean.is_test_distance == 1 || conditionBean.is_emissivity == 1)
 
         group_ambient_humidity.isVisible = conditionBean?.is_ambient_humidity == 1
         tv_ambient_humidity.text = conditionBean?.ambient_humidity

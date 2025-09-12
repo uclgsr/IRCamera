@@ -3,9 +3,9 @@ package com.topdon.menu.adapter
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.topdon.menu.R as MenuR
 import com.topdon.lib.core.R
 import com.topdon.menu.constant.MenuType
+import com.topdon.menu.R as MenuR
 
 /**
  * 测温模式-菜单6-高低温档 菜单所用 Adapter，单选且必须选中其中一个.
@@ -50,8 +50,6 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
      */
     var onTempLevelListener: ((code: Int) -> Unit)? = null
 
-
-
     private val dataList: ArrayList<Data> = ArrayList(6)
 
     init {
@@ -64,7 +62,10 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
         dataList.add(Data(R.string.thermal_automatic, MenuR.drawable.selector_menu2_temp_level_2, code = -1))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         val data: Data = dataList[position]
         holder.binding.ivIcon.setImageResource(data.drawableId)
         holder.binding.tvText.setText(data.stringId)
@@ -80,11 +81,12 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
         }
     }
 
-    private fun IntRange.getTempStr(isUnitF: Boolean): String = if (isUnitF) {
-        "${c2f(start)}\n~\n${c2f(endInclusive)}°F"
-    } else {
-        "${start}\n~\n${endInclusive}°C"
-    }
+    private fun IntRange.getTempStr(isUnitF: Boolean): String =
+        if (isUnitF) {
+            "${c2f(start)}\n~\n${c2f(endInclusive)}°F"
+        } else {
+            "${start}\n~\n$endInclusive°C"
+        }
 
     /**
      * 将指定 摄氏度°C 转换为 华氏度°F
@@ -93,5 +95,10 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
 
     override fun getItemCount(): Int = dataList.size
 
-    data class Data(@StringRes val stringId: Int, @DrawableRes val drawableId: Int, val range: IntRange? = null, val code: Int)
+    data class Data(
+        @StringRes val stringId: Int,
+        @DrawableRes val drawableId: Int,
+        val range: IntRange? = null,
+        val code: Int,
+    )
 }

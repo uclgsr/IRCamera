@@ -10,12 +10,14 @@ import com.energy.iruvc.utils.SynchronizedBitmap
  * 温度标定
  */
 object CalibrationTools {
-
     /**
      * 单点标定
      * 对准黑体 - 设置温度
      */
-    fun sign(irCmd: IRCMD, singlePointTemp: Int): Boolean {
+    fun sign(
+        irCmd: IRCMD,
+        singlePointTemp: Int,
+    ): Boolean {
         var success = false
         // 标定前需要重置测温参数,否则温度标定不准
         if (irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD) == 0) {
@@ -36,7 +38,10 @@ object CalibrationTools {
      * 温度标定
      * 低温(100 ~ 400)
      */
-    fun pointFirst(irCmd: IRCMD, pointTemp: Int): Boolean {
+    fun pointFirst(
+        irCmd: IRCMD,
+        pointTemp: Int,
+    ): Boolean {
         var success = false
         // 标定前需要重置测温参数,否则温度标定不准
         if (irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD) == 0) {
@@ -58,7 +63,10 @@ object CalibrationTools {
      *
      * 提交完低温之后才能提交高温
      */
-    fun pointEnd(irCmd: IRCMD, pointTemp: Int): Boolean {
+    fun pointEnd(
+        irCmd: IRCMD,
+        pointTemp: Int,
+    ): Boolean {
         var success = false
         // 标定前需要重置测温参数,否则温度标定不准
         if (irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD) == 0) {
@@ -79,7 +87,7 @@ object CalibrationTools {
      *
      */
     fun potReady(irCmd: IRCMD): Boolean {
-        return irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_DIS) == 0 //关闭锅盖校正
+        return irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_DIS) == 0 // 关闭锅盖校正
     }
 
     /**
@@ -90,15 +98,19 @@ object CalibrationTools {
      * CommonParams.RMCoverAutoCalcType.GAIN_2
      * CommonParams.RMCoverAutoCalcType.GAIN_4
      */
-    fun potStart(irCmd: IRCMD, type: Int) {
-        val gainType = when (type) {
-            1 -> CommonParams.RMCoverAutoCalcType.GAIN_1
-            2 -> CommonParams.RMCoverAutoCalcType.GAIN_2
-            4 -> CommonParams.RMCoverAutoCalcType.GAIN_4
-            else -> CommonParams.RMCoverAutoCalcType.GAIN_1
-        }
-        irCmd.rmCoverAutoCalc(gainType) //发送锅盖标定
-        irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_EN) //打开锅盖校正
+    fun potStart(
+        irCmd: IRCMD,
+        type: Int,
+    ) {
+        val gainType =
+            when (type) {
+                1 -> CommonParams.RMCoverAutoCalcType.GAIN_1
+                2 -> CommonParams.RMCoverAutoCalcType.GAIN_2
+                4 -> CommonParams.RMCoverAutoCalcType.GAIN_4
+                else -> CommonParams.RMCoverAutoCalcType.GAIN_1
+            }
+        irCmd.rmCoverAutoCalc(gainType) // 发送锅盖标定
+        irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_EN) // 打开锅盖校正
     }
 
     /**
@@ -130,9 +142,15 @@ object CalibrationTools {
      * @param type 1: 打开    0: 关闭
      *
      */
-    fun setGain(irCmd: IRCMD, type: Int) {
+    fun setGain(
+        irCmd: IRCMD,
+        type: Int,
+    ) {
         if (type == 1) {
-            irCmd.setPropTPDParams(CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL, CommonParams.PropTPDParamsValue.GAINSELStatus.GAIN_SEL_HIGH)
+            irCmd.setPropTPDParams(
+                CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL,
+                CommonParams.PropTPDParamsValue.GAINSELStatus.GAIN_SEL_HIGH,
+            )
         } else {
             irCmd.setPropTPDParams(CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL, CommonParams.PropTPDParamsValue.GAINSELStatus.GAIN_SEL_LOW)
         }
@@ -141,7 +159,10 @@ object CalibrationTools {
     /**
      * 查询Tpd
      */
-    fun queryTpd(irCmd: IRCMD, params: CommonParams.PropTPDParams): Int {
+    fun queryTpd(
+        irCmd: IRCMD,
+        params: CommonParams.PropTPDParams,
+    ): Int {
         val value = IntArray(1)
         irCmd.getPropTPDParams(params, value)
         return value[0]
@@ -150,7 +171,10 @@ object CalibrationTools {
     /**
      * 打快门
      */
-    fun shutter(irCmd: IRCMD?, syncImage: SynchronizedBitmap) {
+    fun shutter(
+        irCmd: IRCMD?,
+        syncImage: SynchronizedBitmap,
+    ) {
         if (syncImage.type == 1) {
             irCmd?.tc1bShutterManual()
         } else {
@@ -162,7 +186,10 @@ object CalibrationTools {
     /**
      * 控制锅盖标定开关
      */
-    fun stsSwitch(irCmd: IRCMD?, flag: Boolean) {
+    fun stsSwitch(
+        irCmd: IRCMD?,
+        flag: Boolean,
+    ) {
         if (flag) {
             irCmd?.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_EN)
         } else {
@@ -178,20 +205,27 @@ object CalibrationTools {
      * CommonParams.RMCoverAutoCalcType.GAIN_2
      * CommonParams.RMCoverAutoCalcType.GAIN_4
      */
-    fun pot(irCmd: IRCMD, type: Int) {
-        val gainType = when (type) {
-            1 -> CommonParams.RMCoverAutoCalcType.GAIN_1
-            2 -> CommonParams.RMCoverAutoCalcType.GAIN_2
-            4 -> CommonParams.RMCoverAutoCalcType.GAIN_4
-            else -> CommonParams.RMCoverAutoCalcType.GAIN_1
-        }
-        irCmd.rmCoverAutoCalc(gainType) //发送锅盖标定
+    fun pot(
+        irCmd: IRCMD,
+        type: Int,
+    ) {
+        val gainType =
+            when (type) {
+                1 -> CommonParams.RMCoverAutoCalcType.GAIN_1
+                2 -> CommonParams.RMCoverAutoCalcType.GAIN_2
+                4 -> CommonParams.RMCoverAutoCalcType.GAIN_4
+                else -> CommonParams.RMCoverAutoCalcType.GAIN_1
+            }
+        irCmd.rmCoverAutoCalc(gainType) // 发送锅盖标定
     }
 
     /**
      * 自动快门
      */
-    fun autoShutter(irCmd: IRCMD?, flag: Boolean) {
+    fun autoShutter(
+        irCmd: IRCMD?,
+        flag: Boolean,
+    ) {
         val data = if (flag) CommonParams.PropAutoShutterParameterValue.StatusSwith.ON else CommonParams.PropAutoShutterParameterValue.StatusSwith.OFF
         irCmd?.setPropAutoShutterParameter(CommonParams.PropAutoShutterParameter.SHUTTER_PROP_SWITCH, data)
     }
@@ -201,7 +235,10 @@ object CalibrationTools {
      * 设置距离 unit:cnt(128cnt=1m)
      * @param value 0 ~ 25600
      */
-    fun setTpdDis(irCmd: IRCMD?, value: Int) {
+    fun setTpdDis(
+        irCmd: IRCMD?,
+        value: Int,
+    ) {
         val data = CommonParams.PropTPDParamsValue.NumberType(value.toString())
         setTpdParams(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_DISTANCE, value = data)
     }
@@ -210,7 +247,10 @@ object CalibrationTools {
      * 设置发射率 unit:cnt(128cnt=1)
      * @param value 1 ~ 128
      */
-    fun setTpdEms(irCmd: IRCMD?, value: Int) {
+    fun setTpdEms(
+        irCmd: IRCMD?,
+        value: Int,
+    ) {
         val data = CommonParams.PropTPDParamsValue.NumberType(value.toString())
         setTpdParams(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_EMS, value = data)
     }
@@ -218,7 +258,11 @@ object CalibrationTools {
     /**
      * 设置Tpd
      */
-    private fun setTpdParams(irCmd: IRCMD?, params: CommonParams.PropTPDParams, value: CommonParams.PropTPDParamsValue): Int {
+    private fun setTpdParams(
+        irCmd: IRCMD?,
+        params: CommonParams.PropTPDParams,
+        value: CommonParams.PropTPDParamsValue,
+    ): Int {
         return try {
             irCmd?.setPropTPDParams(params, value) ?: 0
         } catch (e: Exception) {

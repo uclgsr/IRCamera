@@ -18,16 +18,18 @@ import kotlinx.android.synthetic.main.item_filter.view.*
 class ImgAdapter(
     private val context: Context,
     private val mDataList: ArrayList<ImgBean>,
-    var listenter: OnItemOnClickListenter
+    var listenter: OnItemOnClickListenter,
 ) : RecyclerView.Adapter<ImgAdapter.ViewHolder>() {
-
     private var bitmap: Bitmap? = null
 
     interface OnItemOnClickListenter {
         fun onClick(position: Int)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.item_filter, parent, false)
         return ViewHolder(view)
     }
@@ -45,7 +47,11 @@ class ImgAdapter(
      * @param dst_h  输出高度
      * @return
      */
-    fun imageScale(bitmap: Bitmap, dst_w: Int, dst_h: Int): Bitmap {
+    fun imageScale(
+        bitmap: Bitmap,
+        dst_w: Int,
+        dst_h: Int,
+    ): Bitmap {
         val src_w = bitmap.width
         val src_h = bitmap.height
         val scale_w = dst_w.toFloat() / src_w
@@ -57,13 +63,16 @@ class ImgAdapter(
 
     var canvas: Canvas? = null
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         val filterBean = mDataList[position]
         holder.tvName.text = filterBean.titleName
         holder.filter_img.setImageResource(filterBean.img)
         holder.rlRoot.setOnClickListener {
             listenter.onClick(
-                position
+                position,
             )
         }
     }

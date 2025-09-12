@@ -13,8 +13,7 @@ import com.topdon.module.thermal.ir.report.bean.ReportInfoBean
 /**
  * 报告信息 - 预览 View.
  */
-class ReportInfoView: LinearLayout {
-
+class ReportInfoView : LinearLayout {
     // View declarations
     private lateinit var tvReportName: android.widget.TextView
     private lateinit var tvReportAuthor: android.widget.TextView
@@ -85,15 +84,15 @@ class ReportInfoView: LinearLayout {
      * 根据指定的检测条件信息刷新对应 View.
      */
     fun refreshCondition(conditionBean: ReportConditionBean?) {
-        clReportCondition.isVisible = conditionBean?.is_ambient_humidity == 1
-                || conditionBean?.is_ambient_temperature == 1
-                || conditionBean?.is_test_distance == 1
-                || conditionBean?.is_emissivity == 1
+        clReportCondition.isVisible = conditionBean?.is_ambient_humidity == 1 ||
+            conditionBean?.is_ambient_temperature == 1 ||
+            conditionBean?.is_test_distance == 1 ||
+            conditionBean?.is_emissivity == 1
 
         groupAmbientTemperature.isVisible = conditionBean?.is_ambient_temperature == 1
         tvAmbientTemperature.text = conditionBean?.ambient_temperature
         viewLine1.isVisible = conditionBean?.is_ambient_temperature == 1 &&
-                (conditionBean.is_ambient_humidity == 1 || conditionBean.is_test_distance == 1 || conditionBean.is_emissivity == 1)
+            (conditionBean.is_ambient_humidity == 1 || conditionBean.is_test_distance == 1 || conditionBean.is_emissivity == 1)
 
         groupAmbientHumidity.isVisible = conditionBean?.is_ambient_humidity == 1
         tvAmbientHumidity.text = conditionBean?.ambient_humidity

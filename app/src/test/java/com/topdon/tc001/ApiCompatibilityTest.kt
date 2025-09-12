@@ -1,14 +1,13 @@
 package com.topdon.tc001
 
-import org.junit.Test
 import org.junit.Assert.*
+import org.junit.Test
 import kotlin.test.assertTrue
 
 /**
  * Test API compatibility and core functionality
  */
 class ApiCompatibilityTest {
-    
     @Test
     fun testKotlinCompatibility() {
         // Test basic Kotlin functionality
@@ -16,8 +15,8 @@ class ApiCompatibilityTest {
         assertTrue(testString.isNotEmpty())
         assertEquals(23, testString.length)
     }
-    
-    @Test 
+
+    @Test
     fun testCoroutinesCompatibility() {
         // Test coroutines basic functionality
         runBlocking {
@@ -25,7 +24,7 @@ class ApiCompatibilityTest {
             assertEquals("Coroutines work!", result.await())
         }
     }
-    
+
     @Test
     fun testNetworkingClasses() {
         // Test that network classes can be instantiated

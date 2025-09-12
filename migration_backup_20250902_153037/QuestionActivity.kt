@@ -10,8 +10,8 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.module.user.R
-import com.topdon.module.user.model.QuestionData
 import com.topdon.module.user.model.FaqRepository
+import com.topdon.module.user.model.QuestionData
 import kotlinx.android.synthetic.main.activity_question.*
 import kotlinx.android.synthetic.main.item_question.view.item_question_info
 import kotlinx.android.synthetic.main.item_question.view.item_question_lay
@@ -22,7 +22,6 @@ import java.util.ArrayList
  */
 @Route(path = RouterConfig.QUESTION)
 class QuestionActivity : BaseActivity() {
-
     override fun initContentView() = R.layout.activity_question
 
     override fun initView() {
@@ -40,21 +39,24 @@ class QuestionActivity : BaseActivity() {
     }
 
     override fun initData() {
-
     }
 
-
     private class MyAdapter(private val questionList: ArrayList<QuestionData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
         var onItemClickListener: ((data: QuestionData) -> Unit)? = null
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int,
+        ): RecyclerView.ViewHolder {
             return ItemHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_question, parent, false))
         }
 
         override fun getItemCount(): Int = questionList.size
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        override fun onBindViewHolder(
+            holder: RecyclerView.ViewHolder,
+            position: Int,
+        ) {
             if (holder is ItemHolder) {
                 holder.rootView.item_question_info.text = questionList[position].question
                 holder.rootView.item_question_lay.setOnClickListener {

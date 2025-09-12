@@ -52,8 +52,8 @@ class IRMonocularActivity : BaseWifiActivity() {
     private var mDefaultHot = SharedManager.getHotMode()
     private var mDefaultLight = MenuBean.TYPE_LIGHT_MIDDLE
     private var mDefaultGain = MenuBean.TYPE_GAIN_X1
-    private var isRange: Boolean = true //测距
-    private var isPip: Boolean = true //画中画与测距互斥
+    private var isRange: Boolean = true // 测距
+    private var isPip: Boolean = true // 画中画与测距互斥
     private var isExpand: Boolean = false
     private var isVideo = false
     private var isVideoRecording = false
@@ -68,16 +68,17 @@ class IRMonocularActivity : BaseWifiActivity() {
     }
 
     override fun initView() {
-        //开启软编
+        // 开启软编
         PreferenceManager.getDefaultSharedPreferences(this@IRMonocularActivity)
             .edit()
             .putBoolean("use-sw-codec", true)
             .apply()
-        recyclerView.layoutManager = if (ScreenUtil.isPortrait(this)) {
-            GridLayoutManager(this, 3)
-        } else {
-            LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        }
+        recyclerView.layoutManager =
+            if (ScreenUtil.isPortrait(this)) {
+                GridLayoutManager(this, 3)
+            } else {
+                LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+            }
         recyclerView.adapter = sixAdapter
         sixAdapter.listener = { _, code ->
             setSetting(code)
@@ -97,11 +98,12 @@ class IRMonocularActivity : BaseWifiActivity() {
     private fun initListener() {
         val screenNum = resources.configuration.orientation
         iv_portrait.setOnClickListener {
-            requestedOrientation = if (screenNum == 1) {
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            } else {
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            }
+            requestedOrientation =
+                if (screenNum == 1) {
+                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                } else {
+                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                }
         }
         iv_back.setOnClickListener {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -127,15 +129,16 @@ class IRMonocularActivity : BaseWifiActivity() {
         }
         camera_setting_img.setOnClickListener {
             resetCamera()
-            isVideo = if (isVideo) {
-                camera_img.setImageResource(R.drawable.ic_menu_camera)
-                camera_setting_img.setImageResource(R.mipmap.ic_menu_video_setting)
-                false
-            } else {
-                camera_img.setImageResource(R.drawable.ic_menu_bottom_video_svg)
-                camera_setting_img.setImageResource(R.mipmap.ic_menu_camera_setting)
-                true
-            }
+            isVideo =
+                if (isVideo) {
+                    camera_img.setImageResource(R.drawable.ic_menu_camera)
+                    camera_setting_img.setImageResource(R.mipmap.ic_menu_video_setting)
+                    false
+                } else {
+                    camera_img.setImageResource(R.drawable.ic_menu_bottom_video_svg)
+                    camera_setting_img.setImageResource(R.mipmap.ic_menu_camera_setting)
+                    true
+                }
         }
 
         camera_img.setOnClickListener {
@@ -145,7 +148,7 @@ class IRMonocularActivity : BaseWifiActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (Build.VERSION.SDK_INT >= 29) {//Android10 及以上
+        if (Build.VERSION.SDK_INT >= 29) { // Android10 及以上
             NetWorkUtils.switchNetwork(true) {
                 if (it != null) {
                     TS004Repository.netWork = it
@@ -217,7 +220,7 @@ class IRMonocularActivity : BaseWifiActivity() {
     }
 
     override fun connected() {
-        //由于 BlankDevActivity 监听 USB 设备插拔的逻辑，该弹框会一闪而过，最终决定先不弹这个弹框
+        // 由于 BlankDevActivity 监听 USB 设备插拔的逻辑，该弹框会一闪而过，最终决定先不弹这个弹框
         /*TipDialog.Builder(this)
             .setMessage(getString(R.string.tc_has_line_device) + " " + getString(R.string.device_switch_tips))
             .setPositiveListener(R.string.app_yes) {
@@ -239,19 +242,20 @@ class IRMonocularActivity : BaseWifiActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //开启软编
+        // 开启软编
         PreferenceManager.getDefaultSharedPreferences(this@IRMonocularActivity)
             .edit()
             .putBoolean("use-sw-codec", true)
             .apply()
-        mRenderFragment = if (savedInstanceState == null) {
-            val fragment: PlayFragment =
-                PlayFragment.newInstance(url, Client.TRANSTYPE_TCP, 1, null)
-            supportFragmentManager.beginTransaction().add(R.id.render_holder, fragment).commit()
-            fragment
-        } else {
-            (supportFragmentManager.findFragmentById(R.id.render_holder) as PlayFragment?)!!
-        }
+        mRenderFragment =
+            if (savedInstanceState == null) {
+                val fragment: PlayFragment =
+                    PlayFragment.newInstance(url, Client.TRANSTYPE_TCP, 1, null)
+                supportFragmentManager.beginTransaction().add(R.id.render_holder, fragment).commit()
+                fragment
+            } else {
+                (supportFragmentManager.findFragmentById(R.id.render_holder) as PlayFragment?)!!
+            }
     }
 
     private fun resetCamera() {
@@ -270,8 +274,10 @@ class IRMonocularActivity : BaseWifiActivity() {
             if (show) {
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
             } else {
-                window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_FULLSCREEN)
+                window.decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN
+                )
             }
         }
     }
@@ -279,7 +285,7 @@ class IRMonocularActivity : BaseWifiActivity() {
     private fun setSetting(code: Int) {
         when (code) {
             MonocularHelp.TYPE_SET_BLACK -> {
-                //伪彩样式
+                // 伪彩样式
                 setPseudoColor()
             }
 
@@ -289,17 +295,17 @@ class IRMonocularActivity : BaseWifiActivity() {
             }
 
             MonocularHelp.TYPE_SET_LIGHT -> {
-                //亮度
+                // 亮度
                 setBrightness()
             }
 
             MonocularHelp.TYPE_SET_PIP -> {
-                //画中画
+                // 画中画
                 setPip()
             }
 
             MonocularHelp.TYPE_SET_GAIN -> {
-                //放大倍数
+                // 放大倍数
                 setZoom()
             }
 
@@ -421,7 +427,6 @@ class IRMonocularActivity : BaseWifiActivity() {
         }
     }
 
-
     private fun setPip() {
         lifecycleScope.launch {
             val isSuccess = TS004Repository.setPip(!isPip)
@@ -454,50 +459,59 @@ class IRMonocularActivity : BaseWifiActivity() {
         super.finish()
     }
 
-    //底部拍照中间按钮
+    // 底部拍照中间按钮
     @SuppressLint("CheckResult")
     private fun centerCamera() {
         XXPermissions.with(this)
             .permission(
-                permissionList
+                permissionList,
             )
-            .request(object : OnPermissionCallback {
-                override fun onGranted(permissions: MutableList<String>, allGranted: Boolean) {
-                    if (allGranted) {
-                        if (isVideo) {
-                            //录制视频
-                            isVideoRecording = if (isVideoRecording) {
-                                camera_img.setImageResource(R.drawable.ic_menu_bottom_video_svg)
-                                false
+            .request(
+                object : OnPermissionCallback {
+                    override fun onGranted(
+                        permissions: MutableList<String>,
+                        allGranted: Boolean,
+                    ) {
+                        if (allGranted) {
+                            if (isVideo) {
+                                // 录制视频
+                                isVideoRecording =
+                                    if (isVideoRecording) {
+                                        camera_img.setImageResource(R.drawable.ic_menu_bottom_video_svg)
+                                        false
+                                    } else {
+                                        camera_img.setImageResource(R.drawable.ic_menu_bottom_video_recording_svg)
+                                        true
+                                    }
+                                video()
                             } else {
-                                camera_img.setImageResource(R.drawable.ic_menu_bottom_video_recording_svg)
-                                true
+                                camera()
                             }
-                            video()
                         } else {
-                            camera()
+                            TToast.shortToast(this@IRMonocularActivity, R.string.scan_ble_tip_authorize)
                         }
-                    } else {
-                        TToast.shortToast(this@IRMonocularActivity, R.string.scan_ble_tip_authorize)
                     }
-                }
 
-                override fun onDenied(permissions: MutableList<String>, doNotAskAgain: Boolean) {
-                    if (doNotAskAgain) {
-                        //拒绝授权并且不再提醒
-                        TipDialog.Builder(this@IRMonocularActivity)
-                            .setTitleMessage(getString(R.string.app_tip))
-                            .setMessage(R.string.app_storage_content)
-                            .setPositiveListener(R.string.app_open) {
-                                AppUtils.launchAppDetailsSettings()
-                            }
-                            .setCancelListener(R.string.app_cancel) {
-                            }
-                            .setCanceled(true)
-                            .create().show()
+                    override fun onDenied(
+                        permissions: MutableList<String>,
+                        doNotAskAgain: Boolean,
+                    ) {
+                        if (doNotAskAgain) {
+                            // 拒绝授权并且不再提醒
+                            TipDialog.Builder(this@IRMonocularActivity)
+                                .setTitleMessage(getString(R.string.app_tip))
+                                .setMessage(R.string.app_storage_content)
+                                .setPositiveListener(R.string.app_open) {
+                                    AppUtils.launchAppDetailsSettings()
+                                }
+                                .setCancelListener(R.string.app_cancel) {
+                                }
+                                .setCanceled(true)
+                                .create().show()
+                        }
                     }
-                }
-            })
+                },
+            )
     }
 
     private fun camera() {
@@ -537,8 +551,8 @@ class IRMonocularActivity : BaseWifiActivity() {
         lifecycleScope.launch {
             val fileList: List<FileBean>? = TS004Repository.getNewestFile(fileType)
             try {
-                if (fileList != null) {//请求成功
-                    if (fileList.isEmpty()) {//请求成功但是当前没有对应图片或视频
+                if (fileList != null) { // 请求成功
+                    if (fileList.isEmpty()) { // 请求成功但是当前没有对应图片或视频
                         camera_gallery_img.setImageResource(R.mipmap.ic_menu_photo_default)
                         updateDefaultPhotoWH(true)
                     } else {
@@ -546,7 +560,7 @@ class IRMonocularActivity : BaseWifiActivity() {
                         val iconBean: FileBean = fileList[0]
                         GlideLoader.loadGallery(
                             camera_gallery_img,
-                            "http://192.168.40.1:8080/DCIM/" + if (iconBean.type == 1) iconBean.thumb else iconBean.name
+                            "http://192.168.40.1:8080/DCIM/" + if (iconBean.type == 1) iconBean.thumb else iconBean.name,
                         )
                     }
                 }
@@ -564,7 +578,7 @@ class IRMonocularActivity : BaseWifiActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketMsgEvent(event: SocketMsgEvent) {
         when (SocketCmdUtil.getCmdResponse(event.text)) {
-            WsCmdConstants.AR_COMMAND_PSEUDO_COLOR_GET -> {//伪彩样式
+            WsCmdConstants.AR_COMMAND_PSEUDO_COLOR_GET -> { // 伪彩样式
                 val webSocketIp = SocketCmdUtil.getIpResponse(event.text)
                 val pseudoColor: WsPseudoColor? = WsUtil.getWsResponse(event.text)
                 if (webSocketIp == WsCmdConstants.AR_COMMAND_IP) {
@@ -573,7 +587,7 @@ class IRMonocularActivity : BaseWifiActivity() {
                 }
             }
 
-            WsCmdConstants.AR_COMMAND_RANGE_FIND_GET -> {//测距
+            WsCmdConstants.AR_COMMAND_RANGE_FIND_GET -> { // 测距
                 val webSocketIp = SocketCmdUtil.getIpResponse(event.text)
                 val wsRange: WsRange? = WsUtil.getWsResponse(event.text)
                 if (webSocketIp == WsCmdConstants.AR_COMMAND_IP) {
@@ -582,7 +596,7 @@ class IRMonocularActivity : BaseWifiActivity() {
                 }
             }
 
-            WsCmdConstants.AR_COMMAND_PANEL_PARAM_GET -> {//亮度
+            WsCmdConstants.AR_COMMAND_PANEL_PARAM_GET -> { // 亮度
                 val webSocketIp = SocketCmdUtil.getIpResponse(event.text)
                 val wsBrightness: WsLight? = WsUtil.getWsResponse(event.text)
                 if (webSocketIp == WsCmdConstants.AR_COMMAND_IP) {
@@ -591,7 +605,7 @@ class IRMonocularActivity : BaseWifiActivity() {
                 }
             }
 
-            WsCmdConstants.AR_COMMAND_PIP_GET -> {//画中画
+            WsCmdConstants.AR_COMMAND_PIP_GET -> { // 画中画
                 val webSocketIp = SocketCmdUtil.getIpResponse(event.text)
                 val wsPip: WsPip? = WsUtil.getWsResponse(event.text)
                 if (webSocketIp == WsCmdConstants.AR_COMMAND_IP) {
@@ -600,7 +614,7 @@ class IRMonocularActivity : BaseWifiActivity() {
                 }
             }
 
-            WsCmdConstants.AR_COMMAND_ZOOM_GET -> {//放大倍数
+            WsCmdConstants.AR_COMMAND_ZOOM_GET -> { // 放大倍数
                 val webSocketIp = SocketCmdUtil.getIpResponse(event.text)
                 val wsZoom: WsZoom? = WsUtil.getWsResponse(event.text)
                 if (webSocketIp == WsCmdConstants.AR_COMMAND_IP) {
@@ -609,20 +623,19 @@ class IRMonocularActivity : BaseWifiActivity() {
                 }
             }
 
-            WsCmdConstants.AR_COMMAND_SNAPSHOT -> {//拍照事件
+            WsCmdConstants.AR_COMMAND_SNAPSHOT -> { // 拍照事件
                 refreshImg(0)
             }
 
-            WsCmdConstants.AR_COMMAND_VRECORD -> {//开始或结束录像事件
+            WsCmdConstants.AR_COMMAND_VRECORD -> { // 开始或结束录像事件
                 try {
                     val data: JSONObject = JSONObject(event.text).getJSONObject("data")
                     val enable: Boolean = data.getBoolean("enable")
-                    if (!enable) {//结束才同步
+                    if (!enable) { // 结束才同步
                         refreshImg(1)
                     }
-                    updateCamera(enable);
+                    updateCamera(enable)
                 } catch (_: Exception) {
-
                 }
             }
         }

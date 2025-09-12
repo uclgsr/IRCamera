@@ -115,7 +115,7 @@ class RecordingStatusIndicator
             // For detailed status updates, we could show individual sensor states
             updateDisplay()
         }
-        
+
         /**
          * Update with comprehensive sensor status from RecordingController
          */
@@ -125,56 +125,59 @@ class RecordingStatusIndicator
                 statusIcon.setBackgroundColor(Color.RED)
                 statusText.text = "🔴 RECORDING"
                 statusText.setTextColor(Color.RED)
-                
+
                 // Show detailed sensor status
                 val sensorDisplay = mutableListOf<String>()
                 summary.sensors.forEach { sensorStatus ->
-                    val icon = when {
-                        sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "📸"
-                        sensorStatus.sensorType.contains("Thermal", ignoreCase = true) -> "🌡️"
-                        sensorStatus.sensorType.contains("GSR", ignoreCase = true) -> "📊"
-                        else -> "🔘"
-                    }
-                    
-                    val statusIcon = when {
-                        sensorStatus.isRecording -> "✅"
-                        sensorStatus.isInitialized -> "⏸️"  
-                        else -> "❌"
-                    }
-                    
+                    val icon =
+                        when {
+                            sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "📸"
+                            sensorStatus.sensorType.contains("Thermal", ignoreCase = true) -> "🌡️"
+                            sensorStatus.sensorType.contains("GSR", ignoreCase = true) -> "📊"
+                            else -> "🔘"
+                        }
+
+                    val statusIcon =
+                        when {
+                            sensorStatus.isRecording -> "✅"
+                            sensorStatus.isInitialized -> "⏸️"
+                            else -> "❌"
+                        }
+
                     sensorDisplay.add("$icon$statusIcon")
                 }
-                
+
                 sensorsText.text = sensorDisplay.joinToString(" ")
                 visibility = VISIBLE
-                
             } else {
                 statusIcon.setBackgroundColor(Color.GRAY)
-                statusText.text = when {
-                    summary.totalSensorsInitialized == 0 -> "❌ NO SENSORS"
-                    summary.totalSensorsInitialized < summary.totalSensorsConfigured -> "⚠️ PARTIAL SETUP"
-                    else -> "⏹️ READY"
-                }
+                statusText.text =
+                    when {
+                        summary.totalSensorsInitialized == 0 -> "❌ NO SENSORS"
+                        summary.totalSensorsInitialized < summary.totalSensorsConfigured -> "⚠️ PARTIAL SETUP"
+                        else -> "⏹️ READY"
+                    }
                 statusText.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
                 durationText.text = ""
-                
+
                 // Show sensor availability even when not recording
                 if (summary.totalSensorsInitialized > 0) {
                     val sensorDisplay = mutableListOf<String>()
                     summary.sensors.forEach { sensorStatus ->
-                        val icon = when {
-                            sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "📸"
-                            sensorStatus.sensorType.contains("Thermal", ignoreCase = true) -> "🌡️"  
-                            sensorStatus.sensorType.contains("GSR", ignoreCase = true) -> "📊"
-                            else -> "🔘"
-                        }
+                        val icon =
+                            when {
+                                sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "📸"
+                                sensorStatus.sensorType.contains("Thermal", ignoreCase = true) -> "🌡️"
+                                sensorStatus.sensorType.contains("GSR", ignoreCase = true) -> "📊"
+                                else -> "🔘"
+                            }
                         sensorDisplay.add("$icon✅")
                     }
                     sensorsText.text = sensorDisplay.joinToString(" ") + " ready"
                 } else {
                     sensorsText.text = "Check sensor connections"
                 }
-                
+
                 visibility = VISIBLE // Show status even when not recording
             }
         }

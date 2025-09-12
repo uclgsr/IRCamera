@@ -5,8 +5,8 @@ package com.topdon.libcom.util
  * @date: 2023/5/5 16:28
  */
 open class SingletonHolder<out T, in A>(creator: (A) -> T) {
-
     private var creator: ((A) -> T)? = creator
+
     @Volatile
     private var instance: T? = null
 
@@ -28,5 +28,4 @@ open class SingletonHolder<out T, in A>(creator: (A) -> T) {
             }
         }
     }
-
 }

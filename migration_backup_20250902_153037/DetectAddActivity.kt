@@ -55,12 +55,13 @@ import java.util.Locale
  * Created by LCG on 2024/8/21.
  */
 class DetectAddActivity : BaseActivity(), View.OnClickListener {
-    private val viewModel: DetectViewModel  by viewModels()
+    private val viewModel: DetectViewModel by viewModels()
 
     /**
      * 仅当编辑模式时，从上一界面传递过来的，要编辑的房屋检测 Id.
      */
     private var editId: Long = 0
+
     /**
      * 当前编辑或新增的房屋检测信息.
      */
@@ -70,7 +71,6 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
      * 当前输入的检测时间.
      */
     private var inputDetectTime: Long? = null
-
 
     override fun initContentView(): Int = R.layout.activity_detect_add
 
@@ -112,7 +112,6 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
             tv_cost_unit.text = resources.getStringArray(R.array.currency)[houseDetect.costUnit]
         }
 
-
         tv_detect_time.setOnClickListener(this)
         iv_address_location.setOnClickListener(this)
         iv_house_image.setOnClickListener(this)
@@ -128,11 +127,14 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
         tv_house_address_title.text = SpanBuilder().appendColor("*", 0xffff4848.toInt()).append(getString(R.string.house_detail_address))
         tv_house_image_title.text = SpanBuilder().appendColor("*", 0xffff4848.toInt()).append(getString(R.string.house_image))
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                showExitTipsDialog()
-            }
-        })
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    showExitTipsDialog()
+                }
+            },
+        )
     }
 
     override fun initData() {
@@ -140,16 +142,16 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            tv_detect_time -> {//检测时间
+            tv_detect_time -> { // 检测时间
                 showDetectTimeDialog()
             }
-            iv_address_location -> {//房屋地址定位图标
+            iv_address_location -> { // 房屋地址定位图标
                 getLocation()
             }
-            iv_house_image -> {//房屋图片
+            iv_house_image -> { // 房屋图片
                 ImagePickFromDialog(this)
                     .setSelectListener {
-                        if (it == 0) {//相册
+                        if (it == 0) { // 相册
                             PermissionTool.requestImageRead(this) {
                                 galleryPickResult.launch("image/*")
                             }
@@ -163,7 +165,7 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
                     }
                     .show()
             }
-            tv_house_year -> {//建筑年份
+            tv_house_year -> { // 建筑年份
                 YearPicker(this, houseDetect.year).also {
                     it.setTitle(R.string.year_built)
                     it.setOnYearPickedListener { year ->
@@ -172,7 +174,7 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
                     }
                 }.show()
             }
-            tv_house_space_unit -> {//建筑面积单位
+            tv_house_space_unit -> { // 建筑面积单位
                 StrArrayPicker(this, resources.getStringArray(R.array.area), SharedManager.houseSpaceUnit).also {
                     it.setTitle(R.string.area)
                     it.setOnOptionPickedListener { position, item ->
@@ -182,7 +184,7 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
                     }
                 }.show()
             }
-            tv_cost_unit -> {//检测费用单位
+            tv_cost_unit -> { // 检测费用单位
                 StrArrayPicker(this, resources.getStringArray(R.array.currency), SharedManager.costUnit).also {
                     it.setTitle(R.string.diagnosis_unit)
                     it.setOnOptionPickedListener { position, item ->
@@ -192,7 +194,7 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
                     }
                 }.show()
             }
-            tv_create_report -> {//创建报告 or 编辑报告
+            tv_create_report -> { // 创建报告 or 编辑报告
                 val reportName = et_detect_name.text.toString()
                 if (reportName.isEmpty()) {
                     TToast.shortToast(this, R.string.album_report_input_name_tips)
@@ -234,7 +236,7 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
                         houseDetect.createTime = if (editId > 0) houseDetect.createTime else currentTime
                         houseDetect.updateTime = currentTime
 
-                        if (editId > 0) {//编辑模式
+                        if (editId > 0) { // 编辑模式
                             AppDatabase.getInstance().houseDetectDao().updateDetect(houseDetect)
                             EventBus.getDefault().post(HouseDetectEditEvent(houseDetect.id))
                         } else {
@@ -278,29 +280,31 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
     /**
      * 从系统相册拾取图片结果
      */
-    private val galleryPickResult = registerForActivityResult(ActivityResultContracts.GetContent()) {
-        val srcFile: File? = UriUtils.uri2File(it)
-        if (srcFile != null) {
-            val copyFile = FileConfig.getDetectImageDir(this, "Cover${System.currentTimeMillis()}.png")
-            FileUtils.copy(srcFile, copyFile)
-            houseDetect.imagePath = copyFile.absolutePath
-            Glide.with(iv_house_image).load(copyFile.absolutePath).into(iv_house_image)
-            iv_house_image_camera.isVisible = false
-            tv_house_image_camera.isVisible = false
+    private val galleryPickResult =
+        registerForActivityResult(ActivityResultContracts.GetContent()) {
+            val srcFile: File? = UriUtils.uri2File(it)
+            if (srcFile != null) {
+                val copyFile = FileConfig.getDetectImageDir(this, "Cover${System.currentTimeMillis()}.png")
+                FileUtils.copy(srcFile, copyFile)
+                houseDetect.imagePath = copyFile.absolutePath
+                Glide.with(iv_house_image).load(copyFile.absolutePath).into(iv_house_image)
+                iv_house_image_camera.isVisible = false
+                tv_house_image_camera.isVisible = false
+            }
         }
-    }
 
     /**
      * 从系统相机拍照结果
      */
-    private val lightPhotoResult = registerForActivityResult(TakePhotoResult()) {
-        if (it != null) {
-            houseDetect.imagePath = it.absolutePath
-            Glide.with(iv_house_image).load(it.absolutePath).into(iv_house_image)
-            iv_house_image_camera.isVisible = false
-            tv_house_image_camera.isVisible = false
+    private val lightPhotoResult =
+        registerForActivityResult(TakePhotoResult()) {
+            if (it != null) {
+                houseDetect.imagePath = it.absolutePath
+                Glide.with(iv_house_image).load(it.absolutePath).into(iv_house_image)
+                iv_house_image_camera.isVisible = false
+                tv_house_image_camera.isVisible = false
+            }
         }
-    }
 
     /**
      * 显示退出不保存提示弹框

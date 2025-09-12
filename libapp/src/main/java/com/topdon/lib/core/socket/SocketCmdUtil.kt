@@ -6,7 +6,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 object SocketCmdUtil {
-    fun getSocketCmd(cmd: Int): String?  {
+    fun getSocketCmd(cmd: Int): String? {
         var cmdJson: String? = null
         try {
             val gson = Gson()

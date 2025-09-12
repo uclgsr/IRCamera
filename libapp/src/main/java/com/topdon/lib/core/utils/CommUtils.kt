@@ -11,7 +11,7 @@ import com.elvishew.xlog.XLog
  * date: 2024/2/22 17:06S
  **/
 object CommUtils {
-    fun getAppName(): String  {
+    fun getAppName(): String {
         var msg = ""
         var appInfo: ApplicationInfo? = null
         appInfo =

@@ -37,10 +37,9 @@ object GalleryRepository {
                 return false
             }
             val fileList = sourceDir.listFiles()
-            if (fileList?.isEmpty() == true)
-                {
-                    return false
-                }
+            if (fileList?.isEmpty() == true) {
+                return false
+            }
             if (!targetDir.exists()) {
                 targetDir.mkdirs()
             }

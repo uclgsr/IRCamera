@@ -30,7 +30,7 @@ import org.greenrobot.eventbus.EventBus
  */
 class AbilityFragment : BaseFragment(), View.OnClickListener {
     private var mIsTC007 = false
-    
+
     // View references
     private lateinit var ivWinter: ImageView
     private lateinit var viewMonitory: View
@@ -41,13 +41,13 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
 
     override fun initView() {
         mIsTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
-        
+
         // Initialize views with findViewById
         ivWinter = requireView().findViewById(R.id.iv_winter)
-        viewMonitory = requireView().findViewById(R.id.view_monitory) 
+        viewMonitory = requireView().findViewById(R.id.view_monitory)
         viewHouse = requireView().findViewById(R.id.view_house)
         viewCar = requireView().findViewById(R.id.view_car)
-        
+
         ivWinter.setOnClickListener(this)
         viewMonitory.setOnClickListener(this)
         viewHouse.setOnClickListener(this)
@@ -59,33 +59,34 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            ivWinter -> {//冬季特辑入口
+            ivWinter -> { // 冬季特辑入口
                 SharedManager.hasClickWinter = true
                 EventBus.getDefault().post(WinterClickEvent())
-                val url = if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
-                    "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
+                val url =
+                    if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
+                        "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
                             "languageId=1" // Fixed to English (languageId=1)
-                } else {
-                    "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
-                }
+                    } else {
+                        "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
+                    }
                 NavigationManager.getInstance().build(RouterConfig.WEB_VIEW)
                     .withString(ExtraKeyConfig.URL, url)
                     .navigation(requireContext())
             }
-            viewMonitory -> {//温度监控
+            viewMonitory -> { // 温度监控
                 val intent = Intent(requireContext(), MonitoryHomeActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
                 startActivity(intent)
             }
 
-            viewHouse -> {//房屋检测
+            viewHouse -> { // 房屋检测
                 // Disabled - HouseHomeActivity from removed house module
                 // val intent = Intent(requireContext(), HouseHomeActivity::class.java)
                 // intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
                 // startActivity(intent)
             }
 
-            viewCar -> {//汽车检测
+            viewCar -> { // 汽车检测
                 if (mIsTC007) {
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07)

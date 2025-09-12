@@ -24,13 +24,13 @@ class ReliableMessageService(private val context: Context? = null) {
 
     private val messageScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val sequenceNumber = AtomicLong(0)
-    
+
     // Pending messages waiting for acknowledgment
     private val pendingMessages = ConcurrentHashMap<String, PendingMessage>()
-    
+
     // Message handlers for different message types
     private val messageHandlers = ConcurrentHashMap<String, MessageHandler>()
-    
+
     // Cleanup job for expired messages
     private var cleanupJob: Job? = null
 
@@ -46,20 +46,28 @@ class ReliableMessageService(private val context: Context? = null) {
         val sentAt: Long,
         var retryCount: Int = 0,
         var lastRetryAt: Long = 0,
-        val callback: MessageCallback?
+        val callback: MessageCallback?,
     )
 
     enum class MessagePriority {
-        LOW,      // Non-critical messages (status updates)
-        NORMAL,   // Regular messages (data transfer)
-        HIGH,     // Important messages (control commands)
-        CRITICAL  // Critical messages (emergency stop, sync)
+        LOW, // Non-critical messages (status updates)
+        NORMAL, // Regular messages (data transfer)
+        HIGH, // Important messages (control commands)
+        CRITICAL, // Critical messages (emergency stop, sync)
     }
 
     interface MessageCallback {
         fun onAcknowledged(messageId: String)
-        fun onFailed(messageId: String, error: String)
-        fun onRetrying(messageId: String, attempt: Int)
+
+        fun onFailed(
+            messageId: String,
+            error: String,
+        )
+
+        fun onRetrying(
+            messageId: String,
+            attempt: Int,
+        )
     }
 
     interface MessageHandler {
@@ -68,9 +76,9 @@ class ReliableMessageService(private val context: Context? = null) {
 
     interface MessageTransport {
         suspend fun sendMessage(
-            host: String, 
-            port: Int, 
-            message: JSONObject
+            host: String,
+            port: Int,
+            message: JSONObject,
         ): Boolean
     }
 
@@ -85,13 +93,14 @@ class ReliableMessageService(private val context: Context? = null) {
      */
     fun initialize() {
         // Start cleanup job for expired messages
-        cleanupJob = messageScope.launch {
-            while (isActive) {
-                cleanupExpiredMessages()
-                delay(CLEANUP_INTERVAL_MS)
+        cleanupJob =
+            messageScope.launch {
+                while (isActive) {
+                    cleanupExpiredMessages()
+                    delay(CLEANUP_INTERVAL_MS)
+                }
             }
-        }
-        
+
         Log.i(TAG, "Reliable messaging service initialized")
     }
 
@@ -106,35 +115,36 @@ class ReliableMessageService(private val context: Context? = null) {
         priority: MessagePriority = MessagePriority.NORMAL,
         timeoutMs: Long = DEFAULT_TIMEOUT_MS,
         maxRetries: Int = MAX_RETRY_ATTEMPTS,
-        callback: MessageCallback? = null
+        callback: MessageCallback? = null,
     ): String {
-        
         val messageId = generateMessageId()
         val sequenceNum = sequenceNumber.incrementAndGet()
-        
-        val reliableMessage = JSONObject().apply {
-            put("message_id", messageId)
-            put("sequence_number", sequenceNum)
-            put("message_type", messageType)
-            put("timestamp", System.currentTimeMillis())
-            put("priority", priority.name)
-            put("requires_ack", true)
-            put("sender_id", getSenderId())
-            put("content", content)
-        }
 
-        val pendingMessage = PendingMessage(
-            messageId = messageId,
-            messageType = messageType,
-            content = reliableMessage,
-            targetHost = targetHost,
-            targetPort = targetPort,
-            priority = priority,
-            timeoutMs = timeoutMs,
-            maxRetries = maxRetries,
-            sentAt = System.currentTimeMillis(),
-            callback = callback
-        )
+        val reliableMessage =
+            JSONObject().apply {
+                put("message_id", messageId)
+                put("sequence_number", sequenceNum)
+                put("message_type", messageType)
+                put("timestamp", System.currentTimeMillis())
+                put("priority", priority.name)
+                put("requires_ack", true)
+                put("sender_id", getSenderId())
+                put("content", content)
+            }
+
+        val pendingMessage =
+            PendingMessage(
+                messageId = messageId,
+                messageType = messageType,
+                content = reliableMessage,
+                targetHost = targetHost,
+                targetPort = targetPort,
+                priority = priority,
+                timeoutMs = timeoutMs,
+                maxRetries = maxRetries,
+                sentAt = System.currentTimeMillis(),
+                callback = callback,
+            )
 
         pendingMessages[messageId] = pendingMessage
 
@@ -154,21 +164,21 @@ class ReliableMessageService(private val context: Context? = null) {
         targetHost: String,
         targetPort: Int,
         messageType: String,
-        content: JSONObject
+        content: JSONObject,
     ): Boolean {
-        
         val messageId = generateMessageId()
         val sequenceNum = sequenceNumber.incrementAndGet()
-        
-        val message = JSONObject().apply {
-            put("message_id", messageId)
-            put("sequence_number", sequenceNum)
-            put("message_type", messageType)
-            put("timestamp", System.currentTimeMillis())
-            put("requires_ack", false)
-            put("sender_id", getSenderId())
-            put("content", content)
-        }
+
+        val message =
+            JSONObject().apply {
+                put("message_id", messageId)
+                put("sequence_number", sequenceNum)
+                put("message_type", messageType)
+                put("timestamp", System.currentTimeMillis())
+                put("requires_ack", false)
+                put("sender_id", getSenderId())
+                put("content", content)
+            }
 
         return transport?.sendMessage(targetHost, targetPort, message) ?: false
     }
@@ -207,7 +217,7 @@ class ReliableMessageService(private val context: Context? = null) {
             // Send acknowledgment if required
             if (requiresAck && messageId.isNotEmpty()) {
                 val ack = createAcknowledgment(messageId, senderId, response != null)
-                
+
                 // Extract sender details for response (this would need to be enhanced
                 // to track sender information from the connection)
                 // For now, we'll return the ACK to be sent by the caller
@@ -215,18 +225,17 @@ class ReliableMessageService(private val context: Context? = null) {
             }
 
             return response
-            
         } catch (e: Exception) {
             Log.e(TAG, "Error processing incoming message", e)
-            
+
             // Send NACK for the failed message
             val messageId = message.optString("message_id")
             val senderId = message.optString("sender_id")
-            
+
             if (messageId.isNotEmpty()) {
                 return createNegativeAcknowledgment(messageId, senderId, e.message ?: "Processing error")
             }
-            
+
             return null
         }
     }
@@ -234,7 +243,10 @@ class ReliableMessageService(private val context: Context? = null) {
     /**
      * Register a message handler for a specific message type
      */
-    fun registerMessageHandler(messageType: String, handler: MessageHandler) {
+    fun registerMessageHandler(
+        messageType: String,
+        handler: MessageHandler,
+    ) {
         messageHandlers[messageType] = handler
         Log.d(TAG, "Registered handler for message type: $messageType")
     }
@@ -280,18 +292,19 @@ class ReliableMessageService(private val context: Context? = null) {
     private suspend fun sendWithRetry(pendingMessage: PendingMessage) {
         while (pendingMessage.retryCount <= pendingMessage.maxRetries) {
             try {
-                val success = transport?.sendMessage(
-                    pendingMessage.targetHost,
-                    pendingMessage.targetPort,
-                    pendingMessage.content
-                ) ?: false
+                val success =
+                    transport?.sendMessage(
+                        pendingMessage.targetHost,
+                        pendingMessage.targetPort,
+                        pendingMessage.content,
+                    ) ?: false
 
                 if (success) {
                     pendingMessage.lastRetryAt = System.currentTimeMillis()
-                    
+
                     // Wait for acknowledgment with timeout
                     val ackReceived = waitForAcknowledgment(pendingMessage)
-                    
+
                     if (ackReceived) {
                         return // Success!
                     }
@@ -299,11 +312,11 @@ class ReliableMessageService(private val context: Context? = null) {
 
                 // Failed or no ACK received, retry if possible
                 pendingMessage.retryCount++
-                
+
                 if (pendingMessage.retryCount <= pendingMessage.maxRetries) {
                     Log.w(TAG, "Retrying message ${pendingMessage.messageId} (attempt ${pendingMessage.retryCount})")
                     pendingMessage.callback?.onRetrying(pendingMessage.messageId, pendingMessage.retryCount)
-                    
+
                     // Exponential backoff delay
                     val delay = RETRY_DELAY_MS * (1 shl (pendingMessage.retryCount - 1))
                     delay(delay)
@@ -314,11 +327,10 @@ class ReliableMessageService(private val context: Context? = null) {
                     pendingMessage.callback?.onFailed(pendingMessage.messageId, "Max retries exceeded")
                     return
                 }
-                
             } catch (e: Exception) {
                 Log.e(TAG, "Error sending message ${pendingMessage.messageId}", e)
                 pendingMessage.retryCount++
-                
+
                 if (pendingMessage.retryCount > pendingMessage.maxRetries) {
                     pendingMessages.remove(pendingMessage.messageId)
                     pendingMessage.callback?.onFailed(pendingMessage.messageId, e.message ?: "Send error")
@@ -332,7 +344,7 @@ class ReliableMessageService(private val context: Context? = null) {
 
     private suspend fun waitForAcknowledgment(pendingMessage: PendingMessage): Boolean {
         val startTime = System.currentTimeMillis()
-        
+
         while (System.currentTimeMillis() - startTime < pendingMessage.timeoutMs) {
             if (!pendingMessages.containsKey(pendingMessage.messageId)) {
                 // Message was acknowledged and removed
@@ -340,7 +352,7 @@ class ReliableMessageService(private val context: Context? = null) {
             }
             delay(100) // Check every 100ms
         }
-        
+
         return false // Timeout
     }
 
@@ -352,7 +364,10 @@ class ReliableMessageService(private val context: Context? = null) {
         }
     }
 
-    private fun handleNegativeAcknowledgment(messageId: String, errorReason: String) {
+    private fun handleNegativeAcknowledgment(
+        messageId: String,
+        errorReason: String,
+    ) {
         val pendingMessage = pendingMessages.remove(messageId)
         if (pendingMessage != null) {
             Log.w(TAG, "Received NACK for message $messageId: $errorReason")
@@ -360,7 +375,11 @@ class ReliableMessageService(private val context: Context? = null) {
         }
     }
 
-    private fun createAcknowledgment(messageId: String, senderId: String, success: Boolean): JSONObject {
+    private fun createAcknowledgment(
+        messageId: String,
+        senderId: String,
+        success: Boolean,
+    ): JSONObject {
         return JSONObject().apply {
             put("message_type", if (success) "ack" else "nack")
             put("ack_for_message_id", messageId)
@@ -372,7 +391,11 @@ class ReliableMessageService(private val context: Context? = null) {
         }
     }
 
-    private fun createNegativeAcknowledgment(messageId: String, senderId: String, errorReason: String): JSONObject {
+    private fun createNegativeAcknowledgment(
+        messageId: String,
+        senderId: String,
+        errorReason: String,
+    ): JSONObject {
         return JSONObject().apply {
             put("message_type", "nack")
             put("nack_for_message_id", messageId)
@@ -384,16 +407,17 @@ class ReliableMessageService(private val context: Context? = null) {
 
     private fun cleanupExpiredMessages() {
         val currentTime = System.currentTimeMillis()
-        val expiredMessages = pendingMessages.values.filter { 
-            currentTime - it.sentAt > MESSAGE_EXPIRY_MS 
-        }
-        
+        val expiredMessages =
+            pendingMessages.values.filter {
+                currentTime - it.sentAt > MESSAGE_EXPIRY_MS
+            }
+
         expiredMessages.forEach { message ->
             pendingMessages.remove(message.messageId)
             Log.w(TAG, "Expired message: ${message.messageId}")
             message.callback?.onFailed(message.messageId, "Message expired")
         }
-        
+
         if (expiredMessages.isNotEmpty()) {
             Log.d(TAG, "Cleaned up ${expiredMessages.size} expired messages")
         }
@@ -406,14 +430,15 @@ class ReliableMessageService(private val context: Context? = null) {
     private fun getSenderId(): String {
         return if (context != null) {
             // Use Settings.Secure.ANDROID_ID as a stable device identifier
-            val androidId = android.provider.Settings.Secure.getString(
-                context.contentResolver,
-                android.provider.Settings.Secure.ANDROID_ID
-            )
+            val androidId =
+                android.provider.Settings.Secure.getString(
+                    context.contentResolver,
+                    android.provider.Settings.Secure.ANDROID_ID,
+                )
             "${android.os.Build.MODEL}-${androidId ?: UUID.randomUUID().toString()}"
         } else {
             // Fallback for backwards compatibility - use a generated UUID
-            "${android.os.Build.MODEL}-${UUID.randomUUID().toString()}"
+            "${android.os.Build.MODEL}-${UUID.randomUUID()}"
         }
     }
 

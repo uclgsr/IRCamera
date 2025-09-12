@@ -1,7 +1,5 @@
 package com.topdon.tc001.gsr
 
-import android.media.MediaMetadataRetriever
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ItemGsrDataFileBinding
-import com.csl.irCamera.databinding.ItemGsrVideoFileBinding
 import com.csl.irCamera.databinding.ItemGsrRawImageFileBinding
+import com.csl.irCamera.databinding.ItemGsrVideoFileBinding
 import java.io.File
 
 /**
@@ -35,11 +33,12 @@ class GSRDataAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        val binding = ItemGsrDataFileBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
+        val binding =
+            ItemGsrDataFileBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
         return ViewHolder(binding)
     }
 
@@ -98,11 +97,12 @@ class GSRVideoAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        val binding = ItemGsrVideoFileBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
+        val binding =
+            ItemGsrVideoFileBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
         return ViewHolder(binding)
     }
 
@@ -171,11 +171,12 @@ class GSRRawImageAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        val binding = ItemGsrRawImageFileBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
+        val binding =
+            ItemGsrRawImageFileBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
         return ViewHolder(binding)
     }
 

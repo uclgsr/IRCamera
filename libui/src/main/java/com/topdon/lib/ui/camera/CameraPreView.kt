@@ -17,6 +17,7 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.util.Size
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.Surface
@@ -25,16 +26,13 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.NonNull
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
 import com.topdon.lib.core.listener.BitmapViewListener
-import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.ui.databinding.CameraLayBinding
 import java.util.Collections
-import android.view.LayoutInflater
 
 /**
  * 相机预览
@@ -43,7 +41,6 @@ class CameraPreView :
     LinearLayout,
     ScaleGestureDetector.OnScaleGestureListener,
     BitmapViewListener {
-    
     private lateinit var binding: CameraLayBinding
     private var cameraCharacteristics: CameraCharacteristics? = null
     private var isReverse: Boolean = false
@@ -141,10 +138,9 @@ class CameraPreView :
                     (startX > 0 && startX > parentViewW - SizeUtils.dp2px(10f)) ||
                     (startY < 0 && startY < -binding.cameraTexture.height * scale + SizeUtils.dp2px(10f)) ||
                     (startY > 0 && startY > parentViewH - SizeUtils.dp2px(10f))
-                )
-                    {
-                        cameraPreViewCloseListener?.invoke()
-                    }
+                ) {
+                    cameraPreViewCloseListener?.invoke()
+                }
             }
         }
         return lis.onTouchEvent(event)
@@ -162,20 +158,17 @@ class CameraPreView :
         isScale = true
         detector?.let {
             val scaleFactor = it.scaleFactor - 1
-            if (scaleFactor < 0)
-                {
-                    if (scale > 0.1)
-                        {
-                            scale += scaleFactor
-                            binding.cameraTexture.scaleX = scale
-                            binding.cameraTexture.scaleY = scale
-                        }
-                } else
-                {
+            if (scaleFactor < 0) {
+                if (scale > 0.1) {
                     scale += scaleFactor
                     binding.cameraTexture.scaleX = scale
                     binding.cameraTexture.scaleY = scale
                 }
+            } else {
+                scale += scaleFactor
+                binding.cameraTexture.scaleX = scale
+                binding.cameraTexture.scaleY = scale
+            }
         }
         return true
     }
@@ -188,13 +181,12 @@ class CameraPreView :
     override fun onScaleEnd(detector: ScaleGestureDetector) {
     }
 
-    fun onResume()  {
+    fun onResume() {
         // 处理切换后台，打开系统相机后，回到app导致预览不更新画面的问题
-        if (mCameraDevice != null)
-            {
-                mCameraDevice?.close()
-                openCamera()
-            }
+        if (mCameraDevice != null) {
+            mCameraDevice?.close()
+            openCamera()
+        }
     }
 
 // ////////////////
@@ -266,19 +258,17 @@ class CameraPreView :
             }
         }
 
-    fun setRotation(isReverse: Boolean)  {
+    fun setRotation(isReverse: Boolean) {
         this.isReverse = isReverse
         updateRotation()
     }
 
-    private fun updateRotation()  {
-        if (isReverse)
-            {
-                binding.cameraTexture.rotation = 180f
-            } else
-            {
-                binding.cameraTexture.rotation = 0f
-            }
+    private fun updateRotation() {
+        if (isReverse) {
+            binding.cameraTexture.rotation = 180f
+        } else {
+            binding.cameraTexture.rotation = 0f
+        }
     }
 
     /**
@@ -295,7 +285,7 @@ class CameraPreView :
         val surfaceTexture = binding.cameraTexture.surfaceTexture
         // 设置默认的缓冲大小
         surfaceTexture?.setDefaultBufferSize(mPreviewSize!!.width, mPreviewSize!!.height)
-        // 创建Surface  
+        // 创建Surface
         val previewSurface = Surface(surfaceTexture)
         try {
             // 创建预览请求
@@ -516,11 +506,11 @@ class CameraPreView :
     override val viewScale: Float
         get() = scale
 
-    fun setCameraAlpha(alpha: Float)  {
+    fun setCameraAlpha(alpha: Float) {
         binding.cameraTexture.alpha = 1 - alpha
     }
 
-    fun setZoom(zoomLeve: Int)  {
+    fun setZoom(zoomLeve: Int) {
         scale = zoomLeve * 0.5f
         binding.cameraTexture.scaleX = scale
         binding.cameraTexture.scaleY = scale

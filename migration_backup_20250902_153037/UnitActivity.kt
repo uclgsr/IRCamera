@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.activity_unit.*
  */
 @Route(path = RouterConfig.UNIT)
 class UnitActivity : BaseActivity() {
-
     override fun initContentView() = R.layout.activity_unit
 
     override fun initView() {
@@ -36,8 +35,5 @@ class UnitActivity : BaseActivity() {
     }
 
     override fun initData() {
-
     }
-
 }
-

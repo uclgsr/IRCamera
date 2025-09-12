@@ -14,9 +14,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
-import com.topdon.menu.R as MenuR
-import com.topdon.lib.core.R
 import com.topdon.menu.databinding.ViewCameraMenuBinding
+import com.topdon.menu.R as MenuR
 
 /**
  * Menu 1 - Photo and video capture related functionality.
@@ -34,16 +33,19 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
     companion object {
         /** onCameraClickListener event code: photo/video capture */
         const val CODE_ACTION = 0
+
         /** onCameraClickListener event code: gallery */
         const val CODE_GALLERY = 1
+
         /** onCameraClickListener event code: more menu */
         const val CODE_MORE = 2
+
         /** onCameraClickListener event code: switch to photo */
         const val CODE_TO_PHOTO = 3
+
         /** onCameraClickListener event code: switch to video */
         const val CODE_TO_VIDEO = 4
     }
-
 
     /**
      * Whether currently in video mode.
@@ -112,14 +114,12 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
                 .apply(
                     RequestOptions.bitmapTransform(MultiTransformation(CenterCrop()))
                         .placeholder(MenuR.drawable.shape_oval_33)
-                        .error(MenuR.drawable.shape_oval_33)
+                        .error(MenuR.drawable.shape_oval_33),
                 )
                 .into(binding.ivGallery)
         } catch (_: Exception) {
         }
     }
-
-
 
     private lateinit var binding: ViewCameraMenuBinding
 
@@ -129,7 +129,12 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes,
+    ) {
         if (isInEditMode) {
             LayoutInflater.from(context).inflate(MenuR.layout.view_camera_menu, this, true)
         } else {
@@ -158,32 +163,34 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.ivAction -> {// 开始拍照/开始录像/停止录像
+            binding.ivAction -> { // 开始拍照/开始录像/停止录像
                 val currentTime = System.currentTimeMillis()
                 if (currentTime - lastClickTime > 500) {
                     lastClickTime = currentTime
                     onCameraClickListener?.invoke(CODE_ACTION)
                 }
             }
-            binding.ivGallery -> {//图库
+            binding.ivGallery -> { // 图库
                 onCameraClickListener?.invoke(CODE_GALLERY)
             }
-            binding.ivMore -> {//更多菜单
+            binding.ivMore -> { // 更多菜单
                 onCameraClickListener?.invoke(CODE_MORE)
             }
-            binding.tvPhoto -> {//拍照文字
+            binding.tvPhoto -> { // 拍照文字
                 binding.viewPager2.currentItem = 0
             }
-            binding.tvVideo -> {//视频文字
+            binding.tvVideo -> { // 视频文字
                 binding.viewPager2.currentItem = 1
             }
         }
     }
 
-
     inner class MyOnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
-
-        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+        override fun onPageScrolled(
+            position: Int,
+            positionOffset: Float,
+            positionOffsetPixels: Int,
+        ) {
             val scrollWidth: Float = binding.tvPhoto.width / 2f + binding.tvVideo.width / 2f
             if (position == 0) {
                 binding.tvPhoto.translationX = -scrollWidth * positionOffset
@@ -197,7 +204,9 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
         override fun onPageSelected(position: Int) {
             binding.tvPhoto.isSelected = position == 0
             binding.tvVideo.isSelected = position == 1
-            binding.ivAction.setImageResource(if (position == 1) MenuR.drawable.svg_camera_video_normal else MenuR.drawable.svg_camera_photo_normal)
+            binding.ivAction.setImageResource(
+                if (position == 1) MenuR.drawable.svg_camera_video_normal else MenuR.drawable.svg_camera_photo_normal,
+            )
             onCameraClickListener?.invoke(if (position == 1) CODE_TO_VIDEO else CODE_TO_PHOTO)
         }
     }
@@ -206,18 +215,23 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
      * ViewPager2 所用 Adapter.
      */
     class MenuCameraAdapter : RecyclerView.Adapter<MenuCameraAdapter.ViewHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int,
+        ): ViewHolder {
             val view = View(parent.context)
             view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             return ViewHolder(view)
         }
 
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
+        override fun onBindViewHolder(
+            holder: ViewHolder,
+            position: Int,
+        ) {
         }
 
         override fun getItemCount(): Int = 2
 
-        class ViewHolder(rootView: View): RecyclerView.ViewHolder(rootView)
+        class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)
     }
 }

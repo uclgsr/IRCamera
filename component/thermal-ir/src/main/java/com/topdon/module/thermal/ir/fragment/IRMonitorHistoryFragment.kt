@@ -3,7 +3,6 @@ package com.topdon.module.thermal.ir.fragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView as AndroidRecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.db.dao.ThermalDao
-import com.topdon.lib.core.tools.TimeTool
 import com.topdon.lib.core.dialog.TipDialog
+import com.topdon.lib.core.tools.TimeTool
 import com.topdon.libcom.view.CommLoadMoreView
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.IRLogMPChartActivity
@@ -32,30 +30,35 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Calendar
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView as AndroidRecyclerView
 
 class IRMonitorHistoryFragment : Fragment() {
-
     private val adapter = MyAdapter(ArrayList())
 
     private val viewModel: IRMonitorViewModel by viewModels()
 
-    // findViewById declarations 
+    // findViewById declarations
     private lateinit var recyclerView: AndroidRecyclerView
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         EventBus.getDefault().register(this)
         return inflater.inflate(R.layout.fragment_ir_monitor_history, container)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
-        
+
         // Initialize findViewById
         recyclerView = view.findViewById(R.id.recycler_view)
-        
+
         adapter.loadMoreModule.loadMoreView = CommLoadMoreView()
         adapter.onItemClickListener = {
             val record: ThermalDao.Record = adapter.data[it]
@@ -72,7 +75,6 @@ class IRMonitorHistoryFragment : Fragment() {
                     adapter.removeAt(it)
                 }
                 .setCancelListener(R.string.app_cancel) {
-
                 }
                 .create().show()
         }
@@ -84,22 +86,25 @@ class IRMonitorHistoryFragment : Fragment() {
         adapter.isUseEmpty = true
         viewModel.recordListLD.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
-                if (!adapter.hasEmptyView()){
-                    adapter.setEmptyView(R.layout.layout_empty)
-                }
-                withContext(Dispatchers.IO){
+                if (!adapter.hasEmptyView())
+                    {
+                        adapter.setEmptyView(R.layout.layout_empty)
+                    }
+                withContext(Dispatchers.IO) {
                     var lastTime = 0L
                     val nowCalendar = Calendar.getInstance()
                     val lastCalendar = Calendar.getInstance()
-                    for (tmp in it){
-                        if (lastTime == 0L){
-                            tmp.showTitle = true
-                        }
+                    for (tmp in it) {
+                        if (lastTime == 0L)
+                            {
+                                tmp.showTitle = true
+                            }
                         nowCalendar.timeInMillis = tmp.startTime
                         lastCalendar.timeInMillis = lastTime
-                        if (nowCalendar.get(Calendar.MONTH) != lastCalendar.get(Calendar.MONTH)){
-                            tmp.showTitle = true
-                        }
+                        if (nowCalendar.get(Calendar.MONTH) != lastCalendar.get(Calendar.MONTH))
+                            {
+                                tmp.showTitle = true
+                            }
                         lastTime = tmp.startTime
                     }
                 }
@@ -123,27 +128,33 @@ class IRMonitorHistoryFragment : Fragment() {
         viewModel.queryRecordList()
     }
 
-    private class MyAdapter(dataList: MutableList<ThermalDao.Record>?) : BaseQuickAdapter<ThermalDao.Record,
-            BaseViewHolder>(R.layout.item_monitory_history, dataList), LoadMoreModule {
-
+    private class MyAdapter(dataList: MutableList<ThermalDao.Record>?) :
+        BaseQuickAdapter<
+            ThermalDao.Record,
+            BaseViewHolder,
+            >(R.layout.item_monitory_history, dataList),
+        LoadMoreModule {
         /**
          * item 点击事件监听.
          */
         var onItemClickListener: ((position: Int) -> Unit)? = null
+
         /**
          * item 长按事件监听.
          */
         var onItemLongClickListener: ((position: Int) -> Unit)? = null
 
-
-        override fun convert(holder: BaseViewHolder, item: ThermalDao.Record) {
+        override fun convert(
+            holder: BaseViewHolder,
+            item: ThermalDao.Record,
+        ) {
             val position = data.indexOf(item)
             val record: ThermalDao.Record = data[position]
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = record.startTime
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH) + 1
-            val day =  calendar.get(Calendar.DAY_OF_MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
 
             // Use findViewById for views
             val groupTitle = holder.itemView.findViewById<View>(R.id.group_title)

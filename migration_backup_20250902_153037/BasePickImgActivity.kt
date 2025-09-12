@@ -27,6 +27,7 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
      * String 类型 - 拾取的图片在本地的绝对路径.
      */
     val RESULT_IMAGE_PATH = "RESULT_IMAGE_PATH"
+
     /**
      * 当前是否已拍了一张照等待完成.
      */
@@ -44,7 +45,7 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //默认选中画圆
+        // 默认选中画圆
         iv_edit_circle.isSelected = true
         image_edit_view.type = ImageEditView.Type.CIRCLE
         view_color.setBackgroundColor(image_edit_view.color)
@@ -80,39 +81,44 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
     private fun resize() {
         val widthPixels = resources.displayMetrics.widthPixels
         val heightPixels = resources.displayMetrics.heightPixels
-        title_view.measure(MeasureSpec.makeMeasureSpec(widthPixels, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(heightPixels, MeasureSpec.AT_MOST))
+        title_view.measure(
+            MeasureSpec.makeMeasureSpec(widthPixels, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(heightPixels, MeasureSpec.AT_MOST),
+        )
 
-        val ivPickHeight = SizeUtils.dp2px(60f + 20 + 20) //拍照按钮高度，60dp+上下各20dp margin
+        val ivPickHeight = SizeUtils.dp2px(60f + 20 + 20) // 拍照按钮高度，60dp+上下各20dp margin
         val menuHeight = (widthPixels * 75f / 384).toInt()
         val bottomHeight = ivPickHeight.coerceAtLeast(menuHeight)
         val canUseHeight = heightPixels - title_view.measuredHeight - bottomHeight
         val wantHeight = (widthPixels * 256f / 192).toInt()
-        if (wantHeight <= canUseHeight) {//够用
-            fragment_container_view.layoutParams = fragment_container_view.layoutParams.apply {
-                width = widthPixels
-                height = wantHeight
-            }
-            image_edit_view.layoutParams = image_edit_view.layoutParams.apply {
-                width = widthPixels
-                height = wantHeight
-            }
+        if (wantHeight <= canUseHeight) { // 够用
+            fragment_container_view.layoutParams =
+                fragment_container_view.layoutParams.apply {
+                    width = widthPixels
+                    height = wantHeight
+                }
+            image_edit_view.layoutParams =
+                image_edit_view.layoutParams.apply {
+                    width = widthPixels
+                    height = wantHeight
+                }
         } else {
-            fragment_container_view.layoutParams = fragment_container_view.layoutParams.apply {
-                width = (canUseHeight * 192f / 256).toInt()
-                height = canUseHeight
-            }
-            image_edit_view.layoutParams = image_edit_view.layoutParams.apply {
-                width = (canUseHeight * 192f / 256).toInt()
-                height = canUseHeight
-            }
+            fragment_container_view.layoutParams =
+                fragment_container_view.layoutParams.apply {
+                    width = (canUseHeight * 192f / 256).toInt()
+                    height = canUseHeight
+                }
+            image_edit_view.layoutParams =
+                image_edit_view.layoutParams.apply {
+                    width = (canUseHeight * 192f / 256).toInt()
+                    height = canUseHeight
+                }
         }
     }
 
-
-    open suspend fun getPickBitmap() : Bitmap?{
-       return null
+    open suspend fun getPickBitmap(): Bitmap?  {
+        return null
     }
-
 
     override fun onClick(v: View?) {
         when (v) {
@@ -193,5 +199,4 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         super.disConnected()
         finish()
     }
-
 }

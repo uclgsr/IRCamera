@@ -20,11 +20,10 @@ import kotlinx.android.synthetic.main.item_electronic_manual.view.item_text
  */
 @Route(path = RouterConfig.ELECTRONIC_MANUAL)
 class ElectronicManualActivity : BaseActivity() {
-
     override fun initContentView() = R.layout.activity_electronic_manual
 
     override fun initView() {
-        val productType = intent.getIntExtra(Constants.SETTING_TYPE, 0) //0-电子说明书 1-FAQ
+        val productType = intent.getIntExtra(Constants.SETTING_TYPE, 0) // 0-电子说明书 1-FAQ
 
         title_view.setTitleText(if (productType == Constants.SETTING_BOOK) R.string.electronic_manual else R.string.app_question)
 
@@ -32,17 +31,17 @@ class ElectronicManualActivity : BaseActivity() {
         adapter.onPickListener = { isTS001 ->
             if (isTS001) {
                 if (productType == Constants.SETTING_BOOK) {
-                    //电子说明书-TS001
+                    // 电子说明书-TS001
                 } else {
-                    //FAQ-TS001
+                    // FAQ-TS001
                     ARouter.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", true).navigation(this)
                 }
             } else {
                 if (productType == Constants.SETTING_BOOK) {
-                    //电子说明书-TS004
+                    // 电子说明书-TS004
                     ARouter.getInstance().build(RouterConfig.PDF).withBoolean("isTS001", false).navigation(this)
                 } else {
-                    //FAQ-TS004
+                    // FAQ-TS004
                     ARouter.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", false).navigation(this)
                 }
             }
@@ -53,14 +52,9 @@ class ElectronicManualActivity : BaseActivity() {
     }
 
     override fun initData() {
-
     }
 
-
-
-
     private class MyAdapter(private val isFAQ: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
         var onPickListener: ((isTS001: Boolean) -> Unit)? = null
 
         private val optionList: ArrayList<String> = ArrayList(2)
@@ -73,11 +67,17 @@ class ElectronicManualActivity : BaseActivity() {
             optionList.add("TS004")
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int,
+        ): RecyclerView.ViewHolder {
             return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_electronic_manual, parent, false))
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        override fun onBindViewHolder(
+            holder: RecyclerView.ViewHolder,
+            position: Int,
+        ) {
             if (holder is ItemViewHolder) {
                 holder.rootView.item_text.text = optionList[position]
                 holder.rootView.item_lay.setOnClickListener {
@@ -90,5 +90,4 @@ class ElectronicManualActivity : BaseActivity() {
 
         private class ItemViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView)
     }
-
 }

@@ -94,7 +94,7 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
      * else - 2D编辑菜单                                  警示、字体、水印
      * 参数 [Constants.IR_OBSERVE_MODE] = 2 观测模式  指南针、旋转、镜像、对比度
      */
-    fun setShowMenuFour(modeType: Int)  {
+    fun setShowMenuFour(modeType: Int) {
         fourBean.clear()
         when (modeType) {
             IR_TEMPERATURE_MODE -> {
@@ -358,26 +358,24 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
             updateViewWidth(holder.itemView, holder.img)
             val bean = fourBean[position]
             holder.name.text = bean.name
-            if (bean.code == CameraHelp.TYPE_SET_ROTATE)
-                {
-                    when (rotateAngle) {
-                        0 -> {
-                            holder.img.setImageResource(MenuR.drawable.svg_menu2_setting_4_rotate270)
-                        }
-                        90 -> {
-                            holder.img.setImageResource(MenuR.drawable.svg_menu2_setting_4_rotate180)
-                        }
-                        180 -> {
-                            holder.img.setImageResource(MenuR.drawable.svg_menu2_setting_4_rotate90)
-                        }
-                        270 -> {
-                            holder.img.setImageResource(MenuR.drawable.svg_menu2_setting_4_rotate0)
-                        }
+            if (bean.code == CameraHelp.TYPE_SET_ROTATE) {
+                when (rotateAngle) {
+                    0 -> {
+                        holder.img.setImageResource(MenuR.drawable.svg_menu2_setting_4_rotate270)
                     }
-                } else
-                {
-                    holder.img.setImageResource(bean.res)
+                    90 -> {
+                        holder.img.setImageResource(MenuR.drawable.svg_menu2_setting_4_rotate180)
+                    }
+                    180 -> {
+                        holder.img.setImageResource(MenuR.drawable.svg_menu2_setting_4_rotate90)
+                    }
+                    270 -> {
+                        holder.img.setImageResource(MenuR.drawable.svg_menu2_setting_4_rotate0)
+                    }
                 }
+            } else {
+                holder.img.setImageResource(bean.res)
+            }
             holder.lay.setOnClickListener(
                 object : SingleClickListener() {
                     override fun onSingleClick() {
@@ -451,16 +449,14 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
     private fun updateViewWidth(
         itemView: View,
         itemMenu: ImageView,
-    )  {
-        if (fourBean.size <= 4)
-            {
-                itemView.layoutParams =
-                    ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            } else
-            {
-                itemView.layoutParams =
-                    ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            }
+    ) {
+        if (fourBean.size <= 4) {
+            itemView.layoutParams =
+                ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        } else {
+            itemView.layoutParams =
+                ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
 //        if (fourBean.size <= 4) {  //item少于4个，每个占1/4
 //            val canSeeCount = fourBean.size //一屏占4个
 //            val with = (ScreenUtils.getScreenWidth() / canSeeCount)

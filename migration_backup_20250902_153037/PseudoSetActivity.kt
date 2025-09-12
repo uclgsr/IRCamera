@@ -3,11 +3,9 @@ package com.topdon.pseudo.activity
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.view.View
-import androidx.annotation.ColorInt
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.topdon.lib.core.common.ProductType
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.tools.UnitTools
@@ -35,7 +33,6 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
      */
     private lateinit var customPseudoBean: CustomPseudoBean
 
-
     override fun initContentView() = R.layout.activity_pseudo_set
 
     override fun initView() {
@@ -43,7 +40,7 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
         customPseudoBean = intent.getParcelableExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN) ?: CustomPseudoBean.loadFromShared(isTC007)
         switchDynamicCustom(customPseudoBean.isUseCustomPseudo)
 
-        //加载温度配置
+        // 加载温度配置
         et_max_temp.setText(UnitTools.showNoUnit(customPseudoBean.maxTemp))
         et_min_temp.setText(UnitTools.showNoUnit(customPseudoBean.minTemp))
         tv_max_temp_unit.text = UnitTools.showUnit()
@@ -51,7 +48,7 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
 
         switchColorType(customPseudoBean.isColorCustom)
 
-        //加载自定义颜色配置
+        // 加载自定义颜色配置
         pseudo_pick_view.onSelectChangeListener = {
             reset6CustomColor()
             color_select_view.reset()
@@ -71,10 +68,10 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
             customPseudoBean.selectIndex,
             customPseudoBean.getCustomColors(),
             customPseudoBean.getCustomZAltitudes(),
-            customPseudoBean.getCustomPlaces()
+            customPseudoBean.getCustomPlaces(),
         )
 
-        //加载推荐颜色配置
+        // 加载推荐颜色配置
         view_recommend_color1.background = buildRectDrawableArray(ColorRecommend.colorList1)
         view_recommend_color2.background = buildRectDrawableArray(ColorRecommend.colorList2)
         view_recommend_color3.background = buildRectDrawableArray(ColorRecommend.getColorByIndex(isTC007, 2))
@@ -83,7 +80,6 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
         switchRecommendColorIndex(customPseudoBean.customRecommendIndex)
 
         switchUseGray(customPseudoBean.isUseGray)
-
 
         cl_dynamic.setOnClickListener(this)
         cl_custom.setOnClickListener(this)
@@ -126,89 +122,89 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            cl_dynamic -> {//动态渲染
+            cl_dynamic -> { // 动态渲染
                 switchDynamicCustom(false)
             }
-            cl_custom -> {//自定义
+            cl_custom -> { // 自定义
                 switchDynamicCustom(true)
             }
-            tv_color_custom -> {//颜色-自定义
+            tv_color_custom -> { // 颜色-自定义
                 switchColorType(true)
             }
-            tv_color_recommend -> {//颜色-推荐
+            tv_color_recommend -> { // 颜色-推荐
                 switchColorType(false)
                 switchRecommendColorIndex(customPseudoBean.customRecommendIndex)
             }
 
-            view_custom_color1 -> {//颜色-自定义-颜色值拾取1
+            view_custom_color1 -> { // 颜色-自定义-颜色值拾取1
                 reset6CustomColor()
                 view_custom_color1.isSelected = true
                 color_select_view.selectColor(0xff0000ff.toInt())
                 pseudo_pick_view.refreshColor(0xff0000ff.toInt())
             }
-            view_custom_color2 -> {//颜色-自定义-颜色值拾取2
+            view_custom_color2 -> { // 颜色-自定义-颜色值拾取2
                 reset6CustomColor()
                 view_custom_color2.isSelected = true
                 color_select_view.selectColor(0xffff0000.toInt())
                 pseudo_pick_view.refreshColor(0xffff0000.toInt())
             }
-            view_custom_color3 -> {//颜色-自定义-颜色值拾取3
+            view_custom_color3 -> { // 颜色-自定义-颜色值拾取3
                 reset6CustomColor()
                 view_custom_color3.isSelected = true
                 color_select_view.selectColor(0xff00ff00.toInt())
                 pseudo_pick_view.refreshColor(0xff00ff00.toInt())
             }
-            view_custom_color4 -> {//颜色-自定义-颜色值拾取4
+            view_custom_color4 -> { // 颜色-自定义-颜色值拾取4
                 reset6CustomColor()
                 view_custom_color4.isSelected = true
                 color_select_view.selectColor(0xffffff00.toInt())
                 pseudo_pick_view.refreshColor(0xffffff00.toInt())
             }
-            view_custom_color5 -> {//颜色-自定义-颜色值拾取5
+            view_custom_color5 -> { // 颜色-自定义-颜色值拾取5
                 reset6CustomColor()
                 view_custom_color5.isSelected = true
                 color_select_view.selectColor(0xff000000.toInt())
                 pseudo_pick_view.refreshColor(0xff000000.toInt())
             }
-            view_custom_color6 -> {//颜色-自定义-颜色值拾取6
+            view_custom_color6 -> { // 颜色-自定义-颜色值拾取6
                 reset6CustomColor()
                 view_custom_color6.isSelected = true
                 color_select_view.selectColor(0xffffffff.toInt())
                 pseudo_pick_view.refreshColor(0xffffffff.toInt())
             }
 
-            iv_custom_add -> {//颜色-自定义-添加
+            iv_custom_add -> { // 颜色-自定义-添加
                 pseudo_pick_view.add()
             }
-            iv_custom_del -> {//颜色-自定义-删除
+            iv_custom_del -> { // 颜色-自定义-删除
                 pseudo_pick_view.del()
             }
 
-            view_recommend_bg_color1 -> {//颜色-推荐-铁红
+            view_recommend_bg_color1 -> { // 颜色-推荐-铁红
                 switchRecommendColorIndex(0)
             }
-            view_recommend_bg_color2 -> {//颜色-推荐-黑红
+            view_recommend_bg_color2 -> { // 颜色-推荐-黑红
                 switchRecommendColorIndex(1)
             }
-            view_recommend_bg_color3 -> {//颜色-推荐-自然
+            view_recommend_bg_color3 -> { // 颜色-推荐-自然
                 switchRecommendColorIndex(2)
             }
-            view_recommend_bg_color4 -> {//颜色-推荐-岩浆
+            view_recommend_bg_color4 -> { // 颜色-推荐-岩浆
                 switchRecommendColorIndex(3)
             }
-            view_recommend_bg_color5 -> {//颜色-推荐-辉金
+            view_recommend_bg_color5 -> { // 颜色-推荐-辉金
                 switchRecommendColorIndex(4)
             }
 
-            cl_over_grey -> {//灰度渐变
+            cl_over_grey -> { // 灰度渐变
                 switchUseGray(true)
             }
-            cl_over_color -> {//等色
+            cl_over_color -> { // 等色
                 switchUseGray(false)
             }
 
-            tv_confirm -> {//确定
-                if (cl_custom_content.isVisible) {//使用自定义渲染
+            tv_confirm -> { // 确定
+                if (cl_custom_content.isVisible) { // 使用自定义渲染
                     val inputMax = et_max_temp.text.toString()
                     if (inputMax.isEmpty()) {
                         ToastUtils.showShort(R.string.tip_input_format)
@@ -220,17 +216,19 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
                         return
                     }
 
-                    val maxTemp = try {
-                        UnitTools.showToCValue(BigDecimal(inputMax).setScale(1, RoundingMode.HALF_UP).toFloat())
-                    } catch (e: NumberFormatException) {
-                        null
-                    }
-                    val minTemp = try {
-                        UnitTools.showToCValue(BigDecimal(inputMin).setScale(1, RoundingMode.HALF_UP).toFloat())
-                    } catch (e: NumberFormatException) {
-                        null
-                    }
-                    if(maxTemp == null || minTemp == null || maxTemp < minTemp || maxTemp > 550f || minTemp < -20f) {
+                    val maxTemp =
+                        try {
+                            UnitTools.showToCValue(BigDecimal(inputMax).setScale(1, RoundingMode.HALF_UP).toFloat())
+                        } catch (e: NumberFormatException) {
+                            null
+                        }
+                    val minTemp =
+                        try {
+                            UnitTools.showToCValue(BigDecimal(inputMin).setScale(1, RoundingMode.HALF_UP).toFloat())
+                        } catch (e: NumberFormatException) {
+                            null
+                        }
+                    if (maxTemp == null || minTemp == null || maxTemp < minTemp || maxTemp > 550f || minTemp < -20f) {
                         ToastUtils.showShort(R.string.tip_input_format)
                         return
                     }
@@ -251,7 +249,7 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
                 setResult(RESULT_OK, resultIntent)
                 finish()
             }
-            tv_cancel -> {//取消
+            tv_cancel -> { // 取消
                 setResult(RESULT_CANCELED)
                 finish()
             }
@@ -267,7 +265,9 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
         cl_custom_content.isVisible = isToCustom
         cl_dynamic.isSelected = !isToCustom
         cl_custom.isSelected = isToCustom
-        iv_dynamic.setImageResource(if (isToCustom) R.drawable.svg_pseudo_set_dynamic_not_select else R.drawable.svg_pseudo_set_dynamic_select)
+        iv_dynamic.setImageResource(
+            if (isToCustom) R.drawable.svg_pseudo_set_dynamic_not_select else R.drawable.svg_pseudo_set_dynamic_select,
+        )
         iv_custom.setImageResource(if (isToCustom) R.drawable.svg_pseudo_set_custom_select else R.drawable.svg_pseudo_set_custom_not_select)
         tv_dynamic_title.setTextColor(if (isToCustom) 0xffffffff.toInt() else 0xffffba42.toInt())
         tv_custom_title.setTextColor(if (isToCustom) 0xffffba42.toInt() else 0xffffffff.toInt())
@@ -356,13 +356,14 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
         iv_over_color_select.isVisible = !isUseGray
         tv_over_grey.setTextColor(if (isUseGray) 0xffffba42.toInt() else 0xffffffff.toInt())
         tv_over_color.setTextColor(if (isUseGray) 0xffffffff.toInt() else 0xffffba42.toInt())
-        cl_over_grey.setBackgroundResource(if (isUseGray) R.drawable.bg_corners05_solid_2a183e_stroke_theme else R.drawable.bg_corners05_solid_626569)
-        cl_over_color.setBackgroundResource(if (isUseGray) R.drawable.bg_corners05_solid_626569 else R.drawable.bg_corners05_solid_2a183e_stroke_theme)
+        cl_over_grey.setBackgroundResource(
+            if (isUseGray) R.drawable.bg_corners05_solid_2a183e_stroke_theme else R.drawable.bg_corners05_solid_626569,
+        )
+        cl_over_color.setBackgroundResource(
+            if (isUseGray) R.drawable.bg_corners05_solid_626569 else R.drawable.bg_corners05_solid_2a183e_stroke_theme,
+        )
         customPseudoBean.isUseGray = isUseGray
     }
-
-
-
 
     private fun buildRectDrawableArray(color: IntArray): GradientDrawable {
         val drawable = GradientDrawable()

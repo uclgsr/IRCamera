@@ -26,7 +26,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    
+
     // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
@@ -56,10 +56,10 @@ dependencies {
     implementation(libs.glide)
 
     implementation(project(":libapp")) // Requires string resources
-    
+
     // Add unified BLE module for comprehensive Shimmer Nordic and Topdon BLE support
     implementation(project(":BleModule"))
-    
+
     // Testing dependencies - using Robolectric for context-based testing
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")

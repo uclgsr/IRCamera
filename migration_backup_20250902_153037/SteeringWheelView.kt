@@ -12,21 +12,22 @@ import kotlinx.android.synthetic.main.ui_steering_wheel_view.view.*
  * 校准方向
  */
 class SteeringWheelView : LinearLayout, OnClickListener {
-
     var listener: ((action: Int, moveX: Int) -> Unit)? = null
     var moveX = 30
     var rotationIR = 270
-    set(value) {
-        field = value
-        if (value == 270 || value == 90){
-            tv_confirm?.rotation = 270f
-            rotation = 90f
-        }else{
-            tv_confirm?.rotation = 0f
-            rotation = 0f
+        set(value) {
+            field = value
+            if (value == 270 || value == 90)
+                {
+                    tv_confirm?.rotation = 270f
+                    rotation = 90f
+                } else
+                {
+                    tv_confirm?.rotation = 0f
+                    rotation = 0f
+                }
+            requestLayout()
         }
-        requestLayout()
-    }
 
     constructor(context: Context) : this(context, null)
 
@@ -37,7 +38,7 @@ class SteeringWheelView : LinearLayout, OnClickListener {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     )
 
     private fun initView() {
@@ -45,13 +46,15 @@ class SteeringWheelView : LinearLayout, OnClickListener {
         steering_wheel_start_btn.setOnClickListener(this)
         steering_wheel_center_btn.setOnClickListener(this)
         steering_wheel_end_btn.setOnClickListener(this)
-        if (rotationIR == 270 || rotationIR == 90){
-            tv_confirm.rotation = 270f
-            rotation = 90f
-        }else{
-            tv_confirm.rotation = 0f
-            rotation = 0f
-        }
+        if (rotationIR == 270 || rotationIR == 90)
+            {
+                tv_confirm.rotation = 270f
+                rotation = 90f
+            } else
+            {
+                tv_confirm.rotation = 0f
+                rotation = 0f
+            }
     }
 
     override fun onClick(v: View?) {
@@ -75,6 +78,4 @@ class SteeringWheelView : LinearLayout, OnClickListener {
             }
         }
     }
-
-
 }

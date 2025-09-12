@@ -187,11 +187,11 @@ class RadioGroupPlus : LinearLayout {
      */
     private fun findViewTraversal(id: Int): View? {
         if (this.id == id) return this
-        
+
         for (i in 0 until childCount) {
             val child = getChildAt(i)
             if (child.id == id) return child
-            
+
             if (child is ViewGroup) {
                 val found = child.findViewById<View>(id)
                 if (found != null) return found

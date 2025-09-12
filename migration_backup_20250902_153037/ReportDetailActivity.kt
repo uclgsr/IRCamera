@@ -9,13 +9,13 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.config.RouterConfig
+import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.tools.FileTools
 import com.topdon.lib.core.tools.GlideLoader
-import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.libcom.PDFHelp
-import com.topdon.module.thermal.ir.report.view.ReportIRShowView
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.report.bean.ReportBean
+import com.topdon.module.thermal.ir.report.view.ReportIRShowView
 import kotlinx.android.synthetic.main.activity_report_detail.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,8 +28,7 @@ import java.io.File
  * - 一份报告所有信息 [ExtraKeyConfig.REPORT_BEAN]
  */
 @Route(path = RouterConfig.REPORT_DETAIL)
-class ReportDetailActivity: BaseActivity() {
-
+class ReportDetailActivity : BaseActivity() {
     /**
      * 从上一界面传递过来的，报告所有信息.
      */
@@ -39,7 +38,6 @@ class ReportDetailActivity: BaseActivity() {
      * 当前预览页面已生成的 PDF 文件绝对路径
      */
     private var pdfFilePath: String? = null
-
 
     override fun initContentView() = R.layout.activity_report_detail
 
@@ -87,7 +85,8 @@ class ReportDetailActivity: BaseActivity() {
                 val name = reportBean?.report_info?.report_number
                 if (name != null) {
                     if (File(FileConfig.getPdfDir() + "/$name.pdf").exists() &&
-                        !TextUtils.isEmpty(pdfFilePath)) {
+                        !TextUtils.isEmpty(pdfFilePath)
+                    ) {
                         lifecycleScope.launch {
                             dismissCameraLoading()
                             actionShare()
@@ -95,8 +94,11 @@ class ReportDetailActivity: BaseActivity() {
                         return@launch
                     }
                 }
-                pdfFilePath = PDFHelp.savePdfFileByListView(name?:System.currentTimeMillis().toString(),
-                    scroll_view, getPrintViewList(),watermark_view)
+                pdfFilePath =
+                    PDFHelp.savePdfFileByListView(
+                        name ?: System.currentTimeMillis().toString(),
+                        scroll_view, getPrintViewList(), watermark_view,
+                    )
                 lifecycleScope.launch {
                     dismissCameraLoading()
                     actionShare()
@@ -124,7 +126,7 @@ class ReportDetailActivity: BaseActivity() {
         val result = ArrayList<View>()
         result.add(report_info_view)
         val childCount = ll_content.childCount
-        for (i in 0 until  childCount) {
+        for (i in 0 until childCount) {
             val childView = ll_content.getChildAt(i)
             if (childView is ReportIRShowView) {
                 result.addAll(childView.getPrintViewList())

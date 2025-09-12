@@ -21,7 +21,6 @@ import java.lang.NumberFormatException
  * Created by LCG on 2024/10/24.
  */
 class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean) : Dialog(context, R.style.TextInputDialog) {
-
     private var value: Float? = null
     private var onConfirmListener: ((value: Float) -> Unit)? = null
 
@@ -32,6 +31,7 @@ class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean
         this.value = value
         return this
     }
+
     /**
      * 设置确认点击事件监听.
      */
@@ -39,7 +39,6 @@ class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean
         this.onConfirmListener = l
         return this
     }
-
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,11 +80,12 @@ class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean
         tvConfirm.setOnClickListener {
             try {
                 val input: Float = etInput.text.toString().toFloat()
-                val isRight = when (type) {
-                    Type.TEMP -> input in UnitTools.showUnitValue(-10f) .. UnitTools.showUnitValue(if (isTC007) 50f else 55f)
-                    Type.DIS -> input in 0.2f .. if (isTC007) 4f else 5f
-                    Type.EM -> input in (if (isTC007) 0.1f else 0.01f) .. 1f
-                }
+                val isRight =
+                    when (type) {
+                        Type.TEMP -> input in UnitTools.showUnitValue(-10f)..UnitTools.showUnitValue(if (isTC007) 50f else 55f)
+                        Type.DIS -> input in 0.2f..if (isTC007) 4f else 5f
+                        Type.EM -> input in (if (isTC007) 0.1f else 0.01f)..1f
+                    }
                 if (isRight) {
                     dismiss()
                     onConfirmListener?.invoke(input)

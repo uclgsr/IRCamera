@@ -20,18 +20,18 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.topdon.lib.core.bean.GalleryBean
+import com.topdon.lib.core.bean.event.GalleryDelEvent
 import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.config.RouterConfig
+import com.topdon.lib.core.dialog.ConfirmSelectDialog
+import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.repository.TS004Repository
 import com.topdon.lib.core.tools.FileTools
 import com.topdon.lib.core.tools.TimeTool
 import com.topdon.lib.core.tools.ToastTools
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.repository.TS004Repository
-import com.topdon.module.thermal.ir.R
-import com.topdon.lib.core.dialog.ConfirmSelectDialog
-import com.topdon.lib.core.bean.event.GalleryDelEvent
 import com.topdon.lms.sdk.weiget.TToast
+import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.event.GalleryDownloadEvent
 import com.topdon.module.thermal.ir.fragment.GalleryFragment
 import kotlinx.android.synthetic.main.activity_ir_gallery_detail_04.*
@@ -44,16 +44,17 @@ import java.io.File
  */
 @Route(path = RouterConfig.IR_GALLERY_DETAIL_04)
 class IRGalleryDetail04Activity : BaseActivity() {
-
     /**
      * 是否查看远端数据.
      * true-远端数据 false-手机本地数据
      */
     private var isRemote = false
+
     /**
      * 当前展示图片在列表中的 position
      */
     private var position = 0
+
     /**
      * 从上一界面传递过来的，当前展示的图片列表.
      */
@@ -69,7 +70,7 @@ class IRGalleryDetail04Activity : BaseActivity() {
 
         title_view.setTitleText("${position + 1}/${dataList.size}")
 
-        cl_bottom.isVisible = isRemote //查看远端时底部才有3个按钮
+        cl_bottom.isVisible = isRemote // 查看远端时底部才有3个按钮
 
         if (!isRemote) {
             title_view.setRightDrawable(R.drawable.ic_toolbar_info_svg)
@@ -98,21 +99,21 @@ class IRGalleryDetail04Activity : BaseActivity() {
     }
 
     override fun initData() {
-
     }
 
     @SuppressLint("SetTextI18n")
     private fun initViewPager() {
         ir_gallery_viewpager.adapter = GalleryViewPagerAdapter(this)
-        ir_gallery_viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                this@IRGalleryDetail04Activity.position = position
-                title_view.setTitleText("${position + 1}/${dataList.size}")
-                iv_download.isSelected = dataList[position].hasDownload
-            }
-        })
+        ir_gallery_viewpager.registerOnPageChangeCallback(
+            object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    this@IRGalleryDetail04Activity.position = position
+                    title_view.setTitleText("${position + 1}/${dataList.size}")
+                    iv_download.isSelected = dataList[position].hasDownload
+                }
+            },
+        )
         ir_gallery_viewpager?.setCurrentItem(position, false)
     }
 
@@ -122,7 +123,7 @@ class IRGalleryDetail04Activity : BaseActivity() {
             val exif = ExifInterface(data.path)
             val width = exif.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)
             val length = exif.getAttribute(ExifInterface.TAG_IMAGE_LENGTH)
-            val whStr = "${width}x${length}"
+            val whStr = "${width}x$length"
             val sizeStr = FileTools.getFileSize(data.path)
 
             val str = StringBuilder()
@@ -206,7 +207,6 @@ class IRGalleryDetail04Activity : BaseActivity() {
         }
     }
 
-
     private fun actionDownload(isToShare: Boolean) {
         val data = dataList[position]
         if (data.hasDownload) {
@@ -217,8 +217,14 @@ class IRGalleryDetail04Activity : BaseActivity() {
         }
         showCameraLoading()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        Glide.with(this).downloadOnly().load(data.path).addListener(object : RequestListener<File> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<File>?, isFirstResource: Boolean): Boolean {
+        Glide.with(this).downloadOnly().load(data.path).addListener(
+            object : RequestListener<File> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<File>?,
+                    isFirstResource: Boolean,
+                ): Boolean {
                     dismissCameraLoading()
                     ToastTools.showShort(R.string.liveData_save_error)
                     window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -226,7 +232,11 @@ class IRGalleryDetail04Activity : BaseActivity() {
                 }
 
                 override fun onResourceReady(
-                    resource: File?, model: Any?, target: Target<File>?, dataSource: DataSource?, isFirstResource: Boolean
+                    resource: File?,
+                    model: Any?,
+                    target: Target<File>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean,
                 ): Boolean {
                     EventBus.getDefault().post(GalleryDownloadEvent(data.name))
                     dismissCameraLoading()
@@ -241,11 +251,11 @@ class IRGalleryDetail04Activity : BaseActivity() {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                     return false
                 }
-            }).preload()
+            },
+        ).preload()
     }
 
     inner class GalleryViewPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
-
         override fun getItemCount(): Int {
             return dataList.size
         }
@@ -257,7 +267,5 @@ class IRGalleryDetail04Activity : BaseActivity() {
             fragment.arguments = bundle
             return fragment
         }
-
     }
 }
-

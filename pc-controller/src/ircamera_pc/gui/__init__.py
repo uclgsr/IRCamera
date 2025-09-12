@@ -10,9 +10,9 @@ import os
 GUI_AVAILABLE = True
 try:
     # Set Qt platform to offscreen if no display is available
-    if 'DISPLAY' not in os.environ and 'QT_QPA_PLATFORM' not in os.environ:
-        os.environ['QT_QPA_PLATFORM'] = 'offscreen'
-    
+    if "DISPLAY" not in os.environ and "QT_QPA_PLATFORM" not in os.environ:
+        os.environ["QT_QPA_PLATFORM"] = "offscreen"
+
     # Test PyQt6 imports
     from PyQt6.QtCore import Qt
 except ImportError:
@@ -34,12 +34,13 @@ if GUI_AVAILABLE:
             SessionControlWidget,
             StatusDisplayWidget,
         )
+
         __all__ = [
             "IRCameraApp",
             "main",
-            "MainWindow", 
+            "MainWindow",
             "DeviceListWidget",
-            "SessionControlWidget",  
+            "SessionControlWidget",
             "StatusDisplayWidget",
             "setup_logging",
             "format_file_size",
@@ -49,7 +50,7 @@ if GUI_AVAILABLE:
         __all__ = [
             "IRCameraApp",
             "main",
-            "setup_logging", 
+            "setup_logging",
             "format_file_size",
             "format_duration",
         ]
@@ -58,6 +59,6 @@ else:
         "IRCameraApp",
         "main",
         "setup_logging",
-        "format_file_size", 
+        "format_file_size",
         "format_duration",
     ]

@@ -9,7 +9,6 @@ import com.topdon.lib.core.ktbase.BaseViewModel
 import kotlinx.coroutines.*
 
 class IRMonitorViewModel : BaseViewModel() {
-
     val recordListLD = MutableLiveData<List<ThermalDao.Record>>()
 
     fun queryRecordList() {
@@ -18,10 +17,6 @@ class IRMonitorViewModel : BaseViewModel() {
             recordListLD.postValue(recordList)
         }
     }
-
-
-
-
 
     val detailListLD = MutableLiveData<List<ThermalEntity>>()
 

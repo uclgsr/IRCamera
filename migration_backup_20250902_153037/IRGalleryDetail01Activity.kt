@@ -16,20 +16,20 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.elvishew.xlog.XLog
 import com.topdon.lib.core.bean.GalleryBean
+import com.topdon.lib.core.bean.event.GalleryDelEvent
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.config.RouterConfig
+import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.tools.FileTools
 import com.topdon.lib.core.tools.TimeTool
 import com.topdon.lib.core.tools.ToastTools
 import com.topdon.lib.core.utils.ByteUtils.bytesToInt
-import com.topdon.lib.core.dialog.TipDialog
+import com.topdon.lib.core.utils.Constants.IS_REPORT_FIRST
 import com.topdon.lib.ui.dialog.ProgressDialog
 import com.topdon.libcom.ExcelUtil
 import com.topdon.module.thermal.ir.R
-import com.topdon.lib.core.bean.event.GalleryDelEvent
-import com.topdon.lib.core.utils.Constants.IS_REPORT_FIRST
 import com.topdon.module.thermal.ir.event.ImageGalleryEvent
 import com.topdon.module.thermal.ir.fragment.GalleryFragment
 import com.topdon.module.thermal.ir.frame.FrameTool
@@ -48,7 +48,6 @@ import java.io.File
  */
 @Route(path = RouterConfig.IR_GALLERY_DETAIL_01)
 class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
-
     /**
      * 从上一界面传递过来的，当前是否为 TC007 设备类型.
      * true-TC007 false-其他插件式设备
@@ -59,6 +58,7 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
      * 当前展示图片在列表中的 position
      */
     private var position = 0
+
     /**
      * 从上一界面传递过来的，当前展示的图片列表.
      */
@@ -68,6 +68,7 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
     private val irViewModel: IRGalleryEditViewModel by viewModels()
 
     override fun initContentView() = R.layout.activity_ir_gallery_detail_01
+
     private val frameTool by lazy { FrameTool() }
 
     override fun initView() {
@@ -92,17 +93,18 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                 val filePath: String?
                 withContext(Dispatchers.IO) {
                     frameTool.read(it.frame)
-                    filePath = ExcelUtil.exportExcel(
-                        excelName,
-                        192,
-                        256,
-                        frameTool.getRotate90Temp(frameTool.temperatureBytes)
-                    ) { current, total ->
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            progressDialog?.max = total
-                            progressDialog?.progress = current
+                    filePath =
+                        ExcelUtil.exportExcel(
+                            excelName,
+                            192,
+                            256,
+                            frameTool.getRotate90Temp(frameTool.temperatureBytes),
+                        ) { current, total ->
+                            lifecycleScope.launch(Dispatchers.Main) {
+                                progressDialog?.max = total
+                                progressDialog?.progress = current
+                            }
                         }
-                    }
                 }
                 progressDialog?.dismiss()
                 if (filePath.isNullOrEmpty()) {
@@ -120,27 +122,27 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
     }
 
     override fun initData() {
-
     }
 
     @SuppressLint("SetTextI18n")
     private fun initViewPager() {
         ir_gallery_viewpager.adapter = GalleryViewPagerAdapter(this)
-        ir_gallery_viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        ir_gallery_viewpager.registerOnPageChangeCallback(
+            object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    this@IRGalleryDetail01Activity.position = position
+                    title_view.setTitleText("${position + 1}/${dataList.size}")
 
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                this@IRGalleryDetail01Activity.position = position
-                title_view.setTitleText("${position + 1}/${dataList.size}")
-
-                irPath = "${FileConfig.lineIrGalleryDir}/${dataList[position].name.substringBeforeLast(".")}.ir"
-                val hasIrData = File(irPath!!).exists()
-                ll_ir_edit_3D?.isVisible = hasIrData
-                ll_ir_report?.isVisible = hasIrData
-                ll_ir_edit_2D?.isVisible = hasIrData
-                ll_ir_ex?.isVisible = hasIrData
-            }
-        })
+                    irPath = "${FileConfig.lineIrGalleryDir}/${dataList[position].name.substringBeforeLast(".")}.ir"
+                    val hasIrData = File(irPath!!).exists()
+                    ll_ir_edit_3D?.isVisible = hasIrData
+                    ll_ir_report?.isVisible = hasIrData
+                    ll_ir_edit_2D?.isVisible = hasIrData
+                    ll_ir_ex?.isVisible = hasIrData
+                }
+            },
+        )
         ir_gallery_viewpager?.setCurrentItem(position, false)
     }
 
@@ -150,7 +152,7 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
             val exif = ExifInterface(data.path)
             val width = exif.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)
             val length = exif.getAttribute(ExifInterface.TAG_IMAGE_LENGTH)
-            val whStr = "${width}x${length}"
+            val whStr = "${width}x$length"
             val sizeStr = FileTools.getFileSize(data.path)
 
             val str = StringBuilder()
@@ -212,7 +214,7 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
         progressDialog?.show()
 
         excelName = dataList[position].name.substringBeforeLast(".")
-        val irPath = "${FileConfig.lineIrGalleryDir}/${excelName}.ir"
+        val irPath = "${FileConfig.lineIrGalleryDir}/$excelName.ir"
         if (!File(irPath).exists()) {
             ToastTools.showShort(getString(R.string.album_report_on_edit))
             progressDialog?.dismiss()
@@ -221,19 +223,18 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
         irViewModel.initData(irPath)
     }
 
-
     override fun onClick(v: View?) {
         when (v) {
             ll_ir_edit_2D -> {
-                //2d编辑
+                // 2d编辑
                 actionEditOrReport(false)
             }
 
             ll_ir_edit_3D -> {
-                //跳转到3D
+                // 跳转到3D
                 val data = dataList[position]
                 val fileName = data.name.substringBeforeLast(".")
-                val irPath = "${FileConfig.lineIrGalleryDir}/${fileName}.ir"
+                val irPath = "${FileConfig.lineIrGalleryDir}/$fileName.ir"
                 if (!File(irPath).exists()) {
                     ToastTools.showShort(R.string.album_report_on_edit)
                     return
@@ -266,18 +267,17 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                         .withFloat(ExtraKeyConfig.TEMP_HIGH, tempHigh).withFloat(ExtraKeyConfig.TEMP_LOW, tempLow)
                         .navigation(this@IRGalleryDetail01Activity)
                 }
-
             }
 
             ll_ir_report -> {
-                //报告
+                // 报告
                 actionEditOrReport(true)
             }
 
             ll_ir_ex -> {
                 TipDialog.Builder(this).setMessage(R.string.tip_album_temp_exportfile).setPositiveListener(R.string.app_confirm) {
-                        actionExcel()
-                    }.setCancelListener(R.string.app_cancel) {}.setCanceled(true).create().show()
+                    actionExcel()
+                }.setCancelListener(R.string.app_cancel) {}.setCanceled(true).create().show()
             }
         }
     }
@@ -285,7 +285,7 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
     private fun actionEditOrReport(isReport: Boolean) {
         val data = dataList[position]
         val fileName = data.name.substringBeforeLast(".")
-        val irPath = "${FileConfig.lineIrGalleryDir}/${fileName}.ir"
+        val irPath = "${FileConfig.lineIrGalleryDir}/$fileName.ir"
         if (!File(irPath).exists()) {
             ToastTools.showShort(R.string.album_report_on_edit)
             return
@@ -299,7 +299,6 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
     }
 
     inner class GalleryViewPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
-
         override fun getItemCount(): Int {
             return dataList.size
         }
@@ -311,12 +310,10 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
             fragment.arguments = bundle
             return fragment
         }
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSaveFinishBean(imageGalleryEvent : ImageGalleryEvent) {
+    fun onSaveFinishBean(imageGalleryEvent: ImageGalleryEvent) {
         finish()
     }
 }
-

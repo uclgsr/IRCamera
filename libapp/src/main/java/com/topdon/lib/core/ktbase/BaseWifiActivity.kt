@@ -2,8 +2,8 @@ package com.topdon.lib.core.ktbase
 
 import android.os.Build
 import android.os.Bundle
-import androidx.preference.PreferenceManager
 import android.view.WindowManager
+import androidx.preference.PreferenceManager
 import com.hjq.permissions.Permission
 import com.topdon.lib.core.utils.NetWorkUtils
 
@@ -14,12 +14,11 @@ import com.topdon.lib.core.utils.NetWorkUtils
  **/
 abstract class BaseWifiActivity : BaseActivity() {
     protected val permissionList by lazy {
-        if (this.applicationInfo.targetSdkVersion >= 34)
-            {
-                listOf(
-                    Permission.WRITE_EXTERNAL_STORAGE,
-                )
-            } else if (this.applicationInfo.targetSdkVersion == 33) {
+        if (this.applicationInfo.targetSdkVersion >= 34) {
+            listOf(
+                Permission.WRITE_EXTERNAL_STORAGE,
+            )
+        } else if (this.applicationInfo.targetSdkVersion == 33) {
             mutableListOf(
                 Permission.READ_MEDIA_VIDEO,
                 Permission.READ_MEDIA_IMAGES,

@@ -3,7 +3,6 @@ package com.topdon.tc001.gsr
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

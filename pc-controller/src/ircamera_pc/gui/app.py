@@ -17,32 +17,48 @@ from loguru import logger
 GUI_AVAILABLE = True
 try:
     # Set Qt platform to offscreen if no display is available
-    if 'DISPLAY' not in os.environ and 'QT_QPA_PLATFORM' not in os.environ:
-        os.environ['QT_QPA_PLATFORM'] = 'offscreen'
-    
+    if "DISPLAY" not in os.environ and "QT_QPA_PLATFORM" not in os.environ:
+        os.environ["QT_QPA_PLATFORM"] = "offscreen"
+
     from PyQt6.QtCore import QTimer
     from PyQt6.QtWidgets import QApplication
 except ImportError as e:
     logger.warning(f"GUI libraries not available, running in headless mode: {e}")
     GUI_AVAILABLE = False
+
     # Mock classes for headless mode
     class QApplication:
-        def __init__(self, *args): pass
-        def setApplicationName(self, name): pass
-        def setApplicationVersion(self, version): pass
-        def setStyleSheet(self, style): pass
-        def exec(self): return 0
-    class QTimer:
-        def __init__(self): 
-            self.timeout_func = None
-        def timeout(self): 
-            return self
-        def connect(self, func): 
-            self.timeout_func = func
-        def start(self, interval): 
+        def __init__(self, *args):
             pass
+
+        def setApplicationName(self, name):
+            pass
+
+        def setApplicationVersion(self, version):
+            pass
+
+        def setStyleSheet(self, style):
+            pass
+
+        def exec(self):
+            return 0
+
+    class QTimer:
+        def __init__(self):
+            self.timeout_func = None
+
+        def timeout(self):
+            return self
+
+        def connect(self, func):
+            self.timeout_func = func
+
+        def start(self, interval):
+            pass
+
         def stop(self):
             pass
+
 
 from ..core import SessionManager, config
 from ..core.admin_privileges import AdminPrivilegesManager
@@ -59,11 +75,16 @@ from .utils import setup_logging
 if GUI_AVAILABLE:
     from .main_window import MainWindow
 else:
+
     class MainWindow:
         def __init__(self, *args, **kwargs):
             logger.info("MainWindow created in headless mode")
-        def show(self): pass
-        def resize(self, w, h): pass
+
+        def show(self):
+            pass
+
+        def resize(self, w, h):
+            pass
 
 
 class IRCameraApp:
@@ -124,7 +145,7 @@ class IRCameraApp:
             logger.info("Running in headless mode - GUI not available")
             self.qt_app = QApplication(sys.argv)
             return
-            
+
         if self.qt_app is None:
             self.qt_app = QApplication(sys.argv)
             self.qt_app.setApplicationName("IRCamera PC Controller")
@@ -357,6 +378,7 @@ class IRCameraApp:
                             # Process any pending async tasks
                             self._process_async_events()
                         import time
+
                         time.sleep(0.1)
                 except KeyboardInterrupt:
                     logger.info("Keyboard interrupt received, shutting down...")
@@ -391,20 +413,26 @@ class IRCameraApp:
 def main() -> int:
     """Main entry point for the application."""
     import argparse
-    
-    parser = argparse.ArgumentParser(description='IRCamera PC Controller - Multi-Modal Physiological Sensing Platform Hub')
-    parser.add_argument('--version', action='version', version='IRCamera PC Controller v1.0.0')
-    parser.add_argument('--config', help='Path to configuration file')
-    parser.add_argument('--debug', action='store_true', help='Enable debug logging')
-    parser.add_argument('--headless', action='store_true', help='Run in headless mode (no GUI)')
-    
+
+    parser = argparse.ArgumentParser(
+        description="IRCamera PC Controller - Multi-Modal Physiological Sensing Platform Hub"
+    )
+    parser.add_argument(
+        "--version", action="version", version="IRCamera PC Controller v1.0.0"
+    )
+    parser.add_argument("--config", help="Path to configuration file")
+    parser.add_argument("--debug", action="store_true", help="Enable debug logging")
+    parser.add_argument(
+        "--headless", action="store_true", help="Run in headless mode (no GUI)"
+    )
+
     args = parser.parse_args()
-    
+
     if args.debug:
         logger.info("Debug mode enabled")
-    
+
     app = IRCameraApp()
-    
+
     # Handle headless mode
     if args.headless:
         logger.info("Running in headless mode - network services only")
@@ -412,7 +440,7 @@ def main() -> int:
         # For now, just print the help and exit
         parser.print_help()
         return 0
-    
+
     return app.run()
 
 

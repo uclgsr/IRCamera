@@ -411,27 +411,25 @@ class FileTransferManager:
     ) -> bytes:
         """
         Read a chunk of data from the device using real network communication
-        
+
         Args:
             job: Transfer job containing device connection info
             offset: File offset to read from
             size: Number of bytes to read
-            
+
         Returns:
             Chunk data as bytes
         """
         try:
             # Phase 3: Enhanced chunk reading with WebSocket support
             device_conn = job.device_connection
-            
-            if hasattr(device_conn, 'read_file_chunk'):
+
+            if hasattr(device_conn, "read_file_chunk"):
                 # Direct device connection method
                 return await device_conn.read_file_chunk(
-                    job.manifest.file_path,
-                    offset,
-                    size
+                    job.manifest.file_path, offset, size
                 )
-            elif hasattr(device_conn, 'websocket'):
+            elif hasattr(device_conn, "websocket"):
                 # WebSocket-based chunk reading (Phase 3)
                 request_data = {
                     "type": "file_chunk_request",
@@ -439,22 +437,25 @@ class FileTransferManager:
                     "file_path": job.manifest.file_path,
                     "offset": offset,
                     "size": size,
-                    "session_id": job.manifest.session_id
+                    "session_id": job.manifest.session_id,
                 }
-                
+
                 # Send WebSocket request and wait for response
                 response = await device_conn.send_and_wait(request_data, timeout=30.0)
-                
+
                 if response and response.get("type") == "file_chunk_response":
                     if response.get("status") == "success":
                         # Decode base64 chunk data
                         chunk_data = response.get("chunk_data", "")
                         if isinstance(chunk_data, str):
                             import base64
+
                             return base64.b64decode(chunk_data)
                         return chunk_data
                     else:
-                        raise Exception(f"Chunk read failed: {response.get('error', 'Unknown error')}")
+                        raise Exception(
+                            f"Chunk read failed: {response.get('error', 'Unknown error')}"
+                        )
                 else:
                     raise Exception("Invalid or timeout response from device")
             else:
@@ -464,57 +465,60 @@ class FileTransferManager:
                     "file_path": job.manifest.file_path,
                     "offset": offset,
                     "size": size,
-                    "session_id": job.manifest.session_id
+                    "session_id": job.manifest.session_id,
                 }
-                
+
                 response = await self._send_device_request(device_conn, request_data)
-                
+
                 if response and response.get("status") == "success":
                     chunk_data = response.get("data", b"")
                     if isinstance(chunk_data, str):
                         import base64
+
                         chunk_data = base64.b64decode(chunk_data)
                     return chunk_data
                 else:
-                    raise Exception(f"Device read failed: {response.get('error', 'Unknown error')}")
-                    
+                    raise Exception(
+                        f"Device read failed: {response.get('error', 'Unknown error')}"
+                    )
+
         except Exception as e:
             logger.error(f"Failed to read chunk from device: {e}")
             raise
-    
+
     async def _send_device_request(self, device_conn: Any, request_data: dict) -> dict:
         """
         Send request to Android device and get response
-        
+
         Args:
             device_conn: Device connection object
             request_data: Request data as dict
-            
+
         Returns:
             Response data as dict
         """
         try:
             import json
-            
+
             # Convert request to JSON
             request_json = json.dumps(request_data)
-            
+
             # Send via device connection
-            if hasattr(device_conn, 'send_json'):
+            if hasattr(device_conn, "send_json"):
                 return await device_conn.send_json(request_data)
-            elif hasattr(device_conn, 'writer'):
+            elif hasattr(device_conn, "writer"):
                 # Direct socket communication
-                device_conn.writer.write(request_json.encode('utf-8'))
+                device_conn.writer.write(request_json.encode("utf-8"))
                 await device_conn.writer.drain()
-                
+
                 # Read response
                 response_data = await device_conn.reader.read(65536)
-                response_json = response_data.decode('utf-8')
+                response_json = response_data.decode("utf-8")
                 return json.loads(response_json)
             else:
                 # Fallback error
                 raise Exception("No valid device communication method available")
-                
+
         except Exception as e:
             logger.error(f"Device request failed: {e}")
             return {"status": "error", "error": str(e)}
@@ -679,9 +683,9 @@ class FileTransferManager:
                         checksum=manifest_data.get("checksum", ""),
                         file_type=FileType(manifest_data.get("file_type", "metadata")),
                         device_id=manifest_data.get("device_id", ""),
-                        timestamp=manifest_data.get("timestamp", 0.0)
+                        timestamp=manifest_data.get("timestamp", 0.0),
                     )
-                    
+
                     # Recreate transfer job
                     job = TransferJob(
                         job_id=job_id,
@@ -693,49 +697,61 @@ class FileTransferManager:
                         end_time=job_data.get("end_time"),
                         resume_offset=job_data.get("resume_offset", 0),
                         retry_count=job_data.get("retry_count", 0),
-                        error_message=job_data.get("error_message")
+                        error_message=job_data.get("error_message"),
                     )
-                    
+
                     # Only restore jobs that were in progress or pending
-                    if job.status in [TransferStatus.PENDING, TransferStatus.IN_PROGRESS, TransferStatus.PAUSED]:
+                    if job.status in [
+                        TransferStatus.PENDING,
+                        TransferStatus.IN_PROGRESS,
+                        TransferStatus.PAUSED,
+                    ]:
                         # Verify local file state
                         if job.local_path.exists():
                             actual_size = job.local_path.stat().st_size
                             job.bytes_transferred = actual_size
                             job.resume_offset = actual_size
-                            
+
                             # If file is complete, mark as completed
                             if actual_size >= job.manifest.size_bytes:
                                 job.status = TransferStatus.COMPLETED
-                                logger.info(f"Restored completed transfer: {job.manifest.filename}")
+                                logger.info(
+                                    f"Restored completed transfer: {job.manifest.filename}"
+                                )
                             else:
                                 job.status = TransferStatus.PAUSED  # Resume later
                                 self.transfer_queue.append(job_id)
-                                logger.info(f"Restored paused transfer: {job.manifest.filename} "
-                                          f"({actual_size}/{job.manifest.size_bytes} bytes)")
+                                logger.info(
+                                    f"Restored paused transfer: {job.manifest.filename} "
+                                    f"({actual_size}/{job.manifest.size_bytes} bytes)"
+                                )
                         else:
                             # File doesn't exist, reset transfer
                             job.bytes_transferred = 0
                             job.resume_offset = 0
                             job.status = TransferStatus.PENDING
                             self.transfer_queue.append(job_id)
-                            logger.info(f"Restored pending transfer: {job.manifest.filename}")
-                        
+                            logger.info(
+                                f"Restored pending transfer: {job.manifest.filename}"
+                            )
+
                         self.active_jobs[job_id] = job
                         reconstructed_jobs += 1
-                        
+
                 except Exception as e:
                     logger.warning(f"Failed to restore transfer job {job_id}: {e}")
                     continue
-            
+
             # Restore transfer queue if saved
             saved_queue = state_data.get("transfer_queue", [])
             for job_id in saved_queue:
                 if job_id in self.active_jobs and job_id not in self.transfer_queue:
                     self.transfer_queue.append(job_id)
 
-            logger.info(f"Transfer state loaded: {reconstructed_jobs} jobs reconstructed, "
-                       f"{len(self.transfer_queue)} queued for processing")
+            logger.info(
+                f"Transfer state loaded: {reconstructed_jobs} jobs reconstructed, "
+                f"{len(self.transfer_queue)} queued for processing"
+            )
 
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Failed to load transfer state: {e}")

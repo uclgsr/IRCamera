@@ -27,6 +27,7 @@ class EmissivityView : View {
      * 是否顶部对齐
      */
     var isAlignTop = false
+
     /**
      * 是否需要绘制顶部横线
      */
@@ -36,11 +37,11 @@ class EmissivityView : View {
      * 要显示的文字列表.
      */
     private val textList: ArrayList<CharSequence> = ArrayList(3)
+
     /**
      * 执行绘制的 Layout 列表.
      */
     private val layoutList: ArrayList<StaticLayout> = ArrayList(3)
-
 
     private val strokeWidth = SizeUtils.dp2px(DEFAULT_STROKE_WIDTH).coerceAtLeast(1).toFloat()
     private val linePaint = Paint()
@@ -52,7 +53,12 @@ class EmissivityView : View {
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes:Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes,
+    ) {
         linePaint.color = 0xff5b5961.toInt()
         linePaint.style = Paint.Style.STROKE
         linePaint.strokeWidth = strokeWidth
@@ -68,38 +74,42 @@ class EmissivityView : View {
         requestLayout()
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         val widthSize: Int = MeasureSpec.getSize(widthMeasureSpec) - paddingStart - paddingEnd
-        val firstWidth: Int = (widthSize * 135 / 335f).toInt()// 3 列的比例为 135:100:100
+        val firstWidth: Int = (widthSize * 135 / 335f).toInt() // 3 列的比例为 135:100:100
         val elseWidth: Int = (widthSize - firstWidth) / 2
         val contentWidth: Int = firstWidth + elseWidth * 2
 
-        //初始化 layoutList
+        // 初始化 layoutList
         layoutList.clear()
         for (i in textList.indices) {
-            val textWidth: Int = if (textList.size == 1) {
-                contentWidth - SizeUtils.dp2px(24f)//左右各 12dp padding
-            } else {
-                (if (i == 0) firstWidth else elseWidth) - SizeUtils.dp2px(24f)//左右各 12dp padding
-            }
+            val textWidth: Int =
+                if (textList.size == 1) {
+                    contentWidth - SizeUtils.dp2px(24f) // 左右各 12dp padding
+                } else {
+                    (if (i == 0) firstWidth else elseWidth) - SizeUtils.dp2px(24f) // 左右各 12dp padding
+                }
             layoutList.add(
                 StaticLayout.Builder.obtain(textList[i], 0, textList[i].length, textPaint, textWidth)
                     .setAlignment(Layout.Alignment.ALIGN_CENTER)
-                    .build()
+                    .build(),
             )
         }
 
-        //计算最大高度
+        // 计算最大高度
         var maxHeight = 0
         for (layout in layoutList) {
             maxHeight = maxHeight.coerceAtLeast(layout.height)
         }
-        if (maxHeight == 0) {//没有设置要显示的字符时，给个占位的高度好了
+        if (maxHeight == 0) { // 没有设置要显示的字符时，给个占位的高度好了
             maxHeight = textPaint.fontMetricsInt.bottom - textPaint.fontMetricsInt.top
         }
-        maxHeight += SizeUtils.dp2px(12f)//上下各 6dp padding
+        maxHeight += SizeUtils.dp2px(12f) // 上下各 6dp padding
 
-        //宽度为 UNSPECIFIED 的情况目前不存在，不考虑
+        // 宽度为 UNSPECIFIED 的情况目前不存在，不考虑
         setMeasuredDimension(contentWidth + paddingStart + paddingEnd, maxHeight)
     }
 

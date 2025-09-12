@@ -63,16 +63,16 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
             // Note: Title text setting is handled by the parent view implementation
             // title_view.setTitleText(themeStr)
         }
-        
+
         // Create a simple ViewModel-like observer pattern since we're using BaseBindingActivity
         observeHtmlData()
-        
+
         if (keyUseType != 0) {
             loadHttpWhenNotInit(binding.policyWeb)
             delayShowWebView()
         }
     }
-    
+
     private fun observeHtmlData() {
         // Since we're not using ViewModel anymore, we'll directly load the data
         // This is a simplified version - in a real scenario you'd want proper MVVM
@@ -102,7 +102,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
             loadDefaultContent()
         }
     }
-    
+
     private fun loadDefaultContent() {
         // Load the appropriate content based on theme type
         loadHttp(binding.policyWeb)

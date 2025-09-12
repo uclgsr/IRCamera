@@ -3,9 +3,9 @@ package com.topdon.menu.adapter
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.topdon.menu.R as MenuR
 import com.topdon.lib.core.R
 import com.topdon.menu.constant.TempPointType
+import com.topdon.menu.R as MenuR
 
 /**
  * 观测模式-菜单5-高低温点 菜单所用 Adapter，按旧逻辑存在全部未选择的状态。
@@ -25,7 +25,10 @@ internal class TempPointAdapter : BaseMenuAdapter() {
     /**
      * 设置 高温点 或 低稳点 的选中状态。
      */
-    fun setSelected(tempPointType: TempPointType, isSelected: Boolean) {
+    fun setSelected(
+        tempPointType: TempPointType,
+        isSelected: Boolean,
+    ) {
         for (i in dataArray.indices) {
             if (dataArray[i].tempPointType == tempPointType) {
                 dataArray[i].isSelected = isSelected
@@ -46,14 +49,17 @@ internal class TempPointAdapter : BaseMenuAdapter() {
         notifyDataSetChanged()
     }
 
+    private val dataArray: Array<Data> =
+        arrayOf(
+            Data(R.string.main_tab_second_high_temperature_point, MenuR.drawable.selector_menu2_temp_point_1, TempPointType.HIGH),
+            Data(R.string.main_tab_second_low_temperature_point, MenuR.drawable.selector_menu2_temp_point_2, TempPointType.LOW),
+            Data(R.string.thermal_delete, MenuR.drawable.selector_menu2_del, TempPointType.DELETE),
+        )
 
-    private val dataArray: Array<Data> = arrayOf(
-        Data(R.string.main_tab_second_high_temperature_point, MenuR.drawable.selector_menu2_temp_point_1, TempPointType.HIGH),
-        Data(R.string.main_tab_second_low_temperature_point, MenuR.drawable.selector_menu2_temp_point_2, TempPointType.LOW),
-        Data(R.string.thermal_delete, MenuR.drawable.selector_menu2_del, TempPointType.DELETE),
-    )
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         val data: Data = dataArray[position]
         holder.binding.ivIcon.setImageResource(data.drawableId)
         holder.binding.tvText.setText(data.stringId)
@@ -61,7 +67,7 @@ internal class TempPointAdapter : BaseMenuAdapter() {
         holder.binding.tvText.isSelected = data.isSelected
         holder.binding.clRoot.setOnClickListener {
             if (data.tempPointType == TempPointType.DELETE) {
-                if (!data.isSelected) {//选中时再次删除没卵用，未选中时才处理
+                if (!data.isSelected) { // 选中时再次删除没卵用，未选中时才处理
                     for (temp in dataArray) {
                         temp.isSelected = temp.tempPointType == TempPointType.DELETE
                     }
@@ -72,7 +78,7 @@ internal class TempPointAdapter : BaseMenuAdapter() {
                 data.isSelected = !data.isSelected
                 holder.binding.ivIcon.isSelected = data.isSelected
                 holder.binding.tvText.isSelected = data.isSelected
-                if (data.isSelected) {//选中高温点、低温点时要把“删除”设为未选中；取消选中时不耦合删除
+                if (data.isSelected) { // 选中高温点、低温点时要把“删除”设为未选中；取消选中时不耦合删除
                     for (i in dataArray.indices) {
                         if (dataArray[i].tempPointType == TempPointType.DELETE && dataArray[i].isSelected) {
                             dataArray[i].isSelected = false

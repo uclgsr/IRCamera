@@ -24,9 +24,7 @@ class AlarmHelp private constructor(val context: Context) {
     private var isPause = false
     private var alarmBean: AlarmBean? = null
 
-
-
-    fun updateData(alarmBean : AlarmBean) {
+    fun updateData(alarmBean: AlarmBean) {
         this.alarmBean = alarmBean
         isTempAlarmRingtoneOpen = alarmBean?.isRingtoneOpen ?: false
         isOpenLowTemp = alarmBean?.isLowOpen ?: false
@@ -48,7 +46,11 @@ class AlarmHelp private constructor(val context: Context) {
         }
     }
 
-    fun updateData(low: Float?, high: Float?, ringtone: Int?) {
+    fun updateData(
+        low: Float?,
+        high: Float?,
+        ringtone: Int?,
+    ) {
         if (low == null) {
             isOpenLowTemp = false
         } else {
@@ -90,13 +92,16 @@ class AlarmHelp private constructor(val context: Context) {
         }
     }
 
-
     /**
      *
      */
-    fun alarmData(realMax: Float, realMin: Float, tempLayout: TempLayout?) {
+    fun alarmData(
+        realMax: Float,
+        realMin: Float,
+        tempLayout: TempLayout?,
+    ) {
         if (isOpenHighTemp && isOpenLowTemp) {
-            //高低温预警
+            // 高低温预警
             if (realMax > maxTemp && realMin < minTemp) {
                 tempLayout?.startAnimation(TempLayout.TYPE_A)
                 startMediaPlayer()
@@ -111,7 +116,7 @@ class AlarmHelp private constructor(val context: Context) {
                 stopPlayer()
             }
         } else if (isOpenHighTemp) {
-            //高温预警
+            // 高温预警
             if (realMax > maxTemp) {
                 tempLayout?.startAnimation(TempLayout.TYPE_HOT)
                 startMediaPlayer()
@@ -120,7 +125,7 @@ class AlarmHelp private constructor(val context: Context) {
                 stopPlayer()
             }
         } else if (isOpenLowTemp) {
-            //低温预警
+            // 低温预警
             if (realMin < minTemp) {
                 tempLayout?.startAnimation(TempLayout.TYPE_LT)
                 startMediaPlayer()
@@ -147,7 +152,7 @@ class AlarmHelp private constructor(val context: Context) {
         }
     }
 
-    fun onDestroy(isSaveSetting : Boolean) {
+    fun onDestroy(isSaveSetting: Boolean) {
         if (!isSaveSetting) {
             isTempAlarmRingtoneOpen = false
             isOpenHighTemp = false
@@ -162,7 +167,6 @@ class AlarmHelp private constructor(val context: Context) {
         }
     }
 
-
     fun pause() {
         mediaPlayer?.let {
             if (it.isPlaying) {
@@ -175,6 +179,4 @@ class AlarmHelp private constructor(val context: Context) {
     fun onResume() {
         isPause = false
     }
-
-
 }

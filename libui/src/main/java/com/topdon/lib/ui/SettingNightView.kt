@@ -5,9 +5,7 @@ import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import com.topdon.lib.ui.databinding.UiSettingViewNightBinding
@@ -15,7 +13,7 @@ import com.topdon.lib.ui.R as UiR
 
 class SettingNightView : LinearLayout {
     private lateinit var binding: UiSettingViewNightBinding
-    
+
     var isRightArrowVisible: Boolean
         get() = binding.itemSettingEndImage.isVisible
         set(value) {
@@ -41,7 +39,7 @@ class SettingNightView : LinearLayout {
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         binding = UiSettingViewNightBinding.inflate(LayoutInflater.from(context), this, true)
-        
+
         val ta: TypedArray = context.obtainStyledAttributes(attrs, UiR.styleable.SettingNightView)
         for (i in 0 until ta.indexCount) {
             when (ta.getIndex(i)) {

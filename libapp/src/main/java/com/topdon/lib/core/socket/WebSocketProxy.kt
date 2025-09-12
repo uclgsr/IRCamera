@@ -30,7 +30,7 @@ class WebSocketProxy {
         // TLS-enabled URLs (wss://) for secure communication
         private const val TS004_URL = "wss://192.168.40.1:888"
         private const val TC007_URL = "wss://192.168.40.1:63206/v1/thermal/temp/template/data"
-        
+
         // Fallback to plaintext for compatibility (can be disabled in production)
         private const val TS004_URL_FALLBACK = "ws://192.168.40.1:888"
         private const val TC007_URL_FALLBACK = "ws://192.168.40.1:63206/v1/thermal/temp/template/data"
@@ -77,27 +77,27 @@ class WebSocketProxy {
                     Interceptor { chain ->
                         val originalRequest = chain.request()
                         val requestBuilder: Request.Builder = originalRequest.newBuilder()
-                        
+
                         // Add authentication header if certificate manager is available
                         certificateManager?.let { certManager ->
                             val authToken = certManager.generateAuthToken()
                             requestBuilder.addHeader("Authorization", "Bearer $authToken")
                         }
-                        
+
                         val compressedRequest: Request = requestBuilder.build()
                         XLog.tag("WebSocket").d("request:$compressedRequest")
                         chain.proceed(compressedRequest)
                     },
                 )
                 .retryOnConnectionFailure(true)
-        
+
         // Configure TLS/SSL if certificate manager is available and secure connection is enabled
         if (useSecureConnection && certificateManager != null) {
             try {
                 val sslSocketFactory = certificateManager?.createSSLSocketFactory()
                 val trustManager = certificateManager?.getTrustManager()
                 val hostnameVerifier = certificateManager?.createHostnameVerifier()
-                
+
                 if (sslSocketFactory != null && trustManager != null && hostnameVerifier != null) {
                     builder.sslSocketFactory(sslSocketFactory, trustManager)
                     builder.hostnameVerifier(hostnameVerifier)
@@ -111,14 +111,14 @@ class WebSocketProxy {
                 useSecureConnection = false
             }
         }
-        
+
         // Apply network-specific socket factory if available
         network?.socketFactory?.let {
             if (!useSecureConnection) { // Only apply if not using SSL
                 builder.socketFactory(it)
             }
         }
-        
+
         return builder.build()
     }
 
@@ -215,7 +215,7 @@ class WebSocketProxy {
      */
     private fun getWebSocketUrl(ssid: String): String {
         val isTS004 = ssid.startsWith(DeviceConfig.TS004_NAME_START)
-        
+
         return if (useSecureConnection) {
             // Use secure WebSocket (wss://)
             if (isTS004) TS004_URL else TC007_URL

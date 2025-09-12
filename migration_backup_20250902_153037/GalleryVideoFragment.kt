@@ -29,32 +29,35 @@ class GalleryVideoFragment : BaseViewModelFragment<GalleryViewModel>() {
         viewModel.galleryLiveData.observe(this) {
             adapter.datas = it
         }
-        adapter.listener = object : GalleryAdapter.OnItemClickListener {
-            override fun onClick(index: Int, path: String) {
-                openVideo(path)
-            }
+        adapter.listener =
+            object : GalleryAdapter.OnItemClickListener {
+                override fun onClick(
+                    index: Int,
+                    path: String,
+                ) {
+                    openVideo(path)
+                }
 
-            override fun onLongClick(index: Int, path: String) {
-                TipDialog.Builder(requireContext()).setMessage("导出图片")
-                    .setPositiveListener("分享") {
+                override fun onLongClick(
+                    index: Int,
+                    path: String,
+                ) {
+                    TipDialog.Builder(requireContext()).setMessage("导出图片")
+                        .setPositiveListener("分享") {
 //                            share(path)
-                    }
-                    .create().show()
+                        }
+                        .create().show()
+                }
             }
-
-        }
-
     }
 
     override fun initData() {
-
     }
 
     override fun onStart() {
         super.onStart()
         viewModel.getVideoData()
     }
-
 
 //    fun previewVideo(path: String) {
 //        val imageEngine = GlideImageEngine()
@@ -65,10 +68,8 @@ class GalleryVideoFragment : BaseViewModelFragment<GalleryViewModel>() {
 //            .show()
 //    }
 
-
     fun openVideo(path: String) {
         ARouter.getInstance().build(RouterConfig.VIDEO).withString("video_path", path)
             .navigation(requireContext())
     }
-
 }

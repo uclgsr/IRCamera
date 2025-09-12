@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.item_gallery_lay.view.*
  */
 @SuppressLint("NotifyDataSetChanged")
 class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     companion object {
         private const val TYPE_HEAD = 0
         private const val TYPE_DATA = 1
@@ -63,21 +62,21 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
         }
 
-
     /**
      * 非编辑模式下 item 长按进入编辑模式事件监听.
      */
     var onLongEditListener: (() -> Unit)? = null
+
     /**
      * 选中数量变更回调.
      * data 当前选中的 item position 列表
      */
     var selectCallback: ((data: ArrayList<Int>) -> Unit)? = null
+
     /**
      * 非编辑模式时，item 点击事件监听.
      */
     var itemClickCallback: ((position: Int) -> Unit)? = null
-
 
     fun refreshList(newList: List<GalleryBean>) {
         dataList.clear()
@@ -122,7 +121,10 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         return if (viewType == TYPE_HEAD) {
             ItemHeadView(LayoutInflater.from(parent.context).inflate(R.layout.item_gallery_head_lay, parent, false))
         } else {
@@ -130,7 +132,10 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         val data = dataList[position]
         if (holder is ItemView) {
             GlideLoader.load(holder.img, data.thumb)
@@ -190,6 +195,4 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val img: ImageView = itemView.item_gallery_img
         val info: TextView = itemView.item_gallery_text
     }
-
-
 }

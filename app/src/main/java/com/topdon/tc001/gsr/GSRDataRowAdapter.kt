@@ -23,11 +23,12 @@ class GSRDataRowAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        val binding = ItemGsrDataRowBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
+        val binding =
+            ItemGsrDataRowBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
         return ViewHolder(binding)
     }
 

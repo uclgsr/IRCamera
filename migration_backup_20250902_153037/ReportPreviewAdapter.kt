@@ -29,22 +29,26 @@ import kotlinx.android.synthetic.main.item_report_floor.view.rcy_report
 import kotlinx.android.synthetic.main.item_report_floor.view.tv_floor_number
 import kotlinx.android.synthetic.main.item_report_floor.view.view_category_mask
 
-
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRepPreviewItemBean>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     override fun getItemViewType(position: Int): Int {
         return position
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         return ItemView(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_report_floor, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_report_floor, parent, false),
         )
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         val data = dataList[position]
         holder.itemView.tv_floor_number.text = data.itemName
 
@@ -89,29 +93,36 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
             false
         }
 
-        holder.itemView.hsv_report.setOnScrollStopListner(object : OnScrollStopListner {
-            override fun onScrollToRightEdge() {
-                holder.itemView.view_category_mask.visibility = View.VISIBLE
-            }
-
-            override fun onScrollToMiddle() {
-                holder.itemView.view_category_mask.visibility = View.VISIBLE
-            }
-
-            override fun onScrollToLeftEdge() {
-                holder.itemView.view_category_mask.visibility = View.GONE
-            }
-
-            override fun onScrollStoped() {
-            }
-
-            override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
-                if (holder.itemView.view_category_mask.visibility == View.VISIBLE) {
-                    return
+        holder.itemView.hsv_report.setOnScrollStopListner(
+            object : OnScrollStopListner {
+                override fun onScrollToRightEdge() {
+                    holder.itemView.view_category_mask.visibility = View.VISIBLE
                 }
-                holder.itemView.view_category_mask.visibility = View.VISIBLE
-            }
-        })
+
+                override fun onScrollToMiddle() {
+                    holder.itemView.view_category_mask.visibility = View.VISIBLE
+                }
+
+                override fun onScrollToLeftEdge() {
+                    holder.itemView.view_category_mask.visibility = View.GONE
+                }
+
+                override fun onScrollStoped() {
+                }
+
+                override fun onScrollChanged(
+                    l: Int,
+                    t: Int,
+                    oldl: Int,
+                    oldt: Int,
+                ) {
+                    if (holder.itemView.view_category_mask.visibility == View.VISIBLE) {
+                        return
+                    }
+                    holder.itemView.view_category_mask.visibility = View.VISIBLE
+                }
+            },
+        )
     }
 
     override fun getItemCount(): Int {

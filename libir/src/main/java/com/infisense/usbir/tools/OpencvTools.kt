@@ -1,14 +1,11 @@
 package com.infisense.usbir.tools
 
-
-
 /**
  * @author: CaiSongL
  * @date: 2023/5/18 9:46
  */
 object OpencvTools {
-
-//    init {
+    //    init {
 //        System.loadLibrary("opencv_java4");
 //    }
 //
@@ -29,5 +26,4 @@ object OpencvTools {
 //        Log.w("opencv图像合并时间耗时：","${System.currentTimeMillis() - time}")
 //        return dstBitmap
 //    }
-
 }

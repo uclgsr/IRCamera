@@ -13,43 +13,43 @@ import java.util.concurrent.atomic.AtomicInteger
  * Phase 0 implementation - Android Service + CoroutineScope with stop tokens
  */
 class CrashSafeSupervisor private constructor(private val context: Context) {
-    
     companion object {
         private const val TAG = "CrashSafeSupervisor"
-        
+
         @Volatile
         private var instance: CrashSafeSupervisor? = null
-        
+
         fun getInstance(context: Context): CrashSafeSupervisor {
             return instance ?: synchronized(this) {
                 instance ?: CrashSafeSupervisor(context.applicationContext).also { instance = it }
             }
         }
     }
-    
+
     // Supervisor state
     private val isRunning = AtomicBoolean(false)
-    private val supervisorScope = CoroutineScope(
-        SupervisorJob() + 
-        Dispatchers.Default + 
-        CoroutineName("CrashSafeSupervisor") +
-        CoroutineExceptionHandler { _, exception ->
-            handleSupervisorException(exception)
-        }
-    )
-    
+    private val supervisorScope =
+        CoroutineScope(
+            SupervisorJob() +
+                Dispatchers.Default +
+                CoroutineName("CrashSafeSupervisor") +
+                CoroutineExceptionHandler { _, exception ->
+                    handleSupervisorException(exception)
+                },
+        )
+
     // Managed components
     private val managedJobs = ConcurrentHashMap<String, ManagedJob>()
     private val healthChecks = ConcurrentHashMap<String, HealthCheck>()
     private val restartCounts = ConcurrentHashMap<String, AtomicInteger>()
-    
+
     // Configuration
     private val maxRestartAttempts = 3
     private val restartDelayMs = 5000L
     private val healthCheckIntervalMs = 30000L
-    
+
     private val logger = StructuredLogger.getInstance(context)
-    
+
     /**
      * Represents a managed job with recovery capabilities
      */
@@ -60,42 +60,42 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         val stopToken: StopToken,
         val restartable: Boolean = true,
         val critical: Boolean = false,
-        val startTime: Long = System.currentTimeMillis()
+        val startTime: Long = System.currentTimeMillis(),
     )
-    
+
     /**
      * Health check interface for monitored components
      */
     interface HealthCheck {
         suspend fun checkHealth(): HealthStatus
     }
-    
+
     /**
      * Health status result
      */
     data class HealthStatus(
         val isHealthy: Boolean,
         val message: String,
-        val details: Map<String, Any> = emptyMap()
+        val details: Map<String, Any> = emptyMap(),
     )
-    
+
     /**
      * Stop token for graceful shutdown
      */
     class StopToken {
         private val stopped = AtomicBoolean(false)
-        
+
         fun isStopRequested(): Boolean = stopped.get()
-        
+
         fun requestStop() {
             stopped.set(true)
         }
-        
+
         fun reset() {
             stopped.set(false)
         }
     }
-    
+
     /**
      * Initialize the supervisor system
      */
@@ -104,20 +104,20 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             Log.i(TAG, "Crash-safe supervisor already running")
             return
         }
-        
+
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "CrashSafeSupervisor",
             "supervisor_initialized",
-            mapOf("max_restart_attempts" to maxRestartAttempts)
+            mapOf("max_restart_attempts" to maxRestartAttempts),
         )
-        
+
         // Start health monitoring
         startHealthMonitoring()
-        
+
         Log.i(TAG, "Crash-safe supervisor initialized")
     }
-    
+
     /**
      * Register a managed job with automatic restart capabilities
      */
@@ -127,47 +127,48 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         critical: Boolean = false,
         restartable: Boolean = true,
         healthCheck: HealthCheck? = null,
-        jobFactory: suspend (StopToken) -> Unit
+        jobFactory: suspend (StopToken) -> Unit,
     ): Job {
         if (!isRunning.get()) {
             throw IllegalStateException("Supervisor not initialized")
         }
-        
+
         val stopToken = StopToken()
-        val job = supervisorScope.launch {
-            try {
-                jobFactory(stopToken)
-            } catch (e: Exception) {
-                logger.log(
-                    StructuredLogger.LogLevel.ERROR,
-                    "CrashSafeSupervisor",
-                    "job_failed",
-                    mapOf(
-                        "job_id" to id,
-                        "job_name" to name,
-                        "error" to e.message,
-                        "critical" to critical
+        val job =
+            supervisorScope.launch {
+                try {
+                    jobFactory(stopToken)
+                } catch (e: Exception) {
+                    logger.log(
+                        StructuredLogger.LogLevel.ERROR,
+                        "CrashSafeSupervisor",
+                        "job_failed",
+                        mapOf(
+                            "job_id" to id,
+                            "job_name" to name,
+                            "error" to e.message,
+                            "critical" to critical,
+                        ),
                     )
-                )
-                
-                if (critical) {
-                    handleCriticalJobFailure(id, name, e)
-                } else if (restartable) {
-                    scheduleJobRestart(id, name, jobFactory, stopToken)
+
+                    if (critical) {
+                        handleCriticalJobFailure(id, name, e)
+                    } else if (restartable) {
+                        scheduleJobRestart(id, name, jobFactory, stopToken)
+                    }
+
+                    throw e
                 }
-                
-                throw e
             }
-        }
-        
+
         val managedJob = ManagedJob(id, name, job, stopToken, restartable, critical)
         managedJobs[id] = managedJob
         restartCounts[id] = AtomicInteger(0)
-        
+
         if (healthCheck != null) {
             healthChecks[id] = healthCheck
         }
-        
+
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "CrashSafeSupervisor",
@@ -177,13 +178,13 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                 "job_name" to name,
                 "critical" to critical,
                 "restartable" to restartable,
-                "has_health_check" to (healthCheck != null)
-            )
+                "has_health_check" to (healthCheck != null),
+            ),
         )
-        
+
         return job
     }
-    
+
     /**
      * Unregister a managed job
      */
@@ -191,22 +192,22 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         val managedJob = managedJobs.remove(id)
         healthChecks.remove(id)
         restartCounts.remove(id)
-        
+
         managedJob?.let { job ->
             job.stopToken.requestStop()
             if (!job.job.isCompleted) {
                 job.job.cancel()
             }
-            
+
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 "CrashSafeSupervisor",
                 "job_unregistered",
-                mapOf("job_id" to id, "job_name" to job.name)
+                mapOf("job_id" to id, "job_name" to job.name),
             )
         }
     }
-    
+
     /**
      * Request graceful stop for a specific job
      */
@@ -214,16 +215,16 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         val managedJob = managedJobs[id]
         if (managedJob != null) {
             managedJob.stopToken.requestStop()
-            
+
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 "CrashSafeSupervisor",
                 "job_stop_requested",
-                mapOf("job_id" to id, "job_name" to managedJob.name)
+                mapOf("job_id" to id, "job_name" to managedJob.name),
             )
         }
     }
-    
+
     /**
      * Get status of all managed jobs
      */
@@ -239,11 +240,11 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                 restartable = managedJob.restartable,
                 restartCount = restartCounts[managedJob.id]?.get() ?: 0,
                 startTime = managedJob.startTime,
-                upTimeSeconds = (System.currentTimeMillis() - managedJob.startTime) / 1000
+                upTimeSeconds = (System.currentTimeMillis() - managedJob.startTime) / 1000,
             )
         }
     }
-    
+
     data class JobStatus(
         val id: String,
         val name: String,
@@ -254,21 +255,25 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         val restartable: Boolean,
         val restartCount: Int,
         val startTime: Long,
-        val upTimeSeconds: Long
+        val upTimeSeconds: Long,
     )
-    
+
     private fun handleSupervisorException(exception: Throwable) {
         logger.log(
             StructuredLogger.LogLevel.ERROR,
             "CrashSafeSupervisor",
             "supervisor_exception",
-            mapOf("error" to exception.message)
+            mapOf("error" to exception.message),
         )
-        
+
         Log.e(TAG, "Supervisor exception", exception)
     }
-    
-    private fun handleCriticalJobFailure(id: String, name: String, exception: Exception) {
+
+    private fun handleCriticalJobFailure(
+        id: String,
+        name: String,
+        exception: Exception,
+    ) {
         logger.log(
             StructuredLogger.LogLevel.ERROR,
             "CrashSafeSupervisor",
@@ -276,24 +281,24 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             mapOf(
                 "job_id" to id,
                 "job_name" to name,
-                "error" to exception.message
-            )
+                "error" to exception.message,
+            ),
         )
-        
+
         Log.e(TAG, "Critical job failure: $name ($id)", exception)
-        
+
         // For critical jobs, we might want to trigger a service restart
         // or notify the user of a critical system failure
     }
-    
+
     private fun scheduleJobRestart(
-        id: String, 
-        name: String, 
+        id: String,
+        name: String,
         jobFactory: suspend (StopToken) -> Unit,
-        originalStopToken: StopToken
+        originalStopToken: StopToken,
     ) {
         val restartCount = restartCounts[id]?.incrementAndGet() ?: 1
-        
+
         if (restartCount > maxRestartAttempts) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
@@ -303,25 +308,25 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                     "job_id" to id,
                     "job_name" to name,
                     "restart_count" to restartCount,
-                    "max_attempts" to maxRestartAttempts
-                )
+                    "max_attempts" to maxRestartAttempts,
+                ),
             )
             return
         }
-        
+
         supervisorScope.launch {
             delay(restartDelayMs)
-            
+
             if (originalStopToken.isStopRequested()) {
                 logger.log(
                     StructuredLogger.LogLevel.INFO,
                     "CrashSafeSupervisor",
                     "job_restart_cancelled",
-                    mapOf("job_id" to id, "job_name" to name)
+                    mapOf("job_id" to id, "job_name" to name),
                 )
                 return@launch
             }
-            
+
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 "CrashSafeSupervisor",
@@ -329,26 +334,27 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                 mapOf(
                     "job_id" to id,
                     "job_name" to name,
-                    "restart_attempt" to restartCount
-                )
+                    "restart_attempt" to restartCount,
+                ),
             )
-            
+
             try {
                 val newStopToken = StopToken()
-                val newJob = supervisorScope.launch {
-                    jobFactory(newStopToken)
-                }
-                
+                val newJob =
+                    supervisorScope.launch {
+                        jobFactory(newStopToken)
+                    }
+
                 // Update the managed job reference
                 managedJobs[id]?.let { oldManagedJob ->
-                    val updatedJob = oldManagedJob.copy(
-                        job = newJob,
-                        stopToken = newStopToken,
-                        startTime = System.currentTimeMillis()
-                    )
+                    val updatedJob =
+                        oldManagedJob.copy(
+                            job = newJob,
+                            stopToken = newStopToken,
+                            startTime = System.currentTimeMillis(),
+                        )
                     managedJobs[id] = updatedJob
                 }
-                
             } catch (e: Exception) {
                 logger.log(
                     StructuredLogger.LogLevel.ERROR,
@@ -358,13 +364,13 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                         "job_id" to id,
                         "job_name" to name,
                         "restart_attempt" to restartCount,
-                        "error" to e.message
-                    )
+                        "error" to e.message,
+                    ),
                 )
             }
         }
     }
-    
+
     private fun startHealthMonitoring() {
         supervisorScope.launch {
             while (isRunning.get()) {
@@ -375,20 +381,20 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                         StructuredLogger.LogLevel.ERROR,
                         "CrashSafeSupervisor",
                         "health_check_error",
-                        mapOf("error" to e.message)
+                        mapOf("error" to e.message),
                     )
                 }
-                
+
                 delay(healthCheckIntervalMs)
             }
         }
     }
-    
+
     private suspend fun performHealthChecks() {
         healthChecks.forEach { (jobId, healthCheck) ->
             try {
                 val status = healthCheck.checkHealth()
-                
+
                 logger.log(
                     StructuredLogger.LogLevel.DEBUG,
                     "CrashSafeSupervisor",
@@ -396,14 +402,13 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                     mapOf(
                         "job_id" to jobId,
                         "healthy" to status.isHealthy,
-                        "message" to status.message
-                    ) + status.details
+                        "message" to status.message,
+                    ) + status.details,
                 )
-                
+
                 if (!status.isHealthy) {
                     handleUnhealthyJob(jobId, status)
                 }
-                
             } catch (e: Exception) {
                 logger.log(
                     StructuredLogger.LogLevel.WARNING,
@@ -411,14 +416,17 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                     "health_check_exception",
                     mapOf(
                         "job_id" to jobId,
-                        "error" to e.message
-                    )
+                        "error" to e.message,
+                    ),
                 )
             }
         }
     }
-    
-    private fun handleUnhealthyJob(jobId: String, status: HealthStatus) {
+
+    private fun handleUnhealthyJob(
+        jobId: String,
+        status: HealthStatus,
+    ) {
         val managedJob = managedJobs[jobId]
         if (managedJob != null && managedJob.restartable) {
             logger.log(
@@ -428,15 +436,15 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                 mapOf(
                     "job_id" to jobId,
                     "job_name" to managedJob.name,
-                    "health_message" to status.message
-                )
+                    "health_message" to status.message,
+                ),
             )
-            
+
             // Cancel the unhealthy job and trigger a restart
             managedJob.job.cancel("Health check failed: ${status.message}")
         }
     }
-    
+
     /**
      * Graceful shutdown of the supervisor
      */
@@ -444,22 +452,22 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         if (!isRunning.getAndSet(false)) {
             return
         }
-        
+
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "CrashSafeSupervisor",
             "supervisor_shutdown_started",
-            mapOf("managed_jobs" to managedJobs.size)
+            mapOf("managed_jobs" to managedJobs.size),
         )
-        
+
         // Request stop for all managed jobs
         managedJobs.values.forEach { managedJob ->
             managedJob.stopToken.requestStop()
         }
-        
+
         // Cancel supervisor scope
         supervisorScope.cancel()
-        
+
         // Wait a bit for graceful shutdown
         try {
             runBlocking {
@@ -470,17 +478,17 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         } catch (e: Exception) {
             Log.w(TAG, "Timeout waiting for supervisor shutdown", e)
         }
-        
+
         managedJobs.clear()
         healthChecks.clear()
         restartCounts.clear()
-        
+
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "CrashSafeSupervisor",
-            "supervisor_shutdown_completed"
+            "supervisor_shutdown_completed",
         )
-        
+
         Log.i(TAG, "Crash-safe supervisor shutdown completed")
     }
 }

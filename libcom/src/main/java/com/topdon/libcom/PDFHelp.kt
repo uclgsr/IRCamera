@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable
 import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfDocument.PageInfo
 import android.os.Build
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -17,7 +16,6 @@ import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.UriUtils
 import com.blankj.utilcode.util.Utils
 import com.topdon.lib.core.config.FileConfig
-import com.topdon.lib.core.utils.CommUtils
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -27,8 +25,12 @@ import java.io.FileOutputStream
  * @date: 2023/5/5 17:41
  */
 object PDFHelp {
-
-    fun savePdfFileByListView(name: String, view: ScrollView, viewList: MutableList<View>, watermarkView: View): String {
+    fun savePdfFileByListView(
+        name: String,
+        view: ScrollView,
+        viewList: MutableList<View>,
+        watermarkView: View,
+    ): String {
         val onePageHeight: Int = (view.width * 297f / 210f).toInt() // A4纸宽高比210:297
 
         var onePageContentHeight = 0f
@@ -42,15 +44,16 @@ object PDFHelp {
 
         for (index in 0 until viewList.size) {
             val contentHeight = viewList[index].measuredHeight
-            if (onePageContentHeight + contentHeight > onePageHeight) {//超出内容，另起一页
+            if (onePageContentHeight + contentHeight > onePageHeight) { // 超出内容，另起一页
                 onePageContentHeight = 0f
                 pdfDocument.finishPage(page)
                 page = null
             }
             if (page == null) {
-                val pageInfo = PageInfo.Builder(view.width, onePageHeight, 1)
-                    .setContentRect(Rect(0, 0, view.width, onePageHeight))
-                    .create()
+                val pageInfo =
+                    PageInfo.Builder(view.width, onePageHeight, 1)
+                        .setContentRect(Rect(0, 0, view.width, onePageHeight))
+                        .create()
                 page = pdfDocument.startPage(pageInfo)
                 canvas = page.canvas
                 canvas.drawRect(0f, 0f, view.width.toFloat(), onePageHeight.toFloat(), paint)
@@ -78,7 +81,6 @@ object PDFHelp {
             }
         }
 
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             val pdfFile = File(FileConfig.getPdfDir(), "$name.pdf")
             val fos = FileOutputStream(pdfFile)
@@ -92,7 +94,7 @@ object PDFHelp {
             values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
             values.put(
                 MediaStore.MediaColumns.RELATIVE_PATH,
-                FileConfig.getPdfDir()
+                FileConfig.getPdfDir(),
             )
             val contentUri = MediaStore.Files.getContentUri("external")
             val uri = Utils.getApp().contentResolver.insert(contentUri, values)
@@ -111,6 +113,4 @@ object PDFHelp {
             }
         }
     }
-
-
 }

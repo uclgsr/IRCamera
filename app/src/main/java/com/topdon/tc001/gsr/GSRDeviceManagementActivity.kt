@@ -6,8 +6,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,23 +13,23 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrDeviceManagementBinding
+import com.topdon.ble.util.BluetoothPermissionUtils
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
-import com.topdon.ble.util.BluetoothPermissionUtils
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * GSR Device Management Activity - UI parity with IR camera device management
  * Provides comprehensive device discovery, connection, and configuration interface
  * following the same patterns as thermal camera (Topdon TC001) management
  */
-class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagementBinding>(), 
+class GSRDeviceManagementActivity :
+    BaseBindingActivity<ActivityGsrDeviceManagementBinding>(),
     View.OnClickListener {
-    
     companion object {
         private const val TAG = "GSRDeviceManagement"
-        
+
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, GSRDeviceManagementActivity::class.java))
         }
@@ -41,74 +39,75 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
     private var gsrSensorRecorder: GSRSensorRecorder? = null
     private lateinit var deviceAdapter: GSRDeviceAdapter
     private val discoveredDevices = mutableListOf<GSRDeviceInfo>()
-    
+
     // Permission handling
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var pendingOperation: (() -> Unit)? = null
-    
+
     // Device scanning state
     private var isScanning = false
     private var isConnecting = false
-    
+
     override fun initContentLayoutId() = R.layout.activity_gsr_device_management
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         prefs = getSharedPreferences("gsr_device_prefs", Context.MODE_PRIVATE)
-        
+
         initializeUI()
         setupPermissionHandling()
         initializeGSRComponents()
         setupDeviceListRecycler()
         loadSavedDevices()
     }
-    
+
     /**
      * Initialize UI components and event listeners - matching IR camera pattern
      */
     private fun initializeUI() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GSR Device Management"
-        
+
         // Setup click listeners
         binding.scanDevicesButton.setOnClickListener(this)
         binding.stopScanButton.setOnClickListener(this)
         binding.refreshButton.setOnClickListener(this)
         binding.settingsButton.setOnClickListener(this)
-        
+
         // Setup device connection status indicators
         updateConnectionStatus("Not Connected")
-        
+
         // Setup scanning indicator
         binding.scanningIndicator.visibility = View.GONE
-        
+
         // Setup device list empty state
         updateDeviceListState()
     }
-    
+
     /**
      * Setup permission handling system
      */
     private fun setupPermissionHandling() {
-        permissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-            val allGranted = permissions.values.all { it }
-            
-            if (allGranted) {
-                Log.i(TAG, "All required permissions granted")
-                enableDeviceOperations(true)
-                pendingOperation?.invoke()
-                pendingOperation = null
-            } else {
-                Log.w(TAG, "Some permissions were denied")
-                showPermissionRequiredDialog()
-                enableDeviceOperations(false)
+        permissionLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.RequestMultiplePermissions(),
+            ) { permissions ->
+                val allGranted = permissions.values.all { it }
+
+                if (allGranted) {
+                    Log.i(TAG, "All required permissions granted")
+                    enableDeviceOperations(true)
+                    pendingOperation?.invoke()
+                    pendingOperation = null
+                } else {
+                    Log.w(TAG, "Some permissions were denied")
+                    showPermissionRequiredDialog()
+                    enableDeviceOperations(false)
+                }
             }
-        }
     }
-    
+
     /**
      * Initialize GSR sensor recorder and components
      */
@@ -117,7 +116,7 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
             try {
                 gsrSensorRecorder = GSRSensorRecorder(this@GSRDeviceManagementActivity)
                 val initialized = gsrSensorRecorder?.initialize() ?: false
-                
+
                 if (initialized) {
                     Log.i(TAG, "GSR sensor recorder initialized successfully")
                     enableDeviceOperations(BluetoothPermissionUtils.hasBluetoothPermissions(this@GSRDeviceManagementActivity))
@@ -125,29 +124,29 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
                     Log.w(TAG, "GSR sensor recorder initialization failed")
                     showErrorMessage("Failed to initialize GSR system")
                 }
-                
             } catch (e: Exception) {
                 Log.e(TAG, "Error initializing GSR components", e)
                 showErrorMessage("Error initializing GSR system: ${e.message}")
             }
         }
     }
-    
+
     /**
      * Setup device list RecyclerView - matching IR camera device list pattern
      */
     private fun setupDeviceListRecycler() {
-        deviceAdapter = GSRDeviceAdapter(discoveredDevices) { device ->
-            // Device item click handler
-            connectToDevice(device)
-        }
-        
+        deviceAdapter =
+            GSRDeviceAdapter(discoveredDevices) { device ->
+                // Device item click handler
+                connectToDevice(device)
+            }
+
         binding.deviceRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@GSRDeviceManagementActivity)
             adapter = deviceAdapter
         }
     }
-    
+
     /**
      * Load previously discovered and saved devices
      */
@@ -160,7 +159,7 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
             Log.w(TAG, "Failed to load saved devices", e)
         }
     }
-    
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.scanDevicesButton -> startDeviceScan()
@@ -169,7 +168,7 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
             R.id.settingsButton -> openGSRSettings()
         }
     }
-    
+
     /**
      * Start device scanning - matches IR camera discovery pattern
      */
@@ -180,50 +179,50 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
             }
             return
         }
-        
+
         if (isScanning) {
             Log.w(TAG, "Device scan already in progress")
             return
         }
-        
+
         lifecycleScope.launch {
             try {
                 isScanning = true
                 updateScanningState(true)
-                
+
                 Log.i(TAG, "Starting GSR device scan")
-                
+
                 // Clear previous results
                 discoveredDevices.clear()
                 deviceAdapter.notifyDataSetChanged()
                 updateDeviceListState()
-                
+
                 // Perform device discovery
                 val devices = gsrSensorRecorder?.getAvailableShimmerDevices() ?: emptyList()
-                
+
                 // Simulate progressive discovery (like IR camera scanning)
                 devices.forEach { deviceName ->
                     delay(500) // Simulate discovery time
-                    
-                    val deviceInfo = GSRDeviceInfo(
-                        name = deviceName,
-                        address = extractMacAddress(deviceName),
-                        rssi = -50, // Simulated signal strength
-                        isConnected = false,
-                        batteryLevel = 85, // Simulated battery
-                        firmwareVersion = "1.0.0"
-                    )
-                    
+
+                    val deviceInfo =
+                        GSRDeviceInfo(
+                            name = deviceName,
+                            address = extractMacAddress(deviceName),
+                            rssi = -50, // Simulated signal strength
+                            isConnected = false,
+                            batteryLevel = 85, // Simulated battery
+                            firmwareVersion = "1.0.0",
+                        )
+
                     discoveredDevices.add(deviceInfo)
                     deviceAdapter.notifyItemInserted(discoveredDevices.size - 1)
                     updateDeviceListState()
-                    
+
                     Log.d(TAG, "Discovered GSR device: $deviceName")
                 }
-                
+
                 Log.i(TAG, "Device scan completed. Found ${devices.size} devices")
                 showToast("Found ${devices.size} GSR devices")
-                
             } catch (e: Exception) {
                 Log.e(TAG, "Device scan failed", e)
                 showErrorMessage("Device scan failed: ${e.message}")
@@ -233,19 +232,19 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
             }
         }
     }
-    
+
     /**
      * Stop device scanning if in progress
      */
     private fun stopDeviceScan() {
         if (!isScanning) return
-        
+
         isScanning = false
         updateScanningState(false)
         Log.i(TAG, "Device scan stopped by user")
         showToast("Device scan stopped")
     }
-    
+
     /**
      * Refresh device list and connection status
      */
@@ -257,9 +256,9 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
                     // Check if device is still available and connected
                     device.isConnected = checkDeviceConnection(device.address)
                 }
-                
+
                 deviceAdapter.notifyDataSetChanged()
-                
+
                 // Update current connection status
                 val connectedDevice = discoveredDevices.find { it.isConnected }
                 if (connectedDevice != null) {
@@ -267,15 +266,14 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
                 } else {
                     updateConnectionStatus("Not Connected")
                 }
-                
+
                 Log.i(TAG, "Device list refreshed")
-                
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to refresh device list", e)
             }
         }
     }
-    
+
     /**
      * Connect to selected GSR device - matches IR camera connection pattern
      */
@@ -284,40 +282,39 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
             Log.w(TAG, "Connection already in progress")
             return
         }
-        
+
         if (!BluetoothPermissionUtils.hasBluetoothPermissions(this)) {
             requestRequiredPermissions {
                 connectToDevice(device)
             }
             return
         }
-        
+
         lifecycleScope.launch {
             try {
                 isConnecting = true
                 updateConnectionStatus("Connecting to ${device.name}...")
-                
+
                 Log.i(TAG, "Attempting to connect to GSR device: ${device.name}")
-                
+
                 val success = gsrSensorRecorder?.connectToShimmerDevice(device.address) ?: false
-                
+
                 if (success) {
                     device.isConnected = true
                     updateConnectionStatus("Connected to ${device.name}")
                     saveDeviceConnection(device)
                     showToast("Successfully connected to ${device.name}")
-                    
+
                     Log.i(TAG, "Successfully connected to GSR device: ${device.name}")
                 } else {
                     device.isConnected = false
                     updateConnectionStatus("Connection failed")
                     showErrorMessage("Failed to connect to ${device.name}")
-                    
+
                     Log.w(TAG, "Failed to connect to GSR device: ${device.name}")
                 }
-                
+
                 deviceAdapter.notifyDataSetChanged()
-                
             } catch (e: Exception) {
                 Log.e(TAG, "Connection attempt failed", e)
                 device.isConnected = false
@@ -329,30 +326,30 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
             }
         }
     }
-    
+
     /**
      * Open GSR settings activity
      */
     private fun openGSRSettings() {
         GSRSettingsActivity.startActivity(this)
     }
-    
+
     /**
      * Request required permissions with user explanation
      */
     private fun requestRequiredPermissions(onGranted: (() -> Unit)? = null) {
         val missingPermissions = BluetoothPermissionUtils.getMissingPermissions(this)
-        
+
         if (missingPermissions.isEmpty()) {
             enableDeviceOperations(true)
             onGranted?.invoke()
             return
         }
-        
+
         pendingOperation = onGranted
         permissionLauncher.launch(missingPermissions.toTypedArray())
     }
-    
+
     /**
      * Update scanning state UI indicators
      */
@@ -362,21 +359,22 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
         binding.stopScanButton.visibility = if (scanning) View.VISIBLE else View.GONE
         binding.scanProgressText.text = if (scanning) "Scanning for devices..." else ""
     }
-    
+
     /**
      * Update connection status display
      */
     private fun updateConnectionStatus(status: String) {
         binding.connectionStatusText.text = status
-        
-        val color = when {
-            status.contains("Connected", ignoreCase = true) -> getColor(android.R.color.holo_green_dark)
-            status.contains("Connecting", ignoreCase = true) -> getColor(android.R.color.holo_orange_dark)
-            else -> getColor(android.R.color.holo_red_dark)
-        }
+
+        val color =
+            when {
+                status.contains("Connected", ignoreCase = true) -> getColor(android.R.color.holo_green_dark)
+                status.contains("Connecting", ignoreCase = true) -> getColor(android.R.color.holo_orange_dark)
+                else -> getColor(android.R.color.holo_red_dark)
+            }
         binding.connectionStatusText.setTextColor(color)
     }
-    
+
     /**
      * Update device list empty state
      */
@@ -387,10 +385,10 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
         } else {
             binding.emptyStateText.visibility = View.GONE
         }
-        
+
         binding.deviceCountText.text = "${discoveredDevices.size} device(s) found"
     }
-    
+
     /**
      * Enable or disable device operation buttons based on permissions
      */
@@ -398,7 +396,7 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
         binding.scanDevicesButton.isEnabled = enabled && !isScanning
         binding.refreshButton.isEnabled = enabled
     }
-    
+
     /**
      * Show permission required dialog
      */
@@ -412,7 +410,7 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
             .setNegativeButton("Cancel", null)
             .show()
     }
-    
+
     /**
      * Utility methods
      */
@@ -424,12 +422,12 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
             "00:00:00:00:00:00" // Default/unknown MAC
         }
     }
-    
+
     private suspend fun checkDeviceConnection(address: String): Boolean {
         // Check if device is currently connected
         return gsrSensorRecorder?.getShimmerConnectionStatus()?.contains("Connected") == true
     }
-    
+
     private fun saveDeviceConnection(device: GSRDeviceInfo) {
         // Save successful connection for future reference
         prefs.edit().apply {
@@ -438,18 +436,18 @@ class GSRDeviceManagementActivity : BaseBindingActivity<ActivityGsrDeviceManagem
             apply()
         }
     }
-    
+
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-    
+
     private fun showErrorMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
-    
+
     override fun onDestroy() {
         super.onDestroy()
-        
+
         // Cleanup GSR components
         lifecycleScope.launch {
             try {
@@ -470,5 +468,5 @@ data class GSRDeviceInfo(
     val rssi: Int,
     var isConnected: Boolean,
     val batteryLevel: Int,
-    val firmwareVersion: String
+    val firmwareVersion: String,
 )

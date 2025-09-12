@@ -20,9 +20,8 @@ import java.util.*
 
 // Legacy ARouter route annotation - now using NavigationManager
 class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnClickListener {
-
     override fun initContentLayoutId(): Int = R.layout.activity_version
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()

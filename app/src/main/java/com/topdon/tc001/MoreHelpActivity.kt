@@ -18,9 +18,9 @@ import com.topdon.lib.core.utils.Constants
 class MoreHelpActivity : BaseBindingActivity<ActivityMoreHelpBinding>() {
     private var connectionType: Int = 0
     private lateinit var wifiManager: WifiManager
-    
+
     override fun initContentLayoutId(): Int = R.layout.activity_more_help
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()

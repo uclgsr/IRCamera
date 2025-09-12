@@ -3,9 +3,9 @@ package com.topdon.menu.adapter
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.topdon.menu.R as MenuR
 import com.topdon.lib.core.R
 import com.topdon.menu.constant.TargetType
+import com.topdon.menu.R as MenuR
 
 /**
  * 观测模式-菜单4-标靶 菜单所用 Adapter.
@@ -21,7 +21,6 @@ import com.topdon.menu.constant.TargetType
  */
 @SuppressLint("NotifyDataSetChanged")
 internal class TargetAdapter : BaseMenuAdapter() {
-
     /**
      * 观测模式-菜单4-标靶 点击事件监听.
      */
@@ -31,7 +30,10 @@ internal class TargetAdapter : BaseMenuAdapter() {
      * 设置指定选项的选中状态.
      * 对于一些互斥的选中取消选中操作，由于历史遗留现在先不改动，丢给上层去维护这个互斥状态.
      */
-    fun setSelected(targetType: TargetType, isSelected: Boolean) {
+    fun setSelected(
+        targetType: TargetType,
+        isSelected: Boolean,
+    ) {
         for (i in dataArray.indices) {
             if (dataArray[i].targetType == targetType) {
                 dataArray[i].isSelected = isSelected
@@ -53,36 +55,40 @@ internal class TargetAdapter : BaseMenuAdapter() {
     fun setTargetMode(modeCode: Int) {
         for (i in dataArray.indices) {
             if (dataArray[i].targetType == TargetType.MODE) {
-                dataArray[i].drawableId = when (modeCode) {
-                    11 -> MenuR.drawable.selector_menu2_target_1_sheep
-                    12 -> MenuR.drawable.selector_menu2_target_1_dog
-                    13 -> MenuR.drawable.selector_menu2_target_1_bird
-                    else -> MenuR.drawable.selector_menu2_target_1_person
-                }
+                dataArray[i].drawableId =
+                    when (modeCode) {
+                        11 -> MenuR.drawable.selector_menu2_target_1_sheep
+                        12 -> MenuR.drawable.selector_menu2_target_1_dog
+                        13 -> MenuR.drawable.selector_menu2_target_1_bird
+                        else -> MenuR.drawable.selector_menu2_target_1_person
+                    }
                 notifyItemChanged(i)
                 break
             }
         }
     }
 
+    private val dataArray: Array<Data> =
+        arrayOf(
+            Data(R.string.main_tab_second_measure_mode, MenuR.drawable.selector_menu2_target_1_person, TargetType.MODE),
+            Data(R.string.main_tab_first_target, MenuR.drawable.selector_menu2_target_2_style, TargetType.STYLE),
+            Data(R.string.main_tab_second_target_color, MenuR.drawable.selector_menu2_target_3_color, TargetType.COLOR),
+            Data(R.string.thermal_delete, MenuR.drawable.selector_menu2_del, TargetType.DELETE),
+            Data(R.string.main_tab_second_target_help, MenuR.drawable.selector_menu2_target_4_help, TargetType.HELP),
+        )
 
-    private val dataArray: Array<Data> = arrayOf(
-        Data(R.string.main_tab_second_measure_mode, MenuR.drawable.selector_menu2_target_1_person, TargetType.MODE),
-        Data(R.string.main_tab_first_target, MenuR.drawable.selector_menu2_target_2_style, TargetType.STYLE),
-        Data(R.string.main_tab_second_target_color, MenuR.drawable.selector_menu2_target_3_color, TargetType.COLOR),
-        Data(R.string.thermal_delete, MenuR.drawable.selector_menu2_del, TargetType.DELETE),
-        Data(R.string.main_tab_second_target_help, MenuR.drawable.selector_menu2_target_4_help, TargetType.HELP),
-    )
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         val data: Data = dataArray[position]
         holder.binding.ivIcon.setImageResource(data.drawableId)
         holder.binding.tvText.setText(data.stringId)
         holder.binding.ivIcon.isSelected = data.isSelected
         holder.binding.tvText.isSelected = data.isSelected
         holder.binding.clRoot.setOnClickListener {
-            //标靶颜色以生效才视为高亮选中的，这里先保持旧代码逻辑，
-            //菜单的选中刷新丢给上层的 listener 去做，后面有空再考虑更改
+            // 标靶颜色以生效才视为高亮选中的，这里先保持旧代码逻辑，
+            // 菜单的选中刷新丢给上层的 listener 去做，后面有空再考虑更改
 //            data.isSelected = !data.isSelected
 //            holder.binding.ivIcon.isSelected = data.isSelected
 //            holder.binding.tvText.isSelected = data.isSelected

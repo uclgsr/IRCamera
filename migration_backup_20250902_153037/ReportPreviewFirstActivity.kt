@@ -16,9 +16,7 @@ import kotlinx.android.synthetic.main.activity_report_preview_first.*
  * - 可选：检测条件 [ExtraKeyConfig.REPORT_CONDITION]
  */
 @Route(path = RouterConfig.REPORT_PREVIEW_FIRST)
-class ReportPreviewFirstActivity: BaseActivity() {
-
-
+class ReportPreviewFirstActivity : BaseActivity() {
     override fun initContentView() = R.layout.activity_report_preview_first
 
     override fun initView() {

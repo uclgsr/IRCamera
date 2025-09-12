@@ -19,24 +19,39 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 try:
     import cv2
     import numpy as np
+
     OPENCV_AVAILABLE = True
 except ImportError:
     OPENCV_AVAILABLE = False
+
     # Mock numpy and cv2 for environments without OpenCV
     class MockOpenCV:
-        def findChessboardCorners(self, *args, **kwargs): return False, None
-        def calibrateCamera(self, *args, **kwargs): return 0, None, None, None, None
-        def undistort(self, *args, **kwargs): return None
+        def findChessboardCorners(self, *args, **kwargs):
+            return False, None
+
+        def calibrateCamera(self, *args, **kwargs):
+            return 0, None, None, None, None
+
+        def undistort(self, *args, **kwargs):
+            return None
+
         TERM_CRITERIA_EPS = 1
         TERM_CRITERIA_MAX_ITER = 2
+
     cv2 = MockOpenCV()
     try:
         import numpy as np
     except ImportError:
+
         class MockNumPy:
-            def array(self, *args, **kwargs): return []
-            def zeros(self, *args, **kwargs): return []
+            def array(self, *args, **kwargs):
+                return []
+
+            def zeros(self, *args, **kwargs):
+                return []
+
             float32 = float
+
         np = MockNumPy()
 
 from loguru import logger
@@ -466,15 +481,17 @@ class CameraCalibrator:
             logger.error(f"Failed to finalize calibration: {e}")
             return None
 
-    def get_calibration_status(self, device_id: str, session_id: str, camera_type: Union[CameraType, str]) -> Dict[str, Any]:
+    def get_calibration_status(
+        self, device_id: str, session_id: str, camera_type: Union[CameraType, str]
+    ) -> Dict[str, Any]:
         """
         Get calibration session status
-        
+
         Args:
             device_id: Device identifier
             session_id: Session identifier
             camera_type: Camera type (CameraType enum or string)
-            
+
         Returns:
             Dictionary containing session status
         """
@@ -483,17 +500,17 @@ class CameraCalibrator:
             camera_type_str = camera_type.value
         else:
             camera_type_str = str(camera_type)
-            
+
         calibration_id = f"{device_id}_{camera_type_str}_{session_id}"
-        
+
         if calibration_id not in self.active_sessions:
             return {
                 "exists": False,
                 "status": "not_started",
                 "images_collected": 0,
-                "min_images": self.min_images
+                "min_images": self.min_images,
             }
-        
+
         session_data = self.active_sessions[calibration_id]
         return {
             "exists": True,
@@ -502,19 +519,21 @@ class CameraCalibrator:
             "min_images": self.min_images,
             "session_data": {
                 "start_time": session_data["start_time"],
-                "image_resolution": session_data["image_resolution"]
-            }
+                "image_resolution": session_data["image_resolution"],
+            },
         }
 
-    def cancel_calibration(self, device_id: str, session_id: str, camera_type: Union[CameraType, str]) -> bool:
+    def cancel_calibration(
+        self, device_id: str, session_id: str, camera_type: Union[CameraType, str]
+    ) -> bool:
         """
         Cancel an active calibration session
-        
+
         Args:
             device_id: Device identifier
             session_id: Session identifier
             camera_type: Camera type (CameraType enum or string)
-            
+
         Returns:
             True if session was canceled, False if not found
         """
@@ -523,20 +542,20 @@ class CameraCalibrator:
             camera_type_str = camera_type.value
         else:
             camera_type_str = str(camera_type)
-            
+
         calibration_id = f"{device_id}_{camera_type_str}_{session_id}"
-        
+
         if calibration_id in self.active_sessions:
             del self.active_sessions[calibration_id]
             logger.info(f"Canceled calibration session: {calibration_id}")
             return True
-        
+
         return False
 
     def get_active_calibrations(self) -> List[str]:
         """
         Get list of active calibration session IDs
-        
+
         Returns:
             List of calibration session identifiers
         """
@@ -567,69 +586,92 @@ class CameraCalibrator:
             # Extract calibration data from both cameras
             left_intrinsics = left_result.intrinsics
             right_intrinsics = right_result.intrinsics
-            
+
             # Create camera matrices from intrinsics
-            camera_matrix_left = np.array([
-                [left_intrinsics.fx, 0, left_intrinsics.cx],
-                [0, left_intrinsics.fy, left_intrinsics.cy],
-                [0, 0, 1]
-            ], dtype=np.float64)
-            
-            camera_matrix_right = np.array([
-                [right_intrinsics.fx, 0, right_intrinsics.cx],
-                [0, right_intrinsics.fy, right_intrinsics.cy],
-                [0, 0, 1]
-            ], dtype=np.float64)
-            
+            camera_matrix_left = np.array(
+                [
+                    [left_intrinsics.fx, 0, left_intrinsics.cx],
+                    [0, left_intrinsics.fy, left_intrinsics.cy],
+                    [0, 0, 1],
+                ],
+                dtype=np.float64,
+            )
+
+            camera_matrix_right = np.array(
+                [
+                    [right_intrinsics.fx, 0, right_intrinsics.cx],
+                    [0, right_intrinsics.fy, right_intrinsics.cy],
+                    [0, 0, 1],
+                ],
+                dtype=np.float64,
+            )
+
             # Distortion coefficients
-            dist_coeffs_left = np.array(left_intrinsics.distortion_coeffs, dtype=np.float64)
-            dist_coeffs_right = np.array(right_intrinsics.distortion_coeffs, dtype=np.float64)
-            
+            dist_coeffs_left = np.array(
+                left_intrinsics.distortion_coeffs, dtype=np.float64
+            )
+            dist_coeffs_right = np.array(
+                right_intrinsics.distortion_coeffs, dtype=np.float64
+            )
+
             # For stereo calibration, we need corresponding object and image points
             # In a real implementation, you'd collect synchronized stereo image pairs
             # For now, we'll create a working calibration based on the individual results
-            
+
             # Get the image resolution from the calibration results
             image_size = left_result.image_resolution
-            
+
             # Create synthetic corresponding points for demonstration
             # In production, use actual stereo chessboard detections
             object_points_stereo = []
             image_points_left_stereo = []
             image_points_right_stereo = []
-            
+
             # Generate calibration pattern points (9x6 chessboard, 25mm squares)
             pattern_size = (9, 6)
             square_size = 25.0  # mm
-            
+
             # Create 3D object points for chessboard
             objp = np.zeros((pattern_size[0] * pattern_size[1], 3), np.float32)
-            objp[:,:2] = np.mgrid[0:pattern_size[0], 0:pattern_size[1]].T.reshape(-1,2) * square_size
-            
+            objp[:, :2] = (
+                np.mgrid[0 : pattern_size[0], 0 : pattern_size[1]].T.reshape(-1, 2)
+                * square_size
+            )
+
             # Simulate stereo correspondences (would be real detections in production)
-            num_stereo_pairs = max(15, min(left_result.num_images_used, right_result.num_images_used))
-            
+            num_stereo_pairs = max(
+                15, min(left_result.num_images_used, right_result.num_images_used)
+            )
+
             for i in range(num_stereo_pairs):
                 # Add object points (same for both cameras)
                 object_points_stereo.append(objp)
-                
+
                 # Simulate detected corners with realistic noise and stereo offset
-                base_corners_left = self._generate_realistic_corners(pattern_size, image_size, i)
-                base_corners_right = self._generate_stereo_corners(base_corners_left, baseline_offset=100)
-                
+                base_corners_left = self._generate_realistic_corners(
+                    pattern_size, image_size, i
+                )
+                base_corners_right = self._generate_stereo_corners(
+                    base_corners_left, baseline_offset=100
+                )
+
                 image_points_left_stereo.append(base_corners_left)
                 image_points_right_stereo.append(base_corners_right)
-            
+
             # Perform stereo calibration using OpenCV
-            logger.info(f"Performing stereo calibration with {len(object_points_stereo)} image pairs")
-            
+            logger.info(
+                f"Performing stereo calibration with {len(object_points_stereo)} image pairs"
+            )
+
             # Stereo calibration flags
-            flags = (cv2.CALIB_FIX_INTRINSIC + 
-                    cv2.CALIB_RATIONAL_MODEL +
-                    cv2.CALIB_FIX_ASPECT_RATIO +
-                    cv2.CALIB_ZERO_TANGENT_DIST +
-                    cv2.CALIB_SAME_FOCAL_LENGTH)
-            
+            flags = (
+                cv2.CALIB_FIX_INTRINSIC
+                + cv2.CALIB_RATIONAL_MODEL
+                + cv2.CALIB_FIX_ASPECT_RATIO
+                + cv2.CALIB_ZERO_TANGENT_DIST
+                + cv2.CALIB_SAME_FOCAL_LENGTH
+            )
+
             # Run stereo calibration
             ret, _, _, _, _, R, T, E, F = cv2.stereoCalibrate(
                 object_points_stereo,
@@ -641,20 +683,28 @@ class CameraCalibrator:
                 dist_coeffs_right,
                 image_size,
                 flags=flags,
-                criteria=(cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 1e-5)
+                criteria=(
+                    cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER,
+                    100,
+                    1e-5,
+                ),
             )
-            
+
             logger.info(f"Stereo calibration completed with RMS error: {ret:.3f}")
-            
+
             # Compute rectification transforms
             R1, R2, P1, P2, Q, roi_left, roi_right = cv2.stereoRectify(
-                camera_matrix_left, dist_coeffs_left,
-                camera_matrix_right, dist_coeffs_right,
-                image_size, R, T,
+                camera_matrix_left,
+                dist_coeffs_left,
+                camera_matrix_right,
+                dist_coeffs_right,
+                image_size,
+                R,
+                T,
                 flags=cv2.CALIB_ZERO_DISPARITY,
-                alpha=0.9  # 0=crop everything, 1=keep everything
+                alpha=0.9,  # 0=crop everything, 1=keep everything
             )
-            
+
             # Create stereo calibration result
             stereo_calibration = StereoCalibration(
                 rotation_matrix=R.tolist(),
@@ -669,62 +719,70 @@ class CameraCalibrator:
                 roi_left=roi_left,
                 roi_right=roi_right,
                 baseline=float(np.linalg.norm(T)),
-                convergence_angle=float(np.arccos(np.clip(np.trace(R) - 1) / 2, -1, 1)) * 180 / np.pi
+                convergence_angle=float(np.arccos(np.clip(np.trace(R) - 1) / 2, -1, 1))
+                * 180
+                / np.pi,
             )
-            
+
             # Update calibration results with stereo information
             left_result.stereo = stereo_calibration
             right_result.stereo = stereo_calibration
-            
+
             logger.info(f"Stereo calibration completed successfully")
             logger.info(f"Baseline: {stereo_calibration.baseline:.2f}mm")
-            logger.info(f"Convergence angle: {stereo_calibration.convergence_angle:.2f}°")
-            
+            logger.info(
+                f"Convergence angle: {stereo_calibration.convergence_angle:.2f}°"
+            )
+
             return stereo_calibration
 
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Failed to perform stereo calibration: {e}")
             return None
 
-    def _generate_realistic_corners(self, pattern_size: tuple, image_size: tuple, seed: int) -> np.ndarray:
+    def _generate_realistic_corners(
+        self, pattern_size: tuple, image_size: tuple, seed: int
+    ) -> np.ndarray:
         """Generate realistic chessboard corner points with noise."""
         np.random.seed(seed)
-        
+
         # Grid spacing based on image size
         grid_width = image_size[0] * 0.6 / pattern_size[0]
         grid_height = image_size[1] * 0.6 / pattern_size[1]
-        
+
         # Center the grid in the image
         start_x = (image_size[0] - grid_width * (pattern_size[0] - 1)) / 2
         start_y = (image_size[1] - grid_height * (pattern_size[1] - 1)) / 2
-        
+
         corners = []
         for j in range(pattern_size[1]):
             for i in range(pattern_size[0]):
                 # Base position
                 x = start_x + i * grid_width
                 y = start_y + j * grid_height
-                
+
                 # Add realistic noise (subpixel accuracy)
                 noise_x = np.random.normal(0, 0.2)
                 noise_y = np.random.normal(0, 0.2)
-                
+
                 corners.append([x + noise_x, y + noise_y])
-        
+
         return np.array(corners, dtype=np.float32)
-    
-    def _generate_stereo_corners(self, left_corners: np.ndarray, baseline_offset: float) -> np.ndarray:
+
+    def _generate_stereo_corners(
+        self, left_corners: np.ndarray, baseline_offset: float
+    ) -> np.ndarray:
         """Generate corresponding right camera corners with stereo disparity."""
         right_corners = left_corners.copy()
-        
+
         # Add disparity (horizontal offset) based on baseline and depth
         for i in range(len(right_corners)):
             # Simulate depth-dependent disparity
             depth_factor = 0.8 + 0.4 * np.random.random()  # Vary depth
             disparity = baseline_offset / depth_factor
-            
+
             # Add some vertical disparity for realism
             right_corners[i, 0] -= disparity + np.random.normal(0, 0.1)
             right_corners[i, 1] += np.random.normal(0, 0.05)  # Small vertical offset
-        
+
         return right_corners

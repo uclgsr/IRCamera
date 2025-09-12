@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.activity_connect_tips.*
  */
 @Route(path = RouterConfig.IR_CONNECT_TIPS)
 class ConnectTipsActivity : BaseActivity() {
-
     /**
      * 从上一界面传递过来的，当前是否为 TC007 设备类型.
      * true-TC007 false-其他插件式设备
@@ -40,8 +39,9 @@ class ConnectTipsActivity : BaseActivity() {
         if (isTC007) {
             tv_tips1.setText(R.string.tc007_connect_tips1)
         } else {
-            tv_tips1.text = SpanBuilder(getString(R.string.ts004_guide_text2))
-                .appendDrawable(this, R.drawable.svg_connect_tips_m, SizeUtils.sp2px(18f))
+            tv_tips1.text =
+                SpanBuilder(getString(R.string.ts004_guide_text2))
+                    .appendDrawable(this, R.drawable.svg_connect_tips_m, SizeUtils.sp2px(18f))
         }
         iv_tips1.setImageResource(if (isTC007) R.drawable.ic_connect_tips_tc007_1 else R.drawable.ic_connect_tips_ts004_1)
 
@@ -55,18 +55,19 @@ class ConnectTipsActivity : BaseActivity() {
 
         tv_more_help.movementMethod = LinkMovementMethod.getInstance()
         tv_more_help.isVisible = !isTC007
-        tv_more_help.text = SpanBuilder().appendColorAndClick(
-            this,
-            R.string.ts004_guide_text7,
-            getString(R.string.ts004_guide_text6),
-            0xcc06aaff.toInt(),
-            true
-        ) {
-            ARouter.getInstance()
-                .build(RouterConfig.IR_MORE_HELP)
-                .withInt(Constants.SETTING_CONNECTION_TYPE, Constants.SETTING_CONNECTION)
-                .navigation(this)
-        }
+        tv_more_help.text =
+            SpanBuilder().appendColorAndClick(
+                this,
+                R.string.ts004_guide_text7,
+                getString(R.string.ts004_guide_text6),
+                0xcc06aaff.toInt(),
+                true,
+            ) {
+                ARouter.getInstance()
+                    .build(RouterConfig.IR_MORE_HELP)
+                    .withInt(Constants.SETTING_CONNECTION_TYPE, Constants.SETTING_CONNECTION)
+                    .navigation(this)
+            }
     }
 
     override fun initData() {

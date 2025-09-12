@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.dialog_transfer.view.*
  * Created by LCG on 2024/3/26.
  */
 class TransferDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
-
     var max: Int
         get() = contentView.seek_bar.max
         set(value) {
@@ -27,7 +26,6 @@ class TransferDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
         set(value) {
             contentView.seek_bar.progress = value
         }
-
 
     private val contentView: View = LayoutInflater.from(context).inflate(R.layout.dialog_transfer, null)
 

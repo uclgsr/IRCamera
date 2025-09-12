@@ -11,7 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class IRConfigViewModel(application: Application) : AndroidViewModel(application) {
-
     val configLiveData = SingleLiveEvent<ModelBean>()
 
     /**
@@ -26,7 +25,10 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
     /**
      * 更新默认参数中的环境温度，单位摄氏度。
      */
-    fun updateDefaultEnvironment(isTC007: Boolean, environment: Float) {
+    fun updateDefaultEnvironment(
+        isTC007: Boolean,
+        environment: Float,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             val modelBean = configLiveData.value ?: ConfigRepository.read(isTC007)
             modelBean.defaultModel.environment = environment
@@ -38,7 +40,10 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
     /**
      * 更新默认参数中的距离，单位不详。
      */
-    fun updateDefaultDistance(isTC007: Boolean, distance: Float) {
+    fun updateDefaultDistance(
+        isTC007: Boolean,
+        distance: Float,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             val modelBean = configLiveData.value ?: ConfigRepository.read(isTC007)
             modelBean.defaultModel.distance = distance
@@ -50,7 +55,10 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
     /**
      * 更新默认参数中的发射率。
      */
-    fun updateDefaultRadiation(isTC007: Boolean, radiation: Float) {
+    fun updateDefaultRadiation(
+        isTC007: Boolean,
+        radiation: Float,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             val modelBean = configLiveData.value ?: ConfigRepository.read(isTC007)
             modelBean.defaultModel.radiation = radiation
@@ -83,7 +91,10 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
      * 选择模式
      * @param id 0:默认模式   > 0 采用自定义模式
      */
-    fun checkConfig(isTC007: Boolean, id: Int) {
+    fun checkConfig(
+        isTC007: Boolean,
+        id: Int,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             val modelBean = configLiveData.value ?: ConfigRepository.read(isTC007)
             modelBean.defaultModel.use = id == 0
@@ -99,14 +110,17 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
      * 删除自定义模式
      * @param id 自定义模式 id
      */
-    fun deleteConfig(isTC007: Boolean, id: Int) {
+    fun deleteConfig(
+        isTC007: Boolean,
+        id: Int,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             val modelBean = configLiveData.value ?: ConfigRepository.read(isTC007)
             var removeAt = modelBean.myselfModel.size
             for (i in modelBean.myselfModel.indices) {
                 val dataBean = modelBean.myselfModel[i]
                 if (dataBean.id == id) {
-                    if (dataBean.use) {//删除当前正在使用的自定义模式，变更为使用默认模式
+                    if (dataBean.use) { // 删除当前正在使用的自定义模式，变更为使用默认模式
                         modelBean.defaultModel.use = true
                     }
                     modelBean.myselfModel.removeAt(i)
@@ -132,7 +146,10 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
     /**
      * 更新一项自定义参数.
      */
-    fun updateCustom(isTC007: Boolean, dataBean: DataBean) {
+    fun updateCustom(
+        isTC007: Boolean,
+        dataBean: DataBean,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             val modelBean = configLiveData.value ?: ConfigRepository.read(isTC007)
             for (i in modelBean.myselfModel.indices) {
@@ -145,5 +162,4 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
             configLiveData.postValue(modelBean)
         }
     }
-
 }

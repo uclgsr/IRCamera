@@ -2,10 +2,8 @@ package com.topdon.module.thermal.ir.activity
 
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.view.View
 import android.view.WindowManager
-import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.CollectionUtils
@@ -22,7 +20,6 @@ import com.google.android.material.appbar.AppBarLayout
 // import com.topdon.lib.core.bean.HouseRepPreviewItemBean
 // import com.topdon.lib.core.bean.HouseRepPreviewProjectItemBean
 import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.db.AppDatabase
 import com.topdon.lib.core.db.entity.HouseReport
 import com.topdon.lib.core.ktbase.BaseActivity
@@ -32,7 +29,6 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.adapter.ReportPreviewAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import kotlin.math.abs
 
 // Temporary data class stubs to resolve compilation issues
@@ -47,24 +43,24 @@ data class HouseRepPreviewBean(
     var houseArea: String = "",
     var expenses: String = "",
     var inspectorWhitePath: String = "",
-    var houseOwnerWhitePath: String = ""
+    var houseOwnerWhitePath: String = "",
 )
 
 data class HouseRepPreviewItemBean(
     var projectItemBeans: ArrayList<HouseRepPreviewProjectItemBean>? = null,
     var albumItemBeans: ArrayList<HouseRepPreviewAlbumItemBean>? = null,
-    var itemName: String = ""
+    var itemName: String = "",
 )
 
 data class HouseRepPreviewProjectItemBean(
     var projectName: String = "",
     var state: String = "",
-    var remark: String = ""
+    var remark: String = "",
 )
 
 data class HouseRepPreviewAlbumItemBean(
     var photoPath: String = "",
-    var title: String = ""
+    var title: String = "",
 )
 
 /**
@@ -74,7 +70,6 @@ data class HouseRepPreviewAlbumItemBean(
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
-
     // Disabled - ViewModels from removed house module
     // private val detectViewModel: DetectViewModel by viewModels()
     // private val reportViewModel: ReportViewModel by viewModels()
@@ -132,7 +127,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
         tvArea = findViewById(R.id.tv_area)
         tvCost = findViewById(R.id.tv_cost)
         rcyFloor = findViewById(R.id.rcy_floor)
-        
+
         showLoadingDialog("")
         isReport = intent.getBooleanExtra(ExtraKeyConfig.IS_REPORT, false)
         tvSave.isEnabled = false
@@ -144,11 +139,12 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
         rlyInspectorSignature.setOnClickListener(this)
         rlyHouseOwnerSignature.setOnClickListener(this)
 
-        if(clSign.isShown){
-            val mAppBarChildAt: View = layAppbar.getChildAt(0)
-            val mAppBarParams = mAppBarChildAt.layoutParams as AppBarLayout.LayoutParams
-            mAppBarParams.scrollFlags = 0
-        }
+        if (clSign.isShown)
+            {
+                val mAppBarChildAt: View = layAppbar.getChildAt(0)
+                val mAppBarParams = mAppBarChildAt.layoutParams as AppBarLayout.LayoutParams
+                mAppBarParams.scrollFlags = 0
+            }
 
         // Disabled - ViewModels from removed house module
         // detectViewModel.detectLD.observe(this) {
@@ -176,26 +172,29 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
         // } else {//生成报告
         //     detectViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
         // }
-        
+
         // Temporary stub - disable save functionality without ViewModels
         tvSave.isEnabled = false
         dismissLoadingDialog()
     }
 
     override fun initData() {
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         setAvatorChange()
     }
 
     private fun setAvatorChange() {
         layAppbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            //verticalOffset始终为0以下的负数
+            // verticalOffset始终为0以下的负数
             val percent = abs(verticalOffset * 1.0f) / appBarLayout.totalScrollRange
             layToolbar.setBackgroundColor(changeAlpha(getColor(R.color.color_23202E), percent))
         }
     }
 
-    private fun changeAlpha(color: Int, fraction: Float): Int {
+    private fun changeAlpha(
+        color: Int,
+        fraction: Float,
+    ): Int {
         val red = Color.red(color)
         val green = Color.green(color)
         val blue = Color.blue(color)
@@ -224,17 +223,17 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             }
 
             tvSave -> {
-                if (isReport) {//分享
+                if (isReport) { // 分享
                     lifecycleScope.launch {
                         showLoadingDialog()
                         // Disabled - PDFUtil from removed house module
                         // PDFUtil.delAllPDF(this@ReportPreviewActivity)
                         // val pdfUri: Uri? = PDFUtil.savePDF(this@ReportPreviewActivity, houseReport)
                         dismissLoadingDialog()
-                        
+
                         // Disabled PDF functionality - house module removed
                         TToast.shortToast(this@ReportPreviewActivity, "PDF sharing disabled - house module removed")
-                        
+
                         // Original PDF sharing code commented out:
                         // if (pdfUri != null) {
                         //     val shareIntent = Intent()
@@ -244,7 +243,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
                         //     startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
                         // }
                     }
-                } else {//定稿并保存
+                } else { // 定稿并保存
                     if (houseReport.inspectorWhitePath.isEmpty() || houseReport.houseOwnerWhitePath.isEmpty()) {
                         if (clSign.bottom + layAppbar.height > llSave.top) {
                             layAppbar.setExpanded(false, true)
@@ -272,21 +271,25 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             val whitePath = data?.getStringExtra(ExtraKeyConfig.RESULT_PATH_WHITE) ?: return
             val blackPath = data.getStringExtra(ExtraKeyConfig.RESULT_PATH_BLACK) ?: return
             when (requestCode) {
                 1000 -> {
-                    //检测师签名
+                    // 检测师签名
                     Glide.with(this).load(whitePath).into(ivInspectorSignature)
                     houseReport.inspectorWhitePath = whitePath
                     houseReport.inspectorBlackPath = blackPath
                 }
 
                 1001 -> {
-                    //房主签名
+                    // 房主签名
                     Glide.with(this).load(whitePath).into(ivHouseOwnerSignature)
                     houseReport.houseOwnerWhitePath = whitePath
                     houseReport.houseOwnerBlackPath = blackPath
@@ -356,9 +359,10 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             }
 
             var isEmpty =
-                CollectionUtils.isEmpty(itemBean.projectItemBeans) && CollectionUtils.isEmpty(
-                    itemBean.albumItemBeans
-                )
+                CollectionUtils.isEmpty(itemBean.projectItemBeans) &&
+                    CollectionUtils.isEmpty(
+                        itemBean.albumItemBeans,
+                    )
             if (CollectionUtils.isNotEmpty(itemBean.projectItemBeans)) {
                 itemBean.projectItemBeans?.add(0, HouseRepPreviewProjectItemBean())
             }
@@ -383,12 +387,16 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             tvCost.text = it.expenses
 
             rcyFloor.layoutManager = LinearLayoutManager(this)
-            val reportPreviewAdapter = ReportPreviewAdapter(this, it.itemBeans?.map { itemBean ->
-                // Convert local HouseRepPreviewItemBean to libapp HouseRepPreviewItemBean
-                com.topdon.lib.core.bean.HouseRepPreviewItemBean().apply {
-                    // Map properties as needed - this is a simplified conversion
-                }
-            } ?: emptyList())
+            val reportPreviewAdapter =
+                ReportPreviewAdapter(
+                    this,
+                    it.itemBeans?.map { itemBean ->
+                        // Convert local HouseRepPreviewItemBean to libapp HouseRepPreviewItemBean
+                        com.topdon.lib.core.bean.HouseRepPreviewItemBean().apply {
+                            // Map properties as needed - this is a simplified conversion
+                        }
+                    } ?: emptyList(),
+                )
             rcyFloor.isNestedScrollingEnabled = false
             rcyFloor.adapter = reportPreviewAdapter
 

@@ -15,17 +15,14 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
 import kotlinx.android.synthetic.main.dialog_msg.view.*
 
-
 /**
  * 消息提示窗
  * create by fylder on 2018/6/15
  **/
 class MsgDialog : Dialog {
-
     constructor(context: Context) : super(context)
 
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
-
 
     class Builder {
         var dialog: MsgDialog? = null
@@ -44,7 +41,9 @@ class MsgDialog : Dialog {
             this.context = context
         }
 
-        fun setImg(@DrawableRes res: Int): Builder {
+        fun setImg(
+            @DrawableRes res: Int,
+        ): Builder {
             this.imgRes = res
             return this
         }
@@ -54,7 +53,9 @@ class MsgDialog : Dialog {
             return this
         }
 
-        fun setMessage(@StringRes message: Int): Builder {
+        fun setMessage(
+            @StringRes message: Int,
+        ): Builder {
             this.message = context!!.getString(message)
             return this
         }
@@ -68,7 +69,6 @@ class MsgDialog : Dialog {
             this.dialog!!.dismiss()
         }
 
-
         fun create(): MsgDialog {
             if (dialog == null) {
                 dialog = MsgDialog(context!!, R.style.InfoDialog)
@@ -80,18 +80,19 @@ class MsgDialog : Dialog {
             messageText = view.dialog_msg_text
             closeImg = view.dialog_msg_close
             dialog!!.addContentView(
-                view, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                view,
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT),
             )
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    //竖屏
+                    // 竖屏
                     0.9
                 } else {
-                    //横屏
+                    // 横屏
                     0.3
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() //设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(false)
@@ -101,14 +102,14 @@ class MsgDialog : Dialog {
                     positiveClickListener!!.onClick(dialog!!)
                 }
             }
-            //img
+            // img
             if (imgRes != 0) {
                 tipImg?.visibility = View.VISIBLE
                 tipImg?.setImageResource(imgRes)
             } else {
                 tipImg?.visibility = View.GONE
             }
-            //msg
+            // msg
             if (message != null) {
                 messageText?.visibility = View.VISIBLE
                 messageText?.setText(message, TextView.BufferType.NORMAL)
@@ -120,7 +121,6 @@ class MsgDialog : Dialog {
             return dialog as MsgDialog
         }
     }
-
 
     /**
      * 提交回调

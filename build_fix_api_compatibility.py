@@ -12,29 +12,30 @@ import shutil
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+
 def fix_api_compatibility_issues():
     """Fix API level compatibility issues in the build configuration."""
-    
+
     print("🔧 Fixing API compatibility issues...")
-    
+
     # 1. Update minSdk to 26 to support MethodHandle if needed
     version_catalog = Path("gradle/libs.versions.toml")
     if version_catalog.exists():
         content = version_catalog.read_text()
-        
+
         # Check if we need to update minSdk for MethodHandle compatibility
         if 'minSdk = "24"' in content:
             print("   📱 Updating minSdk from 24 to 26 for MethodHandle compatibility")
             content = content.replace('minSdk = "24"', 'minSdk = "26"')
             version_catalog.write_text(content)
-    
+
     # 2. Add compatibility configurations to app build.gradle.kts
     app_build_gradle = Path("app/build.gradle.kts")
     if app_build_gradle.exists():
         content = app_build_gradle.read_text()
-        
+
         # Add MethodHandle compatibility configuration if not present
-        compatibility_config = '''
+        compatibility_config = """
     // API compatibility configuration
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -53,14 +54,14 @@ def fix_api_compatibility_issues():
             "-opt-in=kotlinx.coroutines.FlowPreview",
             "-Xjvm-default=all"  // Enable default methods for better Java interop
         )
-    }'''
-        
+    }"""
+
         # Only add if not already configured properly
-        if 'Xjvm-default=all' not in content and 'kotlinOptions' in content:
+        if "Xjvm-default=all" not in content and "kotlinOptions" in content:
             # Find kotlinOptions block and enhance it
             content = re.sub(
-                r'kotlinOptions\s*\{[^}]*\}',
-                '''kotlinOptions {
+                r"kotlinOptions\s*\{[^}]*\}",
+                """kotlinOptions {
         jvmTarget = "17"
         apiVersion = "1.9"
         languageVersion = "1.9"
@@ -70,20 +71,20 @@ def fix_api_compatibility_issues():
             "-opt-in=kotlinx.coroutines.FlowPreview",
             "-Xjvm-default=all"
         )
-    }''',
+    }""",
                 content,
-                flags=re.MULTILINE | re.DOTALL
+                flags=re.MULTILINE | re.DOTALL,
             )
             app_build_gradle.write_text(content)
             print("   🔧 Enhanced Kotlin configuration for better API compatibility")
-    
+
     # 3. Fix dependency conflicts that might cause MethodHandle issues
     if app_build_gradle.exists():
         content = app_build_gradle.read_text()
-        
+
         # Add dependency resolution strategy for conflicting libraries
         if "configurations.all" not in content:
-            dependency_fix = '''
+            dependency_fix = """
 // Enhanced dependency resolution strategy
 configurations.all {
     resolutionStrategy {
@@ -94,18 +95,20 @@ configurations.all {
         // Exclude conflicting MethodHandle implementations
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk7")
     }
-}'''
+}"""
             # Add before dependencies block
-            content = content.replace("dependencies {", dependency_fix + "\n\ndependencies {")
+            content = content.replace(
+                "dependencies {", dependency_fix + "\n\ndependencies {"
+            )
             app_build_gradle.write_text(content)
             print("   📦 Added enhanced dependency resolution strategy")
-    
+
     # 4. Create proguard rules to handle MethodHandle properly
     proguard_rules = Path("app/proguard-rules.pro")
     if proguard_rules.exists():
         content = proguard_rules.read_text()
-        
-        methodhandle_rules = '''
+
+        methodhandle_rules = """
 # MethodHandle API compatibility rules
 -keep class java.lang.invoke.** { *; }
 -dontwarn java.lang.invoke.**
@@ -119,21 +122,22 @@ configurations.all {
 # Network client compatibility
 -keep class com.topdon.tc001.network.** { *; }
 -keep class com.topdon.gsr.network.** { *; }
-'''
-        
+"""
+
         if "MethodHandle" not in content:
             content += methodhandle_rules
             proguard_rules.write_text(content)
             print("   🛡️  Added MethodHandle ProGuard rules")
-    
+
     print("✅ API compatibility fixes applied successfully")
+
 
 def validate_build_configuration():
     """Validate that build configuration is correct."""
     print("\n🔍 Validating build configuration...")
-    
+
     issues = []
-    
+
     # Check version catalog
     version_catalog = Path("gradle/libs.versions.toml")
     if version_catalog.exists():
@@ -144,7 +148,7 @@ def validate_build_configuration():
             print("   ✅ compileSdk is 35 (latest)")
     else:
         issues.append("❌ gradle/libs.versions.toml not found")
-    
+
     # Check app build gradle
     app_build_gradle = Path("app/build.gradle.kts")
     if app_build_gradle.exists():
@@ -155,7 +159,7 @@ def validate_build_configuration():
             print("   ✅ JVM target configured")
     else:
         issues.append("❌ app/build.gradle.kts not found")
-    
+
     if issues:
         print("\n⚠️  Configuration issues found:")
         for issue in issues:
@@ -165,12 +169,13 @@ def validate_build_configuration():
         print("   ✅ Build configuration looks good")
         return True
 
+
 def create_compatibility_test():
     """Create a simple test to verify API compatibility."""
     test_file = Path("app/src/test/java/com/topdon/tc001/ApiCompatibilityTest.kt")
     test_file.parent.mkdir(parents=True, exist_ok=True)
-    
-    test_content = '''package com.topdon.tc001
+
+    test_content = """package com.topdon.tc001
 
 import org.junit.Test
 import org.junit.Assert.*
@@ -211,35 +216,36 @@ class ApiCompatibilityTest {
             assertTrue("NetworkClient class exists in codebase", true)
         }
     }
-}'''
-    
+}"""
+
     test_file.write_text(test_content)
     print(f"   📝 Created API compatibility test: {test_file}")
+
 
 def main():
     """Main function to run all compatibility fixes."""
     print("🚀 Android Build Configuration Compatibility Fix")
     print("=" * 50)
-    
+
     # Check if we're in the right directory
     if not Path("app/build.gradle.kts").exists():
         print("❌ Not in Android project root directory")
         print("   Please run this script from the IRCamera root directory")
         return 1
-    
+
     # Apply fixes
     fix_api_compatibility_issues()
-    
+
     # Validate configuration
     config_valid = validate_build_configuration()
-    
+
     # Create compatibility test
     create_compatibility_test()
-    
+
     print("\n" + "=" * 50)
     print("🎯 COMPATIBILITY FIX SUMMARY")
     print("=" * 50)
-    
+
     if config_valid:
         print("✅ Build configuration compatibility fixes applied successfully")
         print("\n📋 Next steps:")
@@ -252,6 +258,7 @@ def main():
         print("⚠️  Some configuration issues remain")
         print("   Review the warnings above and fix manually if needed")
         return 1
+
 
 if __name__ == "__main__":
     exit(main())

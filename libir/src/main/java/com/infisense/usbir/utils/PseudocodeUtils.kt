@@ -1,6 +1,5 @@
 package com.infisense.usbir.utils
 
-import android.widget.Switch
 import com.energy.iruvc.utils.CommonParams
 
 /**
@@ -8,9 +7,7 @@ import com.energy.iruvc.utils.CommonParams
  * @date: 2023/6/2 9:36
  */
 object PseudocodeUtils {
-
-
-    fun changeDualPseudocodeModelByOld(oldPseudocodeMode : Int) : CommonParams.PseudoColorUsbDualType {
+    fun changeDualPseudocodeModelByOld(oldPseudocodeMode: Int): CommonParams.PseudoColorUsbDualType {
         return when (oldPseudocodeMode) {
             1 -> {
                 CommonParams.PseudoColorUsbDualType.WHITE_HOT_MODE
@@ -51,7 +48,7 @@ object PseudocodeUtils {
     /**
      * 旧版sdk的兼容
      */
-    fun changePseudocodeModeByOld(oldPseudocodeMode : Int) : CommonParams.PseudoColorType {
+    fun changePseudocodeModeByOld(oldPseudocodeMode: Int): CommonParams.PseudoColorType {
         return when (oldPseudocodeMode) {
             1 -> {
                 CommonParams.PseudoColorType.PSEUDO_1
@@ -89,7 +86,7 @@ object PseudocodeUtils {
         }
     }
 
-    fun changePseudocodeModeByNew(pseudoColorType : CommonParams.PseudoColorType) : Int {
+    fun changePseudocodeModeByNew(pseudoColorType: CommonParams.PseudoColorType): Int {
         return when (pseudoColorType) {
             CommonParams.PseudoColorType.PSEUDO_1 -> {
                 1
@@ -126,6 +123,4 @@ object PseudocodeUtils {
             }
         }
     }
-
-
 }

@@ -18,15 +18,12 @@ import kotlinx.android.synthetic.main.dialog_tip.view.*
  * create by fylder on 2018/6/15
  **/
 class TipDialog : Dialog {
-
     constructor(context: Context) : super(context)
 
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
 
     override fun onBackPressed() {
-
     }
-
 
     class Builder(private val context: Context) {
         var dialog: TipDialog? = null
@@ -50,26 +47,40 @@ class TipDialog : Dialog {
             return this
         }
 
-        fun setMessage(@StringRes message: Int): Builder {
+        fun setMessage(
+            @StringRes message: Int,
+        ): Builder {
             this.message = context.getString(message)
             return this
         }
 
-        fun setPositiveListener(@StringRes strRes: Int, event: (() -> Unit)? = null): Builder {
+        fun setPositiveListener(
+            @StringRes strRes: Int,
+            event: (() -> Unit)? = null,
+        ): Builder {
             return setPositiveListener(context.getString(strRes), event)
         }
 
-        fun setPositiveListener(str: String, event: (() -> Unit)? = null): Builder {
+        fun setPositiveListener(
+            str: String,
+            event: (() -> Unit)? = null,
+        ): Builder {
             this.positiveStr = str
             this.positiveEvent = event
             return this
         }
 
-        fun setCancelListener(@StringRes strRes: Int, event: (() -> Unit)? = null): Builder {
+        fun setCancelListener(
+            @StringRes strRes: Int,
+            event: (() -> Unit)? = null,
+        ): Builder {
             return setCancelListener(context.getString(strRes), event)
         }
 
-        fun setCancelListener(str: String, event: (() -> Unit)? = null): Builder {
+        fun setCancelListener(
+            str: String,
+            event: (() -> Unit)? = null,
+        ): Builder {
             this.cancelStr = str
             this.cancelEvent = event
             return this
@@ -89,7 +100,6 @@ class TipDialog : Dialog {
             this.dialog!!.dismiss()
         }
 
-
         fun create(): TipDialog {
             if (dialog == null) {
                 dialog = TipDialog(context, R.style.InfoDialog)
@@ -100,7 +110,7 @@ class TipDialog : Dialog {
             val isPortrait = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
             val widthPixels = context.resources.displayMetrics.widthPixels
             val lp = dialog!!.window!!.attributes
-            lp.width = (widthPixels * if (isPortrait) 0.85 else 0.35).toInt() //设置宽度
+            lp.width = (widthPixels * if (isPortrait) 0.85 else 0.35).toInt() // 设置宽度
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceled)
@@ -125,7 +135,7 @@ class TipDialog : Dialog {
                 view.dialog_tip_cancel_btn.visibility = View.GONE
                 view.dialog_tip_cancel_btn.text = ""
             }
-            //msg
+            // msg
             if (message != null) {
                 view.dialog_tip_msg_text.visibility = View.VISIBLE
                 view.dialog_tip_msg_text.setText(message, TextView.BufferType.NORMAL)
@@ -133,7 +143,7 @@ class TipDialog : Dialog {
                 view.dialog_tip_msg_text.visibility = View.GONE
             }
 
-            //msg
+            // msg
             if (titleMessage != null) {
                 view.dialog_tip_title_msg_text.visibility = View.VISIBLE
                 view.dialog_tip_title_msg_text.setText(titleMessage, TextView.BufferType.NORMAL)
@@ -147,5 +157,4 @@ class TipDialog : Dialog {
             return dialog as TipDialog
         }
     }
-
 }

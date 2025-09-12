@@ -1,6 +1,5 @@
 package com.topdon.module.user.activity
 
-import android.os.Build
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
@@ -11,24 +10,21 @@ import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
 import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.bean.event.TS004ResetEvent
-import com.topdon.lib.core.common.SaveSettingUtil
-import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.ConfirmSelectDialog
+import com.topdon.lib.core.dialog.FirmwareUpDialog
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.http.tool.DownloadTool
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.repository.TS004Repository
 import com.topdon.lib.core.utils.Constants
 import com.topdon.lib.core.viewmodel.FirmwareViewModel
-import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.user.R
 import com.topdon.module.user.dialog.DownloadProDialog
 import com.topdon.module.user.dialog.FirmwareInstallDialog
-import com.topdon.lib.core.dialog.FirmwareUpDialog
 import kotlinx.android.synthetic.main.activity_more.*
 import kotlinx.android.synthetic.main.layout_upgrade.*
 import kotlinx.coroutines.delay
@@ -42,7 +38,6 @@ import java.text.DecimalFormat
  */
 @Route(path = RouterConfig.TS004_MORE)
 class MoreActivity : BaseActivity(), View.OnClickListener {
-
     private val firmwareViewModel: FirmwareViewModel by viewModels()
 
     override fun initContentView() = R.layout.activity_more
@@ -69,7 +64,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         firmwareViewModel.firmwareDataLD.observe(this) {
             tv_upgrade_point.isVisible = it != null
             dismissCameraLoading()
-            if (it == null) {//请求成功但没有固件升级包，即已是最新
+            if (it == null) { // 请求成功但没有固件升级包，即已是最新
                 ToastUtils.showShort(R.string.setting_firmware_update_latest_version)
             } else {
                 showFirmwareUpDialog(it)
@@ -84,40 +79,40 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            setting_device_information -> {//设备信息
+            setting_device_information -> { // 设备信息
                 ARouter.getInstance()
                     .build(RouterConfig.DEVICE_INFORMATION)
                     .withBoolean(ExtraKeyConfig.IS_TC007, false)
                     .navigation(this@MoreActivity)
             }
-            setting_tisr -> {//设置超分
+            setting_tisr -> { // 设置超分
                 ARouter.getInstance().build(RouterConfig.TISR).navigation(this@MoreActivity)
             }
-            setting_auto_save -> {//自动保存到手机
+            setting_auto_save -> { // 自动保存到手机
                 ARouter.getInstance().build(RouterConfig.AUTO_SAVE).navigation(this@MoreActivity)
             }
-            setting_storage_space -> {//TS004储存空间
+            setting_storage_space -> { // TS004储存空间
                 ARouter.getInstance().build(RouterConfig.STORAGE_SPACE).navigation(this@MoreActivity)
             }
-            setting_version -> {//固件版本
-                //由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释强制登录逻辑
+            setting_version -> { // 固件版本
+                // 由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释强制登录逻辑
 //                if (LMS.getInstance().isLogin) {
-                    val firmwareData = firmwareViewModel.firmwareDataLD.value
-                    if (firmwareData != null) {
-                        showFirmwareUpDialog(firmwareData)
-                    } else {
-                        XLog.i("TS004 固件升级 - 点击查询")
-                        showCameraLoading()
-                        firmwareViewModel.queryFirmware(true)
-                    }
+                val firmwareData = firmwareViewModel.firmwareDataLD.value
+                if (firmwareData != null) {
+                    showFirmwareUpDialog(firmwareData)
+                } else {
+                    XLog.i("TS004 固件升级 - 点击查询")
+                    showCameraLoading()
+                    firmwareViewModel.queryFirmware(true)
+                }
 //                } else {
 //                    LMS.getInstance().activityLogin()
 //                }
             }
-            setting_reset -> {//恢复出厂设置
+            setting_reset -> { // 恢复出厂设置
                 restoreFactory()
             }
-            setting_disconnect -> {//断开连接
+            setting_disconnect -> { // 断开连接
                 ARouter.getInstance().build(RouterConfig.IR_MORE_HELP)
                     .withInt(Constants.SETTING_CONNECTION_TYPE, Constants.SETTING_DISCONNECTION)
                     .navigation(this@MoreActivity)
@@ -135,22 +130,23 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         dialog.contentStr = firmwareData.updateStr
         dialog.isShowRestartTips = true
         dialog.onConfirmClickListener = {
-            //由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释下载逻辑
-            //downloadFirmware(firmwareData)
+            // 由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释下载逻辑
+            // downloadFirmware(firmwareData)
             installFirmware(FileConfig.getFirmwareFile(firmwareData.downUrl))
         }
         dialog.show()
     }
 
-    private fun getFileSizeStr(size: Long): String = if (size < 1024) {
-        "${size}B"
-    } else if (size < 1024 * 1024) {
-        DecimalFormat("#.0").format(size.toDouble() / 1024) + "KB"
-    } else if (size < 1024 * 1024 * 1024) {
-        DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024) + "MB"
-    } else {
-        DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024 / 1024) + "GB"
-    }
+    private fun getFileSizeStr(size: Long): String =
+        if (size < 1024) {
+            "${size}B"
+        } else if (size < 1024 * 1024) {
+            DecimalFormat("#.0").format(size.toDouble() / 1024) + "KB"
+        } else if (size < 1024 * 1024 * 1024) {
+            DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024) + "MB"
+        } else {
+            DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024 / 1024) + "GB"
+        }
 
     /**
      * 下载指定固件升级包
@@ -162,9 +158,10 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
             progressDialog.show()
 
             val file = FileConfig.getFirmwareFile("TS004${firmwareData.version}.zip")
-            val isSuccess = DownloadTool.download(firmwareData.downUrl, file) { current, total ->
-                progressDialog.refreshProgress(current, total)
-            }
+            val isSuccess =
+                DownloadTool.download(firmwareData.downUrl, file) { current, total ->
+                    progressDialog.refreshProgress(current, total)
+                }
             progressDialog.dismiss()
             if (isSuccess) {
                 XLog.d("TS004 固件升级 - 固件升级包下载成功，即将开始安装")

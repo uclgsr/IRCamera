@@ -13,16 +13,15 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.isVisible
 import com.topdon.lib.core.tools.UnitTools
 import com.topdon.module.thermal.ir.R
-import com.topdon.lib.core.R as LibR
 import com.topdon.module.thermal.ir.report.bean.ImageTempBean
+import com.topdon.lib.core.R as LibR
 
-class ReportIRInputView: LinearLayout {
-
+class ReportIRInputView : LinearLayout {
     companion object {
-        private const val TYPE_FULL = 0 //全图
-        private const val TYPE_POINT = 1//点
-        private const val TYPE_LINE = 2 //线
-        private const val TYPE_RECT = 3 //面
+        private const val TYPE_FULL = 0 // 全图
+        private const val TYPE_POINT = 1 // 点
+        private const val TYPE_LINE = 2 // 线
+        private const val TYPE_RECT = 3 // 面
     }
 
     // View references - migrated from synthetic views
@@ -83,7 +82,10 @@ class ReportIRInputView: LinearLayout {
         clExplain = findViewById(R.id.cl_explain)
     }
 
-    private fun setupTypeSpecificViews(type: Int, index: Int) {
+    private fun setupTypeSpecificViews(
+        type: Int,
+        index: Int,
+    ) {
         val tvMaxName = clMax.findViewById<TextView>(R.id.tv_item_name)
         val tvMinName = clMin.findViewById<TextView>(R.id.tv_item_name)
         val tvAverageName = clAverage.findViewById<TextView>(R.id.tv_item_name)
@@ -130,17 +132,17 @@ class ReportIRInputView: LinearLayout {
         val switchMax = clMax.findViewById<SwitchCompat>(R.id.switch_item)
         return switchMax.isChecked
     }
-    
+
     fun isSwitchMinCheck(): Boolean {
         val switchMin = clMin.findViewById<SwitchCompat>(R.id.switch_item)
         return switchMin.isChecked
     }
-    
+
     fun isSwitchAverageCheck(): Boolean {
         val switchAverage = clAverage.findViewById<SwitchCompat>(R.id.switch_item)
         return switchAverage.isChecked
     }
-    
+
     fun isSwitchExplainCheck(): Boolean {
         val switchExplain = clExplain.findViewById<SwitchCompat>(R.id.switch_item)
         return switchExplain.isChecked
@@ -150,17 +152,17 @@ class ReportIRInputView: LinearLayout {
         val etMax = clMax.findViewById<EditText>(R.id.et_item)
         return etMax.text.toString()
     }
-    
+
     fun getMinInput(): String {
         val etMin = clMin.findViewById<EditText>(R.id.et_item)
         return etMin.text.toString()
     }
-    
+
     fun getAverageInput(): String {
         val etAverage = clAverage.findViewById<EditText>(R.id.et_item)
         return etAverage.text.toString()
     }
-    
+
     fun getExplainInput(): String {
         val etExplain = clExplain.findViewById<EditText>(R.id.et_item)
         return etExplain.text.toString()
@@ -171,7 +173,7 @@ class ReportIRInputView: LinearLayout {
         val etMin = clMin.findViewById<EditText>(R.id.et_item)
         val etAverage = clAverage.findViewById<EditText>(R.id.et_item)
         val etExplain = clExplain.findViewById<EditText>(R.id.et_item)
-        
+
         tempBean?.max?.let {
             etMax.setText(UnitTools.showUnitValue(it.toFloat())?.toString())
         }
@@ -184,7 +186,10 @@ class ReportIRInputView: LinearLayout {
         etExplain.setText("")
     }
 
-    private fun setSwitchListener(switchCompat: SwitchCompat, editText: EditText) {
+    private fun setSwitchListener(
+        switchCompat: SwitchCompat,
+        editText: EditText,
+    ) {
         switchCompat.setOnCheckedChangeListener { _, isChecked ->
             editText.isVisible = isChecked
         }

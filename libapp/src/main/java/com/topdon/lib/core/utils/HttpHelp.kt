@@ -12,7 +12,6 @@ import com.topdon.lms.sdk.xutils.http.RequestParams
  * @date: 2023/5/12 17:17
  */
 object HttpHelp {
-
     /**
      * 获取首次报告列表
      * modelId：TC001 是950, TC002 是951, TC003是952
@@ -21,7 +20,7 @@ object HttpHelp {
         isTC007: Boolean,
         pageNumber: Int,
         iResponseCallback: IResponseCallback,
-    )  {
+    ) {
         val url = UrlConstant.BASE_URL + "api/v1/outProduce/testReport/getTestReport"
         val params = RequestParams()
         params.addBodyParameter("modelId", if (isTC007) 1783 else 950) // TC001-950, TC002-951, TC003-952 TC007-1783

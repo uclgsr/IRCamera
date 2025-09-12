@@ -80,16 +80,20 @@ def setup_logging() -> LogHandler:
     def gui_sink(record):
         try:
             # Handle both dict and Record object formats
-            if hasattr(record, 'level'):
+            if hasattr(record, "level"):
                 # New loguru Record object format
                 level = record.level.name
                 message = record.message
                 timestamp = record.time.strftime("%H:%M:%S")
-            elif hasattr(record, 'get'):
+            elif hasattr(record, "get"):
                 # Dictionary format for backwards compatibility
                 level = record.get("level", {}).get("name", "INFO")
                 message = record.get("message", "")
-                timestamp = record.get("time", "").strftime("%H:%M:%S") if record.get("time") else ""
+                timestamp = (
+                    record.get("time", "").strftime("%H:%M:%S")
+                    if record.get("time")
+                    else ""
+                )
             else:
                 # Fallback for unknown formats
                 level = "INFO"

@@ -7,34 +7,35 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.AppUtils
-import com.topdon.lib.core.bean.GalleryBean
 import com.topdon.lib.core.bean.HouseRepPreviewProjectItemBean
-import com.topdon.lib.core.utils.AppUtil
 import com.topdon.module.thermal.ir.R
 
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewFloorAdapter(
     val cxt: Context,
-    var dataList: List<HouseRepPreviewProjectItemBean>
+    var dataList: List<HouseRepPreviewProjectItemBean>,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     override fun getItemViewType(position: Int): Int {
         return position
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         return ItemView(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_report_floor_child, parent, false)
+                .inflate(R.layout.item_report_floor_child, parent, false),
         )
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         val bean = dataList[position]
         if (holder is ItemView) {
             holder.ivProblemState.visibility = if (position == 0) View.INVISIBLE else View.VISIBLE
@@ -44,9 +45,13 @@ class ReportPreviewFloorAdapter(
             holder.tvRepair.visibility = if (position == 0) View.VISIBLE else View.INVISIBLE
             holder.tvReplace.visibility = if (position == 0) View.VISIBLE else View.INVISIBLE
             holder.rlyParent.setBackgroundColor(
-                if (position == 0) Color.parseColor("#393643") else Color.parseColor(
-                    "#23202E"
-                )
+                if (position == 0) {
+                    Color.parseColor("#393643")
+                } else {
+                    Color.parseColor(
+                        "#23202E",
+                    )
+                },
             )
 
             if (position == 0) {

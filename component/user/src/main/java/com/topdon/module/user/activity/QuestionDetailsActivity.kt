@@ -1,7 +1,6 @@
 package com.topdon.module.user.activity
 
 import android.widget.TextView
-import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.module.user.R
 
@@ -10,7 +9,6 @@ import com.topdon.module.user.R
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class QuestionDetailsActivity : BaseActivity() {
-
     private lateinit var questionDetailsTitle: TextView
     private lateinit var questionDetailsContent: TextView
 
@@ -19,13 +17,11 @@ class QuestionDetailsActivity : BaseActivity() {
     override fun initView() {
         questionDetailsTitle = findViewById(R.id.question_details_title)
         questionDetailsContent = findViewById(R.id.question_details_content)
-        
+
         questionDetailsTitle.text = intent.getStringExtra("question")
         questionDetailsContent.text = intent.getStringExtra("answer")
     }
 
     override fun initData() {
-
     }
-
 }

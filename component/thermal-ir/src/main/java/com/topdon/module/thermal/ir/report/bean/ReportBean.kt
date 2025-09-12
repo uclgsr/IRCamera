@@ -11,5 +11,5 @@ data class ReportBean(
     val software_info: SoftwareInfo,
     val report_info: ReportInfoBean,
     val detection_condition: ReportConditionBean,
-    val infrared_data: List<ReportIRBean>
+    val infrared_data: List<ReportIRBean>,
 ) : Parcelable

@@ -71,14 +71,14 @@ class TipPreviewDialog : DialogFragment() {
                 getString(R.string.preview_step_1),
                 getString(R.string.preview_step_2),
             )
-            
+
         // Initialize views using binding
         checkBox = binding.dialogTipCheck
         imgClose = binding.imgClose
         viewPager = binding.viewPager
         tvContent = binding.tvContent
         indicateView = binding.indicateView
-        
+
         val adapter = PageAdapter(childFragmentManager)
         indicateView.itemCount = adapter.count
         viewPager.adapter = adapter
@@ -113,11 +113,10 @@ class TipPreviewDialog : DialogFragment() {
         )
     }
 
-    fun updateIndex(position: Int)  {
-        if (index == position)
-            {
-                return
-            }
+    fun updateIndex(position: Int) {
+        if (index == position) {
+            return
+        }
         indicateView.currentIndex = position
         viewPager.setCurrentItem(position, true)
         tvContent.text = titleList[position]
@@ -138,7 +137,7 @@ class TipPreviewDialog : DialogFragment() {
         dialog?.window?.attributes = params as WindowManager.LayoutParams
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
-    
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

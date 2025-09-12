@@ -66,7 +66,7 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
     /**
      * 刷新测量模式图标
      */
-    fun upCurrentMeasureMode(measureMode: Int)  {
+    fun upCurrentMeasureMode(measureMode: Int) {
         secondBean.clear()
         when (measureMode) {
             ObserveBean.TYPE_MEASURE_PERSON -> {

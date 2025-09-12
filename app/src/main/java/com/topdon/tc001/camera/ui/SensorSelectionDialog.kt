@@ -13,8 +13,6 @@ import com.csl.irCamera.R
 
 // Enhanced unified BLE integration for comprehensive sensor discovery
 import com.topdon.ble.UnifiedBleManager
-import com.topdon.ble.UnifiedDevice
-import android.bluetooth.BluetoothDevice
 
 /**
  * Dialog for selecting which sensors to include in multi-modal recording
@@ -44,7 +42,7 @@ class SensorSelectionDialog(
                 val unifiedBleManager = UnifiedBleManager.getInstance(context)
                 // Quick check for any previously connected Shimmer devices
                 val hasConnectedShimmerDevices = unifiedBleManager.getConnectedShimmerDevices().isNotEmpty()
-                
+
                 if (hasConnectedShimmerDevices) {
                     available.add(SensorType.GSR)
                     Log.d(TAG, "Connected Shimmer GSR devices found")

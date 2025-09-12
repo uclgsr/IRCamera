@@ -1,13 +1,11 @@
 package com.infisense.usbir.utils
 
-import android.graphics.Bitmap
 import android.util.Log
 import com.example.open3d.JNITool
 import com.topdon.lib.core.bean.AlarmBean
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
-import java.io.ByteArrayOutputStream
 import java.io.IOException
 
 /**
@@ -16,11 +14,9 @@ import java.io.IOException
  * @date: 2024/1/17 9:54
  */
 class IRImageHelp {
-
-
-    //自定义的颜色值
+    // 自定义的颜色值
     @Volatile
-    private var colorList: IntArray ?= null
+    private var colorList: IntArray? = null
 
     @Volatile
     private var places: FloatArray? = null
@@ -31,7 +27,7 @@ class IRImageHelp {
     private var maxRGB = IntArray(3)
     private var minRGB = IntArray(3)
 
-    fun getColorList() : IntArray?{
+    fun getColorList(): IntArray?  {
         return colorList
     }
 
@@ -45,7 +41,7 @@ class IRImageHelp {
         places: FloatArray?,
         isUseGray: Boolean,
         customMaxTemp: Float,
-        customMinTemp: Float
+        customMinTemp: Float,
     ) {
         if (colorList == null) {
             this.isUseGray = true
@@ -68,7 +64,6 @@ class IRImageHelp {
         }
     }
 
-
     /**
      * 自定义伪彩处理，在执行这个方法之前，变更伪彩属性时先通过 上面setColorList进行属性设置
      * @param imageDst ByteArray ： 图像数据，argb格式
@@ -77,7 +72,12 @@ class IRImageHelp {
      * @param imageHeight Int
      * @return ByteArray ： 返回处理后的图像数据，argb格式
      */
-    fun customPseudoColor(imageDst: ByteArray, temperatureSrc:ByteArray, imageWidth : Int, imageHeight : Int) : ByteArray{
+    fun customPseudoColor(
+        imageDst: ByteArray,
+        temperatureSrc: ByteArray,
+        imageWidth: Int,
+        imageHeight: Int,
+    ): ByteArray  {
         try {
             if (colorList != null && temperatureSrc != null) {
                 var j = 0
@@ -87,8 +87,12 @@ class IRImageHelp {
                 while (index < imageDstLength) {
                     // 温度换算公式
                     var temperature0: Float =
-                        ((temperatureSrc.get(j).toInt() and 0xff) + (temperatureSrc.get(j + 1)
-                            .toInt() and 0xff) * 256).toFloat()
+                        (
+                            (temperatureSrc.get(j).toInt() and 0xff) + (
+                                temperatureSrc.get(j + 1)
+                                    .toInt() and 0xff
+                            ) * 256
+                        ).toFloat()
                     temperature0 = (temperature0 / 64 - 273.15).toFloat()
                     if (temperature0 >= customMinTemp && temperature0 <= customMaxTemp) {
                         // OpencvTools disabled due to missing AAR dependencies
@@ -106,7 +110,7 @@ class IRImageHelp {
                             imageDst[index + 1] = rgb[1].toByte()
                             imageDst[index + 2] = rgb[2].toByte()
                         }
-                        */
+                         */
                         // Simple fallback: use temperature-based grayscale
                         val intensity = ((temperature0 - customMinTemp) / (customMaxTemp - customMinTemp) * 255).toInt().coerceIn(0, 255)
                         imageDst[index] = intensity.toByte()
@@ -135,18 +139,22 @@ class IRImageHelp {
             }
         } catch (exception: Exception) {
             Log.e("上色异常", exception.message!!)
-        }finally {
+        } finally {
             return imageDst
         }
     }
 
-
-
     /**
      * 等温尺处理,展示伪彩的温度范围内信息
      */
-    fun setPseudoColorMaxMin(imageDst: ByteArray?, temperatureSrc:ByteArray?,max : Float,
-                       min : Float,imageWidth : Int,imageHeight : Int){
+    fun setPseudoColorMaxMin(
+        imageDst: ByteArray?,
+        temperatureSrc: ByteArray?,
+        max: Float,
+        min: Float,
+        imageWidth: Int,
+        imageHeight: Int,
+    )  {
         if (temperatureSrc != null && (max != Float.MAX_VALUE || min != Float.MIN_VALUE)) {
             var j = 0
             val imageDstLength: Int = imageWidth * imageHeight * 4
@@ -156,18 +164,21 @@ class IRImageHelp {
             // 遍历像素点，过滤温度阈值
             var index = 0
             while (index < imageDstLength) {
-
                 // 温度换算公式
                 var temperature0: Float =
-                    ((temperatureSrc[j].toInt() and 0xff) + (temperatureSrc[j + 1]
-                        .toInt() and 0xff) * 256).toFloat()
+                    (
+                        (temperatureSrc[j].toInt() and 0xff) + (
+                            temperatureSrc[j + 1]
+                                .toInt() and 0xff
+                        ) * 256
+                    ).toFloat()
                 temperature0 = (temperature0 / 64 - 273.15).toFloat()
                 val y0: Int = imageDst!![j].toInt() and 0xff
                 if (temperature0 < biaochiMin || temperature0 > biaochiMax) {
                     val r: Int = imageDst!![index].toInt() and 0xff
                     val g: Int = imageDst!![index + 1].toInt() and 0xff
                     val b: Int = imageDst!![index + 2].toInt() and 0xff
-                    //灰度
+                    // 灰度
                     val grey = (r * 0.3f + g * 0.59f + b * 0.11f).toInt()
                     imageDst!![index] = grey.toByte()
                     imageDst!![index + 1] = grey.toByte()
@@ -179,30 +190,42 @@ class IRImageHelp {
             }
         }
     }
+
     /**
      * contourDetection 轮廓检测
      */
-    fun contourDetection(alarmBean : AlarmBean?,imageDst : ByteArray?,temperatureSrc : ByteArray?,
-                         imageWidth : Int,imageHeight : Int) : ByteArray?{
+    fun contourDetection(
+        alarmBean: AlarmBean?,
+        imageDst: ByteArray?,
+        temperatureSrc: ByteArray?,
+        imageWidth: Int,
+        imageHeight: Int,
+    ): ByteArray?  {
         if (alarmBean != null && imageDst != null && temperatureSrc != null) {
             if (alarmBean.isMarkOpen && (
-                        (alarmBean.highTemp != Float.MAX_VALUE && alarmBean.isHighOpen)  ||
-                                (alarmBean.isLowOpen && alarmBean.lowTemp != Float.MIN_VALUE)
-                    )) {
+                    (alarmBean.highTemp != Float.MAX_VALUE && alarmBean.isHighOpen) ||
+                        (alarmBean.isLowOpen && alarmBean.lowTemp != Float.MIN_VALUE)
+                )
+            ) {
                 try {
-                    val matByteArray = JNITool.draw_edge_from_temp_reigon_bitmap_argb_psd(imageDst,
-                        temperatureSrc,
-                        imageHeight,
-                        imageWidth,
-                        if (alarmBean.isHighOpen) alarmBean.highTemp else Float.MAX_VALUE,
-                        if (alarmBean.isLowOpen) alarmBean.lowTemp else Float.MIN_VALUE,
-                        alarmBean.highColor,
-                        alarmBean.lowColor,
-                        alarmBean.markType)
-                    val diffMat = Mat(
-                        imageHeight,
-                        imageWidth,
-                        CvType.CV_8UC3)
+                    val matByteArray =
+                        JNITool.draw_edge_from_temp_reigon_bitmap_argb_psd(
+                            imageDst,
+                            temperatureSrc,
+                            imageHeight,
+                            imageWidth,
+                            if (alarmBean.isHighOpen) alarmBean.highTemp else Float.MAX_VALUE,
+                            if (alarmBean.isLowOpen) alarmBean.lowTemp else Float.MIN_VALUE,
+                            alarmBean.highColor,
+                            alarmBean.lowColor,
+                            alarmBean.markType,
+                        )
+                    val diffMat =
+                        Mat(
+                            imageHeight,
+                            imageWidth,
+                            CvType.CV_8UC3,
+                        )
                     diffMat.put(0, 0, matByteArray)
                     Imgproc.cvtColor(diffMat, diffMat, Imgproc.COLOR_BGR2RGBA)
                     val grayData = ByteArray(diffMat.cols() * diffMat.rows() * 4)
@@ -215,7 +238,4 @@ class IRImageHelp {
         }
         return imageDst
     }
-
-
-
 }

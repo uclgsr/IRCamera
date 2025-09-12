@@ -24,7 +24,6 @@ import kotlinx.coroutines.launch
  * Created by LCG on 2024/4/8.
  */
 class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(context, R.style.TransparentDialog) {
-
     /**
      * 下一步点击事件监听，step：当前处于第`[1,3]`，在该步骤点击的下一步
      */
@@ -37,7 +36,6 @@ class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(c
 
     // Initialize view as class property for coroutine access
     private lateinit var ivBlurBg: ImageView
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,7 +87,6 @@ class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(c
             dismiss()
         }
 
-
         tvSkin1.setOnClickListener {
             onSkinClickListener?.invoke()
             dismiss()
@@ -129,7 +126,6 @@ class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(c
                     ivBlurBg.setImageBitmap(outputBitmap)
                 }
             } catch (_: Exception) {
-
             }
         }
     }

@@ -22,12 +22,11 @@ import org.greenrobot.eventbus.ThreadMode
  */
 @Route(path = RouterConfig.IR_CORRECTION)
 class IRCorrectionActivity : BaseActivity() {
-
     override fun initContentView(): Int = R.layout.activity_ir_correction
 
     override fun initView() {
         tv_correction.setOnClickListener {
-            val jumpIntent = Intent(this,IRCorrectionTwoActivity::class.java)
+            val jumpIntent = Intent(this, IRCorrectionTwoActivity::class.java)
             jumpIntent.putExtra(ExtraKeyConfig.IS_TC007, intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false))
             startActivity(jumpIntent)
         }

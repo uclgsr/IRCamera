@@ -48,11 +48,12 @@ class HouseHomeActivity : BaseActivity(), View.OnClickListener {
         iv_add.setOnClickListener(this)
         iv_exit_edit.setOnClickListener(this)
 
-        val backCallback = object : OnBackPressedCallback(false) {
-            override fun handleOnBackPressed() {
-                tabViewModel.isEditModeLD.value = false
+        val backCallback =
+            object : OnBackPressedCallback(false) {
+                override fun handleOnBackPressed() {
+                    tabViewModel.isEditModeLD.value = false
+                }
             }
-        }
         onBackPressedDispatcher.addCallback(this, backCallback)
 
         tabViewModel.isEditModeLD.observe(this) {
@@ -78,15 +79,17 @@ class HouseHomeActivity : BaseActivity(), View.OnClickListener {
         }
 
         view_pager2.adapter = ViewPagerAdapter(this)
-        view_pager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                if (position == 0) {//检测
-                    iv_edit.isEnabled = !detectViewModel.detectListLD.value.isNullOrEmpty()
-                } else {//报告
-                    iv_edit.isEnabled = !reportViewModel.reportListLD.value.isNullOrEmpty()
+        view_pager2.registerOnPageChangeCallback(
+            object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    if (position == 0) { // 检测
+                        iv_edit.isEnabled = !detectViewModel.detectListLD.value.isNullOrEmpty()
+                    } else { // 报告
+                        iv_edit.isEnabled = !reportViewModel.reportListLD.value.isNullOrEmpty()
+                    }
                 }
-            }
-        })
+            },
+        )
         TabLayoutMediator(tab_layout, view_pager2) { tab, position ->
             tab.setText(if (position == 0) R.string.app_detection else R.string.app_report)
         }.attach()
@@ -97,27 +100,26 @@ class HouseHomeActivity : BaseActivity(), View.OnClickListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDetectCreate(event: HouseReportAddEvent) {
-        //有新报告被创建时，切到报告页
+        // 有新报告被创建时，切到报告页
         view_pager2.currentItem = 1
     }
 
     override fun onClick(v: View?) {
         when (v) {
             iv_back -> finish()
-            iv_edit -> {//编辑
+            iv_edit -> { // 编辑
                 tabViewModel.isEditModeLD.value = true
             }
-            iv_add -> {//添加
+            iv_add -> { // 添加
                 val newIntent = Intent(this, DetectAddActivity::class.java)
                 newIntent.putExtra(ExtraKeyConfig.IS_TC007, intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false))
                 startActivity(newIntent)
             }
-            iv_exit_edit -> {//退出编辑
+            iv_exit_edit -> { // 退出编辑
                 tabViewModel.isEditModeLD.value = false
             }
         }
     }
-
 
     private class ViewPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(activity) {
         override fun getItemCount(): Int = 2

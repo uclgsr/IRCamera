@@ -4,22 +4,39 @@ import android.graphics.Paint
 import android.graphics.Rect
 import kotlin.math.roundToLong
 
+// 获取真实的x坐标
+fun realX(
+    str: String,
+    x: Float,
+    paint: Paint,
+) = x - textWidth(str, paint) / 2f
 
-//获取真实的x坐标
-fun realX(str: String, x: Float,paint: Paint) = x - textWidth(str,paint) / 2f
+fun realY(
+    str: String,
+    y: Float,
+    paint: Paint,
+) = y - textHeight(str, paint) / 4f
 
-fun realY(str: String, y: Float,paint: Paint) = y - textHeight(str,paint) / 4f
-
-fun textWidth(text: String,paint: Paint): Float {
-    return textDimensions(text,paint).first
+fun textWidth(
+    text: String,
+    paint: Paint,
+): Float {
+    return textDimensions(text, paint).first
 }
 
-fun textHeight(text: String,paint: Paint): Float {
-    return textDimensions(text,paint).second
+fun textHeight(
+    text: String,
+    paint: Paint,
+): Float {
+    return textDimensions(text, paint).second
 }
 
 val measurementRect = Rect()
-fun textDimensions(text: String,paint: Paint): Pair<Float, Float> {
+
+fun textDimensions(
+    text: String,
+    paint: Paint,
+): Pair<Float, Float> {
     paint.getTextBounds(text, 0, text.length, measurementRect)
     return measurementRect.width().toFloat() to measurementRect.height().toFloat()
 }
@@ -31,7 +48,11 @@ fun textDimensions(text: String,paint: Paint): Pair<Float, Float> {
  * @param divisor The divisor
  * @return The values between min and max, inclusive, that are divisible by divisor
  */
-fun getValuesBetween(min: Float, max: Float, divisor: Float): List<Float> {
+fun getValuesBetween(
+    min: Float,
+    max: Float,
+    divisor: Float,
+): List<Float> {
     val values = mutableListOf<Float>()
     val start = min.roundNearest(divisor)
     var i = start
@@ -59,14 +80,17 @@ fun getPixelLinear(
     bearing: Float,
     azimuth: Float,
     viewWidth: Float,
-    fovWidth: Float
+    fovWidth: Float,
 ): Float {
     val newBearing = deltaAngle(azimuth, bearing)
     val wPixelsPerDegree = viewWidth / fovWidth
     return viewWidth / 2f + newBearing * wPixelsPerDegree
 }
 
-fun deltaAngle(angle1: Float, angle2: Float): Float {
+fun deltaAngle(
+    angle1: Float,
+    angle2: Float,
+): Float {
     // These will be at most 360 degrees apart, so normalize them to restrict that
     val a = normalizeAngle(angle1 - angle2)
     val b = normalizeAngle(angle2 - angle1)
@@ -81,11 +105,19 @@ fun normalizeAngle(angle: Float): Float {
     return wrap(angle, 0f, 360f) % 360
 }
 
-fun wrap(value: Float, min: Float, max: Float): Float {
+fun wrap(
+    value: Float,
+    min: Float,
+    max: Float,
+): Float {
     return wrap(value.toDouble(), min.toDouble(), max.toDouble()).toFloat()
 }
 
-fun wrap(value: Double, min: Double, max: Double): Double {
+fun wrap(
+    value: Double,
+    min: Double,
+    max: Double,
+): Double {
     // https://stackoverflow.com/questions/14415753/wrap-value-into-range-min-max-without-division
     val range = max - min
     if (value < min) {

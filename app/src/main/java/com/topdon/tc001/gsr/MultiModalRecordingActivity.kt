@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
-import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -31,8 +30,6 @@ import kotlinx.coroutines.launch
 // Enhanced unified BLE integration for comprehensive cross-modal coordination
 import com.topdon.ble.UnifiedBleManager
 import com.topdon.ble.UnifiedDevice
-import com.topdon.ble.ShimmerDeviceConfig
-import com.topdon.ble.TopdonDeviceConfig
 
 // Note: EnhancedRecordingService is referenced with full package name since it's in a different module
 
@@ -83,39 +80,43 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private var currentSession: SessionInfo? = null
     private var sampleCount = 0L
     private var syncMarkCount = 0
-    
+
     // Enhanced unified BLE management for cross-modal coordination
     private var unifiedBleManager: UnifiedBleManager? = null
     private var discoveredBleDevices = mutableListOf<UnifiedDevice>()
     private var connectedBleDevices = mutableListOf<UnifiedDevice>()
-    
+
     // Enhanced service integration
     private var enhancedRecordingService: com.topdon.gsr.service.EnhancedRecordingService? = null
     private var isServiceBound = false
     private var discoveredDevices = mutableListOf<com.topdon.gsr.network.NetworkClient.ControllerInfo>()
-    
+
     // UI update timer
     private var uiUpdateJob: kotlinx.coroutines.Job? = null
 
     override fun initContentLayoutId() = R.layout.activity_multi_modal_recording
 
     // Service connection for enhanced recording service
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as? com.topdon.gsr.service.EnhancedRecordingService.EnhancedRecordingBinder
-            enhancedRecordingService = binder?.getService()
-            isServiceBound = true
-            Log.i(TAG, "Enhanced recording service connected")
-            updateNetworkStatusUI()
-        }
+    private val serviceConnection =
+        object : ServiceConnection {
+            override fun onServiceConnected(
+                name: ComponentName?,
+                service: IBinder?,
+            ) {
+                val binder = service as? com.topdon.gsr.service.EnhancedRecordingService.EnhancedRecordingBinder
+                enhancedRecordingService = binder?.getService()
+                isServiceBound = true
+                Log.i(TAG, "Enhanced recording service connected")
+                updateNetworkStatusUI()
+            }
 
-        override fun onServiceDisconnected(name: ComponentName?) {
-            enhancedRecordingService = null
-            isServiceBound = false
-            Log.i(TAG, "Enhanced recording service disconnected")
-            updateNetworkStatusUI()
+            override fun onServiceDisconnected(name: ComponentName?) {
+                enhancedRecordingService = null
+                isServiceBound = false
+                Log.i(TAG, "Enhanced recording service disconnected")
+                updateNetworkStatusUI()
+            }
         }
-    }
 
     private val gsrListener =
         object : GSRRecorder.GSRRecordingListener {
@@ -207,8 +208,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             }
         }
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -225,15 +224,16 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             enableVideoSwitch.isChecked = true
             enable4kSwitch.isChecked = false
             enableRawCaptureSwitch.isChecked = false
-            
+
             // Set up raw frame rate spinner
-            val frameRateAdapter = ArrayAdapter(
-                this@MultiModalRecordingActivity,
-                android.R.layout.simple_spinner_item,
-                listOf("30 fps", "15 fps", "10 fps", "5 fps")
-            ).apply {
-                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            }
+            val frameRateAdapter =
+                ArrayAdapter(
+                    this@MultiModalRecordingActivity,
+                    android.R.layout.simple_spinner_item,
+                    listOf("30 fps", "15 fps", "10 fps", "5 fps"),
+                ).apply {
+                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                }
             rawFrameRateSpinner.adapter = frameRateAdapter
             rawFrameRateSpinner.isEnabled = false
 
@@ -274,7 +274,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                                 Toast.makeText(
                                     this@MultiModalRecordingActivity,
                                     "Found PC Controller: ${controller.deviceName} (${controller.ipAddress})",
-                                    Toast.LENGTH_SHORT
+                                    Toast.LENGTH_SHORT,
                                 ).show()
                             }
                         }
@@ -285,7 +285,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                                 Toast.makeText(
                                     this@MultiModalRecordingActivity,
                                     "Connected to ${controller.deviceName}",
-                                    Toast.LENGTH_SHORT
+                                    Toast.LENGTH_SHORT,
                                 ).show()
                             }
                         }
@@ -296,7 +296,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                                 Toast.makeText(
                                     this@MultiModalRecordingActivity,
                                     "Disconnected: $reason",
-                                    Toast.LENGTH_SHORT
+                                    Toast.LENGTH_SHORT,
                                 ).show()
                             }
                         }
@@ -371,17 +371,23 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             }
                         }
 
-                        override fun onPairingRequested(controllerId: String, controllerName: String) {
+                        override fun onPairingRequested(
+                            controllerId: String,
+                            controllerName: String,
+                        ) {
                             runOnUiThread {
                                 Toast.makeText(
                                     this@MultiModalRecordingActivity,
                                     "Pairing requested by: $controllerName",
-                                    Toast.LENGTH_LONG
+                                    Toast.LENGTH_LONG,
                                 ).show()
                             }
                         }
 
-                        override fun onPairingCompleted(controllerId: String, success: Boolean) {
+                        override fun onPairingCompleted(
+                            controllerId: String,
+                            success: Boolean,
+                        ) {
                             runOnUiThread {
                                 val message = if (success) "Device pairing successful" else "Device pairing failed"
                                 Toast.makeText(this@MultiModalRecordingActivity, message, Toast.LENGTH_SHORT).show()
@@ -393,7 +399,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                                 Toast.makeText(
                                     this@MultiModalRecordingActivity,
                                     "Authentication required for PC Controller",
-                                    Toast.LENGTH_SHORT
+                                    Toast.LENGTH_SHORT,
                                 ).show()
                             }
                         }
@@ -546,37 +552,41 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         binding.startButton.isEnabled = false
         binding.startButton.text = "Starting..."
 
-        val sessionId = binding.participantIdInput.text.toString().trim().ifEmpty {
-            TimeUtil.generateSessionId("MultiModal")
-        }
+        val sessionId =
+            binding.participantIdInput.text.toString().trim().ifEmpty {
+                TimeUtil.generateSessionId("MultiModal")
+            }
         val participantId = binding.participantIdInput.text.toString().trim().takeIf { it.isNotEmpty() }
 
         // Start RGB camera recording if enabled
         if (binding.enableVideoSwitch.isChecked) {
-            val resolution = if (binding.enable4kSwitch.isChecked) {
-                RGBCameraRecorder.VideoResolution.UHD_4K
-            } else {
-                RGBCameraRecorder.VideoResolution.HD_1080P
-            }
+            val resolution =
+                if (binding.enable4kSwitch.isChecked) {
+                    RGBCameraRecorder.VideoResolution.UHD_4K
+                } else {
+                    RGBCameraRecorder.VideoResolution.HD_1080P
+                }
 
-            val rawFrameRate = when (binding.rawFrameRateSpinner.selectedItemPosition) {
-                0 -> 30
-                1 -> 15
-                2 -> 10
-                3 -> 5
-                else -> 30
-            }
+            val rawFrameRate =
+                when (binding.rawFrameRateSpinner.selectedItemPosition) {
+                    0 -> 30
+                    1 -> 15
+                    2 -> 10
+                    3 -> 5
+                    else -> 30
+                }
 
-            val cameraSettings = RGBCameraRecorder.RecordingSettings(
-                resolution = resolution,
-                frameRate = 60, // Video frame rate
-                bitRate = if (resolution == RGBCameraRecorder.VideoResolution.UHD_4K) 12_000_000 else 8_000_000,
-                enableStabilization = true,
-                enableFlash = false,
-                audioEnabled = true,
-                enableRawCapture = binding.enableRawCaptureSwitch.isChecked,
-                rawCaptureFrameRate = rawFrameRate,
-            )
+            val cameraSettings =
+                RGBCameraRecorder.RecordingSettings(
+                    resolution = resolution,
+                    frameRate = 60, // Video frame rate
+                    bitRate = if (resolution == RGBCameraRecorder.VideoResolution.UHD_4K) 12_000_000 else 8_000_000,
+                    enableStabilization = true,
+                    enableFlash = false,
+                    audioEnabled = true,
+                    enableRawCapture = binding.enableRawCaptureSwitch.isChecked,
+                    rawCaptureFrameRate = rawFrameRate,
+                )
 
             rgbCameraRecorder?.updateSettings(cameraSettings)
 
@@ -612,7 +622,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             this@MultiModalRecordingActivity,
                             sessionId,
                             participantId,
-                            null
+                            null,
                         )
                         Log.i(TAG, "Enhanced recording service started")
                     } catch (e: Exception) {
@@ -718,10 +728,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     private fun triggerFlashSync() {
         // Trigger a visual flash for synchronization
-        val overlay = android.view.View(this).apply {
-            setBackgroundColor(android.graphics.Color.WHITE)
-            alpha = 1.0f
-        }
+        val overlay =
+            android.view.View(this).apply {
+                setBackgroundColor(android.graphics.Color.WHITE)
+                alpha = 1.0f
+            }
 
         val frameLayout = findViewById<android.widget.FrameLayout>(android.R.id.content)
         frameLayout.addView(
@@ -735,7 +746,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         overlay.animate()
             .alpha(0.0f)
             .setDuration(200)
-            .withEndAction { 
+            .withEndAction {
                 frameLayout.removeView(overlay)
                 // Also add a sync mark
                 triggerSyncEvent()
@@ -791,33 +802,36 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private fun updateNetworkStatusUI() {
         runOnUiThread {
             // Update network connection status
-            val connectionStatus = when {
-                networkClient?.isConnected() == true -> "Connected"
-                isServiceBound -> "Service Bound"
-                else -> "Disconnected"
-            }
+            val connectionStatus =
+                when {
+                    networkClient?.isConnected() == true -> "Connected"
+                    isServiceBound -> "Service Bound"
+                    else -> "Disconnected"
+                }
             binding.networkStatusText.text = "Network: $connectionStatus"
 
             // Update discovered devices
             val deviceCount = discoveredDevices.size
-            val deviceText = if (deviceCount > 0) {
-                val firstDevice = discoveredDevices.first()
-                "Devices: $deviceCount found (${firstDevice.deviceName})"
-            } else {
-                "Discovered Devices: None"
-            }
+            val deviceText =
+                if (deviceCount > 0) {
+                    val firstDevice = discoveredDevices.first()
+                    "Devices: $deviceCount found (${firstDevice.deviceName})"
+                } else {
+                    "Discovered Devices: None"
+                }
             binding.discoveredDevicesText.text = deviceText
 
             // Update streaming queue (get total from all queue types)
             enhancedRecordingService?.let { service ->
                 val queueSizes = service.getQueueSizes()
                 val totalItems = queueSizes.values.sum()
-                val queueText = if (queueSizes.isNotEmpty()) {
-                    val details = queueSizes.entries.joinToString(", ") { "${it.key}: ${it.value}" }
-                    "Streaming Queue: $totalItems items ($details)"
-                } else {
-                    "Streaming Queue: 0 items"
-                }
+                val queueText =
+                    if (queueSizes.isNotEmpty()) {
+                        val details = queueSizes.entries.joinToString(", ") { "${it.key}: ${it.value}" }
+                        "Streaming Queue: $totalItems items ($details)"
+                    } else {
+                        "Streaming Queue: 0 items"
+                    }
                 binding.streamingQueueText.text = queueText
             } ?: run {
                 binding.streamingQueueText.text = "Streaming Queue: Service not bound"
@@ -828,7 +842,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 if (client.isConnected()) {
                     val latency = client.getLatencyMs()
                     val throughput = client.getThroughputKBps()
-                    binding.networkMetricsText.text = "Latency: ${latency} ms | Throughput: ${throughput} KB/s"
+                    binding.networkMetricsText.text = "Latency: $latency ms | Throughput: $throughput KB/s"
                 } else {
                     binding.networkMetricsText.text = "Latency: -- ms | Throughput: -- KB/s"
                 }
@@ -906,12 +920,13 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     // Start periodic UI updates
     private fun startUIUpdates() {
         uiUpdateJob?.cancel()
-        uiUpdateJob = lifecycleScope.launch {
-            while (true) {
-                updateNetworkStatusUI()
-                kotlinx.coroutines.delay(2000) // Update every 2 seconds
+        uiUpdateJob =
+            lifecycleScope.launch {
+                while (true) {
+                    updateNetworkStatusUI()
+                    kotlinx.coroutines.delay(2000) // Update every 2 seconds
+                }
             }
-        }
     }
 
     // Stop periodic UI updates

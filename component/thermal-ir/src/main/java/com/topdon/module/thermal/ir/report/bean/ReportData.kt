@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.GsonUtils
  * @author: CaiSongL
  * @date: 2023/5/29 18:00
  */
+
 /**
  * @author: CaiSongL
  * @date: 2023/5/12 17:44
@@ -51,15 +52,13 @@ class ReportData {
         var sn: String? = null
         var uploadTime: String? = null
         var status: String? = null
-        var isShowTitleTime : Boolean = false
-        var reportContent : ReportBean? = null
+        var isShowTitleTime: Boolean = false
+        var reportContent: ReportBean? = null
             get() {
                 if (field == null) {
                     field = GsonUtils.fromJson(testInfo, ReportBean::class.java)
                 }
                 return field
             }
-
     }
 }
-

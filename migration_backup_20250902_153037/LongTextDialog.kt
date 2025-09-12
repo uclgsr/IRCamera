@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.dialog_long_text.view.*
  * Created by LCG on 2024/2/2.
  */
 class LongTextDialog(context: Context, val title: String?, val content: String?) : Dialog(context, R.style.InfoDialog) {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCancelable(true)
@@ -29,7 +28,6 @@ class LongTextDialog(context: Context, val title: String?, val content: String?)
         rootView.tv_i_know.setOnClickListener {
             dismiss()
         }
-
 
         window?.let {
             val layoutParams = it.attributes

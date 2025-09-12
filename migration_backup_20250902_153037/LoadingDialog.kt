@@ -18,8 +18,9 @@ import kotlinx.android.synthetic.main.dialog_loading.view.*
  * Created by LCG on 2024/4/12.
  */
 class LoadingDialog(context: Context) : Dialog(context, R.style.TransparentDialog) {
-
-    fun setTips(@StringRes resId: Int) {
+    fun setTips(
+        @StringRes resId: Int,
+    ) {
         rootView.tv_tips.setText(resId)
         rootView.tv_tips.isVisible = true
     }
@@ -28,7 +29,6 @@ class LoadingDialog(context: Context) : Dialog(context, R.style.TransparentDialo
         rootView.tv_tips.text = text
         rootView.tv_tips.isVisible = text?.isNotEmpty() == true
     }
-
 
     private val rootView: View = LayoutInflater.from(context).inflate(R.layout.dialog_loading, null)
 
@@ -45,5 +45,4 @@ class LoadingDialog(context: Context) : Dialog(context, R.style.TransparentDialo
             it.attributes = layoutParams
         }
     }
-
 }

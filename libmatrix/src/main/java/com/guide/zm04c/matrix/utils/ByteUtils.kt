@@ -3,7 +3,6 @@ package com.guide.zm04c.matrix.utils
 import java.util.*
 
 object ByteUtils {
-
     /**
      * byte[] => int
      */
@@ -22,17 +21,17 @@ object ByteUtils {
      * [0x01, 0x02] => 01 02
      */
 //    @ExperimentalUnsignedTypes // just to make it clear that the experimental unsigned types are used
-    fun ByteArray.toHexString() = asUByteArray().joinToString(" ") {
-        it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
-    }
+    fun ByteArray.toHexString() =
+        asUByteArray().joinToString(" ") {
+            it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
+        }
 
     /**
      * string => byte[]
      * 0102 => [0x01, 0x02]
      */
     @ExperimentalUnsignedTypes
-    fun String.hexStringToByteArray() =
-        ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
+    fun String.hexStringToByteArray() = ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
 
     /**
      * UUID => ff01

@@ -13,18 +13,18 @@ import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer
 import com.topdon.lib.core.bean.GalleryBean
+import com.topdon.lib.core.bean.event.GalleryDelEvent
 import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.config.RouterConfig
+import com.topdon.lib.core.dialog.ConfirmSelectDialog
+import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.repository.TS004Repository
 import com.topdon.lib.core.tools.FileTools
 import com.topdon.lib.core.tools.TimeTool
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.repository.TS004Repository
 import com.topdon.lib.core.tools.ToastTools
-import com.topdon.module.thermal.ir.R
-import com.topdon.lib.core.dialog.ConfirmSelectDialog
-import com.topdon.lib.core.bean.event.GalleryDelEvent
 import com.topdon.lms.sdk.weiget.TToast
+import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.event.GalleryDownloadEvent
 import kotlinx.android.synthetic.main.activity_ir_video_gsy.*
 import kotlinx.coroutines.launch
@@ -32,12 +32,11 @@ import org.greenrobot.eventbus.EventBus
 import tv.danmaku.ijk.media.exo2.Exo2PlayerManager
 import java.io.File
 
-
 @Route(path = RouterConfig.IR_VIDEO_GSY)
 class IRVideoGSYActivity : BaseActivity() {
-
     private var isRemote = false
     private lateinit var data: GalleryBean
+
     override fun initContentView() = R.layout.activity_ir_video_gsy
 
     override fun initView() {
@@ -46,7 +45,7 @@ class IRVideoGSYActivity : BaseActivity() {
         isRemote = intent.getBooleanExtra("isRemote", false)
         data = intent.getParcelableExtra("data") ?: throw NullPointerException("传递 data")
 
-        cl_bottom.isVisible = isRemote //查看远端时底部才有3个按钮
+        cl_bottom.isVisible = isRemote // 查看远端时底部才有3个按钮
 
         if (!isRemote) {
             title_view.setRightDrawable(R.drawable.ic_toolbar_info_svg)
@@ -80,27 +79,31 @@ class IRVideoGSYActivity : BaseActivity() {
     override fun initData() {
     }
 
-    private fun previewVideo(isRemote: Boolean, path: String) {
+    private fun previewVideo(
+        isRemote: Boolean,
+        path: String,
+    ) {
         PlayerFactory.setPlayManager(Exo2PlayerManager::class.java)
-        val url = if (isRemote) {
-            path
-        } else {
-            path.replace("//", "/")
-            "file://$path"
-        }
+        val url =
+            if (isRemote) {
+                path
+            } else {
+                path.replace("//", "/")
+                "file://$path"
+            }
 
         GSYVideoOptionBuilder()
             .setUrl(url)
             .build(gsy_play)
-        //界面设置
-        gsy_play.isNeedShowWifiTip = false //不显示消耗流量弹框
+        // 界面设置
+        gsy_play.isNeedShowWifiTip = false // 不显示消耗流量弹框
         gsy_play.titleTextView.visibility = View.GONE
         gsy_play.backButton.visibility = View.GONE
         gsy_play.fullscreenButton.visibility = View.GONE
     }
 
     private fun actionDownload(isToShare: Boolean) {
-        if (data.hasDownload) {//已下载
+        if (data.hasDownload) { // 已下载
             if (isToShare) {
                 actionShare()
             }

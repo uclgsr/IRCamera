@@ -80,7 +80,7 @@ internal class ReportListFragment : BaseFragment(), View.OnClickListener {
         }
         adapter.onMoreClickListener = { position, v ->
             ThreePickPopup(requireContext(), arrayListOf(R.string.app_rename, R.string.report_delete)) {
-                if (it == 0) {//重命名
+                if (it == 0) { // 重命名
                     val houseReport: HouseReport = adapter.dataList[position] as HouseReport
                     InputTextDialog(requireContext(), houseReport.name) { newName ->
                         if (houseReport.name != newName) {
@@ -90,7 +90,7 @@ internal class ReportListFragment : BaseFragment(), View.OnClickListener {
                             adapter.notifyItemChanged(position)
                         }
                     }.show()
-                } else {//删除
+                } else { // 删除
                     TipDialog.Builder(requireContext())
                         .setTitleMessage(getString(R.string.monitor_report_delete))
                         .setMessage(R.string.report_delete_tips)
@@ -123,7 +123,6 @@ internal class ReportListFragment : BaseFragment(), View.OnClickListener {
         tv_add.setOnClickListener(this)
         cl_del.setOnClickListener(this)
 
-
         tabViewModel.isEditModeLD.observe(viewLifecycleOwner) {
             adapter.isEditMode = it
             cl_del.isVisible = it
@@ -152,21 +151,22 @@ internal class ReportListFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            tv_add -> {//添加
+            tv_add -> { // 添加
                 val intent = Intent(requireContext(), DetectAddActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_TC007, arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false)
                 startActivity(intent)
             }
-            cl_del -> {//批量删除
+            cl_del -> { // 批量删除
                 if (adapter.selectIndexList.isNotEmpty()) {
                     TipDialog.Builder(requireContext())
                         .setTitleMessage(getString(R.string.monitor_report_delete))
                         .setMessage(R.string.report_delete_tips)
                         .setCancelListener(R.string.app_cancel)
                         .setPositiveListener(R.string.thermal_delete) {
-                            val resultArray: Array<HouseReport> = Array(adapter.selectIndexList.size) {
-                                adapter.dataList[adapter.selectIndexList[it]] as HouseReport
-                            }
+                            val resultArray: Array<HouseReport> =
+                                Array(adapter.selectIndexList.size) {
+                                    adapter.dataList[adapter.selectIndexList[it]] as HouseReport
+                                }
                             viewModel.deleteMore(*resultArray)
                             tabViewModel.isEditModeLD.value = false
                             TToast.shortToast(requireContext(), R.string.test_results_delete_success)

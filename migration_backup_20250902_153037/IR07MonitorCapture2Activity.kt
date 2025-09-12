@@ -28,7 +28,6 @@ import org.greenrobot.eventbus.EventBus
  * Created by LCG on 2024/5/10.
  */
 class IR07MonitorCapture2Activity : BaseActivity() {
-
     companion object {
         private const val RTSP_URL = "rtsp://192.168.40.1/stream0"
     }
@@ -43,7 +42,7 @@ class IR07MonitorCapture2Activity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            val playFragment = PlayFragment.newInstance(RTSP_URL, Client.TRANSTYPE_TCP, 1, null,true)
+            val playFragment = PlayFragment.newInstance(RTSP_URL, Client.TRANSTYPE_TCP, 1, null, true)
             supportFragmentManager.beginTransaction().add(R.id.fl_rtsp, playFragment).commit()
         }
     }
@@ -69,9 +68,8 @@ class IR07MonitorCapture2Activity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        mp_chart_view.highlightValue(null) //关闭高亮点Marker
+        mp_chart_view.highlightValue(null) // 关闭高亮点Marker
     }
-
 
     override fun onPause() {
         super.onPause()
@@ -80,7 +78,7 @@ class IR07MonitorCapture2Activity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        //退出时把点线面清掉
+        // 退出时把点线面清掉
         CoroutineScope(Dispatchers.IO).launch {
             TC007Repository.clearAllTemp()
         }
@@ -94,7 +92,7 @@ class IR07MonitorCapture2Activity : BaseActivity() {
     }
 
     private fun addCallback(selectInfo: SelectInfoBean) {
-        var lastSaveTime: Long = 0 //上一次执行保存的时间戳，用于控制1秒保存1次
+        var lastSaveTime: Long = 0 // 上一次执行保存的时间戳，用于控制1秒保存1次
         val thermalId = TimeTool.showDateSecond()
         val startTime = System.currentTimeMillis()
 
@@ -103,16 +101,18 @@ class IR07MonitorCapture2Activity : BaseActivity() {
             if (currentTime - lastSaveTime > 1000) {
                 lastSaveTime = currentTime
 
-                val maxValue = when (selectInfo.type) {
-                    1 -> it.p1Value / 10f
-                    2 -> it.l1MaxValue / 10f
-                    else -> it.r1MaxValue / 10f
-                }
-                val minValue = when (selectInfo.type) {
-                    1 -> it.p1Value / 10f
-                    2 -> it.l1MinValue / 10f
-                    else -> it.r1MinValue / 10f
-                }
+                val maxValue =
+                    when (selectInfo.type) {
+                        1 -> it.p1Value / 10f
+                        2 -> it.l1MaxValue / 10f
+                        else -> it.r1MaxValue / 10f
+                    }
+                val minValue =
+                    when (selectInfo.type) {
+                        1 -> it.p1Value / 10f
+                        2 -> it.l1MinValue / 10f
+                        else -> it.r1MinValue / 10f
+                    }
                 val entity = ThermalEntity()
                 entity.userId = SharedManager.getUserId()
                 entity.thermalId = thermalId
@@ -121,11 +121,12 @@ class IR07MonitorCapture2Activity : BaseActivity() {
                 entity.thermalMin = NumberTools.to02f(minValue)
                 entity.startTime = startTime
                 entity.createTime = currentTime
-                entity.type = when (selectInfo.type) {
-                    1 -> "point"
-                    2 -> "line"
-                    else -> "fence"
-                }
+                entity.type =
+                    when (selectInfo.type) {
+                        1 -> "point"
+                        2 -> "line"
+                        else -> "fence"
+                    }
 
                 lifecycleScope.launch(Dispatchers.IO) {
                     AppDatabase.getInstance().thermalDao().insert(entity)

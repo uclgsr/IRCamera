@@ -17,16 +17,16 @@ import kotlinx.android.synthetic.main.activity_ir_correction_three.*
  */
 @Route(path = RouterConfig.IR_CORRECTION_THREE)
 class IRCorrectionThreeActivity : BaseActivity() {
-
     override fun initContentView(): Int = R.layout.activity_ir_correction_three
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val fragment: IRCorrectionFragment = if (savedInstanceState == null) {
-            IRCorrectionFragment()
-        } else {
-            supportFragmentManager.findFragmentById(R.id.fragment_container_view) as IRCorrectionFragment
-        }
+        val fragment: IRCorrectionFragment =
+            if (savedInstanceState == null) {
+                IRCorrectionFragment()
+            } else {
+                supportFragmentManager.findFragmentById(R.id.fragment_container_view) as IRCorrectionFragment
+            }
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -37,7 +37,7 @@ class IRCorrectionThreeActivity : BaseActivity() {
 
         tv_correction.setOnClickListener {
             if (fragment.frameReady) {
-                val intent = Intent(this,IRCorrectionFourActivity::class.java)
+                val intent = Intent(this, IRCorrectionFourActivity::class.java)
                 startActivity(intent)
                 finish()
             }

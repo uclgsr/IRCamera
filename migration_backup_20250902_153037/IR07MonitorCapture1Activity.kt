@@ -28,7 +28,6 @@ import org.easydarwin.video.Client
  */
 @Route(path = RouterConfig.IR_MONITOR_CAPTURE_07)
 class IR07MonitorCapture1Activity : BaseActivity(), View.OnClickListener {
-
     companion object {
         private const val RTSP_URL = "rtsp://192.168.40.1/stream0"
     }
@@ -38,13 +37,12 @@ class IR07MonitorCapture1Activity : BaseActivity(), View.OnClickListener {
      */
     private var selectInfo: SelectInfoBean? = null
 
-
     override fun initContentView(): Int = R.layout.activity_ir_07_monitor_capture1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            val playFragment = PlayFragment.newInstance(RTSP_URL, Client.TRANSTYPE_TCP, 1, null,true)
+            val playFragment = PlayFragment.newInstance(RTSP_URL, Client.TRANSTYPE_TCP, 1, null, true)
             supportFragmentManager.beginTransaction().add(R.id.fl_rtsp, playFragment).commit()
         }
     }
@@ -91,9 +89,9 @@ class IR07MonitorCapture1Activity : BaseActivity(), View.OnClickListener {
             // 读取配置设置 环境温度、测温距离、发射率
             val config = ConfigRepository.readConfig(true)
             TC007Repository.setIRConfig(config.environment, config.distance, config.radiation)
-            //设置温度单位
-            TC007Repository.setEnvAttr(SharedManager.getTemperature() == 1,0)
-            //清除点、线、面、全图
+            // 设置温度单位
+            TC007Repository.setEnvAttr(SharedManager.getTemperature() == 1, 0)
+            // 清除点、线、面、全图
             TC007Repository.clearAllTemp()
             TC007Repository.setTempFrame(false)
         }
@@ -107,30 +105,28 @@ class IR07MonitorCapture1Activity : BaseActivity(), View.OnClickListener {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-
     override fun onPause() {
         super.onPause()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     override fun onSocketDisConnected(isTS004: Boolean) {
-        if (!isTS004) {//TC007 的 Socket 断了
+        if (!isTS004) { // TC007 的 Socket 断了
             finish()
         }
     }
 
-
     override fun onClick(v: View?) {
         when (v) {
-            motion_btn -> {//生成监控图
+            motion_btn -> { // 生成监控图
                 showMonitorSelectDialog()
             }
-            motion_start_btn -> {//开始记录
+            motion_start_btn -> { // 开始记录
                 if (selectInfo == null) {
                     showMonitorSelectDialog()
                     return
                 }
-                //开始温度监听
+                // 开始温度监听
                 val intent = Intent(this, IR07MonitorCapture2Activity::class.java)
                 intent.putExtra("select", selectInfo)
                 startActivity(intent)
@@ -144,7 +140,7 @@ class IR07MonitorCapture1Activity : BaseActivity(), View.OnClickListener {
             .setPositiveListener {
                 motion_start_btn.isVisible = true
                 motion_btn.isVisible = false
-                when (it) {//1-点 2-线 3-面
+                when (it) { // 1-点 2-线 3-面
                     1 -> geometry_view.mode = Mode.POINT
                     2 -> geometry_view.mode = Mode.LINE
                     3 -> geometry_view.mode = Mode.RECT

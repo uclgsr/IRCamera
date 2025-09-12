@@ -60,7 +60,7 @@ class FenceView : View {
             MotionEvent.ACTION_DOWN -> {
                 rect.right += strokeWidth.toInt()
                 rect.bottom += strokeWidth.toInt()
-                invalidate()  // Invalidate entire view
+                invalidate() // Invalidate entire view
                 rect.left = mX.toInt()
                 rect.top = mY.toInt()
                 rect.right = rect.left
@@ -97,7 +97,7 @@ class FenceView : View {
                 rect.right = x
                 rect.bottom = y
                 old.union(x, y)
-                invalidate()  // Invalidate entire view
+                invalidate() // Invalidate entire view
                 result()
             }
             MotionEvent.ACTION_MOVE -> {
@@ -111,7 +111,7 @@ class FenceView : View {
                 rect.right = mX.toInt()
                 rect.bottom = mY.toInt()
                 old.union(mX.toInt(), mY.toInt())
-                invalidate()  // Invalidate entire view
+                invalidate() // Invalidate entire view
             }
         }
         return true

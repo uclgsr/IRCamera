@@ -18,6 +18,7 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.util.Size
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.Surface
@@ -30,11 +31,10 @@ import androidx.annotation.NonNull
 import com.blankj.utilcode.util.ThreadUtils.runOnUiThread
 import com.blankj.utilcode.util.ToastUtils
 import com.topdon.lib.core.utils.ScreenUtil
+import com.topdon.lib.ui.databinding.CameraLayBinding
 import java.nio.ByteBuffer
 import java.util.Collections
 import kotlin.concurrent.thread
-import android.view.LayoutInflater
-import com.topdon.lib.ui.databinding.CameraLayBinding
 
 class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     /**预览 */

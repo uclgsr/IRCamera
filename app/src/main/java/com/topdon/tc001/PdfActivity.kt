@@ -2,7 +2,6 @@ package com.topdon.tc001
 
 import android.view.WindowManager
 // Note: PDFView library dependency not included in current build configuration
-import android.widget.TextView
 import com.csl.irCamera.R
 
 import com.topdon.lib.core.ktbase.BaseBindingActivity
@@ -32,7 +31,7 @@ class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
         // Note: PDF functionality requires PDFView library integration
         val pdfFileName = if (intent.getBooleanExtra("isTS001", false)) "TC001.pdf" else "TS004.pdf"
         pdfView.text = "PDF functionality temporarily unavailable - $pdfFileName will be displayed here when PDF library is available"
-        
+
         // Note: PDF viewer method calls require PDFView library integration
         /*
         pdfView.fromAsset(pdfFileName)

@@ -11,7 +11,6 @@ import kotlinx.android.synthetic.main.activity_question_details.*
  */
 @Route(path = RouterConfig.QUESTION_DETAILS)
 class QuestionDetailsActivity : BaseActivity() {
-
     override fun initContentView() = R.layout.activity_question_details
 
     override fun initView() {
@@ -20,7 +19,5 @@ class QuestionDetailsActivity : BaseActivity() {
     }
 
     override fun initData() {
-
     }
-
 }

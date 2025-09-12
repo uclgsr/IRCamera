@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.dialog_input_text.view.*
  */
 class InputTextDialog(context: Context, private val inputText: String, private val onConfirmListener: (text: String) -> Unit) :
     Dialog(context, R.style.TextInputDialog), View.OnClickListener {
-
     private lateinit var contentView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {

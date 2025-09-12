@@ -27,49 +27,59 @@ class MenuFiveNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
         notifyDataSetChanged()
     }
 
-    private val fiveBean = arrayListOf(
-        TemperatureBean(
-            R.drawable.selector_menu2_temp_level_1,
-            context.getString(R.string.thermal_normal_temperature),
-            getTempStr(-20, 150),
-            CameraItemBean.TYPE_TMP_C
-        ),
-        if (DeviceTools.isTC001LiteConnect()) {
+    private val fiveBean =
+        arrayListOf(
             TemperatureBean(
                 R.drawable.selector_menu2_temp_level_1,
-                context.getString(R.string.thermal_high_temperature),
-                getTempStr(150, 450),
-                CameraItemBean.TYPE_TMP_H
-            )
+                context.getString(R.string.thermal_normal_temperature),
+                getTempStr(-20, 150),
+                CameraItemBean.TYPE_TMP_C,
+            ),
+            if (DeviceTools.isTC001LiteConnect()) {
+                TemperatureBean(
+                    R.drawable.selector_menu2_temp_level_1,
+                    context.getString(R.string.thermal_high_temperature),
+                    getTempStr(150, 450),
+                    CameraItemBean.TYPE_TMP_H,
+                )
+            } else {
+                TemperatureBean(
+                    R.drawable.selector_menu2_temp_level_1,
+                    context.getString(R.string.thermal_high_temperature),
+                    getTempStr(150, 550),
+                    CameraItemBean.TYPE_TMP_H,
+                )
+            },
+            TemperatureBean(
+                R.drawable.selector_menu2_temp_level_2,
+                context.getString(R.string.thermal_automatic),
+                "",
+                CameraItemBean.TYPE_TMP_ZD,
+            ),
+        )
+
+    private fun getTempStr(
+        min: Int,
+        max: Int,
+    ): String =
+        if (SharedManager.getTemperature() == 1) {
+            "${min}\n~\n$max°C"
         } else {
-            TemperatureBean(
-                R.drawable.selector_menu2_temp_level_1,
-                context.getString(R.string.thermal_high_temperature),
-                getTempStr(150, 550),
-                CameraItemBean.TYPE_TMP_H
-            )
-        },
-        TemperatureBean(
-            R.drawable.selector_menu2_temp_level_2,
-            context.getString(R.string.thermal_automatic),
-            "",
-            CameraItemBean.TYPE_TMP_ZD
-        ),
-    )
+            "${(min * 1.8 + 32).toInt()}\n~\n${(max * 1.8 + 32).toInt()}°F"
+        }
 
-    private fun getTempStr(min: Int, max: Int): String = if (SharedManager.getTemperature() == 1) {
-        "${min}\n~\n${max}°C"
-    } else {
-        "${(min * 1.8 + 32).toInt()}\n~\n${(max * 1.8 + 32).toInt()}°F"
-    }
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.ui_item_menu_five_view, parent, false)
         return ItemView(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         if (holder is ItemView) {
             holder.img.setImageResource(fiveBean[position].res)
             holder.lay.setOnClickListener {
@@ -82,12 +92,18 @@ class MenuFiveNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
             holder.name.isSelected = fiveBean[position].code == selectedCode
             holder.info.isSelected = fiveBean[position].code == selectedCode
             holder.name.setTextColor(
-                if (fiveBean[position].code == selectedCode) ContextCompat.getColor(context, R.color.white)
-                else ContextCompat.getColor(context, R.color.font_third_color)
+                if (fiveBean[position].code == selectedCode) {
+                    ContextCompat.getColor(context, R.color.white)
+                } else {
+                    ContextCompat.getColor(context, R.color.font_third_color)
+                },
             )
             holder.info.setTextColor(
-                if (fiveBean[position].code == selectedCode) ContextCompat.getColor(context, R.color.color_FFBA42)
-                else ContextCompat.getColor(context, R.color.font_third_color)
+                if (fiveBean[position].code == selectedCode) {
+                    ContextCompat.getColor(context, R.color.color_FFBA42)
+                } else {
+                    ContextCompat.getColor(context, R.color.font_third_color)
+                },
             )
         }
     }
@@ -112,5 +128,4 @@ class MenuFiveNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
         val name: TextView = itemView.item_menu_tab_text
         val info: TextView = itemView.item_menu_tab_info_text
     }
-
 }

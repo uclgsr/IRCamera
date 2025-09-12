@@ -27,19 +27,25 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         return selected
     }
 
-    private val secondBean = arrayListOf(
-        ColorBean(R.drawable.ic_menu_thermal6002, "", ObserveBean.TYPE_TARGET_HORIZONTAL),
-        ColorBean(R.drawable.ic_menu_thermal6001, "", ObserveBean.TYPE_TARGET_VERTICAL),
-        ColorBean(R.drawable.ic_menu_thermal6003, "", ObserveBean.TYPE_TARGET_CIRCLE),
-    )
+    private val secondBean =
+        arrayListOf(
+            ColorBean(R.drawable.ic_menu_thermal6002, "", ObserveBean.TYPE_TARGET_HORIZONTAL),
+            ColorBean(R.drawable.ic_menu_thermal6001, "", ObserveBean.TYPE_TARGET_VERTICAL),
+            ColorBean(R.drawable.ic_menu_thermal6003, "", ObserveBean.TYPE_TARGET_CIRCLE),
+        )
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.itme_target_mode, parent, false)
         return ItemView(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         if (holder is ItemView) {
             val bean = secondBean[position]
             holder.img.setImageResource(bean.res)
@@ -51,8 +57,11 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             holder.name.text = bean.name
             holder.name.isSelected = bean.code == selected
             holder.name.setTextColor(
-                if (position == selected) ContextCompat.getColor(context, R.color.white)
-                else ContextCompat.getColor(context, R.color.font_third_color)
+                if (position == selected) {
+                    ContextCompat.getColor(context, R.color.white)
+                } else {
+                    ContextCompat.getColor(context, R.color.font_third_color)
+                },
             )
         }
     }

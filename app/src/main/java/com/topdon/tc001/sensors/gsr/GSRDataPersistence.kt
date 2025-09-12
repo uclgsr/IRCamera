@@ -24,25 +24,25 @@ import java.util.concurrent.atomic.AtomicLong
  */
 class GSRDataPersistence(
     private val context: Context,
-    private val sessionId: String
+    private val sessionId: String,
 ) {
     companion object {
         private const val TAG = "GSRDataPersistence"
         private const val BATCH_SIZE = 100
         private const val FLUSH_INTERVAL_MS = 1000L
     }
-    
+
     private val dataQueue = ConcurrentLinkedQueue<GSRDataRecord>()
     private val writeMutex = Mutex()
     private val isWriting = AtomicBoolean(false)
     private val samplesWritten = AtomicLong(0)
-    
+
     private var csvFile: File? = null
     private var csvWriter: FileWriter? = null
     private val scope = CoroutineScope(Dispatchers.IO)
-    
+
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault())
-    
+
     /**
      * Initialize data persistence for GSR recording session
      */
@@ -51,37 +51,37 @@ class GSRDataPersistence(
             val sessionDir = createSessionDirectory()
             csvFile = createCsvFile(sessionDir)
             csvWriter = FileWriter(csvFile!!, true)
-            
+
             // Write CSV header with comprehensive timestamp information
             writeCsvHeader()
-            
+
             Log.i(TAG, "GSR data persistence initialized for session: $sessionId")
             Log.i(TAG, "CSV file: ${csvFile!!.absolutePath}")
-            
+
             // Start background batch writer
             startBatchWriter()
-            
+
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize GSR data persistence", e)
             false
         }
     }
-    
+
     /**
      * Create session directory with proper structure
      */
     private fun createSessionDirectory(): File {
         val baseDir = File(context.getExternalFilesDir(null), "GSR_Sessions")
         val sessionDir = File(baseDir, sessionId)
-        
+
         if (!sessionDir.exists()) {
             sessionDir.mkdirs()
         }
-        
+
         return sessionDir
     }
-    
+
     /**
      * Create CSV file with timestamp-based naming
      */
@@ -90,71 +90,72 @@ class GSRDataPersistence(
         val filename = "gsr_data_${sessionId}_$timestamp.csv"
         return File(sessionDir, filename)
     }
-    
+
     /**
      * Write comprehensive CSV header with all timestamp formats
      */
     private suspend fun writeCsvHeader() {
         writeMutex.withLock {
             try {
-                val header = buildString {
-                    // Timestamp columns (multiple formats for compatibility)
-                    append(TimestampRecord.getCsvHeader())
-                    append(",")
-                    
-                    // GSR sensor data columns  
-                    append("gsr_raw_value,gsr_microsiemens,gsr_resistance_kohm,")
-                    
-                    // PPG sensor data columns (if available)
-                    append("ppg_raw_value,ppg_filtered,heart_rate_bpm,")
-                    
-                    // Device and quality metrics
-                    append("device_id,battery_level,signal_quality,")
-                    append("sampling_rate_hz,packet_sequence,")
-                    
-                    // Session and participant info
-                    append("session_id,participant_id,recording_mode")
-                }
-                
+                val header =
+                    buildString {
+                        // Timestamp columns (multiple formats for compatibility)
+                        append(TimestampRecord.getCsvHeader())
+                        append(",")
+
+                        // GSR sensor data columns
+                        append("gsr_raw_value,gsr_microsiemens,gsr_resistance_kohm,")
+
+                        // PPG sensor data columns (if available)
+                        append("ppg_raw_value,ppg_filtered,heart_rate_bpm,")
+
+                        // Device and quality metrics
+                        append("device_id,battery_level,signal_quality,")
+                        append("sampling_rate_hz,packet_sequence,")
+
+                        // Session and participant info
+                        append("session_id,participant_id,recording_mode")
+                    }
+
                 csvWriter?.write(header)
                 csvWriter?.write("\n")
                 csvWriter?.flush()
-                
+
                 Log.i(TAG, "CSV header written with ${header.split(",").size} columns")
-                
             } catch (e: IOException) {
                 Log.e(TAG, "Failed to write CSV header", e)
                 throw e
             }
         }
     }
-    
+
     /**
      * Queue GSR data record for asynchronous writing
      */
     fun queueDataRecord(gsrData: GSRSampleData) {
         val timestamp = TimestampManager.createTimestampRecord()
-        val record = GSRDataRecord(
-            timestamp = timestamp,
-            gsrRawValue = gsrData.rawValue,
-            gsrMicrosiemens = gsrData.microsiemens,
-            gsrResistanceKohm = gsrData.resistanceKohm,
-            ppgRawValue = gsrData.ppgRawValue,
-            ppgFiltered = gsrData.ppgFiltered,
-            heartRateBpm = gsrData.heartRateBpm,
-            deviceId = gsrData.deviceId,
-            batteryLevel = gsrData.batteryLevel,
-            signalQuality = gsrData.signalQuality,
-            samplingRateHz = gsrData.samplingRateHz,
-            packetSequence = gsrData.packetSequence,
-            sessionId = sessionId,
-            participantId = gsrData.participantId,
-            recordingMode = gsrData.recordingMode
-        )
-        
+        val record =
+            GSRDataRecord(
+                timestamp = timestamp,
+                gsrRawValue = gsrData.rawValue,
+                gsrMicrosiemens = gsrData.microsiemens,
+                gsrResistanceKohm = gsrData.resistanceKohm,
+                ppgRawValue = gsrData.ppgRawValue,
+                ppgFiltered = gsrData.ppgFiltered,
+                heartRateBpm = gsrData.heartRateBpm,
+                deviceId = gsrData.deviceId,
+                batteryLevel = gsrData.batteryLevel,
+                signalQuality = gsrData.signalQuality,
+                samplingRateHz = gsrData.samplingRateHz,
+                packetSequence = gsrData.packetSequence,
+                sessionId = sessionId,
+                participantId = gsrData.participantId,
+                recordingMode = gsrData.recordingMode,
+            )
+
         dataQueue.offer(record)
     }
-    
+
     /**
      * Start background batch writer for efficient data persistence
      */
@@ -170,20 +171,20 @@ class GSRDataPersistence(
             }
         }
     }
-    
+
     /**
      * Write batch of data records to CSV file
      */
     private suspend fun writeBatch() {
         if (dataQueue.isEmpty()) return
-        
+
         val batch = mutableListOf<GSRDataRecord>()
         repeat(BATCH_SIZE) {
             dataQueue.poll()?.let { batch.add(it) }
         }
-        
+
         if (batch.isEmpty()) return
-        
+
         writeMutex.withLock {
             try {
                 batch.forEach { record ->
@@ -191,18 +192,17 @@ class GSRDataPersistence(
                     csvWriter?.write(csvLine)
                     csvWriter?.write("\n")
                 }
-                
+
                 csvWriter?.flush()
                 samplesWritten.addAndGet(batch.size.toLong())
-                
+
                 Log.d(TAG, "Wrote batch of ${batch.size} GSR samples. Total: ${samplesWritten.get()}")
-                
             } catch (e: IOException) {
                 Log.e(TAG, "Failed to write GSR data batch", e)
             }
         }
     }
-    
+
     /**
      * Start data persistence (called when recording starts)
      */
@@ -211,29 +211,29 @@ class GSRDataPersistence(
         TimestampManager.startSession()
         Log.i(TAG, "GSR data persistence started")
     }
-    
+
     /**
      * Stop data persistence and flush remaining data
      */
     suspend fun stopPersistence() {
         isWriting.set(false)
-        
+
         // Write remaining data
         while (dataQueue.isNotEmpty()) {
             writeBatch()
         }
-        
+
         TimestampManager.endSession()
-        
+
         Log.i(TAG, "GSR data persistence stopped. Total samples written: ${samplesWritten.get()}")
     }
-    
+
     /**
      * Cleanup resources
      */
     suspend fun cleanup() {
         stopPersistence()
-        
+
         writeMutex.withLock {
             try {
                 csvWriter?.close()
@@ -244,7 +244,7 @@ class GSRDataPersistence(
             }
         }
     }
-    
+
     /**
      * Get recording statistics
      */
@@ -254,7 +254,7 @@ class GSRDataPersistence(
             pendingSamples = dataQueue.size,
             csvFilePath = csvFile?.absolutePath ?: "",
             sessionId = sessionId,
-            isActive = isWriting.get()
+            isActive = isWriting.get(),
         )
     }
 }
@@ -277,7 +277,7 @@ data class GSRDataRecord(
     val packetSequence: Long,
     val sessionId: String,
     val participantId: String,
-    val recordingMode: String
+    val recordingMode: String,
 ) {
     /**
      * Convert record to CSV line format
@@ -287,17 +287,17 @@ data class GSRDataRecord(
             // Timestamp data
             append(timestamp.toCsvFormat())
             append(",")
-            
+
             // GSR sensor data
             append("$gsrRawValue,$gsrMicrosiemens,$gsrResistanceKohm,")
-            
+
             // PPG sensor data
             append("$ppgRawValue,$ppgFiltered,$heartRateBpm,")
-            
+
             // Device and quality metrics
             append("$deviceId,$batteryLevel,$signalQuality,")
             append("$samplingRateHz,$packetSequence,")
-            
+
             // Session information
             append("$sessionId,$participantId,$recordingMode")
         }
@@ -320,7 +320,7 @@ data class GSRSampleData(
     val samplingRateHz: Int = 128,
     val packetSequence: Long,
     val participantId: String,
-    val recordingMode: String = "shimmer_ble"
+    val recordingMode: String = "shimmer_ble",
 )
 
 /**
@@ -331,5 +331,5 @@ data class GSRPersistenceStats(
     val pendingSamples: Int,
     val csvFilePath: String,
     val sessionId: String,
-    val isActive: Boolean
+    val isActive: Boolean,
 )

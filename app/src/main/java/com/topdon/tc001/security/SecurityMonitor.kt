@@ -11,27 +11,26 @@ import java.util.concurrent.atomic.AtomicLong
 
 /**
  * Security Monitor for Phase 4 Security Enhancement
- * 
+ *
  * Provides real-time security monitoring, intrusion detection, and threat analysis
  */
 class SecurityMonitor(
     private val context: Context,
-    private val logger: StructuredLogger
+    private val logger: StructuredLogger,
 ) {
-    
     companion object {
         private const val TAG = "SecurityMonitor"
-        
+
         // Monitoring thresholds
         private const val MAX_FAILED_LOGINS_PER_HOUR = 10
         private const val MAX_CONNECTIONS_PER_DEVICE = 5
         private const val SUSPICIOUS_ACTIVITY_THRESHOLD = 5
         private const val SESSION_TIMEOUT_WARNING_MS = 5 * 60 * 1000L // 5 minutes
-        
+
         // Monitoring intervals
         private const val MONITORING_INTERVAL_MS = 30 * 1000L // 30 seconds
         private const val CLEANUP_INTERVAL_MS = 60 * 60 * 1000L // 1 hour
-        
+
         // Alert types
         const val ALERT_BRUTE_FORCE = "brute_force_attack"
         const val ALERT_SUSPICIOUS_CONNECTION = "suspicious_connection"
@@ -42,37 +41,37 @@ class SecurityMonitor(
         const val ALERT_DATA_EXFILTRATION = "data_exfiltration"
         const val ALERT_SYSTEM_COMPROMISE = "system_compromise"
     }
-    
+
     // Monitoring state
     private val isMonitoring = AtomicBoolean(false)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    
+
     // Security metrics
     private val connectionAttempts = ConcurrentHashMap<String, MutableList<Long>>()
     private val failedLogins = ConcurrentHashMap<String, MutableList<Long>>()
     private val sessionActivities = ConcurrentHashMap<String, SessionActivity>()
     private val securityAlerts = mutableListOf<SecurityAlert>()
-    
+
     // Real-time statistics
     private val totalConnections = AtomicLong(0)
     private val totalFailedLogins = AtomicLong(0)
     private val totalSecurityAlerts = AtomicLong(0)
-    
+
     data class SessionActivity(
         val deviceId: String,
         val startTime: Long,
         var lastActivity: Long,
         var activityCount: Long,
         var suspiciousEvents: Int,
-        val activityPattern: MutableList<ActivityEvent>
+        val activityPattern: MutableList<ActivityEvent>,
     )
-    
+
     data class ActivityEvent(
         val type: String,
         val timestamp: Long,
-        val details: Map<String, Any>
+        val details: Map<String, Any>,
     )
-    
+
     data class SecurityAlert(
         val id: String,
         val type: String,
@@ -81,55 +80,79 @@ class SecurityMonitor(
         val timestamp: Long,
         val description: String,
         val details: Map<String, Any>,
-        var acknowledged: Boolean = false
+        var acknowledged: Boolean = false,
     )
-    
+
     enum class Severity(val level: Int, val displayName: String) {
         LOW(1, "Low"),
-        MEDIUM(2, "Medium"), 
+        MEDIUM(2, "Medium"),
         HIGH(3, "High"),
-        CRITICAL(4, "Critical")
+        CRITICAL(4, "Critical"),
     }
-    
+
     interface SecurityEventListener {
         fun onSecurityAlert(alert: SecurityAlert)
-        fun onSuspiciousActivity(deviceId: String, activityType: String, details: Map<String, Any>)
-        fun onSessionAnomalyDetected(deviceId: String, anomalyType: String)
-        fun onThreatDetected(threatType: String, confidence: Float, details: Map<String, Any>)
+
+        fun onSuspiciousActivity(
+            deviceId: String,
+            activityType: String,
+            details: Map<String, Any>,
+        )
+
+        fun onSessionAnomalyDetected(
+            deviceId: String,
+            anomalyType: String,
+        )
+
+        fun onThreatDetected(
+            threatType: String,
+            confidence: Float,
+            details: Map<String, Any>,
+        )
     }
-    
+
     private var securityListener: SecurityEventListener? = null
-    
+
     /**
      * Initialize security monitoring
      */
     fun initialize(): Boolean {
         return try {
             Log.i(TAG, "Initializing security monitoring system")
-            
-            logger.log(StructuredLogger.LogLevel.INFO, TAG, "security_monitor_initialized", mapOf(
-                "monitoring_interval_seconds" to (MONITORING_INTERVAL_MS / 1000L),
-                "cleanup_interval_minutes" to (CLEANUP_INTERVAL_MS / (60 * 1000L)),
-                "alert_types_count" to 8
-            ))
-            
+
+            logger.log(
+                StructuredLogger.LogLevel.INFO,
+                TAG,
+                "security_monitor_initialized",
+                mapOf(
+                    "monitoring_interval_seconds" to (MONITORING_INTERVAL_MS / 1000L),
+                    "cleanup_interval_minutes" to (CLEANUP_INTERVAL_MS / (60 * 1000L)),
+                    "alert_types_count" to 8,
+                ),
+            )
+
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize security monitor", e)
-            logger.log(StructuredLogger.LogLevel.ERROR, TAG, "init_failed", mapOf(
-                "error" to e.message.orEmpty()
-            ))
+            logger.log(
+                StructuredLogger.LogLevel.ERROR,
+                TAG,
+                "init_failed",
+                mapOf(
+                    "error" to e.message.orEmpty(),
+                ),
+            )
             false
         }
     }
-    
+
     /**
      * Set security event listener
      */
     fun setSecurityEventListener(listener: SecurityEventListener) {
         this.securityListener = listener
     }
-    
+
     /**
      * Start security monitoring
      */
@@ -138,9 +161,9 @@ class SecurityMonitor(
             Log.w(TAG, "Security monitoring already started")
             return
         }
-        
+
         isMonitoring.set(true)
-        
+
         // Start main monitoring loop
         scope.launch {
             while (isMonitoring.get()) {
@@ -152,7 +175,7 @@ class SecurityMonitor(
                 }
             }
         }
-        
+
         // Start cleanup task
         scope.launch {
             while (isMonitoring.get()) {
@@ -164,93 +187,120 @@ class SecurityMonitor(
                 }
             }
         }
-        
+
         Log.i(TAG, "Security monitoring started")
-        
-        logger.log(StructuredLogger.LogLevel.INFO, TAG, "monitoring_started", mapOf(
-            "monitoring_active" to true
-        ))
+
+        logger.log(
+            StructuredLogger.LogLevel.INFO,
+            TAG,
+            "monitoring_started",
+            mapOf(
+                "monitoring_active" to true,
+            ),
+        )
     }
-    
+
     /**
      * Stop security monitoring
      */
     fun stopMonitoring() {
         isMonitoring.set(false)
         scope.cancel()
-        
+
         Log.i(TAG, "Security monitoring stopped")
-        
-        logger.log(StructuredLogger.LogLevel.INFO, TAG, "monitoring_stopped", mapOf(
-            "total_connections_monitored" to totalConnections.get(),
-            "total_failed_logins" to totalFailedLogins.get(),
-            "total_alerts_generated" to totalSecurityAlerts.get()
-        ))
+
+        logger.log(
+            StructuredLogger.LogLevel.INFO,
+            TAG,
+            "monitoring_stopped",
+            mapOf(
+                "total_connections_monitored" to totalConnections.get(),
+                "total_failed_logins" to totalFailedLogins.get(),
+                "total_alerts_generated" to totalSecurityAlerts.get(),
+            ),
+        )
     }
-    
+
     /**
      * Report connection attempt
      */
-    fun reportConnectionAttempt(deviceId: String, successful: Boolean, details: Map<String, Any> = emptyMap()) {
+    fun reportConnectionAttempt(
+        deviceId: String,
+        successful: Boolean,
+        details: Map<String, Any> = emptyMap(),
+    ) {
         val currentTime = System.currentTimeMillis()
-        
+
         // Track connection attempts
         connectionAttempts.computeIfAbsent(deviceId) { mutableListOf() }.add(currentTime)
         totalConnections.incrementAndGet()
-        
+
         // Track failed logins separately
         if (!successful) {
             failedLogins.computeIfAbsent(deviceId) { mutableListOf() }.add(currentTime)
             totalFailedLogins.incrementAndGet()
-            
+
             // Check for brute force attack
             checkBruteForceAttack(deviceId)
         }
-        
+
         // Update session activity
         updateSessionActivity(deviceId, "connection_attempt", details + mapOf("successful" to successful))
-        
-        logger.log(StructuredLogger.LogLevel.DEBUG, TAG, "connection_attempt", mapOf(
-            "device_id" to deviceId,
-            "successful" to successful,
-            "timestamp" to currentTime
-        ))
+
+        logger.log(
+            StructuredLogger.LogLevel.DEBUG,
+            TAG,
+            "connection_attempt",
+            mapOf(
+                "device_id" to deviceId,
+                "successful" to successful,
+                "timestamp" to currentTime,
+            ),
+        )
     }
-    
+
     /**
      * Report security event
      */
-    fun reportSecurityEvent(eventType: String, details: Map<String, Any>) {
+    fun reportSecurityEvent(
+        eventType: String,
+        details: Map<String, Any>,
+    ) {
         val deviceId = details["device_id"] as? String ?: "unknown"
-        
+
         updateSessionActivity(deviceId, eventType, details)
-        
+
         // Analyze event severity
         val severity = determineSeverity(eventType, details)
-        
+
         if (severity.level >= Severity.MEDIUM.level) {
             generateSecurityAlert(eventType, severity, deviceId, details)
         }
-        
-        logger.log(StructuredLogger.LogLevel.INFO, TAG, "security_event", mapOf(
-            "event_type" to eventType,
-            "device_id" to deviceId,
-            "severity" to severity.name
-        ))
+
+        logger.log(
+            StructuredLogger.LogLevel.INFO,
+            TAG,
+            "security_event",
+            mapOf(
+                "event_type" to eventType,
+                "device_id" to deviceId,
+                "severity" to severity.name,
+            ),
+        )
     }
-    
+
     /**
      * Check session activity for anomalies
      */
     fun checkSessionActivity(deviceId: String) {
         val activity = sessionActivities[deviceId] ?: return
         val currentTime = System.currentTimeMillis()
-        
+
         // Check for session timeout warning
         if (currentTime - activity.lastActivity > SESSION_TIMEOUT_WARNING_MS) {
             securityListener?.onSessionAnomalyDetected(deviceId, "session_timeout_warning")
         }
-        
+
         // Check for unusual activity patterns
         if (activity.activityCount > 100 && (currentTime - activity.startTime) < 60 * 1000L) {
             generateSecurityAlert(
@@ -259,11 +309,11 @@ class SecurityMonitor(
                 deviceId,
                 mapOf(
                     "activity_count" to activity.activityCount,
-                    "time_window_seconds" to ((currentTime - activity.startTime) / 1000L)
-                )
+                    "time_window_seconds" to ((currentTime - activity.startTime) / 1000L),
+                ),
             )
         }
-        
+
         // Check for suspicious event concentration
         if (activity.suspiciousEvents >= SUSPICIOUS_ACTIVITY_THRESHOLD) {
             generateSecurityAlert(
@@ -272,42 +322,42 @@ class SecurityMonitor(
                 deviceId,
                 mapOf(
                     "suspicious_events_count" to activity.suspiciousEvents,
-                    "session_duration_minutes" to ((currentTime - activity.startTime) / (60 * 1000L))
-                )
+                    "session_duration_minutes" to ((currentTime - activity.startTime) / (60 * 1000L)),
+                ),
             )
         }
     }
-    
+
     /**
      * Perform comprehensive security check
      */
     private suspend fun performSecurityCheck() {
         val currentTime = System.currentTimeMillis()
-        
+
         // Check all active sessions
         sessionActivities.values.forEach { activity ->
             checkSessionActivity(activity.deviceId)
         }
-        
+
         // Check for unusual connection patterns
         checkConnectionPatterns()
-        
+
         // Check for certificate violations
         checkCertificateViolations()
-        
+
         // Analyze threat patterns
         analyzeThreatPatterns()
-        
+
         // Update monitoring statistics
         updateMonitoringStatistics()
     }
-    
+
     /**
      * Check for brute force attacks
      */
     private fun checkBruteForceAttack(deviceId: String) {
         val recentFailures = getRecentFailedLogins(deviceId, 60 * 60 * 1000L) // Last hour
-        
+
         if (recentFailures.size >= MAX_FAILED_LOGINS_PER_HOUR) {
             generateSecurityAlert(
                 ALERT_BRUTE_FORCE,
@@ -315,21 +365,22 @@ class SecurityMonitor(
                 deviceId,
                 mapOf(
                     "failed_attempts" to recentFailures.size,
-                    "time_window" to "1_hour"
-                )
+                    "time_window" to "1_hour",
+                ),
             )
         }
     }
-    
+
     /**
      * Check connection patterns for anomalies
      */
     private fun checkConnectionPatterns() {
         connectionAttempts.forEach { (deviceId, attempts) ->
-            val recentAttempts = attempts.filter { 
-                System.currentTimeMillis() - it < 60 * 1000L // Last minute
-            }
-            
+            val recentAttempts =
+                attempts.filter {
+                    System.currentTimeMillis() - it < 60 * 1000L // Last minute
+                }
+
             if (recentAttempts.size > MAX_CONNECTIONS_PER_DEVICE) {
                 generateSecurityAlert(
                     ALERT_SUSPICIOUS_CONNECTION,
@@ -337,13 +388,13 @@ class SecurityMonitor(
                     deviceId,
                     mapOf(
                         "connections_per_minute" to recentAttempts.size,
-                        "threshold" to MAX_CONNECTIONS_PER_DEVICE
-                    )
+                        "threshold" to MAX_CONNECTIONS_PER_DEVICE,
+                    ),
                 )
             }
         }
     }
-    
+
     /**
      * Check for certificate violations
      */
@@ -351,16 +402,16 @@ class SecurityMonitor(
         // Placeholder for certificate violation detection
         // This would integrate with CertificateManager to detect invalid or suspicious certificates
     }
-    
+
     /**
      * Analyze threat patterns using simple heuristics
      */
     private fun analyzeThreatPatterns() {
         val recentAlerts = getRecentAlerts(60 * 60 * 1000L) // Last hour
-        
+
         // Group alerts by device
         val alertsByDevice = recentAlerts.groupBy { it.deviceId }
-        
+
         alertsByDevice.forEach { (deviceId, alerts) ->
             if (alerts.size >= 5) {
                 // Multiple alerts from same device - potential compromise
@@ -370,12 +421,12 @@ class SecurityMonitor(
                     mapOf(
                         "device_id" to deviceId,
                         "alert_count" to alerts.size,
-                        "alert_types" to alerts.map { it.type }.distinct()
-                    )
+                        "alert_types" to alerts.map { it.type }.distinct(),
+                    ),
                 )
             }
         }
-        
+
         // Check for coordinated attacks
         if (recentAlerts.size >= 10) {
             val uniqueDevices = recentAlerts.map { it.deviceId }.distinct().size
@@ -385,51 +436,59 @@ class SecurityMonitor(
                     0.9f,
                     mapOf(
                         "affected_devices" to uniqueDevices,
-                        "total_alerts" to recentAlerts.size
-                    )
+                        "total_alerts" to recentAlerts.size,
+                    ),
                 )
             }
         }
     }
-    
+
     /**
      * Update session activity
      */
-    private fun updateSessionActivity(deviceId: String, activityType: String, details: Map<String, Any>) {
+    private fun updateSessionActivity(
+        deviceId: String,
+        activityType: String,
+        details: Map<String, Any>,
+    ) {
         val currentTime = System.currentTimeMillis()
-        
-        val activity = sessionActivities.computeIfAbsent(deviceId) {
-            SessionActivity(
-                deviceId = deviceId,
-                startTime = currentTime,
-                lastActivity = currentTime,
-                activityCount = 0,
-                suspiciousEvents = 0,
-                activityPattern = mutableListOf()
-            )
-        }
-        
+
+        val activity =
+            sessionActivities.computeIfAbsent(deviceId) {
+                SessionActivity(
+                    deviceId = deviceId,
+                    startTime = currentTime,
+                    lastActivity = currentTime,
+                    activityCount = 0,
+                    suspiciousEvents = 0,
+                    activityPattern = mutableListOf(),
+                )
+            }
+
         activity.lastActivity = currentTime
         activity.activityCount++
-        
+
         // Check if activity is suspicious
         if (isSuspiciousActivity(activityType, details)) {
             activity.suspiciousEvents++
         }
-        
+
         // Add to activity pattern
         activity.activityPattern.add(ActivityEvent(activityType, currentTime, details))
-        
+
         // Keep only recent activity (last 1000 events)
         if (activity.activityPattern.size > 1000) {
             activity.activityPattern.removeAt(0)
         }
     }
-    
+
     /**
      * Determine if activity is suspicious
      */
-    private fun isSuspiciousActivity(activityType: String, details: Map<String, Any>): Boolean {
+    private fun isSuspiciousActivity(
+        activityType: String,
+        details: Map<String, Any>,
+    ): Boolean {
         return when (activityType) {
             "connection_attempt" -> !(details["successful"] as? Boolean ?: true)
             "permission_denied" -> true
@@ -439,7 +498,7 @@ class SecurityMonitor(
             else -> false
         }
     }
-    
+
     /**
      * Generate security alert
      */
@@ -447,44 +506,53 @@ class SecurityMonitor(
         alertType: String,
         severity: Severity,
         deviceId: String,
-        details: Map<String, Any>
+        details: Map<String, Any>,
     ) {
-        val alert = SecurityAlert(
-            id = generateAlertId(),
-            type = alertType,
-            severity = severity,
-            deviceId = deviceId,
-            timestamp = System.currentTimeMillis(),
-            description = generateAlertDescription(alertType, details),
-            details = details
-        )
-        
+        val alert =
+            SecurityAlert(
+                id = generateAlertId(),
+                type = alertType,
+                severity = severity,
+                deviceId = deviceId,
+                timestamp = System.currentTimeMillis(),
+                description = generateAlertDescription(alertType, details),
+                details = details,
+            )
+
         synchronized(securityAlerts) {
             securityAlerts.add(alert)
-            
+
             // Keep only last 1000 alerts
             if (securityAlerts.size > 1000) {
                 securityAlerts.removeAt(0)
             }
         }
-        
+
         totalSecurityAlerts.incrementAndGet()
-        
+
         // Notify listener
         securityListener?.onSecurityAlert(alert)
-        
-        logger.log(StructuredLogger.LogLevel.WARNING, TAG, "security_alert", mapOf(
-            "alert_id" to alert.id,
-            "alert_type" to alertType,
-            "severity" to severity.name,
-            "device_id" to deviceId
-        ))
+
+        logger.log(
+            StructuredLogger.LogLevel.WARNING,
+            TAG,
+            "security_alert",
+            mapOf(
+                "alert_id" to alert.id,
+                "alert_type" to alertType,
+                "severity" to severity.name,
+                "device_id" to deviceId,
+            ),
+        )
     }
-    
+
     /**
      * Determine event severity
      */
-    private fun determineSeverity(eventType: String, details: Map<String, Any>): Severity {
+    private fun determineSeverity(
+        eventType: String,
+        details: Map<String, Any>,
+    ): Severity {
         return when (eventType) {
             ALERT_BRUTE_FORCE -> Severity.HIGH
             ALERT_SESSION_HIJACK -> Severity.CRITICAL
@@ -497,11 +565,14 @@ class SecurityMonitor(
             else -> Severity.LOW
         }
     }
-    
+
     /**
      * Generate alert description
      */
-    private fun generateAlertDescription(alertType: String, details: Map<String, Any>): String {
+    private fun generateAlertDescription(
+        alertType: String,
+        details: Map<String, Any>,
+    ): String {
         return when (alertType) {
             ALERT_BRUTE_FORCE -> "Brute force attack detected: ${details["failed_attempts"]} failed attempts"
             ALERT_SUSPICIOUS_CONNECTION -> "Suspicious connection pattern: ${details["connections_per_minute"]} connections/minute"
@@ -514,22 +585,25 @@ class SecurityMonitor(
             else -> "Security event: $alertType"
         }
     }
-    
+
     /**
      * Generate unique alert ID
      */
     private fun generateAlertId(): String {
         return "ALERT_${System.currentTimeMillis()}_${(Math.random() * 1000).toInt()}"
     }
-    
+
     /**
      * Get recent failed logins for device
      */
-    private fun getRecentFailedLogins(deviceId: String, timeWindowMs: Long): List<Long> {
+    private fun getRecentFailedLogins(
+        deviceId: String,
+        timeWindowMs: Long,
+    ): List<Long> {
         val cutoffTime = System.currentTimeMillis() - timeWindowMs
         return failedLogins[deviceId]?.filter { it > cutoffTime } ?: emptyList()
     }
-    
+
     /**
      * Get recent security alerts
      */
@@ -539,45 +613,51 @@ class SecurityMonitor(
             return securityAlerts.filter { it.timestamp > cutoffTime }
         }
     }
-    
+
     /**
      * Perform periodic cleanup
      */
     private fun performCleanup() {
         val currentTime = System.currentTimeMillis()
         val cleanupCutoff = currentTime - (24 * 60 * 60 * 1000L) // 24 hours
-        
+
         // Clean old connection attempts
         connectionAttempts.values.forEach { attempts ->
             attempts.removeAll { it < cleanupCutoff }
         }
-        
+
         // Clean old failed logins
         failedLogins.values.forEach { failures ->
             failures.removeAll { it < cleanupCutoff }
         }
-        
+
         // Clean inactive sessions
-        val inactiveSessions = sessionActivities.filterValues { 
-            currentTime - it.lastActivity > (60 * 60 * 1000L) // 1 hour inactive
-        }.keys
-        
+        val inactiveSessions =
+            sessionActivities.filterValues {
+                currentTime - it.lastActivity > (60 * 60 * 1000L) // 1 hour inactive
+            }.keys
+
         inactiveSessions.forEach { deviceId ->
             sessionActivities.remove(deviceId)
         }
-        
-        logger.log(StructuredLogger.LogLevel.DEBUG, TAG, "cleanup_performed", mapOf(
-            "inactive_sessions_removed" to inactiveSessions.size
-        ))
+
+        logger.log(
+            StructuredLogger.LogLevel.DEBUG,
+            TAG,
+            "cleanup_performed",
+            mapOf(
+                "inactive_sessions_removed" to inactiveSessions.size,
+            ),
+        )
     }
-    
+
     /**
      * Update monitoring statistics
      */
     private fun updateMonitoringStatistics() {
         // This could update dashboard metrics, send to monitoring systems, etc.
     }
-    
+
     /**
      * Get security alerts
      */
@@ -586,7 +666,7 @@ class SecurityMonitor(
             return securityAlerts.takeLast(limit)
         }
     }
-    
+
     /**
      * Acknowledge security alert
      */
@@ -595,16 +675,21 @@ class SecurityMonitor(
             val alert = securityAlerts.find { it.id == alertId }
             return if (alert != null) {
                 alert.acknowledged = true
-                logger.log(StructuredLogger.LogLevel.INFO, TAG, "alert_acknowledged", mapOf(
-                    "alert_id" to alertId
-                ))
+                logger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    TAG,
+                    "alert_acknowledged",
+                    mapOf(
+                        "alert_id" to alertId,
+                    ),
+                )
                 true
             } else {
                 false
             }
         }
     }
-    
+
     /**
      * Get monitoring statistics
      */
@@ -619,31 +704,37 @@ class SecurityMonitor(
             put("monitored_devices", connectionAttempts.size)
         }
     }
-    
+
     /**
      * Get comprehensive security diagnostics
      */
     fun getSecurityDiagnostics(): JSONObject {
         return JSONObject().apply {
             put("monitoring_statistics", getMonitoringStatistics())
-            put("recent_alerts", getSecurityAlerts(10).map { alert ->
-                JSONObject().apply {
-                    put("id", alert.id)
-                    put("type", alert.type)
-                    put("severity", alert.severity.name)
-                    put("device_id", alert.deviceId)
-                    put("timestamp", alert.timestamp)
-                    put("acknowledged", alert.acknowledged)
-                }
-            })
-            put("active_sessions", sessionActivities.values.map { session ->
-                JSONObject().apply {
-                    put("device_id", session.deviceId)
-                    put("activity_count", session.activityCount)
-                    put("suspicious_events", session.suspiciousEvents)
-                    put("last_activity", session.lastActivity)
-                }
-            })
+            put(
+                "recent_alerts",
+                getSecurityAlerts(10).map { alert ->
+                    JSONObject().apply {
+                        put("id", alert.id)
+                        put("type", alert.type)
+                        put("severity", alert.severity.name)
+                        put("device_id", alert.deviceId)
+                        put("timestamp", alert.timestamp)
+                        put("acknowledged", alert.acknowledged)
+                    }
+                },
+            )
+            put(
+                "active_sessions",
+                sessionActivities.values.map { session ->
+                    JSONObject().apply {
+                        put("device_id", session.deviceId)
+                        put("activity_count", session.activityCount)
+                        put("suspicious_events", session.suspiciousEvents)
+                        put("last_activity", session.lastActivity)
+                    }
+                },
+            )
         }
     }
 }

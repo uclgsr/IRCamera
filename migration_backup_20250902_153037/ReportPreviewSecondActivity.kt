@@ -15,19 +15,19 @@ import com.topdon.lib.core.bean.event.ReportCreateEvent
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.config.RouterConfig
+import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseViewModelActivity
+import com.topdon.lib.core.socket.WebSocketProxy
 import com.topdon.lib.core.tools.FileTools
 import com.topdon.lib.core.tools.GlideLoader
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.socket.WebSocketProxy
 import com.topdon.lib.core.utils.NetWorkUtils
 import com.topdon.libcom.PDFHelp
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.utils.StringUtils
 import com.topdon.lms.sdk.weiget.TToast
-import com.topdon.module.thermal.ir.report.view.ReportIRShowView
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.report.bean.ReportBean
+import com.topdon.module.thermal.ir.report.view.ReportIRShowView
 import com.topdon.module.thermal.ir.report.viewmodel.UpReportViewModel
 import kotlinx.android.synthetic.main.activity_report_preview_second.*
 import kotlinx.coroutines.Dispatchers
@@ -43,8 +43,7 @@ import java.io.File
  * - 一份报告所有信息 [ExtraKeyConfig.REPORT_BEAN]
  */
 @Route(path = RouterConfig.REPORT_PREVIEW_SECOND)
-class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), View.OnClickListener {
-
+class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), View.OnClickListener {
     /**
      * 从上一界面传递过来的，当前是否为 TC007 设备类型.
      * true-TC007 false-其他插件式设备
@@ -60,7 +59,6 @@ class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), V
      * 当前预览页面已生成的 PDF 文件绝对路径
      */
     private var pdfFilePath: String? = null
-
 
     override fun initContentView() = R.layout.activity_report_preview_second
 
@@ -79,11 +77,11 @@ class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), V
         title_view.setRightClickListener {
             TipDialog.Builder(this)
                 .setMessage(R.string.album_report_exit_tips)
-                .setPositiveListener(R.string.app_ok){
+                .setPositiveListener(R.string.app_ok) {
                     EventBus.getDefault().post(ReportCreateEvent())
                     finish()
                 }
-                .setCancelListener(R.string.app_cancel){
+                .setCancelListener(R.string.app_cancel) {
                 }
                 .setCanceled(false)
                 .create().show()
@@ -111,14 +109,16 @@ class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), V
 
         tv_to_pdf.setOnClickListener(this)
         tv_complete.setOnClickListener(this)
-        lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onResume(owner: LifecycleOwner) {
-                // 要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
-                if (WebSocketProxy.getInstance().isConnected()) {
-                    NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
+        lifecycle.addObserver(
+            object : DefaultLifecycleObserver {
+                override fun onResume(owner: LifecycleOwner) {
+                    // 要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+                    if (WebSocketProxy.getInstance().isConnected()) {
+                        NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
+                    }
                 }
-            }
-        })
+            },
+        )
     }
 
     override fun initData() {
@@ -142,10 +142,10 @@ class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), V
 
     override fun onClick(v: View?) {
         when (v) {
-            tv_to_pdf -> {//生成PDF
+            tv_to_pdf -> { // 生成PDF
                 saveWithPDF()
             }
-            tv_complete -> {//完成
+            tv_complete -> { // 完成
 
                 if (LMS.getInstance().isLogin) {
                     if (!NetworkUtils.isConnected()) {
@@ -168,7 +168,8 @@ class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), V
                 val name = reportBean?.report_info?.report_number
                 if (name != null) {
                     if (File(FileConfig.getPdfDir() + "/$name.pdf").exists() &&
-                        !TextUtils.isEmpty(pdfFilePath)) {
+                        !TextUtils.isEmpty(pdfFilePath)
+                    ) {
                         lifecycleScope.launch {
                             dismissCameraLoading()
                             actionShare()
@@ -176,8 +177,11 @@ class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), V
                         return@launch
                     }
                 }
-                pdfFilePath = PDFHelp.savePdfFileByListView(name?:System.currentTimeMillis().toString(),
-                    scroll_view, getPrintViewList(),watermark_view)
+                pdfFilePath =
+                    PDFHelp.savePdfFileByListView(
+                        name ?: System.currentTimeMillis().toString(),
+                        scroll_view, getPrintViewList(), watermark_view,
+                    )
                 lifecycleScope.launch {
                     tv_to_pdf.text = getString(R.string.battery_share)
                     dismissCameraLoading()
@@ -206,7 +210,7 @@ class ReportPreviewSecondActivity: BaseViewModelActivity<UpReportViewModel>(), V
         val result = ArrayList<View>()
         result.add(report_info_view)
         val childCount = ll_content.childCount
-        for (i in 0 until  childCount) {
+        for (i in 0 until childCount) {
             val childView = ll_content.getChildAt(i)
             if (childView is ReportIRShowView) {
                 result.addAll(childView.getPrintViewList())

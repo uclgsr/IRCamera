@@ -1,22 +1,22 @@
-//package com.infisense.usbir.view
+// package com.infisense.usbir.view
 //
-//import android.content.Context
-//import android.graphics.drawable.ColorDrawable
-//import android.util.Log
-//import android.view.Gravity
-//import android.view.LayoutInflater
-//import android.view.View
-//import android.view.ViewGroup
-//import android.widget.*
-//import androidx.recyclerview.widget.LinearLayoutManager
-//import com.infisense.iruvc.sdkisp.Libircmd
-//import com.infisense.usbir.R
-//import com.infisense.usbir.camera.IRUVC
-//import kotlinx.android.synthetic.main.layout_tpd.view.*
+// import android.content.Context
+// import android.graphics.drawable.ColorDrawable
+// import android.util.Log
+// import android.view.Gravity
+// import android.view.LayoutInflater
+// import android.view.View
+// import android.view.ViewGroup
+// import android.widget.*
+// import androidx.recyclerview.widget.LinearLayoutManager
+// import com.infisense.iruvc.sdkisp.Libircmd
+// import com.infisense.usbir.R
+// import com.infisense.usbir.camera.IRUVC
+// import kotlinx.android.synthetic.main.layout_tpd.view.*
 //
 //
-////长按[温度测量]弹出
-//class PopuMenuTPD(context: Context?) {
+// //长按[温度测量]弹出
+// class PopuMenuTPD(context: Context?) {
 //
 //    private val popupWindow: PopupWindow
 //
@@ -46,7 +46,7 @@
 //
 //    init {
 //        layView = LayoutInflater.from(context).inflate(R.layout.layout_tpd, null)
-////        ButterKnife.bind(this, view)
+// //        ButterKnife.bind(this, view)
 //        popupWindow = PopupWindow(layView)
 //        popupWindow.width = ViewGroup.LayoutParams.MATCH_PARENT
 //        popupWindow.height = ViewGroup.LayoutParams.WRAP_CONTENT
@@ -87,4 +87,4 @@
 //            }
 //        }
 //    }
-//}
+// }

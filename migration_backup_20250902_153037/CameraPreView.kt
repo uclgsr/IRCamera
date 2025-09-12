@@ -25,20 +25,21 @@ import com.topdon.lib.ui.R
 import kotlinx.android.synthetic.main.camera_lay.view.*
 import java.util.*
 
-
 /**
  * 相机预览
  */
-class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
+class CameraPreView :
+    LinearLayout,
+    ScaleGestureDetector.OnScaleGestureListener,
     BitmapViewListener {
-    private var cameraCharacteristics: CameraCharacteristics ?= null
-    private var isReverse : Boolean = false
+    private var cameraCharacteristics: CameraCharacteristics? = null
+    private var isReverse: Boolean = false
     private lateinit var mTextureView: TextureView
     private var cameraWidth = 0
 
     var isPreviewing = false
 
-    var cameraPreViewCloseListener : (() -> Unit) ?= null
+    var cameraPreViewCloseListener: (() -> Unit)? = null
 
     constructor(context: Context) : this(context, null)
 
@@ -49,7 +50,7 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     )
 
     private fun initView() {
@@ -60,8 +61,6 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
         onResumeView()
     }
 
-
-
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         isPreviewing = false
@@ -69,7 +68,7 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
         mCameraHandler?.removeCallbacksAndMessages(null)
     }
 
-    private var startX = 0f//记录落点到控件的距离
+    private var startX = 0f // 记录落点到控件的距离
     private var startY = 0f
     private var moveX = 0f
     private var moveY = 0f
@@ -77,7 +76,7 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
     private var parentViewH = 0f
     private var isScale = false
     private var scale = 1f
-    private var scaleW = 0f//单边缩放长度
+    private var scaleW = 0f // 单边缩放长度
     private var scaleH = 0f
 
     private lateinit var lis: ScaleGestureDetector
@@ -98,10 +97,10 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
                 parentViewH = view.height.toFloat()
             }
             MotionEvent.ACTION_MOVE -> {
-                //滑动
+                // 滑动
                 moveX = event.x - startX
                 moveY = event.y - startY
-                //根据移动情况，不可见时候关闭
+                // 根据移动情况，不可见时候关闭
 //                if (moveX-scaleW < -mTextureView.width ||
 //                    moveX+scaleW > parentViewW ||
 //                    moveY - scaleH < -mTextureView.height ||
@@ -109,7 +108,7 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
 //                    cameraPreViewCloseListener?.invoke()
 //                }
 
-                //越界归位
+                // 越界归位
 //                if (moveX - scaleW < 0f) moveX = 0f + scaleW
 //                if (moveY - scaleH < 0f) moveY = 0f + scaleH
 //                if (moveX + scaleW > parentViewW - mTextureView.width) {
@@ -123,42 +122,49 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
                 mTextureView.y = moveY
             }
             MotionEvent.ACTION_UP -> {
-                isScale = false//实际以手指抬起设定缩放结束
+                isScale = false // 实际以手指抬起设定缩放结束
                 val startX = viewX
                 val startY = viewY
 //                Log.e("测试","/"+(startX)+"///"+startY+"///"+(mTextureView.width)+"//"+mTextureView.width * scale)
-                if ((viewX < 0 && startX <  -mTextureView.width * scale + SizeUtils.dp2px(10f)) ||
+                if ((viewX < 0 && startX < -mTextureView.width * scale + SizeUtils.dp2px(10f)) ||
                     (startX > 0 && startX > parentViewW - SizeUtils.dp2px(10f)) ||
                     (startY < 0 && startY < -mTextureView.height * scale + SizeUtils.dp2px(10f)) ||
-                    (startY > 0 && startY > parentViewH - SizeUtils.dp2px(10f))){
-                    cameraPreViewCloseListener?.invoke()
-                }
+                    (startY > 0 && startY > parentViewH - SizeUtils.dp2px(10f))
+                )
+                    {
+                        cameraPreViewCloseListener?.invoke()
+                    }
             }
         }
         return lis.onTouchEvent(event)
     }
+
     /**
      * 保存图片
      */
-    public fun getBitmap() : Bitmap? {
+    public fun getBitmap(): Bitmap? {
         return mTextureView.bitmap
     }
+
     override fun onScale(detector: ScaleGestureDetector): Boolean {
-        //缩放
+        // 缩放
         isScale = true
         detector?.let {
             val scaleFactor = it.scaleFactor - 1
-            if (scaleFactor < 0){
-                if (scale > 0.1){
+            if (scaleFactor < 0)
+                {
+                    if (scale > 0.1)
+                        {
+                            scale += scaleFactor
+                            mTextureView.scaleX = scale
+                            mTextureView.scaleY = scale
+                        }
+                } else
+                {
                     scale += scaleFactor
                     mTextureView.scaleX = scale
                     mTextureView.scaleY = scale
                 }
-            }else{
-                scale += scaleFactor
-                mTextureView.scaleX = scale
-                mTextureView.scaleY = scale
-            }
         }
         return true
     }
@@ -170,15 +176,18 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
 
     override fun onScaleEnd(detector: ScaleGestureDetector) {
     }
-    fun onResume(){
-        //处理切换后台，打开系统相机后，回到app导致预览不更新画面的问题
-        if (mCameraDevice!=null){
-            mCameraDevice?.close()
-            openCamera()
-        }
+
+    fun onResume()  {
+        // 处理切换后台，打开系统相机后，回到app导致预览不更新画面的问题
+        if (mCameraDevice != null)
+            {
+                mCameraDevice?.close()
+                openCamera()
+            }
     }
 
-//////////////////
+// ////////////////
+
     /**相机权限请求标识 */
     private val REQUEST_CAMERA_CODE = 0x100
 
@@ -215,14 +224,18 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
     /**相机设备状态回调 */
     private val mStateCallback: CameraDevice.StateCallback =
         object : CameraDevice.StateCallback() {
-            override fun onOpened(@NonNull camera: CameraDevice) {
+            override fun onOpened(
+                @NonNull camera: CameraDevice,
+            ) {
                 // 打开
                 XLog.i("开启预览")
                 mCameraDevice = camera
                 takePreview()
             }
 
-            override fun onDisconnected(@NonNull camera: CameraDevice) {
+            override fun onDisconnected(
+                @NonNull camera: CameraDevice,
+            ) {
                 // 断开连接
                 XLog.i("关闭预览")
                 isPreviewing = false
@@ -230,7 +243,10 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
 //                mCameraDevice = null
             }
 
-            override fun onError(@NonNull camera: CameraDevice, error: Int) {
+            override fun onError(
+                @NonNull camera: CameraDevice,
+                error: Int,
+            ) {
                 // 异常
                 isPreviewing = false
                 camera.close()
@@ -239,17 +255,19 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
             }
         }
 
-    fun setRotation(isReverse : Boolean){
+    fun setRotation(isReverse: Boolean)  {
         this.isReverse = isReverse
         updateRotation()
     }
 
-    private fun updateRotation(){
-        if(isReverse){
-            mTextureView.rotation = 180f
-        }else{
-            mTextureView.rotation = 0f
-        }
+    private fun updateRotation()  {
+        if (isReverse)
+            {
+                mTextureView.rotation = 180f
+            } else
+            {
+                mTextureView.rotation = 0f
+            }
     }
 
     /**
@@ -277,7 +295,9 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
             mCameraDevice!!.createCaptureSession(
                 listOf(previewSurface),
                 object : CameraCaptureSession.StateCallback() {
-                    override fun onConfigured(@NonNull session: CameraCaptureSession) {
+                    override fun onConfigured(
+                        @NonNull session: CameraCaptureSession,
+                    ) {
                         try {
                             // 配置
                             val captureRequest = mCaptureBuilder.build()
@@ -287,68 +307,72 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
                             mCameraCaptureSession?.setRepeatingRequest(
                                 captureRequest,
                                 null,
-                                mCameraHandler
+                                mCameraHandler,
                             )
                         } catch (e: CameraAccessException) {
                             XLog.e("相机异常：${e.printStackTrace()}")
                         }
                     }
 
-                    override fun onConfigureFailed(@NonNull session: CameraCaptureSession) {
+                    override fun onConfigureFailed(
+                        @NonNull session: CameraCaptureSession,
+                    ) {
                         // 配置失败
                         XLog.e("配置失败")
                     }
                 },
-                mCameraHandler
+                mCameraHandler,
             )
         } catch (e: CameraAccessException) {
             e.printStackTrace()
         }
     }
 
-
     private fun onResumeView() {
-        mTextureView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
-            override fun onSurfaceTextureAvailable(
-                surface: SurfaceTexture,
-                width: Int,
-                height: Int
-            ) {
-                // SurfaceTexture可用
-                XLog.w("width:$width, height:$height")
-                setUpCamera(width, height)
-            }
+        mTextureView.surfaceTextureListener =
+            object : TextureView.SurfaceTextureListener {
+                override fun onSurfaceTextureAvailable(
+                    surface: SurfaceTexture,
+                    width: Int,
+                    height: Int,
+                ) {
+                    // SurfaceTexture可用
+                    XLog.w("width:$width, height:$height")
+                    setUpCamera(width, height)
+                }
 
-            override fun onSurfaceTextureSizeChanged(
-                surface: SurfaceTexture,
-                width: Int,
-                height: Int
-            ) {
-                // SurfaceTexture大小改变
-            }
+                override fun onSurfaceTextureSizeChanged(
+                    surface: SurfaceTexture,
+                    width: Int,
+                    height: Int,
+                ) {
+                    // SurfaceTexture大小改变
+                }
 
-            override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
-                // SurfaceTexture 销毁
-                return false
-            }
+                override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+                    // SurfaceTexture 销毁
+                    return false
+                }
 
-            override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
-                // SurfaceTexture 更新
+                override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
+                    // SurfaceTexture 更新
+                }
             }
-        }
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
     }
 
-
     /**
      * 设置相机参数
      * @param width 宽度
      * @param height 高度
      */
-    private fun setUpCamera(width: Int, height: Int) {
+    private fun setUpCamera(
+        width: Int,
+        height: Int,
+    ) {
         // 创建Handler
         mCameraHandler = Handler(Looper.getMainLooper())
         // 获取摄像头的管理者
@@ -370,9 +394,9 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
                 mPreviewSize = getOptimalSize(mapList, width, height)
                 val constraintSet = ConstraintSet()
                 constraintSet.clone(camera_lay_root)
-                constraintSet.constrainHeight(mTextureView.id,width * mPreviewSize!!.width / mPreviewSize!!.height)
-                constraintSet.applyTo(camera_lay_root);
-                XLog.w("mPreviewSize:${mPreviewSize}")
+                constraintSet.constrainHeight(mTextureView.id, width * mPreviewSize!!.width / mPreviewSize!!.height)
+                constraintSet.applyTo(camera_lay_root)
+                XLog.w("mPreviewSize:$mPreviewSize")
                 // 获取相机支持的最大拍照尺寸
                 val sizes = map.getOutputSizes(ImageFormat.JPEG)
                 XLog.w("size:${sizes.toList()}")
@@ -380,7 +404,7 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
                 val h = w * sizes[0].height / sizes[0].width
 //                mCaptureSize = Size(w, h)//影响拍照尺寸
                 XLog.w("选取比例 w:${sizes[0].width}, h:${sizes[0].height}")
-                XLog.w("调整后 w: ${w}, h:${h}")
+                XLog.w("调整后 w: $w, h:$h")
                 // 此处ImageReader用于拍照所需
 //                setupImageReader()
                 // 为摄像头赋值
@@ -400,7 +424,11 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
      * @param height 高
      * @return 最接近width和height的size
      */
-    private fun getOptimalSize(sizeMap: Array<Size>, width: Int, height: Int): Size {
+    private fun getOptimalSize(
+        sizeMap: Array<Size>,
+        width: Int,
+        height: Int,
+    ): Size {
         // 创建列表
         val sizeList: MutableList<Size> = ArrayList()
         // 遍历
@@ -421,7 +449,9 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
             Collections.min(sizeList) { lhs, rhs ->
                 java.lang.Long.signum((lhs.width * lhs.height - rhs.width * rhs.height).toLong())
             }
-        } else sizeMap[0]
+        } else {
+            sizeMap[0]
+        }
     }
 
     /**
@@ -448,7 +478,7 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
         isPreviewing = false
         try {
             mCameraDevice?.close()
-            //恢复原始状态
+            // 恢复原始状态
             mTextureView.x = 0f
             mTextureView.y = 0f
             mTextureView.scaleX = 1f
@@ -462,9 +492,9 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
     }
 
     override val viewX: Float
-        get() = mTextureView.x - (viewWidth - mTextureView.width)/2
+        get() = mTextureView.x - (viewWidth - mTextureView.width) / 2
     override val viewY: Float
-        get() = mTextureView.y - (viewHeight - mTextureView.height)/2
+        get() = mTextureView.y - (viewHeight - mTextureView.height) / 2
     override val viewAlpha: Float
         get() = mTextureView.alpha
     override val viewWidth: Float
@@ -474,16 +504,14 @@ class CameraPreView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener,
     override val viewScale: Float
         get() = scale
 
-    fun setCameraAlpha(alpha : Float){
+    fun setCameraAlpha(alpha: Float)  {
         mTextureView?.alpha = 1 - alpha
     }
 
-    fun setZoom(zoomLeve : Int){
+    fun setZoom(zoomLeve: Int)  {
         scale = zoomLeve * 0.5f
         mTextureView.scaleX = scale
         mTextureView.scaleY = scale
         invalidate()
     }
-
-
 }

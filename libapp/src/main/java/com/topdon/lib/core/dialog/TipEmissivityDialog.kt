@@ -117,14 +117,12 @@ class TipEmissivityDialog : Dialog {
             val tvEnvironmentValue = binding.tvEnvironmentValue
             val tvDistanceValue = binding.tvDistanceValue
 
-            if (text.isNotEmpty())
-                {
-                    tvEmissivityMaterials.text = text
-                    tvEmissivityMaterials.visibility = View.VISIBLE
-                } else
-                {
-                    tvEmissivityMaterials.visibility = View.GONE
-                }
+            if (text.isNotEmpty()) {
+                tvEmissivityMaterials.text = text
+                tvEmissivityMaterials.visibility = View.VISIBLE
+            } else {
+                tvEmissivityMaterials.visibility = View.GONE
+            }
             tvEmissivity.text = "${context?.getString(R.string.thermal_config_radiation)}: ${
                 NumberTools.to02(radiation)}"
             tvEnvironmentValue.text = UnitTools.showC(environment)

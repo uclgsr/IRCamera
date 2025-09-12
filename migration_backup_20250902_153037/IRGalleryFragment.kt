@@ -13,21 +13,21 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.topdon.lib.core.bean.GalleryBean
 import com.topdon.lib.core.bean.GalleryTitle
+import com.topdon.lib.core.bean.event.GalleryDelEvent
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.FileConfig
+import com.topdon.lib.core.config.FileConfig.getGalleryDirByType
 import com.topdon.lib.core.config.RouterConfig
+import com.topdon.lib.core.dialog.ConfirmSelectDialog
 import com.topdon.lib.core.ktbase.BaseFragment
-import com.topdon.lib.core.tools.FileTools.getUri
-import com.topdon.lib.core.tools.ToastTools
 import com.topdon.lib.core.repository.GalleryRepository.DirType
 import com.topdon.lib.core.repository.TS004Repository
+import com.topdon.lib.core.tools.FileTools.getUri
+import com.topdon.lib.core.tools.ToastTools
+import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.adapter.GalleryAdapter
-import com.topdon.lib.core.dialog.ConfirmSelectDialog
 import com.topdon.module.thermal.ir.event.GalleryAddEvent
-import com.topdon.lib.core.bean.event.GalleryDelEvent
-import com.topdon.lib.core.config.FileConfig.getGalleryDirByType
-import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.event.GalleryDirChangeEvent
 import com.topdon.module.thermal.ir.event.GalleryDownloadEvent
 import com.topdon.module.thermal.ir.viewmodel.IRGalleryTabViewModel
@@ -43,7 +43,6 @@ import java.io.File
  * 图库
  */
 class IRGalleryFragment : BaseFragment() {
-
     /**
      * 从上一界面传递过来的，进入图库时初始的目录类型
      */
@@ -63,12 +62,13 @@ class IRGalleryFragment : BaseFragment() {
     override fun initContentView() = R.layout.fragment_ir_gallery
 
     override fun initView() {
-        currentDirType = when (arguments?.getInt(ExtraKeyConfig.DIR_TYPE, 0) ?: 0) {
-            DirType.TS004_LOCALE.ordinal -> DirType.TS004_LOCALE
-            DirType.TS004_REMOTE.ordinal -> DirType.TS004_REMOTE
-            DirType.TC007.ordinal -> DirType.TC007
-            else -> DirType.LINE
-        }
+        currentDirType =
+            when (arguments?.getInt(ExtraKeyConfig.DIR_TYPE, 0) ?: 0) {
+                DirType.TS004_LOCALE.ordinal -> DirType.TS004_LOCALE
+                DirType.TS004_REMOTE.ordinal -> DirType.TS004_REMOTE
+                DirType.TC007.ordinal -> DirType.TC007
+                else -> DirType.LINE
+            }
 
         cl_download.isVisible = currentDirType == DirType.TS004_REMOTE
 
@@ -114,7 +114,12 @@ class IRGalleryFragment : BaseFragment() {
             if (it) {
                 TToast.shortToast(requireContext(), R.string.test_results_delete_success)
                 tabViewModel.isEditModeLD.value = false
-                MediaScannerConnection.scanFile(requireContext(), arrayOf(FileConfig.lineGalleryDir, FileConfig.ts004GalleryDir), null, null)
+                MediaScannerConnection.scanFile(
+                    requireContext(),
+                    arrayOf(FileConfig.lineGalleryDir, FileConfig.ts004GalleryDir),
+                    null,
+                    null,
+                )
                 EventBus.getDefault().post(GalleryDelEvent())
             } else {
                 TToast.shortToast(requireContext(), R.string.test_results_delete_failed)
@@ -134,7 +139,6 @@ class IRGalleryFragment : BaseFragment() {
     }
 
     override fun initData() {
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -169,12 +173,13 @@ class IRGalleryFragment : BaseFragment() {
     private fun initRecycler() {
         val spanCount = 3
         val gridLayoutManager = GridLayoutManager(requireActivity(), spanCount)
-        //动态设置span
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (adapter.dataList[position] is GalleryTitle) spanCount else 1
+        // 动态设置span
+        gridLayoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (adapter.dataList[position] is GalleryTitle) spanCount else 1
+                }
             }
-        }
         ir_gallery_recycler.adapter = adapter
         ir_gallery_recycler.layoutManager = gridLayoutManager
 
@@ -203,7 +208,6 @@ class IRGalleryFragment : BaseFragment() {
                     }
                 }
 
-
                 if (currentDirType == DirType.LINE || currentDirType == DirType.TC007) {
                     ARouter.getInstance().build(RouterConfig.IR_GALLERY_DETAIL_01)
                         .withBoolean(ExtraKeyConfig.IS_TC007, currentDirType == DirType.TC007)
@@ -219,7 +223,6 @@ class IRGalleryFragment : BaseFragment() {
                 }
             }
         }
-
 
         refresh_layout.setOnRefreshListener {
             refresh()
@@ -253,10 +256,12 @@ class IRGalleryFragment : BaseFragment() {
 
         if (deleteList.size > 0) {
             ConfirmSelectDialog(requireContext()).run {
-                setTitleStr(getString(
-                    R.string.tip_delete_chosen,
-                    deleteList.size
-                ))
+                setTitleStr(
+                    getString(
+                        R.string.tip_delete_chosen,
+                        deleteList.size,
+                    ),
+                )
                 setMessageRes(R.string.also_del_from_phone_album)
                 setShowMessage(currentDirType == DirType.TS004_REMOTE && hasOneDownload)
                 onConfirmClickListener = {
@@ -270,7 +275,10 @@ class IRGalleryFragment : BaseFragment() {
         }
     }
 
-    private fun downloadList(downloadList: List<GalleryBean>, isShare: Boolean) {
+    private fun downloadList(
+        downloadList: List<GalleryBean>,
+        isShare: Boolean,
+    ) {
         val downloadMap = HashMap<String, File>()
         downloadList.forEach {
             if (!it.hasDownload) {
@@ -289,18 +297,19 @@ class IRGalleryFragment : BaseFragment() {
             lifecycleScope.launch {
                 (context as? Activity)?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                 showLoadingDialog()
-                val successCount = TS004Repository.downloadList(downloadMap) { path, isSuccess ->
-                    if (isSuccess) {
-                        for (galleryBean in downloadList) {
-                            if (galleryBean.path == path) {
-                                galleryBean.hasDownload = true
-                                adapter.notifyDataSetChanged()
-                                break
+                val successCount =
+                    TS004Repository.downloadList(downloadMap) { path, isSuccess ->
+                        if (isSuccess) {
+                            for (galleryBean in downloadList) {
+                                if (galleryBean.path == path) {
+                                    galleryBean.hasDownload = true
+                                    adapter.notifyDataSetChanged()
+                                    break
+                                }
                             }
                         }
                     }
-                }
-                if (successCount == downloadMap.size) {//全都下载成功
+                if (successCount == downloadMap.size) { // 全都下载成功
                     dismissLoadingDialog()
                     if (isShare) {
                         shareImage(downloadList)
@@ -312,7 +321,12 @@ class IRGalleryFragment : BaseFragment() {
                     dismissLoadingDialog()
                     ToastTools.showShort(R.string.liveData_save_error)
                 }
-                MediaScannerConnection.scanFile(requireContext(), arrayOf(FileConfig.lineGalleryDir, FileConfig.ts004GalleryDir), null, null)
+                MediaScannerConnection.scanFile(
+                    requireContext(),
+                    arrayOf(FileConfig.lineGalleryDir, FileConfig.ts004GalleryDir),
+                    null,
+                    null,
+                )
                 (context as? Activity)?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             }
         }
@@ -341,4 +355,3 @@ class IRGalleryFragment : BaseFragment() {
         startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
     }
 }
-

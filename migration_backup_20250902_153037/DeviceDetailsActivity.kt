@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
  */
 @Route(path = RouterConfig.DEVICE_INFORMATION)
 class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
-
     /**
      * 从上一界面传递过来的，当前是否为 TC007 设备类型.
      * true-TC007 false-其他插件式设备
@@ -68,7 +67,7 @@ class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            cl_layout_copy -> {//复制信息
+            cl_layout_copy -> { // 复制信息
                 val text = "${tv_sn.text}:${tv_sn_value.text}  ${tv_device_model.text}:${tv_device_model_value.text}"
                 val cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?
                 val mClipData = ClipData.newPlainText("text", text)
@@ -77,5 +76,4 @@ class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
 }

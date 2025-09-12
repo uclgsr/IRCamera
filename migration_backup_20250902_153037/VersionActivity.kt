@@ -74,20 +74,24 @@ class VersionActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    private var appVersionUtil: AppVersionUtil?=null
+    private var appVersionUtil: AppVersionUtil? = null
+
     private fun checkAppVersion(isShow: Boolean) {
         if (appVersionUtil == null) {
-            appVersionUtil = AppVersionUtil(this, object : AppVersionUtil.DotIsShowListener {
-                override fun isShow(show: Boolean) {
-                    cl_new_version.visibility = View.VISIBLE
-                }
+            appVersionUtil =
+                AppVersionUtil(
+                    this,
+                    object : AppVersionUtil.DotIsShowListener {
+                        override fun isShow(show: Boolean) {
+                            cl_new_version.visibility = View.VISIBLE
+                        }
 
-                override fun version(version: String) {
-                    tv_new_version.text = "$version"
-                }
-            })
+                        override fun version(version: String) {
+                            tv_new_version.text = "$version"
+                        }
+                    },
+                )
         }
         appVersionUtil?.checkVersion(isShow)
     }
-
 }

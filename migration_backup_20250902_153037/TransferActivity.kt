@@ -32,7 +32,6 @@ import java.util.zip.ZipFile
  * Created by LCG on 2024/3/28.
  */
 class TransferActivity : BaseActivity() {
-
     private lateinit var transferDialog: TransferDialog
 
     override fun initContentView(): Int = R.layout.activity_transfer
@@ -54,32 +53,39 @@ class TransferActivity : BaseActivity() {
     private fun requestPermission() {
         XXPermissions.with(this)
             .permission(if (applicationInfo.targetSdkVersion < 33) Permission.READ_EXTERNAL_STORAGE else Permission.READ_MEDIA_IMAGES)
-            .request(object : OnPermissionCallback {
-                override fun onGranted(permissions: MutableList<String>, allGranted: Boolean) {
-                    if (allGranted) {
-                        startTransfer()
-                    } else {
-                        ToastUtils.showShort(R.string.scan_ble_tip_authorize)
+            .request(
+                object : OnPermissionCallback {
+                    override fun onGranted(
+                        permissions: MutableList<String>,
+                        allGranted: Boolean,
+                    ) {
+                        if (allGranted) {
+                            startTransfer()
+                        } else {
+                            ToastUtils.showShort(R.string.scan_ble_tip_authorize)
+                        }
                     }
-                }
 
-                override fun onDenied(permissions: MutableList<String>, doNotAskAgain: Boolean) {
-                    if (doNotAskAgain) {//拒绝授权并且不再提醒
-                        TipDialog.Builder(this@TransferActivity)
-                            .setTitleMessage(getString(R.string.app_tip))
-                            .setMessage(getString(R.string.app_album_content))
-                            .setPositiveListener(R.string.app_open) {
-                                AppUtils.launchAppDetailsSettings()
-                            }
-                            .setCancelListener(R.string.app_cancel) {
-                            }
-                            .setCanceled(true)
-                            .create().show()
+                    override fun onDenied(
+                        permissions: MutableList<String>,
+                        doNotAskAgain: Boolean,
+                    ) {
+                        if (doNotAskAgain) { // 拒绝授权并且不再提醒
+                            TipDialog.Builder(this@TransferActivity)
+                                .setTitleMessage(getString(R.string.app_tip))
+                                .setMessage(getString(R.string.app_album_content))
+                                .setPositiveListener(R.string.app_open) {
+                                    AppUtils.launchAppDetailsSettings()
+                                }
+                                .setCancelListener(R.string.app_cancel) {
+                                }
+                                .setCanceled(true)
+                                .create().show()
+                        }
                     }
-                }
-            })
+                },
+            )
     }
-
 
     /**
      * 开始执行迁移流程.
@@ -136,7 +142,6 @@ class TransferActivity : BaseActivity() {
                         }
                     }
                 } catch (_: Exception) {
-
                 }
                 launch(Dispatchers.Main) {
                     transferDialog.progress += 1

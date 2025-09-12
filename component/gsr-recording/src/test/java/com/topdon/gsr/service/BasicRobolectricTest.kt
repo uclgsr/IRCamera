@@ -20,74 +20,73 @@ import org.robolectric.annotation.Config
 @Config(sdk = [Build.VERSION_CODES.O])
 @OptIn(ExperimentalCoroutinesApi::class)
 class BasicRobolectricTest {
-    
     private lateinit var context: Context
-    
+
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
     }
-    
+
     @Test
     fun testContextAccess() {
         assertNotNull("Context should be available", context)
         assertNotNull("Package name should be available", context.packageName)
         assertFalse("Package name should not be empty", context.packageName.isEmpty())
     }
-    
+
     @Test
     fun testSystemServiceAccess() {
         // Test various system services that GSR recording might use
         val notificationService = context.getSystemService(Context.NOTIFICATION_SERVICE)
         assertNotNull("Notification service should be available", notificationService)
-        
+
         val connectivityService = context.getSystemService(Context.CONNECTIVITY_SERVICE)
         assertNotNull("Connectivity service should be available", connectivityService)
-        
+
         val bluetoothService = context.getSystemService(Context.BLUETOOTH_SERVICE)
         assertNotNull("Bluetooth service should be available", bluetoothService)
     }
-    
+
     @Test
     fun testFileSystemAccess() {
         val filesDir = context.filesDir
         assertNotNull("Files directory should be accessible", filesDir)
         assertTrue("Files directory should exist", filesDir.exists())
-        
+
         val cacheDir = context.cacheDir
         assertNotNull("Cache directory should be accessible", cacheDir)
         assertTrue("Cache directory should exist", cacheDir.exists())
     }
-    
+
     @Test
     fun testSharedPreferencesAccess() {
         val prefs = context.getSharedPreferences("test_prefs", Context.MODE_PRIVATE)
         assertNotNull("SharedPreferences should be available", prefs)
-        
+
         // Test read/write
         val editor = prefs.edit()
         editor.putString("test_key", "test_value")
         editor.apply()
-        
+
         val value = prefs.getString("test_key", null)
         assertEquals("Value should be stored and retrieved", "test_value", value)
     }
-    
+
     @Test
     fun testResourceAccess() {
         val resources = context.resources
         assertNotNull("Resources should be available", resources)
-        
+
         val displayMetrics = resources.displayMetrics
         assertNotNull("Display metrics should be available", displayMetrics)
         assertTrue("Display density should be positive", displayMetrics.density > 0)
     }
-    
+
     @Test
     fun testPackageManagerAccess() {
         val packageManager = context.packageManager
         assertNotNull("Package manager should be available", packageManager)
-        
+
         try {
             val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
             assertNotNull("Package info should be available", packageInfo)
@@ -96,34 +95,36 @@ class BasicRobolectricTest {
             // May not be available in test environment, that's OK
         }
     }
-    
+
     @Test
-    fun testAsyncOperations() = runTest {
-        // Test that coroutines work with Robolectric context
-        val result = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-            context.packageName
+    fun testAsyncOperations() =
+        runTest {
+            // Test that coroutines work with Robolectric context
+            val result =
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                    context.packageName
+                }
+
+            assertEquals("Async operation should return correct value", context.packageName, result)
         }
-        
-        assertEquals("Async operation should return correct value", context.packageName, result)
-    }
-    
+
     @Test
     fun testMultipleContextInstances() {
         val context1 = ApplicationProvider.getApplicationContext<Context>()
         val context2 = ApplicationProvider.getApplicationContext<Context>()
-        
+
         // Should be the same application context
         assertSame("Application contexts should be the same instance", context1, context2)
         assertEquals("Package names should match", context1.packageName, context2.packageName)
     }
-    
+
     @Test
     fun testContextBasedClassInstantiation() {
         // Test creating classes that require context
         try {
             val sessionManager = SessionManager.getInstance(context)
             assertNotNull("SessionManager should be created with context", sessionManager)
-            
+
             val shimmerRecorder = ShimmerGSRRecorder(context, 128)
             assertNotNull("ShimmerGSRRecorder should be created with context", shimmerRecorder)
         } catch (e: Exception) {

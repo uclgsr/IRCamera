@@ -43,7 +43,6 @@ import kotlin.math.abs
  */
 @Route(path = RouterConfig.REPORT_PREVIEW)
 class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
-
     private val detectViewModel: DetectViewModel by viewModels()
     private val reportViewModel: ReportViewModel by viewModels()
 
@@ -68,11 +67,12 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
         rly_inspector_signature.setOnClickListener(this)
         rly_house_owner_signature.setOnClickListener(this)
 
-        if(cl_sign.isShown){
-            val mAppBarChildAt: View = lay_appbar.getChildAt(0)
-            val mAppBarParams = mAppBarChildAt.layoutParams as AppBarLayout.LayoutParams
-            mAppBarParams.scrollFlags = 0
-        }
+        if (cl_sign.isShown)
+            {
+                val mAppBarChildAt: View = lay_appbar.getChildAt(0)
+                val mAppBarParams = mAppBarChildAt.layoutParams as AppBarLayout.LayoutParams
+                mAppBarParams.scrollFlags = 0
+            }
 
         detectViewModel.detectLD.observe(this) {
             tv_save.isEnabled = it != null
@@ -93,27 +93,30 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             dismissLoadingDialog()
         }
 
-        if (isReport) {//查看报告
+        if (isReport) { // 查看报告
             reportViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
-        } else {//生成报告
+        } else { // 生成报告
             detectViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
         }
     }
 
     override fun initData() {
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         setAvatorChange()
     }
 
     private fun setAvatorChange() {
         lay_appbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            //verticalOffset始终为0以下的负数
+            // verticalOffset始终为0以下的负数
             val percent = abs(verticalOffset * 1.0f) / appBarLayout.totalScrollRange
             lay_toolbar.setBackgroundColor(changeAlpha(getColor(R.color.color_23202E), percent))
         }
     }
 
-    private fun changeAlpha(color: Int, fraction: Float): Int {
+    private fun changeAlpha(
+        color: Int,
+        fraction: Float,
+    ): Int {
         val red = Color.red(color)
         val green = Color.green(color)
         val blue = Color.blue(color)
@@ -140,7 +143,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             }
 
             tv_save -> {
-                if (isReport) {//分享
+                if (isReport) { // 分享
                     lifecycleScope.launch {
                         showLoadingDialog()
                         PDFUtil.delAllPDF(this@ReportPreviewActivity)
@@ -154,7 +157,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
                             startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
                         }
                     }
-                } else {//定稿并保存
+                } else { // 定稿并保存
                     if (houseReport.inspectorWhitePath.isEmpty() || houseReport.houseOwnerWhitePath.isEmpty()) {
                         if (cl_sign.bottom + lay_appbar.height > ll_save.top) {
                             lay_appbar.setExpanded(false, true)
@@ -181,21 +184,25 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             val whitePath = data?.getStringExtra(ExtraKeyConfig.RESULT_PATH_WHITE) ?: return
             val blackPath = data.getStringExtra(ExtraKeyConfig.RESULT_PATH_BLACK) ?: return
             when (requestCode) {
                 1000 -> {
-                    //检测师签名
+                    // 检测师签名
                     Glide.with(this).load(whitePath).into(iv_inspector_signature)
                     houseReport.inspectorWhitePath = whitePath
                     houseReport.inspectorBlackPath = blackPath
                 }
 
                 1001 -> {
-                    //房主签名
+                    // 房主签名
                     Glide.with(this).load(whitePath).into(iv_house_owner_signature)
                     houseReport.houseOwnerWhitePath = whitePath
                     houseReport.houseOwnerBlackPath = blackPath
@@ -265,9 +272,10 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             }
 
             var isEmpty =
-                CollectionUtils.isEmpty(itemBean.projectItemBeans) && CollectionUtils.isEmpty(
-                    itemBean.albumItemBeans
-                )
+                CollectionUtils.isEmpty(itemBean.projectItemBeans) &&
+                    CollectionUtils.isEmpty(
+                        itemBean.albumItemBeans,
+                    )
             if (CollectionUtils.isNotEmpty(itemBean.projectItemBeans)) {
                 itemBean.projectItemBeans.add(0, HouseRepPreviewProjectItemBean())
             }

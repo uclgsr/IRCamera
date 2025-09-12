@@ -8,6 +8,7 @@ class IRGalleryTabViewModel : BaseViewModel() {
      * 是否处于编辑模式.
      */
     val isEditModeLD: MutableLiveData<Boolean> = MutableLiveData(false)
+
     /**
      * 当前选中数量.
      */

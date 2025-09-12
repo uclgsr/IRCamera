@@ -13,18 +13,14 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
 import kotlinx.android.synthetic.main.dialog_tip_progress.view.*
 
-
 /**
  * 提示窗
  * create by fylder on 2018/6/15
  **/
 class TipProgressDialog : Dialog {
-
-
     constructor(context: Context) : super(context)
 
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
-
 
     class Builder {
         var dialog: TipProgressDialog? = null
@@ -45,7 +41,9 @@ class TipProgressDialog : Dialog {
             return this
         }
 
-        fun setMessage(@StringRes message: Int): Builder {
+        fun setMessage(
+            @StringRes message: Int,
+        ): Builder {
             this.message = context!!.getString(message)
             return this
         }
@@ -59,7 +57,6 @@ class TipProgressDialog : Dialog {
             this.dialog!!.dismiss()
         }
 
-
         fun create(): TipProgressDialog {
             if (dialog == null) {
                 dialog = TipProgressDialog(context!!, R.style.InfoDialog)
@@ -71,22 +68,22 @@ class TipProgressDialog : Dialog {
 
             dialog!!.addContentView(
                 view,
-                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT),
             )
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    //竖屏
+                    // 竖屏
                     0.52
                 } else {
-                    //横屏
+                    // 横屏
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() //设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceleable)
-            //msg
+            // msg
             if (message != null) {
                 messageText?.visibility = View.VISIBLE
                 messageText?.setText(message, TextView.BufferType.NORMAL)
@@ -98,7 +95,6 @@ class TipProgressDialog : Dialog {
             return dialog as TipProgressDialog
         }
     }
-
 
     /**
      * 提交回调

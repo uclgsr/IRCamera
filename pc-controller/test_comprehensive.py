@@ -234,7 +234,9 @@ async def test_calibration_session(camera_calibrator, session_id):
         device_id, session_id, CameraType.THERMAL
     )
     assert status is not None, "Failed to get calibration status"
-    assert status["status"] == "active", f"Unexpected calibration status: {status['status']}"
+    assert (
+        status["status"] == "active"
+    ), f"Unexpected calibration status: {status['status']}"
 
     # Cancel calibration (since we don't have real images)
     success = camera_calibrator.cancel_calibration(

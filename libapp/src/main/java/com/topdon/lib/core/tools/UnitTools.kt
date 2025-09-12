@@ -131,10 +131,9 @@ object UnitTools {
         value: Float,
         showC: Boolean,
     ): Float {
-        if (value == Float.MAX_VALUE || value == Float.MIN_VALUE)
-            {
-                return value
-            }
+        if (value == Float.MAX_VALUE || value == Float.MIN_VALUE) {
+            return value
+        }
         val str =
             if (showC) {
                 // 温度

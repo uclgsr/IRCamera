@@ -21,20 +21,21 @@ android {
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
         // targetSdk removed for library modules - only set in main app module per AGP 8.0+
-        
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
-    buildTypes {release {
+    buildTypes {
+        release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
-    
+
     // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
@@ -42,20 +43,21 @@ android {
             variant.enable = variant.buildType == "release"
         }
     }
-    
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-    
+
     kotlinOptions {
         jvmTarget = "17"
-        freeCompilerArgs += listOf(
-            "-opt-in=kotlin.RequiresOptIn",
-            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-opt-in=kotlinx.coroutines.FlowPreview"
-        )
+        freeCompilerArgs +=
+            listOf(
+                "-opt-in=kotlin.RequiresOptIn",
+                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-opt-in=kotlinx.coroutines.FlowPreview",
+            )
     }
 
     buildFeatures {
@@ -78,10 +80,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.utilcode)
     implementation(libs.glide)
-    
+
     // Enhanced unified BLE system integration for cross-modal coordination
     implementation(project(":BleModule"))
-    
+
     // Test dependencies - using Robolectric for context-based testing
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")

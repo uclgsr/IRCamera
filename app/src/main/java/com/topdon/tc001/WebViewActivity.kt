@@ -23,9 +23,8 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class WebViewActivity : BaseBindingActivity<ActivityWebViewBinding>() {
-
     override fun initContentLayoutId(): Int = R.layout.activity_web_view
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()

@@ -20,7 +20,6 @@ import kotlinx.android.synthetic.main.dialog_tip_guide.view.*
 import kotlin.collections.ArrayList
 
 class TipGuideDialog : DialogFragment() {
-
     private lateinit var titleList: ArrayList<String>
     private lateinit var imgList: ArrayList<Int>
     var closeEvent: ((check: Boolean) -> Unit)? = null
@@ -36,25 +35,30 @@ class TipGuideDialog : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(R.layout.dialog_tip_guide, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
-        titleList = arrayListOf(
-            getString(R.string.target_tips_step_1),
-            getString(R.string.target_tips_step_2),
-            getString(R.string.target_tips_step_3),
-            getString(R.string.target_tips_step_4),
-        )
-        imgList = arrayListOf(
-            R.drawable.target_guide_pic_1,
-            R.drawable.target_guide_pic_2,
-            R.drawable.target_guide_pic_3,
-            R.drawable.target_guide_pic_4,
-        )
+        titleList =
+            arrayListOf(
+                getString(R.string.target_tips_step_1),
+                getString(R.string.target_tips_step_2),
+                getString(R.string.target_tips_step_3),
+                getString(R.string.target_tips_step_4),
+            )
+        imgList =
+            arrayListOf(
+                R.drawable.target_guide_pic_1,
+                R.drawable.target_guide_pic_2,
+                R.drawable.target_guide_pic_3,
+                R.drawable.target_guide_pic_4,
+            )
         viewPager = view.view_pager
         tvContent1 = view.tv_content_1
         tvContent2 = view.tv_content_2
@@ -69,24 +73,24 @@ class TipGuideDialog : DialogFragment() {
             dismiss()
         }
         updateIndex(0)
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-            }
+        viewPager.addOnPageChangeListener(
+            object : ViewPager.OnPageChangeListener {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int,
+                ) {
+                }
 
-            override fun onPageSelected(position: Int) {
-                updateIndex(position)
-            }
+                override fun onPageSelected(position: Int) {
+                    updateIndex(position)
+                }
 
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-        })
+                override fun onPageScrollStateChanged(state: Int) {
+                }
+            },
+        )
     }
-
 
     fun updateIndex(position: Int) {
         if (index == position) {
@@ -126,7 +130,10 @@ class TipGuideDialog : DialogFragment() {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
-    override fun show(manager: FragmentManager, tag: String?) {
+    override fun show(
+        manager: FragmentManager,
+        tag: String?,
+    ) {
         try {
             super.show(manager, tag)
         } catch (e: Exception) {
@@ -142,7 +149,7 @@ class TipGuideDialog : DialogFragment() {
 
     inner class PageAdapter(
         fragmentManager: FragmentManager,
-        private val imgResList: ArrayList<Int>
+        private val imgResList: ArrayList<Int>,
     ) :
         FragmentPagerAdapter(fragmentManager) {
         override fun getCount(): Int {

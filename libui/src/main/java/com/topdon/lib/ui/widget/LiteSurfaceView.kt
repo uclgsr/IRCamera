@@ -26,7 +26,7 @@ class LiteSurfaceView
 
         var imageBitmap: Bitmap? = null
 
-        fun scaleBitmap(): Bitmap  {
+        fun scaleBitmap(): Bitmap {
             try {
                 if (tmpData == null) {
                     tmpData = ByteArray(mIrRotateData!!.size)

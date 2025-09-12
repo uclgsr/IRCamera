@@ -7,7 +7,6 @@ import android.view.View
 import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.databinding.DialogMonitorSelectBinding
-import com.topdon.lib.ui.R as UiR
 
 /**
  * 提示窗

@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
@@ -31,7 +30,6 @@ import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.adapter.ColorSelectAdapter
 import com.topdon.lib.ui.databinding.DialogThermalInputBinding
 import java.math.BigDecimal
-import com.topdon.lib.ui.R as UiR
 
 /**
  * 提示窗
@@ -208,7 +206,7 @@ class ThermalInputDialog : Dialog {
             val inflater =
                 context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             binding = DialogThermalInputBinding.inflate(inflater)
-            
+
             // Initialize views using binding
             messageText = binding.dialogTipMsgText
             successBtn = binding.dialogTipSuccessBtn
@@ -219,10 +217,10 @@ class ThermalInputDialog : Dialog {
             downUnit = binding.dialogDownUnitText
             colorPickerView = binding.colorPickerView
             recycler = binding.colorPickerRecycler
-            
+
             binding.colorPickerViewLay.visibility = View.GONE
             binding.dialogInputLay.visibility = View.VISIBLE
-            
+
             // 隐藏颜色
             if (isIconEdit) {
                 binding.dialogUpColor.visibility = View.GONE
@@ -286,29 +284,26 @@ class ThermalInputDialog : Dialog {
                     dialog!!.action = 100
                     return@setOnClickListener
                 }
-                if (upEdit.text.isNullOrEmpty() || downEdit.text.isNullOrEmpty())
-                    {
-                        ToastTools.showShort(com.topdon.lib.core.R.string.ui_fill_in_the_complete)
-                        return@setOnClickListener
-                    }
+                if (upEdit.text.isNullOrEmpty() || downEdit.text.isNullOrEmpty()) {
+                    ToastTools.showShort(com.topdon.lib.core.R.string.ui_fill_in_the_complete)
+                    return@setOnClickListener
+                }
 
                 val upValue = upEdit.text.trim().toString()
                 val downValue = downEdit.text.trim().toString()
                 try {
-                    if (upValue.toFloat() < downValue.toFloat())
-                        {
-                            ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
-                            return@setOnClickListener
-                        }
+                    if (upValue.toFloat() < downValue.toFloat()) {
+                        ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
+                        return@setOnClickListener
+                    }
                 } catch (e: Exception) {
                     ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
                     return@setOnClickListener
                 }
-                if (sub(upValue, downValue) < 0.1f)
-                    {
-                        ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
-                        return@setOnClickListener
-                    }
+                if (sub(upValue, downValue) < 0.1f) {
+                    ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
+                    return@setOnClickListener
+                }
 //                if (upValue.isBlank() && downValue.isBlank()) {
 //                    ToastTools.showShort(R.string.ui_fill_in_the_complete)
 //                    return@setOnClickListener
@@ -319,34 +314,32 @@ class ThermalInputDialog : Dialog {
                 }
 
                 dismiss()
-                if (isIconEdit)
-                    {
+                if (isIconEdit) {
+                    positiveEvent?.invoke(
+                        if (upValue.isBlank()) -273f else upValue.toFloat(),
+                        if (downValue.isBlank()) -273f else downValue.toFloat(),
+                        upColor,
+                        downColor,
+                    )
+                } else {
+                    if (SharedManager.getTemperature() == 1) {
+                        // 摄氏度不用转
                         positiveEvent?.invoke(
                             if (upValue.isBlank()) -273f else upValue.toFloat(),
                             if (downValue.isBlank()) -273f else downValue.toFloat(),
                             upColor,
                             downColor,
                         )
-                    } else
-                    {
-                        if (SharedManager.getTemperature() == 1) {
-                            // 摄氏度不用转
-                            positiveEvent?.invoke(
-                                if (upValue.isBlank()) -273f else upValue.toFloat(),
-                                if (downValue.isBlank()) -273f else downValue.toFloat(),
-                                upColor,
-                                downColor,
-                            )
-                        } else {
-                            // 华氏度
-                            positiveEvent?.invoke(
-                                if (upValue.isBlank()) -273f else UnitTools.toC(upValue.toFloat()),
-                                if (downValue.isBlank()) -273f else UnitTools.toC(downValue.toFloat()),
-                                upColor,
-                                downColor,
-                            )
-                        }
+                    } else {
+                        // 华氏度
+                        positiveEvent?.invoke(
+                            if (upValue.isBlank()) -273f else UnitTools.toC(upValue.toFloat()),
+                            if (downValue.isBlank()) -273f else UnitTools.toC(downValue.toFloat()),
+                            upColor,
+                            downColor,
+                        )
                     }
+                }
             }
             cancelBtn.setOnClickListener {
                 if (binding.colorPickerViewLay.isVisible) {

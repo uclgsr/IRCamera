@@ -12,20 +12,20 @@ import kotlin.system.measureNanoTime
  */
 object TimestampManager {
     private const val TAG = "TimestampManager"
-    
+
     // System boot time reference for consistent timestamps
     private val bootTimeReference = AtomicLong(0L)
-    
+
     // Cross-device clock offset for hub-spoke synchronization
     private val clockOffset = AtomicLong(0L)
-    
+
     // Session start time for relative timestamps
     private val sessionStartTime = AtomicLong(0L)
-    
+
     init {
         initializeTimestampSystem()
     }
-    
+
     /**
      * Initialize the timestamp system with boot time reference
      */
@@ -33,7 +33,7 @@ object TimestampManager {
         bootTimeReference.set(System.currentTimeMillis() - SystemClock.elapsedRealtime())
         Log.i(TAG, "Timestamp system initialized with boot reference: ${bootTimeReference.get()}")
     }
-    
+
     /**
      * Get current system timestamp in nanoseconds
      * Used for high-precision GSR sample timestamping
@@ -41,7 +41,7 @@ object TimestampManager {
     fun getCurrentTimestampNanos(): Long {
         return System.nanoTime()
     }
-    
+
     /**
      * Get current elapsed realtime in milliseconds
      * Used for cross-sensor alignment (compatible with RGB/thermal timestamps)
@@ -49,15 +49,15 @@ object TimestampManager {
     fun getCurrentElapsedRealtimeMs(): Long {
         return SystemClock.elapsedRealtime()
     }
-    
+
     /**
-     * Get device timestamp in milliseconds 
+     * Get device timestamp in milliseconds
      * Combines system elapsed time with boot reference for absolute timestamp
      */
     fun getDeviceTimestampMs(): Long {
         return bootTimeReference.get() + SystemClock.elapsedRealtime()
     }
-    
+
     /**
      * Get session-relative timestamp for cross-sensor data alignment
      * Returns milliseconds since session start
@@ -70,7 +70,7 @@ object TimestampManager {
         }
         return getCurrentElapsedRealtimeMs() - sessionStart
     }
-    
+
     /**
      * Start a new recording session and set session reference time
      */
@@ -80,7 +80,7 @@ object TimestampManager {
         Log.i(TAG, "Session started at: $sessionStart ms")
         return sessionStart
     }
-    
+
     /**
      * End the current recording session
      */
@@ -91,7 +91,7 @@ object TimestampManager {
         Log.i(TAG, "Session ended. Duration: $sessionDuration ms")
         return sessionDuration
     }
-    
+
     /**
      * Set clock offset for hub-spoke synchronization
      * Offset in milliseconds to align with PC hub time
@@ -100,7 +100,7 @@ object TimestampManager {
         clockOffset.set(offsetMs)
         Log.i(TAG, "Clock offset set to: $offsetMs ms")
     }
-    
+
     /**
      * Get synchronized timestamp for hub-spoke data alignment
      * Applies clock offset for consistency with PC hub
@@ -108,7 +108,7 @@ object TimestampManager {
     fun getSynchronizedTimestampMs(): Long {
         return getDeviceTimestampMs() + clockOffset.get()
     }
-    
+
     /**
      * Create a timestamp record for GSR data persistence
      * Returns a formatted record with multiple timestamp formats for compatibility
@@ -119,24 +119,25 @@ object TimestampManager {
         val deviceMs = getDeviceTimestampMs()
         val sessionRelativeMs = getSessionRelativeTimestampMs()
         val synchronizedMs = getSynchronizedTimestampMs()
-        
+
         return TimestampRecord(
             systemNanos = currentNanos,
             elapsedRealtimeMs = elapsedMs,
             deviceTimestampMs = deviceMs,
             sessionRelativeMs = sessionRelativeMs,
-            synchronizedTimestampMs = synchronizedMs
+            synchronizedTimestampMs = synchronizedMs,
         )
     }
-    
+
     /**
      * Measure execution time of a block in nanoseconds
      * Used for performance monitoring and precision timing
      */
     inline fun <T> measureExecutionTime(block: () -> T): Pair<T, Long> {
-        val executionTime = measureNanoTime {
-            return block() to 0L
-        }
+        val executionTime =
+            measureNanoTime {
+                return block() to 0L
+            }
         return Pair(block(), executionTime)
     }
 }
@@ -146,13 +147,12 @@ object TimestampManager {
  * Contains multiple timestamp formats for maximum compatibility
  */
 data class TimestampRecord(
-    val systemNanos: Long,              // High-precision nanosecond timestamp (for GSR samples)
-    val elapsedRealtimeMs: Long,        // System elapsed time (for sensor alignment) 
-    val deviceTimestampMs: Long,        // Absolute device time (for data export)
-    val sessionRelativeMs: Long,        // Session-relative time (for analysis)
-    val synchronizedTimestampMs: Long   // Hub-synchronized time (for multi-device sessions)
+    val systemNanos: Long, // High-precision nanosecond timestamp (for GSR samples)
+    val elapsedRealtimeMs: Long, // System elapsed time (for sensor alignment)
+    val deviceTimestampMs: Long, // Absolute device time (for data export)
+    val sessionRelativeMs: Long, // Session-relative time (for analysis)
+    val synchronizedTimestampMs: Long, // Hub-synchronized time (for multi-device sessions)
 ) {
-    
     /**
      * Convert to CSV format for data export
      * Compatible with research analysis tools
@@ -160,7 +160,7 @@ data class TimestampRecord(
     fun toCsvFormat(): String {
         return "$systemNanos,$elapsedRealtimeMs,$deviceTimestampMs,$sessionRelativeMs,$synchronizedTimestampMs"
     }
-    
+
     /**
      * Get CSV header for timestamp columns
      */

@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.dialog_firmware_up.view.*
  * Created by LCG on 2024/3/4.
  */
 class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), View.OnClickListener {
-
     /**
      * 标题文字，如 “发现新版本 V3.50”
      */
@@ -62,16 +61,15 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), 
             rootView.tv_cancel.isVisible = value
         }
 
-
     /**
      * 取消点击事件监听.
      */
     var onCancelClickListener: (() -> Unit)? = null
+
     /**
      * 更新点击事件监听.
      */
     var onConfirmClickListener: (() -> Unit)? = null
-
 
     private val rootView: View = LayoutInflater.from(context).inflate(R.layout.dialog_firmware_up, null)
 
@@ -94,11 +92,11 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), 
 
     override fun onClick(v: View?) {
         when (v) {
-            rootView.tv_cancel -> {//取消
+            rootView.tv_cancel -> { // 取消
                 dismiss()
                 onCancelClickListener?.invoke()
             }
-            rootView.tv_confirm -> {//确认
+            rootView.tv_confirm -> { // 确认
                 dismiss()
                 onConfirmClickListener?.invoke()
             }

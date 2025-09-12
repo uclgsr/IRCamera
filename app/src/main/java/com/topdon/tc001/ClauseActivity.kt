@@ -6,11 +6,11 @@ import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityClauseBinding
 import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.dialog.TipProgressDialog
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.utils.CommUtils
 import com.topdon.lms.sdk.utils.NetworkUtil

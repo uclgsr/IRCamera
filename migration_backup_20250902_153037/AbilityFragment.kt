@@ -45,32 +45,33 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            iv_winter -> {//冬季特辑入口
+            iv_winter -> { // 冬季特辑入口
                 SharedManager.hasClickWinter = true
                 EventBus.getDefault().post(WinterClickEvent())
-                val url = if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
-                    "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
+                val url =
+                    if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
+                        "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
                             "languageId=${LanguageUtil.getLanguageId(requireContext())}"
-                } else {
-                    "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
-                }
+                    } else {
+                        "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
+                    }
                 ARouter.getInstance().build(RouterConfig.WEB_VIEW)
                     .withString(ExtraKeyConfig.URL, url)
                     .navigation(requireContext())
             }
-            view_monitory -> {//温度监控
+            view_monitory -> { // 温度监控
                 val intent = Intent(requireContext(), MonitoryHomeActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
                 startActivity(intent)
             }
 
-            view_house -> {//房屋检测
+            view_house -> { // 房屋检测
                 val intent = Intent(requireContext(), HouseHomeActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
                 startActivity(intent)
             }
 
-            view_car -> {//汽车检测
+            view_car -> { // 汽车检测
                 if (mIsTC007) {
                     if (WebSocketProxy.getInstance().isConnected()) {
                         ARouter.getInstance().build(RouterConfig.IR_THERMAL_07)

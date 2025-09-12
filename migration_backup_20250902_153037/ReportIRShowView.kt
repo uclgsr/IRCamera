@@ -19,14 +19,13 @@ import kotlinx.android.synthetic.main.view_report_ir_show.view.*
  *
  * 包含一张图片对应的 全图、点、线、面 预览信息.
  */
-class ReportIRShowView: LinearLayout {
+class ReportIRShowView : LinearLayout {
     companion object {
-        private const val TYPE_FULL = 0 //全图
-        private const val TYPE_POINT = 1//点
-        private const val TYPE_LINE = 2 //线
-        private const val TYPE_RECT = 3 //面
+        private const val TYPE_FULL = 0 // 全图
+        private const val TYPE_POINT = 1 // 点
+        private const val TYPE_LINE = 2 // 线
+        private const val TYPE_RECT = 3 // 面
     }
-
 
     constructor(context: Context) : this(context, null)
 
@@ -56,25 +55,32 @@ class ReportIRShowView: LinearLayout {
         initTitleText(cl_rect5, TYPE_RECT, 4)
     }
 
-    private fun initTitleText(itemRoot: View, type: Int, index: Int) {
+    private fun initTitleText(
+        itemRoot: View,
+        type: Int,
+        index: Int,
+    ) {
         itemRoot.tv_title.isVisible = index == 0
-        itemRoot.tv_title.text = when (type) {
-            TYPE_FULL -> context.getString(R.string.thermal_full_rect)
-            TYPE_POINT -> context.getString(R.string.thermal_point) + "(P)"
-            TYPE_LINE -> context.getString(R.string.thermal_line) + "(L)"
-            else -> context.getString(R.string.thermal_rect) + "(R)"
-        }
-        itemRoot.tv_average_title.text = when (type) {
-            TYPE_FULL, TYPE_POINT -> "" //全图、点没有平均温
-            TYPE_LINE -> "L${index + 1} " + context.getString(R.string.album_report_mean_temperature)
-            else -> "R${index + 1} " + context.getString(R.string.album_report_mean_temperature)
-        }
-        itemRoot.tv_explain_title.text = when (type) {
-            TYPE_FULL -> context.getString(R.string.album_report_comment)
-            TYPE_POINT -> "P${index + 1} " + context.getString(R.string.album_report_comment)
-            TYPE_LINE -> "L${index + 1} " + context.getString(R.string.album_report_comment)
-            else -> "R${index + 1} " + context.getString(R.string.album_report_comment)
-        }
+        itemRoot.tv_title.text =
+            when (type) {
+                TYPE_FULL -> context.getString(R.string.thermal_full_rect)
+                TYPE_POINT -> context.getString(R.string.thermal_point) + "(P)"
+                TYPE_LINE -> context.getString(R.string.thermal_line) + "(L)"
+                else -> context.getString(R.string.thermal_rect) + "(R)"
+            }
+        itemRoot.tv_average_title.text =
+            when (type) {
+                TYPE_FULL, TYPE_POINT -> "" // 全图、点没有平均温
+                TYPE_LINE -> "L${index + 1} " + context.getString(R.string.album_report_mean_temperature)
+                else -> "R${index + 1} " + context.getString(R.string.album_report_mean_temperature)
+            }
+        itemRoot.tv_explain_title.text =
+            when (type) {
+                TYPE_FULL -> context.getString(R.string.album_report_comment)
+                TYPE_POINT -> "P${index + 1} " + context.getString(R.string.album_report_comment)
+                TYPE_LINE -> "L${index + 1} " + context.getString(R.string.album_report_comment)
+                else -> "R${index + 1} " + context.getString(R.string.album_report_comment)
+            }
     }
 
     /**
@@ -106,7 +112,10 @@ class ReportIRShowView: LinearLayout {
         return result
     }
 
-    private fun getItemChild(itemRoot: View, resultList: ArrayList<View>) {
+    private fun getItemChild(
+        itemRoot: View,
+        resultList: ArrayList<View>,
+    ) {
         if (itemRoot.isVisible) {
             if (itemRoot.cl_range.isVisible) {
                 resultList.add(itemRoot.cl_range)
@@ -131,10 +140,16 @@ class ReportIRShowView: LinearLayout {
         iv_image.setImageDrawable(drawable)
     }
 
-    fun refreshData(isFirst: Boolean, isLast: Boolean, reportIRBean: ReportIRBean) {
+    fun refreshData(
+        isFirst: Boolean,
+        isLast: Boolean,
+        reportIRBean: ReportIRBean,
+    ) {
         tv_head.isVisible = isFirst
         view_not_head.isVisible = !isFirst
-        view_image_bg.setBackgroundResource(if (isFirst) R.drawable.layer_report_ir_show_top_bg else R.drawable.layer_report_ir_show_item_bg)
+        view_image_bg.setBackgroundResource(
+            if (isFirst) R.drawable.layer_report_ir_show_top_bg else R.drawable.layer_report_ir_show_item_bg,
+        )
         cl_image.setPadding(0, if (isFirst) SizeUtils.dp2px(20f) else 0, 0, 0)
 
         refreshItem(cl_full, reportIRBean.full_graph_data, TYPE_FULL, 0)
@@ -218,7 +233,12 @@ class ReportIRShowView: LinearLayout {
         hideLastLine(isLast, cl_full, reportIRBean.full_graph_data, TYPE_FULL)
     }
 
-    private fun hideLastLine(isLast: Boolean, itemRoot: View, tempBean: ReportTempBean?, type: Int) {
+    private fun hideLastLine(
+        isLast: Boolean,
+        itemRoot: View,
+        tempBean: ReportTempBean?,
+        type: Int,
+    ) {
         if (tempBean == null) {
             return
         }
@@ -245,48 +265,58 @@ class ReportIRShowView: LinearLayout {
         }
     }
 
-    private fun refreshItem(itemRoot: View, tempBean: ReportTempBean?, type: Int, index: Int) {
+    private fun refreshItem(
+        itemRoot: View,
+        tempBean: ReportTempBean?,
+        type: Int,
+        index: Int,
+    ) {
         if (tempBean == null) {
             itemRoot.isVisible = false
             return
         }
 
-        itemRoot.isVisible = when (type) {
-            TYPE_FULL -> tempBean.isMaxOpen() || tempBean.isMinOpen() || tempBean.isExplainOpen()
-            TYPE_POINT -> tempBean.isTempOpen() || tempBean.isExplainOpen()
-            else -> tempBean.isMaxOpen() || tempBean.isMinOpen() || tempBean.isAverageOpen() || tempBean.isExplainOpen()
-        }
+        itemRoot.isVisible =
+            when (type) {
+                TYPE_FULL -> tempBean.isMaxOpen() || tempBean.isMinOpen() || tempBean.isExplainOpen()
+                TYPE_POINT -> tempBean.isTempOpen() || tempBean.isExplainOpen()
+                else -> tempBean.isMaxOpen() || tempBean.isMinOpen() || tempBean.isAverageOpen() || tempBean.isExplainOpen()
+            }
         if (!itemRoot.isVisible) {
             return
         }
 
-        val rangeTitle = if (type == TYPE_POINT) {
-            "P${index + 1} " + context.getString(R.string.chart_temperature)
-        } else {
-            val prefix = when (type) {
-                TYPE_LINE -> "L${index + 1} "
-                TYPE_RECT -> "R${index + 1} "
-                else -> ""
-            }
-            prefix + if (tempBean.isMinOpen() && tempBean.isMaxOpen()) {
-                context.getString(R.string.chart_temperature_low) + "-" + context.getString(R.string.chart_temperature_high)
-            } else if (tempBean.isMinOpen()) {
-                context.getString(R.string.chart_temperature_low)
+        val rangeTitle =
+            if (type == TYPE_POINT) {
+                "P${index + 1} " + context.getString(R.string.chart_temperature)
             } else {
-                context.getString(R.string.chart_temperature_high)
+                val prefix =
+                    when (type) {
+                        TYPE_LINE -> "L${index + 1} "
+                        TYPE_RECT -> "R${index + 1} "
+                        else -> ""
+                    }
+                prefix +
+                    if (tempBean.isMinOpen() && tempBean.isMaxOpen()) {
+                        context.getString(R.string.chart_temperature_low) + "-" + context.getString(R.string.chart_temperature_high)
+                    } else if (tempBean.isMinOpen()) {
+                        context.getString(R.string.chart_temperature_low)
+                    } else {
+                        context.getString(R.string.chart_temperature_high)
+                    }
             }
-        }
-        val rangeValue = if (type == TYPE_POINT) {
-            tempBean.temperature
-        } else {
-            if (tempBean.isMinOpen() && tempBean.isMaxOpen()) {
-                tempBean.min_temperature + "~" + tempBean.max_temperature
-            } else if (tempBean.isMinOpen()) {
-                tempBean.min_temperature
+        val rangeValue =
+            if (type == TYPE_POINT) {
+                tempBean.temperature
             } else {
-                tempBean.max_temperature
+                if (tempBean.isMinOpen() && tempBean.isMaxOpen()) {
+                    tempBean.min_temperature + "~" + tempBean.max_temperature
+                } else if (tempBean.isMinOpen()) {
+                    tempBean.min_temperature
+                } else {
+                    tempBean.max_temperature
+                }
             }
-        }
 
         itemRoot.tv_range_title.isVisible = if (type == TYPE_POINT) tempBean.isTempOpen() else tempBean.isMinOpen() || tempBean.isMaxOpen()
         itemRoot.tv_range_value.isVisible = if (type == TYPE_POINT) tempBean.isTempOpen() else tempBean.isMinOpen() || tempBean.isMaxOpen()

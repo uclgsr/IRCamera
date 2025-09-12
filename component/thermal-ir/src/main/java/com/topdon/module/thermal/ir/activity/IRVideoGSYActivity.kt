@@ -2,7 +2,6 @@ package com.topdon.module.thermal.ir.activity
 
 import android.content.Intent
 import android.media.MediaScannerConnection
-import android.view.View
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -14,7 +13,6 @@ import com.blankj.utilcode.util.BarUtils
 // import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer
 import com.topdon.lib.core.bean.GalleryBean
 import com.topdon.lib.core.config.FileConfig
-import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.tools.FileTools
 import com.topdon.lib.core.tools.TimeTool
@@ -33,13 +31,11 @@ import org.greenrobot.eventbus.EventBus
 // import com.shuyu.gsyvideoplayer.player.SystemPlayerManager
 import java.io.File
 
-
 // Legacy ARouter route annotation - now using NavigationManager
 class IRVideoGSYActivity : BaseActivity() {
-
     private var isRemote = false
     private lateinit var data: GalleryBean
-    
+
     // View declarations
     private lateinit var titleView: com.topdon.lib.core.view.TitleView
     private lateinit var clBottom: androidx.constraintlayout.widget.ConstraintLayout
@@ -48,7 +44,7 @@ class IRVideoGSYActivity : BaseActivity() {
     private lateinit var clDelete: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var ivDownload: android.widget.ImageView
     // private lateinit var gsyPlay: com.topdon.module.thermal.ir.view.MyGSYVideoPlayer
-    
+
     override fun initContentView() = R.layout.activity_ir_video_gsy
 
     override fun initView() {
@@ -60,13 +56,13 @@ class IRVideoGSYActivity : BaseActivity() {
         clDelete = findViewById(R.id.cl_delete)
         ivDownload = findViewById(R.id.iv_download)
         // gsyPlay = findViewById(R.id.gsy_play)
-        
+
         BarUtils.setNavBarColor(this, ContextCompat.getColor(this, UiR.color.black))
 
         isRemote = intent.getBooleanExtra("isRemote", false)
         data = intent.getParcelableExtra("data") ?: throw NullPointerException("传递 data")
 
-        clBottom.isVisible = isRemote //查看远端时底部才有3个按钮
+        clBottom.isVisible = isRemote // 查看远端时底部才有3个按钮
 
         if (!isRemote) {
             titleView.setRightDrawable(UiR.drawable.ic_toolbar_info_svg)
@@ -100,7 +96,10 @@ class IRVideoGSYActivity : BaseActivity() {
     override fun initData() {
     }
 
-    private fun previewVideo(isRemote: Boolean, path: String) {
+    private fun previewVideo(
+        isRemote: Boolean,
+        path: String,
+    ) {
         // Temporarily commented out GSY Video Player usage due to dependency resolution issues
         // TODO: Re-enable with correct dependency once GSY Video Player is properly included
         /*
@@ -120,14 +119,14 @@ class IRVideoGSYActivity : BaseActivity() {
         gsyPlay.titleTextView.visibility = View.GONE
         gsyPlay.backButton.visibility = View.GONE
         gsyPlay.fullscreenButton.visibility = View.GONE
-        */
-        
+         */
+
         // Placeholder implementation - shows path for now
         // In production, implement with Media3 ExoPlayer as alternative
     }
 
     private fun actionDownload(isToShare: Boolean) {
-        if (data.hasDownload) {//已下载
+        if (data.hasDownload) { // 已下载
             if (isToShare) {
                 actionShare()
             }
@@ -231,5 +230,5 @@ class IRVideoGSYActivity : BaseActivity() {
     private fun getCurPlay(): GSYVideoPlayer {
         return gsyPlay.fullWindowPlayer ?: gsyPlay
     }
-    */
+     */
 }

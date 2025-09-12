@@ -16,7 +16,7 @@ object PermissionUtils {
      * android 14是否授权了部分读取权限
      * @return Boolean
      */
-    fun isVisualUser(): Boolean  {
+    fun isVisualUser(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE &&
             ContextCompat.checkSelfPermission(
                 BaseApplication.instance,
@@ -24,7 +24,7 @@ object PermissionUtils {
             ) == PERMISSION_GRANTED
     }
 
-    fun hasCameraPermission(): Boolean  {
+    fun hasCameraPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             BaseApplication.instance,
             android.Manifest.permission.CAMERA,

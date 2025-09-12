@@ -7,25 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.AppUtils
-import com.topdon.lib.core.bean.GalleryBean
 import com.topdon.lib.core.bean.HouseRepPreviewProjectItemBean
-import com.topdon.lib.core.utils.AppUtil
 import com.topdon.module.thermal.ir.R
 import kotlinx.android.synthetic.main.item_gallery_head_lay.view.*
 import kotlinx.android.synthetic.main.item_gallery_lay.view.*
-import kotlinx.android.synthetic.main.item_report_floor.view.lly_album
-import kotlinx.android.synthetic.main.item_report_floor.view.rcy_album
-import kotlinx.android.synthetic.main.item_report_floor.view.rcy_category
-import kotlinx.android.synthetic.main.item_report_floor.view.rcy_report
-import kotlinx.android.synthetic.main.item_report_floor.view.tv_floor_number
 import kotlinx.android.synthetic.main.item_report_floor_child.view.iv_problem
 import kotlinx.android.synthetic.main.item_report_floor_child.view.iv_repair
 import kotlinx.android.synthetic.main.item_report_floor_child.view.iv_replace
-import kotlinx.android.synthetic.main.item_report_floor_child.view.lly_content
 import kotlinx.android.synthetic.main.item_report_floor_child.view.rly_parent
 import kotlinx.android.synthetic.main.item_report_floor_child.view.tv_problem
 import kotlinx.android.synthetic.main.item_report_floor_child.view.tv_project
@@ -36,22 +26,27 @@ import kotlinx.android.synthetic.main.item_report_floor_child.view.tv_replace
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewFloorAdapter(
     val cxt: Context,
-    var dataList: List<HouseRepPreviewProjectItemBean>
+    var dataList: List<HouseRepPreviewProjectItemBean>,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     override fun getItemViewType(position: Int): Int {
         return position
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         return ItemView(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_report_floor_child, parent, false)
+                .inflate(R.layout.item_report_floor_child, parent, false),
         )
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         val bean = dataList[position]
         holder.itemView.iv_problem.visibility = if (position == 0) View.INVISIBLE else View.VISIBLE
         holder.itemView.iv_repair.visibility = if (position == 0) View.INVISIBLE else View.VISIBLE
@@ -60,9 +55,13 @@ class ReportPreviewFloorAdapter(
         holder.itemView.tv_repair.visibility = if (position == 0) View.VISIBLE else View.INVISIBLE
         holder.itemView.tv_replace.visibility = if (position == 0) View.VISIBLE else View.INVISIBLE
         holder.itemView.rly_parent.setBackgroundColor(
-            if (position == 0) Color.parseColor("#393643") else Color.parseColor(
-                "#23202E"
-            )
+            if (position == 0) {
+                Color.parseColor("#393643")
+            } else {
+                Color.parseColor(
+                    "#23202E",
+                )
+            },
         )
 
         if (position == 0) {

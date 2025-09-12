@@ -9,15 +9,15 @@ import androidx.viewpager2.widget.ViewPager2
  * @author: CaiSongL
  * @date: 2022/6/3 21:09
  */
-fun View.gone(){
+fun View.gone()  {
     this.visibility = View.GONE
 }
 
-fun View.visible(){
+fun View.visible()  {
     this.visibility = View.VISIBLE
 }
 
-fun View.invisible(){
+fun View.invisible()  {
     this.visibility = View.INVISIBLE
 }
 
@@ -27,10 +27,12 @@ fun View.invisible(){
  */
 fun View?.goneAlphaAnimation(duration: Long = 500L) {
     this?.visibility = View.GONE
-    this?.startAnimation(AlphaAnimation(1f, 0f).apply {
-        this.duration = duration
-        fillAfter = true
-    })
+    this?.startAnimation(
+        AlphaAnimation(1f, 0f).apply {
+            this.duration = duration
+            fillAfter = true
+        },
+    )
 }
 
 /**
@@ -39,10 +41,12 @@ fun View?.goneAlphaAnimation(duration: Long = 500L) {
  */
 fun View?.invisibleAlphaAnimation(duration: Long = 500L) {
     this?.visibility = View.INVISIBLE
-    this?.startAnimation(AlphaAnimation(1f, 0f).apply {
-        this.duration = duration
-        fillAfter = true
-    })
+    this?.startAnimation(
+        AlphaAnimation(1f, 0f).apply {
+            this.duration = duration
+            fillAfter = true
+        },
+    )
 }
 
 /**
@@ -52,10 +56,12 @@ fun View?.invisibleAlphaAnimation(duration: Long = 500L) {
  */
 fun View?.visibleAlphaAnimation(duration: Long = 500L) {
     this?.visibility = View.VISIBLE
-    this?.startAnimation(AlphaAnimation(0f, 1f).apply {
-        this.duration = duration
-        fillAfter = true
-    })
+    this?.startAnimation(
+        AlphaAnimation(0f, 1f).apply {
+            this.duration = duration
+            fillAfter = true
+        },
+    )
 }
 
 fun ViewPager2.reduceDragSensitivity() {

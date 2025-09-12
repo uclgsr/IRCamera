@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.dialog_confirm_select.view.*
  * Created by LCG on 2024/2/29.
  */
 class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog), View.OnClickListener {
-
     var onConfirmClickListener: ((isSelect: Boolean) -> Unit)? = null
 
     /**
@@ -28,7 +27,9 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         rootView.iv_icon.isVisible = isShowIcon
     }
 
-    fun setTitleRes(@StringRes titleRes: Int) {
+    fun setTitleRes(
+        @StringRes titleRes: Int,
+    ) {
         rootView.tv_title.setText(titleRes)
     }
 
@@ -43,7 +44,9 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         rootView.rl_message.isVisible = isShowMessage
     }
 
-    fun setMessageRes(@StringRes messageRes: Int) {
+    fun setMessageRes(
+        @StringRes messageRes: Int,
+    ) {
         rootView.tv_message.setText(messageRes)
     }
 
@@ -53,20 +56,24 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
     fun setShowCancel(isShowCancel: Boolean) {
         rootView.tv_cancel.isVisible = isShowCancel
     }
+
     /**
      * 设置取消按钮文字，默认为“取消”.
      */
-    fun setCancelText(@StringRes cancelRes: Int) {
+    fun setCancelText(
+        @StringRes cancelRes: Int,
+    ) {
         rootView.tv_cancel.setText(cancelRes)
     }
 
     /**
      * 设置确认按钮文字，默认为“删除"
      */
-    fun setConfirmText(@StringRes confirmRes: Int) {
+    fun setConfirmText(
+        @StringRes confirmRes: Int,
+    ) {
         rootView.tv_confirm.setText(confirmRes)
     }
-
 
     private val rootView: View = LayoutInflater.from(context).inflate(R.layout.dialog_confirm_select, null)
 
@@ -90,13 +97,13 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
 
     override fun onClick(v: View?) {
         when (v) {
-            rootView.rl_message -> {//选中状态
+            rootView.rl_message -> { // 选中状态
                 rootView.iv_select.isSelected = !rootView.iv_select.isSelected
             }
-            rootView.tv_cancel -> {//取消
+            rootView.tv_cancel -> { // 取消
                 dismiss()
             }
-            rootView.tv_confirm -> {//确认
+            rootView.tv_confirm -> { // 确认
                 dismiss()
                 onConfirmClickListener?.invoke(rootView.iv_select.isSelected)
             }

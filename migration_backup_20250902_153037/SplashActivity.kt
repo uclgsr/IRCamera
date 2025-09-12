@@ -16,7 +16,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LMS.getInstance().screenOrientation = Config.SCREEN_PORTRAIT
@@ -37,6 +36,5 @@ class SplashActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-
     }
 }

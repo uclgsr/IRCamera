@@ -32,7 +32,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    
+
     // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
@@ -65,7 +65,7 @@ dependencies {
     implementation("javax.xml.stream:stax-api:1.0-2")
     implementation("com.fasterxml:aalto-xml:1.3.3")
     implementation(project(":RangeSeekBar"))
-    
+
     // Test dependencies - using Robolectric for context-based testing
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")

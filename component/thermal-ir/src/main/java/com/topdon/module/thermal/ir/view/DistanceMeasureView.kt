@@ -6,10 +6,8 @@ import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-
 
 /**
  * @author: CaiSongL
@@ -23,7 +21,7 @@ class DistanceMeasureView : View {
     var distance = 0f
         private set
 
-    var moveListener :  ((distance: Float) -> Unit)? = null
+    var moveListener: ((distance: Float) -> Unit)? = null
 
     constructor(context: Context?) : super(context) {
         init()
@@ -36,7 +34,7 @@ class DistanceMeasureView : View {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ) {
         init()
     }
@@ -51,7 +49,10 @@ class DistanceMeasureView : View {
         linePaint!!.pathEffect = DashPathEffect(intervals, 0f)
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         // 计算初始位置，使得两条线居中，间隔20dp
         val screenHeight = measuredHeight
@@ -83,7 +84,7 @@ class DistanceMeasureView : View {
 
                 // 根据触摸位置更新线的位置
                 if (Math.abs(newY - line1Y) < Math.abs(newY - line2Y)) {
-                    val abs =  line1Y - newY
+                    val abs = line1Y - newY
                     line1Y = newY
                     line2Y += abs
                 } else {

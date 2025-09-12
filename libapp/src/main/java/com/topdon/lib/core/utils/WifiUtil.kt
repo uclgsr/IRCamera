@@ -21,12 +21,13 @@ object WifiUtil {
     /**
      * 不带双引号的 SSID.
      */
-    fun ScanResult.getWifiName(): String = if (Build.VERSION.SDK_INT < 33) {
-        @Suppress("DEPRECATION")
-        SSID
-    } else {
-        removeQuotation(wifiSsid.toString())
-    }
+    fun ScanResult.getWifiName(): String =
+        if (Build.VERSION.SDK_INT < 33) {
+            @Suppress("DEPRECATION")
+            SSID
+        } else {
+            removeQuotation(wifiSsid.toString())
+        }
 
     fun WifiInfo.getWifiName(): String = removeQuotation(ssid)
 

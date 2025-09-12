@@ -78,14 +78,12 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
             binding.tvDistanceTitle.text = context.getString(R.string.thermal_config_distance) + ":"
 
             binding.tvTitle.visibility = View.GONE
-            if (text.isNotEmpty())
-                {
-                    binding.tvEmissivityMaterials.text = text
-                    binding.tvEmissivityMaterials.visibility = View.VISIBLE
-                } else
-                {
-                    binding.tvEmissivityMaterials.visibility = View.GONE
-                }
+            if (text.isNotEmpty()) {
+                binding.tvEmissivityMaterials.text = text
+                binding.tvEmissivityMaterials.visibility = View.VISIBLE
+            } else {
+                binding.tvEmissivityMaterials.visibility = View.GONE
+            }
             binding.dialogTipCancelBtn.visibility = View.GONE
             binding.dialogTipSuccessBtn.text = context.getString(R.string.tc_modify_params)
             binding.dialogTipCheck.visibility = View.GONE

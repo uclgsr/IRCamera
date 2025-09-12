@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 class NetworkErrorRecoveryManager(
     private val context: Context,
-    private val networkClient: NetworkClient
+    private val networkClient: NetworkClient,
 ) {
     companion object {
         private const val TAG = "NetworkErrorRecovery"
@@ -34,7 +34,7 @@ class NetworkErrorRecoveryManager(
     private var lastFailureTime = 0L
     private var lastKnownGoodController: NetworkClient.ControllerInfo? = null
     private var healthCheckJob: Job? = null
-    
+
     // Real network performance tracking
     private val latencyMeasurements = mutableListOf<Long>()
     private val throughputMeasurements = mutableListOf<Double>()
@@ -42,17 +42,25 @@ class NetworkErrorRecoveryManager(
     private var lastDataTransferTime = 0L
     private var bytesTransferred = 0L
     private val maxMeasurements = 50 // Keep last 50 measurements
-    
+
     // Connection health and success tracking
     private var isHealthy = false
     private val successfulConnections = AtomicInteger(0)
 
     interface RecoveryEventListener {
         fun onRecoveryStarted(reason: String)
-        fun onRecoveryAttempt(attempt: Int, maxAttempts: Int)
+
+        fun onRecoveryAttempt(
+            attempt: Int,
+            maxAttempts: Int,
+        )
+
         fun onRecoverySuccess(controller: NetworkClient.ControllerInfo)
+
         fun onRecoveryFailed(reason: String)
+
         fun onConnectionHealthChanged(isHealthy: Boolean)
+
         fun onRapidFailureDetected(failureCount: Int)
     }
 
@@ -117,7 +125,10 @@ class NetworkErrorRecoveryManager(
     /**
      * Handle network error and potentially trigger recovery
      */
-    fun handleNetworkError(operation: String, error: String) {
+    fun handleNetworkError(
+        operation: String,
+        error: String,
+    ) {
         Log.w(TAG, "Network error in $operation: $error")
 
         if (isRapidFailure()) {
@@ -137,26 +148,27 @@ class NetworkErrorRecoveryManager(
     }
 
     private fun startHealthMonitoring() {
-        healthCheckJob = recoveryScope.launch {
-            while (isRecoveryActive.get() && isActive) {
-                try {
-                    val healthCheckResult = performHealthCheck()
-                    isHealthy = healthCheckResult
-                    eventListener?.onConnectionHealthChanged(isHealthy)
+        healthCheckJob =
+            recoveryScope.launch {
+                while (isRecoveryActive.get() && isActive) {
+                    try {
+                        val healthCheckResult = performHealthCheck()
+                        isHealthy = healthCheckResult
+                        eventListener?.onConnectionHealthChanged(isHealthy)
 
-                    if (!isHealthy && isRecoveryActive.get()) {
-                        performRecovery("Health check failed")
-                    }
+                        if (!isHealthy && isRecoveryActive.get()) {
+                            performRecovery("Health check failed")
+                        }
 
-                    delay(HEALTH_CHECK_INTERVAL_MS)
-                } catch (e: Exception) {
-                    if (isActive) {
-                        Log.e(TAG, "Health monitoring error", e)
                         delay(HEALTH_CHECK_INTERVAL_MS)
+                    } catch (e: Exception) {
+                        if (isActive) {
+                            Log.e(TAG, "Health monitoring error", e)
+                            delay(HEALTH_CHECK_INTERVAL_MS)
+                        }
                     }
                 }
             }
-        }
     }
 
     private fun stopHealthMonitoring() {
@@ -171,10 +183,11 @@ class NetworkErrorRecoveryManager(
 
         return try {
             // Send a simple ping message to test connectivity
-            val pingMessage = org.json.JSONObject().apply {
-                put("message_type", "ping")
-                put("timestamp", System.currentTimeMillis())
-            }
+            val pingMessage =
+                org.json.JSONObject().apply {
+                    put("message_type", "ping")
+                    put("timestamp", System.currentTimeMillis())
+                }
 
             // Use a shorter timeout for health checks
             withTimeout(5000) {
@@ -202,7 +215,7 @@ class NetworkErrorRecoveryManager(
 
         while (reconnectionAttempts.get() < maxAttempts && isRecoveryActive.get()) {
             val attempt = reconnectionAttempts.incrementAndGet()
-            
+
             Log.i(TAG, "Recovery attempt $attempt/$maxAttempts")
             eventListener?.onRecoveryAttempt(attempt, maxAttempts)
 
@@ -218,8 +231,10 @@ class NetworkErrorRecoveryManager(
 
                 if (success) {
                     Log.i(TAG, "Recovery successful after $attempt attempts")
-                    eventListener?.onRecoverySuccess(lastKnownGoodController ?: 
-                        NetworkClient.ControllerInfo("unknown", 0, "Recovered", emptyList()))
+                    eventListener?.onRecoverySuccess(
+                        lastKnownGoodController
+                            ?: NetworkClient.ControllerInfo("unknown", 0, "Recovered", emptyList()),
+                    )
                     reconnectionAttempts.set(0)
                     break
                 } else {
@@ -245,11 +260,11 @@ class NetworkErrorRecoveryManager(
     private suspend fun attemptReconnection(controller: NetworkClient.ControllerInfo): Boolean {
         return try {
             Log.d(TAG, "Attempting reconnection to ${controller.deviceName} at ${controller.ipAddress}")
-            
+
             // Disconnect first to clean up any existing connection
             networkClient.disconnect()
             delay(1000) // Brief delay before reconnecting
-            
+
             withTimeout(CONNECTION_TIMEOUT_MS) {
                 networkClient.connectToController(controller.ipAddress, controller.port)
             }
@@ -262,23 +277,25 @@ class NetworkErrorRecoveryManager(
     private suspend fun attemptDiscoveryAndConnect(): Boolean {
         return try {
             Log.d(TAG, "Attempting discovery and connection")
-            
-            val controllers = withTimeout(15000) {
-                networkClient.discoverControllers()
-            }
-            
+
+            val controllers =
+                withTimeout(15000) {
+                    networkClient.discoverControllers()
+                }
+
             if (controllers.isNotEmpty()) {
                 val controller = controllers.first()
                 Log.d(TAG, "Found controller during recovery: ${controller.deviceName}")
-                
-                val connected = withTimeout(CONNECTION_TIMEOUT_MS) {
-                    networkClient.connectToController(controller.ipAddress, controller.port)
-                }
-                
+
+                val connected =
+                    withTimeout(CONNECTION_TIMEOUT_MS) {
+                        networkClient.connectToController(controller.ipAddress, controller.port)
+                    }
+
                 if (connected) {
                     lastKnownGoodController = controller
                 }
-                
+
                 connected
             } else {
                 Log.d(TAG, "No controllers found during discovery")
@@ -300,14 +317,14 @@ class NetworkErrorRecoveryManager(
 
     private fun isRapidFailure(): Boolean {
         val currentTime = System.currentTimeMillis()
-        
+
         if (currentTime - lastFailureTime > RAPID_FAILURE_WINDOW_MS) {
             // Reset rapid failure count if outside the window
             rapidFailureCount.set(1)
         } else {
             rapidFailureCount.incrementAndGet()
         }
-        
+
         lastFailureTime = currentTime
         return rapidFailureCount.get() >= RAPID_FAILURE_THRESHOLD
     }
@@ -331,7 +348,7 @@ class NetworkErrorRecoveryManager(
             "reconnection_attempts" to reconnectionAttempts.get(),
             "rapid_failure_count" to rapidFailureCount.get(),
             "last_failure_time" to lastFailureTime,
-            "has_known_good_controller" to (lastKnownGoodController != null)
+            "has_known_good_controller" to (lastKnownGoodController != null),
         )
     }
 
@@ -346,7 +363,7 @@ class NetworkErrorRecoveryManager(
             }
         }
     }
-    
+
     /**
      * Record data transfer for throughput calculation
      */

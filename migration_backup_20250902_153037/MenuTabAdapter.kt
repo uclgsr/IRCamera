@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.item_menu_tab_view.view.*
 
 class MenuTabAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     var listener: OnItemClickListener? = null
     private var type = 0
     private var datas = arrayListOf<Int>()
@@ -31,11 +30,11 @@ class MenuTabAdapter(val context: Context) :
         notifyDataSetChanged()
     }
 
-    //拍摄
+    // 拍摄
     private val firstMenus =
         arrayListOf(R.drawable.ic_menu_thermal1001_svg, R.drawable.ic_menu_thermal1002_svg)
 
-    //选框
+    // 选框
     private val secondMenus =
         arrayListOf(
             R.drawable.ic_menu_thermal2002,
@@ -43,10 +42,10 @@ class MenuTabAdapter(val context: Context) :
             R.drawable.ic_menu_thermal2004,
             R.drawable.ic_menu_thermal2001,
             R.drawable.ic_menu_thermal2005,
-            R.drawable.ic_menu_thermal2006
+            R.drawable.ic_menu_thermal2006,
         )
 
-    //选框
+    // 选框
     private val secondMenusStr =
         arrayListOf(
             "点",
@@ -54,10 +53,10 @@ class MenuTabAdapter(val context: Context) :
             "面",
             "添加",
             "全图",
-            "删除"
+            "删除",
         )
 
-    //选框
+    // 选框
     private val fourthMenusStr =
         arrayListOf(
             "旋转",
@@ -66,7 +65,7 @@ class MenuTabAdapter(val context: Context) :
             "色带",
         )
 
-    //色彩
+    // 色彩
     private val thirdMenus =
         arrayListOf(
             R.drawable.ic_menu_thermal3001,
@@ -78,49 +77,58 @@ class MenuTabAdapter(val context: Context) :
             R.drawable.ic_menu_thermal3007,
             R.drawable.ic_menu_thermal3008,
             R.drawable.ic_menu_thermal3009,
-            R.drawable.ic_menu_thermal3010
+            R.drawable.ic_menu_thermal3010,
         )
 
-    //设置
+    // 设置
     private val fourthMenus =
         arrayListOf(
             R.drawable.ic_menu_thermal4001_svg,
             R.drawable.ic_menu_thermal4002_svg,
             R.drawable.ic_menu_thermal4003_svg,
-            R.drawable.ic_menu_thermal4004_svg
+            R.drawable.ic_menu_thermal4004_svg,
         )
 
     fun initType(type: Int) {
         this.type = type
-        datas = when (type) {
-            1 -> firstMenus
-            2 -> secondMenus
-            3 -> thirdMenus
-            4 -> fourthMenus
-            else -> thirdMenus
-        }
-        dataStrList = when (type) {
-            2 -> secondMenusStr
-            4 -> fourthMenusStr
-            else -> secondMenusStr
-        }
+        datas =
+            when (type) {
+                1 -> firstMenus
+                2 -> secondMenus
+                3 -> thirdMenus
+                4 -> fourthMenus
+                else -> thirdMenus
+            }
+        dataStrList =
+            when (type) {
+                2 -> secondMenusStr
+                4 -> fourthMenusStr
+                else -> secondMenusStr
+            }
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         return if (viewType == TYPE_ITEM) {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_menu_tab_view, parent, false)
+            val view =
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_menu_tab_view, parent, false)
             ItemView(view)
         } else {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_menu_tab_more_view, parent, false)
+            val view =
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_menu_tab_more_view, parent, false)
             ItemMoreView(view)
         }
-
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         if (holder is BaseItemView) {
             holder.img.setImageResource(datas[position])
             holder.lay.setOnClickListener {
@@ -133,8 +141,11 @@ class MenuTabAdapter(val context: Context) :
                 holder.name.text = dataStrList[position]
                 holder.name.isSelected = position == selected
                 holder.name.setTextColor(
-                    if (position == selected) ContextCompat.getColor(context, R.color.white)
-                    else ContextCompat.getColor(context, R.color.font_third_color)
+                    if (position == selected) {
+                        ContextCompat.getColor(context, R.color.white)
+                    } else {
+                        ContextCompat.getColor(context, R.color.font_third_color)
+                    },
                 )
             }
         }
@@ -177,6 +188,4 @@ class MenuTabAdapter(val context: Context) :
     interface OnItemClickListener {
         fun onClick(index: Int)
     }
-
-
 }

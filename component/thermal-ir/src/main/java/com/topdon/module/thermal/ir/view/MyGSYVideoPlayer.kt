@@ -2,8 +2,8 @@ package com.topdon.module.thermal.ir.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.ImageView
 import android.widget.FrameLayout
+import android.widget.ImageView
 import com.topdon.module.thermal.ir.R
 
 // TODO: Replace with ExoPlayer/Media3 implementation once GSY VideoPlayer dependency is resolved
@@ -11,7 +11,7 @@ import com.topdon.module.thermal.ir.R
 
 /**
  * Temporary video player stub to replace GSY VideoPlayer dependency.
- * 
+ *
  * This class provides basic video player functionality using Media3/ExoPlayer
  * until the GSY VideoPlayer dependency issue is resolved.
  *
@@ -19,7 +19,6 @@ import com.topdon.module.thermal.ir.R
  * Modified for GSY VideoPlayer compatibility.
  */
 class MyGSYVideoPlayer : FrameLayout {
-
     // Compatibility constants for GSY VideoPlayer
     companion object {
         const val CURRENT_STATE_PLAYING = 2

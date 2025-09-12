@@ -20,12 +20,11 @@ import kotlinx.android.synthetic.main.dialog_tip_emissivity.view.*
  * 发射率的提示弹窗
  */
 class TipEmissivityDialog : Dialog {
-
     constructor(context: Context) : super(context)
 
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
 
-    var onDismissListener :((check : Boolean) -> Unit) ?= null
+    var onDismissListener: ((check: Boolean) -> Unit)? = null
 
     class Builder {
         private var isTC007: Boolean = false
@@ -60,7 +59,13 @@ class TipEmissivityDialog : Dialog {
             return this
         }
 
-        fun setDataBean(environment: Float,distance : Float,radiation : Float,text : String,isTC007 : Boolean = false): Builder {
+        fun setDataBean(
+            environment: Float,
+            distance: Float,
+            radiation: Float,
+            text: String,
+            isTC007: Boolean = false,
+        ): Builder {
             this.environment = environment
             this.distance = distance
             this.radiation = radiation
@@ -68,7 +73,6 @@ class TipEmissivityDialog : Dialog {
             this.isTC007 = isTC007
             return this
         }
-
 
         fun setCancelListener(event: ((check: Boolean) -> Unit)? = null): Builder {
             this.closeEvent = event
@@ -93,7 +97,6 @@ class TipEmissivityDialog : Dialog {
                 context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val view = inflater.inflate(R.layout.dialog_tip_emissivity, null)
 
-
             view.tv_environment_title.text = context!!.getString(R.string.thermal_config_environment) + ":"
             view.tv_distance_title.text = context!!.getString(R.string.thermal_config_distance) + ":"
 
@@ -113,12 +116,14 @@ class TipEmissivityDialog : Dialog {
             val tvEnvironmentValue = view.tv_environment_value
             val tvDistanceValue = view.tv_distance_value
 
-            if (text.isNotEmpty()){
-                tvEmissivityMaterials.text = text
-                tvEmissivityMaterials.visibility = View.VISIBLE
-            }else{
-                tvEmissivityMaterials.visibility = View.GONE
-            }
+            if (text.isNotEmpty())
+                {
+                    tvEmissivityMaterials.text = text
+                    tvEmissivityMaterials.visibility = View.VISIBLE
+                } else
+                {
+                    tvEmissivityMaterials.visibility = View.GONE
+                }
             tvEmissivity.text = "${context?.getString(R.string.thermal_config_radiation)}: ${
                 NumberTools.to02(radiation)}"
             tvEnvironmentValue.text = UnitTools.showC(environment)
@@ -130,18 +135,18 @@ class TipEmissivityDialog : Dialog {
             imgClose = view.img_close
             dialog!!.addContentView(
                 view,
-                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT),
             )
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    //竖屏
+                    // 竖屏
                     0.75
                 } else {
-                    //横屏
+                    // 横屏
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() //设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceled)
@@ -154,11 +159,11 @@ class TipEmissivityDialog : Dialog {
                 dismiss()
                 closeEvent?.invoke(hasCheck)
             }
-            //title
+            // title
             if (title != null) {
                 titleText.setText(title, TextView.BufferType.NORMAL)
             }
-            //msg
+            // msg
 //            if (message != null) {
 //                messageText.visibility = View.VISIBLE
 //                messageText.setText(message, TextView.BufferType.NORMAL)

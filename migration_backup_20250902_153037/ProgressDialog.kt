@@ -26,9 +26,8 @@ class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
             field = value
         }
 
-
-
     private val rootView: View
+
     init {
         rootView = LayoutInflater.from(context).inflate(R.layout.dialog_progress, null)
     }

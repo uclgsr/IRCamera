@@ -23,29 +23,31 @@ import java.text.DecimalFormat
 @Route(path = RouterConfig.STORAGE_SPACE)
 class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
     companion object {
-        private fun formatFileSize(fileSize: Long): String = if (fileSize == 0L) {
-            "0"
-        } else if (fileSize < 1024) {
-            DecimalFormat("#.0").format(fileSize.toDouble())
-        } else if (fileSize < 1048576) {
-            DecimalFormat("#.0").format(fileSize.toDouble() / 1024)
-        } else if (fileSize < 1073741824) {
-            DecimalFormat("#.0").format(fileSize.toDouble() / 1048576)
-        } else {
-            DecimalFormat("#.0").format(fileSize.toDouble() / 1073741824)
-        }
+        private fun formatFileSize(fileSize: Long): String =
+            if (fileSize == 0L) {
+                "0"
+            } else if (fileSize < 1024) {
+                DecimalFormat("#.0").format(fileSize.toDouble())
+            } else if (fileSize < 1048576) {
+                DecimalFormat("#.0").format(fileSize.toDouble() / 1024)
+            } else if (fileSize < 1073741824) {
+                DecimalFormat("#.0").format(fileSize.toDouble() / 1048576)
+            } else {
+                DecimalFormat("#.0").format(fileSize.toDouble() / 1073741824)
+            }
 
-        private fun getUnit(fileSize: Long): String = if (fileSize < 1024) {
-            "B"
-        } else if (fileSize < 1048576) {
-            "KB"
-        } else if (fileSize < 1073741824) {
-            "MB"
-        } else {
-            "GB"
-        }
+        private fun getUnit(fileSize: Long): String =
+            if (fileSize < 1024) {
+                "B"
+            } else if (fileSize < 1048576) {
+                "KB"
+            } else if (fileSize < 1073741824) {
+                "MB"
+            } else {
+                "GB"
+            }
     }
-    
+
     override fun initContentView() = R.layout.activity_storage_space
 
     override fun initView() {
@@ -86,7 +88,7 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            tv_format_storage -> {//格式化存储
+            tv_format_storage -> { // 格式化存储
                 TipDialog.Builder(this@StorageSpaceActivity)
                     .setTitleMessage(getString(R.string.more_storage_reset))
                     .setMessage(getString(R.string.more_storage_reset1))

@@ -11,19 +11,16 @@ import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
-import com.topdon.lib.core.tools.UnitTools
-import com.topdon.libcom.AlarmHelp
-import com.topdon.libcom.R
 import com.topdon.lib.core.bean.AlarmBean
-import com.topdon.lib.core.common.SaveSettingUtil
 import com.topdon.lib.core.tools.ToastTools
+import com.topdon.lib.core.tools.UnitTools
+import com.topdon.libcom.R
 import kotlinx.android.synthetic.main.dialog_temp_alarm_set.*
 
 class TempAlarmSetDialog(
     context: Context,
     private val isEdit: Boolean,
 ) : Dialog(context, R.style.app_compat_dialog), CompoundButton.OnCheckedChangeListener {
-
     var alarmBean = AlarmBean()
         set(value) {
             field = value.copy()
@@ -40,7 +37,6 @@ class TempAlarmSetDialog(
     private var mediaPlayer: MediaPlayer? = null
 
     public var hideAlarmMark = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,11 +119,12 @@ class TempAlarmSetDialog(
         cl_ringtone_select.isVisible = !isEdit && switch_alarm_ringtone.isChecked
         tv_alarm_ringtone.isVisible = !isEdit
         switch_alarm_ringtone.isVisible = !isEdit
-        if (hideAlarmMark){
-            tv_alarm_mark.visibility = View.GONE
-            switch_alarm_mark.visibility = View.GONE
-            cl_alarm_mark.visibility = View.GONE
-        }
+        if (hideAlarmMark)
+            {
+                tv_alarm_mark.visibility = View.GONE
+                switch_alarm_mark.visibility = View.GONE
+                cl_alarm_mark.visibility = View.GONE
+            }
         switch_alarm_mark.isVisible = !isEdit
         if (alarmBean.highTemp == Float.MAX_VALUE) {
             et_alarm_high.setText("")
@@ -155,16 +152,18 @@ class TempAlarmSetDialog(
 
     private fun save() {
         try {
-            val inputHigh = if (switch_alarm_high.isChecked) {
-                if (et_alarm_high.text.isNotEmpty()) UnitTools.showToCValue(et_alarm_high.text.toString().toFloat()) else null
-            } else {
-                null
-            }
-            val inputLow = if (switch_alarm_low.isChecked) {
-                if (et_alarm_low.text.isNotEmpty()) UnitTools.showToCValue(et_alarm_low.text.toString().toFloat()) else null
-            } else {
-                null
-            }
+            val inputHigh =
+                if (switch_alarm_high.isChecked) {
+                    if (et_alarm_high.text.isNotEmpty()) UnitTools.showToCValue(et_alarm_high.text.toString().toFloat()) else null
+                } else {
+                    null
+                }
+            val inputLow =
+                if (switch_alarm_low.isChecked) {
+                    if (et_alarm_low.text.isNotEmpty()) UnitTools.showToCValue(et_alarm_low.text.toString().toFloat()) else null
+                } else {
+                    null
+                }
             if (inputHigh != null && inputLow != null && inputLow > inputHigh) {
                 ToastTools.showShort(R.string.tip_input_format)
                 return
@@ -182,7 +181,6 @@ class TempAlarmSetDialog(
             highValue = if (inputHigh.isNotEmpty()) UnitTools.showToCValue(inputHigh.toFloat()) else null
             lowValue = if (inputLow.isNotEmpty()) UnitTools.showToCValue(inputLow.toFloat()) else null
         } catch (_: Exception) {
-
         }
         alarmBean.highTemp = highValue ?: Float.MAX_VALUE
         alarmBean.lowTemp = lowValue ?: Float.MIN_VALUE
@@ -196,7 +194,7 @@ class TempAlarmSetDialog(
     }
 
     private fun showColorDialog(isHigh: Boolean) {
-        val colorPickDialog = ColorPickDialog(context, if (isHigh) alarmBean.highColor else alarmBean.lowColor,-1)
+        val colorPickDialog = ColorPickDialog(context, if (isHigh) alarmBean.highColor else alarmBean.lowColor, -1)
         colorPickDialog.onPickListener = { it: Int, i1: Int ->
             if (isHigh) {
                 alarmBean.highColor = it
@@ -218,29 +216,30 @@ class TempAlarmSetDialog(
             mediaPlayer?.release()
             mediaPlayer = null
         } catch (_: Exception) {
-
         }
-
     }
 
-    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+    override fun onCheckedChanged(
+        buttonView: CompoundButton?,
+        isChecked: Boolean,
+    ) {
         when (buttonView?.id) {
-            R.id.switch_alarm_high -> {//高温报警
+            R.id.switch_alarm_high -> { // 高温报警
                 et_alarm_high.isEnabled = isChecked
                 alarmBean.isHighOpen = isChecked
             }
 
-            R.id.switch_alarm_low -> {//低温报警
+            R.id.switch_alarm_low -> { // 低温报警
                 et_alarm_low.isEnabled = isChecked
                 alarmBean.isLowOpen = isChecked
             }
 
-            R.id.switch_alarm_mark -> {//区域标记
+            R.id.switch_alarm_mark -> { // 区域标记
                 cl_alarm_mark.isVisible = isChecked
                 alarmBean.isMarkOpen = isChecked
             }
 
-            R.id.switch_alarm_ringtone -> {//报警铃声
+            R.id.switch_alarm_ringtone -> { // 报警铃声
                 cl_ringtone_select.isVisible = isChecked
                 if (isChecked) {
                     selectRingtone(alarmBean.ringtoneType)

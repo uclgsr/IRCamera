@@ -66,7 +66,7 @@ class TipGuideDialog : DialogFragment() {
                 UiR.drawable.target_guide_pic_3,
                 UiR.drawable.target_guide_pic_4,
             )
-            
+
         // Initialize views using binding
         viewPager = binding.viewPager
         tvContent1 = binding.tvContent1
@@ -74,7 +74,7 @@ class TipGuideDialog : DialogFragment() {
         tvContent3 = binding.tvContent3
         indicateView = binding.indicateView
         ivTarget = binding.ivTarget
-        
+
         val adapter = PageAdapter(childFragmentManager, imgList)
         indicateView.itemCount = adapter.count
         viewPager.adapter = adapter
@@ -130,7 +130,7 @@ class TipGuideDialog : DialogFragment() {
         tvContent2.text = titleList[position]
         index = position
     }
-    
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

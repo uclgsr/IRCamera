@@ -49,15 +49,18 @@ import java.util.*
  * 热成像
  */
 class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
-
     protected var mIrSurfaceViewLayout: FrameLayout? = null
     protected var mIrSurfaceView: IrSurfaceView? = null
 
     override fun initContentView() = R.layout.fragment_monitor_thermal
+
     private val msgLiveData by lazy { MutableLiveData<Int>() }
 
-    //设置温度展示的位置
-    private fun setViewPosition(imageView: ImageView, index: Int) {
+    // 设置温度展示的位置
+    private fun setViewPosition(
+        imageView: ImageView,
+        index: Int,
+    ) {
         if (rawWidth == 0 || rawHeight == 0) {
             return
         }
@@ -77,10 +80,9 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 
     private var mGuideInterface: GuideInterface? = null
 
-
     override fun initView() {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        rotateType = 3//默认旋转270度
+        rotateType = 3 // 默认旋转270度
         mCenterTextView = temp_display
         mMaxTextView = max_temp_display
         mMinTextView = min_temp_display
@@ -92,10 +94,12 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         mFenceLayout!!.visibility = View.GONE
         mIrSurfaceViewLayout = final_ir_layout
         mIrSurfaceView = IrSurfaceView(requireContext())
-        val ifrSurfaceViewLayoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER
-        )
+        val ifrSurfaceViewLayoutParams =
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                Gravity.CENTER,
+            )
         mIrSurfaceView!!.layoutParams = ifrSurfaceViewLayoutParams
         mIrSurfaceView!!.setMatrix(ThermalTool.getRotate(rotateType), 256f, 192f)
         mIrSurfaceViewLayout!!.addView(mIrSurfaceView)
@@ -103,7 +107,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 //        height = resources.getDimension(R.dimen.ir_height).toInt()
         val screenWidth = ScreenUtils.getScreenWidth()
         val screenHeight = screenWidth * 270 / 360
-        Log.w("123", "screenWidth比例:${screenWidth} / $screenHeight")
+        Log.w("123", "screenWidth比例:$screenWidth / $screenHeight")
         Log.w("123", "screenWidth比例:${screenWidth.toFloat() / screenHeight}")
         width = screenWidth
         height = screenHeight
@@ -142,9 +146,9 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 
 //            Log.i("123", "修改后w:${mIrSurfaceView!!.width}, h:${mIrSurfaceView!!.height}")
         }
-        //初始选取范围
+        // 初始选取范围
         initFence()
-        //初始图像
+        // 初始图像
         onIrVideoStart()
         mIrSurfaceView!!.post {
             Log.w("123", "w:${mIrSurfaceView!!.width}, h:${mIrSurfaceView!!.height}")
@@ -162,69 +166,73 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     }
 
     override fun initData() {
-
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         isRecord = false
         onIrVideoStop()
-
     }
-
 
     /**
      * 开启视频流
      */
     fun onIrVideoStart() {
-        mIsIrVideoStart = if (mIsIrVideoStart) {
-            ToastUtils.showShort("视频流已开启")
-            return
-        } else {
-            true
-        }
-        mGuideInterface = GuideInterface()
-        val ret = mGuideInterface!!.init(requireContext(), object : GuideInterface.IrDataCallback {
-            override fun processIrData(yuv: ByteArray, temp: FloatArray) {
-                //刷新图像
-                if (mIrBitmap == null) {
-                    mIrBitmap = Bitmap.createBitmap(256, 192, Bitmap.Config.ARGB_8888)
-                }
-                mGuideInterface!!.yuv2Bitmap(mIrBitmap, yuv)//视频转码yuv
-//                mIrBitmap = mIrBitmap?.let { rotateBitmap(it, 90f) }
-                try {
-                    mIrSurfaceView!!.doDraw(mIrBitmap, mGuideInterface!!.getImageStatus())
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-                if (rotateType == 1 || rotateType == 3) {
-                    rawWidth = SRC_WIDTH
-                    rawHeight = SRC_HEIGHT
-                } else {
-                    rawWidth = SRC_HEIGHT
-                    rawHeight = SRC_WIDTH
-                }
-                val centerIndex = rawWidth * (rawHeight / 2) + rawWidth / 2
-                try {
-                    //选取区域
-                    val maxTempIndex = ArrayUtils.getMaxIndex(temp, rotateType, selectIndex)
-                    val minTempIndex = ArrayUtils.getMinIndex(temp, rotateType, selectIndex)
-                    maxIndex = maxTempIndex
-                    minIndex = minTempIndex
-                    val rotateData = ArrayUtils.matrixRotate(srcData = temp, rotateType)
-                    val bigDecimal = BigDecimal.valueOf(rotateData[centerIndex].toDouble())
-                    val maxBigDecimal = BigDecimal.valueOf(rotateData[maxTempIndex].toDouble())
-                    val minBigDecimal = BigDecimal.valueOf(rotateData[minTempIndex].toDouble())
-                    mCenter = bigDecimal.setScale(1, BigDecimal.ROUND_HALF_UP).toFloat()
-                    mMaxTemp = maxBigDecimal.setScale(1, BigDecimal.ROUND_HALF_UP).toFloat()
-                    mMinTemp = minBigDecimal.setScale(1, BigDecimal.ROUND_HALF_UP).toFloat()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.e(TAG, "提取温度异常:${e.message}")
-                }
+        mIsIrVideoStart =
+            if (mIsIrVideoStart) {
+                ToastUtils.showShort("视频流已开启")
+                return
+            } else {
+                true
             }
-
-        })
+        mGuideInterface = GuideInterface()
+        val ret =
+            mGuideInterface!!.init(
+                requireContext(),
+                object : GuideInterface.IrDataCallback {
+                    override fun processIrData(
+                        yuv: ByteArray,
+                        temp: FloatArray,
+                    ) {
+                        // 刷新图像
+                        if (mIrBitmap == null) {
+                            mIrBitmap = Bitmap.createBitmap(256, 192, Bitmap.Config.ARGB_8888)
+                        }
+                        mGuideInterface!!.yuv2Bitmap(mIrBitmap, yuv) // 视频转码yuv
+//                mIrBitmap = mIrBitmap?.let { rotateBitmap(it, 90f) }
+                        try {
+                            mIrSurfaceView!!.doDraw(mIrBitmap, mGuideInterface!!.getImageStatus())
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                        if (rotateType == 1 || rotateType == 3) {
+                            rawWidth = SRC_WIDTH
+                            rawHeight = SRC_HEIGHT
+                        } else {
+                            rawWidth = SRC_HEIGHT
+                            rawHeight = SRC_WIDTH
+                        }
+                        val centerIndex = rawWidth * (rawHeight / 2) + rawWidth / 2
+                        try {
+                            // 选取区域
+                            val maxTempIndex = ArrayUtils.getMaxIndex(temp, rotateType, selectIndex)
+                            val minTempIndex = ArrayUtils.getMinIndex(temp, rotateType, selectIndex)
+                            maxIndex = maxTempIndex
+                            minIndex = minTempIndex
+                            val rotateData = ArrayUtils.matrixRotate(srcData = temp, rotateType)
+                            val bigDecimal = BigDecimal.valueOf(rotateData[centerIndex].toDouble())
+                            val maxBigDecimal = BigDecimal.valueOf(rotateData[maxTempIndex].toDouble())
+                            val minBigDecimal = BigDecimal.valueOf(rotateData[minTempIndex].toDouble())
+                            mCenter = bigDecimal.setScale(1, BigDecimal.ROUND_HALF_UP).toFloat()
+                            mMaxTemp = maxBigDecimal.setScale(1, BigDecimal.ROUND_HALF_UP).toFloat()
+                            mMinTemp = minBigDecimal.setScale(1, BigDecimal.ROUND_HALF_UP).toFloat()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            Log.e(TAG, "提取温度异常:${e.message}")
+                        }
+                    }
+                },
+            )
 
         if (ret == 5) {
             Log.w("123", "视频流开启完成")
@@ -236,7 +244,10 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         }
     }
 
-    private fun rotateBitmap(origin: Bitmap, rotate: Float): Bitmap? {
+    private fun rotateBitmap(
+        origin: Bitmap,
+        rotate: Float,
+    ): Bitmap? {
         try {
             if (origin == null) {
                 return null
@@ -261,17 +272,17 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
      * 停止视频流
      */
     fun onIrVideoStop() {
-        mIsIrVideoStart = if (!mIsIrVideoStart) {
-            Log.w("123", "视频流已停止")
-            return
-        } else {
-            false
-        }
+        mIsIrVideoStart =
+            if (!mIsIrVideoStart) {
+                Log.w("123", "视频流已停止")
+                return
+            } else {
+                false
+            }
         mGuideInterface!!.exit()
         mGuideInterface = null
         Log.w("123", "视频流停止完成")
     }
-
 
     fun onLowRangeBtnClick(view: View?) {
         if (mGuideInterface == null) {
@@ -302,12 +313,13 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         isDispLayTemp = !isDispLayTemp
         if (isDispLayTemp) {
             mDisplayFrameLayout!!.visibility = View.VISIBLE
-            timerJob = lifecycleScope.launch {
-                repeat(Int.MAX_VALUE) {
-                    msgLiveData.postValue(0)
-                    delay(1000)
+            timerJob =
+                lifecycleScope.launch {
+                    repeat(Int.MAX_VALUE) {
+                        msgLiveData.postValue(0)
+                        delay(1000)
+                    }
                 }
-            }
         } else {
             mDisplayFrameLayout!!.visibility = View.GONE
             if (timerJob != null && timerJob!!.isActive) {
@@ -317,8 +329,8 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         }
     }
 
+    // ***************************************专家模式**********************************************
 
-    //***************************************专家模式**********************************************
     /**
      * 专家模式
      */
@@ -367,49 +379,49 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         Log.w("123", "event:${event.action}")
         when (event.action) {
             1001 -> {
-                //拍照
+                // 拍照
                 ToastUtils.showShort("拍照")
                 picture()
             }
             1002 -> {
-                //录制
+                // 录制
                 ToastUtils.showShort("录制")
                 video()
             }
             2001 -> {
-                //添加点
+                // 添加点
                 addPoint()
             }
             2002 -> {
-                //添加线
+                // 添加线
                 addLine()
             }
             2003 -> {
-                //添加围栏
+                // 添加围栏
                 addFence()
             }
             2004 -> {
-                //添加温度
+                // 添加温度
                 onTempBtnClick()
             }
             2006 -> {
-                //清除还原
+                // 清除还原
                 clearFence()
             }
             in 3000..3010 -> {
-                //设置伪彩
+                // 设置伪彩
                 setColor(event.action)
             }
             in 5000..5010 -> {
-                //全屏
+                // 全屏
                 full()
             }
             10001 -> {
-                //开始记录
+                // 开始记录
                 recordThermal()
             }
             10003 -> {
-                //停止记录
+                // 停止记录
                 isRecord = false
             }
         }
@@ -460,10 +472,10 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         type = "fence"
     }
 
-    //显示点线面布局
+    // 显示点线面布局
     private fun showFence(index: Int) {
         if (fenceFlag.getIndex(index) == 0) {
-            fenceFlag = 1.shl(4 * (index - 1)) //设置001 or 010 or 100
+            fenceFlag = 1.shl(4 * (index - 1)) // 设置001 or 010 or 100
             mFenceLayout!!.visibility = View.VISIBLE
             fence_point_view.visibility = if (fenceFlag.getIndex(1) > 0) View.VISIBLE else View.GONE
             fence_line_view.visibility = if (fenceFlag.getIndex(2) > 0) View.VISIBLE else View.GONE
@@ -474,39 +486,53 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         }
     }
 
-    var selectIndex: ArrayList<Int> = arrayListOf()//选取点
+    var selectIndex: ArrayList<Int> = arrayListOf() // 选取点
 
     private fun initFence() {
-        fence_point_view.listener = object : FencePointView.CallBack {
-            override fun callback(startPoint: IntArray, srcRect: IntArray) {
-                //获取点
-                val activity: MonitorActivity = requireActivity() as MonitorActivity
-                selectIndex.clear()
-                selectIndex =
-                    Fence(srcRect = srcRect, rotateType = rotateType).getPointIndex(startPoint)
-                activity.select(1, selectIndex)
+        fence_point_view.listener =
+            object : FencePointView.CallBack {
+                override fun callback(
+                    startPoint: IntArray,
+                    srcRect: IntArray,
+                ) {
+                    // 获取点
+                    val activity: MonitorActivity = requireActivity() as MonitorActivity
+                    selectIndex.clear()
+                    selectIndex =
+                        Fence(srcRect = srcRect, rotateType = rotateType).getPointIndex(startPoint)
+                    activity.select(1, selectIndex)
+                }
             }
-        }
-        fence_line_view.listener = object : FenceLineView.CallBack {
-            override fun callback(startPoint: IntArray, endPoint: IntArray, srcRect: IntArray) {
-                //获取线
-                selectIndex = Fence(srcRect = srcRect, rotateType = rotateType)
-                    .getLineIndex(startPoint, endPoint)
-                val activity: MonitorActivity = requireActivity() as MonitorActivity
-                activity.select(2, selectIndex)
+        fence_line_view.listener =
+            object : FenceLineView.CallBack {
+                override fun callback(
+                    startPoint: IntArray,
+                    endPoint: IntArray,
+                    srcRect: IntArray,
+                ) {
+                    // 获取线
+                    selectIndex =
+                        Fence(srcRect = srcRect, rotateType = rotateType)
+                            .getLineIndex(startPoint, endPoint)
+                    val activity: MonitorActivity = requireActivity() as MonitorActivity
+                    activity.select(2, selectIndex)
+                }
             }
-
-        }
-        fence_view.listener = object : FenceView.CallBack {
-            override fun callback(startPoint: IntArray, endPoint: IntArray, srcRect: IntArray) {
-                //获取面
-                selectIndex = Fence(srcRect = srcRect, rotateType = rotateType)
-                    .getAreaIndex(startPoint, endPoint)
-                val activity: MonitorActivity = requireActivity() as MonitorActivity
-                activity.select(3, selectIndex)
+        fence_view.listener =
+            object : FenceView.CallBack {
+                override fun callback(
+                    startPoint: IntArray,
+                    endPoint: IntArray,
+                    srcRect: IntArray,
+                ) {
+                    // 获取面
+                    selectIndex =
+                        Fence(srcRect = srcRect, rotateType = rotateType)
+                            .getAreaIndex(startPoint, endPoint)
+                    val activity: MonitorActivity = requireActivity() as MonitorActivity
+                    activity.select(3, selectIndex)
+                }
             }
-
-        }
     }
 
     private fun picture() {
@@ -527,12 +553,13 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     }
 
     private fun full() {
-        rotateType = if (rotateType == 0) {
-            Log.w("123", "横屏显示")
-            1
-        } else {
-            0
-        }
+        rotateType =
+            if (rotateType == 0) {
+                Log.w("123", "横屏显示")
+                1
+            } else {
+                0
+            }
         mIrSurfaceView!!.setMatrix(ThermalTool.getRotate(rotateType), 256f, 192f)
     }
 
@@ -553,7 +580,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 
     var isRecord = false
     var type = ""
-    var timeMillis = 1000L //间隔1s
+    var timeMillis = 1000L // 间隔1s
 
     private fun recordThermal() {
         val thermalId = TimeTool.showDateSecond()

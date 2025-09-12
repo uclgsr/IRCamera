@@ -17,7 +17,6 @@ import kotlin.math.min
  * Created by LCG on 2024/12/31.
  */
 class TrendView : FrameLayout {
-
     /**
      * 展开趋势图
      */
@@ -51,7 +50,6 @@ class TrendView : FrameLayout {
         binding.viewChartTrend.setToEmpty()
     }
 
-
     private lateinit var binding: ViewTrendBinding
 
     constructor(context: Context) : this(context, null)
@@ -60,7 +58,12 @@ class TrendView : FrameLayout {
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int): super(context, attrs, defStyleAttr, defStyleRes) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes,
+    ) {
         if (isInEditMode) {
             LayoutInflater.from(context).inflate(R.layout.view_trend, this, true)
         } else {
@@ -84,18 +87,22 @@ class TrendView : FrameLayout {
         }
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
 
-        //宽度为 UNSPECIFIED 的情况目前不存在，不考虑
+        // 宽度为 UNSPECIFIED 的情况目前不存在，不考虑
         val wantHeight: Int = SizeUtils.dp2px(34f) + (widthSize * 158 / 264f).toInt()
-        val height = when (heightMode) {
-            MeasureSpec.EXACTLY -> heightSize
-            MeasureSpec.AT_MOST -> min(wantHeight, heightSize)
-            else -> wantHeight
-        }
+        val height =
+            when (heightMode) {
+                MeasureSpec.EXACTLY -> heightSize
+                MeasureSpec.AT_MOST -> min(wantHeight, heightSize)
+                else -> wantHeight
+            }
 
         val newWidthSpec = MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY)
         val newHeightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)

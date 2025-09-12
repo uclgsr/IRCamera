@@ -9,14 +9,18 @@ import com.topdon.lib.core.utils.ByteUtils.descBytes
 import java.util.concurrent.LinkedBlockingQueue
 
 object ImageTools {
-
-    fun readFrame(imageBytes: ByteArray, tempBytes: ByteArray, max: Float = 40f, min: Float = 20f) {
+    fun readFrame(
+        imageBytes: ByteArray,
+        tempBytes: ByteArray,
+        max: Float = 40f,
+        min: Float = 20f,
+    ) {
         if (max < min) {
             return
         }
         val selectBean = getTempIndex(tempBytes, max, min)
 //        Log.w("123", "max size: ${selectBean.maxIndex.size}, min size: ${selectBean.minIndex.size}")
-        bitmapFromRgbaGrey(bytes = imageBytes, bean = selectBean)//灰度
+        bitmapFromRgbaGrey(bytes = imageBytes, bean = selectBean) // 灰度
     }
 
     fun readFrame(
@@ -25,7 +29,7 @@ object ImageTools {
         max: Float = 40f,
         min: Float = 20f,
         @ColorInt maxColor: Int,
-        @ColorInt minColor: Int
+        @ColorInt minColor: Int,
     ) {
         if (max < min) {
             return
@@ -35,8 +39,8 @@ object ImageTools {
             bytes = imageBytes,
             bean = selectBean,
             maxColor = maxColor,
-            minColor = minColor
-        )//换颜色
+            minColor = minColor,
+        ) // 换颜色
     }
 
     // 选取区域转颜色
@@ -44,7 +48,7 @@ object ImageTools {
         bytes: ByteArray,
         bean: SelectIndexBean,
         @ColorInt maxColor: Int,
-        @ColorInt minColor: Int
+        @ColorInt minColor: Int,
     ) {
         val len = bytes.size / 4
         val selectMaxIndex = bean.maxIndex
@@ -68,10 +72,10 @@ object ImageTools {
         val minB = ((minColor shr 0) and 0xff).toByte()
         for (i in 0 until len) {
             if (maxQueue.peek() == i) {
-                bytes[i * 4] = maxR //r
-                bytes[i * 4 + 1] = maxG //g
-                bytes[i * 4 + 2] = maxB//b
-                bytes[i * 4 + 3] = maxA //a
+                bytes[i * 4] = maxR // r
+                bytes[i * 4 + 1] = maxG // g
+                bytes[i * 4 + 2] = maxB // b
+                bytes[i * 4 + 3] = maxA // a
                 maxQueue.poll()
             }
             if (minQueue.peek() == i) {
@@ -85,7 +89,10 @@ object ImageTools {
     }
 
     // 选取区域转灰度
-    private fun bitmapFromRgbaGrey(bytes: ByteArray, bean: SelectIndexBean) {
+    private fun bitmapFromRgbaGrey(
+        bytes: ByteArray,
+        bean: SelectIndexBean,
+    ) {
         val len = bytes.size / 4
         val selectIndex = bean.maxIndex.plus(bean.minIndex)
         selectIndex.sort()
@@ -102,7 +109,7 @@ object ImageTools {
                 r = bytes[i * 4].toInt() and 0xff
                 g = bytes[i * 4 + 1].toInt() and 0xff
                 b = bytes[i * 4 + 2].toInt() and 0xff
-                //灰度
+                // 灰度
                 grey = (r * 0.3f).toInt() + (g * 0.59f).toInt() + (b * 0.11f).toInt()
                 bytes[i * 4] = grey.toByte()
                 bytes[i * 4 + 1] = grey.toByte()
@@ -112,13 +119,16 @@ object ImageTools {
         }
     }
 
-
     /**
      * 温度选取点
      *
      * @param bytes 温度数据
      */
-    private fun getTempIndex(bytes: ByteArray, max: Float, min: Float): SelectIndexBean {
+    private fun getTempIndex(
+        bytes: ByteArray,
+        max: Float,
+        min: Float,
+    ): SelectIndexBean {
         var data: ByteArray
         val maxList = arrayListOf<Int>()
         val minList = arrayListOf<Int>()
@@ -193,7 +203,7 @@ object ImageTools {
         max: Float = 40f,
         min: Float = 20f,
         @ColorInt maxColor: Int = 0,
-        @ColorInt minColor: Int = 0
+        @ColorInt minColor: Int = 0,
     ) {
         if (max < min) {
             return
@@ -211,7 +221,7 @@ object ImageTools {
         max: Float = 40f,
         min: Float = 20f,
         @ColorInt maxColor: Int,
-        @ColorInt minColor: Int
+        @ColorInt minColor: Int,
     ) {
         try {
             if (maxColor == 0 && minColor == 0) {
@@ -226,11 +236,11 @@ object ImageTools {
                     data = tempBytes.copyOfRange(i * 2, i * 2 + 2)
                     value = readTempValue(data)
                     if (value > max || value < min) {
-                        //max color
+                        // max color
                         r = imageBytes[i * 4].toInt() and 0xff
                         g = imageBytes[i * 4 + 1].toInt() and 0xff
                         b = imageBytes[i * 4 + 2].toInt() and 0xff
-                        //灰度
+                        // 灰度
                         grey = (r * 0.3f).toInt() + (g * 0.59f).toInt() + (b * 0.11f).toInt()
                         imageBytes[i * 4] = grey.toByte()
                         imageBytes[i * 4 + 1] = grey.toByte()
@@ -253,14 +263,14 @@ object ImageTools {
                     data = tempBytes.copyOfRange(i * 2, i * 2 + 2)
                     value = readTempValue(data)
                     if (value > max) {
-                        //max color
-                        imageBytes[i * 4] = maxR //r
-                        imageBytes[i * 4 + 1] = maxG //g
-                        imageBytes[i * 4 + 2] = maxB //b
-                        imageBytes[i * 4 + 3] = maxA //a
+                        // max color
+                        imageBytes[i * 4] = maxR // r
+                        imageBytes[i * 4 + 1] = maxG // g
+                        imageBytes[i * 4 + 2] = maxB // b
+                        imageBytes[i * 4 + 3] = maxA // a
                     }
                     if (value < min) {
-                        //min color
+                        // min color
                         imageBytes[i * 4] = minR
                         imageBytes[i * 4 + 1] = minG
                         imageBytes[i * 4 + 2] = minB
@@ -273,4 +283,3 @@ object ImageTools {
         }
     }
 }
-

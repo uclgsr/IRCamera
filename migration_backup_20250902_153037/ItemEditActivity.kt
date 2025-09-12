@@ -119,11 +119,14 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
         }
         viewModel.queryDirById(intent.getLongExtra(ExtraKeyConfig.DIR_ID, 0))
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                showExitTipsDialog()
-            }
-        })
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    showExitTipsDialog()
+                }
+            },
+        )
     }
 
     override fun initData() {
@@ -132,7 +135,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             iv_exit -> showExitTipsDialog()
-            iv_save -> {//保存
+            iv_save -> { // 保存
                 val dirDetect: DirDetect = viewModel.dirLD.value ?: return
                 showLoadingDialog()
                 lifecycleScope.launch(Dispatchers.IO) {
@@ -146,9 +149,9 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
             }
-            cl_dir -> {//展开收起切换
+            cl_dir -> { // 展开收起切换
                 adapter.isExpand = !adapter.isExpand
-                if (adapter.isExpand) {//切换到展开
+                if (adapter.isExpand) { // 切换到展开
                     iv_triangle.setImageResource(R.drawable.svg_house_triangle_up)
                     cl_dir.setBackgroundResource(R.drawable.bg_corners10_top_solid_23202e)
                 } else {
@@ -156,14 +159,14 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                     cl_dir.setBackgroundResource(R.drawable.bg_corners10_solid_23202e)
                 }
             }
-            view_select_all -> {//全选、取消全选
+            view_select_all -> { // 全选、取消全选
                 adapter.isSelectAll = !adapter.isSelectAll
             }
-            view_copy -> {//复制
+            view_copy -> { // 复制
                 adapter.copySelect()
                 TToast.shortToast(this@ItemEditActivity, R.string.ts004_copy_success)
             }
-            view_del -> {//删除
+            view_del -> { // 删除
                 TipDialog.Builder(this)
                     .setTitleMessage(getString(R.string.tips_del_item_title))
                     .setMessage(R.string.tips_del_item_content)
@@ -201,15 +204,22 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
             dataList = newList
         }
 
-        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+        override fun getMovementFlags(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+        ): Int {
             return makeMovementFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0)
         }
 
-        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder,
+        ): Boolean {
             val fromPosition = viewHolder.bindingAdapterPosition
             val toPosition = target.bindingAdapterPosition
 
-            //刷新 lastItem
+            // 刷新 lastItem
             if (fromPosition == dataList.size - 1 || toPosition == dataList.size - 1) {
                 if (viewHolder is MyAdapter.ViewHolder) {
                     viewHolder.refreshIsLast(toPosition == dataList.size - 1)
@@ -232,7 +242,10 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
             return true
         }
 
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        override fun onSwiped(
+            viewHolder: RecyclerView.ViewHolder,
+            direction: Int,
+        ) {
         }
     }
 
@@ -251,18 +264,19 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
          * 当前已选中的数量.
          */
         private var selectCount = 0
+
         /**
          * 当前是否已全选 true-已全选 false-未全选
          */
         var isSelectAll: Boolean
             get() = selectCount == dataList.size && dataList.size > 0
             set(value) {
-                if (value) {//->全选
+                if (value) { // ->全选
                     selectCount = dataList.size
                     for (item in dataList) {
                         item.hasSelect = true
                     }
-                } else {//全选->取消全选
+                } else { // 全选->取消全选
                     selectCount = 0
                     for (item in dataList) {
                         item.hasSelect = false
@@ -276,6 +290,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
          * 一个 item 选中或取消选中事件监听.
          */
         var onSelectChangeListener: ((selectSize: Int) -> Unit)? = null
+
         /**
          * 一个 item 状态变更事件监听.
          */
@@ -303,7 +318,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                         onStateChangeListener?.invoke(itemDetect.state, 0)
                     }
                 }
-                if (isDelLast) {//最后一个被删除时，旧最后一个需要刷新
+                if (isDelLast) { // 最后一个被删除时，旧最后一个需要刷新
                     notifyItemChanged(dataList.size - 1)
                 }
             }
@@ -331,17 +346,23 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                     onStateChangeListener?.invoke(0, oldItem.state)
                 }
             }
-            if (isCopyLast) {//复制的内容包含最后一个时，旧的最后一个需要刷新
+            if (isCopyLast) { // 复制的内容包含最后一个时，旧的最后一个需要刷新
                 notifyItemChanged(dataList.size - 2)
             }
             onSelectChangeListener?.invoke(selectCount)
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int,
+        ): ViewHolder {
             return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_edit_item, parent, false))
         }
 
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        override fun onBindViewHolder(
+            holder: ViewHolder,
+            position: Int,
+        ) {
             val itemDetect: ItemDetect = dataList[position]
             holder.itemView.iv_select.isSelected = itemDetect.hasSelect
             holder.itemView.et_input_name.setText(itemDetect.itemName)

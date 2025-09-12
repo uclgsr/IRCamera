@@ -32,7 +32,7 @@ class MonitoryHomeActivity : BaseActivity() {
         val isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
         val viewPager2 = findViewById<ViewPager2>(R.id.view_pager2)
         val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
-        
+
         viewPager2.adapter = ViewPagerAdapter(this, isTC007)
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
             tab.setText(if (position == 0) R.string.chart_history else R.string.chart_real_time)

@@ -26,7 +26,10 @@ class UpReportViewModel : BaseViewModel() {
 
     val exceptionLD = SingleLiveEvent<Exception?>()
 
-    fun upload(isTC007: Boolean, reportBean: ReportBean?) {
+    fun upload(
+        isTC007: Boolean,
+        reportBean: ReportBean?,
+    ) {
         viewModelScope.launch {
             uploadImages(reportBean)
             uploadJSON(isTC007, reportBean)
@@ -62,24 +65,31 @@ class UpReportViewModel : BaseViewModel() {
         }
     }
 
-    private suspend fun uploadJSON(isTC007: Boolean, reportBean: ReportBean?) {
+    private suspend fun uploadJSON(
+        isTC007: Boolean,
+        reportBean: ReportBean?,
+    ) {
         withContext(Dispatchers.IO) {
             val url = UrlConstant.BASE_URL + "api/v1/outProduce/testReport/addTestReport"
             val params = RequestParams()
             params.addBodyParameter("reportType", 2)
-            params.addBodyParameter("modelId", if (isTC007) 1783 else 950) //TC001-950, TC002-951, TC003-952 TC007-1783
+            params.addBodyParameter("modelId", if (isTC007) 1783 else 950) // TC001-950, TC002-951, TC003-952 TC007-1783
             params.addBodyParameter("testTime", TimeUtils.getNowString())
             params.addBodyParameter("testInfo", GsonUtils.toJson(reportBean))
             params.addBodyParameter("sn", "")
-            HttpProxy.instant.post(url, params, object : IResponseCallback {
-                override fun onResponse(response: String?) {
-                    commonBeanLD.postValue(ResponseBean.convertCommonBean(response, null))
-                }
+            HttpProxy.instant.post(
+                url,
+                params,
+                object : IResponseCallback {
+                    override fun onResponse(response: String?) {
+                        commonBeanLD.postValue(ResponseBean.convertCommonBean(response, null))
+                    }
 
-                override fun onFail(exception: Exception?) {
-                    exceptionLD.postValue(exception)
-                }
-            })
+                    override fun onFail(exception: Exception?) {
+                        exceptionLD.postValue(exception)
+                    }
+                },
+            )
         }
     }
 }

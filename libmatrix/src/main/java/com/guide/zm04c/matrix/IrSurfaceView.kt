@@ -3,13 +3,11 @@ package com.guide.zm04c.matrix
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.blankj.utilcode.util.ScreenUtils
 
 class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
-
     private var mHolder: SurfaceHolder? = null // 用于控制SurfaceView
     private var mCanvas: Canvas? = null // 声明一张画布
     private val p: Paint by lazy { Paint() } // 声明一支画笔
@@ -28,7 +26,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
     private var callback: IfrCamOpenOverCallback? = null
 
-    private var mCtx: Context? = null;
+    private var mCtx: Context? = null
 
     constructor(context: Context) : super(context) {
         mCtx = context
@@ -66,7 +64,11 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
      * 180
      * 270
      */
-    fun setMatrix(rotate: Float, w: Float, h: Float) {
+    fun setMatrix(
+        rotate: Float,
+        w: Float,
+        h: Float,
+    ) {
         mMatrix.reset()
         when (rotate) {
             90f -> {
@@ -82,7 +84,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
                 mMatrix.postScale(sca, sca)
             }
             270f -> {
-                //矩阵转换
+                // 矩阵转换
                 val sca = ScreenUtils.getScreenWidth() / h
                 mMatrix.setRotate(rotate, 0f, 0f)
                 mMatrix.postTranslate(0f, w)
@@ -98,8 +100,10 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
     /**
      * 自定义画图方法
      */
-    fun doDraw(bitmap: Bitmap?, shutterFlag: Int) {
-
+    fun doDraw(
+        bitmap: Bitmap?,
+        shutterFlag: Int,
+    ) {
         synchronized(this) {
             if (isLockImage || !isPrepare || null == bitmap || shutterFlag == 1) {
                 return@doDraw
@@ -111,10 +115,10 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
                 mCanvas?.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
 //                mCanvas?.drawBitmap(bitmap, mMatrix, p)
                 if (openLut) {
-                    mColorMatrixEnhance.setSaturation(saturation * 0.01f * 2.5f + 1f)//对比度
-                    p.colorFilter = ColorMatrixColorFilter(mColorMatrixEnhance)//修改色彩矩阵
+                    mColorMatrixEnhance.setSaturation(saturation * 0.01f * 2.5f + 1f) // 对比度
+                    p.colorFilter = ColorMatrixColorFilter(mColorMatrixEnhance) // 修改色彩矩阵
                 } else {
-                    p.colorFilter = ColorMatrixColorFilter(mColorMatrix)//恢复色彩矩阵
+                    p.colorFilter = ColorMatrixColorFilter(mColorMatrix) // 恢复色彩矩阵
                 }
                 mCanvas?.drawBitmap(bitmap, mMatrix, p)
             } catch (e: Exception) {
@@ -129,48 +133,50 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
                     }
                 }
             }
-
         }
     }
 
     // 生成色彩矩阵
-    private var mColorMatrix = ColorMatrix(
-        floatArrayOf(
-            1f, 0f, 0f, 0f, 0f,
-            0f, 1f, 0f, 0f, 0f,
-            0f, 0f, 1f, 0f, 0f,
-            0f, 0f, 0f, 01f, 0f
+    private var mColorMatrix =
+        ColorMatrix(
+            floatArrayOf(
+                1f, 0f, 0f, 0f, 0f,
+                0f, 1f, 0f, 0f, 0f,
+                0f, 0f, 1f, 0f, 0f,
+                0f, 0f, 0f, 01f, 0f,
+            ),
         )
-    )
 
     // 生成色彩矩阵
-    private var mColorMatrixLut = ColorMatrix(
-        floatArrayOf(
-            1f, 0f, 0f, 0f, 0f,
-            0f, 1.5f, 0f, 0f, 25f,
-            0.1f, 0.2f, 0.7f, 0f, 25f,
-            0f, 0f, 0f, 01f, 0f
+    private var mColorMatrixLut =
+        ColorMatrix(
+            floatArrayOf(
+                1f, 0f, 0f, 0f, 0f,
+                0f, 1.5f, 0f, 0f, 25f,
+                0.1f, 0.2f, 0.7f, 0f, 25f,
+                0f, 0f, 0f, 01f, 0f,
+            ),
         )
-    )
     private val n = 1f
 
     // 生成色彩矩阵
-    private var mColorMatrixEnhance = ColorMatrix(
+    private var mColorMatrixEnhance =
+        ColorMatrix(
 //        floatArrayOf(
 //            n, 0f, 0f, 0f, 128 * (1 - n),
 //            0f, n, 0f, 0f, 128 * (1 - n),
 //            0f, 0f, n, 0f, 128 * (1 - n),
 //            0f, 0f, 0f, 1f, 0f
 //        )
-        floatArrayOf(
-            1f, 0f, 0f, 0f, 0f,
-            0f, 1f, 0f, 0f, 0f,
-            0f, 0f, 1f, 0f, 0f,
-            0f, 0f, 0f, 1f, 0f
+            floatArrayOf(
+                1f, 0f, 0f, 0f, 0f,
+                0f, 1f, 0f, 0f, 0f,
+                0f, 0f, 1f, 0f, 0f,
+                0f, 0f, 0f, 1f, 0f,
+            ),
         )
-    )
 
-    private var saturation = 0 //对比度 0~100
+    private var saturation = 0 // 对比度 0~100
 
     fun setOpenLut() {
 //        openLut = !openLut
@@ -200,15 +206,21 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
      */
     override fun surfaceCreated(holder: SurfaceHolder) {
         isPrepare = true
-        if (callback != null)
+        if (callback != null) {
             callback!!.onSurfaceCreated()
+        }
         Logger.d(TAG, "holder onSurfaceCreated")
     }
 
     /**
      * 当SurfaceView的视图发生改变的时候，调用此函数
      */
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+    override fun surfaceChanged(
+        holder: SurfaceHolder,
+        format: Int,
+        width: Int,
+        height: Int,
+    ) {
         Logger.d(TAG, "holder surfaceChanged")
     }
 
@@ -229,5 +241,4 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
     interface IfrCamOpenOverCallback {
         fun onSurfaceCreated()
     }
-
 }

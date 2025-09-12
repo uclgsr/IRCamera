@@ -223,12 +223,11 @@ class Comm3DSeekBar : AppCompatSeekBar {
     /**
      * 通过级别分层进行粘性处理
      */
-    fun stopTrackTouchLevel()  {
-        if (level > 0)
-            {
-                val newLevel = (progress.toFloat() / 100 * 4).roundToInt()
-                setProgress((newLevel.toFloat() / level * 100).toInt())
-            }
+    fun stopTrackTouchLevel() {
+        if (level > 0) {
+            val newLevel = (progress.toFloat() / 100 * 4).roundToInt()
+            setProgress((newLevel.toFloat() / level * 100).toInt())
+        }
     }
 
     private fun trackTouchEvent(event: MotionEvent) {

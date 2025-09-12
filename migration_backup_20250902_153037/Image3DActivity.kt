@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-
 /**
  * 热成像的3D界面
  * @author: CaiSongL
@@ -27,46 +26,45 @@ import java.io.File
  */
 @Route(path = RouterConfig.IR_GALLERY_3D)
 class Image3DActivity : BaseActivity() {
-
-
-    private var ir_path  : String ?= null
-    private var temp_high : Float = 0F
+    private var ir_path: String? = null
+    private var temp_high: Float = 0F
     private var temp_low: Float = 0f
     private var tempX = 128
     private var tempY = 96
 
     private var open3DTools = IROpen3DTools()
-    private var irRender : IRRender ?= null
+    private var irRender: IRRender? = null
     private var imageBytes: ByteArray = ByteArray(192 * 256 * 2)
-    private val temperatureBytes = ByteArray(192*256*2)
-    private lateinit var ir_sf : IRSurfaceView
+    private val temperatureBytes = ByteArray(192 * 256 * 2)
+    private lateinit var ir_sf: IRSurfaceView
 
     override fun initContentView(): Int {
         return R.layout.activity_image_3d
     }
+
     override fun initView() {
         ir_path = intent.getStringExtra(ExtraKeyConfig.IR_PATH).toString()
-        temp_high = intent.getFloatExtra(ExtraKeyConfig.TEMP_HIGH,0f)
-        temp_low = intent.getFloatExtra(ExtraKeyConfig.TEMP_LOW,0f)
+        temp_high = intent.getFloatExtra(ExtraKeyConfig.TEMP_HIGH, 0f)
+        temp_low = intent.getFloatExtra(ExtraKeyConfig.TEMP_LOW, 0f)
         lifecycleScope.launch {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 val file = File(ir_path)
                 if (!file.exists()) {
                     XLog.w("IR文件不存在: ${file.absolutePath}")
                     return@withContext
                 }
                 XLog.w("IR文件: ${file.absolutePath}")
-                val  allBytes = file.readBytes()
+                val allBytes = file.readBytes()
                 val headLenBytes = ByteArray(2)
                 System.arraycopy(allBytes, 0, headLenBytes, 0, 2)
                 val headLen = headLenBytes.bytesToInt()
                 System.arraycopy(allBytes, headLen, imageBytes, 0, imageBytes.size)
-                System.arraycopy(allBytes, imageBytes.size+headLen, temperatureBytes, 0, temperatureBytes.size) //温度数据 (192 x 256 x 2)
+                System.arraycopy(allBytes, imageBytes.size + headLen, temperatureBytes, 0, temperatureBytes.size) // 温度数据 (192 x 256 x 2)
             }
-            open3DTools.init(imageBytes!!,1)
+            open3DTools.init(imageBytes!!, 1)
             ir_sf = IRSurfaceView(this@Image3DActivity)
             irRender = IRRender(this@Image3DActivity)
-            irRender?.initData(temp_high,temp_low,open3DTools)
+            irRender?.initData(temp_high, temp_low, open3DTools)
             irRender?.changeMode(IRRender.TYPE_MODEL_EML)
             irRender?.visualAngle(IRRender.TYPE_3D)
             ir_frame.addView(ir_sf)
@@ -76,91 +74,90 @@ class Image3DActivity : BaseActivity() {
         }
 
         menu.onPseudoClickListener = {
-            open3DTools.init(imageBytes!!,it+1)
+            open3DTools.init(imageBytes!!, it + 1)
             irRender?.updatePseudoModel(open3DTools)
             ir_sf.requestRender()
         }
         menu.onMarkClickListener = {
-            when(it){
-                0->{
-                    //自定义
-                    irRender?.updatePointData(tempY,tempX,temp_high,temp_low,IROpen3DTools.TYPE_SEL_TEMP,temperatureBytes)
-                    val temp = open3DTools.getRandomPoint(tempY,tempX,temp_high,temp_low,IROpen3DTools.TYPE_SEL_TEMP,temperatureBytes)
+            when (it) {
+                0 -> {
+                    // 自定义
+                    irRender?.updatePointData(tempY, tempX, temp_high, temp_low, IROpen3DTools.TYPE_SEL_TEMP, temperatureBytes)
+                    val temp = open3DTools.getRandomPoint(tempY, tempX, temp_high, temp_low, IROpen3DTools.TYPE_SEL_TEMP, temperatureBytes)
                     ir_sf.requestRender()
-                    tv_temp.text = getXYZText(open3DTools.selTemp,temp[0][0],temp[0][1])
+                    tv_temp.text = getXYZText(open3DTools.selTemp, temp[0][0], temp[0][1])
                     tv_temp.visibility = View.VISIBLE
                     bar_pick_view_x.visibility = View.VISIBLE
                     bar_pick_view_y.visibility = View.VISIBLE
 
 //                    tv_temp.setTextColor(Color.GREEN)
                 }
-                1->{
-                    //高温
-                    irRender?.updatePointData(0,0,temp_high,temp_low,IROpen3DTools.TYPE_HIGHT_TEMP,temperatureBytes)
-                    val temp = open3DTools.getRandomPoint(0,0,temp_high,temp_low,IROpen3DTools.TYPE_HIGHT_TEMP,temperatureBytes)
+                1 -> {
+                    // 高温
+                    irRender?.updatePointData(0, 0, temp_high, temp_low, IROpen3DTools.TYPE_HIGHT_TEMP, temperatureBytes)
+                    val temp = open3DTools.getRandomPoint(0, 0, temp_high, temp_low, IROpen3DTools.TYPE_HIGHT_TEMP, temperatureBytes)
                     ir_sf.requestRender()
                     tv_temp.visibility = View.VISIBLE
-                    tv_temp.text = getXYZText(temp_high,temp[0][0],temp[0][1])
+                    tv_temp.text = getXYZText(temp_high, temp[0][0], temp[0][1])
                     bar_pick_view_x.visibility = View.GONE
                     bar_pick_view_y.visibility = View.GONE
 //                    tv_temp.setTextColor(Color.RED)
                 }
-                2->{
-                    irRender?.updatePointData(0,0,temp_high,temp_low,IROpen3DTools.TYPE_LOW_TEMP,temperatureBytes)
-                    val temp = open3DTools.getRandomPoint(0,0,temp_high,temp_low,IROpen3DTools.TYPE_LOW_TEMP,temperatureBytes)
+                2 -> {
+                    irRender?.updatePointData(0, 0, temp_high, temp_low, IROpen3DTools.TYPE_LOW_TEMP, temperatureBytes)
+                    val temp = open3DTools.getRandomPoint(0, 0, temp_high, temp_low, IROpen3DTools.TYPE_LOW_TEMP, temperatureBytes)
                     ir_sf.requestRender()
                     tv_temp.visibility = View.VISIBLE
-                    tv_temp.text = getXYZText(temp_low,temp[0][0],temp[0][1])
+                    tv_temp.text = getXYZText(temp_low, temp[0][0], temp[0][1])
                     bar_pick_view_x.visibility = View.GONE
                     bar_pick_view_y.visibility = View.GONE
 //                    tv_temp.setTextColor(Color.BLUE)
                 }
-                3->{
-                    irRender?.updatePointData(0,0,temp_high,temp_low,IROpen3DTools.TYPE_HIDE_TEMP,temperatureBytes)
+                3 -> {
+                    irRender?.updatePointData(0, 0, temp_high, temp_low, IROpen3DTools.TYPE_HIDE_TEMP, temperatureBytes)
                     ir_sf.requestRender()
                     tv_temp.visibility = View.GONE
                     bar_pick_view_x.visibility = View.GONE
                     bar_pick_view_y.visibility = View.GONE
                 }
             }
-
         }
         menu.onModeClickListener = {
-            when(it){
-                0->{
+            when (it) {
+                0 -> {
                     irRender?.changeMode(IRRender.TYPE_MODEL_POINT)
                     ir_sf.requestRender()
                 }
-                1->{
+                1 -> {
                     irRender?.changeMode(IRRender.TYPE_MODEL_LINE)
                     ir_sf.requestRender()
                 }
-                2->{
+                2 -> {
                     irRender?.changeMode(IRRender.TYPE_MODEL_EML)
                     ir_sf.requestRender()
                 }
             }
         }
         menu.onVisualClickListener = {
-            when(it){
-                0->{
-                    irRender?.visualAngle(IRRender.TYPE_3D,true)
+            when (it) {
+                0 -> {
+                    irRender?.visualAngle(IRRender.TYPE_3D, true)
                     ir_sf.requestRender()
                 }
-                1->{
-                    irRender?.visualAngle(IRRender.TYPE_TOP,true)
+                1 -> {
+                    irRender?.visualAngle(IRRender.TYPE_TOP, true)
                     ir_sf.requestRender()
                 }
-                2->{
-                    irRender?.visualAngle(IRRender.TYPE_LEFT,true)
+                2 -> {
+                    irRender?.visualAngle(IRRender.TYPE_LEFT, true)
                     ir_sf.requestRender()
                 }
-                3->{
-                    irRender?.visualAngle(IRRender.TYPE_RIGHT,true)
+                3 -> {
+                    irRender?.visualAngle(IRRender.TYPE_RIGHT, true)
                     ir_sf.requestRender()
                 }
-                4->{
-                    irRender?.visualAngle(IRRender.TYPE_FRONT,true)
+                4 -> {
+                    irRender?.visualAngle(IRRender.TYPE_FRONT, true)
                     ir_sf.requestRender()
                 }
             }
@@ -171,8 +168,8 @@ class Image3DActivity : BaseActivity() {
             tempY = max - progress
 
             try {
-                irRender?.updatePointData(tempY, tempX, temp_high, temp_low, IROpen3DTools.TYPE_SEL_TEMP,temperatureBytes)
-                val temp = open3DTools.getRandomPoint(tempY, tempX, temp_high, temp_low, IROpen3DTools.TYPE_SEL_TEMP,temperatureBytes)
+                irRender?.updatePointData(tempY, tempX, temp_high, temp_low, IROpen3DTools.TYPE_SEL_TEMP, temperatureBytes)
+                val temp = open3DTools.getRandomPoint(tempY, tempX, temp_high, temp_low, IROpen3DTools.TYPE_SEL_TEMP, temperatureBytes)
                 ir_sf.requestRender()
                 tv_temp.text = getXYZText(open3DTools.selTemp, temp[0][0], temp[0][1])
             } catch (e: Exception) {
@@ -182,8 +179,8 @@ class Image3DActivity : BaseActivity() {
         bar_pick_view_x.onProgressChanged = { progress, max ->
             tempX = max - progress
             try {
-                irRender?.updatePointData(tempY, tempX, temp_high, temp_low, IROpen3DTools.TYPE_SEL_TEMP,temperatureBytes)
-                val temp = open3DTools.getRandomPoint(tempY, tempX, temp_high, temp_low, IROpen3DTools.TYPE_SEL_TEMP,temperatureBytes)
+                irRender?.updatePointData(tempY, tempX, temp_high, temp_low, IROpen3DTools.TYPE_SEL_TEMP, temperatureBytes)
+                val temp = open3DTools.getRandomPoint(tempY, tempX, temp_high, temp_low, IROpen3DTools.TYPE_SEL_TEMP, temperatureBytes)
                 ir_sf.requestRender()
                 tv_temp.text = getXYZText(open3DTools.selTemp, temp[0][0], temp[0][1])
             } catch (e: Exception) {
@@ -192,11 +189,14 @@ class Image3DActivity : BaseActivity() {
         }
     }
 
-
-    private fun getXYZText(temp: Float, x : Float, y:Float):String{
+    private fun getXYZText(
+        temp: Float,
+        x: Float,
+        y: Float,
+    ): String  {
         return "X ${(256 - (y * open3DTools.halfy + open3DTools.halfy)).toInt()}," +
-                "Y ${( 192 - (x * open3DTools.halfx + open3DTools.halfx)).toInt()}," +
-                "Z ${UnitTools.showC(temp)}"
+            "Y ${(192 - (x * open3DTools.halfx + open3DTools.halfx)).toInt()}," +
+            "Z ${UnitTools.showC(temp)}"
     }
 
     override fun onResume() {
@@ -211,6 +211,4 @@ class Image3DActivity : BaseActivity() {
 
     override fun initData() {
     }
-
-
 }

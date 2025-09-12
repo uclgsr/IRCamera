@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.dialog_tip_target_color.view.*
  * 观测-标靶颜色
  */
 class TipTargetColorDialog : Dialog {
-
     constructor(context: Context) : super(context)
 
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
@@ -77,7 +76,7 @@ class TipTargetColorDialog : Dialog {
             imgClose = view.img_close
             recyclerView = view.recycler_view
             recyclerView.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
-            val targetColorAdapter = TargetColorAdapter(context!!,targetColor)
+            val targetColorAdapter = TargetColorAdapter(context!!, targetColor)
             targetColorAdapter.listener = listener@{ _, item ->
                 targetColor = item
                 targetColorAdapter.selectedCode(item)
@@ -85,18 +84,18 @@ class TipTargetColorDialog : Dialog {
             recyclerView?.adapter = targetColorAdapter
             dialog!!.addContentView(
                 view,
-                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT),
             )
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    //竖屏
+                    // 竖屏
                     0.90
                 } else {
-                    //横屏
+                    // 横屏
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() //设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceled)

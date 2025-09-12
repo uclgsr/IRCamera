@@ -65,7 +65,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             showGSROptions()
             true
         }
-        
+
         // Add prominent GSR access button for research features
         binding.fabGsrRecording.setOnClickListener {
             showGSROptions()
@@ -511,13 +511,15 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         // For now, show a placeholder dialog with implementation details
         TipDialog.Builder(requireContext())
             .setTitleMessage("Dual-Mode Camera Integration")
-            .setMessage("Enhanced RGBCameraRecorder with:\n\n" +
+            .setMessage(
+                "Enhanced RGBCameraRecorder with:\n\n" +
                     "• RAW 50MP capture at ~15fps\n" +
                     "• 4K video at 30/60fps\n" +
                     "• Fast session switching (~200ms)\n" +
                     "• Samsung S22 optimizations\n" +
                     "• CameraModeSelector UI\n\n" +
-                    "Implementation ready for integration.")
+                    "Implementation ready for integration.",
+            )
             .setPositiveListener("Got it") { }
             .create().show()
     }

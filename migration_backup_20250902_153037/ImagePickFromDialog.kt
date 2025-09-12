@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.dialog_image_pick_from.view.*
  * Created by LCG on 2024/1/23.
  */
 class ImagePickFromDialog(private val context: Context) : Dialog(context, R.style.InfoDialog), View.OnClickListener {
-
     /**
      * 拾取事件监听.
      * 0-相册 1-可见光相机 2-热成像相机
@@ -56,11 +55,11 @@ class ImagePickFromDialog(private val context: Context) : Dialog(context, R.styl
 
     override fun onClick(v: View?) {
         when (v) {
-            contentView.tv_gallery -> {//从相册获取
+            contentView.tv_gallery -> { // 从相册获取
                 dismiss()
                 onSelectListener?.invoke(0)
             }
-            contentView.tv_light_camera -> {//相机拍照
+            contentView.tv_light_camera -> { // 相机拍照
                 dismiss()
                 onSelectListener?.invoke(1)
             }

@@ -1,111 +1,111 @@
-//package com.topdon.module.thermal.ir.activity
+// package com.topdon.module.thermal.ir.activity
 //
-//import android.Manifest
-//import android.annotation.SuppressLint
-//import android.content.Intent
-//import android.content.pm.ActivityInfo
-//import android.content.pm.PackageManager
-//import android.content.res.Configuration
-//import android.graphics.Bitmap
-//import android.graphics.Paint
-//import android.graphics.drawable.ColorDrawable
-//import android.hardware.SensorManager
-//import android.os.SystemClock
-//import android.provider.Settings
-//import android.util.Log
-//import android.view.*
-//import android.widget.*
-//import androidx.activity.result.contract.ActivityResultContracts
-//import androidx.core.app.ActivityCompat
-//import androidx.core.content.ContextCompat
-//import androidx.core.text.HtmlCompat
-//import androidx.core.view.drawToBitmap
-//import androidx.core.view.isVisible
-//import androidx.lifecycle.Observer
-//import androidx.lifecycle.lifecycleScope
-//import androidx.recyclerview.widget.GridLayoutManager
-//import androidx.recyclerview.widget.RecyclerView
-//import com.alibaba.android.arouter.facade.annotation.Route
-//import com.alibaba.android.arouter.launcher.ARouter
-//import com.blankj.utilcode.util.*
-//import com.blankj.utilcode.util.ScreenUtils
-//import com.elvishew.xlog.XLog
-//import com.google.gson.Gson
-//import com.hjq.permissions.OnPermissionCallback
-//import com.hjq.permissions.Permission
-//import com.hjq.permissions.XXPermissions
-//import com.infisense.iruvc.ircmd.IRCMD
-//import com.infisense.iruvc.ircmd.IRCMDType
-//import com.infisense.iruvc.ircmd.IRUtils
-//import com.infisense.iruvc.sdkisp.LibIRParse
-//import com.infisense.iruvc.sdkisp.LibIRProcess
-//import com.infisense.iruvc.utils.CommonParams
-//import com.infisense.iruvc.utils.CommonParams.*
-//import com.infisense.iruvc.utils.CommonUtils
-//import com.infisense.iruvc.utils.DeviceType
-//import com.infisense.iruvc.utils.SynchronizedBitmap
-//import com.infisense.iruvc.uvc.ConnectCallback
-//import com.infisense.iruvc.uvc.UVCCamera
-//import com.infisense.usbir.camera.IRUVCTC
-//import com.infisense.usbir.config.MsgCode
-//import com.infisense.usbir.event.IRMsgEvent
-//import com.infisense.usbir.event.PreviewComplete
-//import com.infisense.usbir.thread.ImageThreadTC
-//import com.infisense.usbir.utils.*
-//import com.infisense.usbir.view.DragViewUtil
-//import com.infisense.usbir.view.ITsTempListener
-//import com.infisense.usbir.view.TemperatureView.*
-//import com.topdon.lib.core.BaseApplication
-//import com.topdon.lib.core.bean.AlarmBean
-//import com.topdon.lib.core.bean.CameraItemBean
-//import com.topdon.lib.core.bean.event.device.DeviceCameraEvent
-//import com.topdon.lib.core.common.SharedManager
-//import com.topdon.lib.core.common.SharedManager.getTemperature
-//import com.topdon.lib.core.config.DeviceConfig
-//import com.topdon.lib.core.config.ExtraKeyConfig
-//import com.topdon.lib.core.config.RouterConfig
-//import com.topdon.lib.core.ktbase.BaseActivity
-//import com.topdon.lib.core.tools.*
-//import com.topdon.lib.core.utils.CameraLiveDateUtil
-//import com.topdon.lib.core.utils.ImageUtils
-//import com.topdon.lib.core.widget.dialog.*
-//import com.topdon.menu.MenuFirstTabView
-//import com.topdon.lib.ui.config.CameraHelp
-//import com.topdon.lib.ui.dialog.ThermalInputDialog
-//import com.topdon.lib.ui.dialog.TipPreviewDialog
-//import com.topdon.lib.ui.widget.CommSeekBar
-//import com.topdon.lib.ui.widget.seekbar.OnRangeChangedListener
-//import com.topdon.lib.ui.widget.seekbar.RangeSeekBar
-//import com.topdon.libcom.AlarmHelp
-//import com.topdon.libcom.dialog.ColorDialog
-//import com.topdon.libcom.dialog.TempAlarmSetDialog
-//import com.topdon.module.thermal.ir.KotlinEx.showChangePseudoDialog
-//import com.topdon.module.thermal.ir.R
-//import com.topdon.module.thermal.ir.adapter.CameraItemAdapter
-//import com.topdon.module.thermal.ir.extension.countDownCoroutines
-//import com.topdon.module.thermal.ir.frame.FrameStructTool
-//import com.topdon.module.thermal.ir.repository.ConfigRepository
-//import com.topdon.module.thermal.ir.video.VideoRecordFFmpeg
-//import com.topdon.module.thermal.ir.view.TimeDownView
-//import com.topdon.pseudo.activity.PseudoSetActivity
-//import com.topdon.pseudo.bean.CustomPseudoBean
-//import kotlinx.android.synthetic.main.activity_ir_gallery_edit.*
-//import kotlinx.android.synthetic.main.activity_thermal_ir.*
-//import kotlinx.android.synthetic.main.activity_thermal_ir.temperature_iv_input
-//import kotlinx.android.synthetic.main.activity_thermal_ir.temperature_iv_lock
-//import kotlinx.android.synthetic.main.activity_thermal_ir.temperature_seekbar
-//import kotlinx.android.synthetic.main.activity_thermal_ir.thermal_recycler
-//import kotlinx.android.synthetic.main.activity_thermal_ir.tv_temp_content
-//import kotlinx.coroutines.*
-//import kotlinx.coroutines.flow.flow
-//import org.greenrobot.eventbus.Subscribe
-//import org.greenrobot.eventbus.ThreadMode
-//import java.io.File
-//import java.util.*
+// import android.Manifest
+// import android.annotation.SuppressLint
+// import android.content.Intent
+// import android.content.pm.ActivityInfo
+// import android.content.pm.PackageManager
+// import android.content.res.Configuration
+// import android.graphics.Bitmap
+// import android.graphics.Paint
+// import android.graphics.drawable.ColorDrawable
+// import android.hardware.SensorManager
+// import android.os.SystemClock
+// import android.provider.Settings
+// import android.util.Log
+// import android.view.*
+// import android.widget.*
+// import androidx.activity.result.contract.ActivityResultContracts
+// import androidx.core.app.ActivityCompat
+// import androidx.core.content.ContextCompat
+// import androidx.core.text.HtmlCompat
+// import androidx.core.view.drawToBitmap
+// import androidx.core.view.isVisible
+// import androidx.lifecycle.Observer
+// import androidx.lifecycle.lifecycleScope
+// import androidx.recyclerview.widget.GridLayoutManager
+// import androidx.recyclerview.widget.RecyclerView
+// import com.alibaba.android.arouter.facade.annotation.Route
+// import com.alibaba.android.arouter.launcher.ARouter
+// import com.blankj.utilcode.util.*
+// import com.blankj.utilcode.util.ScreenUtils
+// import com.elvishew.xlog.XLog
+// import com.google.gson.Gson
+// import com.hjq.permissions.OnPermissionCallback
+// import com.hjq.permissions.Permission
+// import com.hjq.permissions.XXPermissions
+// import com.infisense.iruvc.ircmd.IRCMD
+// import com.infisense.iruvc.ircmd.IRCMDType
+// import com.infisense.iruvc.ircmd.IRUtils
+// import com.infisense.iruvc.sdkisp.LibIRParse
+// import com.infisense.iruvc.sdkisp.LibIRProcess
+// import com.infisense.iruvc.utils.CommonParams
+// import com.infisense.iruvc.utils.CommonParams.*
+// import com.infisense.iruvc.utils.CommonUtils
+// import com.infisense.iruvc.utils.DeviceType
+// import com.infisense.iruvc.utils.SynchronizedBitmap
+// import com.infisense.iruvc.uvc.ConnectCallback
+// import com.infisense.iruvc.uvc.UVCCamera
+// import com.infisense.usbir.camera.IRUVCTC
+// import com.infisense.usbir.config.MsgCode
+// import com.infisense.usbir.event.IRMsgEvent
+// import com.infisense.usbir.event.PreviewComplete
+// import com.infisense.usbir.thread.ImageThreadTC
+// import com.infisense.usbir.utils.*
+// import com.infisense.usbir.view.DragViewUtil
+// import com.infisense.usbir.view.ITsTempListener
+// import com.infisense.usbir.view.TemperatureView.*
+// import com.topdon.lib.core.BaseApplication
+// import com.topdon.lib.core.bean.AlarmBean
+// import com.topdon.lib.core.bean.CameraItemBean
+// import com.topdon.lib.core.bean.event.device.DeviceCameraEvent
+// import com.topdon.lib.core.common.SharedManager
+// import com.topdon.lib.core.common.SharedManager.getTemperature
+// import com.topdon.lib.core.config.DeviceConfig
+// import com.topdon.lib.core.config.ExtraKeyConfig
+// import com.topdon.lib.core.config.RouterConfig
+// import com.topdon.lib.core.ktbase.BaseActivity
+// import com.topdon.lib.core.tools.*
+// import com.topdon.lib.core.utils.CameraLiveDateUtil
+// import com.topdon.lib.core.utils.ImageUtils
+// import com.topdon.lib.core.widget.dialog.*
+// import com.topdon.menu.MenuFirstTabView
+// import com.topdon.lib.ui.config.CameraHelp
+// import com.topdon.lib.ui.dialog.ThermalInputDialog
+// import com.topdon.lib.ui.dialog.TipPreviewDialog
+// import com.topdon.lib.ui.widget.CommSeekBar
+// import com.topdon.lib.ui.widget.seekbar.OnRangeChangedListener
+// import com.topdon.lib.ui.widget.seekbar.RangeSeekBar
+// import com.topdon.libcom.AlarmHelp
+// import com.topdon.libcom.dialog.ColorDialog
+// import com.topdon.libcom.dialog.TempAlarmSetDialog
+// import com.topdon.module.thermal.ir.KotlinEx.showChangePseudoDialog
+// import com.topdon.module.thermal.ir.R
+// import com.topdon.module.thermal.ir.adapter.CameraItemAdapter
+// import com.topdon.module.thermal.ir.extension.countDownCoroutines
+// import com.topdon.module.thermal.ir.frame.FrameStructTool
+// import com.topdon.module.thermal.ir.repository.ConfigRepository
+// import com.topdon.module.thermal.ir.video.VideoRecordFFmpeg
+// import com.topdon.module.thermal.ir.view.TimeDownView
+// import com.topdon.pseudo.activity.PseudoSetActivity
+// import com.topdon.pseudo.bean.CustomPseudoBean
+// import kotlinx.android.synthetic.main.activity_ir_gallery_edit.*
+// import kotlinx.android.synthetic.main.activity_thermal_ir.*
+// import kotlinx.android.synthetic.main.activity_thermal_ir.temperature_iv_input
+// import kotlinx.android.synthetic.main.activity_thermal_ir.temperature_iv_lock
+// import kotlinx.android.synthetic.main.activity_thermal_ir.temperature_seekbar
+// import kotlinx.android.synthetic.main.activity_thermal_ir.thermal_recycler
+// import kotlinx.android.synthetic.main.activity_thermal_ir.tv_temp_content
+// import kotlinx.coroutines.*
+// import kotlinx.coroutines.flow.flow
+// import org.greenrobot.eventbus.Subscribe
+// import org.greenrobot.eventbus.ThreadMode
+// import java.io.File
+// import java.util.*
 //
 //
-//@Route(path = RouterConfig.IR_MAIN)
-//open class IRThermalActivity : BaseActivity(), ITsTempListener {
+// @Route(path = RouterConfig.IR_MAIN)
+// open class IRThermalActivity : BaseActivity(), ITsTempListener {
 //
 //    private var alphaPaint: Paint ?=null
 //    private var tempAlarmSetDialog: TempAlarmSetDialog ?= null
@@ -179,7 +179,7 @@
 //        temperatureView.listener = TempListener { max, min ,tempData->
 //            realLeftValue = UnitTools.showUnitValue(min,isShowC)
 //            realRightValue = UnitTools.showUnitValue(max,isShowC)
-////            Log.w("温度更新","${max}--${min}//${realRightValue}--${realLeftValue}:::")
+// //            Log.w("温度更新","${max}--${min}//${realRightValue}--${realLeftValue}:::")
 //            cl_seek_bar.changeData = true
 //            this@IRThermalActivity.runOnUiThread {
 //                if (!customPseudoBean.isUseCustomPseudo){
@@ -459,7 +459,7 @@
 //
 //    private fun initRecycler() {
 //        thermal_recycler.cameraListener = {
-////            closeCameraPreviewConfig()
+// //            closeCameraPreviewConfig()
 //            setCamera(it)
 //        }
 //        thermal_recycler.galleryImgListener = {
@@ -474,7 +474,7 @@
 //            }
 //        }
 //        thermal_recycler.fencelistener = {
-////            closeCameraPreviewConfig()
+// //            closeCameraPreviewConfig()
 //            setTemp(it)
 //        }
 //        thermal_recycler.colorListener = { _, it ->
@@ -496,7 +496,7 @@
 //            setSetting(it)
 //        }
 //        thermal_recycler.temperatureListener = {
-////            closeCameraPreviewConfig()
+// //            closeCameraPreviewConfig()
 //            setTemperature(it)
 //        }
 //        thermal_recycler.menuCameraListener = {
@@ -518,9 +518,9 @@
 //
 //        if (select == 4 && !isOpenPreview) {
 //            thermal_recycler.cameraPreviewStats = 450
-////            lifecycleScope.launch(Dispatchers.Main) {
-////                delay(100)
-////            }
+// //            lifecycleScope.launch(Dispatchers.Main) {
+// //                delay(100)
+// //            }
 //        }
 //    }
 //
@@ -649,7 +649,7 @@
 //         * 固件机芯实现(部分伪彩为预留,设置后可能无效果)
 //         */
 //        imageThread?.pseudocolorMode = pseudocolorMode//设置伪彩
-////        ircmd!!.setPseudoColor(PreviewPathChannel.PREVIEW_PATH0, PseudocodeUtils.changePseudocodeModeByOld(pseudocolorMode))
+// //        ircmd!!.setPseudoColor(PreviewPathChannel.PREVIEW_PATH0, PseudocodeUtils.changePseudocodeModeByOld(pseudocolorMode))
 //        CameraLiveDateUtil.getInstance().savePseudoColorMode(pseudocolorMode)
 //        thermal_recycler.setPseudoColor(code)
 //    }
@@ -740,7 +740,7 @@
 //                    thermal_recycler.rotationStats = 511
 //                }
 //                updateRotateAngle(rotateAngle)
-////                setRotateAction()
+// //                setRotateAction()
 //            }
 //            CameraHelp.TYPE_SET_MIRROR -> {
 //                // 镜像
@@ -762,7 +762,7 @@
 //        }
 //    }
 //    var openMirror : Boolean = false
-////    var cameraAlpha = CameraLiveDateUtil.getInstance().getCameraSBeanData().irSettingBean.alpha
+// //    var cameraAlpha = CameraLiveDateUtil.getInstance().getCameraSBeanData().irSettingBean.alpha
 //    var cameraAlpha = 50
 //    private fun setCameraAlpha() {
 //        if (thermal_recycler.cameraAlphaStats == 471){
@@ -925,17 +925,17 @@
 //        }
 //        cameraView.setSyncimage(syncimage)
 //        cameraView.bitmap = bitmap
-////        temperatureView!!.setImageSize(imageWidth, imageHeight)
+// //        temperatureView!!.setImageSize(imageWidth, imageHeight)
 //        temperatureView?.setSyncimage(syncimage)
 //        temperatureView?.setTemperature(temperatureBytes)
 //        temperatureView.nowZoomLevel = nowZoomLevel
 //        setViewLay(defaultIsPortrait)
-////        temperatureView.setTemperatureRegionMode(TemperatureView.FOCUSABLES_TOUCH_MODE)
+// //        temperatureView.setTemperatureRegionMode(TemperatureView.FOCUSABLES_TOUCH_MODE)
 //        // 某些特定客户的特殊设备需要使用该命令关闭sensor
-////        if (Usbcontorl.isload) {
-////            Usbcontorl.usb3803_mode_setting(1) //打开5V
-////            XLog.w("打开5V")
-////        }
+// //        if (Usbcontorl.isload) {
+// //            Usbcontorl.usb3803_mode_setting(1) //打开5V
+// //            XLog.w("打开5V")
+// //        }
 //        //初始全局测温
 //        temperatureView?.post {
 //            if (!temperaturerun) {
@@ -1044,7 +1044,7 @@
 //                    this@IRThermalActivity.ircmd = ircmd
 //                    // 需要等IRCMD初始化完成之后才可以调用
 //                    temperatureView.setIrcmd(ircmd)
-////                    ircmd?.setPseudoColor(PreviewPathChannel.PREVIEW_PATH0, PseudocodeUtils.changePseudocodeModeByOld(pseudocolorMode))
+// //                    ircmd?.setPseudoColor(PreviewPathChannel.PREVIEW_PATH0, PseudocodeUtils.changePseudocodeModeByOld(pseudocolorMode))
 //                    isConfigWait = false
 //                }
 //            }, object : USBMonitorCallback {
@@ -1072,7 +1072,7 @@
 //        }
 //        iruvc?.registerUSB()
 //        // 画面旋转设置
-////        popupCalibration.setRotate(true)
+// //        popupCalibration.setRotate(true)
 //    }
 //    private var nuc_table_high = ShortArray(8192)
 //    private var nuc_table_low = ShortArray(8192)
@@ -1302,7 +1302,7 @@
 //        Log.w(TAG, "onStart")
 //        if (!isrun) {
 //            // 初始配置,伪彩铁红
-////          pseudocolorMode = 3
+// //          pseudocolorMode = 3
 //            tv_type_ind.visibility = GONE
 //            thermal_recycler.limitStats = 460 //默认关闭DIY
 //            startUSB(false)
@@ -1399,9 +1399,9 @@
 //        }
 //
 //        // 某些特定客户的特殊设备需要使用该命令关闭sensor
-////        if (Usbcontorl.isload) {
-////            Usbcontorl.usb3803_mode_setting(0) //关闭5V
-////        }
+// //        if (Usbcontorl.isload) {
+// //            Usbcontorl.usb3803_mode_setting(0) //关闭5V
+// //        }
 //
 //    }
 //
@@ -1430,7 +1430,7 @@
 //         */
 //        val oemInfo = ByteArray(oemWriteInfo.length)
 //        ircmd?.oemRead(oemInfo)
-////        Log.i(TAG, "oemRead:" + String(oemInfo))
+// //        Log.i(TAG, "oemRead:" + String(oemInfo))
 //        val CHIP_FW_INFO = ByteArray(8)
 //        val FW_COMPILE_DATE = ByteArray(8)
 //        val DEV_QUALIFICATION = ByteArray(8)
@@ -1551,7 +1551,7 @@
 //                                        }, onStart = {
 //                                            tv_type_ind.visibility = VISIBLE
 //                                            isAutoCamera = true
-////                                        ToastTools.showShort(R.string.app_auto_photo)
+// //                                        ToastTools.showShort(R.string.app_auto_photo)
 //                                        },onFinish = {
 //                                            tv_type_ind.visibility = GONE
 //                                            isAutoCamera = false
@@ -1771,7 +1771,7 @@
 //            launch(Dispatchers.Main) {
 //                thermal_recycler.showCameraActive()
 //            }
-////            System.arraycopy(imageEditBytes, 0, imageEditTempBytes, 0, imageEditBytes.size)//一帧数据内容
+// //            System.arraycopy(imageEditBytes, 0, imageEditTempBytes, 0, imageEditBytes.size)//一帧数据内容
 //            synchronized(syncimage.dataLock) {
 //                // 获取展示图像信息的图层数据
 //                var cameraViewBitmap = cameraView.bitmap
@@ -1859,19 +1859,19 @@
 //                    correctRotate = correctRotate,
 //                    customPseudoBean = customPseudoBean
 //                ) //首部内容
-////                val le = 256 * 192 * 2
-////                val tmpBy = ByteArray(le)
-////                System.arraycopy(
-////                    imageEditTempBytes, le, tmpBy, 0,
-////                    le
-////                )
-////                val tmp1 = LibIRTemp(256, 192)
-////                tmp1.setTempData(tmpBy)
-////                val result1 = tmp1.getTemperatureOfRect(Rect(0, 0, 256, 192))
-////                Log.w("温度更新19", result1.maxTemperature.toString() + "///" + result1.minTemperature)
+// //                val le = 256 * 192 * 2
+// //                val tmpBy = ByteArray(le)
+// //                System.arraycopy(
+// //                    imageEditTempBytes, le, tmpBy, 0,
+// //                    le
+// //                )
+// //                val tmp1 = LibIRTemp(256, 192)
+// //                tmp1.setTempData(tmpBy)
+// //                val result1 = tmp1.getTemperatureOfRect(Rect(0, 0, 256, 192))
+// //                Log.w("温度更新19", result1.maxTemperature.toString() + "///" + result1.minTemperature)
 //                ImageUtils.saveFrame(bs = imageEditBytes, capital = capital, name = name)
 //                //保存一帧argb数据，临时代码，可删
-////                ImageUtils.saveOneFrameAGRB(bs = imageThread!!.imageTemp, name = System.currentTimeMillis().toString())
+// //                ImageUtils.saveOneFrameAGRB(bs = imageThread!!.imageTemp, name = System.currentTimeMillis().toString())
 //                //读取argb
 //                launch(Dispatchers.Main) {
 //                    thermal_recycler.refreshImg()
@@ -1966,15 +1966,15 @@
 //    private fun setPseudoColor() {
 //        cl_seek_bar.isVisible = !cl_seek_bar.isVisible
 //        CameraLiveDateUtil.getInstance().saveColorBarStats(cl_seek_bar.isVisible)
-////        thermal_pseudo_bar.isVisible = !thermal_pseudo_bar.isVisible
+// //        thermal_pseudo_bar.isVisible = !thermal_pseudo_bar.isVisible
 //        if (cl_seek_bar.isVisible) {
 //            thermal_recycler.colorBarStats = 441
 //        } else {
 //            thermal_recycler.colorBarStats = 440
 //        }
 //    }
-////    private var contrastConfig = CameraLiveDateUtil.getInstance().getCameraSBeanData().irSettingBean.contrastConfig
-////    private var ddeConfig = CameraLiveDateUtil.getInstance().getCameraSBeanData().irSettingBean?.ddeConfig
+// //    private var contrastConfig = CameraLiveDateUtil.getInstance().getCameraSBeanData().irSettingBean.contrastConfig
+// //    private var ddeConfig = CameraLiveDateUtil.getInstance().getCameraSBeanData().irSettingBean?.ddeConfig
 //    private var contrastConfig = 128
 //    private var ddeConfig = 2
 //
@@ -2099,12 +2099,12 @@
 //            }
 //            cameraView.scaleX = 1f + 0.3f * (nowZoomLevel -1)
 //            cameraView.scaleY = 1f + 0.3f * (nowZoomLevel -1)
-////            temperatureView.scaleX = 1f + 0.3f * (nowZoomLevel -1)
-////            temperatureView.scaleY = 1f + 0.3f * (nowZoomLevel -1)
-////            ircmd?.zoomCenterUp(
-////                CommonParams.PreviewPathChannel.PREVIEW_PATH0,
-////                CommonParams.ZoomScaleStep.ZOOM_STEP2
-////            )
+// //            temperatureView.scaleX = 1f + 0.3f * (nowZoomLevel -1)
+// //            temperatureView.scaleY = 1f + 0.3f * (nowZoomLevel -1)
+// //            ircmd?.zoomCenterUp(
+// //                CommonParams.PreviewPathChannel.PREVIEW_PATH0,
+// //                CommonParams.ZoomScaleStep.ZOOM_STEP2
+// //            )
 //            nowZoomLevel ++
 //            if (nowZoomLevel <= 1){
 //                imgDown?.setImageResource(R.drawable.ic_reduce_disable)
@@ -2126,12 +2126,12 @@
 //            }
 //            cameraView.scaleX = 1f + 0.3f * (nowZoomLevel -1)
 //            cameraView.scaleY = 1f + 0.3f * (nowZoomLevel -1)
-////            temperatureView.scaleX = 1f + 0.3f * (nowZoomLevel -1)
-////            temperatureView.scaleY = 1f + 0.3f * (nowZoomLevel -1)
-////            ircmd?.zoomCenterDown(
-////                CommonParams.PreviewPathChannel.PREVIEW_PATH0,
-////                CommonParams.ZoomScaleStep.ZOOM_STEP2
-////            )
+// //            temperatureView.scaleX = 1f + 0.3f * (nowZoomLevel -1)
+// //            temperatureView.scaleY = 1f + 0.3f * (nowZoomLevel -1)
+// //            ircmd?.zoomCenterDown(
+// //                CommonParams.PreviewPathChannel.PREVIEW_PATH0,
+// //                CommonParams.ZoomScaleStep.ZOOM_STEP2
+// //            )
 //            nowZoomLevel --
 //            if (nowZoomLevel <= 1){
 //                imgDown?.setImageResource(R.drawable.ic_reduce_disable)
@@ -2177,8 +2177,8 @@
 //        val seekBar = contentView?.findViewById<CommSeekBar>(R.id.seek_bar)
 //        val tvProcess = contentView?.findViewById<TextView>(R.id.tv_value)
 //        val mode = CharArray(1)
-////        Libircmd.get_prop_image_params(Libircmd.IMAGE_PROP_LEVEL_DDE, mode, iruvc!!.uvcCamera.nativePtr)
-////        val levelCurrent = mode.first().code
+// //        Libircmd.get_prop_image_params(Libircmd.IMAGE_PROP_LEVEL_DDE, mode, iruvc!!.uvcCamera.nativePtr)
+// //        val levelCurrent = mode.first().code
 //        val saturation = ddeConfig.toFloat() / levelMax * 100
 //        seekBar?.progress = saturation.toInt()
 //        tvProcess?.text = "${saturation}%"
@@ -2221,8 +2221,8 @@
 //        popupWindow?.showAsDropDown(thermal_lay, 0, getPopupWindowY(contentHeight), Gravity.NO_GRAVITY)
 //    }
 //
-////    //IMAGE_PROP_LEVEL_SNR (0~3) 空域降噪(默认2) 看不出
-////    //IMAGE_PROP_LEVEL_TNR (0~3) 时域降噪(默认2) 看不出
+// //    //IMAGE_PROP_LEVEL_SNR (0~3) 空域降噪(默认2) 看不出
+// //    //IMAGE_PROP_LEVEL_TNR (0~3) 时域降噪(默认2) 看不出
 //
 //    /**
 //     * 自动增益
@@ -2231,28 +2231,28 @@
 //     */
 //    private fun autoConfig() {
 //        lifecycleScope.launch(Dispatchers.IO) {
-////            val value = CharArray(1)
-////            Libircmd.get_prop_image_params(
-////                Libircmd.IMAGE_PROP_MODE_AGC, value,
-////                iruvc!!.uvcCamera.nativePtr
-////            )
-////            Log.w("123", "IMAGE_PROP_MODE_AGC: ${value[0].toInt()}")
-////            Libircmd.set_prop_image_params(
-////                Libircmd.IMAGE_PROP_MODE_AGC,
-////                3.toChar(),
-////                iruvc!!.uvcCamera.nativePtr
-////            )
+// //            val value = CharArray(1)
+// //            Libircmd.get_prop_image_params(
+// //                Libircmd.IMAGE_PROP_MODE_AGC, value,
+// //                iruvc!!.uvcCamera.nativePtr
+// //            )
+// //            Log.w("123", "IMAGE_PROP_MODE_AGC: ${value[0].toInt()}")
+// //            Libircmd.set_prop_image_params(
+// //                Libircmd.IMAGE_PROP_MODE_AGC,
+// //                3.toChar(),
+// //                iruvc!!.uvcCamera.nativePtr
+// //            )
 //
-////            val value = CharArray(1)
-////            Libircmd.get_prop_image_params(
-////                Libircmd.IMAGE_PROP_ONOFF_AGC, value,
-////                iruvc!!.uvcCamera.nativePtr
-////            )
-////            Log.w("123", "IMAGE_PROP_ONOFF_AGC: ${value[0].toInt()}")
-////            setImageParams(
-////                Libircmd.IMAGE_PROP_ONOFF_AGC,
-////                (if (value[0] == 0.toChar()) 1 else 0).toChar()
-////            )
+// //            val value = CharArray(1)
+// //            Libircmd.get_prop_image_params(
+// //                Libircmd.IMAGE_PROP_ONOFF_AGC, value,
+// //                iruvc!!.uvcCamera.nativePtr
+// //            )
+// //            Log.w("123", "IMAGE_PROP_ONOFF_AGC: ${value[0].toInt()}")
+// //            setImageParams(
+// //                Libircmd.IMAGE_PROP_ONOFF_AGC,
+// //                (if (value[0] == 0.toChar()) 1 else 0).toChar()
+// //            )
 //
 //            iruvc?.let {
 //                if (!it.auto_gain_switch) {
@@ -2292,33 +2292,33 @@
 //    //配置
 //    private fun configParam() {
 //        configJob =  lifecycleScope.launch {
-////            showLoading()
+// //            showLoading()
 //            while (isConfigWait) {
 //                delay(100)
 //            }
 //            delay(300)
 //            // 读取高低增益 1:低增益 0: 高增益
-////            val gainSelValue = CharArray(1)
-////            iruvc?.uvcCamera?.nativePtr?.let {
-////                Libircmd.get_prop_tpd_params(5, gainSelValue, it)
-//////                gainSelChar = gainSelValue[0].code
-//////                thermal_recycler.setFiveSelectCode(gainSelChar)
-////                XLog.w("读取TPD_PROP ${paramType[5]}: ${gainSelValue[0].code}")
-////            }
+// //            val gainSelValue = CharArray(1)
+// //            iruvc?.uvcCamera?.nativePtr?.let {
+// //                Libircmd.get_prop_tpd_params(5, gainSelValue, it)
+// ////                gainSelChar = gainSelValue[0].code
+// ////                thermal_recycler.setFiveSelectCode(gainSelChar)
+// //                XLog.w("读取TPD_PROP ${paramType[5]}: ${gainSelValue[0].code}")
+// //            }
 //
 //            val gainSelValue = CharArray(1)
-////            iruvc?.uvcCamera?.nativePtr?.let {
-////                Libircmd.get_prop_tpd_params(5, gainSelValue, it)
-//////                gainSelChar = gainSelValue[0].code
-//////                thermal_recycler.setFiveSelectCode(gainSelChar)
-////                XLog.w("读取TPD_PROP ${paramType[5]}: ${gainSelValue[0].code}")
-////            }
+// //            iruvc?.uvcCamera?.nativePtr?.let {
+// //                Libircmd.get_prop_tpd_params(5, gainSelValue, it)
+// ////                gainSelChar = gainSelValue[0].code
+// ////                thermal_recycler.setFiveSelectCode(gainSelChar)
+// //                XLog.w("读取TPD_PROP ${paramType[5]}: ${gainSelValue[0].code}")
+// //            }
 //
 //            val configRepository = ConfigRepository()
 //            val config = configRepository.readConfig()
 //            val disChar = (config.distance * 128).toInt() //距离(米)
 //            val emsChar = (config.radiation * 128).toInt() //发射率
-////            val tuChar = (config.environment * 10).toInt().toChar() //环境温度
+// //            val tuChar = (config.environment * 10).toInt().toChar() //环境温度
 //            XLog.w("设置TPD_PROP DISTANCE:${disChar.toInt()}, EMS:${emsChar.toInt()}}")
 //            val timeMillis = 250L
 //            delay(timeMillis)
@@ -2344,12 +2344,12 @@
 //                    PropTPDParamsValue.GAINSELStatus.GAIN_SEL_HIGH
 //                )
 //            }
-////            delay(timeMillis)
-////            //环境反射温度
-////            setTpdParams(Libircmd.TPD_PROP_TA, tuChar) //ok
-////            delay(timeMillis)
-////            //环境反射温度
-////            setTpdParams(Libircmd.TPD_PROP_TU, tuChar) //ok
+// //            delay(timeMillis)
+// //            //环境反射温度
+// //            setTpdParams(Libircmd.TPD_PROP_TA, tuChar) //ok
+// //            delay(timeMillis)
+// //            //环境反射温度
+// //            setTpdParams(Libircmd.TPD_PROP_TU, tuChar) //ok
 //            // 自动快门
 //            delay(timeMillis)
 //            if (isFirst && isrun){
@@ -2415,7 +2415,7 @@
 //                dismissCameraLoading()
 //            }
 //            printSN()
-////            dismissLoading()
+// //            dismissLoading()
 //        }
 //    }
 //
@@ -2546,7 +2546,7 @@
 //        }
 //    }
 //
-////    private var isResetFlag = false
+// //    private var isResetFlag = false
 //
 //    //重启设备
 //    private fun resetDevice() {
@@ -2584,7 +2584,7 @@
 //        super.disConnected()
 //        BaseApplication.instance.actionIR = 0
 //
-////        finish()
+// //        finish()
 //        if (!isInit) {
 //            finish()
 //        }
@@ -2595,22 +2595,22 @@
 //        super.finish()
 //    }
 //
-////    var count = 0
-////
-////    @Subscribe(threadMode = ThreadMode.MAIN)
-////    fun resetEvent(event: ResetConnectEvent) {
-////        if (count < 10) {
-////            if (event.action == 3) {
-////                lifecycleScope.launch {
-////                    XLog.e("设备断开,重新连接")
-////                    delay(1000)
-//////                    restartUsbCamera()
-//////                    startUSB()
-////
-////                }
-////            }
-////        }
-////    }
+// //    var count = 0
+// //
+// //    @Subscribe(threadMode = ThreadMode.MAIN)
+// //    fun resetEvent(event: ResetConnectEvent) {
+// //        if (count < 10) {
+// //            if (event.action == 3) {
+// //                lifecycleScope.launch {
+// //                    XLog.e("设备断开,重新连接")
+// //                    delay(1000)
+// ////                    restartUsbCamera()
+// ////                    startUSB()
+// //
+// //                }
+// //            }
+// //        }
+// //    }
 //
 //    override fun onBackPressed() {
 //        setResult(200)
@@ -2690,4 +2690,4 @@
 //            return tmp
 //        }
 //    }
-//}
+// }

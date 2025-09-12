@@ -10,20 +10,20 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.topdon.lib.core.bean.GalleryTitle
+import com.topdon.lib.core.bean.event.GalleryDelEvent
 import com.topdon.lib.core.bean.event.ReportCreateEvent
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.config.RouterConfig
+import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.repository.GalleryRepository.DirType
 import com.topdon.lib.core.tools.FileTools.getUri
 import com.topdon.lib.core.tools.ToastTools
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.repository.GalleryRepository.DirType
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.adapter.GalleryAdapter
-import com.topdon.lib.core.bean.event.GalleryDelEvent
 import com.topdon.lib.core.utils.Constants.IS_REPORT_FIRST
 import com.topdon.lms.sdk.weiget.TToast
+import com.topdon.module.thermal.ir.R
+import com.topdon.module.thermal.ir.adapter.GalleryAdapter
 import com.topdon.module.thermal.ir.viewmodel.IRGalleryViewModel
 import kotlinx.android.synthetic.main.activity_report_pick_img.*
 import org.greenrobot.eventbus.EventBus
@@ -42,7 +42,6 @@ import java.io.File
  */
 @Route(path = RouterConfig.REPORT_PICK_IMG)
 class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
-
     /**
      * 从上一界面传递过来的，当前是否为 TC007 设备类型.
      * true-TC007 false-其他插件式设备
@@ -77,7 +76,12 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
                 TToast.shortToast(this@ReportPickImgActivity, R.string.test_results_delete_success)
                 adapter.isEditMode = false
                 EventBus.getDefault().post(GalleryDelEvent())
-                MediaScannerConnection.scanFile(this, arrayOf(if (isTC007) FileConfig.tc007GalleryDir else FileConfig.lineGalleryDir), null, null)
+                MediaScannerConnection.scanFile(
+                    this,
+                    arrayOf(if (isTC007) FileConfig.tc007GalleryDir else FileConfig.lineGalleryDir),
+                    null,
+                    null,
+                )
                 viewModel.queryAllReportImg(if (isTC007) DirType.TC007 else DirType.LINE)
             } else {
                 TToast.shortToast(this@ReportPickImgActivity, R.string.test_results_delete_failed)
@@ -92,7 +96,6 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun initData() {
-
     }
 
     override fun onBackPressed() {
@@ -106,7 +109,9 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
     private fun setEditMode(isEditMode: Boolean) {
         adapter.isEditMode = isEditMode
         group_bottom.isVisible = isEditMode
-        title_view.setTitleText(if (isEditMode) getString(R.string.chosen_item, adapter.selectList.size) else getString(R.string.app_gallery))
+        title_view.setTitleText(
+            if (isEditMode) getString(R.string.chosen_item, adapter.selectList.size) else getString(R.string.app_gallery),
+        )
         title_view.setLeftDrawable(if (isEditMode) R.drawable.svg_x_cc else R.drawable.ic_back_white_svg)
         title_view.setLeftClickListener {
             if (isEditMode) {
@@ -140,12 +145,13 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
     private fun initRecycler() {
         val spanCount = 3
         val gridLayoutManager = GridLayoutManager(this, spanCount)
-        //动态设置span
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (adapter.dataList[position] is GalleryTitle) spanCount else 1
+        // 动态设置span
+        gridLayoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (adapter.dataList[position] is GalleryTitle) spanCount else 1
+                }
             }
-        }
         ir_gallery_recycler.adapter = adapter
         ir_gallery_recycler.layoutManager = gridLayoutManager
 
@@ -170,7 +176,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
         adapter.itemClickCallback = {
             val data = adapter.dataList[it]
             val fileName = data.name.substringBeforeLast(".")
-            val irPath = "${FileConfig.lineIrGalleryDir}/${fileName}.ir"
+            val irPath = "${FileConfig.lineIrGalleryDir}/$fileName.ir"
             if (File(irPath).exists()) {
                 ARouter.getInstance().build(RouterConfig.IR_GALLERY_EDIT)
                     .withBoolean(ExtraKeyConfig.IS_TC007, isTC007)
@@ -191,10 +197,12 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
         val deleteList = adapter.buildSelectList()
         if (deleteList.size > 0) {
             TipDialog.Builder(this)
-                .setMessage(getString(
+                .setMessage(
+                    getString(
                         R.string.tip_delete_chosen,
-                        deleteList.size
-                    ))
+                        deleteList.size,
+                    ),
+                )
                 .setPositiveListener(R.string.app_confirm) {
                     viewModel.delete(deleteList, if (isTC007) DirType.TC007 else DirType.LINE, true)
                 }.setCancelListener(R.string.app_cancel)
@@ -236,4 +244,3 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
         startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
     }
 }
-
