@@ -25,21 +25,17 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * RGB Camera recorder implementing dual-stream capture as specified in FR5:
- * - 1080p MP4 video recording for playback
- * - High-resolution timestamped JPEG image capture for analysis
+ * Legacy RGB Camera recorder using CameraX API - DEPRECATED
  * 
- * Uses CameraX for robust Android camera handling with lifecycle awareness.
+ * This implementation has been replaced by RGBCameraRecorder which uses Camera2 API
+ * for dual RAW (50MP) and 4K video modes with fast session switching.
  * 
- * Technical Requirements:
- * - Simultaneous video (1080p 30fps) and image (max resolution) capture
- * - Frame-accurate timestamps for temporal synchronization
- * - Storage optimized with JPEG compression
- * - Automatic exposure and focus control
+ * Kept for backward compatibility only.
  * 
- * @author IRCamera Android Sensor Node (Spoke)
+ * @deprecated Use RGBCameraRecorder instead for dual-mode camera functionality
  */
-class RgbCameraRecorder(
+@Deprecated("Use RGBCameraRecorder for dual-mode functionality", replaceWith = ReplaceWith("RGBCameraRecorder"))
+class RgbCameraRecorderLegacy(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
     override val sensorId: String = "rgb_camera_1",

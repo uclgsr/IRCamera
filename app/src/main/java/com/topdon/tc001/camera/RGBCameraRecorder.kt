@@ -2,6 +2,7 @@ package com.topdon.tc001.camera
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.ImageFormat
@@ -19,6 +20,10 @@ import android.util.Size
 import android.view.Surface
 import android.view.TextureView
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 import com.topdon.gsr.util.TimeUtil
 import kotlinx.coroutines.*
 import java.io.File
@@ -47,6 +52,7 @@ import java.util.concurrent.TimeUnit
 class RGBCameraRecorder(
     private val context: Context,
     private val textureView: TextureView,
+    private val activity: Activity? = null // Add activity for permission requests
 ) {
     companion object {
         private const val TAG = "RGBCameraRecorder"
@@ -128,11 +134,18 @@ class RGBCameraRecorder(
 
     // Camera settings with dual-mode support
     private var currentCameraFacing = CameraFacing.BACK
+    private var currentCameraId = "0" // Track current camera ID
+    private var availableCameraIds = emptyList<String>() // Available camera IDs
     private var recordingSettings = RecordingSettings()
     private var videoSize = Size(3840, 2160) // Default to 4K
     private var previewSize = Size(1920, 1080)
     private var rawSensorSize = Size(4032, 3024) // Will be updated from camera characteristics
     private var maxRawSize = Size(8160, 6120) // Samsung S22 max RAW resolution
+
+    // Permission handling
+    private var permissionCallback: (() -> Unit)? = null
+    var onPermissionGranted: (() -> Unit)? = null
+    var onPermissionDenied: ((String) -> Unit)? = null
 
     // File management
     private var currentVideoFile: File? = null
@@ -148,19 +161,96 @@ class RGBCameraRecorder(
     // Callbacks with enhanced mode switching support
     var onRecordingStarted: (() -> Unit)? = null
     var onRecordingStopped: ((File?) -> Unit)? = null
-    var onCameraSwitched: ((CameraFacing) -> Unit)? = null
+    var onCameraSwitched: ((CameraFacing, String) -> Unit)? = null // Include camera ID
     var onModeChanged: ((CameraMode) -> Unit)? = null
     var onRawImageCaptured: ((File) -> Unit)? = null
     var onError: ((String) -> Unit)? = null
+    var onCameraListUpdated: ((List<CameraInfo>) -> Unit)? = null // Camera list callback
+
+    // Camera information for switching
+    data class CameraInfo(
+        val cameraId: String,
+        val facing: CameraFacing,
+        val supportsRaw: Boolean,
+        val supports4K: Boolean,
+        val displayName: String
+    )
 
     /**
      * Initialize camera recorder with enhanced dual-mode support
      */
     fun initialize() {
+        Log.i(TAG, "Initializing camera on device: ${Build.BRAND} ${Build.MODEL} (Android ${Build.VERSION.RELEASE})")
+        
+        // Check and request camera permission first
+        if (checkCameraPermission()) {
+            initializeCamera()
+        } else {
+            requestCameraPermission {
+                initializeCamera()
+            }
+        }
+    }
+
+    /**
+     * Check if camera permission is granted
+     */
+    private fun checkCameraPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+    }
+
+    /**
+     * Request camera permission with proper user feedback
+     */
+    private fun requestCameraPermission(onGranted: () -> Unit) {
+        if (activity == null) {
+            Log.e(TAG, "Activity is null - cannot request camera permission")
+            onPermissionDenied?.invoke("Camera permission required but cannot request (no activity context)")
+            return
+        }
+
+        permissionCallback = onGranted
+
+        XXPermissions.with(activity)
+            .permission(Permission.CAMERA)
+            .request(object : OnPermissionCallback {
+                override fun onGranted(permissions: MutableList<String>?, all: Boolean) {
+                    if (all) {
+                        Log.i(TAG, "Camera permission granted")
+                        onPermissionGranted?.invoke()
+                        permissionCallback?.invoke()
+                        permissionCallback = null
+                    } else {
+                        Log.w(TAG, "Some camera permissions denied")
+                        onPermissionDenied?.invoke("Camera permission partially denied")
+                    }
+                }
+
+                override fun onDenied(permissions: MutableList<String>?, never: Boolean) {
+                    val message = if (never) {
+                        "Camera permission permanently denied. Please enable in app settings."
+                    } else {
+                        "Camera permission denied. Camera functionality will not work."
+                    }
+                    
+                    Log.e(TAG, "Camera permission denied: $message")
+                    onPermissionDenied?.invoke(message)
+                    onError?.invoke(message)
+                    permissionCallback = null
+                }
+            })
+    }
+
+    /**
+     * Initialize camera system after permissions are granted
+     */
+    private fun initializeCamera() {
         startBackgroundThread()
         
+        // Get available cameras and setup camera info
+        setupAvailableCameras()
+        
         // Log device information for Samsung S22 debugging
-        Log.i(TAG, "Initializing camera on device: ${Build.BRAND} ${Build.MODEL} (Android ${Build.VERSION.RELEASE})")
         if (isSamsungDevice) {
             Log.i(TAG, "Samsung device detected - enabling compatibility mode")
         }
@@ -172,6 +262,49 @@ class RGBCameraRecorder(
         
         if (textureView.isAvailable) {
             openCamera()
+        }
+    }
+
+    /**
+     * Setup available cameras and their capabilities
+     */
+    private fun setupAvailableCameras() {
+        try {
+            val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+            val cameraList = mutableListOf<CameraInfo>()
+            
+            availableCameraIds = manager.cameraIdList.toList()
+            
+            for (cameraId in availableCameraIds) {
+                val characteristics = manager.getCameraCharacteristics(cameraId)
+                val facing = when (characteristics.get(CameraCharacteristics.LENS_FACING)) {
+                    CameraCharacteristics.LENS_FACING_BACK -> CameraFacing.BACK
+                    CameraCharacteristics.LENS_FACING_FRONT -> CameraFacing.FRONT
+                    else -> CameraFacing.BACK
+                }
+                
+                // Check RAW support
+                val capabilities = characteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES)
+                val supportsRaw = capabilities?.contains(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_RAW) ?: false
+                
+                // Check 4K support
+                val map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+                val videoSizes = map?.getOutputSizes(MediaRecorder::class.java) ?: emptyArray()
+                val supports4K = videoSizes.any { it.width >= 3840 && it.height >= 2160 }
+                
+                val displayName = "${facing.displayName} (ID: $cameraId)" + 
+                    if (supportsRaw) " [RAW]" else "" +
+                    if (supports4K) " [4K]" else ""
+                
+                cameraList.add(CameraInfo(cameraId, facing, supportsRaw, supports4K, displayName))
+            }
+            
+            onCameraListUpdated?.invoke(cameraList)
+            Log.i(TAG, "Found ${cameraList.size} cameras: ${cameraList.map { it.displayName }}")
+            
+        } catch (e: CameraAccessException) {
+            Log.e(TAG, "Failed to enumerate cameras", e)
+            onError?.invoke("Failed to access camera system: ${e.message}")
         }
     }
 
@@ -2700,5 +2833,101 @@ class RGBCameraRecorder(
                 iterator.remove()
             }
         }
+    }
+
+    // ===== CAMERA SWITCHING METHODS =====
+
+    /**
+     * Switch to a different camera by ID
+     */
+    suspend fun switchCamera(cameraId: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            if (cameraId == currentCameraId) {
+                Log.i(TAG, "Already using camera $cameraId")
+                return@withContext true
+            }
+
+            if (!availableCameraIds.contains(cameraId)) {
+                Log.e(TAG, "Camera ID $cameraId not available")
+                return@withContext false
+            }
+
+            Log.i(TAG, "Switching from camera $currentCameraId to $cameraId")
+            
+            // Close current camera
+            closeCamera()
+            
+            // Update camera ID and determine facing
+            val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+            val characteristics = manager.getCameraCharacteristics(cameraId)
+            val facing = when (characteristics.get(CameraCharacteristics.LENS_FACING)) {
+                CameraCharacteristics.LENS_FACING_BACK -> CameraFacing.BACK
+                CameraCharacteristics.LENS_FACING_FRONT -> CameraFacing.FRONT
+                else -> CameraFacing.BACK
+            }
+            
+            currentCameraId = cameraId
+            currentCameraFacing = facing
+            
+            // Reopen with new camera
+            openCamera()
+            
+            onCameraSwitched?.invoke(facing, cameraId)
+            Log.i(TAG, "Successfully switched to camera $cameraId")
+            
+            return@withContext true
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to switch camera to $cameraId", e)
+            onError?.invoke("Camera switch failed: ${e.message}")
+            return@withContext false
+        }
+    }
+
+    /**
+     * Switch camera by facing direction
+     */
+    suspend fun switchCamera(facing: CameraFacing): Boolean {
+        val targetCameraId = getCameraId(facing)
+        return switchCamera(targetCameraId)
+    }
+
+    /**
+     * Get list of available cameras with their capabilities
+     */
+    fun getAvailableCameras(): List<CameraInfo> {
+        val cameraList = mutableListOf<CameraInfo>()
+        
+        try {
+            val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+            
+            for (cameraId in availableCameraIds) {
+                val characteristics = manager.getCameraCharacteristics(cameraId)
+                val facing = when (characteristics.get(CameraCharacteristics.LENS_FACING)) {
+                    CameraCharacteristics.LENS_FACING_BACK -> CameraFacing.BACK
+                    CameraCharacteristics.LENS_FACING_FRONT -> CameraFacing.FRONT
+                    else -> CameraFacing.BACK
+                }
+                
+                // Check capabilities
+                val capabilities = characteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES)
+                val supportsRaw = capabilities?.contains(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_RAW) ?: false
+                
+                val map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+                val videoSizes = map?.getOutputSizes(MediaRecorder::class.java) ?: emptyArray()
+                val supports4K = videoSizes.any { it.width >= 3840 && it.height >= 2160 }
+                
+                val displayName = "${facing.displayName} (ID: $cameraId)" + 
+                    if (supportsRaw) " [RAW]" else "" +
+                    if (supports4K) " [4K]" else ""
+                
+                cameraList.add(CameraInfo(cameraId, facing, supportsRaw, supports4K, displayName))
+            }
+            
+        } catch (e: CameraAccessException) {
+            Log.e(TAG, "Failed to get camera list", e)
+        }
+        
+        return cameraList
     }
 }
