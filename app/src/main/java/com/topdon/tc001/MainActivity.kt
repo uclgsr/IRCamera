@@ -67,8 +67,8 @@ import com.topdon.tc001.fragment.MainFragment
 import com.topdon.tc001.utils.AppVersionUtil
 import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.databinding.ActivityMainBinding
-// Network integration imports
-import com.topdon.tc001.network.NetworkClient
+// Network integration imports - Phase 1 WebSocket client
+import com.topdon.tc001.network.WebSocketClient
 import com.topdon.tc001.service.RecordingService
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.gsr.model.SessionInfo
@@ -94,8 +94,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private var checkPermissionType: Int = -1 // 0 initData数据 1 图库  2 connect方法
     
-    // PC-to-phone control networking
-    private var networkClient: NetworkClient? = null
+    // PC-to-phone control networking - Phase 1 WebSocket implementation
+    private var webSocketClient: WebSocketClient? = null
     private var recordingService: RecordingService? = null
     private var isServiceBound = false
     private var connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
@@ -833,36 +833,36 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         )
         
         try {
-            // Initialize network client with supervision
+            // Initialize WebSocket client with supervision - Phase 1
             crashSafeSupervisor.registerJob(
-                id = "network_client",
-                name = "NetworkClient",
+                id = "websocket_client",
+                name = "WebSocketClient",
                 critical = false,
                 restartable = true,
                 healthCheck = object : CrashSafeSupervisor.HealthCheck {
                     override suspend fun checkHealth(): CrashSafeSupervisor.HealthStatus {
-                        val client = networkClient
-                        return if (client != null && connectionStatus == ConnectionStatus.CONNECTED) {
+                        val client = webSocketClient
+                        return if (client != null && client.isConnected()) {
                             CrashSafeSupervisor.HealthStatus(
                                 isHealthy = true,
-                                message = "NetworkClient connected and operational",
+                                message = "WebSocketClient connected and operational",
                                 details = mapOf(
                                     "connection_status" to connectionStatus.name,
-                                    "latency_ms" to (client.getLatencyMs() ?: -1),
-                                    "secure_connection" to client.isSecureConnection()
+                                    "authenticated" to client.isAuthenticated(),
+                                    "current_server" to (client.getCurrentServer()?.name ?: "none")
                                 )
                             )
                         } else {
                             CrashSafeSupervisor.HealthStatus(
                                 isHealthy = false,
-                                message = "NetworkClient not connected",
+                                message = "WebSocketClient not connected",
                                 details = mapOf("connection_status" to connectionStatus.name)
                             )
                         }
                     }
                 }
             ) { stopToken ->
-                initializeNetworkClientSupervised(stopToken)
+                initializeWebSocketClientSupervised(stopToken)
             }
             
             // Bind to recording service for remote control capability
@@ -891,29 +891,59 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
     
     /**
-     * Initialize network client under supervision with stop token
+     * Initialize WebSocket client under supervision - Phase 1 implementation
      */
-    private suspend fun initializeNetworkClientSupervised(stopToken: CrashSafeSupervisor.StopToken) {
+    private suspend fun initializeWebSocketClientSupervised(stopToken: CrashSafeSupervisor.StopToken) {
         while (!stopToken.isStopRequested()) {
             try {
-                // Initialize network client
-                networkClient = NetworkClient(this@MainActivity).apply {
-                    // Initialize the enhanced network client
-                    val initSuccess = initialize()
-                    if (!initSuccess) {
-                        structuredLogger.log(
-                            StructuredLogger.LogLevel.WARNING,
-                            "NetworkClient",
-                            "initialization_failed"
-                        )
-                        updateConnectionStatus(ConnectionStatus.ERROR)
-                        kotlinx.coroutines.delay(5000) // Wait before retry
-                        return@apply
-                    }
+                // Initialize WebSocket client
+                webSocketClient = WebSocketClient(this@MainActivity).apply {
+                    // Set up event listener for WebSocket events
+                    setEventListener(createWebSocketEventListener())
                     
-                    // Set up event listener for network events
-                    setEventListener(createNetworkEventListener())
+                    // Start connection (includes discovery and auto-connect)
+                    start()
                 }
+                
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "WebSocketClient",
+                    "initialized_successfully"
+                )
+                
+                // Wait for connection or stop signal
+                while (!stopToken.isStopRequested() && webSocketClient?.isConnected() != true) {
+                    kotlinx.coroutines.delay(1000)
+                }
+                
+                if (webSocketClient?.isConnected() == true) {
+                    updateConnectionStatus(ConnectionStatus.CONNECTED)
+                }
+                
+                // Keep running while connected
+                while (!stopToken.isStopRequested() && webSocketClient?.isConnected() == true) {
+                    kotlinx.coroutines.delay(1000)
+                }
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Error in WebSocket client supervision", e)
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.ERROR,
+                    "WebSocketClient",
+                    "supervision_error",
+                    mapOf("error" to e.message)
+                )
+                
+                updateConnectionStatus(ConnectionStatus.ERROR)
+                
+                // Wait before retry
+                kotlinx.coroutines.delay(5000)
+            }
+        }
+        
+        // Clean up on stop
+        webSocketClient?.stop()
+    }
                 
                 // Start automatic discovery and connection if enabled
                 if (FeatureFlags.MDNS_ENABLE) {
@@ -945,78 +975,93 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
         
-        // Cleanup
-        networkClient?.disconnect()
-        networkClient?.cleanup()
-        networkClient = null
+        // Cleanup WebSocket client
+        webSocketClient?.stop()
+        webSocketClient = null
     }
     
     /**
      * Create network event listener to handle PC controller events with structured logging
      */
-    private fun createNetworkEventListener(): NetworkClient.NetworkEventListener {
-        return object : NetworkClient.NetworkEventListener {
-            override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
+    /**
+     * Create WebSocket event listener - Phase 1 implementation
+     */
+    private fun createWebSocketEventListener(): WebSocketClient.WebSocketEventListener {
+        return object : WebSocketClient.WebSocketEventListener {
+            override fun onServerDiscovered(serverInfo: WebSocketClient.ServerInfo) {
                 structuredLogger.logConnection(
-                    "controller_discovered",
-                    controller.ipAddress,
+                    "server_discovered",
+                    serverInfo.host,
                     mapOf(
-                        "device_name" to controller.deviceName,
-                        "ip_address" to controller.ipAddress,
-                        "port" to controller.port
+                        "server_name" to serverInfo.name,
+                        "host" to serverInfo.host,
+                        "port" to serverInfo.port,
+                        "uses_tls" to serverInfo.usesTLS,
+                        "protocol_version" to serverInfo.protocolVersion
                     )
                 )
                 
                 runOnUiThread {
                     updateConnectionStatus(ConnectionStatus.CONNECTING)
                     Toast.makeText(this@MainActivity, 
-                        "Found PC Controller: ${controller.deviceName}", 
+                        "Found PC Server: ${serverInfo.name}", 
                         Toast.LENGTH_SHORT).show()
-                }
-                
-                // Automatically connect to discovered controller
-                networkClient?.connectToController(controller.ipAddress, controller.port) { success ->
-                    runOnUiThread {
-                        if (success) {
-                            structuredLogger.logConnection(
-                                "connection_established",
-                                controller.ipAddress,
-                                mapOf("device_name" to controller.deviceName)
-                            )
-                        } else {
-                            structuredLogger.logConnection(
-                                "connection_failed",
-                                controller.ipAddress,
-                                mapOf("device_name" to controller.deviceName)
-                            )
-                            updateConnectionStatus(ConnectionStatus.ERROR)
-                        }
-                    }
                 }
             }
             
-            override fun onConnected(controller: NetworkClient.ControllerInfo) {
+            override fun onConnecting(serverInfo: WebSocketClient.ServerInfo) {
                 structuredLogger.logConnection(
-                    "connection_success",
-                    controller.ipAddress,
+                    "connecting",
+                    serverInfo.host,
                     mapOf(
-                        "device_name" to controller.deviceName,
-                        "secure_connection" to (networkClient?.isSecureConnection() ?: false),
-                        "protocol_version" to ProtocolVersion.CURRENT_VERSION
+                        "server_name" to serverInfo.name,
+                        "host" to serverInfo.host,
+                        "port" to serverInfo.port
+                    )
+                )
+                
+                runOnUiThread {
+                    updateConnectionStatus(ConnectionStatus.CONNECTING)
+                }
+            }
+            
+            override fun onConnected(serverInfo: WebSocketClient.ServerInfo) {
+                structuredLogger.logConnection(
+                    "websocket_connected",
+                    serverInfo.host,
+                    mapOf(
+                        "server_name" to serverInfo.name,
+                        "uses_tls" to serverInfo.usesTLS,
+                        "protocol_version" to serverInfo.protocolVersion
                     )
                 )
                 
                 runOnUiThread {
                     updateConnectionStatus(ConnectionStatus.CONNECTED)
                     Toast.makeText(this@MainActivity, 
-                        "Connected to PC: ${controller.deviceName}", 
+                        "Connected to PC: ${serverInfo.name}", 
                         Toast.LENGTH_LONG).show()
+                }
+            }
+            
+            override fun onAuthenticated() {
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "WebSocketClient",
+                    "authenticated_successfully",
+                    emptyMap()
+                )
+                
+                runOnUiThread {
+                    Toast.makeText(this@MainActivity, 
+                        "Authenticated with PC controller", 
+                        Toast.LENGTH_SHORT).show()
                 }
             }
             
             override fun onDisconnected(reason: String) {
                 structuredLogger.logConnection(
-                    "disconnected",
+                    "websocket_disconnected",
                     "",
                     mapOf("reason" to reason)
                 )
@@ -1029,78 +1074,125 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             }
             
-            override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
-                structuredLogger.logSessionEvent(
-                    "remote_measurement_request",
-                    sessionInfo.sessionId,
-                    mapOf(
-                        "study_name" to (sessionInfo.studyName ?: "unknown"),
-                        "participant_id" to (sessionInfo.participantId ?: "unknown")
-                    )
+            override fun onMessage(messageType: String, message: org.json.JSONObject) {
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.DEBUG,
+                    "WebSocketClient",
+                    "message_received",
+                    mapOf("message_type" to messageType)
                 )
                 
-                runOnUiThread {
-                    handleRemoteRecordingRequest(sessionInfo)
+                when (messageType) {
+                    "session_start_response" -> {
+                        val success = message.optBoolean("success", false)
+                        val sessionId = message.optString("session_id", "")
+                        
+                        if (success) {
+                            runOnUiThread {
+                                handleRemoteSessionStart(sessionId)
+                            }
+                        }
+                    }
+                    "session_stop_response" -> {
+                        val success = message.optBoolean("success", false)
+                        
+                        if (success) {
+                            runOnUiThread {
+                                handleRemoteSessionStop()
+                            }
+                        }
+                    }
+                    "sync_flash" -> {
+                        val durationMs = message.optInt("duration_ms", 500)
+                        runOnUiThread {
+                            performSyncFlash(durationMs)
+                        }
+                    }
+                    else -> {
+                        // Handle other message types as needed
+                        Log.d(TAG, "Received message type: $messageType")
+                    }
                 }
             }
             
-            override fun onSyncFlash(durationMs: Int) {
-                structuredLogger.log(
-                    StructuredLogger.LogLevel.INFO,
-                    "SyncFlash",
-                    "sync_flash_requested",
-                    mapOf("duration_ms" to durationMs)
-                )
-                
-                runOnUiThread {
-                    performSyncFlash(durationMs)
-                }
-            }
-            
-            override fun onTimeSynchronized(offsetNanoseconds: Long) {
-                structuredLogger.log(
-                    StructuredLogger.LogLevel.INFO,
-                    "TimeSync",
-                    "time_synchronized",
-                    mapOf(
-                        "offset_nanoseconds" to offsetNanoseconds,
-                        "offset_milliseconds" to (offsetNanoseconds / 1_000_000.0)
-                    )
-                )
-            }
-            
-            override fun onDataStreamingStarted() {
-                structuredLogger.log(
-                    StructuredLogger.LogLevel.INFO,
-                    "DataStreaming",
-                    "streaming_started"
-                )
-            }
-            
-            override fun onDataStreamingStopped() {
-                structuredLogger.log(
-                    StructuredLogger.LogLevel.INFO,
-                    "DataStreaming",
-                    "streaming_stopped"
-                )
-            }
-            
-            override fun onError(operation: String, error: String) {
+            override fun onError(error: String, exception: Throwable?) {
                 structuredLogger.log(
                     StructuredLogger.LogLevel.ERROR,
-                    "NetworkClient",
-                    "network_error",
-                    mapOf(
-                        "operation" to operation,
-                        "error" to error
-                    )
+                    "WebSocketClient",
+                    "websocket_error",
+                    mapOf("error" to error)
                 )
                 
                 runOnUiThread {
                     updateConnectionStatus(ConnectionStatus.ERROR)
-                    showNetworkError("Network error: $error")
+                    showNetworkError("WebSocket error: $error")
                 }
             }
+            
+            override fun onHeartbeatReceived() {
+                // Update last heartbeat time for connection health monitoring
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.DEBUG,
+                    "WebSocketClient",
+                    "heartbeat_received",
+                    emptyMap()
+                )
+            }
+        }
+    }
+    
+    /**
+     * Handle remote session start request - Phase 1
+     */
+    private fun handleRemoteSessionStart(sessionId: String) {
+        try {
+            structuredLogger.logSessionEvent(
+                "remote_session_start",
+                sessionId,
+                emptyMap()
+            )
+            
+            // Start recording through the service
+            recordingService?.getRecordingController()?.startRecording()
+            
+            Toast.makeText(this, "Remote recording started: $sessionId", Toast.LENGTH_LONG).show()
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling remote session start", e)
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "RemoteControl",
+                "session_start_error",
+                mapOf("error" to e.message)
+            )
+        }
+    }
+    
+    /**
+     * Handle remote session stop request - Phase 1
+     */
+    private fun handleRemoteSessionStop() {
+        try {
+            structuredLogger.log(
+                StructuredLogger.LogLevel.INFO,
+                "RemoteControl",
+                "remote_session_stop",
+                emptyMap()
+            )
+            
+            // Stop recording through the service
+            recordingService?.getRecordingController()?.stopRecording()
+            
+            Toast.makeText(this, "Remote recording stopped", Toast.LENGTH_LONG).show()
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling remote session stop", e)
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "RemoteControl",
+                "session_stop_error",
+                mapOf("error" to e.message)
+            )
         }
     }
     
@@ -1115,30 +1207,24 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     /**
      * Start network discovery to find PC controllers
      */
+    /**
+     * Start network discovery to find PC controllers - Phase 1 WebSocket implementation
+     */
     private fun startNetworkDiscovery() {
-        Log.i(TAG, "Starting network discovery for PC controllers")
+        Log.i(TAG, "Starting WebSocket discovery for PC servers")
         updateConnectionStatus(ConnectionStatus.DISCOVERING)
         
-        networkClient?.startDiscovery { success ->
-            runOnUiThread {
-                if (success) {
-                    Log.i(TAG, "Network discovery completed successfully")
-                    
-                    val controllers = networkClient?.getDiscoveredControllers()
-                    if (controllers.isNullOrEmpty()) {
-                        Log.i(TAG, "No PC controllers found during discovery")
-                        updateConnectionStatus(ConnectionStatus.DISCONNECTED)
-                        Toast.makeText(this@MainActivity, 
-                            "No PC controllers found. Ensure PC app is running on same network.", 
-                            Toast.LENGTH_LONG).show()
-                    }
-                } else {
-                    Log.w(TAG, "Network discovery failed")
-                    updateConnectionStatus(ConnectionStatus.ERROR)
-                    showNetworkError("Discovery failed. Check network connection.")
-                }
-            }
-        }
+        // WebSocket client handles discovery automatically when started
+        // Discovery is handled in the initialization process
+        structuredLogger.log(
+            StructuredLogger.LogLevel.INFO,
+            "WebSocketClient",
+            "discovery_started",
+            emptyMap()
+        )
+        
+        // The WebSocket client will automatically discover and connect
+        // Event callbacks handle the UI updates
     }
     
     /**
@@ -1317,12 +1403,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     /**
      * Get network performance metrics
      */
+    /**
+     * Get network metrics for WebSocket connection - Phase 1
+     */
     fun getNetworkMetrics(): String {
-        val client = networkClient ?: return "Network client not available"
+        val client = webSocketClient ?: return "WebSocket client not available"
         
-        return "Latency: ${client.getLatencyMs()}ms, " +
-               "Throughput: ${String.format("%.1f", client.getThroughputKBps())}KB/s, " +
-               "Secure: ${client.isSecureConnection()}"
+        return "Status: ${if (client.isConnected()) "Connected" else "Disconnected"}, " +
+               "Authenticated: ${client.isAuthenticated()}, " +
+               "Reconnecting: ${client.isReconnecting()}"
     }
     
     /**
@@ -1416,35 +1505,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             while (!isFinishing) {
                 if (connectionStatus == ConnectionStatus.CONNECTED) {
                     try {
-                        // Send ping message to keep connection alive
-                        val heartbeat = org.json.JSONObject().apply {
-                            put("type", "heartbeat")
-                            put("timestamp", System.currentTimeMillis())
-                            put("device_id", android.provider.Settings.Secure.getString(
-                                contentResolver,
-                                android.provider.Settings.Secure.ANDROID_ID
-                            ))
-                        }
-                        
-                        val success = try {
-                            // Use sendMeasurementData as a heartbeat mechanism
-                            networkClient?.sendMeasurementData("heartbeat", heartbeat) ?: false
-                        } catch (e: Exception) {
-                            Log.w(TAG, "Heartbeat exception", e)
-                            false
-                        }
-                        if (!success) {
-                            Log.w(TAG, "Heartbeat failed, connection may be lost")
-                            updateConnectionStatus(ConnectionStatus.ERROR)
-                        }
+                        // WebSocket client handles heartbeat automatically
+                        // Just send a status request periodically to test connection
+                        webSocketClient?.sendStatusRequest()
                         
                     } catch (e: Exception) {
-                        Log.w(TAG, "Heartbeat error", e)
+                        Log.w(TAG, "Status request exception", e)
                         updateConnectionStatus(ConnectionStatus.ERROR)
                     }
                 }
                 
-                kotlinx.coroutines.delay(30000L) // Send heartbeat every 30 seconds
+                kotlinx.coroutines.delay(30000L) // Send status request every 30 seconds
             }
         }
     }
@@ -1458,10 +1529,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         sb.append("Connection Status: ${connectionStatus.name}\n")
         sb.append("Network Metrics: ${getNetworkMetrics()}\n")
         
-        val controllers = networkClient?.getDiscoveredControllers()
-        sb.append("Discovered Controllers: ${controllers?.size ?: 0}\n")
-        controllers?.forEach { controller ->
-            sb.append("  - ${controller.deviceName} (${controller.ipAddress}:${controller.port})\n")
+        val servers = webSocketClient?.getDiscoveredServers()
+        sb.append("Discovered Servers: ${servers?.size ?: 0}\n")
+        servers?.forEach { (name, server) ->
+            sb.append("  - $name (${server.host}:${server.port}) TLS:${server.usesTLS}\n")
+        }
+        
+        val currentServer = webSocketClient?.getCurrentServer()
+        if (currentServer != null) {
+            sb.append("Current Server: ${currentServer.name} (${currentServer.host}:${currentServer.port})\n")
         }
         
         sb.append("Service Bound: $isServiceBound\n")
@@ -1552,17 +1628,19 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
      */
     private fun showConnectionInfoDialog() {
         val metrics = getNetworkMetrics()
-        val controllers = networkClient?.getDiscoveredControllers()
-        val currentController = controllers?.firstOrNull()
+        val servers = webSocketClient?.getDiscoveredServers()
+        val currentServer = webSocketClient?.getCurrentServer()
         
         val message = StringBuilder()
         message.append("Connection Status: Connected\n\n")
         message.append("Performance Metrics:\n$metrics\n\n")
         
-        if (currentController != null) {
+        if (currentServer != null) {
             message.append("Connected to:\n")
-            message.append("Device: ${currentController.deviceName}\n")
-            message.append("Address: ${currentController.ipAddress}:${currentController.port}\n\n")
+            message.append("Server: ${currentServer.name}\n")
+            message.append("Address: ${currentServer.host}:${currentServer.port}\n")
+            message.append("TLS: ${currentServer.usesTLS}\n")
+            message.append("Protocol: ${currentServer.protocolVersion}\n\n")
         }
         
         message.append("Recording Service: ${if (isServiceBound) "Available" else "Not Available"}\n")
@@ -1717,11 +1795,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             "activity_destroying"
         )
         
-        // Cleanup networking
+        // Cleanup networking - Phase 1 WebSocket client
         try {
-            networkClient?.disconnect()
-            networkClient?.cleanup()
-            networkClient = null
+            webSocketClient?.stop()
+            webSocketClient = null
             
             // Stop server socket
             RecordingService.stopServer(this)

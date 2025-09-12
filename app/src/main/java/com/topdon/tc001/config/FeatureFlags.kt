@@ -19,8 +19,8 @@ object FeatureFlags {
     private const val KEY_FILE_UPLOAD_PROTOCOL = "FILE_UPLOAD_PROTOCOL"
     private const val KEY_TIME_SYNC_MODE = "TIME_SYNC_MODE"
     
-    // Default values
-    private const val DEFAULT_COMM_USE_WSS = false // Start with TCP, upgrade to WSS in Phase 1
+    // Default values - Phase 1: Enable WSS by default
+    private const val DEFAULT_COMM_USE_WSS = true // Phase 1: Enable WebSocket Secure by default
     private const val DEFAULT_TLS_ENABLE = true
     private const val DEFAULT_MDNS_ENABLE = true
     private const val DEFAULT_FILE_UPLOAD_PROTOCOL = "tcp" // Options: tcp, http, websocket
