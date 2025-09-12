@@ -17,8 +17,37 @@ repos:
   - repo: local
     hooks:
       - id: dev-validate
-        name: Run development validation
-        entry: ./dev.sh
+        name: IRCamera Development Validation
+        entry: ./dev.sh validate
         language: system
-        args: [lint]
+        stages: [commit]
         pass_filenames: false
+        verbose: true
+        
+      - id: security-quick-check
+        name: Quick Security Check
+        entry: bash -c './tools/security-scanner.sh > /dev/null 2>&1 || echo "⚠️  Security issues detected - review before commit"'
+        language: system
+        stages: [commit]
+        pass_filenames: false
+        
+      - id: format-kotlin
+        name: Format Kotlin files
+        entry: bash -c 'if command -v ktlint &> /dev/null; then find . -name "*.kt" -not -path "./build/*" | xargs ktlint --format || true; fi'
+        language: system
+        files: \.kt$
+        
+      - id: format-java
+        name: Format Java files
+        entry: bash -c 'if command -v google-java-format &> /dev/null; then find . -name "*.java" -not -path "./build/*" | xargs google-java-format --replace || true; fi'
+        language: system
+        files: \.java$
+        
+      - id: gradle-build-check
+        name: Gradle Build Check
+        entry: bash -c './gradlew :app:compileDebugSources --quiet || (echo "❌ Build failed - fix before commit" && exit 1)'
+        language: system
+        stages: [commit]
+        pass_filenames: false
+
+default_stages: [commit]

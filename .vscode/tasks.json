@@ -108,6 +108,90 @@
         "panel": "shared"
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Security Analysis",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": ["security"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Generate Documentation",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": ["docs"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Advanced Testing Suite",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": ["test-suite"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Performance Analysis",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": ["analyze"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Quality Monitoring",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": ["monitor"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Release Management",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": ["release", "help"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      },
+      "problemMatcher": []
     }
   ]
 }

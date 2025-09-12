@@ -28,11 +28,19 @@ show_help() {
     echo "  monitor     - Launch quality monitor"
     echo "  analyze     - Run performance analysis"
     echo "  health      - Quick health check"
+    echo "  security    - Run security analysis"
+    echo "  docs        - Generate documentation"
+    echo "  test-suite  - Run advanced testing suite"
+    echo "  release     - Manage releases and versioning"
     echo "  help        - Show this help"
     echo ""
     echo -e "${CYAN}Advanced Tools:${NC}"
     echo "  ./tools/quality-monitor.sh     - Real-time quality monitoring"
     echo "  ./tools/performance-analyzer.sh - Performance and optimization analysis"
+    echo "  ./tools/security-scanner.sh    - Comprehensive security analysis"
+    echo "  ./tools/advanced-testing.sh    - Advanced testing with coverage"
+    echo "  ./tools/doc-generator.sh       - Automated documentation generation"
+    echo "  ./tools/release-manager.sh     - Release management and versioning"
     echo "  ./status.sh                    - Project status overview"
 }
 
@@ -332,6 +340,34 @@ case "${1:-help}" in
         ;;
     "health")
         quick_health_check
+        ;;
+    "security")
+        if [ -x "./tools/security-scanner.sh" ]; then
+            ./tools/security-scanner.sh
+        else
+            print_error "Security scanner not found or not executable"
+        fi
+        ;;
+    "docs")
+        if [ -x "./tools/doc-generator.sh" ]; then
+            ./tools/doc-generator.sh
+        else
+            print_error "Documentation generator not found or not executable"
+        fi
+        ;;
+    "test-suite")
+        if [ -x "./tools/advanced-testing.sh" ]; then
+            ./tools/advanced-testing.sh
+        else
+            print_error "Advanced testing suite not found or not executable"
+        fi
+        ;;
+    "release")
+        if [ -x "./tools/release-manager.sh" ]; then
+            ./tools/release-manager.sh "${@:2}"
+        else
+            print_error "Release manager not found or not executable"
+        fi
         ;;
     "help"|*)
         show_help
