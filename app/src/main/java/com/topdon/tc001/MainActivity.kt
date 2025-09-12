@@ -770,6 +770,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             // Bind to recording service for remote control capability
             bindRecordingService()
             
+            // Start recording service with server socket automatically
+            RecordingService.startServer(this)
+            
             // Start automatic discovery and connection
             startNetworkDiscovery()
             
@@ -1235,6 +1238,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 val recordingController = recordingService?.getRecordingController()
                 val summary = recordingController?.getSensorStatusSummary()
                 sb.append("Recording Status: $summary\n")
+                
+                // Add server socket status
+                val serverStatus = recordingService?.getServerStatus()
+                sb.append("Server Socket: $serverStatus\n")
+                
+                val connectedClients = recordingService?.getConnectedClients()
+                sb.append("Connected PC Clients: ${connectedClients?.size ?: 0}\n")
+                connectedClients?.forEach { client ->
+                    sb.append("  - $client\n")
+                }
+                
             } catch (e: Exception) {
                 sb.append("Recording Status: Error - ${e.message}\n")
             }
@@ -1470,6 +1484,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             networkClient?.disconnect()
             networkClient?.cleanup()
             networkClient = null
+            
+            // Stop server socket
+            RecordingService.stopServer(this)
             
             if (isServiceBound) {
                 unbindService(serviceConnection)

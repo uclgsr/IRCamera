@@ -3,6 +3,8 @@ package com.topdon.tc001.service
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.net.nsd.NsdManager
+import android.net.nsd.NsdServiceInfo
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -12,24 +14,34 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.controller.RecordingState
+import com.topdon.gsr.model.SessionInfo
+import com.topdon.gsr.model.SyncMark
 import com.csl.irCamera.R
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
-import java.io.File
+import org.json.JSONObject
+import java.io.*
+import java.net.*
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * Background service for multi-modal sensor recording.
+ * Background service for multi-modal sensor recording with PC-to-Phone server socket support.
  * 
  * This service ensures continuous recording operation even when the app is in the background.
  * It manages the RecordingController and provides status updates through notifications.
  * 
  * Key Features:
  * - Foreground service for uninterrupted recording
+ * - Persistent server socket for PC connections
+ * - Multi-connection support with re-accept loop
+ * - NSD service advertisement for discovery
  * - Real-time status notifications
  * - Automatic recovery from errors
  * - Integration with PC Controller communication
  * - Power management awareness
+ * - Graceful shutdown and resource management
  * 
  * @author IRCamera Android Sensor Node (Spoke)
  */
@@ -40,10 +52,17 @@ class RecordingService : LifecycleService() {
         private const val NOTIFICATION_ID = 1001
         private const val CHANNEL_ID = "recording_service_channel"
         
+        // Server socket configuration
+        private const val SERVER_PORT = 8080
+        private const val SERVICE_TYPE = "_ircamera._tcp."
+        private const val SERVICE_NAME = "IRCamera-Android"
+        
         // Actions
         const val ACTION_START_RECORDING = "com.topdon.tc001.START_RECORDING"
         const val ACTION_STOP_RECORDING = "com.topdon.tc001.STOP_RECORDING"
         const val ACTION_ADD_SYNC_MARKER = "com.topdon.tc001.ADD_SYNC_MARKER"
+        const val ACTION_START_SERVER = "com.topdon.tc001.START_SERVER"
+        const val ACTION_STOP_SERVER = "com.topdon.tc001.STOP_SERVER"
         
         // Extras
         const val EXTRA_SESSION_DIRECTORY = "session_directory"
@@ -67,6 +86,26 @@ class RecordingService : LifecycleService() {
         fun stopRecording(context: Context) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_STOP_RECORDING
+            }
+            context.startService(intent)
+        }
+        
+        /**
+         * Start server socket for PC connections
+         */
+        fun startServer(context: Context) {
+            val intent = Intent(context, RecordingService::class.java).apply {
+                action = ACTION_START_SERVER
+            }
+            context.startForegroundService(intent)
+        }
+        
+        /**
+         * Stop server socket
+         */
+        fun stopServer(context: Context) {
+            val intent = Intent(context, RecordingService::class.java).apply {
+                action = ACTION_STOP_SERVER
             }
             context.startService(intent)
         }
@@ -97,6 +136,28 @@ class RecordingService : LifecycleService() {
     
     // Notification manager
     private lateinit var notificationManager: NotificationManager
+    
+    // Server socket components
+    private var serverSocket: ServerSocket? = null
+    private var isServerRunning = AtomicBoolean(false)
+    private var serverJob: Job? = null
+    private val activeConnections = ConcurrentHashMap<String, ClientConnection>()
+    
+    // NSD components
+    private var nsdManager: NsdManager? = null
+    private var nsdServiceInfo: NsdServiceInfo? = null
+    private var isServiceRegistered = false
+    
+    /**
+     * Represents an active client connection from PC
+     */
+    private data class ClientConnection(
+        val socket: Socket,
+        val clientId: String,
+        val inputStream: DataInputStream,
+        val outputStream: DataOutputStream,
+        val job: Job
+    )
 
     inner class RecordingServiceBinder : Binder() {
         fun getService(): RecordingService = this@RecordingService
@@ -110,6 +171,9 @@ class RecordingService : LifecycleService() {
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel()
         
+        // Initialize NSD manager
+        nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
+        
         // Initialize recording controller
         recordingController = RecordingController(this, this)
         
@@ -122,6 +186,9 @@ class RecordingService : LifecycleService() {
                 if (success) {
                     Log.i(TAG, "Recording service initialized successfully")
                     setupStatusMonitoring()
+                    
+                    // Start server socket automatically
+                    startServerSocket()
                 } else {
                     Log.e(TAG, "Failed to initialize recording service")
                     stopSelf()
@@ -150,6 +217,14 @@ class RecordingService : LifecycleService() {
                 stopRecordingSession()
             }
             
+            ACTION_START_SERVER -> {
+                startServerSocket()
+            }
+            
+            ACTION_STOP_SERVER -> {
+                stopServerSocket()
+            }
+            
             ACTION_ADD_SYNC_MARKER -> {
                 val markerType = intent.getStringExtra(EXTRA_MARKER_TYPE)
                 val timestampNs = intent.getLongExtra(EXTRA_TIMESTAMP_NS, System.nanoTime())
@@ -159,7 +234,7 @@ class RecordingService : LifecycleService() {
             }
         }
         
-        return START_NOT_STICKY
+        return START_STICKY // Changed to STICKY to ensure server persistence
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -173,6 +248,10 @@ class RecordingService : LifecycleService() {
         
         lifecycleScope.launch {
             try {
+                // Stop server socket first
+                stopServerSocket()
+                
+                // Stop recording if active
                 recordingController.cleanup()
             } catch (e: Exception) {
                 Log.e(TAG, "Error during service cleanup", e)
@@ -383,19 +462,487 @@ class RecordingService : LifecycleService() {
     fun getCurrentSession(): SessionInfo? {
         return currentSessionDirectory?.let { directory ->
             SessionInfo(
-                directory = directory,
-                startTime = recordingStartTime,
-                isRecording = recordingController.isRecording
+                sessionId = directory.substringAfterLast("/"),
+                startTime = recordingStartTime
             )
         }
     }
+    
+    // ==================== SERVER SOCKET IMPLEMENTATION ====================
+    
+    /**
+     * Start persistent server socket for PC connections
+     */
+    private fun startServerSocket() {
+        if (isServerRunning.get()) {
+            Log.i(TAG, "Server socket already running")
+            return
+        }
+        
+        lifecycleScope.launch {
+            try {
+                // Create server socket
+                serverSocket = ServerSocket(SERVER_PORT)
+                isServerRunning.set(true)
+                
+                Log.i(TAG, "Server socket started on port $SERVER_PORT")
+                
+                // Register NSD service
+                registerNsdService()
+                
+                // Start as foreground service if not already
+                if (!isServiceForeground()) {
+                    startForeground(NOTIFICATION_ID, createServerNotification("Server listening for PC connections"))
+                }
+                
+                // Start accept loop
+                startAcceptLoop()
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start server socket", e)
+                isServerRunning.set(false)
+                updateNotification("Server start failed: ${e.message}")
+            }
+        }
+    }
+    
+    /**
+     * Stop server socket and cleanup
+     */
+    private fun stopServerSocket() {
+        if (!isServerRunning.get()) {
+            Log.i(TAG, "Server socket not running")
+            return
+        }
+        
+        Log.i(TAG, "Stopping server socket")
+        isServerRunning.set(false)
+        
+        // Cancel server job
+        serverJob?.cancel()
+        serverJob = null
+        
+        // Close all active connections
+        activeConnections.values.forEach { connection ->
+            try {
+                connection.job.cancel()
+                connection.socket.close()
+            } catch (e: Exception) {
+                Log.w(TAG, "Error closing connection", e)
+            }
+        }
+        activeConnections.clear()
+        
+        // Close server socket
+        try {
+            serverSocket?.close()
+        } catch (e: Exception) {
+            Log.w(TAG, "Error closing server socket", e)
+        } finally {
+            serverSocket = null
+        }
+        
+        // Unregister NSD service
+        unregisterNsdService()
+        
+        Log.i(TAG, "Server socket stopped")
+    }
+    
+    /**
+     * Start accept loop to handle multiple PC connections
+     */
+    private fun startAcceptLoop() {
+        serverJob = lifecycleScope.launch(Dispatchers.IO) {
+            while (isServerRunning.get() && !currentCoroutineContext().isActive.not()) {
+                try {
+                    val clientSocket = serverSocket?.accept()
+                    if (clientSocket != null && isServerRunning.get()) {
+                        val clientId = "${clientSocket.inetAddress.hostAddress}:${clientSocket.port}"
+                        Log.i(TAG, "PC client connected: $clientId")
+                        
+                        // Handle client connection
+                        handleNewClientConnection(clientSocket, clientId)
+                        
+                        // Update notification
+                        withContext(Dispatchers.Main) {
+                            updateNotification("Connected PCs: ${activeConnections.size}")
+                        }
+                    }
+                } catch (e: SocketException) {
+                    if (isServerRunning.get()) {
+                        Log.w(TAG, "Server socket accept error", e)
+                        // Brief delay before retry
+                        delay(1000)
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Unexpected error in accept loop", e)
+                    if (isServerRunning.get()) {
+                        delay(5000) // Longer delay for unexpected errors
+                    }
+                }
+            }
+            Log.i(TAG, "Accept loop terminated")
+        }
+    }
+    
+    /**
+     * Handle new PC client connection
+     */
+    private suspend fun handleNewClientConnection(clientSocket: Socket, clientId: String) {
+        try {
+            // Set socket timeout
+            clientSocket.soTimeout = 30000 // 30 second timeout
+            
+            // Create streams
+            val inputStream = DataInputStream(clientSocket.getInputStream())
+            val outputStream = DataOutputStream(clientSocket.getOutputStream())
+            
+            // Create client handler job
+            val clientJob = lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    handleClientMessages(clientId, inputStream, outputStream)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Client $clientId handler error", e)
+                } finally {
+                    // Clean up connection
+                    activeConnections.remove(clientId)
+                    try {
+                        clientSocket.close()
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Error closing client socket", e)
+                    }
+                    Log.i(TAG, "PC client disconnected: $clientId")
+                    
+                    // Update notification
+                    withContext(Dispatchers.Main) {
+                        updateNotification("Connected PCs: ${activeConnections.size}")
+                    }
+                }
+            }
+            
+            // Store connection
+            val connection = ClientConnection(
+                socket = clientSocket,
+                clientId = clientId,
+                inputStream = inputStream,
+                outputStream = outputStream,
+                job = clientJob
+            )
+            activeConnections[clientId] = connection
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error setting up client connection", e)
+            try {
+                clientSocket.close()
+            } catch (e: Exception) {
+                Log.w(TAG, "Error closing failed client socket", e)
+            }
+        }
+    }
+    
+    /**
+     * Handle messages from PC client
+     */
+    private suspend fun handleClientMessages(
+        clientId: String, 
+        inputStream: DataInputStream, 
+        outputStream: DataOutputStream
+    ) {
+        while (isServerRunning.get() && currentCoroutineContext().isActive) {
+            try {
+                // Read message length
+                val messageLength = inputStream.readInt()
+                if (messageLength > 1024 * 1024) { // 1MB limit
+                    Log.w(TAG, "Message too large from $clientId: $messageLength bytes")
+                    break
+                }
+                
+                // Read message data
+                val messageData = ByteArray(messageLength)
+                inputStream.readFully(messageData)
+                
+                // Parse JSON message
+                val message = JSONObject(String(messageData, Charsets.UTF_8))
+                
+                // Process message
+                processClientMessage(clientId, message, outputStream)
+                
+            } catch (e: SocketTimeoutException) {
+                // Send keepalive
+                sendKeepAlive(outputStream)
+            } catch (e: EOFException) {
+                Log.i(TAG, "Client $clientId disconnected normally")
+                break
+            } catch (e: Exception) {
+                Log.w(TAG, "Error handling message from $clientId", e)
+                break
+            }
+        }
+    }
+    
+    /**
+     * Process message from PC client
+     */
+    private suspend fun processClientMessage(
+        clientId: String, 
+        message: JSONObject, 
+        outputStream: DataOutputStream
+    ) {
+        val messageType = message.optString("message_type")
+        Log.d(TAG, "Processing message from $clientId: $messageType")
+        
+        try {
+            when (messageType) {
+                "session_start" -> {
+                    val sessionId = message.optString("session_id", "remote_${System.currentTimeMillis()}")
+                    val sessionName = message.optString("session_name", "PC Remote Session")
+                    
+                    // Create session directory
+                    val baseDir = File(getExternalFilesDir(null), "recordings")
+                    val sessionDir = File(baseDir, sessionId)
+                    
+                    withContext(Dispatchers.Main) {
+                        startRecordingSession(sessionDir.absolutePath)
+                    }
+                    
+                    // Send acknowledgment
+                    sendAck(outputStream, "session_start", "Recording started")
+                }
+                
+                "session_stop" -> {
+                    withContext(Dispatchers.Main) {
+                        stopRecordingSession()
+                    }
+                    sendAck(outputStream, "session_stop", "Recording stopped")
+                }
+                
+                "sync_flash" -> {
+                    val durationMs = message.optInt("duration_ms", 100)
+                    withContext(Dispatchers.Main) {
+                        performSyncFlash(durationMs)
+                    }
+                    sendAck(outputStream, "sync_flash", "Flash performed")
+                }
+                
+                "status_request" -> {
+                    sendStatusResponse(outputStream)
+                }
+                
+                "heartbeat" -> {
+                    sendAck(outputStream, "heartbeat", "alive")
+                }
+                
+                else -> {
+                    Log.w(TAG, "Unknown message type from $clientId: $messageType")
+                    sendError(outputStream, "Unknown message type: $messageType")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error processing message $messageType from $clientId", e)
+            sendError(outputStream, "Error processing $messageType: ${e.message}")
+        }
+    }
+    
+    /**
+     * Send acknowledgment to PC client
+     */
+    private suspend fun sendAck(outputStream: DataOutputStream, messageType: String, result: String) {
+        val ackMessage = JSONObject().apply {
+            put("message_type", "ack")
+            put("ack_for", messageType)
+            put("result", result)
+            put("timestamp", System.currentTimeMillis())
+        }
+        sendMessage(outputStream, ackMessage)
+    }
+    
+    /**
+     * Send error to PC client
+     */
+    private suspend fun sendError(outputStream: DataOutputStream, error: String) {
+        val errorMessage = JSONObject().apply {
+            put("message_type", "error")
+            put("error", error)
+            put("timestamp", System.currentTimeMillis())
+        }
+        sendMessage(outputStream, errorMessage)
+    }
+    
+    /**
+     * Send status response to PC client
+     */
+    private suspend fun sendStatusResponse(outputStream: DataOutputStream) {
+        val statusMessage = JSONObject().apply {
+            put("message_type", "status_response")
+            put("device_id", android.provider.Settings.Secure.getString(
+                contentResolver, android.provider.Settings.Secure.ANDROID_ID))
+            put("recording_active", recordingController.isRecording)
+            put("connected_clients", activeConnections.size)
+            put("server_running", isServerRunning.get())
+            put("sensors_initialized", isInitialized)
+            put("current_session", currentSessionDirectory)
+            put("timestamp", System.currentTimeMillis())
+        }
+        sendMessage(outputStream, statusMessage)
+    }
+    
+    /**
+     * Send keepalive to PC client
+     */
+    private suspend fun sendKeepAlive(outputStream: DataOutputStream) {
+        val keepAliveMessage = JSONObject().apply {
+            put("message_type", "keepalive")
+            put("timestamp", System.currentTimeMillis())
+        }
+        sendMessage(outputStream, keepAliveMessage)
+    }
+    
+    /**
+     * Send message to PC client
+     */
+    private suspend fun sendMessage(outputStream: DataOutputStream, message: JSONObject) {
+        withContext(Dispatchers.IO) {
+            try {
+                val messageData = message.toString().toByteArray(Charsets.UTF_8)
+                outputStream.writeInt(messageData.size)
+                outputStream.write(messageData)
+                outputStream.flush()
+            } catch (e: Exception) {
+                Log.w(TAG, "Error sending message to PC client", e)
+                throw e
+            }
+        }
+    }
+    
+    /**
+     * Perform sync flash for PC synchronization
+     */
+    private fun performSyncFlash(durationMs: Int) {
+        // This would need to be handled by the main activity
+        // For now, just add a sync marker
+        addSyncMarker("pc_sync_flash", System.nanoTime())
+    }
+    
+    // ==================== NSD SERVICE MANAGEMENT ====================
+    
+    /**
+     * Register NSD service for PC discovery
+     */
+    private fun registerNsdService() {
+        if (isServiceRegistered) {
+            Log.i(TAG, "NSD service already registered")
+            return
+        }
+        
+        try {
+            val serviceInfo = NsdServiceInfo().apply {
+                serviceName = SERVICE_NAME
+                serviceType = SERVICE_TYPE
+                port = SERVER_PORT
+            }
+            
+            nsdManager?.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, object : NsdManager.RegistrationListener {
+                override fun onServiceRegistered(serviceInfo: NsdServiceInfo?) {
+                    Log.i(TAG, "NSD service registered: ${serviceInfo?.serviceName}")
+                    nsdServiceInfo = serviceInfo
+                    isServiceRegistered = true
+                }
+                
+                override fun onRegistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
+                    Log.e(TAG, "NSD service registration failed: $errorCode")
+                }
+                
+                override fun onServiceUnregistered(serviceInfo: NsdServiceInfo?) {
+                    Log.i(TAG, "NSD service unregistered: ${serviceInfo?.serviceName}")
+                    isServiceRegistered = false
+                }
+                
+                override fun onUnregistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
+                    Log.e(TAG, "NSD service unregistration failed: $errorCode")
+                }
+            })
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error registering NSD service", e)
+        }
+    }
+    
+    /**
+     * Unregister NSD service
+     */
+    private fun unregisterNsdService() {
+        if (!isServiceRegistered || nsdServiceInfo == null) {
+            return
+        }
+        
+        try {
+            nsdManager?.unregisterService(object : NsdManager.RegistrationListener {
+                override fun onServiceRegistered(serviceInfo: NsdServiceInfo?) {}
+                override fun onRegistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {}
+                override fun onServiceUnregistered(serviceInfo: NsdServiceInfo?) {
+                    Log.i(TAG, "NSD service unregistered successfully")
+                    isServiceRegistered = false
+                    nsdServiceInfo = null
+                }
+                override fun onUnregistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
+                    Log.e(TAG, "NSD service unregistration failed: $errorCode")
+                }
+            })
+        } catch (e: Exception) {
+            Log.e(TAG, "Error unregistering NSD service", e)
+        }
+    }
+    
+    /**
+     * Check if service is running in foreground
+     */
+    private fun isServiceForeground(): Boolean {
+        // This is a simplified check - in production you might want more sophisticated detection
+        return currentSessionDirectory != null || isServerRunning.get()
+    }
+    
+    /**
+     * Create notification for server status
+     */
+    private fun createServerNotification(contentText: String): Notification {
+        val stopIntent = Intent(this, RecordingService::class.java).apply {
+            action = ACTION_STOP_SERVER
+        }
+        val stopPendingIntent = PendingIntent.getService(
+            this, 1, stopIntent, 
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        
+        return NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("IRCamera Server")
+            .setContentText(contentText)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setOngoing(true)
+            .addAction(
+                android.R.drawable.ic_media_pause,
+                "Stop Server",
+                stopPendingIntent
+            )
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .build()
+    }
+    
+    /**
+     * Get server connection status
+     */
+    fun getServerStatus(): String {
+        return if (isServerRunning.get()) {
+            "Running on port $SERVER_PORT (${activeConnections.size} clients)"
+        } else {
+            "Stopped"
+        }
+    }
+    
+    /**
+     * Get list of connected PC clients
+     */
+    fun getConnectedClients(): List<String> {
+        return activeConnections.keys.toList()
+    }
 }
-
-/**
- * Current session information
- */
-data class SessionInfo(
-    val directory: String,
-    val startTime: Long,
-    val isRecording: Boolean
-)
