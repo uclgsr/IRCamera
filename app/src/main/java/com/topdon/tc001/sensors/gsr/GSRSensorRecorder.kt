@@ -64,7 +64,7 @@ class GSRSensorRecorder(
          * This addresses the comment's requirement for proper permission handling
          */
         fun hasRequiredPermissions(context: Context): Boolean {
-            return BluetoothPermissionUtils.hasBluetoothPermissions(context)
+            return BluetoothPermissionUtils.hasBleScanningPermissions(context)
         }
         
         /**
@@ -72,24 +72,16 @@ class GSRSensorRecorder(
          * This can be used by UI to request specific permissions
          */
         fun getMissingPermissions(context: Context): List<String> {
-            val missingPermissions = mutableListOf<String>()
-            
-            if (!BluetoothPermissionUtils.hasBluetoothScanPermission(context)) {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                    missingPermissions.add(android.Manifest.permission.BLUETOOTH_SCAN)
-                } else {
-                    missingPermissions.add(android.Manifest.permission.BLUETOOTH)
-                    missingPermissions.add(android.Manifest.permission.BLUETOOTH_ADMIN)
-                }
-            }
-            
-            if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(context)) {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                    missingPermissions.add(android.Manifest.permission.BLUETOOTH_CONNECT)
-                }
-            }
-            
-            return missingPermissions
+            return BluetoothPermissionUtils.getMissingPermissions(context)
+        }
+        
+        /**
+         * Check if the app has comprehensive BLE scanning permissions (including location)
+         * @param context Application context
+         * @return true if all BLE scanning permissions are granted, false otherwise
+         */
+        fun hasComprehensiveBluetoothPermissions(context: Context): Boolean {
+            return BluetoothPermissionUtils.hasBleScanningPermissions(context)
         }
     }
 
@@ -270,9 +262,10 @@ class GSRSensorRecorder(
                 return@withContext true
             }
             
-            // Re-check Bluetooth permissions (user might have revoked them)
-            if (!BluetoothPermissionUtils.hasBluetoothPermissions(context)) {
-                Log.w(TAG, "Bluetooth permissions not available for Shimmer GSR recording")
+            // Re-check comprehensive Bluetooth permissions (user might have revoked them)
+            if (!BluetoothPermissionUtils.hasBleScanningPermissions(context)) {
+                Log.w(TAG, "Comprehensive Bluetooth permissions (including location) not available for Shimmer GSR recording")
+                Log.i(TAG, "Missing permissions: ${BluetoothPermissionUtils.getMissingPermissions(context)}")
                 Log.i(TAG, "Continuing with limited GSR functionality - Shimmer features disabled")
                 // Don't fail completely, continue with legacy recording if available
             }
@@ -283,8 +276,8 @@ class GSRSensorRecorder(
             var shimmerRecordingStarted = false
             var legacyRecordingStarted = false
             
-            // Attempt Shimmer GSR recording if permissions are available
-            if (BluetoothPermissionUtils.hasBluetoothPermissions(context)) {
+            // Attempt Shimmer GSR recording if comprehensive permissions are available
+            if (BluetoothPermissionUtils.hasBleScanningPermissions(context)) {
                 val shimmerRecorder = realShimmerGSRRecorder
                 if (shimmerRecorder != null) {
                     Log.i(TAG, "Starting Shimmer GSR recording with BLE backend")
