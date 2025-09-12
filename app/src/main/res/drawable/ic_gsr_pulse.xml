@@ -14,10 +14,8 @@
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
         
-    <!-- Small GSR sensor dot -->
-    <circle
+    <!-- Small GSR sensor dot as path -->
+    <path
         android:fillColor="@color/white"
-        android:cx="12"
-        android:cy="12"
-        android:radius="1.5" />
+        android:pathData="M12,10.5 A1.5,1.5 0 1 1 12,13.5 A1.5,1.5 0 1 1 12,10.5 Z" />
 </vector>

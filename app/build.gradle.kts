@@ -131,7 +131,14 @@ android {
                 "META-INF/com.android.art/baseline.prof",
                 "META-INF/com.android.art/baseline.profm",
                 // Exclude duplicate Shimmer Bluetooth classes to avoid conflicts
-                "**/it/gerdavax/easybluetooth/**"
+                "**/it/gerdavax/easybluetooth/**",
+                // Exclude duplicate Bluetooth classes from AndroidBluetoothLibrary
+                "**/android/bluetooth/IBluetoothDeviceCallback*",
+                // Exclude duplicate AndroidPlot classes  
+                "**/com/androidplot/**",
+                // Exclude duplicate Shimmer Biophysical Processing classes
+                "**/com/shimmerresearch/biophysicalprocessing/**",
+                "**/com/shimmerresearch/utilityfunctions/**"
             )
         }
         jniLibs {
@@ -188,7 +195,7 @@ android {
     // Removed obsolete dexOptions configuration
 }
 
-// Dependency resolution strategy to fix Guava conflicts and add ListenableFuture
+// Dependency resolution strategy to fix Guava conflicts and handle Shimmer SDK conflicts
 configurations.all {
     resolutionStrategy {
         force("com.google.guava:guava:31.1-android")
@@ -199,8 +206,15 @@ configurations.all {
                 // Prefer existing project Bluetooth implementation over Shimmer's bundled version
                 useTarget("${project.group}:${project.name}:${project.version}")
             }
+            // Resolve AndroidPlot conflicts by preferring newer version
+            if (requested.name == "androidplot-core") {
+                useVersion("0.5.0-release")
+            }
         }
     }
+    
+    // Exclude duplicate classes at configuration level
+    exclude(group = "android.bluetooth", module = "IBluetoothDeviceCallback")
 }
 
 dependencies {
@@ -284,7 +298,8 @@ dependencies {
     implementation(files("libs/shimmerbluetoothmanager-0.11.5_beta.jar"))
     
     // Shimmer biophysical processing library for advanced GSR analysis
-    implementation(files("../component/gsr-recording/libs/ShimmerBiophysicalProcessingLibrary_Rev_0_11.jar"))
+    // Excluded - already provided by main Shimmer SDK AAR to avoid duplicate classes
+    // implementation(files("../component/gsr-recording/libs/ShimmerBiophysicalProcessingLibrary_Rev_0_11.jar"))
     
     // CameraX for RGB camera dual-stream capture
     implementation("androidx.camera:camera-camera2:1.5.0")
