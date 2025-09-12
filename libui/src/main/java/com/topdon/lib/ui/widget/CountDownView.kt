@@ -15,6 +15,9 @@ import android.view.animation.LinearInterpolator
 import androidx.core.content.ContextCompat
 import com.topdon.lib.ui.R as UiR
 
+/**
+ * CountDownView class
+ */
 class CountDownView : View {
     // 圆环颜色
     private var mRingColor = 0
@@ -207,6 +210,9 @@ class CountDownView : View {
         this.mListener = mListener
     }
 
+    /**
+     * OnCountDownListener class
+     */
     interface OnCountDownListener {
         fun countDownFinished()
     }

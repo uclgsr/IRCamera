@@ -22,6 +22,9 @@ import com.topdon.menu.R as MenuR
  *
  * Created by LCG on 2024/11/12.
  */
+/**
+ * ColorView class
+ */
 class ColorView : View {
     /**
      * pseudo color渐变颜色值数组.

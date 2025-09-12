@@ -5,6 +5,9 @@ package com.topdon.menu.constant
  *
  * Created by LCG on 2024/11/29.
  */
+/**
+ * class class
+ */
 enum class TargetType {
     /**
      * Measurement mode: Human (default), Sheep, Dog, Bird.

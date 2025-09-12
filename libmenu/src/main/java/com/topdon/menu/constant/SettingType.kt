@@ -5,6 +5,9 @@ package com.topdon.menu.constant
  *
  * Created by LCG on 2024/11/28.
  */
+/**
+ * class class
+ */
 enum class SettingType {
     /** Pseudo color bar */
     PSEUDO_BAR,

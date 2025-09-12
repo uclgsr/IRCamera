@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
+import com.topdon.menu.R as MenuR
 import com.topdon.menu.constant.FenceType
 import com.topdon.menu.constant.MenuType
-import com.topdon.menu.R as MenuR
 
 /**
  * 点、线、面、全图、趋势图(可选)、删除 菜单 Adapter.

@@ -5,6 +5,9 @@ package com.topdon.menu.constant
  *
  * Created by LCG on 2024/11/18.
  */
+/**
+ * class class
+ */
 enum class MenuType {
     SINGLE_LIGHT,
 

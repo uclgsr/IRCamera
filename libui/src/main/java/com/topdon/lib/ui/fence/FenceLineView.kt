@@ -11,6 +11,9 @@ import android.view.MotionEvent
 import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
+/**
+ * FenceLineView class
+ */
 class FenceLineView : View {
     var listener: CallBack? = null
 
@@ -145,6 +148,9 @@ class FenceLineView : View {
         invalidate()
     }
 
+    /**
+     * CallBack class
+     */
     interface CallBack {
         /**
          * startPoint: 左上角

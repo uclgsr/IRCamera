@@ -21,6 +21,9 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O], manifest = Config.NONE)
 @OptIn(ExperimentalCoroutinesApi::class)
+/**
+ * MenuModuleTest class
+ */
 class MenuModuleTest {
     private lateinit var context: Context
 

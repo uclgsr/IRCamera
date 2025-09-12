@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
-import com.topdon.menu.constant.TargetType
 import com.topdon.menu.R as MenuR
+import com.topdon.menu.constant.TargetType
 
 /**
  * 观测模式-菜单4-标靶 菜单所用 Adapter.

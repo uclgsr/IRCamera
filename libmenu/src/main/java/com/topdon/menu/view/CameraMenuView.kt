@@ -14,8 +14,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
-import com.topdon.menu.databinding.ViewCameraMenuBinding
 import com.topdon.menu.R as MenuR
+import com.topdon.menu.databinding.ViewCameraMenuBinding
 
 /**
  * Menu 1 - Photo and video capture related functionality.
@@ -28,6 +28,9 @@ import com.topdon.menu.R as MenuR
  * - Video mode - Recording
  *
  * Created by LCG on 2024/11/8.
+ */
+/**
+ * CameraMenuView class
  */
 class CameraMenuView : FrameLayout, View.OnClickListener {
     companion object {
@@ -214,6 +217,9 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
     /**
      * ViewPager2 所用 Adapter.
      */
+    /**
+     * MenuCameraAdapter class
+     */
     class MenuCameraAdapter : RecyclerView.Adapter<MenuCameraAdapter.ViewHolder>() {
         override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -232,6 +238,9 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
 
         override fun getItemCount(): Int = 2
 
+        /**
+         * ViewHolder(rootView: class
+         */
         class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)
     }
 }

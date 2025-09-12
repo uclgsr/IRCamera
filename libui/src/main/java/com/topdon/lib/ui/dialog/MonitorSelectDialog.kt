@@ -12,7 +12,13 @@ import com.topdon.lib.ui.databinding.DialogMonitorSelectBinding
  * 提示窗
  * create by fylder on 2018/6/15
  **/
+/**
+ * MonitorSelectDialog(context: class
+ */
 class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
+    /**
+     * Builder(private class
+     */
     class Builder(private val context: Context) {
         /**
          * 是否处于第 1 步.

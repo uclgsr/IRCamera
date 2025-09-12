@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
-import com.topdon.menu.constant.MenuType
 import com.topdon.menu.R as MenuR
+import com.topdon.menu.constant.MenuType
 
 /**
  * 测温模式-菜单6-高低温档 菜单所用 Adapter，单选且必须选中其中一个.

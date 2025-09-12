@@ -3,6 +3,9 @@ package com.topdon.menu.util
 /**
  * 伪彩菜单、伪彩条所用的预设伪彩配置.
  */
+/**
+ * PseudoColorConfig class
+ */
 object PseudoColorConfig {
     /**
      * 根据指定伪彩代号获取对应的颜色数组

@@ -1,13 +1,13 @@
 package com.topdon.lib.core.common
 
 /**
- * des:
- * author: CaiSongL
- * date: 2024/4/25 10:45
- **/
+ * Product type constants and product name definitions
+ * Author: CaiSongL  
+ * Date: 2024/4/25 10:45
+ */
 object ProductType {
     /**
-     * 产品名称
+     * Product names
      */
     const val PRODUCT_NAME_TC = "TC001"
     const val PRODUCT_NAME_TS = "TS001"

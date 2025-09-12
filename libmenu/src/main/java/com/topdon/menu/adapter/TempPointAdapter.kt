@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
-import com.topdon.menu.constant.TempPointType
 import com.topdon.menu.R as MenuR
+import com.topdon.menu.constant.TempPointType
 
 /**
  * 观测模式-菜单5-高低温点 菜单所用 Adapter，按旧逻辑存在全部未选择的状态。

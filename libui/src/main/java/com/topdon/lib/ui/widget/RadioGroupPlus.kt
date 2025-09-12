@@ -43,6 +43,9 @@ import androidx.annotation.IdRes
  *
  * @see RadioButton
  */
+/**
+ * RadioGroupPlus class
+ */
 class RadioGroupPlus : LinearLayout {
     /**
      *
@@ -261,6 +264,9 @@ class RadioGroupPlus : LinearLayout {
      * [LinearLayout Attributes][com.android.internal.R.styleable.LinearLayout_Layout]
      * for a list of all child view attributes that this class supports.
      */
+    /**
+     * LayoutParams class
+     */
     class LayoutParams : LinearLayout.LayoutParams {
         /**
          * {@inheritDoc}
@@ -322,6 +328,9 @@ class RadioGroupPlus : LinearLayout {
      *
      * Interface definition for a callback to be invoked when the checked
      * radio button changed in this group.
+     */
+    /**
+     * OnCheckedChangeListener class
      */
     interface OnCheckedChangeListener {
         /**

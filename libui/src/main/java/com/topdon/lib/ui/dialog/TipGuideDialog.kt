@@ -17,11 +17,14 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.topdon.lib.core.R
+import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.ui.databinding.DialogTipGuideBinding
 import com.topdon.lib.ui.widget.IndicateView
 import kotlin.collections.ArrayList
-import com.topdon.lib.ui.R as UiR
 
+/**
+ * TipGuideDialog class
+ */
 class TipGuideDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
     private lateinit var imgList: ArrayList<Int>

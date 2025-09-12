@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
  *
  * Created by LCG on 2023/9/20.
  */
+/**
+ * MyItemDecoration(context: class
+ */
 class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     /**
      * 整个 RecyclerView 左侧间距，单位 dp.

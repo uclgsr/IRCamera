@@ -17,6 +17,9 @@ import com.topdon.lib.ui.R as UiR
 /**
  * 3D 编辑使用的，长地像 SeekBar 的那个条条.
  */
+/**
+ * BarPickView class
+ */
 class BarPickView : View {
     companion object {
         /**

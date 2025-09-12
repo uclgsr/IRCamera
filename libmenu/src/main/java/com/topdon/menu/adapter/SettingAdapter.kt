@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
+import com.topdon.menu.R as MenuR
 import com.topdon.menu.constant.MenuType
 import com.topdon.menu.constant.SettingType
-import com.topdon.menu.R as MenuR
 
 /**
  * 设置菜单所用 Adapter，所有选项互相独立，可多选.

@@ -7,6 +7,9 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import com.topdon.lib.ui.R as UiR
 
+/**
+ * RoundImageView class
+ */
 class RoundImageView : AppCompatImageView {
     companion object {
         /** 圆角位置 - 左上.  */

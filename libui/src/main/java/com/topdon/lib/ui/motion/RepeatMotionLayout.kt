@@ -7,6 +7,9 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 /**
  * 闪烁效果
  */
+/**
+ * RepeatMotionLayout class
+ */
 class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
     private var motionStartId = 0
     private var motionEndId = 0

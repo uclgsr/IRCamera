@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R // Import R from libapp for strings
+import com.topdon.menu.R as MenuR // Import R from libmenu for drawables
 import com.topdon.menu.constant.MenuType
 import com.topdon.menu.constant.TwoLightType
-import com.topdon.menu.R as MenuR // Import R from libmenu for drawables
 
 /**
  * 测温模式-菜单3-双光 菜单所用 Adapter.

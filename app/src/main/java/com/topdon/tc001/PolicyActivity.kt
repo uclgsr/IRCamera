@@ -18,9 +18,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * 条款 1: 用户条款  2: 隐私条款  3: 第三方
+ * Terms and Conditions Activity
+ * 
+ * Displays different types of terms:
+ * 1: User terms  2: Privacy terms  3: Third-party terms
  *
- * 服务返回有错误时,加载默认条款
+ * When service returns an error, loads default terms
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
@@ -28,7 +31,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
 
     companion object {
         const val KEY_THEME_TYPE = "key_theme_type"
-        const val KEY_USE_TYPE = "key_use_type" // 使用类型 用本地和用网络
+        const val KEY_USE_TYPE = "key_use_type" // Usage type: local or network
     }
 
     private var themeType = 1

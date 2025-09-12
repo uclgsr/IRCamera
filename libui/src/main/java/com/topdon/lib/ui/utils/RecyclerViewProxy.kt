@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
  * @author: CaiSongL
  * @date: 2023/4/1 14:44
  */
+/**
+ * RecyclerViewProxy(val class
+ */
 class RecyclerViewProxy(val layoutManager: RecyclerView.LayoutManager) {
     fun attachView(view: View?) {
         layoutManager.attachView(view!!)

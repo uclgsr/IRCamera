@@ -19,13 +19,16 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.topdon.lib.core.R
+import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.ui.databinding.DialogTipPreviewBinding
 import com.topdon.lib.ui.widget.IndicateView
 import io.reactivex.disposables.Disposable
 import java.util.Timer
 import kotlin.collections.ArrayList
-import com.topdon.lib.ui.R as UiR
 
+/**
+ * TipPreviewDialog class
+ */
 class TipPreviewDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
     private var dis: Disposable? = null

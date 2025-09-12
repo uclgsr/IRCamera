@@ -12,6 +12,9 @@ import com.topdon.menu.databinding.ViewMenuEditBinding
  *
  * 点线面、伪彩、设置、伪彩条
  */
+/**
+ * MenuEditView class
+ */
 class MenuEditView : FrameLayout, View.OnClickListener {
     /**
      * 伪彩条图标当前是否处于选中状态

@@ -14,6 +14,9 @@ import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.ui.R as UiR
 
+/**
+ * FencePointView class
+ */
 class FencePointView : View {
     var listener: CallBack? = null
     private val iconSize = SizeUtils.dp2px(32f)
@@ -151,6 +154,9 @@ class FencePointView : View {
         invalidate()
     }
 
+    /**
+     * CallBack class
+     */
     interface CallBack {
         /**
          * startPoint: 左上角

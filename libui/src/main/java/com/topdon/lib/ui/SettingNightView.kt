@@ -8,9 +8,12 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
-import com.topdon.lib.ui.databinding.UiSettingViewNightBinding
 import com.topdon.lib.ui.R as UiR
+import com.topdon.lib.ui.databinding.UiSettingViewNightBinding
 
+/**
+ * SettingNightView class
+ */
 class SettingNightView : LinearLayout {
     private lateinit var binding: UiSettingViewNightBinding
 

@@ -16,6 +16,9 @@ internal object CenterItemUtils {
         return minItem
     }
 
+    /**
+     * CenterViewItem class
+     */
     class CenterViewItem
     // 当前Item索引
     // 当前item和居中位置的差值

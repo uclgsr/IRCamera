@@ -12,6 +12,9 @@ import com.topdon.lib.ui.databinding.DialogProgressBinding
 /**
  * 带进度条的提示弹框.
  */
+/**
+ * ProgressDialog(context: class
+ */
 class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
     private val binding: DialogProgressBinding = DialogProgressBinding.inflate(LayoutInflater.from(context))
 

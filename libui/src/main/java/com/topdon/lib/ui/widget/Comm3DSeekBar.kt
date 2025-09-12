@@ -9,12 +9,15 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.blankj.utilcode.util.SizeUtils
-import kotlin.math.roundToInt
 import com.topdon.lib.ui.R as UiR
+import kotlin.math.roundToInt
 
 /**
  * 支持竖向的 SeekBar。
  * 暂不支持 thumbOffset.
+ */
+/**
+ * Comm3DSeekBar class
  */
 class Comm3DSeekBar : AppCompatSeekBar {
     private lateinit var mPaint: TextPaint

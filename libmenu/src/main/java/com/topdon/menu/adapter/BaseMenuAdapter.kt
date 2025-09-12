@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.topdon.menu.databinding.ItemMenuBinding
 
 /**
- * 除伪彩颜色外，所有菜单 Adapter 共有逻辑抽取.
+ * Shared logic extraction for all menu adapters except pseudo color.
  *
  * Created by LCG on 2024/11/29.
  */
@@ -52,5 +52,8 @@ internal abstract class BaseMenuAdapter : RecyclerView.Adapter<BaseMenuAdapter.V
         return ViewHolder(binding)
     }
 
+    /**
+     * ViewHolder(val class
+     */
     class ViewHolder(val binding: ItemMenuBinding) : RecyclerView.ViewHolder(binding.root)
 }

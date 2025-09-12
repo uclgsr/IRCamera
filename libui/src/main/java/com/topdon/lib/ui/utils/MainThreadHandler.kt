@@ -2,6 +2,9 @@ package com.topdon.lib.ui.utils
 import android.os.Handler
 import android.os.Looper
 
+/**
+ * MainThreadHandler class
+ */
 object MainThreadHandler {
     private val handler = Handler(Looper.getMainLooper())
 

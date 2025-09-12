@@ -5,6 +5,9 @@ package com.topdon.lib.ui.config
  * @author: CaiSongL
  * @date: 2023/4/4 9:57
  */
+/**
+ * CameraHelp class
+ */
 object CameraHelp {
     /**
      * 伪彩条

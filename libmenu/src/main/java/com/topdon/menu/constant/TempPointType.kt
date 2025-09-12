@@ -5,6 +5,9 @@ package com.topdon.menu.constant
  *
  * Created by LCG on 2024/11/29.
  */
+/**
+ * class class
+ */
 enum class TempPointType {
     /**
      * High temperature point
