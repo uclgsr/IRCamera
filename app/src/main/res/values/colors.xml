@@ -4,4 +4,14 @@
     <color name="white">#FFFFFFFF</color>
     <color name="color_CCFFFFFF">#CCFFFFFF</color>
     <color name="c_bg_white">#FF16131E</color>
+    
+    <!-- Camera Mode Selector Colors -->
+    <color name="primary_color">#FF2196F3</color>
+    <color name="background_card">#FF1E1E1E</color>
+    <color name="background_secondary">#FF2E2E2E</color>
+    <color name="border_light">#FF424242</color>
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_secondary">#FFCCCCCC</color>
+    <color name="text_tertiary">#FF999999</color>
+    <color name="segmented_button_text">@color/text_primary</color>
 </resources>
