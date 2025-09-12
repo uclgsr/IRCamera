@@ -108,6 +108,121 @@
 
         </androidx.cardview.widget.CardView>
 
+        <!-- Shimmer Device Selection Section -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="#2a2a2a">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Shimmer Device Management"
+                    android:textColor="#ffffff"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Device Status"
+                        android:textColor="#ccffffff"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/device_status_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Not Connected"
+                        android:textColor="#ffcc00"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Available Devices"
+                        android:textColor="#ccffffff"
+                        android:textSize="14sp" />
+
+                    <Spinner
+                        android:id="@+id/shimmer_device_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="150dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp">
+
+                    <Button
+                        android:id="@+id/scan_devices_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:text="Scan Devices"
+                        android:textColor="#ffffff"
+                        android:backgroundTint="#3f51b5" />
+
+                    <Button
+                        android:id="@+id/connect_device_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:text="Connect"
+                        android:textColor="#ffffff"
+                        android:backgroundTint="#4caf50" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/device_info_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No devices found. Ensure Shimmer device is powered on and Bluetooth is enabled."
+                    android:textColor="#aaaaaa"
+                    android:textSize="12sp"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
         <!-- Video Settings Section -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
