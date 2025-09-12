@@ -4,4 +4,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="color_CCFFFFFF">#CCFFFFFF</color>
     <color name="c_bg_white">#FF16131E</color>
+    
+    <!-- GSR Multi-Modal Recording Colors -->
+    <color name="fab_gsr_background">#FF1565C0</color>
+    <color name="gsr_pulse_color">#FF00E676</color>
+    <color name="gsr_recording_active">#FFFF5722</color>
 </resources>

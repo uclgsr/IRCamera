@@ -99,4 +99,9 @@
     
     <!-- Manual strings -->
     <string name="app_manual">Manual</string>
+    
+    <!-- GSR Multi-Modal Recording Strings -->
+    <string name="gsr_multi_modal_recording">GSR Multi-Modal Recording</string>
+    <string name="gsr_physiological_monitoring">Physiological Monitoring</string>
+    <string name="gsr_quick_access">Quick GSR Access</string>
 </resources>

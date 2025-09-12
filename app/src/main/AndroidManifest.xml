@@ -150,6 +150,11 @@
             android:name="com.topdon.tc001.gsr.GSRDemoActivity"
             android:screenOrientation="userPortrait"
             android:exported="false" />
+        <activity
+            android:name="com.topdon.tc001.gsr.GSRQuickRecordingActivity"
+            android:screenOrientation="userPortrait"
+            android:exported="false"
+            android:label="@string/gsr_quick_access" />
             
         <!-- Session Management and Research Template Activities -->
         <activity

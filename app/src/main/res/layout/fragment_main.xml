@@ -151,5 +151,18 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- GSR Multi-Modal Recording FAB -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_gsr_recording"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_gsr_pulse"
+            android:contentDescription="@string/gsr_multi_modal_recording"
+            app:backgroundTint="@color/fab_gsr_background"
+            app:tint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
