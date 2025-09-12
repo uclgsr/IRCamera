@@ -376,7 +376,7 @@ class GSRSessionFragment : Fragment() {
 
         val recordingDir = File(context?.getExternalFilesDir(null), "GSR_Recordings")
         if (recordingDir.exists()) {
-            recordingDir.listFiles { it.isDirectory }?.forEach { sessionDir ->
+            recordingDir.listFiles { file -> file.isDirectory }?.forEach { sessionDir ->
                 try {
                     val sessionInfo = parseSessionDirectory(sessionDir)
                     sessions.add(sessionInfo)
@@ -393,9 +393,9 @@ class GSRSessionFragment : Fragment() {
         val sessionId = sessionDir.name
 
         // Find session files
-        val gsrDataFile = sessionDir.listFiles { it.extension == "csv" && it.name.contains("gsr_data") }?.firstOrNull()
-        val videoFile = sessionDir.listFiles { it.extension == "mp4" || it.extension == "mov" }?.firstOrNull()
-        val rawImageCount = sessionDir.listFiles { it.extension == "dng" }?.size ?: 0
+        val gsrDataFile = sessionDir.listFiles { file -> file.extension == "csv" && file.name.contains("gsr_data") }?.firstOrNull()
+        val videoFile = sessionDir.listFiles { file -> file.extension == "mp4" || file.extension == "mov" }?.firstOrNull()
+        val rawImageCount = sessionDir.listFiles { file -> file.extension == "dng" }?.size ?: 0
 
         // Parse session metadata from files or directory name
         val parts = sessionId.split("_")
@@ -410,7 +410,7 @@ class GSRSessionFragment : Fragment() {
 
         // Estimate duration from GSR data if available
         val duration =
-            gsrDataFile?.let { file ->
+            gsrDataFile?.let { file: File ->
                 try {
                     val sampleCount = file.readLines().size - 1L
                     sampleCount / 128 // seconds at 128 Hz

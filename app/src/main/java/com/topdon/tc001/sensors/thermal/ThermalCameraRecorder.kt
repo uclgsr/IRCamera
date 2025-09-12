@@ -224,7 +224,8 @@ class ThermalCameraRecorder(
         timestamp: Long,
         frameNumber: Long,
         thermalData: ThermalFrameData
-    ) = withContext(Dispatchers.IO) {
+    ) {
+        withContext(Dispatchers.IO) {
         try {
             // Write thermal summary data to CSV
             val summaryData = arrayOf(
@@ -257,6 +258,7 @@ class ThermalCameraRecorder(
                 csvWriter?.flush()
                 framesCsvWriter?.flush()
             }
+            Unit // Explicitly return Unit to make this not an expression
             
         } catch (e: Exception) {
             Log.e(TAG, "Failed to save real IR thermal data", e)
@@ -264,6 +266,7 @@ class ThermalCameraRecorder(
             GlobalScope.launch {
                 emitError(ErrorType.STORAGE_ERROR, "IR thermal data saving failed: ${e.message}")
             }
+        }
         }
     }
     
