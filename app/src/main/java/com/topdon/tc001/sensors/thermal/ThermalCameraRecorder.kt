@@ -686,6 +686,8 @@ class ThermalCameraRecorder(
     }
     
     private fun Float.format(digits: Int) = "%.${digits}f".format(this)
+    
+    private suspend fun startRealIRCameraRecording(irCamera: IRUVCTC): Boolean {
         return try {
             // Start preview/recording on the real IR camera
             // This would integrate with the existing IRUVCTC implementation
