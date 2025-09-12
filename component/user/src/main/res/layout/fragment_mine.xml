@@ -107,7 +107,7 @@
                 app:layout_constraintEnd_toEndOf="@id/iv_winter"
                 app:layout_constraintTop_toTopOf="@id/iv_winter"
                 app:layout_constraintBottom_toBottomOf="@id/iv_winter" />
-            <!-- 标题 -->
+            <!-- Title -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_winter_title"
                 android:layout_width="0dp"
@@ -150,7 +150,7 @@
                     app:layout_constraintStart_toEndOf="@id/tv_winter_title"
                     app:layout_constraintEnd_toEndOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <!-- 副标题 -->
+            <!-- 副Title -->
             <TextView
                 android:id="@+id/tv_winter_sub_title"
                 android:layout_width="0dp"
@@ -229,7 +229,7 @@
                     app:setting_text_night="@string/setting_unit"
                     />
 
-                <!-- 由于原有逻辑清除缓存也会清除数据库，温度监控数据也没了，经测试与产品沟通后，于 2023/12/12 产品决定砍掉清除缓存 -->
+                <!-- 由于原有逻辑清除缓存也会清除DataLibrary，温度MonitorData也没了，经Test与产品沟通后，于 2023/12/12 产品决定砍掉清除缓存 -->
                 <com.topdon.lib.ui.SettingNightView
                     android:id="@+id/setting_item_clear"
                     android:layout_width="match_parent"

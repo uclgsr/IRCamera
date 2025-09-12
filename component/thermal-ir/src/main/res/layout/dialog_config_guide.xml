@@ -7,7 +7,7 @@
     tools:ignore="HardcodedText"
     tools:background="#000000">
 
-    <!-- 低于 Android12 显示操作指引时模糊背景图片 -->
+    <!-- 低于 Android12 Display操作指引时模糊背景图片 -->
     <ImageView
         android:id="@+id/iv_blur_bg"
         android:layout_width="0dp"
@@ -49,7 +49,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- 默认模式 -->
+        <!-- 默认Mode -->
         <TextView
             android:id="@+id/tv_default_title"
             android:layout_width="0dp"
@@ -103,7 +103,7 @@
             app:layout_constraintTop_toTopOf="@id/space_default_temp_title"
             app:layout_constraintBottom_toBottomOf="@id/space_default_temp_title" />
 
-        <!-- 测温距离 -->
+        <!-- 测温Distance -->
         <TextView
             android:id="@+id/tv_default_dis_title"
             android:layout_width="0dp"

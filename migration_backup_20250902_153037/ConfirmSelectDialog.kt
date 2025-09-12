@@ -27,12 +27,18 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         rootView.iv_icon.isVisible = isShowIcon
     }
 
+    /**
+     * setTitleRes function implementation.
+     */
     fun setTitleRes(
         @StringRes titleRes: Int,
     ) {
         rootView.tv_title.setText(titleRes)
     }
 
+    /**
+     * setTitleStr function implementation.
+     */
     fun setTitleStr(titleStr: String) {
         rootView.tv_title.text = titleStr
     }
@@ -44,6 +50,9 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         rootView.rl_message.isVisible = isShowMessage
     }
 
+    /**
+     * setMessageRes function implementation.
+     */
     fun setMessageRes(
         @StringRes messageRes: Int,
     ) {

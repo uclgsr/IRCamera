@@ -30,6 +30,9 @@ import kotlinx.android.synthetic.main.item_report_add_head.view.*
  * Created by LCG on 2024/8/24.
  */
 @SuppressLint("NotifyDataSetChanged")
+/**
+ * HouseDetectView class for thermal imaging functionality.
+ */
 class HouseDetectView : FrameLayout {
     /**
      * 所有目录列表，仅用于全部收起及全部展开调用.
@@ -148,6 +151,9 @@ class HouseDetectView : FrameLayout {
         adapter.notifyDataSetChanged()
     }
 
+    /**
+     * notifyDirInsert function implementation.
+     */
     fun notifyDirInsert(
         position: Int,
         dirDetect: DirDetect,
@@ -162,6 +168,9 @@ class HouseDetectView : FrameLayout {
         }
     }
 
+    /**
+     * notifyItemInsert function implementation.
+     */
     fun notifyItemInsert(
         position: Int,
         itemDetect: ItemDetect,
@@ -181,6 +190,9 @@ class HouseDetectView : FrameLayout {
         }
     }
 
+    /**
+     * notifyItemRemove function implementation.
+     */
     fun notifyItemRemove(
         position: Int,
         itemDetect: ItemDetect,
@@ -208,6 +220,9 @@ class HouseDetectView : FrameLayout {
         }
     }
 
+    /**
+     * notifyItemChange function implementation.
+     */
     fun notifyItemChange(position: Int) {
         adapter.notifyItemChanged(position)
     }
@@ -253,6 +268,9 @@ class HouseDetectView : FrameLayout {
             onDirExpandListener?.invoke(dirDetect.isExpand)
         }
 
+        /**
+         * refreshDir function implementation.
+         */
         fun refreshDir(
             dirView: View,
             dirDetect: DirDetect,

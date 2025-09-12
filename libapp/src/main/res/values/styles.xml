@@ -1,10 +1,10 @@
 <resources>
 
     <style name="base_dialog" parent="android:style/Theme.Dialog">
-        <item name="android:statusBarColor">#00000000</item>  <!-- 状态栏颜色 -->
+        <item name="android:statusBarColor">#00000000</item>  <!-- Status栏颜色 -->
         <item name="android:windowFrame">@null</item>         <!-- 边框 -->
         <item name="android:windowIsFloating">false</item>    <!-- 是否浮现在activity之上 -->
-        <item name="android:windowNoTitle">true</item>        <!-- 是否无标题 -->
+        <item name="android:windowNoTitle">true</item>        <!-- 是否无Title -->
         <item name="android:windowIsTranslucent">false</item> <!-- 是否半透明 -->
         <item name="android:windowBackground">#00000000</item><!-- 背景颜色-透明 -->
         <item name="android:backgroundDimEnabled">true</item> <!-- 对话框之外的背景是否模糊 -->
@@ -39,7 +39,7 @@
     <style name="TextInputDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>        <!-- 边框 -->
         <item name="android:windowIsFloating">true</item>   <!-- 是否浮现在activity之上 -->
-        <item name="android:windowNoTitle">true</item>       <!-- 是否无标题 -->
+        <item name="android:windowNoTitle">true</item>       <!-- 是否无Title -->
         <item name="android:windowIsTranslucent">false</item><!-- 是否半透明 -->
         <item name="android:windowBackground">@android:color/transparent</item><!-- 背景颜色-透明 -->
         <item name="android:backgroundDimEnabled">true</item><!-- 对话框之外的背景是否模糊 -->
@@ -49,7 +49,7 @@
     <style name="DefaultDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>        <!-- 边框 -->
         <item name="android:windowIsFloating">false</item>   <!-- 是否浮现在activity之上 -->
-        <item name="android:windowNoTitle">true</item>       <!-- 是否无标题 -->
+        <item name="android:windowNoTitle">true</item>       <!-- 是否无Title -->
         <item name="android:windowIsTranslucent">false</item><!-- 是否半透明 -->
         <item name="android:windowBackground">@android:color/transparent</item><!-- 背景颜色-透明 -->
         <item name="android:backgroundDimEnabled">true</item><!-- 对话框之外的背景是否模糊 -->
@@ -59,7 +59,7 @@
     <style name="TransparentDialog" parent="AppTheme">
         <item name="android:windowFrame">@null</item>         <!-- 边框 -->
         <item name="android:windowIsFloating">false</item>    <!-- 是否浮现在activity之上 -->
-        <item name="android:windowNoTitle">true</item>        <!-- 是否无标题 -->
+        <item name="android:windowNoTitle">true</item>        <!-- 是否无Title -->
         <item name="android:windowIsTranslucent">true</item>  <!-- 是否半透明 -->
         <item name="android:windowBackground">@android:color/transparent</item><!-- 背景颜色-透明 -->
         <item name="android:backgroundDimEnabled">false</item><!-- 对话框之外的背景是否模糊 -->

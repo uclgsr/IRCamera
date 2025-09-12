@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 取消 -->
+    <!-- Cancel -->
     <TextView
         android:id="@+id/tv_cancel"
         android:layout_width="0dp"
@@ -174,7 +174,7 @@
                     app:layout_constraintBottom_toBottomOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- 自定义设置内容 -->
+            <!-- 自定义SettingsContent -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_custom_content"
                 android:layout_width="0dp"
@@ -350,7 +350,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_color_title">
 
-                    <!-- 添加 -->
+                    <!-- Add -->
                     <ImageView
                         android:id="@+id/iv_custom_add"
                         android:layout_width="44dp"
@@ -362,7 +362,7 @@
                         android:contentDescription="@null"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-                    <!-- 删除 -->
+                    <!-- Delete -->
                     <ImageView
                         android:id="@+id/iv_custom_del"
                         android:layout_width="44dp"
@@ -416,7 +416,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/pseudo_pick_view" />
 
-                    <!-- 目前原型UI为6个预设值，更改的概率不大，此处直接写死，就不用 RecyclerView、自定义View 之类的去复杂化了 -->
+                    <!-- 目前原型UI为6个预设值，更改的概率不大，此处直接写死，就不用 RecyclerView、自定义View 之Class的去复杂化了 -->
                     <View
                         android:id="@+id/view_custom_color1"
                         android:layout_width="0dp"
@@ -501,7 +501,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_color_title">
-                    <!-- 目前原型UI为5个预设值，更改的概率不大，此处直接写死，就不用 RecyclerView、自定义View 之类的去复杂化了 -->
+                    <!-- 目前原型UI为5个预设值，更改的概率不大，此处直接写死，就不用 RecyclerView、自定义View 之Class的去复杂化了 -->
                     <!-- 铁红 -->
                     <View
                         android:id="@+id/view_recommend_bg_color1"

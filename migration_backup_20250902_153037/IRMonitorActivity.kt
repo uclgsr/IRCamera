@@ -16,6 +16,9 @@ import org.greenrobot.eventbus.EventBus
  * 选取区域监听
  */
 @Route(path = RouterConfig.IR_THERMAL_MONITOR)
+/**
+ * IRMonitorActivity class for thermal imaging functionality.
+ */
 class IRMonitorActivity : BaseActivity(), View.OnClickListener {
     private var selectIndex: SelectPositionBean? = null // 选取点
 
@@ -66,6 +69,9 @@ class IRMonitorActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
+    /**
+     * select function implementation.
+     */
     fun select(selectIndex: SelectPositionBean?) {
         this.selectIndex = selectIndex
     }

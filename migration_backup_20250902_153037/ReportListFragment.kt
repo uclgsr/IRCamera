@@ -26,13 +26,13 @@ import com.topdon.lib.core.db.entity.HouseReport
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseFragment
 import com.topdon.lms.sdk.weiget.TToast
+import java.io.File
 import kotlinx.android.synthetic.main.fragment_report_list.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.io.File
 
 /**
  * 报告列表.
@@ -142,6 +142,9 @@ internal class ReportListFragment : BaseFragment(), View.OnClickListener {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * onDetectCreate function implementation.
+     */
     fun onDetectCreate(event: HouseReportAddEvent) {
         viewModel.queryAll()
     }

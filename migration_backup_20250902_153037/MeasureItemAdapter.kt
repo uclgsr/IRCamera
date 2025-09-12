@@ -13,11 +13,17 @@ import com.topdon.lib.ui.bean.ColorBean
 import com.topdon.module.thermal.ir.R
 import kotlinx.android.synthetic.main.itme_target_mode.view.*
 
+/**
+ * MeasureItemAdapter class for thermal imaging functionality.
+ */
 class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
     private var selected = -1
 
+    /**
+     * selected function implementation.
+     */
     fun selected(index: Int) {
         selected = index
         notifyDataSetChanged()

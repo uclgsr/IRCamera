@@ -24,6 +24,9 @@ class TipOtgDialog : Dialog {
 
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
 
+    /**
+     * Builder class for thermal imaging functionality.
+     */
     class Builder {
         var dialog: TipOtgDialog? = null
         private var context: Context? = null
@@ -44,11 +47,17 @@ class TipOtgDialog : Dialog {
             this.context = context
         }
 
+        /**
+         * setMessage function implementation.
+         */
         fun setMessage(message: String): Builder {
             this.message = message
             return this
         }
 
+        /**
+         * setMessage function implementation.
+         */
         fun setMessage(
             @StringRes message: Int,
         ): Builder {
@@ -56,6 +65,9 @@ class TipOtgDialog : Dialog {
             return this
         }
 
+        /**
+         * setPositiveListener function implementation.
+         */
         fun setPositiveListener(
             @StringRes strRes: Int,
             event: ((check: Boolean) -> Unit)? = null,
@@ -63,6 +75,9 @@ class TipOtgDialog : Dialog {
             return setPositiveListener(context!!.getString(strRes), event)
         }
 
+        /**
+         * setPositiveListener function implementation.
+         */
         fun setPositiveListener(
             str: String,
             event: ((check: Boolean) -> Unit)? = null,
@@ -72,6 +87,9 @@ class TipOtgDialog : Dialog {
             return this
         }
 
+        /**
+         * setCancelListener function implementation.
+         */
         fun setCancelListener(
             @StringRes strRes: Int,
             event: (() -> Unit)? = null,
@@ -79,6 +97,9 @@ class TipOtgDialog : Dialog {
             return setCancelListener(context!!.getString(strRes), event)
         }
 
+        /**
+         * setCancelListener function implementation.
+         */
         fun setCancelListener(
             str: String,
             event: (() -> Unit)? = null,
@@ -88,15 +109,24 @@ class TipOtgDialog : Dialog {
             return this
         }
 
+        /**
+         * setCanceled function implementation.
+         */
         fun setCanceled(canceled: Boolean): Builder {
             this.canceled = canceled
             return this
         }
 
+        /**
+         * dismiss function implementation.
+         */
         fun dismiss() {
             this.dialog!!.dismiss()
         }
 
+        /**
+         * create function implementation.
+         */
         fun create(): TipOtgDialog {
             if (dialog == null) {
                 dialog = TipOtgDialog(context!!, R.style.InfoDialog)

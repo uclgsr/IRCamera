@@ -26,7 +26,7 @@
     <usb-device
         class="39"
         subclass="0" />
-    <!-- vid若为0A0A会影响到模组重新插拔之后的数据格式转换 -->
+    <!-- vid若为0A0A会影响到模组重新插拔之后的DataFormat转换 -->
     <usb-device
         product-id="9730"
         vendor-id="2570" />

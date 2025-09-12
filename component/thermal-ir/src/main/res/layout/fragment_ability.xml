@@ -40,7 +40,7 @@
         app:layout_constraintEnd_toEndOf="@id/iv_winter"
         app:layout_constraintTop_toTopOf="@id/iv_winter"
         app:layout_constraintBottom_toBottomOf="@id/iv_winter" />
-    <!-- 标题 -->
+    <!-- Title -->
     <TextView
         android:id="@+id/tv_winter_title"
         android:layout_width="0dp"
@@ -58,7 +58,7 @@
         app:layout_constraintEnd_toStartOf="@+id/space_winter_right"
         app:layout_constraintTop_toTopOf="@id/iv_winter"
         app:layout_constraintBottom_toTopOf="@+id/tv_winter_sub_title" />
-    <!-- 副标题 -->
+    <!-- 副Title -->
     <TextView
         android:id="@+id/tv_winter_sub_title"
         android:layout_width="0dp"
@@ -75,7 +75,7 @@
         app:layout_constraintBottom_toBottomOf="@id/iv_winter" />
 
 
-    <!-- 温度监控 -->
+    <!-- 温度Monitor -->
     <ImageView
         android:id="@+id/iv_monitory"
         android:layout_width="0dp"

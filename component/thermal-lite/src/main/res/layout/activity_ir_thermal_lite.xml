@@ -269,7 +269,7 @@
         app:layout_constraintStart_toStartOf="@id/thermal_lay"
         app:layout_constraintEnd_toEndOf="@id/thermal_lay" />
 
-    <!-- 拍照-更多 5 选项菜单 -->
+    <!-- 拍照-更多 5 OptionMenu -->
     <ViewStub
         android:id="@+id/view_stub_camera"
         android:layout_width="0dp"

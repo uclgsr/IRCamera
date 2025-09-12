@@ -12,11 +12,17 @@ import com.topdon.libcom.bean.DColorSelectBean
 import kotlinx.android.synthetic.main.d_ui_item_color_select.view.*
 
 @Deprecated("产品要求所有颜色拾取都更改为 ColorPickDialog 那种样式，这个弹框废弃")
+/**
+ * DColorSelectAdapter class for thermal imaging functionality.
+ */
 class DColorSelectAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((code: Int, color: Int) -> Unit)? = null
     private var type = 0
     private var selected = -1
 
+    /**
+     * selected function implementation.
+     */
     fun selected(index: Int) {
         selected = index
         notifyDataSetChanged()

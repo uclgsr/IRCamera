@@ -98,7 +98,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Blank"
             android:exported="true">
-            <!-- 监听USB设备的插拔 -->
+            <!-- 监听USBDevice的插拔 -->
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>

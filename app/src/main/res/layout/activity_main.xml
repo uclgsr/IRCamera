@@ -82,7 +82,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
-            <!-- 图库 -->
+            <!-- 图Library -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_icon_gallery"
                 android:layout_width="0dp"

@@ -19,6 +19,9 @@ import kotlinx.android.synthetic.main.item_new_version.tv_new_version
 import java.util.*
 
 @Route(path = RouterConfig.VERSION)
+/**
+ * VersionActivity class for thermal imaging functionality.
+ */
 class VersionActivity : BaseActivity(), View.OnClickListener {
     override fun initContentView() = R.layout.activity_version
 

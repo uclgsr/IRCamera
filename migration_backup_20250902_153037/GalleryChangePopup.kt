@@ -50,6 +50,9 @@ class GalleryChangePopup(private val context: Context) : PopupWindow() {
         }
     }
 
+    /**
+     * show function implementation.
+     */
     fun show(anchor: View) {
         val locationArray = IntArray(2)
         anchor.getLocationInWindow(locationArray)

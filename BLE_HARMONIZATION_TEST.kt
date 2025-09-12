@@ -29,6 +29,9 @@ import org.junit.runner.RunWith
  * @author IRCamera Systematic Harmonization Team
  */
 @RunWith(AndroidJUnit4::class)
+/**
+ * EnhancedBLEHarmonizationTest class for thermal imaging functionality.
+ */
 class EnhancedBLEHarmonizationTest {
     private lateinit var context: Context
     private lateinit var enhancedBLE: EasyBLE
@@ -37,6 +40,9 @@ class EnhancedBLEHarmonizationTest {
     private lateinit var bleDeviceManager: BleDeviceManager
 
     @Before
+    /**
+     * setup function implementation.
+     */
     fun setup() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
 
@@ -58,6 +64,9 @@ class EnhancedBLEHarmonizationTest {
     }
 
     @Test
+    /**
+     * testEnhancedBLEInitialization function implementation.
+     */
     fun testEnhancedBLEInitialization() {
         // Verify enhanced BLE module initializes correctly
         assertNotNull("Enhanced BLE should be initialized", enhancedBLE)
@@ -66,6 +75,9 @@ class EnhancedBLEHarmonizationTest {
     }
 
     @Test
+    /**
+     * testNordicBleBackendIntegration function implementation.
+     */
     fun testNordicBleBackendIntegration() =
         runBlocking {
             // Test Nordic BLE backend initialization
@@ -78,6 +90,9 @@ class EnhancedBLEHarmonizationTest {
         }
 
     @Test
+    /**
+     * testEnhancedConnectionReliability function implementation.
+     */
     fun testEnhancedConnectionReliability() =
         runBlocking {
             // Test enhanced connection reliability features
@@ -102,6 +117,9 @@ class EnhancedBLEHarmonizationTest {
         }
 
     @Test
+    /**
+     * testGSRSensorOptimization function implementation.
+     */
     fun testGSRSensorOptimization() {
         // Test GSR sensor detection and optimization
         val gsrDeviceAddress = "AA:BB:CC:DD:EE:FF"
@@ -118,6 +136,9 @@ class EnhancedBLEHarmonizationTest {
     }
 
     @Test
+    /**
+     * testMultiDeviceCoordination function implementation.
+     */
     fun testMultiDeviceCoordination() {
         // Test multi-device coordination for hub-spoke systems
         enhancedBleManager.enableMultiDeviceMode(true)
@@ -130,6 +151,9 @@ class EnhancedBLEHarmonizationTest {
     }
 
     @Test
+    /**
+     * testUserComponentBleIntegration function implementation.
+     */
     fun testUserComponentBleIntegration() =
         runBlocking {
             // Test user component BLE device management
@@ -148,6 +172,9 @@ class EnhancedBLEHarmonizationTest {
         }
 
     @Test
+    /**
+     * testConnectionMetricsAndReliability function implementation.
+     */
     fun testConnectionMetricsAndReliability() =
         runBlocking {
             // Test connection metrics and reliability scoring
@@ -171,6 +198,9 @@ class EnhancedBLEHarmonizationTest {
         }
 
     @Test
+    /**
+     * testDataLossDetectionAndRecovery function implementation.
+     */
     fun testDataLossDetectionAndRecovery() =
         runBlocking {
             // Test data loss detection and error recovery
@@ -194,6 +224,9 @@ class EnhancedBLEHarmonizationTest {
         }
 
     @Test
+    /**
+     * testAPICompatibility function implementation.
+     */
     fun testAPICompatibility() {
         // Verify that both enhanced and standard BLE maintain API compatibility
         assertNotNull("Enhanced BLE should be created", enhancedBLE)
@@ -207,6 +240,9 @@ class EnhancedBLEHarmonizationTest {
     }
 
     @Test
+    /**
+     * testGSRSensorRecorderIntegration function implementation.
+     */
     fun testGSRSensorRecorderIntegration() {
         // Test GSR sensor recorder with enhanced BLE backend
         val gsrRecorder =
@@ -224,6 +260,9 @@ class EnhancedBLEHarmonizationTest {
     }
 
     @Test
+    /**
+     * testSystemWideHarmonization function implementation.
+     */
     fun testSystemWideHarmonization() =
         runBlocking {
             // Test system-wide BLE harmonization across components
@@ -249,6 +288,9 @@ class EnhancedBLEHarmonizationTest {
         }
 
     @Test
+    /**
+     * testZeroBreakingChanges function implementation.
+     */
     fun testZeroBreakingChanges() {
         // Test that existing BLE code works unchanged
 
@@ -267,6 +309,9 @@ class EnhancedBLEHarmonizationTest {
     }
 
     @Test
+    /**
+     * testHubSpokeIntegrationCompatibility function implementation.
+     */
     fun testHubSpokeIntegrationCompatibility() {
         // Test hub-spoke integration compatibility with enhanced BLE
 
@@ -295,6 +340,9 @@ class EnhancedBLEHarmonizationTest {
     }
 
     @Test
+    /**
+     * testComprehensiveBuildIntegration function implementation.
+     */
     fun testComprehensiveBuildIntegration() {
         // Test that all BLE-enabled components compile and integrate properly
 
@@ -321,6 +369,9 @@ class EnhancedBLEHarmonizationTest {
     }
 
     @Test
+    /**
+     * testAdvancedSensorFusionManager function implementation.
+     */
     fun testAdvancedSensorFusionManager() =
         runBlocking {
             // Test advanced sensor fusion capabilities
@@ -348,6 +399,9 @@ class EnhancedBLEHarmonizationTest {
         }
 
     @Test
+    /**
+     * testPredictiveConnectionManager function implementation.
+     */
     fun testPredictiveConnectionManager() =
         runBlocking {
             // Test predictive connection management
@@ -381,6 +435,9 @@ class EnhancedBLEHarmonizationTest {
         }
 
     @Test
+    /**
+     * testResearchGradeBleManager function implementation.
+     */
     fun testResearchGradeBleManager() =
         runBlocking {
             // Test research-grade BLE management
@@ -425,6 +482,9 @@ class EnhancedBLEHarmonizationTest {
         }
 
     @Test
+    /**
+     * testSecureBleManager function implementation.
+     */
     fun testSecureBleManager() =
         runBlocking {
             // Test secure BLE management
@@ -475,6 +535,9 @@ class EnhancedBLEHarmonizationTest {
         }
 
     @Test
+    /**
+     * testAdvancedMultiModalSensorIntegration function implementation.
+     */
     fun testAdvancedMultiModalSensorIntegration() =
         runBlocking {
             // Test advanced integration across all managers
@@ -570,6 +633,9 @@ class EnhancedBLEHarmonizationTest {
         }
 
     @Test
+    /**
+     * testCrossPlatformSynchronization function implementation.
+     */
     fun testCrossPlatformSynchronization() =
         runBlocking {
             // Test cross-platform coordination features
@@ -596,6 +662,9 @@ class EnhancedBLEHarmonizationTest {
         }
 
     @Test
+    /**
+     * testComprehensiveDataQualityAssurance function implementation.
+     */
     fun testComprehensiveDataQualityAssurance() =
         runBlocking {
             // Test comprehensive data quality and validation
@@ -669,6 +738,9 @@ class EnhancedBLEHarmonizationTest {
         }
 
     @Test
+    /**
+     * runComprehensiveHarmonizationTestSuite function implementation.
+     */
     fun runComprehensiveHarmonizationTestSuite() =
         runBlocking {
             println("\n🚀 Starting Enhanced BLE Harmonization Comprehensive Test Suite")

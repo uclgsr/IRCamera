@@ -26,7 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 测温模式-菜单2-点线面 -->
+    <!-- 测温Mode-Menu2-点线面 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_fence"
         android:layout_width="0dp"
@@ -36,7 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/space"
         app:layout_constraintBottom_toBottomOf="@id/space" />
-    <!-- 测温模式-菜单3-双光 -->
+    <!-- 测温Mode-Menu3-双光 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_two_light"
         android:layout_width="0dp"
@@ -46,7 +46,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/space"
         app:layout_constraintBottom_toBottomOf="@id/space" />
-    <!-- 测温模式-菜单4-伪彩/观测模式-菜单3-伪彩 -->
+    <!-- 测温Mode-Menu4-伪彩/观测Mode-Menu3-伪彩 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_color"
         android:layout_width="0dp"
@@ -56,7 +56,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/space"
         app:layout_constraintBottom_toBottomOf="@id/space" />
-    <!-- 测温模式-菜单5-设置 -->
+    <!-- 测温Mode-Menu5-Settings -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_setting_te"
         android:layout_width="0dp"
@@ -66,7 +66,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/space"
         app:layout_constraintBottom_toBottomOf="@id/space" />
-    <!-- 测温模式-菜单6-高低温档 -->
+    <!-- 测温Mode-Menu6-高低温档 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_temp_level"
         android:layout_width="0dp"
@@ -78,7 +78,7 @@
         app:layout_constraintBottom_toBottomOf="@id/space" />
 
 
-    <!-- 观测模式-菜单2-高低温源 -->
+    <!-- 观测Mode-Menu2-高低温源 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_temp_source"
         android:layout_width="0dp"
@@ -88,7 +88,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/space"
         app:layout_constraintBottom_toBottomOf="@id/space" />
-    <!-- 观测模式-菜单4-标靶 -->
+    <!-- 观测Mode-Menu4-标靶 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_target"
         android:layout_width="0dp"
@@ -98,7 +98,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/space"
         app:layout_constraintBottom_toBottomOf="@id/space" />
-    <!-- 观测模式-菜单5-高低温点 -->
+    <!-- 观测Mode-Menu5-高低温点 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_temp_point"
         android:layout_width="0dp"
@@ -108,7 +108,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/space"
         app:layout_constraintBottom_toBottomOf="@id/space" />
-    <!-- 观测模式-菜单6-设置 -->
+    <!-- 观测Mode-Menu6-Settings -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_setting_ob"
         android:layout_width="0dp"

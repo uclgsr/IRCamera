@@ -76,7 +76,7 @@
             android:paddingTop="20dp"
             android:paddingBottom="20dp">
 
-            <!-- 报告信息 -->
+            <!-- ReportInformation -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_report_info"
                 android:layout_width="0dp"
@@ -89,7 +89,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <!-- 报告信息 -->
+                <!-- ReportInformation -->
                 <TextView
                     android:id="@+id/tv_report_info_title"
                     android:layout_width="0dp"
@@ -106,7 +106,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- 报告名称 -->
+                <!-- Report名称 -->
                 <TextView
                     android:id="@+id/tv_report_name"
                     android:layout_width="wrap_content"
@@ -180,7 +180,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_report_author" />
 
-                <!-- 报告日期 -->
+                <!-- ReportDate -->
                 <TextView
                     android:id="@+id/tv_report_date_title"
                     android:layout_width="wrap_content"
@@ -220,7 +220,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_report_date_title" />
 
-                <!-- 报告地点 -->
+                <!-- Report地点 -->
                 <TextView
                     android:id="@+id/tv_report_place"
                     android:layout_width="wrap_content"
@@ -466,7 +466,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_emissivity" />
 
-                <!-- 测试距离 -->
+                <!-- TestDistance -->
                 <TextView
                     android:id="@+id/tv_test_distance"
                     android:layout_width="wrap_content"

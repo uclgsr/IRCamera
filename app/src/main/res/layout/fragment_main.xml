@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         tools:background="#16131e">
 
-        <!-- 未连接过任何设备界面 -->
+        <!-- 未Connect过任何DeviceInterface -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_no_device"
             android:layout_width="0dp"
@@ -62,7 +62,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
-            <!-- 连接设备 -->
+            <!-- ConnectDevice -->
             <TextView
                 android:id="@+id/tv_connect_device"
                 android:layout_width="0dp"
@@ -81,7 +81,7 @@
                 app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- 连接过任何设备界面 -->
+        <!-- Connect过任何DeviceInterface -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_has_device"
             android:layout_width="0dp"

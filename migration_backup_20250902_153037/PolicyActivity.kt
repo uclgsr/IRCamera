@@ -27,6 +27,9 @@ import kotlinx.coroutines.launch
  * 服务返回有错误时,加载默认条款
  */
 @Route(path = RouterConfig.POLICY)
+/**
+ * PolicyActivity class for thermal imaging functionality.
+ */
 class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
     private val mHandler = Handler(Looper.getMainLooper())
 
@@ -182,6 +185,9 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
         delayShowWebView()
     }
 
+    /**
+     * loadHttpWhenNotInit function implementation.
+     */
     fun loadHttpWhenNotInit(view: WebView) {
         reloadCount--
         when (themeType) {

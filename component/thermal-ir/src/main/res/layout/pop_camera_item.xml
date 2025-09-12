@@ -115,7 +115,7 @@
                 app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- 更多设置 -->
+        <!-- 更多Settings -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_setting"
             android:layout_width="0dp"

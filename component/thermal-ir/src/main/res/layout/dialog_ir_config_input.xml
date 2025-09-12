@@ -60,7 +60,7 @@
         app:layout_constraintTop_toTopOf="@id/view_input_bg"
         app:layout_constraintBottom_toBottomOf="@id/view_input_bg" />
 
-    <!-- 取消 -->
+    <!-- Cancel -->
     <TextView
         android:id="@+id/tv_cancel"
         android:layout_width="0dp"

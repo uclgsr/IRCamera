@@ -41,16 +41,25 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
         view = inflater.inflate(R.layout.layout_popup_tip_emissivity, null)
     }
 
+    /**
+     * setTitle function implementation.
+     */
     fun setTitle(title: String): EmissivityTipPopup {
         titleText?.text = title
         return this
     }
 
+    /**
+     * setMessage function implementation.
+     */
     fun setMessage(message: String): EmissivityTipPopup {
         messageText?.text = message
         return this
     }
 
+    /**
+     * setDataBean function implementation.
+     */
     fun setDataBean(
         environment: Float,
         distance: Float,
@@ -64,11 +73,17 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
         return this
     }
 
+    /**
+     * setCancelListener function implementation.
+     */
     fun setCancelListener(event: ((check: Boolean) -> Unit)?): EmissivityTipPopup {
         this.closeEvent = event
         return this
     }
 
+    /**
+     * build function implementation.
+     */
     fun build(): PopupWindow {
         if (popupWindow == null) {
             view.tv_environment_title.text = context.getString(R.string.thermal_config_environment) + ":"
@@ -111,10 +126,16 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
         return popupWindow!!
     }
 
+    /**
+     * show function implementation.
+     */
     fun show(anchorView: View) {
         popupWindow?.showAtLocation(anchorView, Gravity.CENTER, -SizeUtils.dp2px(10f), 0)
     }
 
+    /**
+     * dismiss function implementation.
+     */
     fun dismiss() {
         popupWindow?.dismiss()
         closeEvent?.invoke(checkBox?.isChecked ?: false)

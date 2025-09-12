@@ -68,6 +68,9 @@ class OptionPickPopup(
         contentView.recycler_view.layoutManager = LinearLayoutManager(context)
     }
 
+    /**
+     * show function implementation.
+     */
     fun show(anchor: View) {
         val locationArray = IntArray(2)
         anchor.getLocationInWindow(locationArray)

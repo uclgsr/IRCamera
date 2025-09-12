@@ -19,6 +19,9 @@ import kotlinx.coroutines.launch
  * @date: 2023/8/4 9:06
  */
 @Route(path = RouterConfig.IR_CORRECTION_THREE_LITE)
+/**
+ * IRCorrectionLiteThreeActivity class for thermal imaging functionality.
+ */
 class IRCorrectionLiteThreeActivity : BaseActivity() {
     override fun initContentView(): Int = R.layout.activity_ir_correction_lite_three
 

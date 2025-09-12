@@ -241,7 +241,7 @@
     <string name="device_loading_tip">Loading…</string>
 
 
-    <!-- 2.00版本 -->
+    <!-- 2.00Version -->
     <string name="app_lapsePhotography">Timed Photo</string>
     <string name="app_Manual_Shutter">Manual Shutter</string>
     <string name="app_record_sound">Record Audio</string>
@@ -286,7 +286,7 @@
     <string name="tip_video_record">Each recording time is up to 60 minutes</string>
 
 
-    <!-- 2.10版本 -->
+    <!-- 2.10Version -->
     <string name="temp_alarm_alarm">Alarm</string>
     <string name="temp_alarm_high_alarm">High Temp. Alarm</string>
     <string name="temp_alarm_low_alarm">Low Temp. Alarm</string>
@@ -457,7 +457,7 @@
     <string name="target_tips_step_4">4.Observe the object and the number on the target (the distance between the camera and the object). As shown in the picture below, the distance between the camera and the object is 20 meters.</string>
     <string name="target_tips_tip_content">Note: Currently, referential heights for 4 types of objects are available.</string>
 
-    <!--国内上架用-->
+    <!-- 国内上架用 -->
     <string name="permission_request_camera_app">%1$s is requesting permission for your camera to allow changing your profile picture or taking photos to give feedback.</string>
     <string name="permission_request_location_app">%1$s is requesting permission for your location to search for nearby Bluetooth devices.</string>
     <string name="permission_request_storage_app">%1$s is requesting storage permission to save local files or read pictures for profile setting.</string>
