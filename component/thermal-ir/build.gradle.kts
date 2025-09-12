@@ -104,6 +104,12 @@ dependencies {
     // Image browser library
     implementation(libs.mn.image.browser)
     
+    // GSYVideoPlayer - using base player without extra dependencies
+    implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.6.0-release-jitpack")
+    
+    // LocalBroadcastManager - add androidx.localbroadcastmanager
+    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
+    
     // Media3 ExoPlayer for video playback - compatible replacement for GSYVideoPlayer
     implementation("androidx.media3:media3-exoplayer:1.1.1")
     implementation("androidx.media3:media3-ui:1.1.1")
