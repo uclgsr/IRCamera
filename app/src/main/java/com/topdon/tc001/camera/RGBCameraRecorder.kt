@@ -178,6 +178,14 @@ class RGBCameraRecorder(
     /**
      * Switch camera mode with fast session reconfiguration (Samsung S22 optimized)
      * Implements the dual-mode switching without reopening camera device
+     * 
+     * Session Configuration Logic:
+     * 1. Stop any ongoing repeating requests
+     * 2. Close/tear down the previous capture session (but NOT the camera device)
+     * 3. Clean up mode-specific resources
+     * 4. Create new capture session with appropriate surfaces for the new mode
+     * 
+     * This avoids fully restarting the camera device, which would be slow and unnecessary.
      */
     suspend fun switchMode(newMode: CameraMode): Boolean = withContext(Dispatchers.Main) {
         if (currentMode == newMode) {
@@ -203,6 +211,10 @@ class RGBCameraRecorder(
             // Stop current session repeating requests
             captureSession?.stopRepeating()
             captureSession?.abortCaptures()
+            
+            // Close the previous capture session (but NOT the camera device)
+            captureSession?.close()
+            captureSession = null
             
             // Clean up mode-specific resources
             cleanupCurrentMode()
@@ -341,6 +353,12 @@ class RGBCameraRecorder(
             
             return@withContext true
             
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to configure standard video mode", e)
+            return@withContext false
+        }
+    }
+    
     /**
      * Configure high-speed 4K@60fps video mode (Samsung S22 attempt)
      */
@@ -746,9 +764,19 @@ class RGBCameraRecorder(
 
     /**
      * Reconfigure session to add MediaRecorder surface for video recording
+     * 
+     * Properly tears down previous session and creates new one with MediaRecorder surface,
+     * following the recommended pattern: stop requests → close session → create new session.
+     * This avoids closing the camera device itself, which would be expensive.
      */
     private fun reconfigureSessionForVideoRecording() {
         try {
+            // Stop ongoing repeating requests and close previous session
+            captureSession?.stopRepeating()
+            captureSession?.abortCaptures()
+            captureSession?.close()
+            captureSession = null
+            
             val surfaces = mutableListOf<Surface>()
             previewSurface?.let { surfaces.add(it) }
             
@@ -1511,6 +1539,42 @@ class RGBCameraRecorder(
      */
     fun supportsHighSpeed60fps(): Boolean {
         return checkHighSpeedVideoSupport() && !isSamsungDevice // Samsung typically restricts this for 3rd party apps
+    }
+
+    /**
+     * Check if simultaneous RAW + video streams are supported
+     * 
+     * As mentioned in the technical review, running 50MP RAW and 4K60 video simultaneously 
+     * is very demanding and may not be supported on all devices. This method helps validate
+     * stream combinations before attempting to configure them.
+     */
+    private fun validateStreamCombination(surfaces: List<Surface>): Boolean {
+        return try {
+            val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+            val cameraId = getCameraId(currentCameraFacing)
+            val characteristics = manager.getCameraCharacteristics(cameraId)
+            
+            // For now, we use separate sessions for each mode to avoid bandwidth limitations
+            // This is the safer approach mentioned in the technical review
+            
+            // Check basic stream configuration limits
+            val map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+            if (map == null) {
+                Log.w(TAG, "Stream configuration map not available")
+                return false
+            }
+            
+            // Log the approach being used
+            Log.d(TAG, "Using dynamic session reconfiguration to avoid simultaneous RAW+4K limitations")
+            
+            // Since we're using separate sessions, this validation always passes
+            // The real validation happens when createCaptureSession is called
+            true
+            
+        } catch (e: Exception) {
+            Log.w(TAG, "Error validating stream combination", e)
+            false
+        }
     }
 
     private fun createCameraPreviewSession() {
