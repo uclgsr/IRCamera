@@ -334,13 +334,14 @@ class GSRSensorRecorder(
             } else {
                 Log.i(TAG, "GSR recording started with available methods (Shimmer: $shimmerRecordingStarted, Legacy: $legacyRecordingStarted)")
             
-            _isRecording.set(true)
-            sampleCount.set(0)
-            syncMarkerCount.set(0)
-            
-            Log.i(TAG, "GSR sensor recording started (Shimmer: $shimmerRecordingStarted, Legacy: $legacyRecordingStarted)")
-            emitStatus()
-            return@withContext true
+                _isRecording.set(true)
+                sampleCount.set(0)
+                syncMarkerCount.set(0)
+                
+                Log.i(TAG, "GSR sensor recording started (Shimmer: $shimmerRecordingStarted, Legacy: $legacyRecordingStarted)")
+                emitStatus()
+                return@withContext true
+            }
             
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start real Shimmer GSR recording", e)
