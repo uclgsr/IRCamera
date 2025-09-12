@@ -19,3 +19,16 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+# MethodHandle API compatibility rules
+-keep class java.lang.invoke.** { *; }
+-dontwarn java.lang.invoke.**
+-keep class kotlin.jvm.internal.** { *; }
+
+# Enhanced Kotlin compatibility
+-keep class kotlin.** { *; }
+-keep class kotlinx.coroutines.** { *; }
+-dontwarn kotlinx.coroutines.**
+
+# Network client compatibility
+-keep class com.topdon.tc001.network.** { *; }
+-keep class com.topdon.gsr.network.** { *; }

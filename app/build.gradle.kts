@@ -93,10 +93,13 @@ android {
     
     kotlinOptions {
         jvmTarget = "17"
+        apiVersion = "1.9"
+        languageVersion = "1.9"
         freeCompilerArgs += listOf(
             "-opt-in=kotlin.RequiresOptIn",
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi", 
-            "-opt-in=kotlinx.coroutines.FlowPreview"
+            "-opt-in=kotlinx.coroutines.FlowPreview",
+            "-Xjvm-default=all"
         )
     }
 

@@ -1,0 +1,71 @@
+{
+  "validation_summary": {
+    "total_tests": 8,
+    "passed_tests": 6,
+    "failed_tests": 2,
+    "success_rate": "75.0%",
+    "total_duration": "2.12s",
+    "timestamp": 1757637157.569
+  },
+  "test_results": [
+    {
+      "test": "Network Protocol Compatibility",
+      "status": "PASSED",
+      "details": "Test completed successfully",
+      "duration": "0.00s"
+    },
+    {
+      "test": "PC Controller Network Server",
+      "status": "PASSED",
+      "details": "Test completed successfully",
+      "duration": "0.00s"
+    },
+    {
+      "test": "Android Connection Simulation",
+      "status": "FAILED",
+      "details": "Error: Android connection simulation failed: timed out",
+      "duration": "2.01s"
+    },
+    {
+      "test": "Time Synchronization Protocol",
+      "status": "PASSED",
+      "details": "Test completed successfully",
+      "duration": "0.00s"
+    },
+    {
+      "test": "Remote Recording Commands",
+      "status": "PASSED",
+      "details": "Test completed successfully",
+      "duration": "0.00s"
+    },
+    {
+      "test": "Connection Recovery",
+      "status": "PASSED",
+      "details": "Test completed successfully",
+      "duration": "0.00s"
+    },
+    {
+      "test": "Security Features",
+      "status": "FAILED",
+      "details": "Error: Security validation failed: module 'ssl' has no attribute 'PROTOCOL_SSLv2'",
+      "duration": "0.11s"
+    },
+    {
+      "test": "Performance Metrics",
+      "status": "PASSED",
+      "details": "Test completed successfully",
+      "duration": "0.00s"
+    }
+  ],
+  "system_status": "NEEDS_ATTENTION",
+  "recommendations": [
+    "\u26a0\ufe0f  Some tests failed. Review the following areas:",
+    "   - Android Connection Simulation: Error: Android connection simulation failed: timed out",
+    "   - Security Features: Error: Security validation failed: module 'ssl' has no attribute 'PROTOCOL_SSLv2'",
+    "\ud83d\udccb Next steps:",
+    "   1. Test with physical Android device on same network",
+    "   2. Verify firewall settings allow TCP connections on port 8080",
+    "   3. Test discovery functionality with mDNS/Zeroconf",
+    "   4. Validate recording functionality end-to-end"
+  ]
+}
