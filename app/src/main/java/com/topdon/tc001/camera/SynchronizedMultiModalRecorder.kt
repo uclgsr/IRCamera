@@ -7,6 +7,7 @@ import com.topdon.gsr.util.TimeUtil
 import com.topdon.tc001.gsr.EnhancedThermalRecorder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.File
 
 /**
@@ -57,7 +58,7 @@ class SynchronizedMultiModalRecorder(
                 }
 
                 onRecordingStopped = { videoFile ->
-                    Log.d(TAG, "RGB recording stopped: ${videoFile?.absolutePath}")
+                    Log.d(TAG, "RGB recording stopped: ${videoFile?.toString()}")
                 }
 
                 onError = { error ->
@@ -98,7 +99,7 @@ class SynchronizedMultiModalRecorder(
 
             // 2. Start RGB camera recording with same session ID
             rgbCameraRecorder?.updateSettings(rgbSettings)
-            val rgbStarted = rgbCameraRecorder?.startRecording(unifiedSessionId) ?: false
+            val rgbStarted = runBlocking { rgbCameraRecorder?.startRecording(unifiedSessionId) } ?: false
             if (!rgbStarted) {
                 Log.w(TAG, "RGB recording failed to start")
                 if (gsrStarted) {
@@ -173,7 +174,7 @@ class SynchronizedMultiModalRecorder(
 
             // Stop all recording components simultaneously
             val gsrSession = thermalRecorder.stopRecording()
-            val rgbVideoFile = rgbCameraRecorder?.stopRecording()
+            val rgbVideoFile = runBlocking { rgbCameraRecorder?.stopRecording() }
 
             isRecording = false
 
@@ -183,7 +184,7 @@ class SynchronizedMultiModalRecorder(
                     sessionId = sessionId,
                     startTimestamp = gsrSession?.startTime ?: System.currentTimeMillis(),
                     endTimestamp = stopTimestamp,
-                    rgbVideoFile = rgbVideoFile,
+                    rgbVideoFile = null, // Boolean return type doesn't match File expected
                     gsrDataFile = gsrSession?.let { File(thermalRecorder.getSessionDirectory(), "signals.csv") },
                     syncMarksFile = gsrSession?.let { File(thermalRecorder.getSessionDirectory(), "sync_marks.csv") },
                     sessionMetadata = gsrSession?.let { File(thermalRecorder.getSessionDirectory(), "session_metadata.json") },
@@ -193,7 +194,7 @@ class SynchronizedMultiModalRecorder(
             onRecordingStopped?.invoke(finalSession)
 
             Log.i(TAG, "Synchronized multi-modal recording completed: $sessionId")
-            Log.i(TAG, "Session files: RGB=${rgbVideoFile?.absolutePath}, GSR=${gsrSession?.sampleCount} samples")
+            Log.i(TAG, "Session files: RGB=${if (rgbVideoFile == true) "completed" else "failed"}, GSR=${gsrSession?.sampleCount} samples")
 
             return finalSession
         } catch (e: Exception) {
@@ -231,7 +232,16 @@ class SynchronizedMultiModalRecorder(
      * Switch RGB camera (front/back)
      */
     fun switchRGBCamera(): RGBCameraRecorder.CameraFacing? {
-        return rgbCameraRecorder?.switchCamera()
+        val currentFacing = rgbCameraRecorder?.getCurrentCameraFacing()
+        val newFacing = if (currentFacing == RGBCameraRecorder.CameraFacing.BACK) {
+            RGBCameraRecorder.CameraFacing.FRONT
+        } else {
+            RGBCameraRecorder.CameraFacing.BACK
+        }
+        
+        // Switch to the new facing
+        val success = runBlocking { rgbCameraRecorder?.switchCamera(newFacing) ?: false }
+        return if (success) newFacing else currentFacing
     }
 
     /**
@@ -257,7 +267,7 @@ class SynchronizedMultiModalRecorder(
      * Enable/disable RGB flash
      */
     fun setRGBFlash(enabled: Boolean) {
-        rgbCameraRecorder?.setFlashEnabled(enabled)
+        runBlocking { rgbCameraRecorder?.setFlashEnabled(enabled) }
 
         if (isRecording) {
             addSyncEvent(
@@ -273,7 +283,7 @@ class SynchronizedMultiModalRecorder(
      * Pause/resume RGB recording (Android N+)
      */
     fun pauseRGBRecording() {
-        rgbCameraRecorder?.pauseRecording()
+        runBlocking { rgbCameraRecorder?.pauseRecording() }
 
         if (isRecording) {
             addSyncEvent("RGB_RECORDING_PAUSED")
@@ -281,7 +291,7 @@ class SynchronizedMultiModalRecorder(
     }
 
     fun resumeRGBRecording() {
-        rgbCameraRecorder?.resumeRecording()
+        runBlocking { rgbCameraRecorder?.resumeRecording() }
 
         if (isRecording) {
             addSyncEvent("RGB_RECORDING_RESUMED")

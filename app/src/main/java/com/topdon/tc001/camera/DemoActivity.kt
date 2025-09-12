@@ -6,7 +6,8 @@ import android.view.TextureView
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.topdon.tc001.R
+import androidx.lifecycle.lifecycleScope
+import com.csl.irCamera.R
 import com.topdon.tc001.camera.core.ModeManager
 import kotlinx.coroutines.*
 

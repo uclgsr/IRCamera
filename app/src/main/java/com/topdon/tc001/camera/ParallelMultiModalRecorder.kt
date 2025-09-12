@@ -76,7 +76,7 @@ class ParallelMultiModalRecorder(
 
                 onRecordingStopped = { videoFile ->
                     onSensorStatusChanged?.invoke(SensorSelectionDialog.SensorType.RGB, "Completed")
-                    Log.d(TAG, "RGB recording stopped: ${videoFile?.absolutePath}")
+                    Log.d(TAG, "RGB recording stopped: ${videoFile?.toString()}")
                 }
 
                 onError = { error ->
@@ -398,18 +398,27 @@ class ParallelMultiModalRecorder(
             return null
         }
 
-        val newFacing = rgbCameraRecorder?.switchCamera()
+        val currentFacing = rgbCameraRecorder?.getCurrentCameraFacing()
+        val newFacing = if (currentFacing == RGBCameraRecorder.CameraFacing.BACK) {
+            RGBCameraRecorder.CameraFacing.FRONT
+        } else {
+            RGBCameraRecorder.CameraFacing.BACK
+        }
+        
+        // Switch to the new facing
+        val success = runBlocking { rgbCameraRecorder?.switchCamera(newFacing) ?: false }
+        val resultFacing = if (success) newFacing else currentFacing
 
         if (isRecording.get()) {
             addParallelSyncEvent(
                 "RGB_CAMERA_SWITCHED",
                 mapOf(
-                    "new_camera_facing" to (newFacing?.displayName ?: "unknown"),
+                    "new_camera_facing" to (resultFacing?.displayName ?: "unknown"),
                 ),
             )
         }
 
-        return newFacing
+        return resultFacing
     }
 
     /**

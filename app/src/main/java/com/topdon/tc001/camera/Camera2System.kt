@@ -281,16 +281,16 @@ class Camera2System(
                         
                         try {
                             session.setRepeatingRequest(requestBuilder!!.build(), null, null)
-                            continuation.resume(true)
+                            continuation.resume(true, null)
                         } catch (e: Exception) {
                             Log.e(TAG, "Failed to start preview request", e)
-                            continuation.resume(false)
+                            continuation.resume(false, null)
                         }
                     }
                     
                     override fun onConfigureFailed(session: CameraCaptureSession) {
                         Log.e(TAG, "RAW mode session configuration failed")
-                        continuation.resume(false)
+                        continuation.resume(false, null)
                     }
                 })
             }
@@ -324,16 +324,16 @@ class Camera2System(
                         
                         try {
                             session.setRepeatingRequest(requestBuilder!!.build(), null, null)
-                            continuation.resume(true)
+                            continuation.resume(true, null)
                         } catch (e: Exception) {
                             Log.e(TAG, "Failed to start video preview request", e)
-                            continuation.resume(false)
+                            continuation.resume(false, null)
                         }
                     }
                     
                     override fun onConfigureFailed(session: CameraCaptureSession) {
                         Log.e(TAG, "Video mode session configuration failed")
-                        continuation.resume(false)
+                        continuation.resume(false, null)
                     }
                 })
             }
@@ -362,16 +362,16 @@ class Camera2System(
                         
                         try {
                             session.setRepeatingRequest(requestBuilder!!.build(), null, null)
-                            continuation.resume(true)
+                            continuation.resume(true, null)
                         } catch (e: Exception) {
                             Log.e(TAG, "Failed to start preview request", e)
-                            continuation.resume(false)
+                            continuation.resume(false, null)
                         }
                     }
                     
                     override fun onConfigureFailed(session: CameraCaptureSession) {
                         Log.e(TAG, "Preview mode session configuration failed")
-                        continuation.resume(false)
+                        continuation.resume(false, null)
                     }
                 })
             }
@@ -428,19 +428,19 @@ class Camera2System(
                             
                             // Start MediaRecorder
                             if (videoEngine.start()) {
-                                continuation.resume(true)
+                                continuation.resume(true, null)
                             } else {
-                                continuation.resume(false)
+                                continuation.resume(false, null)
                             }
                         } catch (e: Exception) {
                             Log.e(TAG, "Failed to start recording request", e)
-                            continuation.resume(false)
+                            continuation.resume(false, null)
                         }
                     }
                     
                     override fun onConfigureFailed(session: CameraCaptureSession) {
                         Log.e(TAG, "Recording session configuration failed")
-                        continuation.resume(false)
+                        continuation.resume(false, null)
                     }
                 })
             }

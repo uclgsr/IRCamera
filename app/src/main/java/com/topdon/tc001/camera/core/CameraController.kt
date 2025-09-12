@@ -172,11 +172,11 @@ class CameraController(private val context: Context) {
         var supports4k60 = false
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val highSpeedConfigs = characteristics.get(CameraCharacteristics.CONTROL_AVAILABLE_HIGH_SPEED_VIDEO_CONFIGURATIONS)
-                highSpeedConfigs?.forEach { config ->
-                    if (config.width == 3840 && config.height == 2160) {
+                // Check high-speed video sizes and fps ranges directly from StreamConfigurationMap
+                map?.getHighSpeedVideoSizes()?.forEach { size ->
+                    if (size.width == 3840 && size.height == 2160) {
                         // Check if any fps range includes 60
-                        map?.getHighSpeedVideoFpsRangesFor(Size(3840, 2160))?.forEach { range ->
+                        map.getHighSpeedVideoFpsRangesFor(size)?.forEach { range ->
                             if (range.upper >= 60) {
                                 supports4k60 = true
                             }
