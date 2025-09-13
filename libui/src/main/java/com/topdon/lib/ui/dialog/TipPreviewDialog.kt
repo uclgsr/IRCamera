@@ -36,23 +36,6 @@ import kotlin.collections.ArrayList
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for TipPreviewDialog display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class TipPreviewDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
     private var dis: Disposable? = null
@@ -71,37 +54,14 @@ class TipPreviewDialog : DialogFragment() {
     private val pageCount = 2
     private var timer: Timer? = Timer()
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    /**
-     * Executes oncreatedialog operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return super.onCreateDialog(savedInstanceState)
     }
 
-    /**
-     * Executes oncreateview operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param inflater Parameter for operation (type: LayoutInflater)
-     * @param container Parameter for operation (type: ViewGroup?)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -111,34 +71,14 @@ class TipPreviewDialog : DialogFragment() {
         return binding.root
     }
 
-    /**
-     * Executes onviewcreated operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param view Parameter for operation (type: View)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
         titleList =
-            /**
-             * Executes arraylistof operation with thermal imaging domain optimization.
-             *
-             */
             arrayListOf(
-                /**
-                 * Retrieves the string with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getString(R.string.preview_step_1),
-                /**
-                 * Retrieves the string with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getString(R.string.preview_step_2),
             )
 
@@ -157,36 +97,15 @@ class TipPreviewDialog : DialogFragment() {
         }
         imgClose.setOnClickListener {
             closeEvent?.invoke(hasCheck)
-            /**
-             * Executes dismiss operation with thermal imaging domain optimization.
-             *
-             */
             dismiss()
         }
         binding.tvIKnow.setOnClickListener {
             closeEvent?.invoke(hasCheck)
-            /**
-             * Executes dismiss operation with thermal imaging domain optimization.
-             *
-             */
             dismiss()
         }
-        /**
-         * Executes updateindex operation with thermal imaging domain optimization.
-         *
-         */
         updateIndex(0)
         viewPager.addOnPageChangeListener(
             object : ViewPager.OnPageChangeListener {
-                /**
-                 * Executes onpagescrolled operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param position Parameter for operation (type: Int)
-                 * @param positionOffset Parameter for operation (type: Float)
-                 * @param positionOffsetPixels Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onPageScrolled(
                     position: Int,
                     positionOffset: Float,
@@ -194,28 +113,10 @@ class TipPreviewDialog : DialogFragment() {
                 ) {
                 }
 
-                /**
-                 * Executes onpageselected operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param position Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onPageSelected(position: Int) {
-                    /**
-                     * Executes updateindex operation with thermal imaging domain optimization.
-                     *
-                     */
                     updateIndex(position)
                 }
 
-                /**
-                 * Executes onpagescrollstatechanged operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param state Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onPageScrollStateChanged(state: Int) {
                 }
             },
@@ -235,20 +136,12 @@ class TipPreviewDialog : DialogFragment() {
         index = position
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
         super.onDestroy()
         timer?.cancel()
         timer = null
     }
 
-    /**
-     * Executes onresume operation with thermal imaging domain optimization.
-     *
-     */
     override fun onResume() {
         super.onResume()
         val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
@@ -258,10 +151,6 @@ class TipPreviewDialog : DialogFragment() {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
-    /**
-     * Executes ondestroyview operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -270,14 +159,6 @@ class TipPreviewDialog : DialogFragment() {
         dis?.dispose()
     }
 
-    /**
-     * Executes show operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param manager Parameter for operation (type: FragmentManager)
-     * @param tag Parameter for operation (type: String?)
-     *
-     */
     override fun show(
         manager: FragmentManager,
         tag: String?,
@@ -293,10 +174,6 @@ class TipPreviewDialog : DialogFragment() {
     /**
      * Executes newinstance functionality.
      */
-        /**
-         * Executes newinstance operation with thermal imaging domain optimization.
-         *
-         */
         fun newInstance(): TipPreviewDialog {
             return TipPreviewDialog()
         }
@@ -304,26 +181,11 @@ class TipPreviewDialog : DialogFragment() {
 
     @Suppress("DEPRECATION")
     inner class PageAdapter(fragmentManager: FragmentManager) :
-        /**
-         * Executes fragmentpageradapter operation with thermal imaging domain optimization.
-         *
-         */
         FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        /**
-         * Retrieves the count with optimized performance for thermal imaging operations.
-         *
-         */
         override fun getCount(): Int {
             return pageCount
         }
 
-        /**
-         * Retrieves the item with optimized performance for thermal imaging operations.
-         *
-         * @param
-         * @param position Parameter for operation (type: Int)
-         *
-         */
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> {

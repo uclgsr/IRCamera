@@ -4,18 +4,8 @@ import com.kylecorry.andromeda.sense.compass.ICompass
 import com.kylecorry.sol.units.Bearing
 
 /**
- * Specialized thermal imaging component providing NullCompass functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Null compass utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
  */
 class NullCompass : NullSensor(), ICompass {
     override val bearing: Bearing = Bearing(0f)

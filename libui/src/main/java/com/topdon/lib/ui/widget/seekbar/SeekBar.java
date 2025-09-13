@@ -42,22 +42,8 @@ import java.util.Locale;
  * ================================================
  */
 
-/**
- * Specialized thermal imaging component providing SeekBar functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class SeekBar {
-    // The indicator show mode
+    //the indicator show mode
     public static final int INDICATOR_SHOW_WHEN_TOUCH = 0;
     public static final int INDICATOR_ALWAYS_HIDE = 1;
     public static final int INDICATOR_ALWAYS_SHOW_AFTER_TOUCH = 2;
@@ -74,12 +60,12 @@ public class SeekBar {
 
     private int indicatorShowMode;
 
-    // 进度tip背景的高度，宽度如果是0的话会自适应Adjust
-    // Progress prompted the background height, width,
+    //进度tip背景的高度，宽度如果是0的话会自适应Adjust
+    //Progress prompted the background height, width,
     private int indicatorHeight;
     private int indicatorWidth;
-    // 进度tip背景与button之间的距离
-    // The progress indicates the distance between the background and the button
+    //进度tip背景与button之间的距离
+    //The progress indicates the distance between the background and the button
     private int indicatorMargin;
     private int indicatorDrawableId;
     private int indicatorArrowSize;
@@ -93,10 +79,10 @@ public class SeekBar {
     private int thumbWidth;
     private int thumbHeight;
 
-    // When you touch or move, the thumb will scale, default not scale
+    //when you touch or move, the thumb will scale, default not scale
     float thumbScaleRatio;
 
-    // ****************** the above is attr value  ******************//
+    //****************** the above is attr value  ******************//
 
     int left, right, top, bottom;
     float currPercent;
@@ -120,36 +106,16 @@ public class SeekBar {
     int scaleThumbWidth;
     int scaleThumbHeight;
 
-    /**
-     * Executes seekbar operation with thermal imaging domain optimization.
-     *
-     */
     public SeekBar(RangeSeekBar rangeSeekBar, AttributeSet attrs, boolean isLeft) {
         this.rangeSeekBar = rangeSeekBar;
         this.isLeft = isLeft;
-        /**
-         * Initializes the attrs component for thermal imaging operations.
-         *
-         */
         initAttrs(attrs);
-        /**
-         * Initializes the bitmap component for thermal imaging operations.
-         *
-         */
         initBitmap();
-        /**
-         * Initializes the variables component for thermal imaging operations.
-         *
-         */
         initVariables();
     }
 
     private void initAttrs(AttributeSet attrs) {
         TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.RangeSeekBar);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (t == null) return;
         indicatorMargin = (int) t.getDimension(R.styleable.RangeSeekBar_rsb_indicator_margin, 0);
         indicatorDrawableId = t.getResourceId(R.styleable.RangeSeekBar_rsb_indicator_drawable, 0);
@@ -177,17 +143,9 @@ public class SeekBar {
     protected void initVariables() {
         scaleThumbWidth = thumbWidth;
         scaleThumbHeight = thumbHeight;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (indicatorHeight == WRAP_CONTENT) {
             indicatorHeight = Utils.measureText("8", indicatorTextSize).height() + indicatorPaddingTop + indicatorPaddingBottom;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (indicatorArrowSize <= 0) {
             indicatorArrowSize = (int) (thumbWidth / 4);
         }
@@ -198,10 +156,6 @@ public class SeekBar {
     }
 
     public Resources getResources() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (getContext() != null) return getContext().getResources();
         return null;
     }
@@ -210,20 +164,8 @@ public class SeekBar {
      * initialize进度tip的背景
      */
     private void initBitmap() {
-        /**
-         * Configures the indicatordrawableid with validation and thermal imaging optimization.
-         *
-         */
         setIndicatorDrawableId(indicatorDrawableId);
-        /**
-         * Configures the thumbdrawableid with validation and thermal imaging optimization.
-         *
-         */
         setThumbDrawableId(thumbDrawableId, thumbWidth, thumbHeight);
-        /**
-         * Configures the thumbinactivateddrawableid with validation and thermal imaging optimization.
-         *
-         */
         setThumbInactivatedDrawableId(thumbInactivatedDrawableId, thumbWidth, thumbHeight);
     }
 
@@ -235,15 +177,7 @@ public class SeekBar {
      * @param y position y
      */
     protected void onSizeChanged(int x, int y) {
-        /**
-         * Initializes the variables component for thermal imaging operations.
-         *
-         */
         initVariables();
-        /**
-         * Initializes the bitmap component for thermal imaging operations.
-         *
-         */
         initBitmap();
         left = (int) (x - getThumbScaleWidth() / 2);
         right = (int) (x + getThumbScaleWidth() / 2);
@@ -257,10 +191,6 @@ public class SeekBar {
         int y = rangeSeekBar.getProgressBottom();
         top = y - scaleThumbHeight / 2;
         bottom = y + scaleThumbHeight / 2;
-        /**
-         * Configures the thumbdrawableid with validation and thermal imaging optimization.
-         *
-         */
         setThumbDrawableId(thumbDrawableId, scaleThumbWidth, scaleThumbHeight);
     }
 
@@ -270,10 +200,6 @@ public class SeekBar {
         int y = rangeSeekBar.getProgressBottom();
         top = y - scaleThumbHeight / 2;
         bottom = y + scaleThumbHeight / 2;
-        /**
-         * Configures the thumbdrawableid with validation and thermal imaging optimization.
-         *
-         */
         setThumbDrawableId(thumbDrawableId, scaleThumbWidth, scaleThumbHeight);
     }
 
@@ -294,59 +220,35 @@ public class SeekBar {
      * @param canvas Canvas
      */
     protected void draw(Canvas canvas, boolean isLeft) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isVisible) {
             return;
         }
         int offset = (int) (rangeSeekBar.getProgressWidth() * currPercent);
         canvas.save();
         canvas.translate(offset, 0);
-        // Translate canvas, then don't care left
+        // translate canvas, then don't care left
         canvas.translate(left, 0);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isShowIndicator) {
-            /**
-             * Executes ondrawindicator operation with thermal imaging domain optimization.
-             *
-             */
-            onDrawIndicator(canvas, paint, formatCurrentIndicatorText(userText2Draw)); // Swipeaxis外tag
+            onDrawIndicator(canvas, paint, formatCurrentIndicatorText(userText2Draw)); //Swipe轴外tag
         }
-// If (isLeft) {
-//            // Settings上指示图标
-// SetThumbDrawableId(R.drawable.ic_seekbar_high_svg, thumbWidth, thumbHeight);
+//        if (isLeft) {
+//            //settings上指示图标
+//            setThumbDrawableId(R.drawable.ic_seekbar_high_svg, thumbWidth, thumbHeight);
 //        } else {
-//            // Settings下指示图标
-// SetThumbDrawableId(R.drawable.ic_seekbar_low_svg, thumbWidth, thumbHeight);
+//            //settings下指示图标
+//            setThumbDrawableId(R.drawable.ic_seekbar_low_svg, thumbWidth, thumbHeight);
 //        }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (thumbShow){
-            /**
-             * Executes ondrawthumb operation with thermal imaging domain optimization.
-             *
-             */
             onDrawThumb(canvas);
         }else {
-            /**
-             * Executes ondrawthumb operation with thermal imaging domain optimization.
-             *
-             */
-            onDrawThumb(canvas, isLeft); // Axis上tag
+            onDrawThumb(canvas, isLeft); //轴上tag
         }
         canvas.restore();
     }
 
     /**
      * 绘制button
-     * 如果没有image资源，则绘制defaultbutton
+     * 如果没有image资源，则绘制默认button
      * <p>
      * draw the thumb button
      * If there is no image resource, draw the default button
@@ -354,45 +256,33 @@ public class SeekBar {
      * @param canvas canvas
      */
     protected void onDrawThumb(Canvas canvas) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (thumbInactivatedBitmap != null && !isActivate) {
             canvas.drawBitmap(thumbInactivatedBitmap, 0, rangeSeekBar.getProgressTop() + (rangeSeekBar.getProgressHeight() - scaleThumbHeight) / 2f, null);
         } else if (thumbBitmap != null) {
-            // 绘制tag
+            //绘制tag
             canvas.drawBitmap(thumbBitmap, 0, rangeSeekBar.getProgressTop() + (rangeSeekBar.getProgressHeight() - scaleThumbHeight) / 2f, null);
         }
     }
 
     /**
      * 绘制button
-     * 如果没有image资源，则绘制defaultbutton
+     * 如果没有image资源，则绘制默认button
      * <p>
      * draw the thumb button
      * If there is no image resource, draw the default button
      *
      * @param canvas canvas
-     * @param isLeft 区分上下,用于rotation
+     * @param isLeft 区分上下,用于旋转
      */
     protected void onDrawThumb(Canvas canvas, Boolean isLeft) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (thumbInactivatedBitmap != null && !isActivate) {
-// Canvas.drawBitmap(thumbInactivatedBitmap, 0, rangeSeekBar.getProgressTop() + (rangeSeekBar.getProgressHeight() - scaleThumbHeight) / 2f, null);
+//            canvas.drawBitmap(thumbInactivatedBitmap, 0, rangeSeekBar.getProgressTop() + (rangeSeekBar.getProgressHeight() - scaleThumbHeight) / 2f, null);
         } else if (thumbBitmap != null) {
-            // 绘制tag
+            //绘制tag
             Matrix matrix = new Matrix();
             int offX = thumbBitmap.getWidth() / 2;
             int offY = thumbBitmap.getHeight() / 2;
             matrix.postTranslate(-offX, -offY);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isLeft) {
                 matrix.postRotate(90);
                 offX = offX - 5;
@@ -400,8 +290,8 @@ public class SeekBar {
                 matrix.postRotate(270);
                 offX = offX + 5;
             }
-// Matrix.postTranslate(offX, rangeSeekBar.getProgressTop() + (rangeSeekBar.getProgressHeight() - scaleThumbHeight) / 2f + offY);
-// Canvas.drawBitmap(thumbBitmap, matrix, null);
+//            matrix.postTranslate(offX, rangeSeekBar.getProgressTop() + (rangeSeekBar.getProgressHeight() - scaleThumbHeight) / 2f + offY);
+//            canvas.drawBitmap(thumbBitmap, matrix, null);
         }
     }
 
@@ -414,30 +304,14 @@ public class SeekBar {
      */
     protected String formatCurrentIndicatorText(String text2Draw) {
         SeekBarState[] states = rangeSeekBar.getRangeSeekBarState();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (TextUtils.isEmpty(text2Draw)) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isLeft) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (indicatorTextDecimalFormat != null) {
                     text2Draw = indicatorTextDecimalFormat.format(states[0].value);
                 } else {
                     text2Draw = states[0].indicatorText;
                 }
             } else {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (indicatorTextDecimalFormat != null) {
                     text2Draw = indicatorTextDecimalFormat.format(states[1].value);
                 } else {
@@ -445,12 +319,8 @@ public class SeekBar {
                 }
             }
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (indicatorTextStringFormat != null) {
-// Text2Draw = String.format(Locale.ENGLISH, indicatorTextStringFormat, text2Draw);
+//            text2Draw = String.format(Locale.ENGLISH, indicatorTextStringFormat, text2Draw);
             text2Draw = String.format(Locale.ENGLISH, indicatorTextStringFormat, Float.parseFloat(text2Draw));
         }
         return text2Draw;
@@ -465,36 +335,20 @@ public class SeekBar {
      */
     protected void onDrawIndicator(Canvas canvas, Paint paint, String text2Draw) {
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (text2Draw == null) return;
             paint.setTextSize(indicatorTextSize);
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(indicatorBackgroundColor);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (noNegativeNumber){
                 text2Draw = text2Draw.replace("-","");
             }
             paint.getTextBounds(text2Draw, 0, text2Draw.length(), indicatorTextRect);
             int realIndicatorWidth = indicatorWidth + indicatorPaddingLeft + indicatorPaddingRight;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (indicatorWidth > realIndicatorWidth) {
                 realIndicatorWidth = indicatorWidth;
             }
 
             int realIndicatorHeight = indicatorTextRect.height() + indicatorPaddingTop + indicatorPaddingBottom;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (indicatorHeight > realIndicatorHeight) {
                 realIndicatorHeight = indicatorHeight;
             }
@@ -503,15 +357,11 @@ public class SeekBar {
             indicatorRect.top = bottom - realIndicatorHeight - scaleThumbHeight - indicatorMargin;
             indicatorRect.right = indicatorRect.left + realIndicatorWidth;
             indicatorRect.bottom = indicatorRect.top + realIndicatorHeight;
-            // Draw default indicator arrow
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            //draw default indicator arrow
             if (indicatorBitmap == null) {
-                // Arrow three point
-                // B   c
-                // A
+                //arrow three point
+                //  b   c
+                //    a
                 int ax = scaleThumbWidth / 2;
                 int ay = indicatorRect.bottom;
                 int bx = ax - indicatorArrowSize;
@@ -525,18 +375,14 @@ public class SeekBar {
                 canvas.drawPath(indicatorArrowPath, paint);
                 indicatorRect.bottom -= indicatorArrowSize;
                 indicatorRect.top -= indicatorArrowSize;
-                Log.w("pseudo color条refresh","// /");
+                Log.w("pseudo color条refresh","///");
             }
 
-            // Indicator background edge processing
+            //indicator background edge processing
             int defaultPaddingOffset = Utils.dp2px(getContext(), 1);
             int leftOffset = indicatorRect.width() / 2 - (int) (rangeSeekBar.getProgressWidth() * currPercent) - rangeSeekBar.getProgressLeft() + defaultPaddingOffset;
             int rightOffset = indicatorRect.width() / 2 - (int) (rangeSeekBar.getProgressWidth() * (1 - currPercent)) - rangeSeekBar.getProgressPaddingRight() + defaultPaddingOffset;
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (leftOffset > 0) {
                 indicatorRect.left += leftOffset;
                 indicatorRect.right += leftOffset;
@@ -545,11 +391,7 @@ public class SeekBar {
                 indicatorRect.right -= rightOffset;
             }
 
-            // Draw indicator background
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            //draw indicator background
             if (indicatorBitmap != null) {
                 int offset = (int) (rangeSeekBar.getProgressWidth() * currPercent);
 
@@ -561,12 +403,8 @@ public class SeekBar {
                 canvas.drawRect(indicatorRect, paint);
             }
 
-            // Draw indicator content text
+            //draw indicator content text
             int tx, ty;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (indicatorPaddingLeft > 0) {
                 tx = indicatorRect.left + indicatorPaddingLeft;
             } else if (indicatorPaddingRight > 0) {
@@ -575,10 +413,6 @@ public class SeekBar {
                 tx = indicatorRect.left + (realIndicatorWidth - indicatorTextRect.width()) / 2;
             }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (indicatorPaddingTop > 0) {
                 ty = indicatorRect.top + indicatorTextRect.height() + indicatorPaddingTop;
             } else if (indicatorPaddingBottom > 0) {
@@ -587,7 +421,7 @@ public class SeekBar {
                 ty = indicatorRect.bottom - (realIndicatorHeight - indicatorTextRect.height()) / 2 + 1;
             }
 
-            // Draw indicator text
+            //draw indicator text
             paint.setColor(indicatorTextColor);
             canvas.drawText(text2Draw, tx, ty, paint);
         }catch (Exception e){
@@ -606,20 +440,12 @@ public class SeekBar {
     }
 
     protected void slide(float percent) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (percent < 0) percent = 0;
         else if (percent > 1) percent = 1;
         currPercent = percent;
     }
 
     protected void setShowIndicatorEnable(boolean isEnable) {
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (indicatorShowMode) {
             case INDICATOR_SHOW_WHEN_TOUCH:
                 isShowIndicator = isEnable;
@@ -635,20 +461,12 @@ public class SeekBar {
     }
 
     public void materialRestore() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (anim != null) anim.cancel();
         anim = ValueAnimator.ofFloat(material, 0);
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 material = (float) animation.getAnimatedValue();
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (rangeSeekBar != null) rangeSeekBar.invalidate();
             }
         });
@@ -656,10 +474,6 @@ public class SeekBar {
             @Override
             public void onAnimationEnd(Animator animation) {
                 material = 0;
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (rangeSeekBar != null) rangeSeekBar.invalidate();
             }
         });
@@ -687,22 +501,10 @@ public class SeekBar {
     }
 
     public void setIndicatorDrawableId(@DrawableRes int indicatorDrawableId) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (indicatorDrawableId != 0) {
             this.indicatorDrawableId = indicatorDrawableId;
             indicatorBitmap = BitmapFactory.decodeResource(getResources(), indicatorDrawableId);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (indicatorBitmap == null){
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     indicatorBitmap = Utils.drawableToBitmap(indicatorWidth, indicatorHeight, getResources().getDrawable(indicatorDrawableId, null));
                 } else {
@@ -791,25 +593,13 @@ public class SeekBar {
      * @return The actual occupation height of indicator
      */
     public int getIndicatorRawHeight() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (indicatorHeight > 0) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (indicatorBitmap != null) {
                 return indicatorHeight + indicatorMargin;
             } else {
                 return indicatorHeight + indicatorArrowSize + indicatorMargin;
             }
         } else {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (indicatorBitmap != null) {
                 return Utils.measureText("8", indicatorTextSize).height() + indicatorPaddingTop + indicatorPaddingBottom + indicatorMargin;
             } else {
@@ -863,16 +653,8 @@ public class SeekBar {
     }
 
     public void setThumbInactivatedDrawableId(@DrawableRes int thumbInactivatedDrawableId, int width, int height) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (thumbInactivatedDrawableId != 0 && getResources() != null) {
             this.thumbInactivatedDrawableId = thumbInactivatedDrawableId;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 thumbInactivatedBitmap = Utils.drawableToBitmap(width, height, getResources().getDrawable(thumbInactivatedDrawableId, null));
             } else {
@@ -886,16 +668,8 @@ public class SeekBar {
     }
 
     public void setThumbDrawableId(@DrawableRes int thumbDrawableId, int width, int height) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (thumbDrawableId != 0 && getResources() != null && width > 0 && height > 0) {
             this.thumbDrawableId = thumbDrawableId;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 thumbBitmap = Utils.drawableToBitmap(width, height, getResources().getDrawable(thumbDrawableId, null));
             } else {
@@ -905,23 +679,11 @@ public class SeekBar {
     }
 
     public void setThumbDrawableId(@DrawableRes int thumbDrawableId) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (thumbWidth <= 0 || thumbHeight <= 0) {
             throw new IllegalArgumentException("please set thumbWidth and thumbHeight first!");
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (thumbDrawableId != 0 && getResources() != null) {
             this.thumbDrawableId = thumbDrawableId;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 thumbBitmap = Utils.drawableToBitmap(thumbWidth, thumbHeight, getResources().getDrawable(thumbDrawableId, null));
             } else {

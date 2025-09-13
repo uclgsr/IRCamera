@@ -10,23 +10,6 @@ package com.topdon.gsr.util
  * - Timing Accuracy: Sub-millisecond precision for physiological recording (both variants)
  * - NTP Synchronization: Device acts as unified time base for all modalities
  */
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for TimeUtil operations.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 object TimeUtil {
     private const val TAG = "TimeUtil"
 
@@ -48,9 +31,6 @@ object TimeUtil {
      * Uses Samsung S22 processor-specific system timer for maximum precision
      * Compatible with both Exynos 2200 and Snapdragon 8 Gen 1 variants
      */
-    /**
-     * Retrieves utctimestamp information.
-     */
     fun getUtcTimestamp(): Long {
         // Use Samsung S22 device clock as authoritative ground truth reference
         val currentDeviceTime = System.currentTimeMillis()
@@ -63,17 +43,10 @@ object TimeUtil {
      * Called at application startup to establish unified time base
      * Automatically detects Exynos 2200 vs Snapdragon 8 Gen 1 for optimal timing
      */
-    /**
-     * Initializes ializegroundtruthtiming component.
-     */
     fun initializeGroundTruthTiming() {
         deviceGroundTruthBase = System.currentTimeMillis()
 
         // Detect Samsung S22 processor variant for optimal timing configuration
-        /**
-         * Executes detectsamsungs22processor operation with thermal imaging domain optimization.
-         *
-         */
         detectSamsungS22Processor()
 
         // Capture boot time reference for high-precision calculations
@@ -97,23 +70,12 @@ object TimeUtil {
      * Detect Samsung S22 processor variant (Exynos 2200 vs Snapdragon 8 Gen 1)
      * Based on device model and hardware characteristics
      */
-    /**
-     * Executes detectSamsungS22Processor functionality.
-     */
-    /**
-     * Executes detectsamsungs22processor operation with thermal imaging domain optimization.
-     *
-     */
     private fun detectSamsungS22Processor() {
         try {
             deviceModel = android.os.Build.MODEL
             val deviceBrand = android.os.Build.MANUFACTURER
             val hardware = android.os.Build.HARDWARE
             val soc =
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (android.os.Build.VERSION.SDK_INT >= 31) {
                     android.os.Build.SOC_MANUFACTURER
                 } else {
@@ -163,9 +125,6 @@ object TimeUtil {
      * This would typically be called after network time sync with PC
      * Maintains Samsung S22 as ground truth while enabling PC coordination
      */
-    /**
-     * Sets pctimeoffset configuration.
-     */
     fun setPcTimeOffset(offset: Long) {
         pcTimeOffset = offset
         // Only log if Android Log is available (not in unit tests)
@@ -180,10 +139,6 @@ object TimeUtil {
     /**
      * Get current PC time offset
      */
-    /**
-     * Retrieves the pctimeoffset with optimized performance for thermal imaging operations.
-     *
-     */
     fun getPcTimeOffset(): Long = pcTimeOffset
 
     /**
@@ -194,16 +149,6 @@ object TimeUtil {
     /**
      * Convert system timestamp to UTC with PC offset and ground truth
      * Maintains Samsung S22 device precision
-     */
-    /**
-     * Executes systemToUtc functionality.
-     */
-    /**
-     * Executes systemtoutc operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param systemTime Parameter for operation (type: Long)
-     *
      */
     fun systemToUtc(systemTime: Long): Long {
         val deviceOffset = systemTime - deviceGroundTruthBase
@@ -222,9 +167,6 @@ object TimeUtil {
      * Uses Samsung S22 device clock as unified ground truth
      * Implements NTP-style coordination with sub-millisecond precision
      */
-    /**
-     * Retrieves synchronizedtimestamp information.
-     */
     fun getSynchronizedTimestamp(): Long {
         return getUtcTimestamp()
     }
@@ -234,9 +176,6 @@ object TimeUtil {
      * Used for critical synchronization events requiring maximum precision
      * Optimized for both Exynos 2200 and Snapdragon 8 Gen 1 processors
      */
-    /**
-     * Retrieves highprecisiontimestamp information.
-     */
     fun getHighPrecisionTimestamp(): Long {
         return try {
             // Use Samsung S22 nanoTime for sub-millisecond precision, adjusted to ground truth base
@@ -244,10 +183,6 @@ object TimeUtil {
             deviceGroundTruthBase + nanoOffset + pcTimeOffset
         } catch (e: Exception) {
             // Fallback to standard millisecond precision
-            /**
-             * Retrieves the synchronizedtimestamp with optimized performance for thermal imaging operations.
-             *
-             */
             getSynchronizedTimestamp()
         }
     }
@@ -284,9 +219,6 @@ object TimeUtil {
      * Get timing metadata for session information
      * Includes Samsung S22 device specifications for research documentation
      */
-    /**
-     * Retrieves timingmetadata information.
-     */
     fun getTimingMetadata(): Map<String, String> {
         return mapOf(
             "ground_truth_base" to deviceGroundTruthBase.toString(),
@@ -304,13 +236,6 @@ object TimeUtil {
     /**
      * Validate timing precision and Samsung S22 ground truth status
      * Returns health check of timing system with processor-specific validation
-     */
-    /**
-     * Executes validateTimingSystem functionality.
-     */
-    /**
-     * Executes validatetimingsystem operation with thermal imaging domain optimization.
-     *
      */
     fun validateTimingSystem(): Map<String, Any> {
         val currentTime = System.currentTimeMillis()
@@ -343,10 +268,6 @@ object TimeUtil {
 
     /**
      * Get detected device model
-     */
-    /**
-     * Retrieves the devicemodel with optimized performance for thermal imaging operations.
-     *
      */
     fun getDeviceModel(): String = deviceModel
 }

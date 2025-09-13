@@ -22,85 +22,30 @@ import java.io.File
 import java.util.concurrent.CountDownLatch
 
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for UpReportViewModel display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Up report view model view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class UpReportViewModel : BaseViewModel() {
     val commonBeanLD = SingleLiveEvent<CommonBean>()
 
     val exceptionLD = SingleLiveEvent<Exception?>()
 
-    /**
-     * Executes upload functionality.
-     */
-    /**
-     * Executes upload operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isTC007 Parameter for operation (type: Boolean)
-     * @param reportBean Parameter for operation (type: ReportBean?)
-     *
-     */
     fun upload(
         isTC007: Boolean,
         reportBean: ReportBean?,
     ) {
         viewModelScope.launch {
-            /**
-             * Executes uploadimages operation with thermal imaging domain optimization.
-             *
-             */
             uploadImages(reportBean)
-            /**
-             * Executes uploadjson operation with thermal imaging domain optimization.
-             *
-             */
             uploadJSON(isTC007, reportBean)
         }
     }
 
-    /**
-     * Executes uploadimages operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param reportBean Parameter for operation (type: ReportBean?)
-     *
-     */
     private suspend fun uploadImages(reportBean: ReportBean?) {
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             val irList = reportBean?.infrared_data
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (irList != null) {
                 val downLatch = CountDownLatch(irList.size)
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (reportIrBean in irList) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (reportIrBean.picture_id.isNotEmpty()) {
                         downLatch.countDown()
                         continue
@@ -108,10 +53,6 @@ class UpReportViewModel : BaseViewModel() {
                     val file = File(reportIrBean.picture_url)
                     LMS.getInstance().uploadFile(file, 0, 13, 20) {
                         XLog.i(it?.data)
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (it?.code == LMS.SUCCESS) {
                             file.delete()
                             val jsonObject = JSONObject(it.data)
@@ -128,22 +69,10 @@ class UpReportViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Executes uploadjson operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isTC007 Parameter for operation (type: Boolean)
-     * @param reportBean Parameter for operation (type: ReportBean?)
-     *
-     */
     private suspend fun uploadJSON(
         isTC007: Boolean,
         reportBean: ReportBean?,
     ) {
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             val url = UrlConstant.BASE_URL + "api/v1/outProduce/testReport/addTestReport"
             val params = RequestParams()
@@ -156,24 +85,10 @@ class UpReportViewModel : BaseViewModel() {
                 url,
                 params,
                 object : IResponseCallback {
-                    /**
-                     * Executes onresponse operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param response Parameter for operation (type: String?)
-                     *
-                     */
                     override fun onResponse(response: String?) {
                         commonBeanLD.postValue(ResponseBean.convertCommonBean(response, null))
                     }
 
-                    /**
-                     * Executes onfail operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param exception Parameter for operation (type: Exception?)
-                     *
-                     */
                     override fun onFail(exception: Exception?) {
                         exceptionLD.postValue(exception)
                     }

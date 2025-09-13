@@ -1,15 +1,5 @@
 package com.infisense.usbir.utils;
 
-/**
- * Advanced pseudo color management system for thermal imaging visualization. Handles color palette conversion and thermal data mapping with PseudocolorModeTable implementation.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public final class PseudocolorModeTable {
 
     /**

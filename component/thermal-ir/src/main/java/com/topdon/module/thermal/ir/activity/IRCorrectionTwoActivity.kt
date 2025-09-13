@@ -24,20 +24,6 @@ import org.greenrobot.eventbus.ThreadMode
 - [ExtraKeyConfig.IS_TC007] - 当前device是否为 TC007
  */
 // Legacy ARouter route annotation - now using NavigationManager
-/**
- * Specialized thermal imaging component providing IRCorrectionTwoActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class IRCorrectionTwoActivity : BaseActivity() {
     /**
 From上一interface传递过来的，当前是否为 TC007 devicetype.
@@ -48,16 +34,8 @@ true-TC007 false-其他插件式device
     // Modern findViewById references
     private lateinit var tvCorrection: TextView
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView(): Int = R.layout.activity_ir_correction_two
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
@@ -66,10 +44,6 @@ true-TC007 false-其他插件式device
 
         ivSketchMap.setImageResource(if (isTC007) R.drawable.ic_corrected_tc007 else R.drawable.ic_corrected_line)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (if (isTC007) WebSocketProxy.getInstance().isTC007Connect() else DeviceTools.isConnect()) {
             tvCorrection.setBackgroundResource(com.topdon.lib.core.R.drawable.bg_corners05_solid_theme)
         } else {
@@ -77,22 +51,10 @@ true-TC007 false-其他插件式device
         }
 
         tvCorrection.setOnClickListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (if (isTC007) WebSocketProxy.getInstance().isTC007Connect() else DeviceTools.isConnect()) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isTC007) {
                     NavigationManager.getInstance().build(RouterConfig.IR_CORRECTION_07).navigation(this)
                 } else {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (DeviceTools.isTC001LiteConnect())
                         {
                             NavigationManager.getInstance().build(RouterConfig.IR_CORRECTION_THREE_LITE).navigation(this)
@@ -107,90 +69,34 @@ true-TC007 false-其他插件式device
         }
     }
 
-    /**
-     * Executes connected operation with thermal imaging domain optimization.
-     *
-     */
     override fun connected() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isTC007) {
             tvCorrection.setBackgroundResource(com.topdon.lib.core.R.drawable.bg_corners05_solid_theme)
         }
     }
 
-    /**
-     * Executes disconnected operation with thermal imaging domain optimization.
-     *
-     */
     override fun disConnected() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isTC007) {
             tvCorrection.setBackgroundResource(com.topdon.lib.core.R.drawable.bg_corners05_solid_50_theme)
         }
     }
 
-    /**
-     * Executes onsocketconnected operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isTS004 Parameter for operation (type: Boolean)
-     *
-     */
     override fun onSocketConnected(isTS004: Boolean) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isTC007 && !isTS004) {
             tvCorrection.setBackgroundResource(com.topdon.lib.core.R.drawable.bg_corners05_solid_theme)
         }
     }
 
-    /**
-     * Executes onsocketdisconnected operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isTS004 Parameter for operation (type: Boolean)
-     *
-     */
     override fun onSocketDisConnected(isTS004: Boolean) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isTC007 && !isTS004) {
             tvCorrection.setBackgroundResource(com.topdon.lib.core.R.drawable.bg_corners05_solid_50_theme)
         }
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {}
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    /**
-     * Executes finishCorrection functionality.
-     */
-    /**
-     * Executes finishcorrection operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: CorrectionFinishEvent)
-     *
-     */
     fun finishCorrection(event: CorrectionFinishEvent) {
-        /**
-         * Executes finish operation with thermal imaging domain optimization.
-         *
-         */
         finish()
     }
 }

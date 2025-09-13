@@ -25,29 +25,8 @@ import com.topdon.lib.ui.R as UiR
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with CameraItemAdapter functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapter.ViewHolder>() {
     val data: List<String> =
-        /**
-         * Executes listof operation with thermal imaging domain optimization.
-         *
-         */
         listOf(
             context.getString(R.string.person_headshot_camera),
             context.getString(R.string.app_video),
@@ -55,26 +34,11 @@ class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapt
 
     private var parentRecycler: RecyclerView? = null
 
-    /**
-     * Executes onattachedtorecyclerview operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param recyclerView Parameter for operation (type: RecyclerView)
-     *
-     */
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         parentRecycler = recyclerView
     }
 
-    /**
-     * Executes oncreateviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param parent Parameter for operation (type: ViewGroup)
-     * @param viewType Parameter for operation (type: Int)
-     *
-     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -84,14 +48,6 @@ class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapt
         return ViewHolder(v)
     }
 
-    /**
-     * Executes onbindviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param holder Parameter for operation (type: ViewHolder)
-     * @param position Parameter for operation (type: Int)
-     *
-     */
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
@@ -99,10 +55,6 @@ class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapt
         holder?.textView?.text = data[position]
     }
 
-    /**
-     * Retrieves the itemcount with optimized performance for thermal imaging operations.
-     *
-     */
     override fun getItemCount(): Int {
         return data.size
     }
@@ -120,10 +72,6 @@ class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapt
     /**
      * Executes showtext functionality.
      */
-        /**
-         * Executes showtext operation with thermal imaging domain optimization.
-         *
-         */
         fun showText() {
             textView.pivotX = (textView.width / 2).toFloat()
             textView.pivotY = (textView.height / 2).toFloat()
@@ -139,25 +87,14 @@ class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapt
     /**
      * Executes hidetext functionality.
      */
-        /**
-         * Executes hidetext operation with thermal imaging domain optimization.
-         *
-         */
         fun hideText() {
             textView.setTextColor(ContextCompat.getColor(textView.context, UiR.color.ui_main_custom_color))
-            // TextView.setColorFilter(ContextCompat.getColor(imageView.getContext(), UiR.color.Grey700));
+            //            textView.setColorFilter(ContextCompat.getColor(imageView.getContext(), UiR.color.Grey700));
             textView.animate().scaleX(1f).scaleY(1f)
                 .setDuration(100)
                 .start()
         }
 
-        /**
-         * Executes onclick operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param v Parameter for operation (type: View)
-         *
-         */
         override fun onClick(v: View) {
             parentRecycler!!.smoothScrollToPosition(bindingAdapterPosition)
         }

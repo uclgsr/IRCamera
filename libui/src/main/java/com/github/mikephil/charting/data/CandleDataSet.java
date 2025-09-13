@@ -11,18 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Specialized thermal imaging component providing CandleDataSet functionality for the IRCamera system.
+ * DataSet for the CandleStickChart.
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author Philipp Jahoda
  */
 public class CandleDataSet extends LineScatterCandleRadarDataSet<CandleEntry> implements ICandleDataSet {
 
@@ -82,33 +73,17 @@ public class CandleDataSet extends LineScatterCandleRadarDataSet<CandleEntry> im
      */
     protected int mShadowColor = ColorTemplate.COLOR_SKIP;
 
-    /**
-     * Executes candledataset operation with thermal imaging domain optimization.
-     *
-     */
     public CandleDataSet(List<CandleEntry> yVals, String label) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(yVals, label);
     }
 
     @Override
     public DataSet<CandleEntry> copy() {
         List<CandleEntry> entries = new ArrayList<CandleEntry>();
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < mValues.size(); i++) {
             entries.add(mValues.get(i).copy());
         }
         CandleDataSet copied = new CandleDataSet(entries, getLabel());
-        /**
-         * Executes copy operation with thermal imaging domain optimization.
-         *
-         */
         copy(copied);
         return copied;
     }
@@ -131,55 +106,27 @@ public class CandleDataSet extends LineScatterCandleRadarDataSet<CandleEntry> im
     @Override
     protected void calcMinMax(CandleEntry e) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (e.getLow() < mYMin)
             mYMin = e.getLow();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (e.getHigh() > mYMax)
             mYMax = e.getHigh();
 
-        /**
-         * Executes calcminmaxx operation with thermal imaging domain optimization.
-         *
-         */
         calcMinMaxX(e);
     }
 
     @Override
     protected void calcMinMaxY(CandleEntry e) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (e.getHigh() < mYMin)
             mYMin = e.getHigh();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (e.getHigh() > mYMax)
             mYMax = e.getHigh();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (e.getLow() < mYMin)
             mYMin = e.getLow();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (e.getLow() > mYMax)
             mYMax = e.getLow();
     }
@@ -192,16 +139,8 @@ public class CandleDataSet extends LineScatterCandleRadarDataSet<CandleEntry> im
      */
     public void setBarSpace(float space) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (space < 0f)
             space = 0f;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (space > 0.45f)
             space = 0.45f;
 

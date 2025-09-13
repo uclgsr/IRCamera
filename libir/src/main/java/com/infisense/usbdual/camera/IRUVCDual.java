@@ -36,20 +36,6 @@ import java.util.List;
  * @UpdateDate:     2022.3.28 14:48
  * @UpdateRemark:
  */
-/**
- * Specialized thermal imaging component providing IRUVCDual functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class IRUVCDual {
     public String TAG = "IRUVC";
     private final Context mContext;
@@ -76,9 +62,9 @@ public class IRUVCDual {
     private boolean isUseIRISP;
     // 是否使用GPU方案
     private boolean isUseGPU = false;
-    // Current的gainstate
+    // current的gainstate
     private CommonParams.GainStatus gainStatus = CommonParams.GainStatus.HIGH_GAIN;
-    // Module支持的高低gainmode
+    // module支持的高低gainmode
     private CommonParams.GainMode gainMode = CommonParams.GainMode.GAIN_MODE_HIGH_LOW;
     private short[] nuc_table_high = new short[8192];
     private short[] nuc_table_low = new short[8192];
@@ -91,7 +77,7 @@ public class IRUVCDual {
     private short[] bt_high = new short[1201];
     private short[] bt_low = new short[1201];
 
-    // Coretemperature
+    // coretemperature
     private int[] curVtemp = new int[1];
 
     private ConnectCallback mConnectCallback;
@@ -146,10 +132,6 @@ public class IRUVCDual {
      * @param context
      * @param syncimage
      */
-    /**
-     * Executes iruvcdual operation with thermal imaging domain optimization.
-     *
-     */
     public IRUVCDual(int cameraWidth, int cameraHeight, Context context, SynchronizedBitmap syncimage,
                      ConnectCallback connectCallback) {
         this.cameraWidth = cameraWidth;
@@ -157,35 +139,19 @@ public class IRUVCDual {
         this.mContext = context;
         this.syncimage = syncimage;
         this.mConnectCallback = connectCallback;
-        /**
-         * Initializes the uvccamera component for thermal imaging operations.
-         *
-         */
         initUVCCamera(cameraWidth, cameraHeight);
         mUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
 
-            // Called by checking usb device
-            // Do request device permission
+            // called by checking usb device
+            // do request device permission
             @Override
             public void onAttach(UsbDevice device) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (mPid != 0) {
                     return;
                 }
                 Log.d(TAG, "onAttach");
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isRequest) {
                     isRequest = true;
-                    /**
-                     * Executes requestpermission operation with thermal imaging domain optimization.
-                     *
-                     */
                     requestPermission(0);
                 }
 
@@ -196,57 +162,37 @@ public class IRUVCDual {
 
             }
 
-            // Called by connect to usb camera
-            // Do open camera,start previewing
+            // called by connect to usb camera
+            // do open camera,start previewing
             @Override
             public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
                 Log.w(TAG, "onConnect");
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (createNew) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (mConnectCallback != null && uvcCamera != null) {
                         Log.d(TAG, "onCameraOpened");
                         mConnectCallback.onCameraOpened(uvcCamera);
                     }
                     Const.isDeviceConnected = true;
-                    /**
-                     * Executes handleusbconnect operation with thermal imaging domain optimization.
-                     *
-                     */
                     handleUSBConnect(ctrlBlock);
                 }
             }
 
-            // Called by disconnect to usb camera
-            // Do nothing
+            // called by disconnect to usb camera
+            // do nothing
             @Override
             public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
                 Log.w(TAG, "onDisconnect");
                 Const.isDeviceConnected = false;
             }
 
-            // Called by taking out usb device
-            // Do close camera
+            // called by taking out usb device
+            // do close camera
             @Override
             public void onDettach(UsbDevice device) {
                 Log.w(TAG, "onDettach" + isRequest);
                 Const.isDeviceConnected = false;
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isRequest) {
                     isRequest = false;
-                    /**
-                     * Executes stoppreview operation with thermal imaging domain optimization.
-                     *
-                     */
                     stopPreview();
                 }
             }
@@ -260,18 +206,18 @@ public class IRUVCDual {
          * 同时Open防灼烧和自动gainswitch后，如果想modify防灼烧和自动gainswitch的触发优先级，可以通过modify下area的触发parameterimplementation
          */
         // 自动gainswitchparameterauto gain switch parameter
-        gain_switch_param.above_pixel_prop = 0.1f;    // 用于high -> low gain,device像素总area积的百分比
-        gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4); // 用于high -> low gain,高gain向低gainswitch的触发temperature
-        gain_switch_param.below_pixel_prop = 0.95f;   // 用于low -> high gain,device像素总area积的百分比
-        gain_switch_param.below_temp_data = (int) ((110 + 273.15) * 16 * 4);// 用于low -> high gain,低gain向高gainswitch的触发temperature
-        auto_gain_switch_info.switch_frame_cnt = 5 * 15; // Continuous满足触发条件帧数超过该阈值会触发自动gainswitch(假设出图速度为15帧每秒，则5 * 15大概为5秒)
-        auto_gain_switch_info.waiting_frame_cnt = 7 * 15;// 触发自动gainswitch之后，会间隔该阈值的帧数不进行gainswitch监测(假设出图速度为15帧每秒，则7 * 15大概为7秒)
+        gain_switch_param.above_pixel_prop = 0.1f;    //用于high -> low gain,device像素总area积的百分比
+        gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4); //用于high -> low gain,高gain向低gainswitch的触发temperature
+        gain_switch_param.below_pixel_prop = 0.95f;   //用于low -> high gain,device像素总area积的百分比
+        gain_switch_param.below_temp_data = (int) ((110 + 273.15) * 16 * 4);//用于low -> high gain,低gain向高gainswitch的触发temperature
+        auto_gain_switch_info.switch_frame_cnt = 5 * 15; //continuous满足触发条件帧数超过该阈值会触发自动gainswitch(假设出图速度为15帧每秒，则5 * 15大概为5秒)
+        auto_gain_switch_info.waiting_frame_cnt = 7 * 15;//触发自动gainswitch之后，会间隔该阈值的帧数不进行gainswitch监测(假设出图速度为15帧每秒，则7 * 15大概为7秒)
         // 防灼烧parameterover_portect parameter
-        int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4); // 低gain下触发防灼烧的temperature
-        int high_gain_over_temp_data = (int) ((100 + 273.15) * 16 * 4); // 高gain下触发防灼烧的temperature
-        float pixel_above_prop = 0.02f;// Device像素总area积的百分比
-        int switch_frame_cnt = 7 * 15;// Continuous满足触发条件超过该阈值会触发防灼烧(假设出图速度为15帧每秒，则7 * 15大概为7秒)
-        int close_frame_cnt = 10 * 15;// 触发防灼烧之后，经过该阈值的帧数之后会解除防灼烧(假设出图速度为15帧每秒，则10 * 15大概为10秒)
+        int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4); //低gain下触发防灼烧的temperature
+        int high_gain_over_temp_data = (int) ((100 + 273.15) * 16 * 4); //高gain下触发防灼烧的temperature
+        float pixel_above_prop = 0.02f;//device像素总area积的百分比
+        int switch_frame_cnt = 7 * 15;//continuous满足触发条件超过该阈值会触发防灼烧(假设出图速度为15帧每秒，则7 * 15大概为7秒)
+        int close_frame_cnt = 10 * 15;//触发防灼烧之后，经过该阈值的帧数之后会解除防灼烧(假设出图速度为15帧每秒，则10 * 15大概为10秒)
     }
 
     /**
@@ -283,10 +229,6 @@ public class IRUVCDual {
      * @param connectCallback
      * @param iFrameCallback
      */
-    /**
-     * Executes iruvcdual operation with thermal imaging domain optimization.
-     *
-     */
     public IRUVCDual(int cameraWidth, int cameraHeight, Context context, int pid, int fps,
                      ConnectCallback connectCallback, IFrameCallback iFrameCallback) {
         this.mPid = pid;
@@ -297,15 +239,11 @@ public class IRUVCDual {
         this.mConnectCallback = connectCallback;
         this.iFrameCallback = iFrameCallback;
         //
-        /**
-         * Initializes the uvccamera component for thermal imaging operations.
-         *
-         */
         initUVCCamera(cameraWidth, cameraHeight);
         //
         mUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
-            // Called by checking usb device
-            // Do request device permission
+            // called by checking usb device
+            // do request device permission
             @Override
             public void onAttach(UsbDevice device) {
                 Log.w(TAG, "USBMonitor-onAttach mPid = " + pid + " getProductId = " + device.getProductId());
@@ -316,10 +254,6 @@ public class IRUVCDual {
                 if (device.getProductId() != mPid) {
                     return;
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (uvcCamera == null || !uvcCamera.getOpenStatus()) {
                     mUSBMonitor.requestPermission(device);
                 }
@@ -330,22 +264,14 @@ public class IRUVCDual {
                 Log.w(TAG, "USBMonitor-onGranted");
             }
 
-            // Called by taking out usb device
-            // Do close camera
+            // called by taking out usb device
+            // do close camera
             @Override
             public void onDettach(UsbDevice device) {
                 Log.w(TAG, "USBMonitor-onDettach mPid = " + pid);
                 Const.isDeviceConnected = false;
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (uvcCamera != null && uvcCamera.getOpenStatus()) {
-// StopPreview();
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
+//                    stopPreview();
                     if (handler != null && status != 2) {
                         handler.sendEmptyMessage(Const.RESTART_USB);
                     }
@@ -353,45 +279,29 @@ public class IRUVCDual {
                 }
             }
 
-            // Called by connect to usb camera
-            // Do open camera,start previewing
+            // called by connect to usb camera
+            // do open camera,start previewing
             @Override
             public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
                 Log.w(TAG, "USBMonitor-onConnect mPid = " + pid);
                 Log.w(TAG, "USBMonitor-onConnect createNew = " + createNew);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (createNew && device.getProductId() == pid) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (handler != null) {
                         handler.sendEmptyMessage(Const.SHOW_LOADING);
                     }
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (mConnectCallback != null && uvcCamera != null) {
                         Log.w(TAG, "USBMonitor-onCameraOpened");
                         mConnectCallback.onCameraOpened(uvcCamera);
                     }
                     Const.isDeviceConnected = true;
-                    /**
-                     * Executes handleusbconnect operation with thermal imaging domain optimization.
-                     *
-                     */
                     handleUSBConnect(ctrlBlock);
                     status = 3;
                 }
             }
 
-            // Called by disconnect to usb camera
-            // Do nothing
+            // called by disconnect to usb camera
+            // do nothing
             @Override
             public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
                 Log.w(TAG, "USBMonitor-onDisconnect mPid = " + pid);
@@ -407,10 +317,6 @@ public class IRUVCDual {
         });
     }
 
-    /**
-     * Executes iruvcdual operation with thermal imaging domain optimization.
-     *
-     */
     public IRUVCDual(int cameraWidth, int cameraHeight, Context context, SynchronizedBitmap syncimage, int pid, int fps,
                      ConnectCallback connectCallback) {
         this.mPid = pid;
@@ -421,15 +327,11 @@ public class IRUVCDual {
         this.syncimage = syncimage;
         this.mConnectCallback = connectCallback;
         //
-        /**
-         * Initializes the uvccamera component for thermal imaging operations.
-         *
-         */
         initUVCCamera(cameraWidth, cameraHeight);
         //
         mUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
-            // Called by checking usb device
-            // Do request device permission
+            // called by checking usb device
+            // do request device permission
             @Override
             public void onAttach(UsbDevice device) {
                 Log.w(TAG, "USBMonitor-onAttach mPid = " + pid + " getProductId = " + device.getProductId());
@@ -440,10 +342,6 @@ public class IRUVCDual {
                 if (device.getProductId() != mPid) {
                     return;
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (uvcCamera == null || !uvcCamera.getOpenStatus()) {
                     mUSBMonitor.requestPermission(device);
                 }
@@ -454,22 +352,14 @@ public class IRUVCDual {
                 Log.w(TAG, "USBMonitor-onGranted");
             }
 
-            // Called by taking out usb device
-            // Do close camera
+            // called by taking out usb device
+            // do close camera
             @Override
             public void onDettach(UsbDevice device) {
                 Log.w(TAG, "USBMonitor-onDettach mPid = " + pid);
                 Const.isDeviceConnected = false;
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (uvcCamera != null && uvcCamera.getOpenStatus()) {
-// StopPreview();
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
+//                    stopPreview();
                     if (handler != null && status != 2) {
                         handler.sendEmptyMessage(Const.RESTART_USB);
                     }
@@ -477,45 +367,29 @@ public class IRUVCDual {
                 }
             }
 
-            // Called by connect to usb camera
-            // Do open camera,start previewing
+            // called by connect to usb camera
+            // do open camera,start previewing
             @Override
             public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
                 Log.w(TAG, "USBMonitor-onConnect mPid = " + pid);
                 Log.w(TAG, "USBMonitor-onConnect createNew = " + createNew);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (createNew && device.getProductId() == pid) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (handler != null) {
                         handler.sendEmptyMessage(Const.SHOW_LOADING);
                     }
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (mConnectCallback != null && uvcCamera != null) {
                         Log.w(TAG, "USBMonitor-onCameraOpened");
                         mConnectCallback.onCameraOpened(uvcCamera);
                     }
                     Const.isDeviceConnected = true;
-                    /**
-                     * Executes handleusbconnect operation with thermal imaging domain optimization.
-                     *
-                     */
                     handleUSBConnect(ctrlBlock);
                     status = 3;
                 }
             }
 
-            // Called by disconnect to usb camera
-            // Do nothing
+            // called by disconnect to usb camera
+            // do nothing
             @Override
             public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
                 Log.w(TAG, "USBMonitor-onDisconnect mPid = " + pid);
@@ -538,10 +412,6 @@ public class IRUVCDual {
      * @param syncimage
      * @param pid
      */
-    /**
-     * Executes iruvcdual operation with thermal imaging domain optimization.
-     *
-     */
     public IRUVCDual(int cameraWidth, int cameraHeight, Context context, SynchronizedBitmap syncimage, int pid,
                      ConnectCallback connectCallback, boolean isUseIRISP) {
         this.mPid = pid;
@@ -552,28 +422,16 @@ public class IRUVCDual {
         this.isUseIRISP = isUseIRISP;
         this.mConnectCallback = connectCallback;
         //
-        /**
-         * Initializes the uvccamera component for thermal imaging operations.
-         *
-         */
         initUVCCamera(cameraWidth, cameraHeight);
         //
         mUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
 
-            // Called by checking usb device
-            // Do request device permission
+            // called by checking usb device
+            // do request device permission
             @Override
             public void onAttach(UsbDevice device) {
                 Log.w(TAG, "onAttach" + device.getProductId());
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (pid != 0) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (uvcCamera == null || !uvcCamera.getOpenStatus()) {
                         Log.w(TAG, "USBMonitor" + "onAttach requestPermission" + pid);
                         mUSBMonitor.requestPermission(device);
@@ -585,78 +443,46 @@ public class IRUVCDual {
             public void onGranted(UsbDevice usbDevice, boolean granted) {
             }
 
-            // Called by taking out usb device
-            // Do close camera
+            // called by taking out usb device
+            // do close camera
             @Override
             public void onDettach(UsbDevice device) {
                 Log.w(TAG, "onDettach");
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (pid != 0 && device != null) {
                     Const.isDeviceConnected = false;
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (uvcCamera != null && uvcCamera.getOpenStatus()) {
                         status = 2;
                     }
                 }
             }
 
-            // Called by connect to usb camera
-            // Do open camera,start previewing
+            // called by connect to usb camera
+            // do open camera,start previewing
             @Override
             public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
                 Log.w(TAG, "onConnect");
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (pid != 0) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (createNew) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (handler != null) {
                             handler.sendEmptyMessage(Const.SHOW_LOADING);
                         }
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (mConnectCallback != null && uvcCamera != null) {
                             Log.d(TAG, "onCameraOpened");
                             mConnectCallback.onCameraOpened(uvcCamera);
                         }
                         Const.isDeviceConnected = true;
-                        /**
-                         * Executes handleusbconnect operation with thermal imaging domain optimization.
-                         *
-                         */
                         handleUSBConnect(ctrlBlock);
                         status = 3;
                     }
                 }
             }
 
-            // Called by disconnect to usb camera
-            // Do nothing
+            // called by disconnect to usb camera
+            // do nothing
             @Override
             public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
                 Log.w(TAG, "onDisconnect");
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (pid != 0 && status != 4) {
                     Const.isDeviceConnected = false;
                     status = 4;
@@ -701,10 +527,6 @@ public class IRUVCDual {
     
     public void registerUSB() {
         Log.i(TAG, "registerUSB");
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mUSBMonitor != null) {
             mUSBMonitor.register();
         }
@@ -713,10 +535,6 @@ public class IRUVCDual {
     
     public void unregisterUSB() {
         Log.i(TAG, "unregisterUSB");
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mUSBMonitor != null) {
             mUSBMonitor.destroy();
         }
@@ -725,14 +543,10 @@ public class IRUVCDual {
     public List<UsbDevice> getUsbDeviceList() {
         List<DeviceFilter> deviceFilters = DeviceFilter
                 .getDeviceFilters(mContext, R.xml.device_filter);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mUSBMonitor == null || deviceFilters == null) {
             return null;
         }
-        // Matching all of filter devices
+        // matching all of filter devices
         return mUSBMonitor.getDeviceList(deviceFilters);
     }
 
@@ -743,30 +557,14 @@ public class IRUVCDual {
     public boolean requestPermission(int index) {
         Log.i(TAG, "requestPermission");
         List<UsbDevice> devList = getUsbDeviceList();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (devList == null || devList.size() == 0) {
             return false;
         }
         int count = devList.size();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (index >= count) {
             new IllegalArgumentException("index illegal,should be < devList.size()");
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mUSBMonitor != null) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (getUsbDeviceList().get(index).getProductId() == mPid) {
                 return mUSBMonitor.requestPermission(getUsbDeviceList().get(index));
             }
@@ -779,31 +577,15 @@ public class IRUVCDual {
      */
     public void openUVCCamera(USBMonitor.UsbControlBlock ctrlBlock) {
         Log.i(TAG, "openUVCCamera");
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ctrlBlock.getProductId() == 0x3901) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (syncimage != null) {
                 syncimage.type = 1;
             }
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (uvcCamera == null) {
-            /**
-             * Initializes the uvccamera component for thermal imaging operations.
-             *
-             */
             initUVCCamera(cameraWidth, cameraHeight);
         }
-        // Uvc开启
+        // uvc开启
         uvcCamera.openUVCCamera(ctrlBlock);
     }
 
@@ -812,20 +594,12 @@ public class IRUVCDual {
         Log.w(TAG, "startPreview mPid = " + mPid + " isUseIRISP = " + isUseIRISP);
         uvcCamera.setOpenStatus(true);
         //
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (iFrameCallback != null) {
             uvcCamera.setFrameCallback(iFrameCallback);
         }
         uvcCamera.onStartPreview();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mPid == 0x5830 || mPid == 0x5840) {
-            // Settingsinfrared镜像出图，跟原生visible light保持一直
+            //settingsinfrared镜像出图，跟原生visible light保持一直
             ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                     CommonParams.StartPreviewSource.SOURCE_SENSOR,
                     25, CommonParams.StartPreviewMode.VOC_DVP_MODE,
@@ -842,20 +616,9 @@ public class IRUVCDual {
      */
     private List<CameraSize> getAllSupportedSize() {
         List<CameraSize> previewList = new ArrayList<>();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (uvcCamera != null) {
             previewList = uvcCamera.getSupportedSizeList();
         }
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param size Parameter for operation (type: previewList)
-         *
-         */
         for (CameraSize size : previewList) {
             Log.i(TAG, "SupportedSize : " + size.width + " * " + size.height);
         }
@@ -869,21 +632,10 @@ public class IRUVCDual {
      * @param previewList
      */
     public void initIRCMD(List<CameraSize> previewList) {
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param size Parameter for operation (type: previewList)
-         *
-         */
         for (CameraSize size : previewList) {
 //            Log.i(TAG, "SupportedSize : " + size.width + " * " + size.height);
         }
         // IRCMD init
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (uvcCamera != null) {
             ConcreteIRCMDBuilder concreteIRCMDBuilder = new ConcreteIRCMDBuilder();
             ircmd = concreteIRCMDBuilder
@@ -891,10 +643,6 @@ public class IRUVCDual {
                     .setIdCamera(uvcCamera.getNativePtr())
                     .build();
             //
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mConnectCallback != null) {
                 Log.d(TAG, "onIRCMDCreate");
                 mConnectCallback.onIRCMDCreate(ircmd);
@@ -903,16 +651,12 @@ public class IRUVCDual {
     }
 
     /**
-     * 之前的openUVCCameramethod中传入的都是default值，这里需要根据实际传入对应的值
+     * 之前的openUVCCameramethod中传入的都是默认值，这里需要根据实际传入对应的值
      *
      * @param cameraWidth
      * @param cameraHeight
      */
     private int setPreviewSize(int cameraWidth, int cameraHeight) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (uvcCamera != null) {
             Log.d(TAG, "setUSBPreviewSize mPid = " + mPid + " cameraWidth = " + cameraWidth +
                     " cameraHeight = " + cameraHeight);
@@ -923,15 +667,7 @@ public class IRUVCDual {
 
     public void stopPreview() {
         Log.i(TAG, "stopPreview");
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (uvcCamera != null) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (uvcCamera.getOpenStatus()) {
                 uvcCamera.onStopPreview();
             }
@@ -954,29 +690,17 @@ public class IRUVCDual {
      */
     private void handleUSBConnect(USBMonitor.UsbControlBlock ctrlBlock) {
         Log.d(TAG, "handleUSBConnect mPid = " + mPid);
-        /**
-         * Manages thermal camera operations with hardware-optimized performance and error handling.
-         *
-         */
         openUVCCamera(ctrlBlock);
         // Get/Retrievedevice的分辨率list
         List<CameraSize> previewList = getAllSupportedSize();
         // 可以根据Get/Retrieve到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mPid == 0x5830 || mPid == 0x5840) {
-            /**
-             * Initializes the ircmd component for thermal imaging operations.
-             *
-             */
             initIRCMD(previewList);
             /**
              * Adjust带宽
              * 部分分辨率或在部分机型上，会出现无法出图，或出图一段时间后卡顿的问题，需要configuration对应的带宽
              */
-            uvcCamera.setDefaultBandwidth(1.0f);       // Adjust带宽
+            uvcCamera.setDefaultBandwidth(1.0f);       //Adjust带宽
             uvcCamera.setDefaultPreviewMinFps(1);
             uvcCamera.setDefaultPreviewMaxFps(mFps);
         } else {
@@ -991,31 +715,19 @@ public class IRUVCDual {
              * Adjust带宽
              * 部分分辨率或在部分机型上，会出现无法出图，或出图一段时间后卡顿的问题，需要configuration对应的带宽
              */
-            uvcCamera.setDefaultBandwidth(0.6f);       // Adjust带宽
+            uvcCamera.setDefaultBandwidth(0.6f);       //Adjust带宽
             uvcCamera.setDefaultPreviewMinFps(1);
             uvcCamera.setDefaultPreviewMaxFps(mFps);
         }
 
         // 根据device的分辨率list，这里可以动态的settingsmodule的宽高(这里作为示例，用的是从外部传入的方式)
         int result = setPreviewSize(cameraWidth, cameraHeight);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (result == 0) {
             //
             Log.d(TAG, "handleUSBConnect setPreviewSize success = " );
-            /**
-             * Executes startpreview operation with thermal imaging domain optimization.
-             *
-             */
             startPreview();
         } else {
             Log.d(TAG, "handleUSBConnect setPreviewSize fail = " );
-            /**
-             * Executes stoppreview operation with thermal imaging domain optimization.
-             *
-             */
             stopPreview();
         }
 

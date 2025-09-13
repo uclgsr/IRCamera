@@ -16,23 +16,6 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
  * 
  * @author Philipp Jahoda
  */
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ViewPortJob display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public abstract class ViewPortJob extends ObjectPool.Poolable implements Runnable {
 
     protected float[] pts = new float[2];
@@ -43,10 +26,6 @@ public abstract class ViewPortJob extends ObjectPool.Poolable implements Runnabl
     protected Transformer mTrans;
     protected View view;
 
-    /**
-     * Executes viewportjob operation with thermal imaging domain optimization.
-     *
-     */
     public ViewPortJob(ViewPortHandler viewPortHandler, float xValue, float yValue,
                        Transformer trans, View v) {
 

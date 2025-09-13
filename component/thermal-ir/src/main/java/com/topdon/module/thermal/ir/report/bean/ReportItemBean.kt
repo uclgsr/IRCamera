@@ -22,15 +22,7 @@ data class ReportItemBean(
     val status: Int?,
 ) : Parcelable {
     var reportBean: ReportBean? = null
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (field == null) {
                 field = GsonUtils.fromJson(testInfo, ReportBean::class.java)
             }

@@ -10,18 +10,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * Specialized thermal imaging component providing SecurityMonitor functionality for the IRCamera system.
+ * Security Monitor for Phase 4 Security Enhancement
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Provides real-time security monitoring, intrusion detection, and threat analysis
  */
 class SecurityMonitor(
     private val context: Context,
@@ -90,79 +81,29 @@ class SecurityMonitor(
         val description: String,
         val details: Map<String, Any>,
         var acknowledged: Boolean = false,
-/**
- * Specialized thermal imaging component providing SecurityEventListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+    )
+
+    enum class Severity(val level: Int, val displayName: String) {
+        LOW(1, "Low"),
+        MEDIUM(2, "Medium"),
+        HIGH(3, "High"),
+        CRITICAL(4, "Critical"),
+    }
+
     interface SecurityEventListener {
-    /**
-     * Executes onSecurityAlert functionality.
-     */
-        /**
-         * Executes onsecurityalert operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param alert Parameter for operation (type: SecurityAlert)
-         *
-         */
         fun onSecurityAlert(alert: SecurityAlert)
 
-    /**
-     * Executes onSuspiciousActivity functionality.
-     */
-        /**
-         * Executes onsuspiciousactivity operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param deviceId Parameter for operation (type: String)
-         * @param activityType Parameter for operation (type: String)
-         * @param details Parameter for operation (type: Map<String)
-         *
-         */
         fun onSuspiciousActivity(
             deviceId: String,
             activityType: String,
             details: Map<String, Any>,
         )
 
-    /**
-     * Executes onSessionAnomalyDetected functionality.
-     */
-        /**
-         * Executes onsessionanomalydetected operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param deviceId Parameter for operation (type: String)
-         * @param anomalyType Parameter for operation (type: String)
-         *
-         */
         fun onSessionAnomalyDetected(
             deviceId: String,
             anomalyType: String,
         )
 
-    /**
-     * Executes onThreatDetected functionality.
-     */
-        /**
-         * Executes onthreatdetected operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param threatType Parameter for operation (type: String)
-         * @param confidence Parameter for operation (type: Float)
-         * @param details Parameter for operation (type: Map<String)
-         *
-         */
         fun onThreatDetected(
             threatType: String,
             confidence: Float,
@@ -183,10 +124,6 @@ class SecurityMonitor(
                 StructuredLogger.LogLevel.INFO,
                 TAG,
                 "security_monitor_initialized",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "monitoring_interval_seconds" to (MONITORING_INTERVAL_MS / 1000L),
                     "cleanup_interval_minutes" to (CLEANUP_INTERVAL_MS / (60 * 1000L)),
@@ -201,10 +138,6 @@ class SecurityMonitor(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "init_failed",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "error" to e.message.orEmpty(),
                 ),
@@ -223,15 +156,7 @@ class SecurityMonitor(
     /**
      * Start security monitoring
      */
-    /**
-     * Executes startmonitoring operation with thermal imaging domain optimization.
-     *
-     */
     fun startMonitoring() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isMonitoring.get()) {
             Log.w(TAG, "Security monitoring already started")
             return
@@ -241,21 +166,9 @@ class SecurityMonitor(
 
         // Start main monitoring loop
         scope.launch {
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (isMonitoring.get()) {
                 try {
-                    /**
-                     * Executes performsecuritycheck operation with thermal imaging domain optimization.
-                     *
-                     */
                     performSecurityCheck()
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(MONITORING_INTERVAL_MS)
                 } catch (e: Exception) {
                     Log.e(TAG, "Error in security monitoring loop", e)
@@ -265,21 +178,9 @@ class SecurityMonitor(
 
         // Start cleanup task
         scope.launch {
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (isMonitoring.get()) {
                 try {
-                    /**
-                     * Executes performcleanup operation with thermal imaging domain optimization.
-                     *
-                     */
                     performCleanup()
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(CLEANUP_INTERVAL_MS)
                 } catch (e: Exception) {
                     Log.e(TAG, "Error in cleanup task", e)
@@ -293,10 +194,6 @@ class SecurityMonitor(
             StructuredLogger.LogLevel.INFO,
             TAG,
             "monitoring_started",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "monitoring_active" to true,
             ),
@@ -305,10 +202,6 @@ class SecurityMonitor(
 
     /**
      * Stop security monitoring
-     */
-    /**
-     * Executes stopmonitoring operation with thermal imaging domain optimization.
-     *
      */
     fun stopMonitoring() {
         isMonitoring.set(false)
@@ -320,10 +213,6 @@ class SecurityMonitor(
             StructuredLogger.LogLevel.INFO,
             TAG,
             "monitoring_stopped",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "total_connections_monitored" to totalConnections.get(),
                 "total_failed_logins" to totalFailedLogins.get(),
@@ -334,18 +223,6 @@ class SecurityMonitor(
 
     /**
      * Report connection attempt
-     */
-    /**
-     * Handles temperature measurement and calibration with precision thermal data processing.
-     *
-     * @param
-     * @param deviceId Parameter for operation (type: String)
-     * @param successful Parameter for operation (type: Boolean)
-     * @param details Parameter for operation (type: Map<String)
-     *
-     * @note Temperature values are in Celsius unless otherwise specified.
-     * Accuracy depends on thermal camera calibration.
-     *
      */
     fun reportConnectionAttempt(
         deviceId: String,
@@ -359,37 +236,21 @@ class SecurityMonitor(
         totalConnections.incrementAndGet()
 
         // Track failed logins separately
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!successful) {
             failedLogins.computeIfAbsent(deviceId) { mutableListOf() }.add(currentTime)
             totalFailedLogins.incrementAndGet()
 
             // Check for brute force attack
-            /**
-             * Executes checkbruteforceattack operation with thermal imaging domain optimization.
-             *
-             */
             checkBruteForceAttack(deviceId)
         }
 
         // Update session activity
-        /**
-         * Executes updatesessionactivity operation with thermal imaging domain optimization.
-         *
-         */
         updateSessionActivity(deviceId, "connection_attempt", details + mapOf("successful" to successful))
 
         logger.log(
             StructuredLogger.LogLevel.DEBUG,
             TAG,
             "connection_attempt",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "device_id" to deviceId,
                 "successful" to successful,
@@ -401,38 +262,18 @@ class SecurityMonitor(
     /**
      * Report security event
      */
-    /**
-     * Executes reportsecurityevent operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param eventType Parameter for operation (type: String)
-     * @param details Parameter for operation (type: Map<String)
-     *
-     */
     fun reportSecurityEvent(
         eventType: String,
         details: Map<String, Any>,
     ) {
         val deviceId = details["device_id"] as? String ?: "unknown"
 
-        /**
-         * Executes updatesessionactivity operation with thermal imaging domain optimization.
-         *
-         */
         updateSessionActivity(deviceId, eventType, details)
 
         // Analyze event severity
         val severity = determineSeverity(eventType, details)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (severity.level >= Severity.MEDIUM.level) {
-            /**
-             * Executes generatesecurityalert operation with thermal imaging domain optimization.
-             *
-             */
             generateSecurityAlert(eventType, severity, deviceId, details)
         }
 
@@ -440,10 +281,6 @@ class SecurityMonitor(
             StructuredLogger.LogLevel.INFO,
             TAG,
             "security_event",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "event_type" to eventType,
                 "device_id" to deviceId,
@@ -460,32 +297,16 @@ class SecurityMonitor(
         val currentTime = System.currentTimeMillis()
 
         // Check for session timeout warning
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (currentTime - activity.lastActivity > SESSION_TIMEOUT_WARNING_MS) {
             securityListener?.onSessionAnomalyDetected(deviceId, "session_timeout_warning")
         }
 
         // Check for unusual activity patterns
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (activity.activityCount > 100 && (currentTime - activity.startTime) < 60 * 1000L) {
-            /**
-             * Executes generatesecurityalert operation with thermal imaging domain optimization.
-             *
-             */
             generateSecurityAlert(
                 ALERT_UNUSUAL_ACTIVITY,
                 Severity.MEDIUM,
                 deviceId,
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "activity_count" to activity.activityCount,
                     "time_window_seconds" to ((currentTime - activity.startTime) / 1000L),
@@ -494,23 +315,11 @@ class SecurityMonitor(
         }
 
         // Check for suspicious event concentration
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (activity.suspiciousEvents >= SUSPICIOUS_ACTIVITY_THRESHOLD) {
-            /**
-             * Executes generatesecurityalert operation with thermal imaging domain optimization.
-             *
-             */
             generateSecurityAlert(
                 ALERT_SUSPICIOUS_CONNECTION,
                 Severity.HIGH,
                 deviceId,
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "suspicious_events_count" to activity.suspiciousEvents,
                     "session_duration_minutes" to ((currentTime - activity.startTime) / (60 * 1000L)),
@@ -527,39 +336,19 @@ class SecurityMonitor(
 
         // Check all active sessions
         sessionActivities.values.forEach { activity ->
-            /**
-             * Executes checksessionactivity operation with thermal imaging domain optimization.
-             *
-             */
             checkSessionActivity(activity.deviceId)
         }
 
         // Check for unusual connection patterns
-        /**
-         * Executes checkconnectionpatterns operation with thermal imaging domain optimization.
-         *
-         */
         checkConnectionPatterns()
 
         // Check for certificate violations
-        /**
-         * Executes checkcertificateviolations operation with thermal imaging domain optimization.
-         *
-         */
         checkCertificateViolations()
 
         // Analyze threat patterns
-        /**
-         * Executes analyzethreatpatterns operation with thermal imaging domain optimization.
-         *
-         */
         analyzeThreatPatterns()
 
         // Update monitoring statistics
-        /**
-         * Executes updatemonitoringstatistics operation with thermal imaging domain optimization.
-         *
-         */
         updateMonitoringStatistics()
     }
 
@@ -569,23 +358,11 @@ class SecurityMonitor(
     private fun checkBruteForceAttack(deviceId: String) {
         val recentFailures = getRecentFailedLogins(deviceId, 60 * 60 * 1000L) // Last hour
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (recentFailures.size >= MAX_FAILED_LOGINS_PER_HOUR) {
-            /**
-             * Executes generatesecurityalert operation with thermal imaging domain optimization.
-             *
-             */
             generateSecurityAlert(
                 ALERT_BRUTE_FORCE,
                 Severity.HIGH,
                 deviceId,
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "failed_attempts" to recentFailures.size,
                     "time_window" to "1_hour",
@@ -604,23 +381,11 @@ class SecurityMonitor(
                     System.currentTimeMillis() - it < 60 * 1000L // Last minute
                 }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (recentAttempts.size > MAX_CONNECTIONS_PER_DEVICE) {
-                /**
-                 * Executes generatesecurityalert operation with thermal imaging domain optimization.
-                 *
-                 */
                 generateSecurityAlert(
                     ALERT_SUSPICIOUS_CONNECTION,
                     Severity.MEDIUM,
                     deviceId,
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf(
                         "connections_per_minute" to recentAttempts.size,
                         "threshold" to MAX_CONNECTIONS_PER_DEVICE,
@@ -648,19 +413,11 @@ class SecurityMonitor(
         val alertsByDevice = recentAlerts.groupBy { it.deviceId }
 
         alertsByDevice.forEach { (deviceId, alerts) ->
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (alerts.size >= 5) {
                 // Multiple alerts from same device - potential compromise
                 securityListener?.onThreatDetected(
                     "device_compromise",
                     0.8f,
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf(
                         "device_id" to deviceId,
                         "alert_count" to alerts.size,
@@ -671,24 +428,12 @@ class SecurityMonitor(
         }
 
         // Check for coordinated attacks
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (recentAlerts.size >= 10) {
             val uniqueDevices = recentAlerts.map { it.deviceId }.distinct().size
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (uniqueDevices >= 3) {
                 securityListener?.onThreatDetected(
                     "coordinated_attack",
                     0.9f,
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf(
                         "affected_devices" to uniqueDevices,
                         "total_alerts" to recentAlerts.size,
@@ -701,15 +446,6 @@ class SecurityMonitor(
     /**
      * Update session activity
      */
-    /**
-     * Executes updatesessionactivity operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param deviceId Parameter for operation (type: String)
-     * @param activityType Parameter for operation (type: String)
-     * @param details Parameter for operation (type: Map<String)
-     *
-     */
     private fun updateSessionActivity(
         deviceId: String,
         activityType: String,
@@ -719,10 +455,6 @@ class SecurityMonitor(
 
         val activity =
             sessionActivities.computeIfAbsent(deviceId) {
-                /**
-                 * Executes sessionactivity operation with thermal imaging domain optimization.
-                 *
-                 */
                 SessionActivity(
                     deviceId = deviceId,
                     startTime = currentTime,
@@ -737,10 +469,6 @@ class SecurityMonitor(
         activity.activityCount++
 
         // Check if activity is suspicious
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isSuspiciousActivity(activityType, details)) {
             activity.suspiciousEvents++
         }
@@ -749,10 +477,6 @@ class SecurityMonitor(
         activity.activityPattern.add(ActivityEvent(activityType, currentTime, details))
 
         // Keep only recent activity (last 1000 events)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (activity.activityPattern.size > 1000) {
             activity.activityPattern.removeAt(0)
         }
@@ -778,16 +502,6 @@ class SecurityMonitor(
     /**
      * Generate security alert
      */
-    /**
-     * Executes generatesecurityalert operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param alertType Parameter for operation (type: String)
-     * @param severity Parameter for operation (type: Severity)
-     * @param deviceId Parameter for operation (type: String)
-     * @param details Parameter for operation (type: Map<String)
-     *
-     */
     private fun generateSecurityAlert(
         alertType: String,
         severity: Severity,
@@ -795,10 +509,6 @@ class SecurityMonitor(
         details: Map<String, Any>,
     ) {
         val alert =
-            /**
-             * Executes securityalert operation with thermal imaging domain optimization.
-             *
-             */
             SecurityAlert(
                 id = generateAlertId(),
                 type = alertType,
@@ -809,18 +519,10 @@ class SecurityMonitor(
                 details = details,
             )
 
-        /**
-         * Executes synchronized operation with thermal imaging domain optimization.
-         *
-         */
         synchronized(securityAlerts) {
             securityAlerts.add(alert)
 
             // Keep only last 1000 alerts
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (securityAlerts.size > 1000) {
                 securityAlerts.removeAt(0)
             }
@@ -835,10 +537,6 @@ class SecurityMonitor(
             StructuredLogger.LogLevel.WARNING,
             TAG,
             "security_alert",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "alert_id" to alert.id,
                 "alert_type" to alertType,
@@ -850,14 +548,6 @@ class SecurityMonitor(
 
     /**
      * Determine event severity
-     */
-    /**
-     * Executes determineseverity operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param eventType Parameter for operation (type: String)
-     * @param details Parameter for operation (type: Map<String)
-     *
      */
     private fun determineSeverity(
         eventType: String,
@@ -879,14 +569,6 @@ class SecurityMonitor(
     /**
      * Generate alert description
      */
-    /**
-     * Executes generatealertdescription operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param alertType Parameter for operation (type: String)
-     * @param details Parameter for operation (type: Map<String)
-     *
-     */
     private fun generateAlertDescription(
         alertType: String,
         details: Map<String, Any>,
@@ -907,10 +589,6 @@ class SecurityMonitor(
     /**
      * Generate unique alert ID
      */
-    /**
-     * Executes generatealertid operation with thermal imaging domain optimization.
-     *
-     */
     private fun generateAlertId(): String {
         return "ALERT_${System.currentTimeMillis()}_${(Math.random() * 1000).toInt()}"
     }
@@ -929,19 +607,8 @@ class SecurityMonitor(
     /**
      * Get recent security alerts
      */
-    /**
-     * Retrieves the recentalerts with optimized performance for thermal imaging operations.
-     *
-     * @param
-     * @param timeWindowMs Parameter for operation (type: Long)
-     *
-     */
     private fun getRecentAlerts(timeWindowMs: Long): List<SecurityAlert> {
         val cutoffTime = System.currentTimeMillis() - timeWindowMs
-        /**
-         * Executes synchronized operation with thermal imaging domain optimization.
-         *
-         */
         synchronized(securityAlerts) {
             return securityAlerts.filter { it.timestamp > cutoffTime }
         }
@@ -949,10 +616,6 @@ class SecurityMonitor(
 
     /**
      * Perform periodic cleanup
-     */
-    /**
-     * Executes performcleanup operation with thermal imaging domain optimization.
-     *
      */
     private fun performCleanup() {
         val currentTime = System.currentTimeMillis()
@@ -982,10 +645,6 @@ class SecurityMonitor(
             StructuredLogger.LogLevel.DEBUG,
             TAG,
             "cleanup_performed",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "inactive_sessions_removed" to inactiveSessions.size,
             ),
@@ -1002,18 +661,7 @@ class SecurityMonitor(
     /**
      * Get security alerts
      */
-    /**
-     * Retrieves the securityalerts with optimized performance for thermal imaging operations.
-     *
-     * @param
-     * @param limit Parameter for operation (type: Int = 100)
-     *
-     */
     fun getSecurityAlerts(limit: Int = 100): List<SecurityAlert> {
-        /**
-         * Executes synchronized operation with thermal imaging domain optimization.
-         *
-         */
         synchronized(securityAlerts) {
             return securityAlerts.takeLast(limit)
         }
@@ -1022,18 +670,7 @@ class SecurityMonitor(
     /**
      * Acknowledge security alert
      */
-    /**
-     * Executes acknowledgealert operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param alertId Parameter for operation (type: String)
-     *
-     */
     fun acknowledgeAlert(alertId: String): Boolean {
-        /**
-         * Executes synchronized operation with thermal imaging domain optimization.
-         *
-         */
         synchronized(securityAlerts) {
             val alert = securityAlerts.find { it.id == alertId }
             return if (alert != null) {
@@ -1042,10 +679,6 @@ class SecurityMonitor(
                     StructuredLogger.LogLevel.INFO,
                     TAG,
                     "alert_acknowledged",
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf(
                         "alert_id" to alertId,
                     ),
@@ -1060,46 +693,14 @@ class SecurityMonitor(
     /**
      * Get monitoring statistics
      */
-    /**
-     * Retrieves the monitoringstatistics with optimized performance for thermal imaging operations.
-     *
-     */
     fun getMonitoringStatistics(): JSONObject {
         return JSONObject().apply {
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("monitoring_active", isMonitoring.get())
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("total_connections", totalConnections.get())
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("total_failed_logins", totalFailedLogins.get())
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("total_security_alerts", totalSecurityAlerts.get())
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("active_sessions", sessionActivities.size)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("recent_alerts_count", getRecentAlerts(60 * 60 * 1000L).size)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("monitored_devices", connectionAttempts.size)
         }
     }
@@ -1110,86 +711,26 @@ class SecurityMonitor(
     fun getSecurityDiagnostics(): JSONObject {
         return JSONObject().apply {
             put("monitoring_statistics", getMonitoringStatistics())
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put(
                 "recent_alerts",
-                /**
-                 * Retrieves the securityalerts with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getSecurityAlerts(10).map { alert ->
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("id", alert.id)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("type", alert.type)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("severity", alert.severity.name)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_id", alert.deviceId)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("timestamp", alert.timestamp)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("acknowledged", alert.acknowledged)
                     }
                 },
             )
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put(
                 "active_sessions",
                 sessionActivities.values.map { session ->
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_id", session.deviceId)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("activity_count", session.activityCount)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("suspicious_events", session.suspiciousEvents)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("last_activity", session.lastActivity)
                     }
                 },

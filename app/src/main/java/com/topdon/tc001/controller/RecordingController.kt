@@ -28,20 +28,6 @@ import java.util.concurrent.atomic.AtomicBoolean
  * 
  * @author IRCamera Android Sensor Node (Spoke)
  */
-/**
- * Specialized thermal imaging component providing RecordingController functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class RecordingController(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner
@@ -91,7 +77,7 @@ class RecordingController(
                 
                 // Create sensor recorders - NOTE: RGB camera requires TextureView which may not be available here
                 // This is a structural issue that needs to be addressed
-                // Val rgbCamera = RGBCameraRecorder(context, textureView) // TextureView needed
+                // val rgbCamera = RGBCameraRecorder(context, textureView) // TextureView needed
                 val thermalCamera = ThermalCameraRecorder(context, "thermal_camera_1")
                 val gsrSensor = GSRSensorRecorder(context, "gsr_shimmer_1")
                 
@@ -128,15 +114,7 @@ class RecordingController(
                 
                 // Add successfully initialized sensors
                 initResults.forEach { (sensorId, success) ->
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (success) {
-                        /**
-                         * Executes when operation with thermal imaging domain optimization.
-                         *
-                         */
                         when (sensorId) {
                             // "rgb_camera_1" -> sensorRecorders[sensorId] = rgbCamera // Commented out
                             "thermal_camera_1" -> sensorRecorders[sensorId] = thermalCamera
@@ -145,13 +123,6 @@ class RecordingController(
                         Log.i(TAG, "Sensor $sensorId initialized successfully")
                     } else {
                         Log.w(TAG, "Sensor $sensorId failed to initialize")
-                        /**
-                         * Executes emiterror operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param sensor Parameter for operation (type: $sensorId")
-                         *
-                         */
                         emitError(RecordingControllerError(
                             errorType = "SENSOR_INIT_FAILED",
                             message = "Failed to initialize sensor: $sensorId",
@@ -162,10 +133,6 @@ class RecordingController(
                 }
                 
                 // Start monitoring
-                /**
-                 * Executes startmonitoring operation with thermal imaging domain optimization.
-                 *
-                 */
                 startMonitoring()
                 
                 val successCount = sensorRecorders.size
@@ -178,13 +145,6 @@ class RecordingController(
                 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to initialize sensors", e)
-                /**
-                 * Executes emiterror operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param failed Parameter for operation (type: ${e.message}")
-                 *
-                 */
                 emitError(RecordingControllerError(
                     errorType = "INIT_FAILED",
                     message = "Sensor initialization failed: ${e.message}",
@@ -201,10 +161,6 @@ class RecordingController(
     suspend fun startRecording(sessionDirectory: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (_isRecording.get()) {
                     Log.w(TAG, "Recording already in progress")
                     return@withContext true
@@ -215,10 +171,6 @@ class RecordingController(
                 
                 // Create session directory
                 val sessionDir = File(sessionDirectory)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!sessionDir.exists()) {
                     sessionDir.mkdirs()
                 }
@@ -231,30 +183,15 @@ class RecordingController(
                     async {
                         try {
                             val success = sensor.startRecording(sessionDirectory)
-                            /**
-                             * Executes triple operation with thermal imaging domain optimization.
-                             *
-                             */
                             Triple(sensor.sensorId, success, null)
                         } catch (e: Exception) {
                             Log.w(TAG, "Exception starting sensor ${sensor.sensorId}", e)
-                            /**
-                             * Executes emiterror operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param start Parameter for operation (type: ${e.message}")
-                             *
-                             */
                             emitError(RecordingControllerError(
                                 errorType = "SENSOR_START_EXCEPTION",
                                 message = "Sensor ${sensor.sensorId} threw exception during start: ${e.message}",
                                 sensorId = sensor.sensorId,
                                 isRecoverable = true
                             ))
-                            /**
-                             * Executes triple operation with thermal imaging domain optimization.
-                             *
-                             */
                             Triple(sensor.sensorId, false, e)
                         }
                     }
@@ -276,13 +213,6 @@ class RecordingController(
                         " (Returned false)"
                     }
                     Log.w(TAG, "Sensor $sensorId failed to start$errorDetails")
-                    /**
-                     * Executes emiterror operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param sensor Parameter for operation (type: $sensorId$errorDetails")
-                     *
-                     */
                     emitError(RecordingControllerError(
                         errorType = "SENSOR_START_FAILED",
                         message = "Failed to start sensor: $sensorId$errorDetails",
@@ -291,19 +221,11 @@ class RecordingController(
                     ))
                 }
                 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (successfulStarts.isNotEmpty()) {
                     _isRecording.set(true)
                     _recordingStateFlow.value = RecordingState.RECORDING
                     
                     // Add initial sync marker
-                    /**
-                     * Executes addsyncmarker operation with thermal imaging domain optimization.
-                     *
-                     */
                     addSyncMarker("session_start", recordingStartTime)
                     
                     val totalSensors = startResults.size
@@ -317,13 +239,6 @@ class RecordingController(
                 } else {
                     _recordingStateFlow.value = RecordingState.ERROR
                     Log.e(TAG, "All ${startResults.size} sensors failed to start - cannot begin session")
-                    /**
-                     * Executes emiterror operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param start Parameter for operation (type: ${failedStarts.joinToString(")
-                     *
-                     */
                     emitError(RecordingControllerError(
                         errorType = "ALL_SENSORS_FAILED",
                         message = "All sensors failed to start: ${failedStarts.joinToString(", ") { it.first }}",
@@ -335,13 +250,6 @@ class RecordingController(
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start recording", e)
                 _recordingStateFlow.value = RecordingState.ERROR
-                /**
-                 * Executes emiterror operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param recording Parameter for operation (type: ${e.message}")
-                 *
-                 */
                 emitError(RecordingControllerError(
                     errorType = "START_FAILED",
                     message = "Failed to start recording: ${e.message}",
@@ -358,10 +266,6 @@ class RecordingController(
     suspend fun stopRecording(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!_isRecording.get()) {
                     Log.w(TAG, "No recording in progress")
                     return@withContext true
@@ -371,17 +275,9 @@ class RecordingController(
                 _recordingStateFlow.value = RecordingState.STOPPING
                 
                 // Add final sync marker
-                /**
-                 * Executes addsyncmarker operation with thermal imaging domain optimization.
-                 *
-                 */
                 addSyncMarker("session_end", System.nanoTime())
                 
                 // Wait a moment for sync marker to propagate
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(SYNC_MARKER_DISTRIBUTION_DELAY_MS)
                 
                 // Stop all sensors concurrently with proper error handling
@@ -389,17 +285,9 @@ class RecordingController(
                     async {
                         try {
                             val success = sensor.stopRecording()
-                            /**
-                             * Executes triple operation with thermal imaging domain optimization.
-                             *
-                             */
                             Triple(sensor.sensorId, success, null)
                         } catch (e: Exception) {
                             Log.w(TAG, "Exception stopping sensor ${sensor.sensorId}", e)
-                            /**
-                             * Executes triple operation with thermal imaging domain optimization.
-                             *
-                             */
                             Triple(sensor.sensorId, false, e)
                         }
                     }
@@ -434,13 +322,6 @@ class RecordingController(
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to stop recording", e)
                 _recordingStateFlow.value = RecordingState.ERROR
-                /**
-                 * Executes emiterror operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param recording Parameter for operation (type: ${e.message}")
-                 *
-                 */
                 emitError(RecordingControllerError(
                     errorType = "STOP_FAILED",
                     message = "Failed to stop recording: ${e.message}",
@@ -529,53 +410,14 @@ class RecordingController(
      * Get a simple text report of current sensor status
      * Useful for logging, debugging, or simple UI display
      */
-    /**
-     * Retrieves statusreport information.
-     */
     fun getStatusReport(): String {
         val summary = getSensorStatusSummary()
         return buildString {
-            /**
-             * Executes appendline operation with thermal imaging domain optimization.
-             *
-             */
             appendLine("=== Recording Controller Status ===")
-            /**
-             * Executes appendline operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param State Parameter for operation (type: ${summary.sessionState}")
-             *
-             */
             appendLine("Session State: ${summary.sessionState}")
-            /**
-             * Executes appendline operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param Sensors Parameter for operation (type: ${summary.totalSensorsRecording}/${summary.totalSensorsInitialized} recording")
-             *
-             */
             appendLine("Sensors: ${summary.totalSensorsRecording}/${summary.totalSensorsInitialized} recording")
-            /**
-             * Executes appendline operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param Status Parameter for operation (type: ${summary.statusMessage}")
-             *
-             */
             appendLine("Status: ${summary.statusMessage}")
-            /**
-             * Executes appendline operation with thermal imaging domain optimization.
-             *
-             */
             appendLine()
-            /**
-             * Executes appendline operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param Sensors Parameter for operation (type: ")
-             *
-             */
             appendLine("Individual Sensors:")
             summary.sensors.forEach { sensor ->
                 val status = when {
@@ -583,54 +425,14 @@ class RecordingController(
                     sensor.isInitialized -> "🟡 READY"
                     else -> "❌ FAILED"
                 }
-                /**
-                 * Executes appendline operation with thermal imaging domain optimization.
-                 *
-                 */
                 appendLine("  ${sensor.sensorType}: $status")
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (_isRecording.get()) {
                 val stats = getRecordingStatistics()
-                /**
-                 * Executes appendline operation with thermal imaging domain optimization.
-                 *
-                 */
                 appendLine()
-                /**
-                 * Executes appendline operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param Stats Parameter for operation (type: ")
-                 *
-                 */
                 appendLine("Session Stats:")
-                /**
-                 * Executes appendline operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param Duration Duration in milliseconds (type: ${String.format("%.1f")
-                 *
-                 */
                 appendLine("  Duration: ${String.format("%.1f", stats.sessionDurationSeconds)}s")
-                /**
-                 * Executes appendline operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param Samples Parameter for operation (type: ${stats.totalSamplesRecorded}")
-                 *
-                 */
                 appendLine("  Total Samples: ${stats.totalSamplesRecorded}")
-                /**
-                 * Executes appendline operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param Used Parameter for operation (type: ${String.format("%.2f")
-                 *
-                 */
                 appendLine("  Storage Used: ${String.format("%.2f", stats.totalStorageUsedMB)}MB")
             }
         }
@@ -678,9 +480,6 @@ class RecordingController(
 <<<<<<< HEAD
      * Get detailed status of all sensors including initialization and recording state
      */
-    /**
-     * Retrieves sensorstatussummary information.
-     */
     fun getSensorStatusSummary(): SensorStatusSummary {
         val sensors = sensorRecorders.values.map { sensor ->
             DetailedSensorStatus(
@@ -716,29 +515,13 @@ class RecordingController(
     /**
      * Clean up all resources
      */
-    /**
-     * Executes cleanup operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun cleanup() {
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 Log.i(TAG, "Cleaning up recording controller")
                 
                 // Stop recording if active
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (_isRecording.get()) {
-                    /**
-                     * Executes stoprecording operation with thermal imaging domain optimization.
-                     *
-                     */
                     stopRecording()
                 }
                 
@@ -772,28 +555,13 @@ class RecordingController(
         }
     }
 
-    /**
-     * Executes startMonitoring functionality.
-     */
-    /**
-     * Executes startmonitoring operation with thermal imaging domain optimization.
-     *
-     */
     private fun startMonitoring() {
         // Start status monitoring
         statusMonitoringJob = controllerScope.launch {
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (isActive) {
                 try {
                     val statusList = sensorRecorders.values.map { sensor ->
                         sensor.getRecordingStats().let { stats ->
-                            /**
-                             * Executes recordingstatus operation with thermal imaging domain optimization.
-                             *
-                             */
                             RecordingStatus(
                                 sensorId = stats.sensorId,
                                 sensorType = stats.sensorType,
@@ -812,10 +580,6 @@ class RecordingController(
                     Log.w(TAG, "Status monitoring error", e)
                 }
                 
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(STATUS_UPDATE_INTERVAL_MS)
             }
         }
@@ -835,25 +599,10 @@ class RecordingController(
                             originalError = sensorError
                         )
                         
-                        /**
-                         * Executes emiterror operation with thermal imaging domain optimization.
-                         *
-                         */
                         emitError(controllerError)
                         
                         // Attempt recovery for recoverable errors
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (sensorError.isRecoverable) {
-                            /**
-                             * Handles temperature measurement and calibration with precision thermal data processing.
-                             *
-                             * @note Temperature values are in Celsius unless otherwise specified.
-                             * Accuracy depends on thermal camera calibration.
-                             *
-                             */
                             attemptErrorRecovery(sensor, sensorError)
                         }
                     }
@@ -862,56 +611,25 @@ class RecordingController(
         }
     }
 
-    /**
-     * Handles temperature measurement and calibration with precision thermal data processing.
-     *
-     * @param
-     * @param sensor Parameter for operation (type: SensorRecorder)
-     * @param error Parameter for operation (type: SensorError)
-     *
-     * @note Temperature values are in Celsius unless otherwise specified.
-     * Accuracy depends on thermal camera calibration.
-     *
-     */
     private suspend fun attemptErrorRecovery(sensor: SensorRecorder, error: SensorError) {
         controllerScope.launch {
             try {
                 Log.i(TAG, "Attempting error recovery for sensor ${sensor.sensorId}")
                 
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(ERROR_RECOVERY_DELAY_MS)
                 
                 // Simple recovery: reinitialize the sensor
                 val recoverySuccess = sensor.initialize()
                 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (recoverySuccess) {
                     Log.i(TAG, "Error recovery successful for sensor ${sensor.sensorId}")
                     
                     // Restart recording if session is active
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (_isRecording.get() && currentSessionDirectory != null) {
                         try {
                             val restartSuccess = sensor.startRecording(currentSessionDirectory!!)
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (restartSuccess) {
                                 Log.i(TAG, "Sensor ${sensor.sensorId} successfully restarted during session")
-                                /**
-                                 * Executes emiterror operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 emitError(RecordingControllerError(
                                     errorType = "SENSOR_RECOVERED",
                                     message = "Sensor ${sensor.sensorId} recovered and restarted",
@@ -942,28 +660,16 @@ class RecordingController(
         return withContext(Dispatchers.IO) {
             try {
                 val sensor = sensorRecorders[sensorId]
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sensor == null) {
                     Log.w(TAG, "Cannot restart sensor $sensorId - not found in active sensors")
                     return@withContext false
                 }
                 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sensor.isRecording) {
                     Log.i(TAG, "Sensor $sensorId is already recording")
                     return@withContext true
                 }
                 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!_isRecording.get() || currentSessionDirectory == null) {
                     Log.w(TAG, "Cannot restart sensor $sensorId - no active recording session")
                     return@withContext false
@@ -973,26 +679,14 @@ class RecordingController(
                 
                 // Try to reinitialize and start recording
                 val initSuccess = sensor.initialize()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!initSuccess) {
                     Log.w(TAG, "Sensor $sensorId reinitialization failed")
                     return@withContext false
                 }
                 
                 val startSuccess = sensor.startRecording(currentSessionDirectory!!)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (startSuccess) {
                     Log.i(TAG, "Sensor $sensorId successfully restarted during session")
-                    /**
-                     * Executes emiterror operation with thermal imaging domain optimization.
-                     *
-                     */
                     emitError(RecordingControllerError(
                         errorType = "SENSOR_MANUALLY_RESTARTED",
                         message = "Sensor $sensorId manually restarted during session",
@@ -1009,19 +703,16 @@ class RecordingController(
                 Log.e(TAG, "Exception during manual sensor restart for $sensorId", e)
                 return@withContext false
             }
+        }
+    }
+
+    private suspend fun emitError(error: RecordingControllerError) {
+        _errorFlow.emit(error)
+    }
+}
+
 /**
- * Specialized thermal imaging component providing RecordingState functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Recording states for the controller
  */
 enum class RecordingState {
     STOPPED,

@@ -46,36 +46,11 @@ import org.json.JSONObject
  * Created by LCG on 2024/4/18.
  */
 @SuppressLint("NotifyDataSetChanged")
-/**
- * Specialized thermal imaging component providing MainFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickListener {
     private lateinit var adapter: MyAdapter
 
-    /**
-     * Initializes the contentlayoutid component for thermal imaging operations.
-     *
-     */
     override fun initContentLayoutId(): Int = R.layout.fragment_main
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun initView(savedInstanceState: Bundle?) {
         adapter = MyAdapter()
         binding.tvConnectDevice.setOnClickListener(this)
@@ -83,28 +58,16 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
 
         // GSR Multi-modal Recording Access (long press on titles for research features)
         binding.tvNoDeviceTitle.setOnLongClickListener {
-            /**
-             * Executes showgsroptions operation with thermal imaging domain optimization.
-             *
-             */
             showGSROptions()
             true
         }
         binding.tvHasDeviceTitle.setOnLongClickListener {
-            /**
-             * Executes showgsroptions operation with thermal imaging domain optimization.
-             *
-             */
             showGSROptions()
             true
         }
 
         // Add prominent GSR access button for research features
         binding.fabGsrRecording.setOnClickListener {
-            /**
-             * Executes showgsroptions operation with thermal imaging domain optimization.
-             *
-             */
             showGSROptions()
         }
 
@@ -112,10 +75,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         adapter.hasConnectTS004 = WebSocketProxy.getInstance().isTS004Connect()
         adapter.hasConnectTC007 = WebSocketProxy.getInstance().isTC007Connect()
         adapter.onItemClickListener = {
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (it) {
                 ConnectType.LINE -> {
                     NavigationManager.getInstance()
@@ -124,10 +83,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         .navigation(requireContext())
                 }
                 ConnectType.TS004 -> {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (WebSocketProxy.getInstance().isTS004Connect()) {
                         NavigationManager.getInstance().build(RouterConfig.IR_MONOCULAR).navigation(requireContext())
                     } else {
@@ -156,19 +111,11 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     )
                     .setMessage(R.string.tc_delete_device_tips)
                     .setPositiveListener(R.string.report_delete) {
-                        /**
-                         * Executes when operation with thermal imaging domain optimization.
-                         *
-                         */
                         when (type) {
                             ConnectType.LINE -> SharedManager.hasTcLine = false
                             ConnectType.TS004 -> SharedManager.hasTS004 = false
                             ConnectType.TC007 -> SharedManager.hasTC007 = false
                         }
-                        /**
-                         * Executes refresh operation with thermal imaging domain optimization.
-                         *
-                         */
                         refresh()
                         TToast.shortToast(requireContext(), R.string.test_results_delete_success)
                     }
@@ -181,17 +128,9 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (WebSocketProxy.getInstance().isTC007Connect()) {
             lifecycleScope.launch {
                 val batteryInfo: BatteryInfo? = TC007Repository.getBatteryInfo()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (batteryInfo != null) {
                     adapter.tc007Battery = batteryInfo
                 }
@@ -199,19 +138,8 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         }
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
-                /**
-                 * Executes onresume operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param owner Parameter for operation (type: LifecycleOwner)
-                 *
-                 */
                 override fun onResume(owner: LifecycleOwner) {
-                    // 如果当前已连接 TS004 或 TC007，则切换到移动数据网络，否则 LoginRegister、意见反馈等功能将无法联网
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
+                    // 要是当前已connection TS004、TC007，切到流量上，不然LoginRegister意见反馈那些没网
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(true)
                     }
@@ -220,27 +148,12 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         )
     }
 
-    /**
-     * Executes onresume operation with thermal imaging domain optimization.
-     *
-     */
     override fun onResume() {
         super.onResume()
-        /**
-         * Executes refresh operation with thermal imaging domain optimization.
-         *
-         */
         refresh()
         adapter?.notifyDataSetChanged()
     }
 
-    /**
-     * Executes refresh functionality.
-     */
-    /**
-     * Executes refresh operation with thermal imaging domain optimization.
-     *
-     */
     private fun refresh() {
         val hasAnyDevice = SharedManager.hasTcLine || SharedManager.hasTS004 || SharedManager.hasTC007
         binding.clHasDevice.isVisible = hasAnyDevice
@@ -251,40 +164,17 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         adapter.notifyDataSetChanged()
     }
 
-    /**
-     * Executes connected operation with thermal imaging domain optimization.
-     *
-     */
     override fun connected() {
         adapter.hasConnectLine = true
         SharedManager.hasTcLine = true
-        /**
-         * Executes refresh operation with thermal imaging domain optimization.
-         *
-         */
         refresh()
     }
 
-    /**
-     * Executes disconnected operation with thermal imaging domain optimization.
-     *
-     */
     override fun disConnected() {
         adapter.hasConnectLine = false
     }
 
-    /**
-     * Executes onsocketconnected operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isTS004 Parameter for operation (type: Boolean)
-     *
-     */
     override fun onSocketConnected(isTS004: Boolean) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isTS004) {
             SharedManager.hasTS004 = true
             adapter.hasConnectTS004 = true
@@ -293,10 +183,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             adapter.hasConnectTC007 = true
             lifecycleScope.launch {
                 val batteryInfo: BatteryInfo? = TC007Repository.getBatteryInfo()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (batteryInfo != null) {
                     adapter.tc007Battery = batteryInfo
                 }
@@ -304,18 +190,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         }
     }
 
-    /**
-     * Executes onsocketdisconnected operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isTS004 Parameter for operation (type: Boolean)
-     *
-     */
     override fun onSocketDisConnected(isTS004: Boolean) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isTS004) {
             adapter.hasConnectTS004 = false
         } else {
@@ -323,49 +198,20 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         }
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
-            binding.tvConnectDevice, binding.ivAdd -> { // Adddevice
+            binding.tvConnectDevice, binding.ivAdd -> { // adddevice
                 startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
 //                NavigationManager.getInstance().build(RoutePath.UsbIrModule.PAGE_IR_MAIN_ACTIVITY)
 //                    .navigation()
-// StartActivity(Intent(requireContext(), IRThermalLiteActivity::class.java))
+//                startActivity(Intent(requireContext(), IRThermalLiteActivity::class.java))
             }
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    /**
-     * Executes onSocketMsgEvent functionality.
-     */
-    /**
-     * Executes onsocketmsgevent operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: SocketMsgEvent)
-     *
-     */
     fun onSocketMsgEvent(event: SocketMsgEvent) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (SocketCmdUtil.getCmdResponse(event.text) == WsCmdConstants.APP_EVENT_HEART_BEATS) { // 心跳
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!adapter.hasConnectTC007) { // 当前connection的不是 TC007
                 return
             }
@@ -377,16 +223,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         }
     }
 
-/**
- * Specialized thermal imaging component providing MyAdapter functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     private class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
         /**
          * 有linedevice当前是否已connection.
@@ -394,10 +230,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         var hasConnectLine: Boolean = false
             set(value) {
                 field = value
-                /**
-                 * Executes notifyitemrangechanged operation with thermal imaging domain optimization.
-                 *
-                 */
                 notifyItemRangeChanged(0, 3)
             }
 
@@ -407,10 +239,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         var hasConnectTS004: Boolean = false
             set(value) {
                 field = value
-                /**
-                 * Executes notifyitemrangechanged operation with thermal imaging domain optimization.
-                 *
-                 */
                 notifyItemRangeChanged(0, itemCount)
             }
 
@@ -420,10 +248,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         var hasConnectTC007: Boolean = false
             set(value) {
                 field = value
-                /**
-                 * Executes notifyitemrangechanged operation with thermal imaging domain optimization.
-                 *
-                 */
                 notifyItemRangeChanged(0, itemCount)
             }
 
@@ -434,10 +258,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             set(value) {
                 if (field != value) {
                     field = value
-                    /**
-                     * Executes notifyitemrangechanged operation with thermal imaging domain optimization.
-                     *
-                     */
                     notifyItemRangeChanged(0, itemCount)
                 }
             }
@@ -445,14 +265,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         var onItemClickListener: ((type: ConnectType) -> Unit)? = null
         var onItemLongClickListener: ((view: View, type: ConnectType) -> Unit)? = null
 
-        /**
-         * Executes oncreateviewholder operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param parent Parameter for operation (type: ViewGroup)
-         * @param viewType Parameter for operation (type: Int)
-         *
-         */
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
@@ -461,34 +273,18 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         }
 
         @SuppressLint("SetTextI18n")
-        /**
-         * Executes onbindviewholder operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param holder Parameter for operation (type: ViewHolder)
-         * @param position Parameter for operation (type: Int)
-         *
-         */
         override fun onBindViewHolder(
             holder: ViewHolder,
             position: Int,
         ) {
             val type = holder.getConnectType(position)
             val hasTitle: Boolean =
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (position) {
                     0 -> true
                     1 -> SharedManager.hasTcLine
                     else -> false
                 }
             val hasConnect: Boolean =
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (type) {
                     ConnectType.LINE -> hasConnectLine
                     ConnectType.TS004 -> hasConnectTS004
@@ -498,30 +294,14 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             holder.bind(type, hasTitle, hasConnect, hasConnectTC007, tc007Battery)
         }
 
-        /**
-         * Retrieves the itemcount with optimized performance for thermal imaging operations.
-         *
-         */
         override fun getItemCount(): Int {
             var result = 0
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (SharedManager.hasTcLine) {
                 result++
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (SharedManager.hasTS004) {
                 result++
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (SharedManager.hasTC007) {
                 result++
             }
@@ -542,51 +322,27 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             init {
                 ivBg.setOnClickListener {
                     val position = bindingAdapterPosition
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (position != RecyclerView.NO_POSITION) {
                         onItemClickListener?.invoke(getConnectType(position))
                     }
                 }
                 ivBg.setOnLongClickListener {
                     val position = bindingAdapterPosition
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (position != RecyclerView.NO_POSITION) {
                         // 只有离linedevice才能长按delete
                         val deviceType = getConnectType(position)
-                        /**
-                         * Executes when operation with thermal imaging domain optimization.
-                         *
-                         */
                         when (deviceType) {
                             ConnectType.LINE -> {
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (DeviceTools.isConnect()) {
                                     return@setOnLongClickListener true
                                 }
                             }
                             ConnectType.TS004 -> {
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (WebSocketProxy.getInstance().isTS004Connect()) {
                                     return@setOnLongClickListener true
                                 }
                             }
                             ConnectType.TC007 -> {
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (WebSocketProxy.getInstance().isTC007Connect()) {
                                     return@setOnLongClickListener true
                                 }
@@ -598,20 +354,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 }
             }
 
-    /**
-     * Executes bind functionality.
-     */
-            /**
-             * Executes bind operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param type Parameter for operation (type: ConnectType)
-             * @param hasTitle Parameter for operation (type: Boolean)
-             * @param hasConnect Parameter for operation (type: Boolean)
-             * @param hasConnectTC007 Parameter for operation (type: Boolean)
-             * @param tc007Battery Parameter for operation (type: BatteryInfo?)
-             *
-             */
             fun bind(
                 type: ConnectType,
                 hasTitle: Boolean,
@@ -634,10 +376,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 tvBattery.isVisible = type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
                 batteryView.isVisible = type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
 
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (type) {
                     ConnectType.LINE -> {
                         tvDeviceName.setText(
@@ -647,10 +385,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                             )
                                 .getString(R.string.tc_has_line_device),
                         )
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (hasConnect) {
                             ivImage.setImageResource(R.drawable.ic_main_device_line_connect)
                         } else {
@@ -659,10 +393,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     }
                     ConnectType.TS004 -> {
                         tvDeviceName.text = "TS004"
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (hasConnect) {
                             ivImage.setImageResource(R.drawable.ic_main_device_ts004_connect)
                         } else {
@@ -671,10 +401,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     }
                     ConnectType.TC007 -> {
                         tvDeviceName.text = "TC007"
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (hasConnect) {
                             ivImage.setImageResource(R.drawable.ic_main_device_tc007_connect)
                         } else {
@@ -687,16 +413,9 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 }
             }
 
-    /**
-     * Retrieves connecttype information.
-     */
             fun getConnectType(position: Int): ConnectType =
                 when (position) {
                     0 ->
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (SharedManager.hasTcLine) {
                             ConnectType.LINE
                         } else if (SharedManager.hasTS004) {
@@ -705,15 +424,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                             ConnectType.TC007
                         }
                     1 ->
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (SharedManager.hasTcLine) {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (SharedManager.hasTS004) ConnectType.TS004 else ConnectType.TC007
                         } else {
                             ConnectType.TC007
@@ -727,33 +438,18 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
      * Show GSR Multi-modal Recording options for research purposes
      * Accessed via long-press on app title or GSR FAB
      */
-    /**
-     * Executes showGSROptions functionality.
-     */
-    /**
-     * Executes showgsroptions operation with thermal imaging domain optimization.
-     *
-     */
     private fun showGSROptions() {
         TipDialog.Builder(requireContext())
             .setTitleMessage("GSR Multi-modal Recording")
             .setMessage("Choose recording option:")
             .setPositiveListener("Dual-Mode Camera") {
                 // Launch dual-mode camera interface (RAW 50MP + 4K Video)
-                /**
-                 * Manages thermal camera operations with hardware-optimized performance and error handling.
-                 *
-                 */
                 showDualModeCameraOptions()
             }
             .setCancelListener("Quick Recording") {
                 // Launch quick GSR recording interface with direct RecordingController access
                 try {
                     val intent = Intent(requireContext(), Class.forName("com.topdon.tc001.gsr.GSRQuickRecordingActivity"))
-                    /**
-                     * Executes startactivity operation with thermal imaging domain optimization.
-                     *
-                     */
                     startActivity(intent)
                 } catch (e: ClassNotFoundException) {
                     // Fallback to full setup
@@ -775,31 +471,16 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
      * Show dual-mode camera options (RAW 50MP vs 4K Video)
      * Enhanced for Samsung S22 compatibility
      */
-    /**
-     * Executes showDualModeCameraOptions functionality.
-     */
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
-     */
     private fun showDualModeCameraOptions() {
         TipDialog.Builder(requireContext())
             .setTitleMessage("Dual-Mode Camera System")
             .setMessage("Samsung S22 optimized camera modes with fast switching:")
             .setPositiveListener("RAW 50MP Mode") {
                 // Launch in RAW capture mode
-                /**
-                 * Manages thermal camera operations with hardware-optimized performance and error handling.
-                 *
-                 */
                 launchDualModeCamera("RAW_50MP")
             }
             .setCancelListener("4K Video Mode") {
                 // Launch in 4K video mode
-                /**
-                 * Manages thermal camera operations with hardware-optimized performance and error handling.
-                 *
-                 */
                 launchDualModeCamera("VIDEO_4K")
             }
             .create().show()
@@ -813,19 +494,11 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             val intent = Intent(requireContext(), com.topdon.tc001.camera.integration.DualModeCameraActivity::class.java)
             intent.putExtra("INITIAL_MODE", initialMode)
             intent.putExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)
-            /**
-             * Executes startactivity operation with thermal imaging domain optimization.
-             *
-             */
             startActivity(intent)
         } catch (e: Exception) {
             // Fallback to integration example
             TToast.show("Launching dual-mode camera integration example...")
             // Show integration example in a demo activity
-            /**
-             * Executes showdualmodeintegrationexample operation with thermal imaging domain optimization.
-             *
-             */
             showDualModeIntegrationExample()
         }
     }
@@ -851,16 +524,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             .create().show()
     }
 
-/**
- * Specialized thermal imaging component providing ConnectType functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     enum class ConnectType {
         LINE,
         TS004,

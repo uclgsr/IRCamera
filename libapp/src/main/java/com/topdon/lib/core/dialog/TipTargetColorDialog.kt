@@ -23,42 +23,15 @@ import com.topdon.lib.core.utils.ScreenUtil
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing TipTargetColorDialog functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class TipTargetColorDialog : Dialog {
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : super(context)
 
+    constructor(context: Context, themeResId: Int) : super(context, themeResId)
+
 /**
- * Specialized thermal imaging component providing Builder functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
+ * Builder manages camera operations and image capture functionality.
  *
  * @author IRCamera Development Team
- * @version 2.0
  * @since 1.0
  */
     class Builder {
@@ -72,36 +45,20 @@ class TipTargetColorDialog : Dialog {
         private lateinit var imgClose: ImageView
         private lateinit var recyclerView: RecyclerView
 
-        /**
-         * Executes constructor operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param context Parameter for operation (type: Context)
-         *
-         */
         constructor(context: Context) {
             this.context = context
         }
 
-    /**
-     * Sets cancellistener configuration.
-     */
         fun setCancelListener(event: ((targetColor: Int) -> Unit)? = null): Builder {
             this.closeEvent = event
             return this
         }
 
-    /**
-     * Sets targetcolor configuration.
-     */
         fun setTargetColor(color: Int): Builder {
             this.targetColor = color
             return this
         }
 
-    /**
-     * Sets canceled configuration.
-     */
         fun setCanceled(canceled: Boolean): Builder {
             this.canceled = canceled
             return this
@@ -110,10 +67,6 @@ class TipTargetColorDialog : Dialog {
     /**
      * Executes dismiss functionality.
      */
-        /**
-         * Executes dismiss operation with thermal imaging domain optimization.
-         *
-         */
         fun dismiss() {
             this.dialog!!.dismiss()
         }
@@ -128,10 +81,6 @@ class TipTargetColorDialog : Dialog {
             val binding = DialogTipTargetColorBinding.inflate(LayoutInflater.from(context!!))
 
             binding.tvIKnow.setOnClickListener {
-                /**
-                 * Executes dismiss operation with thermal imaging domain optimization.
-                 *
-                 */
                 dismiss()
                 closeEvent?.invoke(targetColor)
             }
@@ -148,18 +97,10 @@ class TipTargetColorDialog : Dialog {
             recyclerView?.adapter = targetColorAdapter
             dialog!!.addContentView(
                 binding.root,
-                /**
-                 * Executes layoutparams operation with thermal imaging domain optimization.
-                 *
-                 */
                 LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT),
             )
             val lp = dialog!!.window!!.attributes
             val wRatio =
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                     
                     0.90
@@ -172,12 +113,8 @@ class TipTargetColorDialog : Dialog {
 
             dialog!!.setCanceledOnTouchOutside(canceled)
             imgClose.setOnClickListener {
-                /**
-                 * Executes dismiss operation with thermal imaging domain optimization.
-                 *
-                 */
                 dismiss()
-// CloseEvent?.invoke(targetColor)
+//              closeEvent?.invoke(targetColor)
             }
             dialog!!.setContentView(binding.root)
             return dialog as TipTargetColorDialog

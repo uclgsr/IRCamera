@@ -1,34 +1,9 @@
 package com.topdon.lib.core.tools
 
-/**
- * Specialized thermal imaging component providing CheckDoubleClick functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 object CheckDoubleClick {
     private val records: MutableMap<String, Long> = HashMap()
 
-    /**
-     * Executes isFastDoubleClick functionality.
-     */
-    /**
-     * Executes isfastdoubleclick operation with thermal imaging domain optimization.
-     *
-     */
     fun isFastDoubleClick(): Boolean {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (records.size > 1000) {
             records.clear()
         }
@@ -39,10 +14,6 @@ object CheckDoubleClick {
         var lastClickTime = records[key]
         val thisClickTime = System.currentTimeMillis()
         records[key] = thisClickTime
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (lastClickTime == null) {
             lastClickTime = 0L
         }

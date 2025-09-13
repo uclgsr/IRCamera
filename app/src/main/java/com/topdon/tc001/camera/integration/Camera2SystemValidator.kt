@@ -14,23 +14,6 @@ import kotlinx.coroutines.*
  * - Fast switching without closing CameraDevice
  * - Deterministic state machine. No races. No silent failures
  */
-/**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with Camera2SystemValidator functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class Camera2SystemValidator(private val context: Context) {
     companion object {
         private const val TAG = "Camera2SystemValidator"
@@ -47,10 +30,6 @@ class Camera2SystemValidator(private val context: Context) {
             Log.i(TAG, "Starting Camera2 system validation...")
 
             // Test 1: Architecture Components
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (validateArchitectureComponents()) {
                 results.add("✅ Architecture components validated")
             } else {
@@ -59,10 +38,6 @@ class Camera2SystemValidator(private val context: Context) {
             }
 
             // Test 2: Mode Switching Logic
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (validateModeSwitching()) {
                 results.add("✅ Mode switching logic validated")
             } else {
@@ -71,10 +46,6 @@ class Camera2SystemValidator(private val context: Context) {
             }
 
             // Test 3: Fast Session Switching
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (validateFastSessionSwitching()) {
                 results.add("✅ Fast session switching validated")
             } else {
@@ -83,10 +54,6 @@ class Camera2SystemValidator(private val context: Context) {
             }
 
             // Test 4: Samsung S22 Compatibility
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (validateSamsungCompatibility()) {
                 results.add("✅ Samsung S22 compatibility validated")
             } else {
@@ -104,13 +71,6 @@ class Camera2SystemValidator(private val context: Context) {
         return ValidationResult(allPassed, results)
     }
 
-    /**
-     * Executes validateArchitectureComponents functionality.
-     */
-    /**
-     * Executes validatearchitecturecomponents operation with thermal imaging domain optimization.
-     *
-     */
     private fun validateArchitectureComponents(): Boolean {
         // Verify all core components are accessible
         return try {
@@ -129,13 +89,6 @@ class Camera2SystemValidator(private val context: Context) {
         }
     }
 
-    /**
-     * Executes validateModeSwitching functionality.
-     */
-    /**
-     * Executes validatemodeswitching operation with thermal imaging domain optimization.
-     *
-     */
     private fun validateModeSwitching(): Boolean {
         return try {
             val modeManager = ModeManager()
@@ -201,52 +154,18 @@ class Camera2SystemValidator(private val context: Context) {
         val allTestsPassed: Boolean,
         val results: List<String>,
     ) {
-    /**
-     * Retrieves formattedreport information.
-     */
         fun getFormattedReport(): String {
             return buildString {
                 appendLine("=== Camera2 System Validation Report ===")
-                /**
-                 * Executes appendline operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param Result Parameter for operation (type: ${if (allTestsPassed)
-                 *
-                 */
                 appendLine("Overall Result: ${if (allTestsPassed) "✅ PASS" else "❌ FAIL"}")
-                /**
-                 * Executes appendline operation with thermal imaging domain optimization.
-                 *
-                 */
                 appendLine()
                 results.forEach { result ->
-                    /**
-                     * Executes appendline operation with thermal imaging domain optimization.
-                     *
-                     */
                     appendLine(result)
                 }
-                /**
-                 * Executes appendline operation with thermal imaging domain optimization.
-                 *
-                 */
                 appendLine()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (allTestsPassed) {
-                    /**
-                     * Executes appendline operation with thermal imaging domain optimization.
-                     *
-                     */
                     appendLine("🚀 System ready for Samsung S22 (Exynos, Android 15) deployment")
                 } else {
-                    /**
-                     * Executes appendline operation with thermal imaging domain optimization.
-                     *
-                     */
                     appendLine("⚠️ System requires fixes before deployment")
                 }
             }

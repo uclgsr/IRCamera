@@ -15,18 +15,9 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.renderer.BarChartRenderer;
 
 /**
- * Specialized thermal imaging component providing BarChart functionality for the IRCamera system.
+ * Chart that draws bars.
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author Philipp Jahoda
  */
 public class BarChart extends BarLineChartBase<BarData> implements BarDataProvider {
 
@@ -47,39 +38,15 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
 
     private boolean mFitBars = false;
 
-    /**
-     * Executes barchart operation with thermal imaging domain optimization.
-     *
-     */
     public BarChart(Context context) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context);
     }
 
-    /**
-     * Executes barchart operation with thermal imaging domain optimization.
-     *
-     */
     public BarChart(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
     }
 
-    /**
-     * Executes barchart operation with thermal imaging domain optimization.
-     *
-     */
     public BarChart(Context context, AttributeSet attrs, int defStyle) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyle);
     }
 
@@ -89,38 +56,22 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
 
         mRenderer = new BarChartRenderer(this, mAnimator, mViewPortHandler);
 
-        /**
-         * Configures the highlighter with validation and thermal imaging optimization.
-         *
-         */
         setHighlighter(new BarHighlighter(this));
 
-        /**
-         * Retrieves the xaxis with optimized performance for thermal imaging operations.
-         *
-         */
         getXAxis().setSpaceMin(0.5f);
-        /**
-         * Retrieves the xaxis with optimized performance for thermal imaging operations.
-         *
-         */
         getXAxis().setSpaceMax(0.5f);
     }
 
     @Override
     protected void calcMinMax() {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mFitBars) {
             mXAxis.calculate(mData.getXMin() - mData.getBarWidth() / 2f, mData.getXMax() + mData.getBarWidth() / 2f);
         } else {
             mXAxis.calculate(mData.getXMin(), mData.getXMax());
         }
 
-        // Calculate axis range (min / max) according to provided data
+        // calculate axis range (min / max) according to provided data
         mAxisLeft.calculate(mData.getYMin(YAxis.AxisDependency.LEFT), mData.getYMax(YAxis.AxisDependency.LEFT));
         mAxisRight.calculate(mData.getYMin(YAxis.AxisDependency.RIGHT), mData.getYMax(YAxis.AxisDependency
                 .RIGHT));
@@ -138,19 +89,11 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
     @Override
     public Highlight getHighlightByTouchPoint(float x, float y) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mData == null) {
             Log.e(LOG_TAG, "Can't select by touch. No data set.");
             return null;
         } else {
             Highlight h = getHighlighter().getHighlight(x, y);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (h == null || !isHighlightFullBarEnabled()) return h;
 
             // For isHighlightFullBarEnabled, remove stackIndex
@@ -170,10 +113,6 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
     public RectF getBarBounds(BarEntry e) {
 
         RectF bounds = new RectF();
-        /**
-         * Retrieves the barbounds with optimized performance for thermal imaging operations.
-         *
-         */
         getBarBounds(e, bounds);
 
         return bounds;
@@ -192,10 +131,6 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
 
         IBarDataSet set = mData.getDataSetForEntry(e);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (set == null) {
             bounds.set(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
             return;
@@ -213,10 +148,6 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
 
         bounds.set(left, top, right, bottom);
 
-        /**
-         * Retrieves the transformer with optimized performance for thermal imaging operations.
-         *
-         */
         getTransformer(set.getAxisDependency()).rectValueToPixel(outputRect);
     }
 
@@ -286,10 +217,6 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
      * @param stackIndex   the index inside the stack - only relevant for stacked entries
      */
     public void highlightValue(float x, int dataSetIndex, int stackIndex) {
-        /**
-         * Executes highlightvalue operation with thermal imaging domain optimization.
-         *
-         */
         highlightValue(new Highlight(x, dataSetIndex, stackIndex), false);
     }
 
@@ -321,22 +248,10 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
      */
     public void groupBars(float fromX, float groupSpace, float barSpace) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (getBarData() == null) {
             throw new RuntimeException("You need to set data for the chart before grouping bars.");
         } else {
-            /**
-             * Retrieves the bardata with optimized performance for thermal imaging operations.
-             *
-             */
             getBarData().groupBars(fromX, groupSpace, barSpace);
-            /**
-             * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-             *
-             */
             notifyDataSetChanged();
         }
     }

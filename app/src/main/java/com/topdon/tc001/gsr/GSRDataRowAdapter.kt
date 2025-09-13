@@ -6,28 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.databinding.ItemGsrDataRowBinding
 
 /**
- * Specialized thermal imaging component providing GSRDataRowAdapter functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ViewHolder display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Adapter for displaying GSR data rows in detailed view
  */
+class GSRDataRowAdapter(
+    private val dataRows: List<GSRDataViewActivity.GSRDataRow>,
+) : RecyclerView.Adapter<GSRDataRowAdapter.ViewHolder>() {
     class ViewHolder(private val binding: ItemGsrDataRowBinding) : RecyclerView.ViewHolder(binding.root) {
         val rowNumber = binding.rowNumber
         val timestamp = binding.timestamp
@@ -36,14 +19,6 @@ import com.csl.irCamera.databinding.ItemGsrDataRowBinding
         val conductance = binding.conductance
     }
 
-    /**
-     * Executes oncreateviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param parent Parameter for operation (type: ViewGroup)
-     * @param viewType Parameter for operation (type: Int)
-     *
-     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -57,14 +32,6 @@ import com.csl.irCamera.databinding.ItemGsrDataRowBinding
         return ViewHolder(binding)
     }
 
-    /**
-     * Executes onbindviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param holder Parameter for operation (type: ViewHolder)
-     * @param position Parameter for operation (type: Int)
-     *
-     */
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
@@ -78,9 +45,5 @@ import com.csl.irCamera.databinding.ItemGsrDataRowBinding
         holder.conductance.text = "%.6f S".format(dataRow.conductance)
     }
 
-    /**
-     * Retrieves the itemcount with optimized performance for thermal imaging operations.
-     *
-     */
     override fun getItemCount() = minOf(dataRows.size, 100) // Limit to first 100 rows for performance
 }

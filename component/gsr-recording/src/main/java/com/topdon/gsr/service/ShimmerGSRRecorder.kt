@@ -24,18 +24,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * Specialized thermal imaging component providing ShimmerGSRRecorder functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Shimmer3-based GSR recorder using official Shimmer Android API
+ * Replaces simulated data with real GSR sensor data from Shimmer3 devices
  */
 class ShimmerGSRRecorder(
     private val context: Context,
@@ -49,10 +39,6 @@ class ShimmerGSRRecorder(
         private const val SESSION_METADATA_FILENAME = "session_metadata.json"
 
         private val SIGNALS_HEADER =
-            /**
-             * Executes arrayof operation with thermal imaging domain optimization.
-             *
-             */
             arrayOf(
                 "timestamp_ms",
                 "utc_timestamp_ms",
@@ -64,10 +50,6 @@ class ShimmerGSRRecorder(
             )
 
         private val SYNC_MARKS_HEADER =
-            /**
-             * Executes arrayof operation with thermal imaging domain optimization.
-             *
-             */
             arrayOf(
                 "timestamp_ms",
                 "utc_timestamp_ms",
@@ -82,124 +64,39 @@ class ShimmerGSRRecorder(
     private val isDeviceConnected = AtomicBoolean(false)
 
     private var shimmerDevice: Shimmer? = null
-/**
- * Specialized thermal imaging component providing GSRRecordingListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
-    interface GSRRecordingListener {
+    private var bluetoothAdapter: BluetoothAdapter? = null
+    private var currentSession: SessionInfo? = null
+    private var sessionDirectory: File? = null
+    private var signalsWriter: CSVWriter? = null
+    private var syncMarksWriter: CSVWriter? = null
+
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private val listeners = mutableListOf<GSRRecordingListener>()
+    private val shimmerAPIBridge = ShimmerAPIBridge.getInstance()
+
     /**
-     * Executes onRecordingStarted functionality.
+     * Interface for listening to GSR recording events
      */
-        /**
-         * Executes onrecordingstarted operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param session Parameter for operation (type: SessionInfo)
-         *
-         */
+    interface GSRRecordingListener {
         fun onRecordingStarted(session: SessionInfo)
 
-    /**
-     * Executes onRecordingStopped functionality.
-     */
-        /**
-         * Executes onrecordingstopped operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param session Parameter for operation (type: SessionInfo)
-         *
-         */
         fun onRecordingStopped(session: SessionInfo)
 
-    /**
-     * Executes onSampleRecorded functionality.
-     */
-        /**
-         * Executes onsamplerecorded operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param sample Parameter for operation (type: GSRSample)
-         *
-         */
         fun onSampleRecorded(sample: GSRSample)
 
-    /**
-     * Executes onSyncMarkRecorded functionality.
-     */
-        /**
-         * Executes onsyncmarkrecorded operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param syncMark Parameter for operation (type: SyncMark)
-         *
-         */
         fun onSyncMarkRecorded(syncMark: SyncMark)
 
-    /**
-     * Executes onError functionality.
-     */
-        /**
-         * Executes onerror operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param error Parameter for operation (type: String)
-         *
-         */
         fun onError(error: String)
 
-    /**
-     * Executes onDeviceConnected functionality.
-     */
-        /**
-         * Executes ondeviceconnected operation with thermal imaging domain optimization.
-         *
-         */
         fun onDeviceConnected()
 
-    /**
-     * Executes onDeviceDisconnected functionality.
-     */
-        /**
-         * Executes ondevicedisconnected operation with thermal imaging domain optimization.
-         *
-         */
         fun onDeviceDisconnected()
     }
 
-    /**
-     * Executes addListener functionality.
-     */
-    /**
-     * Executes addlistener operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param listener Event listener for callbacks (type: GSRRecordingListener)
-     *
-     */
     fun addListener(listener: GSRRecordingListener) {
         listeners.add(listener)
     }
 
-    /**
-     * Executes removeListener functionality.
-     */
-    /**
-     * Executes removelistener operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param listener Event listener for callbacks (type: GSRRecordingListener)
-     *
-     */
     fun removeListener(listener: GSRRecordingListener) {
         listeners.remove(listener)
     }
@@ -213,16 +110,8 @@ class ShimmerGSRRecorder(
                 val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
                 bluetoothAdapter = bluetoothManager.adapter
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (bluetoothAdapter?.isEnabled != true) {
                     Log.w(TAG, "Bluetooth is not enabled")
-                    /**
-                     * Executes notifyerror operation with thermal imaging domain optimization.
-                     *
-                     */
                     notifyError("Bluetooth is not enabled")
                     return@withContext false
                 }
@@ -242,10 +131,6 @@ class ShimmerGSRRecorder(
 
                     // Set up connection state callback
                     device.setConnectionCallback { connectionState ->
-                        /**
-                         * Executes when operation with thermal imaging domain optimization.
-                         *
-                         */
                         when (connectionState) {
                             "CONNECTED" -> {
                                 isDeviceConnected.set(true)
@@ -272,26 +157,14 @@ class ShimmerGSRRecorder(
                         Log.w(TAG, "Configuration note: using default settings", e)
                     }
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (deviceAddress != null) {
                         // Connect to specific device
                         device.connect(deviceAddress, "default")
                     } else {
                         // Use first available Shimmer device
                         // Check for Bluetooth permissions
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                             Log.w(TAG, "BLUETOOTH_CONNECT permission not granted")
-                            /**
-                             * Executes notifyerror operation with thermal imaging domain optimization.
-                             *
-                             */
                             notifyError("BLUETOOTH_CONNECT permission not granted")
                             return@withContext false
                         }
@@ -302,18 +175,10 @@ class ShimmerGSRRecorder(
                                 it.name?.contains("Shimmer", ignoreCase = true) == true
                             }
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (shimmerDevice != null) {
                             device.connect(shimmerDevice.address, "default")
                         } else {
                             Log.w(TAG, "No paired Shimmer devices found")
-                            /**
-                             * Executes notifyerror operation with thermal imaging domain optimization.
-                             *
-                             */
                             notifyError("No paired Shimmer devices found")
                             return@withContext false
                         }
@@ -321,33 +186,17 @@ class ShimmerGSRRecorder(
 
                     // Wait for connection (timeout after 10 seconds)
                     var attempts = 0
-                    /**
-                     * Executes while operation with thermal imaging domain optimization.
-                     *
-                     */
                     while (!isDeviceConnected.get() && attempts < 50) {
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(200)
                         attempts++
                     }
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isDeviceConnected.get()) {
                         Log.i(TAG, "Shimmer device connected successfully")
                         listeners.forEach { it.onDeviceConnected() }
                         return@withContext true
                     } else {
                         Log.w(TAG, "Failed to connect to Shimmer device")
-                        /**
-                         * Executes notifyerror operation with thermal imaging domain optimization.
-                         *
-                         */
                         notifyError("Failed to connect to Shimmer device")
                         return@withContext false
                     }
@@ -356,13 +205,6 @@ class ShimmerGSRRecorder(
                 false
             } catch (e: Exception) {
                 Log.e(TAG, "Error initializing Shimmer device", e)
-                /**
-                 * Executes notifyerror operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param device Parameter for operation (type: ${e.message}")
-                 *
-                 */
                 notifyError("Error initializing device: ${e.message}")
                 false
             }
@@ -378,16 +220,8 @@ class ShimmerGSRRecorder(
                 return@withContext false
             }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isDeviceConnected.get()) {
                 Log.w(TAG, "Shimmer device not connected")
-                /**
-                 * Executes notifyerror operation with thermal imaging domain optimization.
-                 *
-                 */
                 notifyError("Shimmer device not connected")
                 return@withContext false
             }
@@ -395,39 +229,19 @@ class ShimmerGSRRecorder(
             try {
                 // Create session directory
                 sessionDirectory = createSessionDirectory(sessionId)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sessionDirectory == null) {
-                    /**
-                     * Executes notifyerror operation with thermal imaging domain optimization.
-                     *
-                     */
                     notifyError("Failed to create session directory")
                     return@withContext false
                 }
 
                 // Initialize CSV writers
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!initializeCsvWriters()) {
-                    /**
-                     * Executes notifyerror operation with thermal imaging domain optimization.
-                     *
-                     */
                     notifyError("Failed to initialize CSV writers")
                     return@withContext false
                 }
 
                 // Create session info
                 currentSession =
-                    /**
-                     * Executes sessioninfo operation with thermal imaging domain optimization.
-                     *
-                     */
                     SessionInfo(
                         sessionId = sessionId,
                         startTime = System.currentTimeMillis(),
@@ -450,18 +264,7 @@ class ShimmerGSRRecorder(
                 return@withContext true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start recording", e)
-                /**
-                 * Executes cleanup operation with thermal imaging domain optimization.
-                 *
-                 */
                 cleanup()
-                /**
-                 * Executes notifyerror operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param recording Parameter for operation (type: ${e.message}")
-                 *
-                 */
                 notifyError("Failed to start recording: ${e.message}")
                 return@withContext false
             }
@@ -470,15 +273,7 @@ class ShimmerGSRRecorder(
     /**
      * Stop GSR recording session
      */
-    /**
-     * Executes stoprecording operation with thermal imaging domain optimization.
-     *
-     */
     fun stopRecording(): SessionInfo? {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isRecording.get()) {
             Log.w(TAG, "No recording in progress")
             return currentSession
@@ -494,20 +289,12 @@ class ShimmerGSRRecorder(
             session.sampleCount = sampleIndex.get()
 
             // Save session metadata
-            /**
-             * Executes savesessionmetadata operation with thermal imaging domain optimization.
-             *
-             */
             saveSessionMetadata(session)
 
             listeners.forEach { it.onRecordingStopped(session) }
             Log.i(TAG, "Shimmer GSR recording stopped: sessionId=${session.sessionId}, samples=${session.sampleCount}")
         }
 
-        /**
-         * Executes cleanup operation with thermal imaging domain optimization.
-         *
-         */
         cleanup()
         val completedSession = currentSession
         currentSession = null
@@ -521,19 +308,11 @@ class ShimmerGSRRecorder(
         eventType: String,
         metadata: String = "",
     ): Boolean {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isRecording.get()) return false
 
         try {
             currentSession?.let { session ->
                 val syncMark =
-                    /**
-                     * Executes syncmark operation with thermal imaging domain optimization.
-                     *
-                     */
                     SyncMark(
                         timestamp = System.currentTimeMillis(),
                         utcTimestamp = TimeUtil.getUtcTimestamp(),
@@ -554,13 +333,6 @@ class ShimmerGSRRecorder(
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error recording sync event", e)
-            /**
-             * Executes notifyerror operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param event Parameter for operation (type: ${e.message}")
-             *
-             */
             notifyError("Error recording sync event: ${e.message}")
         }
 
@@ -595,10 +367,6 @@ class ShimmerGSRRecorder(
 
                 // Write to CSV
                 signalsWriter?.writeNext(sample.toCsvRow())
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (currentIndex % 10 == 0L) { // Flush every 10 samples
                     signalsWriter?.flush()
                 }
@@ -608,13 +376,6 @@ class ShimmerGSRRecorder(
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error handling Shimmer data", e)
-            /**
-             * Executes notifyerror operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param data Parameter for operation (type: ${e.message}")
-             *
-             */
             notifyError("Error processing Shimmer data: ${e.message}")
         }
     }
@@ -623,18 +384,11 @@ class ShimmerGSRRecorder(
      * Extract raw GSR value from Shimmer ObjectCluster for processing by ShimmerAPIBridge
      * This extracts the raw ADC value which will be processed using official Shimmer algorithms
      */
-    /**
-     * Executes extractRawGSRValue functionality.
-     */
     private fun extractRawGSRValue(objectCluster: ObjectCluster): Double {
         try {
             // Try to extract raw GSR data first
             try {
                 val rawData = objectCluster.getFormatClusterValue("GSR", "RAW")
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (rawData?.data != null && rawData.data > 0) {
                     Log.d(TAG, "Using raw GSR data: ${rawData.data}")
                     return rawData.data
@@ -646,10 +400,6 @@ class ShimmerGSRRecorder(
             // Try calibrated GSR data and reverse-convert to approximate raw
             try {
                 val conductanceData = objectCluster.getFormatClusterValue("GSR_Conductance", "CAL")
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (conductanceData?.data != null && conductanceData.data > 0) {
                     // Approximate raw value from calibrated conductance (reverse engineering)
                     val rawApprox = (conductanceData.data / 100.0) * 4095.0 // Rough approximation
@@ -682,13 +432,6 @@ class ShimmerGSRRecorder(
      * Create GSR configuration for Shimmer3
      * Uses conservative configuration approach for compatibility
      */
-    /**
-     * Executes createGSRConfiguration functionality.
-     */
-    /**
-     * Executes creategsrconfiguration operation with thermal imaging domain optimization.
-     *
-     */
     private fun createGSRConfiguration(): ByteArray {
         try {
             // Create basic GSR configuration with sampling rate
@@ -697,10 +440,6 @@ class ShimmerGSRRecorder(
 
             // Set sampling rate (convert Hz to configuration bytes)
             val samplingRateConfig =
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (samplingRateHz) {
                     128 -> 0x04.toByte()
                     256 -> 0x03.toByte()
@@ -723,26 +462,12 @@ class ShimmerGSRRecorder(
         }
     }
 
-    /**
-     * Executes createSessionDirectory functionality.
-     */
-    /**
-     * Executes createsessiondirectory operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param sessionId Parameter for operation (type: String)
-     *
-     */
     private fun createSessionDirectory(sessionId: String): File? {
         return try {
             val externalStorage = Environment.getExternalStorageDirectory()
             val sessionsDir = File(externalStorage, SESSIONS_DIR)
             val sessionDir = File(sessionsDir, sessionId)
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!sessionDir.exists() && !sessionDir.mkdirs()) {
                 Log.e(TAG, "Failed to create session directory: ${sessionDir.absolutePath}")
                 return null
@@ -756,49 +481,22 @@ class ShimmerGSRRecorder(
         }
     }
 
-    /**
-     * Initializes ializecsvwriters component.
-     */
     private fun initializeCsvWriters(): Boolean {
         return try {
             sessionDirectory?.let { dir ->
                 // Initialize signals CSV writer
                 val signalsFile = File(dir, SIGNALS_FILENAME)
                 signalsWriter =
-                    /**
-                     * Executes csvwriter operation with thermal imaging domain optimization.
-                     *
-                     */
                     CSVWriter(FileWriter(signalsFile)).apply {
-                        /**
-                         * Executes writenext operation with thermal imaging domain optimization.
-                         *
-                         */
                         writeNext(SIGNALS_HEADER)
-                        /**
-                         * Executes flush operation with thermal imaging domain optimization.
-                         *
-                         */
                         flush()
                     }
 
                 // Initialize sync marks CSV writer
                 val syncMarksFile = File(dir, SYNC_MARKS_FILENAME)
                 syncMarksWriter =
-                    /**
-                     * Executes csvwriter operation with thermal imaging domain optimization.
-                     *
-                     */
                     CSVWriter(FileWriter(syncMarksFile)).apply {
-                        /**
-                         * Executes writenext operation with thermal imaging domain optimization.
-                         *
-                         */
                         writeNext(SYNC_MARKS_HEADER)
-                        /**
-                         * Executes flush operation with thermal imaging domain optimization.
-                         *
-                         */
                         flush()
                     }
 
@@ -810,16 +508,6 @@ class ShimmerGSRRecorder(
         }
     }
 
-    /**
-     * Executes saveSessionMetadata functionality.
-     */
-    /**
-     * Executes savesessionmetadata operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param session Parameter for operation (type: SessionInfo)
-     *
-     */
     private fun saveSessionMetadata(session: SessionInfo) {
         try {
             sessionDirectory?.let { dir ->
@@ -836,13 +524,6 @@ class ShimmerGSRRecorder(
         }
     }
 
-    /**
-     * Executes cleanup functionality.
-     */
-    /**
-     * Executes cleanup operation with thermal imaging domain optimization.
-     *
-     */
     private fun cleanup() {
         try {
             signalsWriter?.close()
@@ -854,16 +535,6 @@ class ShimmerGSRRecorder(
         }
     }
 
-    /**
-     * Executes notifyError functionality.
-     */
-    /**
-     * Executes notifyerror operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param message Parameter for operation (type: String)
-     *
-     */
     private fun notifyError(message: String) {
         listeners.forEach { it.onError(message) }
     }

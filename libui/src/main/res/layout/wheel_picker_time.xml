@@ -9,7 +9,6 @@
   ~ PURPOSE.
   ~ See the Mulan PSL v2 for more details. -->
 
-<!-- Linear container layout -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"

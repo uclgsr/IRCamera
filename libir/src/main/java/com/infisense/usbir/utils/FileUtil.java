@@ -43,23 +43,6 @@ import java.util.Date;
  * @UpdateRemark:
  * @Version: 1.0.0
  */
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for FileUtil operations.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class FileUtil {
 
     private static final String TAG = "FileUtil";
@@ -71,17 +54,9 @@ public class FileUtil {
      */
     public static String getDiskCacheDir(Context context) {
         String cachePath = context.getCacheDir().getPath();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
                 || !Environment.isExternalStorageRemovable()) {
             File externalCacheDir = context.getExternalCacheDir();
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (externalCacheDir != null) {
                 cachePath = externalCacheDir.getPath();
             }
@@ -97,10 +72,6 @@ public class FileUtil {
      */
     public static void copyAssetsDataToSD(Context context, String srcFileName, String strOutFileName) throws IOException {
         File file = new File(strOutFileName);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (file.exists()) {
             file.delete();
         }
@@ -109,10 +80,6 @@ public class FileUtil {
         myInput = context.getAssets().open(srcFileName);
         byte[] buffer = new byte[1024];
         int length = myInput.read(buffer);
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (length > 0) {
             myOutput.write(buffer, 0, length);
             length = myInput.read(buffer);
@@ -130,18 +97,10 @@ public class FileUtil {
         try {
             String fileSaveDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
             File path = new File(fileSaveDir);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!path.exists() && path.isDirectory()) {
                 path.mkdirs();
             }
             String fileName = fileTitle + new SimpleDateFormat("_HHmmss_yyMMdd").
-                    /**
-                     * Executes format operation with thermal imaging domain optimization.
-                     *
-                     */
                     format(new Date(System.currentTimeMillis())) + ".bin";
             File file = new File(fileSaveDir, fileName);
             Log.i(TAG, "fileSaveDir=" + fileSaveDir + " fileName=" + fileName);
@@ -158,19 +117,19 @@ public class FileUtil {
      * @param fileTitle
      */
     public static void saveByteFile(byte[] bytes, String fileTitle) {
-// Try {
+//        try {
 //            String fileSaveDir = TempKey.DEVICE_DATA_SAVE_DIR;
 //            File path = new File(fileSaveDir);
-// If (!path.exists() && path.isDirectory()) {
-// Path.mkdirs();
+//            if (!path.exists() && path.isDirectory()) {
+//                path.mkdirs();
 //            }
 //            //
 //            File file = new File(fileSaveDir, fileTitle);
 //            FileOutputStream fos = new FileOutputStream(file);
-// Fos.write(bytes);
-// Fos.close();
+//            fos.write(bytes);
+//            fos.close();
 //        } catch (IOException e) {
-// E.printStackTrace();
+//            e.printStackTrace();
 //        }
     }
 
@@ -185,10 +144,6 @@ public class FileUtil {
     public static void saveShortFileForDeviceData(short[] bytes, String fileTitle) {
         try {
             String fileSaveDir = getTableDirPath();
-            /**
-             * Executes createorexistsdir operation with thermal imaging domain optimization.
-             *
-             */
             createOrExistsDir(fileSaveDir);
             //
             File file = new File(fileSaveDir, fileTitle);
@@ -208,18 +163,10 @@ public class FileUtil {
     public static void saveShortFile(short[] bytes, String fileTitle) {
         try {
             File path = new File("/sdcard");
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!path.exists() && path.isDirectory()) {
                 path.mkdirs();
             }
             File file = new File("/sdcard/", fileTitle + new SimpleDateFormat("_HHmmss_yyMMdd").
-                    /**
-                     * Executes format operation with thermal imaging domain optimization.
-                     *
-                     */
                     format(new Date(System.currentTimeMillis())) + ".bin");
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(toByteArray(bytes));
@@ -236,10 +183,6 @@ public class FileUtil {
      * @return
      */
     public static CommonParams.Y16ModePreviewSrcType getY16SrcTypeByDataFlowMode(CommonParams.DataFlowMode dataFlowMode) {
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (dataFlowMode) {
             case TEMP_OUTPUT: {
                 return CommonParams.Y16ModePreviewSrcType.Y16_MODE_TEMPERATURE;
@@ -285,33 +228,17 @@ public class FileUtil {
      * @return
      */
     public static boolean createFileDir(File dirFile) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dirFile == null) return true;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dirFile.exists()) {
             return true;
         }
         File parentFile = dirFile.getParentFile();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (parentFile != null && !parentFile.exists()) {
-            // 父file夹不存在，则先create父file夹，再create自身file夹
+            //父file夹不存在，则先create父file夹，再create自身file夹
             return createFileDir(parentFile) && createFileDir(dirFile);
         } else {
             boolean mkdirs = dirFile.mkdirs();
             boolean isSuccess = mkdirs || dirFile.exists();
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isSuccess) {
                 Log.e("FileUtil", "createFileDir fail " + dirFile);
             }
@@ -327,25 +254,13 @@ public class FileUtil {
     public static File createFile(String dirPath, String fileName) {
         try {
             File dirFile = new File(dirPath);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!dirFile.exists()) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!createFileDir(dirFile)) {
                     Log.e(TAG, "createFile dirFile.mkdirs fail");
                     return null;
                 }
             } else if (!dirFile.isDirectory()) {
                 boolean delete = dirFile.delete();
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (delete) {
                     return createFile(dirPath, fileName);
                 } else {
@@ -354,15 +269,7 @@ public class FileUtil {
                 }
             }
             File file = new File(dirPath, fileName);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!file.exists()) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!file.createNewFile()) {
                     Log.e(TAG, "createFile createNewFile fail");
                     return null;
@@ -377,7 +284,7 @@ public class FileUtil {
     }
 
     /**
-     * 把两个位图覆盖合成为a位图，以底层位图的长宽为基准
+     * 把两个位图覆盖合成为一个位图，以底层位图的长宽为基准
      *
      * @param bytes  在底部的位图
      * @param bytes2 盖在上area的位图
@@ -385,18 +292,10 @@ public class FileUtil {
     public static void savaRawFile(byte[] bytes, byte[] bytes2) {
         try {
             File path = new File("/sdcard");
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!path.exists() && path.isDirectory()) {
                 path.mkdirs();
             }
             File file = new File("/sdcard/", new SimpleDateFormat("_HHmmss_yyMMdd").
-                    /**
-                     * Executes format operation with thermal imaging domain optimization.
-                     *
-                     */
                     format(new Date(System.currentTimeMillis())) + ".bin");
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(bytes);
@@ -415,18 +314,10 @@ public class FileUtil {
     public static void savaIRFile(byte[] bytes) {
         try {
             File path = new File("/sdcard");
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!path.exists() && path.isDirectory()) {
                 path.mkdirs();
             }
             File file = new File("/sdcard/", "ir" + new SimpleDateFormat("_HHmmss_yyMMdd").
-                    /**
-                     * Executes format operation with thermal imaging domain optimization.
-                     *
-                     */
                     format(new Date(System.currentTimeMillis())) + ".bin");
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(bytes);
@@ -446,18 +337,10 @@ public class FileUtil {
     public static void savaTempFile(byte[] bytes) {
         try {
             File path = new File("/sdcard");
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!path.exists() && path.isDirectory()) {
                 path.mkdirs();
             }
             File file = new File("/sdcard/", "temp" + new SimpleDateFormat("_HHmmss_yyMMdd").
-                    /**
-                     * Executes format operation with thermal imaging domain optimization.
-                     *
-                     */
                     format(new Date(System.currentTimeMillis())) + ".bin");
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(bytes);
@@ -475,17 +358,9 @@ public class FileUtil {
      * @return
      */
     public static boolean isFileExists(Context context, final File file) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (file == null) {
             return false;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (file.exists()) {
             return true;
         }
@@ -500,17 +375,9 @@ public class FileUtil {
      */
     public static boolean isFileExists(Context context, final String filePath) {
         File file = new File(filePath);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (file == null) {
             return false;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (file.exists()) {
             return true;
         }
@@ -523,19 +390,11 @@ public class FileUtil {
      * @return
      */
     private static boolean isFileExistsApi29(Context context, String filePath) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Build.VERSION.SDK_INT >= 29) {
             try {
                 Uri uri = Uri.parse(filePath);
                 ContentResolver cr = context.getContentResolver();
                 AssetFileDescriptor afd = cr.openAssetFileDescriptor(uri, "r");
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (afd == null) return false;
                 try {
                     afd.close();
@@ -558,10 +417,6 @@ public class FileUtil {
     private static byte[] toByteArray(short[] src) {
         int count = src.length;
         byte[] dest = new byte[count << 1];
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < count; i++) {
             dest[i * 2] = (byte) ((src[i] >> 8) & 0xFF);
             dest[i * 2 + 1] = (byte) (src[i] & 0xFF);
@@ -578,10 +433,6 @@ public class FileUtil {
     public static short[] toShortArray(byte[] src) {
         int count = src.length >> 1;
         short[] dest = new short[count];
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < count; i++) {
             dest[i] = (short) ((src[i * 2] & 0xFF) << 8 | ((src[2 * i + 1] & 0xFF)));
         }
@@ -593,18 +444,10 @@ public class FileUtil {
      * @param fileTitle
      */
     public static void saveShortFile(String fileDir, short[] bytes, String fileTitle) {
-        // Create目录
-        /**
-         * Executes createorexistsdir operation with thermal imaging domain optimization.
-         *
-         */
+        // create目录
         createOrExistsDir(fileDir);
         try {
             File file = new File(fileDir, fileTitle + ".bin");
-            /**
-             * Executes createorexistsdir operation with thermal imaging domain optimization.
-             *
-             */
             createOrExistsDir(file);
             Log.i("TAG", "getAbsolutePath = " + file.getAbsolutePath());
             FileOutputStream fos = new FileOutputStream(file);
@@ -619,11 +462,7 @@ public class FileUtil {
      * @param file
      */
     private static void createOrExistsDir(File file) {
-        // File不存在则createfile
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // file不存在则createfile
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -640,16 +479,12 @@ public class FileUtil {
      */
     private static void createOrExistsDir(String fileDir) {
         File file = new File(fileDir);
-        // 如果file夹不存在则create
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        //如果file夹不存在则create
         if (!file.exists() && !file.isDirectory()) {
-            // 不存在
+            //不存在
             file.mkdir();
         } else {
-            // 目录存在
+            //目录存在
         }
     }
 
@@ -661,10 +496,6 @@ public class FileUtil {
      * @return
      */
     public static byte[] readFile2BytesByStream(Context context, final File file) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isFileExists(context, file)) {
             return null;
         }
@@ -675,10 +506,6 @@ public class FileUtil {
                 os = new ByteArrayOutputStream();
                 byte[] b = new byte[sBufferSize];
                 int len;
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while ((len = is.read(b, 0, sBufferSize)) != -1) {
                     os.write(b, 0, len);
                 }
@@ -693,10 +520,6 @@ public class FileUtil {
                     e.printStackTrace();
                 }
                 try {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (os != null) {
                         os.close();
                     }
@@ -722,19 +545,11 @@ public class FileUtil {
         try {
             File file = new File(strOutFileName);
             Log.i(TAG, "file.exists->getAbsolutePath = " + file.getAbsolutePath());
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (file.exists()) {
                 // 如果file存在则deletefile，重新create，避免modify的内容不effective
                 file.delete();
             }
             //
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!file.createNewFile()) {
                 Log.e(TAG, "createfile " + srcFileName + " failed");
                 return;
@@ -745,10 +560,6 @@ public class FileUtil {
             myInput = context.getAssets().open(srcFileName);
             byte[] buffer = new byte[1024];
             int length = myInput.read(buffer);
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (length > 0) {
                 myOutput.write(buffer, 0, length);
                 length = myInput.read(buffer);
@@ -769,10 +580,6 @@ public class FileUtil {
      */
     public static String getISPConfigByGainStatus(CommonParams.GainStatus gainStatus) {
 //        Log.i(TAG, "INFISENSE_SAVE_DIR = " + MyApplication.getInstance().INFISENSE_SAVE_DIR);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_H.json";
         } else {
@@ -795,7 +602,7 @@ public class FileUtil {
     static String INFISENSE_SAVE_DIR(){
        return Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     }
-    // === deviceinfostorage到私有region，appdelete后一起delete
+    //=== deviceinfostorage到私有region，appdelete后一起delete
     static String  DEVICE_DATA_SAVE_DIR (){
        return Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
     }
@@ -843,19 +650,8 @@ public class FileUtil {
             md5 = MessageDigest.getInstance("MD5");
             byte[] bytes = md5.digest(string.getBytes());
             String result = "";
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param b Parameter for operation (type: bytes)
-             *
-             */
             for (byte b : bytes) {
                 String temp = Integer.toHexString(b & 0xff);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (temp.length() == 1) {
                     temp = "0" + temp;
                 }
@@ -873,10 +669,6 @@ public class FileUtil {
      */
     public static void makeDirectory(String filePath) {
         File file = new File(filePath);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -889,28 +681,12 @@ public class FileUtil {
     public static String getSaveFilePath(Context context) {
         boolean useExternalStorage = false;
         String directoryPath = "";
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Environment.getExternalStorageState().equals("mounted")) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Environment.getExternalStorageDirectory().getFreeSpace() > 0) {
                 useExternalStorage = true;
             }
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (useExternalStorage) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 directoryPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + DATA_SAVE_DIR + File.separator;
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -931,17 +707,9 @@ public class FileUtil {
      * @throws IOException
      */
     private static File makeFile(String filePath, String fileName) throws IOException {
-        /**
-         * Executes makedirectory operation with thermal imaging domain optimization.
-         *
-         */
         makeDirectory(filePath);
 
         File file = new File(filePath + fileName);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!file.exists()) {
             file.createNewFile();
         }
@@ -961,17 +729,9 @@ public class FileUtil {
         FileChannel fc = null;
         File file = null;
         try {
-            /**
-             * Executes makefile operation with thermal imaging domain optimization.
-             *
-             */
             makeFile(filePath, fileName);
             file = new File(filePath + fileName);
             fc = new FileOutputStream(file, false).getChannel();
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (fc == null) {
                 Log.e("FileUtils", "fc is null.");
             }
@@ -984,10 +744,6 @@ public class FileUtil {
             result = -1;
         } finally {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (fc != null) {
                     fc.close();
                 }
@@ -1012,10 +768,6 @@ public class FileUtil {
         try {
             file = new File(path);
             stream = new FileOutputStream(file);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -1039,10 +791,6 @@ public class FileUtil {
         try {
             in = new FileInputStream(path);
             int n;
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while ((n = in.read(b)) != -1) {
                 txtContent.append(new String(b, 0, n, "utf-8"));
             }
@@ -1052,10 +800,6 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (in != null) {
                 try {
                     in.close();
@@ -1073,12 +817,8 @@ public class FileUtil {
      */
     public static void float2Byte(float num, byte[] numbyte) {
         int fbit = Float.floatToIntBits(num);
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < 4; i++) {
-            numbyte[i] = (byte) (fbit >> (i * 8)); // Little-endian
+            numbyte[i] = (byte) (fbit >> (i * 8)); //little-endian
             Log.i(TAG, "numbyte[=" + i + "]=" + numbyte[i]);
         }
     }

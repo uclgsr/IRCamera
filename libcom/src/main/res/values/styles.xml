@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Style definitions for thermal imaging UI -->
 <resources>
 
     <style name="app_compat_dialog" parent="Theme.AppCompat.Light.Dialog">

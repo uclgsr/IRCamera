@@ -49,19 +49,8 @@ import com.topdon.lib.core.R as LibR
  */
 // Legacy ARouter route annotation - now using NavigationManager
 /**
-/**
- * Specialized thermal imaging component providing IRGalleryDetail01Activity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * I r gallery detail01 activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
  */
 class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
     /**
@@ -83,18 +72,10 @@ true-TC007 false-其他插件式device
     private var irPath: String? = null
     private val irViewModel: IRGalleryEditViewModel by viewModels()
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.activity_ir_gallery_detail_01
 
     private val frameTool by lazy { FrameTool() }
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         position = intent.getIntExtra("position", 0)
         dataList = intent.getParcelableArrayListExtra("list")!!
@@ -106,10 +87,6 @@ true-TC007 false-其他插件式device
         titleView.setRight2ClickListener { actionShare() }
         titleView.setRight3ClickListener { deleteImage() }
 
-        /**
-         * Initializes the viewpager component for thermal imaging operations.
-         *
-         */
         initViewPager()
 
         findViewById<LinearLayout>(R.id.ll_ir_edit_2D)?.setOnClickListener(this)
@@ -120,10 +97,6 @@ true-TC007 false-其他插件式device
         irViewModel.resultLiveData.observe(this) {
             lifecycleScope.launch {
                 val filePath: String?
-                /**
-                 * Executes withcontext operation with thermal imaging domain optimization.
-                 *
-                 */
                 withContext(Dispatchers.IO) {
                     frameTool.read(it.frame)
                     filePath =
@@ -140,10 +113,6 @@ true-TC007 false-其他插件式device
                         }
                 }
                 progressDialog?.dismiss()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (filePath.isNullOrEmpty()) {
                     ToastTools.showShort(LibR.string.liveData_save_error)
                 } else {
@@ -152,39 +121,21 @@ true-TC007 false-其他插件式device
                     shareIntent.action = Intent.ACTION_SEND
                     shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
                     shareIntent.type = "application/xlsx"
-                    /**
-                     * Executes startactivity operation with thermal imaging domain optimization.
-                     *
-                     */
                     startActivity(Intent.createChooser(shareIntent, getString(LibR.string.battery_share)))
                 }
             }
         }
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
     @SuppressLint("SetTextI18n")
-    /**
-     * Initializes viewpager component.
-     */
     private fun initViewPager() {
         val irGalleryViewpager = findViewById<ViewPager2>(R.id.ir_gallery_viewpager)
         irGalleryViewpager.adapter = GalleryViewPagerAdapter(this)
         irGalleryViewpager.registerOnPageChangeCallback(
             object : ViewPager2.OnPageChangeCallback() {
-                /**
-                 * Executes onpageselected operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param position Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
                     this@IRGalleryDetail01Activity.position = position
@@ -202,13 +153,6 @@ true-TC007 false-其他插件式device
         irGalleryViewpager?.setCurrentItem(position, false)
     }
 
-    /**
-     * Executes actionInfo functionality.
-     */
-    /**
-     * Executes actioninfo operation with thermal imaging domain optimization.
-     *
-     */
     private fun actionInfo() {
         try {
             val data = dataList[position]
@@ -231,13 +175,6 @@ true-TC007 false-其他插件式device
         }
     }
 
-    /**
-     * Executes actionShare functionality.
-     */
-    /**
-     * Executes actionshare operation with thermal imaging domain optimization.
-     *
-     */
     private fun actionShare() {
         val data = dataList[position]
         val uri = FileTools.getUri(File(data.path))
@@ -245,58 +182,23 @@ true-TC007 false-其他插件式device
         shareIntent.action = Intent.ACTION_SEND
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
         shareIntent.type = "image/jpeg"
-        /**
-         * Executes startactivity operation with thermal imaging domain optimization.
-         *
-         */
         startActivity(Intent.createChooser(shareIntent, getString(LibR.string.battery_share)))
     }
 
-    /**
-     * Executes deleteImage functionality.
-     */
-    /**
-     * Executes deleteimage operation with thermal imaging domain optimization.
-     *
-     */
     private fun deleteImage() {
         TipDialog.Builder(this)
             .setMessage(getString(LibR.string.tip_delete))
             .setPositiveListener(LibR.string.app_confirm) {
                 val data = dataList[position]
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (dataList.size == 1) {
-                    /**
-                     * Executes file operation with thermal imaging domain optimization.
-                     *
-                     */
                     File(data.path).delete()
-                    /**
-                     * Executes finish operation with thermal imaging domain optimization.
-                     *
-                     */
                     finish()
                 } else {
-                    /**
-                     * Executes file operation with thermal imaging domain optimization.
-                     *
-                     */
                     File(data.path).delete()
                     dataList.removeAt(position)
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (position >= dataList.size) {
                         position = dataList.size - 1
                     }
-                    /**
-                     * Initializes the viewpager component for thermal imaging operations.
-                     *
-                     */
                     initViewPager()
                 }
                 EventBus.getDefault().post(GalleryDelEvent())
@@ -312,18 +214,7 @@ export为 excel 时的进度条弹窗.
     private var progressDialog: ProgressDialog? = null
     private var excelName: String = ""
 
-    /**
-     * Executes actionExcel functionality.
-     */
-    /**
-     * Executes actionexcel operation with thermal imaging domain optimization.
-     *
-     */
     private fun actionExcel() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (progressDialog == null) {
             progressDialog = ProgressDialog(this)
         }
@@ -331,10 +222,6 @@ export为 excel 时的进度条弹窗.
 
         excelName = dataList[position].name.substringBeforeLast(".")
         val irPath = "${FileConfig.lineIrGalleryDir}/$excelName.ir"
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!File(irPath).exists()) {
             ToastTools.showShort(getString(LibR.string.album_report_on_edit))
             progressDialog?.dismiss()
@@ -343,25 +230,10 @@ export为 excel 时的进度条弹窗.
         irViewModel.initData(irPath)
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
             findViewById<LinearLayout>(R.id.ll_ir_edit_2D) -> {
 2d编辑
-                /**
-                 * Executes actioneditorreport operation with thermal imaging domain optimization.
-                 *
-                 */
                 actionEditOrReport(false)
             }
 
@@ -370,10 +242,6 @@ export为 excel 时的进度条弹窗.
                 val data = dataList[position]
                 val fileName = data.name.substringBeforeLast(".")
                 val irPath = "${FileConfig.lineIrGalleryDir}/$fileName.ir"
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!File(irPath).exists()) {
                     ToastTools.showShort(LibR.string.album_report_on_edit)
                     return
@@ -381,17 +249,9 @@ export为 excel 时的进度条弹窗.
                 var tempHigh = 0f
                 var tempLow = 0f
                 lifecycleScope.launch {
-// ShowLoading()
-                    /**
-                     * Executes withcontext operation with thermal imaging domain optimization.
-                     *
-                     */
+//                    showLoading()
                     withContext(Dispatchers.IO) {
                         val file = File(irPath)
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (!file.exists()) {
                             XLog.w("IRfile不存在: ${file.absolutePath}")
                             return@withContext
@@ -409,7 +269,7 @@ export为 excel 时的进度条弹窗.
                         tempHigh = frameTool.getSrcTemp().maxTemperature
                         tempLow = frameTool.getSrcTemp().minTemperature
                     }
-// DismissLoading()
+//                    dismissLoading()
                     NavigationManager.getInstance().build(RouterConfig.IR_GALLERY_3D).withString(ExtraKeyConfig.IR_PATH, irPath)
                         .withFloat(ExtraKeyConfig.TEMP_HIGH, tempHigh).withFloat(ExtraKeyConfig.TEMP_LOW, tempLow)
                         .navigation(this@IRGalleryDetail01Activity)
@@ -418,43 +278,21 @@ export为 excel 时的进度条弹窗.
 
             findViewById<LinearLayout>(R.id.ll_ir_report) -> {
 report
-                /**
-                 * Executes actioneditorreport operation with thermal imaging domain optimization.
-                 *
-                 */
                 actionEditOrReport(true)
             }
 
             findViewById<LinearLayout>(R.id.ll_ir_ex) -> {
                 TipDialog.Builder(this).setMessage(LibR.string.tip_album_temp_exportfile).setPositiveListener(LibR.string.app_confirm) {
-                    /**
-                     * Executes actionexcel operation with thermal imaging domain optimization.
-                     *
-                     */
                     actionExcel()
                 }.setCancelListener(LibR.string.app_cancel) {}.setCanceled(true).create().show()
             }
         }
     }
 
-    /**
-     * Executes actionEditOrReport functionality.
-     */
-    /**
-     * Executes actioneditorreport operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isReport Parameter for operation (type: Boolean)
-     *
-     */
     private fun actionEditOrReport(isReport: Boolean) {
         val data = dataList[position]
         val fileName = data.name.substringBeforeLast(".")
         val irPath = "${FileConfig.lineIrGalleryDir}/$fileName.ir"
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!File(irPath).exists()) {
             ToastTools.showShort(LibR.string.album_report_on_edit)
             return
@@ -468,21 +306,10 @@ report
     }
 
     inner class GalleryViewPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
-        /**
-         * Retrieves the itemcount with optimized performance for thermal imaging operations.
-         *
-         */
         override fun getItemCount(): Int {
             return dataList.size
         }
 
-        /**
-         * Executes createfragment operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param position Parameter for operation (type: Int)
-         *
-         */
         override fun createFragment(position: Int): Fragment {
             val fragment = GalleryFragment()
             val bundle = Bundle()
@@ -493,21 +320,7 @@ report
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    /**
-     * Executes onSaveFinishBean functionality.
-     */
-    /**
-     * Executes onsavefinishbean operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param imageGalleryEvent Parameter for operation (type: ImageGalleryEvent)
-     *
-     */
     fun onSaveFinishBean(imageGalleryEvent: ImageGalleryEvent) {
-        /**
-         * Executes finish operation with thermal imaging domain optimization.
-         *
-         */
         finish()
     }
 }

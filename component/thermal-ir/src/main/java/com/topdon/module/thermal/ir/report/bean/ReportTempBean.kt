@@ -13,23 +13,13 @@ data class ReportTempBean(
     val is_max_temperature: Int, // 是否Show/Displaymaximum温
     val min_temperature: String?, // 带单位符号的minimum温，单位跟随Userconfiguration
     val is_min_temperature: Int, // 是否Show/Displayminimum温
-    val comment: String?, // Comment
+    val comment: String?, // comment
     val is_comment: Int, // 是否Show/Displaycomment
     val mean_temperature: String? = null, // 带单位符号的average温，单位跟随Userconfiguration
     val is_mean_temperature: Int = 0, // 是否Show/Displayaverage温
     val temperature: String? = null, // 带单位符号的pointtemperature，单位跟随Userconfiguration
     val is_temperature: Int = 0, // 是否Show/Displaypointtemperature
 ) : Parcelable {
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param temperature Temperature value in Celsius (type: String?)
-     * @param is_temperature Temperature value in Celsius (type: Int)
-     * @param comment Parameter for operation (type: String?)
-     * @param is_comment Parameter for operation (type: Int)
-     *
-     */
     constructor(temperature: String?, is_temperature: Int, comment: String?, is_comment: Int) : this(
         null,
         0,
@@ -43,44 +33,13 @@ data class ReportTempBean(
         is_temperature,
     )
 
-    /**
-     * Executes isMaxOpen functionality.
-     */
-    /**
-     * Executes ismaxopen operation with thermal imaging domain optimization.
-     *
-     */
     fun isMaxOpen() = is_max_temperature == 1
 
-    /**
-     * Executes isMinOpen functionality.
-     */
-    /**
-     * Executes isminopen operation with thermal imaging domain optimization.
-     *
-     */
     fun isMinOpen() = is_min_temperature == 1
 
-    /**
-     * Executes isAverageOpen functionality.
-     */
-    /**
-     * Executes isaverageopen operation with thermal imaging domain optimization.
-     *
-     */
     fun isAverageOpen() = is_mean_temperature == 1
 
-    /**
-     * Executes isExplainOpen functionality.
-     */
-    /**
-     * Executes isexplainopen operation with thermal imaging domain optimization.
-     *
-     */
     fun isExplainOpen() = is_comment == 1
 
-    /**
-     * Processes temperature measurement data.
-     */
     fun isTempOpen() = is_temperature == 1
 }

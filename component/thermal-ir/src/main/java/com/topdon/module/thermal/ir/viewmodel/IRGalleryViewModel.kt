@@ -15,21 +15,8 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for IRGalleryViewModel display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom I r gallery view model view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class IRGalleryViewModel : BaseViewModel() {
     companion object {
@@ -60,16 +47,8 @@ add了日期title的用于display的列表.
 插入日期 item
             val showList: ArrayList<GalleryBean> = ArrayList(sourceList.size)
             var beforeTime = 0L
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (galleryBean in sourceList) {
                 val currentTime = TimeTool.timeToMinute(galleryBean.timeMillis, 4)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (beforeTime != currentTime) { // 新的日期
                     showList.add(GalleryTitle(galleryBean.timeMillis))
                     beforeTime = currentTime
@@ -91,17 +70,6 @@ null-请求failed
      */
     val pageListLD: MutableLiveData<ArrayList<GalleryBean>?> = MutableLiveData()
 
-    /**
-     * Executes queryGalleryByPage functionality.
-     */
-    /**
-     * Executes querygallerybypage operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isVideo Parameter for operation (type: Boolean)
-     * @param dirType Parameter for operation (type: GalleryRepository.DirType)
-     *
-     */
     fun queryGalleryByPage(
         isVideo: Boolean,
         dirType: GalleryRepository.DirType,
@@ -110,33 +78,17 @@ null-请求failed
             val pageList: ArrayList<GalleryBean>? = GalleryRepository.loadByPage(isVideo, dirType, hasLoadPage + 1, PAGE_COUNT)
             pageListLD.postValue(pageList)
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (pageList != null) {
                 val sourceList = if (hasLoadPage == 0) ArrayList(pageList.size) else sourceListLD.value ?: ArrayList(pageList.size)
                 val showList = if (hasLoadPage == 0) ArrayList(pageList.size) else showListLD.value ?: ArrayList(pageList.size)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (pageList.isNotEmpty()) {
                     hasLoadPage++
                 }
 
 插入日期 item
                 var beforeTime = if (sourceList.isEmpty()) 0 else TimeTool.timeToMinute(sourceList.last().timeMillis, 4)
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (galleryBean in pageList) {
                     val currentTime = TimeTool.timeToMinute(galleryBean.timeMillis, 4)
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (beforeTime != currentTime) { // 新的日期
                         showList.add(GalleryTitle(galleryBean.timeMillis))
                         beforeTime = currentTime
@@ -156,60 +108,24 @@ null-请求failed
      */
     val deleteResultLD: MutableLiveData<Boolean> = MutableLiveData()
 
-    /**
-     * Executes delete functionality.
-     */
-    /**
-     * Executes delete operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param deleteList Parameter for operation (type: List<GalleryBean>)
-     * @param dirType Parameter for operation (type: GalleryRepository.DirType)
-     * @param isDelLocal Parameter for operation (type: Boolean)
-     *
-     */
     fun delete(
         deleteList: List<GalleryBean>,
         dirType: GalleryRepository.DirType,
         isDelLocal: Boolean,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (dirType == GalleryRepository.DirType.TS004_REMOTE) {
                 val isSuccess =
                     TS004Repository.deleteFiles(
-                        /**
-                         * Executes array operation with thermal imaging domain optimization.
-                         *
-                         */
                         Array(deleteList.size) {
                             deleteList[it].id
                         },
                     )
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isSuccess) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isDelLocal) {
                         deleteList.forEach {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (it.hasDownload) {
                                 val file = File(FileConfig.ts004GalleryDir, it.name)
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (file.exists()) {
                                     WriteTools.delete(file)
                                 }
@@ -223,10 +139,6 @@ null-请求failed
             } else {
                 deleteList.forEach {
                     val file = File(it.path)
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (file.exists()) {
                         WriteTools.delete(file)
                     }

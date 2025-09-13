@@ -15,30 +15,12 @@ import androidx.core.app.ActivityCompat
  *
  * Provides device discovery, pairing, and connection management
  */
-/**
- * Specialized thermal imaging component providing BluetoothManager functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class BluetoothManager(private val context: Context) {
     companion object {
         private const val TAG = "ShimmerBluetoothManager"
 
         // Shimmer device name patterns
         val SHIMMER_DEVICE_PATTERNS =
-            /**
-             * Executes arrayof operation with thermal imaging domain optimization.
-             *
-             */
             arrayOf(
                 "Shimmer3",
                 "Shimmer",
@@ -52,90 +34,32 @@ class BluetoothManager(private val context: Context) {
         const val STATE_CONNECTED = 2
         const val STATE_LISTEN = 3
     }
-/**
- * Specialized thermal imaging component providing BluetoothConnectionListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+
+    private val bluetoothAdapter: BluetoothAdapter? by lazy {
+        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as android.bluetooth.BluetoothManager
+        bluetoothManager.adapter
+    }
+    private val discoveredDevices = mutableListOf<BluetoothDevice>()
+    private val listeners = mutableListOf<BluetoothConnectionListener>()
+
     interface BluetoothConnectionListener {
-    /**
-     * Executes onDeviceDiscovered functionality.
-     */
-        /**
-         * Executes ondevicediscovered operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param device Parameter for operation (type: BluetoothDevice)
-         *
-         */
         fun onDeviceDiscovered(device: BluetoothDevice)
 
-    /**
-     * Executes onConnectionStateChanged functionality.
-     */
-        /**
-         * Executes onconnectionstatechanged operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param device Parameter for operation (type: BluetoothDevice)
-         * @param state Parameter for operation (type: Int)
-         *
-         */
         fun onConnectionStateChanged(
             device: BluetoothDevice,
             state: Int,
         )
 
-    /**
-     * Executes onConnectionError functionality.
-     */
-        /**
-         * Executes onconnectionerror operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param device Parameter for operation (type: BluetoothDevice)
-         * @param error Parameter for operation (type: String)
-         *
-         */
         fun onConnectionError(
             device: BluetoothDevice,
             error: String,
         )
     }
 
-    /**
-     * Executes addListener functionality.
-     */
-    /**
-     * Executes addlistener operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param listener Event listener for callbacks (type: BluetoothConnectionListener)
-     *
-     */
     fun addListener(listener: BluetoothConnectionListener) {
         listeners.add(listener)
     }
 
-    /**
-     * Executes removeListener functionality.
-     */
-    /**
-     * Executes removelistener operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param listener Event listener for callbacks (type: BluetoothConnectionListener)
-     *
-     */
     fun removeListener(listener: BluetoothConnectionListener) {
         listeners.remove(listener)
     }
@@ -154,10 +78,6 @@ class BluetoothManager(private val context: Context) {
     fun hasRequiredPermissions(): Boolean {
         // Check for Android 12+ (API 31) specific permissions
         val connectPermission =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 ActivityCompat.checkSelfPermission(
                     context, Manifest.permission.BLUETOOTH_CONNECT,
@@ -186,18 +106,10 @@ class BluetoothManager(private val context: Context) {
 
         return try {
             bluetoothAdapter?.bondedDevices?.filter { device ->
-                /**
-                 * Executes isshimmerdevice operation with thermal imaging domain optimization.
-                 *
-                 */
                 isShimmerDevice(device)
             } ?: emptyList()
         } catch (e: SecurityException) {
             Log.e(TAG, "Security exception getting bonded devices", e)
-            /**
-             * Executes emptylist operation with thermal imaging domain optimization.
-             *
-             */
             emptyList()
         }
     }
@@ -208,10 +120,6 @@ class BluetoothManager(private val context: Context) {
     fun isShimmerDevice(device: BluetoothDevice): Boolean {
         val deviceName =
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (hasRequiredPermissions()) {
                     device.name
                 } else {
@@ -242,10 +150,6 @@ class BluetoothManager(private val context: Context) {
     fun findShimmerDeviceByAddress(address: String): BluetoothDevice? {
         return try {
             bluetoothAdapter?.getRemoteDevice(address)?.takeIf { device ->
-                /**
-                 * Executes isshimmerdevice operation with thermal imaging domain optimization.
-                 *
-                 */
                 isShimmerDevice(device)
             }
         } catch (e: Exception) {
@@ -275,10 +179,6 @@ class BluetoothManager(private val context: Context) {
     fun getConnectionState(device: BluetoothDevice): Int {
         return try {
             // Check permissions before accessing device properties
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!hasRequiredPermissions()) {
                 Log.w(TAG, "Required permissions not available for connection state check")
                 return STATE_NONE
@@ -286,10 +186,6 @@ class BluetoothManager(private val context: Context) {
 
             // This would normally check the actual connection state
             // For now, return based on bonding state
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (device.bondState) {
                 BluetoothDevice.BOND_BONDED -> STATE_CONNECTED
                 BluetoothDevice.BOND_BONDING -> STATE_CONNECTING
@@ -307,36 +203,20 @@ class BluetoothManager(private val context: Context) {
     fun validateShimmerDevice(device: BluetoothDevice): ValidationResult {
         val issues = mutableListOf<String>()
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isBluetoothAvailable()) {
             issues.add("Bluetooth not available")
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!hasRequiredPermissions()) {
             issues.add("Missing Bluetooth permissions")
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isShimmerDevice(device)) {
             issues.add("Device is not recognized as Shimmer device")
         }
 
         try {
             // Check permissions before accessing device properties
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (hasRequiredPermissions() && device.bondState != BluetoothDevice.BOND_BONDED) {
                 issues.add("Device is not paired")
             }
@@ -346,10 +226,6 @@ class BluetoothManager(private val context: Context) {
 
         val isValid = issues.isEmpty()
         val message =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isValid) {
                 "Device validation successful"
             } else {
@@ -377,10 +253,6 @@ class BluetoothManager(private val context: Context) {
             isEnabled = bluetoothAdapter?.isEnabled ?: false,
             address =
                 try {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (hasRequiredPermissions()) {
                         bluetoothAdapter?.address ?: "Unknown"
                     } else {
@@ -391,10 +263,6 @@ class BluetoothManager(private val context: Context) {
                 },
             name =
                 try {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (hasRequiredPermissions()) {
                         bluetoothAdapter?.name ?: "Unknown"
                     } else {
@@ -415,10 +283,6 @@ class BluetoothManager(private val context: Context) {
 
     /**
      * Clean up resources
-     */
-    /**
-     * Executes cleanup operation with thermal imaging domain optimization.
-     *
      */
     fun cleanup() {
         listeners.clear()

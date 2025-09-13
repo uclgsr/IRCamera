@@ -18,18 +18,9 @@ import com.topdon.libcom.R
 import com.topdon.libcom.util.ColorUtils
 
 /**
- * Specialized thermal imaging component providing ColorPickDialog functionality for the IRCamera system.
+ * 颜色拾取弹框.
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Created by chenggeng.lin on 2023/12/18.
  */
 class ColorPickDialog(
     context: Context,
@@ -44,29 +35,10 @@ class ColorPickDialog(
 
     private val rootView: View = LayoutInflater.from(context).inflate(R.layout.dialog_color_pick, null)
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /**
-         * Configures the cancelable with validation and thermal imaging optimization.
-         *
-         */
         setCancelable(true)
-        /**
-         * Configures the canceledontouchoutside with validation and thermal imaging optimization.
-         *
-         */
         setCanceledOnTouchOutside(true)
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(rootView)
 
         window?.let {
@@ -81,10 +53,6 @@ class ColorPickDialog(
         val iconTintColor =
             ColorUtils.setColorAlpha(ContextCompat.getColor(context, R.color.we_read_theme_color), 0.7f)
 
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (color) {
             0xff0000ff.toInt() -> rootView.findViewById<View>(R.id.view_color1).isSelected = true
             0xffff0000.toInt() -> rootView.findViewById<View>(R.id.view_color2).isSelected = true
@@ -96,17 +64,9 @@ class ColorPickDialog(
         }
 
         rootView.findViewById<ColorSelectView>(R.id.color_select_view).onSelectListener = {
-            /**
-             * Executes unselect6color operation with thermal imaging domain optimization.
-             *
-             */
             unSelect6Color()
             color = it
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (textSize != -1)
             {
                 findViewById<TextView>(R.id.tv_size_title).visibility = View.VISIBLE
@@ -116,16 +76,6 @@ class ColorPickDialog(
                 findViewById<DefRangeSeekBar>(R.id.nifty_slider_view).visibility = View.VISIBLE
                 findViewById<DefRangeSeekBar>(R.id.nifty_slider_view).setOnRangeChangedListener(
                     object : OnRangeChangedListener {
-                        /**
-                         * Executes onrangechanged operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param view Parameter for operation (type: DefRangeSeekBar?)
-                         * @param leftValue Parameter for operation (type: Float)
-                         * @param rightValue Parameter for operation (type: Float)
-                         * @param isFromUser Parameter for operation (type: Boolean)
-                         *
-                         */
                         override fun onRangeChanged(
                             view: DefRangeSeekBar?,
                             leftValue: Float,
@@ -134,10 +84,6 @@ class ColorPickDialog(
                         ) {
                             var text = "standard"
                             text =
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (leftValue <= 0)
                                     {
                                         textSize = 14
@@ -154,28 +100,12 @@ class ColorPickDialog(
                             findViewById<TextView>(R.id.tv_size_value).text = text
                         }
 
-                        /**
-                         * Executes onstarttrackingtouch operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param view Parameter for operation (type: DefRangeSeekBar?)
-                         * @param isLeft Parameter for operation (type: Boolean)
-                         *
-                         */
                         override fun onStartTrackingTouch(
                             view: DefRangeSeekBar?,
                             isLeft: Boolean,
                         ) {
                         }
 
-                        /**
-                         * Executes onstoptrackingtouch operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param view Parameter for operation (type: DefRangeSeekBar?)
-                         * @param isLeft Parameter for operation (type: Boolean)
-                         *
-                         */
                         override fun onStopTrackingTouch(
                             view: DefRangeSeekBar?,
                             isLeft: Boolean,
@@ -198,25 +128,10 @@ class ColorPickDialog(
         rootView.findViewById<View>(R.id.tv_save).setOnClickListener(this)
     }
 
-    /**
-     * Executes textSizeToNifyValue functionality.
-     */
-    /**
-     * Executes textsizetonifyvalue operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param size Parameter for operation (type: Int)
-     * @param isTC007 Parameter for operation (type: Boolean)
-     *
-     */
     private fun textSizeToNifyValue(
         size: Int,
         isTC007: Boolean,
     ): Float  {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isTC007)
             {
                 return when (size) {
@@ -232,85 +147,46 @@ class ColorPickDialog(
         }
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
             rootView.findViewById<View>(R.id.rl_close) -> dismiss()
 
-            rootView.findViewById<View>(R.id.tv_save) -> { // Save
-                /**
-                 * Executes dismiss operation with thermal imaging domain optimization.
-                 *
-                 */
+            rootView.findViewById<View>(R.id.tv_save) -> { // save
                 dismiss()
                 onPickListener?.invoke(color, textSize)
             }
 
             rootView.findViewById<View>(R.id.view_color1) -> {
-                /**
-                 * Executes unselect6color operation with thermal imaging domain optimization.
-                 *
-                 */
                 unSelect6Color()
                 rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
                 rootView.findViewById<View>(R.id.view_color1).isSelected = true
                 color = 0xff0000ff.toInt()
             }
             rootView.findViewById<View>(R.id.view_color2) -> {
-                /**
-                 * Executes unselect6color operation with thermal imaging domain optimization.
-                 *
-                 */
                 unSelect6Color()
                 rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
                 rootView.findViewById<View>(R.id.view_color2).isSelected = true
                 color = 0xffff0000.toInt()
             }
             rootView.findViewById<View>(R.id.view_color3) -> {
-                /**
-                 * Executes unselect6color operation with thermal imaging domain optimization.
-                 *
-                 */
                 unSelect6Color()
                 rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
                 rootView.findViewById<View>(R.id.view_color3).isSelected = true
                 color = 0xff00ff00.toInt()
             }
             rootView.findViewById<View>(R.id.view_color4) -> {
-                /**
-                 * Executes unselect6color operation with thermal imaging domain optimization.
-                 *
-                 */
                 unSelect6Color()
                 rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
                 rootView.findViewById<View>(R.id.view_color4).isSelected = true
                 color = 0xffffff00.toInt()
             }
             rootView.findViewById<View>(R.id.view_color5) -> {
-                /**
-                 * Executes unselect6color operation with thermal imaging domain optimization.
-                 *
-                 */
                 unSelect6Color()
                 rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
                 rootView.findViewById<View>(R.id.view_color5).isSelected = true
                 color = 0xff000000.toInt()
             }
             rootView.findViewById<View>(R.id.view_color6) -> {
-                /**
-                 * Executes unselect6color operation with thermal imaging domain optimization.
-                 *
-                 */
                 unSelect6Color()
                 rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
                 rootView.findViewById<View>(R.id.view_color6).isSelected = true

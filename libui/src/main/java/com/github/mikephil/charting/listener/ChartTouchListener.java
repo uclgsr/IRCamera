@@ -8,18 +8,7 @@ import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.highlight.Highlight;
 
 /**
- * Specialized thermal imaging component providing ChartTouchListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Created by philipp on 12/06/15.
  */
 public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDetector.SimpleOnGestureListener implements View.OnTouchListener {
 
@@ -32,7 +21,7 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
      **/
     protected ChartGesture mLastGesture = ChartGesture.NONE;
 
-    // States
+    // states
     protected static final int NONE = 0;
     protected static final int DRAG = 1;
     protected static final int X_ZOOM = 2;
@@ -76,10 +65,6 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
 
         OnChartGestureListener l = mChart.getOnChartGestureListener();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (l != null)
             l.onChartGestureStart(me, mLastGesture);
     }
@@ -93,10 +78,6 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
 
         OnChartGestureListener l = mChart.getOnChartGestureListener();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (l != null)
             l.onChartGestureEnd(me, mLastGesture);
     }
@@ -135,10 +116,6 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
      */
     protected void performHighlight(Highlight h, MotionEvent e) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (h == null || h.equalTo(mLastHighlighted)) {
             mChart.highlightValue(null, true);
             mLastHighlighted = null;
@@ -160,10 +137,6 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
     protected static float distance(float eventX, float startX, float eventY, float startY) {
         float dx = eventX - startX;
         float dy = eventY - startY;
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (float) Math.sqrt(dx * dx + dy * dy);
     }
 }

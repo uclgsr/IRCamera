@@ -44,20 +44,6 @@ import com.topdon.lib.ui.R as UiR
 - [ExtraKeyConfig.REPORT_IR_LIST] - 当前已add的image对应data列表
  */
 // Legacy ARouter route annotation - now using NavigationManager
-/**
- * Specialized thermal imaging component providing ReportPickImgActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
     /**
 从上一interface传递过来的，当前是否为 TC007 devicetype.
@@ -76,16 +62,8 @@ true-TC007 false-其他插件式device
     private lateinit var groupBottom: androidx.constraintlayout.widget.Group
     private lateinit var irGalleryRecycler: androidx.recyclerview.widget.RecyclerView
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.activity_report_pick_img
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         // Initialize views
         titleView = findViewById(R.id.title_view)
@@ -99,44 +77,24 @@ true-TC007 false-其他插件式device
         titleView.setRightDrawable(UiR.drawable.ic_toolbar_check_svg)
         titleView.setRightClickListener { setEditMode(true) }
 
-        /**
-         * Initializes the recycler component for thermal imaging operations.
-         *
-         */
         initRecycler()
 
         clShare.setOnClickListener(this)
         clDelete.setOnClickListener(this)
 
-        /**
-         * Executes showloadingdialog operation with thermal imaging domain optimization.
-         *
-         */
         showLoadingDialog()
 
         viewModel.showListLD.observe(this) {
             adapter.refreshList(it)
-            /**
-             * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-             *
-             */
             dismissLoadingDialog()
         }
         viewModel.deleteResultLD.observe(this) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (it) {
                 TToast.shortToast(this@ReportPickImgActivity, R.string.test_results_delete_success)
                 adapter.isEditMode = false
                 EventBus.getDefault().post(GalleryDelEvent())
                 MediaScannerConnection.scanFile(
                     this,
-                    /**
-                     * Executes arrayof operation with thermal imaging domain optimization.
-                     *
-                     */
                     arrayOf(if (isTC007) FileConfig.tc007GalleryDir else FileConfig.lineGalleryDir),
                     null,
                     null,
@@ -150,149 +108,63 @@ true-TC007 false-其他插件式device
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    /**
-     * Executes onReportCreate functionality.
-     */
-    /**
-     * Executes onreportcreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: ReportCreateEvent)
-     *
-     */
     fun onReportCreate(event: ReportCreateEvent) {
-        /**
-         * Executes finish operation with thermal imaging domain optimization.
-         *
-         */
         finish()
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
-    /**
-     * Executes onbackpressed operation with thermal imaging domain optimization.
-     *
-     */
     override fun onBackPressed() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (adapter.isEditMode) {
-            /**
-             * Configures the editmode with validation and thermal imaging optimization.
-             *
-             */
             setEditMode(false)
         } else {
             super.onBackPressed()
         }
     }
 
-    /**
-     * Sets editmode configuration.
-     */
     private fun setEditMode(isEditMode: Boolean) {
         adapter.isEditMode = isEditMode
         groupBottom.isVisible = isEditMode
         titleView.setTitleText(
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isEditMode) getString(R.string.chosen_item, adapter.selectList.size) else getString(R.string.app_gallery),
         )
         titleView.setLeftDrawable(if (isEditMode) 0 else 0) // Note: Add appropriate drawables for edit mode states
         titleView.setLeftClickListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isEditMode) {
-                /**
-                 * Configures the editmode with validation and thermal imaging optimization.
-                 *
-                 */
                 setEditMode(false)
             } else {
-                /**
-                 * Executes finish operation with thermal imaging domain optimization.
-                 *
-                 */
                 finish()
             }
         }
         titleView.setRightDrawable(if (isEditMode) 0 else UiR.drawable.ic_toolbar_check_svg)
         titleView.setRightText(if (isEditMode) getString(R.string.report_select_all) else "")
         titleView.setRightClickListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isEditMode) {
                 adapter.selectAll()
             } else {
-                /**
-                 * Configures the editmode with validation and thermal imaging optimization.
-                 *
-                 */
                 setEditMode(true)
             }
         }
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
             clShare -> {
-                /**
-                 * Executes shareimage operation with thermal imaging domain optimization.
-                 *
-                 */
                 shareImage()
             }
             clDelete -> {
-                /**
-                 * Executes deleteimage operation with thermal imaging domain optimization.
-                 *
-                 */
                 deleteImage()
             }
         }
     }
 
-    /**
-     * Initializes recycler component.
-     */
     private fun initRecycler() {
         val spanCount = 3
         val gridLayoutManager = GridLayoutManager(this, spanCount)
 动态setspan
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
-                /**
-                 * Retrieves the spansize with optimized performance for thermal imaging operations.
-                 *
-                 * @param
-                 * @param position Parameter for operation (type: Int)
-                 *
-                 */
                 override fun getSpanSize(position: Int): Int {
                     return if (adapter.dataList[position] is GalleryTitle) spanCount else 1
                 }
@@ -306,10 +178,6 @@ adapter 里area的switch编辑太乱了，先这么顶着
             titleView.setTitleText(getString(R.string.chosen_item, adapter.selectList.size))
             titleView.setLeftDrawable(0) // Note: Add appropriate drawable for cancel/back action
             titleView.setLeftClickListener {
-                /**
-                 * Configures the editmode with validation and thermal imaging optimization.
-                 *
-                 */
                 setEditMode(false)
             }
             titleView.setRightDrawable(0)
@@ -326,10 +194,6 @@ adapter 里area的switch编辑太乱了，先这么顶着
             val data = adapter.dataList[it]
             val fileName = data.name.substringBeforeLast(".")
             val irPath = "${FileConfig.lineIrGalleryDir}/$fileName.ir"
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (File(irPath).exists()) {
                 val navigation =
                     NavigationManager.getInstance().build(RouterConfig.IR_GALLERY_EDIT)
@@ -355,26 +219,11 @@ adapter 里area的switch编辑太乱了，先这么顶着
         }
     }
 
-    /**
-     * Executes deleteImage functionality.
-     */
-    /**
-     * Executes deleteimage operation with thermal imaging domain optimization.
-     *
-     */
     private fun deleteImage() {
         val deleteList = adapter.buildSelectList()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (deleteList.size > 0) {
             TipDialog.Builder(this)
                 .setMessage(
-                    /**
-                     * Retrieves the string with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getString(
                         R.string.tip_delete_chosen,
                         deleteList.size,
@@ -389,42 +238,19 @@ adapter 里area的switch编辑太乱了，先这么顶着
         }
     }
 
-    /**
-     * Executes shareImage functionality.
-     */
-    /**
-     * Executes shareimage operation with thermal imaging domain optimization.
-     *
-     */
     private fun shareImage() {
         val data = adapter.buildSelectList()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (data.size == 0) {
             ToastTools.showShort(getString(R.string.tip_least_select))
             return
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (data.size > 9) {
             ToastTools.showShort(getString(R.string.Limite_di_9carte))
             return
         }
         val imageUris = ArrayList<Uri>()
         val shareIntent = Intent()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (data.size == 1) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (data[0].name.uppercase().endsWith(".MP4")) {
                 shareIntent.type = "video/*"
             } else {
@@ -435,20 +261,12 @@ adapter 里area的switch编辑太乱了，先这么顶着
             shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
         } else {
             shareIntent.type = "video/*"
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (bean in data) {
                 imageUris.add(getUri(File(bean.path)))
             }
             shareIntent.action = Intent.ACTION_SEND_MULTIPLE
             shareIntent.putExtra(Intent.EXTRA_STREAM, imageUris)
         }
-        /**
-         * Executes startactivity operation with thermal imaging domain optimization.
-         *
-         */
         startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
     }
 }

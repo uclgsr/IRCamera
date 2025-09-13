@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -45,20 +45,6 @@ import java.util.List;
  * @since 2021/6/5 16:20
  */
 @SuppressWarnings("unused")
-/**
- * Specialized thermal imaging component providing TimeWheelLayout functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class TimeWheelLayout extends BaseWheelLayout {
     private NumberWheelView hourWheelView;
     private NumberWheelView minuteWheelView;
@@ -82,51 +68,19 @@ public class TimeWheelLayout extends BaseWheelLayout {
     private OnTimeMeridiemSelectedListener onTimeMeridiemSelectedListener;
     private boolean resetWhenLinkage = true;
 
-    /**
-     * Executes timewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public TimeWheelLayout(Context context) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context);
     }
 
-    /**
-     * Executes timewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public TimeWheelLayout(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
     }
 
-    /**
-     * Executes timewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public TimeWheelLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyleAttr);
     }
 
-    /**
-     * Executes timewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public TimeWheelLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
@@ -156,11 +110,7 @@ public class TimeWheelLayout extends BaseWheelLayout {
         meridiemWheelView = findViewById(R.id.wheel_picker_time_meridiem_wheel);
         spaceEndView = findViewById(R.id.wheel_picker_time_end_view);
 
-        // Settings高度
-        /**
-         * Executes post operation with thermal imaging domain optimization.
-         *
-         */
+        //settings高度
         post(new Runnable() {
             @Override
             public void run() {
@@ -176,148 +126,40 @@ public class TimeWheelLayout extends BaseWheelLayout {
     protected void onAttributeSet(@NonNull Context context, @NonNull TypedArray typedArray) {
         float density = context.getResources().getDisplayMetrics().density;
         float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
-        /**
-         * Configures the visibleitemcount with validation and thermal imaging optimization.
-         *
-         */
         setVisibleItemCount(typedArray.getInt(R.styleable.TimeWheelLayout_wheel_visibleItemCount, 5));
-        /**
-         * Configures the samewidthenabled with validation and thermal imaging optimization.
-         *
-         */
         setSameWidthEnabled(typedArray.getBoolean(R.styleable.TimeWheelLayout_wheel_sameWidthEnabled, false));
-        /**
-         * Configures the maxwidthtext with validation and thermal imaging optimization.
-         *
-         */
         setMaxWidthText(typedArray.getString(R.styleable.TimeWheelLayout_wheel_maxWidthText));
-        /**
-         * Configures the textcolor with validation and thermal imaging optimization.
-         *
-         */
         setTextColor(typedArray.getColor(R.styleable.TimeWheelLayout_wheel_itemTextColor, 0xFF888888));
-        /**
-         * Configures the selectedtextcolor with validation and thermal imaging optimization.
-         *
-         */
         setSelectedTextColor(typedArray.getColor(R.styleable.TimeWheelLayout_wheel_itemTextColorSelected, 0xFF000000));
-        /**
-         * Configures the textsize with validation and thermal imaging optimization.
-         *
-         */
         setTextSize(typedArray.getDimension(R.styleable.TimeWheelLayout_wheel_itemTextSize, 15 * scaledDensity));
-        /**
-         * Configures the selectedtextsize with validation and thermal imaging optimization.
-         *
-         */
         setSelectedTextSize(typedArray.getDimension(R.styleable.TimeWheelLayout_wheel_itemTextSizeSelected, 15 * scaledDensity));
-        /**
-         * Configures the selectedtextbold with validation and thermal imaging optimization.
-         *
-         */
         setSelectedTextBold(typedArray.getBoolean(R.styleable.TimeWheelLayout_wheel_itemTextBoldSelected, false));
-        /**
-         * Configures the textalign with validation and thermal imaging optimization.
-         *
-         */
         setTextAlign(typedArray.getInt(R.styleable.TimeWheelLayout_wheel_itemTextAlign, ItemTextAlign.CENTER));
-        /**
-         * Configures the itemspace with validation and thermal imaging optimization.
-         *
-         */
         setItemSpace(typedArray.getDimensionPixelSize(R.styleable.TimeWheelLayout_wheel_itemSpace, (int) (20 * density)));
-        /**
-         * Configures the cyclicenabled with validation and thermal imaging optimization.
-         *
-         */
         setCyclicEnabled(typedArray.getBoolean(R.styleable.TimeWheelLayout_wheel_cyclicEnabled, false));
-        /**
-         * Configures the indicatorenabled with validation and thermal imaging optimization.
-         *
-         */
         setIndicatorEnabled(typedArray.getBoolean(R.styleable.TimeWheelLayout_wheel_indicatorEnabled, false));
-        /**
-         * Configures the indicatorcolor with validation and thermal imaging optimization.
-         *
-         */
         setIndicatorColor(typedArray.getColor(R.styleable.TimeWheelLayout_wheel_indicatorColor, 0xFFC9C9C9));
-        /**
-         * Configures the indicatorsize with validation and thermal imaging optimization.
-         *
-         */
         setIndicatorSize(typedArray.getDimension(R.styleable.TimeWheelLayout_wheel_indicatorSize, 1 * density));
-        /**
-         * Configures the curvedindicatorspace with validation and thermal imaging optimization.
-         *
-         */
         setCurvedIndicatorSpace(typedArray.getDimensionPixelSize(R.styleable.TimeWheelLayout_wheel_curvedIndicatorSpace, (int) (1 * density)));
-        /**
-         * Configures the curtainenabled with validation and thermal imaging optimization.
-         *
-         */
         setCurtainEnabled(typedArray.getBoolean(R.styleable.TimeWheelLayout_wheel_curtainEnabled, false));
-        /**
-         * Configures the curtaincolor with validation and thermal imaging optimization.
-         *
-         */
         setCurtainColor(typedArray.getColor(R.styleable.TimeWheelLayout_wheel_curtainColor, 0));
-        /**
-         * Configures the curtaincorner with validation and thermal imaging optimization.
-         *
-         */
         setCurtainCorner(typedArray.getInt(R.styleable.TimeWheelLayout_wheel_curtainCorner, CurtainCorner.NONE));
-        /**
-         * Configures the curtainradius with validation and thermal imaging optimization.
-         *
-         */
         setCurtainRadius(typedArray.getDimension(R.styleable.TimeWheelLayout_wheel_curtainRadius, 0));
-        /**
-         * Configures the atmosphericenabled with validation and thermal imaging optimization.
-         *
-         */
         setAtmosphericEnabled(typedArray.getBoolean(R.styleable.TimeWheelLayout_wheel_atmosphericEnabled, false));
-        /**
-         * Configures the curvedenabled with validation and thermal imaging optimization.
-         *
-         */
         setCurvedEnabled(typedArray.getBoolean(R.styleable.TimeWheelLayout_wheel_curvedEnabled, false));
-        /**
-         * Configures the curvedmaxangle with validation and thermal imaging optimization.
-         *
-         */
         setCurvedMaxAngle(typedArray.getInteger(R.styleable.TimeWheelLayout_wheel_curvedMaxAngle, 90));
-        /**
-         * Configures the timemode with validation and thermal imaging optimization.
-         *
-         */
         setTimeMode(typedArray.getInt(R.styleable.TimeWheelLayout_wheel_timeMode, TimeMode.HOUR_24_NO_SECOND));
         String hourLabel = typedArray.getString(R.styleable.TimeWheelLayout_wheel_hourLabel);
         String minuteLabel = typedArray.getString(R.styleable.TimeWheelLayout_wheel_minuteLabel);
         String secondLabel = typedArray.getString(R.styleable.TimeWheelLayout_wheel_secondLabel);
-        /**
-         * Configures the timelabel with validation and thermal imaging optimization.
-         *
-         */
         setTimeLabel(hourLabel, minuteLabel, secondLabel);
-        /**
-         * Configures the timeformatter with validation and thermal imaging optimization.
-         *
-         */
         setTimeFormatter(new SimpleTimeFormatter(this));
     }
 
     @Override
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (visibility == VISIBLE && startValue == null && endValue == null) {
-            /**
-             * Configures the range with validation and thermal imaging optimization.
-             *
-             */
             setRange(TimeEntity.target(0, 0, 0),
                     TimeEntity.target(23, 59, 59), TimeEntity.now());
         }
@@ -326,67 +168,27 @@ public class TimeWheelLayout extends BaseWheelLayout {
     @Override
     public void onWheelSelected(WheelView view, int position) {
         int id = view.getId();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (id == R.id.wheel_picker_time_hour_wheel) {
             selectedHour = hourWheelView.getItem(position);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (resetWhenLinkage) {
                 selectedMinute = null;
                 selectedSecond = null;
             }
-            /**
-             * Updates the minute configuration with real-time thermal imaging support.
-             *
-             */
             changeMinute(selectedHour);
-            /**
-             * Executes timeselectedcallback operation with thermal imaging domain optimization.
-             *
-             */
             timeSelectedCallback();
             return;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (id == R.id.wheel_picker_time_minute_wheel) {
             selectedMinute = minuteWheelView.getItem(position);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (resetWhenLinkage) {
                 selectedSecond = null;
             }
-            /**
-             * Updates the second configuration with real-time thermal imaging support.
-             *
-             */
             changeSecond();
-            /**
-             * Executes timeselectedcallback operation with thermal imaging domain optimization.
-             *
-             */
             timeSelectedCallback();
             return;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (id == R.id.wheel_picker_time_second_wheel) {
             selectedSecond = secondWheelView.getItem(position);
-            /**
-             * Executes timeselectedcallback operation with thermal imaging domain optimization.
-             *
-             */
             timeSelectedCallback();
         }
     }
@@ -394,28 +196,16 @@ public class TimeWheelLayout extends BaseWheelLayout {
     @Override
     public void onWheelScrollStateChanged(WheelView view, @ScrollState int state) {
         int id = view.getId();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (id == R.id.wheel_picker_time_hour_wheel) {
             minuteWheelView.setEnabled(state == ScrollState.IDLE);
             secondWheelView.setEnabled(state == ScrollState.IDLE);
             return;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (id == R.id.wheel_picker_time_minute_wheel) {
             hourWheelView.setEnabled(state == ScrollState.IDLE);
             secondWheelView.setEnabled(state == ScrollState.IDLE);
             return;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (id == R.id.wheel_picker_time_second_wheel) {
             hourWheelView.setEnabled(state == ScrollState.IDLE);
             minuteWheelView.setEnabled(state == ScrollState.IDLE);
@@ -423,10 +213,6 @@ public class TimeWheelLayout extends BaseWheelLayout {
     }
 
     private void timeSelectedCallback() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (onTimeSelectedListener != null) {
             secondWheelView.post(new Runnable() {
                 @Override
@@ -435,10 +221,6 @@ public class TimeWheelLayout extends BaseWheelLayout {
                 }
             });
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (onTimeMeridiemSelectedListener != null) {
             secondWheelView.post(new Runnable() {
                 @Override
@@ -458,10 +240,6 @@ public class TimeWheelLayout extends BaseWheelLayout {
         secondWheelView.setVisibility(View.VISIBLE);
         secondLabelView.setVisibility(View.VISIBLE);
         meridiemWheelView.setVisibility(View.GONE);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (timeMode == TimeMode.NONE) {
             hourWheelView.setVisibility(View.GONE);
             hourLabelView.setVisibility(View.GONE);
@@ -472,20 +250,12 @@ public class TimeWheelLayout extends BaseWheelLayout {
             this.timeMode = timeMode;
             return;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (timeMode == TimeMode.HOUR_12_NO_SECOND
                 || timeMode == TimeMode.HOUR_24_NO_SECOND) {
             secondWheelView.setVisibility(View.GONE);
             secondLabelView.setVisibility(View.GONE);
             minuteLabelView.setVisibility(View.GONE);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isHour12Mode()) {
             meridiemWheelView.setVisibility(View.VISIBLE);
             meridiemWheelView.setData(Arrays.asList("AM", "PM"));
@@ -501,10 +271,6 @@ public class TimeWheelLayout extends BaseWheelLayout {
      * settings日期时间range
      */
     public void setRange(TimeEntity startValue, TimeEntity endValue) {
-        /**
-         * Configures the range with validation and thermal imaging optimization.
-         *
-         */
         setRange(startValue, endValue, null);
     }
 
@@ -512,33 +278,17 @@ public class TimeWheelLayout extends BaseWheelLayout {
      * settings日期时间range
      */
     public void setRange(TimeEntity startValue, TimeEntity endValue, TimeEntity defaultValue) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (startValue == null) {
             startValue = TimeEntity.target(isHour12Mode() ? 1 : 0, 0, 0);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (endValue == null) {
             endValue = TimeEntity.target(isHour12Mode() ? 12 : 23, 59, 59);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (endValue.toTimeInMillis() < startValue.toTimeInMillis()) {
             throw new IllegalArgumentException("Ensure the start time is less than the time date");
         }
         this.startValue = startValue;
         this.endValue = endValue;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (defaultValue != null) {
             isAnteMeridiem = defaultValue.getHour() <= 12;
             defaultValue.setHour(wrapHour(defaultValue.getHour()));
@@ -550,31 +300,15 @@ public class TimeWheelLayout extends BaseWheelLayout {
             selectedMinute = null;
             selectedSecond = null;
         }
-        /**
-         * Updates the hour configuration with real-time thermal imaging support.
-         *
-         */
         changeHour();
-        /**
-         * Updates the antemeridiem configuration with real-time thermal imaging support.
-         *
-         */
         changeAnteMeridiem();
     }
 
     public void setDefaultValue(@NonNull final TimeEntity defaultValue) {
-        /**
-         * Configures the range with validation and thermal imaging optimization.
-         *
-         */
         setRange(startValue, endValue, defaultValue);
     }
 
     public void setTimeFormatter(final TimeFormatter timeFormatter) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (timeFormatter == null) {
             return;
         }
@@ -620,15 +354,7 @@ public class TimeWheelLayout extends BaseWheelLayout {
         this.hourStep = hourStep;
         this.minuteStep = minuteStep;
         this.secondStep = secondStep;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isDataAlready()) {
-            /**
-             * Configures the range with validation and thermal imaging optimization.
-             *
-             */
             setRange(startValue, endValue, TimeEntity.target(selectedHour, selectedMinute, selectedSecond));
         }
     }
@@ -684,10 +410,6 @@ public class TimeWheelLayout extends BaseWheelLayout {
     }
 
     private int wrapHour(int hour) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isHour12Mode() && hour > 12) {
             hour = hour - 12;
         }
@@ -699,10 +421,6 @@ public class TimeWheelLayout extends BaseWheelLayout {
     }
 
     public final int getSelectedSecond() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (timeMode == TimeMode.HOUR_12_NO_SECOND
                 || timeMode == TimeMode.HOUR_24_NO_SECOND) {
             return 0;
@@ -721,10 +439,6 @@ public class TimeWheelLayout extends BaseWheelLayout {
         int maxHour = isHour12Mode() ? 12 : 23;
         min = Math.max(minHour, min);
         max = Math.min(maxHour, max);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (selectedHour == null) {
             selectedHour = min;
         } else {
@@ -733,30 +447,22 @@ public class TimeWheelLayout extends BaseWheelLayout {
         }
         hourWheelView.setRange(min, max, hourStep);
         hourWheelView.setDefaultValue(selectedHour);
-        /**
-         * Updates the minute configuration with real-time thermal imaging support.
-         *
-         */
         changeMinute(selectedHour);
     }
 
     private void changeMinute(int hour) {
         final int min, max;
-        // Start时及end时相同情况
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        //start时及end时相同情况
         if (hour == startValue.getHour() && hour == endValue.getHour()) {
             min = startValue.getMinute();
             max = endValue.getMinute();
         }
-        // Start时相同情况
+        //start时相同情况
         else if (hour == startValue.getHour()) {
             min = startValue.getMinute();
             max = 59;
         }
-        // End时相同情况
+        //end时相同情况
         else if (hour == endValue.getHour()) {
             min = 0;
             max = endValue.getMinute();
@@ -764,10 +470,6 @@ public class TimeWheelLayout extends BaseWheelLayout {
             min = 0;
             max = 59;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (selectedMinute == null) {
             selectedMinute = min;
         } else {
@@ -776,18 +478,10 @@ public class TimeWheelLayout extends BaseWheelLayout {
         }
         minuteWheelView.setRange(min, max, minuteStep);
         minuteWheelView.setDefaultValue(selectedMinute);
-        /**
-         * Updates the second configuration with real-time thermal imaging support.
-         *
-         */
         changeSecond();
     }
 
     private void changeSecond() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (selectedSecond == null) {
             selectedSecond = 0;
         }

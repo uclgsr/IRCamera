@@ -70,18 +70,8 @@ import com.topdon.pseudo.bean.CustomPseudoBean
  * ```
  */
 /**
- * Specialized thermal imaging component providing FrameStruct functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Frame struct utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
  */
 class FrameStruct() {
     companion object {
@@ -201,27 +191,12 @@ storage在 resultArray 中，[660, 663)是ambient temperature，[664, 667)是距
     var radiation: Float = 0f
     var isAmplify: Boolean = false
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param data Parameter for operation (type: ByteArray)
-     *
-     */
     constructor(data: ByteArray) : this() {
         len = (data[0].toInt() and 0xff shl 8) or (data[1].toInt() and 0xff)
 
         // [2,18)
         var nameEndIndex = 17
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in 17 downTo 2) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (data[i].toInt() != 0) {
                 nameEndIndex = i
                 break
@@ -251,10 +226,6 @@ storage在 resultArray 中，[660, 663)是ambient temperature，[664, 667)是距
         isShowPseudoBar = data[173].toInt() == 1
 
         textColor = ByteUtils.bigBytesToInt(data[174], data[175], data[176], data[177])
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (textColor == 0) {
             textColor = 0xffffffff.toInt()
         }
@@ -268,10 +239,6 @@ storage在 resultArray 中，[660, 663)是ambient temperature，[664, 667)是距
         alarmBean = AlarmBean.loadFromArray(alarmArray)
         gainStatus = data[657].toInt()
         val tmpTextSize = (data[658].toInt() and 0xff shl 8) or (data[659].toInt() and 0xff)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (tmpTextSize >= SizeUtils.sp2px(14f))
             {
                 textSize = tmpTextSize
@@ -287,12 +254,5 @@ storage在 resultArray 中，[660, 663)是ambient temperature，[664, 667)是距
         isAmplify = data[672].toInt() == 1
     }
 
-    /**
-     * Executes isTC007 functionality.
-     */
-    /**
-     * Executes istc007 operation with thermal imaging domain optimization.
-     *
-     */
     fun isTC007(): Boolean = name == PRODUCT_NAME_TC007
 }

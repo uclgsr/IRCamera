@@ -37,18 +37,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Specialized thermal imaging component providing TestRecordActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author: CaiSongL
+ * @date: 2023/5/18 14:44
  */
 public class TestRecordActivity extends Activity{
 
@@ -105,29 +95,17 @@ public class TestRecordActivity extends Activity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /**
-         * Configures the requestedorientation with validation and thermal imaging optimization.
-         *
-         */
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(R.layout.activity_record_test);
 
-// Ffmpeg_link = getExternalFilesDir(Environment.DIRECTORY_MOVIES).getAbsolutePath() + "/stream.flv";
+//        ffmpeg_link = getExternalFilesDir(Environment.DIRECTORY_MOVIES).getAbsolutePath() + "/stream.flv";
         ffmpeg_link = String.format("%s/%d.mp4", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath(), new Date().getTime());
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, CLASS_LABEL);
         mWakeLock.acquire();
 
-        /**
-         * Initializes the layout component for thermal imaging operations.
-         *
-         */
         initLayout();
     }
 
@@ -135,10 +113,6 @@ public class TestRecordActivity extends Activity{
     protected void onResume() {
         super.onResume();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mWakeLock == null) {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, CLASS_LABEL);
@@ -150,10 +124,6 @@ public class TestRecordActivity extends Activity{
     protected void onPause() {
         super.onPause();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mWakeLock != null) {
             mWakeLock.release();
             mWakeLock = null;
@@ -166,28 +136,16 @@ public class TestRecordActivity extends Activity{
 
         recording = false;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (cameraView != null) {
             cameraView.stopPreview();
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if(cameraDevice != null) {
             cameraDevice.stopPreview();
             cameraDevice.release();
             cameraDevice = null;
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mWakeLock != null) {
             mWakeLock.release();
             mWakeLock = null;
@@ -204,10 +162,6 @@ public class TestRecordActivity extends Activity{
         LayoutInflater myInflate = null;
         myInflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         RelativeLayout topLayout = new RelativeLayout(this);
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(topLayout);
         LinearLayout preViewLayout = (LinearLayout) myInflate.inflate(R.layout.activity_record_test, null);
         layoutParam = new RelativeLayout.LayoutParams(screenWidth, screenHeight);
@@ -219,24 +173,12 @@ public class TestRecordActivity extends Activity{
         btnRecorderControl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!recording) {
-                    /**
-                     * Executes startrecording operation with thermal imaging domain optimization.
-                     *
-                     */
                     startRecording();
                     Log.w(LOG_TAG, "Start Button Pushed");
                     btnRecorderControl.setText("Stop");
                 } else {
                     // This will trigger the audio recording loop to stop and then set isRecorderStart = false;
-                    /**
-                     * Executes stoprecording operation with thermal imaging domain optimization.
-                     *
-                     */
                     stopRecording();
                     Log.w(LOG_TAG, "Stop Button Pushed");
                     btnRecorderControl.setText("Start");
@@ -248,10 +190,6 @@ public class TestRecordActivity extends Activity{
         int display_width_d = (int) (1.0 * bg_screen_width * screenWidth / bg_width);
         int display_height_d = (int) (1.0 * bg_screen_height * screenHeight / bg_height);
         int prev_rw, prev_rh;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (1.0 * display_width_d / display_height_d > 1.0 * live_width / live_height) {
             prev_rh = display_height_d;
             prev_rw = (int) (1.0 * display_height_d * live_width / live_height);
@@ -270,25 +208,17 @@ public class TestRecordActivity extends Activity{
         Log.i(LOG_TAG, "cameara preview start: OK");
     }
 
-    // ---------------------------------------
-    // Initialize ffmpeg_recorder
-    // ---------------------------------------
+    //---------------------------------------
+    // initialize ffmpeg_recorder
+    //---------------------------------------
     private void initRecorder() {
 
         Log.w(LOG_TAG, "init recorder");
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (RECORD_LENGTH > 0) {
             imagesIndex = 0;
             images = new Frame[RECORD_LENGTH * frameRate];
             timestamps = new long[images.length];
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0; i < images.length; i++) {
                 images[i] = new Frame(imageWidth, imageHeight, Frame.DEPTH_UBYTE, 2);
                 timestamps[i] = -1;
@@ -314,10 +244,6 @@ public class TestRecordActivity extends Activity{
 
     public void startRecording() {
 
-        /**
-         * Initializes the recorder component for thermal imaging operations.
-         *
-         */
         initRecorder();
 
         try {
@@ -342,57 +268,25 @@ public class TestRecordActivity extends Activity{
         audioRecordRunnable = null;
         audioThread = null;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (recorder != null && recording) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (RECORD_LENGTH > 0) {
                 Log.v(LOG_TAG,"Writing frames");
                 try {
                     int firstIndex = imagesIndex % samples.length;
                     int lastIndex = (imagesIndex - 1) % images.length;
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (imagesIndex <= images.length) {
                         firstIndex = 0;
                         lastIndex = imagesIndex - 1;
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if ((startTime = timestamps[lastIndex] - RECORD_LENGTH * 1000000L) < 0) {
                         startTime = 0;
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (lastIndex < firstIndex) {
                         lastIndex += images.length;
                     }
-                    /**
-                     * Executes for operation with thermal imaging domain optimization.
-                     *
-                     */
                     for (int i = firstIndex; i <= lastIndex; i++) {
                         long t = timestamps[i % timestamps.length] - startTime;
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (t >= 0) {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (t > recorder.getTimestamp()) {
                                 recorder.setTimestamp(t);
                             }
@@ -402,25 +296,13 @@ public class TestRecordActivity extends Activity{
 
                     firstIndex = samplesIndex % samples.length;
                     lastIndex = (samplesIndex - 1) % samples.length;
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (samplesIndex <= samples.length) {
                         firstIndex = 0;
                         lastIndex = samplesIndex - 1;
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (lastIndex < firstIndex) {
                         lastIndex += samples.length;
                     }
-                    /**
-                     * Executes for operation with thermal imaging domain optimization.
-                     *
-                     */
                     for (int i = firstIndex; i <= lastIndex; i++) {
                         recorder.recordSamples(samples[i % samples.length]);
                     }
@@ -446,42 +328,22 @@ public class TestRecordActivity extends Activity{
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (recording) {
-                /**
-                 * Executes stoprecording operation with thermal imaging domain optimization.
-                 *
-                 */
                 stopRecording();
             }
 
-            /**
-             * Executes finish operation with thermal imaging domain optimization.
-             *
-             */
             finish();
-/**
- * Specialized thermal imaging component providing AudioRecordRunnable functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    //---------------------------------------------
+    // audio thread, gets and encodes audio data
+    //---------------------------------------------
     class AudioRecordRunnable implements Runnable {
 
         @Override
@@ -498,17 +360,9 @@ public class TestRecordActivity extends Activity{
             audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleAudioRateInHz,
                     AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (RECORD_LENGTH > 0) {
                 samplesIndex = 0;
                 samples = new ShortBuffer[RECORD_LENGTH * sampleAudioRateInHz * 2 / bufferSize + 1];
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (int i = 0; i < samples.length; i++) {
                     samples[i] = ShortBuffer.allocate(bufferSize);
                 }
@@ -520,42 +374,22 @@ public class TestRecordActivity extends Activity{
             audioRecord.startRecording();
 
             /* ffmpeg_audio encoding loop */
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (runAudioThread) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (RECORD_LENGTH > 0) {
                     audioData = samples[samplesIndex++ % samples.length];
                     audioData.position(0).limit(0);
                 }
-                // Log.v(LOG_TAG,"recording? " + recording);
+                //Log.v(LOG_TAG,"recording? " + recording);
                 bufferReadResult = audioRecord.read(audioData.array(), 0, audioData.capacity());
                 audioData.limit(bufferReadResult);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (bufferReadResult > 0) {
                     Log.v(LOG_TAG,"bufferReadResult: " + bufferReadResult);
                     // If "recording" isn't true when start this thread, it never get's set according to this if statement...!!!
                     // Why?  Good question...
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (recording) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (RECORD_LENGTH <= 0) try {
                             recorder.recordSamples(audioData);
-                            // Log.v(LOG_TAG,"recording " + 1024*i + " to " + 1024*i+1024);
+                            //Log.v(LOG_TAG,"recording " + 1024*i + " to " + 1024*i+1024);
                         } catch (FFmpegFrameRecorder.Exception e) {
                             Log.v(LOG_TAG,e.getMessage());
                             e.printStackTrace();
@@ -566,45 +400,24 @@ public class TestRecordActivity extends Activity{
             Log.v(LOG_TAG,"AudioThread Finished, release audioRecord");
 
             /* encoding finish, release recorder */
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (audioRecord != null) {
                 audioRecord.stop();
                 audioRecord.release();
                 audioRecord = null;
-/**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with CameraView functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+                Log.v(LOG_TAG,"audioRecord released");
+            }
+        }
+    }
+
+    //---------------------------------------------
+    // camera thread, gets and encodes video data
+    //---------------------------------------------
     class CameraView extends SurfaceView implements SurfaceHolder.Callback, Camera.PreviewCallback {
 
         private SurfaceHolder mHolder;
         private Camera mCamera;
 
-        /**
-         * Manages thermal camera operations with hardware-optimized performance and error handling.
-         *
-         */
         public CameraView(Context context, Camera camera) {
-            /**
-             * Executes super operation with thermal imaging domain optimization.
-             *
-             */
             super(context);
             Log.w("camera","camera view");
             mCamera = camera;
@@ -617,10 +430,6 @@ public class TestRecordActivity extends Activity{
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
             try {
-                /**
-                 * Executes stoppreview operation with thermal imaging domain optimization.
-                 *
-                 */
                 stopPreview();
                 mCamera.setPreviewDisplay(holder);
             } catch (IOException exception) {
@@ -641,16 +450,8 @@ public class TestRecordActivity extends Activity{
             });
 
             // Pick the first preview size that is equal or bigger, or pick the last (biggest) option if we cannot
-            // Reach the initial settings of imageWidth/imageHeight.
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
+            // reach the initial settings of imageWidth/imageHeight.
             for (int i = 0; i < sizes.size(); i++) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if ((sizes.get(i).width >= imageWidth && sizes.get(i).height >= imageHeight) || i == sizes.size() - 1) {
                     imageWidth = sizes.get(i).width;
                     imageHeight = sizes.get(i).height;
@@ -666,10 +467,6 @@ public class TestRecordActivity extends Activity{
             Log.v(LOG_TAG,"Preview Framerate: " + camParams.getPreviewFrameRate());
 
             mCamera.setParameters(camParams);
-            /**
-             * Executes startpreview operation with thermal imaging domain optimization.
-             *
-             */
             startPreview();
         }
 
@@ -684,10 +481,6 @@ public class TestRecordActivity extends Activity{
         }
 
         public void startPreview() {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isPreviewOn && mCamera != null) {
                 isPreviewOn = true;
                 mCamera.startPreview();
@@ -695,10 +488,6 @@ public class TestRecordActivity extends Activity{
         }
 
         public void stopPreview() {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isPreviewOn && mCamera != null) {
                 isPreviewOn = false;
                 mCamera.stopPreview();
@@ -707,42 +496,22 @@ public class TestRecordActivity extends Activity{
 
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (audioRecord == null || audioRecord.getRecordingState() != AudioRecord.RECORDSTATE_RECORDING) {
                 startTime = System.currentTimeMillis();
                 return;
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (RECORD_LENGTH > 0) {
                 int i = imagesIndex++ % images.length;
                 yuvImage = images[i];
                 timestamps[i] = 1000 * (System.currentTimeMillis() - startTime);
             }
             /* get video data */
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (yuvImage != null && recording) {
                 ((ByteBuffer)yuvImage.image[0].position(0)).put(data);
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (RECORD_LENGTH <= 0) try {
                     Log.v(LOG_TAG,"Writing Frame");
                     long t = 1000 * (System.currentTimeMillis() - startTime);
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (t > recorder.getTimestamp()) {
                         recorder.setTimestamp(t);
                     }

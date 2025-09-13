@@ -32,23 +32,6 @@ import com.topdon.lib.core.R
  *
  * Created by LCG on 2023/10/19.
  */
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for TitleView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 open class TitleView : ViewGroup {
     companion object {
         /**
@@ -94,46 +77,12 @@ open class TitleView : ViewGroup {
      */
     protected var tvTitle: MyTextView? = null
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     * @param defStyleRes Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
         context,
         attrs,
@@ -144,10 +93,6 @@ open class TitleView : ViewGroup {
         actionBarSize = typedArray.getDimensionPixelSize(0, 0)
         typedArray.recycle()
 
-        /**
-         * Initializes the view component for thermal imaging operations.
-         *
-         */
         initView()
 
         tvTitle?.setPadding(0)
@@ -161,25 +106,13 @@ open class TitleView : ViewGroup {
         tvLeft?.setOnlyDrawableStart(a.getDrawable(R.styleable.TitleView_leftDrawable))
         tvLeft?.isVisible = tvLeft?.text?.isNotEmpty() == true || tvLeft!!.hasAnyDrawable()
         val leftColor: ColorStateList? = a.getColorStateList(R.styleable.TitleView_leftTextColor)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (leftColor != null) {
             tvLeft?.setTextColor(leftColor)
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (a.getBoolean(R.styleable.TitleView_isInitLeft, true)) {
             tvLeft?.isVisible = true
             tvLeft?.setOnlyDrawableStart(R.drawable.ic_back_white_svg)
             tvLeft?.setOnClickListener {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (context is Activity) {
                     context.finish()
                 }
@@ -190,10 +123,6 @@ open class TitleView : ViewGroup {
         tvRight1?.setOnlyDrawableStart(a.getDrawable(R.styleable.TitleView_rightDrawable))
         tvRight1?.isVisible = tvRight1?.text?.isNotEmpty() == true || tvRight1!!.hasAnyDrawable()
         val rightColor: ColorStateList? = a.getColorStateList(R.styleable.TitleView_rightTextColor)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rightColor != null) {
             tvRight1?.setTextColor(rightColor)
         }
@@ -219,7 +148,7 @@ open class TitleView : ViewGroup {
     }
 
     /**
-     * Builda TextView 并add到当前 View 中.
+     * Build一个 TextView 并add到当前 View 中.
      */
     fun addTextView(
         context: Context,
@@ -233,119 +162,53 @@ open class TitleView : ViewGroup {
         textView.setTextColor(0xffffffff.toInt())
         textView.setPadding(SizeUtils.dp2px(padding))
         textView.setDrawableHeightPx(SizeUtils.dp2px(imgHeight))
-        /**
-         * Executes addview operation with thermal imaging domain optimization.
-         *
-         */
         addView(textView)
         return textView
     }
 
-    /**
-     * Executes addTextView functionality.
-     */
-    /**
-     * Executes addtextview operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     fun addTextView(context: Context): MyTextView {
         return addTextView(context, 12f, 24f)
     }
 
-    /**
-     * Executes onmeasure operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param widthMeasureSpec Parameter for operation (type: Int)
-     * @param heightMeasureSpec Parameter for operation (type: Int)
-     *
-     */
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
     ) {
-        // Calculation最大高度
+        // calculation最大高度
         var maxHeight = actionBarSize.coerceAtLeast(SizeUtils.dp2px(ICON_SIZE))
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in 0 until childCount) {
             val childView: View = getChildAt(i)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (childView != tvTitle && childView.visibility != View.GONE) {
-                /**
-                 * Executes measurechild operation with thermal imaging domain optimization.
-                 *
-                 */
                 measureChild(childView, widthMeasureSpec, heightMeasureSpec)
                 maxHeight = maxHeight.coerceAtLeast(childView.measuredHeight)
             }
         }
 
         // 宽度为 UNSPECIFIED 的情况目前不存在，不考虑
-        /**
-         * Configures the measureddimension with validation and thermal imaging optimization.
-         *
-         */
         setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), maxHeight)
 
-        // Measurement除titletext外的子 View
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
+        // measurement除titletext外的子 View
         for (i in 0 until childCount) {
             val childView: View = getChildAt(i)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (childView != tvTitle && childView.visibility != View.GONE) {
                 val widthSpec = MeasureSpec.makeMeasureSpec(childView.measuredWidth, MeasureSpec.EXACTLY)
                 childView.measure(widthSpec, MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY))
             }
         }
 
-        // Measurementtitletext
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // measurementtitletext
         if (isTitleCenter) { // 居中
             val leftSize = if (tvLeft!!.isVisible) tvLeft?.measuredWidth else SizeUtils.dp2px(ICON_SIZE)
             var rightSize = 0
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tvRight1!!.isVisible) {
                 rightSize += tvRight1!!.measuredWidth
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tvRight2!!.isVisible) {
                 rightSize += tvRight2!!.measuredWidth
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tvRight3!!.isVisible) {
                 rightSize += tvRight3!!.measuredWidth
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rightSize == 0) { // 右侧没有任何东西时，给titletext搞个 ICON_SIZE 大小的 margin
                 rightSize = SizeUtils.dp2px(ICON_SIZE)
             }
@@ -356,17 +219,9 @@ open class TitleView : ViewGroup {
             var titleWidth = measuredWidth
             titleWidth -= if (tvLeft!!.isVisible) tvLeft!!.measuredWidth else SizeUtils.dp2px(ICON_SIZE)
             titleWidth -= if (tvRight1!!.isVisible) tvRight1!!.measuredWidth else SizeUtils.dp2px(ICON_SIZE)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tvRight2!!.isVisible) {
                 titleWidth -= tvRight2!!.measuredWidth
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tvRight3!!.isVisible) {
                 titleWidth -= tvRight3!!.measuredWidth
             }
@@ -375,17 +230,6 @@ open class TitleView : ViewGroup {
         }
     }
 
-    /**
-     * Executes onlayout operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param changed Parameter for operation (type: Boolean)
-     * @param l Parameter for operation (type: Int)
-     * @param t Parameter for operation (type: Int)
-     * @param r Parameter for operation (type: Int)
-     * @param b Parameter for operation (type: Int)
-     *
-     */
     override fun onLayout(
         changed: Boolean,
         l: Int,
@@ -393,24 +237,12 @@ open class TitleView : ViewGroup {
         r: Int,
         b: Int,
     ) {
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in 0 until childCount) {
             val child = getChildAt(i)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!child.isVisible) {
                 continue
             }
             val childWidth = child.measuredWidth
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (child) {
                 tvLeft -> child.layout(0, 0, childWidth, measuredHeight)
                 tvRight1 -> child.layout(measuredWidth - childWidth, 0, measuredWidth, measuredHeight)
@@ -423,10 +255,6 @@ open class TitleView : ViewGroup {
                     child.layout(right - tvRight3!!.measuredWidth, 0, right, measuredHeight)
                 }
                 tvTitle -> {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isTitleCenter) {
                         val margin = (measuredWidth - childWidth) / 2
                         child.layout(margin, 0, margin + childWidth, measuredHeight)
@@ -442,13 +270,6 @@ open class TitleView : ViewGroup {
     /**
      * settingstitletext.
      */
-    /**
-     * Configures the titletext with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param resId Parameter for operation (type: Int)
-     *
-     */
     fun setTitleText(
         @StringRes resId: Int,
     ) {
@@ -458,13 +279,6 @@ open class TitleView : ViewGroup {
 
     /**
      * settingstitletext.
-     */
-    /**
-     * Configures the titletext with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param title Parameter for operation (type: CharSequence?)
-     *
      */
     fun setTitleText(title: CharSequence?) {
         tvTitle?.text = title
@@ -477,21 +291,9 @@ open class TitleView : ViewGroup {
      */
     var isLeftVisible: Boolean
         get() = tvLeft!!.isVisible
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tvLeft?.isVisible != value) {
                 tvLeft?.isVisible = value
-                /**
-                 * Executes requestlayout operation with thermal imaging domain optimization.
-                 *
-                 */
                 requestLayout()
             }
         }
@@ -504,10 +306,6 @@ open class TitleView : ViewGroup {
     ) {
         tvLeft?.isVisible = resId != 0 || tvLeft?.text?.isNotEmpty() == true
         tvLeft?.setCompoundDrawablesWithIntrinsicBounds(resId, 0, 0, 0)
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout()
     }
 
@@ -519,10 +317,6 @@ open class TitleView : ViewGroup {
     ) {
         tvLeft?.setText(resId)
         tvLeft?.isVisible = true
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout()
     }
 
@@ -532,10 +326,6 @@ open class TitleView : ViewGroup {
     fun setLeftText(text: CharSequence?) {
         tvLeft?.text = text
         tvLeft?.isVisible = text?.isNotEmpty() == true || tvLeft!!.hasAnyDrawable()
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout()
     }
 
@@ -552,21 +342,9 @@ open class TitleView : ViewGroup {
      */
     var isRightVisible: Boolean
         get() = tvRight1!!.isVisible
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tvRight1?.isVisible != value) {
                 tvRight1?.isVisible = value
-                /**
-                 * Executes requestlayout operation with thermal imaging domain optimization.
-                 *
-                 */
                 requestLayout()
             }
         }
@@ -579,10 +357,6 @@ open class TitleView : ViewGroup {
     ) {
         tvRight1?.isVisible = resId != 0 || tvRight1?.text?.isNotEmpty() == true
         tvRight1?.setCompoundDrawablesWithIntrinsicBounds(resId, 0, 0, 0)
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout()
     }
 
@@ -594,10 +368,6 @@ open class TitleView : ViewGroup {
     ) {
         tvRight1?.setText(resId)
         tvRight1?.isVisible = true
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout()
     }
 
@@ -607,10 +377,6 @@ open class TitleView : ViewGroup {
     fun setRightText(text: CharSequence?) {
         tvRight1?.text = text
         tvRight1?.isVisible = text?.isNotEmpty() == true || tvRight1!!.hasAnyDrawable()
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout()
     }
 
@@ -629,10 +395,6 @@ open class TitleView : ViewGroup {
     ) {
         tvRight2?.isVisible = resId != 0 || tvRight2?.text?.isNotEmpty() == true
         tvRight2?.setCompoundDrawablesWithIntrinsicBounds(resId, 0, 0, 0)
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout()
     }
 
@@ -651,10 +413,6 @@ open class TitleView : ViewGroup {
     ) {
         tvRight3?.isVisible = resId != 0 || tvRight3?.text?.isNotEmpty() == true
         tvRight3?.setCompoundDrawablesWithIntrinsicBounds(resId, 0, 0, 0)
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout()
     }
 

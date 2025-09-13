@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Color definitions for thermal imaging UI -->
 <resources>
-    <!-- UI styling - color select1 -->
     <color name="color_select1">#FF000000</color>
-    <!-- UI styling - color select2 -->
     <color name="color_select2">#FFFFFFFF</color>
-    <!-- UI styling - color select3 -->
     <color name="color_select3">#FF2B79D8</color>
-    <!-- UI styling - color select4 -->
     <color name="color_select4">#FFFF0000</color>
-    <!-- UI styling - color select5 -->
     <color name="color_select5">#FF0FA752</color>
-    <!-- UI styling - color select6 -->
     <color name="color_select6">#808080</color>
 
-    <!-- UI styling - we read theme color -->
     <color name="we_read_theme_color">#FFE9F1F9</color>
 
 </resources>

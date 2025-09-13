@@ -4,21 +4,9 @@ package com.github.mikephil.charting.utils;
 import java.util.List;
 
 /**
- * Specialized thermal imaging component providing MPPointD functionality for the IRCamera system.
+ * Point encapsulating two double values.
  *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author Philipp Jahoda
  */
 public class MPPointD extends ObjectPool.Poolable {
 
@@ -51,10 +39,6 @@ public class MPPointD extends ObjectPool.Poolable {
         return new MPPointD(0,0);
     }
 
-    /**
-     * Executes mppointd operation with thermal imaging domain optimization.
-     *
-     */
     private MPPointD(double x, double y) {
         this.x = x;
         this.y = y;

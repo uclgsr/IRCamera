@@ -45,18 +45,8 @@ temperature correction（即setambient temperature、temperature measurement距�
  */
 // Legacy ARouter route annotation - now using NavigationManager
 /**
- * Configuration management system for thermal imaging parameters. Handles settings and calibration for IRConfigActivity operations.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * I r config activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
  */
 class IRConfigActivity : BaseActivity(), View.OnClickListener {
     /**
@@ -69,17 +59,9 @@ true-TC007 false-其他插件式device
 
     private lateinit var adapter: ConfigAdapter
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView(): Int = R.layout.activity_ir_config
 
     @SuppressLint("SetTextI18n")
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
@@ -140,22 +122,14 @@ true-TC007 false-其他插件式device
         recyclerView.adapter = ConcatAdapter(adapter, ConfigEmAdapter(this))
 
         viewModel.configLiveData.observe(this) {
-先只refreshdefault的configuration，等操作指引display完再refresh自定义configuration
+先只refresh默认的configuration，等操作指引display完再refresh自定义configuration
             tvDefaultTempValue.text = NumberTools.to02(UnitTools.showUnitValue(it.defaultModel.environment))
             tvDefaultDisValue.text = NumberTools.to02(it.defaultModel.distance)
             tvDefaultEmValue.text = NumberTools.to02(it.defaultModel.radiation)
             ivDefaultSelector.isSelected = true
 
-            /**
-             * Executes showguidedialog operation with thermal imaging domain optimization.
-             *
-             */
             showGuideDialog(it)
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isTC007 && WebSocketProxy.getInstance().isTC007Connect()) {
                 lifecycleScope.launch {
                     val config = ConfigRepository.readConfig(true)
@@ -166,31 +140,16 @@ true-TC007 false-其他插件式device
         viewModel.getConfig(isTC007)
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
     /**
 display操作指引弹框.
      */
-    /**
-     * Executes showguidedialog operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param modelBean Parameter for operation (type: ModelBean)
-     *
-     */
     private fun showGuideDialog(modelBean: ModelBean) {
         val ivDefaultSelector = findViewById<android.widget.ImageView>(R.id.iv_default_selector)
         val llRoot = findViewById<android.widget.LinearLayout>(R.id.ll_root)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (SharedManager.configGuideStep == 0) { // 已看过或不再tip
             ivDefaultSelector.isSelected = modelBean.defaultModel.use
             adapter.refresh(modelBean.myselfModel)
@@ -198,10 +157,6 @@ display操作指引弹框.
         }
         val guideDialog = ConfigGuideDialog(this, isTC007, modelBean.defaultModel)
         guideDialog.setOnDismissListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Build.VERSION.SDK_INT >= 31) {
                 window?.decorView?.setRenderEffect(null)
             }
@@ -210,51 +165,28 @@ display操作指引弹框.
         }
         guideDialog.show()
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Build.VERSION.SDK_INT >= 31) {
             window?.decorView?.setRenderEffect(RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.MIRROR))
         } else {
             lifecycleScope.launch {
 interfacerefresh需要时间，所以需要等待100毫秒再去refresh背景
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(100)
                 guideDialog.blurBg(llRoot)
             }
         }
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
         val ivDefaultSelector = findViewById<android.widget.ImageView>(R.id.iv_default_selector)
         val viewDefaultTempBg = findViewById<android.view.View>(R.id.view_default_temp_bg)
         val viewDefaultDisBg = findViewById<android.view.View>(R.id.view_default_dis_bg)
         val tvDefaultEmValue = findViewById<android.widget.TextView>(R.id.tv_default_em_value)
 
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
-            ivDefaultSelector -> { // Defaultmode-selected
+            ivDefaultSelector -> { // 默认mode-selected
                 viewModel.checkConfig(isTC007, 0)
             }
-            viewDefaultTempBg -> { // Defaultmode-环境temperature
-                /**
-                 * Executes irconfiginputdialog operation with thermal imaging domain optimization.
-                 *
-                 */
+            viewDefaultTempBg -> { // 默认mode-环境temperature
                 IRConfigInputDialog(this, IRConfigInputDialog.Type.TEMP, isTC007)
                     .setInput(UnitTools.showUnitValue(viewModel.configLiveData.value?.defaultModel?.environment!!))
                     .setConfirmListener {
@@ -262,11 +194,7 @@ interfacerefresh需要时间，所以需要等待100毫秒再去refresh背景
                     }
                     .show()
             }
-            viewDefaultDisBg -> { // Defaultmode-temperature measurement距离
-                /**
-                 * Executes irconfiginputdialog operation with thermal imaging domain optimization.
-                 *
-                 */
+            viewDefaultDisBg -> { // 默认mode-temperature measurement距离
                 IRConfigInputDialog(this, IRConfigInputDialog.Type.DIS, isTC007)
                     .setInput(viewModel.configLiveData.value?.defaultModel?.distance)
                     .setConfirmListener {
@@ -274,11 +202,7 @@ interfacerefresh需要时间，所以需要等待100毫秒再去refresh背景
                     }
                     .show()
             }
-            tvDefaultEmValue -> { // Defaultmode-发射率
-                /**
-                 * Executes irconfiginputdialog operation with thermal imaging domain optimization.
-                 *
-                 */
+            tvDefaultEmValue -> { // 默认mode-发射率
                 IRConfigInputDialog(this, IRConfigInputDialog.Type.EM, isTC007)
                     .setInput(viewModel.configLiveData.value?.defaultModel?.radiation)
                     .setConfirmListener {
@@ -289,16 +213,6 @@ interfacerefresh需要时间，所以需要等待100毫秒再去refresh背景
         }
     }
 
-/**
- * Configuration management system for thermal imaging parameters. Handles settings and calibration for ConfigAdapter operations.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     private class ConfigAdapter(val context: Context, val isTC007: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private val dataList: ArrayList<DataBean> = ArrayList()
 
@@ -323,81 +237,32 @@ addEventListener.
         var onAddListener: View.OnClickListener? = null
 
         @SuppressLint("NotifyDataSetChanged")
-    /**
-     * Executes refresh functionality.
-     */
-        /**
-         * Executes refresh operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param newList Parameter for operation (type: List<DataBean>)
-         *
-         */
         fun refresh(newList: List<DataBean>) {
             dataList.clear()
             dataList.addAll(newList)
-            /**
-             * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-             *
-             */
             notifyDataSetChanged()
         }
 
-        /**
-         * Retrieves the itemviewtype with optimized performance for thermal imaging operations.
-         *
-         * @param
-         * @param position Parameter for operation (type: Int)
-         *
-         */
         override fun getItemViewType(position: Int): Int {
             return if (position < dataList.size) 0 else 1
         }
 
-        /**
-         * Executes oncreateviewholder operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param parent Parameter for operation (type: ViewGroup)
-         * @param viewType Parameter for operation (type: Int)
-         *
-         */
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
         ): RecyclerView.ViewHolder {
             return if (viewType == 0) {
-                /**
-                 * Executes itemviewholder operation with thermal imaging domain optimization.
-                 *
-                 */
                 ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.item_ir_config_config, parent, false))
             } else {
-                /**
-                 * Executes footviewholder operation with thermal imaging domain optimization.
-                 *
-                 */
                 FootViewHolder(LayoutInflater.from(context).inflate(R.layout.item_ir_config_foot, parent, false))
             }
         }
 
         @SuppressLint("SetTextI18n")
-        /**
-         * Executes onbindviewholder operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param holder Parameter for operation (type: RecyclerView.ViewHolder)
-         * @param position Parameter for operation (type: Int)
-         *
-         */
         override fun onBindViewHolder(
             holder: RecyclerView.ViewHolder,
             position: Int,
         ) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (holder is ItemViewHolder) {
                 val dataBean = dataList[position]
                 holder.itemView.findViewById<android.widget.TextView>(R.id.tv_name).text = "${context.getString(LibR.string.thermal_custom_mode)}${dataBean.name}"
@@ -418,45 +283,25 @@ addEventListener.
             }
         }
 
-        /**
-         * Retrieves the itemcount with optimized performance for thermal imaging operations.
-         *
-         */
         override fun getItemCount(): Int = dataList.size + 1
 
         inner class ItemViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
             init {
                 rootView.findViewById<android.widget.ImageView>(R.id.iv_selector).setOnClickListener {
                     val position: Int = bindingAdapterPosition
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (position != RecyclerView.NO_POSITION) {
                         onSelectListener?.invoke(dataList[position].id)
                     }
                 }
                 rootView.findViewById<android.widget.ImageView>(R.id.iv_del).setOnClickListener {
                     val position: Int = bindingAdapterPosition
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (position != RecyclerView.NO_POSITION) {
                         onDeleteListener?.invoke(dataList[position])
                     }
                 }
                 rootView.findViewById<android.view.View>(R.id.view_temp_bg).setOnClickListener {
                     val position: Int = bindingAdapterPosition
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (position != RecyclerView.NO_POSITION) {
-                        /**
-                         * Executes irconfiginputdialog operation with thermal imaging domain optimization.
-                         *
-                         */
                         IRConfigInputDialog(context, IRConfigInputDialog.Type.TEMP, isTC007)
                             .setInput(UnitTools.showUnitValue(dataList[position].environment))
                             .setConfirmListener {
@@ -469,15 +314,7 @@ addEventListener.
                 }
                 rootView.findViewById<android.view.View>(R.id.view_dis_bg).setOnClickListener {
                     val position: Int = bindingAdapterPosition
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (position != RecyclerView.NO_POSITION) {
-                        /**
-                         * Executes irconfiginputdialog operation with thermal imaging domain optimization.
-                         *
-                         */
                         IRConfigInputDialog(context, IRConfigInputDialog.Type.DIS, isTC007)
                             .setInput(dataList[position].distance)
                             .setConfirmListener {
@@ -490,15 +327,7 @@ addEventListener.
                 }
                 rootView.findViewById<android.widget.TextView>(R.id.tv_em_value).setOnClickListener {
                     val position: Int = bindingAdapterPosition
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (position != RecyclerView.NO_POSITION) {
-                        /**
-                         * Executes irconfiginputdialog operation with thermal imaging domain optimization.
-                         *
-                         */
                         IRConfigInputDialog(context, IRConfigInputDialog.Type.EM, isTC007)
                             .setInput(dataList[position].radiation)
                             .setConfirmListener {
@@ -515,16 +344,8 @@ addEventListener.
         inner class FootViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
             init {
                 rootView.findViewById<android.view.View>(R.id.view_add).setOnClickListener {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (dataList.size < 10) {
                         val position: Int = bindingAdapterPosition
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (position != RecyclerView.NO_POSITION) {
                             onAddListener?.onClick(it)
                         }

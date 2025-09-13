@@ -31,21 +31,7 @@ import java.util.Locale;
 import static com.infisense.usbdual.camera.IFrameData.FRAME_LEN;
 
 /**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with DualViewWithExternalCameraCommonApi functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Created by fengjibo on 2023/9/20.
  */
 public class DualViewWithExternalCameraCommonApi extends BaseDualView {
 
@@ -59,7 +45,7 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
     public int count = 0;
     private long timestart = 0;
     private double fps = 0;
-    // 开启自动gainswitch将auto_gain_switch和auto_gain_switch_running同时改为true
+    //开启自动gainswitch将auto_gain_switch和auto_gain_switch_running同时改为true
     public boolean auto_gain_switch = false;
     public boolean auto_gain_switch_running = true;
     public boolean auto_over_protect = false;
@@ -83,19 +69,19 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
 
     private DualCameraParams.FusionType mCurrentFusionType;
     private boolean firstFrame = false;
-    private byte[] irRGBAData;// 原始infrareddata 192 *256
-    private byte[] preIrData;// 预processinginfrared原始data 192 *256 * 2
-    private byte[] preTempData;// 预processingtemperature原始data 192 *256 * 2
-    private byte[] preIrARGBData;// 预processing后infraredARGBdata 192 * 256 * 4
-    public byte[] frameData = new byte[FRAME_LEN];// 原始全部data
+    private byte[] irRGBAData;//原始infrareddata 192 *256
+    private byte[] preIrData;//预processinginfrared原始data 192 *256 * 2
+    private byte[] preTempData;//预processingtemperature原始data 192 *256 * 2
+    private byte[] preIrARGBData;//预processing后infraredARGBdata 192 * 256 * 4
+    public byte[] frameData = new byte[FRAME_LEN];//原始全部data
 
     public byte[] frameIrAndTempData = new byte[192 * 256 * 4];
 
-    public int rotate = 180; // Lens颠倒了，所以初始颠倒个180度
+    public int rotate = 180; //lens颠倒了，所以初始颠倒个180度
 
     private volatile boolean isOpenAmplify = false;
-    private final byte[] amplifyMixRotateArray;// Fusion的data 640 * MULTIPLE * 480 * MULTIPLE
-    private final byte[] amplifyIRRotateArray;// 单infrared的data 256 * MULTIPLE * 192 * MULTIPLE
+    private final byte[] amplifyMixRotateArray;//fusion的data 640 * MULTIPLE * 480 * MULTIPLE
+    private final byte[] amplifyIRRotateArray;//单infrared的data 256 * MULTIPLE * 192 * MULTIPLE
 
     public static final int MULTIPLE = 2;
 
@@ -124,10 +110,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
      * @param irCameraHeight
      * @param dualCameraWidth
      * @param dualCameraHeight
-     */
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
      */
     public DualViewWithExternalCameraCommonApi(SurfaceView cameraview, UVCCamera irUVCCamera,
                                                CommonParams.DataFlowMode dataFlowMode,
@@ -187,10 +169,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                 .setMultiThreadHandleDualEnable(false)
                 .build();
         DualCameraParams.TypeLoadParameters rotateT = DualCameraParams.TypeLoadParameters.ROTATE_0;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rotate == 0) {
             rotateT = DualCameraParams.TypeLoadParameters.ROTATE_0;
         } else if (rotate == 90) {
@@ -208,27 +186,27 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
          * 同时Open防灼烧和自动gainswitch后，如果想modify防灼烧和自动gainswitch的触发优先级，可以通过modify下area的触发parameterimplementation
          */
         // 自动gainswitchparameterauto gain switch parameter
-        gain_switch_param.above_pixel_prop = 0.1f;    // 用于high -> low gain,device像素总area积的百分比
-        gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4); // 用于high -> low gain,高gain向低gainswitch的触发temperature
-        gain_switch_param.below_pixel_prop = 0.95f;   // 用于low -> high gain,device像素总area积的百分比
-        gain_switch_param.below_temp_data = (int) ((110 + 273.15) * 16 * 4);// 用于low -> high gain,低gain向高gainswitch的触发temperature
-        auto_gain_switch_info.switch_frame_cnt = 5 * 15; // Continuous满足触发条件帧数超过该阈值会触发自动gainswitch(假设出图速度为15帧每秒，则5 * 15大概为5秒)
-        auto_gain_switch_info.waiting_frame_cnt = 7 * 15;// 触发自动gainswitch之后，会间隔该阈值的帧数不进行gainswitch监测(假设出图速度为15帧每秒，则7 * 15大概为7秒)
+        gain_switch_param.above_pixel_prop = 0.1f;    //用于high -> low gain,device像素总area积的百分比
+        gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4); //用于high -> low gain,高gain向低gainswitch的触发temperature
+        gain_switch_param.below_pixel_prop = 0.95f;   //用于low -> high gain,device像素总area积的百分比
+        gain_switch_param.below_temp_data = (int) ((110 + 273.15) * 16 * 4);//用于low -> high gain,低gain向高gainswitch的触发temperature
+        auto_gain_switch_info.switch_frame_cnt = 5 * 15; //continuous满足触发条件帧数超过该阈值会触发自动gainswitch(假设出图速度为15帧每秒，则5 * 15大概为5秒)
+        auto_gain_switch_info.waiting_frame_cnt = 7 * 15;//触发自动gainswitch之后，会间隔该阈值的帧数不进行gainswitch监测(假设出图速度为15帧每秒，则7 * 15大概为7秒)
         // 防灼烧parameterover_portect parameter
-        int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4); // 低gain下触发防灼烧的temperature
-        int high_gain_over_temp_data = (int) ((110 + 273.15) * 16 * 4); // 高gain下触发防灼烧的temperature
-        float pixel_above_prop = 0.02f;// Device像素总area积的百分比
-        int switch_frame_cnt = 7 * 15;// Continuous满足触发条件超过该阈值会触发防灼烧(假设出图速度为15帧每秒，则7 * 15大概为7秒)
-        int close_frame_cnt = 10 * 15;// 触发防灼烧之后，经过该阈值的帧数之后会解除防灼烧(假设出图速度为15帧每秒，则10 * 15大概为10秒)
+        int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4); //低gain下触发防灼烧的temperature
+        int high_gain_over_temp_data = (int) ((110 + 273.15) * 16 * 4); //高gain下触发防灼烧的temperature
+        float pixel_above_prop = 0.02f;//device像素总area积的百分比
+        int switch_frame_cnt = 7 * 15;//continuous满足触发条件超过该阈值会触发防灼烧(假设出图速度为15帧每秒，则7 * 15大概为7秒)
+        int close_frame_cnt = 10 * 15;//触发防灼烧之后，经过该阈值的帧数之后会解除防灼烧(假设出图速度为15帧每秒，则10 * 15大概为10秒)
 
         LibIRProcess.ImageRes_t imageRes = new LibIRProcess.ImageRes_t();
         imageRes.height = (char) (192);
         imageRes.width = (char) 256;
 
         irRGBAData = new byte[irSize * 4];
-        preIrData = new byte[irSize * 2];// 预processinginfrared原始data 192 *256 * 2
-        preTempData = new byte[irSize * 2];// 预processingtemperature原始data 192 *256 * 2
-        preIrARGBData = new byte[irSize * 2 * 2];;// 预processing后infraredARGBdata 192 * 256 * 4
+        preIrData = new byte[irSize * 2];//预processinginfrared原始data 192 *256 * 2
+        preTempData = new byte[irSize * 2];//预processingtemperature原始data 192 *256 * 2
+        preIrARGBData = new byte[irSize * 2 * 2];;//预processing后infraredARGBdata 192 * 256 * 4
         iFrameCallback = new IFrameCallback() {
             /**
              * frame 所有data集合 (CPU)
@@ -259,15 +237,7 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
              */
             @Override
             public void onFrame(byte[] frame) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (frame.length == 1) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (handler != null) {
                         handler.sendEmptyMessage(Const.RESTART_USB);
                     }
@@ -276,17 +246,9 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                 }
                 // 帧率展示
                 count++;
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (count == 100) {
                     count = 0;
                     long currentTimeMillis = System.currentTimeMillis();
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (timestart != 0) {
                         long timeuse = currentTimeMillis - timestart;
                         fps = 100 * 1000 / (timeuse + 0.0);
@@ -304,40 +266,22 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
 
                 System.arraycopy(frame, fusionLength + irSize * 4 + Const.DUAL_WIDTH * Const.DUAL_HEIGHT * 2, vlData,
                         0, vlSize);
-                System.arraycopy(frame, 0, frameData, 0, FRAME_LEN); // 无损data
-                // Merge原始infrareddata和原始temperaturedata
+                System.arraycopy(frame, 0, frameData, 0, FRAME_LEN); //无损data
+                //Merge原始infrareddata和原始temperaturedata
                 System.arraycopy(frame, dualCameraWidth*dualCameraHeight*4, frameIrAndTempData, 0, frameIrAndTempData.length);
 
-                // Picture-in-picturemodeScreenFusion:mixData 为单infrareddata，formatARGB，长度dualwidth * dualHeight * 4
-// If (mCurrentFusionType == DualCameraParams.FusionType.ScreenFusion) {
+                //picture-in-picturemodeScreenFusion:mixData 为单infrareddata，formatARGB，长度dualwidth * dualHeight * 4
+//                if (mCurrentFusionType == DualCameraParams.FusionType.ScreenFusion) {
 //                    System.arraycopy(frame, fusionLength + irSize * 4 + remapTempSize + vlSize, vlARGBData, 0,
-// FusionLength);
+//                            fusionLength);
 //                }
 
-                // 如果是IROnlyNoFusionmode, 此时infrareddata和temperature为原始data，长度都为256*192
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+                //如果是IROnlyNoFusionmode, 此时infrareddata和temperature为原始data，长度都为256*192
                 if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
-                    /**
-                     * Executes for operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param onFrameCallback Parameter for operation (type: onFrameCallbacks)
-                     *
-                     */
                     for (OnFrameCallback onFrameCallback : onFrameCallbacks) {
                         onFrameCallback.onFame(mixData, normalTempData, fps);
                     }
                 } else {
-                    /**
-                     * Executes for operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param onFrameCallback Parameter for operation (type: onFrameCallbacks)
-                     *
-                     */
                     for (OnFrameCallback onFrameCallback : onFrameCallbacks) {
                         onFrameCallback.onFame(mixData, remapTempData, fps);
                     }
@@ -345,61 +289,29 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
 
                 mSurface = cameraview.getHolder().getSurface();
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
                     LibIRParse.converyArrayYuv422ToARGB(irData, Const.IR_WIDTH * Const.IR_HEIGHT, irRGBAData);
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isOpenAmplify){
                         OpencvTools.supImage(irData,Const.IR_HEIGHT,Const.IR_WIDTH, amplifyIRRotateArray);
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (mSurface != null) {
                             mSurfaceNativeWindow.onDrawFrame(mSurface, amplifyIRRotateArray,
                                     Const.IR_WIDTH * MULTIPLE,
                                     Const.IR_HEIGHT * MULTIPLE);
                         }
                     }else {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (mSurface != null) {
                             mSurfaceNativeWindow.onDrawFrame(mSurface, irRGBAData, Const.IR_HEIGHT, Const.IR_WIDTH);
                         }
                     }
                 }else {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isOpenAmplify){
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (mCurrentFusionType == DualCameraParams.FusionType.IROnly){
                             OpencvTools.supImageMix(mixData,Const.DUAL_HEIGHT,Const.DUAL_WIDTH, mixData);
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (mSurface != null) {
                                 mSurfaceNativeWindow.onDrawFrame(mSurface, mixData, Const.DUAL_WIDTH, Const.DUAL_HEIGHT);
                             }
                         }else {
                             OpencvTools.supImage(mixData,Const.DUAL_HEIGHT,Const.DUAL_WIDTH, amplifyMixRotateArray);
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (mSurface != null) {
                                 mSurfaceNativeWindow.onDrawFrame(mSurface, amplifyMixRotateArray,
                                         Const.DUAL_WIDTH * MULTIPLE,
@@ -407,36 +319,24 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                             }
                         }
                     }else {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (mSurface != null) {
                             mSurfaceNativeWindow.onDrawFrame(mSurface, mixData, Const.DUAL_WIDTH, Const.DUAL_HEIGHT);
                         }
                     }
                 }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isUseIRISP && !firstFrame) {
                     firstFrame = true;
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (handler != null) {
                         handler.sendEmptyMessage(Const.HIDE_LOADING);
                     }
                 }
 
-// If (saveData) {
-// SaveData = false;
-// New Thread(new Runnable() {
+//                if (saveData) {
+//                    saveData = false;
+//                    new Thread(new Runnable() {
 //                        @Override
-// Public void run() {
+//                        public void run() {
 //                            FileUtil.saveByteFile(cameraview.getContext(), mixData, "mix");
 //                            FileUtil.saveByteFile(cameraview.getContext(), remapTempData, "remap_temp");
 //                            FileUtil.saveByteFile(cameraview.getContext(), irData, "ir_data");
@@ -447,18 +347,10 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
 //                    }).start();
 //
 //                }
-                // 请不要rotationimageTest
+                //请不要旋转imageTest
                 // 自动gainswitch，不effective的话请您的device是否支持自动gainswitch
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
                     System.arraycopy(frame, fusionLength + irSize * 2, normalTempData, 0, irSize * 2);
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (auto_gain_switch && auto_gain_switch_running) {
                         USBMonitorManager.getInstance().getIrcmd().autoGainSwitch(normalTempData, imageRes,
                                 auto_gain_switch_info, gain_switch_param, new AutoGainSwitchCallback() {
@@ -466,10 +358,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                                     public void onAutoGainSwitchState(CommonParams.PropTPDParamsValue.GAINSELStatus gainselStatus) {
                                         Log.d(TAG, "onAutoGainSwitchState = " + gainselStatus.getValue());
                                         auto_gain_switch_running = false;
-                                        /**
-                                         * Executes resetautogaininfo operation with thermal imaging domain optimization.
-                                         *
-                                         */
                                         resetAutoGainInfo();
                                     }
 
@@ -482,10 +370,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                                 });
                     }
                     // 防灼烧保护
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (auto_over_protect) {
                         USBMonitorManager.getInstance().getIrcmd().avoidOverexposure(false, gainStatus,
                                 normalTempData, imageRes, low_gain_over_temp_data, high_gain_over_temp_data,
@@ -547,17 +431,9 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
     }
 
     public Bitmap getScaledBitmap() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isOpenAmplify){
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion){
-                // 单infraredmode
+                //单infraredmode
                 supIROlyNoFusionBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(amplifyIRRotateArray, 0,
                         supIROlyNoFusionBitmap.getWidth() * supIROlyNoFusionBitmap.getHeight() * 4));
                 mScaledBitmap = Bitmap.createScaledBitmap(supIROlyNoFusionBitmap,
@@ -592,10 +468,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
 
     public void setCurrentFusionType(DualCameraParams.FusionType currentFusionType) {
         this.mCurrentFusionType = currentFusionType;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dualUVCCamera != null) {
             dualUVCCamera.setFusion(currentFusionType);
         }

@@ -14,28 +14,11 @@ import com.topdon.gsr.model.GSRSample
  * - Samsung S22 ground truth timing integration
  * - Research-grade GSR data conversion and validation
  */
-/**
- * Specialized thermal imaging component providing ShimmerAPIBridge functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class ShimmerAPIBridge private constructor() {
     companion object {
         private const val TAG = "ShimmerAPIBridge"
         private var instance: ShimmerAPIBridge? = null
 
-    /**
-     * Retrieves instance information.
-     */
         fun getInstance(): ShimmerAPIBridge {
             return instance ?: synchronized(this) {
                 instance ?: ShimmerAPIBridge().also { instance = it }
@@ -47,10 +30,6 @@ class ShimmerAPIBridge private constructor() {
     private var processingMode: String = "FALLBACK"
 
     init {
-        /**
-         * Initializes the ializeshimmerprocessing component for thermal imaging operations.
-         *
-         */
         initializeShimmerProcessing()
     }
 
@@ -58,19 +37,12 @@ class ShimmerAPIBridge private constructor() {
      * Initialize Shimmer processing capabilities using reflection for safety
      * This approach allows the code to work even if JAR files are missing or incompatible
      */
-    /**
-     * Initializes ializeshimmerprocessing component.
-     */
     private fun initializeShimmerProcessing() {
         try {
             // Try to load and instantiate GSRMetrics class from the official JAR
             val gsrMetricsClass = Class.forName("com.shimmerresearch.biophysicalprocessing.GSRMetrics")
             val gsrMetricsInstance = gsrMetricsClass.getDeclaredConstructor().newInstance()
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (gsrMetricsInstance != null) {
                 isOfficialAPIAvailable = true
                 processingMode = "OFFICIAL_SHIMMER_JAR"
@@ -85,17 +57,9 @@ class ShimmerAPIBridge private constructor() {
             }
         } catch (classNotFoundException: ClassNotFoundException) {
             Log.w(TAG, "GSRMetrics class not found in JAR, using enhanced fallback processing")
-            /**
-             * Configures the upenhancedfallback with validation and thermal imaging optimization.
-             *
-             */
             setupEnhancedFallback()
         } catch (exception: Exception) {
             Log.w(TAG, "Error initializing official Shimmer processing: ${exception.message}")
-            /**
-             * Configures the upenhancedfallback with validation and thermal imaging optimization.
-             *
-             */
             setupEnhancedFallback()
         }
     }
@@ -113,34 +77,14 @@ class ShimmerAPIBridge private constructor() {
      * Process GSR data using the best available method
      * Automatically selects between official JAR processing and enhanced fallback
      */
-    /**
-     * Executes processGSRData functionality.
-     */
-    /**
-     * Executes processgsrdata operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param rawValue Parameter for operation (type: Double)
-     * @param timestamp Parameter for operation (type: Long)
-     * @param sessionId Parameter for operation (type: String)
-     *
-     */
     fun processGSRData(
         rawValue: Double,
         timestamp: Long,
         sessionId: String,
     ): GSRSample {
         return if (isOfficialAPIAvailable) {
-            /**
-             * Executes processwithofficialapi operation with thermal imaging domain optimization.
-             *
-             */
             processWithOfficialAPI(rawValue, timestamp, sessionId)
         } else {
-            /**
-             * Executes processwithenhancedfallback operation with thermal imaging domain optimization.
-             *
-             */
             processWithEnhancedFallback(rawValue, timestamp, sessionId)
         }
     }
@@ -158,10 +102,6 @@ class ShimmerAPIBridge private constructor() {
             val conductance = convertToConductanceOfficial(rawValue)
             val resistance = convertToResistanceOfficial(conductance)
 
-            /**
-             * Executes gsrsample operation with thermal imaging domain optimization.
-             *
-             */
             GSRSample(
                 timestamp = timestamp,
                 conductance = conductance,
@@ -171,10 +111,6 @@ class ShimmerAPIBridge private constructor() {
             )
         } catch (e: Exception) {
             Log.w(TAG, "Official API processing failed, falling back: ${e.message}")
-            /**
-             * Executes processwithenhancedfallback operation with thermal imaging domain optimization.
-             *
-             */
             processWithEnhancedFallback(rawValue, timestamp, sessionId)
         }
     }
@@ -182,18 +118,6 @@ class ShimmerAPIBridge private constructor() {
     /**
      * Enhanced fallback processing with research-grade GSR algorithms
      * Based on official Shimmer3 specifications and physiological research
-     */
-    /**
-     * Executes processWithEnhancedFallback functionality.
-     */
-    /**
-     * Executes processwithenhancedfallback operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param rawValue Parameter for operation (type: Double)
-     * @param timestamp Parameter for operation (type: Long)
-     * @param sessionId Parameter for operation (type: String)
-     *
      */
     private fun processWithEnhancedFallback(
         rawValue: Double,
@@ -221,10 +145,6 @@ class ShimmerAPIBridge private constructor() {
             // This would call official GSRMetrics methods via reflection
             // For now, use enhanced fallback calculation
             val resistance = convertToResistanceShimmer3(rawValue)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (resistance > 0) 1000000.0 / resistance else 0.0
         } catch (e: Exception) {
             Log.w(TAG, "Official conductance conversion failed: ${e.message}")
@@ -238,10 +158,6 @@ class ShimmerAPIBridge private constructor() {
     private fun convertToResistanceOfficial(conductance: Double): Double {
         return try {
             // This would call official GSRMetrics methods via reflection
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (conductance > 0) 1000000.0 / conductance else Double.MAX_VALUE
         } catch (e: Exception) {
             Log.w(TAG, "Official resistance conversion failed: ${e.message}")
@@ -252,16 +168,6 @@ class ShimmerAPIBridge private constructor() {
     /**
      * Convert raw ADC to resistance using enhanced Shimmer3 algorithm
      * Based on official Shimmer3 GSR specifications and hardware configuration
-     */
-    /**
-     * Executes convertToResistanceShimmer3 functionality.
-     */
-    /**
-     * Executes converttoresistanceshimmer3 operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param rawValue Parameter for operation (type: Double)
-     *
      */
     private fun convertToResistanceShimmer3(rawValue: Double): Double {
         // Enhanced Shimmer3 GSR resistance calculation
@@ -281,10 +187,6 @@ class ShimmerAPIBridge private constructor() {
         // Calculate GSR resistance using voltage divider formula
         // R_gsr = R_ref * (V_ref - V_out) / V_out
         val denominator = vOut
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (denominator <= 0.001) { // Avoid near-zero division
             return 10000.0 // Return high resistance value (10MΩ)
         }

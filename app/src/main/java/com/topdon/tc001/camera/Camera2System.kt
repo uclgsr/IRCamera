@@ -25,23 +25,6 @@ import java.io.File
  * - Fast switch without closing CameraDevice
  * - Deterministic state machine. No races. No silent failures.
  */
-/**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with Camera2System functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class Camera2System(
     private val context: Context,
     private val textureView: TextureView,
@@ -71,10 +54,6 @@ class Camera2System(
     var onRecordingStopped: (() -> Unit)? = null
 
     init {
-        /**
-         * Configures the upcallbacks with validation and thermal imaging optimization.
-         *
-         */
         setupCallbacks()
     }
 
@@ -87,15 +66,7 @@ class Camera2System(
                 Log.i(TAG, "Initializing Camera2System")
 
                 // Wait for texture to be ready
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (!uiBridge.isTextureReady()) {
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(50)
                 }
 
@@ -117,19 +88,11 @@ class Camera2System(
     suspend fun switchMode(mode: ModeManager.CameraMode): Boolean =
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!modeManager.canSwitchMode()) {
                     Log.w(TAG, "Cannot switch mode - switching already in progress")
                     return@withContext false
                 }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!modeManager.requestModeSwitch(mode)) {
                     return@withContext false
                 }
@@ -138,20 +101,12 @@ class Camera2System(
 
                 // Fast session reconfiguration without closing camera device
                 val success =
-                    /**
-                     * Executes when operation with thermal imaging domain optimization.
-                     *
-                     */
                     when (mode) {
                         ModeManager.CameraMode.RAW_50MP -> setupRawMode()
                         ModeManager.CameraMode.VIDEO_4K -> setupVideoMode()
                         ModeManager.CameraMode.PREVIEW_ONLY -> setupPreviewMode()
                     }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     modeManager.confirmModeSwitch()
                     uiBridge.updateMode(mode.name)
@@ -184,10 +139,6 @@ class Camera2System(
                 outputDirectory = createOutputDirectory(sessionId)
 
                 val success =
-                    /**
-                     * Executes when operation with thermal imaging domain optimization.
-                     *
-                     */
                     when (modeManager.getCurrentMode()) {
                         ModeManager.CameraMode.RAW_50MP -> startRawRecording()
                         ModeManager.CameraMode.VIDEO_4K -> startVideoRecording()
@@ -197,10 +148,6 @@ class Camera2System(
                         }
                     }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     isRecording = true
                     onRecordingStarted?.invoke()
@@ -219,30 +166,14 @@ class Camera2System(
     /**
      * Stop recording
      */
-    /**
-     * Executes stoprecording operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun stopRecording(): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isRecording) {
                 Log.w(TAG, "Not recording")
                 return@withContext false
             }
 
             try {
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (modeManager.getCurrentMode()) {
                     ModeManager.CameraMode.RAW_50MP -> rawEngine.stopCapture()
                     ModeManager.CameraMode.VIDEO_4K -> videoEngine.stop()
@@ -265,10 +196,6 @@ class Camera2System(
     /**
      * Get current mode
      */
-    /**
-     * Retrieves the currentmode with optimized performance for thermal imaging operations.
-     *
-     */
     fun getCurrentMode(): ModeManager.CameraMode = modeManager.getCurrentMode()
 
     /**
@@ -279,18 +206,10 @@ class Camera2System(
     /**
      * Check if recording
      */
-    /**
-     * Executes isrecording operation with thermal imaging domain optimization.
-     *
-     */
     fun isRecording(): Boolean = isRecording
 
     /**
      * Get device capabilities
-     */
-    /**
-     * Retrieves the devicecaps with optimized performance for thermal imaging operations.
-     *
      */
     fun getDeviceCaps(): DeviceCaps? = cameraController.getDeviceCaps()
 
@@ -312,9 +231,6 @@ class Camera2System(
 
     // Private implementation methods
 
-    /**
-     * Sets upcallbacks configuration.
-     */
     private fun setupCallbacks() {
         // Camera controller callbacks
         cameraController.onCameraOpened = { caps ->
@@ -322,15 +238,7 @@ class Camera2System(
             uiBridge.reportProgress("Camera opened, capabilities detected")
 
             // Start in preview mode
-            /**
-             * Executes coroutinescope operation with thermal imaging domain optimization.
-             *
-             */
             CoroutineScope(Dispatchers.IO).launch {
-                /**
-                 * Executes switchmode operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchMode(ModeManager.CameraMode.PREVIEW_ONLY)
             }
         }
@@ -351,15 +259,7 @@ class Camera2System(
         uiBridge.onProgress = { message -> onProgress?.invoke(message) }
     }
 
-    /**
-     * Configures the uprawmode with validation and thermal imaging optimization.
-     *
-     */
     private suspend fun setupRawMode(): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val caps = cameraController.getDeviceCaps() ?: return@withContext false
@@ -376,13 +276,6 @@ class Camera2System(
                     cameraController.createCaptureSession(
                         surfaces,
                         object : CameraCaptureSession.StateCallback() {
-                            /**
-                             * Executes onconfigured operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param session Parameter for operation (type: CameraCaptureSession)
-                             *
-                             */
                             override fun onConfigured(session: CameraCaptureSession) {
                                 cameraController.setCaptureSession(session)
 
@@ -399,13 +292,6 @@ class Camera2System(
                                 }
                             }
 
-                            /**
-                             * Executes onconfigurefailed operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param session Parameter for operation (type: CameraCaptureSession)
-                             *
-                             */
                             override fun onConfigureFailed(session: CameraCaptureSession) {
                                 Log.e(TAG, "RAW mode session configuration failed")
                                 continuation.resume(false, null)
@@ -419,15 +305,7 @@ class Camera2System(
             }
         }
 
-    /**
-     * Configures the upvideomode with validation and thermal imaging optimization.
-     *
-     */
     private suspend fun setupVideoMode(): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val caps = cameraController.getDeviceCaps() ?: return@withContext false
@@ -444,13 +322,6 @@ class Camera2System(
                     cameraController.createCaptureSession(
                         surfaces,
                         object : CameraCaptureSession.StateCallback() {
-                            /**
-                             * Executes onconfigured operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param session Parameter for operation (type: CameraCaptureSession)
-                             *
-                             */
                             override fun onConfigured(session: CameraCaptureSession) {
                                 cameraController.setCaptureSession(session)
 
@@ -467,13 +338,6 @@ class Camera2System(
                                 }
                             }
 
-                            /**
-                             * Executes onconfigurefailed operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param session Parameter for operation (type: CameraCaptureSession)
-                             *
-                             */
                             override fun onConfigureFailed(session: CameraCaptureSession) {
                                 Log.e(TAG, "Video mode session configuration failed")
                                 continuation.resume(false, null)
@@ -487,15 +351,7 @@ class Camera2System(
             }
         }
 
-    /**
-     * Configures the uppreviewmode with validation and thermal imaging optimization.
-     *
-     */
     private suspend fun setupPreviewMode(): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val previewSurface = uiBridge.getPreviewSurface() ?: return@withContext false
@@ -507,13 +363,6 @@ class Camera2System(
                     cameraController.createCaptureSession(
                         surfaces,
                         object : CameraCaptureSession.StateCallback() {
-                            /**
-                             * Executes onconfigured operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param session Parameter for operation (type: CameraCaptureSession)
-                             *
-                             */
                             override fun onConfigured(session: CameraCaptureSession) {
                                 cameraController.setCaptureSession(session)
 
@@ -530,13 +379,6 @@ class Camera2System(
                                 }
                             }
 
-                            /**
-                             * Executes onconfigurefailed operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param session Parameter for operation (type: CameraCaptureSession)
-                             *
-                             */
                             override fun onConfigureFailed(session: CameraCaptureSession) {
                                 Log.e(TAG, "Preview mode session configuration failed")
                                 continuation.resume(false, null)
@@ -550,25 +392,13 @@ class Camera2System(
             }
         }
 
-    /**
-     * Executes startrawrecording operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun startRawRecording(): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 // RAW capture uses continuous still capture requests
                 rawEngine.startCapture()
 
                 // Start periodic RAW capture
-                /**
-                 * Executes startperiodicrawcapture operation with thermal imaging domain optimization.
-                 *
-                 */
                 startPeriodicRawCapture()
 
                 return@withContext true
@@ -578,15 +408,7 @@ class Camera2System(
             }
         }
 
-    /**
-     * Executes startvideorecording operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun startVideoRecording(): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val caps = cameraController.getDeviceCaps() ?: return@withContext false
@@ -607,13 +429,6 @@ class Camera2System(
                     cameraController.createCaptureSession(
                         surfaces,
                         object : CameraCaptureSession.StateCallback() {
-                            /**
-                             * Executes onconfigured operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param session Parameter for operation (type: CameraCaptureSession)
-                             *
-                             */
                             override fun onConfigured(session: CameraCaptureSession) {
                                 cameraController.setCaptureSession(session)
 
@@ -626,10 +441,6 @@ class Camera2System(
                                     session.setRepeatingRequest(requestBuilder!!.build(), null, null)
 
                                     // Start MediaRecorder
-                                    /**
-                                     * Executes if operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     if (videoEngine.start()) {
                                         continuation.resume(true, null)
                                     } else {
@@ -641,13 +452,6 @@ class Camera2System(
                                 }
                             }
 
-                            /**
-                             * Executes onconfigurefailed operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param session Parameter for operation (type: CameraCaptureSession)
-                             *
-                             */
                             override fun onConfigureFailed(session: CameraCaptureSession) {
                                 Log.e(TAG, "Recording session configuration failed")
                                 continuation.resume(false, null)
@@ -661,48 +465,18 @@ class Camera2System(
             }
         }
 
-    /**
-     * Executes startPeriodicRawCapture functionality.
-     */
-    /**
-     * Executes startperiodicrawcapture operation with thermal imaging domain optimization.
-     *
-     */
     private fun startPeriodicRawCapture() {
         // Start periodic RAW still captures at 15fps
         val captureInterval = 1000L / 15 // 15fps
 
-        /**
-         * Executes coroutinescope operation with thermal imaging domain optimization.
-         *
-         */
         CoroutineScope(Dispatchers.IO).launch {
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (isRecording && modeManager.getCurrentMode() == ModeManager.CameraMode.RAW_50MP) {
-                /**
-                 * Executes capturerawimage operation with thermal imaging domain optimization.
-                 *
-                 */
                 captureRawImage()
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(captureInterval)
             }
         }
     }
 
-    /**
-     * Executes captureRawImage functionality.
-     */
-    /**
-     * Executes capturerawimage operation with thermal imaging domain optimization.
-     *
-     */
     private fun captureRawImage() {
         try {
             val rawSurface = rawEngine.getSurface() ?: return
@@ -714,15 +488,6 @@ class Camera2System(
             session.capture(
                 requestBuilder!!.build(),
                 object : CameraCaptureSession.CaptureCallback() {
-                    /**
-                     * Executes oncapturecompleted operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param session Parameter for operation (type: CameraCaptureSession)
-                     * @param request Parameter for operation (type: CaptureRequest)
-                     * @param result Parameter for operation (type: TotalCaptureResult)
-                     *
-                     */
                     override fun onCaptureCompleted(
                         session: CameraCaptureSession,
                         request: CaptureRequest,
@@ -739,42 +504,18 @@ class Camera2System(
         }
     }
 
-    /**
-     * Executes createOutputDirectory functionality.
-     */
-    /**
-     * Executes createoutputdirectory operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param sessionId Parameter for operation (type: String)
-     *
-     */
     private fun createOutputDirectory(sessionId: String): File {
         val timestamp = System.currentTimeMillis()
         val dirName = "Camera_${sessionId}_$timestamp"
         return File(context.getExternalFilesDir("Camera"), dirName).apply {
-            /**
-             * Executes mkdirs operation with thermal imaging domain optimization.
-             *
-             */
             mkdirs()
         }
     }
 
-    /**
-     * Processes temperature measurement data.
-     */
     private fun createTempDirectory(): File {
         return File(context.cacheDir, "temp_raw").apply { mkdirs() }
     }
 
-    /**
-     * Executes createVideoFile functionality.
-     */
-    /**
-     * Executes createvideofile operation with thermal imaging domain optimization.
-     *
-     */
     private fun createVideoFile(): File {
         val timestamp = System.currentTimeMillis()
         val filename = "Video_${currentSessionId}_$timestamp.mp4"

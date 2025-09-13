@@ -24,22 +24,8 @@ import kotlin.coroutines.EmptyCoroutineContext
 横向的指南针View
  */
 /**
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for LinearCompassView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Linear compass view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class LinearCompassView : View {
     private val paint = Paint()
@@ -68,46 +54,14 @@ class LinearCompassView : View {
     private val scope = CoroutineScope(EmptyCoroutineContext)
     var curBitmap: Bitmap? = null // 当前view的bitmap
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null) {
-        /**
-         * Initializes the view component for thermal imaging operations.
-         *
-         */
         initView()
     }
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0) {
-        /**
-         * Initializes the view component for thermal imaging operations.
-         *
-         */
         initView()
     }
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -148,16 +102,9 @@ class LinearCompassView : View {
                 SizeUtils.sp2px(2f).toFloat(),
             )
         attributes.recycle()
-        /**
-         * Initializes the view component for thermal imaging operations.
-         *
-         */
         initView()
     }
 
-    /**
-     * Initializes view component.
-     */
     private fun initView() {
         paint.color = backgroundColor
         paint.style = Paint.Style.FILL_AND_STROKE
@@ -199,57 +146,25 @@ class LinearCompassView : View {
 
     private var text: String = ""
 
-    /**
-     * Retrieves rawminimum information.
-     */
     private fun getRawMinimum() = azimuth - range / 2
 
-    /**
-     * Retrieves rawmaximum information.
-     */
     private fun getRawMaximum() = azimuth + range / 2
 
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
         this.canvas = canvas
-// DrawBackGround()
-        /**
-         * Executes drawazimutharrow operation with thermal imaging domain optimization.
-         *
-         */
+//        drawBackGround()
         drawAzimuthArrow()
-        /**
-         * Executes drawcompassline operation with thermal imaging domain optimization.
-         *
-         */
         drawCompassLine()
     }
 
 drawing背景
-    /**
-     * Executes drawBackGround functionality.
-     */
-    /**
-     * Executes drawbackground operation with thermal imaging domain optimization.
-     *
-     */
     private fun drawBackGround() {
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
     }
 
-drawingangle
-    /**
-     * Executes drawAzimuthArrow functionality.
-     */
-    /**
-     * Executes drawazimutharrow operation with thermal imaging domain optimization.
-     *
-     */
+drawing角度
     private fun drawAzimuthArrow() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!showAzimuthArrow) {
             return
         }
@@ -259,20 +174,9 @@ drawingangle
     }
 
 drawingmarkerline
-    /**
-     * Executes drawCompassLine functionality.
-     */
-    /**
-     * Executes drawcompassline operation with thermal imaging domain optimization.
-     *
-     */
     private fun drawCompassLine() {
 calculation指南针的line有几等份
-// Val values = getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map { it.toInt() }
-        /**
-         * Executes drawcompass operation with thermal imaging domain optimization.
-         *
-         */
+//        val values = getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map { it.toInt() }
         drawCompass()
         val bottomHeight = height * 7 / 10f
         canvas.drawLine(0f, (bottomHeight - 1), width.toFloat(), bottomHeight, shortLinePaint)
@@ -286,55 +190,29 @@ calculation指南针的line有几等份
         )
     }
 
-    /**
-     * Sets curazimuth configuration.
-     */
     fun setCurAzimuth(azimuth: Int) {
         scope.launch(Dispatchers.IO) {
             this@LinearCompassView.azimuth = azimuth.toFloat()
             this@LinearCompassView.text = azimuth.toString()
             var curTime = System.currentTimeMillis()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (curTime - lastDrawTime > step) {
                 lastDrawTime = curTime
-                /**
-                 * Executes launch operation with thermal imaging domain optimization.
-                 *
-                 */
                 launch(Dispatchers.Main) {
                     curBitmap = this@LinearCompassView.drawToBitmap()
-                    /**
-                     * Executes invalidate operation with thermal imaging domain optimization.
-                     *
-                     */
                     invalidate()
                 }
             }
         }
     }
 
-    /**
-     * Executes drawCompass functionality.
-     */
-    /**
-     * Executes drawcompass operation with thermal imaging domain optimization.
-     *
-     */
     private fun drawCompass() {
-        /**
-         * Retrieves the valuesbetween with optimized performance for thermal imaging operations.
-         *
-         */
         getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map {
             it.toInt()
         }.toMutableList().forEach {
-calculation实际X的coordinate
+calculation实际X的坐标
             val x = toPixel(it.toFloat())
 
-最短：15度 最长：90度 起始pointxcoordinate
+最短：15度 最长：90度 起始pointx坐标
             val lineHeight =
                 when {
                     it % 90 == 0 -> (3 / 10f) * height
@@ -351,10 +229,6 @@ drawingmarkerline
             }
 
 drawing底部方位文本
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (it % 45 == 0) {
                 val coord = getPositionText(it)
                 canvas.drawText(coord, realX(coord, x, positionPaint), realY(coord, height - 2f, positionPaint), positionPaint)
@@ -362,9 +236,6 @@ drawing底部方位文本
         }
     }
 
-    /**
-     * Retrieves positiontext information.
-     */
     private fun getPositionText(position: Int): String =
         when (position) {
             -90, 270 -> resources.getString(R.string.compass_west)
@@ -378,16 +249,6 @@ drawing底部方位文本
             else -> ""
         }
 
-    /**
-     * Executes toPixel functionality.
-     */
-    /**
-     * Executes topixel operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param bearing Parameter for operation (type: Float)
-     *
-     */
     private fun toPixel(bearing: Float): Float {
         return getPixelLinear(
             bearing,
@@ -397,10 +258,6 @@ drawing底部方位文本
         )
     }
 
-    /**
-     * Executes ondetachedfromwindow operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         scope.cancel()

@@ -18,20 +18,6 @@ import java.util.List;
  *
  * @author Philipp Jahoda
  */
-/**
- * Specialized thermal imaging component providing Legend functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class Legend extends ComponentBase {
 
     public enum LegendForm {
@@ -159,10 +145,6 @@ public class Legend extends ComponentBase {
     /**
      * default constructor
      */
-    /**
-     * Executes legend operation with thermal imaging domain optimization.
-     *
-     */
     public Legend() {
 
         this.mTextSize = Utils.convertDpToPixel(10f);
@@ -176,16 +158,8 @@ public class Legend extends ComponentBase {
      * @param entries
      */
     public Legend(LegendEntry[] entries) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (entries == null) {
             throw new IllegalArgumentException("entries array is NULL");
         }
@@ -219,37 +193,18 @@ public class Legend extends ComponentBase {
         float maxFormSize = 0f;
         float formToTextSpace = Utils.convertDpToPixel(mFormToTextSpace);
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param entry Parameter for operation (type: mEntries)
-         *
-         */
         for (LegendEntry entry : mEntries) {
             final float formSize = Utils.convertDpToPixel(
                     Float.isNaN(entry.formSize)
                     ? mFormSize : entry.formSize);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (formSize > maxFormSize)
                 maxFormSize = formSize;
 
             String label = entry.label;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (label == null) continue;
 
             float length = (float) Utils.calcTextWidth(p, label);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (length > max)
                 max = length;
         }
@@ -267,27 +222,12 @@ public class Legend extends ComponentBase {
 
         float max = 0f;
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param entry Parameter for operation (type: mEntries)
-         *
-         */
         for (LegendEntry entry : mEntries) {
             String label = entry.label;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (label == null) continue;
 
             float length = (float) Utils.calcTextHeight(p, label);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (length > max)
                 max = length;
         }
@@ -305,10 +245,6 @@ public class Legend extends ComponentBase {
     }
 
     public void setExtra(LegendEntry[] entries) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (entries == null)
             entries = new LegendEntry[]{};
         mExtraEntries = entries;
@@ -324,19 +260,11 @@ public class Legend extends ComponentBase {
 
         List<LegendEntry> entries = new ArrayList<>();
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < Math.min(colors.length, labels.length); i++) {
             final LegendEntry entry = new LegendEntry();
             entry.formColor = colors[i];
             entry.label = labels[i];
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (entry.formColor == ColorTemplate.COLOR_SKIP ||
                     entry.formColor == 0)
                 entry.form = LegendForm.NONE;
@@ -735,10 +663,6 @@ public class Legend extends ComponentBase {
         mTextWidthMax = getMaximumEntryWidth(labelpaint);
         mTextHeightMax = getMaximumEntryHeight(labelpaint);
 
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (mOrientation) {
             case VERTICAL: {
 
@@ -746,10 +670,6 @@ public class Legend extends ComponentBase {
                 float labelLineHeight = Utils.getLineHeight(labelpaint);
                 boolean wasStacked = false;
 
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (int i = 0; i < entryCount; i++) {
 
                     LegendEntry e = entries[i];
@@ -759,39 +679,19 @@ public class Legend extends ComponentBase {
                             : Utils.convertDpToPixel(e.formSize);
                     String label = e.label;
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (!wasStacked)
                         width = 0.f;
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (drawingForm) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (wasStacked)
                             width += stackSpace;
                         width += formSize;
                     }
 
-                    // Grouped forms have null labels
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
+                    // grouped forms have null labels
                     if (label != null) {
 
-                        // Make a step to the left
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
+                        // make a step to the left
                         if (drawingForm && !wasStacked)
                             width += formToTextSpace;
                         else if (wasStacked) {
@@ -803,19 +703,11 @@ public class Legend extends ComponentBase {
 
                         width += Utils.calcTextWidth(labelpaint, label);
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (i < entryCount - 1)
                             maxHeight += labelLineHeight + yEntrySpace;
                     } else {
                         wasStacked = true;
                         width += formSize;
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (i < entryCount - 1)
                             width += stackSpace;
                     }
@@ -844,10 +736,6 @@ public class Legend extends ComponentBase {
                 mCalculatedLabelSizes.clear();
                 mCalculatedLineSizes.clear();
 
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (int i = 0; i < entryCount; i++) {
 
                     LegendEntry e = entries[i];
@@ -859,24 +747,16 @@ public class Legend extends ComponentBase {
 
                     mCalculatedLabelBreakPoints.add(false);
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (stackedStartIndex == -1) {
-                        // We are not stacking, so required width is for this label
-                        // Only
+                        // we are not stacking, so required width is for this label
+                        // only
                         requiredWidth = 0.f;
                     } else {
-                        // Add the spacing appropriate for stacked labels/forms
+                        // add the spacing appropriate for stacked labels/forms
                         requiredWidth += stackSpace;
                     }
 
-                    // Grouped forms have null labels
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
+                    // grouped forms have null labels
                     if (label != null) {
 
                         mCalculatedLabelSizes.add(Utils.calcTextSize(labelpaint, label));
@@ -887,28 +767,16 @@ public class Legend extends ComponentBase {
                         mCalculatedLabelSizes.add(FSize.getInstance(0.f, 0.f));
                         requiredWidth += drawingForm ? formSize : 0.f;
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (stackedStartIndex == -1) {
-                            // Mark this index as we might want to break here later
+                            // mark this index as we might want to break here later
                             stackedStartIndex = i;
                         }
                     }
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (label != null || i == entryCount - 1) {
 
                         float requiredSpacing = currentLineWidth == 0.f ? 0.f : xEntrySpace;
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (!wordWrapEnabled // No word wrapping, it must fit.
                                 // The line is empty, it must fit
                                 || currentLineWidth == 0.f
@@ -930,10 +798,6 @@ public class Legend extends ComponentBase {
                             currentLineWidth = requiredWidth;
                         }
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (i == entryCount - 1) {
                             // Add last line size to array
                             mCalculatedLineSizes.add(FSize.getInstance(currentLineWidth, labelLineHeight));

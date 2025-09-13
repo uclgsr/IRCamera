@@ -34,18 +34,8 @@ import com.topdon.ble.UnifiedDevice
 // Note: EnhancedRecordingService is referenced with full package name since it's in a different module
 
 /**
- * Specialized thermal imaging component providing MultiModalRecordingActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Full multi-modal recording interface with GSR and thermal coordination
+ * Navigation: Use NavigationManager.getInstance().build(RouterConfig.GSR_MULTI_MODAL).navigation(context)
  */
 class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecordingBinding>() {
     companion object {
@@ -53,10 +43,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         private const val REQUEST_PERMISSIONS = 100
 
         private val REQUIRED_PERMISSIONS =
-            /**
-             * Executes arrayof operation with thermal imaging domain optimization.
-             *
-             */
             arrayOf(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -67,34 +53,17 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 Manifest.permission.BLUETOOTH_CONNECT,
             )
 
-    /**
-     * Executes start functionality.
-     */
-        /**
-         * Executes start operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param context Parameter for operation (type: Context)
-         *
-         */
         fun start(context: Context) {
             val intent = Intent(context, MultiModalRecordingActivity::class.java)
             context.startActivity(intent)
         }
 
-    /**
-     * Processes temperature measurement data.
-     */
         fun startWithTemplate(
             context: Context,
             templateId: String,
         ) {
             val intent =
                 Intent(context, MultiModalRecordingActivity::class.java).apply {
-                    /**
-                     * Executes putextra operation with thermal imaging domain optimization.
-                     *
-                     */
                     putExtra("template_id", templateId)
                 }
             context.startActivity(intent)
@@ -125,23 +94,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     // UI update timer
     private var uiUpdateJob: kotlinx.coroutines.Job? = null
 
-    /**
-     * Initializes the contentlayoutid component for thermal imaging operations.
-     *
-     */
     override fun initContentLayoutId() = R.layout.activity_multi_modal_recording
 
     // Service connection for enhanced recording service
     private val serviceConnection =
         object : ServiceConnection {
-            /**
-             * Executes onserviceconnected operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param name Parameter for operation (type: ComponentName?)
-             * @param service Parameter for operation (type: IBinder?)
-             *
-             */
             override fun onServiceConnected(
                 name: ComponentName?,
                 service: IBinder?,
@@ -150,49 +107,23 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 enhancedRecordingService = binder?.getService()
                 isServiceBound = true
                 Log.i(TAG, "Enhanced recording service connected")
-                /**
-                 * Executes updatenetworkstatusui operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateNetworkStatusUI()
             }
 
-            /**
-             * Executes onservicedisconnected operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param name Parameter for operation (type: ComponentName?)
-             *
-             */
             override fun onServiceDisconnected(name: ComponentName?) {
                 enhancedRecordingService = null
                 isServiceBound = false
                 Log.i(TAG, "Enhanced recording service disconnected")
-                /**
-                 * Executes updatenetworkstatusui operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateNetworkStatusUI()
             }
         }
 
     private val gsrListener =
         object : GSRRecorder.GSRRecordingListener {
-            /**
-             * Executes onrecordingstarted operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param sessionInfo Parameter for operation (type: SessionInfo)
-             *
-             */
             override fun onRecordingStarted(sessionInfo: SessionInfo) {
                 runOnUiThread {
                     isRecording = true
                     currentSession = sessionInfo
-                    /**
-                     * Executes updateui operation with thermal imaging domain optimization.
-                     *
-                     */
                     updateUI()
                     binding.statusText.text = "Recording GSR data at 128 Hz..."
                     binding.progressBar.visibility = View.VISIBLE
@@ -202,21 +133,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 }
             }
 
-            /**
-             * Executes onrecordingstopped operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param sessionInfo Parameter for operation (type: SessionInfo)
-             *
-             */
             override fun onRecordingStopped(sessionInfo: SessionInfo) {
                 runOnUiThread {
                     isRecording = false
                     currentSession = null
-                    /**
-                     * Executes updateui operation with thermal imaging domain optimization.
-                     *
-                     */
                     updateUI()
                     binding.statusText.text = "Recording completed. ${sessionInfo.sampleCount} samples recorded."
                     binding.progressBar.visibility = View.GONE
@@ -229,51 +149,20 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 }
             }
 
-            /**
-             * Executes onsamplerecorded operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param sample Parameter for operation (type: GSRSample)
-             *
-             */
             override fun onSampleRecorded(sample: GSRSample) {
                 sampleCount = sample.sampleIndex
 
                 // Send data to PC Controller if connected
                 networkClient?.let { client ->
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (client.isConnected()) {
                         currentSession?.let { session ->
                             lifecycleScope.launch {
                                 val data =
                                     org.json.JSONObject().apply {
-                                        /**
-                                         * Executes put operation with thermal imaging domain optimization.
-                                         *
-                                         */
                                         put("gsr_conductance", sample.conductance)
-                                        /**
-                                         * Executes put operation with thermal imaging domain optimization.
-                                         *
-                                         */
                                         put("gsr_resistance", sample.resistance)
-                                        /**
-                                         * Executes put operation with thermal imaging domain optimization.
-                                         *
-                                         */
                                         put("raw_value", sample.rawValue)
-                                        /**
-                                         * Executes put operation with thermal imaging domain optimization.
-                                         *
-                                         */
                                         put("timestamp", sample.timestamp)
-                                        /**
-                                         * Executes put operation with thermal imaging domain optimization.
-                                         *
-                                         */
                                         put("sample_index", sample.sampleIndex)
                                     }
                                 client.sendMeasurementData(session.sessionId, data)
@@ -283,10 +172,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 }
 
                 // Update UI every second (128 samples)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sampleCount % 128 == 0L) {
                     runOnUiThread {
                         binding.dataText.text = "Samples: $sampleCount"
@@ -298,13 +183,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 }
             }
 
-            /**
-             * Executes onsyncmarkadded operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param syncMark Parameter for operation (type: SyncMark)
-             *
-             */
             override fun onSyncMarkAdded(syncMark: SyncMark) {
                 syncMarkCount++
                 runOnUiThread {
@@ -317,13 +195,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 }
             }
 
-            /**
-             * Executes onerror operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param error Parameter for operation (type: String)
-             *
-             */
             override fun onError(error: String) {
                 runOnUiThread {
                     binding.statusText.text = "Error: $error"
@@ -337,13 +208,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             }
         }
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -352,10 +216,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         sessionManager = SessionManager.getInstance(this)
 
         // Set up view references using binding
-        /**
-         * Executes with operation with thermal imaging domain optimization.
-         *
-         */
         with(binding) {
             // Configure session ID input
             participantIdInput.setText(TimeUtil.generateSessionId("MultiModal"))
@@ -367,23 +227,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
             // Set up raw frame rate spinner
             val frameRateAdapter =
-                /**
-                 * Executes arrayadapter operation with thermal imaging domain optimization.
-                 *
-                 */
                 ArrayAdapter(
                     this@MultiModalRecordingActivity,
                     android.R.layout.simple_spinner_item,
-                    /**
-                     * Executes listof operation with thermal imaging domain optimization.
-                     *
-                     */
                     listOf("30 fps", "15 fps", "10 fps", "5 fps"),
                 ).apply {
-                    /**
-                     * Configures the dropdownviewresource with validation and thermal imaging optimization.
-                     *
-                     */
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
             rawFrameRateSpinner.adapter = frameRateAdapter
@@ -416,46 +264,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         // Initialize network client for PC Controller communication
         networkClient =
             com.topdon.gsr.network.NetworkClient(this).apply {
-                /**
-                 * Configures the eventlistener with validation and thermal imaging optimization.
-                 *
-                 * @param
-                 * @param object Parameter for operation (type: com.topdon.gsr.network.NetworkClient.NetworkEventListener {                         override fun onControllerDiscovered(controller: com.topdon.gsr.network.NetworkClient.ControllerInfo)
-                 * @param Controller Parameter for operation (type: ${controller.deviceName} (${controller.ipAddress})
-                 * @param controller Parameter for operation (type: com.topdon.gsr.network.NetworkClient.ControllerInfo)
-                 * @param reason Parameter for operation (type: String)
-                 * @param Disconnected Parameter for operation (type: $reason")
-                 * @param sessionInfo Parameter for operation (type: SessionInfo)
-                 * @param durationMs Duration in milliseconds (type: Int)
-                 * @param operation Parameter for operation (type: String)
-                 * @param error Parameter for operation (type: String)
-                 * @param error Parameter for operation (type: $error")
-                 * @param offsetNanoseconds Parameter for operation (type: Long)
-                 * @param offset Parameter for operation (type: ${offsetNanoseconds}ns)
-                 * @param controllerId Parameter for operation (type: String)
-                 * @param controllerName Parameter for operation (type: String)
-                 * @param by Parameter for operation (type: $controllerName")
-                 * @param controllerId Parameter for operation (type: String)
-                 * @param success Parameter for operation (type: Boolean)
-                 * @param controllerId Parameter for operation (type: String)
-                 *
-                 */
                 setEventListener(
                     object : com.topdon.gsr.network.NetworkClient.NetworkEventListener {
-                        /**
-                         * Executes oncontrollerdiscovered operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param controller Parameter for operation (type: com.topdon.gsr.network.NetworkClient.ControllerInfo)
-                         *
-                         */
                         override fun onControllerDiscovered(controller: com.topdon.gsr.network.NetworkClient.ControllerInfo) {
                             runOnUiThread {
                                 discoveredDevices.add(controller)
-                                /**
-                                 * Executes updatenetworkstatusui operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 updateNetworkStatusUI()
                                 binding.connectToDeviceButton.isEnabled = true
                                 Toast.makeText(
@@ -466,19 +279,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             }
                         }
 
-                        /**
-                         * Executes onconnected operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param controller Parameter for operation (type: com.topdon.gsr.network.NetworkClient.ControllerInfo)
-                         *
-                         */
                         override fun onConnected(controller: com.topdon.gsr.network.NetworkClient.ControllerInfo) {
                             runOnUiThread {
-                                /**
-                                 * Executes updatenetworkstatusui operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 updateNetworkStatusUI()
                                 Toast.makeText(
                                     this@MultiModalRecordingActivity,
@@ -488,19 +290,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             }
                         }
 
-                        /**
-                         * Executes ondisconnected operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param reason Parameter for operation (type: String)
-                         *
-                         */
                         override fun onDisconnected(reason: String) {
                             runOnUiThread {
-                                /**
-                                 * Executes updatenetworkstatusui operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 updateNetworkStatusUI()
                                 Toast.makeText(
                                     this@MultiModalRecordingActivity,
@@ -510,13 +301,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             }
                         }
 
-                        /**
-                         * Executes onremotemeasurementrequest operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param sessionInfo Parameter for operation (type: SessionInfo)
-                         *
-                         */
                         override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
                             runOnUiThread {
                                 // Auto-fill session info from remote request
@@ -524,36 +308,17 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                                 binding.participantIdInput.setText(sessionInfo.participantId)
 
                                 // Auto-start recording if requested
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (!isRecording) {
-                                    /**
-                                     * Executes startrecording operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     startRecording()
                                 }
                             }
                         }
 
-                        /**
-                         * Executes onsyncflash operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param durationMs Duration in milliseconds (type: Int)
-                         *
-                         */
                         override fun onSyncFlash(durationMs: Int) {
                             runOnUiThread {
                                 // Flash screen for sync
                                 val overlay =
                                     android.view.View(this@MultiModalRecordingActivity).apply {
-                                        /**
-                                         * Configures the backgroundcolor with validation and thermal imaging optimization.
-                                         *
-                                         */
                                         setBackgroundColor(android.graphics.Color.WHITE)
                                         alpha = 1.0f
                                     }
@@ -575,14 +340,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             }
                         }
 
-                        /**
-                         * Executes onerror operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param operation Parameter for operation (type: String)
-                         * @param error Parameter for operation (type: String)
-                         *
-                         */
                         override fun onError(
                             operation: String,
                             error: String,
@@ -596,47 +353,24 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                         }
 
                         // Additional methods for enhanced NetworkClient
-                        /**
-                         * Executes ontimesynchronized operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param offsetNanoseconds Parameter for operation (type: Long)
-                         *
-                         */
                         override fun onTimeSynchronized(offsetNanoseconds: Long) {
                             runOnUiThread {
                                 binding.statusText.text = "Time synchronized with PC Controller (offset: ${offsetNanoseconds}ns)"
                             }
                         }
 
-                        /**
-                         * Executes ondatastreamingstarted operation with thermal imaging domain optimization.
-                         *
-                         */
                         override fun onDataStreamingStarted() {
                             runOnUiThread {
                                 binding.statusText.text = "Real-time data streaming active"
                             }
                         }
 
-                        /**
-                         * Executes ondatastreamingstopped operation with thermal imaging domain optimization.
-                         *
-                         */
                         override fun onDataStreamingStopped() {
                             runOnUiThread {
                                 binding.statusText.text = "Data streaming stopped"
                             }
                         }
 
-                        /**
-                         * Executes onpairingrequested operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param controllerId Parameter for operation (type: String)
-                         * @param controllerName Parameter for operation (type: String)
-                         *
-                         */
                         override fun onPairingRequested(
                             controllerId: String,
                             controllerName: String,
@@ -650,14 +384,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             }
                         }
 
-                        /**
-                         * Executes onpairingcompleted operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param controllerId Parameter for operation (type: String)
-                         * @param success Parameter for operation (type: Boolean)
-                         *
-                         */
                         override fun onPairingCompleted(
                             controllerId: String,
                             success: Boolean,
@@ -668,13 +394,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             }
                         }
 
-                        /**
-                         * Executes onauthenticationrequired operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param controllerId Parameter for operation (type: String)
-                         *
-                         */
                         override fun onAuthenticationRequired(controllerId: String) {
                             runOnUiThread {
                                 Toast.makeText(
@@ -694,39 +413,17 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         Log.i(TAG, "RGBCameraRecorder skipped - no preview available in this layout")
 
         // Initialize camera
-        // RgbCameraRecorder?.initialize() // Skipped since rgbCameraRecorder is null
+        // rgbCameraRecorder?.initialize() // Skipped since rgbCameraRecorder is null
         gsrRecorder.addListener(gsrListener)
 
         // Check permissions
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!hasRequiredPermissions()) {
-            /**
-             * Executes requestpermissions operation with thermal imaging domain optimization.
-             *
-             */
             requestPermissions()
         }
     }
 
-    /**
-     * Executes hasRequiredPermissions functionality.
-     */
-    /**
-     * Executes hasrequiredpermissions operation with thermal imaging domain optimization.
-     *
-     */
     private fun hasRequiredPermissions(): Boolean {
         val basePermissions =
-            /**
-             * Executes arrayof operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param Critical Parameter for operation (type: Camera permission for RGB video recording                 Manifest.permission.CAMERA)
-             *
-             */
             arrayOf(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -743,16 +440,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
         // Check Android 12+ Bluetooth permissions for Shimmer3 GSR devices
         val bluetoothGranted =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
                 val bluetoothPermissions =
-                    /**
-                     * Executes arrayof operation with thermal imaging domain optimization.
-                     *
-                     */
                     arrayOf(
                         Manifest.permission.BLUETOOTH_SCAN,
                         Manifest.permission.BLUETOOTH_CONNECT,
@@ -769,28 +458,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         return baseGranted && bluetoothGranted
     }
 
-    /**
-     * Executes requestPermissions functionality.
-     */
-    /**
-     * Executes requestpermissions operation with thermal imaging domain optimization.
-     *
-     */
     private fun requestPermissions() {
         val permissionsToRequest =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
                 // Android 12+ permissions including Camera and Bluetooth for Shimmer3 GSR devices
-                /**
-                 * Executes arrayof operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param Critical Parameter for operation (type: Camera permission for RGB video recording                     Manifest.permission.CAMERA)
-                 *
-                 */
                 arrayOf(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -802,13 +473,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 )
             } else {
                 // Legacy permissions including Camera
-                /**
-                 * Executes arrayof operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param Critical Parameter for operation (type: Camera permission for RGB video recording                     Manifest.permission.CAMERA)
-                 *
-                 */
                 arrayOf(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -823,15 +487,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         ActivityCompat.requestPermissions(this, permissionsToRequest, REQUEST_PERMISSIONS)
     }
 
-    /**
-     * Executes onrequestpermissionsresult operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param requestCode Parameter for operation (type: Int)
-     * @param permissions Parameter for operation (type: Array<out String>)
-     * @param grantResults Parameter for operation (type: IntArray)
-     *
-     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -839,15 +494,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (requestCode == REQUEST_PERMISSIONS) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 binding.statusText.text = "All permissions granted. GSR recording with Shimmer3 devices ready."
             } else {
@@ -856,15 +503,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
                 // Check which specific permissions are missing
                 permissions.forEachIndexed { index, permission ->
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
-                        /**
-                         * Executes when operation with thermal imaging domain optimization.
-                         *
-                         */
                         when (permission) {
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -888,63 +527,25 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         }
     }
 
-    /**
-     * Executes toggleRecording functionality.
-     */
-    /**
-     * Executes togglerecording operation with thermal imaging domain optimization.
-     *
-     */
     private fun toggleRecording() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!hasRequiredPermissions()) {
-            /**
-             * Executes requestpermissions operation with thermal imaging domain optimization.
-             *
-             */
             requestPermissions()
             return
         }
 
         // Guard against concurrent toggling
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isStartingRecording) {
             Log.d(TAG, "Recording start already in progress, ignoring additional taps")
             return
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isRecording) {
-            /**
-             * Executes stoprecording operation with thermal imaging domain optimization.
-             *
-             */
             stopRecording()
         } else {
-            /**
-             * Executes startrecording operation with thermal imaging domain optimization.
-             *
-             */
             startRecording()
         }
     }
 
-    /**
-     * Executes startRecording functionality.
-     */
-    /**
-     * Executes startrecording operation with thermal imaging domain optimization.
-     *
-     */
     private fun startRecording() {
         // Set guard flag and disable button immediately to prevent double taps
         isStartingRecording = true
@@ -958,16 +559,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         val participantId = binding.participantIdInput.text.toString().trim().takeIf { it.isNotEmpty() }
 
         // Start RGB camera recording if enabled
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (binding.enableVideoSwitch.isChecked) {
             val resolution =
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (binding.enable4kSwitch.isChecked) {
                     RGBCameraRecorder.VideoResolution.UHD_4K
                 } else {
@@ -975,10 +568,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 }
 
             val rawFrameRate =
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (binding.rawFrameRateSpinner.selectedItemPosition) {
                     0 -> 30
                     1 -> 15
@@ -1002,10 +591,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             rgbCameraRecorder?.updateSettings(cameraSettings)
 
             val cameraStarted = rgbCameraRecorder?.startRecording(sessionId) ?: false
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!cameraStarted) {
                 // Reset guard flags on failure
                 isStartingRecording = false
@@ -1022,10 +607,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             try {
                 val success = gsrRecorder.startRecording(sessionId, participantId, null)
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     // Reset counters
                     sampleCount = 0
@@ -1050,10 +631,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                     }
 
                     runOnUiThread {
-                        /**
-                         * Executes updateui operation with thermal imaging domain optimization.
-                         *
-                         */
                         updateUI()
                         binding.startButton.isEnabled = true
                         binding.startButton.text = "Start Recording"
@@ -1061,16 +638,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                     }
 
                     val recordingModes = mutableListOf<String>()
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (binding.enableVideoSwitch.isChecked) {
                         recordingModes.add(if (binding.enable4kSwitch.isChecked) "4K Video" else "1080p Video")
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (binding.enableRawCaptureSwitch.isChecked) {
                             recordingModes.add("RAW Images (${binding.rawFrameRateSpinner.selectedItem})")
                         }
@@ -1113,13 +682,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         }
     }
 
-    /**
-     * Executes stopRecording functionality.
-     */
-    /**
-     * Executes stoprecording operation with thermal imaging domain optimization.
-     *
-     */
     private fun stopRecording() {
         // Stop enhanced recording service
         try {
@@ -1149,26 +711,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         }
 
         isRecording = false
-        /**
-         * Executes updateui operation with thermal imaging domain optimization.
-         *
-         */
         updateUI()
     }
 
-    /**
-     * Executes triggerSyncEvent functionality.
-     */
-    /**
-     * Executes triggersyncevent operation with thermal imaging domain optimization.
-     *
-     */
     private fun triggerSyncEvent() {
         lifecycleScope.launch {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (gsrRecorder.addSyncMark("USER_TRIGGER", "Manual sync event triggered from UI")) {
                 Log.d(TAG, "User sync event triggered successfully")
                 binding.statusText.text = "Sync event added at ${System.currentTimeMillis()}"
@@ -1179,21 +726,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         }
     }
 
-    /**
-     * Executes triggerFlashSync functionality.
-     */
-    /**
-     * Executes triggerflashsync operation with thermal imaging domain optimization.
-     *
-     */
     private fun triggerFlashSync() {
         // Trigger a visual flash for synchronization
         val overlay =
             android.view.View(this).apply {
-                /**
-                 * Configures the backgroundcolor with validation and thermal imaging optimization.
-                 *
-                 */
                 setBackgroundColor(android.graphics.Color.WHITE)
                 alpha = 1.0f
             }
@@ -1213,22 +749,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             .withEndAction {
                 frameLayout.removeView(overlay)
                 // Also add a sync mark
-                /**
-                 * Executes triggersyncevent operation with thermal imaging domain optimization.
-                 *
-                 */
                 triggerSyncEvent()
             }
             .start()
     }
 
-    /**
-     * Executes updateUI functionality.
-     */
-    /**
-     * Executes updateui operation with thermal imaging domain optimization.
-     *
-     */
     private fun updateUI() {
         binding.startButton.text = if (isRecording) "Recording..." else "Start Recording"
         binding.stopButton.isEnabled = isRecording
@@ -1238,48 +763,22 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         binding.participantIdInput.isEnabled = !isRecording
     }
 
-    /**
-     * Executes oncreateoptionsmenu operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param menu Parameter for operation (type: android.view.Menu?)
-     *
-     */
     override fun onCreateOptionsMenu(menu: android.view.Menu?): Boolean {
         menuInflater.inflate(R.menu.multi_modal_recording_menu, menu)
         return true
     }
 
-    /**
-     * Executes onoptionsitemselected operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param item Parameter for operation (type: android.view.MenuItem)
-     *
-     */
     override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_gallery -> {
-                /**
-                 * Executes opengallery operation with thermal imaging domain optimization.
-                 *
-                 */
                 openGallery()
                 true
             }
             R.id.action_settings -> {
-                /**
-                 * Executes opensettings operation with thermal imaging domain optimization.
-                 *
-                 */
                 openSettings()
                 true
             }
             R.id.action_session_manager -> {
-                /**
-                 * Executes opensessionmanager operation with thermal imaging domain optimization.
-                 *
-                 */
                 openSessionManager()
                 true
             }
@@ -1287,47 +786,19 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         }
     }
 
-    /**
-     * Executes openGallery functionality.
-     */
-    /**
-     * Executes opengallery operation with thermal imaging domain optimization.
-     *
-     */
     private fun openGallery() {
         GSRGalleryActivity.startActivity(this)
     }
 
-    /**
-     * Executes openSettings functionality.
-     */
-    /**
-     * Executes opensettings operation with thermal imaging domain optimization.
-     *
-     */
     private fun openSettings() {
         GSRSettingsActivity.startActivity(this)
     }
 
-    /**
-     * Executes openSessionManager functionality.
-     */
-    /**
-     * Executes opensessionmanager operation with thermal imaging domain optimization.
-     *
-     */
     private fun openSessionManager() {
         SessionManagerActivity.startActivity(this)
     }
 
     // Network status UI update method
-    /**
-     * Executes updateNetworkStatusUI functionality.
-     */
-    /**
-     * Executes updatenetworkstatusui operation with thermal imaging domain optimization.
-     *
-     */
     private fun updateNetworkStatusUI() {
         runOnUiThread {
             // Update network connection status
@@ -1342,10 +813,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             // Update discovered devices
             val deviceCount = discoveredDevices.size
             val deviceText =
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (deviceCount > 0) {
                     val firstDevice = discoveredDevices.first()
                     "Devices: $deviceCount found (${firstDevice.deviceName})"
@@ -1359,10 +826,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 val queueSizes = service.getQueueSizes()
                 val totalItems = queueSizes.values.sum()
                 val queueText =
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (queueSizes.isNotEmpty()) {
                         val details = queueSizes.entries.joinToString(", ") { "${it.key}: ${it.value}" }
                         "Streaming Queue: $totalItems items ($details)"
@@ -1376,10 +839,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
             // Update network metrics (simulate metrics)
             networkClient?.let { client ->
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (client.isConnected()) {
                     val latency = client.getLatencyMs()
                     val throughput = client.getThroughputKBps()
@@ -1392,13 +851,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     // Start device discovery
-    /**
-     * Executes startDeviceDiscovery functionality.
-     */
-    /**
-     * Executes startdevicediscovery operation with thermal imaging domain optimization.
-     *
-     */
     private fun startDeviceDiscovery() {
         discoveredDevices.clear()
         binding.connectToDeviceButton.isEnabled = false
@@ -1409,52 +861,25 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             runOnUiThread {
                 binding.startDiscoveryButton.text = "Start Device Discovery"
                 binding.startDiscoveryButton.isEnabled = true
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!success) {
                     Toast.makeText(this, "Failed to start discovery", Toast.LENGTH_SHORT).show()
                 }
-                /**
-                 * Executes updatenetworkstatusui operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateNetworkStatusUI()
             }
         }
     }
 
     // Connect to selected device
-    /**
-     * Executes connectToSelectedDevice functionality.
-     */
-    /**
-     * Executes connecttoselecteddevice operation with thermal imaging domain optimization.
-     *
-     */
     private fun connectToSelectedDevice() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (discoveredDevices.isNotEmpty()) {
             val selectedDevice = discoveredDevices.first() // For simplicity, connect to first device
             networkClient?.connectToController(selectedDevice.ipAddress, selectedDevice.port) { success ->
                 runOnUiThread {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (success) {
                         Toast.makeText(this, "Connection successful", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(this, "Connection failed", Toast.LENGTH_SHORT).show()
                     }
-                    /**
-                     * Executes updatenetworkstatusui operation with thermal imaging domain optimization.
-                     *
-                     */
                     updateNetworkStatusUI()
                 }
             }
@@ -1462,20 +887,9 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     // Service binding methods
-    /**
-     * Executes bindEnhancedRecordingService functionality.
-     */
-    /**
-     * Executes bindenhancedrecordingservice operation with thermal imaging domain optimization.
-     *
-     */
     private fun bindEnhancedRecordingService() {
         try {
             val intent = Intent(this, com.topdon.gsr.service.EnhancedRecordingService::class.java)
-            /**
-             * Executes bindservice operation with thermal imaging domain optimization.
-             *
-             */
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to bind enhanced recording service", e)
@@ -1483,86 +897,32 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         }
     }
 
-    /**
-     * Executes unbindEnhancedRecordingService functionality.
-     */
-    /**
-     * Executes unbindenhancedrecordingservice operation with thermal imaging domain optimization.
-     *
-     */
     private fun unbindEnhancedRecordingService() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isServiceBound) {
-            /**
-             * Executes unbindservice operation with thermal imaging domain optimization.
-             *
-             */
             unbindService(serviceConnection)
             isServiceBound = false
             enhancedRecordingService = null
         }
     }
 
-    /**
-     * Executes onstart operation with thermal imaging domain optimization.
-     *
-     */
     override fun onStart() {
         super.onStart()
-        /**
-         * Executes bindenhancedrecordingservice operation with thermal imaging domain optimization.
-         *
-         */
         bindEnhancedRecordingService()
-        /**
-         * Executes startuiupdates operation with thermal imaging domain optimization.
-         *
-         */
         startUIUpdates()
     }
 
-    /**
-     * Executes onstop operation with thermal imaging domain optimization.
-     *
-     */
     override fun onStop() {
         super.onStop()
-        /**
-         * Executes stopuiupdates operation with thermal imaging domain optimization.
-         *
-         */
         stopUIUpdates()
-        /**
-         * Executes unbindenhancedrecordingservice operation with thermal imaging domain optimization.
-         *
-         */
         unbindEnhancedRecordingService()
     }
 
     // Start periodic UI updates
-    /**
-     * Executes startUIUpdates functionality.
-     */
-    /**
-     * Executes startuiupdates operation with thermal imaging domain optimization.
-     *
-     */
     private fun startUIUpdates() {
         uiUpdateJob?.cancel()
         uiUpdateJob =
             lifecycleScope.launch {
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (true) {
-                    /**
-                     * Executes updatenetworkstatusui operation with thermal imaging domain optimization.
-                     *
-                     */
                     updateNetworkStatusUI()
                     kotlinx.coroutines.delay(2000) // Update every 2 seconds
                 }
@@ -1570,47 +930,20 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     // Stop periodic UI updates
-    /**
-     * Executes stopUIUpdates functionality.
-     */
-    /**
-     * Executes stopuiupdates operation with thermal imaging domain optimization.
-     *
-     */
     private fun stopUIUpdates() {
         uiUpdateJob?.cancel()
         uiUpdateJob = null
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
         super.onDestroy()
-        /**
-         * Executes stopuiupdates operation with thermal imaging domain optimization.
-         *
-         */
         stopUIUpdates()
         gsrRecorder.removeListener(gsrListener)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isRecording) {
-            /**
-             * Executes stoprecording operation with thermal imaging domain optimization.
-             *
-             */
             stopRecording()
         }
         rgbCameraRecorder?.cleanup()
         networkClient?.cleanup()
-        /**
-         * Executes unbindenhancedrecordingservice operation with thermal imaging domain optimization.
-         *
-         */
         unbindEnhancedRecordingService()
     }
 }

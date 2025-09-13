@@ -10,7 +10,7 @@ data class ResearchTemplate(
     val description: String,
     val category: TemplateCategory,
     val sensors: Set<SensorType>,
-    val duration: Long? = null, // Milliseconds, null for unlimited
+    val duration: Long? = null, // milliseconds, null for unlimited
     val gsrSamplingRate: Int = 128,
     val videoResolution: VideoResolution = VideoResolution.FULL_HD,
     val videoFrameRate: Int = 30,
@@ -18,16 +18,6 @@ data class ResearchTemplate(
     val instructions: String? = null,
     val icon: String? = null,
 ) {
-/**
- * Temperature measurement and calibration utility for thermal imaging. Provides precision temperature calculations with TemplateCategory algorithms.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     enum class TemplateCategory {
         STRESS_RESPONSE,
         COGNITIVE_LOAD,
@@ -37,52 +27,16 @@ data class ResearchTemplate(
         CUSTOM,
     }
 
-/**
- * Specialized thermal imaging component providing SensorType functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     enum class SensorType {
         GSR,
         THERMAL_CAMERA,
         RGB_CAMERA,
     }
 
-/**
- * Specialized thermal imaging component providing VideoResolution functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     enum class VideoResolution(val width: Int, val height: Int) {
-        /**
-         * Executes sd operation with thermal imaging domain optimization.
-         *
-         */
         SD(720, 480),
-        /**
-         * Executes hd operation with thermal imaging domain optimization.
-         *
-         */
         HD(1280, 720),
-        /**
-         * Executes full hd operation with thermal imaging domain optimization.
-         *
-         */
         FULL_HD(1920, 1080),
-        /**
-         * Executes uhd 4k operation with thermal imaging domain optimization.
-         *
-         */
         UHD_4K(3840, 2160),
     }
 
@@ -93,13 +47,6 @@ data class ResearchTemplate(
         val PREDEFINED_TEMPLATES =
             listOf(
                 // Stress Response Studies
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 ResearchTemplate(
                     id = "stress_response_basic",
                     name = "Stress Response - Basic",
@@ -110,10 +57,6 @@ data class ResearchTemplate(
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.HD,
                     metadata =
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "study_type" to "stress_response",
                             "measurement_focus" to "physiological_arousal",
@@ -121,16 +64,6 @@ data class ResearchTemplate(
                     instructions = "Place GSR sensors on participant's fingers. Position thermal camera to capture face. Begin baseline recording for 2 minutes before stress induction.",
                     icon = "🧠",
                 ),
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @param
-                 * @param study Parameter for operation (type: \n1. Attach GSR sensors\n2. Position thermal and RGB cameras\n3. Record 5min baseline → 10min stress task → 5min recovery")
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 ResearchTemplate(
                     id = "stress_response_comprehensive",
                     name = "Stress Response - Comprehensive",
@@ -142,10 +75,6 @@ data class ResearchTemplate(
                     videoResolution = VideoResolution.FULL_HD,
                     videoFrameRate = 60,
                     metadata =
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "study_type" to "comprehensive_stress",
                             "baseline_duration" to "300", // 5 minutes
@@ -156,13 +85,6 @@ data class ResearchTemplate(
                     icon = "🔬",
                 ),
                 // Cognitive Load Studies
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 ResearchTemplate(
                     id = "cognitive_load_mental_tasks",
                     name = "Cognitive Load - Mental Tasks",
@@ -173,10 +95,6 @@ data class ResearchTemplate(
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.HD,
                     metadata =
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "study_type" to "cognitive_load",
                             "task_type" to "mental_arithmetic",
@@ -185,16 +103,6 @@ data class ResearchTemplate(
                     instructions = "Measure cognitive load during mental tasks. Begin with 3min rest, then progressive difficulty tasks (easy→medium→hard). Monitor GSR changes and thermal patterns.",
                     icon = "🧮",
                 ),
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @param
-                 * @param monitoring Parameter for operation (type: \n1. 10min instruction phase\n2. 15min practice phase\n3. 5min assessment phase\nMonitor engagement and cognitive load throughout.")
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 ResearchTemplate(
                     id = "cognitive_load_learning",
                     name = "Cognitive Load - Learning Assessment",
@@ -205,10 +113,6 @@ data class ResearchTemplate(
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.FULL_HD,
                     metadata =
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "study_type" to "learning_assessment",
                             "session_structure" to "instruction_practice_test",
@@ -217,13 +121,6 @@ data class ResearchTemplate(
                     icon = "📚",
                 ),
                 // Emotion Recognition Studies
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 ResearchTemplate(
                     id = "emotion_recognition_basic",
                     name = "Emotion Recognition - Basic",
@@ -235,10 +132,6 @@ data class ResearchTemplate(
                     videoResolution = VideoResolution.FULL_HD,
                     videoFrameRate = 30,
                     metadata =
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "study_type" to "emotion_recognition",
                             "stimulus_type" to "images_videos",
@@ -247,16 +140,6 @@ data class ResearchTemplate(
                     instructions = "Present emotional stimuli while recording physiological responses. Ensure thermal camera captures full face area. Record GSR baseline before each stimulus presentation.",
                     icon = "😊",
                 ),
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @param
-                 * @param study Parameter for operation (type: \n- RGB: facial expressions\n- Thermal: arousal patterns\n- GSR: autonomic responses\nPresent varied emotional stimuli and record multi-modal responses.")
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 ResearchTemplate(
                     id = "emotion_recognition_multimodal",
                     name = "Emotion Recognition - Multi-Modal",
@@ -268,10 +151,6 @@ data class ResearchTemplate(
                     videoResolution = VideoResolution.FULL_HD,
                     videoFrameRate = 60,
                     metadata =
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "study_type" to "multimodal_emotion",
                             "modalities" to "facial_thermal_gsr",
@@ -281,13 +160,6 @@ data class ResearchTemplate(
                     icon = "🎭",
                 ),
                 // Physiological Monitoring
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 ResearchTemplate(
                     id = "physio_monitoring_baseline",
                     name = "Physiological Monitoring - Baseline",
@@ -298,10 +170,6 @@ data class ResearchTemplate(
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.HD,
                     metadata =
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "study_type" to "baseline_monitoring",
                             "monitoring_duration" to "3600", // 1 hour
@@ -311,31 +179,17 @@ data class ResearchTemplate(
                     icon = "📈",
                 ),
                 // Behavioral Analysis
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @param
-                 * @param monitoring Parameter for operation (type: \n- RGB: behavioral coding\n- Thermal: arousal detection\n- GSR: stress/engagement\nRecord natural conversation or structured interaction tasks.")
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 ResearchTemplate(
                     id = "behavioral_analysis_social",
                     name = "Behavioral Analysis - Social Interaction",
                     description = "Social behavior analysis with physiological arousal monitoring",
                     category = TemplateCategory.BEHAVIORAL_ANALYSIS,
                     sensors = setOf(SensorType.GSR, SensorType.THERMAL_CAMERA, SensorType.RGB_CAMERA),
-                    duration = null, // Unlimited
+                    duration = null, // unlimited
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.FULL_HD,
                     videoFrameRate = 60,
                     metadata =
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "study_type" to "social_behavior",
                             "interaction_type" to "dyadic_conversation",
@@ -345,13 +199,6 @@ data class ResearchTemplate(
                     icon = "👥",
                 ),
                 // Custom Template
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 ResearchTemplate(
                     id = "custom_template",
                     name = "Custom Research Template",
@@ -367,23 +214,14 @@ data class ResearchTemplate(
                 ),
             )
 
-    /**
-     * Retrieves templatesbycategory information.
-     */
         fun getTemplatesByCategory(category: TemplateCategory): List<ResearchTemplate> {
             return PREDEFINED_TEMPLATES.filter { it.category == category }
         }
 
-    /**
-     * Retrieves templatebyid information.
-     */
         fun getTemplateById(id: String): ResearchTemplate? {
             return PREDEFINED_TEMPLATES.find { it.id == id }
         }
 
-    /**
-     * Retrieves templateswithsensor information.
-     */
         fun getTemplatesWithSensor(sensorType: SensorType): List<ResearchTemplate> {
             return PREDEFINED_TEMPLATES.filter { it.sensors.contains(sensorType) }
         }

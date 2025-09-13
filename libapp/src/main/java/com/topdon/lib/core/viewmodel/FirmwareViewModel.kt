@@ -41,23 +41,6 @@ import java.util.concurrent.CountDownLatch
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for FirmwareViewModel display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class FirmwareViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
         /**
@@ -98,7 +81,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
-     * 用avariable来storage请求state，避免重复请求.
+     * 用一个variable来storage请求state，避免重复请求.
      */
     @Volatile
     private var isRequest = false
@@ -116,7 +99,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     val failLD: MutableLiveData<Boolean> = MutableLiveData()
 
     /**
-     * afirmwareUpgrade包info.
+     * 一个firmwareUpgrade包info.
      * @param version 该firmwareUpgrade包version，V1.00format
      * @param updateStr Upgrade文案info
      * @param downUrl firmwareUpgrade包 URL
@@ -135,21 +118,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
      * - [failLD] (failed)
      * @param isTS004 true-TS004 false-TC007
      */
-    /**
-     * Executes queryFirmware functionality.
-     */
-    /**
-     * Executes queryfirmware operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isTS004 Parameter for operation (type: Boolean)
-     *
-     */
     fun queryFirmware(isTS004: Boolean) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isRequest) { // 别催别催，在查了
             return
         }
@@ -158,12 +127,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch(Dispatchers.IO) {
             // 由于双通道方案存在问题，V3.30临时使用 apk 内置firmwareUpgrade包，以下使用network的代码先comment
             /*if (isTS004) {
-                // 从 TS004 中Get/Retrieve SN、Activate码
+                //从 TS004 中Get/Retrieve SN、Activate码
                 val deviceInfo: DeviceInfo? = TS004Repository.getDeviceInfo()?.data
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (deviceInfo == null) {
                     XLog.w("TS004 firmwareUpgrade - 从device查询 SN、Activate码 failed!")
                     failLD.postValue(false)
@@ -171,12 +136,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                     return@launch
                 }
 
-                // 从 TS004 中Get/Retrievefirmwareversion
+                //从 TS004 中Get/Retrievefirmwareversion
                 val firmware: String? = TS004Repository.getVersion()?.data?.firmware
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (firmware == null) {
                     XLog.w("TS004 firmwareUpgrade - 从device查询 firmwareversion failed!")
                     failLD.postValue(false)
@@ -186,18 +147,10 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
                 val sn: String = if (USE_DEBUG_SN) TS004_DEBUG_SN else deviceInfo.sn
                 val randomNum: String = if (USE_DEBUG_SN) TS004_DEBUG_RANDOM_NUM else deviceInfo.code
-                /**
-                 * Retrieves the infofromnetwork with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getInfoFromNetwork(true, sn, randomNum, firmware)
             } else {
-                // 从 TC007 中Get/Retrieve SN、Activate码
+                //从 TC007 中Get/Retrieve SN、Activate码
                 val productInfo: ProductBean? = TC007Repository.getProductInfo()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (productInfo == null) {
                     XLog.w("TC007 firmwareUpgrade - 从device查询 SN、Activate码 failed!")
                     failLD.postValue(false)
@@ -208,25 +161,13 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 val sn: String = if (USE_DEBUG_SN) TC007_DEBUG_SN else productInfo.ProductSN
                 val randomNum: String = if (USE_DEBUG_SN) TC007_DEBUG_RANDOM_NUM else productInfo.Code
                 val firmware = "V${productInfo.getVersionStr()}"
-                /**
-                 * Retrieves the infofromnetwork with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getInfoFromNetwork(false, sn, randomNum, firmware)
             }*/
 
             // 由于双通道方案存在问题，V3.30临时使用 apk 内置firmwareUpgrade包，以下为临时方案逻辑
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isTS004) {
                 // 从 TS004 中Get/Retrievefirmwareversion
                 val firmware: String? = TS004Repository.getVersion()?.data?.firmware
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (firmware == null) {
                     XLog.w("TS004 firmwareUpgrade - 从device查询 firmwareversion failed!")
                     failLD.postValue(false)
@@ -234,18 +175,10 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                     return@launch
                 }
 
-                /**
-                 * Retrieves the infofromassets with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getInfoFromAssets(true, firmware)
             } else {
                 // 从 TC007 中Get/Retrievefirmwareversion
                 val productInfo: ProductBean? = TC007Repository.getProductInfo()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (productInfo == null) {
                     XLog.w("TC007 firmwareUpgrade - 从device查询 SN、Activate码 failed!")
                     failLD.postValue(false)
@@ -253,10 +186,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                     return@launch
                 }
 
-                /**
-                 * Retrieves the infofromassets with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getInfoFromAssets(false, "V${productInfo.getVersionStr()}")
             }
         }
@@ -275,10 +204,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val newVersion: Double = getVersionFromStr(apkVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
         XLog.d("${if (isTS004) "TS004" else "TC007"} firmwareUpgrade - currentversion：$currentVersion apk内置version：$newVersion")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (newVersion <= currentVersion) { 
             firmwareDataLD.postValue(null)
             isRequest = false
@@ -292,10 +217,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             val outputStream: OutputStream = FileOutputStream(firmwareFile)
             val buffer = ByteArray(1024)
             var length: Int
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (inputStream.read(buffer).also { length = it } > 0) {
                 outputStream.write(buffer, 0, length)
             }
@@ -327,10 +248,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     ) {
         
         val bindCode = bindDevice(sn, randomNum)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (bindCode != LMS.SUCCESS && bindCode != 15109) {
             XLog.w("${if (isTS004) "TS004" else "TC007"} firmwareUpgrade - 绑定devicefailed! sn: $sn")
             failLD.postValue(bindCode == 15162)
@@ -340,10 +257,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         // Get/RetrievefirmwareUpgrade包list
         val packageData: PackageData? = querySoftPackage(sn, if (isTS004) TS004_SOFT_CODE else TC007_SOFT_CODE)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (packageData == null) {
             XLog.w("${if (isTS004) "TS004" else "TC007"} firmwareUpgrade - Get/RetrievefirmwareUpgrade包infofailed!")
             failLD.postValue(false)
@@ -353,10 +266,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val record: PackageData.Record? = packageData.getFirstRecord()
         val newVersionStr: String? = record?.maxUpdateVersion
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (record == null || newVersionStr == null) { // 没有firmwareUpgrade包，即currentfirmware已是最新
             XLog.d("${if (isTS004) "TS004" else "TC007"} firmwareUpgrade - 没有firmwareUpgrade包，即currentfirmware已是最新")
             firmwareDataLD.postValue(null)
@@ -367,10 +276,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val newVersion: Double = getVersionFromStr(newVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
         XLog.d("${if (isTS004) "TS004" else "TC007"} firmwareUpgrade - currentversion：$currentVersion service器version：$newVersion")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (newVersion <= currentVersion) { 
             firmwareDataLD.postValue(null)
             isRequest = false
@@ -379,16 +284,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         // Get/RetrievefirmwareUpgrade包Download地址
         val downloadData = queryDownloadUrl(sn, record.maxUpdateVersionSoftId)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (downloadData?.responseCode == LMS.SUCCESS) {
             firmwareDataLD.postValue(
-                /**
-                 * Executes firmwaredata operation with thermal imaging domain optimization.
-                 *
-                 */
                 FirmwareData(
                     newVersionStr,
                     record.getUpdateStr(),
@@ -429,10 +326,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         sn: String,
         softCode: String,
     ): PackageData? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             var packageData: PackageData? = null
             val countDownLatch = CountDownLatch(1)
@@ -451,13 +344,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 url,
                 params,
                 object : IResponseCallback {
-                    /**
-                     * Executes onresponse operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param response Parameter for operation (type: String?)
-                     *
-                     */
                     override fun onResponse(response: String?) {
                         try {
                             val commonBean: CommonBean = ResponseBean.convertCommonBean(response, null)
@@ -467,13 +353,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                         countDownLatch.countDown()
                     }
 
-                    /**
-                     * Executes onfail operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param exception Parameter for operation (type: Exception?)
-                     *
-                     */
                     override fun onFail(exception: Exception?) {
                         countDownLatch.countDown()
                     }
@@ -491,10 +370,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         sn: String,
         businessId: Int,
     ): DownloadData? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             var result: DownloadData? = null
             val countDownLatch = CountDownLatch(1)
@@ -509,20 +384,9 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 url,
                 params,
                 object : IResponseCallback {
-                    /**
-                     * Executes onresponse operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param response Parameter for operation (type: String?)
-                     *
-                     */
                     override fun onResponse(response: String?) {
                         try {
                             val commonBean: CommonBean = ResponseBean.convertCommonBean(response, null)
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (commonBean.code == LMS.SUCCESS) {
                                 result = Gson().fromJson(commonBean.data, DownloadData::class.java)
                                 result?.responseCode = commonBean.code
@@ -534,13 +398,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                         countDownLatch.countDown()
                     }
 
-                    /**
-                     * Executes onfail operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param exception Parameter for operation (type: Exception?)
-                     *
-                     */
                     override fun onFail(exception: Exception?) {
                         countDownLatch.countDown()
                     }
@@ -550,51 +407,34 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             return@withContext result
         }
 
+    private fun getVersionFromStr(versionStr: String): Double =
+        try {
+            if (versionStr[0] == 'V') {
+                versionStr.substring(1, versionStr.length).toDouble()
+            } else {
+                versionStr.toDouble()
+            }
+        } catch (e: NumberFormatException) {
+            0.0
+        }
+
     /**
-     * Retrieves versionfromstr information.
+     * 用来parsing Get/RetrievefirmwareUpgrade包list interfaceReturn的data.
      */
-/**
- * Specialized thermal imaging component providing PackageData functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     private class PackageData {
         var records: List<Record>? = null
 
-    /**
-     * Retrieves firstrecord information.
-     */
         fun getFirstRecord(): Record? = if (records?.isNotEmpty() == true) records?.get(0) else null
 
         data class Record(
-            var maxUpdateVersion: String?, // Version名，如"V1.32"
+            var maxUpdateVersion: String?, // version名，如"V1.32"
             var maxUpdateVersionSoftId: Int, 
             var maxVersionDetailResVO: MaxVersionDetailResVO?,
         ) {
-    /**
-     * Retrieves updatestr information.
-     */
             fun getUpdateStr(): String {
                 val otherExplain: List<OtherExplain>? = maxVersionDetailResVO?.otherExplain
                 if (otherExplain != null) {
-                    /**
-                     * Executes for operation with thermal imaging domain optimization.
-                     *
-                     */
                     for (data in otherExplain) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (data.valueType == 3) {
                             return data.textDescription ?: ""
                         }

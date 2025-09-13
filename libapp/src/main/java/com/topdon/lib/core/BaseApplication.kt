@@ -42,20 +42,6 @@ import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 import java.io.File
 
-/**
- * Specialized thermal imaging component providing BaseApplication functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 abstract class BaseApplication : Application() {
     companion object {
         lateinit var instance: BaseApplication
@@ -81,50 +67,22 @@ abstract class BaseApplication : Application() {
      */
     abstract fun isDomestic(): Boolean
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     */
     override fun onCreate() {
         super.onCreate()
         instance = this
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            /**
-             * Executes webviewsetpath operation with thermal imaging domain optimization.
-             *
-             */
             webviewSetPath(this)
         }
-        /**
-         * Executes onlanguagechange operation with thermal imaging domain optimization.
-         *
-         */
         onLanguageChange()
 
         WebSocketProxy.getInstance().onMessageListener = {
-            /**
-             * Executes parsersocketmessage operation with thermal imaging domain optimization.
-             *
-             */
             parserSocketMessage(it)
         }
     }
 
     open fun initWebSocket() {
-        /**
-         * Executes connectwebsocket operation with thermal imaging domain optimization.
-         *
-         */
         connectWebSocket()
         // Registernetwork变更广播 - using modern network callback for Android 10+
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkRequest =
@@ -135,25 +93,10 @@ abstract class BaseApplication : Application() {
             manager.registerNetworkCallback(
                 networkRequest,
                 object : ConnectivityManager.NetworkCallback() {
-                    /**
-                     * Executes onavailable operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param network Parameter for operation (type: Network)
-                     *
-                     */
                     override fun onAvailable(network: Network) {
                         super.onAvailable(network)
                         val capabilities = manager.getNetworkCapabilities(network)
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
-                            /**
-                             * Executes connectwebsocket operation with thermal imaging domain optimization.
-                             *
-                             */
                             connectWebSocket()
                             Log.i("WebSocket", "WiFi network available: $network")
                         }
@@ -162,40 +105,16 @@ abstract class BaseApplication : Application() {
             )
         } else {
             // Fallback for older Android versions - use modern Intent filter approach
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                /**
-                 * Executes registerreceiver operation with thermal imaging domain optimization.
-                 *
-                 */
                 registerReceiver(
-                    /**
-                     * Executes networkchangedreceiver operation with thermal imaging domain optimization.
-                     *
-                     */
                     NetworkChangedReceiver(),
-                    /**
-                     * Executes intentfilter operation with thermal imaging domain optimization.
-                     *
-                     */
                     IntentFilter().apply {
-                        /**
-                         * Executes addaction operation with thermal imaging domain optimization.
-                         *
-                         */
                         addAction("android.net.conn.CONNECTIVITY_CHANGE")
                     },
                     Context.RECEIVER_NOT_EXPORTED,
                 )
             } else {
                 @Suppress("DEPRECATION")
-                /**
-                 * Executes registerreceiver operation with thermal imaging domain optimization.
-                 *
-                 */
                 registerReceiver(NetworkChangedReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
             }
         }
@@ -207,10 +126,6 @@ abstract class BaseApplication : Application() {
     private fun connectWebSocket() {
         val ssid = WifiUtil.getCurrentWifiSSID(this) ?: return
         Log.i("WebSocket", "currentconnection Wifi SSID: $ssid")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ssid.startsWith(DeviceConfig.TS004_NAME_START)) {
             SharedManager.hasTS004 = true
             WebSocketProxy.getInstance().startWebSocket(ssid)
@@ -234,39 +149,13 @@ abstract class BaseApplication : Application() {
      * parsingsocketmessage
      * @param msgJson
      */
-    /**
-     * Executes parserSocketMessage functionality.
-     */
-    /**
-     * Executes parsersocketmessage operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param msgJson Parameter for operation (type: String)
-     *
-     */
     private fun parserSocketMessage(msgJson: String) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (TextUtils.isEmpty(msgJson)) return
         EventBus.getDefault().post(SocketMsgEvent(msgJson))
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (SharedManager.is04AutoSync) { 
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (SocketCmdUtil.getCmdResponse(msgJson)) {
                 WsCmdConstants.AR_COMMAND_SNAPSHOT -> { 
-                    /**
-                     * Executes autosavenewest operation with thermal imaging domain optimization.
-                     *
-                     */
                     autoSaveNewest(false)
                 }
 
@@ -274,15 +163,7 @@ abstract class BaseApplication : Application() {
                     try {
                         val data: JSONObject = JSONObject(msgJson).getJSONObject("data")
                         val enable: Boolean = data.getBoolean("enable")
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (!enable) { 
-                            /**
-                             * Executes autosavenewest operation with thermal imaging domain optimization.
-                             *
-                             */
                             autoSaveNewest(true)
                         }
                     } catch (_: Exception) {
@@ -295,27 +176,12 @@ abstract class BaseApplication : Application() {
     /**
      * Executes autosavenewest functionality.
      */
-    /**
-     * Executes autosavenewest operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isVideo Parameter for operation (type: Boolean)
-     *
-     */
     private fun autoSaveNewest(isVideo: Boolean) {
-        /**
-         * Executes coroutinescope operation with thermal imaging domain optimization.
-         *
-         */
         CoroutineScope(Dispatchers.IO).launch {
             val fileList: List<FileBean>? = TS004Repository.getNewestFile(if (isVideo) 1 else 0)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!fileList.isNullOrEmpty()) {
                 val fileBean: FileBean = fileList[0]
-                val url = "http:// 192.168.40.1:8080/DCIM/${fileBean.name}"
+                val url = "http://192.168.40.1:8080/DCIM/${fileBean.name}"
                 val file = File(FileConfig.ts004GalleryDir, fileBean.name)
                 TS004Repository.download(url, file)
                 MediaScannerConnection.scanFile(this@BaseApplication, arrayOf(FileConfig.ts004GalleryDir), null, null)
@@ -324,44 +190,20 @@ abstract class BaseApplication : Application() {
     }
 
     private inner class NetworkChangedReceiver : BroadcastReceiver() {
-        /**
-         * Executes onreceive operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param context Parameter for operation (type: Context?)
-         * @param intent Parameter for operation (type: Intent?)
-         *
-         */
         override fun onReceive(
             context: Context?,
             intent: Intent?,
         ) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (intent?.action == "android.net.conn.CONNECTIVITY_CHANGE") {
                 val manager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
                 // Use modern API for Android M+ (API 23+)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     val activeNetwork = manager.activeNetwork
                     val capabilities = manager.getNetworkCapabilities(activeNetwork)
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true &&
                         capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
                     ) {
-                        /**
-                         * Executes connectwebsocket operation with thermal imaging domain optimization.
-                         *
-                         */
                         connectWebSocket()
                         Log.i("WebSocket", "WiFi network connected: $activeNetwork")
                     }
@@ -370,15 +212,7 @@ abstract class BaseApplication : Application() {
                     @Suppress("DEPRECATION")
                     val activeNetwork = manager.activeNetworkInfo
                     @Suppress("DEPRECATION")
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (activeNetwork?.isConnected == true && activeNetwork.type == ConnectivityManager.TYPE_WIFI) {
-                        /**
-                         * Executes connectwebsocket operation with thermal imaging domain optimization.
-                         *
-                         */
                         connectWebSocket()
                         Log.i("WebSocket", "WiFi network connected (legacy): ${activeNetwork.type}")
                     }
@@ -394,10 +228,6 @@ abstract class BaseApplication : Application() {
     open fun webviewSetPath(context: Context?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val processName = getProcessName(context)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!applicationContext.packageName.equals(processName)) { 
                 WebView.setDataDirectorySuffix(processName!!)
             }
@@ -405,21 +235,9 @@ abstract class BaseApplication : Application() {
     }
 
     open fun getProcessName(context: Context?): String? {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (context == null) return null
         val manager: ActivityManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (processInfo in manager.runningAppProcesses) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (processInfo.pid == Process.myPid()) {
                 return processInfo.processName
             }
@@ -428,13 +246,6 @@ abstract class BaseApplication : Application() {
     }
 
     
-    /**
-     * Executes clearDb functionality.
-     */
-    /**
-     * Executes cleardb operation with thermal imaging domain optimization.
-     *
-     */
     fun clearDb() {
         GlobalScope.launch(Dispatchers.Default) {
             try {
@@ -450,10 +261,6 @@ abstract class BaseApplication : Application() {
         val locale = AppLanguageUtils.getLocaleByLanguage(ConstantLanguages.ENGLISH)
         LanguageUtils.applyLanguage(locale)
         SharedManager.setLanguage(baseContext, ConstantLanguages.ENGLISH)
-        /**
-         * Executes webview operation with thermal imaging domain optimization.
-         *
-         */
         WebView(this).destroy()
     }
 
@@ -463,10 +270,6 @@ abstract class BaseApplication : Application() {
 
     /**
      * Exit所有
-     */
-    /**
-     * Executes exitall operation with thermal imaging domain optimization.
-     *
      */
     fun exitAll() {
         hasOtgShow = false

@@ -19,20 +19,9 @@ photo或video
  */
 /**
  * Custom Gallery view for thermal imaging display.
-/**
- * Specialized thermal imaging component providing GalleryAdapter functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Provides specialized rendering and interaction capabilities.
  */
+@SuppressLint("NotifyDataSetChanged")
 class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         private const val TYPE_HEAD = 0
@@ -56,10 +45,6 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         set(value) {
             if (field != value) {
                 field = value
-                /**
-                 * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-                 *
-                 */
                 notifyDataSetChanged()
             }
         }
@@ -68,29 +53,13 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 当前是否处于编辑mode.
      */
     var isEditMode = false
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (field != value) {
                 field = value
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!value) {
                     selectList.clear()
                     selectCallback?.invoke(selectList)
                 }
-                /**
-                 * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-                 *
-                 */
                 notifyDataSetChanged()
             }
         }
@@ -111,33 +80,12 @@ data 当前selected的 item position 列表
      */
     var itemClickCallback: ((position: Int) -> Unit)? = null
 
-    /**
-     * Executes refreshList functionality.
-     */
-    /**
-     * Executes refreshlist operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param newList Parameter for operation (type: List<GalleryBean>)
-     *
-     */
     fun refreshList(newList: List<GalleryBean>) {
         dataList.clear()
         dataList.addAll(newList)
-        /**
-         * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-         *
-         */
         notifyDataSetChanged()
     }
 
-    /**
-     * Executes buildSelectList functionality.
-     */
-    /**
-     * Executes buildselectlist operation with thermal imaging domain optimization.
-     *
-     */
     fun buildSelectList(): ArrayList<GalleryBean> {
         val resultList: ArrayList<GalleryBean> = ArrayList()
         selectList.forEach {
@@ -146,61 +94,27 @@ data 当前selected的 item position 列表
         return resultList
     }
 
-    /**
-     * Executes selectAll functionality.
-     */
-    /**
-     * Executes selectall operation with thermal imaging domain optimization.
-     *
-     */
     fun selectAll() {
         var dataCount = 0
         dataList.forEach {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (it !is GalleryTitle) {
                 dataCount++
             }
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (selectList.size >= dataCount) {
             selectList.clear()
         } else {
             selectList.clear()
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (i in 0 until dataList.size) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (dataList[i] !is GalleryTitle) {
                     selectList.add(i)
                 }
             }
         }
         selectCallback?.invoke(selectList)
-        /**
-         * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-         *
-         */
         notifyDataSetChanged()
     }
 
-    /**
-     * Retrieves the itemviewtype with optimized performance for thermal imaging operations.
-     *
-     * @param
-     * @param position Parameter for operation (type: Int)
-     *
-     */
     override fun getItemViewType(position: Int): Int {
         return if (dataList[position] is GalleryTitle) {
             TYPE_HEAD
@@ -209,56 +123,24 @@ data 当前selected的 item position 列表
         }
     }
 
-    /**
-     * Executes oncreateviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param parent Parameter for operation (type: ViewGroup)
-     * @param viewType Parameter for operation (type: Int)
-     *
-     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder {
         return if (viewType == TYPE_HEAD) {
-            /**
-             * Executes itemheadview operation with thermal imaging domain optimization.
-             *
-             */
             ItemHeadView(LayoutInflater.from(parent.context).inflate(R.layout.item_gallery_head_lay, parent, false))
         } else {
-            /**
-             * Executes itemview operation with thermal imaging domain optimization.
-             *
-             */
             ItemView(LayoutInflater.from(parent.context).inflate(R.layout.item_gallery_lay, parent, false))
         }
     }
 
-    /**
-     * Executes onbindviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param holder Parameter for operation (type: RecyclerView.ViewHolder)
-     * @param position Parameter for operation (type: Int)
-     *
-     */
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
         val data = dataList[position]
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (holder is ItemView) {
             GlideLoader.load(holder.img, data.thumb)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (data.name.uppercase().endsWith(".MP4")) {
                 holder.info.text = TimeTool.showVideoTime(data.duration)
                 holder.ivVideoTime.isVisible = true
@@ -273,15 +155,7 @@ data 当前selected的 item position 列表
             holder.ivCheck.isSelected = selectList.contains(position)
 
             holder.img.setOnClickListener {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isEditMode) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (selectList.contains(position)) {
                         selectList.remove(position)
                     } else {
@@ -295,10 +169,6 @@ data 当前selected的 item position 列表
                 }
             }
             holder.img.setOnLongClickListener {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isEditMode) {
                     selectList.add(position)
                     selectCallback?.invoke(selectList)
@@ -315,10 +185,6 @@ data 当前selected的 item position 列表
         }
     }
 
-    /**
-     * Retrieves the itemcount with optimized performance for thermal imaging operations.
-     *
-     */
     override fun getItemCount(): Int {
         return dataList.size
     }

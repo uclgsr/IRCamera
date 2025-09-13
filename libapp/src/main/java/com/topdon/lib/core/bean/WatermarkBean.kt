@@ -34,10 +34,6 @@ data class WatermarkBean(
     /**
      * Executes tobytearray functionality.
      */
-    /**
-     * Executes tobytearray operation with thermal imaging domain optimization.
-     *
-     */
     fun toByteArray(): ByteArray {
         val result = ByteArray(450)
 

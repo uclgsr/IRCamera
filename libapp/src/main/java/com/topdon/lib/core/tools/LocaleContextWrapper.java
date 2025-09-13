@@ -7,30 +7,13 @@ import android.content.res.Configuration;
 import java.util.Locale;
 
 /**
- * Specialized thermal imaging component providing LocaleContextWrapper functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+ * des:
+ * author: CaiSongL
+ * date: 2024/9/13 18:35
+ **/
 public class LocaleContextWrapper extends ContextWrapper {
 
-    /**
-     * Executes localecontextwrapper operation with thermal imaging domain optimization.
-     *
-     */
     public LocaleContextWrapper(Context base) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(base);
     }
 

@@ -1,22 +1,5 @@
 package com.topdon.lib.core.utils
 
-/**
- * Specialized thermal imaging component providing Constants functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 object Constants {
     const val PRODUCT_TYPE_NAME = "product_type"
     const val PRODUCT_TS001_NAME = "TS001"
@@ -30,7 +13,7 @@ object Constants {
     const val IR_TEMPERATURE_MODE = 1
     const val IR_OBSERVE_MODE = 2
     const val IR_EDIT_MODE = 4 
-    const val IR_TCPLUS_MODE = 5 // Dual lightdevice
+    const val IR_TCPLUS_MODE = 5 // dual lightdevice
     const val IR_TC007_MODE = 6 
     const val IR_TEMPERATURE_LITE = 7 
     /**

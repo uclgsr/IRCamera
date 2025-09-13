@@ -29,9 +29,9 @@ import com.infisense.usbir.extension.setMirror
 import com.infisense.usbir.extension.setAutoShutter
 import com.infisense.usbir.extension.setPropDdeLevel
 import com.infisense.usbir.extension.setContrast
-// Import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi // Temporarily disabled - hardware specific
-// Import com.infisense.usbdual.camera.IRUVCDual // Temporarily disabled - hardware specific
-// Import com.infisense.usbdual.camera.USBMonitorManager // Temporarily disabled - hardware specific
+// import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi // Temporarily disabled - hardware specific
+// import com.infisense.usbdual.camera.IRUVCDual // Temporarily disabled - hardware specific
+// import com.infisense.usbdual.camera.USBMonitorManager // Temporarily disabled - hardware specific
 import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi
 import com.infisense.usbdual.camera.IRUVCDual
 import com.infisense.usbdual.camera.USBMonitorManager
@@ -60,24 +60,10 @@ dual light的initialize
 dual light的
  */
 /**
- * Specialized thermal imaging component providing BaseIRPlushFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Base i r plush fragment for thermal imaging components.
+ * Handles specific UI sections and user interactions.
  */
 abstract class BaseIRPlushFragment :
-    /**
-     * Executes basefragment operation with thermal imaging domain optimization.
-     *
-     */
     BaseFragment(),
     OnUSBConnectListener,
     ITsTempListener,
@@ -92,7 +78,7 @@ abstract class BaseIRPlushFragment :
     protected var dualView: DualViewWithExternalCameraCommonApi? = null
 
     /**
-pseudo-color颜色mode，default IRONBOW_MODE(iron red)
+pseudo-color颜色mode，默认 IRONBOW_MODE(iron red)
      */
     protected var pseudoColorModeDual = CommonParams.PseudoColorUsbDualType.IRONBOW_MODE
 
@@ -108,7 +94,7 @@ false-尚未执行预览相关的initialize.
 thermal imagingdevicesn,可作为唯一id，此sn并非艾睿烧录的，是内部烧录的
     protected var snStr = ""
 
-defaultdata流mode：image+temperature复合data */
+默认data流mode：image+temperature复合data */
     protected var defaultDataFlowMode = CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT
 
     /**
@@ -118,15 +104,15 @@ defaultdata流mode：image+temperature复合data */
      */
     private var irPid = 0x5830
     private var irFps = 25
-    private var irCameraWidth = // Sensor的原始宽度
+    private var irCameraWidth = // sensor的原始宽度
         0
-    private var irCameraHeight = // Sensor的原始高度
+    private var irCameraHeight = // sensor的原始高度
         0
-    private var irTempHeight = // Temperaturedata高度
+    private var irTempHeight = // temperaturedata高度
         0
-    private var imageWidth = // 经过rotation后的image宽度
+    private var imageWidth = // 经过旋转后的image宽度
         0
-    private var imageHeight = // 经过rotation后的image高度
+    private var imageHeight = // 经过旋转后的image高度
         0
     protected var temperatureSrc: ByteArray? = null
 
@@ -146,7 +132,7 @@ defaultdata流mode：image+temperature复合data */
 
     protected var vlCameraWidth = 1280
     protected var vlCameraHeight = 720
-    private var vlData = ByteArray(vlCameraWidth * vlCameraHeight * 3) // Storagevisible lightdata
+    private var vlData = ByteArray(vlCameraWidth * vlCameraHeight * 3) // storagevisible lightdata
 
     /**
      * dual camera
@@ -194,17 +180,13 @@ camera camera相关
      * @param dataFlowMode
      */
     open fun initDataFlowMode(dataFlowMode: CommonParams.DataFlowMode) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (dataFlowMode) {
             CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT -> {
                 /**
 image+temperature
                  */
-                irCameraWidth = 256 // Sensor的原始宽度
-                irCameraHeight = 384 // Sensor的原始高度
+                irCameraWidth = 256 // sensor的原始宽度
+                irCameraHeight = 384 // sensor的原始高度
                 irTempHeight = 192
                 imageWidth = irCameraHeight - irTempHeight
                 imageHeight = irCameraWidth
@@ -214,8 +196,8 @@ image+temperature
                 /**
 image
                  */
-                irCameraWidth = 256 // Sensor的原始宽度
-                irCameraHeight = 192 // Sensor的原始高度
+                irCameraWidth = 256 // sensor的原始宽度
+                irCameraHeight = 192 // sensor的原始高度
                 irTempHeight = 0
                 imageWidth = irCameraHeight - irTempHeight
                 imageHeight = irCameraWidth
@@ -225,16 +207,16 @@ image
                 /**
 temperature
                  */
-                irCameraWidth = 256 // Sensor的原始宽度
-                irCameraHeight = 192 // Sensor的原始高度
+                irCameraWidth = 256 // sensor的原始宽度
+                irCameraHeight = 192 // sensor的原始高度
                 irTempHeight = 0
                 imageWidth = irCameraHeight - irTempHeight
                 imageHeight = irCameraWidth
                 temperatureSrc = ByteArray(imageWidth * imageHeight * 2)
             }
             else -> {
-                irCameraWidth = 256 // Sensor的原始宽度
-                irCameraHeight = 192 // Sensor的原始高度
+                irCameraWidth = 256 // sensor的原始宽度
+                irCameraHeight = 192 // sensor的原始高度
                 irTempHeight = 0
                 imageWidth = irCameraHeight - irTempHeight
                 imageHeight = irCameraWidth
@@ -243,24 +225,12 @@ temperature
         }
     }
 
-    /**
-     * Executes onresume operation with thermal imaging domain optimization.
-     *
-     */
     override fun onResume() {
         super.onResume()
         activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        /**
-         * Executes dualstart operation with thermal imaging domain optimization.
-         *
-         */
         dualStart()
     }
 
-    /**
-     * Executes onpause operation with thermal imaging domain optimization.
-     *
-     */
     override fun onPause() {
         super.onPause()
         activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -273,51 +243,21 @@ temperature
 
     abstract fun setTemperatureViewType()
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isDualIR())
             {
-                /**
-                 * Retrieves the temperaturedualview with optimized performance for thermal imaging operations.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 getTemperatureDualView().setTextSize(SaveSettingUtil.tempTextSize)
-                /**
-                 * Initializes the dataflowmode component for thermal imaging operations.
-                 *
-                 */
                 initDataFlowMode(defaultDataFlowMode)
-                /**
-                 * Initializes the irdualdata component for thermal imaging operations.
-                 *
-                 */
                 initIrDualdata()
             }
     }
 
-    /**
-     * Initializes irdualdata component.
-     */
     private fun initIrDualdata() {
 calculation画area的宽高，避免被拉伸变形
         var width = 0
         var height = 0
         val screenWidth: Int = ScreenUtils.getScreenWidth(context)
         val screenHeight: Int = ScreenUtils.getScreenHeight(context) - SizeUtils.dp2px(52f)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (screenWidth > screenHeight) {
             width = screenHeight * imageWidth / imageHeight
             height = screenHeight
@@ -330,27 +270,12 @@ calculation画area的宽高，避免被拉伸变形
                 width,
                 height,
             )
-        /**
-         * Retrieves the surfaceview with optimized performance for thermal imaging operations.
-         *
-         */
         getSurfaceView().layoutParams = fullScreenlayoutParams
-        /**
-         * Retrieves the temperaturedualview with optimized performance for thermal imaging operations.
-         *
-         * @note Temperature values are in Celsius unless otherwise specified.
-         * Accuracy depends on thermal camera calibration.
-         *
-         */
         getTemperatureDualView().layoutParams = fullScreenlayoutParams
         USBMonitorManager.getInstance().init(irPid, isUseIRISP, defaultDataFlowMode)
         USBMonitorManager.getInstance().addOnUSBConnectListener(this)
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
         super.onDestroy()
         mIrHandler.removeCallbacksAndMessages(null)
@@ -361,15 +286,11 @@ calculation画area的宽高，避免被拉伸变形
         val am = requireContext().assets
         var `is`: InputStream? = null
         try {
-loadpseudo-color，虽然用不上这个pseudo-color，但是sdk限制必须initializea才能正常出图
+loadpseudo-color，虽然用不上这个pseudo-color，但是sdk限制必须initialize一个才能正常出图
             psedocolor = Array(11) { ByteArray(0) }
             `is` = am.open("pseudocolor/White_Hot.bin")
             var lenth = `is`.available()
             psedocolor!![0] = ByteArray(lenth + 1)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (`is`.read(psedocolor!![0]) != lenth) {
                 Log.d(
                     TAG,
@@ -382,10 +303,6 @@ loadpseudo-color，虽然用不上这个pseudo-color，但是sdk限制必须init
                 psedocolor!![0],
             )
 这里可以setinitializefusionmode
-            /**
-             * Configures the fusion with validation and thermal imaging optimization.
-             *
-             */
             setFusion(mCurrentFusionType)
             `is`.close()
         } catch (e: IOException) {
@@ -401,35 +318,10 @@ loadpseudo-color，虽然用不上这个pseudo-color，但是sdk限制必须init
 
     open fun setFusion(fusion: DualCameraParams.FusionType) {
         dualView?.setCurrentFusionType(fusion)
-        /**
-         * Retrieves the temperaturedualview with optimized performance for thermal imaging operations.
-         *
-         * @note Temperature values are in Celsius unless otherwise specified.
-         * Accuracy depends on thermal camera calibration.
-         *
-         */
         getTemperatureDualView().setCurrentFusionType(fusion)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (fusion == DualCameraParams.FusionType.IROnlyNoFusion) {
-            /**
-             * Retrieves the temperaturedualview with optimized performance for thermal imaging operations.
-             *
-             * @note Temperature values are in Celsius unless otherwise specified.
-             * Accuracy depends on thermal camera calibration.
-             *
-             */
             getTemperatureDualView().setImageSize(Const.IR_HEIGHT, Const.IR_WIDTH, null)
         } else {
-            /**
-             * Retrieves the temperaturedualview with optimized performance for thermal imaging operations.
-             *
-             * @note Temperature values are in Celsius unless otherwise specified.
-             * Accuracy depends on thermal camera calibration.
-             *
-             */
             getTemperatureDualView().setImageSize(dualCameraWidth, dualCameraHeight, null)
         }
     }
@@ -441,10 +333,6 @@ loadpseudo-color，虽然用不上这个pseudo-color，但是sdk限制必须init
 一体式
      */
     open fun initDefIntegralArgsDISP_VALUE(typeLoadParameters: DualCameraParams.TypeLoadParameters) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isDualIR())
             {
                 return
@@ -453,12 +341,8 @@ loadpseudo-color，虽然用不上这个pseudo-color，但是sdk限制必须init
             val parameters = IRCmdTool.getDualBytes(USBMonitorManager.getInstance().ircmd)
             val data = dualView?.dualUVCCamera?.loadParameters(parameters, typeLoadParameters)
             dualDisp = IRCmdTool.dispNumber
-            /**
-             * Configures the dispviewdata with validation and thermal imaging optimization.
-             *
-             */
             setDispViewData(dualDisp)
-initializedefault值
+initialize默认值
             dualView?.dualUVCCamera?.setDisp(dualDisp)
             dualView?.startPreview()
         }
@@ -468,44 +352,20 @@ initializedefault值
     }
 
     open fun restartDualCamera() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isrun) {
             USBMonitorManager.getInstance().isReStart = true
-            /**
-             * Executes dualstop operation with thermal imaging domain optimization.
-             *
-             */
             dualStop()
             SystemClock.sleep(200)
-            /**
-             * Executes dualstart operation with thermal imaging domain optimization.
-             *
-             */
             dualStart()
         }
     }
 
-    /**
-     * Executes onstop operation with thermal imaging domain optimization.
-     *
-     */
     override fun onStop() {
         super.onStop()
-        /**
-         * Executes dualstop operation with thermal imaging domain optimization.
-         *
-         */
         dualStop()
     }
 
     open fun dualStart() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isDualIR())
             {
                 return
@@ -521,93 +381,35 @@ Openinfraredmodule
         USBMonitorManager.getInstance().registerUSB()
 在USBMonitorManager onConnectCallback中Openvisible lightmodule
         //
-// GetTemperatureDualView().setTemperatureRegionMode(View.FOCUSABLES_TOUCH_MODE)
-        /**
-         * Retrieves the temperaturedualview with optimized performance for thermal imaging operations.
-         *
-         * @note Temperature values are in Celsius unless otherwise specified.
-         * Accuracy depends on thermal camera calibration.
-         *
-         */
+//        getTemperatureDualView().setTemperatureRegionMode(View.FOCUSABLES_TOUCH_MODE)
         getTemperatureDualView().setUseIRISP(isUseIRISP)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
-            /**
-             * Retrieves the temperaturedualview with optimized performance for thermal imaging operations.
-             *
-             * @note Temperature values are in Celsius unless otherwise specified.
-             * Accuracy depends on thermal camera calibration.
-             *
-             */
             getTemperatureDualView().setImageSize(Const.IR_HEIGHT, Const.IR_WIDTH, null)
         } else {
-            /**
-             * Retrieves the temperaturedualview with optimized performance for thermal imaging operations.
-             *
-             * @note Temperature values are in Celsius unless otherwise specified.
-             * Accuracy depends on thermal camera calibration.
-             *
-             */
             getTemperatureDualView().setImageSize(dualCameraWidth, dualCameraHeight, null)
         }
-        /**
-         * Configures the temperatureviewtype with validation and thermal imaging optimization.
-         *
-         * @note Temperature values are in Celsius unless otherwise specified.
-         * Accuracy depends on thermal camera calibration.
-         *
-         */
         setTemperatureViewType()
-        /**
-         * Retrieves the temperaturedualview with optimized performance for thermal imaging operations.
-         *
-         * @note Temperature values are in Celsius unless otherwise specified.
-         * Accuracy depends on thermal camera calibration.
-         *
-         */
         getTemperatureDualView().start()
     }
 
     
     var mIrHandler: Handler =
         object : Handler(Looper.getMainLooper()) {
-            /**
-             * Executes handlemessage operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param msg Parameter for operation (type: Message)
-             *
-             */
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
                 Log.d(
                     TAG,
                     "USBMonitorManager 收到message${msg.what}",
                 )
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isDualIR())
                     {
                         return
                     }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (msg.what == Const.RESTART_USB) {
                     Log.d(
                         TAG,
                         "restartDualCamera",
                     )
-                    /**
-                     * Manages thermal camera operations with hardware-optimized performance and error handling.
-                     *
-                     */
                     restartDualCamera()
                 } else if (msg.what == Const.HANDLE_CONNECT) {
                     Log.d(
@@ -621,16 +423,8 @@ Openinfraredmodule
                      */
                     lifecycleScope.launch(Dispatchers.Main) {
                         startVLCamera(vlPid, vlFps, vlCameraWidth, vlCameraHeight)
-                        /**
-                         * Initializes the dualcamera component for thermal imaging operations.
-                         *
-                         */
                         initDualCamera()
 一体式
-                        /**
-                         * Initializes the defintegralargsdisp value component for thermal imaging operations.
-                         *
-                         */
                         initDefIntegralArgsDISP_VALUE(DualCameraParams.TypeLoadParameters.ROTATE_270)
                     }
                 } else if (msg.what == Const.HANDLE_REGISTER) {
@@ -640,20 +434,12 @@ Openinfraredmodule
                         TAG,
                         "SHOW_LOADING",
                     )
-                    /**
-                     * Executes showloadingdialog operation with thermal imaging domain optimization.
-                     *
-                     */
                     showLoadingDialog()
                 } else if (msg.what == Const.HIDE_LOADING) {
                     Log.d(
                         TAG,
                         "HIDE_LOADING",
                     )
-                    /**
-                     * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-                     *
-                     */
                     dismissLoadingDialog()
                 } else if (msg.what == Const.SHOW_RESTART_MESSAGE) {
                     Toast.makeText(
@@ -667,18 +453,10 @@ Openinfraredmodule
         }
 
     open fun initDualCamera() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isDualIR())
             {
                 return
             }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dualView != null) {
             return
         }
@@ -687,15 +465,7 @@ Openinfraredmodule
             "initDualCamera",
         )
         dualView =
-            /**
-             * Manages thermal camera operations with hardware-optimized performance and error handling.
-             *
-             */
             DualViewWithExternalCameraCommonApi(
-                /**
-                 * Retrieves the surfaceview with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getSurfaceView(),
                 USBMonitorManager.getInstance().uvcCamera, defaultDataFlowMode,
                 irCameraWidth, irCameraHeight - irTempHeight,
@@ -704,25 +474,11 @@ Openinfraredmodule
             )
         dualView?.addFrameCallback(getTemperatureDualView())
         //
-        /**
-         * Retrieves the temperaturedualview with optimized performance for thermal imaging operations.
-         *
-         * @note Temperature values are in Celsius unless otherwise specified.
-         * Accuracy depends on thermal camera calibration.
-         *
-         */
         getTemperatureDualView().setDualUVCCamera(dualView!!.getDualUVCCamera())
-        /**
-         * Initializes the pseudocolor component for thermal imaging operations.
-         *
-         * @note This method is optimized for thermal imaging pseudo color processing.
-         * Ensure proper thermal calibration before use.
-         *
-         */
         initPseudocolor()
 这里可以setinitializefusionmode
-// SetFusion(mCurrentFusionType)
-// DualView!!.startPreview()
+//        setFusion(mCurrentFusionType)
+//        dualView!!.startPreview()
         dualView?.setHandler(mIrHandler)
         isrun = true
     }
@@ -740,10 +496,6 @@ visible lightmodule
         cameraWidth: Int,
         cameraHeight: Int,
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isDualIR())
             {
                 return
@@ -753,34 +505,13 @@ visible lightmodule
             "startVLCamera",
         )
         vlUVCCamera =
-            /**
-             * Executes iruvcdual operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param object Parameter for operation (type: ConnectCallback {                     override fun onCameraOpened(uvcCamera: UVCCamera)
-             * @param ircmd Parameter for operation (type: IRCMD)
-             *
-             * @return Operation result or configured object (type: Log.i(                         TAG,                         "startVLCamera-onFrame->frame.length = " + frame.size,                     )                     if (dualView != null && dualView?.getDualUVCCamera() != null &&                         Const.isDeviceConnected                     ))
-             *
-             */
             IRUVCDual(
                 cameraWidth,
                 cameraHeight,
-                /**
-                 * Executes requirecontext operation with thermal imaging domain optimization.
-                 *
-                 */
                 requireContext(),
                 pid,
                 fps,
                 object : ConnectCallback {
-                    /**
-                     * Manages thermal camera operations with hardware-optimized performance and error handling.
-                     *
-                     * @param
-                     * @param uvcCamera Camera configuration or reference (type: UVCCamera)
-                     *
-                     */
                     override fun onCameraOpened(uvcCamera: UVCCamera) {
                         Log.i(
                             TAG,
@@ -788,18 +519,7 @@ visible lightmodule
                         )
                     }
 
-                    /**
-                     * Executes onircmdcreate operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param ircmd Parameter for operation (type: IRCMD)
-                     *
-                     */
                     override fun onIRCMDCreate(ircmd: IRCMD) {
-                        /**
-                         * Configures the uvccameraicmd with validation and thermal imaging optimization.
-                         *
-                         */
                         setUVCCameraICMD(ircmd)
                     }
                 },
@@ -808,10 +528,6 @@ visible lightmodule
                         TAG,
                         "startVLCamera-onFrame->frame.length = " + frame.size,
                     )
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (dualView != null && dualView?.getDualUVCCamera() != null &&
                         Const.isDeviceConnected
                     ) {
@@ -836,33 +552,21 @@ visible lightmodule
             TAG,
             "ConnectCallback-startVLCamera-onIRCMDCreate",
         )
-// GetTemperatureDualView().setIrcmd(ircmd)
-// PopupCalibration.setIrcmd(ircmd)
-// PopupImage.setIrcmd(ircmd)
-// PopupOthers.setIrcmd(ircmd)
-// GetTemperatureDualView().setIrcmd(ircmd)
+//        getTemperatureDualView().setIrcmd(ircmd)
+//        popupCalibration.setIrcmd(ircmd)
+//        popupImage.setIrcmd(ircmd)
+//        popupOthers.setIrcmd(ircmd)
+//        getTemperatureDualView().setIrcmd(ircmd)
 // 画arearotationset
-// PopupCalibration.setRotate(true)
-// PopupImage.setRotate(true)
+//        popupCalibration.setRotate(true)
+//        popupImage.setRotate(true)
     }
 
-    /**
-     * Executes onstart operation with thermal imaging domain optimization.
-     *
-     */
     override fun onStart() {
         super.onStart()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isrun) {
             isrun = true
 Restoreconfiguration
-            /**
-             * Executes configparam operation with thermal imaging domain optimization.
-             *
-             */
             configParam()
         }
     }
@@ -872,40 +576,17 @@ Restoreconfiguration
     private val timeMillis = 150L
 
 configuration
-    /**
-     * Executes configParam functionality.
-     */
-    /**
-     * Executes configparam operation with thermal imaging domain optimization.
-     *
-     */
     private fun configParam() {
         configJob =
             lifecycleScope.launch {
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (isConfigWait && isActive) {
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(200)
                 }
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(500)
                 val config = ConfigRepository.readConfig(false)
                 val disChar = (config.distance * 128).toInt() // 距离(米)
                 val emsChar = (config.radiation * 128).toInt() // 发射率
                 XLog.w("settingsTPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(timeMillis)
 emissivity
                 // / Emissivity property. unit:1/128, range:1-128(0.01-1)
@@ -913,10 +594,6 @@ emissivity
                     CommonParams.PropTPDParams.TPD_PROP_EMS,
                     CommonParams.PropTPDParamsValue.NumberType(emsChar.toString()),
                 )
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(timeMillis)
 距离
                 ircmd?.setPropTPDParams(
@@ -924,29 +601,13 @@ emissivity
                     CommonParams.PropTPDParamsValue.NumberType(disChar.toString()),
                 )
 自动快门
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(timeMillis)
                 XLog.w("settingsTPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isFirst && isrun) {
 Restore镜像
                     ircmd?.setMirror(false)
 自动快门
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(timeMillis)
-                    /**
-                     * Executes withcontext operation with thermal imaging domain optimization.
-                     *
-                     */
                     withContext(Dispatchers.IO) {
 部分机型在disabled自动快门，初始会花屏
                         ircmd?.setAutoShutter(true)
@@ -962,10 +623,6 @@ resetcontrast
                     CommonParams.PropImageParamsValue.StatusSwith.ON,
                 )
 手动快门
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (syncimage.type == 1) {
                     ircmd?.tc1bShutterManual()
                 } else {
@@ -976,10 +633,6 @@ resetcontrast
     }
 
     open fun dualStop() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isDualIR())
             {
                 return
@@ -991,31 +644,16 @@ resetcontrast
         isrun = false
         syncimage.valid = false
         isConfigWait = true
-        /**
-         * Retrieves the temperaturedualview with optimized performance for thermal imaging operations.
-         *
-         * @note Temperature values are in Celsius unless otherwise specified.
-         * Accuracy depends on thermal camera calibration.
-         *
-         */
         getTemperatureDualView().stop()
         USBMonitorManager.getInstance().unregisterUSB()
         ircmd?.onDestroy()
         ircmd = null
         SystemClock.sleep(100)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dualView != null) {
             dualView?.removeFrameCallback(getTemperatureDualView())
             dualView?.dualUVCCamera?.onPausePreview()
             USBMonitorManager.getInstance().stopPreview()
             //
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (vlUVCCamera != null) {
                 vlUVCCamera?.unregisterUSB()
                 vlUVCCamera?.stopPreview()
@@ -1032,13 +670,6 @@ resetcontrast
         }
     }
 
-    /**
-     * Executes onattach operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param device Parameter for operation (type: UsbDevice?)
-     *
-     */
     override fun onAttach(device: UsbDevice?) {
         Log.d(
             TAG,
@@ -1046,14 +677,6 @@ resetcontrast
         )
     }
 
-    /**
-     * Executes ongranted operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param usbDevice Parameter for operation (type: UsbDevice?)
-     * @param granted Parameter for operation (type: Boolean)
-     *
-     */
     override fun onGranted(
         usbDevice: UsbDevice?,
         granted: Boolean,
@@ -1064,13 +687,6 @@ resetcontrast
         )
     }
 
-    /**
-     * Executes ondettach operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param device Parameter for operation (type: UsbDevice?)
-     *
-     */
     override fun onDettach(device: UsbDevice?) {
         Log.d(
             TAG,
@@ -1078,15 +694,6 @@ resetcontrast
         )
     }
 
-    /**
-     * Executes onconnect operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param device Parameter for operation (type: UsbDevice?)
-     * @param ctrlBlock Parameter for operation (type: USBMonitor.UsbControlBlock?)
-     * @param createNew Parameter for operation (type: Boolean)
-     *
-     */
     override fun onConnect(
         device: UsbDevice?,
         ctrlBlock: USBMonitor.UsbControlBlock?,
@@ -1099,14 +706,6 @@ resetcontrast
         mIrHandler.sendEmptyMessage(Const.HANDLE_CONNECT)
     }
 
-    /**
-     * Executes ondisconnect operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param device Parameter for operation (type: UsbDevice?)
-     * @param ctrlBlock Parameter for operation (type: USBMonitor.UsbControlBlock?)
-     *
-     */
     override fun onDisconnect(
         device: UsbDevice?,
         ctrlBlock: USBMonitor.UsbControlBlock?,
@@ -1117,13 +716,6 @@ resetcontrast
         )
     }
 
-    /**
-     * Executes oncancel operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param device Parameter for operation (type: UsbDevice?)
-     *
-     */
     override fun onCancel(device: UsbDevice?) {
         Log.d(
             TAG,
@@ -1131,33 +723,14 @@ resetcontrast
         )
     }
 
-    /**
-     * Executes onircmdinit operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param ircmd Parameter for operation (type: IRCMD?)
-     *
-     */
     override fun onIRCMDInit(ircmd: IRCMD?) {
-        /**
-         * Configures the uvccameraicmd with validation and thermal imaging optimization.
-         *
-         */
         setUVCCameraICMD(ircmd!!)
     }
 
-    /**
-     * Executes oncompleteinit operation with thermal imaging domain optimization.
-     *
-     */
     override fun onCompleteInit() {
         mIrHandler.sendEmptyMessage(Const.HIDE_LOADING)
     }
 
-    /**
-     * Executes onsetpreviewsizefail operation with thermal imaging domain optimization.
-     *
-     */
     override fun onSetPreviewSizeFail() {
         mIrHandler.sendEmptyMessage(Const.SHOW_RESTART_MESSAGE)
     }
@@ -1167,13 +740,6 @@ resetcontrast
     protected val preIrData = ByteArray(256 * 192 * 2)
     protected val preTempData = ByteArray(256 * 192 * 2)
 
-    /**
-     * Executes onirframe operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param irFrame Parameter for operation (type: ByteArray?)
-     *
-     */
     override fun onIrFrame(irFrame: ByteArray?): ByteArray {
         /**
 @param irFrame 原始infraredYUV422data + temperaturedata 长度 irWidth * irHeight * 2 + irWidth * irHeight * 2

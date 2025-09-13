@@ -8,18 +8,7 @@ import com.github.mikephil.charting.utils.Utils;
 import java.util.List;
 
 /**
- * Specialized thermal imaging component providing LineScatterCandleRadarDataSet functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Created by Philipp Jahoda on 11/07/15.
  */
 public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends BarLineScatterCandleBubbleDataSet<T> implements ILineScatterCandleRadarDataSet<T> {
 
@@ -59,10 +48,6 @@ public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends Bar
      */
     public void setDrawHighlightIndicators(boolean enabled) {
         setDrawVerticalHighlightIndicator(enabled);
-        /**
-         * Configures the drawhorizontalhighlightindicator with validation and thermal imaging optimization.
-         *
-         */
         setDrawHorizontalHighlightIndicator(enabled);
     }
 

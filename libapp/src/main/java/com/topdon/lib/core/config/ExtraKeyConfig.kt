@@ -2,20 +2,6 @@ package com.topdon.lib.core.config
 
 import com.topdon.lib.core.repository.GalleryRepository
 
-/**
- * Configuration management system for thermal imaging parameters. Handles settings and calibration for ExtraKeyConfig operations.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 object ExtraKeyConfig {
     /**
      * boolean type - 跳转相册界area时，是否为生成report拾取image操作.

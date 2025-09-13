@@ -14,31 +14,10 @@ import com.bumptech.glide.request.target.Target
 import com.maning.imagebrowserlibrary.ImageEngine
 
 /**
- * Specialized thermal imaging component providing GlideImageEngine functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Glide image engine view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class GlideImageEngine : ImageEngine {
-    /**
-     * Executes loadimage operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param url Parameter for operation (type: String)
-     * @param imageView Parameter for operation (type: ImageView)
-     * @param progressView Parameter for operation (type: View)
-     * @param customImageView Parameter for operation (type: View)
-     *
-     */
     override fun loadImage(
         context: Context,
         url: String,
@@ -47,31 +26,21 @@ class GlideImageEngine : ImageEngine {
         customImageView: View,
     ) {
         val option = RequestOptions().centerCrop()
+
+        Glide.with(context)
+            .asBitmap()
+            .load(url)
+            .apply(option)
+            .fitCenter()
+            .listener(BitmapRequestListener())
+            .into(imageView)
+    }
+
 /**
- * Specialized thermal imaging component providing DrawableRequestListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Drawable request listener view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
     class DrawableRequestListener : RequestListener<Drawable> {
-        /**
-         * Executes onloadfailed operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param e Parameter for operation (type: GlideException?)
-         * @param model Parameter for operation (type: Any?)
-         * @param target Parameter for operation (type: Target<Drawable>?)
-         * @param isFirstResource Parameter for operation (type: Boolean)
-         *
-         */
         override fun onLoadFailed(
             e: GlideException?,
             model: Any?,
@@ -81,47 +50,22 @@ class GlideImageEngine : ImageEngine {
             return false
         }
 
-        /**
-         * Executes onresourceready operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param Specifications Parameter for operation (type: </h3>  * <ul>  *   <li>Thread-safe operations for thermal data processing</li>  *   <li>Optimized performance for real-time thermal imaging</li>  *   <li>Compatible with TC001 thermal camera hardware</li>  * </ul>  *  * @author IRCamera Development Team  * @version 2.0  * @since 1.0  */     class BitmapRequestListener : RequestListener<Bitmap> {         override fun onLoadFailed(             e: GlideException?)
-         * @param model Parameter for operation (type: Any?)
-         * @param target Parameter for operation (type: Target<Bitmap>?)
-         * @param isFirstResource Parameter for operation (type: Boolean)
-         * @param resource Parameter for operation (type: Bitmap?)
-         * @param model Parameter for operation (type: Any?)
-         * @param target Parameter for operation (type: Target<Bitmap>?)
-         * @param dataSource Parameter for operation (type: DataSource?)
-         * @param isFirstResource Parameter for operation (type: Boolean)
-         *
-         */
         override fun onResourceReady(
+            resource: Drawable?,
+            model: Any?,
+            target: Target<Drawable>?,
+            dataSource: DataSource?,
+            isFirstResource: Boolean,
+        ): Boolean {
+            return false
+        }
+    }
+
 /**
- * Specialized thermal imaging component providing BitmapRequestListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Bitmap request listener view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
     class BitmapRequestListener : RequestListener<Bitmap> {
-        /**
-         * Executes onloadfailed operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param e Parameter for operation (type: GlideException?)
-         * @param model Parameter for operation (type: Any?)
-         * @param target Parameter for operation (type: Target<Bitmap>?)
-         * @param isFirstResource Parameter for operation (type: Boolean)
-         *
-         */
         override fun onLoadFailed(
             e: GlideException?,
             model: Any?,
@@ -131,17 +75,6 @@ class GlideImageEngine : ImageEngine {
             return false
         }
 
-        /**
-         * Executes onresourceready operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param resource Parameter for operation (type: Bitmap?)
-         * @param model Parameter for operation (type: Any?)
-         * @param target Parameter for operation (type: Target<Bitmap>?)
-         * @param dataSource Parameter for operation (type: DataSource?)
-         * @param isFirstResource Parameter for operation (type: Boolean)
-         *
-         */
         override fun onResourceReady(
             resource: Bitmap?,
             model: Any?,

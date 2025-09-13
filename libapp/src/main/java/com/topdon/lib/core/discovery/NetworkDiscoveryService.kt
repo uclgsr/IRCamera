@@ -17,20 +17,6 @@ import java.util.concurrent.ConcurrentHashMap
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing NetworkDiscoveryService functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class NetworkDiscoveryService(private val context: Context) {
     companion object {
         private const val TAG = "NetworkDiscovery"
@@ -54,18 +40,18 @@ class NetworkDiscoveryService(private val context: Context) {
 
     data class DiscoveredDevice(
         val serviceName: String,
+        val serviceType: String,
+        val ipAddress: String,
+        val port: Int,
+        val deviceType: DeviceType,
+        val attributes: Map<String, String> = emptyMap(),
+        val discoveredAt: Long = System.currentTimeMillis(),
+    )
+
 /**
- * Specialized thermal imaging component providing DeviceType functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
+ * Type definition for device classification.
  *
  * @author IRCamera Development Team
- * @version 2.0
  * @since 1.0
  */
     enum class DeviceType {
@@ -73,18 +59,12 @@ class NetworkDiscoveryService(private val context: Context) {
         THERMAL_CAMERA_TS004,
         THERMAL_CAMERA_TC007,
         UNKNOWN,
+    }
+
 /**
- * Specialized thermal imaging component providing DiscoveryEventListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
+ * DiscoveryEventListener manages camera operations and image capture functionality.
  *
  * @author IRCamera Development Team
- * @version 2.0
  * @since 1.0
  */
     interface DiscoveryEventListener {
@@ -119,9 +99,6 @@ class NetworkDiscoveryService(private val context: Context) {
 
     private var eventListener: DiscoveryEventListener? = null
 
-    /**
-     * Sets eventlistener configuration.
-     */
     fun setEventListener(listener: DiscoveryEventListener?) {
         eventListener = listener
     }
@@ -139,17 +116,9 @@ class NetworkDiscoveryService(private val context: Context) {
             Log.i(TAG, "Starting network service discovery")
 
             // Discover PC controllers
-            /**
-             * Executes startservicediscovery operation with thermal imaging domain optimization.
-             *
-             */
             startServiceDiscovery(SERVICE_TYPE_PC_CONTROLLER)
 
             // Discover thermal cameras
-            /**
-             * Executes startservicediscovery operation with thermal imaging domain optimization.
-             *
-             */
             startServiceDiscovery(SERVICE_TYPE_THERMAL_CAMERA)
 
             isDiscovering = true
@@ -157,21 +126,9 @@ class NetworkDiscoveryService(private val context: Context) {
 
             // Auto-stop discovery after timeout
             discoveryScope.launch {
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(DISCOVERY_TIMEOUT_MS)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isDiscovering) {
                     Log.i(TAG, "Discovery timeout reached, stopping discovery")
-                    /**
-                     * Executes stopdiscovery operation with thermal imaging domain optimization.
-                     *
-                     */
                     stopDiscovery()
                 }
             }
@@ -219,20 +176,12 @@ class NetworkDiscoveryService(private val context: Context) {
         attributes: Map<String, String> = emptyMap(),
     ): Boolean {
         return try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isRegistered) {
                 Log.w(TAG, "Service already registered")
                 return true
             }
 
             val serviceType =
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (deviceType) {
                     DeviceType.PC_CONTROLLER -> SERVICE_TYPE_PC_CONTROLLER
                     DeviceType.THERMAL_CAMERA_TS004,
@@ -242,10 +191,6 @@ class NetworkDiscoveryService(private val context: Context) {
                 }
 
             val serviceInfo =
-                /**
-                 * Executes nsdserviceinfo operation with thermal imaging domain optimization.
-                 *
-                 */
                 NsdServiceInfo().apply {
                     this.serviceName = "$SERVICE_NAME_PREFIX$serviceName"
                     this.serviceType = serviceType
@@ -253,36 +198,16 @@ class NetworkDiscoveryService(private val context: Context) {
 
                     // Add device attributes
                     attributes.forEach { (key, value) ->
-                        /**
-                         * Configures the attribute with validation and thermal imaging optimization.
-                         *
-                         */
                         setAttribute(key, value)
                     }
 
                     // Add device type
-                    /**
-                     * Configures the attribute with validation and thermal imaging optimization.
-                     *
-                     */
                     setAttribute("device_type", deviceType.name)
-                    /**
-                     * Configures the attribute with validation and thermal imaging optimization.
-                     *
-                     */
                     setAttribute("version", "1.0")
                 }
 
             registrationListener =
                 object : NsdManager.RegistrationListener {
-                    /**
-                     * Executes onregistrationfailed operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-                     * @param errorCode Parameter for operation (type: Int)
-                     *
-                     */
                     override fun onRegistrationFailed(
                         serviceInfo: NsdServiceInfo,
                         errorCode: Int,
@@ -291,14 +216,6 @@ class NetworkDiscoveryService(private val context: Context) {
                         eventListener?.onError("register_service", "Registration failed: $errorCode")
                     }
 
-                    /**
-                     * Executes onunregistrationfailed operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-                     * @param errorCode Parameter for operation (type: Int)
-                     *
-                     */
                     override fun onUnregistrationFailed(
                         serviceInfo: NsdServiceInfo,
                         errorCode: Int,
@@ -307,25 +224,11 @@ class NetworkDiscoveryService(private val context: Context) {
                         eventListener?.onError("unregister_service", "Unregistration failed: $errorCode")
                     }
 
-                    /**
-                     * Executes onserviceregistered operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-                     *
-                     */
                     override fun onServiceRegistered(serviceInfo: NsdServiceInfo) {
                         Log.i(TAG, "Service registered: ${serviceInfo.serviceName}")
                         isRegistered = true
                     }
 
-                    /**
-                     * Executes onserviceunregistered operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-                     *
-                     */
                     override fun onServiceUnregistered(serviceInfo: NsdServiceInfo) {
                         Log.i(TAG, "Service unregistered: ${serviceInfo.serviceName}")
                         isRegistered = false
@@ -345,15 +248,7 @@ class NetworkDiscoveryService(private val context: Context) {
     /**
      * Unregister the service
      */
-    /**
-     * Executes unregisterservice operation with thermal imaging domain optimization.
-     *
-     */
     fun unregisterService() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isRegistered) return
 
         try {
@@ -385,10 +280,6 @@ class NetworkDiscoveryService(private val context: Context) {
     /**
      * Clear discovery cache
      */
-    /**
-     * Executes cleardiscovereddevices operation with thermal imaging domain optimization.
-     *
-     */
     fun clearDiscoveredDevices() {
         discoveredServices.clear()
     }
@@ -399,14 +290,6 @@ class NetworkDiscoveryService(private val context: Context) {
     private fun startServiceDiscovery(serviceType: String) {
         val discoveryListener =
             object : NsdManager.DiscoveryListener {
-                /**
-                 * Executes onstartdiscoveryfailed operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceType Parameter for operation (type: String)
-                 * @param errorCode Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onStartDiscoveryFailed(
                     serviceType: String,
                     errorCode: Int,
@@ -415,14 +298,6 @@ class NetworkDiscoveryService(private val context: Context) {
                     eventListener?.onError("start_discovery", "Failed to start discovery: $errorCode")
                 }
 
-                /**
-                 * Executes onstopdiscoveryfailed operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceType Parameter for operation (type: String)
-                 * @param errorCode Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onStopDiscoveryFailed(
                     serviceType: String,
                     errorCode: Int,
@@ -431,59 +306,23 @@ class NetworkDiscoveryService(private val context: Context) {
                     eventListener?.onError("stop_discovery", "Failed to stop discovery: $errorCode")
                 }
 
-                /**
-                 * Executes ondiscoverystarted operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceType Parameter for operation (type: String)
-                 *
-                 */
                 override fun onDiscoveryStarted(serviceType: String) {
                     Log.d(TAG, "Discovery started for $serviceType")
                 }
 
-                /**
-                 * Executes ondiscoverystopped operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceType Parameter for operation (type: String)
-                 *
-                 */
                 override fun onDiscoveryStopped(serviceType: String) {
                     Log.d(TAG, "Discovery stopped for $serviceType")
                     activeDiscoveryListeners.remove(serviceType)
                 }
 
-                /**
-                 * Executes onservicefound operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-                 *
-                 */
                 override fun onServiceFound(serviceInfo: NsdServiceInfo) {
                     Log.d(TAG, "Service found: ${serviceInfo.serviceName}")
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (serviceInfo.serviceName.startsWith(SERVICE_NAME_PREFIX)) {
-                        /**
-                         * Executes resolveservice operation with thermal imaging domain optimization.
-                         *
-                         */
                         resolveService(serviceInfo)
                     }
                 }
 
-                /**
-                 * Executes onservicelost operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-                 *
-                 */
                 override fun onServiceLost(serviceInfo: NsdServiceInfo) {
                     Log.d(TAG, "Service lost: ${serviceInfo.serviceName}")
 
@@ -500,24 +339,9 @@ class NetworkDiscoveryService(private val context: Context) {
     /**
      * Executes resolveservice functionality.
      */
-    /**
-     * Executes resolveservice operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-     *
-     */
     private fun resolveService(serviceInfo: NsdServiceInfo) {
         val resolveListener =
             object : NsdManager.ResolveListener {
-                /**
-                 * Executes onresolvefailed operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-                 * @param errorCode Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onResolveFailed(
                     serviceInfo: NsdServiceInfo,
                     errorCode: Int,
@@ -525,13 +349,6 @@ class NetworkDiscoveryService(private val context: Context) {
                     Log.w(TAG, "Resolve failed for ${serviceInfo.serviceName}: $errorCode")
                 }
 
-                /**
-                 * Executes onserviceresolved operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-                 *
-                 */
                 override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
                     Log.d(TAG, "Service resolved: ${serviceInfo.serviceName}")
 
@@ -542,10 +359,6 @@ class NetworkDiscoveryService(private val context: Context) {
                     val ipAddress = serviceInfo.host?.hostAddress ?: "unknown"
 
                     val discoveredDevice =
-                        /**
-                         * Executes discovereddevice operation with thermal imaging domain optimization.
-                         *
-                         */
                         DiscoveredDevice(
                             serviceName = serviceInfo.serviceName,
                             serviceType = serviceInfo.serviceType,
@@ -569,20 +382,9 @@ class NetworkDiscoveryService(private val context: Context) {
     /**
      * Executes determinedevicetype functionality.
      */
-    /**
-     * Executes determinedevicetype operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-     *
-     */
     private fun determineDeviceType(serviceInfo: NsdServiceInfo): DeviceType {
         val deviceTypeAttr =
             serviceInfo.attributes["device_type"]?.let {
-                /**
-                 * Executes string operation with thermal imaging domain optimization.
-                 *
-                 */
                 String(it, Charsets.UTF_8)
             }
 
@@ -601,13 +403,6 @@ class NetworkDiscoveryService(private val context: Context) {
     /**
      * Executes extractattributes functionality.
      */
-    /**
-     * Executes extractattributes operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-     *
-     */
     private fun extractAttributes(serviceInfo: NsdServiceInfo): Map<String, String> {
         val attributes = mutableMapOf<String, String>()
 
@@ -621,20 +416,8 @@ class NetworkDiscoveryService(private val context: Context) {
     /**
      * Cleanup resources
      */
-    /**
-     * Executes cleanup operation with thermal imaging domain optimization.
-     *
-     */
     fun cleanup() {
-        /**
-         * Executes stopdiscovery operation with thermal imaging domain optimization.
-         *
-         */
         stopDiscovery()
-        /**
-         * Executes unregisterservice operation with thermal imaging domain optimization.
-         *
-         */
         unregisterService()
         discoveryScope.cancel()
         discoveredServices.clear()

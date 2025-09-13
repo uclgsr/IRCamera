@@ -18,32 +18,10 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.List;
 
-/**
- * Specialized thermal imaging component providing YAxisRendererHorizontalBarChart functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
 
-    /**
-     * Executes yaxisrendererhorizontalbarchart operation with thermal imaging domain optimization.
-     *
-     */
     public YAxisRendererHorizontalBarChart(ViewPortHandler viewPortHandler, YAxis yAxis,
                                            Transformer trans) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(viewPortHandler, yAxis, trans);
 
         mLimitLinePaint.setTextAlign(Align.LEFT);
@@ -58,12 +36,8 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
     @Override
     public void computeAxis(float yMin, float yMax, boolean inverted) {
 
-        // Calculate the starting and entry point of the y-labels (depending on
-        // Zoom / contentrect bounds)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // calculate the starting and entry point of the y-labels (depending on
+        // zoom / contentrect bounds)
         if (mViewPortHandler.contentHeight() > 10 && !mViewPortHandler.isFullyZoomedOutX()) {
 
             MPPointD p1 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(),
@@ -71,10 +45,6 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
             MPPointD p2 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentRight(),
                     mViewPortHandler.contentTop());
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!inverted) {
                 yMin = (float) p1.x;
                 yMax = (float) p2.x;
@@ -87,10 +57,6 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
             MPPointD.recycleInstance(p2);
         }
 
-        /**
-         * Executes computeaxisvalues operation with thermal imaging domain optimization.
-         *
-         */
         computeAxisValues(yMin, yMax);
     }
 
@@ -100,10 +66,6 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
     @Override
     public void renderAxisLabels(Canvas c) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!mYAxis.isEnabled() || !mYAxis.isDrawLabelsEnabled())
             return;
 
@@ -122,16 +84,8 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
 
         float yPos = 0f;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dependency == AxisDependency.LEFT) {
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (labelPosition == YAxisLabelPosition.OUTSIDE_CHART) {
                 yPos = mViewPortHandler.contentTop() - baseYOffset;
             } else {
@@ -140,10 +94,6 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
 
         } else {
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (labelPosition == YAxisLabelPosition.OUTSIDE_CHART) {
                 yPos = mViewPortHandler.contentBottom() + textHeight + baseYOffset;
             } else {
@@ -151,30 +101,18 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
             }
         }
 
-        /**
-         * Executes drawylabels operation with thermal imaging domain optimization.
-         *
-         */
         drawYLabels(c, yPos, positions, mYAxis.getYOffset());
     }
 
     @Override
     public void renderAxisLine(Canvas c) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!mYAxis.isEnabled() || !mYAxis.isDrawAxisLineEnabled())
             return;
 
         mAxisLinePaint.setColor(mYAxis.getAxisLineColor());
         mAxisLinePaint.setStrokeWidth(mYAxis.getAxisLineWidth());
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mYAxis.getAxisDependency() == AxisDependency.LEFT) {
             c.drawLine(mViewPortHandler.contentLeft(),
                     mViewPortHandler.contentTop(), mViewPortHandler.contentRight(),
@@ -204,10 +142,6 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
                 ? mYAxis.mEntryCount
                 : (mYAxis.mEntryCount - 1);
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = from; i < to; i++) {
 
             String text = mYAxis.getFormattedLabel(i);
@@ -219,21 +153,13 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
     @Override
     protected float[] getTransformedPositions() {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if(mGetTransformedPositionsBuffer.length != mYAxis.mEntryCount * 2) {
             mGetTransformedPositionsBuffer = new float[mYAxis.mEntryCount * 2];
         }
         float[] positions = mGetTransformedPositionsBuffer;
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < positions.length; i += 2) {
-            // Only fill x values, y values are not needed for x-labels
+            // only fill x values, y values are not needed for x-labels
             positions[i] = mYAxis.mEntries[i / 2];
         }
 
@@ -267,7 +193,7 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
         mZeroLineClippingRect.inset(-mYAxis.getZeroLineWidth(), 0.f);
         c.clipRect(mLimitLineClippingRect);
 
-        // Draw zero line
+        // draw zero line
         MPPointD pos = mTrans.getPixelForValues(0f, 0f);
 
         mZeroLinePaint.setColor(mYAxis.getZeroLineColor());
@@ -279,7 +205,7 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
         zeroLinePath.moveTo((float) pos.x - 1, mViewPortHandler.contentTop());
         zeroLinePath.lineTo((float) pos.x - 1, mViewPortHandler.contentBottom());
 
-        // Draw a path because lines don't support dashing on lower android versions
+        // draw a path because lines don't support dashing on lower android versions
         c.drawPath(zeroLinePath, mZeroLinePaint);
 
         c.restoreToCount(clipRestoreCount);
@@ -298,10 +224,6 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
 
         List<LimitLine> limitLines = mYAxis.getLimitLines();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (limitLines == null || limitLines.size() <= 0)
             return;
 
@@ -313,18 +235,10 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
         Path limitLinePath = mRenderLimitLinesPathBuffer;
         limitLinePath.reset();
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < limitLines.size(); i++) {
 
             LimitLine l = limitLines.get(i);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!l.isEnabled())
                 continue;
 
@@ -354,11 +268,7 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
 
             String label = l.getLabel();
 
-            // If drawing the limit-value label is enabled
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            // if drawing the limit-value label is enabled
             if (label != null && !label.equals("")) {
 
                 mLimitLinePaint.setStyle(l.getTextStyle());
@@ -373,10 +283,6 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
 
                 final LimitLine.LimitLabelPosition position = l.getLabelPosition();
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (position == LimitLine.LimitLabelPosition.RIGHT_TOP) {
 
                     final float labelLineHeight = Utils.calcTextHeight(mLimitLinePaint, label);

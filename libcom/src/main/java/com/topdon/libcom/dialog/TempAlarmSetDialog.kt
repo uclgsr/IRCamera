@@ -21,29 +21,11 @@ import com.topdon.lib.core.tools.ToastTools
 import com.topdon.lib.core.tools.UnitTools
 import com.topdon.libcom.R
 
-/**
- * Temperature measurement and calibration utility for thermal imaging. Provides precision temperature calculations with TempAlarmSetDialog algorithms.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class TempAlarmSetDialog(
     context: Context,
     private val isEdit: Boolean,
 ) : Dialog(context, R.style.app_compat_dialog), CompoundButton.OnCheckedChangeListener {
     var alarmBean = AlarmBean()
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             field = value.copy()
         }
@@ -88,34 +70,11 @@ class TempAlarmSetDialog(
     private lateinit var tvAlarmRingtone: TextView
     private lateinit var tvAlarmMark: TextView
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /**
-         * Configures the cancelable with validation and thermal imaging optimization.
-         *
-         */
         setCancelable(false)
-        /**
-         * Configures the canceledontouchoutside with validation and thermal imaging optimization.
-         *
-         */
         setCanceledOnTouchOutside(false)
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(LayoutInflater.from(context).inflate(R.layout.dialog_temp_alarm_set, null))
-        /**
-         * Initializes the view component for thermal imaging operations.
-         *
-         */
         initView()
 
         window?.let {
@@ -127,21 +86,10 @@ class TempAlarmSetDialog(
     }
 
     @Deprecated("Deprecated in Java")
-    /**
-     * Executes onbackpressed operation with thermal imaging domain optimization.
-     *
-     */
     override fun onBackPressed() {
-        /**
-         * Executes dismiss operation with thermal imaging domain optimization.
-         *
-         */
         dismiss()
     }
 
-    /**
-     * Initializes view component.
-     */
     private fun initView() {
         // Initialize view references
         clRoot = findViewById(R.id.cl_root)
@@ -185,24 +133,12 @@ class TempAlarmSetDialog(
         switchAlarmRingtone.setOnCheckedChangeListener(this)
 
         imgMarkHigh.setOnClickListener {
-            /**
-             * Executes showcolordialog operation with thermal imaging domain optimization.
-             *
-             */
             showColorDialog(true)
         }
         imgMarkLow.setOnClickListener {
-            /**
-             * Executes showcolordialog operation with thermal imaging domain optimization.
-             *
-             */
             showColorDialog(false)
         }
         ivCheckStoke.setOnClickListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!ivCheckStoke.isSelected) {
                 ivCheckStoke.isSelected = true
                 ivCheckMatrix.isSelected = false
@@ -210,10 +146,6 @@ class TempAlarmSetDialog(
             }
         }
         ivCheckMatrix.setOnClickListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!ivCheckMatrix.isSelected) {
                 ivCheckStoke.isSelected = false
                 ivCheckMatrix.isSelected = true
@@ -225,34 +157,15 @@ class TempAlarmSetDialog(
         tvAlarmLowUnit.text = UnitTools.showUnit()
     }
 
-    /**
-     * Executes show operation with thermal imaging domain optimization.
-     *
-     */
     override fun show() {
         super.show()
-        /**
-         * Executes refreshalarmview operation with thermal imaging domain optimization.
-         *
-         */
         refreshAlarmView()
     }
 
-    /**
-     * Executes refreshAlarmView functionality.
-     */
-    /**
-     * Executes refreshalarmview operation with thermal imaging domain optimization.
-     *
-     */
     private fun refreshAlarmView() {
         switchAlarmHigh.isChecked = alarmBean.isHighOpen
         switchAlarmLow.isChecked = alarmBean.isLowOpen
         switchAlarmMark.isChecked = isEdit || alarmBean.isMarkOpen
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isEdit) {
             switchAlarmRingtone.isChecked = alarmBean.isRingtoneOpen
         }
@@ -267,10 +180,6 @@ class TempAlarmSetDialog(
         clRingtoneSelect.isVisible = !isEdit && switchAlarmRingtone.isChecked
         tvAlarmRingtone.isVisible = !isEdit
         switchAlarmRingtone.isVisible = !isEdit
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (hideAlarmMark)
             {
                 tvAlarmMark.visibility = View.GONE
@@ -278,19 +187,11 @@ class TempAlarmSetDialog(
                 clAlarmMark.visibility = View.GONE
             }
         switchAlarmMark.isVisible = !isEdit
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (alarmBean.highTemp == Float.MAX_VALUE) {
             etAlarmHigh.setText("")
         } else {
             etAlarmHigh.setText(UnitTools.showUnitValue(alarmBean.highTemp).toString())
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (alarmBean.lowTemp == Float.MIN_VALUE) {
             etAlarmLow.setText("")
         } else {
@@ -301,10 +202,6 @@ class TempAlarmSetDialog(
         ivRingtone3.isSelected = false
         ivRingtone4.isSelected = false
         ivRingtone5.isSelected = false
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (alarmBean.ringtoneType) {
             0 -> ivRingtone1.isSelected = true
             1 -> ivRingtone2.isSelected = true
@@ -314,47 +211,20 @@ class TempAlarmSetDialog(
         }
     }
 
-    /**
-     * Executes save functionality.
-     */
-    /**
-     * Executes save operation with thermal imaging domain optimization.
-     *
-     */
     private fun save() {
         try {
             val inputHigh =
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (switchAlarmHigh.isChecked) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (etAlarmHigh.text.isNotEmpty()) UnitTools.showToCValue(etAlarmHigh.text.toString().toFloat()) else null
                 } else {
                     null
                 }
             val inputLow =
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (switchAlarmLow.isChecked) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (etAlarmLow.text.isNotEmpty()) UnitTools.showToCValue(etAlarmLow.text.toString().toFloat()) else null
                 } else {
                     null
                 }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (inputHigh != null && inputLow != null && inputLow > inputHigh) {
                 ToastTools.showShort(com.topdon.lib.ui.R.string.tip_input_format)
                 return
@@ -381,30 +251,12 @@ class TempAlarmSetDialog(
 
         onSaveListener?.invoke(alarmBean)
 
-        /**
-         * Executes dismiss operation with thermal imaging domain optimization.
-         *
-         */
         dismiss()
     }
 
-    /**
-     * Executes showColorDialog functionality.
-     */
-    /**
-     * Executes showcolordialog operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isHigh Parameter for operation (type: Boolean)
-     *
-     */
     private fun showColorDialog(isHigh: Boolean) {
         val colorPickDialog = ColorPickDialog(context, if (isHigh) alarmBean.highColor else alarmBean.lowColor, -1)
         colorPickDialog.onPickListener = { it: Int, i1: Int ->
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isHigh) {
                 alarmBean.highColor = it
                 Glide.with(context).load(ColorDrawable(it)).into(imgCAlarmHigh)
@@ -416,17 +268,9 @@ class TempAlarmSetDialog(
         colorPickDialog.show()
     }
 
-    /**
-     * Executes dismiss operation with thermal imaging domain optimization.
-     *
-     */
     override fun dismiss() {
         super.dismiss()
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mediaPlayer?.isPlaying == true) {
                 mediaPlayer?.stop()
             }
@@ -436,22 +280,10 @@ class TempAlarmSetDialog(
         }
     }
 
-    /**
-     * Executes oncheckedchanged operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param buttonView Parameter for operation (type: CompoundButton?)
-     * @param isChecked Parameter for operation (type: Boolean)
-     *
-     */
     override fun onCheckedChanged(
         buttonView: CompoundButton?,
         isChecked: Boolean,
     ) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (buttonView?.id) {
             R.id.switch_alarm_high -> { // 高温报警
                 etAlarmHigh.isEnabled = isChecked
@@ -463,28 +295,16 @@ class TempAlarmSetDialog(
                 alarmBean.isLowOpen = isChecked
             }
 
-            R.id.switch_alarm_mark -> { // Regionmarker
+            R.id.switch_alarm_mark -> { // regionmarker
                 clAlarmMark.isVisible = isChecked
                 alarmBean.isMarkOpen = isChecked
             }
 
             R.id.switch_alarm_ringtone -> { // 报警铃声
                 clRingtoneSelect.isVisible = isChecked
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isChecked) {
-                    /**
-                     * Executes selectringtone operation with thermal imaging domain optimization.
-                     *
-                     */
                     selectRingtone(alarmBean.ringtoneType)
                 } else {
-                    /**
-                     * Executes selectringtone operation with thermal imaging domain optimization.
-                     *
-                     */
                     selectRingtone(null)
                 }
             }
@@ -502,10 +322,6 @@ class TempAlarmSetDialog(
             }
         } catch (_: Exception) {
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (position == null) {
             return
         }
@@ -516,10 +332,6 @@ class TempAlarmSetDialog(
         ivRingtone3.isSelected = false
         ivRingtone4.isSelected = false
         ivRingtone5.isSelected = false
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (position) {
             0 -> ivRingtone1.isSelected = true
             1 -> ivRingtone2.isSelected = true
@@ -527,10 +339,6 @@ class TempAlarmSetDialog(
             3 -> ivRingtone4.isSelected = true
             4 -> ivRingtone5.isSelected = true
         }
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (position) {
             0 -> mediaPlayer = MediaPlayer.create(context, R.raw.ringtone1)
             1 -> mediaPlayer = MediaPlayer.create(context, R.raw.ringtone2)

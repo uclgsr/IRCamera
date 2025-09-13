@@ -17,20 +17,6 @@ import java.util.concurrent.ConcurrentHashMap
  * Handles high-resolution RAW image capture with proper TotalCaptureResult pairing
  * and Samsung S22 optimizations for sustained performance.
  */
-/**
- * Specialized thermal imaging component providing RawEngine functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class RawEngine(private val context: Context) {
     companion object {
         private const val TAG = "RawEngine"
@@ -96,10 +82,6 @@ class RawEngine(private val context: Context) {
     /**
      * Stop RAW capture
      */
-    /**
-     * Executes stopcapture operation with thermal imaging domain optimization.
-     *
-     */
     fun stopCapture() {
         isCapturing = false
         Log.i(TAG, "RAW capture stopped, captured $rawCaptureCount images")
@@ -114,10 +96,6 @@ class RawEngine(private val context: Context) {
             pendingCaptureResults[timestamp] = result
 
             // Clean up old results to prevent memory leaks
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (pendingCaptureResults.size > 10) {
                 val oldestKey = pendingCaptureResults.keys.minOrNull()
                 oldestKey?.let { pendingCaptureResults.remove(it) }
@@ -133,24 +111,12 @@ class RawEngine(private val context: Context) {
     /**
      * Get capture count
      */
-    /**
-     * Retrieves the capturecount with optimized performance for thermal imaging operations.
-     *
-     */
     fun getCaptureCount(): Int = rawCaptureCount
 
     /**
      * Release resources
      */
-    /**
-     * Executes release operation with thermal imaging domain optimization.
-     *
-     */
     fun release() {
-        /**
-         * Executes stopcapture operation with thermal imaging domain optimization.
-         *
-         */
         stopCapture()
         rawImageReader?.close()
         rawImageReader = null
@@ -162,10 +128,6 @@ class RawEngine(private val context: Context) {
 
     private val rawImageAvailableListener =
         ImageReader.OnImageAvailableListener { reader ->
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isCapturing) return@OnImageAvailableListener
 
             val image = reader.acquireLatestImage() ?: return@OnImageAvailableListener
@@ -174,23 +136,11 @@ class RawEngine(private val context: Context) {
                 val timestamp = image.timestamp
                 val captureResult = pendingCaptureResults.remove(timestamp)
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (captureResult != null) {
-                    /**
-                     * Executes saverawimageasdng operation with thermal imaging domain optimization.
-                     *
-                     */
                     saveRawImageAsDng(image, captureResult)
                 } else {
                     Log.w(TAG, "No capture result found for timestamp $timestamp")
                     // Save without DNG metadata as fallback
-                    /**
-                     * Executes saverawimageasraw operation with thermal imaging domain optimization.
-                     *
-                     */
                     saveRawImageAsRaw(image)
                 }
             } catch (e: Exception) {
@@ -201,17 +151,6 @@ class RawEngine(private val context: Context) {
             }
         }
 
-    /**
-     * Executes saveRawImageAsDng functionality.
-     */
-    /**
-     * Executes saverawimageasdng operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param image Parameter for operation (type: Image)
-     * @param captureResult Parameter for operation (type: TotalCaptureResult)
-     *
-     */
     private fun saveRawImageAsDng(
         image: Image,
         captureResult: TotalCaptureResult,
@@ -223,10 +162,6 @@ class RawEngine(private val context: Context) {
         try {
             // TODO: Implement DNG creation when DngCreator import is resolved
             // For now, save as raw binary data
-            /**
-             * Executes saverawimageasraw operation with thermal imaging domain optimization.
-             *
-             */
             saveRawImageAsRaw(image)
 
             rawCaptureCount++
@@ -238,16 +173,6 @@ class RawEngine(private val context: Context) {
         }
     }
 
-    /**
-     * Executes saveRawImageAsRaw functionality.
-     */
-    /**
-     * Executes saverawimageasraw operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param image Parameter for operation (type: Image)
-     *
-     */
     private fun saveRawImageAsRaw(image: Image) {
         val outputDir = rawOutputDirectory ?: return
         val timestamp = System.currentTimeMillis()

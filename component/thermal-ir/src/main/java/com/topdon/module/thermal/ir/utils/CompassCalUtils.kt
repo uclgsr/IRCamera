@@ -4,54 +4,19 @@ import android.graphics.Paint
 import android.graphics.Rect
 import kotlin.math.roundToLong
 
-get真实的xcoordinate
-    /**
-     * Executes realX functionality.
-     */
-/**
- * Executes realx operation with thermal imaging domain optimization.
- *
- * @param
- * @param str Parameter for operation (type: String)
- * @param x Parameter for operation (type: Float)
- * @param paint Parameter for operation (type: Paint)
- *
- */
+get真实的x坐标
 fun realX(
     str: String,
     x: Float,
     paint: Paint,
 ) = x - textWidth(str, paint) / 2f
 
-    /**
-     * Executes realY functionality.
-     */
-/**
- * Executes realy operation with thermal imaging domain optimization.
- *
- * @param
- * @param str Parameter for operation (type: String)
- * @param y Parameter for operation (type: Float)
- * @param paint Parameter for operation (type: Paint)
- *
- */
 fun realY(
     str: String,
     y: Float,
     paint: Paint,
 ) = y - textHeight(str, paint) / 4f
 
-    /**
-     * Executes textWidth functionality.
-     */
-/**
- * Executes textwidth operation with thermal imaging domain optimization.
- *
- * @param
- * @param text Parameter for operation (type: String)
- * @param paint Parameter for operation (type: Paint)
- *
- */
 fun textWidth(
     text: String,
     paint: Paint,
@@ -59,17 +24,6 @@ fun textWidth(
     return textDimensions(text, paint).first
 }
 
-    /**
-     * Executes textHeight functionality.
-     */
-/**
- * Executes textheight operation with thermal imaging domain optimization.
- *
- * @param
- * @param text Parameter for operation (type: String)
- * @param paint Parameter for operation (type: Paint)
- *
- */
 fun textHeight(
     text: String,
     paint: Paint,
@@ -79,17 +33,6 @@ fun textHeight(
 
 val measurementRect = Rect()
 
-    /**
-     * Executes textDimensions functionality.
-     */
-/**
- * Executes textdimensions operation with thermal imaging domain optimization.
- *
- * @param
- * @param text Parameter for operation (type: String)
- * @param paint Parameter for operation (type: Paint)
- *
- */
 fun textDimensions(
     text: String,
     paint: Paint,
@@ -105,9 +48,6 @@ fun textDimensions(
  * @param divisor The divisor
  * @return The values between min and max, inclusive, that are divisible by divisor
  */
-    /**
-     * Retrieves valuesbetween information.
-     */
 fun getValuesBetween(
     min: Float,
     max: Float,
@@ -116,15 +56,7 @@ fun getValuesBetween(
     val values = mutableListOf<Float>()
     val start = min.roundNearest(divisor)
     var i = start
-    /**
-     * Executes while operation with thermal imaging domain optimization.
-     *
-     */
     while (i <= max) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (i >= min) {
             values.add(i)
         }
@@ -133,14 +65,7 @@ fun getValuesBetween(
     return values
 }
 
-    /**
-     * Executes Float functionality.
-     */
 fun Float.roundNearest(nearest: Float): Float {
-    /**
-     * Executes return operation with thermal imaging domain optimization.
-     *
-     */
     return (this / nearest).roundToLong() * nearest
 }
 
@@ -151,9 +76,6 @@ fun Float.roundNearest(nearest: Float): Float {
  * @param viewWidth The size of the view in pixels
  * @param fovWidth The field of view of the camera in degrees
  */
-    /**
-     * Retrieves pixellinear information.
-     */
 fun getPixelLinear(
     bearing: Float,
     azimuth: Float,
@@ -165,17 +87,6 @@ fun getPixelLinear(
     return viewWidth / 2f + newBearing * wPixelsPerDegree
 }
 
-    /**
-     * Executes deltaAngle functionality.
-     */
-/**
- * Executes deltaangle operation with thermal imaging domain optimization.
- *
- * @param
- * @param angle1 Angle in degrees (type: Float)
- * @param angle2 Angle in degrees (type: Float)
- *
- */
 fun deltaAngle(
     angle1: Float,
     angle2: Float,
@@ -190,32 +101,10 @@ fun deltaAngle(
     }
 }
 
-    /**
-     * Executes normalizeAngle functionality.
-     */
-/**
- * Executes normalizeangle operation with thermal imaging domain optimization.
- *
- * @param
- * @param angle Angle in degrees (type: Float)
- *
- */
 fun normalizeAngle(angle: Float): Float {
     return wrap(angle, 0f, 360f) % 360
 }
 
-    /**
-     * Executes wrap functionality.
-     */
-/**
- * Executes wrap operation with thermal imaging domain optimization.
- *
- * @param
- * @param value Parameter for operation (type: Float)
- * @param min Parameter for operation (type: Float)
- * @param max Parameter for operation (type: Float)
- *
- */
 fun wrap(
     value: Float,
     min: Float,
@@ -224,37 +113,17 @@ fun wrap(
     return wrap(value.toDouble(), min.toDouble(), max.toDouble()).toFloat()
 }
 
-    /**
-     * Executes wrap functionality.
-     */
-/**
- * Executes wrap operation with thermal imaging domain optimization.
- *
- * @param
- * @param value Parameter for operation (type: Double)
- * @param min Parameter for operation (type: Double)
- * @param max Parameter for operation (type: Double)
- *
- */
 fun wrap(
     value: Double,
     min: Double,
     max: Double,
 ): Double {
-    // Https:// Stackoverflow.com/questions/14415753/wrap-value-into-range-min-max-without-division
+    // https://stackoverflow.com/questions/14415753/wrap-value-into-range-min-max-without-division
     val range = max - min
-    /**
-     * Executes if operation with thermal imaging domain optimization.
-     *
-     */
     if (value < min) {
         return max - (min - value) % range
     }
 
-    /**
-     * Executes if operation with thermal imaging domain optimization.
-     *
-     */
     if (value > max) {
         return min + (value - min) % range
     }

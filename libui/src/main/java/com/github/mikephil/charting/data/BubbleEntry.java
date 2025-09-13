@@ -12,20 +12,6 @@ import android.graphics.drawable.Drawable;
  * @author Philipp Jahoda
  */
 @SuppressLint("ParcelCreator")
-/**
- * Specialized thermal imaging component providing BubbleEntry functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class BubbleEntry extends Entry {
 
     /** size value */
@@ -38,15 +24,7 @@ public class BubbleEntry extends Entry {
      * @param y The value on the y-axis.
      * @param size The size of the bubble.
      */
-    /**
-     * Executes bubbleentry operation with thermal imaging domain optimization.
-     *
-     */
     public BubbleEntry(float x, float y, float size) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(x, y);
         this.mSize = size;
     }
@@ -59,15 +37,7 @@ public class BubbleEntry extends Entry {
      * @param size The size of the bubble.
      * @param data Spot for additional data this Entry represents.
      */
-    /**
-     * Executes bubbleentry operation with thermal imaging domain optimization.
-     *
-     */
     public BubbleEntry(float x, float y, float size, Object data) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(x, y, data);
         this.mSize = size;
     }
@@ -80,15 +50,7 @@ public class BubbleEntry extends Entry {
      * @param size The size of the bubble.
      * @param icon Icon image
      */
-    /**
-     * Executes bubbleentry operation with thermal imaging domain optimization.
-     *
-     */
     public BubbleEntry(float x, float y, float size, Drawable icon) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(x, y, icon);
         this.mSize = size;
     }
@@ -102,15 +64,7 @@ public class BubbleEntry extends Entry {
      * @param icon Icon image
      * @param data Spot for additional data this Entry represents.
      */
-    /**
-     * Executes bubbleentry operation with thermal imaging domain optimization.
-     *
-     */
     public BubbleEntry(float x, float y, float size, Drawable icon, Object data) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(x, y, icon, data);
         this.mSize = size;
     }

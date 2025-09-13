@@ -18,18 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Specialized thermal imaging component providing BaseDataSet functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Created by Philipp Jahoda on 21/10/15.
+ * This is the base dataset of all DataSets. It's purpose is to implement critical methods
+ * provided by the IDataSet interface.
  */
 public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
 
@@ -105,15 +96,11 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     /**
      * Default constructor.
      */
-    /**
-     * Executes basedataset operation with thermal imaging domain optimization.
-     *
-     */
     public BaseDataSet() {
         mColors = new ArrayList<Integer>();
         mValueColors = new ArrayList<Integer>();
 
-        // Default color
+        // default color
         mColors.add(Color.rgb(140, 234, 255));
         mValueColors.add(Color.BLACK);
     }
@@ -124,10 +111,6 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
      * @param label
      */
     public BaseDataSet(String label) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this();
         this.mLabel = label;
     }
@@ -219,23 +202,12 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
      */
     public void setColors(int[] colors, Context c) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mColors == null) {
             mColors = new ArrayList<>();
         }
 
         mColors.clear();
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param color Parameter for operation (type: colors)
-         *
-         */
         for (int color : colors) {
             mColors.add(c.getResources().getColor(color));
         }
@@ -247,10 +219,6 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
      * @param color
      */
     public void addColor(int color) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mColors == null)
             mColors = new ArrayList<Integer>();
         mColors.add(color);
@@ -263,10 +231,6 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
      * @param color
      */
     public void setColor(int color) {
-        /**
-         * Executes resetcolors operation with thermal imaging domain optimization.
-         *
-         */
         resetColors();
         mColors.add(color);
     }
@@ -297,10 +261,6 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
      * @param alpha from 0-255
      */
     public void setColor(int color, int alpha) {
-        /**
-         * Configures the color with validation and thermal imaging optimization.
-         *
-         */
         setColor(Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color)));
     }
 
@@ -311,23 +271,8 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
      * @param alpha
      */
     public void setColors(int[] colors, int alpha) {
-        /**
-         * Executes resetcolors operation with thermal imaging domain optimization.
-         *
-         */
         resetColors();
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param color Parameter for operation (type: colors)
-         *
-         */
         for (int color : colors) {
-            /**
-             * Executes addcolor operation with thermal imaging domain optimization.
-             *
-             */
             addColor(Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color)));
         }
     }
@@ -369,10 +314,6 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     @Override
     public void setValueFormatter(ValueFormatter f) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (f == null)
             return;
         else
@@ -381,10 +322,6 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
 
     @Override
     public ValueFormatter getValueFormatter() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (needsFormatter())
             return Utils.getDefaultValueFormatter();
         return mValueFormatter;
@@ -531,15 +468,7 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     @Override
     public int getIndexInEntries(int xIndex) {
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < getEntryCount(); i++) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (xIndex == getEntryForIndex(i).getX())
                 return i;
         }
@@ -550,10 +479,6 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     @Override
     public boolean removeFirst() {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (getEntryCount() > 0) {
 
             T entry = getEntryForIndex(0);
@@ -565,10 +490,6 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     @Override
     public boolean removeLast() {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (getEntryCount() > 0) {
 
             T e = getEntryForIndex(getEntryCount() - 1);
@@ -594,15 +515,7 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     @Override
     public boolean contains(T e) {
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < getEntryCount(); i++) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (getEntryForIndex(i).equals(e))
                 return true;
         }

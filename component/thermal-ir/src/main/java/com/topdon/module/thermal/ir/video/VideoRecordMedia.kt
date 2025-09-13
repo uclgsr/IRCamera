@@ -15,18 +15,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
- * Specialized thermal imaging component providing VideoRecordMedia functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Video record media utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
  */
 class VideoRecordMedia(
     private var cameraView: CameraView,
@@ -44,45 +34,29 @@ class VideoRecordMedia(
         width = 480
         height = width * cameraView.height / cameraView.width
 宽高不能出现奇数
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (height % 2 == 1) {
             height -= 1
         }
     }
 
-    /**
-     * Executes startrecord operation with thermal imaging domain optimization.
-     *
-     */
     override fun startRecord() {
         val downloadDir = FileConfig.lineGalleryDir
         val exportedFile = File(downloadDir, "${Date().time}.mp4")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (exportedFile.exists()) {
             exportedFile.delete()
         }
         encoder.setOutputFilePath(exportedFile.path)
-// If (bitmap == null) {
+//        if (bitmap == null) {
 Log.w("123", "recording准备failed")
-// Return
+//            return
 //        }
         encoder.setOutputSize(width, height)
         encoder.startEncode()
         isRunning = true
-defaultframe率20,间隔50ms一frame
+默认frame率20,间隔50ms一frame
         exportDisposable =
             Observable.interval(50, TimeUnit.MILLISECONDS)
                 .map {
-                    /**
-                     * Executes createbitmapfromview operation with thermal imaging domain optimization.
-                     *
-                     */
                     createBitmapFromView()
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -91,25 +65,10 @@ defaultframe率20,间隔50ms一frame
                 }
     }
 
-    /**
-     * Executes startrecord operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param fileDir Parameter for operation (type: String)
-     *
-     */
     override fun startRecord(fileDir: String) {
     }
 
-    /**
-     * Executes stoprecord operation with thermal imaging domain optimization.
-     *
-     */
     override fun stopRecord() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isRunning) {
             encoder.stopEncode()
             exportDisposable.dispose()
@@ -117,30 +76,12 @@ defaultframe率20,间隔50ms一frame
         isRunning = false
     }
 
-    /**
-     * Executes updateaudiostate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param audioRecord Parameter for operation (type: Boolean)
-     *
-     */
     override fun updateAudioState(audioRecord: Boolean) {
         // Note: Audio state update functionality not yet implemented
     }
 
-    /**
-     * Executes createBitmapFromView functionality.
-     */
-    /**
-     * Executes createbitmapfromview operation with thermal imaging domain optimization.
-     *
-     */
     private fun createBitmapFromView(): Bitmap {
         var cameraViewBitmap = cameraView.bitmap
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (temperatureView.temperatureRegionMode != TemperatureView.REGION_MODE_CLEAN) {
 gettemperature图层的data，包括pointline框，temperature值等，重新合成bitmap
             cameraViewBitmap =
@@ -152,10 +93,6 @@ gettemperature图层的data，包括pointline框，temperature值等，重新合
                 )
         }
         val dstBitmap =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (cameraViewBitmap != null) {
                 Bitmap.createScaledBitmap(cameraViewBitmap, width, height, true)
             } else {

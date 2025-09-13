@@ -22,42 +22,15 @@ import com.topdon.lib.core.utils.ScreenUtil
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing TipShutterDialog functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class TipShutterDialog : Dialog {
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : super(context)
 
+    constructor(context: Context, themeResId: Int) : super(context, themeResId)
+
 /**
- * Specialized thermal imaging component providing Builder functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
+ * Builder manages camera operations and image capture functionality.
  *
  * @author IRCamera Development Team
- * @version 2.0
  * @since 1.0
  */
     class Builder(private val context: Context) {
@@ -67,16 +40,6 @@ class TipShutterDialog : Dialog {
         private var closeEvent: ((check: Boolean) -> Unit)? = null
         private var canceled = false
 
-    /**
-     * Sets title configuration.
-     */
-        /**
-         * Configures the title with validation and thermal imaging optimization.
-         *
-         * @param
-         * @param resId Parameter for operation (type: Int)
-         *
-         */
         fun setTitle(
             @StringRes resId: Int,
         ): Builder {
@@ -84,17 +47,11 @@ class TipShutterDialog : Dialog {
             return this
         }
 
-    /**
-     * Sets message configuration.
-     */
         fun setMessage(message: CharSequence): Builder {
             this.message = message
             return this
         }
 
-    /**
-     * Sets message configuration.
-     */
         fun setMessage(
             @StringRes message: Int,
         ): Builder {
@@ -102,17 +59,11 @@ class TipShutterDialog : Dialog {
             return this
         }
 
-    /**
-     * Sets cancellistener configuration.
-     */
         fun setCancelListener(event: ((check: Boolean) -> Unit)? = null): Builder {
             this.closeEvent = event
             return this
         }
 
-    /**
-     * Sets canceled configuration.
-     */
         fun setCanceled(canceled: Boolean): Builder {
             this.canceled = canceled
             return this
@@ -121,10 +72,6 @@ class TipShutterDialog : Dialog {
     /**
      * Executes dismiss functionality.
      */
-        /**
-         * Executes dismiss operation with thermal imaging domain optimization.
-         *
-         */
         fun dismiss() {
             this.dialog!!.dismiss()
         }
@@ -146,32 +93,16 @@ class TipShutterDialog : Dialog {
             dialog!!.window!!.attributes = lp
 
             binding.tvIKnow.setOnClickListener {
-                /**
-                 * Executes dismiss operation with thermal imaging domain optimization.
-                 *
-                 */
                 dismiss()
                 closeEvent?.invoke(binding.dialogTipCheck.isChecked)
             }
             binding.imgClose.setOnClickListener {
-                /**
-                 * Executes dismiss operation with thermal imaging domain optimization.
-                 *
-                 */
                 dismiss()
                 closeEvent?.invoke(binding.dialogTipCheck.isChecked)
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (titleRes != null) {
                 binding.tvTitle.setText(titleRes!!)
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (message != null) {
                 binding.dialogTipMsgText.visibility = View.VISIBLE
                 binding.dialogTipMsgText.setText(message, TextView.BufferType.NORMAL)

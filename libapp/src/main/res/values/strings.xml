@@ -1,31 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- String resources for thermal imaging interface -->
 <resources>
-    <!-- UI styling - app name -->
     <string name="app_name">TOPINFRARED</string>
-    <!-- UI styling - top infrared up case -->
     <string name="top_infrared_up_case" translatable="false">TOPINFRARED</string>
-    <!-- UI styling - see more than -->
     <string name="see_more_than" translatable="false">See More Than Human Eye Can</string>
 
-    <!-- UI styling - version code -->
     <string name="version_code" translatable="false">Version %s</string>
-    <!-- UI styling - version year -->
     <string name="version_year" translatable="false">Copyright %s TOPDON Technology Co.,Ltd.\nAll Rights Reserved.</string>
-    <!-- UI styling - splash title 1 -->
     <string name="splash_title_1" translatable="false">See More</string>
-    <!-- UI styling - splash title 2 -->
     <string name="splash_title_2" translatable="false">Than Human Eye Can</string>
 
 
-    <!-- UI styling - english -->
     <string name="english" translatable="false">English</string>
 
-    <!-- UI styling - setting language list -->
     <string-array name="setting_language_list">
         <item>@string/english</item>
     </string-array>
 
-    <!-- UI styling - http code z5004 -->
     <string name="http_code_z5004">Request timeout, please try again</string>
 </resources>

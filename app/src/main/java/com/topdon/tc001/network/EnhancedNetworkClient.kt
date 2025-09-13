@@ -27,20 +27,6 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * @author IRCamera Android Sensor Node (Spoke)
  */
-/**
- * Specialized thermal imaging component providing EnhancedNetworkClient functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class EnhancedNetworkClient(
     private val context: Context,
     private val recordingController: RecordingController,
@@ -96,15 +82,7 @@ class EnhancedNetworkClient(
     ): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isConnected.get()) {
-                    /**
-                     * Executes disconnect operation with thermal imaging domain optimization.
-                     *
-                     */
                     disconnect()
                 }
 
@@ -113,15 +91,7 @@ class EnhancedNetworkClient(
 
                 // Establish socket connection
                 socket =
-                    /**
-                     * Executes socket operation with thermal imaging domain optimization.
-                     *
-                     */
                     Socket().apply {
-                        /**
-                         * Executes connect operation with thermal imaging domain optimization.
-                         *
-                         */
                         connect(InetSocketAddress(ipAddress, port), CONNECTION_TIMEOUT_MS.toInt())
                         soTimeout = 30000 // 30 second read timeout
                     }
@@ -131,26 +101,14 @@ class EnhancedNetworkClient(
 
                 // Register device with enhanced capabilities
                 val registrationSuccess = registerEnhancedDevice()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!registrationSuccess) {
                     Log.e(TAG, "Device registration failed")
-                    /**
-                     * Executes disconnect operation with thermal imaging domain optimization.
-                     *
-                     */
                     disconnect()
                     return@withContext false
                 }
 
                 // Perform time synchronization
                 val timeSyncSuccess = timeManager.synchronizeWithPC(ipAddress, TIME_SYNC_PORT)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!timeSyncSuccess) {
                     Log.w(TAG, "Time synchronization failed, continuing with local time")
                 }
@@ -167,20 +125,8 @@ class EnhancedNetworkClient(
                     )
 
                 // Start background communication tasks
-                /**
-                 * Executes startmessagelistener operation with thermal imaging domain optimization.
-                 *
-                 */
                 startMessageListener()
-                /**
-                 * Executes startheartbeat operation with thermal imaging domain optimization.
-                 *
-                 */
                 startHeartbeat()
-                /**
-                 * Executes startstatusreporting operation with thermal imaging domain optimization.
-                 *
-                 */
                 startStatusReporting()
 
                 Log.i(TAG, "Successfully connected to PC Controller")
@@ -188,10 +134,6 @@ class EnhancedNetworkClient(
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to connect to PC Controller", e)
                 _connectionStateFlow.value = ConnectionState.ERROR
-                /**
-                 * Executes disconnect operation with thermal imaging domain optimization.
-                 *
-                 */
                 disconnect()
                 return@withContext false
             }
@@ -215,17 +157,9 @@ class EnhancedNetworkClient(
                 messageListenerJob?.cancel()
 
                 // Send disconnect message
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (outputStream != null) {
                     try {
                         val disconnectMessage = createMessage("device_disconnect")
-                        /**
-                         * Executes sendmessage operation with thermal imaging domain optimization.
-                         *
-                         */
                         sendMessage(disconnectMessage)
                     } catch (e: Exception) {
                         Log.w(TAG, "Failed to send disconnect message", e)
@@ -256,10 +190,6 @@ class EnhancedNetworkClient(
     suspend fun startCoordinatedSession(sessionDirectory: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isConnected.get()) {
                     Log.e(TAG, "Not connected to PC Controller")
                     return@withContext false
@@ -269,40 +199,16 @@ class EnhancedNetworkClient(
 
                 // Notify PC Controller of session start
                 val sessionStartMessage =
-                    /**
-                     * Executes createmessage operation with thermal imaging domain optimization.
-                     *
-                     */
                     createMessage("session_start_request").apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("session_directory", sessionDirectory)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_capabilities", getDeviceCapabilities())
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("time_sync_quality", timeManager.getSyncQuality().level.name)
                     }
 
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(sessionStartMessage)
 
                 // Wait for PC Controller confirmation
                 val response = receiveMessageWithTimeout(10000L)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (response?.optString("message_type") != "session_start_confirmed") {
                     Log.e(TAG, "PC Controller did not confirm session start")
                     return@withContext false
@@ -310,40 +216,20 @@ class EnhancedNetworkClient(
 
                 // Start local recording
                 val recordingSuccess = recordingController.startRecording(sessionDirectory)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!recordingSuccess) {
                     Log.e(TAG, "Failed to start local recording")
 
                     // Notify PC Controller of failure
                     val failureMessage =
-                        /**
-                         * Executes createmessage operation with thermal imaging domain optimization.
-                         *
-                         */
                         createMessage("session_start_failed").apply {
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put("reason", "Local recording failed to start")
                         }
-                    /**
-                     * Executes sendmessage operation with thermal imaging domain optimization.
-                     *
-                     */
                     sendMessage(failureMessage)
                     return@withContext false
                 }
 
                 // Confirm session started successfully
                 val confirmMessage = createMessage("session_started")
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(confirmMessage)
 
                 Log.i(TAG, "Coordinated recording session started successfully")
@@ -361,10 +247,6 @@ class EnhancedNetworkClient(
     suspend fun stopCoordinatedSession(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isConnected.get()) {
                     Log.w(TAG, "Not connected to PC Controller, stopping local recording only")
                     return@withContext recordingController.stopRecording()
@@ -378,27 +260,11 @@ class EnhancedNetworkClient(
 
                 // Notify PC Controller
                 val sessionStopMessage =
-                    /**
-                     * Executes createmessage operation with thermal imaging domain optimization.
-                     *
-                     */
                     createMessage("session_stop_request").apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("final_sync_timestamp", finalSyncTimestamp)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("session_stats", getSessionStatistics())
                     }
 
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(sessionStopMessage)
 
                 // Stop local recording
@@ -406,26 +272,10 @@ class EnhancedNetworkClient(
 
                 // Report completion to PC Controller
                 val completionMessage =
-                    /**
-                     * Executes createmessage operation with thermal imaging domain optimization.
-                     *
-                     */
                     createMessage("session_stopped").apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("success", recordingSuccess)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("final_stats", getSessionStatistics())
                     }
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(completionMessage)
 
                 Log.i(TAG, "Coordinated recording session stopped")
@@ -452,43 +302,15 @@ class EnhancedNetworkClient(
                 recordingController.addSyncMarker(markerType, syncTimestamp, metadata)
 
                 // Send sync marker to PC Controller for distribution
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isConnected.get()) {
                     val syncMessage =
-                        /**
-                         * Executes createmessage operation with thermal imaging domain optimization.
-                         *
-                         */
                         createMessage("sync_marker").apply {
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put("marker_type", markerType)
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put("timestamp_ns", syncTimestamp)
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put("metadata", JSONObject(metadata))
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put("source_device", deviceId)
                         }
 
-                    /**
-                     * Executes sendmessage operation with thermal imaging domain optimization.
-                     *
-                     */
                     sendMessage(syncMessage)
                     Log.i(TAG, "Sync marker distributed: $markerType")
                 }
@@ -498,54 +320,18 @@ class EnhancedNetworkClient(
         }
     }
 
-    /**
-     * Executes registerenhanceddevice operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun registerEnhancedDevice(): Boolean {
         return try {
             val registrationMessage =
-                /**
-                 * Executes createmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 createMessage("enhanced_device_register").apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("device_type", "android_sensor_node")
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("device_capabilities", getDeviceCapabilities())
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("api_version", "2.0")
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("recording_controller_version", "1.0")
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("time_sync_capable", true)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("available_sensors", getAvailableSensors())
                 }
 
-            /**
-             * Executes sendmessage operation with thermal imaging domain optimization.
-             *
-             */
             sendMessage(registrationMessage)
 
             val response = receiveMessageWithTimeout(5000L)
@@ -556,36 +342,17 @@ class EnhancedNetworkClient(
         }
     }
 
-    /**
-     * Executes startMessageListener functionality.
-     */
-    /**
-     * Executes startmessagelistener operation with thermal imaging domain optimization.
-     *
-     */
     private fun startMessageListener() {
         messageListenerJob =
             networkScope.launch {
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (isConnected.get() && isActive) {
                     try {
                         val message = receiveMessageWithTimeout(1000L)
                         message?.let {
-                            /**
-                             * Executes handleincomingmessage operation with thermal imaging domain optimization.
-                             *
-                             */
                             handleIncomingMessage(it)
                             _messageFlow.emit(NetworkMessage.fromJSON(it))
                         }
                     } catch (e: Exception) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isConnected.get()) {
                             Log.e(TAG, "Message listener error", e)
                         }
@@ -595,60 +362,21 @@ class EnhancedNetworkClient(
             }
     }
 
-    /**
-     * Executes startHeartbeat functionality.
-     */
-    /**
-     * Executes startheartbeat operation with thermal imaging domain optimization.
-     *
-     */
     private fun startHeartbeat() {
         heartbeatJob =
             networkScope.launch {
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (isConnected.get() && isActive) {
                     try {
                         val heartbeatMessage =
-                            /**
-                             * Executes createmessage operation with thermal imaging domain optimization.
-                             *
-                             */
                             createMessage("enhanced_heartbeat").apply {
-                                /**
-                                 * Executes put operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 put("recording_active", recordingController.isRecording)
-                                /**
-                                 * Executes put operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 put("time_sync_quality", timeManager.getSyncQuality().level.name)
-                                /**
-                                 * Executes put operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 put("device_status", "operational")
                             }
 
-                        /**
-                         * Executes sendmessage operation with thermal imaging domain optimization.
-                         *
-                         */
                         sendMessage(heartbeatMessage)
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(HEARTBEAT_INTERVAL_MS)
                     } catch (e: Exception) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isConnected.get()) {
                             Log.e(TAG, "Heartbeat failed", e)
                         }
@@ -658,67 +386,24 @@ class EnhancedNetworkClient(
             }
     }
 
-    /**
-     * Executes startStatusReporting functionality.
-     */
-    /**
-     * Executes startstatusreporting operation with thermal imaging domain optimization.
-     *
-     */
     private fun startStatusReporting() {
         statusReportJob =
             networkScope.launch {
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (isConnected.get() && isActive) {
                     try {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (recordingController.isRecording) {
                             val statusMessage =
-                                /**
-                                 * Executes createmessage operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 createMessage("recording_status").apply {
-                                    /**
-                                     * Executes put operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     put("session_stats", getSessionStatistics())
-                                    /**
-                                     * Executes put operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     put("sensor_status", getSensorStatusArray())
-                                    /**
-                                     * Executes put operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     put("sync_events", recordingController.syncEventFlow.replayCache.size)
                                 }
 
-                            /**
-                             * Executes sendmessage operation with thermal imaging domain optimization.
-                             *
-                             */
                             sendMessage(statusMessage)
                         }
 
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(STATUS_REPORT_INTERVAL_MS)
                     } catch (e: Exception) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isConnected.get()) {
                             Log.w(TAG, "Status reporting error", e)
                         }
@@ -727,25 +412,10 @@ class EnhancedNetworkClient(
             }
     }
 
-    /**
-     * Executes handleincomingmessage operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param message Parameter for operation (type: JSONObject)
-     *
-     */
     private suspend fun handleIncomingMessage(message: JSONObject) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (message.optString("message_type")) {
             "session_start_command" -> {
                 val sessionDirectory = message.optString("session_directory")
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sessionDirectory.isNotEmpty()) {
                     Log.i(TAG, "Received session start command from PC Controller")
                     recordingController.startRecording(sessionDirectory)
@@ -764,10 +434,6 @@ class EnhancedNetworkClient(
                     message.optJSONObject("metadata")?.let { json ->
                         mutableMapOf<String, String>().apply {
                             json.keys().forEach { key ->
-                                /**
-                                 * Executes put operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 put(key, json.optString(key))
                             }
                         }
@@ -781,40 +447,16 @@ class EnhancedNetworkClient(
                 // Handle time sync requests
                 val syncResult = timeManager.getSyncQuality()
                 val response =
-                    /**
-                     * Executes createmessage operation with thermal imaging domain optimization.
-                     *
-                     */
                     createMessage("time_sync_response").apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("sync_quality", syncResult.level.name)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("offset_ns", syncResult.offsetNs)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("quality_ms", syncResult.qualityMs)
                     }
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(response)
             }
 
             "ping" -> {
                 val pongMessage = createMessage("pong")
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(pongMessage)
             }
 
@@ -824,18 +466,7 @@ class EnhancedNetworkClient(
         }
     }
 
-    /**
-     * Executes sendmessage operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param message Parameter for operation (type: JSONObject)
-     *
-     */
     private suspend fun sendMessage(message: JSONObject) {
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             val output = outputStream ?: throw IOException("Not connected")
             val messageData = message.toString().toByteArray(Charsets.UTF_8)
@@ -846,28 +477,13 @@ class EnhancedNetworkClient(
         }
     }
 
-    /**
-     * Executes receivemessagewithtimeout operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param timeoutMs Parameter for operation (type: Long)
-     *
-     */
     private suspend fun receiveMessageWithTimeout(timeoutMs: Long): JSONObject? {
         return withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Executes withtimeoutornull operation with thermal imaging domain optimization.
-                 *
-                 */
                 withTimeoutOrNull(timeoutMs) {
                     val input = inputStream ?: return@withTimeoutOrNull null
 
                     val messageLength = input.readInt()
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (messageLength > 10 * 1024 * 1024) { // 10MB limit
                         throw IOException("Message too large: $messageLength bytes")
                     }
@@ -875,10 +491,6 @@ class EnhancedNetworkClient(
                     val messageData = ByteArray(messageLength)
                     input.readFully(messageData)
 
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject(String(messageData, Charsets.UTF_8))
                 }
             } catch (e: Exception) {
@@ -888,102 +500,34 @@ class EnhancedNetworkClient(
         }
     }
 
-    /**
-     * Executes createMessage functionality.
-     */
-    /**
-     * Executes createmessage operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param messageType Parameter for operation (type: String)
-     *
-     */
     private fun createMessage(messageType: String): JSONObject {
         return JSONObject().apply {
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("message_type", messageType)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("device_id", deviceId)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("timestamp_ns", timeManager.getCurrentTimestampNs())
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("local_timestamp", System.currentTimeMillis())
         }
     }
 
-    /**
-     * Retrieves devicecapabilities information.
-     */
     private fun getDeviceCapabilities(): JSONObject {
         return JSONObject().apply {
             put("recording_coordination", true)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("time_synchronization", true)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("multi_modal_recording", true)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("real_time_monitoring", true)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("error_recovery", true)
         }
     }
 
-    /**
-     * Retrieves availablesensors information.
-     */
     private fun getAvailableSensors(): JSONObject {
         val sensors = recordingController.getAvailableSensors()
         return JSONObject().apply {
             sensors.forEach { sensor ->
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put(
                     sensor.sensorId,
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("type", sensor.sensorType)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("sampling_rate", sensor.samplingRate)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("recording", sensor.isRecording)
                     },
                 )
@@ -991,91 +535,33 @@ class EnhancedNetworkClient(
         }
     }
 
-    /**
-     * Retrieves sessionstatistics information.
-     */
     private fun getSessionStatistics(): JSONObject {
         val stats = recordingController.getRecordingStatistics()
         return JSONObject().apply {
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("is_recording", stats.isRecording)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("session_duration_seconds", stats.sessionDurationSeconds)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("active_sensors", stats.activeSensors)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("total_samples", stats.totalSamplesRecorded)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("storage_used_mb", stats.totalStorageUsedMB)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("dropped_samples", stats.totalDroppedSamples)
         }
     }
 
-    /**
-     * Retrieves sensorstatusarray information.
-     */
     private fun getSensorStatusArray(): JSONObject {
         val sensorStats = recordingController.getRecordingStatistics().sensorStatistics
         return JSONObject().apply {
             sensorStats.forEach { stats ->
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put(
                     stats.sensorId,
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("type", stats.sensorType)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put(
                             "recording",
                             recordingController.getAvailableSensors()
                                 .find { it.sensorId == stats.sensorId }?.isRecording ?: false,
                         )
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("samples", stats.totalSamplesRecorded)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("data_rate", stats.averageDataRate)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("storage_mb", stats.storageUsedMB)
                     },
                 )
@@ -1095,19 +581,16 @@ class EnhancedNetworkClient(
     /**
      * Get current connection state
      */
+    fun isConnected(): Boolean = isConnected.get()
+
+    /**
+     * Get connected controller information
+     */
+    fun getConnectedController(): NetworkClient.ControllerInfo? = connectedControllerInfo
+}
+
 /**
- * Specialized thermal imaging component providing ConnectionState functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Connection states for the enhanced network client
  */
 enum class ConnectionState {
     DISCONNECTED,
@@ -1127,16 +610,6 @@ data class NetworkMessage(
     val content: JSONObject,
 ) {
     companion object {
-    /**
-     * Executes fromJSON functionality.
-     */
-        /**
-         * Executes fromjson operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param json Parameter for operation (type: JSONObject)
-         *
-         */
         fun fromJSON(json: JSONObject): NetworkMessage {
             return NetworkMessage(
                 messageType = json.optString("message_type"),

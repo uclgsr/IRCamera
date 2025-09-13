@@ -15,20 +15,6 @@ import com.github.mikephil.charting.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Specialized thermal imaging component providing LineDataSet functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet {
 
     /**
@@ -78,50 +64,30 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
 
     private boolean mDrawCircleHole = true;
 
-    /**
-     * Executes linedataset operation with thermal imaging domain optimization.
-     *
-     */
     public LineDataSet(List<Entry> yVals, String label) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(yVals, label);
 
-        // MCircleRadius = Utils.convertDpToPixel(4f);
-        // MLineWidth = Utils.convertDpToPixel(1f);
+        // mCircleRadius = Utils.convertDpToPixel(4f);
+        // mLineWidth = Utils.convertDpToPixel(1f);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mCircleColors == null) {
             mCircleColors = new ArrayList<Integer>();
         }
         mCircleColors.clear();
 
-        // Default colors
-        // MColors.add(Color.rgb(192, 255, 140));
-        // MColors.add(Color.rgb(255, 247, 140));
+        // default colors
+        // mColors.add(Color.rgb(192, 255, 140));
+        // mColors.add(Color.rgb(255, 247, 140));
         mCircleColors.add(Color.rgb(140, 234, 255));
     }
 
     @Override
     public DataSet<Entry> copy() {
         List<Entry> entries = new ArrayList<Entry>();
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < mValues.size(); i++) {
             entries.add(mValues.get(i).copy());
         }
         LineDataSet copied = new LineDataSet(entries, getLabel());
-        /**
-         * Executes copy operation with thermal imaging domain optimization.
-         *
-         */
         copy(copied);
         return copied;
     }
@@ -167,16 +133,8 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
      */
     public void setCubicIntensity(float intensity) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (intensity > 1f)
             intensity = 1f;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (intensity < 0.05f)
             intensity = 0.05f;
 
@@ -196,10 +154,6 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
      */
     public void setCircleRadius(float radius) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (radius >= 1f) {
             mCircleRadius = Utils.convertDpToPixel(radius);
         } else {
@@ -220,10 +174,6 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
      */
     public void setCircleHoleRadius(float holeRadius) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (holeRadius >= 0.5f) {
             mCircleHoleRadius = Utils.convertDpToPixel(holeRadius);
         } else {
@@ -246,10 +196,6 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
      */
     @Deprecated
     public void setCircleSize(float size) {
-        /**
-         * Configures the circleradius with validation and thermal imaging optimization.
-         *
-         */
         setCircleRadius(size);
     }
 
@@ -380,22 +326,11 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     public void setCircleColors(int[] colors, Context c) {
 
         List<Integer> clrs = mCircleColors;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (clrs == null) {
             clrs = new ArrayList<>();
         }
         clrs.clear();
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param color Parameter for operation (type: colors)
-         *
-         */
         for (int color : colors) {
             clrs.add(c.getResources().getColor(color));
         }
@@ -410,10 +345,6 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
      * @param color
      */
     public void setCircleColor(int color) {
-        /**
-         * Executes resetcirclecolors operation with thermal imaging domain optimization.
-         *
-         */
         resetCircleColors();
         mCircleColors.add(color);
     }
@@ -464,10 +395,6 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
      */
     public void setFillFormatter(IFillFormatter formatter) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (formatter == null)
             mFillFormatter = new DefaultFillFormatter();
         else

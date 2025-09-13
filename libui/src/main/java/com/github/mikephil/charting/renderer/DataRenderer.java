@@ -14,18 +14,9 @@ import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
- * Specialized thermal imaging component providing DataRenderer functionality for the IRCamera system.
+ * Superclass of all render classes for the different data types (line, bar, ...).
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author Philipp Jahoda
  */
 public abstract class DataRenderer extends Renderer {
 
@@ -54,15 +45,7 @@ public abstract class DataRenderer extends Renderer {
      */
     protected Paint mValuePaint;
 
-    /**
-     * Executes datarenderer operation with thermal imaging domain optimization.
-     *
-     */
     public DataRenderer(ChartAnimator animator, ViewPortHandler viewPortHandler) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(viewPortHandler);
         this.mAnimator = animator;
 
@@ -88,7 +71,7 @@ public abstract class DataRenderer extends Renderer {
     }
 
     protected boolean isDrawingValuesAllowed(ChartInterface chart) {
-        // TODO: Attempt to invoke virtual method 'int com.github.mikephil.charting.data.ChartData.getEntryCount()' on a null object reference
+        //TODO Attempt to invoke virtual method 'int com.github.mikephil.charting.data.ChartData.getEntryCount()' on a null object reference
         return chart.getData().getEntryCount() < chart.getMaxVisibleCount()
                 * mViewPortHandler.getScaleX();
     }

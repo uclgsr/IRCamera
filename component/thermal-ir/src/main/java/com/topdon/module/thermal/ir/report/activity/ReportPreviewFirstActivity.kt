@@ -18,21 +18,8 @@ import com.topdon.lib.ui.R as UiR
  */
 // Legacy ARouter route annotation - now using NavigationManager
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ReportPreviewFirstActivity display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Report preview first activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
  */
 class ReportPreviewFirstActivity : BaseActivity() {
     // View declarations
@@ -40,16 +27,8 @@ class ReportPreviewFirstActivity : BaseActivity() {
     private lateinit var reportInfoView: ReportInfoView
     private lateinit var watermarkView: WatermarkView
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.activity_report_preview_first
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         // Initialize views
         titleView = findViewById(R.id.title_view)
@@ -58,10 +37,6 @@ class ReportPreviewFirstActivity : BaseActivity() {
 
         titleView.setLeftDrawable(UiR.drawable.svg_arrow_left_e8)
         titleView.setLeftClickListener {
-            /**
-             * Executes finish operation with thermal imaging domain optimization.
-             *
-             */
             finish()
         }
 
@@ -69,19 +44,11 @@ class ReportPreviewFirstActivity : BaseActivity() {
         reportInfoView.refreshInfo(reportInfoBean)
         reportInfoView.refreshCondition(intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION))
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (reportInfoBean?.is_report_watermark == 1) {
             watermarkView.watermarkText = reportInfoBean.report_watermark
         }
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 }

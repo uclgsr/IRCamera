@@ -13,20 +13,9 @@ import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
-/**
- * Thermal imaging UI animation system. Provides smooth transitions and visual effects for AnimatedZoomJob components.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Created by Philipp Jahoda on 19/02/16.
  */
+@SuppressLint("NewApi")
 public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.AnimatorListener {
 
     private static ObjectPool<AnimatedZoomJob> pool;
@@ -62,15 +51,7 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
     protected float xAxisRange;
 
     @SuppressLint("NewApi")
-    /**
-     * Executes animatedzoomjob operation with thermal imaging domain optimization.
-     *
-     */
     public AnimatedZoomJob(ViewPortHandler viewPortHandler, View v, Transformer trans, YAxis axis, float xAxisRange, float scaleX, float scaleY, float xOrigin, float yOrigin, float zoomCenterX, float zoomCenterY, float zoomOriginX, float zoomOriginY, long duration) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(viewPortHandler, scaleX, scaleY, trans, v, xOrigin, yOrigin, duration);
 
         this.zoomCenterX = zoomCenterX;

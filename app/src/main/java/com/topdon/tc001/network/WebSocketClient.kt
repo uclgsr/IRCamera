@@ -34,20 +34,6 @@ import kotlin.random.Random
  * - WebSocket heartbeat (PING every 5s, disconnect on 15s silence)
  * - Persistent connection across network interruptions
  */
-/**
- * Specialized thermal imaging component providing WebSocketClient functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class WebSocketClient(private val context: Context) {
     companion object {
         private const val TAG = "WebSocketClient"
@@ -124,117 +110,35 @@ class WebSocketClient(private val context: Context) {
     private var connectionStartTime = 0L
 
     data class ServerInfo(
-/**
- * Specialized thermal imaging component providing WebSocketEventListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+        val name: String,
+        val host: String,
+        val port: Int,
+        val usesTLS: Boolean,
+        val protocolVersion: String,
+        val capabilities: Set<String>,
+    )
+
     interface WebSocketEventListener {
-    /**
-     * Executes onConnecting functionality.
-     */
-        /**
-         * Executes onconnecting operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param serverInfo Parameter for operation (type: ServerInfo)
-         *
-         */
         fun onConnecting(serverInfo: ServerInfo)
 
-    /**
-     * Executes onConnected functionality.
-     */
-        /**
-         * Executes onconnected operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param serverInfo Parameter for operation (type: ServerInfo)
-         *
-         */
         fun onConnected(serverInfo: ServerInfo)
 
-    /**
-     * Executes onAuthenticated functionality.
-     */
-        /**
-         * Executes onauthenticated operation with thermal imaging domain optimization.
-         *
-         */
         fun onAuthenticated()
 
-    /**
-     * Executes onDisconnected functionality.
-     */
-        /**
-         * Executes ondisconnected operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param reason Parameter for operation (type: String)
-         *
-         */
         fun onDisconnected(reason: String)
 
-    /**
-     * Executes onMessage functionality.
-     */
-        /**
-         * Executes onmessage operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param messageType Parameter for operation (type: String)
-         * @param message Parameter for operation (type: JSONObject)
-         *
-         */
         fun onMessage(
             messageType: String,
             message: JSONObject,
         )
 
-    /**
-     * Executes onError functionality.
-     */
-        /**
-         * Executes onerror operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param error Parameter for operation (type: String)
-         * @param exception Parameter for operation (type: Throwable?)
-         *
-         */
         fun onError(
             error: String,
             exception: Throwable?,
         )
 
-    /**
-     * Executes onServerDiscovered functionality.
-     */
-        /**
-         * Executes onserverdiscovered operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param serverInfo Parameter for operation (type: ServerInfo)
-         *
-         */
         fun onServerDiscovered(serverInfo: ServerInfo)
 
-    /**
-     * Executes onHeartbeatReceived functionality.
-     */
-        /**
-         * Executes onheartbeatreceived operation with thermal imaging domain optimization.
-         *
-         */
         fun onHeartbeatReceived()
     }
 
@@ -247,10 +151,6 @@ class WebSocketClient(private val context: Context) {
             StructuredLogger.LogLevel.INFO,
             "WebSocketClient",
             "initialized",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "device_id" to getDeviceId(),
                 "tls_enabled" to FeatureFlags.TLS_ENABLE,
@@ -259,13 +159,6 @@ class WebSocketClient(private val context: Context) {
         )
     }
 
-    /**
-     * Executes createOkHttpClient functionality.
-     */
-    /**
-     * Executes createokhttpclient operation with thermal imaging domain optimization.
-     *
-     */
     private fun createOkHttpClient(): OkHttpClient {
         val builder =
             OkHttpClient.Builder()
@@ -275,44 +168,20 @@ class WebSocketClient(private val context: Context) {
                 .retryOnConnectionFailure(true)
 
         // Add TLS configuration if enabled
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (FeatureFlags.TLS_ENABLE) {
             val trustAllCerts =
                 arrayOf<TrustManager>(
                     object : X509TrustManager {
-                        /**
-                         * Executes checkclienttrusted operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param chain Parameter for operation (type: Array<X509Certificate>)
-                         * @param authType Parameter for operation (type: String)
-                         *
-                         */
                         override fun checkClientTrusted(
                             chain: Array<X509Certificate>,
                             authType: String,
                         ) {}
 
-                        /**
-                         * Executes checkservertrusted operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param chain Parameter for operation (type: Array<X509Certificate>)
-                         * @param authType Parameter for operation (type: String)
-                         *
-                         */
                         override fun checkServerTrusted(
                             chain: Array<X509Certificate>,
                             authType: String,
                         ) {}
 
-                        /**
-                         * Retrieves the acceptedissuers with optimized performance for thermal imaging operations.
-                         *
-                         */
                         override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
                     },
                 )
@@ -347,10 +216,6 @@ class WebSocketClient(private val context: Context) {
         logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "start_requested", emptyMap())
 
         // Start server discovery
-        /**
-         * Executes startserverdiscovery operation with thermal imaging domain optimization.
-         *
-         */
         startServerDiscovery()
     }
 
@@ -377,27 +242,11 @@ class WebSocketClient(private val context: Context) {
         currentServerInfo.set(null)
 
         // Stop NSD discovery
-        /**
-         * Executes stopserverdiscovery operation with thermal imaging domain optimization.
-         *
-         */
         stopServerDiscovery()
 
         // Stop Phase 2 and Phase 3 services
-        /**
-         * Executes stopphase2services operation with thermal imaging domain optimization.
-         *
-         */
         stopPhase2Services()
-        /**
-         * Executes stopphase3services operation with thermal imaging domain optimization.
-         *
-         */
         stopPhase3Services()
-        /**
-         * Executes stopphase4services operation with thermal imaging domain optimization.
-         *
-         */
         stopPhase4Services()
 
         eventListener?.onDisconnected("Client stopped")
@@ -419,10 +268,6 @@ class WebSocketClient(private val context: Context) {
                     Log.i(TAG, "Starting NSD discovery for $SERVICE_TYPE")
                     logger.log(
                         StructuredLogger.LogLevel.INFO, "WebSocketClient", "discovery_started",
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "service_type" to SERVICE_TYPE,
                         ),
@@ -430,14 +275,6 @@ class WebSocketClient(private val context: Context) {
 
                     val discoveryListener =
                         object : NsdManager.DiscoveryListener {
-                            /**
-                             * Executes onstartdiscoveryfailed operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param serviceType Parameter for operation (type: String)
-                             * @param errorCode Parameter for operation (type: Int)
-                             *
-                             */
                             override fun onStartDiscoveryFailed(
                                 serviceType: String,
                                 errorCode: Int,
@@ -445,24 +282,12 @@ class WebSocketClient(private val context: Context) {
                                 Log.e(TAG, "Discovery start failed: $errorCode")
                                 logger.log(
                                     StructuredLogger.LogLevel.ERROR, "WebSocketClient", "discovery_start_failed",
-                                    /**
-                                     * Executes mapof operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     mapOf(
                                         "error_code" to errorCode,
                                     ),
                                 )
                             }
 
-                            /**
-                             * Executes onstopdiscoveryfailed operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param serviceType Parameter for operation (type: String)
-                             * @param errorCode Parameter for operation (type: Int)
-                             *
-                             */
                             override fun onStopDiscoveryFailed(
                                 serviceType: String,
                                 errorCode: Int,
@@ -470,51 +295,19 @@ class WebSocketClient(private val context: Context) {
                                 Log.e(TAG, "Discovery stop failed: $errorCode")
                             }
 
-                            /**
-                             * Executes ondiscoverystarted operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param serviceType Parameter for operation (type: String)
-                             *
-                             */
                             override fun onDiscoveryStarted(serviceType: String) {
                                 Log.i(TAG, "Discovery started for $serviceType")
                             }
 
-                            /**
-                             * Executes ondiscoverystopped operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param serviceType Parameter for operation (type: String)
-                             *
-                             */
                             override fun onDiscoveryStopped(serviceType: String) {
                                 Log.i(TAG, "Discovery stopped for $serviceType")
                             }
 
-                            /**
-                             * Executes onservicefound operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-                             *
-                             */
                             override fun onServiceFound(serviceInfo: NsdServiceInfo) {
                                 Log.i(TAG, "Service found: ${serviceInfo.serviceName}")
-                                /**
-                                 * Executes resolveservice operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 resolveService(serviceInfo)
                             }
 
-                            /**
-                             * Executes onservicelost operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-                             *
-                             */
                             override fun onServiceLost(serviceInfo: NsdServiceInfo) {
                                 Log.i(TAG, "Service lost: ${serviceInfo.serviceName}")
                                 discoveredServers.remove(serviceInfo.serviceName)
@@ -524,33 +317,17 @@ class WebSocketClient(private val context: Context) {
                     nsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, discoveryListener)
 
                     // Timeout discovery after specified time
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(DISCOVERY_TIMEOUT_MS)
 
                     // If no servers discovered, try manual connection
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (discoveredServers.isEmpty()) {
                         Log.w(TAG, "No servers discovered via mDNS, trying manual connection")
-                        /**
-                         * Executes trymanualconnection operation with thermal imaging domain optimization.
-                         *
-                         */
                         tryManualConnection()
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error in server discovery", e)
                     logger.log(
                         StructuredLogger.LogLevel.ERROR, "WebSocketClient", "discovery_error",
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "error" to e.message,
                         ),
@@ -565,14 +342,6 @@ class WebSocketClient(private val context: Context) {
     private fun resolveService(serviceInfo: NsdServiceInfo) {
         val resolveListener =
             object : NsdManager.ResolveListener {
-                /**
-                 * Executes onresolvefailed operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-                 * @param errorCode Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onResolveFailed(
                     serviceInfo: NsdServiceInfo,
                     errorCode: Int,
@@ -580,13 +349,6 @@ class WebSocketClient(private val context: Context) {
                     Log.e(TAG, "Resolve failed for ${serviceInfo.serviceName}: $errorCode")
                 }
 
-                /**
-                 * Executes onserviceresolved operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-                 *
-                 */
                 override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
                     Log.i(TAG, "Service resolved: ${serviceInfo.serviceName} at ${serviceInfo.host}:${serviceInfo.port}")
 
@@ -597,10 +359,6 @@ class WebSocketClient(private val context: Context) {
                     val capabilities = String(attributes["capabilities"] ?: "".toByteArray()).split(",").toSet()
 
                     val serverInfo =
-                        /**
-                         * Executes serverinfo operation with thermal imaging domain optimization.
-                         *
-                         */
                         ServerInfo(
                             name = serviceInfo.serviceName,
                             host = serviceInfo.host.hostAddress ?: "unknown",
@@ -614,15 +372,7 @@ class WebSocketClient(private val context: Context) {
                     eventListener?.onServerDiscovered(serverInfo)
 
                     // Auto-connect to first discovered server if not already connected
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (!isConnected.get() && !isReconnecting.get()) {
-                        /**
-                         * Executes connecttoserver operation with thermal imaging domain optimization.
-                         *
-                         */
                         connectToServer(serverInfo)
                     }
                 }
@@ -648,22 +398,10 @@ class WebSocketClient(private val context: Context) {
             )
 
         scope.launch {
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (address in commonAddresses) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isConnected.get()) break
 
                 val serverInfo =
-                    /**
-                     * Executes serverinfo operation with thermal imaging domain optimization.
-                     *
-                     */
                     ServerInfo(
                         name = "Manual-$address",
                         host = address,
@@ -674,16 +412,8 @@ class WebSocketClient(private val context: Context) {
                     )
 
                 Log.i(TAG, "Trying manual connection to $address:$DEFAULT_PC_PORT")
-                /**
-                 * Executes connecttoserver operation with thermal imaging domain optimization.
-                 *
-                 */
                 connectToServer(serverInfo)
 
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(2000) // Wait 2s before trying next address
             }
         }
@@ -707,10 +437,6 @@ class WebSocketClient(private val context: Context) {
             StructuredLogger.LogLevel.INFO,
             "WebSocketClient",
             "connection_attempt",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "server_name" to serverInfo.name,
                 "host" to serverInfo.host,
@@ -723,7 +449,7 @@ class WebSocketClient(private val context: Context) {
 
         // Build WebSocket URL
         val protocol = if (serverInfo.usesTLS) "wss" else "ws"
-        val url = "$protocol:// ${serverInfo.host}:${serverInfo.port}/"
+        val url = "$protocol://${serverInfo.host}:${serverInfo.port}/"
 
         val request =
             Request.Builder()
@@ -732,14 +458,6 @@ class WebSocketClient(private val context: Context) {
 
         val webSocketListener =
             object : WebSocketListener() {
-                /**
-                 * Executes onopen operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param webSocket Parameter for operation (type: WebSocket)
-                 * @param response Parameter for operation (type: Response)
-                 *
-                 */
                 override fun onOpen(
                     webSocket: WebSocket,
                     response: Response,
@@ -752,10 +470,6 @@ class WebSocketClient(private val context: Context) {
                         StructuredLogger.LogLevel.INFO,
                         "WebSocketClient",
                         "connection_opened",
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "server_name" to serverInfo.name,
                             "response_code" to response.code,
@@ -766,44 +480,19 @@ class WebSocketClient(private val context: Context) {
 
                     // Start protocol handshake
                     scope.launch {
-                        /**
-                         * Executes performhandshake operation with thermal imaging domain optimization.
-                         *
-                         */
                         performHandshake()
                     }
                 }
 
-                /**
-                 * Executes onmessage operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param webSocket Parameter for operation (type: WebSocket)
-                 * @param text Parameter for operation (type: String)
-                 *
-                 */
                 override fun onMessage(
                     webSocket: WebSocket,
                     text: String,
                 ) {
                     scope.launch {
-                        /**
-                         * Executes handlemessage operation with thermal imaging domain optimization.
-                         *
-                         */
                         handleMessage(text)
                     }
                 }
 
-                /**
-                 * Executes onclosing operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param webSocket Parameter for operation (type: WebSocket)
-                 * @param code Parameter for operation (type: Int)
-                 * @param reason Parameter for operation (type: String)
-                 *
-                 */
                 override fun onClosing(
                     webSocket: WebSocket,
                     code: Int,
@@ -812,53 +501,21 @@ class WebSocketClient(private val context: Context) {
                     Log.i(TAG, "WebSocket connection closing: $code $reason")
                 }
 
-                /**
-                 * Executes onclosed operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param webSocket Parameter for operation (type: WebSocket)
-                 * @param code Parameter for operation (type: Int)
-                 * @param reason Parameter for operation (type: String)
-                 *
-                 */
                 override fun onClosed(
                     webSocket: WebSocket,
                     code: Int,
                     reason: String,
                 ) {
                     Log.i(TAG, "WebSocket connection closed: $code $reason")
-                    /**
-                     * Executes handledisconnection operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param closed Parameter for operation (type: $reason")
-                     *
-                     */
                     handleDisconnection("Connection closed: $reason")
                 }
 
-                /**
-                 * Executes onfailure operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param webSocket Parameter for operation (type: WebSocket)
-                 * @param t Parameter for operation (type: Throwable)
-                 * @param response Parameter for operation (type: Response?)
-                 *
-                 */
                 override fun onFailure(
                     webSocket: WebSocket,
                     t: Throwable,
                     response: Response?,
                 ) {
                     Log.e(TAG, "WebSocket connection failed", t)
-                    /**
-                     * Executes handledisconnection operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param failed Parameter for operation (type: ${t.message}")
-                     *
-                     */
                     handleDisconnection("Connection failed: ${t.message}")
                 }
             }
@@ -869,17 +526,9 @@ class WebSocketClient(private val context: Context) {
     /**
      * Perform protocol handshake
      */
-    /**
-     * Executes performhandshake operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun performHandshake() {
         try {
             val handshakeMessage = ProtocolVersion.createHandshakeMessage(getDeviceId())
-            /**
-             * Executes sendmessage operation with thermal imaging domain optimization.
-             *
-             */
             sendMessage(handshakeMessage)
 
             Log.i(TAG, "Protocol handshake sent")
@@ -890,10 +539,6 @@ class WebSocketClient(private val context: Context) {
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
                 "handshake_error",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "error" to e.message,
                 ),
@@ -903,10 +548,6 @@ class WebSocketClient(private val context: Context) {
 
     /**
      * Perform authentication
-     */
-    /**
-     * Executes performauthentication operation with thermal imaging domain optimization.
-     *
      */
     private suspend fun performAuthentication() {
         try {
@@ -918,28 +559,12 @@ class WebSocketClient(private val context: Context) {
             val authMessage =
                 ProtocolVersion.createProtocolMessage(
                     "auth_request",
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("auth_type", "basic")
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("credentials", encodedCredentials)
                     },
                 )
 
-            /**
-             * Executes sendmessage operation with thermal imaging domain optimization.
-             *
-             */
             sendMessage(authMessage)
 
             Log.i(TAG, "Authentication request sent")
@@ -951,10 +576,6 @@ class WebSocketClient(private val context: Context) {
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
                 "auth_error",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "error" to e.message,
                 ),
@@ -971,10 +592,6 @@ class WebSocketClient(private val context: Context) {
             val messageType = message.optString("message_type", "")
 
             // Validate protocol version
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!ProtocolVersion.validateMessageVersion(message)) {
                 Log.w(TAG, "Received message with invalid protocol version")
                 return
@@ -982,10 +599,6 @@ class WebSocketClient(private val context: Context) {
 
             Log.d(TAG, "Received message: $messageType")
 
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (messageType) {
                 "protocol_handshake_response" -> handleHandshakeResponse(message)
                 "auth_response" -> handleAuthResponse(message)
@@ -1006,10 +619,6 @@ class WebSocketClient(private val context: Context) {
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
                 "message_error",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "error" to e.message,
                 ),
@@ -1023,22 +632,10 @@ class WebSocketClient(private val context: Context) {
     private suspend fun handleHandshakeResponse(message: JSONObject) {
         val authRequired = message.optBoolean("auth_required", false)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (authRequired) {
-            /**
-             * Executes performauthentication operation with thermal imaging domain optimization.
-             *
-             */
             performAuthentication()
         } else {
             // No auth required, start heartbeat
-            /**
-             * Executes startheartbeat operation with thermal imaging domain optimization.
-             *
-             */
             startHeartbeat()
         }
     }
@@ -1050,41 +647,21 @@ class WebSocketClient(private val context: Context) {
         isAuthenticating.set(false)
         val success = message.optBoolean("success", false)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (success) {
             Log.i(TAG, "Authentication successful")
             isAuthenticated.set(true)
             logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "auth_success", emptyMap())
 
             // Initialize Phase 2 services
-            /**
-             * Initializes the ializephase2services component for thermal imaging operations.
-             *
-             */
             initializePhase2Services()
 
             // Initialize Phase 3 services
-            /**
-             * Initializes the ializephase3services component for thermal imaging operations.
-             *
-             */
             initializePhase3Services()
 
             // Initialize Phase 4 services
-            /**
-             * Initializes the ializephase4services component for thermal imaging operations.
-             *
-             */
             initializePhase4Services()
 
             eventListener?.onAuthenticated()
-            /**
-             * Executes startheartbeat operation with thermal imaging domain optimization.
-             *
-             */
             startHeartbeat()
         } else {
             val error = message.optString("error_message", "Authentication failed")
@@ -1093,10 +670,6 @@ class WebSocketClient(private val context: Context) {
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
                 "auth_failed",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "error" to error,
                 ),
@@ -1110,13 +683,6 @@ class WebSocketClient(private val context: Context) {
     /**
      * Handle ping from server
      */
-    /**
-     * Executes handleping operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param message Parameter for operation (type: JSONObject)
-     *
-     */
     private suspend fun handlePing(message: JSONObject) {
         lastHeartbeatTime = System.currentTimeMillis()
 
@@ -1124,34 +690,15 @@ class WebSocketClient(private val context: Context) {
         val pongMessage =
             ProtocolVersion.createProtocolMessage(
                 "pong",
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("timestamp", System.currentTimeMillis())
                 },
             )
-        /**
-         * Executes sendmessage operation with thermal imaging domain optimization.
-         *
-         */
         sendMessage(pongMessage)
     }
 
     /**
      * Handle heartbeat response
-     */
-    /**
-     * Executes handleheartbeatresponse operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param message Parameter for operation (type: JSONObject)
-     *
      */
     private suspend fun handleHeartbeatResponse(message: JSONObject) {
         lastHeartbeatTime = System.currentTimeMillis()
@@ -1161,13 +708,6 @@ class WebSocketClient(private val context: Context) {
     /**
      * Handle sync flash trigger
      */
-    /**
-     * Executes handlesyncflash operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param message Parameter for operation (type: JSONObject)
-     *
-     */
     private suspend fun handleSyncFlash(message: JSONObject) {
         eventListener?.onMessage("sync_flash", message)
     }
@@ -1175,26 +715,12 @@ class WebSocketClient(private val context: Context) {
     /**
      * Handle session response
      */
-    /**
-     * Executes handlesessionresponse operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param message Parameter for operation (type: JSONObject)
-     *
-     */
     private suspend fun handleSessionResponse(message: JSONObject) {
         eventListener?.onMessage(message.optString("message_type"), message)
     }
 
     /**
      * Handle error message
-     */
-    /**
-     * Executes handleerror operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param message Parameter for operation (type: JSONObject)
-     *
      */
     private suspend fun handleError(message: JSONObject) {
         val errorType = message.optString("error_type", "unknown")
@@ -1205,10 +731,6 @@ class WebSocketClient(private val context: Context) {
             StructuredLogger.LogLevel.ERROR,
             "WebSocketClient",
             "server_error",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "error_type" to errorType,
                 "error_message" to errorMessage,
@@ -1221,28 +743,16 @@ class WebSocketClient(private val context: Context) {
     /**
      * Start heartbeat monitoring
      */
-    /**
-     * Executes startheartbeat operation with thermal imaging domain optimization.
-     *
-     */
     private fun startHeartbeat() {
         heartbeatJob?.cancel()
         heartbeatJob =
             scope.launch {
                 lastHeartbeatTime = System.currentTimeMillis()
 
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (isConnected.get() && isAuthenticated.get()) {
                     try {
                         // Check for heartbeat timeout
                         val currentTime = System.currentTimeMillis()
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (lastHeartbeatTime > 0 && (currentTime - lastHeartbeatTime) > HEARTBEAT_TIMEOUT_MS) {
                             Log.w(TAG, "Heartbeat timeout, disconnecting")
                             webSocket.get()?.close(4000, "Heartbeat timeout")
@@ -1253,28 +763,12 @@ class WebSocketClient(private val context: Context) {
                         val heartbeatMessage =
                             ProtocolVersion.createProtocolMessage(
                                 "heartbeat",
-                                /**
-                                 * Executes jsonobject operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 JSONObject().apply {
-                                    /**
-                                     * Executes put operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     put("timestamp", currentTime)
                                 },
                             )
-                        /**
-                         * Executes sendmessage operation with thermal imaging domain optimization.
-                         *
-                         */
                         sendMessage(heartbeatMessage)
 
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(HEARTBEAT_INTERVAL_MS)
                     } catch (e: Exception) {
                         Log.e(TAG, "Error in heartbeat", e)
@@ -1295,30 +789,14 @@ class WebSocketClient(private val context: Context) {
         heartbeatJob?.cancel()
 
         // Stop services on disconnection
-        /**
-         * Executes stopphase2services operation with thermal imaging domain optimization.
-         *
-         */
         stopPhase2Services()
-        /**
-         * Executes stopphase3services operation with thermal imaging domain optimization.
-         *
-         */
         stopPhase3Services()
-        /**
-         * Executes stopphase4services operation with thermal imaging domain optimization.
-         *
-         */
         stopPhase4Services()
 
         logger.log(
             StructuredLogger.LogLevel.WARNING,
             "WebSocketClient",
             "disconnected",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "reason" to reason,
             ),
@@ -1327,15 +805,7 @@ class WebSocketClient(private val context: Context) {
         eventListener?.onDisconnected(reason)
 
         // Start auto-reconnection if not manually stopped
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!reason.contains("Client stopping")) {
-            /**
-             * Executes startreconnection operation with thermal imaging domain optimization.
-             *
-             */
             startReconnection()
         }
     }
@@ -1352,10 +822,6 @@ class WebSocketClient(private val context: Context) {
             scope.launch {
                 var attempt = 1
 
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (!isConnected.get() && isReconnecting.get()) {
                     try {
                         // Calculate delay with exponential backoff and jitter
@@ -1366,35 +832,19 @@ class WebSocketClient(private val context: Context) {
                         Log.i(TAG, "Reconnection attempt $attempt in ${delay}ms")
                         logger.log(
                             StructuredLogger.LogLevel.INFO, "WebSocketClient", "reconnect_attempt",
-                            /**
-                             * Executes mapof operation with thermal imaging domain optimization.
-                             *
-                             */
                             mapOf(
                                 "attempt" to attempt,
                                 "delay_ms" to delay,
                             ),
                         )
 
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(delay)
 
                         // Try to reconnect to last known server
                         currentServerInfo.get()?.let { serverInfo ->
-                            /**
-                             * Executes connecttoserver operation with thermal imaging domain optimization.
-                             *
-                             */
                             connectToServer(serverInfo)
                         } ?: run {
                             // Restart discovery if no known server
-                            /**
-                             * Executes startserverdiscovery operation with thermal imaging domain optimization.
-                             *
-                             */
                             startServerDiscovery()
                         }
 
@@ -1412,14 +862,10 @@ class WebSocketClient(private val context: Context) {
     /**
      * Stop server discovery
      */
-    /**
-     * Executes stopserverdiscovery operation with thermal imaging domain optimization.
-     *
-     */
     private fun stopServerDiscovery() {
         try {
             // Note: We don't keep a reference to the discovery listener,
-            // So we can't explicitly stop it. This is a limitation of the current implementation.
+            // so we can't explicitly stop it. This is a limitation of the current implementation.
             discoveryJob?.cancel()
         } catch (e: Exception) {
             Log.e(TAG, "Error stopping server discovery", e)
@@ -1429,20 +875,9 @@ class WebSocketClient(private val context: Context) {
     /**
      * Send message to server
      */
-    /**
-     * Executes sendmessage operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param message Parameter for operation (type: JSONObject)
-     *
-     */
     suspend fun sendMessage(message: JSONObject) {
         try {
             val webSocket = this.webSocket.get()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (webSocket == null) {
                 Log.w(TAG, "Cannot send message - not connected")
                 return
@@ -1451,20 +886,12 @@ class WebSocketClient(private val context: Context) {
             val jsonString = message.toString()
             val success = webSocket.send(jsonString)
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!success) {
                 Log.w(TAG, "Failed to send message")
                 logger.log(
                     StructuredLogger.LogLevel.WARNING,
                     "WebSocketClient",
                     "send_failed",
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf(
                         "message_type" to message.optString("message_type", "unknown"),
                     ),
@@ -1476,10 +903,6 @@ class WebSocketClient(private val context: Context) {
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
                 "send_error",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "error" to e.message,
                 ),
@@ -1490,160 +913,68 @@ class WebSocketClient(private val context: Context) {
     /**
      * Send session start request
      */
-    /**
-     * Executes sendsessionstart operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param sessionId Parameter for operation (type: String = "")
-     *
-     */
     suspend fun sendSessionStart(sessionId: String = "") {
         val message =
             ProtocolVersion.createProtocolMessage(
                 "session_start",
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", sessionId.ifEmpty { java.util.UUID.randomUUID().toString() })
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("device_id", getDeviceId())
                 },
             )
-        /**
-         * Executes sendmessage operation with thermal imaging domain optimization.
-         *
-         */
         sendMessage(message)
     }
 
     /**
      * Send session stop request
      */
-    /**
-     * Executes sendsessionstop operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param sessionId Parameter for operation (type: String = "")
-     *
-     */
     suspend fun sendSessionStop(sessionId: String = "") {
         val message =
             ProtocolVersion.createProtocolMessage(
                 "session_stop",
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", sessionId)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("device_id", getDeviceId())
                 },
             )
-        /**
-         * Executes sendmessage operation with thermal imaging domain optimization.
-         *
-         */
         sendMessage(message)
     }
 
     /**
      * Send status request
      */
-    /**
-     * Executes sendstatusrequest operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun sendStatusRequest() {
         val message =
             ProtocolVersion.createProtocolMessage(
                 "status_request",
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("device_id", getDeviceId())
                 },
             )
-        /**
-         * Executes sendmessage operation with thermal imaging domain optimization.
-         *
-         */
         sendMessage(message)
     }
 
     /**
      * Get connection status
      */
-    /**
-     * Executes isconnected operation with thermal imaging domain optimization.
-     *
-     */
     fun isConnected(): Boolean = isConnected.get()
 
-    /**
-     * Executes isAuthenticated functionality.
-     */
-    /**
-     * Executes isauthenticated operation with thermal imaging domain optimization.
-     *
-     */
     fun isAuthenticated(): Boolean = isAuthenticated.get()
 
-    /**
-     * Executes isReconnecting functionality.
-     */
-    /**
-     * Executes isreconnecting operation with thermal imaging domain optimization.
-     *
-     */
     fun isReconnecting(): Boolean = isReconnecting.get()
 
     /**
      * Get current server info
-     */
-    /**
-     * Retrieves the currentserver with optimized performance for thermal imaging operations.
-     *
      */
     fun getCurrentServer(): ServerInfo? = currentServerInfo.get()
 
     /**
      * Get discovered servers
      */
-    /**
-     * Retrieves the discoveredservers with optimized performance for thermal imaging operations.
-     *
-     */
     fun getDiscoveredServers(): Map<String, ServerInfo> = discoveredServers.toMap()
 
     /**
      * Get device ID
-     */
-    /**
-     * Retrieves the deviceid with optimized performance for thermal imaging operations.
-     *
      */
     private fun getDeviceId(): String {
         return android.provider.Settings.Secure.getString(
@@ -1660,24 +991,12 @@ class WebSocketClient(private val context: Context) {
     private fun initializePhase2Services() {
         // Initialize enhanced time synchronization service
         timeSyncService =
-            /**
-             * Executes enhancedtimesyncservice operation with thermal imaging domain optimization.
-             *
-             */
             EnhancedTimeSyncService(context, logger).apply {
                 start { syncResult ->
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (syncResult.success) {
                         Log.i(TAG, "Enhanced time sync completed: offset=${syncResult.offset / 1_000_000.0}ms, quality=${syncResult.quality}")
                         logger.log(
                             StructuredLogger.LogLevel.INFO, "WebSocketClient", "enhanced_sync_completed",
-                            /**
-                             * Executes mapof operation with thermal imaging domain optimization.
-                             *
-                             */
                             mapOf(
                                 "offset_ms" to (syncResult.offset / 1_000_000.0).toString(),
                                 "rtt_ms" to (syncResult.rtt / 1_000_000.0).toString(),
@@ -1694,29 +1013,12 @@ class WebSocketClient(private val context: Context) {
 
         // Initialize session manager
         sessionManager =
-            /**
-             * Executes sessionmanager operation with thermal imaging domain optimization.
-             *
-             */
             SessionManager(context, logger).apply {
-                /**
-                 * Executes start operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param changed Parameter for operation (type: $state")
-                 * @param session Parameter for operation (type: ${device.deviceId} (${device.deviceType})
-                 * @param session Parameter for operation (type: ${device.deviceId}")
-                 *
-                 */
                 start(
                     onSessionStateChanged = { state ->
                         Log.i(TAG, "Session state changed: $state")
                         logger.log(
                             StructuredLogger.LogLevel.INFO, "WebSocketClient", "session_state_changed",
-                            /**
-                             * Executes mapof operation with thermal imaging domain optimization.
-                             *
-                             */
                             mapOf(
                                 "new_state" to state.name,
                             ),
@@ -1726,10 +1028,6 @@ class WebSocketClient(private val context: Context) {
                         Log.i(TAG, "Device joined session: ${device.deviceId} (${device.deviceType})")
                         logger.log(
                             StructuredLogger.LogLevel.INFO, "WebSocketClient", "device_joined",
-                            /**
-                             * Executes mapof operation with thermal imaging domain optimization.
-                             *
-                             */
                             mapOf(
                                 "device_id" to device.deviceId,
                                 "device_type" to device.deviceType,
@@ -1740,10 +1038,6 @@ class WebSocketClient(private val context: Context) {
                         Log.i(TAG, "Device left session: ${device.deviceId}")
                         logger.log(
                             StructuredLogger.LogLevel.INFO, "WebSocketClient", "device_left",
-                            /**
-                             * Executes mapof operation with thermal imaging domain optimization.
-                             *
-                             */
                             mapOf(
                                 "device_id" to device.deviceId,
                             ),
@@ -1751,10 +1045,6 @@ class WebSocketClient(private val context: Context) {
                     },
                     onSyncRequired = { devices ->
                         Log.i(TAG, "Cross-device synchronization required for ${devices.size} devices")
-                        /**
-                         * Executes performcrossdevicesync operation with thermal imaging domain optimization.
-                         *
-                         */
                         performCrossDeviceSync(devices)
                     },
                 )
@@ -1765,10 +1055,6 @@ class WebSocketClient(private val context: Context) {
 
     /**
      * Stop Phase 2 services
-     */
-    /**
-     * Executes stopphase2services operation with thermal imaging domain optimization.
-     *
      */
     private fun stopPhase2Services() {
         timeSyncService?.stop()
@@ -1788,29 +1074,13 @@ class WebSocketClient(private val context: Context) {
     private fun initializePhase3Services() {
         // Initialize file upload service
         fileUploadService =
-            /**
-             * Executes fileuploadservice operation with thermal imaging domain optimization.
-             *
-             */
             FileUploadService(context).apply {
-                /**
-                 * Initializes the ialize component for thermal imaging operations.
-                 *
-                 */
                 initialize(this@WebSocketClient)
             }
 
         // Initialize data management service
         dataManagementService =
-            /**
-             * Executes datamanagementservice operation with thermal imaging domain optimization.
-             *
-             */
             DataManagementService(context).apply {
-                /**
-                 * Initializes the ialize component for thermal imaging operations.
-                 *
-                 */
                 initialize(fileUploadService)
             }
 
@@ -1820,10 +1090,6 @@ class WebSocketClient(private val context: Context) {
             StructuredLogger.LogLevel.INFO,
             "WebSocketClient",
             "phase3_services_initialized",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "file_upload_enabled" to (fileUploadService != null),
                 "data_management_enabled" to (dataManagementService != null),
@@ -1834,10 +1100,6 @@ class WebSocketClient(private val context: Context) {
 
     /**
      * Stop Phase 3 services
-     */
-    /**
-     * Executes stopphase3services operation with thermal imaging domain optimization.
-     *
      */
     private fun stopPhase3Services() {
         fileUploadService?.shutdown()
@@ -1858,10 +1120,6 @@ class WebSocketClient(private val context: Context) {
                     StructuredLogger.LogLevel.INFO,
                     "WebSocketClient",
                     "cross_device_sync_started",
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf(
                         "device_count" to devices.size.toString(),
                     ),
@@ -1869,32 +1127,12 @@ class WebSocketClient(private val context: Context) {
 
                 // Send sync flash command to PC for coordination
                 val syncMessage =
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("type", "sync_flash")
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_count", devices.size)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("sync_timestamp", timeSyncService?.getSynchronizedTime() ?: System.nanoTime())
                     }
 
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(syncMessage)
 
                 // Update device heartbeats after sync
@@ -1913,10 +1151,6 @@ class WebSocketClient(private val context: Context) {
                     StructuredLogger.LogLevel.ERROR,
                     "WebSocketClient",
                     "cross_device_sync_error",
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf(
                         "error" to e.message.orEmpty(),
                     ),
@@ -1977,20 +1211,8 @@ class WebSocketClient(private val context: Context) {
     fun getPhase2Diagnostics(): JSONObject {
         return JSONObject().apply {
             put("time_sync", getTimeSyncDiagnostics())
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("session_management", getSessionDiagnostics())
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("phase2_enabled", true)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("services_active", timeSyncService != null && sessionManager != null)
         }
     }
@@ -2019,13 +1241,6 @@ class WebSocketClient(private val context: Context) {
 
     /**
      * End a recording session
-     */
-    /**
-     * Executes endrecordingsession operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param sessionId Parameter for operation (type: String)
-     *
      */
     fun endRecordingSession(sessionId: String): Boolean {
         return dataManagementService?.endSession(sessionId) ?: false
@@ -2075,23 +1290,12 @@ class WebSocketClient(private val context: Context) {
     /**
      * Get file upload status
      */
-    /**
-     * Retrieves the uploadstatus with optimized performance for thermal imaging operations.
-     *
-     * @param
-     * @param jobId Parameter for operation (type: String)
-     *
-     */
     fun getUploadStatus(jobId: String): FileUploadService.UploadJob? {
         return fileUploadService?.getUploadStatus(jobId)
     }
 
     /**
      * Get all active uploads
-     */
-    /**
-     * Retrieves the activeuploads with optimized performance for thermal imaging operations.
-     *
      */
     fun getActiveUploads(): List<FileUploadService.UploadJob> {
         return fileUploadService?.getActiveUploads() ?: emptyList()
@@ -2100,26 +1304,12 @@ class WebSocketClient(private val context: Context) {
     /**
      * Cancel file upload
      */
-    /**
-     * Executes cancelupload operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param jobId Parameter for operation (type: String)
-     *
-     */
     suspend fun cancelUpload(jobId: String): Boolean {
         return fileUploadService?.cancelUpload(jobId) ?: false
     }
 
     /**
      * Pause file upload
-     */
-    /**
-     * Executes pauseupload operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param jobId Parameter for operation (type: String)
-     *
      */
     suspend fun pauseUpload(jobId: String): Boolean {
         return fileUploadService?.pauseUpload(jobId) ?: false
@@ -2128,28 +1318,12 @@ class WebSocketClient(private val context: Context) {
     /**
      * Resume file upload
      */
-    /**
-     * Executes resumeupload operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param jobId Parameter for operation (type: String)
-     *
-     */
     suspend fun resumeUpload(jobId: String): Boolean {
         return fileUploadService?.resumeUpload(jobId) ?: false
     }
 
     /**
      * Export session data
-     */
-    /**
-     * Executes exportsession operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param sessionId Parameter for operation (type: String)
-     * @param format Parameter for operation (type: DataManagementService.ExportFormat)
-     * @param includeFiles Parameter for operation (type: Boolean = false)
-     *
      */
     suspend fun exportSession(
         sessionId: String,
@@ -2162,23 +1336,12 @@ class WebSocketClient(private val context: Context) {
     /**
      * Get session information
      */
-    /**
-     * Retrieves the session with optimized performance for thermal imaging operations.
-     *
-     * @param
-     * @param sessionId Parameter for operation (type: String)
-     *
-     */
     fun getSession(sessionId: String): DataManagementService.SessionData? {
         return dataManagementService?.getSession(sessionId)
     }
 
     /**
      * Get all sessions
-     */
-    /**
-     * Retrieves the allsessions with optimized performance for thermal imaging operations.
-     *
      */
     fun getAllSessions(): List<DataManagementService.SessionData> {
         return dataManagementService?.getAllSessions() ?: emptyList()
@@ -2187,20 +1350,12 @@ class WebSocketClient(private val context: Context) {
     /**
      * Get storage statistics
      */
-    /**
-     * Retrieves the storagestats with optimized performance for thermal imaging operations.
-     *
-     */
     fun getStorageStats(): Map<String, Any> {
         return dataManagementService?.getStorageStats() ?: emptyMap()
     }
 
     /**
      * Get upload statistics
-     */
-    /**
-     * Retrieves the uploadstats with optimized performance for thermal imaging operations.
-     *
      */
     fun getUploadStats(): Map<String, Any> {
         return fileUploadService?.getUploadStats() ?: emptyMap()
@@ -2212,43 +1367,16 @@ class WebSocketClient(private val context: Context) {
     fun getPhase3Diagnostics(): JSONObject {
         return JSONObject().apply {
             put("file_upload_stats", JSONObject(getUploadStats()))
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("storage_stats", JSONObject(getStorageStats()))
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("active_sessions", getAllSessions().size)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("phase3_enabled", true)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("services_active", fileUploadService != null && dataManagementService != null)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("upload_protocol", FeatureFlags.FILE_UPLOAD_PROTOCOL)
         }
     }
 
     /**
      * Perform data cleanup
-     */
-    /**
-     * Executes performdatacleanup operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param maxAgeMs Parameter for operation (type: Long = 7 * 24 * 60 * 60 * 1000L)
-     *
      */
     suspend fun performDataCleanup(maxAgeMs: Long = 7 * 24 * 60 * 60 * 1000L) {
         dataManagementService?.performCleanup(maxAgeMs)
@@ -2262,51 +1390,14 @@ class WebSocketClient(private val context: Context) {
     private fun initializePhase4Services() {
         // Initialize advanced authentication manager
         advancedAuthManager =
-            /**
-             * Executes advancedauthenticationmanager operation with thermal imaging domain optimization.
-             *
-             */
             AdvancedAuthenticationManager(context).apply {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (initialize()) {
-                    /**
-                     * Configures the authenticationlistener with validation and thermal imaging optimization.
-                     *
-                     * @param
-                     * @param object Parameter for operation (type: AdvancedAuthenticationManager.AuthenticationListener {                             override fun onAuthenticationSuccess(context: AdvancedAuthenticationManager.AuthenticationContext)
-                     * @param successful Parameter for operation (type: role=${context.role.name}")
-                     * @param reason Parameter for operation (type: AdvancedAuthenticationManager.AuthenticationResult)
-                     * @param attemptsRemaining Temperature value in Celsius (type: Int)
-                     * @param failed Parameter for operation (type: $reason)
-                     * @param remaining Parameter for operation (type: $attemptsRemaining")
-                     * @param alertType Parameter for operation (type: String)
-                     * @param details Parameter for operation (type: Map<String)
-                     * @param alert Parameter for operation (type: $alertType")
-                     * @param newRole Parameter for operation (type: AdvancedAuthenticationManager.DeviceRole)
-                     * @param permissions Parameter for operation (type: Set<String>)
-                     * @param to Parameter for operation (type: ${newRole.name}")
-                     *
-                     */
                     setAuthenticationListener(
                         object : AdvancedAuthenticationManager.AuthenticationListener {
-                            /**
-                             * Executes onauthenticationsuccess operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param context Parameter for operation (type: AdvancedAuthenticationManager.AuthenticationContext)
-                             *
-                             */
                             override fun onAuthenticationSuccess(context: AdvancedAuthenticationManager.AuthenticationContext) {
                                 Log.i(TAG, "Advanced authentication successful: role=${context.role.name}")
                                 logger.log(
                                     StructuredLogger.LogLevel.INFO, TAG, "advanced_auth_success",
-                                    /**
-                                     * Executes mapof operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     mapOf(
                                         "device_id" to context.deviceId,
                                         "role" to context.role.name,
@@ -2316,14 +1407,6 @@ class WebSocketClient(private val context: Context) {
                                 )
                             }
 
-                            /**
-                             * Executes onauthenticationfailure operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param reason Parameter for operation (type: AdvancedAuthenticationManager.AuthenticationResult)
-                             * @param attemptsRemaining Temperature value in Celsius (type: Int)
-                             *
-                             */
                             override fun onAuthenticationFailure(
                                 reason: AdvancedAuthenticationManager.AuthenticationResult,
                                 attemptsRemaining: Int,
@@ -2331,10 +1414,6 @@ class WebSocketClient(private val context: Context) {
                                 Log.w(TAG, "Advanced authentication failed: $reason, attempts remaining: $attemptsRemaining")
                                 logger.log(
                                     StructuredLogger.LogLevel.WARNING, TAG, "advanced_auth_failure",
-                                    /**
-                                     * Executes mapof operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     mapOf(
                                         "reason" to reason.name,
                                         "attempts_remaining" to attemptsRemaining,
@@ -2342,35 +1421,16 @@ class WebSocketClient(private val context: Context) {
                                 )
                             }
 
-                            /**
-                             * Executes onsessionexpired operation with thermal imaging domain optimization.
-                             *
-                             */
                             override fun onSessionExpired() {
                                 Log.w(TAG, "Advanced authentication session expired")
                                 logger.log(StructuredLogger.LogLevel.WARNING, TAG, "advanced_session_expired", emptyMap())
 
                                 // Attempt to reauthenticate
                                 scope.launch {
-                                    /**
-                                     * Handles temperature measurement and calibration with precision thermal data processing.
-                                     *
-                                     * @note Temperature values are in Celsius unless otherwise specified.
-                                     * Accuracy depends on thermal camera calibration.
-                                     *
-                                     */
                                     attemptAdvancedReauthentication()
                                 }
                             }
 
-                            /**
-                             * Executes onsecurityalert operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param alertType Parameter for operation (type: String)
-                             * @param details Parameter for operation (type: Map<String)
-                             *
-                             */
                             override fun onSecurityAlert(
                                 alertType: String,
                                 details: Map<String, Any>,
@@ -2378,10 +1438,6 @@ class WebSocketClient(private val context: Context) {
                                 Log.w(TAG, "Security alert: $alertType")
                                 logger.log(
                                     StructuredLogger.LogLevel.WARNING, TAG, "security_alert",
-                                    /**
-                                     * Executes mapof operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     mapOf(
                                         "alert_type" to alertType,
                                         "details" to details.toString(),
@@ -2390,22 +1446,10 @@ class WebSocketClient(private val context: Context) {
 
                                 // Send security alert to PC controller
                                 scope.launch {
-                                    /**
-                                     * Executes sendsecurityalert operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     sendSecurityAlert(alertType, details)
                                 }
                             }
 
-                            /**
-                             * Executes onrolechanged operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param newRole Parameter for operation (type: AdvancedAuthenticationManager.DeviceRole)
-                             * @param permissions Parameter for operation (type: Set<String>)
-                             *
-                             */
                             override fun onRoleChanged(
                                 newRole: AdvancedAuthenticationManager.DeviceRole,
                                 permissions: Set<String>,
@@ -2413,10 +1457,6 @@ class WebSocketClient(private val context: Context) {
                                 Log.i(TAG, "Role changed to: ${newRole.name}")
                                 logger.log(
                                     StructuredLogger.LogLevel.INFO, TAG, "role_changed",
-                                    /**
-                                     * Executes mapof operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     mapOf(
                                         "new_role" to newRole.name,
                                         "permissions" to permissions.joinToString(","),
@@ -2434,10 +1474,6 @@ class WebSocketClient(private val context: Context) {
             StructuredLogger.LogLevel.INFO,
             TAG,
             "phase4_services_initialized",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "advanced_auth_enabled" to (advancedAuthManager != null),
                 "multi_tier_auth" to true,
@@ -2449,10 +1485,6 @@ class WebSocketClient(private val context: Context) {
 
     /**
      * Stop Phase 4 services
-     */
-    /**
-     * Executes stopphase4services operation with thermal imaging domain optimization.
-     *
      */
     private fun stopPhase4Services() {
         advancedAuthManager?.shutdown()
@@ -2478,10 +1510,6 @@ class WebSocketClient(private val context: Context) {
                     credentials = credentials,
                 )
 
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (result) {
                 AdvancedAuthenticationManager.AuthenticationResult.SUCCESS -> {
                     Log.i(TAG, "Enhanced authentication successful at level $authLevel")
@@ -2505,24 +1533,12 @@ class WebSocketClient(private val context: Context) {
         try {
             // Try certificate-based authentication first
             val certificateCredentials = getCertificateCredentials()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (certificateCredentials.isNotEmpty()) {
                 val success =
-                    /**
-                     * Executes performenhancedauthentication operation with thermal imaging domain optimization.
-                     *
-                     */
                     performEnhancedAuthentication(
                         AdvancedAuthenticationManager.AUTH_LEVEL_CERTIFICATE,
                         certificateCredentials,
                     )
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     Log.i(TAG, "Certificate-based reauthentication successful")
                     return
@@ -2531,24 +1547,12 @@ class WebSocketClient(private val context: Context) {
 
             // Fallback to token-based authentication
             val tokenCredentials = getTokenCredentials()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tokenCredentials.isNotEmpty()) {
                 val success =
-                    /**
-                     * Executes performenhancedauthentication operation with thermal imaging domain optimization.
-                     *
-                     */
                     performEnhancedAuthentication(
                         AdvancedAuthenticationManager.AUTH_LEVEL_TOKEN,
                         tokenCredentials,
                     )
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     Log.i(TAG, "Token-based reauthentication successful")
                     return
@@ -2558,19 +1562,11 @@ class WebSocketClient(private val context: Context) {
             // Final fallback to basic authentication
             val basicCredentials = getBasicCredentials()
             val success =
-                /**
-                 * Executes performenhancedauthentication operation with thermal imaging domain optimization.
-                 *
-                 */
                 performEnhancedAuthentication(
                     AdvancedAuthenticationManager.AUTH_LEVEL_BASIC,
                     basicCredentials,
                 )
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (success) {
                 Log.i(TAG, "Basic reauthentication successful")
             } else {
@@ -2661,47 +1657,15 @@ class WebSocketClient(private val context: Context) {
             val alertMessage =
                 ProtocolVersion.createProtocolMessage(
                     "security_alert",
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("alert_type", alertType)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_id", getDeviceId())
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("timestamp", System.currentTimeMillis())
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("severity", determineSeverity(alertType))
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put(
                             "details",
-                            /**
-                             * Executes jsonobject operation with thermal imaging domain optimization.
-                             *
-                             */
                             JSONObject().apply {
                                 details.forEach { (key, value) ->
-                                    /**
-                                     * Executes put operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     put(key, value.toString())
                                 }
                             },
@@ -2709,10 +1673,6 @@ class WebSocketClient(private val context: Context) {
                     },
                 )
 
-            /**
-             * Executes sendmessage operation with thermal imaging domain optimization.
-             *
-             */
             sendMessage(alertMessage)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to send security alert", e)
@@ -2721,13 +1681,6 @@ class WebSocketClient(private val context: Context) {
 
     /**
      * Determine alert severity
-     */
-    /**
-     * Executes determineseverity operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param alertType Parameter for operation (type: String)
-     *
      */
     private fun determineSeverity(alertType: String): String {
         return when (alertType) {
@@ -2758,45 +1711,13 @@ class WebSocketClient(private val context: Context) {
     fun getPhase4Diagnostics(): JSONObject {
         return JSONObject().apply {
             put("advanced_auth_active", advancedAuthManager != null)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("current_auth_level", getAdvancedAuthContext()?.authLevel ?: 0)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("current_role", getAdvancedAuthContext()?.role?.name ?: "NONE")
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("session_active", advancedAuthManager?.isAuthenticated() ?: false)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("security_diagnostics", advancedAuthManager?.getSecurityDiagnostics() ?: JSONObject())
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("phase4_enabled", true)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("multi_tier_auth_supported", true)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("rbac_enabled", true)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("security_monitoring_active", true)
         }
     }
@@ -2810,32 +1731,16 @@ class WebSocketClient(private val context: Context) {
         try {
             // Test basic authentication
             val basicTest =
-                /**
-                 * Executes performenhancedauthentication operation with thermal imaging domain optimization.
-                 *
-                 */
                 performEnhancedAuthentication(
                     AdvancedAuthenticationManager.AUTH_LEVEL_BASIC,
-                    /**
-                     * Retrieves the basiccredentials with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getBasicCredentials(),
                 )
             results.put("basic_auth_test", basicTest)
 
             // Test certificate authentication (will likely fail without real certificates)
             val certTest =
-                /**
-                 * Executes performenhancedauthentication operation with thermal imaging domain optimization.
-                 *
-                 */
                 performEnhancedAuthentication(
                     AdvancedAuthenticationManager.AUTH_LEVEL_CERTIFICATE,
-                    /**
-                     * Retrieves the certificatecredentials with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getCertificateCredentials(),
                 )
             results.put("certificate_auth_test", certTest)

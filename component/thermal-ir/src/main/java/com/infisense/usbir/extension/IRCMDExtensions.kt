@@ -21,23 +21,11 @@ fun IRCMD.setMirror(enabled: Boolean) {
     try {
         // Use real IRCMD native methods for mirror control
         val result =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (enabled) {
                 // Enable mirror mode through native IRCMD interface
-                /**
-                 * Executes nativesetproperty operation with thermal imaging domain optimization.
-                 *
-                 */
                 nativeSetProperty("mirror", 1)
             } else {
                 // Disable mirror mode
-                /**
-                 * Executes nativesetproperty operation with thermal imaging domain optimization.
-                 *
-                 */
                 nativeSetProperty("mirror", 0)
             }
         Log.d(TAG, "Mirror mode set to $enabled, result: $result")
@@ -53,21 +41,9 @@ fun IRCMD.setAutoShutter(enabled: Boolean) {
     try {
         // Use real IRCMD native methods for auto shutter control
         val result =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (enabled) {
-                /**
-                 * Executes nativesetproperty operation with thermal imaging domain optimization.
-                 *
-                 */
                 nativeSetProperty("auto_shutter", 1)
             } else {
-                /**
-                 * Executes nativesetproperty operation with thermal imaging domain optimization.
-                 *
-                 */
                 nativeSetProperty("auto_shutter", 0)
             }
         Log.d(TAG, "Auto shutter set to $enabled, result: $result")
@@ -108,9 +84,6 @@ fun IRCMD.setContrast(level: Int) {
  * Generic property setter for IRCMD hardware interface
  * This would map to actual native SDK calls
  */
-    /**
-     * Executes IRCMD functionality.
-     */
 private fun IRCMD.nativeSetProperty(
     property: String,
     value: Int,

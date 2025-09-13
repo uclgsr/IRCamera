@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Custom attribute definitions for thermal imaging components -->
 <resources>
     <declare-styleable name="TemperatureView">
         <attr name="temperature_count" format="integer" />

@@ -9,18 +9,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * Specialized thermal imaging component providing CrashSafeSupervisor functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Crash-safe supervisor system for PC-to-phone communication
+ * Phase 0 implementation - Android Service + CoroutineScope with stop tokens
  */
 class CrashSafeSupervisor private constructor(private val context: Context) {
     companion object {
@@ -29,9 +19,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         @Volatile
         private var instance: CrashSafeSupervisor? = null
 
-    /**
-     * Retrieves instance information.
-     */
         fun getInstance(context: Context): CrashSafeSupervisor {
             return instance ?: synchronized(this) {
                 instance ?: CrashSafeSupervisor(context.applicationContext).also { instance = it }
@@ -42,27 +29,11 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
     // Supervisor state
     private val isRunning = AtomicBoolean(false)
     private val supervisorScope =
-        /**
-         * Executes coroutinescope operation with thermal imaging domain optimization.
-         *
-         */
         CoroutineScope(
-            /**
-             * Executes supervisorjob operation with thermal imaging domain optimization.
-             *
-             */
             SupervisorJob() +
                 Dispatchers.Default +
-                /**
-                 * Executes coroutinename operation with thermal imaging domain optimization.
-                 *
-                 */
                 CoroutineName("CrashSafeSupervisor") +
                 CoroutineExceptionHandler { _, exception ->
-                    /**
-                     * Executes handlesupervisorexception operation with thermal imaging domain optimization.
-                     *
-                     */
                     handleSupervisorException(exception)
                 },
         )
@@ -82,70 +53,44 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
     /**
      * Represents a managed job with recovery capabilities
      */
-/**
- * Specialized thermal imaging component providing HealthCheck functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+    data class ManagedJob(
+        val id: String,
+        val name: String,
+        val job: Job,
+        val stopToken: StopToken,
+        val restartable: Boolean = true,
+        val critical: Boolean = false,
+        val startTime: Long = System.currentTimeMillis(),
+    )
+
+    /**
+     * Health check interface for monitored components
+     */
     interface HealthCheck {
-        /**
-         * Executes checkhealth operation with thermal imaging domain optimization.
-         *
-         */
         suspend fun checkHealth(): HealthStatus
-/**
- * Specialized thermal imaging component providing StopToken functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+    }
+
+    /**
+     * Health status result
+     */
+    data class HealthStatus(
+        val isHealthy: Boolean,
+        val message: String,
+        val details: Map<String, Any> = emptyMap(),
+    )
+
+    /**
+     * Stop token for graceful shutdown
+     */
     class StopToken {
         private val stopped = AtomicBoolean(false)
 
-    /**
-     * Executes isStopRequested functionality.
-     */
-        /**
-         * Executes isstoprequested operation with thermal imaging domain optimization.
-         *
-         */
         fun isStopRequested(): Boolean = stopped.get()
 
-    /**
-     * Executes requestStop functionality.
-     */
-        /**
-         * Executes requeststop operation with thermal imaging domain optimization.
-         *
-         */
         fun requestStop() {
             stopped.set(true)
         }
 
-    /**
-     * Executes reset functionality.
-     */
-        /**
-         * Executes reset operation with thermal imaging domain optimization.
-         *
-         */
         fun reset() {
             stopped.set(false)
         }
@@ -164,18 +109,10 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             StructuredLogger.LogLevel.INFO,
             "CrashSafeSupervisor",
             "supervisor_initialized",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf("max_restart_attempts" to maxRestartAttempts),
         )
 
         // Start health monitoring
-        /**
-         * Executes starthealthmonitoring operation with thermal imaging domain optimization.
-         *
-         */
         startHealthMonitoring()
 
         Log.i(TAG, "Crash-safe supervisor initialized")
@@ -192,10 +129,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         healthCheck: HealthCheck? = null,
         jobFactory: suspend (StopToken) -> Unit,
     ): Job {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isRunning.get()) {
             throw IllegalStateException("Supervisor not initialized")
         }
@@ -204,20 +137,12 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         val job =
             supervisorScope.launch {
                 try {
-                    /**
-                     * Executes jobfactory operation with thermal imaging domain optimization.
-                     *
-                     */
                     jobFactory(stopToken)
                 } catch (e: Exception) {
                     logger.log(
                         StructuredLogger.LogLevel.ERROR,
                         "CrashSafeSupervisor",
                         "job_failed",
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "job_id" to id,
                             "job_name" to name,
@@ -226,21 +151,9 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                         ),
                     )
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (critical) {
-                        /**
-                         * Executes handlecriticaljobfailure operation with thermal imaging domain optimization.
-                         *
-                         */
                         handleCriticalJobFailure(id, name, e)
                     } else if (restartable) {
-                        /**
-                         * Executes schedulejobrestart operation with thermal imaging domain optimization.
-                         *
-                         */
                         scheduleJobRestart(id, name, jobFactory, stopToken)
                     }
 
@@ -252,10 +165,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         managedJobs[id] = managedJob
         restartCounts[id] = AtomicInteger(0)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (healthCheck != null) {
             healthChecks[id] = healthCheck
         }
@@ -264,10 +173,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             StructuredLogger.LogLevel.INFO,
             "CrashSafeSupervisor",
             "job_registered",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "job_id" to id,
                 "job_name" to name,
@@ -283,13 +188,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
     /**
      * Unregister a managed job
      */
-    /**
-     * Executes unregisterjob operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param id Parameter for operation (type: String)
-     *
-     */
     fun unregisterJob(id: String) {
         val managedJob = managedJobs.remove(id)
         healthChecks.remove(id)
@@ -297,10 +195,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
 
         managedJob?.let { job ->
             job.stopToken.requestStop()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!job.job.isCompleted) {
                 job.job.cancel()
             }
@@ -309,10 +203,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                 StructuredLogger.LogLevel.INFO,
                 "CrashSafeSupervisor",
                 "job_unregistered",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf("job_id" to id, "job_name" to job.name),
             )
         }
@@ -330,10 +220,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                 StructuredLogger.LogLevel.INFO,
                 "CrashSafeSupervisor",
                 "job_stop_requested",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf("job_id" to id, "job_name" to managedJob.name),
             )
         }
@@ -372,43 +258,17 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         val upTimeSeconds: Long,
     )
 
-    /**
-     * Executes handleSupervisorException functionality.
-     */
-    /**
-     * Executes handlesupervisorexception operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param exception Parameter for operation (type: Throwable)
-     *
-     */
     private fun handleSupervisorException(exception: Throwable) {
         logger.log(
             StructuredLogger.LogLevel.ERROR,
             "CrashSafeSupervisor",
             "supervisor_exception",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf("error" to exception.message),
         )
 
         Log.e(TAG, "Supervisor exception", exception)
     }
 
-    /**
-     * Executes handleCriticalJobFailure functionality.
-     */
-    /**
-     * Executes handlecriticaljobfailure operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param id Parameter for operation (type: String)
-     * @param name Parameter for operation (type: String)
-     * @param exception Parameter for operation (type: Exception)
-     *
-     */
     private fun handleCriticalJobFailure(
         id: String,
         name: String,
@@ -418,10 +278,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             StructuredLogger.LogLevel.ERROR,
             "CrashSafeSupervisor",
             "critical_job_failure",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "job_id" to id,
                 "job_name" to name,
@@ -432,24 +288,9 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         Log.e(TAG, "Critical job failure: $name ($id)", exception)
 
         // For critical jobs, we might want to trigger a service restart
-        // Or notify the user of a critical system failure
+        // or notify the user of a critical system failure
     }
 
-    /**
-     * Executes scheduleJobRestart functionality.
-     */
-    /**
-     * Executes schedulejobrestart operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param id Parameter for operation (type: String)
-     * @param name Parameter for operation (type: String)
-     * @param jobFactory Parameter for operation (type: suspend (StopToken)
-     * @param originalStopToken Parameter for operation (type: StopToken)
-     *
-     * @return Operation result or configured object (type: Unit,         originalStopToken: StopToken,     ))
-     *
-     */
     private fun scheduleJobRestart(
         id: String,
         name: String,
@@ -458,19 +299,11 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
     ) {
         val restartCount = restartCounts[id]?.incrementAndGet() ?: 1
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (restartCount > maxRestartAttempts) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "CrashSafeSupervisor",
                 "job_restart_limit_exceeded",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "job_id" to id,
                     "job_name" to name,
@@ -482,25 +315,13 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         }
 
         supervisorScope.launch {
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(restartDelayMs)
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (originalStopToken.isStopRequested()) {
                 logger.log(
                     StructuredLogger.LogLevel.INFO,
                     "CrashSafeSupervisor",
                     "job_restart_cancelled",
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf("job_id" to id, "job_name" to name),
                 )
                 return@launch
@@ -510,10 +331,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                 StructuredLogger.LogLevel.INFO,
                 "CrashSafeSupervisor",
                 "job_restarting",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "job_id" to id,
                     "job_name" to name,
@@ -525,10 +342,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                 val newStopToken = StopToken()
                 val newJob =
                     supervisorScope.launch {
-                        /**
-                         * Executes jobfactory operation with thermal imaging domain optimization.
-                         *
-                         */
                         jobFactory(newStopToken)
                     }
 
@@ -547,10 +360,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                     StructuredLogger.LogLevel.ERROR,
                     "CrashSafeSupervisor",
                     "job_restart_failed",
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf(
                         "job_id" to id,
                         "job_name" to name,
@@ -562,52 +371,25 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Executes startHealthMonitoring functionality.
-     */
-    /**
-     * Executes starthealthmonitoring operation with thermal imaging domain optimization.
-     *
-     */
     private fun startHealthMonitoring() {
         supervisorScope.launch {
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (isRunning.get()) {
                 try {
-                    /**
-                     * Executes performhealthchecks operation with thermal imaging domain optimization.
-                     *
-                     */
                     performHealthChecks()
                 } catch (e: Exception) {
                     logger.log(
                         StructuredLogger.LogLevel.ERROR,
                         "CrashSafeSupervisor",
                         "health_check_error",
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf("error" to e.message),
                     )
                 }
 
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(healthCheckIntervalMs)
             }
         }
     }
 
-    /**
-     * Executes performhealthchecks operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun performHealthChecks() {
         healthChecks.forEach { (jobId, healthCheck) ->
             try {
@@ -617,10 +399,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                     StructuredLogger.LogLevel.DEBUG,
                     "CrashSafeSupervisor",
                     "health_check_result",
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf(
                         "job_id" to jobId,
                         "healthy" to status.isHealthy,
@@ -628,15 +406,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                     ) + status.details,
                 )
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!status.isHealthy) {
-                    /**
-                     * Executes handleunhealthyjob operation with thermal imaging domain optimization.
-                     *
-                     */
                     handleUnhealthyJob(jobId, status)
                 }
             } catch (e: Exception) {
@@ -644,10 +414,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                     StructuredLogger.LogLevel.WARNING,
                     "CrashSafeSupervisor",
                     "health_check_exception",
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf(
                         "job_id" to jobId,
                         "error" to e.message,
@@ -657,35 +423,16 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Executes handleUnhealthyJob functionality.
-     */
-    /**
-     * Executes handleunhealthyjob operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param jobId Parameter for operation (type: String)
-     * @param status Parameter for operation (type: HealthStatus)
-     *
-     */
     private fun handleUnhealthyJob(
         jobId: String,
         status: HealthStatus,
     ) {
         val managedJob = managedJobs[jobId]
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (managedJob != null && managedJob.restartable) {
             logger.log(
                 StructuredLogger.LogLevel.WARNING,
                 "CrashSafeSupervisor",
                 "unhealthy_job_restart",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "job_id" to jobId,
                     "job_name" to managedJob.name,
@@ -710,10 +457,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             StructuredLogger.LogLevel.INFO,
             "CrashSafeSupervisor",
             "supervisor_shutdown_started",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf("managed_jobs" to managedJobs.size),
         )
 
@@ -728,10 +471,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         // Wait a bit for graceful shutdown
         try {
             runBlocking {
-                /**
-                 * Executes withtimeout operation with thermal imaging domain optimization.
-                 *
-                 */
                 withTimeout(10000) { // 10 second timeout
                     supervisorScope.coroutineContext[Job]?.join()
                 }

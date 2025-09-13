@@ -18,18 +18,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Specialized thermal imaging component providing GSRQuickRecordingActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Quick GSR recording activity that directly uses the RecordingController
+ * This provides the main integration point between GSR functionality and the Android app
  */
 class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingBinding>() {
     companion object {
@@ -37,10 +27,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         private const val REQUEST_PERMISSIONS = 100
 
         private val REQUIRED_PERMISSIONS =
-            /**
-             * Executes arrayof operation with thermal imaging domain optimization.
-             *
-             */
             arrayOf(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -50,26 +36,12 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                 Manifest.permission.CAMERA,
             )
 
-    /**
-     * Executes start functionality.
-     */
-        /**
-         * Executes start operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param context Parameter for operation (type: Context)
-         *
-         */
         fun start(context: Context) {
             val intent = Intent(context, GSRQuickRecordingActivity::class.java)
             context.startActivity(intent)
         }
     }
 
-    /**
-     * Initializes the contentlayoutid component for thermal imaging operations.
-     *
-     */
     override fun initContentLayoutId() = R.layout.activity_gsr_quick_recording
 
     // Core recording components - this is the main integration point
@@ -77,35 +49,13 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     private var currentSessionDirectory: String? = null
     private var isRecording = false
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /**
-         * Initializes the recordingcontroller component for thermal imaging operations.
-         *
-         */
         initRecordingController()
-        /**
-         * Configures the upui with validation and thermal imaging optimization.
-         *
-         */
         setupUI()
-        /**
-         * Executes checkpermissions operation with thermal imaging domain optimization.
-         *
-         */
         checkPermissions()
     }
 
-    /**
-     * Initializes recordingcontroller component.
-     */
     private fun initRecordingController() {
         // Initialize the main RecordingController with GSR integration
         recordingController = RecordingController(this, this)
@@ -114,20 +64,12 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         lifecycleScope.launch {
             val success = recordingController.initializeSensors()
             runOnUiThread {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     binding.statusText.text = "Recording system initialized successfully"
                     binding.startRecordingButton.isEnabled = true
 
                     val availableSensors = recordingController.getAvailableSensors()
                     val gsrSensor = availableSensors.find { it.sensorType.contains("GSR", ignoreCase = true) }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (gsrSensor != null) {
                         binding.gsrStatusText.text = "GSR Sensor: ${gsrSensor.sensorId} - Ready"
                         binding.gsrStatusText.setTextColor(ContextCompat.getColor(this@GSRQuickRecordingActivity, R.color.gsr_pulse_color))
@@ -148,10 +90,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         lifecycleScope.launch {
             recordingController.recordingStateFlow.collect { state ->
                 runOnUiThread {
-                    /**
-                     * Executes when operation with thermal imaging domain optimization.
-                     *
-                     */
                     when (state) {
                         com.topdon.tc001.controller.RecordingState.RECORDING -> {
                             isRecording = true
@@ -180,44 +118,12 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             recordingController.sensorStatusFlow.collect { statusList ->
                 runOnUiThread {
                     val gsrStatus = statusList.find { it.sensorType.contains("GSR", ignoreCase = true) }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (gsrStatus != null) {
                         binding.sensorDataText.text =
                             buildString {
-                                /**
-                                 * Executes append operation with thermal imaging domain optimization.
-                                 *
-                                 * @param
-                                 * @param Status Parameter for operation (type: \n")
-                                 *
-                                 */
                                 append("GSR Sensor Status:\n")
-                                /**
-                                 * Executes append operation with thermal imaging domain optimization.
-                                 *
-                                 * @param
-                                 * @param Samples Parameter for operation (type: ${gsrStatus.samplesRecorded}\n")
-                                 *
-                                 */
                                 append("Samples: ${gsrStatus.samplesRecorded}\n")
-                                /**
-                                 * Executes append operation with thermal imaging domain optimization.
-                                 *
-                                 * @param
-                                 * @param Rate Parameter for operation (type: ${"%.1f".format(gsrStatus.currentDataRate)
-                                 *
-                                 */
                                 append("Data Rate: ${"%.1f".format(gsrStatus.currentDataRate)} Hz\n")
-                                /**
-                                 * Executes append operation with thermal imaging domain optimization.
-                                 *
-                                 * @param
-                                 * @param Storage Parameter for operation (type: ${"%.2f".format(gsrStatus.storageUsedMB)
-                                 *
-                                 */
                                 append("Storage: ${"%.2f".format(gsrStatus.storageUsedMB)} MB\n")
                             }
                     }
@@ -226,39 +132,16 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         }
     }
 
-    /**
-     * Sets upui configuration.
-     */
-    /**
-     * Configures the upui with validation and thermal imaging optimization.
-     *
-     */
     private fun setupUI() {
         binding.startRecordingButton.setOnClickListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isRecording) {
-                /**
-                 * Executes stoprecording operation with thermal imaging domain optimization.
-                 *
-                 */
                 stopRecording()
             } else {
-                /**
-                 * Executes startrecording operation with thermal imaging domain optimization.
-                 *
-                 */
                 startRecording()
             }
         }
 
         binding.addSyncMarkerButton.setOnClickListener {
-            /**
-             * Executes addsyncmarker operation with thermal imaging domain optimization.
-             *
-             */
             addSyncMarker()
         }
 
@@ -283,13 +166,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         }
     }
 
-    /**
-     * Executes checkPermissions functionality.
-     */
-    /**
-     * Executes checkpermissions operation with thermal imaging domain optimization.
-     *
-     */
     private fun checkPermissions() {
         // Check if all required permissions are granted
         val missingPermissions =
@@ -297,26 +173,11 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                 ContextCompat.checkSelfPermission(this, it) != android.content.pm.PackageManager.PERMISSION_GRANTED
             }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (missingPermissions.isNotEmpty()) {
-            /**
-             * Executes requestpermissions operation with thermal imaging domain optimization.
-             *
-             */
             requestPermissions(missingPermissions.toTypedArray(), REQUEST_PERMISSIONS)
         }
     }
 
-    /**
-     * Executes startRecording functionality.
-     */
-    /**
-     * Executes startrecording operation with thermal imaging domain optimization.
-     *
-     */
     private fun startRecording() {
         lifecycleScope.launch {
             try {
@@ -331,10 +192,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                 val success = recordingController.startRecording(currentSessionDirectory!!)
 
                 runOnUiThread {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (success) {
                         Toast.makeText(this@GSRQuickRecordingActivity, "Recording started", Toast.LENGTH_SHORT).show()
                     } else {
@@ -350,23 +207,12 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         }
     }
 
-    /**
-     * Executes stopRecording functionality.
-     */
-    /**
-     * Executes stoprecording operation with thermal imaging domain optimization.
-     *
-     */
     private fun stopRecording() {
         lifecycleScope.launch {
             try {
                 val success = recordingController.stopRecording()
 
                 runOnUiThread {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (success) {
                         Toast.makeText(this@GSRQuickRecordingActivity, "Recording stopped", Toast.LENGTH_SHORT).show()
 
@@ -387,18 +233,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         }
     }
 
-    /**
-     * Executes addSyncMarker functionality.
-     */
-    /**
-     * Executes addsyncmarker operation with thermal imaging domain optimization.
-     *
-     */
     private fun addSyncMarker() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isRecording) {
             lifecycleScope.launch {
                 recordingController.addSyncMarker(
@@ -416,15 +251,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         }
     }
 
-    /**
-     * Executes onrequestpermissionsresult operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param requestCode Parameter for operation (type: Int)
-     * @param permissions Parameter for operation (type: Array<out String>)
-     * @param grantResults Parameter for operation (type: IntArray)
-     *
-     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -432,26 +258,14 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (requestCode == REQUEST_PERMISSIONS) {
             val allGranted = grantResults.all { it == android.content.pm.PackageManager.PERMISSION_GRANTED }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!allGranted) {
                 Toast.makeText(this, "Some permissions were denied. GSR functionality may be limited.", Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
         super.onDestroy()
 

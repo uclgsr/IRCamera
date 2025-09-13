@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -34,45 +34,15 @@ import com.topdon.lib.ui.R;
  * @since 2021/6/5 18:21
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-/**
- * Specialized thermal imaging component providing DatimePicker functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class DatimePicker extends ModalDialog {
     protected DatimeWheelLayout wheelLayout;
     private OnDatimePickedListener onDatimePickedListener;
 
-    /**
-     * Executes datimepicker operation with thermal imaging domain optimization.
-     *
-     */
     public DatimePicker(@NonNull Activity activity) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity);
     }
 
-    /**
-     * Executes datimepicker operation with thermal imaging domain optimization.
-     *
-     */
     public DatimePicker(@NonNull Activity activity, @StyleRes int themeResId) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity, themeResId);
     }
 
@@ -85,9 +55,9 @@ public class DatimePicker extends ModalDialog {
         wheelLayout.setDateLabel("/", "/", "");
         wheelLayout.setTimeLabel(":", ":", "");
         wheelLayout.setCurtainEnabled(true);
-        wheelLayout.setCurtainColor(ContextCompat.getColor(getContext(), R.color.wheel_select_bg)); // Selected背景色
-        wheelLayout.setSelectedTextColor(ContextCompat.getColor(getContext(), R.color.wheel_select_text)); // Selectedtextcolor
-        wheelLayout.setTextColor(ContextCompat.getColor(getContext(), R.color.wheel_unselect_text)); // 未selectedtextcolor
+        wheelLayout.setCurtainColor(ContextCompat.getColor(getContext(), R.color.wheel_select_bg)); //selected背景色
+        wheelLayout.setSelectedTextColor(ContextCompat.getColor(getContext(), R.color.wheel_select_text)); //selectedtextcolor
+        wheelLayout.setTextColor(ContextCompat.getColor(getContext(), R.color.wheel_unselect_text)); //未selectedtextcolor
         wheelLayout.setResetWhenLinkage(false, false);
         return wheelLayout;
     }
@@ -99,10 +69,6 @@ public class DatimePicker extends ModalDialog {
 
     @Override
     protected void onOk() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (onDatimePickedListener != null) {
             int year = wheelLayout.getSelectedYear();
             int month = wheelLayout.getSelectedMonth();

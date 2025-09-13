@@ -16,21 +16,9 @@ import android.widget.FrameLayout;
 import com.topdon.lib.core.utils.ScreenUtil;
 
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for DragScaleView display and interaction.
+ * @see <a href="http://www.cnblogs.com/a284628487/">...</a>
+ * @author Cj
  *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
  */
 public class DragScaleView extends FrameLayout implements View.OnTouchListener {
     protected int screenWidth;
@@ -62,89 +50,37 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
         screenWidth = ScreenUtil.getScreenWidth(getContext());
     }
 
-    /**
-     * Executes dragscaleview operation with thermal imaging domain optimization.
-     *
-     */
     public DragScaleView(Context context, AttributeSet attrs, int defStyle) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyle);
-        /**
-         * Configures the ontouchlistener with validation and thermal imaging optimization.
-         *
-         */
         setOnTouchListener(this);
-        /**
-         * Initializes the screenw h component for thermal imaging operations.
-         *
-         */
         initScreenW_H();
     }
 
-    /**
-     * Executes dragscaleview operation with thermal imaging domain optimization.
-     *
-     */
     public DragScaleView(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
-        /**
-         * Configures the ontouchlistener with validation and thermal imaging optimization.
-         *
-         */
         setOnTouchListener(this);
-        /**
-         * Initializes the screenw h component for thermal imaging operations.
-         *
-         */
         initScreenW_H();
     }
 
-    /**
-     * Executes dragscaleview operation with thermal imaging domain optimization.
-     *
-     */
     public DragScaleView(Context context) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context);
-        /**
-         * Configures the ontouchlistener with validation and thermal imaging optimization.
-         *
-         */
         setOnTouchListener(this);
-        /**
-         * Initializes the screenw h component for thermal imaging operations.
-         *
-         */
         initScreenW_H();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-// Paint.setColor(Color.RED);
-// Paint.setStrokeWidth(4.0f);
-// Paint.setStyle(Paint.Style.STROKE);
-// Canvas.drawRect(offset, offset, getWidth() - offset, getHeight()
+//        paint.setColor(Color.RED);
+//        paint.setStrokeWidth(4.0f);
+//        paint.setStyle(Paint.Style.STROKE);
+//        canvas.drawRect(offset, offset, getWidth() - offset, getHeight()
 //                - offset, paint);
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int action = event.getAction();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (action == MotionEvent.ACTION_DOWN) {
             oriLeft = v.getLeft();
             oriRight = v.getRight();
@@ -155,16 +91,8 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
             dragDirection = getDirection(v, (int) event.getX(),
                     (int) event.getY());
         }
-        // Processing拖动Event
-        /**
-         * Executes deldrag operation with thermal imaging domain optimization.
-         *
-         */
+        // processing拖动Event
         delDrag(v, event, action);
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
         return false;
     }
@@ -177,107 +105,43 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
      * @param action
      */
     protected void delDrag(View v, MotionEvent event, int action) {
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (action) {
             case MotionEvent.ACTION_MOVE:
                 int dx = (int) event.getRawX() - lastX;
                 int dy = (int) event.getRawY() - lastY;
-                /**
-                 * Executes switch operation with thermal imaging domain optimization.
-                 *
-                 */
                 switch (dragDirection) {
                     case LEFT: // 左边缘
-                        /**
-                         * Executes left operation with thermal imaging domain optimization.
-                         *
-                         */
                         left(v, dx);
                         break;
                     case RIGHT: // 右边缘
-                        /**
-                         * Executes right operation with thermal imaging domain optimization.
-                         *
-                         */
                         right(v, dx);
                         break;
                     case BOTTOM: // 下边缘
-                        /**
-                         * Executes bottom operation with thermal imaging domain optimization.
-                         *
-                         */
                         bottom(v, dy);
                         break;
                     case TOP: // 上边缘
-                        /**
-                         * Executes top operation with thermal imaging domain optimization.
-                         *
-                         */
                         top(v, dy);
                         break;
-                    case CENTER: // Clickcenter-->>移动
-                        /**
-                         * Executes center operation with thermal imaging domain optimization.
-                         *
-                         */
+                    case CENTER: // clickcenter-->>移动
                         center(v, dx, dy);
                         break;
                     case LEFT_BOTTOM: // 左下
-                        /**
-                         * Executes left operation with thermal imaging domain optimization.
-                         *
-                         */
                         left(v, dx);
-                        /**
-                         * Executes bottom operation with thermal imaging domain optimization.
-                         *
-                         */
                         bottom(v, dy);
                         break;
                     case LEFT_TOP: // 左上
-                        /**
-                         * Executes left operation with thermal imaging domain optimization.
-                         *
-                         */
                         left(v, dx);
-                        /**
-                         * Executes top operation with thermal imaging domain optimization.
-                         *
-                         */
                         top(v, dy);
                         break;
                     case RIGHT_BOTTOM: // 右下
-                        /**
-                         * Executes right operation with thermal imaging domain optimization.
-                         *
-                         */
                         right(v, dx);
-                        /**
-                         * Executes bottom operation with thermal imaging domain optimization.
-                         *
-                         */
                         bottom(v, dy);
                         break;
                     case RIGHT_TOP: // 右上
-                        /**
-                         * Executes right operation with thermal imaging domain optimization.
-                         *
-                         */
                         right(v, dx);
-                        /**
-                         * Executes top operation with thermal imaging domain optimization.
-                         *
-                         */
                         top(v, dy);
                         break;
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (dragDirection != CENTER) {
                     v.layout(oriLeft, oriTop, oriRight, oriBottom);
                 }
@@ -302,34 +166,18 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
         int top = v.getTop() + dy;
         int right = v.getRight() + dx;
         int bottom = v.getBottom() + dy;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (left < -offset) {
             left = -offset;
             right = left + v.getWidth();
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (right > screenWidth + offset) {
             right = screenWidth + offset;
             left = right - v.getWidth();
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (top < -offset) {
             top = -offset;
             bottom = top + v.getHeight();
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (bottom > screenHeight + offset) {
             bottom = screenHeight + offset;
             top = bottom - v.getHeight();
@@ -345,17 +193,9 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
      */
     private void top(View v, int dy) {
         oriTop += dy;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oriTop < -offset) {
             oriTop = -offset;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oriBottom - oriTop - 2 * offset < 200) {
             oriTop = oriBottom - 2 * offset - 200;
         }
@@ -369,17 +209,9 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
      */
     private void bottom(View v, int dy) {
         oriBottom += dy;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oriBottom > screenHeight + offset) {
             oriBottom = screenHeight + offset;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oriBottom - oriTop - 2 * offset < 200) {
             oriBottom = 200 + oriTop + 2 * offset;
         }
@@ -393,17 +225,9 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
      */
     private void right(View v, int dx) {
         oriRight += dx;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oriRight > screenWidth + offset) {
             oriRight = screenWidth + offset;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oriRight - oriLeft - 2 * offset < 200) {
             oriRight = oriLeft + 2 * offset + 200;
         }
@@ -417,17 +241,9 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
      */
     private void left(View v, int dx) {
         oriLeft += dx;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oriLeft < -offset) {
             oriLeft = -offset;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oriRight - oriLeft - 2 * offset < 200) {
             oriLeft = oriRight - 2 * offset - 200;
         }
@@ -446,59 +262,27 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
         int right = v.getRight();
         int bottom = v.getBottom();
         int top = v.getTop();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (x < 40 && y < 40) {
             return LEFT_TOP;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (y < 40 && right - left - x < 40) {
             return RIGHT_TOP;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (x < 40 && bottom - top - y < 40) {
             return LEFT_BOTTOM;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (right - left - x < 40 && bottom - top - y < 40) {
             return RIGHT_BOTTOM;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (x < 40) {
             return LEFT;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (y < 40) {
             return TOP;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (right - left - x < 40) {
             return RIGHT;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (bottom - top - y < 40) {
             return BOTTOM;
         }

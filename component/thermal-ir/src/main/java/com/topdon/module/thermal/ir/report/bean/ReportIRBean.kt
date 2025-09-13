@@ -15,7 +15,7 @@ data class ReportIRBean(
     var picture_id: String, // Uploadservice器后interfaceReturn的imageId
     var picture_url: String, // Uploadservice器后interfaceReturn的imageURL
     val full_graph_data: ReportTempBean?, // 全图data
-    val point_data: List<ReportTempBean>, // Pointdata
-    val line_data: List<ReportTempBean>, // Linedata
-    val surface_data: List<ReportTempBean>, // Areadata
+    val point_data: List<ReportTempBean>, // pointdata
+    val line_data: List<ReportTempBean>, // linedata
+    val surface_data: List<ReportTempBean>, // areadata
 ) : Parcelable

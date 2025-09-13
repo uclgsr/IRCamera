@@ -21,33 +21,10 @@ import java.io.File
 import java.io.FileOutputStream
 
 /**
- * Specialized thermal imaging component providing PDFHelp functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author: CaiSongL
+ * @date: 2023/5/5 17:41
  */
 object PDFHelp {
-    /**
-     * Executes savePdfFileByListView functionality.
-     */
-    /**
-     * Executes savepdffilebylistview operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param name Parameter for operation (type: String)
-     * @param view Parameter for operation (type: ScrollView)
-     * @param viewList Parameter for operation (type: MutableList<View>)
-     * @param watermarkView Parameter for operation (type: View)
-     *
-     */
     fun savePdfFileByListView(
         name: String,
         view: ScrollView,
@@ -65,25 +42,13 @@ object PDFHelp {
         val paint = Paint()
         paint.color = 0xff16131e.toInt()
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (index in 0 until viewList.size) {
             val contentHeight = viewList[index].measuredHeight
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (onePageContentHeight + contentHeight > onePageHeight) { // 超出内容，另起一页
                 onePageContentHeight = 0f
                 pdfDocument.finishPage(page)
                 page = null
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (page == null) {
                 val pageInfo =
                     PageInfo.Builder(view.width, onePageHeight, 1)
@@ -93,10 +58,6 @@ object PDFHelp {
                 canvas = page.canvas
                 canvas.drawRect(0f, 0f, view.width.toFloat(), onePageHeight.toFloat(), paint)
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (index == 0) {
                     val bgTopDrawable: Drawable? = ContextCompat.getDrawable(view.context, R.drawable.ic_report_create_bg_top)
                     bgTopDrawable?.setBounds(0, 0, view.width, (view.width * 1026 / 1125f).toInt())
@@ -115,19 +76,11 @@ object PDFHelp {
 
             canvas?.translate(0f, contentHeight.toFloat())
             onePageContentHeight += contentHeight
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (page != null && index == viewList.size - 1) {
                 pdfDocument.finishPage(page)
             }
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             val pdfFile = File(FileConfig.getPdfDir(), "$name.pdf")
             val fos = FileOutputStream(pdfFile)
@@ -147,10 +100,6 @@ object PDFHelp {
             val uri = Utils.getApp().contentResolver.insert(contentUri, values)
             return if (uri != null) {
                 val outputStream = Utils.getApp().contentResolver.openOutputStream(uri)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (outputStream != null) {
                     val bos = BufferedOutputStream(outputStream)
                     pdfDocument.writeTo(bos)

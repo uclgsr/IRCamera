@@ -9,54 +9,21 @@ import com.github.mikephil.charting.interfaces.dataprovider.CandleDataProvider;
 import com.github.mikephil.charting.renderer.CandleStickChartRenderer;
 
 /**
- * Specialized thermal imaging component providing CandleStickChart functionality for the IRCamera system.
+ * Financial chart type that draws candle-sticks (OHCL chart).
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author Philipp Jahoda
  */
 public class CandleStickChart extends BarLineChartBase<CandleData> implements CandleDataProvider {
 
-    /**
-     * Executes candlestickchart operation with thermal imaging domain optimization.
-     *
-     */
     public CandleStickChart(Context context) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context);
     }
 
-    /**
-     * Executes candlestickchart operation with thermal imaging domain optimization.
-     *
-     */
     public CandleStickChart(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
     }
 
-    /**
-     * Executes candlestickchart operation with thermal imaging domain optimization.
-     *
-     */
     public CandleStickChart(Context context, AttributeSet attrs, int defStyle) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyle);
     }
 
@@ -66,15 +33,7 @@ public class CandleStickChart extends BarLineChartBase<CandleData> implements Ca
 
         mRenderer = new CandleStickChartRenderer(this, mAnimator, mViewPortHandler);
 
-        /**
-         * Retrieves the xaxis with optimized performance for thermal imaging operations.
-         *
-         */
         getXAxis().setSpaceMin(0.5f);
-        /**
-         * Retrieves the xaxis with optimized performance for thermal imaging operations.
-         *
-         */
         getXAxis().setSpaceMax(0.5f);
     }
 

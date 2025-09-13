@@ -13,9 +13,9 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class ImageTempBean(
     val full: TempBean?, // 全图
-    val pointList: ArrayList<TempBean>, // Point
-    val lineList: ArrayList<TempBean>, // Line
-    val rectList: ArrayList<TempBean>, // Area
+    val pointList: ArrayList<TempBean>, // point
+    val lineList: ArrayList<TempBean>, // line
+    val rectList: ArrayList<TempBean>, // area
 ) : Parcelable {
 /**
  * Temp data model for thermal imaging information.

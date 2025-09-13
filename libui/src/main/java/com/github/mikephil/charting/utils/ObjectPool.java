@@ -15,23 +15,6 @@ import java.util.List;
  *
  * Created by Tony Patino on 6/20/16.
  */
-/**
- * Specialized thermal imaging component providing ObjectPool functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class ObjectPool<T extends ObjectPool.Poolable> {
 
     private static int ids = 0;
@@ -68,10 +51,6 @@ public class ObjectPool<T extends ObjectPool.Poolable> {
     }
 
     private ObjectPool(int withCapacity, T object){
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if(withCapacity <= 0){
             throw new IllegalArgumentException("Object Pool must be instantiated with a capacity greater than 0!");
         }
@@ -91,10 +70,6 @@ public class ObjectPool<T extends ObjectPool.Poolable> {
      */
     public void setReplenishPercentage(float percentage){
         float p = percentage;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if(p > 1){
             p = 1;
         }
@@ -115,20 +90,12 @@ public class ObjectPool<T extends ObjectPool.Poolable> {
     private void refillPool(float percentage){
         int portionOfCapacity = (int) (desiredCapacity * percentage);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if(portionOfCapacity < 1){
             portionOfCapacity = 1;
         }else if(portionOfCapacity > desiredCapacity){
             portionOfCapacity = desiredCapacity;
         }
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for(int i = 0 ; i < portionOfCapacity ; i++){
             this.objects[i] = modelObject.instantiate();
         }
@@ -212,10 +179,6 @@ public class ObjectPool<T extends ObjectPool.Poolable> {
         final int oldCapacity = this.desiredCapacity;
         this.desiredCapacity *= 2;
         Object[] temp = new Object[this.desiredCapacity];
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for(int i = 0 ; i < oldCapacity ; i++){
             temp[i] = this.objects[i];
         }

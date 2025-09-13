@@ -6,20 +6,6 @@ package com.shimmerresearch.driver
  *
  * Compatible with shimmerdriver v0.11.4_beta
  */
-/**
- * Configuration management system for thermal imaging parameters. Handles settings and calibration for Configuration operations.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class Configuration {
     companion object {
         // Shimmer device type constants
@@ -41,10 +27,6 @@ class Configuration {
 
         // Sampling rates (Hz)
         val SAMPLING_RATES =
-            /**
-             * Executes doublearrayof operation with thermal imaging domain optimization.
-             *
-             */
             doubleArrayOf(
                 32.768,
                 65.536,
@@ -55,9 +37,6 @@ class Configuration {
             )
 
         // Default configuration for GSR recording
-    /**
-     * Retrieves defaultgsrconfiguration information.
-     */
         fun getDefaultGSRConfiguration(): Configuration {
             return Configuration().apply {
                 samplingRate = 128.0
@@ -104,10 +83,6 @@ class Configuration {
     fun fromConfigurationBytes(config: ByteArray) {
         if (config.size >= 5) {
             val rateIndex = config[0].toInt()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rateIndex >= 0 && rateIndex < SAMPLING_RATES.size) {
                 samplingRate = SAMPLING_RATES[rateIndex]
             }
@@ -129,10 +104,6 @@ class Configuration {
         return validSamplingRate && validGSRRange && validDeviceType
     }
 
-    /**
-     * Executes tostring operation with thermal imaging domain optimization.
-     *
-     */
     override fun toString(): String {
         return "Configuration(samplingRate=${samplingRate}Hz, " +
             "enabledSensors=0x${enabledSensors.toString(16)}, " +

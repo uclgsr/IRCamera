@@ -8,18 +8,8 @@ import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * Specialized thermal imaging component providing ZeroconfDiscoveryService functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * mDNS/Zeroconf service discovery for PC Controllers
+ * Provides automatic discovery and registration using Android NSD API
  */
 class ZeroconfDiscoveryService(private val context: Context) {
     companion object {
@@ -29,68 +19,23 @@ class ZeroconfDiscoveryService(private val context: Context) {
         private const val DISCOVERY_TIMEOUT = 30000L // 30 seconds
     }
 
-/**
- * Specialized thermal imaging component providing ServiceDiscoveryListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+    private val nsdManager: NsdManager by lazy {
+        context.getSystemService(Context.NSD_SERVICE) as NsdManager
+    }
+
+    private val discoveredServices = ConcurrentHashMap<String, NsdServiceInfo>()
+    private var discoveryListener: NsdManager.DiscoveryListener? = null
+    private var registrationListener: NsdManager.RegistrationListener? = null
+    private var isDiscovering = false
+    private var isRegistered = false
+
     interface ServiceDiscoveryListener {
-    /**
-     * Executes onServiceDiscovered functionality.
-     */
-        /**
-         * Executes onservicediscovered operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param serviceInfo Parameter for operation (type: NetworkClient.ControllerInfo)
-         *
-         */
         fun onServiceDiscovered(serviceInfo: NetworkClient.ControllerInfo)
 
-    /**
-     * Executes onServiceLost functionality.
-     */
-        /**
-         * Executes onservicelost operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param serviceName Parameter for operation (type: String)
-         *
-         */
         fun onServiceLost(serviceName: String)
 
-    /**
-     * Executes onServiceRegistered functionality.
-     */
-        /**
-         * Executes onserviceregistered operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param serviceName Parameter for operation (type: String)
-         *
-         */
         fun onServiceRegistered(serviceName: String)
 
-    /**
-     * Executes onDiscoveryError functionality.
-     */
-        /**
-         * Executes ondiscoveryerror operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param errorCode Parameter for operation (type: Int)
-         * @param message Parameter for operation (type: String)
-         *
-         */
         fun onDiscoveryError(
             errorCode: Int,
             message: String,
@@ -99,9 +44,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
     private var serviceListener: ServiceDiscoveryListener? = null
 
-    /**
-     * Sets servicelistener configuration.
-     */
     fun setServiceListener(listener: ServiceDiscoveryListener?) {
         serviceListener = listener
     }
@@ -132,15 +74,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
     /**
      * Stop service discovery
      */
-    /**
-     * Executes stopdiscovery operation with thermal imaging domain optimization.
-     *
-     */
     fun stopDiscovery() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isDiscovering) return
 
         try {
@@ -160,15 +94,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
         deviceId: String,
         port: Int,
     ): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.Main) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isRegistered) {
                 Log.w(TAG, "Service already registered")
                 return@withContext true
@@ -176,17 +102,9 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
             try {
                 val serviceInfo =
-                    /**
-                     * Executes nsdserviceinfo operation with thermal imaging domain optimization.
-                     *
-                     */
                     NsdServiceInfo().apply {
                         serviceName = "$SERVICE_NAME-$deviceId"
                         serviceType = SERVICE_TYPE
-                        /**
-                         * Configures the port with validation and thermal imaging optimization.
-                         *
-                         */
                         setPort(port)
                         // Note: NsdServiceInfo doesn't support attributes in basic Android NSD
                         // Advanced service advertisement would require DNS-SD TXT records
@@ -205,15 +123,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
     /**
      * Unregister the service
      */
-    /**
-     * Executes unregisterservice operation with thermal imaging domain optimization.
-     *
-     */
     fun unregisterService() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isRegistered) return
 
         try {
@@ -249,41 +159,16 @@ class ZeroconfDiscoveryService(private val context: Context) {
         }
     }
 
-    /**
-     * Executes createDiscoveryListener functionality.
-     */
-    /**
-     * Executes creatediscoverylistener operation with thermal imaging domain optimization.
-     *
-     */
     private fun createDiscoveryListener(): NsdManager.DiscoveryListener {
         return object : NsdManager.DiscoveryListener {
-            /**
-             * Executes ondiscoverystarted operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param regType Parameter for operation (type: String)
-             *
-             */
             override fun onDiscoveryStarted(regType: String) {
                 Log.d(TAG, "Service discovery started: $regType")
             }
 
-            /**
-             * Executes onservicefound operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param service Parameter for operation (type: NsdServiceInfo)
-             *
-             */
             override fun onServiceFound(service: NsdServiceInfo) {
                 Log.d(TAG, "Service discovery success: ${service.serviceName}")
 
                 // Don't discover our own service
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (service.serviceName.startsWith(SERVICE_NAME)) {
                     return
                 }
@@ -292,39 +177,17 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 nsdManager.resolveService(service, createResolveListener())
             }
 
-            /**
-             * Executes onservicelost operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param service Parameter for operation (type: NsdServiceInfo)
-             *
-             */
             override fun onServiceLost(service: NsdServiceInfo) {
                 Log.i(TAG, "Service lost: ${service.serviceName}")
                 discoveredServices.remove(service.serviceName)
                 serviceListener?.onServiceLost(service.serviceName)
             }
 
-            /**
-             * Executes ondiscoverystopped operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param serviceType Parameter for operation (type: String)
-             *
-             */
             override fun onDiscoveryStopped(serviceType: String) {
                 Log.i(TAG, "Discovery stopped: $serviceType")
                 isDiscovering = false
             }
 
-            /**
-             * Executes onstartdiscoveryfailed operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param serviceType Parameter for operation (type: String)
-             * @param errorCode Parameter for operation (type: Int)
-             *
-             */
             override fun onStartDiscoveryFailed(
                 serviceType: String,
                 errorCode: Int,
@@ -334,14 +197,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 serviceListener?.onDiscoveryError(errorCode, "Failed to start discovery")
             }
 
-            /**
-             * Executes onstopdiscoveryfailed operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param serviceType Parameter for operation (type: String)
-             * @param errorCode Parameter for operation (type: Int)
-             *
-             */
             override fun onStopDiscoveryFailed(
                 serviceType: String,
                 errorCode: Int,
@@ -352,23 +207,8 @@ class ZeroconfDiscoveryService(private val context: Context) {
         }
     }
 
-    /**
-     * Executes createResolveListener functionality.
-     */
-    /**
-     * Executes createresolvelistener operation with thermal imaging domain optimization.
-     *
-     */
     private fun createResolveListener(): NsdManager.ResolveListener {
         return object : NsdManager.ResolveListener {
-            /**
-             * Executes onresolvefailed operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-             * @param errorCode Parameter for operation (type: Int)
-             *
-             */
             override fun onResolveFailed(
                 serviceInfo: NsdServiceInfo,
                 errorCode: Int,
@@ -376,13 +216,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 Log.e(TAG, "Resolve failed: ${serviceInfo.serviceName}, error: $errorCode")
             }
 
-            /**
-             * Executes onserviceresolved operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-             *
-             */
             override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
                 Log.i(TAG, "Service resolved: ${serviceInfo.serviceName} at ${serviceInfo.host}:${serviceInfo.port}")
 
@@ -411,36 +244,14 @@ class ZeroconfDiscoveryService(private val context: Context) {
         }
     }
 
-    /**
-     * Executes createRegistrationListener functionality.
-     */
-    /**
-     * Executes createregistrationlistener operation with thermal imaging domain optimization.
-     *
-     */
     private fun createRegistrationListener(): NsdManager.RegistrationListener {
         return object : NsdManager.RegistrationListener {
-            /**
-             * Executes onserviceregistered operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-             *
-             */
             override fun onServiceRegistered(serviceInfo: NsdServiceInfo) {
                 Log.i(TAG, "Service registered: ${serviceInfo.serviceName}")
                 isRegistered = true
                 serviceListener?.onServiceRegistered(serviceInfo.serviceName)
             }
 
-            /**
-             * Executes onregistrationfailed operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-             * @param errorCode Parameter for operation (type: Int)
-             *
-             */
             override fun onRegistrationFailed(
                 serviceInfo: NsdServiceInfo,
                 errorCode: Int,
@@ -450,26 +261,11 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 serviceListener?.onDiscoveryError(errorCode, "Registration failed")
             }
 
-            /**
-             * Executes onserviceunregistered operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-             *
-             */
             override fun onServiceUnregistered(serviceInfo: NsdServiceInfo) {
                 Log.i(TAG, "Service unregistered: ${serviceInfo.serviceName}")
                 isRegistered = false
             }
 
-            /**
-             * Executes onunregistrationfailed operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param serviceInfo Parameter for operation (type: NsdServiceInfo)
-             * @param errorCode Parameter for operation (type: Int)
-             *
-             */
             override fun onUnregistrationFailed(
                 serviceInfo: NsdServiceInfo,
                 errorCode: Int,
@@ -483,20 +279,8 @@ class ZeroconfDiscoveryService(private val context: Context) {
     /**
      * Clean up resources
      */
-    /**
-     * Executes cleanup operation with thermal imaging domain optimization.
-     *
-     */
     fun cleanup() {
-        /**
-         * Executes stopdiscovery operation with thermal imaging domain optimization.
-         *
-         */
         stopDiscovery()
-        /**
-         * Executes unregisterservice operation with thermal imaging domain optimization.
-         *
-         */
         unregisterService()
         discoveredServices.clear()
         serviceListener = null

@@ -6,18 +6,9 @@ import java.util.concurrent.atomic.AtomicLong
 import kotlin.system.measureNanoTime
 
 /**
- * Specialized thermal imaging component providing TimestampManager functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Unified timestamp manager for cross-sensor synchronization
+ * Provides high-precision timestamps for GSR, thermal, and RGB sensors
+ * with proper alignment for multi-modal data analysis
  */
 object TimestampManager {
     private const val TAG = "TimestampManager"
@@ -32,10 +23,6 @@ object TimestampManager {
     private val sessionStartTime = AtomicLong(0L)
 
     init {
-        /**
-         * Initializes the ializetimestampsystem component for thermal imaging operations.
-         *
-         */
         initializeTimestampSystem()
     }
 
@@ -51,9 +38,6 @@ object TimestampManager {
      * Get current system timestamp in nanoseconds
      * Used for high-precision GSR sample timestamping
      */
-    /**
-     * Retrieves currenttimestampnanos information.
-     */
     fun getCurrentTimestampNanos(): Long {
         return System.nanoTime()
     }
@@ -61,9 +45,6 @@ object TimestampManager {
     /**
      * Get current elapsed realtime in milliseconds
      * Used for cross-sensor alignment (compatible with RGB/thermal timestamps)
-     */
-    /**
-     * Retrieves currentelapsedrealtimems information.
      */
     fun getCurrentElapsedRealtimeMs(): Long {
         return SystemClock.elapsedRealtime()
@@ -73,9 +54,6 @@ object TimestampManager {
      * Get device timestamp in milliseconds
      * Combines system elapsed time with boot reference for absolute timestamp
      */
-    /**
-     * Retrieves devicetimestampms information.
-     */
     fun getDeviceTimestampMs(): Long {
         return bootTimeReference.get() + SystemClock.elapsedRealtime()
     }
@@ -83,9 +61,6 @@ object TimestampManager {
     /**
      * Get session-relative timestamp for cross-sensor data alignment
      * Returns milliseconds since session start
-     */
-    /**
-     * Retrieves sessionrelativetimestampms information.
      */
     fun getSessionRelativeTimestampMs(): Long {
         val sessionStart = sessionStartTime.get()
@@ -121,9 +96,6 @@ object TimestampManager {
      * Set clock offset for hub-spoke synchronization
      * Offset in milliseconds to align with PC hub time
      */
-    /**
-     * Sets clockoffset configuration.
-     */
     fun setClockOffset(offsetMs: Long) {
         clockOffset.set(offsetMs)
         Log.i(TAG, "Clock offset set to: $offsetMs ms")
@@ -133,9 +105,6 @@ object TimestampManager {
      * Get synchronized timestamp for hub-spoke data alignment
      * Applies clock offset for consistency with PC hub
      */
-    /**
-     * Retrieves synchronizedtimestampms information.
-     */
     fun getSynchronizedTimestampMs(): Long {
         return getDeviceTimestampMs() + clockOffset.get()
     }
@@ -143,13 +112,6 @@ object TimestampManager {
     /**
      * Create a timestamp record for GSR data persistence
      * Returns a formatted record with multiple timestamp formats for compatibility
-     */
-    /**
-     * Executes createTimestampRecord functionality.
-     */
-    /**
-     * Executes createtimestamprecord operation with thermal imaging domain optimization.
-     *
      */
     fun createTimestampRecord(): TimestampRecord {
         val currentNanos = getCurrentTimestampNanos()
@@ -195,13 +157,6 @@ data class TimestampRecord(
      * Convert to CSV format for data export
      * Compatible with research analysis tools
      */
-    /**
-     * Executes toCsvFormat functionality.
-     */
-    /**
-     * Executes tocsvformat operation with thermal imaging domain optimization.
-     *
-     */
     fun toCsvFormat(): String {
         return "$systemNanos,$elapsedRealtimeMs,$deviceTimestampMs,$sessionRelativeMs,$synchronizedTimestampMs"
     }
@@ -210,9 +165,6 @@ data class TimestampRecord(
      * Get CSV header for timestamp columns
      */
     companion object {
-    /**
-     * Retrieves csvheader information.
-     */
         fun getCsvHeader(): String {
             return "system_nanos,elapsed_realtime_ms,device_timestamp_ms,session_relative_ms,synchronized_timestamp_ms"
         }

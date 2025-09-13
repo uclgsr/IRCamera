@@ -74,24 +74,14 @@ import com.topdon.lib.core.R as LibcoreR
 软编吗
  * bitmap -> mp4
  *
-avcodec.AV_CODEC_ID_MPEG4 // Playback正常
-avcodec.AV_CODEC_ID_H264 // 不能拖拽进度条
+avcodec.AV_CODEC_ID_MPEG4 //playback正常
+avcodec.AV_CODEC_ID_H264 //不能拖拽进度条
  */
 /**
-/**
- * Specialized thermal imaging component providing VideoRecordFFmpeg functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Video record f fmpeg view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
+@SuppressLint("MissingPermission")
 class VideoRecordFFmpeg(
     private val cameraView: View,
     private val cameraPreview: CameraPreView?,
@@ -100,7 +90,7 @@ class VideoRecordFFmpeg(
     private val thermalPseudoBarView: BitmapConstraintLayout?,
     private val tempBg: TempLayout?,
     private val compassView: LinearCompassView? = null, // 指南针
-    private val dualView: DualViewWithExternalCameraCommonApi? = null, // Dual light
+    private val dualView: DualViewWithExternalCameraCommonApi? = null, // dual light
     private val isTC007: Boolean = false,
     private val carView: View? = null,
 ) : VideoRecord() {
@@ -116,14 +106,6 @@ class VideoRecordFFmpeg(
         /**
 memory检测
          */
-        /**
-         * Executes canstartvideorecord operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param context Parameter for operation (type: Context)
-         * @param videoFile Parameter for operation (type: File? = null)
-         *
-         */
         fun canStartVideoRecord(
             context: Context,
             videoFile: File? = null,
@@ -135,10 +117,6 @@ memory检测
                             ?: 0
                     )
                 ) > (500L * 1000 * 1000)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!canStart) {
                 ThreadUtils.runOnUiThread {
                     TipDialog.Builder(context)
@@ -189,49 +167,28 @@ memory检测
     private val pix6 = SizeUtils.dp2px(6f)
     private val pixArray = ByteArray(width * height * 4)
     private val bufferRef: AtomicReference<ByteBuffer> =
-        /**
-         * Executes atomicreference operation with thermal imaging domain optimization.
-         *
-         */
         AtomicReference(ByteBuffer.allocate(pixArray.size))
 
-    // Fun readByteBuffer(): ByteBuffer? {
-// Synchronized(lock) {
-// Return pixels?.duplicate() as ByteBuffer?
+    //    fun readByteBuffer(): ByteBuffer? {
+//        synchronized(lock) {
+//            return pixels?.duplicate() as ByteBuffer?
 //        }
 //    }
 //
-// Fun setBitmap(bitmap: Bitmap) {
-// Synchronized(lock) {
-// If (pixels == null || pixels?.capacity() != bitmap.byteCount) {
-// Pixels = ByteBuffer.allocate(bitmap.byteCount)
+//    fun setBitmap(bitmap: Bitmap) {
+//        synchronized(lock) {
+//            if (pixels == null || pixels?.capacity() != bitmap.byteCount) {
+//                pixels = ByteBuffer.allocate(bitmap.byteCount)
 //            }
-// Pixels?.position(0)
-// Bitmap.copyPixelsToBuffer(pixels)
-// Bitmap.recycle()
+//            pixels?.position(0)
+//            bitmap.copyPixelsToBuffer(pixels)
+//            bitmap.recycle()
 //        }
 //    }
-    /**
-     * Executes readByteBuffer functionality.
-     */
-    /**
-     * Executes readbytebuffer operation with thermal imaging domain optimization.
-     *
-     */
     private fun readByteBuffer(): ByteBuffer? {
         return bufferRef.get()?.duplicate()
     }
 
-    /**
-     * Sets bitmap configuration.
-     */
-    /**
-     * Configures the bitmap with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param bitmap Parameter for operation (type: Bitmap)
-     *
-     */
     private fun setBitmap(bitmap: Bitmap) {
         val byteCount = bitmap.byteCount
         val newPixels = ByteBuffer.allocate(byteCount)
@@ -241,26 +198,26 @@ memory检测
         bufferRef.set(newPixels)
     }
 
-// Fun setBitmap(bitmap: Bitmap) {
-// LockWriteLock.writeLock().lock()
-// Try {
-// If (pixels == null || pixels?.capacity() != bitmap.byteCount) {
-// Pixels = ByteBuffer.allocate(bitmap.byteCount)
+//    fun setBitmap(bitmap: Bitmap) {
+//        lockWriteLock.writeLock().lock()
+//        try {
+//            if (pixels == null || pixels?.capacity() != bitmap.byteCount) {
+//                pixels = ByteBuffer.allocate(bitmap.byteCount)
 //            }
-// Pixels?.position(0)
-// Bitmap.copyPixelsToBuffer(pixels)
-// Bitmap.recycle()
+//            pixels?.position(0)
+//            bitmap.copyPixelsToBuffer(pixels)
+//            bitmap.recycle()
 //        } finally {
-// LockWriteLock.writeLock().unlock()
+//            lockWriteLock.writeLock().unlock()
 //        }
 //    }
 //
-// Fun readByteBuffer(): ByteBuffer? {
-// LockWriteLock.readLock().lock()
-// Try {
-// Return pixels?.duplicate()
+//    fun readByteBuffer(): ByteBuffer? {
+//        lockWriteLock.readLock().lock()
+//        try {
+//            return pixels?.duplicate()
 //        } finally {
-// LockWriteLock.readLock().unlock()
+//            lockWriteLock.readLock().unlock()
 //        }
 //    }
 
@@ -271,25 +228,18 @@ avcodec.AV_CODEC_ID_H264 不能拖拽进度条
      *
 个别机型使用H264encoding无法Openvideo,优先使用AV_CODEC_ID_MPEG4
      */
-    /**
-     * Retrieves videocodec information.
-     */
     private fun getVideoCodec(): Int {
         return if (Build.BRAND == "motorola" && Build.MODEL == "XT2201-2") {
             XLog.i("使用videoencodingAV_CODEC_ID_H264")
             avcodec.AV_CODEC_ID_H264
         } else {
-defaulttype
+默认type
             XLog.i("使用videoencodingAV_CODEC_ID_MPEG4")
             avcodec.AV_CODEC_ID_MPEG4
         }
     }
 
     init {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((cameraView.parent as ViewGroup).height > (cameraView.parent as ViewGroup).width) {
 竖屏
             width = 480
@@ -302,10 +252,6 @@ defaulttype
                 width * (cameraView.parent as ViewGroup).height / (cameraView.parent as ViewGroup).width
         }
 宽高不能出现奇数
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (height % 2 == 1) {
             height -= 1
         }
@@ -316,10 +262,6 @@ defaulttype
                 AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT,
             )
         audioRecord =
-            /**
-             * Executes audiorecord operation with thermal imaging domain optimization.
-             *
-             */
             AudioRecord(
                 MediaRecorder.AudioSource.MIC, SAMPLE_AUDIO_RETE_INHZ,
                 AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize,
@@ -333,40 +275,17 @@ defaulttype
 
     var startTime: Long = 0L
 
-    /**
-     * Executes startrecord operation with thermal imaging domain optimization.
-     *
-     */
     override fun startRecord() {
-        /**
-         * Executes startrecord operation with thermal imaging domain optimization.
-         *
-         */
         startRecord(FileConfig.lineGalleryDir)
     }
 
-    /**
-     * Executes startrecord operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param downloadDir Parameter for operation (type: String)
-     *
-     */
     override fun startRecord(downloadDir: String) {
         try {
             exportedFile = File(downloadDir, "${Date().time}.mp4")
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (exportedFile!!.exists()) {
                 exportedFile!!.delete()
             }
             recorder =
-                /**
-                 * Executes ffmpegframerecorder operation with thermal imaging domain optimization.
-                 *
-                 */
                 FFmpegFrameRecorder(
                     exportedFile!!.absolutePath, width, height,
                     AUDIO_CHANNELS,
@@ -374,21 +293,17 @@ defaulttype
             recorder!!.format = FORMAT
             recorder!!.frameRate = RATE.toDouble()
             recorder!!.videoBitrate = VIDEO_BITRATE
-// Recorder!!.audioBitrate = VIDEO_BITRATE
+//            recorder!!.audioBitrate = VIDEO_BITRATE
             recorder!!.videoCodec = VIDEO_CODEC
-// Recorder!!.setAudioOption("itsoffset",(1000L * 200L).toString())
+//            recorder!!.setAudioOption("itsoffset",(1000L * 200L).toString())
             recorder!!.sampleRate = SAMPLE_AUDIO_RETE_INHZ
-// Recorder!!.pixelFormat = avutil.AV_PIX_FMT_YUV420P
-// Recorder!!.audioChannels = 1
-// Recorder!!.setVideoOption("preset", "ultrafast")
+//            recorder!!.pixelFormat = avutil.AV_PIX_FMT_YUV420P
+//            recorder!!.audioChannels = 1
+//            recorder!!.setVideoOption("preset", "ultrafast")
             recorder!!.timestamp = 0L
             recorder!!.start()
             isRunning = true
             isBitmapChangeTime = System.currentTimeMillis()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (openAudioRecord &&
                 ActivityCompat.checkSelfPermission(
                     cameraView.context,
@@ -396,33 +311,17 @@ defaulttype
                 )
                 == PackageManager.PERMISSION_GRANTED
             ) {
-                /**
-                 * Executes startaudiorecording operation with thermal imaging domain optimization.
-                 *
-                 */
                 startAudioRecording()
             }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (audioData == null) {
                 audioData = ShortBuffer.allocate(bufferSize / 2)
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tmpAudioData == null) {
                 tmpAudioData = ShortBuffer.allocate((bufferSize / 2))
             }
             val recordSchedulers = Schedulers.from(recordExecutor)
             val bitmapSchedulers = Schedulers.from(bitmapExecutor)
-            /**
-             * Configures the bitmap with validation and thermal imaging optimization.
-             *
-             */
             setBitmap(createBitmapFromView())
             val fTime = 1000L / RATE
             bitmapDisposable =
@@ -432,10 +331,6 @@ defaulttype
                         Consumer {
                             val tmp = createBitmapFromView()
                             tmp?.let {
-                                /**
-                                 * Configures the bitmap with validation and thermal imaging optimization.
-                                 *
-                                 */
                                 setBitmap(it)
                             }
                         },
@@ -443,16 +338,8 @@ defaulttype
                             Log.e("image对象recordingexception", "${it.message}")
                         },
                     )
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (audioRecord == null) {
                 audioRecord =
-                    /**
-                     * Executes audiorecord operation with thermal imaging domain optimization.
-                     *
-                     */
                     AudioRecord(
                         MediaRecorder.AudioSource.MIC, SAMPLE_AUDIO_RETE_INHZ,
                         AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize,
@@ -470,25 +357,13 @@ defaulttype
                                 val frame = Frame(width, height, Frame.DEPTH_BYTE, 4)
                                 frame.image[0] = readByteBuffer()
                                 val t = 1000L * (System.currentTimeMillis() - startTime)
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (t > (recorder?.timestamp ?: 0)) {
                                     recorder!!.timestamp = t
                                 }
                                 recorder!!.record(frame)
                                 frame.close()
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (System.currentTimeMillis() - queTime > 60 * 1000) {
 间隔1分钟，校验下剩余空间
-                                    /**
-                                     * Executes if operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     if (!canStartVideoRecord(cameraView.context, exportedFile)) {
                                         exportDisposable?.dispose()
                                         stopVideoRecordListener?.invoke(false)
@@ -498,10 +373,6 @@ recording的video超出大小容量限制
                                     queTime = System.currentTimeMillis()
                                 }
                                 recorder?.timestamp?.let {
-                                    /**
-                                     * Executes if operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     if (it / 1000 > 60 * 60 * 1000) {
 thermal imaging录像限制60分钟
                                         exportDisposable?.dispose()
@@ -509,32 +380,16 @@ thermal imaging录像限制60分钟
                                         return@Consumer
                                     }
                                 }
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (audioRecord == null) {
                                     return@Consumer
                                 }
                                 val audioTime = System.currentTimeMillis()
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (openAudioRecord) {
                                     bufferReadResult =
                                         audioRecord?.read(audioData!!.array(), 0, audioData!!.capacity())
                                             ?: 0
-                                    /**
-                                     * Executes if operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     if (bufferReadResult > 0) {
                                         audioData?.limit(bufferReadResult)
-                                        /**
-                                         * Executes if operation with thermal imaging domain optimization.
-                                         *
-                                         */
                                         if (currentTimestamp > (recorder?.timestamp ?: 0)) {
                                             recorder!!.timestamp = currentTimestamp
                                         }
@@ -544,18 +399,10 @@ thermal imaging录像限制60分钟
                                         )
                                     }
                                 } else {
-                                    /**
-                                     * Executes for operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     for (i in 0 until tmpAudioData!!.capacity()) {
                                         tmpAudioData!!.put(i, 1.toShort())
                                     }
 使用当前时间戳
-                                    /**
-                                     * Executes if operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     if (currentTimestamp > (recorder?.timestamp ?: 0)) {
                                         recorder!!.timestamp = currentTimestamp
                                     }
@@ -566,7 +413,7 @@ thermal imaging录像限制60分钟
                                 }
 //                        Log.w(
 "image大小",
-//                            "${System.currentTimeMillis() - time}======${frame.image.size}// ${bufferSize}// ${(recorder?.timestamp!! / 1000000L)}"
+//                            "${System.currentTimeMillis() - time}======${frame.image.size}//${bufferSize}//${(recorder?.timestamp!! / 1000000L)}"
 //                        )
                             } catch (e: Exception) {
                                 Log.e("imagerecording", "Caught an exception: " + e.message)
@@ -577,7 +424,7 @@ thermal imaging录像限制60分钟
                         },
                     )
         } catch (e: Exception) {
-// StopRecord()
+//            stopRecord()
             exportDisposable?.dispose()
             stopVideoRecordListener?.invoke(false)
             XLog.e("recordingexception")
@@ -585,60 +432,23 @@ thermal imaging录像限制60分钟
         }
     }
 
-/**
- * Specialized thermal imaging component providing FrameInterpolationFilter functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     private class FrameInterpolationFilter(private val interpolationFactor: Int) :
-        /**
-         * Executes framefilter operation with thermal imaging domain optimization.
-         *
-         */
         FrameFilter() {
         private var previousFrame: Frame? = null
 
-        /**
-         * Executes start operation with thermal imaging domain optimization.
-         *
-         */
         override fun start() {
             previousFrame = null
         }
 
-        /**
-         * Executes stop operation with thermal imaging domain optimization.
-         *
-         */
         override fun stop() {
             previousFrame = null
         }
 
-        /**
-         * Executes push operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param frame Parameter for operation (type: Frame)
-         *
-         */
         override fun push(frame: Frame) {
             previousFrame = frame.clone()
         }
 
-        /**
-         * Executes pull operation with thermal imaging domain optimization.
-         *
-         */
         override fun pull(): Frame? {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (previousFrame == null) {
                 return null
             }
@@ -647,24 +457,9 @@ thermal imaging录像限制60分钟
             return interpolatedFrame
         }
 
-        /**
-         * Executes release operation with thermal imaging domain optimization.
-         *
-         */
         override fun release() {
         }
 
-    /**
-     * Executes filter functionality.
-     */
-        /**
-         * Executes filter operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param image Parameter for operation (type: IplImage?)
-         * @param image2 Parameter for operation (type: IplImage?)
-         *
-         */
         fun filter(
             image: IplImage?,
             image2: IplImage?,
@@ -674,19 +469,8 @@ thermal imaging录像限制60分钟
         }
     }
 
-    /**
-     * Executes startAudioRecording functionality.
-     */
-    /**
-     * Executes startaudiorecording operation with thermal imaging domain optimization.
-     *
-     */
     fun startAudioRecording() {
         audioRecord =
-            /**
-             * Executes audiorecord operation with thermal imaging domain optimization.
-             *
-             */
             AudioRecord(
                 MediaRecorder.AudioSource.MIC, SAMPLE_AUDIO_RETE_INHZ,
                 AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize,
@@ -694,27 +478,12 @@ thermal imaging录像限制60分钟
         audioRecord!!.startRecording()
     }
 
-    /**
-     * Executes stopAudioRecording functionality.
-     */
-    /**
-     * Executes stopaudiorecording operation with thermal imaging domain optimization.
-     *
-     */
     fun stopAudioRecording() {
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (RECORDSTATE_RECORDING == audioRecord?.recordingState) {
                 audioRecord?.stop()
                 audioRecord?.release()
                 audioRecord =
-                    /**
-                     * Executes audiorecord operation with thermal imaging domain optimization.
-                     *
-                     */
                     AudioRecord(
                         MediaRecorder.AudioSource.MIC, SAMPLE_AUDIO_RETE_INHZ,
                         AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize,
@@ -728,13 +497,6 @@ thermal imaging录像限制60分钟
     /**
 memory检测
      */
-    /**
-     * Executes canstartvideorecord operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param videoFile Parameter for operation (type: File?)
-     *
-     */
     fun canStartVideoRecord(videoFile: File?): Boolean {
         val canStart =
             (
@@ -744,10 +506,6 @@ memory检测
                 )
             ) > (500L * 1000 * 1000)
 Log.w("本地可用空间","" + SDCardUtils.getExternalAvailableSize() / 1000 / 1000)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!canStart) {
             ThreadUtils.runOnUiThread {
                 TipDialog.Builder(cameraView.context)
@@ -764,64 +522,28 @@ Log.w("本地可用空间","" + SDCardUtils.getExternalAvailableSize() / 1000 / 
 
     var queTime = 0L
 
-    /**
-     * Executes stoprecord operation with thermal imaging domain optimization.
-     *
-     */
     override fun stopRecord() {
-        /**
-         * Executes coroutinescope operation with thermal imaging domain optimization.
-         *
-         */
         CoroutineScope(Dispatchers.IO).launch {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isRunning) {
                 try {
-                    /**
-                     * Executes launch operation with thermal imaging domain optimization.
-                     *
-                     */
                     launch(Dispatchers.Main) {
                         exportDisposable?.let {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (!it.isDisposed) {
                                 it.dispose()
                             }
                         }
                         bitmapDisposable?.let {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (!it.isDisposed) {
                                 it.dispose()
                             }
                         }
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (RECORDSTATE_RECORDING == audioRecord?.recordingState) {
                             audioRecord?.stop()
                             audioRecord?.release()
                             audioRecord = null
                         }
-                        /**
-                         * Executes bitmaprecycle operation with thermal imaging domain optimization.
-                         *
-                         */
                         bitmapRecycle()
                         audioDisposable?.let {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (!it.isDisposed) {
                                 it.dispose()
                             }
@@ -831,21 +553,9 @@ Log.w("本地可用空间","" + SDCardUtils.getExternalAvailableSize() / 1000 / 
                     bitmapExecutor.shutdown()
                     recordExecutor.shutdown()
                     audioExecutor.shutdown()
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(500)
                     recorder?.stop()
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(300)
-                    /**
-                     * Executes refreshalbum operation with thermal imaging domain optimization.
-                     *
-                     */
                     refreshAlbum()
                 } catch (e: Exception) {
                     XLog.e("捕获stoprecordingvideo" + e.message)
@@ -855,29 +565,14 @@ Log.w("本地可用空间","" + SDCardUtils.getExternalAvailableSize() / 1000 / 
         }
     }
 
-    /**
-     * Executes bitmapRecycle functionality.
-     */
-    /**
-     * Executes bitmaprecycle operation with thermal imaging domain optimization.
-     *
-     */
     private fun bitmapRecycle() {
         tempBitmap?.let {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!it.isRecycled) {
                 it.recycle()
             }
             tempBitmap = null
         }
         cameraBitmap?.let {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!it.isRecycled) {
                 it.recycle()
             }
@@ -885,37 +580,14 @@ Log.w("本地可用空间","" + SDCardUtils.getExternalAvailableSize() / 1000 / 
         }
     }
 
-    /**
-     * Executes updateaudiostate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param openAudioRecord Parameter for operation (type: Boolean)
-     *
-     */
     override fun updateAudioState(openAudioRecord: Boolean) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (this@VideoRecordFFmpeg.openAudioRecord == openAudioRecord) {
             return
         }
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (openAudioRecord && isRunning) {
-                /**
-                 * Executes startaudiorecording operation with thermal imaging domain optimization.
-                 *
-                 */
                 startAudioRecording()
             } else {
-                /**
-                 * Executes stopaudiorecording operation with thermal imaging domain optimization.
-                 *
-                 */
                 stopAudioRecording()
             }
             this@VideoRecordFFmpeg.openAudioRecord = openAudioRecord
@@ -927,20 +599,9 @@ Log.w("本地可用空间","" + SDCardUtils.getExternalAvailableSize() / 1000 / 
 cameraViewBitmap是屏幕控件的实际宽高
 dstBitmap转成video输出的
      */
-    /**
-     * Executes createBitmapFromView functionality.
-     */
-    /**
-     * Executes createbitmapfromview operation with thermal imaging domain optimization.
-     *
-     */
     private fun createBitmapFromView(): Bitmap {
         var cameraViewBitmap: Bitmap
 
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (cameraView) {
             is CameraView -> cameraViewBitmap = if (dualView == null) cameraView.scaledBitmap else dualView.scaledBitmap
             is TextureView -> {
@@ -952,29 +613,13 @@ dstBitmap转成video输出的
             else -> cameraViewBitmap = Bitmap.createBitmap(cameraView.width, cameraView.height, Bitmap.Config.ARGB_8888)
         }
 
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (temperatureView) {
             is TemperatureView -> {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isRecordTemp) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (temperatureView.temperatureRegionMode != TemperatureView.REGION_MODE_CLEAN) {
                         cameraViewBitmap = BitmapUtils.mergeBitmap(cameraViewBitmap, temperatureView.regionBitmap, 0, 0)
                     }
                 } else {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (temperatureView.temperatureRegionMode == TemperatureView.REGION_MODE_RESET) {
                         cameraViewBitmap = BitmapUtils.mergeBitmap(cameraViewBitmap, temperatureView.regionBitmap, 0, 0)
                     }
@@ -986,10 +631,6 @@ dstBitmap转成video输出的
         }
 
 pseudo-color bar
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (thermalPseudoBarView?.visibility == VISIBLE) {
             try {
                 thermalPseudoBarView?.viewBitmap?.let {
@@ -1007,15 +648,7 @@ Log.w("image对象processing耗时-彩条",""+(System.currentTimeMillis() - star
 Log.e("image对象processing耗时-彩条",""+(System.currentTimeMillis() - startTime))
             }
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (true == tempBg?.isVisible) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (alphaPaint == null) {
                 alphaPaint = Paint()
             }
@@ -1028,10 +661,6 @@ Log.e("image对象processing耗时-彩条",""+(System.currentTimeMillis() - star
                     0,
                 )
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (carView?.isVisible == true)
             {
                 cameraViewBitmap =
@@ -1042,10 +671,6 @@ Log.e("image对象processing耗时-彩条",""+(System.currentTimeMillis() - star
             }
 指南针
         compassView?.let {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (it.isVisible) {
                 try {
                     val bitmap = it.curBitmap
@@ -1065,10 +690,6 @@ Log.w("image对象processing耗时-指南针", "${System.currentTimeMillis() - s
 
 画中画
         cameraPreview?.let {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (it.isVisible) {
                 val newBitmap: Bitmap? =
                     BitmapUtils.mergeBitmapByView(
@@ -1076,10 +697,6 @@ Log.w("image对象processing耗时-指南针", "${System.currentTimeMillis() - s
                         it.getBitmap(),
                         it,
                     )
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (newBitmap != null) {
                     cameraViewBitmap = newBitmap
                 }
@@ -1087,10 +704,6 @@ Log.w("image对象processing耗时-指南针", "${System.currentTimeMillis() - s
         }
 
         var dstBitmap =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (cameraViewBitmap != null) {
                 Bitmap.createScaledBitmap(cameraViewBitmap!!, width, height, true)
             } else {
@@ -1099,34 +712,18 @@ Log.w("image对象processing耗时-指南针", "${System.currentTimeMillis() - s
 
 addwatermark
         val watermarkBean =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isTC007)
                 {
                     SharedManager.wifiWatermarkBean
                 } else {
                 SharedManager.watermarkBean
             }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (watermarkBean.isOpen) {
             dstBitmap =
-                /**
-                 * Executes drawcenterlable operation with thermal imaging domain optimization.
-                 *
-                 */
                 drawCenterLable(
                     dstBitmap!!,
                     watermarkBean.title,
                     watermarkBean.address,
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (watermarkBean.isAddTime) TimeTool.getNowTime() else "",
                 )!!
         }
@@ -1136,19 +733,6 @@ addwatermark
     private var cameraBitmap: Bitmap? = null
     private var tempBitmap: Bitmap? = null
 
-    /**
-     * Executes drawCenterLable functionality.
-     */
-    /**
-     * Executes drawcenterlable operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param bmp Parameter for operation (type: Bitmap)
-     * @param title Parameter for operation (type: String)
-     * @param address Parameter for operation (type: String)
-     * @param time Parameter for operation (type: String?)
-     *
-     */
     fun drawCenterLable(
         bmp: Bitmap,
         title: String,
@@ -1161,36 +745,20 @@ create画布
         val canvas = Canvas(newBmp)
         canvas.drawBitmap(bmp, 0f, 0f, null) // 绘制原始image
         canvas.save()
-        val beginX = pix10.toDouble() // 45度angle值是1.414
+        val beginX = pix10.toDouble() // 45度角度值是1.414
         var beginY = (bmp.height - pix10).toDouble()
         paint.getTextBounds("占位高度文本", 0, "占位高度文本".length, rectText)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!TextUtils.isEmpty(time)) {
             beginY = beginY - (rectText.bottom - rectText.top)
             canvas.drawText(time!!, beginX.toInt().toFloat(), beginY.toInt().toFloat(), paint)
             beginY -= pix6.toDouble()
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!TextUtils.isEmpty(address)) {
             val textHeight = (rectText.bottom - rectText.top)
             paint.getTextBounds(address, 0, address.length, rectText)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rectText.width() > bmp.width - pix20) {
 字符太长，进行换行processing
                 val staticLayout =
-                    /**
-                     * Executes staticlayout operation with thermal imaging domain optimization.
-                     *
-                     */
                     StaticLayout(
                         address,
                         paint,
@@ -1211,24 +779,12 @@ create画布
             }
             beginY -= pix6.toDouble()
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!TextUtils.isEmpty(title)) {
             val textHeight = rectText.bottom - rectText.top
             paint.getTextBounds(title, 0, title.length, rectText)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rectText.width() > bmp.width - pix20) {
 字符太长，进行换行processing
                 val staticLayout =
-                    /**
-                     * Executes staticlayout operation with thermal imaging domain optimization.
-                     *
-                     */
                     StaticLayout(
                         title,
                         paint,
@@ -1250,23 +806,12 @@ create画布
             beginY -= pix6.toDouble()
         }
         canvas.restore()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!bmp.isRecycled) {
             bmp.recycle()
         }
         return newBmp
     }
 
-    /**
-     * Executes refreshAlbum functionality.
-     */
-    /**
-     * Executes refreshalbum operation with thermal imaging domain optimization.
-     *
-     */
     private fun refreshAlbum() {
         exportedFile?.let {
             MediaScannerConnection.scanFile(Utils.getApp(), arrayOf(it.toString()), null, null)

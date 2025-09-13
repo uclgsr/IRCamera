@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -38,20 +38,6 @@ import java.util.List;
  * @since 2019/5/17 13:10
  */
 @SuppressWarnings("WeakerAccess")
-/**
- * Specialized thermal imaging component providing ConstellationPicker functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class ConstellationPicker extends OptionPicker {
     public static String JSON = "[{\"id\":0,\"name\":\"不限\",\"startDate\":\"\",\"endDate\":\"\",\"english\":\"Unlimited\"},\n" +
             "{\"id\":1,\"name\":\"白sheep座\",\"startDate\":\"3-21\",\"endDate\":\"4-19\",\"english\":\"Aries\"},\n" +
@@ -68,50 +54,22 @@ public class ConstellationPicker extends OptionPicker {
             "{\"id\":12,\"name\":\"双鱼座\",\"startDate\":\"2-19\",\"endDate\":\"3-20\",\"english\":\"Pisces\"}]";
     private boolean includeUnlimited = false;
 
-    /**
-     * Executes constellationpicker operation with thermal imaging domain optimization.
-     *
-     */
     public ConstellationPicker(Activity activity) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity);
     }
 
-    /**
-     * Executes constellationpicker operation with thermal imaging domain optimization.
-     *
-     */
     public ConstellationPicker(@NonNull Activity activity, @StyleRes int themeResId) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity, themeResId);
     }
 
     public void setIncludeUnlimited(boolean includeUnlimited) {
         this.includeUnlimited = includeUnlimited;
-        /**
-         * Configures the data with validation and thermal imaging optimization.
-         *
-         */
         setData(provideData());
     }
 
     @Override
     public void setDefaultValue(Object item) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (item instanceof String) {
-            /**
-             * Configures the defaultvaluebyname with validation and thermal imaging optimization.
-             *
-             */
             setDefaultValueByName(item.toString());
         } else {
             super.setDefaultValue(item);
@@ -133,10 +91,6 @@ public class ConstellationPicker extends OptionPicker {
     public void setDefaultValueByDate(DateEntity date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(date.toTimeInMillis());
-        /**
-         * Configures the defaultvaluebydate with validation and thermal imaging optimization.
-         *
-         */
         setDefaultValueByDate(calendar.getTime());
     }
 
@@ -146,10 +100,6 @@ public class ConstellationPicker extends OptionPicker {
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         String name;
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (month) {
             case 1:
                 name = day < 21 ? "摩羯座" : "水瓶座";
@@ -191,10 +141,6 @@ public class ConstellationPicker extends OptionPicker {
                 name = "不限";
                 break;
         }
-        /**
-         * Configures the defaultvaluebyname with validation and thermal imaging optimization.
-         *
-         */
         setDefaultValueByName(name);
     }
 
@@ -209,10 +155,6 @@ public class ConstellationPicker extends OptionPicker {
         ArrayList<ConstellationEntity> data = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(JSON);
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0, n = jsonArray.length(); i < n; i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 ConstellationEntity entity = new ConstellationEntity();
@@ -221,10 +163,6 @@ public class ConstellationPicker extends OptionPicker {
                 entity.setEndDate(jsonObject.getString("endDate"));
                 entity.setName(jsonObject.getString("name"));
                 entity.setEnglish(jsonObject.getString("english"));
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!includeUnlimited && "0".equals(entity.getId())) {
                     continue;
                 }

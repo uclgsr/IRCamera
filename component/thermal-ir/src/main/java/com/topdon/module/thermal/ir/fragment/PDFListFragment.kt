@@ -48,18 +48,8 @@ import java.io.File
  * @date: 2023/5/12 11:34
  */
 /**
- * Specialized thermal imaging component providing PDFListFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * P d f list fragment for thermal imaging components.
+ * Handles specific UI sections and user interactions.
  */
 class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
     // View references using findViewById
@@ -83,18 +73,10 @@ LMS Login及ExitLogin广播.
 
     override fun providerVMClass() = PdfViewModel::class.java
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView(): Int {
         return R.layout.fragment_pdf_list
     }
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         isTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
 
@@ -103,35 +85,15 @@ LMS Login及ExitLogin广播.
         intentFilter.addAction(Config.ACTION_BROADCAST_LOGOFF)
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(loginBroadcastReceiver, intentFilter)
 
-        /**
-         * Initializes the recycler component for thermal imaging operations.
-         *
-         */
         initRecycler()
 
         viewModel.listData.observe(this) {
-            /**
-             * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-             *
-             */
             dismissLoadingDialog()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!reportAdapter.hasEmptyView())
                 {
                     reportAdapter.setEmptyView(R.layout.layout_empty)
                 }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (it == null) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (page == 1) {
                     fragmentPdfRecyclerLay.finishRefresh(false)
                 } else {
@@ -142,16 +104,8 @@ LMS Login及ExitLogin广播.
                 val tvEmpty: TextView? = reportAdapter.emptyLayout?.findViewById(R.id.tv_empty)
                 tvEmpty?.setText(if (page == 1 && data.code != LMS.SUCCESS) R.string.request_fail else R.string.tip_no_more_data)
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (page == 1) {
 refresh
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (data.code == LMS.SUCCESS)
                         {
                             reportAdapter.loadMoreModule.isEnableLoadMore = !data.data?.records.isNullOrEmpty()
@@ -163,16 +117,8 @@ refresh
                     reportAdapter.setNewInstance(data.data?.records)
                 } else {
                     data.data?.records?.let { it1 -> reportAdapter.addData(it1) }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (data.code == LMS.SUCCESS)
                         {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (data.data?.records.isNullOrEmpty())
                                 {
                                     reportAdapter.loadMoreModule.loadMoreEnd()
@@ -189,28 +135,13 @@ refresh
         }
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
-                /**
-                 * Executes onresume operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param owner Parameter for operation (type: LifecycleOwner)
-                 *
-                 */
                 override fun onResume(owner: LifecycleOwner) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(false)
                     } else
                         {
                             NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
                         }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (!hasLoadData) {
                         hasLoadData = true
                         fragmentPdfRecyclerLay.autoRefresh()
@@ -225,39 +156,19 @@ refresh
      */
     private var hasLoadData = false
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
         super.onDestroy()
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(loginBroadcastReceiver)
     }
 
     private inner class LoginBroadcastReceiver : BroadcastReceiver() {
-        /**
-         * Executes onreceive operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param context Parameter for operation (type: Context?)
-         * @param intent Parameter for operation (type: Intent?)
-         *
-         */
         override fun onReceive(
             context: Context?,
             intent: Intent?,
         ) {
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (intent?.action) {
                 Config.ACTION_BROADCAST_LOGIN, Config.ACTION_BROADCAST_LOGOFF -> {
                     hasLoadData = true
@@ -268,9 +179,6 @@ refresh
         }
     }
 
-    /**
-     * Initializes recycler component.
-     */
     private fun initRecycler() {
         reportAdapter.isUseEmpty = true
         reportAdapter.delListener = { item, position ->
@@ -279,15 +187,7 @@ refresh
                 .setMessage(getString(R.string.tip_config_delete, reportBean?.report_info?.report_name ?: ""))
                 .setPositiveListener(R.string.app_confirm) {
                     lifecycleScope.launch {
-                        /**
-                         * Executes showloadingdialog operation with thermal imaging domain optimization.
-                         *
-                         */
                         showLoadingDialog()
-                        /**
-                         * Executes withcontext operation with thermal imaging domain optimization.
-                         *
-                         */
                         withContext(Dispatchers.IO) {
                             val url = UrlConstant.BASE_URL + "api/v1/outProduce/testReport/delTestReport"
                             val params = RequestParams()
@@ -300,44 +200,18 @@ refresh
                                 url, params,
                                 object :
                                     IResponseCallback {
-                                    /**
-                                     * Executes onresponse operation with thermal imaging domain optimization.
-                                     *
-                                     * @param
-                                     * @param response Parameter for operation (type: String?)
-                                     *
-                                     */
                                     override fun onResponse(response: String?) {
                                         val reportNumber = item.reportContent?.report_info?.report_number ?: ""
                                         val file = File(FileConfig.getPdfDir() + "/$reportNumber.pdf")
-                                        /**
-                                         * Executes if operation with thermal imaging domain optimization.
-                                         *
-                                         */
                                         if (file.exists()) {
                                             file.delete()
                                         }
                                         Log.w("deletesuccess", response.toString())
                                     }
 
-                                    /**
-                                     * Executes onfail operation with thermal imaging domain optimization.
-                                     *
-                                     * @param
-                                     * @param exception Parameter for operation (type: Exception?)
-                                     *
-                                     */
                                     override fun onFail(exception: Exception?) {
                                     }
 
-                                    /**
-                                     * Executes onfail operation with thermal imaging domain optimization.
-                                     *
-                                     * @param
-                                     * @param failMsg Parameter for operation (type: String?)
-                                     * @param errorCode Parameter for operation (type: String)
-                                     *
-                                     */
                                     override fun onFail(
                                         failMsg: String?,
                                         errorCode: String,
@@ -346,10 +220,6 @@ refresh
                                         try {
                                             StringUtils.getResString(
                                                 LMS.mContext,
-                                                /**
-                                                 * Executes if operation with thermal imaging domain optimization.
-                                                 *
-                                                 */
                                                 if (TextUtils.isEmpty(errorCode)) -500 else errorCode.toInt(),
                                             ).let {
                                                 TToast.shortToast(LMS.mContext, it)
@@ -361,15 +231,7 @@ refresh
                                 },
                             )
                         }
-                        /**
-                         * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-                         *
-                         */
                         dismissLoadingDialog()
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (item.isShowTitleTime)
                             {
                                 reportAdapter.remove(item)

@@ -52,31 +52,14 @@ import java.util.List;
  * @UpdateDate:     2022.7.19 17:20
  * @UpdateRemark:
  */
-/**
- * Temperature measurement and calibration utility for thermal imaging. Provides precision temperature calculations with TemperatureView algorithms.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class TemperatureView extends SurfaceView implements SurfaceHolder.Callback,
         View.OnTouchListener, BaseDualView.OnFrameCallback {
 
     private static final String TAG = "TemperatureView";
 
     /**
-     * selected操作灵敏度，当 Touch Down coordinate与point/line/areacoordinate偏差在该值range内，视为selected，单位 px.<br>
-     * delete操作灵敏度，当 Touch UP 与 Touch Down coordinate偏差在该值range内，视为delete，单位 px.
+     * selected操作灵敏度，当 Touch Down 坐标与point/line/area坐标偏差在该值range内，视为selected，单位 px.<br>
+     * delete操作灵敏度，当 Touch UP 与 Touch Down 坐标偏差在该值range内，视为delete，单位 px.
      */
     private static final int TOUCH_TOLERANCE = SizeUtils.sp2px(7f);
 
@@ -154,7 +137,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     /**
-     * temperatureregionmode，由 REGION_MODE_** 定义，defaultclear.
+     * temperatureregionmode，由 REGION_MODE_** 定义，默认clear.
      */
     @RegionMode
     private int temperatureRegionMode = REGION_MODE_CLEAN;
@@ -164,10 +147,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
     public void setTemperatureRegionMode(@RegionMode int temperatureRegionMode) {
         this.temperatureRegionMode = temperatureRegionMode;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (temperatureRegionMode == REGION_MODE_CENTER) {
             isShowFull = true;
         } else if (temperatureRegionMode == REGION_MODE_CLEAN) {
@@ -184,10 +163,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
     public void setShowFull(boolean showFull) {
         isShowFull = showFull;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (temperatureRegionMode == REGION_MODE_CLEAN) {
             temperatureRegionMode = REGION_MODE_CENTER;
         }
@@ -195,40 +170,20 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
     public void setTextSize(int textSize){
         helper.setTextSize(textSize);
-        /**
-         * Executes refreshregion operation with thermal imaging domain optimization.
-         *
-         */
         refreshRegion();
     }
 
     public void setLinePaintColor(@ColorInt int color) {
         helper.setTextColor(color);
-        /**
-         * Executes refreshregion operation with thermal imaging domain optimization.
-         *
-         */
         refreshRegion();
     }
 
     private void refreshRegion() {
         Canvas surfaceViewCanvas = getHolder().lockCanvas();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (surfaceViewCanvas != null) {
             surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            /**
-             * Configures the bitmap with validation and thermal imaging optimization.
-             *
-             */
             setBitmap();
             surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-            /**
-             * Retrieves the holder with optimized performance for thermal imaging operations.
-             *
-             */
             getHolder().unlockCanvasAndPost(surfaceViewCanvas);
         }
     }
@@ -276,7 +231,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         this.listener = listener;
     }
 
-    private boolean isMonitor = false;// 如果是temperature监控，则进行实时校验point/line/area的比例
+    private boolean isMonitor = false;//如果是temperature监控，则进行实时校验point/line/area的比例
     public void setMonitor(boolean monitor) {
         isMonitor = monitor;
     }
@@ -314,105 +269,49 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     private void setDefPoint(Point point) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (point.x > temperatureWidth && point.x > 0) {
             point.x = temperatureWidth;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (point.x <= 0) {
             point.x = 0;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (point.y > temperatureHeight) {
             point.y = temperatureHeight;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (point.y < 0) {
             point.y = 0;
         }
     }
     public LibIRTemp.TemperatureSampleResult getPointTemp(Point point) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (irtemp == null) {
             return null;
         } else {
-            /**
-             * Configures the defpoint with validation and thermal imaging optimization.
-             *
-             */
             setDefPoint(point);
             return irtemp.getTemperatureOfPoint(point);
         }
     }
     public LibIRTemp.TemperatureSampleResult getLineTemp(Line line) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (irtemp == null) {
             return null;
         } else {
-            /**
-             * Configures the defpoint with validation and thermal imaging optimization.
-             *
-             */
             setDefPoint(line.start);
-            /**
-             * Configures the defpoint with validation and thermal imaging optimization.
-             *
-             */
             setDefPoint(line.end);
             return irtemp.getTemperatureOfLine(line);
         }
     }
     public LibIRTemp.TemperatureSampleResult getRectTemp(Rect rect) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (irtemp == null) {
             return null;
         } else {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rect.top < 0) {
                 rect.top = 0;
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rect.bottom > temperatureHeight) {
                 rect.bottom = temperatureHeight;
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rect.left < 0) {
                 rect.left = 0;
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rect.right > temperatureWidth) {
                 rect.right = temperatureWidth;
             }
@@ -423,20 +322,20 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     public int productType = Const.TYPE_IR;
 
     /**
-     * 以 View 尺寸为coordinate系，current已add的趋势图对应直line，coordinate为修正过后的coordinate，null 表示未绘制.
+     * 以 View 尺寸为坐标系，current已add的趋势图对应直line，坐标为修正过后的坐标，null 表示未绘制.
      */
     @Nullable
     private Line trendLine;
     /**
-     * 以 View 尺寸为coordinate系，current已add的pointlist，coordinate为修正过后的coordinate.
+     * 以 View 尺寸为坐标系，current已add的pointlist，坐标为修正过后的坐标.
      */
     private final ArrayList<Point> pointList = new ArrayList<>();
     /**
-     * 以 View 尺寸为coordinate系，current已add的pointlist，coordinate为修正过后的coordinate.
+     * 以 View 尺寸为坐标系，current已add的pointlist，坐标为修正过后的坐标.
      */
     private final ArrayList<Line> lineList = new ArrayList<>();
     /**
-     * current绘制的arealist，coordinate采用 view 的宽高coordinate.
+     * current绘制的arealist，坐标采用 view 的宽高坐标.
      */
     private final ArrayList<Rect> rectList = new ArrayList<>();
 
@@ -451,10 +350,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         return regionAndValueBitmap;
     }
     public Bitmap getRegionAndValueBitmap() {
-        /**
-         * Executes synchronized operation with thermal imaging domain optimization.
-         *
-         */
         synchronized (regionLock) {
             return regionAndValueBitmap;
         }
@@ -473,26 +368,14 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private WeakReference<ITsTempListener> iTsTempListenerWeakReference;
 
     public void setImageSize(int imageWidth, int imageHeight, ITsTempListener iTsTempListener) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (iTsTempListener != null) {
             iTsTempListenerWeakReference = new WeakReference<>(iTsTempListener);
         }
         this.temperatureWidth = imageWidth;
         this.temperatureHeight = imageHeight;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (viewWidth == 0) {
             viewWidth = getMeasuredWidth();
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (viewHeight == 0) {
             viewHeight = getMeasuredHeight();
         }
@@ -500,10 +383,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         yScale = (float) viewHeight / (float) imageHeight;
         irtemp = new LibIRTemp(imageWidth, imageHeight);
         llTempData = new byte[imageHeight * imageWidth * 2];
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < drawCount; i++) {
             pointResultList.add(irtemp.new TemperatureSampleResult());
             lineResultList.add(irtemp.new TemperatureSampleResult());
@@ -523,28 +402,12 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private boolean isShow = false;
 
     public void start() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!runflag){
             runflag = true;
             temperatureThread = new Thread(runnable);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isShow) {
-                /**
-                 * Configures the visibility with validation and thermal imaging optimization.
-                 *
-                 */
                 setVisibility(VISIBLE);
             } else {
-                /**
-                 * Configures the visibility with validation and thermal imaging optimization.
-                 *
-                 */
                 setVisibility(INVISIBLE);
             }
             temperatureThread.start();
@@ -555,10 +418,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         runflag = false;
         isShow = getVisibility() == View.VISIBLE;
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (temperatureThread != null) {
                 temperatureThread.interrupt();
                 temperatureThread.join();
@@ -570,10 +429,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public void clear() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (onTrendRemoveListener != null) {
             onTrendRemoveListener.run();
         }
@@ -581,45 +436,21 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         pointList.clear();
         lineList.clear();
         rectList.clear();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (regionBitmap != null) {
             regionBitmap.eraseColor(0);
         }
         Canvas surfaceViewCanvas = getHolder().lockCanvas();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (surfaceViewCanvas != null) {
             surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-            /**
-             * Retrieves the holder with optimized performance for thermal imaging operations.
-             *
-             */
             getHolder().unlockCanvasAndPost(surfaceViewCanvas);
         }
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < pointResultList.size(); i++) {
             pointResultList.get(i).index = 0;
         }
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < lineResultList.size(); i++) {
             lineResultList.get(i).index = 0;
         }
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < rectangleResultList.size(); i++) {
             rectangleResultList.get(i).index = 0;
         }
@@ -630,10 +461,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         float sy = getMeasuredHeight() / (float) temperatureHeight;
         int viewX = TempDrawHelper.Companion.correctPoint(point.x * sx, getMeasuredWidth());
         int viewY = TempDrawHelper.Companion.correctPoint(point.y * sy, getMeasuredHeight());
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (pointList.size() == POINT_MAX_COUNT) {
             pointList.remove(0);
         }
@@ -648,10 +475,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         line.start.y = TempDrawHelper.Companion.correct(l.start.y * sy, getMeasuredHeight());
         line.end.x = TempDrawHelper.Companion.correct(l.end.x * sx, getMeasuredWidth());
         line.end.y = TempDrawHelper.Companion.correct(l.end.y * sy, getMeasuredHeight());
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (pointList.size() == POINT_MAX_COUNT) {
             pointList.remove(0);
         }
@@ -666,17 +489,9 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         rectangle.top = (int) (r.top * sy);
         rectangle.right = (int) (r.right * sx);
         rectangle.bottom = (int) (r.bottom * sy);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rectList.size() < RECTANGLE_MAX_COUNT) {
             rectList.add(rectangle);
         } else {
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int index = 0; index < rectList.size() - 1; index++) {
                 Rect tempRectangle = rectList.get(index + 1);
                 rectList.set(index, tempRectangle);
@@ -686,10 +501,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public Point getPoint() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (pointList.isEmpty()) {
             return null;
         }
@@ -697,10 +508,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public Line getLine() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!lineList.isEmpty()) {
             Line line = new Line(new Point(), new Point());
             line.start.x = (int) (lineList.get(0).start.x / xScale);
@@ -714,10 +521,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public Rect getRectangle() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!rectList.isEmpty()) {
             Rect rect = new Rect();
             rect.left = (int) (rectList.get(0).left / xScale);
@@ -731,79 +534,30 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public void drawLine() {
-        /**
-         * Configures the bitmap with validation and thermal imaging optimization.
-         *
-         */
         setBitmap();
     }
 
-    /**
-     * Handles temperature measurement and calibration with precision thermal data processing.
-     *
-     * @note Temperature values are in Celsius unless otherwise specified.
-     * Accuracy depends on thermal camera calibration.
-     *
-     */
     public TemperatureView(final Context context) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this(context, null, 0);
     }
 
-    /**
-     * Handles temperature measurement and calibration with precision thermal data processing.
-     *
-     * @note Temperature values are in Celsius unless otherwise specified.
-     * Accuracy depends on thermal camera calibration.
-     *
-     */
     public TemperatureView(final Context context, final AttributeSet attrs) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this(context, attrs, 0);
     }
 
-    /**
-     * Handles temperature measurement and calibration with precision thermal data processing.
-     *
-     * @note Temperature values are in Celsius unless otherwise specified.
-     * Accuracy depends on thermal camera calibration.
-     *
-     */
     public TemperatureView(final Context context, final AttributeSet attrs, final int defStyle) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyle);
         // 注意这个method尽早执行(可以在constructormethod里area执行)，解决在小米mix2(Android7.0)上出现的surfaceView内容不展示问题
-        /**
-         * Configures the zorderontop with validation and thermal imaging optimization.
-         *
-         */
         setZOrderOnTop(true);
 
-        /**
-         * Retrieves the holder with optimized performance for thermal imaging operations.
-         *
-         */
         getHolder().addCallback(this);
-        /**
-         * Configures the ontouchlistener with validation and thermal imaging optimization.
-         *
-         */
         setOnTouchListener(this);
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TemperatureView);
         try {
             drawCount = ta.getInteger(R.styleable.TemperatureView_temperature_count, 3);
         } catch (Exception e) {
-            // Ignored
+            // ignored
         } finally {
             ta.recycle();
         }
@@ -813,31 +567,15 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         RECTANGLE_MAX_COUNT = drawCount;
 
         runnable = () -> {
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (!temperatureThread.isInterrupted() && runflag) {
                 byte[] tempArray;
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (productType == Const.TYPE_IR_DUAL){
                     try {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (remapTempData == null) {
                             Log.d(TAG, "remapTempData == NULL");
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (dualUVCCamera != null && llTempData != null
                                     && dualUVCCamera.getTempData(llTempData) != 0) {
-                                // Get/Retrieve映射后的temperaturedatafailed
+                                //Get/Retrieve映射后的temperaturedatafailed
                                 Log.d(TAG, "--------error----------");
                                 SystemClock.sleep(1000);
                                 continue;
@@ -847,10 +585,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                             System.arraycopy(remapTempData, 0, llTempData, 0,
                                     temperatureHeight * temperatureWidth * 2);
                         }
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (llTempData == null){
                             continue;
                         }else {
@@ -863,17 +597,9 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     }
                 }else {
                     try {
-                        /**
-                         * Executes synchronized operation with thermal imaging domain optimization.
-                         *
-                         */
                         synchronized (syncimage.dataLock) {
                             // 用来关联temperaturedata和TemperatureView,方便后area的pointline框temperature measurement
                             irtemp.setTempData(temperature);
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (syncimage.type == 1) irtemp.setScale(16);
                         }
                     }catch (Exception e){
@@ -882,17 +608,9 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     tempArray = temperature;
                 }
                 try {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (iLiteListener != null){
                         iLiteListener.getDeltaNucAndVTemp();
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isMonitor && (viewWidth != getMeasuredWidth() || viewHeight != getMeasuredHeight())){
                         viewWidth = getMeasuredWidth();
                         xScale = (float) viewWidth / (float) temperatureWidth;
@@ -900,16 +618,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                         yScale = (float) viewHeight / (float) temperatureHeight;
                     }
                     LibIRTemp.TemperatureSampleResult temperatureSampleResult = irtemp.getTemperatureOfRect(new Rect(0, 0, temperatureWidth / 2, temperatureHeight - 1));
-                    // Pointline框
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
+                    // pointline框
                     if (regionAndValueBitmap != null) {
-                        /**
-                         * Executes synchronized operation with thermal imaging domain optimization.
-                         *
-                         */
                         synchronized (regionLock) {
                             Canvas canvas = new Canvas(regionAndValueBitmap);
                             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
@@ -920,104 +630,42 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                             LibIRTemp.TemperatureSampleResult fullResult = irtemp.getTemperatureOfRect(new Rect(0, 0, temperatureWidth - 1, temperatureHeight - 1));
                             fullMaxTemp = getTSTemp(fullResult.maxTemperature);
                             fullMinTemp = getTSTemp(fullResult.minTemperature);
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (listener != null) {
                                 listener.getTemp((int) (fullMaxTemp * 100) / 100f, (int) (fullMinTemp * 100) / 100f, temperature);
                             }
 
-                            // Minimum温
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
+                            // minimum温
                             if (isShowFull) {
                                 String minTem = UnitTools.showC(fullMinTemp, isShowC);
                                 int x = TempDrawHelper.Companion.correct(fullResult.minTemperaturePixel.x * xScale, getWidth());
                                 int y = TempDrawHelper.Companion.correct(fullResult.minTemperaturePixel.y * yScale, getHeight());
-                                /**
-                                 * Executes drawcircle operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 drawCircle(canvas, x, y, false);
-                                /**
-                                 * Handles temperature measurement and calibration with precision thermal data processing.
-                                 *
-                                 * @note Temperature values are in Celsius unless otherwise specified.
-                                 * Accuracy depends on thermal camera calibration.
-                                 *
-                                 */
                                 drawTempText(canvas, minTem, x, y);
                             }
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (isUserLowTemp) {
                                 int x = TempDrawHelper.Companion.correctPoint(fullResult.minTemperaturePixel.x * xScale, getWidth());
                                 int y = TempDrawHelper.Companion.correctPoint(fullResult.minTemperaturePixel.y * yScale, getHeight());
-                                /**
-                                 * Executes drawpoint operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 drawPoint(canvas, x, y);
-                                /**
-                                 * Executes drawcircle operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 drawCircle(canvas, x, y, false);
                             }
 
-                            // Maximum温
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
+                            // maximum温
                             if (isShowFull) {
                                 String maxTem = UnitTools.showC(fullMaxTemp, isShowC);
                                 int x = TempDrawHelper.Companion.correct(fullResult.maxTemperaturePixel.x * xScale, getWidth());
                                 int y = TempDrawHelper.Companion.correct(fullResult.maxTemperaturePixel.y * yScale, getHeight());
-                                /**
-                                 * Executes drawcircle operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 drawCircle(canvas, x, y, true);
-                                /**
-                                 * Handles temperature measurement and calibration with precision thermal data processing.
-                                 *
-                                 * @note Temperature values are in Celsius unless otherwise specified.
-                                 * Accuracy depends on thermal camera calibration.
-                                 *
-                                 */
                                 drawTempText(canvas, maxTem, x, y);
                             }
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (isUserHighTemp) {
                                 int x = TempDrawHelper.Companion.correctPoint(fullResult.maxTemperaturePixel.x * xScale, getWidth());
                                 int y = TempDrawHelper.Companion.correctPoint(fullResult.maxTemperaturePixel.y * yScale, getHeight());
-                                /**
-                                 * Executes drawpoint operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 drawPoint(canvas, x, y);
-                                /**
-                                 * Executes drawcircle operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 drawCircle(canvas, x, y, true);
                             }
 
-                            // 趋势图
+                            //趋势图
                             Line trendLine = this.trendLine;
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (trendLine != null) {
                                 int startX = (int) (trendLine.start.x / xScale);
                                 int startY = (int) (trendLine.start.y / yScale);
@@ -1027,64 +675,26 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                                 int maxX = Math.max(startX, endX);
                                 int minY = Math.min(startY, endY);
                                 int maxY = Math.max(startY, endY);
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (maxX < temperatureWidth && minX > 0 && maxY < temperatureHeight && minY > 0) {
                                     temperatureSampleResult = irtemp.getTemperatureOfLine(new Line(new Point(startX, startY), new Point(endX, endY)));
                                     String min = UnitTools.showC(getTSTemp(temperatureSampleResult.minTemperature), isShowC);
                                     String max = UnitTools.showC(getTSTemp(temperatureSampleResult.maxTemperature), isShowC);
-                                    /**
-                                     * Executes drawdot operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawDot(canvas, temperatureSampleResult.minTemperaturePixel, false);
-                                    /**
-                                     * Handles temperature measurement and calibration with precision thermal data processing.
-                                     *
-                                     * @note Temperature values are in Celsius unless otherwise specified.
-                                     * Accuracy depends on thermal camera calibration.
-                                     *
-                                     */
                                     drawTempText(canvas, min, temperatureSampleResult.minTemperaturePixel);
-                                    /**
-                                     * Executes drawdot operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawDot(canvas, temperatureSampleResult.maxTemperaturePixel, true);
-                                    /**
-                                     * Handles temperature measurement and calibration with precision thermal data processing.
-                                     *
-                                     * @note Temperature values are in Celsius unless otherwise specified.
-                                     * Accuracy depends on thermal camera calibration.
-                                     *
-                                     */
                                     drawTempText(canvas, max, temperatureSampleResult.maxTemperaturePixel);
-                                    /**
-                                     * Executes if operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     if (onTrendChangeListener != null) {
                                         List<Float> tempList = TempUtil.INSTANCE.getLineTemps(new Point(startX, startY), new Point(endX, endY), tempArray, temperatureWidth);
                                         onTrendChangeListener.onChange(tempList);
                                     }
                                 }
                             }
-                            /**
-                             * Executes for operation with thermal imaging domain optimization.
-                             *
-                             */
                             for (int index = 0; index < rectList.size(); index++) {
                                 Rect tempRectangle = rectList.get(index);
                                 int left = (int) (tempRectangle.left / xScale);
                                 int top = (int) (tempRectangle.top / yScale);
                                 int right = (int) (tempRectangle.right / xScale);
                                 int bottom = (int) (tempRectangle.bottom / yScale);
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (right > left && bottom > top && left < temperatureWidth && top < temperatureHeight && right > 0 && bottom > 0) {
                                     int tempLeft = Math.max(left, 0);
                                     int tempTop = Math.max(top, 0);
@@ -1093,41 +703,12 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                                     temperatureSampleResult = irtemp.getTemperatureOfRect(new Rect(tempLeft, tempTop, tempRight, tempBottom));
                                     String min = UnitTools.showC(getTSTemp(temperatureSampleResult.minTemperature), isShowC);
                                     String max = UnitTools.showC(getTSTemp(temperatureSampleResult.maxTemperature), isShowC);
-                                    /**
-                                     * Executes drawdot operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawDot(canvas, temperatureSampleResult.minTemperaturePixel, false);
-                                    /**
-                                     * Handles temperature measurement and calibration with precision thermal data processing.
-                                     *
-                                     * @note Temperature values are in Celsius unless otherwise specified.
-                                     * Accuracy depends on thermal camera calibration.
-                                     *
-                                     */
                                     drawTempText(canvas, min, temperatureSampleResult.minTemperaturePixel);
-                                    /**
-                                     * Executes drawdot operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawDot(canvas, temperatureSampleResult.maxTemperaturePixel, true);
-                                    /**
-                                     * Handles temperature measurement and calibration with precision thermal data processing.
-                                     *
-                                     * @note Temperature values are in Celsius unless otherwise specified.
-                                     * Accuracy depends on thermal camera calibration.
-                                     *
-                                     */
                                     drawTempText(canvas, max, temperatureSampleResult.maxTemperaturePixel);
                                 }
                             }
-                            /**
-                             * Executes for operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param line Parameter for operation (type: lineList)
-                             *
-                             */
                             for (Line line : lineList) {
                                 int startX = (int) (line.start.x / xScale);
                                 int startY = (int) (line.start.y / yScale);
@@ -1137,102 +718,35 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                                 int maxX = Math.max(startX, endX);
                                 int minY = Math.min(startY, endY);
                                 int maxY = Math.max(startY, endY);
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (maxX < temperatureWidth && minX > 0 && maxY < temperatureHeight && minY > 0) {
                                     temperatureSampleResult = irtemp.getTemperatureOfLine(new Line(new Point(startX, startY), new Point(endX, endY)));
                                     String min = UnitTools.showC(getTSTemp(temperatureSampleResult.minTemperature), isShowC);
                                     String max = UnitTools.showC(getTSTemp(temperatureSampleResult.maxTemperature), isShowC);
-                                    /**
-                                     * Executes drawdot operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawDot(canvas, temperatureSampleResult.minTemperaturePixel, false);
-                                    /**
-                                     * Handles temperature measurement and calibration with precision thermal data processing.
-                                     *
-                                     * @note Temperature values are in Celsius unless otherwise specified.
-                                     * Accuracy depends on thermal camera calibration.
-                                     *
-                                     */
                                     drawTempText(canvas, min, temperatureSampleResult.minTemperaturePixel);
-                                    /**
-                                     * Executes drawdot operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawDot(canvas, temperatureSampleResult.maxTemperaturePixel, true);
-                                    /**
-                                     * Handles temperature measurement and calibration with precision thermal data processing.
-                                     *
-                                     * @note Temperature values are in Celsius unless otherwise specified.
-                                     * Accuracy depends on thermal camera calibration.
-                                     *
-                                     */
                                     drawTempText(canvas, max, temperatureSampleResult.maxTemperaturePixel);
                                 }
                             }
-                            /**
-                             * Executes for operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param point Parameter for operation (type: pointList)
-                             *
-                             */
                             for (Point point : pointList) {
                                 int x = (int) (point.x / xScale);
                                 int y = (int) (point.y / yScale);
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (x < temperatureWidth && x > 0 && y < temperatureHeight && y > 0) {
                                     temperatureSampleResult = irtemp.getTemperatureOfPoint(new Point(x, y));
                                     String max = UnitTools.showC(getTSTemp(temperatureSampleResult.maxTemperature), isShowC);
-                                    /**
-                                     * Executes drawcircle operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawCircle(canvas, point.x, point.y, true);
-                                    /**
-                                     * Handles temperature measurement and calibration with precision thermal data processing.
-                                     *
-                                     * @note Temperature values are in Celsius unless otherwise specified.
-                                     * Accuracy depends on thermal camera calibration.
-                                     *
-                                     */
                                     drawTempText(canvas, max, point.x, point.y);
                                 }
                             }
-                            // Centertemperature
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
+                            //centertemperature
                             if (isShowFull || (!lineList.isEmpty() || !pointList.isEmpty() || !rectList.isEmpty())) {
-                                /**
-                                 * Executes drawpoint operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 drawPoint(canvas, getWidth() / 2, getHeight() / 2);
                                 temperatureSampleResult = irtemp.getTemperatureOfPoint(new Point(temperatureWidth / 2, temperatureHeight / 2));
                                 String max = UnitTools.showC(getTSTemp(temperatureSampleResult.maxTemperature), isShowC);
-                                /**
-                                 * Handles temperature measurement and calibration with precision thermal data processing.
-                                 *
-                                 * @note Temperature values are in Celsius unless otherwise specified.
-                                 * Accuracy depends on thermal camera calibration.
-                                 *
-                                 */
                                 drawTempText(canvas, max, temperatureSampleResult.maxTemperaturePixel);
                             }
                         }
                         Canvas surfaceViewCanvas = getHolder().lockCanvas();
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (surfaceViewCanvas == null) {
                             SystemClock.sleep(1000);
                             continue;
@@ -1240,10 +754,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                         try {
                             surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                             surfaceViewCanvas.drawBitmap(regionAndValueBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                            /**
-                             * Retrieves the holder with optimized performance for thermal imaging operations.
-                             *
-                             */
                             getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                         } catch (Exception e) {
                             Log.e(TAG, "temperatureThread:" + e.getMessage());
@@ -1281,10 +791,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         xScale = (float) viewWidth / (float) temperatureWidth;
         yScale = (float) viewHeight / (float) temperatureHeight;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (regionBitmap == null || regionBitmap.getWidth() != viewWidth || regionBitmap.getHeight() != viewHeight) {
             regionBitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_4444);
         }
@@ -1294,7 +800,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     /* **************************************** Touch **************************************** */
     /**
      * 是否为add point/line/area mode。<br>
-     * true-adda新point/line/area false-移动a已有point/line/area
+     * true-add一个新point/line/area false-移动一个已有point/line/area
      */
     private boolean isAddAction = true;
 
@@ -1303,10 +809,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (temperatureRegionMode) {
             case REGION_MODE_POINT:
                 return handleTouchPoint(event);
@@ -1324,78 +826,34 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     /* **************************************** point **************************************** */
 
     private boolean handleTouchPoint(MotionEvent event) {
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
                 downX = TempDrawHelper.Companion.correctPoint(event.getX(), getWidth());
                 downY = TempDrawHelper.Companion.correctPoint(event.getY(), getHeight());
                 Point point = getPoint(downX, downY);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
-                if (point == null) {// 新增
+                if (point == null) {//新增
                     isAddAction = true;
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (pointList.size() == POINT_MAX_COUNT) {
-                        /**
-                         * Executes synchronized operation with thermal imaging domain optimization.
-                         *
-                         */
                         synchronized (regionLock) {
                             pointList.remove(0);
                         }
-                        /**
-                         * Configures the bitmap with validation and thermal imaging optimization.
-                         *
-                         */
                         setBitmap();
                     }
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                     surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                    /**
-                     * Executes drawpoint operation with thermal imaging domain optimization.
-                     *
-                     */
                     drawPoint(surfaceViewCanvas, downX, downY);
-                    /**
-                     * Retrieves the holder with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getHolder().unlockCanvasAndPost(surfaceViewCanvas);
-                } else {// 移动或delete
+                } else {//移动或delete
                     isAddAction = false;
-                    /**
-                     * Executes synchronized operation with thermal imaging domain optimization.
-                     *
-                     */
                     synchronized (regionLock) {
                         pointList.remove(point);
                     }
-                    /**
-                     * Configures the bitmap with validation and thermal imaging optimization.
-                     *
-                     */
                     setBitmap();
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                     surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                    /**
-                     * Executes drawpoint operation with thermal imaging domain optimization.
-                     *
-                     */
                     drawPoint(surfaceViewCanvas, point.x, point.y);
-                    /**
-                     * Retrieves the holder with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                 }
                 return true;
@@ -1406,55 +864,23 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                 Canvas surfaceViewCanvas = getHolder().lockCanvas();
                 surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                 surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                /**
-                 * Executes drawpoint operation with thermal imaging domain optimization.
-                 *
-                 */
                 drawPoint(surfaceViewCanvas, x, y);
-                /**
-                 * Retrieves the holder with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                 return true;
             }
             case MotionEvent.ACTION_UP: {
                 int x = TempDrawHelper.Companion.correctPoint(event.getX(), getWidth());
                 int y = TempDrawHelper.Companion.correctPoint(event.getY(), getHeight());
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isAddAction) {
-                    /**
-                     * Executes synchronized operation with thermal imaging domain optimization.
-                     *
-                     */
                     synchronized (regionLock) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (pointList.size() == POINT_MAX_COUNT) {
                             pointList.remove(0);
                         }
                         pointList.add(new Point(x, y));
                     }
                 } else {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (Math.abs(x - downX) > TOUCH_TOLERANCE || Math.abs(y - downY) > TOUCH_TOLERANCE) {
-                        /**
-                         * Executes synchronized operation with thermal imaging domain optimization.
-                         *
-                         */
                         synchronized (regionLock) {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (pointList.size() == POINT_MAX_COUNT) {
                                 pointList.remove(0);
                             }
@@ -1462,18 +888,10 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                         }
                     }
                 }
-                /**
-                 * Configures the bitmap with validation and thermal imaging optimization.
-                 *
-                 */
                 setBitmap();
                 Canvas surfaceViewCanvas = getHolder().lockCanvas();
                 surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                 surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                /**
-                 * Retrieves the holder with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                 return true;
             }
@@ -1484,16 +902,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
     @Nullable
     private Point getPoint(int x, int y) {
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = pointList.size() - 1; i >= 0; i--) {
             Point point = pointList.get(i);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (point.x > x - TOUCH_TOLERANCE && point.x < x + TOUCH_TOLERANCE && point.y > y - TOUCH_TOLERANCE && point.y < y + TOUCH_TOLERANCE) {
                 return point;
             }
@@ -1512,28 +922,16 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private LineMoveType lineMoveType = LineMoveType.ALL;
 
     private boolean handleTouchLine(MotionEvent event, boolean isTrend) {
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
                 downX = TempDrawHelper.Companion.correct(event.getX(), getWidth());
                 downY = TempDrawHelper.Companion.correct(event.getY(), getHeight());
                 Line line = getLine(downX, downY, isTrend);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (line == null) {
                     isAddAction = true;
                 } else {
                     isAddAction = false;
                     movingLine = line;
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (downX > line.start.x - TOUCH_TOLERANCE && downX < line.start.x + TOUCH_TOLERANCE && downY > line.start.y - TOUCH_TOLERANCE && downY < line.start.y + TOUCH_TOLERANCE) {
                         lineMoveType = LineMoveType.START;
                     } else if (downX > line.end.x - TOUCH_TOLERANCE && downX < line.end.x + TOUCH_TOLERANCE && downY > line.end.y - TOUCH_TOLERANCE && downY < line.end.y + TOUCH_TOLERANCE) {
@@ -1541,30 +939,14 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     } else {
                         lineMoveType = LineMoveType.ALL;
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isTrend) {
-                        /**
-                         * Executes synchronized operation with thermal imaging domain optimization.
-                         *
-                         */
                         synchronized (regionLock) {
-                            trendLine = null; // 手势操作过程中不需要绘制temperature，置为 null
+                            trendLine = null; //手势操作过程中不需要绘制temperature，置为 null
                         }
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (onTrendRemoveListener != null) {
                             onTrendRemoveListener.run();
                         }
                     } else {
-                        /**
-                         * Executes synchronized operation with thermal imaging domain optimization.
-                         *
-                         */
                         synchronized (regionLock) {
                             // 真是醉了，Line 没有override equals method，不过好在这个 line 本来就是从 lineList 里取出来的，所以 remove 没问题
                             lineList.remove(line);
@@ -1572,21 +954,9 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     }
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                    /**
-                     * Configures the bitmap with validation and thermal imaging optimization.
-                     *
-                     */
                     setBitmap();
                     surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                    /**
-                     * Executes drawline operation with thermal imaging domain optimization.
-                     *
-                     */
                     drawLine(surfaceViewCanvas, line.start.x, line.start.y, line.end.x, line.end.y, isTrend);
-                    /**
-                     * Retrieves the holder with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                 }
                 return true;
@@ -1594,23 +964,11 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
             case MotionEvent.ACTION_MOVE: {
                 int x = TempDrawHelper.Companion.correct(event.getX(), getWidth());
                 int y = TempDrawHelper.Companion.correct(event.getY(), getHeight());
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isAddAction) {
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                     surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                    /**
-                     * Executes drawline operation with thermal imaging domain optimization.
-                     *
-                     */
                     drawLine(surfaceViewCanvas, downX, downY, x, y, isTrend);
-                    /**
-                     * Retrieves the holder with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                 } else {
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
@@ -1619,10 +977,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
                     Point start = new Point();
                     Point end = new Point();
-                    /**
-                     * Executes switch operation with thermal imaging domain optimization.
-                     *
-                     */
                     switch (lineMoveType) {
                         case ALL:
                             Rect rect = TempDrawHelper.Companion.getRect(getWidth(), getHeight());
@@ -1644,15 +998,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                             end = new Point(x, y);
                             break;
                     }
-                    /**
-                     * Executes drawline operation with thermal imaging domain optimization.
-                     *
-                     */
                     drawLine(surfaceViewCanvas, start.x, start.y, end.x, end.y, isTrend);
-                    /**
-                     * Retrieves the holder with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                 }
                 return true;
@@ -1660,64 +1006,28 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
             case MotionEvent.ACTION_UP: {
                 int x = TempDrawHelper.Companion.correct(event.getX(), getWidth());
                 int y = TempDrawHelper.Companion.correct(event.getY(), getHeight());
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isAddAction) {
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (Math.abs(x - downX) > TOUCH_TOLERANCE || Math.abs(y - downY) > TOUCH_TOLERANCE) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isTrend) {
-                            /**
-                             * Executes synchronized operation with thermal imaging domain optimization.
-                             *
-                             */
                             synchronized (regionLock) {
                                 trendLine = new Line(new Point(downX, downY), new Point(x, y));
                             }
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (onTrendAddListener != null) {
                                 onTrendAddListener.run();
                             }
                         } else {
-                            /**
-                             * Executes synchronized operation with thermal imaging domain optimization.
-                             *
-                             */
                             synchronized (regionLock) {
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (lineList.size() == LINE_MAX_COUNT) {
                                     lineList.remove(0);
                                 }
                                 lineList.add(new Line(new Point(downX, downY), new Point(x, y)));
                             }
                         }
-                        /**
-                         * Configures the bitmap with validation and thermal imaging optimization.
-                         *
-                         */
                         setBitmap();
                     }
                     surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                    /**
-                     * Retrieves the holder with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                 } else {
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
@@ -1725,17 +1035,9 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     Canvas bitmapCanvas = new Canvas(regionBitmap);
 
                     // TODO: 2024/12/13 这里有legacy问题，拖动的时候可以把直line拖成point
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (Math.abs(x - downX) > TOUCH_TOLERANCE || Math.abs(y - downY) > TOUCH_TOLERANCE) {
                         Point start = new Point();
                         Point end = new Point();
-                        /**
-                         * Executes switch operation with thermal imaging domain optimization.
-                         *
-                         */
                         switch (lineMoveType) {
                             case ALL:
                                 Rect rect = TempDrawHelper.Companion.getRect(getWidth(), getHeight());
@@ -1757,41 +1059,17 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                                 end = new Point(x, y);
                                 break;
                         }
-                        /**
-                         * Executes drawline operation with thermal imaging domain optimization.
-                         *
-                         */
                         drawLine(bitmapCanvas, start.x, start.y, end.x, end.y, isTrend);
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isTrend) {
-                            /**
-                             * Executes synchronized operation with thermal imaging domain optimization.
-                             *
-                             */
                             synchronized (regionLock) {
                                 trendLine = new Line(start, end);
                             }
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (onTrendAddListener != null) {
                                 onTrendAddListener.run();
                             }
                         } else {
-                            /**
-                             * Executes synchronized operation with thermal imaging domain optimization.
-                             *
-                             */
                             synchronized (regionLock) {
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (lineList.size() == LINE_MAX_COUNT) {
                                     lineList.remove(0);
                                 }
@@ -1800,10 +1078,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                         }
                     }
                     surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                    /**
-                     * Retrieves the holder with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                 }
                 return true;
@@ -1814,7 +1088,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     /**
-     * 指定coordinate (x, y) 是否视为指定 Line 的selected.
+     * 指定坐标 (x, y) 是否视为指定 Line 的selected.
      */
     private static boolean isLineConcat(@NonNull Line line, int x, int y) {
         int tempDistance = ((line.end.y - line.start.y) * x - (line.end.x - line.start.x) * y + line.end.x * line.start.y - line.start.x * line.end.y);
@@ -1824,29 +1098,13 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
     @Nullable
     private Line getLine(int x, int y, boolean isTrend) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isTrend) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (trendLine != null && isLineConcat(trendLine, x, y)) {
                 return trendLine;
             }
         } else {
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = lineList.size() - 1; i >= 0; i--) {
                 Line line = lineList.get(i);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isLineConcat(line, x, y)) {
                     return line;
                 }
@@ -1877,34 +1135,18 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private RectMoveCorner rectMoveCorner = RectMoveCorner.LT;
 
     private boolean handleTouchRect(MotionEvent event) {
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
                 downX = TempDrawHelper.Companion.correct(event.getX(), getWidth());
                 downY = TempDrawHelper.Companion.correct(event.getY(), getHeight());
                 Rect rect = getRect(downX, downY);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (rect == null) {
                     isAddAction = true;
                 } else {
                     isAddAction = false;
                     movingRect = rect;
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
-                    if (isIn(downX, rect.left)) {// Selected最左那条边
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
+                    if (isIn(downX, rect.left)) {//selected最左那条边
                         if (isIn(downY, rect.top)) {
                             rectMoveType = RectMoveType.CORNER;
                             rectMoveCorner = RectMoveCorner.LT;
@@ -1915,11 +1157,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                             rectMoveType = RectMoveType.EDGE;
                             rectMoveEdge = RectMoveEdge.LEFT;
                         }
-                    } else if (isIn(downX, rect.right)) {// Selected最右那条边
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
+                    } else if (isIn(downX, rect.right)) {//selected最右那条边
                         if (isIn(downY, rect.top)) {
                             rectMoveType = RectMoveType.CORNER;
                             rectMoveCorner = RectMoveCorner.RT;
@@ -1930,39 +1168,23 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                             rectMoveType = RectMoveType.EDGE;
                             rectMoveEdge = RectMoveEdge.RIGHT;
                         }
-                    } else if (isIn(downY, rect.top)) {// Selected顶边
+                    } else if (isIn(downY, rect.top)) {//selected顶边
                         rectMoveType = RectMoveType.EDGE;
                         rectMoveEdge = RectMoveEdge.TOP;
-                    } else if (isIn(downY, rect.bottom)) {// Selected底边
+                    } else if (isIn(downY, rect.bottom)) {//selected底边
                         rectMoveType = RectMoveType.EDGE;
                         rectMoveEdge = RectMoveEdge.BOTTOM;
                     } else {
                         rectMoveType = RectMoveType.ALL;
                     }
-                    /**
-                     * Executes synchronized operation with thermal imaging domain optimization.
-                     *
-                     */
                     synchronized (regionLock) {
                         rectList.remove(rect);
                     }
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                    /**
-                     * Configures the bitmap with validation and thermal imaging optimization.
-                     *
-                     */
                     setBitmap();
                     surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                    /**
-                     * Executes drawrect operation with thermal imaging domain optimization.
-                     *
-                     */
                     drawRect(surfaceViewCanvas, rect.left, rect.top, rect.right, rect.bottom);
-                    /**
-                     * Retrieves the holder with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                 }
                 return true;
@@ -1970,120 +1192,56 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
             case MotionEvent.ACTION_MOVE: {
                 int x = TempDrawHelper.Companion.correct(event.getX(), getWidth());
                 int y = TempDrawHelper.Companion.correct(event.getY(), getHeight());
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isAddAction) {
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                     surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                    /**
-                     * Executes drawrect operation with thermal imaging domain optimization.
-                     *
-                     */
                     drawRect(surfaceViewCanvas, downX, downY, x, y);
-                    /**
-                     * Retrieves the holder with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                 } else {
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                     surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                    /**
-                     * Executes switch operation with thermal imaging domain optimization.
-                     *
-                     */
                     switch (rectMoveType) {
                         case ALL:
                             Rect rect = TempDrawHelper.Companion.getRect(getWidth(), getHeight());
                             int biasX = x < downX ? Math.max(x - downX, rect.left - movingRect.left) : Math.min(x - downX, rect.right - movingRect.right);
                             int biasY = y < downY ? Math.max(y - downY, rect.top - movingRect.top) : Math.min(y - downY, rect.bottom - movingRect.bottom);
-                            /**
-                             * Executes drawrect operation with thermal imaging domain optimization.
-                             *
-                             */
                             drawRect(surfaceViewCanvas, movingRect.left + biasX, movingRect.top + biasY, movingRect.right + biasX, movingRect.bottom + biasY);
                             break;
                         case EDGE:
-                            /**
-                             * Executes switch operation with thermal imaging domain optimization.
-                             *
-                             */
                             switch (rectMoveEdge) {
                                 case LEFT:
-                                    /**
-                                     * Executes drawrect operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawRect(surfaceViewCanvas, x, movingRect.top, movingRect.right, movingRect.bottom);
                                     break;
                                 case TOP:
-                                    /**
-                                     * Executes drawrect operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawRect(surfaceViewCanvas, movingRect.left, y, movingRect.right, movingRect.bottom);
                                     break;
                                 case RIGHT:
-                                    /**
-                                     * Executes drawrect operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawRect(surfaceViewCanvas, movingRect.left, movingRect.top, x, movingRect.bottom);
                                     break;
                                 case BOTTOM:
-                                    /**
-                                     * Executes drawrect operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawRect(surfaceViewCanvas, movingRect.left, movingRect.top, movingRect.right, y);
                                     break;
                             }
                             break;
                         case CORNER:
-                            /**
-                             * Executes switch operation with thermal imaging domain optimization.
-                             *
-                             */
                             switch (rectMoveCorner) {
                                 case LT:
-                                    /**
-                                     * Executes drawrect operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawRect(surfaceViewCanvas, x, y, movingRect.right, movingRect.bottom);
                                     break;
                                 case LB:
-                                    /**
-                                     * Executes drawrect operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawRect(surfaceViewCanvas, x, movingRect.top, movingRect.right, y);
                                     break;
                                 case RT:
-                                    /**
-                                     * Executes drawrect operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawRect(surfaceViewCanvas, movingRect.left, y, x, movingRect.bottom);
                                     break;
                                 case RB:
-                                    /**
-                                     * Executes drawrect operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawRect(surfaceViewCanvas, movingRect.left, movingRect.top, x, y);
                                     break;
                             }
                             break;
                     }
-                    /**
-                     * Retrieves the holder with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                 }
                 return true;
@@ -2091,58 +1249,26 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
             case MotionEvent.ACTION_UP: {
                 int x = TempDrawHelper.Companion.correct(event.getX(), getWidth());
                 int y = TempDrawHelper.Companion.correct(event.getY(), getHeight());
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isAddAction) {
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (Math.abs(x - downX) > TOUCH_TOLERANCE || Math.abs(y - downY) > TOUCH_TOLERANCE) {
-                        /**
-                         * Executes synchronized operation with thermal imaging domain optimization.
-                         *
-                         */
                         synchronized (regionLock) {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (rectList.size() == RECTANGLE_MAX_COUNT) {
                                 rectList.remove(0);
                             }
                             rectList.add(new Rect(Math.min(downX, x), Math.min(downY, y), Math.max(downX, x), Math.max(downY, y)));
                         }
-                        /**
-                         * Configures the bitmap with validation and thermal imaging optimization.
-                         *
-                         */
                         setBitmap();
                     }
                     surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                    /**
-                     * Retrieves the holder with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                 } else {
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                     Canvas bitmapCanvas = new Canvas(regionBitmap);
                     // TODO: 2024/12/13 这里有legacy问题，拖动的时候可以把矩形拖成直line
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (Math.abs(x - downX) > TOUCH_TOLERANCE || Math.abs(y - downY) > TOUCH_TOLERANCE) {
-                        /**
-                         * Executes switch operation with thermal imaging domain optimization.
-                         *
-                         */
                         switch (rectMoveType) {
                             case ALL:
                                 Rect rect = TempDrawHelper.Companion.getRect(getWidth(), getHeight());
@@ -2151,10 +1277,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                                 movingRect.offset(biasX, biasY);
                                 break;
                             case EDGE:
-                                /**
-                                 * Executes switch operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 switch (rectMoveEdge) {
                                     case LEFT:
                                         movingRect.left = Math.min(x, movingRect.right);
@@ -2175,10 +1297,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                                 }
                                 break;
                             case CORNER:
-                                /**
-                                 * Executes switch operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 switch (rectMoveCorner) {
                                     case LT:
                                         movingRect.left = Math.min(x, movingRect.right);
@@ -2208,20 +1326,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                                 break;
                         }
 
-                        /**
-                         * Executes drawrect operation with thermal imaging domain optimization.
-                         *
-                         */
                         drawRect(bitmapCanvas, movingRect.left, movingRect.top, movingRect.right, movingRect.bottom);
-                        /**
-                         * Executes synchronized operation with thermal imaging domain optimization.
-                         *
-                         */
                         synchronized (regionLock) {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (rectList.size() == RECTANGLE_MAX_COUNT) {
                                 rectList.remove(0);
                             }
@@ -2229,10 +1335,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                         }
                     }
                     surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                    /**
-                     * Retrieves the holder with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getHolder().unlockCanvasAndPost(surfaceViewCanvas);
                 }
                 return true;
@@ -2244,16 +1346,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
     @Nullable
     private Rect getRect(int x, int y) {
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = rectList.size() - 1; i >= 0; i--) {
             Rect rect = rectList.get(i);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (x > rect.left - TOUCH_TOLERANCE && x < rect.right + TOUCH_TOLERANCE
                     && y > rect.top - TOUCH_TOLERANCE && y < rect.bottom + TOUCH_TOLERANCE) {
                 return rect;
@@ -2269,7 +1363,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     /* **************************************** Draw **************************************** */
 
     /**
-     * 以 View 尺寸为coordinate系，在 (x,y) 画a十字.<br>
+     * 以 View 尺寸为坐标系，在 (x,y) 画一个十字.<br>
      * 注意，不对 x、y 进行processing，传进来是哪就在哪绘制。
      */
     private void drawPoint(Canvas canvas, int x, int y) {
@@ -2277,28 +1371,24 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     /**
-     * 绘制以 View 尺寸为coordinate的一根line段，这里的 x,y 为 View coordinate原始值
+     * 绘制以 View 尺寸为坐标的一根line段，这里的 x,y 为 View 坐标原始值
      */
     private void drawLine(Canvas canvas, int x1, int y1, int x2, int y2, boolean isTrend) {
-        // 由于line段与实心point的的绘制是分开的，line段使用current View coordinate，而实心point使用temperature(192x256)coordinateconversion为 View coordinate
-        // 故而这里需要把current的coordinate，尽量贴近temperaturecoordinate的整数倍，否则会出现实心圆偏离直line太远的情况
+        // 由于line段与实心point的的绘制是分开的，line段使用current View 坐标，而实心point使用temperature(192x256)坐标conversion为 View 坐标
+        // 故而这里需要把current的坐标，尽量贴近temperature坐标的整数倍，否则会出现实心圆偏离直line太远的情况
         int startX = (int) ((int) (x1 / xScale) * xScale);
         int startY = (int) ((int) (y1 / yScale) * yScale);
         int stopX = (int) ((int) (x2 / xScale) * xScale);
         int stopY = (int) ((int) (y2 / yScale) * yScale);
         helper.drawLine(canvas, startX, startY, stopX, stopY);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isTrend) {
             helper.drawTrendText(canvas, getWidth(), getHeight(), startX, startY, stopX, stopY);
         }
     }
 
     /**
-     * 绘制以 View 尺寸为coordinate的一根line段，这里的 x,y 为 View coordinate原始值
+     * 绘制以 View 尺寸为坐标的一根line段，这里的 x,y 为 View 坐标原始值
      */
     private void drawRect(Canvas canvas, float x1, float y1, float x2, float y2) {
         int left = (int) ((int) (x1 / xScale) * xScale);
@@ -2309,7 +1399,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     /**
-     * 以 View 尺寸为coordinate系，在 (x,y) 画a实心圆.
+     * 以 View 尺寸为坐标系，在 (x,y) 画一个实心圆.
      * @param isMax true-maximum温红色 false-minimum温蓝色
      */
     private void drawCircle(Canvas canvas, int x, int y, boolean isMax) {
@@ -2317,26 +1407,26 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     /**
-     * 在指定 canvas 上，以指定 point coordinate为center，绘制a实心圆.
-     * @param point 以temperature尺寸(192x256)为coordinate系的point
+     * 在指定 canvas 上，以指定 point 坐标为center，绘制一个实心圆.
+     * @param point 以temperature尺寸(192x256)为坐标系的point
      * @param isMax true-maximum温红色 false-minimum温蓝色
      */
     private void drawDot(Canvas canvas, Point point, boolean isMax) {
-        // 这里的 (x,y) 是通过temperaturecoordinateconversion来的，所以已经是temperaturecoordinate的整数倍
+        //这里的 (x,y) 是通过temperature坐标conversion来的，所以已经是temperature坐标的整数倍
         int x = TempDrawHelper.Companion.correct(point.x * xScale, getWidth());
         int y = TempDrawHelper.Companion.correct(point.y * yScale, getHeight());
         helper.drawCircle(canvas, x, y, isMax);
     }
 
     /**
-     * 以 View 尺寸为coordinate系，以 (x,y) 为基准，绘制temperature值text.
+     * 以 View 尺寸为坐标系，以 (x,y) 为基准，绘制temperature值text.
      */
     private void drawTempText(Canvas canvas, String text, int x, int y) {
         helper.drawTempText(canvas, text, getWidth(), x, y);
     }
     /**
-     * 在指定 canvas 上，以指定 point coordinate为center，绘制指定的text.
-     * @param point 以temperature尺寸(192x256)为coordinate系的point
+     * 在指定 canvas 上，以指定 point 坐标为center，绘制指定的text.
+     * @param point 以temperature尺寸(192x256)为坐标系的point
      */
     private void drawTempText(Canvas canvas, String text, Point point) {
         int x = TempDrawHelper.Companion.correct(point.x * xScale, getWidth());
@@ -2347,51 +1437,33 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private void setBitmap() {
         regionBitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(regionBitmap);
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param point Parameter for operation (type: pointList)
-         *
-         */
         for (Point point : pointList) {
-            /**
-             * Executes drawpoint operation with thermal imaging domain optimization.
-             *
-             */
             drawPoint(canvas, point.x, point.y);
         }
-/**
- * Specialized thermal imaging component providing OnTrendChangeListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
-/**
- * Temperature measurement and calibration utility for thermal imaging. Provides precision temperature calculations with TempListener algorithms.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+        for (Line line : lineList) {
+            drawLine(canvas, line.start.x, line.start.y, line.end.x, line.end.y, false);
+        }
+        for (Rect rect : rectList) {
+            drawRect(canvas, rect.left, rect.top, rect.right, rect.bottom);
+        }
+        if (trendLine != null) {
+            drawLine(canvas, trendLine.start.x, trendLine.start.y, trendLine.end.x, trendLine.end.y, true);
+        }
+    }
+
+    /**
+     * 趋势图对应的temperaturedata变更Listener。
+     * 注意！Callback不在主line程！！
+     */
+    public interface OnTrendChangeListener {
+        void onChange(List<Float> temps);
+    }
+
     public interface TempListener {
         void getTemp(float max, float min, byte[] tempData);
     }
 
     public float getCompensateTemp(float temp){
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (iLiteListener != null){
             return iLiteListener.compensateTemp(temp);
         }else {
@@ -2400,10 +1472,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public float getTSTemp(float temp) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (iTsTempListenerWeakReference != null && iTsTempListenerWeakReference.get() != null) {
             return iTsTempListenerWeakReference.get().tempCorrectByTs(getCompensateTemp(temp));
         } else {
@@ -2436,29 +1504,13 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public void onFame(byte[] mixData, byte[] tempData, double fpsText) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Const.TYPE_IR_DUAL == productType){
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (this.remapTempData == null) {
                     this.remapTempData = new byte[Const.IR_WIDTH * Const.IR_HEIGHT * 2];
                 }
                 System.arraycopy(tempData, 0, this.remapTempData, 0, Const.IR_WIDTH * Const.IR_HEIGHT * 2);
             } else {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (this.remapTempData == null) {
                     this.remapTempData = new byte[Const.DUAL_WIDTH * Const.DUAL_HEIGHT * 2];
                 }

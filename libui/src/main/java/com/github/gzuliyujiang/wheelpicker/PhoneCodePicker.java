@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -35,20 +35,6 @@ import java.util.List;
  * @since 2019/5/10 16:44
  */
 @SuppressWarnings("unused")
-/**
- * Specialized thermal imaging component providing PhoneCodePicker functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class PhoneCodePicker extends OptionPicker {
     public static String JSON = "[{\"prefix\":\"1\",\"en\":\"USA\",\"cn\":\"美国\"},\n" +
             "{\"prefix\":\"1\",\"en\":\"PuertoRico\",\"cn\":\"波多黎各\"},\n" +
@@ -264,50 +250,22 @@ public class PhoneCodePicker extends OptionPicker {
             "{\"prefix\":\"1876\",\"en\":\"Jamaica\",\"cn\":\"牙买加\"}]";
     private boolean onlyChina = false;
 
-    /**
-     * Executes phonecodepicker operation with thermal imaging domain optimization.
-     *
-     */
     public PhoneCodePicker(@NonNull Activity activity) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity);
     }
 
-    /**
-     * Executes phonecodepicker operation with thermal imaging domain optimization.
-     *
-     */
     public PhoneCodePicker(@NonNull Activity activity, @StyleRes int themeResId) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity, themeResId);
     }
 
     public void setOnlyChina(boolean onlyChina) {
         this.onlyChina = onlyChina;
-        /**
-         * Configures the data with validation and thermal imaging optimization.
-         *
-         */
         setData(provideData());
     }
 
     @Override
     public void setDefaultValue(Object item) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (item instanceof String) {
-            /**
-             * Configures the defaultvaluebyname with validation and thermal imaging optimization.
-             *
-             */
             setDefaultValueByName(item.toString());
         } else {
             super.setDefaultValue(item);
@@ -335,10 +293,6 @@ public class PhoneCodePicker extends OptionPicker {
     @Override
     protected List<?> provideData() {
         List<PhoneCodeEntity> data = new ArrayList<>();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (onlyChina) {
             PhoneCodeEntity china = new PhoneCodeEntity();
             china.setCode("+86");
@@ -363,10 +317,6 @@ public class PhoneCodePicker extends OptionPicker {
         } else {
             try {
                 JSONArray jsonArray = new JSONArray(JSON);
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (int i = 0, n = jsonArray.length(); i < n; i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     PhoneCodeEntity entity = new PhoneCodeEntity();

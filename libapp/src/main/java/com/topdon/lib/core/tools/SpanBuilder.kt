@@ -20,58 +20,16 @@ import androidx.core.content.ContextCompat
 import java.lang.ref.WeakReference
 
 /**
- * Specialized thermal imaging component providing SpanBuilder functionality for the IRCamera system.
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Created by LCG on 2024/2/19.
  */
 class SpanBuilder : SpannableStringBuilder {
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     */
     constructor() : super()
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param text Parameter for operation (type: CharSequence)
-     *
-     */
     constructor(text: CharSequence) : super(text)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param text Parameter for operation (type: CharSequence)
-     * @param start Parameter for operation (type: Int)
-     * @param end Parameter for operation (type: Int)
-     *
-     */
     constructor(text: CharSequence, start: Int, end: Int) : super(text, start, end)
 
-    /**
-     * Executes appendDrawable functionality.
-     */
-    /**
-     * Executes appenddrawable operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param resourceId Parameter for operation (type: Int)
-     * @param wantHeight Parameter for operation (type: Int)
-     *
-     */
     fun appendDrawable(
         context: Context,
         @DrawableRes resourceId: Int,
@@ -85,25 +43,10 @@ class SpanBuilder : SpannableStringBuilder {
         return this
     }
 
-    /**
-     * Executes appendColor functionality.
-     */
-    /**
-     * Executes appendcolor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param text Parameter for operation (type: CharSequence)
-     * @param color Parameter for operation (type: Int)
-     *
-     */
     fun appendColor(
         text: CharSequence,
         @ColorInt color: Int,
     ): SpanBuilder {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (text.isEmpty()) { // 搞个空字符串过来干嘛
             return this
         }
@@ -113,27 +56,11 @@ class SpanBuilder : SpannableStringBuilder {
         return this
     }
 
-    /**
-     * Executes appendColorAndClick functionality.
-     */
-    /**
-     * Executes appendcolorandclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param text Parameter for operation (type: CharSequence)
-     * @param color Parameter for operation (type: Int)
-     * @param listener Event listener for callbacks (type: OnClickListener)
-     *
-     */
     fun appendColorAndClick(
         text: CharSequence,
         @ColorInt color: Int,
         listener: OnClickListener,
     ): SpanBuilder {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (text.isEmpty()) { // 搞个空字符串过来干嘛
             return this
         }
@@ -143,21 +70,6 @@ class SpanBuilder : SpannableStringBuilder {
         return this
     }
 
-    /**
-     * Executes appendColorAndClick functionality.
-     */
-    /**
-     * Executes appendcolorandclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param resId Parameter for operation (type: Int)
-     * @param formatArg Parameter for operation (type: String)
-     * @param color Parameter for operation (type: Int)
-     * @param hasUnderLine Parameter for operation (type: Boolean = false)
-     * @param listener Event listener for callbacks (type: OnClickListener)
-     *
-     */
     fun appendColorAndClick(
         context: Context,
         @StringRes resId: Int,
@@ -166,10 +78,6 @@ class SpanBuilder : SpannableStringBuilder {
         hasUnderLine: Boolean = false,
         listener: OnClickListener,
     ): SpanBuilder {
-        /**
-         * Executes append operation with thermal imaging domain optimization.
-         *
-         */
         append(context.getString(resId, formatArg))
         val startIndex: Int = lastIndexOf(formatArg)
         val endIndex: Int = startIndex + formatArg.length
@@ -177,51 +85,17 @@ class SpanBuilder : SpannableStringBuilder {
         return this
     }
 
-/**
- * Specialized thermal imaging component providing MyClickSpan functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     private class MyClickSpan(val listener: OnClickListener, val color: Int, val hasUnderLine: Boolean) : ClickableSpan() {
-        /**
-         * Executes updatedrawstate operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param ds Parameter for operation (type: TextPaint)
-         *
-         */
         override fun updateDrawState(ds: TextPaint) {
             ds.color = color
             ds.isUnderlineText = hasUnderLine
         }
 
-        /**
-         * Executes onclick operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param widget Parameter for operation (type: View)
-         *
-         */
         override fun onClick(widget: View) {
             listener.onClick(widget)
         }
     }
 
-/**
- * Specialized thermal imaging component providing MyImageSpan functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     private class MyImageSpan(
         val context: Context,
         @DrawableRes val resourceId: Int,
@@ -229,9 +103,6 @@ class SpanBuilder : SpannableStringBuilder {
     ) : ReplacementSpan() {
         private var weakReference: WeakReference<Drawable>? = null
 
-    /**
-     * Retrieves cacheddrawable information.
-     */
         fun getCachedDrawable(): Drawable {
             val weakDrawable = weakReference?.get()
             if (weakDrawable != null) {
@@ -245,17 +116,6 @@ class SpanBuilder : SpannableStringBuilder {
             return drawable
         }
 
-        /**
-         * Retrieves the size with optimized performance for thermal imaging operations.
-         *
-         * @param
-         * @param paint Parameter for operation (type: Paint)
-         * @param text Parameter for operation (type: CharSequence?)
-         * @param start Parameter for operation (type: Int)
-         * @param end Parameter for operation (type: Int)
-         * @param fm Parameter for operation (type: Paint.FontMetricsInt?)
-         *
-         */
         override fun getSize(
             paint: Paint,
             text: CharSequence?,
@@ -264,10 +124,6 @@ class SpanBuilder : SpannableStringBuilder {
             fm: Paint.FontMetricsInt?,
         ): Int {
             val rect = getCachedDrawable().bounds
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (fm != null) {
                 fm.ascent = -rect.bottom
                 fm.descent = 0
@@ -277,21 +133,6 @@ class SpanBuilder : SpannableStringBuilder {
             return rect.right
         }
 
-        /**
-         * Executes draw operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param canvas Parameter for operation (type: Canvas)
-         * @param text Parameter for operation (type: CharSequence?)
-         * @param start Parameter for operation (type: Int)
-         * @param end Parameter for operation (type: Int)
-         * @param x Parameter for operation (type: Float)
-         * @param top Parameter for operation (type: Int)
-         * @param y Parameter for operation (type: Int)
-         * @param bottom Parameter for operation (type: Int)
-         * @param paint Parameter for operation (type: Paint)
-         *
-         */
         override fun draw(
             canvas: Canvas,
             text: CharSequence?,

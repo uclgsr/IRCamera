@@ -19,7 +19,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-// Import com.guide.zm04c.matrix.GuideInterface // Temporarily disabled - hardware specific
+// import com.guide.zm04c.matrix.GuideInterface // Temporarily disabled - hardware specific
 import com.topdon.lib.core.bean.tools.ThermalBean
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.db.AppDatabase
@@ -43,19 +43,8 @@ temperature监控
  */
 // Legacy ARouter route annotation - now using NavigationManager
 /**
-/**
- * Specialized thermal imaging component providing MonitorChartActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Monitor chart activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
  */
 class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueSelectedListener {
     private val viewModel: LogViewModel by viewModels()
@@ -63,7 +52,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     private val timeAdapter: SettingTimeAdapter by lazy { SettingTimeAdapter(this) } // 时分秒
     private val adapter: SettingCheckAdapter by lazy { SettingCheckAdapter(this) } // 时间间隔
 
-    // Var MONITOR_ACTION = STATS_START
+    //    var MONITOR_ACTION = STATS_START
     private var selectDuration = 1
     private var selectType = 1 // 选取point 1:单point    2:line条    3:region
     private var selectIndex: ArrayList<Int> = arrayListOf() // 选取point
@@ -74,16 +63,8 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
 
     private lateinit var chart: LineChart
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.activity_monitor_chart
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         // Set toolbar title
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
@@ -95,106 +76,48 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         Log.w("123", "selectIndex:${selectIndex.joinToString()}")
         // SharedManager.setSelectFenceType(selectType) // Temporarily disabled
         type =
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (selectType) {
                 1 -> "point"
                 2 -> "line"
                 else -> "fence"
             }
         chart = findViewById(R.id.mp_chart_view)
-        /**
-         * Initializes the chart component for thermal imaging operations.
-         *
-         */
         initChart()
-        /**
-         * Initializes the recycler component for thermal imaging operations.
-         *
-         */
         initRecycler()
         viewModel.resultLiveData.observe(this) {
 查询到历史data
             Log.w("123", "查询到历史data:${it.dataList.size}")
-            /**
-             * Executes resultvol operation with thermal imaging domain optimization.
-             *
-             */
             resultVol(it)
         }
         lifecycleScope.launch {
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(300)
-            /**
-             * Executes onirvideostart operation with thermal imaging domain optimization.
-             *
-             */
             onIrVideoStart()
         }
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
-    /**
-     * Executes onresume operation with thermal imaging domain optimization.
-     *
-     */
     override fun onResume() {
         super.onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    /**
-     * Executes onpause operation with thermal imaging domain optimization.
-     *
-     */
     override fun onPause() {
         super.onPause()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
         super.onDestroy()
-        /**
-         * Executes onirvideostop operation with thermal imaging domain optimization.
-         *
-         */
         onIrVideoStop()
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
         }
     }
 
-    /**
-     * Initializes recycler component.
-     */
     private fun initRecycler() {
         val monitorChartTimeRecycler = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.monitor_chart_time_recycler)
         val monitorChartSettingRecycler = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.monitor_chart_setting_recycler)
@@ -203,21 +126,9 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         monitorChartTimeRecycler.adapter = timeAdapter
         monitorChartSettingRecycler.layoutManager = GridLayoutManager(this, 3)
         monitorChartSettingRecycler.adapter = adapter
-/**
- * Configures the 时间段type with validation and thermal imaging optimization.
- *
- */
 set时间段type(秒 分 时 天)
         timeAdapter.listener =
             object : SettingTimeAdapter.OnItemClickListener {
-                /**
-                 * Executes onclick operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param index Parameter for operation (type: Int)
-                 * @param timeType Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onClick(
                     index: Int,
                     timeType: Int,
@@ -225,21 +136,9 @@ set时间段type(秒 分 时 天)
                     selectTimeType = timeType
                     chart.highlightValue(null) // Close高亮pointMarker
                     latestTime = 0L
-                    /**
-                     * Executes showloadingdialog operation with thermal imaging domain optimization.
-                     *
-                     */
                     showLoadingDialog()
                     lifecycleScope.launch {
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(500)
-                        /**
-                         * Executes querylog operation with thermal imaging domain optimization.
-                         *
-                         */
                         queryLog(2)
                     }
                 }
@@ -247,56 +146,36 @@ set时间段type(秒 分 时 天)
 时间间隔
         adapter.listener =
             object : SettingCheckAdapter.OnItemClickListener {
-                /**
-                 * Executes onclick operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param index Parameter for operation (type: Int)
-                 * @param time Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onClick(
                     index: Int,
                     time: Int,
                 ) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (recordTask != null && recordTask!!.isActive) {
                         recordTask!!.cancel()
                         recordTask = null
                     }
-// CanUpdate = false
+//                canUpdate = false
                     Log.w("123", "select:$time")
                     adapter.setCheck(index)
                     timeMillis = time * 1000L
                     pointIndex = startIndex - defaultCount
-                    /**
-                     * Executes recordthermal operation with thermal imaging domain optimization.
-                     *
-                     */
-                    recordThermal() // StartRecord
+                    recordThermal() // startRecord
                 }
             }
     }
 
-    val defaultCount = 20 // DefaultShow/Display10个数
+    val defaultCount = 20 // 默认Show/Display10个数
     val startIndex = 0f
     var pointIndex = startIndex - defaultCount
 
-    // // /// /// /
+    // /////////
     var mIsIrVideoStart = false
 
-    // Private var mGuideInterface: GuideInterface? = null // Temporarily disabled - hardware specific
+    // private var mGuideInterface: GuideInterface? = null // Temporarily disabled - hardware specific
     var rotateType = 3
 
     /**
 enabledvideo流
-     */
-    /**
-     * Executes onirvideostart operation with thermal imaging domain optimization.
-     *
      */
     private fun onIrVideoStart() {
         // Temporarily disabled - guide interface not available
@@ -309,14 +188,6 @@ enabledvideo流
         }
         mGuideInterface = GuideInterface()
         val ret = mGuideInterface!!.init(this, object : GuideInterface.IrDataCallback {
-            /**
-             * Executes processirdata operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param yuv Parameter for operation (type: ByteArray)
-             * @param temp Temperature value in Celsius (type: FloatArray)
-             *
-             */
             override fun processIrData(yuv: ByteArray, temp: FloatArray) {
                 try {
 选取region
@@ -339,17 +210,9 @@ enabledvideo流
 
         })
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ret == 5) {
             Log.w("123", "video流开启complete")
-            /**
-             * Executes recordthermal operation with thermal imaging domain optimization.
-             *
-             */
-            recordThermal()// StartRecord
+            recordThermal()//startRecord
         } else {
 ToastUtils.showShort("video流enabledfailed")
             Log.w("123", "video流开启failed")
@@ -361,10 +224,6 @@ ToastUtils.showShort("video流enabledfailed")
 
     /**
 stopvideo流
-     */
-    /**
-     * Executes onirvideostop operation with thermal imaging domain optimization.
-     *
      */
     private fun onIrVideoStop() {
         // Temporarily disabled - guide interface not available
@@ -392,25 +251,13 @@ stopvideo流
     /**
 循环Listener-datasave
      */
-    /**
-     * Executes recordthermal operation with thermal imaging domain optimization.
-     *
-     */
     private fun recordThermal() {
         recordTask =
             lifecycleScope.launch(Dispatchers.IO) {
                 isRecord = true
                 startTime = System.currentTimeMillis()
                 var time = 0L
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (isRecord) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (canUpdate) {
                         val entity = ThermalEntity()
                         entity.userId = SharedManager.getUserId()
@@ -423,21 +270,9 @@ stopvideo流
                         entity.createTime = System.currentTimeMillis()
                         AppDatabase.getInstance().thermalDao().insert(entity)
                         time++
-                        /**
-                         * Executes launch operation with thermal imaging domain optimization.
-                         *
-                         */
                         launch(Dispatchers.Main) {
-                            /**
-                             * Executes updatechart operation with thermal imaging domain optimization.
-                             *
-                             */
                             updateChart()
                         }
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(timeMillis)
                     } else {
                         Log.w("123", "当前不可update")
@@ -448,9 +283,6 @@ stopvideo流
     }
 
     // MPChart
-    /**
-     * Initializes chart component.
-     */
     private fun initChart() {
         chart.clear()
         chart.setOnChartValueSelectedListener(this)
@@ -460,9 +292,9 @@ stopvideo流
         chart.description = null // 图标描述文本
         chart.setBackgroundResource(com.topdon.lib.core.R.color.chart_bg)
         chart.setScaleEnabled(true) // Scale
-        chart.setPinchZoom(false) // Disable后，可以分别在xaxis和yaxis上进行Scale
+        chart.setPinchZoom(false) // Disable后，可以分别在x轴和y轴上进行Scale
         chart.isDoubleTapToZoomEnabled = false // 双击不可Scale
-        chart.isScaleYEnabled = false // 禁止YaxisScale
+        chart.isScaleYEnabled = false // 禁止Y轴Scale
         chart.setExtraOffsets(
             0f,
             0f,
@@ -473,7 +305,7 @@ stopvideo流
         chart.setNoDataTextColor(textColor)
         val mv = MyMarkerView(this, R.layout.marker_lay)
         mv.chartView = chart
-        chart.marker = mv // SettingsclickcoordinateShow/Displaytip框
+        chart.marker = mv // settingsclick坐标Show/Displaytip框
         val data = LineData()
         data.setValueTextColor(textColor)
         chart.data = data
@@ -491,8 +323,8 @@ stopvideo流
         xAxis.granularity = 1f
         xAxis.isGranularityEnabled = true // 重复值不Show/Display
         xAxis.textSize = 9f
-xAxis.setLabelCount(6, true)// True保证有刻度数量不变
-        xAxis.setLabelCount(6, false) // True保证有刻度数量不变
+xAxis.setLabelCount(6, true)//true保证有刻度数量不变
+        xAxis.setLabelCount(6, false) // true保证有刻度数量不变
         val leftAxis = chart.axisLeft
         leftAxis.textSize = 9f
         leftAxis.textColor = textColor
@@ -509,71 +341,31 @@ xAxis.setLabelCount(6, true)// True保证有刻度数量不变
     /**
 分classprocessingupdate图表data
      */
-    /**
-     * Executes updatechart operation with thermal imaging domain optimization.
-     *
-     */
     private fun updateChart() {
         ++pointIndex
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (selectTimeType) {
             1 -> {
 秒
-                /**
-                 * Executes addpointtochart operation with thermal imaging domain optimization.
-                 *
-                 */
                 addPointToChart(bean)
             }
             2 -> {
 分
                 val addTime = 2 * 60 * 1000L
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (bean.createTime > TimeTool.timeToMinute(latestTime, 2) + addTime) {
-                    /**
-                     * Executes querylog operation with thermal imaging domain optimization.
-                     *
-                     */
                     queryLog(3)
                 }
             }
             3 -> {
 时
                 val addTime = 2 * 60 * 60 * 1000L
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (bean.createTime > TimeTool.timeToMinute(latestTime, 3) + addTime) {
-                    /**
-                     * Executes querylog operation with thermal imaging domain optimization.
-                     *
-                     */
                     queryLog(3)
                 }
             }
             4 -> {
-/**
- * Executes 天 operation with thermal imaging domain optimization.
- *
- */
-天(图表display最后a时间在昨天，要多加一天)
+天(图表display最后一个时间在昨天，要多加一天)
                 val addTime = 2 * 24 * 60 * 60 * 1000L
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (bean.createTime > TimeTool.timeToMinute(latestTime, 4) + addTime) {
-                    /**
-                     * Executes querylog operation with thermal imaging domain optimization.
-                     *
-                     */
                     queryLog(3)
                 }
             }
@@ -583,24 +375,9 @@ xAxis.setLabelCount(6, true)// True保证有刻度数量不变
     /**
 秒update图表data
      */
-    /**
-     * Executes addpointtochart operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param bean Parameter for operation (type: ThermalBean)
-     *
-     */
     private fun addPointToChart(bean: ThermalBean) {
-        /**
-         * Executes synchronized operation with thermal imaging domain optimization.
-         *
-         */
         synchronized(chart) {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (bean.createTime == 0L) {
                     Log.w("123", "createTime = 0L, bean:$bean")
                     return
@@ -611,27 +388,15 @@ xAxis.setLabelCount(6, true)// True保证有刻度数量不变
                 data.thermal = bean.centerTemp
                 data.createTime = bean.createTime
                 val lineData: LineData = chart.data
-                var volDataSet = lineData.getDataSetByIndex(0) // 读取x为0的coordinatepoint
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+                var volDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标point
                 if (volDataSet == null) {
                     startTime = data.createTime
                     Log.w("123", "settings初始时间startTime:$startTime")
                     chart.xAxis.valueFormatter = MyValueFormatter(startTime = startTime)
                 }
                 val x = (data.createTime - startTime).toFloat()
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (type) {
                     "point" -> {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (volDataSet == null) {
                             volDataSet = createSet("green")
                             lineData.addDataSet(volDataSet)
@@ -640,14 +405,10 @@ xAxis.setLabelCount(6, true)// True保证有刻度数量不变
                         val entity = Entry(x, data.thermal)
                         entity.data = data
                         volDataSet.addEntry(entity)
-                        Log.w("123", "addadata:$entity")
+                        Log.w("123", "add一个data:$entity")
                     }
                     "line" -> {
 第一条line
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (volDataSet == null) {
                             volDataSet = createSet("red")
                             lineData.addDataSet(volDataSet)
@@ -658,11 +419,7 @@ xAxis.setLabelCount(6, true)// True保证有刻度数量不变
                         volDataSet.addEntry(entity)
 
 第二条line
-                        var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的coordinatepoint
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
+                        var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标point
                         if (secondDataSet == null) {
                             secondDataSet = createSet("blue")
                             lineData.addDataSet(secondDataSet)
@@ -673,10 +430,6 @@ xAxis.setLabelCount(6, true)// True保证有刻度数量不变
                     }
                     else -> {
 第一条line
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (volDataSet == null) {
                             volDataSet = createSet("red")
                             lineData.addDataSet(volDataSet)
@@ -686,11 +439,7 @@ xAxis.setLabelCount(6, true)// True保证有刻度数量不变
                         volDataSet.addEntry(entity)
 
 第二条line
-                        var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的coordinatepoint
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
+                        var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标point
                         if (secondDataSet == null) {
                             secondDataSet = createSet("blue")
                             lineData.addDataSet(secondDataSet)
@@ -703,14 +452,10 @@ xAxis.setLabelCount(6, true)// True保证有刻度数量不变
 
                 lineData.notifyDataChanged()
                 chart.notifyDataSetChanged()
-                chart.setVisibleXRangeMinimum(getMinimum()) // SettingsShow/DisplayXaxis区间大小
-                chart.setVisibleXRangeMaximum(getMaximum()) // SettingsShow/DisplayXaxis区间大小
-                chart.xAxis.setLabelCount(getLabCount(volDataSet.entryCount), false) // True保证有刻度数量不变
+                chart.setVisibleXRangeMinimum(getMinimum()) // settingsShow/DisplayX轴区间大小
+                chart.setVisibleXRangeMaximum(getMaximum()) // settingsShow/DisplayX轴区间大小
+                chart.xAxis.setLabelCount(getLabCount(volDataSet.entryCount), false) // true保证有刻度数量不变
                 chart.moveViewToX(chart.xChartMax) // 移动到最右端
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (volDataSet.entryCount == 20) {
                     chart.zoom(100f, 1f, chart.xChartMax, 0f)
                 }
@@ -732,48 +477,37 @@ xAxis.setLabelCount(6, true)// True保证有刻度数量不变
     /**
 曲line样式
      */
-    /**
-     * Executes createset operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param label Parameter for operation (type: String)
-     *
-     */
     private fun createSet(label: String): LineDataSet {
         val set = LineDataSet(null, label)
-// Set.mode = LineDataSet.Mode.LINEAR
+//        set.mode = LineDataSet.Mode.LINEAR
         set.mode = LineDataSet.Mode.CUBIC_BEZIER
         set.setDrawFilled(false)
-set.fillDrawable = fillColor// Set填充颜色渐变
+set.fillDrawable = fillColor//set填充颜色渐变
         set.axisDependency = YAxis.AxisDependency.LEFT
 
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (label) {
             "red" -> {
                 set.color = lineRed // 曲line颜色
-                set.circleHoleColor = lineRed // Coordinate内部颜色
+                set.circleHoleColor = lineRed // 坐标内部颜色
             }
             "blue" -> {
                 set.color = lineBlue // 曲line颜色
-                set.circleHoleColor = lineBlue // Coordinate内部颜色
+                set.circleHoleColor = lineBlue // 坐标内部颜色
             }
             else -> {
                 set.color = lineGreen // 曲line颜色
-                set.circleHoleColor = lineGreen // Coordinate内部颜色
+                set.circleHoleColor = lineGreen // 坐标内部颜色
             }
         }
 
-        set.setCircleColor(whiteColors) // Coordinate颜色
-        set.circleHoleRadius = 4f // Coordinatepoint内部半径
-        set.circleRadius = 5f // Coordinatepoint外部半径
+        set.setCircleColor(whiteColors) // 坐标颜色
+        set.circleHoleRadius = 4f // 坐标point内部半径
+        set.circleRadius = 5f // 坐标point外部半径
         set.valueTextColor = Color.WHITE
         set.lineWidth = 2f
         set.fillAlpha = 200
         set.valueTextSize = 10f
-        set.setDrawValues(false) // Settings是否Show/Displaycoordinate值文本
+        set.setDrawValues(false) // settings是否Show/Display坐标值文本
         set.isHighlightEnabled = true // 允许辅助line
         set.setDrawHorizontalHighlightIndicator(false) // 水平辅助lineClose
         set.enableDashedHighlightLine(8f, 8f, 0f) // 辅助虚line
@@ -781,10 +515,6 @@ set.fillDrawable = fillColor// Set填充颜色渐变
     }
 
     /**
-/**
- * Executes 查询历史电压data operation with thermal imaging domain optimization.
- *
- */
 查询历史电压data(等待bluetooth传输历史Recordend后触发)
 时间区间: 现在时间 => 倒退到startEvent
      *
@@ -795,100 +525,38 @@ set.fillDrawable = fillColor// Set填充颜色渐变
 3: Listener查询
 4: load历史data后查询
      */
-    /**
-     * Executes queryLog functionality.
-     */
-    /**
-     * Executes querylog operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param action Parameter for operation (type: Int)
-     *
-     */
     private fun queryLog(action: Int) {
         startMonitor = false
         lifecycleScope.launch(Dispatchers.IO) {
-dataList.clear()// Cleardata
-// DataList = arrayListOf()
+dataList.clear()//cleardata
+//            dataList = arrayListOf()
             viewModel.queryLogThermals(selectTimeType = selectTimeType, action = action)
         }
     }
 
-    /**
-     * Executes resultVol functionality.
-     */
-    /**
-     * Executes resultvol operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param bean Parameter for operation (type: LogViewModel.ChartList)
-     *
-     */
     private fun resultVol(bean: LogViewModel.ChartList) {
-        /**
-         * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-         *
-         */
         dismissLoadingDialog()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (selectTimeType != 1 && bean.dataList.size > 0) {
             val logTime = TimeTool.showDateType(bean.dataList.last().createTime, selectTimeType)
             val nowTime = TimeTool.showDateType(System.currentTimeMillis(), selectTimeType)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (TextUtils.equals(logTime, nowTime)) {
 分时天,当前时间段没end，应当delete最新当前时间段data
                 bean.dataList.removeLast()
             }
         }
-// DataList = bean.dataList
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+//        dataList = bean.dataList
         if (latestTime == 0L) {
 图表无data需要update
-            /**
-             * Executes addentity operation with thermal imaging domain optimization.
-             *
-             */
             addEntity(bean.dataList)
         } else if (bean.dataList.size > 0 && latestTime < bean.dataList.last().createTime) {
 有新data再update
-            /**
-             * Executes addentity operation with thermal imaging domain optimization.
-             *
-             */
             addEntity(bean.dataList)
         }
     }
 
 整体refresh
-    /**
-     * Executes addEntity functionality.
-     */
-    /**
-     * Executes addentity operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param data Parameter for operation (type: ArrayList<ThermalEntity>)
-     *
-     */
     private fun addEntity(data: ArrayList<ThermalEntity>) {
-        /**
-         * Executes clearentity operation with thermal imaging domain optimization.
-         *
-         */
         clearEntity(data.size == 0)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (data.size == 0) {
             return
         }
@@ -896,11 +564,7 @@ dataList.clear()// Cleardata
         startTime = data[0].createTime
         chart.xAxis.valueFormatter = MyValueFormatter(startTime = startTime)
         val lineData: LineData = chart.data
-        var volDataSet = lineData.getDataSetByIndex(0) // 读取x为0的coordinatepoint
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        var volDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标point
         if (volDataSet == null) {
             volDataSet = createSet("vol")
             lineData.addDataSet(volDataSet)
@@ -908,19 +572,11 @@ dataList.clear()// Cleardata
         chart.xAxis.valueFormatter = MyValueFormatter(startTime = startTime, type = selectTimeType)
         val mv = MyMarkerView(this, R.layout.marker_lay)
         mv.chartView = chart
-        chart.marker = mv // SettingsclickcoordinateShow/Displaytip框
+        chart.marker = mv // settingsclick坐标Show/Displaytip框
         data.forEach {
             val x = (it.createTime - startTime).toFloat()
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (type) {
                 "point" -> {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (volDataSet == null) {
                         volDataSet = createSet("green")
                         lineData.addDataSet(volDataSet)
@@ -929,14 +585,10 @@ dataList.clear()// Cleardata
                     val entity = Entry(x, it.thermal)
                     entity.data = it
                     volDataSet.addEntry(entity)
-                    Log.w("123", "addadata:$entity")
+                    Log.w("123", "add一个data:$entity")
                 }
                 "line" -> {
 第一条line
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (volDataSet == null) {
                         volDataSet = createSet("red")
                         lineData.addDataSet(volDataSet)
@@ -947,11 +599,7 @@ dataList.clear()// Cleardata
                     volDataSet.addEntry(entity)
 
 第二条line
-                    var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的coordinatepoint
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
+                    var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标point
                     if (secondDataSet == null) {
                         secondDataSet = createSet("blue")
                         lineData.addDataSet(secondDataSet)
@@ -962,10 +610,6 @@ dataList.clear()// Cleardata
                 }
                 else -> {
 第一条line
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (volDataSet == null) {
                         volDataSet = createSet("red")
                         lineData.addDataSet(volDataSet)
@@ -975,11 +619,7 @@ dataList.clear()// Cleardata
                     volDataSet.addEntry(entity)
 
 第二条line
-                    var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的coordinatepoint
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
+                    var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标point
                     if (secondDataSet == null) {
                         secondDataSet = createSet("blue")
                         lineData.addDataSet(secondDataSet)
@@ -993,38 +633,20 @@ dataList.clear()// Cleardata
         Log.w("123", "曲linedata:${volDataSet.entryCount}个")
         lineData.notifyDataChanged()
         chart.notifyDataSetChanged()
-        chart.setVisibleXRangeMinimum(getMinimum()) // SettingsShow/DisplayXaxis区间大小
-        chart.setVisibleXRangeMaximum(getMaximum()) // SettingsShow/DisplayXaxis区间大小
+        chart.setVisibleXRangeMinimum(getMinimum()) // settingsShow/DisplayX轴区间大小
+        chart.setVisibleXRangeMaximum(getMaximum()) // settingsShow/DisplayX轴区间大小
         Log.i(
             "123",
             "list moveViewToX:${chart.xChartMax}, chart.highestVisibleX:${chart.highestVisibleX}",
         )
         chart.moveViewToX(chart.xChartMax) // 移动到最右端
-        chart.xAxis.setLabelCount(getLabCount(volDataSet.entryCount), false) // True保证有刻度数量不变
+        chart.xAxis.setLabelCount(getLabCount(volDataSet.entryCount), false) // true保证有刻度数量不变
         chart.zoom(100f, 1f, chart.xChartMax, 0f)
         startMonitor = true
     }
 
-    /**
-     * Executes clearEntity functionality.
-     */
-    /**
-     * Executes clearentity operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isEmpty Parameter for operation (type: Boolean)
-     *
-     */
     private fun clearEntity(isEmpty: Boolean) {
-        /**
-         * Initializes the chart component for thermal imaging operations.
-         *
-         */
         initChart()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isEmpty) {
             chart.clear()
         } else {
@@ -1032,36 +654,17 @@ dataList.clear()// Cleardata
         }
     }
 
-    /**
-     * Executes onvalueselected operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param e Parameter for operation (type: Entry?)
-     * @param h Parameter for operation (type: Highlight?)
-     *
-     */
     override fun onValueSelected(
         e: Entry?,
         h: Highlight?,
     ) {
     }
 
-    /**
-     * Executes onnothingselected operation with thermal imaging domain optimization.
-     *
-     */
     override fun onNothingSelected() {
     }
 
     /**
-xaxisdisplay多少个刻度
-     */
-    /**
-     * Retrieves the labcount with optimized performance for thermal imaging operations.
-     *
-     * @param
-     * @param count Parameter for operation (type: Int)
-     *
+x轴display多少个刻度
      */
     private fun getLabCount(count: Int): Int {
         return when (count) {
@@ -1074,9 +677,6 @@ xaxisdisplay多少个刻度
     }
 
 getdisplay最小区间
-    /**
-     * Retrieves minimum information.
-     */
     private fun getMinimum(): Float {
         val min =
             when (selectTimeType) {
@@ -1090,9 +690,6 @@ getdisplay最小区间
     }
 
 getdisplay最大区间，以最小区间的50倍
-    /**
-     * Retrieves maximum information.
-     */
     private fun getMaximum(): Float {
         return getMinimum() * 50f
     }

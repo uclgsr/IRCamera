@@ -24,23 +24,6 @@ import androidx.core.content.ContextCompat;
  * 描    述:
  * ================================================
  */
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for Utils operations.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class Utils {
 
     private static final String TAG = "RangeSeekBar";
@@ -51,13 +34,6 @@ public class Utils {
 
     public static void print(Object... logs) {
         StringBuilder stringBuilder = new StringBuilder();
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param log Parameter for operation (type: logs)
-         *
-         */
         for (Object log : logs) {
             stringBuilder.append(log);
         }
@@ -65,15 +41,7 @@ public class Utils {
     }
 
     public static Bitmap drawableToBitmap(Context context, int width, int height, int drawableId) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (context == null || width <= 0 || height <= 0 || drawableId == 0) return null;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return Utils.drawableToBitmap(width, height, context.getResources().getDrawable(drawableId, null));
         } else {
@@ -90,17 +58,9 @@ public class Utils {
     public static Bitmap drawableToBitmap(int width, int height, Drawable drawable) {
         Bitmap bitmap = null;
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (drawable instanceof BitmapDrawable) {
                 BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
                 bitmap = bitmapDrawable.getBitmap();
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (bitmap != null && bitmap.getHeight() > 0) {
                     Matrix matrix = new Matrix();
                     float scaleWidth = width * 1.0f / bitmap.getWidth();
@@ -135,15 +95,7 @@ public class Utils {
 
     public static void drawBitmap(Canvas canvas, Paint paint, Bitmap bmp, Rect rect) {
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (NinePatch.isNinePatchChunk(bmp.getNinePatchChunk())) {
-                /**
-                 * Executes drawninepath operation with thermal imaging domain optimization.
-                 *
-                 */
                 drawNinePath(canvas, bmp, rect);
                 return;
             }
@@ -153,16 +105,8 @@ public class Utils {
     }
 
     public static int dp2px(Context context, float dpValue) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (context == null || compareFloat(0f, dpValue) == 0) return 0;
         final float scale = context.getResources().getDisplayMetrics().density;
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (int) (dpValue * scale + 0.5f);
     }
 
@@ -178,10 +122,6 @@ public class Utils {
     public static int compareFloat(float a, float b) {
         int ta = Math.round(a * 1000000);
         int tb = Math.round(b * 1000000);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ta > tb) {
             return 1;
         } else if (ta < tb) {
@@ -201,17 +141,9 @@ public class Utils {
      * 0 is a == b
      */
     public static int compareFloat(float a, float b, int degree) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Math.abs(a-b) < Math.pow(0.1, degree)) {
             return 0;
         } else {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (a < b) {
                 return -1;
             } else {
@@ -238,10 +170,6 @@ public class Utils {
     }
 
     public static boolean verifyBitmap(Bitmap bitmap) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (bitmap == null || bitmap.isRecycled() || bitmap.getWidth() <= 0 || bitmap.getHeight() <= 0) {
             return false;
         }
@@ -249,10 +177,6 @@ public class Utils {
     }
 
     public static int getColor(Context context, @ColorRes int colorId) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (context != null) {
             return ContextCompat.getColor(context.getApplicationContext(), colorId);
         }

@@ -9,7 +9,6 @@
   ~ PURPOSE.
   ~ See the Mulan PSL v2 for more details. -->
 
-<!-- Relative positioning container layout -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -21,7 +20,6 @@
         android:layout_centerVertical="true"
         android:background="#19ffffff" />
 
-    <!-- Linear container layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

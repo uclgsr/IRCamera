@@ -24,27 +24,10 @@ import static org.opencv.highgui.HighGui.imshow;
 import static org.opencv.highgui.HighGui.waitKey;
 import static org.opencv.imgproc.Imgproc.*;
 
-/**
- * Specialized thermal imaging component providing OnlineMethod functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class OnlineMethod {
 
     static {
-// New OpenCVNativeLoader().init();
+//        new OpenCVNativeLoader().init();
         System.loadLibrary("opencv_java4");
     }
 
@@ -52,70 +35,42 @@ public class OnlineMethod {
         double[] temp = new double[256*192];
         int t = 0;
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < temperature.length; i++) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (i % 2 == 0) {
                 int value = (int)(temperature[i + 1] << 8) + (int)(temperature[i]);
                 double divid = 16.0;
                 double g = (value / 4.0) / divid - 273.15;
-                // Cout << g << " ";
+                //cout << g << " ";
                 temp[t] = g;
-                // Cout << temp[t] << " ";
+                //cout << temp[t] << " ";
                 t++;
             }
         }
         Mat im;
         im = new Mat(192, 256, CV_8UC2);
         im.put(0, 0, image);
-        /**
-         * Executes cvtcolor operation with thermal imaging domain optimization.
-         *
-         */
         cvtColor(im, im, COLOR_YUV2GRAY_YUYV);
-        /**
-         * Executes normalize operation with thermal imaging domain optimization.
-         *
-         */
         normalize(im, im, 0, 255, NORM_MINMAX);
         im.convertTo(im, CV_8UC1);
-        /**
-         * Executes applycolormap operation with thermal imaging domain optimization.
-         *
-         */
         applyColorMap(im,im,15);
         Mat tem;
         tem = new Mat(192, 256, CV_64FC1);
         tem.put(0,0,temp);
         tem.convertTo(tem, CV_8UC1);
 
-        // Mat kernal = Mat.ones(5, 5, CV_8UC1);
-        // Mat es = getStructuringElement(MORPH_ELLIPSE,new Size(9, 4));
+        //Mat kernal = Mat.ones(5, 5, CV_8UC1);
+        //Mat es = getStructuringElement(MORPH_ELLIPSE,new Size(9, 4));
         Mat thres_gray = new Mat();
-        // Mat temperature = Mat::zeros(192, 256, CV_8UC1);
-        // Threshold(temperature, thres_gray, 50, 255, THRESH_BINARY);
-        // Int thres = int(high_t);
-        // Src = 255 - src;
+        //Mat temperature = Mat::zeros(192, 256, CV_8UC1);
+        //threshold(temperature, thres_gray, 50, 255, THRESH_BINARY);
+        //int thres = int(high_t);
+        //src = 255 - src;
 
-        /**
-         * Executes threshold operation with thermal imaging domain optimization.
-         *
-         */
         threshold(tem, thres_gray, high_t, 255, THRESH_BINARY);
 
-        // Vector<vector<Point>> cnts;
+        //vector<vector<Point>> cnts;
         List<MatOfPoint> cnts = new ArrayList<MatOfPoint>();
         Mat hierarchy = new Mat();
-        /**
-         * Executes findcontours operation with thermal imaging domain optimization.
-         *
-         */
         findContours(thres_gray, cnts, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
         MatOfPoint2f approxCurve = new MatOfPoint2f();
         List<Rect> rects = new ArrayList<Rect>();
@@ -129,52 +84,28 @@ public class OnlineMethod {
         String R = Integer.toString(rc&255,2);
         int r = Integer.parseInt(R,2);
         Scalar color = new Scalar(b, g, r);
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < cnts.size(); i++)
         {
             MatOfPoint2f contour2f = new MatOfPoint2f(cnts.get(i).toArray());
-            /**
-             * Executes approxpolydp operation with thermal imaging domain optimization.
-             *
-             */
             approxPolyDP(contour2f, approxCurve, 0, true);
             MatOfPoint points = new MatOfPoint(approxCurve.toArray());
             Rect rect = boundingRect(points);
             double area = contourArea(points);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if(area > 300){
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if(type == 1){
-                    /**
-                     * Executes drawcontours operation with thermal imaging domain optimization.
-                     *
-                     */
                     drawContours(im, cnts, i, color, 1, 8);
                 }else{
-                    /**
-                     * Executes rectangle operation with thermal imaging domain optimization.
-                     *
-                     */
                     rectangle(im, rect.tl(), rect.br(),color, 1, 8, 0);
                 }
 
             }
 
-            // MinEnclosingCircle(cnts[i], center[i], radius[i]);
+            //minEnclosingCircle(cnts[i], center[i], radius[i]);
         }
-        // Cv::Mat imageContours = cv::Mat::zeros(cv::Size(W, H), CV_8UC1);
-        // Bezier
-        // Mat drawing = Mat::zeros(image.size(), CV_8UC3);imshow("Contours", im)
-        // WaitKey(0);
+        //cv::Mat imageContours = cv::Mat::zeros(cv::Size(W, H), CV_8UC1);
+        //Bezier
+        //Mat drawing = Mat::zeros(image.size(), CV_8UC3);imshow("Contours", im)
+        // waitKey(0);
         return im;
 
     }
@@ -182,22 +113,14 @@ public class OnlineMethod {
         double[] temp = new double[256*192];
         int t = 0;
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < temperature.length; i++) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (i % 2 == 0) {
                 int value = (int)(temperature[i + 1] << 8) + (int)(temperature[i]);
                 double divid = 16.0;
                 double g = (value / 4.0) / divid - 273.15;
-                // Cout << g << " ";
+                //cout << g << " ";
                 temp[t] = g;
-                // Cout << temp[t] << " ";
+                //cout << temp[t] << " ";
                 t++;
             }
         }
@@ -207,17 +130,9 @@ public class OnlineMethod {
         tem.convertTo(tem, CV_8UC1);
 
         Mat thres_gray = new Mat();
-        /**
-         * Executes threshold operation with thermal imaging domain optimization.
-         *
-         */
         threshold(tem, thres_gray, low_t, 255, 4);
         List<MatOfPoint> cnts = new ArrayList<MatOfPoint>();
         Mat hierarchy = new Mat();
-        /**
-         * Executes findcontours operation with thermal imaging domain optimization.
-         *
-         */
         findContours(thres_gray, cnts, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
         MatOfPoint2f approxCurve = new MatOfPoint2f();
         List<Rect> rects = new ArrayList<Rect>();
@@ -230,41 +145,17 @@ public class OnlineMethod {
         String R = Integer.toString(rc&255,2);
         int r = Integer.parseInt(R,2);
         Scalar color = new Scalar(b, g, r);
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < cnts.size(); i++) {
             MatOfPoint2f contour2f = new MatOfPoint2f(cnts.get(i).toArray());
-            /**
-             * Executes approxpolydp operation with thermal imaging domain optimization.
-             *
-             */
             approxPolyDP(contour2f, approxCurve, 0, true);
             MatOfPoint points = new MatOfPoint(approxCurve.toArray());
             Rect rect = boundingRect(points);
 
             double area = contourArea(points);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (area > 300) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if(type == 1){
-                    /**
-                     * Executes drawcontours operation with thermal imaging domain optimization.
-                     *
-                     */
                     drawContours(src, cnts, i, color, 1, 8);
                 }else{
-                    /**
-                     * Executes rectangle operation with thermal imaging domain optimization.
-                     *
-                     */
                     rectangle(src, rect.tl(), rect.br(),color, 1, 8, 0);
                 }
             }

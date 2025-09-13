@@ -24,49 +24,16 @@ import com.topdon.lib.ui.R as UiR
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for IndicateView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class IndicateView : View {
     var itemCount: Int = 0
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             field = value
-            /**
-             * Executes requestlayout operation with thermal imaging domain optimization.
-             *
-             */
             requestLayout()
         }
 
     var currentIndex: Int = 0
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             field = value
-            /**
-             * Executes invalidate operation with thermal imaging domain optimization.
-             *
-             */
             invalidate()
         }
 
@@ -81,46 +48,12 @@ class IndicateView : View {
     private val defaultPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val selectPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     * @param defStyleRes Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
         context,
         attrs,
@@ -134,38 +67,15 @@ class IndicateView : View {
         selectPaint.color = color
     }
 
-    /**
-     * Executes onmeasure operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param widthMeasureSpec Parameter for operation (type: Int)
-     * @param heightMeasureSpec Parameter for operation (type: Int)
-     *
-     */
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
     ) {
-        /**
-         * Configures the measureddimension with validation and thermal imaging optimization.
-         *
-         */
         setMeasuredDimension(itemWidth * itemCount + itemMargin * (itemCount - 1), itemHeight)
     }
 
-    /**
-     * Executes ondraw operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     *
-     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in 0 until itemCount) {
             val left = i * (itemWidth + itemMargin).toFloat()
             val right = left + itemWidth

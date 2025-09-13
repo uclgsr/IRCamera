@@ -24,23 +24,9 @@ import java.lang.annotation.RetentionPolicy;
  * 描    述:
  * ================================================
  */
-/**
- * Specialized thermal imaging component providing VerticalRangeSeekBar functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class VerticalRangeSeekBar extends RangeSeekBar {
 
-    // Text direction of VerticalRangeSeekBar. include indicator and tickMark
+    //text direction of VerticalRangeSeekBar. include indicator and tickMark
 
     /**
      * @hide
@@ -53,7 +39,7 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
     public final static int TEXT_DIRECTION_VERTICAL = 1;
     public final static int TEXT_DIRECTION_HORIZONTAL = 2;
 
-    // Direction of VerticalRangeSeekBar
+    //direction of VerticalRangeSeekBar
 
     /**
      * @hide
@@ -71,37 +57,13 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
 
     private int maxTickMarkWidth;
 
-    /**
-     * Executes verticalrangeseekbar operation with thermal imaging domain optimization.
-     *
-     */
     public VerticalRangeSeekBar(Context context) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this(context, null);
     }
 
-    /**
-     * Executes verticalrangeseekbar operation with thermal imaging domain optimization.
-     *
-     */
     public VerticalRangeSeekBar(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
-        /**
-         * Initializes the attrs component for thermal imaging operations.
-         *
-         */
         initAttrs(attrs);
-        /**
-         * Initializes the seekbar component for thermal imaging operations.
-         *
-         */
         initSeekBar(attrs);
     }
 
@@ -138,10 +100,6 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
          * MeasureSpec.UNSPECIFIED 是未指定尺寸
          */
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (widthMode == MeasureSpec.EXACTLY) {
             widthSize = MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY);
         } else if (widthMode == MeasureSpec.AT_MOST && getParent() instanceof ViewGroup
@@ -149,10 +107,6 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
             widthSize = MeasureSpec.makeMeasureSpec(((ViewGroup) getParent()).getMeasuredHeight(), MeasureSpec.AT_MOST);
         } else {
             int heightNeeded;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (getGravity() == Gravity.CENTER) {
                 heightNeeded = 2 * getProgressTop() + getProgressHeight();
             } else {
@@ -165,10 +119,6 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (orientation == DIRECTION_LEFT) {
             canvas.rotate(-90);
             canvas.translate(-getHeight(), 0);
@@ -181,37 +131,17 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
 
     @Override
     protected void onDrawTickMark(Canvas canvas, Paint paint) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (getTickMarkTextArray() != null) {
             int arrayLength = getTickMarkTextArray().length;
             int trickPartWidth = getProgressWidth() / (arrayLength - 1);
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0; i < arrayLength; i++) {
                 final String text2Draw = getTickMarkTextArray()[i].toString();
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (TextUtils.isEmpty(text2Draw)) continue;
                 paint.getTextBounds(text2Draw, 0, text2Draw.length(), tickMarkTextRect);
                 paint.setColor(getTickMarkTextColor());
-                // 平分Show/Display
+                //平分Show/Display
                 float x;
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (getTickMarkMode() == TRICK_MARK_MODE_OTHER) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (getTickMarkGravity() == TICK_MARK_GRAVITY_RIGHT) {
                         x = getProgressLeft() + i * trickPartWidth - tickMarkTextRect.width();
                     } else if (getTickMarkGravity() == TICK_MARK_GRAVITY_CENTER) {
@@ -222,22 +152,14 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
                 } else {
                     float num = Utils.parseFloat(text2Draw);
                     SeekBarState[] states = getRangeSeekBarState();
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (Utils.compareFloat(num, states[0].value) != -1 && Utils.compareFloat(num, states[1].value) != 1 && (getSeekBarMode() == SEEKBAR_MODE_RANGE)) {
                         paint.setColor(getTickMarkInRangeTextColor());
                     }
-                    // 按实际比例Show/Display
+                    //按实际比例Show/Display
                     x = getProgressLeft() + getProgressWidth() * (num - getMinProgress()) / (getMaxProgress() - getMinProgress())
                             - tickMarkTextRect.width() / 2f;
                 }
                 float y;
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (getTickMarkLayoutGravity() == Gravity.TOP) {
                     y = getProgressTop() - getTickMarkTextMargin();
                 } else {
@@ -246,33 +168,17 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
                 int degrees = 0;
                 float rotateX = (x + tickMarkTextRect.width() / 2f);
                 float rotateY = (y - tickMarkTextRect.height() / 2f);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (tickMarkDirection == TEXT_DIRECTION_VERTICAL) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (orientation == DIRECTION_LEFT) {
                         degrees = 90;
                     } else if (orientation == DIRECTION_RIGHT) {
                         degrees = -90;
                     }
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (degrees != 0) {
                     canvas.rotate(degrees, rotateX, rotateY);
                 }
                 canvas.drawText(text2Draw, x, y, paint);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (degrees != 0) {
                     canvas.rotate(-degrees, rotateX, rotateY);
                 }
@@ -283,28 +189,12 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
 
     @Override
     protected int getTickMarkRawHeight() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (maxTickMarkWidth > 0) return getTickMarkTextMargin() + maxTickMarkWidth;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (getTickMarkTextArray() != null && getTickMarkTextArray().length > 0) {
             int arrayLength = getTickMarkTextArray().length;
             maxTickMarkWidth = Utils.measureText(String.valueOf(getTickMarkTextArray()[0]), getTickMarkTextSize()).width();
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 1; i < arrayLength; i++) {
                 int width = Utils.measureText(String.valueOf(getTickMarkTextArray()[i]), getTickMarkTextSize()).width();
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (maxTickMarkWidth < width) {
                     maxTickMarkWidth = width;
                 }
@@ -320,17 +210,9 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
      */
     public void setNoNegativeNumber(Boolean noNegativeNumber){
         this.noNegativeNumber = noNegativeNumber;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (leftSB!=null){
             leftSB.setNoNegativeNumber(noNegativeNumber);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rightSB!=null){
             rightSB.setNoNegativeNumber(noNegativeNumber);
         }
@@ -350,10 +232,6 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
 
     @Override
     protected float getEventX(MotionEvent event) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (orientation == DIRECTION_LEFT) {
             return getHeight() - event.getY();
         } else {
@@ -363,10 +241,6 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
 
     @Override
     protected float getEventY(MotionEvent event) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (orientation == DIRECTION_LEFT) {
             return event.getX();
         } else {
@@ -375,26 +249,10 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
     }
 
     public void drawIndPath(boolean draw){
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (leftSB!= null && leftSB instanceof  VerticalSeekBar){
-            /**
-             * Retrieves the leftseekbar with optimized performance for thermal imaging operations.
-             *
-             */
             getLeftSeekBar().setDrawIndPathBg(draw);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rightSB!=null && rightSB instanceof  VerticalSeekBar){
-            /**
-             * Retrieves the rightseekbar with optimized performance for thermal imaging operations.
-             *
-             */
             getRightSeekBar().setDrawIndPathBg(draw);
         }
     }
@@ -405,18 +263,10 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
      * @return left seek bar
      */
     public VerticalSeekBar getLeftSeekBar() {
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (VerticalSeekBar) leftSB;
     }
 
     public VerticalSeekBar getRightSeekBar() {
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (VerticalSeekBar) rightSB;
     }
 

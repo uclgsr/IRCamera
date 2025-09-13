@@ -46,62 +46,17 @@ import kotlin.concurrent.thread
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with CameraView functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     /**预览 */
     lateinit var mTextureView: TextureView
     private lateinit var binding: CameraLayBinding
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        /**
-         * Initializes the view component for thermal imaging operations.
-         *
-         */
         initView()
     }
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -117,41 +72,18 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
         mTextureView.alpha = 0.4f
         lis = ScaleGestureDetector(context, this)
 
-        /**
-         * Executes onresumeview operation with thermal imaging domain optimization.
-         *
-         */
         onResumeView()
     }
 
-    /**
-     * Executes ondetachedfromwindow operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         mCameraDevice?.close()
     }
 
-    /**
-     * Executes ontouchevent operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: MotionEvent)
-     *
-     */
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isScale && event.action != MotionEvent.ACTION_UP) {
             return lis.onTouchEvent(event)
         }
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 scaleW = mTextureView.width * (scale - 1) / 2f
@@ -166,27 +98,11 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                 
                 moveX = event.x - startX
                 moveY = event.y - startY
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (moveX - scaleW < 0f) moveX = 0f + scaleW
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (moveY - scaleH < 0f) moveY = 0f + scaleH
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (moveX + scaleW > parentViewW - mTextureView.width) {
                     moveX = parentViewW - mTextureView.width - scaleW
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (moveY + scaleH > parentViewH - mTextureView.height) {
                     moveY = parentViewH - mTextureView.height - scaleH
                 }
@@ -200,13 +116,6 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
         return lis.onTouchEvent(event)
     }
 
-    /**
-     * Executes onscale operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param detector Parameter for operation (type: ScaleGestureDetector)
-     *
-     */
     override fun onScale(detector: ScaleGestureDetector): Boolean {
         
         isScale = true
@@ -219,25 +128,11 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
         return true
     }
 
-    /**
-     * Executes onscalebegin operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param detector Parameter for operation (type: ScaleGestureDetector)
-     *
-     */
     override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
         isScale = true
         return true
     }
 
-    /**
-     * Executes onscaleend operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param detector Parameter for operation (type: ScaleGestureDetector)
-     *
-     */
     override fun onScaleEnd(detector: ScaleGestureDetector) {
     }
 
@@ -254,7 +149,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
 
     private lateinit var lis: ScaleGestureDetector
 
-// // /// /// /// /// //
+// ////////////////
     /**cameraPermission请求标识 */
     private val REQUEST_CAMERA_CODE = 0x100
 
@@ -294,33 +189,15 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     /**cameradevicestateCallback */
     private val mStateCallback: CameraDevice.StateCallback =
         object : CameraDevice.StateCallback() {
-            /**
-             * Executes onopened operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param camera Camera configuration or reference (type: CameraDevice)
-             *
-             */
             override fun onOpened(
                 @NonNull camera: CameraDevice,
             ) {
                 
                 mCameraDevice = camera
                 
-                /**
-                 * Executes takepreview operation with thermal imaging domain optimization.
-                 *
-                 */
                 takePreview()
             }
 
-            /**
-             * Executes ondisconnected operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param camera Camera configuration or reference (type: CameraDevice)
-             *
-             */
             override fun onDisconnected(
                 @NonNull camera: CameraDevice,
             ) {
@@ -329,14 +206,6 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                 mCameraDevice = null
             }
 
-            /**
-             * Executes onerror operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param camera Camera configuration or reference (type: CameraDevice)
-             * @param error Parameter for operation (type: Int)
-             *
-             */
             override fun onError(
                 @NonNull camera: CameraDevice,
                 error: Int,
@@ -350,12 +219,8 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     /**
      * 预览
      */
-    /**
-     * Executes takepreview operation with thermal imaging domain optimization.
-     *
-     */
     private fun takePreview() {
-// MTextureView.rotation = 270f
+//        mTextureView.rotation = 270f
         mTextureView.rotation = 0f
         // Get/RetrieveSurfaceTexture
         val surfaceTexture = mTextureView.surfaceTexture
@@ -372,22 +237,11 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
             
             @Suppress("DEPRECATION")
             mCameraDevice!!.createCaptureSession(
-                /**
-                 * Executes listof operation with thermal imaging domain optimization.
-                 *
-                 */
                 listOf(
                     previewSurface,
                     mImageReader.surface,
                 ),
                 object : CameraCaptureSession.StateCallback() {
-                    /**
-                     * Executes onconfigured operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param session Parameter for operation (type: CameraCaptureSession)
-                     *
-                     */
                     override fun onConfigured(
                         @NonNull session: CameraCaptureSession,
                     ) {
@@ -407,13 +261,6 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                         }
                     }
 
-                    /**
-                     * Executes onconfigurefailed operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param session Parameter for operation (type: CameraCaptureSession)
-                     *
-                     */
                     override fun onConfigureFailed(
                         @NonNull session: CameraCaptureSession,
                     ) {
@@ -433,15 +280,6 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     private fun onResumeView() {
         mTextureView.surfaceTextureListener =
             object : TextureView.SurfaceTextureListener {
-                /**
-                 * Executes onsurfacetextureavailable operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param surface Parameter for operation (type: SurfaceTexture)
-                 * @param width Parameter for operation (type: Int)
-                 * @param height Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onSurfaceTextureAvailable(
                     surface: SurfaceTexture,
                     width: Int,
@@ -450,24 +288,11 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                     
                     
                     Log.w("123", "width:$width, height:$height")
-                    // W:h = 1 / 1.33
-                    /**
-                     * Configures the upcamera with validation and thermal imaging optimization.
-                     *
-                     */
+                    // w:h = 1 / 1.33
                     setUpCamera(width, height)
-// OpenCamera()
+//                openCamera()
                 }
 
-                /**
-                 * Executes onsurfacetexturesizechanged operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param surface Parameter for operation (type: SurfaceTexture)
-                 * @param width Parameter for operation (type: Int)
-                 * @param height Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onSurfaceTextureSizeChanged(
                     surface: SurfaceTexture,
                     width: Int,
@@ -476,25 +301,11 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                     
                 }
 
-                /**
-                 * Executes onsurfacetexturedestroyed operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param surface Parameter for operation (type: SurfaceTexture)
-                 *
-                 */
                 override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
                     // SurfaceTexture destroy
                     return false
                 }
 
-                /**
-                 * Executes onsurfacetextureupdated operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param surface Parameter for operation (type: SurfaceTexture)
-                 *
-                 */
                 override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
                     // SurfaceTexture update
                 }
@@ -507,10 +318,6 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     @SuppressLint("MissingPermission")
     /**
      * Executes opencamera functionality.
-     */
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
      */
     fun openCamera() {
         // Get/Retrieve照camera管理者
@@ -528,9 +335,6 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
      * @param width 宽度
      * @param height 高度
      */
-    /**
-     * Sets upcamera configuration.
-     */
     private fun setUpCamera(
         width: Int,
         height: Int,
@@ -541,33 +345,18 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
         val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         try {
             
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (cameraId in cameraManager.cameraIdList) {
                 
                 val cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId)
                 // Get/Retrieve摄像头是前置还是后置
                 val facing = cameraCharacteristics.get(CameraCharacteristics.LENS_FACING)
                 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (null != facing && CameraCharacteristics.LENS_FACING_FRONT == facing) continue
                 // Get/RetrieveStreamConfigurationMap，管理摄像头支持的所有输出format和尺寸
                 val map =
                     cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)!!
                 
                 mPreviewSize =
-                    /**
-                     * Retrieves the optimalsize with optimized performance for thermal imaging operations.
-                     *
-                     * @param
-                     * @param SurfaceTexture Parameter for operation (type: :class.java)
-                     *
-                     */
                     getOptimalSize(
                         map.getOutputSizes(SurfaceTexture::class.java),
                         width,
@@ -580,16 +369,12 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                 mCaptureSize = Size(w, h)
                 Log.w("123", "w:${sizes[0].width}, h:${sizes[0].height}")
                 Log.w("123", "Adjust后w:$w, h:$h")
-// MCaptureSize = Size(1000, 1000)
-// MCaptureSize =
+//                mCaptureSize = Size(1000, 1000)
+//                mCaptureSize =
 //                    Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.JPEG))) { lhs, rhs ->
-// Java.lang.Long.signum(lhs.getWidth() * lhs.getHeight() - rhs.getHeight() * rhs.getWidth())
+//                        java.lang.Long.signum(lhs.getWidth() * lhs.getHeight() - rhs.getHeight() * rhs.getWidth())
 //                    }
                 
-                /**
-                 * Configures the upimagereader with validation and thermal imaging optimization.
-                 *
-                 */
                 setupImageReader()
                 
                 mCameraId = cameraId
@@ -607,9 +392,6 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
      * @param height 高
      * @return 最接近width和height的size
      */
-    /**
-     * Retrieves optimalsize information.
-     */
     private fun getOptimalSize(
         sizeMap: Array<Size>,
         width: Int,
@@ -618,29 +400,13 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
         
         val sizeList: MutableList<Size> = ArrayList()
         
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (option in sizeMap) {
             
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (width > height) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (option.width > width && option.height > height) {
                     sizeList.add(option)
                 }
             } else {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (option.width > height && option.height > width) {
                     sizeList.add(option)
                 }
@@ -661,10 +427,6 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     /**
      * settingsImageReader
      */
-    /**
-     * Configures the upimagereader with validation and thermal imaging optimization.
-     *
-     */
     private fun setupImageReader() {
         // 2代表ImageReader中最多可以Get/Retrieve两帧image流
         mImageReader =
@@ -684,7 +446,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
             
             runOnUiThread { // Get/Retrieve字节buffer区
                 val buffer: ByteBuffer = image.planes[0].buffer
-                // Createarray之前调用此method，restoredefaultsettings
+                // createarray之前调用此method，restore默认settings
                 buffer.rewind()
                 
                 val bytes = ByteArray(buffer.remaining())
@@ -693,10 +455,6 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                 // Get/RetrieveBitmapimage
                 val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                 // Show/Display
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (null != bitmap) {
                     val h = bitmap.height
                     val w = bitmap.width
@@ -709,12 +467,8 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                 }
                 flag++
                 thread {
-                    /**
-                     * Executes while operation with thermal imaging domain optimization.
-                     *
-                     */
                     while (flag < 3) {
-// Delay(100)
+//                        delay(100)
                         Thread.sleep(100)
                     }
                     flag = 0
@@ -731,10 +485,6 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
         /**image */
         private val mImage: Image = image
 
-        /**
-         * Executes run operation with thermal imaging domain optimization.
-         *
-         */
         override fun run() {
 //            ImageSaverTool().save(mImage)
             flag++

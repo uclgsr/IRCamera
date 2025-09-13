@@ -12,18 +12,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * Specialized thermal imaging component providing QualityOfServiceManager functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Quality of Service (QoS) manager for adaptive network performance optimization
+ * Monitors bandwidth, implements adaptive streaming, and manages data priority queuing
  */
 class QualityOfServiceManager(
     private val context: Context,
@@ -43,9 +33,9 @@ class QualityOfServiceManager(
     private val qosScope = CoroutineScope(Dispatchers.IO + qosJob)
 
     private val isMonitoring = AtomicBoolean(false)
-    private val currentBandwidth = AtomicLong(0) // Bytes per second
-    private val networkLatency = AtomicLong(0) // Milliseconds
-    private val packetLossRate = AtomicLong(0) // Percentage * 100
+    private val currentBandwidth = AtomicLong(0) // bytes per second
+    private val networkLatency = AtomicLong(0) // milliseconds
+    private val packetLossRate = AtomicLong(0) // percentage * 100
 
     // Priority queues for different data types
     private val criticalQueue = ConcurrentLinkedQueue<QoSDataPacket>()
@@ -66,130 +56,30 @@ class QualityOfServiceManager(
         val metadata: Map<String, String> = emptyMap(),
     )
 
-/**
- * Specialized thermal imaging component providing DataType functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     enum class DataType(val typeName: String) {
-        /**
-         * Executes gsr operation with thermal imaging domain optimization.
-         *
-         */
         GSR("gsr"),
-        /**
-         * Executes thermal operation with thermal imaging domain optimization.
-         *
-         */
         THERMAL("thermal"),
-        /**
-         * Executes video metadata operation with thermal imaging domain optimization.
-         *
-         */
         VIDEO_METADATA("video_metadata"),
-        /**
-         * Executes control message operation with thermal imaging domain optimization.
-         *
-         */
         CONTROL_MESSAGE("control"),
-        /**
-         * Executes file chunk operation with thermal imaging domain optimization.
-         *
-         */
         FILE_CHUNK("file_chunk"),
-        /**
-         * Executes heartbeat operation with thermal imaging domain optimization.
-         *
-         */
         HEARTBEAT("heartbeat"),
     }
 
-/**
- * Specialized thermal imaging component providing Priority functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     enum class Priority(val level: Int) {
-        /**
-         * Executes critical operation with thermal imaging domain optimization.
-         *
-         */
         CRITICAL(4), // Control messages, heartbeats
-        /**
-         * Executes high operation with thermal imaging domain optimization.
-         *
-         */
         HIGH(3), // GSR data, session events
-        /**
-         * Executes normal operation with thermal imaging domain optimization.
-         *
-         */
         NORMAL(2), // Thermal data, video metadata
-        /**
-         * Executes low operation with thermal imaging domain optimization.
-         *
-         */
         LOW(1), // File transfers, logs
     }
 
-/**
- * Specialized thermal imaging component providing CompressionLevel functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     enum class CompressionLevel(val factor: Float) {
-        /**
-         * Executes none operation with thermal imaging domain optimization.
-         *
-         */
         NONE(1.0f),
-        /**
-         * Executes low operation with thermal imaging domain optimization.
-         *
-         */
         LOW(0.9f),
-        /**
-         * Executes medium operation with thermal imaging domain optimization.
-         *
-         */
         MEDIUM(0.7f),
-        /**
-         * Executes high operation with thermal imaging domain optimization.
-         *
-         */
         HIGH(0.5f),
-        /**
-         * Executes maximum operation with thermal imaging domain optimization.
-         *
-         */
         MAXIMUM(0.3f),
     }
 
-/**
- * Specialized thermal imaging component providing NetworkTier functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     enum class NetworkTier {
         POOR, // < 100KB/s
         LOW, // 100KB/s - 500KB/s
@@ -199,9 +89,9 @@ class QualityOfServiceManager(
     }
 
     data class NetworkQualityMetrics(
-        val bandwidth: Long, // Bytes per second
-        val latency: Long, // Milliseconds
-        val packetLoss: Float, // Percentage
+        val bandwidth: Long, // bytes per second
+        val latency: Long, // milliseconds
+        val packetLoss: Float, // percentage
         val networkTier: NetworkTier,
         val recommendedBatchSize: Int,
         val recommendedCompression: CompressionLevel,
@@ -216,20 +106,8 @@ class QualityOfServiceManager(
      *
      * @throws IllegalStateException if QoS monitoring is already active
      */
-    /**
-     * Executes startqosmonitoring operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun startQoSMonitoring() =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isMonitoring.getAndSet(true)) {
                 Log.w(TAG, "QoS monitoring already active")
                 return@withContext
@@ -238,31 +116,15 @@ class QualityOfServiceManager(
             Log.d(TAG, "Starting QoS monitoring")
 
             // Start bandwidth monitoring
-            /**
-             * Executes startbandwidthmonitoring operation with thermal imaging domain optimization.
-             *
-             */
             startBandwidthMonitoring()
 
             // Start latency measurement
-            /**
-             * Executes startlatencymonitoring operation with thermal imaging domain optimization.
-             *
-             */
             startLatencyMonitoring()
 
             // Start adaptive processing
-            /**
-             * Executes startadaptiveprocessing operation with thermal imaging domain optimization.
-             *
-             */
             startAdaptiveProcessing()
 
             // Start priority queue processing
-            /**
-             * Executes startpriorityqueueprocessor operation with thermal imaging domain optimization.
-             *
-             */
             startPriorityQueueProcessor()
         }
 
@@ -276,23 +138,11 @@ class QualityOfServiceManager(
                 currentBandwidth.set(bandwidth)
 
                 // Update network tier based on bandwidth
-                /**
-                 * Executes updatenetworktier operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateNetworkTier(bandwidth)
 
                 // Adjust compression based on bandwidth
-                /**
-                 * Executes adjustcompressionlevel operation with thermal imaging domain optimization.
-                 *
-                 */
                 adjustCompressionLevel(bandwidth)
 
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(BANDWIDTH_MONITOR_INTERVAL)
             }
         }
@@ -301,24 +151,12 @@ class QualityOfServiceManager(
     /**
      * Monitor network latency
      */
-    /**
-     * Executes startlatencymonitoring operation with thermal imaging domain optimization.
-     *
-     */
     private fun startLatencyMonitoring() {
         qosScope.launch {
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (isMonitoring.get()) {
                 val latency = measureNetworkLatency()
                 networkLatency.set(latency)
 
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(5000L) // Measure latency every 5 seconds
             }
         }
@@ -335,17 +173,9 @@ class QualityOfServiceManager(
             return@withContext when {
                 networkCapabilities == null -> 0L
                 networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
-                    /**
-                     * Executes measurewifibandwidth operation with thermal imaging domain optimization.
-                     *
-                     */
                     measureWiFiBandwidth()
                 }
                 networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
-                    /**
-                     * Executes measurecellularbandwidth operation with thermal imaging domain optimization.
-                     *
-                     */
                     measureCellularBandwidth()
                 }
                 else -> 1024 * 1024L // 1MB/s default
@@ -373,10 +203,6 @@ class QualityOfServiceManager(
             }
 
         // Convert Mbps to bytes per second and apply signal quality factor
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (linkSpeed * 1024 * 1024 / 8 * signalQuality).toLong()
     }
 
@@ -403,30 +229,14 @@ class QualityOfServiceManager(
         withContext(Dispatchers.IO) {
             val samples = mutableListOf<Long>()
 
-            /**
-             * Executes repeat operation with thermal imaging domain optimization.
-             *
-             */
             repeat(NETWORK_LATENCY_SAMPLES) {
                 val startTime = System.currentTimeMillis()
 
                 try {
                     // Send ping message to PC Controller
                     val pingMessage =
-                        /**
-                         * Executes jsonobject operation with thermal imaging domain optimization.
-                         *
-                         */
                         JSONObject().apply {
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put("type", "qos_ping")
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put("timestamp", startTime)
                         }
 
@@ -440,10 +250,6 @@ class QualityOfServiceManager(
                     samples.add(2000L) // Timeout value
                 }
 
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(100L) // Small delay between samples
             }
 
@@ -487,15 +293,7 @@ class QualityOfServiceManager(
     private fun startAdaptiveProcessing() {
         qosScope.launch {
             while (isMonitoring.get()) {
-                /**
-                 * Executes adaptparameters operation with thermal imaging domain optimization.
-                 *
-                 */
                 adaptParameters()
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(BANDWIDTH_MONITOR_INTERVAL)
             }
         }
@@ -519,10 +317,6 @@ class QualityOfServiceManager(
             }
 
         // Reduce batch size if congestion detected
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (utilization > CONGESTION_THRESHOLD) {
             adaptiveBatchSize = (adaptiveBatchSize * 0.7).toInt()
         }
@@ -538,10 +332,6 @@ class QualityOfServiceManager(
         if (availableBandwidth <= 0) return 1.0f
 
         val usedBandwidth = calculateCurrentUsage()
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (usedBandwidth.toFloat() / availableBandwidth.toFloat()).coerceAtMost(1.0f)
     }
 
@@ -566,10 +356,6 @@ class QualityOfServiceManager(
         metadata: Map<String, String> = emptyMap(),
     ) {
         val packet =
-            /**
-             * Executes qosdatapacket operation with thermal imaging domain optimization.
-             *
-             */
             QoSDataPacket(
                 data = data,
                 dataType = dataType,
@@ -580,10 +366,6 @@ class QualityOfServiceManager(
             )
 
         val targetQueue =
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (priority) {
                 Priority.CRITICAL -> criticalQueue
                 Priority.HIGH -> highPriorityQueue
@@ -592,10 +374,6 @@ class QualityOfServiceManager(
             }
 
         // Drop oldest packets if queue is full
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (targetQueue.size >= PRIORITY_QUEUE_SIZE) {
             val dropped = targetQueue.poll()
             Log.w(TAG, "Dropped packet due to queue overflow: ${dropped?.dataType}")
@@ -610,15 +388,7 @@ class QualityOfServiceManager(
     private fun startPriorityQueueProcessor() {
         qosScope.launch {
             while (isMonitoring.get()) {
-                /**
-                 * Executes processpriorityqueues operation with thermal imaging domain optimization.
-                 *
-                 */
                 processPriorityQueues()
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(50L) // Process queues every 50ms
             }
         }
@@ -632,57 +402,29 @@ class QualityOfServiceManager(
         val maxBatchSize = adaptiveBatchSize
 
         // Process critical queue first (always immediate)
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (criticalQueue.isNotEmpty() && batch.size < maxBatchSize) {
             criticalQueue.poll()?.let { batch.add(it) }
         }
 
         // Fill remaining batch with high priority
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (highPriorityQueue.isNotEmpty() && batch.size < maxBatchSize) {
             highPriorityQueue.poll()?.let { batch.add(it) }
         }
 
         // Fill remaining batch with normal priority
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (normalPriorityQueue.isNotEmpty() && batch.size < maxBatchSize) {
             normalPriorityQueue.poll()?.let { batch.add(it) }
         }
 
         // Fill remaining batch with low priority (if bandwidth allows)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (calculateBandwidthUtilization() < CONGESTION_THRESHOLD) {
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (lowPriorityQueue.isNotEmpty() && batch.size < maxBatchSize) {
                 lowPriorityQueue.poll()?.let { batch.add(it) }
             }
         }
 
         // Send batch if not empty
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (batch.isNotEmpty()) {
-            /**
-             * Executes sendbatch operation with thermal imaging domain optimization.
-             *
-             */
             sendBatch(batch)
         }
     }
@@ -713,10 +455,6 @@ class QualityOfServiceManager(
 
         // Apply compression based on data type and compression level
         return batch.map { packet ->
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (packet.dataType) {
                 DataType.GSR -> packet // Don't compress GSR data
                 DataType.THERMAL -> compressThermalData(packet)
@@ -750,20 +488,8 @@ class QualityOfServiceManager(
     private fun createBatchMessage(batch: List<QoSDataPacket>): JSONObject {
         return JSONObject().apply {
             put("type", "qos_batch")
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("batch_size", batch.size)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("compression_level", compressionLevel.name)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("timestamp", System.currentTimeMillis())
             // Add batch data serialization
         }
@@ -807,9 +533,6 @@ class QualityOfServiceManager(
         val adaptiveBatchSize: Int,
     )
 
-    /**
-     * Retrieves totalqueuesize information.
-     */
     private fun getTotalQueueSize(): Int {
         return criticalQueue.size + highPriorityQueue.size +
             normalPriorityQueue.size + lowPriorityQueue.size

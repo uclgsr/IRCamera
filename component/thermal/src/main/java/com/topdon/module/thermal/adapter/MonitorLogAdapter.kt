@@ -11,45 +11,19 @@ import com.topdon.lib.core.tools.TimeTool
 import com.topdon.module.thermal.R
 
 /**
- * Specialized thermal imaging component providing MonitorLogAdapter functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Monitor log view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class MonitorLogAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: OnItemClickListener? = null
 
     var datas = arrayListOf<ThermalEntity>()
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             field = value
-            /**
-             * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-             *
-             */
             notifyDataSetChanged()
         }
 
-    /**
-     * Executes oncreateviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param parent Parameter for operation (type: ViewGroup)
-     * @param viewType Parameter for operation (type: Int)
-     *
-     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -59,22 +33,10 @@ class MonitorLogAdapter(val context: Context) :
         return ItemView(view)
     }
 
-    /**
-     * Executes onbindviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param holder Parameter for operation (type: RecyclerView.ViewHolder)
-     * @param position Parameter for operation (type: Int)
-     *
-     */
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (holder is ItemView) {
             val data = datas[position]
             holder.indexText.text = "${position + 1}"
@@ -91,48 +53,26 @@ class MonitorLogAdapter(val context: Context) :
         }
     }
 
+    override fun getItemCount(): Int {
+        return datas.size
+    }
+
+    inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val lay = itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_log_lay)
+        val indexText = itemView.findViewById<TextView>(R.id.item_log_index_text)
+        val timeText = itemView.findViewById<TextView>(R.id.item_log_time_text)
+    }
+
 /**
- * Specialized thermal imaging component providing OnItemClickListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom On item click listener view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
     interface OnItemClickListener {
-    /**
-     * Executes onClick functionality.
-     */
-        /**
-         * Executes onclick operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param index Parameter for operation (type: Int)
-         * @param thermalId Parameter for operation (type: String)
-         *
-         */
         fun onClick(
             index: Int,
             thermalId: String,
         )
 
-    /**
-     * Executes onLongClick functionality.
-     */
-        /**
-         * Executes onlongclick operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param index Parameter for operation (type: Int)
-         * @param thermalId Parameter for operation (type: String)
-         *
-         */
         fun onLongClick(
             index: Int,
             thermalId: String,

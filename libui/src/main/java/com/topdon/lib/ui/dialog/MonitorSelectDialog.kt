@@ -25,38 +25,18 @@ import com.topdon.lib.ui.databinding.DialogMonitorSelectBinding
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing MonitorSelectDialog functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
     /**
      * Builder(private class
      */
 /**
  * Builder dialog for thermal imaging user interaction.
+ * Provides specialized input and configuration interfaces.
+ */
 /**
- * Specialized thermal imaging component providing Builder functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
+ * Builder manages camera operations and image capture functionality.
  *
  * @author IRCamera Development Team
- * @version 2.0
  * @since 1.0
  */
     class Builder(private val context: Context) {
@@ -72,9 +52,6 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
 
         private var positiveClickListener: ((select: Int) -> Unit)? = null
 
-    /**
-     * Sets positivelistener configuration.
-     */
         fun setPositiveListener(listener: ((select: Int) -> Unit)?): Builder {
             this.positiveClickListener = listener
             return this
@@ -95,15 +72,7 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
             dialog.window!!.attributes = lp
 
             binding.btnConfirmOrBack.setOnClickListener {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isFirstStep) { // 步骤1->步骤2 逻辑为“Confirm”
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (monitorType == 0) { 
                         return@setOnClickListener
                     }
@@ -133,24 +102,12 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
             }
 
             binding.tvPoint.setOnClickListener {
-                /**
-                 * Executes updateui operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateUI(binding, 1)
             }
             binding.tvLine.setOnClickListener {
-                /**
-                 * Executes updateui operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateUI(binding, 2)
             }
             binding.tvRect.setOnClickListener {
-                /**
-                 * Executes updateui operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateUI(binding, 3)
             }
             return dialog

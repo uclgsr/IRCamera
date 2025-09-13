@@ -12,20 +12,6 @@ import android.view.View;
  * 描    述:
  * ================================================
  */
-/**
- * Specialized thermal imaging component providing SavedState functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class SavedState extends View.BaseSavedState {
     public float minValue;
     public float maxValue;
@@ -34,27 +20,11 @@ public class SavedState extends View.BaseSavedState {
     public float currSelectedMin;
     public float currSelectedMax;
 
-    /**
-     * Executes savedstate operation with thermal imaging domain optimization.
-     *
-     */
     public SavedState(Parcelable superState) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(superState);
     }
 
-    /**
-     * Executes savedstate operation with thermal imaging domain optimization.
-     *
-     */
     private SavedState(Parcel in) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(in);
         minValue = in.readFloat();
         maxValue = in.readFloat();

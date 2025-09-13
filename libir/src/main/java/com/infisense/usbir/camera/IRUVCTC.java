@@ -34,18 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Specialized thermal imaging component providing IRUVCTC functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * infrared出图核心工具class
  */
 public class IRUVCTC {
     private static final String TAG = "IRUVC_DATA";
@@ -54,10 +43,10 @@ public class IRUVCTC {
     private IRCMD ircmd;
     //
     private final USBMonitor mUSBMonitor;
-    private final ConnectCallback mConnectCallback; // UsbconnectionCallback
+    private final ConnectCallback mConnectCallback; // usbconnectionCallback
     private byte[] imageSrc;
     private byte[] temperatureSrc;
-    private final int imageOrTempDataLength = 256 * 192 * 2; // Infrared或temperature的data长度
+    private final int imageOrTempDataLength = 256 * 192 * 2; // infrared或temperature的data长度
     private final SynchronizedBitmap syncimage;
     /**
      * 自动gainswitch
@@ -68,7 +57,7 @@ public class IRUVCTC {
 
     // 判断data是否准备完毕，在准备完毕之前，画area可能会出现不正常
     private boolean isFrameReady = true;
-    // Current的gainstate
+    // current的gainstate
     private final CommonParams.GainStatus gainStatus = CommonParams.GainStatus.HIGH_GAIN;
     private final byte[] temperatureTemp = new byte[imageOrTempDataLength];
     // 是否可以infrared+TNR出图
@@ -81,30 +70,21 @@ public class IRUVCTC {
     private int pids[] = {0x5840, 0x3901, 0x5830, 0x5838};
     private IFrameCallBackListener iFrameCallBackListener;
 
-/**
- * Specialized thermal imaging component providing IFrameCallBackListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
-/**
- * Specialized thermal imaging component providing IFrameReadListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+    private IFrameReadListener iFrameReadListener;
+    public volatile boolean isFirstFrame;
+
+    public void setIFrameCallBackListener(IFrameCallBackListener iFrameCallBackListener) {
+        this.iFrameCallBackListener = iFrameCallBackListener;
+    }
+
+    public void setiFirstFrameListener(IFrameReadListener iFrameReadListener) {
+        this.iFrameReadListener = iFrameReadListener;
+    }
+
+    public interface IFrameCallBackListener {
+        void updateData();
+    }
+
     public interface IFrameReadListener {
         void frameRead();
     }
@@ -115,10 +95,6 @@ public class IRUVCTC {
      *                        cameraWidth:256,cameraHeight:192,(调用startY16ModePreview，传入Y16_MODE_TEMPERATURE)temperature
      * @param connectCallback settingsusbdeviceconnectionCallback
      */
-    /**
-     * Executes iruvctc operation with thermal imaging domain optimization.
-     *
-     */
     public IRUVCTC(int cameraWidth, int cameraHeight, Context context, SynchronizedBitmap syncimage,
                    CommonParams.DataFlowMode dataFlowMode,
                    ConnectCallback connectCallback, USBMonitorCallback usbMonitorCallback) {
@@ -128,30 +104,18 @@ public class IRUVCTC {
         isFirstFrame = true;
 
         //
-        /**
-         * Initializes the uvccamera component for thermal imaging operations.
-         *
-         */
         initUVCCamera();
         // 注意：USBMonitor的所有Callbackfunction都是运行在line程中的
         mUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
 
-            // Called by checking usb device
-            // Do request device permission
+            // called by checking usb device
+            // do request device permission
             @Override
             public void onAttach(UsbDevice device) {
                 Log.w(TAG, "onAttach");
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (uvcCamera == null || !uvcCamera.getOpenStatus()) {
                     mUSBMonitor.requestPermission(device);
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (usbMonitorCallback != null) {
                     usbMonitorCallback.onAttach();
                 }
@@ -160,99 +124,48 @@ public class IRUVCTC {
             @Override
             public void onGranted(UsbDevice usbDevice, boolean granted) {
                 Log.w(TAG, "onGranted");
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (usbMonitorCallback != null) {
                     usbMonitorCallback.onGranted();
                 }
             }
 
-            // Called by connect to usb camera
-            // Do open camera,start previewing
+            // called by connect to usb camera
+            // do open camera,start previewing
             @Override
             public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
                 Log.w(TAG, "onConnect");
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isIRpid(device.getProductId())){
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (createNew) {
-                        /**
-                         * Manages thermal camera operations with hardware-optimized performance and error handling.
-                         *
-                         */
                         openUVCCamera(ctrlBlock);
 
                         // Get/Retrievedevice的分辨率list
                         List<CameraSize> previewList = getAllSupportedSize();
-                        /**
-                         * Executes for operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param size Parameter for operation (type: previewList)
-                         *
-                         */
                         for (CameraSize size : previewList) {
                             Log.i(TAG, "SupportedSize : " + size.width + " * " + size.height);
                         }
 
                         // 可以根据Get/Retrieve到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
-                        /**
-                         * Initializes the ircmd component for thermal imaging operations.
-                         *
-                         */
                         initIRCMD();
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (ircmd != null) {
                             Log.d(TAG, "startPreview");
                             // 根据device的分辨率list，这里可以动态的settingsmodule的宽高(这里作为示例，用的是从外部传入的方式)
-                            // 之前的openUVCCameramethod中传入的都是default值，这里需要根据实际传入对应的值
+                            // 之前的openUVCCameramethod中传入的都是默认值，这里需要根据实际传入对应的值
                             isTempReplacedWithTNREnabled = ircmd.isTempReplacedWithTNREnabled(DeviceType.P2);
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (isTempReplacedWithTNREnabled) {
                                 // 使用infrared+TNRdata的方式，不用进行停图重新出图的流程，方便快速出图
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (uvcCamera != null) {
                                     uvcCamera.setUSBPreviewSize(cameraWidth, cameraHeight * 2);
                                 }
                             } else {
                                 // 单TNRdata
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (uvcCamera != null) {
                                     uvcCamera.setUSBPreviewSize(cameraWidth, cameraHeight);
                                 }
                             }
-                            /**
-                             * Executes startpreview operation with thermal imaging domain optimization.
-                             *
-                             */
                             startPreview();
                         }
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (usbMonitorCallback != null) {
                             usbMonitorCallback.onConnect();
                         }
@@ -260,34 +173,22 @@ public class IRUVCTC {
                 }
             }
 
-            // Called by disconnect to usb camera
-            // Do nothing
+            // called by disconnect to usb camera
+            // do nothing
             @Override
             public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
                 Log.w(TAG, "onDisconnect");
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (usbMonitorCallback != null) {
                     usbMonitorCallback.onDisconnect();
                 }
             }
 
-            // Called by taking out usb device
-            // Do close camera
+            // called by taking out usb device
+            // do close camera
             @Override
             public void onDettach(UsbDevice device) {
                 Log.w(TAG, "onDettach");
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (uvcCamera != null && uvcCamera.getOpenStatus()) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (usbMonitorCallback != null) {
                         usbMonitorCallback.onDettach();
                     }
@@ -297,10 +198,6 @@ public class IRUVCTC {
             @Override
             public void onCancel(UsbDevice device) {
                 Log.w(TAG, "onCancel");
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (usbMonitorCallback != null) {
                     usbMonitorCallback.onCancel();
                 }
@@ -310,106 +207,74 @@ public class IRUVCTC {
          * 同时Open防灼烧和自动gainswitch后，如果想modify防灼烧和自动gainswitch的触发优先级，可以通过modify下area的触发parameterimplementation
          */
         // 自动gainswitchparameterauto gain switch parameter
-        gain_switch_param.above_pixel_prop = 0.1f;    // 用于high -> low gain,device像素总area积的百分比
-        gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4); // 用于high -> low gain,高gain向低gainswitch的触发temperature
-        gain_switch_param.below_pixel_prop = 0.95f;   // 用于low -> high gain,device像素总area积的百分比
-        gain_switch_param.below_temp_data = (int) ((110 + 273.15) * 16 * 4);// 用于low -> high gain,低gain向高gainswitch的触发temperature
-        auto_gain_switch_info.switch_frame_cnt = 5 * 15; // Continuous满足触发条件帧数超过该阈值会触发自动gainswitch(假设出图速度为15帧每秒，则5 * 15大概为5秒)
-        auto_gain_switch_info.waiting_frame_cnt = 7 * 15;// 触发自动gainswitch之后，会间隔该阈值的帧数不进行gainswitch监测(假设出图速度为15帧每秒，则7 * 15大概为7秒)
+        gain_switch_param.above_pixel_prop = 0.1f;    //用于high -> low gain,device像素总area积的百分比
+        gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4); //用于high -> low gain,高gain向低gainswitch的触发temperature
+        gain_switch_param.below_pixel_prop = 0.95f;   //用于low -> high gain,device像素总area积的百分比
+        gain_switch_param.below_temp_data = (int) ((110 + 273.15) * 16 * 4);//用于low -> high gain,低gain向高gainswitch的触发temperature
+        auto_gain_switch_info.switch_frame_cnt = 5 * 15; //continuous满足触发条件帧数超过该阈值会触发自动gainswitch(假设出图速度为15帧每秒，则5 * 15大概为5秒)
+        auto_gain_switch_info.waiting_frame_cnt = 7 * 15;//触发自动gainswitch之后，会间隔该阈值的帧数不进行gainswitch监测(假设出图速度为15帧每秒，则7 * 15大概为7秒)
         // 防灼烧parameterover_portect parameter
-        int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4); // 低gain下触发防灼烧的temperature
-        int high_gain_over_temp_data = (int) ((150 + 273.15) * 16 * 4); // 高gain下触发防灼烧的temperature
-        float pixel_above_prop = 0.02f;// Device像素总area积的百分比
-        int switch_frame_cnt = 7 * 15;// Continuous满足触发条件超过该阈值会触发防灼烧(假设出图速度为15帧每秒，则7 * 15大概为7秒)
-        int close_frame_cnt = 10 * 15;// 触发防灼烧之后，经过该阈值的帧数之后会解除防灼烧(假设出图速度为15帧每秒，则10 * 15大概为10秒)
+        int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4); //低gain下触发防灼烧的temperature
+        int high_gain_over_temp_data = (int) ((150 + 273.15) * 16 * 4); //高gain下触发防灼烧的temperature
+        float pixel_above_prop = 0.02f;//device像素总area积的百分比
+        int switch_frame_cnt = 7 * 15;//continuous满足触发条件超过该阈值会触发防灼烧(假设出图速度为15帧每秒，则7 * 15大概为7秒)
+        int close_frame_cnt = 10 * 15;//触发防灼烧之后，经过该阈值的帧数之后会解除防灼烧(假设出图速度为15帧每秒，则10 * 15大概为10秒)
 
         LibIRProcess.ImageRes_t imageRes = new LibIRProcess.ImageRes_t();
         imageRes.height = (char) (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT ? cameraHeight / 2
                 : cameraHeight);
         imageRes.width = (char) cameraWidth;
 
-        // Device出图Callback
+        // device出图Callback
         iFrameCallback = new IFrameCallback() {
             @Override
             public void onFrame(byte[] frame) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isFrameReady) {
                     return;
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (syncimage == null) {
                     return;
                 }
                 syncimage.start = true;
                 //
-                /**
-                 * Executes synchronized operation with thermal imaging domain optimization.
-                 *
-                 */
                 synchronized (syncimage.dataLock) {
                     // 判断坏帧，出现坏帧则重启sensor
                     int length = frame.length - 1;
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (frame[length] == 1) {
-                        // Bad frame
+                        // bad frame
                         EventBus.getDefault().post(new IRMsgEvent(MsgCode.RESTART_USB));
                         return;
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (imageEditTemp != null && imageEditTemp.length >= length) {
-                        // 部分场景不需要saved帧data
+                        //部分场景不需要saved帧data
                         System.arraycopy(frame, 0, imageEditTemp, 0, length);
                     }
-// Try {
-// Byte[] tmpBy = new byte[256*192*2];
+//                    try {
+//                        byte[] tmpBy = new byte[256*192*2];
 //                        System.arraycopy(frame, imageOrTempDataLength, tmpBy, 0,
-// ImageOrTempDataLength);
+//                                imageOrTempDataLength);
 //                        LibIRTemp tmp = new LibIRTemp(256,192);
-// Tmp.setTempData(tmpBy);
+//                        tmp.setTempData(tmpBy);
 //                        LibIRTemp.TemperatureSampleResult result = tmp.getTemperatureOfRect(new Rect(0, 0, 256,192));
-//                        Log.w("temperatureupdate3",result.maxTemperature+"// /"+result.minTemperature);
+//                        Log.w("temperatureupdate3",result.maxTemperature+"///"+result.minTemperature);
 //                    }catch (Exception  e){
 //
 //                    }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
                         /*
                          * image+temperature
                          * copyinfrareddata到imagearray中
                          * 出图的framearray中前半部分是infrareddata，后半部分是temperaturedata，
                          * 例如256*384分辨率的device，前area的256*192是infrareddata，后area的256*192是temperaturedata，
-                         * 其中的data是rotation90度的，需要rotation回来,infraredrotation的逻辑放在后areaImageThread中processing。
+                         * 其中的data是旋转90度的，需要旋转回来,infrared旋转的逻辑放在后areaImageThread中processing。
                          */
                         System.arraycopy(frame, 0, imageSrc, 0, imageOrTempDataLength);
                         /*
                          * processingtemperaturedata
                          * 在部分的出图中，如果不需要temperaturedata，则不Return，需要区分对待
                          */
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (length >= imageOrTempDataLength * 2) {
 
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (rotateInt == 270) {
                                 // 270
                                 System.arraycopy(frame, imageOrTempDataLength, temperatureTemp, 0,
@@ -434,16 +299,8 @@ public class IRUVCTC {
                                         imageOrTempDataLength);
 //                                System.arraycopy(frame, length / 2, temperatureSrc, 0, length / 2);
                             }
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (ircmd != null) {
                                 // 自动gainswitch，不effective的话请您的device是否支持自动gainswitch
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (auto_gain_switch) {
                                     ircmd.autoGainSwitch(temperatureSrc, imageRes, auto_gain_switch_info,
                                             gain_switch_param, new AutoGainSwitchCallback() {
@@ -461,10 +318,6 @@ public class IRUVCTC {
                                             });
                                 }
                                 // 防灼烧保护
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (auto_over_portect) {
                                     ircmd.avoidOverexposure(false, gainStatus, temperatureSrc, imageRes,
                                             low_gain_over_temp_data,
@@ -484,22 +337,14 @@ public class IRUVCTC {
                         /*
                          * 单infrareddata
                          * copyinfrareddata到imagearray中
-                         * 其中的data是rotation90度的，需要rotation回来,infraredrotation的逻辑放在后areaImageThread中processing。
+                         * 其中的data是旋转90度的，需要旋转回来,infrared旋转的逻辑放在后areaImageThread中processing。
                          */
                         System.arraycopy(frame, 0, imageSrc, 0, imageOrTempDataLength);
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (iFrameCallBackListener != null) {
                         iFrameCallBackListener.updateData();
                     }
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isFirstFrame && iFrameReadListener != null) {
                     iFrameReadListener.frameRead();
                     isFirstFrame = false;
@@ -558,20 +403,12 @@ public class IRUVCTC {
                     .setIrcmdType(IRCMDType.USB_IR_256_384)
                     .setIdCamera(uvcCamera.getNativePtr())
                     .build();
-            // 这里可根据是否得到ircmd的对象，判断是否initializesuccess，initializefailed，可做相应的failederrortip
-            // Errorinfo可以通过setCreateResultCallback的Callback查看
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            //这里可根据是否得到ircmd的对象，判断是否initializesuccess，initializefailed，可做相应的failederrortip
+            //errorinfo可以通过setCreateResultCallback的Callback查看
             if (ircmd == null) {
                 EventBus.getDefault().post(new PreviewComplete());
                 return;
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mConnectCallback != null) {
                 mConnectCallback.onIRCMDCreate(ircmd);
             }
@@ -580,10 +417,6 @@ public class IRUVCTC {
 
     
     public void registerUSB() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mUSBMonitor != null) {
             mUSBMonitor.register();
         }
@@ -591,10 +424,6 @@ public class IRUVCTC {
 
     
     public void unregisterUSB() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mUSBMonitor != null) {
             mUSBMonitor.unregister();
         }
@@ -602,41 +431,17 @@ public class IRUVCTC {
 
     private void openUVCCamera(USBMonitor.UsbControlBlock ctrlBlock) {
         Log.i(TAG, "openUVCCamera");
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ctrlBlock.getProductId() == 0x3901) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (syncimage != null) {
                 syncimage.type = 1;
             }
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (uvcCamera == null) {
-            /**
-             * Initializes the uvccamera component for thermal imaging operations.
-             *
-             */
             initUVCCamera();
         }
-        // Uvc开启
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // uvc开启
         if (uvcCamera.openUVCCamera(ctrlBlock) == 0) {
             // UVCCamera开启success
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mConnectCallback != null && uvcCamera != null) {
                 mConnectCallback.onCameraOpened(uvcCamera);
             }
@@ -648,22 +453,11 @@ public class IRUVCTC {
      */
     private List<CameraSize> getAllSupportedSize() {
         List<CameraSize> previewList = new ArrayList<>();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (uvcCamera != null) {
             Log.w(TAG, "getSupportedSize = " + uvcCamera.getSupportedSize());
             previewList = uvcCamera.getSupportedSizeList();
         }
         Log.w(TAG, "getSupportedSize = " + uvcCamera.getSupportedSize());
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param size Parameter for operation (type: previewList)
-         *
-         */
         for (CameraSize size : previewList) {
             Log.i(TAG, "SupportedSize : " + size.width + " * " + size.height);
         }
@@ -677,18 +471,7 @@ public class IRUVCTC {
      * @return
      */
     private boolean isIRpid(int devpid) {
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param x Parameter for operation (type: pids)
-         *
-         */
         for (int x : pids) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (x == devpid) return true;
         }
         return false;
@@ -698,10 +481,6 @@ public class IRUVCTC {
      * 预览出图
      */
     private void startPreview() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ircmd == null) {
             return;
         }
@@ -710,10 +489,6 @@ public class IRUVCTC {
         uvcCamera.setFrameCallback(iFrameCallback);
         uvcCamera.onStartPreview();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT == defaultDataFlowMode ||
                 CommonParams.DataFlowMode.IMAGE_OUTPUT == defaultDataFlowMode) {
             /*
@@ -722,48 +497,24 @@ public class IRUVCTC {
              */
             Log.i(TAG, "defaultDataFlowMode = IMAGE_AND_TEMP_OUTPUT or IMAGE_OUTPUT");
             // YUV出图流程
-            /**
-             * Configures the frameready with validation and thermal imaging optimization.
-             *
-             */
             setFrameReady(false);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isRestart) {
                 // 1.停图（全部停图，不是Exity16mode的停图）
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
                     Log.i(TAG, "stopPreview complete");
                     // 2. 发出图Command，settings分辨率为256*384
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                             CommonParams.StartPreviewSource.SOURCE_SENSOR,
                             ScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
                             CommonParams.StartPreviewMode.VOC_DVP_MODE,
                             defaultDataFlowMode) == 0) {
                         Log.i(TAG, "startPreview complete");
-                        /**
-                         * Executes handlestartpreviewcomplete operation with thermal imaging domain optimization.
-                         *
-                         */
                         handleStartPreviewComplete();
                     }
                 } else {
                     Log.e(TAG, "stopPreview error");
                 }
             } else {
-                /**
-                 * Executes handlestartpreviewcomplete operation with thermal imaging domain optimization.
-                 *
-                 */
                 handleStartPreviewComplete();
             }
         } else {
@@ -771,26 +522,10 @@ public class IRUVCTC {
              * 中间出图
              */
             // Y16出图流程(例如TNR出图，使用ISPalgorithm)
-            /**
-             * Configures the frameready with validation and thermal imaging optimization.
-             *
-             */
             setFrameReady(false);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isRestart) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
                     Log.i(TAG, "stopPreview complete 中间出图 restart");
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                             CommonParams.StartPreviewSource.SOURCE_SENSOR,
                             ScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
@@ -805,16 +540,8 @@ public class IRUVCTC {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (ircmd.startY16ModePreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                                 FileUtil.getY16SrcTypeByDataFlowMode(defaultDataFlowMode)) == 0) {
-                            /**
-                             * Executes handlestartpreviewcomplete operation with thermal imaging domain optimization.
-                             *
-                             */
                             handleStartPreviewComplete();
                         } else {
                             Log.e(TAG, "startY16ModePreview error 中间出图 restart");
@@ -833,32 +560,20 @@ public class IRUVCTC {
                 boolean isTempReplacedWithTNREnabled = ircmd.isTempReplacedWithTNREnabled(DeviceType.P2);
                 Log.i(TAG,
                         "defaultDataFlowMode = others isTempReplacedWithTNREnabled = " + isTempReplacedWithTNREnabled);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isTempReplacedWithTNREnabled) {
                     /*
                      * 支持 infrared+TNR 方式出图
                      */
                     // 对于P2module来说，直接SendstartY16ModePreviewCommand可以直接出图
-// If (ircmd.startY16ModePreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
+//                    if (ircmd.startY16ModePreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
 //                            FileUtil.getY16SrcTypeByDataFlowMode(defaultDataFlowMode)) == 0) {
-// HandleStartPreviewComplete();
+//                        handleStartPreviewComplete();
 //                    } else {
 //                        Log.e(TAG, "startY16ModePreview error");
 //                    }
                     // 对于M2module来说，需要先SendstartPreview出图Command，再SendstartY16ModePreviewCommand才可以重新出图
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
                         Log.i(TAG, "stopPreview complete infrared+TNR");
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                                 CommonParams.StartPreviewSource.SOURCE_SENSOR,
                                 ScreenUtils.getPreviewFPSByDataFlowMode(CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT),
@@ -874,16 +589,8 @@ public class IRUVCTC {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (ircmd.startY16ModePreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                                     FileUtil.getY16SrcTypeByDataFlowMode(CommonParams.DataFlowMode.TNR_OUTPUT)) == 0) {
-                                /**
-                                 * Executes handlestartpreviewcomplete operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 handleStartPreviewComplete();
                             } else {
                                 Log.e(TAG, "startY16ModePreview error infrared+TNR");
@@ -897,20 +604,12 @@ public class IRUVCTC {
                 } else {
                     /*
                      * 单TNR 出图
-                     * default上电之后出YUVimage，如果defaultmode为Y16中间出图，进入之后需要走先断电再上电，再中间出图的流程
+                     * 默认上电之后出YUVimage，如果默认mode为Y16中间出图，进入之后需要走先断电再上电，再中间出图的流程
                      * 如果没有断电，且之前的mode为Y16mode，则重新进入仍为Y16mode，不需要执行该流程
                      */
                     // 调用 startY16ModePreview 中间出图method之后，输出的dataformat为y16
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
                         Log.i(TAG, "stopPreview complete 单TNR");
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                                 CommonParams.StartPreviewSource.SOURCE_SENSOR,
                                 ScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
@@ -925,16 +624,8 @@ public class IRUVCTC {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (ircmd.startY16ModePreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                                     FileUtil.getY16SrcTypeByDataFlowMode(defaultDataFlowMode)) == 0) {
-                                /**
-                                 * Executes handlestartpreviewcomplete operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 handleStartPreviewComplete();
                             } else {
                                 Log.e(TAG, "startY16ModePreview error 单TNR");
@@ -953,15 +644,7 @@ public class IRUVCTC {
     
     public void stopPreview() {
         Log.i(TAG, "stopPreview");
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (uvcCamera != null) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (uvcCamera.getOpenStatus()) {
                 uvcCamera.onStopPreview();
             }
@@ -969,11 +652,7 @@ public class IRUVCTC {
             final UVCCamera camera;
             camera = uvcCamera;
             uvcCamera = null;
-            // IRCMD在不用时一定要recycle
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            //IRCMD在不用时一定要recycle
             if (ircmd != null) {
                 ircmd.onDestroy();
                 ircmd = null;
@@ -981,7 +660,7 @@ public class IRUVCTC {
 
             SystemClock.sleep(200);
 
-            // InitIRISPModule 与 destroyIRISPModule对应使用，recycle资源
+            //initIRISPModule 与 destroyIRISPModule对应使用，recycle资源
             camera.onDestroyPreview();
 
         }

@@ -21,23 +21,6 @@ import com.infisense.usbir.R
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for CaliperImageView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class CaliperImageView : AppCompatImageView {
     private var showBitmapWidth: Float = 0f
     private var showBitmapHeight: Float = 0F
@@ -56,40 +39,12 @@ class CaliperImageView : AppCompatImageView {
     private var t: Int = 0
     private var b: Int = 0
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        /**
-         * Initializes the view component for thermal imaging operations.
-         *
-         */
         initView()
     }
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -106,9 +61,6 @@ class CaliperImageView : AppCompatImageView {
         visibility = View.GONE
     }
 
-    /**
-     * Sets imagesize configuration.
-     */
     fun setImageSize(
         imageWidth: Int,
         imageHeight: Int,
@@ -117,10 +69,6 @@ class CaliperImageView : AppCompatImageView {
     ) {
         this.imageWidth = imageWidth
         this.imageHeight = imageHeight
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (parentViewWidth > 0)
             {
                 this.parentViewWidth = parentViewWidth.toFloat()
@@ -128,10 +76,6 @@ class CaliperImageView : AppCompatImageView {
             {
                 this.parentViewWidth = (parent as ViewGroup).measuredWidth.toFloat()
             }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (parentViewHeight > 0)
             {
                 this.parentViewHeight = parentViewHeight.toFloat()
@@ -139,17 +83,9 @@ class CaliperImageView : AppCompatImageView {
             {
                 this.parentViewHeight = (parent as ViewGroup).measuredHeight.toFloat()
             }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (parentViewWidth > 0) {
             xscale = parentViewWidth.toFloat() / imageWidth.toFloat()
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (parentViewHeight > 0) {
             yscale = parentViewHeight.toFloat() / imageHeight.toFloat()
         }
@@ -160,10 +96,6 @@ class CaliperImageView : AppCompatImageView {
         layoutParams.width = showBitmapWidth.toInt()
         layoutParams.height = showBitmapHeight.toInt()
         this.layoutParams = layoutParams
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (l == 0 && t == 0 && r == 0 && b == 0)
             {
                 l = (parentViewWidth / 2 - showBitmapWidth / 2).toInt()
@@ -171,28 +103,10 @@ class CaliperImageView : AppCompatImageView {
                 t = (parentViewHeight / 2 - showBitmapHeight / 2).toInt()
                 b = (parentViewHeight / 2 + showBitmapHeight / 2).toInt()
             }
-        /**
-         * Executes layout operation with thermal imaging domain optimization.
-         *
-         */
         layout(l, t, r, b)
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout()
     }
 
-    /**
-     * Executes layout operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param l Parameter for operation (type: Int)
-     * @param t Parameter for operation (type: Int)
-     * @param r Parameter for operation (type: Int)
-     * @param b Parameter for operation (type: Int)
-     *
-     */
     override fun layout(
         l: Int,
         t: Int,
@@ -207,24 +121,9 @@ class CaliperImageView : AppCompatImageView {
 
     private val downTime: Long = 0
 
-    /**
-     * Executes ontouchevent operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: MotionEvent)
-     *
-     */
     override fun onTouchEvent(event: MotionEvent): Boolean {
         super.onTouchEvent(event)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (this.isEnabled) {
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (event.getAction()) {
                 MotionEvent.ACTION_DOWN -> {
                     downX = event.getX()
@@ -233,19 +132,11 @@ class CaliperImageView : AppCompatImageView {
                 MotionEvent.ACTION_MOVE -> {
                     val xDistance: Float = event.getX() - downX
                     val yDistance: Float = event.getY() - downY
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (xDistance != 0f && yDistance != 0f) {
                         l = (left + xDistance).toInt()
                         r = (right + xDistance).toInt()
                         t = (top + yDistance).toInt()
                         b = (bottom + yDistance).toInt()
-                        /**
-                         * Executes layout operation with thermal imaging domain optimization.
-                         *
-                         */
                         layout(l, t, r, b)
                     }
                 }

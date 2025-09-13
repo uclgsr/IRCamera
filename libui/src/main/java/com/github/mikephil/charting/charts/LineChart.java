@@ -9,54 +9,21 @@ import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.renderer.LineChartRenderer;
 
 /**
- * Specialized thermal imaging component providing LineChart functionality for the IRCamera system.
+ * Chart that draws lines, surfaces, circles, ...
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author Philipp Jahoda
  */
 public class LineChart extends BarLineChartBase<LineData> implements LineDataProvider {
 
-    /**
-     * Executes linechart operation with thermal imaging domain optimization.
-     *
-     */
     public LineChart(Context context) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context);
     }
 
-    /**
-     * Executes linechart operation with thermal imaging domain optimization.
-     *
-     */
     public LineChart(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
     }
 
-    /**
-     * Executes linechart operation with thermal imaging domain optimization.
-     *
-     */
     public LineChart(Context context, AttributeSet attrs, int defStyle) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyle);
     }
 
@@ -74,11 +41,7 @@ public class LineChart extends BarLineChartBase<LineData> implements LineDataPro
 
     @Override
     protected void onDetachedFromWindow() {
-        // Releases the bitmap in the renderer to avoid oom error
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // releases the bitmap in the renderer to avoid oom error
         if (mRenderer != null && mRenderer instanceof LineChartRenderer) {
             ((LineChartRenderer) mRenderer).releaseBitmap();
         }

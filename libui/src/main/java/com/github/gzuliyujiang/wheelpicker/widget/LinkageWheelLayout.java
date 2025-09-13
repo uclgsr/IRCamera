@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -40,20 +40,6 @@ import java.util.List;
  * @since 2019/6/15 11:55
  */
 @SuppressWarnings("unused")
-/**
- * Specialized thermal imaging component providing LinkageWheelLayout functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class LinkageWheelLayout extends BaseWheelLayout {
     private WheelView firstWheelView, secondWheelView, thirdWheelView;
     private TextView firstLabelView, secondLabelView, thirdLabelView;
@@ -63,51 +49,19 @@ public class LinkageWheelLayout extends BaseWheelLayout {
     private LinkageProvider dataProvider;
     private OnLinkageSelectedListener onLinkageSelectedListener;
 
-    /**
-     * Executes linkagewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public LinkageWheelLayout(Context context) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context);
     }
 
-    /**
-     * Executes linkagewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public LinkageWheelLayout(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
     }
 
-    /**
-     * Executes linkagewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public LinkageWheelLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyleAttr);
     }
 
-    /**
-     * Executes linkagewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public LinkageWheelLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
@@ -141,194 +95,58 @@ public class LinkageWheelLayout extends BaseWheelLayout {
     protected void onAttributeSet(@NonNull Context context, @NonNull TypedArray typedArray) {
         float density = context.getResources().getDisplayMetrics().density;
         float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
-        /**
-         * Configures the visibleitemcount with validation and thermal imaging optimization.
-         *
-         */
         setVisibleItemCount(typedArray.getInt(R.styleable.LinkageWheelLayout_wheel_visibleItemCount, 5));
-        /**
-         * Configures the samewidthenabled with validation and thermal imaging optimization.
-         *
-         */
         setSameWidthEnabled(typedArray.getBoolean(R.styleable.LinkageWheelLayout_wheel_sameWidthEnabled, false));
-        /**
-         * Configures the maxwidthtext with validation and thermal imaging optimization.
-         *
-         */
         setMaxWidthText(typedArray.getString(R.styleable.LinkageWheelLayout_wheel_maxWidthText));
-        /**
-         * Configures the textsize with validation and thermal imaging optimization.
-         *
-         */
         setTextSize(typedArray.getDimension(R.styleable.LinkageWheelLayout_wheel_itemTextSize, 15 * scaledDensity));
-        /**
-         * Configures the selectedtextsize with validation and thermal imaging optimization.
-         *
-         */
         setSelectedTextSize(typedArray.getDimension(R.styleable.LinkageWheelLayout_wheel_itemTextSizeSelected, 15 * scaledDensity));
-        /**
-         * Configures the textcolor with validation and thermal imaging optimization.
-         *
-         */
         setTextColor(typedArray.getColor(R.styleable.LinkageWheelLayout_wheel_itemTextColor, 0xFF888888));
-        /**
-         * Configures the selectedtextcolor with validation and thermal imaging optimization.
-         *
-         */
         setSelectedTextColor(typedArray.getColor(R.styleable.LinkageWheelLayout_wheel_itemTextColorSelected, 0xFF000000));
-        /**
-         * Configures the selectedtextbold with validation and thermal imaging optimization.
-         *
-         */
         setSelectedTextBold(typedArray.getBoolean(R.styleable.LinkageWheelLayout_wheel_itemTextBoldSelected, false));
-        /**
-         * Configures the textalign with validation and thermal imaging optimization.
-         *
-         */
         setTextAlign(typedArray.getInt(R.styleable.LinkageWheelLayout_wheel_itemTextAlign, ItemTextAlign.CENTER));
-        /**
-         * Configures the itemspace with validation and thermal imaging optimization.
-         *
-         */
         setItemSpace(typedArray.getDimensionPixelSize(R.styleable.LinkageWheelLayout_wheel_itemSpace,
                 (int) (20 * density)));
-        /**
-         * Configures the cyclicenabled with validation and thermal imaging optimization.
-         *
-         */
         setCyclicEnabled(typedArray.getBoolean(R.styleable.LinkageWheelLayout_wheel_cyclicEnabled, false));
-        /**
-         * Configures the indicatorenabled with validation and thermal imaging optimization.
-         *
-         */
         setIndicatorEnabled(typedArray.getBoolean(R.styleable.LinkageWheelLayout_wheel_indicatorEnabled, false));
-        /**
-         * Configures the indicatorcolor with validation and thermal imaging optimization.
-         *
-         */
         setIndicatorColor(typedArray.getColor(R.styleable.LinkageWheelLayout_wheel_indicatorColor, 0xFFC9C9C9));
-        /**
-         * Configures the indicatorsize with validation and thermal imaging optimization.
-         *
-         */
         setIndicatorSize(typedArray.getDimension(R.styleable.LinkageWheelLayout_wheel_indicatorSize, 1 * density));
-        /**
-         * Configures the curvedindicatorspace with validation and thermal imaging optimization.
-         *
-         */
         setCurvedIndicatorSpace(typedArray.getDimensionPixelSize(R.styleable.LinkageWheelLayout_wheel_curvedIndicatorSpace, (int) (1 * density)));
-        /**
-         * Configures the curtainenabled with validation and thermal imaging optimization.
-         *
-         */
         setCurtainEnabled(typedArray.getBoolean(R.styleable.LinkageWheelLayout_wheel_curtainEnabled, false));
-        /**
-         * Configures the curtaincolor with validation and thermal imaging optimization.
-         *
-         */
         setCurtainColor(typedArray.getColor(R.styleable.LinkageWheelLayout_wheel_curtainColor, 0x88FFFFFF));
-        /**
-         * Configures the curtaincorner with validation and thermal imaging optimization.
-         *
-         */
         setCurtainCorner(typedArray.getInt(R.styleable.LinkageWheelLayout_wheel_curtainCorner, CurtainCorner.NONE));
-        /**
-         * Configures the curtainradius with validation and thermal imaging optimization.
-         *
-         */
         setCurtainRadius(typedArray.getDimension(R.styleable.LinkageWheelLayout_wheel_curtainRadius, 0));
-        /**
-         * Configures the atmosphericenabled with validation and thermal imaging optimization.
-         *
-         */
         setAtmosphericEnabled(typedArray.getBoolean(R.styleable.LinkageWheelLayout_wheel_atmosphericEnabled, false));
-        /**
-         * Configures the curvedenabled with validation and thermal imaging optimization.
-         *
-         */
         setCurvedEnabled(typedArray.getBoolean(R.styleable.LinkageWheelLayout_wheel_curvedEnabled, false));
-        /**
-         * Configures the curvedmaxangle with validation and thermal imaging optimization.
-         *
-         */
         setCurvedMaxAngle(typedArray.getInteger(R.styleable.LinkageWheelLayout_wheel_curvedMaxAngle, 90));
-        /**
-         * Configures the firstvisible with validation and thermal imaging optimization.
-         *
-         */
         setFirstVisible(typedArray.getBoolean(R.styleable.LinkageWheelLayout_wheel_firstVisible, true));
-        /**
-         * Configures the thirdvisible with validation and thermal imaging optimization.
-         *
-         */
         setThirdVisible(typedArray.getBoolean(R.styleable.LinkageWheelLayout_wheel_thirdVisible, true));
         String firstLabel = typedArray.getString(R.styleable.LinkageWheelLayout_wheel_firstLabel);
         String secondLabel = typedArray.getString(R.styleable.LinkageWheelLayout_wheel_secondLabel);
         String thirdLabel = typedArray.getString(R.styleable.LinkageWheelLayout_wheel_thirdLabel);
-        /**
-         * Configures the label with validation and thermal imaging optimization.
-         *
-         */
         setLabel(firstLabel, secondLabel, thirdLabel);
     }
 
     @Override
     public void onWheelSelected(WheelView view, int position) {
         int id = view.getId();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (id == R.id.wheel_picker_linkage_first_wheel) {
             firstIndex = position;
             secondIndex = 0;
             thirdIndex = 0;
-            /**
-             * Updates the seconddata configuration with real-time thermal imaging support.
-             *
-             */
             changeSecondData();
-            /**
-             * Updates the thirddata configuration with real-time thermal imaging support.
-             *
-             */
             changeThirdData();
-            /**
-             * Executes selectedcallback operation with thermal imaging domain optimization.
-             *
-             */
             selectedCallback();
             return;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (id == R.id.wheel_picker_linkage_second_wheel) {
             secondIndex = position;
             thirdIndex = 0;
-            /**
-             * Updates the thirddata configuration with real-time thermal imaging support.
-             *
-             */
             changeThirdData();
-            /**
-             * Executes selectedcallback operation with thermal imaging domain optimization.
-             *
-             */
             selectedCallback();
             return;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (id == R.id.wheel_picker_linkage_third_wheel) {
             thirdIndex = position;
-            /**
-             * Executes selectedcallback operation with thermal imaging domain optimization.
-             *
-             */
             selectedCallback();
         }
     }
@@ -336,28 +154,16 @@ public class LinkageWheelLayout extends BaseWheelLayout {
     @Override
     public void onWheelScrollStateChanged(WheelView view, @ScrollState int state) {
         int id = view.getId();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (id == R.id.wheel_picker_linkage_first_wheel) {
             secondWheelView.setEnabled(state == ScrollState.IDLE);
             thirdWheelView.setEnabled(state == ScrollState.IDLE);
             return;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (id == R.id.wheel_picker_linkage_second_wheel) {
             firstWheelView.setEnabled(state == ScrollState.IDLE);
             thirdWheelView.setEnabled(state == ScrollState.IDLE);
             return;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (id == R.id.wheel_picker_linkage_third_wheel) {
             firstWheelView.setEnabled(state == ScrollState.IDLE);
             secondWheelView.setEnabled(state == ScrollState.IDLE);
@@ -365,78 +171,30 @@ public class LinkageWheelLayout extends BaseWheelLayout {
     }
 
     public void setData(@NonNull LinkageProvider provider) {
-        /**
-         * Configures the firstvisible with validation and thermal imaging optimization.
-         *
-         */
         setFirstVisible(provider.firstLevelVisible());
-        /**
-         * Configures the thirdvisible with validation and thermal imaging optimization.
-         *
-         */
         setThirdVisible(provider.thirdLevelVisible());
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (firstValue != null) {
             firstIndex = provider.findFirstIndex(firstValue);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (secondValue != null) {
             secondIndex = provider.findSecondIndex(firstIndex, secondValue);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (thirdValue != null) {
             thirdIndex = provider.findThirdIndex(firstIndex, secondIndex, thirdValue);
         }
         dataProvider = provider;
-        /**
-         * Updates the firstdata configuration with real-time thermal imaging support.
-         *
-         */
         changeFirstData();
-        /**
-         * Updates the seconddata configuration with real-time thermal imaging support.
-         *
-         */
         changeSecondData();
-        /**
-         * Updates the thirddata configuration with real-time thermal imaging support.
-         *
-         */
         changeThirdData();
     }
 
     public void setDefaultValue(Object first, Object second, Object third) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dataProvider != null) {
             firstIndex = dataProvider.findFirstIndex(first);
             secondIndex = dataProvider.findSecondIndex(firstIndex, second);
             thirdIndex = dataProvider.findThirdIndex(firstIndex, secondIndex, third);
-            /**
-             * Updates the firstdata configuration with real-time thermal imaging support.
-             *
-             */
             changeFirstData();
-            /**
-             * Updates the seconddata configuration with real-time thermal imaging support.
-             *
-             */
             changeSecondData();
-            /**
-             * Updates the thirddata configuration with real-time thermal imaging support.
-             *
-             */
             changeThirdData();
         } else {
             this.firstValue = first;
@@ -470,10 +228,6 @@ public class LinkageWheelLayout extends BaseWheelLayout {
     }
 
     public void setFirstVisible(boolean visible) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (visible) {
             firstWheelView.setVisibility(VISIBLE);
             firstLabelView.setVisibility(VISIBLE);
@@ -484,10 +238,6 @@ public class LinkageWheelLayout extends BaseWheelLayout {
     }
 
     public void setThirdVisible(boolean visible) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (visible) {
             thirdWheelView.setVisibility(VISIBLE);
             thirdLabelView.setVisibility(VISIBLE);
@@ -498,10 +248,6 @@ public class LinkageWheelLayout extends BaseWheelLayout {
     }
 
     private void selectedCallback() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (onLinkageSelectedListener == null) {
             return;
         }
@@ -527,10 +273,6 @@ public class LinkageWheelLayout extends BaseWheelLayout {
     }
 
     private void changeThirdData() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!dataProvider.thirdLevelVisible()) {
             return;
         }

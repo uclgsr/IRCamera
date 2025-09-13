@@ -25,38 +25,16 @@ import com.topdon.lib.ui.databinding.DialogProgressBinding
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing ProgressDialog functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
     private val binding: DialogProgressBinding = DialogProgressBinding.inflate(LayoutInflater.from(context))
 
     var max: Int = 100
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             binding.progressBar.max = value
             field = value
         }
 
     var progress: Int = 0
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             binding.progressBar.progress = value
             field = value
@@ -66,29 +44,10 @@ class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
         // Binding is initialized in constructor
     }
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /**
-         * Configures the cancelable with validation and thermal imaging optimization.
-         *
-         */
         setCancelable(false)
-        /**
-         * Configures the canceledontouchoutside with validation and thermal imaging optimization.
-         *
-         */
         setCanceledOnTouchOutside(false)
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(binding.root)
 
         window?.let {
@@ -99,10 +58,6 @@ class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
         }
     }
 
-    /**
-     * Executes show operation with thermal imaging domain optimization.
-     *
-     */
     override fun show() {
         super.show()
         binding.progressBar.max = max

@@ -22,38 +22,13 @@ import androidx.appcompat.widget.AppCompatImageView
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for BatteryView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class BatteryView : AppCompatImageView {
     /**
      * current电量
      */
     var battery = -1
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             field = value
-            /**
-             * Executes invalidate operation with thermal imaging domain optimization.
-             *
-             */
             invalidate()
         }
 
@@ -61,62 +36,22 @@ class BatteryView : AppCompatImageView {
      * current是否充电中
      */
     var isCharging = false
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             field = value
-            /**
-             * Executes invalidate operation with thermal imaging domain optimization.
-             *
-             */
             invalidate()
         }
 
     private val paint = Paint()
     private val path = Path()
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         paint.isAntiAlias = true
     }
 
-    /**
-     * Executes onmeasure operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param widthMeasureSpec Parameter for operation (type: Int)
-     * @param heightMeasureSpec Parameter for operation (type: Int)
-     *
-     */
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
@@ -125,17 +60,9 @@ class BatteryView : AppCompatImageView {
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (heightMode) {
             MeasureSpec.EXACTLY -> {
                 val wantWidth = (heightSize * 58 / 30f).toInt()
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (widthMode) {
                     MeasureSpec.EXACTLY -> setMeasuredDimension(widthSize, heightSize)
                     MeasureSpec.AT_MOST -> setMeasuredDimension(wantWidth.coerceAtMost(widthSize), heightSize)
@@ -143,63 +70,23 @@ class BatteryView : AppCompatImageView {
                 }
             }
             MeasureSpec.AT_MOST -> {
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (widthMode) {
                     MeasureSpec.EXACTLY -> setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt().coerceAtMost(heightSize))
                     MeasureSpec.AT_MOST -> {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (widthSize < 58) {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (heightSize < 30) { // 宽✘ 高✘
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if ((widthSize * 30 / 58f).toInt() <= heightSize) {
-                                    /**
-                                     * Configures the measureddimension with validation and thermal imaging optimization.
-                                     *
-                                     */
                                     setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
                                 } else {
-                                    /**
-                                     * Configures the measureddimension with validation and thermal imaging optimization.
-                                     *
-                                     */
                                     setMeasuredDimension((heightSize * 58 / 30f).toInt(), heightSize)
                                 }
                             } else { // 宽✘ 高✔
-                                /**
-                                 * Configures the measureddimension with validation and thermal imaging optimization.
-                                 *
-                                 */
                                 setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
                             }
                         } else {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (heightSize < 30) { // 宽✔ 高✘
-                                /**
-                                 * Configures the measureddimension with validation and thermal imaging optimization.
-                                 *
-                                 */
                                 setMeasuredDimension((heightSize * 58 / 30f).toInt(), heightSize)
                             } else { // 宽✔ 高✔
-                                /**
-                                 * Configures the measureddimension with validation and thermal imaging optimization.
-                                 *
-                                 */
                                 setMeasuredDimension(58, 30)
                             }
                         }
@@ -208,10 +95,6 @@ class BatteryView : AppCompatImageView {
                 }
             }
             else -> {
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (widthMode) {
                     MeasureSpec.EXACTLY -> setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
                     MeasureSpec.AT_MOST -> setMeasuredDimension(58.coerceAtMost(widthSize), (58.coerceAtMost(widthSize) * 30 / 58f).toInt())
@@ -247,13 +130,6 @@ class BatteryView : AppCompatImageView {
     private var drawWidth: Int = 0
     private var drawHeight: Int = 0
 
-    /**
-     * Executes ondraw operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     *
-     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         
@@ -284,10 +160,6 @@ class BatteryView : AppCompatImageView {
         canvas.drawLine(anodeX, anodeStartY, anodeX, anodeStartY + anodeHeight, paint)
 
         
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (battery <= 0) {
             return
         }
@@ -295,10 +167,6 @@ class BatteryView : AppCompatImageView {
         paint.strokeCap = Paint.Cap.BUTT
         paint.color =
             (
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isCharging) {
                     0xff6dc80e
                 } else if (battery <= 10) {

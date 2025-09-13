@@ -22,20 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * @author IRCamera Android Sensor Node (Spoke)
  */
-/**
- * Specialized thermal imaging component providing NetworkServer functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class NetworkServer(
     private val context: Context,
     private val port: Int = 8080,
@@ -68,17 +54,9 @@ class NetworkServer(
     /**
      * Start the TCP server
      */
-    /**
-     * Executes start operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun start(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isRunning.get()) {
                     Log.w(TAG, "Server already running")
                     return@withContext true
@@ -92,10 +70,6 @@ class NetworkServer(
                 // Start server job to accept connections
                 serverJob =
                     serverScope.launch {
-                        /**
-                         * Executes acceptconnections operation with thermal imaging domain optimization.
-                         *
-                         */
                         acceptConnections()
                     }
 
@@ -112,15 +86,7 @@ class NetworkServer(
     /**
      * Stop the TCP server
      */
-    /**
-     * Executes stop operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun stop() {
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 Log.i(TAG, "Stopping TCP server")
@@ -159,10 +125,6 @@ class NetworkServer(
     suspend fun sendMessage(message: JSONObject): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isClientConnected.get() || outputStream == null) {
                     Log.w(TAG, "No client connected, cannot send message")
                     return@withContext false
@@ -180,10 +142,6 @@ class NetworkServer(
             } catch (e: Exception) {
                 Log.e(TAG, "Error sending message to PC", e)
                 // Connection might be broken, disconnect client
-                /**
-                 * Executes disconnectclient operation with thermal imaging domain optimization.
-                 *
-                 */
                 disconnectClient()
                 return@withContext false
             }
@@ -199,18 +157,10 @@ class NetworkServer(
                 Log.i(TAG, "Waiting for PC Controller connection...")
 
                 val socket = serverSocket?.accept()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (socket != null && isRunning.get()) {
                     Log.i(TAG, "PC Controller connected from ${socket.remoteSocketAddress}")
 
                     // Disconnect any existing client first
-                    /**
-                     * Executes disconnectclient operation with thermal imaging domain optimization.
-                     *
-                     */
                     disconnectClient()
 
                     // Setup new client connection
@@ -224,18 +174,10 @@ class NetworkServer(
                     // Start message listener for this client
                     messageListenerJob =
                         serverScope.launch {
-                            /**
-                             * Executes listenformessages operation with thermal imaging domain optimization.
-                             *
-                             */
                             listenForMessages()
                         }
                 }
             } catch (e: SocketException) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isRunning.get()) {
                     Log.e(TAG, "Socket error accepting connections", e)
                 } else {
@@ -244,10 +186,6 @@ class NetworkServer(
                 break
             } catch (e: Exception) {
                 Log.e(TAG, "Error accepting connection", e)
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(1000) // Wait before trying again
             }
         }
@@ -260,10 +198,6 @@ class NetworkServer(
         while (isClientConnected.get() && isRunning.get() && !messageListenerJob?.isCancelled!!) {
             try {
                 val message = receiveMessage()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (message != null) {
                     _messageFlow.emit(message)
                 } else {
@@ -280,10 +214,6 @@ class NetworkServer(
         }
 
         // Clean up client connection
-        /**
-         * Executes disconnectclient operation with thermal imaging domain optimization.
-         *
-         */
         disconnectClient()
     }
 
@@ -298,10 +228,6 @@ class NetworkServer(
                 // Read message length (4 bytes, big-endian)
                 val messageLength = input.readInt()
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (messageLength <= 0 || messageLength > MAX_MESSAGE_SIZE) {
                     Log.e(TAG, "Invalid message length: $messageLength")
                     return@withContext null
@@ -352,33 +278,17 @@ class NetworkServer(
     /**
      * Check if server is running
      */
-    /**
-     * Executes isrunning operation with thermal imaging domain optimization.
-     *
-     */
     fun isRunning(): Boolean = isRunning.get()
 
     /**
      * Check if PC is connected
-     */
-    /**
-     * Executes isclientconnected operation with thermal imaging domain optimization.
-     *
      */
     fun isClientConnected(): Boolean = isClientConnected.get()
 
     /**
      * Clean up server resources
      */
-    /**
-     * Executes cleanup operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun cleanup() {
-        /**
-         * Executes stop operation with thermal imaging domain optimization.
-         *
-         */
         stop()
         serverScope.cancel()
         Log.i(TAG, "Network server cleaned up")

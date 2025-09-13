@@ -9,9 +9,6 @@ import androidx.viewpager2.widget.ViewPager2
  * @author: CaiSongL
  * @date: 2022/6/3 21:09
  */
-    /**
-     * Executes View functionality.
-     */
 fun View.gone()  {
     this.visibility = View.GONE
 }
@@ -31,19 +28,12 @@ fun View.invisible()  {
 }
 
 /**
- * Hideview，带有渐隐animation效果。
- * @param duration 毫秒，animation持续时长，default500毫秒。
+ * Hideview，带有渐隐动画效果。
+ * @param duration 毫秒，动画持续时长，默认500毫秒。
  */
-    /**
-     * Executes View functionality.
-     */
 fun View?.goneAlphaAnimation(duration: Long = 500L) {
     this?.visibility = View.GONE
     this?.startAnimation(
-        /**
-         * Executes alphaanimation operation with thermal imaging domain optimization.
-         *
-         */
         AlphaAnimation(1f, 0f).apply {
             this.duration = duration
             fillAfter = true
@@ -52,19 +42,12 @@ fun View?.goneAlphaAnimation(duration: Long = 500L) {
 }
 
 /**
- * 占位Hideview，带有渐隐animation效果。
- * @param duration 毫秒，animation持续时长，default500毫秒。
+ * 占位Hideview，带有渐隐动画效果。
+ * @param duration 毫秒，动画持续时长，默认500毫秒。
  */
-    /**
-     * Executes View functionality.
-     */
 fun View?.invisibleAlphaAnimation(duration: Long = 500L) {
     this?.visibility = View.INVISIBLE
     this?.startAnimation(
-        /**
-         * Executes alphaanimation operation with thermal imaging domain optimization.
-         *
-         */
         AlphaAnimation(1f, 0f).apply {
             this.duration = duration
             fillAfter = true
@@ -73,20 +56,13 @@ fun View?.invisibleAlphaAnimation(duration: Long = 500L) {
 }
 
 /**
- * Show/Displayview，带有渐显animation效果。
+ * Show/Displayview，带有渐显动画效果。
  *
- * @param duration 毫秒，animation持续时长，default500毫秒。
+ * @param duration 毫秒，动画持续时长，默认500毫秒。
  */
-    /**
-     * Executes View functionality.
-     */
 fun View?.visibleAlphaAnimation(duration: Long = 500L) {
     this?.visibility = View.VISIBLE
     this?.startAnimation(
-        /**
-         * Executes alphaanimation operation with thermal imaging domain optimization.
-         *
-         */
         AlphaAnimation(0f, 1f).apply {
             this.duration = duration
             fillAfter = true

@@ -36,38 +36,24 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Specialized thermal imaging component providing RangeSeekBar functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class RangeSeekBar extends View {
 
-    // Pseudo colorcode
+    //pseudo colorcode
     private int pseudocode = 3;
 
     private final static int MIN_INTERCEPT_DISTANCE = 100;
 
-    // Normal seekBar mode
+    //normal seekBar mode
     public final static int SEEKBAR_MODE_SINGLE = 1;
-    // RangeSeekBar
+    //RangeSeekBar
     public final static int SEEKBAR_MODE_RANGE = 2;
 
     private boolean noNegativeNumber = false;
 
-    public final static int TEMP_MODE_CLOSE = 0;// Close
-    public final static int TEMP_MODE_MAX = 2;// 阈值下
-    public final static int TEMP_MODE_MIN = 1;// 阈值上
-    public final static int TEMP_MODE_INTERVAL = 3;// 区间
+    public final static int TEMP_MODE_CLOSE = 0;//close
+    public final static int TEMP_MODE_MAX = 2;//阈值下
+    public final static int TEMP_MODE_MIN = 1;//阈值上
+    public final static int TEMP_MODE_INTERVAL = 3;//区间
     private int tempMode = TEMP_MODE_CLOSE;
 
     public void setTempMode(int tempMode) {
@@ -78,33 +64,17 @@ public class RangeSeekBar extends View {
     }
 
     private void updateTempModeState(){
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (tempMode == TEMP_MODE_CLOSE){
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (currTouchSB == leftSB){
                 tempMode = TEMP_MODE_MIN;
             }else if (currTouchSB == rightSB){
                 tempMode = TEMP_MODE_MAX;
             }
         }else if (tempMode == TEMP_MODE_MIN){
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (currTouchSB == rightSB){
                 tempMode = TEMP_MODE_INTERVAL;
             }
         }else if (tempMode == TEMP_MODE_MAX){
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (currTouchSB == leftSB){
                 tempMode = TEMP_MODE_INTERVAL;
             }
@@ -119,9 +89,9 @@ public class RangeSeekBar extends View {
     public @interface SeekBarModeDef {
     }
 
-    // Number according to the actual proportion of the number of arranged;
+    //number according to the actual proportion of the number of arranged;
     public final static int TRICK_MARK_MODE_NUMBER = 0;
-    // Other equally arranged
+    //other equally arranged
     public final static int TRICK_MARK_MODE_OTHER = 1;
 
     /**
@@ -132,7 +102,7 @@ public class RangeSeekBar extends View {
     public @interface TickMarkModeDef {
     }
 
-    // Tick mark text gravity
+    //tick mark text gravity
     public final static int TICK_MARK_GRAVITY_LEFT = 0;
     public final static int TICK_MARK_GRAVITY_CENTER = 1;
     public final static int TICK_MARK_GRAVITY_RIGHT = 2;
@@ -169,67 +139,67 @@ public class RangeSeekBar extends View {
 
     private int progressTop, progressBottom, progressLeft, progressRight;
     private int seekBarMode;
-    // 刻度mode：number根据数字实际比例排列；other 均分排列
+    //刻度mode：number根据数字实际比例排列；other 均分排列
     private int tickMarkMode;
-    // 刻度与进度条间的间距
-    // The spacing between the tick mark and the progress bar
+    //刻度与进度条间的间距
+    //The spacing between the tick mark and the progress bar
     private int tickMarkTextMargin;
-    // 刻度text与tiptext的大小
-    // Tick mark text and prompt text size
+    //刻度text与tiptext的大小
+    //tick mark text and prompt text size
     private int tickMarkTextSize;
     private int tickMarkGravity;
     private int tickMarkLayoutGravity;
     private int tickMarkTextColor;
     private int tickMarkInRangeTextColor;
-    // 刻度上Show/Display的text
-    // The texts displayed on the scale
+    //刻度上Show/Display的text
+    //The texts displayed on the scale
     private CharSequence[] tickMarkTextArray;
-    // 进度条圆角
-    // Radius of progress bar
+    //进度条圆角
+    //radius of progress bar
     private float progressRadius;
-    // 进度中进度条的color
-    // The color of seekBar in progress
+    //进度中进度条的color
+    //the color of seekBar in progress
     private int progressColor;
-    // Default进度条color
-    // The default color of the progress bar
+    //默认进度条color
+    //the default color of the progress bar
     private int progressDefaultColor;
 
-    // The drawable of seekBar in progress
+    //the drawable of seekBar in progress
     private int progressDrawableId;
-    // The default Drawable of the progress bar
+    //the default Drawable of the progress bar
     private int progressDefaultDrawableId;
 
-    // The progress height
+    //the progress height
     private int progressHeight;
-    // The progress width
+    // the progress width
     private int progressWidth;
-    // The range interval of RangeSeekBar
+    //the range interval of RangeSeekBar
     private float minInterval;
 
     private int gravity;
-    // Enable RangeSeekBar two thumb Overlap
+    //enable RangeSeekBar two thumb Overlap
     private boolean enableThumbOverlap;
 
-    // The color of step divs
+    //the color of step divs
     private int stepsColor;
-    // The width of each step
+    //the width of each step
     private float stepsWidth;
-    // The height of each step
+    //the height of each step
     private float stepsHeight;
-    // The radius of step divs
+    //the radius of step divs
     private float stepsRadius;
-    // Steps is 0 will disable StepSeekBar
+    //steps is 0 will disable StepSeekBar
     private int steps;
-    // The thumb will automatic bonding close to its value
+    //the thumb will automatic bonding close to its value
     private boolean stepsAutoBonding;
     private int stepsDrawableId;
-    // True values set by the user
+    //True values set by the user
     private float minProgress, maxProgress;
-    // ****************** the above is attr value  ******************//
+    //****************** the above is attr value  ******************//
 
     private boolean isEnable = true;
     float touchDownX, touchDownY;
-    // 剩余最小间隔的进度
+    //剩余最小间隔的进度
     float reservePercent;
     boolean isScaleThumb = false;
     Paint paint = new Paint();
@@ -259,92 +229,36 @@ public class RangeSeekBar extends View {
     @Nullable
     private float[] places;
 
-    /**
-     * Executes rangeseekbar operation with thermal imaging domain optimization.
-     *
-     */
     public RangeSeekBar(Context context) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this(context, null);
     }
 
-    /**
-     * Executes rangeseekbar operation with thermal imaging domain optimization.
-     *
-     */
     public RangeSeekBar(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
-        /**
-         * Initializes the attrs component for thermal imaging operations.
-         *
-         */
         initAttrs(attrs);
-        /**
-         * Initializes the paint component for thermal imaging operations.
-         *
-         */
         initPaint();
-        /**
-         * Initializes the seekbar component for thermal imaging operations.
-         *
-         */
         initSeekBar(attrs);
-        /**
-         * Initializes the stepsbitmap component for thermal imaging operations.
-         *
-         */
         initStepsBitmap();
     }
 
     private void initProgressBitmap() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (progressBitmap == null) {
             progressBitmap = Utils.drawableToBitmap(getContext(), progressWidth, progressHeight, progressDrawableId);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (progressDefaultBitmap == null) {
             progressDefaultBitmap = Utils.drawableToBitmap(getContext(), progressWidth, progressHeight, progressDefaultDrawableId);
         }
     }
 
     private boolean verifyStepsMode() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (steps < 1 || stepsHeight <= 0 || stepsWidth <= 0) return false;
         return true;
     }
 
     private void initStepsBitmap() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!verifyStepsMode() || stepsDrawableId == 0) return;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (stepsBitmaps.isEmpty()) {
             Bitmap bitmap = Utils.drawableToBitmap(getContext(), (int) stepsWidth, (int) stepsHeight, stepsDrawableId);
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0; i <= steps; i++) {
                 stepsBitmaps.add(bitmap);
             }
@@ -400,17 +314,9 @@ public class RangeSeekBar extends View {
         int viewHeight = h - getPaddingBottom() - getPaddingTop();
         if (h <= 0) return;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (gravity == Gravity.TOP) {
-            // Calculate the height of indicator and thumb exceeds the part of the progress
+            //calculate the height of indicator and thumb exceeds the part of the progress
             float maxIndicatorHeight = 0;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (leftSB.getIndicatorShowMode() != INDICATOR_ALWAYS_HIDE
                     || rightSB.getIndicatorShowMode() != INDICATOR_ALWAYS_HIDE) {
                 maxIndicatorHeight = Math.max(leftSB.getIndicatorRawHeight(), rightSB.getIndicatorRawHeight());
@@ -418,22 +324,14 @@ public class RangeSeekBar extends View {
             float thumbHeight = Math.max(leftSB.getThumbScaleHeight(), rightSB.getThumbScaleHeight());
             thumbHeight -= progressHeight / 2f;
 
-            // Default height is indicator + thumb exceeds the part of the progress bar
-            // If tickMark height is greater than (indicator + thumb exceeds the part of the progress)
+            //default height is indicator + thumb exceeds the part of the progress bar
+            //if tickMark height is greater than (indicator + thumb exceeds the part of the progress)
             progressTop = (int) (maxIndicatorHeight + (thumbHeight - progressHeight) / 2f);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tickMarkTextArray != null && tickMarkLayoutGravity == Gravity.TOP) {
                 progressTop = (int) Math.max(getTickMarkRawHeight(), maxIndicatorHeight + (thumbHeight - progressHeight) / 2f);
             }
             progressBottom = progressTop + progressHeight;
         } else if (gravity == Gravity.BOTTOM) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tickMarkTextArray != null && tickMarkLayoutGravity == Gravity.BOTTOM) {
                 progressBottom = viewHeight - getTickMarkRawHeight();
             } else {
@@ -452,24 +350,16 @@ public class RangeSeekBar extends View {
         progressWidth = progressRight - progressLeft;
         progressDefaultDstRect.set(getProgressLeft(), getProgressTop(), getProgressRight(), getProgressBottom());
         progressPaddingRight = w - progressRight;
-        // Default value
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        //default value
         if (progressRadius <= 0) {
             progressRadius = (int) ((getProgressBottom() - getProgressTop()) * 0.15f);
         }
-        /**
-         * Initializes the progressbitmap component for thermal imaging operations.
-         *
-         */
         initProgressBitmap();
     }
 
-    // Android 7.0以后，Optimize了View的绘制，onMeasure和onSizeChanged调用顺序有所变化
-    // Android7.0以下：onMeasure--->onSizeChanged--->onMeasure
-    // Android7.0以上：onMeasure--->onSizeChanged
+    //Android 7.0以后，Optimize了View的绘制，onMeasure和onSizeChanged调用顺序有所变化
+    //Android7.0以下：onMeasure--->onSizeChanged--->onMeasure
+    //Android7.0以上：onMeasure--->onSizeChanged
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
@@ -481,10 +371,6 @@ public class RangeSeekBar extends View {
          * MeasureSpec.UNSPECIFIED 是未指定尺寸
          */
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (heightMode == MeasureSpec.EXACTLY) {
             heightSize = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY);
         } else if (heightMode == MeasureSpec.AT_MOST && getParent() instanceof ViewGroup
@@ -492,15 +378,7 @@ public class RangeSeekBar extends View {
             heightSize = MeasureSpec.makeMeasureSpec(((ViewGroup) getParent()).getMeasuredHeight(), MeasureSpec.AT_MOST);
         } else {
             int heightNeeded;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (gravity == Gravity.CENTER) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (tickMarkTextArray != null && tickMarkLayoutGravity == Gravity.BOTTOM) {
                     heightNeeded = (int) (2 * (getRawHeight() - getTickMarkRawHeight()));
                 } else {
@@ -515,10 +393,6 @@ public class RangeSeekBar extends View {
     }
 
     protected int getTickMarkRawHeight() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (tickMarkTextArray != null && tickMarkTextArray.length > 0) {
             return tickMarkTextMargin + Utils.measureText(String.valueOf(tickMarkTextArray[0]), tickMarkTextSize).height() + 3;
         }
@@ -527,26 +401,14 @@ public class RangeSeekBar extends View {
 
     protected float getRawHeight() {
         float rawHeight;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (seekBarMode == SEEKBAR_MODE_SINGLE) {
             rawHeight = leftSB.getRawHeight();
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tickMarkLayoutGravity == Gravity.BOTTOM && tickMarkTextArray != null) {
                 float h = Math.max((leftSB.getThumbScaleHeight() - progressHeight) / 2, getTickMarkRawHeight());
                 rawHeight = rawHeight - leftSB.getThumbScaleHeight() / 2 + progressHeight / 2f + h;
             }
         } else {
             rawHeight = Math.max(leftSB.getRawHeight(), rightSB.getRawHeight());
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tickMarkLayoutGravity == Gravity.BOTTOM && tickMarkTextArray != null) {
                 float thumbHeight = Math.max(leftSB.getThumbScaleHeight(), rightSB.getThumbScaleHeight());
                 float h = Math.max((thumbHeight - progressHeight) / 2, getTickMarkRawHeight());
@@ -559,24 +421,12 @@ public class RangeSeekBar extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        /**
-         * Executes onmeasureprogress operation with thermal imaging domain optimization.
-         *
-         */
         onMeasureProgress(w, h);
-        // Set default value
-        /**
-         * Configures the range with validation and thermal imaging optimization.
-         *
-         */
+        //set default value
         setRange(minProgress, maxProgress, minInterval);
-        // Initializes the positions of the two thumbs
+        // initializes the positions of the two thumbs
         int lineCenterY = (getProgressBottom() + getProgressTop()) / 2;
         leftSB.onSizeChanged(getProgressLeft(), lineCenterY);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
             rightSB.onSizeChanged(getProgressLeft(), lineCenterY);
         }
@@ -585,62 +435,26 @@ public class RangeSeekBar extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        /**
-         * Executes ondrawtickmark operation with thermal imaging domain optimization.
-         *
-         */
-        onDrawTickMark(canvas, paint); // 固定刻度
-        /**
-         * Executes ondrawprogressbar operation with thermal imaging domain optimization.
-         *
-         */
-        onDrawProgressBar(canvas, paint); // Axis
-        /**
-         * Executes ondrawsteps operation with thermal imaging domain optimization.
-         *
-         */
+        onDrawTickMark(canvas, paint); //固定刻度
+        onDrawProgressBar(canvas, paint); //轴
         onDrawSteps(canvas, paint);
-        /**
-         * Executes ondrawseekbar operation with thermal imaging domain optimization.
-         *
-         */
-        onDrawSeekBar(canvas); // Swipetag
+        onDrawSeekBar(canvas); //Swipetag
     }
 
-    // 绘制刻度，并且根据current位置是否在刻度range内settings不同的colorShow/Display
+    //绘制刻度，并且根据current位置是否在刻度range内settings不同的colorShow/Display
     // Draw the scales, and according to the current position is set within
-    // The scale range of different color display
+    // the scale range of different color display
     protected void onDrawTickMark(Canvas canvas, Paint paint) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (tickMarkTextArray != null) {
             int trickPartWidth = progressWidth / (tickMarkTextArray.length - 1);
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0; i < tickMarkTextArray.length; i++) {
                 final String text2Draw = tickMarkTextArray[i].toString();
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (TextUtils.isEmpty(text2Draw)) continue;
                 paint.getTextBounds(text2Draw, 0, text2Draw.length(), tickMarkTextRect);
                 paint.setColor(tickMarkTextColor);
-                // 平分Show/Display
+                //平分Show/Display
                 float x;
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (tickMarkMode == TRICK_MARK_MODE_OTHER) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (tickMarkGravity == TICK_MARK_GRAVITY_RIGHT) {
                         x = getProgressLeft() + i * trickPartWidth - tickMarkTextRect.width();
                     } else if (tickMarkGravity == TICK_MARK_GRAVITY_CENTER) {
@@ -651,22 +465,14 @@ public class RangeSeekBar extends View {
                 } else {
                     float num = Utils.parseFloat(text2Draw);
                     SeekBarState[] states = getRangeSeekBarState();
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (Utils.compareFloat(num, states[0].value) != -1 && Utils.compareFloat(num, states[1].value) != 1 && (seekBarMode == SEEKBAR_MODE_RANGE)) {
                         paint.setColor(tickMarkInRangeTextColor);
                     }
-                    // 按实际比例Show/Display
+                    //按实际比例Show/Display
                     x = getProgressLeft() + progressWidth * (num - minProgress) / (maxProgress - minProgress)
                             - tickMarkTextRect.width() / 2f;
                 }
                 float y;
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (tickMarkLayoutGravity == Gravity.TOP) {
                     y = getProgressTop() - tickMarkTextMargin;
                 } else {
@@ -677,24 +483,16 @@ public class RangeSeekBar extends View {
         }
     }
 
-    // 绘制进度条
-    // Draw the progress bar
+    //绘制进度条
+    // draw the progress bar
     protected void onDrawProgressBar(Canvas canvas, Paint paint) {
 
-        // 固定region背景
-        // Draw default progress
+        //固定region背景
+        //draw default progress
         paint.setShader(null);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Utils.verifyBitmap(progressDefaultBitmap)) {
             canvas.drawBitmap(progressDefaultBitmap, null, progressDefaultDstRect, paint);
         } else {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (progressDefaultColor == -1){
                 int[] colors = PseudoColorConfig.getSeekBarColors();
                 float[] positions = PseudoColorConfig.getSeekBarAlpha();
@@ -705,14 +503,10 @@ public class RangeSeekBar extends View {
             canvas.drawRoundRect(progressDefaultDstRect, progressRadius, progressRadius, paint);
         }
 
-        // 动态region前景
-        // Draw progress
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        //动态region前景
+        //draw progress
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
-//            XLog.w("动态axisregion");
+//            XLog.w("动态轴region");
             progressDstRect.top = getProgressTop();
             progressDstRect.left = leftSB.left + leftSB.getThumbScaleWidth() / 2f + progressWidth * leftSB.currPercent;
             progressDstRect.right = rightSB.left + rightSB.getThumbScaleWidth() / 2f + progressWidth * rightSB.currPercent;
@@ -723,10 +517,6 @@ public class RangeSeekBar extends View {
             progressDstRect.right = leftSB.left + leftSB.getThumbScaleWidth() / 2f + progressWidth * leftSB.currPercent;
             progressDstRect.bottom = getProgressBottom();
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (colorList != null){
             paint.setShader(new LinearGradient(progressWidth, 0f, 0f, 0f, colorList, places, Shader.TileMode.CLAMP));
             canvas.drawRoundRect(progressDstRect, progressRadius, progressRadius, paint);
@@ -736,18 +526,10 @@ public class RangeSeekBar extends View {
             paint.setShader(new LinearGradient(progressWidth, 0f, 0f, 0f, colors, positions, Shader.TileMode.CLAMP));
             canvas.drawRoundRect(progressDstRect, progressRadius, progressRadius, paint);
         } else {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Utils.verifyBitmap(progressBitmap)) {
                 progressSrcRect.top = 0;
                 progressSrcRect.bottom = progressBitmap.getHeight();
                 int bitmapWidth = progressBitmap.getWidth();
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (seekBarMode == SEEKBAR_MODE_RANGE) {
                     progressSrcRect.left = (int) (bitmapWidth * leftSB.currPercent);
                     progressSrcRect.right = (int) (bitmapWidth * rightSB.currPercent);
@@ -764,26 +546,14 @@ public class RangeSeekBar extends View {
 
     }
 
-    // Draw steps
+    //draw steps
     protected void onDrawSteps(Canvas canvas, Paint paint) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!verifyStepsMode()) return;
         int stepMarks = getProgressWidth() / (steps);
         float extHeight = (stepsHeight - getProgressHeight()) / 2f;
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int k = 0; k <= steps; k++) {
             float x = getProgressLeft() + k * stepMarks - stepsWidth / 2f;
             stepDivRect.set(x, getProgressTop() - extHeight, x + stepsWidth, getProgressBottom() + extHeight);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (stepsBitmaps.isEmpty() || stepsBitmaps.size() <= k) {
                 paint.setColor(stepsColor);
                 canvas.drawRoundRect(stepDivRect, stepsRadius, stepsRadius, paint);
@@ -793,27 +563,15 @@ public class RangeSeekBar extends View {
         }
     }
 
-    // 绘制SeekBar相关
+    //绘制SeekBar相关
     protected void onDrawSeekBar(Canvas canvas) {
-        // Draw left SeekBar
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        //draw left SeekBar
         if (leftSB.getIndicatorShowMode() == INDICATOR_ALWAYS_SHOW) {
             leftSB.setShowIndicatorEnable(true);
         }
         leftSB.draw(canvas, true);
-        // Draw right SeekBar
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        //draw right SeekBar
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rightSB.getIndicatorShowMode() == INDICATOR_ALWAYS_SHOW) {
                 rightSB.setShowIndicatorEnable(true);
             }
@@ -821,14 +579,10 @@ public class RangeSeekBar extends View {
         }
     }
 
-    // Initialize画笔
+    //initialize画笔
     private void initPaint() {
         paint.setStyle(Paint.Style.FILL);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (progressDefaultColor == -1){
             int[] colors = PseudoColorConfig.getSeekBarColors();
             float[] positions = PseudoColorConfig.getSeekBarAlpha();
@@ -836,30 +590,18 @@ public class RangeSeekBar extends View {
         }else {
             paint.setColor(progressDefaultColor);
         }
-// Paint.setColor(progressDefaultColor);
+//        paint.setColor(progressDefaultColor);
         paint.setTextSize(tickMarkTextSize);
     }
 
     private void changeThumbActivateState(boolean hasActivate) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (hasActivate && currTouchSB != null) {
             boolean state = currTouchSB == leftSB;
             leftSB.setActivate(state);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (seekBarMode == SEEKBAR_MODE_RANGE)
                 rightSB.setActivate(!state);
         } else {
             leftSB.setActivate(false);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (seekBarMode == SEEKBAR_MODE_RANGE)
                 rightSB.setActivate(false);
         }
@@ -893,46 +635,22 @@ public class RangeSeekBar extends View {
         }
     }
 
-    // Calculate currTouchSB percent by MotionEvent
+    //calculate currTouchSB percent by MotionEvent
     protected float calculateCurrentSeekBarPercent(float touchDownX) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (currTouchSB == null) return 0;
         float percent = (touchDownX - getProgressLeft()) * 1f / (progressWidth);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (touchDownX < getProgressLeft()) {
             percent = 0;
         } else if (touchDownX > getProgressRight()) {
             percent = 1;
         }
-        // RangeMode minimum interval
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        //RangeMode minimum interval
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (currTouchSB == leftSB) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (percent > rightSB.currPercent - reservePercent) {
                     percent = rightSB.currPercent - reservePercent;
                 }
             } else if (currTouchSB == rightSB) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (percent < leftSB.currPercent + reservePercent) {
                     percent = leftSB.currPercent + reservePercent;
                 }
@@ -943,51 +661,23 @@ public class RangeSeekBar extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isEnable) return false;
-//        Log.e("Test焦point：",event.getAction()+"// ");
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
+//        Log.e("Test焦point：",event.getAction()+"//");
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 touchDownX = getEventX(event);
                 touchDownY = getEventY(event);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (seekBarMode == SEEKBAR_MODE_RANGE) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (rightSB.currPercent >= 1 && leftSB.collide(getEventX(event), getEventY(event))) {
                         currTouchSB = leftSB;
-                        /**
-                         * Executes scalecurrentseekbarthumb operation with thermal imaging domain optimization.
-                         *
-                         */
                         scaleCurrentSeekBarThumb();
                     } else if (rightSB.collide(getEventX(event), getEventY(event))) {
                         currTouchSB = rightSB;
-                        /**
-                         * Executes scalecurrentseekbarthumb operation with thermal imaging domain optimization.
-                         *
-                         */
                         scaleCurrentSeekBarThumb();
                     } else {
                         float performClick = (touchDownX - getProgressLeft()) * 1f / (progressWidth);
                         float distanceLeft = Math.abs(leftSB.currPercent - performClick);
                         float distanceRight = Math.abs(rightSB.currPercent - performClick);
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (distanceLeft < distanceRight) {
                             currTouchSB = leftSB;
                         } else {
@@ -998,210 +688,84 @@ public class RangeSeekBar extends View {
                     }
                 } else {
                     currTouchSB = leftSB;
-                    /**
-                     * Executes scalecurrentseekbarthumb operation with thermal imaging domain optimization.
-                     *
-                     */
                     scaleCurrentSeekBarThumb();
                 }
 
-                // Intercept parent TouchEvent
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+                //Intercept parent TouchEvent
                 if (getParent() != null) {
-                    /**
-                     * Retrieves the parent with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (callback != null) {
                     callback.onStartTrackingTouch(this, currTouchSB == leftSB);
                 }
-                /**
-                 * Updates the thumbactivatestate configuration with real-time thermal imaging support.
-                 *
-                 */
                 changeThumbActivateState(true);
                 return true;
             case MotionEvent.ACTION_MOVE:
                 float x = getEventX(event);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if ((seekBarMode == SEEKBAR_MODE_RANGE) && leftSB.currPercent == rightSB.currPercent) {
                     currTouchSB.materialRestore();
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (callback != null) {
                         callback.onStopTrackingTouch(this, currTouchSB == leftSB);
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (x - touchDownX > 0) {
-                        // Method to move right
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
+                        //method to move right
                         if (currTouchSB != rightSB) {
                             currTouchSB.setShowIndicatorEnable(false);
-                            /**
-                             * Executes resetcurrentseekbarthumb operation with thermal imaging domain optimization.
-                             *
-                             */
                             resetCurrentSeekBarThumb();
                             currTouchSB = rightSB;
                         }
                     } else {
-                        // Method to move left
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
+                        //method to move left
                         if (currTouchSB != leftSB) {
                             currTouchSB.setShowIndicatorEnable(false);
-                            /**
-                             * Executes resetcurrentseekbarthumb operation with thermal imaging domain optimization.
-                             *
-                             */
                             resetCurrentSeekBarThumb();
                             currTouchSB = leftSB;
                         }
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (callback != null) {
                         callback.onStartTrackingTouch(this, currTouchSB == leftSB);
                     }
                 }
-                /**
-                 * Executes scalecurrentseekbarthumb operation with thermal imaging domain optimization.
-                 *
-                 */
                 scaleCurrentSeekBarThumb();
                 currTouchSB.material = currTouchSB.material >= 1 ? 1 : currTouchSB.material + 0.1f;
                 touchDownX = x;
                 currTouchSB.slide(calculateCurrentSeekBarPercent(touchDownX));
                 currTouchSB.setShowIndicatorEnable(true);
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (callback != null) {
                     SeekBarState[] states = getRangeSeekBarState();
-                    /**
-                     * Handles temperature measurement and calibration with precision thermal data processing.
-                     *
-                     * @note Temperature values are in Celsius unless otherwise specified.
-                     * Accuracy depends on thermal camera calibration.
-                     *
-                     */
                     updateTempModeState();
                     callback.onRangeChanged(this, states[0].value, states[1].value, true,tempMode);
                 }
-                /**
-                 * Executes invalidate operation with thermal imaging domain optimization.
-                 *
-                 */
                 invalidate();
-                // Intercept parent TouchEvent
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+                //Intercept parent TouchEvent
                 if (getParent() != null) {
-                    /**
-                     * Retrieves the parent with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
-                /**
-                 * Updates the thumbactivatestate configuration with real-time thermal imaging support.
-                 *
-                 */
                 changeThumbActivateState(true);
                 break;
             case MotionEvent.ACTION_CANCEL:
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (seekBarMode == SEEKBAR_MODE_RANGE) {
                     rightSB.setShowIndicatorEnable(false);
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (currTouchSB == leftSB) {
-                    /**
-                     * Executes resetcurrentseekbarthumb operation with thermal imaging domain optimization.
-                     *
-                     */
                     resetCurrentSeekBarThumb();
                 } else if (currTouchSB == rightSB) {
-                    /**
-                     * Executes resetcurrentseekbarthumb operation with thermal imaging domain optimization.
-                     *
-                     */
                     resetCurrentSeekBarThumb();
                 }
                 leftSB.setShowIndicatorEnable(false);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (callback != null) {
                     SeekBarState[] states = getRangeSeekBarState();
-                    /**
-                     * Handles temperature measurement and calibration with precision thermal data processing.
-                     *
-                     * @note Temperature values are in Celsius unless otherwise specified.
-                     * Accuracy depends on thermal camera calibration.
-                     *
-                     */
                     updateTempModeState();
                     callback.onRangeChanged(this, states[0].value, states[1].value, false,tempMode);
                 }
-                // Intercept parent TouchEvent
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+                //Intercept parent TouchEvent
                 if (getParent() != null) {
-                    /**
-                     * Retrieves the parent with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
-                /**
-                 * Updates the thumbactivatestate configuration with real-time thermal imaging support.
-                 *
-                 */
                 changeThumbActivateState(false);
                 break;
             case MotionEvent.ACTION_UP:
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (verifyStepsMode() && stepsAutoBonding) {
                     float percent = calculateCurrentSeekBarPercent(getEventX(event));
                     float stepPercent = 1.0f / steps;
@@ -1209,59 +773,24 @@ public class RangeSeekBar extends View {
                     currTouchSB.slide(stepSelected * stepPercent);
                 }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (seekBarMode == SEEKBAR_MODE_RANGE) {
                     rightSB.setShowIndicatorEnable(false);
                 }
                 leftSB.setShowIndicatorEnable(false);
                 currTouchSB.materialRestore();
-                /**
-                 * Executes resetcurrentseekbarthumb operation with thermal imaging domain optimization.
-                 *
-                 */
                 resetCurrentSeekBarThumb();
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (callback != null) {
                     SeekBarState[] states = getRangeSeekBarState();
-                    /**
-                     * Handles temperature measurement and calibration with precision thermal data processing.
-                     *
-                     * @note Temperature values are in Celsius unless otherwise specified.
-                     * Accuracy depends on thermal camera calibration.
-                     *
-                     */
                     updateTempModeState();
                     callback.onRangeChanged(this, states[0].value, states[1].value, false,tempMode);
                 }
-                // Intercept parent TouchEvent
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+                //Intercept parent TouchEvent
                 if (getParent() != null) {
-                    /**
-                     * Retrieves the parent with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (callback != null) {
                     callback.onStopTrackingTouch(this, currTouchSB == leftSB);
                 }
-                /**
-                 * Updates the thumbactivatestate configuration with real-time thermal imaging support.
-                 *
-                 */
                 changeThumbActivateState(false);
                 break;
         }
@@ -1289,17 +818,9 @@ public class RangeSeekBar extends View {
             float min = ss.minValue;
             float max = ss.maxValue;
             float rangeInterval = ss.rangeInterval;
-            /**
-             * Configures the range with validation and thermal imaging optimization.
-             *
-             */
             setRange(min, max, rangeInterval);
             float currSelectedMin = ss.currSelectedMin;
             float currSelectedMax = ss.currSelectedMax;
-            /**
-             * Configures the progress with validation and thermal imaging optimization.
-             *
-             */
             setProgress(currSelectedMin, currSelectedMax);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1307,24 +828,16 @@ public class RangeSeekBar extends View {
 
     }
 
-    // ******************* Attributes getter and setter *******************//
+    //******************* Attributes getter and setter *******************//
 
     /**
      * 临时processing负数
      */
     public void setNoNegativeNumber(Boolean noNegativeNumber){
         this.noNegativeNumber = noNegativeNumber;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (leftSB!=null){
             leftSB.setNoNegativeNumber(noNegativeNumber);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rightSB!=null){
             rightSB.setNoNegativeNumber(noNegativeNumber);
         }
@@ -1335,24 +848,12 @@ public class RangeSeekBar extends View {
     }
 
     public void setProgress(float value) {
-        /**
-         * Configures the progress with validation and thermal imaging optimization.
-         *
-         */
         setProgress(value, maxProgress);
     }
     public void setProgressNoCallBack(float leftValue, float rightValue) {
         leftValue = Math.min(leftValue, rightValue);
         rightValue = Math.max(leftValue, rightValue);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rightValue - leftValue < minInterval) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (leftValue - minProgress > maxProgress - rightValue) {
                 leftValue = rightValue - minInterval;
             } else {
@@ -1360,45 +861,25 @@ public class RangeSeekBar extends View {
             }
         }
 //
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (leftValue < minProgress) {
             leftValue = minProgress;
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rightValue > maxProgress) {
             rightValue = maxProgress;
         }
         float range = maxProgress - minProgress;
         leftSB.currPercent = Math.abs(leftValue - minProgress) / range;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
             rightSB.currPercent = Math.abs(rightValue - minProgress) / range;
         }
-// Invalidate();
-        /**
-         * Executes postinvalidate operation with thermal imaging domain optimization.
-         *
-         */
+//        invalidate();
         postInvalidate();
     }
     Long updateTime = System.currentTimeMillis();
 
     @Override
     public void invalidate() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (System.currentTimeMillis() - updateTime < 50){
             return;
         }
@@ -1409,15 +890,7 @@ public class RangeSeekBar extends View {
     public void setProgress(float leftValue, float rightValue) {
         leftValue = Math.min(leftValue, rightValue);
         rightValue = Math.max(leftValue, rightValue);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rightValue - leftValue < minInterval) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (leftValue - minProgress > maxProgress - rightValue) {
                 leftValue = rightValue - minInterval;
             } else {
@@ -1425,41 +898,21 @@ public class RangeSeekBar extends View {
             }
         }
 //
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (leftValue < minProgress) {
             leftValue = minProgress;
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rightValue > maxProgress) {
             rightValue = maxProgress;
         }
         float range = maxProgress - minProgress;
         leftSB.currPercent = Math.abs(leftValue - minProgress) / range;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
             rightSB.currPercent = Math.abs(rightValue - minProgress) / range;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (callback != null) {
             callback.onRangeChanged(this, leftValue, rightValue, false,tempMode);
         }
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -1470,15 +923,7 @@ public class RangeSeekBar extends View {
      * @param max 最大值
      */
     public void setRange(float min, float max) {
-        /**
-         * Configures the range with validation and thermal imaging optimization.
-         *
-         */
         setRange(min, max, minInterval);
-        /**
-         * Configures the progress with validation and thermal imaging optimization.
-         *
-         */
         setProgress(getLeftSeekBar().left,getRightSeekBar().right);
     }
 
@@ -1490,73 +935,29 @@ public class RangeSeekBar extends View {
      * @param realRightValue ： 实际maximumtemperature
      */
     public void setRangeAndPro(float editMin,float editMax,float realLeftValue,float realRightValue){
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (editMin == Float.MIN_VALUE && editMax == Float.MAX_VALUE){
-            /**
-             * Configures the rangenoinvalidate with validation and thermal imaging optimization.
-             *
-             */
             setRangeNoInvalidate(realLeftValue,realRightValue,0.1f);
-            /**
-             * Configures the progressnocallback with validation and thermal imaging optimization.
-             *
-             */
             setProgressNoCallBack(realLeftValue,realRightValue);
             return;
         }
-        /**
-         * Configures the rangenoinvalidate with validation and thermal imaging optimization.
-         *
-         */
         setRangeNoInvalidate(realLeftValue,realRightValue,0.1f);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (editMax <= realRightValue && editMin >= realLeftValue){
-            // 手动值均在实际值区间内
-            /**
-             * Configures the progressnocallback with validation and thermal imaging optimization.
-             *
-             */
+            //手动值均在实际值区间内
             setProgressNoCallBack(editMin,editMax);
         }else if (editMax > realRightValue && editMin < realLeftValue){
-            // 手动最大最小值均不在区间内
-            /**
-             * Configures the progressnocallback with validation and thermal imaging optimization.
-             *
-             */
+            //手动最大最小值均不在区间内
             setProgressNoCallBack(realLeftValue,realRightValue);
         }else if (editMax > realRightValue && editMin > realRightValue){
-            // 手动最大值最小值大于实际最大值
-            /**
-             * Configures the progressnocallback with validation and thermal imaging optimization.
-             *
-             */
+            //手动最大值最小值大于实际最大值
             setProgressNoCallBack(realRightValue,realRightValue);
         } else if (editMax < realLeftValue && editMin < realLeftValue){
-            // 手动最大值最小值小于实际最小值
-            /**
-             * Configures the progressnocallback with validation and thermal imaging optimization.
-             *
-             */
+            //手动最大值最小值小于实际最小值
             setProgressNoCallBack(realLeftValue,realLeftValue);
         }else if (editMax <= realRightValue && editMin < realLeftValue){
-            // 手动最大值在区间内，手动最小值超出区间
-            /**
-             * Configures the progressnocallback with validation and thermal imaging optimization.
-             *
-             */
+            //手动最大值在区间内，手动最小值超出区间
             setProgressNoCallBack(realLeftValue,editMax);
         }else if (editMax > realRightValue && editMin >= realLeftValue){
-            // 手动最大值超出区间内，手动最小值在区间内
-            /**
-             * Configures the progressnocallback with validation and thermal imaging optimization.
-             *
-             */
+            //手动最大值超出区间内，手动最小值在区间内
             setProgressNoCallBack(editMin,realRightValue);
         }
     }
@@ -1568,21 +969,17 @@ public class RangeSeekBar extends View {
      * @param minInterval 最小间隔
      */
     public void setRange(float min, float max, float minInterval) {
-// If (max <= min) {
-// Throw new IllegalArgumentException("setRange() max must be greater than min ! #max:" + max + " #min:" + min);
+//        if (max <= min) {
+//            throw new IllegalArgumentException("setRange() max must be greater than min ! #max:" + max + " #min:" + min);
 //        }
-// If (minInterval < 0) {
-// Throw new IllegalArgumentException("setRange() interval must be greater than zero ! #minInterval:" + minInterval);
+//        if (minInterval < 0) {
+//            throw new IllegalArgumentException("setRange() interval must be greater than zero ! #minInterval:" + minInterval);
 //        }
-// If (minInterval >= max - min) {
-// Throw new IllegalArgumentException("setRange() interval must be less than (max - min) ! #minInterval:" + minInterval + " #max - min:" + (max - min));
+//        if (minInterval >= max - min) {
+//            throw new IllegalArgumentException("setRange() interval must be less than (max - min) ! #minInterval:" + minInterval + " #max - min:" + (max - min));
 //        }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (maxProgress == max && min == minProgress){
-//            Log.w("dataupdate拦截",max+"// "+min+"");
+//            Log.w("dataupdate拦截",max+"//"+min+"");
             return;
         }
         maxProgress = max;
@@ -1590,44 +987,28 @@ public class RangeSeekBar extends View {
         this.minInterval = minInterval;
         reservePercent = minInterval / (max - min);
 
-        // Set default value
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        //set default value
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (leftSB.currPercent + reservePercent <= 1 && leftSB.currPercent + reservePercent > rightSB.currPercent) {
                 rightSB.currPercent = leftSB.currPercent + reservePercent;
             } else if (rightSB.currPercent - reservePercent >= 0 && rightSB.currPercent - reservePercent < leftSB.currPercent) {
                 leftSB.currPercent = rightSB.currPercent - reservePercent;
             }
         }
-        /**
-         * Executes postinvalidate operation with thermal imaging domain optimization.
-         *
-         */
         postInvalidate();
     }
     public void setRangeNoInvalidate(float min, float max, float minInterval) {
-// If (max <= min) {
-// Throw new IllegalArgumentException("setRange() max must be greater than min ! #max:" + max + " #min:" + min);
+//        if (max <= min) {
+//            throw new IllegalArgumentException("setRange() max must be greater than min ! #max:" + max + " #min:" + min);
 //        }
-// If (minInterval < 0) {
-// Throw new IllegalArgumentException("setRange() interval must be greater than zero ! #minInterval:" + minInterval);
+//        if (minInterval < 0) {
+//            throw new IllegalArgumentException("setRange() interval must be greater than zero ! #minInterval:" + minInterval);
 //        }
-// If (minInterval >= max - min) {
-// Throw new IllegalArgumentException("setRange() interval must be less than (max - min) ! #minInterval:" + minInterval + " #max - min:" + (max - min));
+//        if (minInterval >= max - min) {
+//            throw new IllegalArgumentException("setRange() interval must be less than (max - min) ! #minInterval:" + minInterval + " #max - min:" + (max - min));
 //        }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (maxProgress == max && min == minProgress){
-//            Log.w("dataupdate拦截",max+"// "+min+"");
+//            Log.w("dataupdate拦截",max+"//"+min+"");
             return;
         }
         maxProgress = max;
@@ -1635,16 +1016,8 @@ public class RangeSeekBar extends View {
         this.minInterval = minInterval;
         reservePercent = minInterval / (max - min);
 
-        // Set default value
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        //set default value
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (leftSB.currPercent + reservePercent <= 1 && leftSB.currPercent + reservePercent > rightSB.currPercent) {
                 rightSB.currPercent = leftSB.currPercent + reservePercent;
             } else if (rightSB.currPercent - reservePercent >= 0 && rightSB.currPercent - reservePercent < leftSB.currPercent) {
@@ -1661,10 +1034,6 @@ public class RangeSeekBar extends View {
         leftSeekBarState.value = leftSB.getProgress();
 
         leftSeekBarState.indicatorText = String.valueOf(leftSeekBarState.value);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Utils.compareFloat(leftSeekBarState.value, minProgress) == 0) {
             leftSeekBarState.isMin = true;
         } else if (Utils.compareFloat(leftSeekBarState.value, maxProgress) == 0) {
@@ -1672,17 +1041,9 @@ public class RangeSeekBar extends View {
         }
 
         SeekBarState rightSeekBarState = new SeekBarState();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
             rightSeekBarState.value = rightSB.getProgress();
             rightSeekBarState.indicatorText = String.valueOf(rightSeekBarState.value);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Utils.compareFloat(rightSB.currPercent, minProgress) == 0) {
                 rightSeekBarState.isMin = true;
             } else if (Utils.compareFloat(rightSB.currPercent, maxProgress) == 0) {
@@ -1701,10 +1062,6 @@ public class RangeSeekBar extends View {
 
     public void setIndicatorText(String progress) {
         leftSB.setIndicatorText(progress);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
             rightSB.setIndicatorText(progress);
         }
@@ -1717,10 +1074,6 @@ public class RangeSeekBar extends View {
      */
     public void setIndicatorTextDecimalFormat(String formatPattern) {
         leftSB.setIndicatorTextDecimalFormat(formatPattern);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
             rightSB.setIndicatorTextDecimalFormat(formatPattern);
         }
@@ -1733,10 +1086,6 @@ public class RangeSeekBar extends View {
      */
     public void setIndicatorTextStringFormat(String formatPattern) {
         leftSB.setIndicatorTextStringFormat(formatPattern);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
             rightSB.setIndicatorTextStringFormat(formatPattern);
         }
@@ -1916,10 +1265,6 @@ public class RangeSeekBar extends View {
     public void setProgressDrawableId(@DrawableRes int progressDrawableId) {
         this.progressDrawableId = progressDrawableId;
         progressBitmap = null;
-        /**
-         * Initializes the progressbitmap component for thermal imaging operations.
-         *
-         */
         initProgressBitmap();
     }
 
@@ -1930,10 +1275,6 @@ public class RangeSeekBar extends View {
     public void setProgressDefaultDrawableId(@DrawableRes int progressDefaultDrawableId) {
         this.progressDefaultDrawableId = progressDefaultDrawableId;
         progressDefaultBitmap = null;
-        /**
-         * Initializes the progressbitmap component for thermal imaging operations.
-         *
-         */
         initProgressBitmap();
     }
 
@@ -2056,10 +1397,6 @@ public class RangeSeekBar extends View {
     public void setStepsDrawableId(@DrawableRes int stepsDrawableId) {
         this.stepsBitmaps.clear();
         this.stepsDrawableId = stepsDrawableId;
-        /**
-         * Initializes the stepsbitmap component for thermal imaging operations.
-         *
-         */
         initStepsBitmap();
     }
 
@@ -2068,84 +1405,48 @@ public class RangeSeekBar extends View {
     }
 
     public void setStepsBitmaps(List<Bitmap> stepsBitmaps) {
-// If (stepsBitmaps == null || stepsBitmaps.isEmpty() || stepsBitmaps.size() <= steps) {
-// Throw new IllegalArgumentException("stepsBitmaps must > steps !");
+//        if (stepsBitmaps == null || stepsBitmaps.isEmpty() || stepsBitmaps.size() <= steps) {
+//            throw new IllegalArgumentException("stepsBitmaps must > steps !");
 //        }
         this.stepsBitmaps.clear();
         this.stepsBitmaps.addAll(stepsBitmaps);
     }
 
     public void setStepsDrawable(List<Integer> stepsDrawableIds) {
-// If (stepsDrawableIds == null || stepsDrawableIds.isEmpty() || stepsDrawableIds.size() <= steps) {
-// Throw new IllegalArgumentException("stepsDrawableIds must > steps !");
+//        if (stepsDrawableIds == null || stepsDrawableIds.isEmpty() || stepsDrawableIds.size() <= steps) {
+//            throw new IllegalArgumentException("stepsDrawableIds must > steps !");
 //        }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!verifyStepsMode()) {
             throw new IllegalArgumentException("stepsWidth must > 0, stepsHeight must > 0,steps must > 0 First!!");
         }
         List<Bitmap> stepsBitmaps = new ArrayList<>();
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < stepsDrawableIds.size(); i++) {
             stepsBitmaps.add(Utils.drawableToBitmap(getContext(), (int) stepsWidth, (int) stepsHeight, stepsDrawableIds.get(i)));
         }
-        /**
-         * Configures the stepsbitmaps with validation and thermal imaging optimization.
-         *
-         */
         setStepsBitmaps(stepsBitmaps);
     }
 
     public void setPseudocode(int pseudocode) {
         this.pseudocode = pseudocode;
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
     public void setColorList(@Nullable int[] colorList) {
         this.colorList = colorList;
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
     public void setPlaces(@Nullable float[] newPlaces) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (newPlaces == null) {
             places = null;
         } else {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (places == null || places.length != newPlaces.length) {
                 places = new float[newPlaces.length];
             }
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0; i < newPlaces.length; i++) {
                 places[places.length - 1 - i] = 1 - newPlaces[i];
             }
         }
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 }

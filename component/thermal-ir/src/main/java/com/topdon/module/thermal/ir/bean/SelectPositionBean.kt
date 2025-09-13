@@ -19,17 +19,7 @@ data class SelectPositionBean(
     val startPosition: Point = Point(),
     val endPosition: Point = Point(),
 ) : Parcelable {
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param rect Parameter for operation (type: Rect)
-     *
-     */
     constructor(rect: Rect) : this(3, Point(rect.left, rect.top), Point(rect.right, rect.bottom))
 
-    /**
-     * Retrieves rect information.
-     */
     fun getRect(): Rect = Rect(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
 }

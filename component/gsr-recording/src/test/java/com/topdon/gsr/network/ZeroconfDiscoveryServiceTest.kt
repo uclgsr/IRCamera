@@ -15,20 +15,9 @@ import org.robolectric.shadows.ShadowNsdManager
 
 /**
  * Context-based tests for ZeroconfDiscoveryService using Robolectric
-/**
- * Specialized thermal imaging component providing ZeroconfDiscoveryServiceTest functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [Build.VERSION_CODES.O])
 class ZeroconfDiscoveryServiceTest {
     private lateinit var context: Context
     private lateinit var discoveryService: ZeroconfDiscoveryService
@@ -36,13 +25,6 @@ class ZeroconfDiscoveryServiceTest {
     private lateinit var shadowNsdManager: ShadowNsdManager
 
     @Before
-    /**
-     * Sets up configuration.
-     */
-    /**
-     * Configures the up with validation and thermal imaging optimization.
-     *
-     */
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
         discoveryService = ZeroconfDiscoveryService(context)
@@ -51,50 +33,17 @@ class ZeroconfDiscoveryServiceTest {
     }
 
     @Test
-    /**
-     * Executes testServiceCreation functionality.
-     */
-    /**
-     * Executes testservicecreation operation with thermal imaging domain optimization.
-     *
-     */
     fun testServiceCreation() {
-        /**
-         * Executes assertnotnull operation with thermal imaging domain optimization.
-         *
-         */
         assertNotNull("Discovery service should be created", discoveryService)
     }
 
     @Test
-    /**
-     * Executes testNsdManagerAccess functionality.
-     */
-    /**
-     * Executes testnsdmanageraccess operation with thermal imaging domain optimization.
-     *
-     */
     fun testNsdManagerAccess() {
-        /**
-         * Executes assertnotnull operation with thermal imaging domain optimization.
-         *
-         */
         assertNotNull("NsdManager should be available", nsdManager)
-        /**
-         * Executes assertnotnull operation with thermal imaging domain optimization.
-         *
-         */
         assertNotNull("Shadow NsdManager should be available", shadowNsdManager)
     }
 
     @Test
-    /**
-     * Executes testSetServiceListener functionality.
-     */
-    /**
-     * Executes testsetservicelistener operation with thermal imaging domain optimization.
-     *
-     */
     fun testSetServiceListener() {
         var serviceDiscovered = false
         var serviceLost = false
@@ -103,47 +52,18 @@ class ZeroconfDiscoveryServiceTest {
 
         val listener =
             object : ZeroconfDiscoveryService.ServiceDiscoveryListener {
-                /**
-                 * Executes onservicediscovered operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceInfo Parameter for operation (type: NetworkClient.ControllerInfo)
-                 *
-                 */
                 override fun onServiceDiscovered(serviceInfo: NetworkClient.ControllerInfo) {
                     serviceDiscovered = true
                 }
 
-                /**
-                 * Executes onservicelost operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceName Parameter for operation (type: String)
-                 *
-                 */
                 override fun onServiceLost(serviceName: String) {
                     serviceLost = true
                 }
 
-                /**
-                 * Executes onserviceregistered operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceName Parameter for operation (type: String)
-                 *
-                 */
                 override fun onServiceRegistered(serviceName: String) {
                     serviceRegistered = true
                 }
 
-                /**
-                 * Executes ondiscoveryerror operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param errorCode Parameter for operation (type: Int)
-                 * @param message Parameter for operation (type: String)
-                 *
-                 */
                 override fun onDiscoveryError(
                     errorCode: Int,
                     message: String,
@@ -156,68 +76,30 @@ class ZeroconfDiscoveryServiceTest {
 
         // Listener should be set (can't directly verify private field, but no exception should occur)
         // Test passes if no exception is thrown
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Setting service listener should succeed", true)
 
         // Test removing listener
         discoveryService.setServiceListener(null)
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Removing service listener should succeed", true)
     }
 
     @Test
-    /**
-     * Executes testGetDiscoveredServices functionality.
-     */
-    /**
-     * Executes testgetdiscoveredservices operation with thermal imaging domain optimization.
-     *
-     */
     fun testGetDiscoveredServices() {
         // Initially should have empty services
         val initialServices = discoveryService.getDiscoveredControllers()
-        /**
-         * Executes assertnotnull operation with thermal imaging domain optimization.
-         *
-         */
         assertNotNull("Discovered services should not be null", initialServices)
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Discovered services should be a list", initialServices is List<*>)
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Initial services should be empty", initialServices.isEmpty())
     }
 
     @Test
-    /**
-     * Executes testServiceNameGeneration functionality.
-     */
-    /**
-     * Executes testservicenamegeneration operation with thermal imaging domain optimization.
-     *
-     */
     fun testServiceNameGeneration() {
         // Test that service names are generated properly
         val deviceName1 = "Device One"
         val deviceName2 = "Device Two"
 
         // This test mainly ensures the service can handle different device names
-        // Without throwing exceptions
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
+        // without throwing exceptions
         assertTrue(
             "Different device names should be handled",
             deviceName1 != deviceName2,
@@ -225,78 +107,31 @@ class ZeroconfDiscoveryServiceTest {
     }
 
     @Test
-    /**
-     * Executes testCleanupResources functionality.
-     */
-    /**
-     * Executes testcleanupresources operation with thermal imaging domain optimization.
-     *
-     */
     fun testCleanupResources() {
         // Cleanup all resources - this is synchronous and safe
         discoveryService.cleanup()
 
         // After cleanup test passes if no exceptions thrown
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Cleanup should complete without errors", true)
     }
 
     @Test
-    /**
-     * Executes testServiceListenerInterface functionality.
-     */
-    /**
-     * Executes testservicelistenerinterface operation with thermal imaging domain optimization.
-     *
-     */
     fun testServiceListenerInterface() {
         // Test that we can create a listener implementation
         val listener =
             object : ZeroconfDiscoveryService.ServiceDiscoveryListener {
-                /**
-                 * Executes onservicediscovered operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceInfo Parameter for operation (type: NetworkClient.ControllerInfo)
-                 *
-                 */
                 override fun onServiceDiscovered(serviceInfo: NetworkClient.ControllerInfo) {
                     // Mock implementation
                 }
 
-                /**
-                 * Executes onservicelost operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceName Parameter for operation (type: String)
-                 *
-                 */
                 override fun onServiceLost(serviceName: String) {
                     // Mock implementation
                 }
 
-                /**
-                 * Executes onserviceregistered operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param serviceName Parameter for operation (type: String)
-                 *
-                 */
                 override fun onServiceRegistered(serviceName: String) {
                     // Mock implementation
                 }
 
-                /**
-                 * Executes ondiscoveryerror operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param errorCode Parameter for operation (type: Int)
-                 * @param message Parameter for operation (type: String)
-                 *
-                 */
                 override fun onDiscoveryError(
                     errorCode: Int,
                     message: String,
@@ -305,10 +140,6 @@ class ZeroconfDiscoveryServiceTest {
                 }
             }
 
-        /**
-         * Executes assertnotnull operation with thermal imaging domain optimization.
-         *
-         */
         assertNotNull("Service listener should be created", listener)
 
         // Test setting and unsetting
@@ -319,46 +150,20 @@ class ZeroconfDiscoveryServiceTest {
     }
 
     @Test
-    /**
-     * Executes testContextDependency functionality.
-     */
-    /**
-     * Executes testcontextdependency operation with thermal imaging domain optimization.
-     *
-     */
     fun testContextDependency() {
         // Test that the service properly uses the context
         val testContext = ApplicationProvider.getApplicationContext<Context>()
         val testService = ZeroconfDiscoveryService(testContext)
 
-        /**
-         * Executes assertnotnull operation with thermal imaging domain optimization.
-         *
-         */
         assertNotNull("Service with context should be created", testService)
 
         // Test that we can get discovered controllers (which should be empty initially)
         val controllers = testService.getDiscoveredControllers()
-        /**
-         * Executes assertnotnull operation with thermal imaging domain optimization.
-         *
-         */
         assertNotNull("Controllers list should not be null", controllers)
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Controllers list should be empty initially", controllers.isEmpty())
     }
 
     @Test
-    /**
-     * Executes testNetworkClientControllerInfo functionality.
-     */
-    /**
-     * Executes testnetworkclientcontrollerinfo operation with thermal imaging domain optimization.
-     *
-     */
     fun testNetworkClientControllerInfo() {
         // Test the data class used in the service
         val controllerInfo =
@@ -369,30 +174,10 @@ class ZeroconfDiscoveryServiceTest {
                 capabilities = listOf("VIDEO", "GSR"),
             )
 
-        /**
-         * Executes assertequals operation with thermal imaging domain optimization.
-         *
-         */
         assertEquals("IP address should match", "192.168.1.100", controllerInfo.ipAddress)
-        /**
-         * Executes assertequals operation with thermal imaging domain optimization.
-         *
-         */
         assertEquals("Port should match", 8080, controllerInfo.port)
-        /**
-         * Executes assertequals operation with thermal imaging domain optimization.
-         *
-         */
         assertEquals("Device name should match", "Test Controller", controllerInfo.deviceName)
-        /**
-         * Executes assertequals operation with thermal imaging domain optimization.
-         *
-         */
         assertEquals("Capabilities should match", 2, controllerInfo.capabilities.size)
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Should contain VIDEO capability", controllerInfo.capabilities.contains("VIDEO"))
     }
 }

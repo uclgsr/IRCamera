@@ -30,20 +30,6 @@ import com.topdon.lib.core.db.entity.*
     ],
     version = 6,
 )
-/**
- * Specialized thermal imaging component providing AppDatabase functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 abstract class AppDatabase : RoomDatabase() {
     abstract fun thermalDao(): ThermalDao
 
@@ -61,35 +47,15 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-    /**
-     * Retrieves instance information.
-     */
         fun getInstance(context: Context = Utils.getApp()): AppDatabase =
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
 
-    /**
-     * Executes buildDatabase functionality.
-     */
-        /**
-         * Executes builddatabase operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param context Parameter for operation (type: Context)
-         *
-         */
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "MPDC4GSR.db")
                 .addMigrations(
                     object : Migration(4, 5) {
-                        /**
-                         * Executes migrate operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param database Parameter for operation (type: SupportSQLiteDatabase)
-                         *
-                         */
                         override fun migrate(database: SupportSQLiteDatabase) {
                             database.execSQL("DROP TABLE file")
                             database.execSQL("DROP TABLE tc001_file")
@@ -126,13 +92,6 @@ abstract class AppDatabase : RoomDatabase() {
                 )
                 .addMigrations(
                     object : Migration(5, 6) {
-                        /**
-                         * Executes migrate operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param database Parameter for operation (type: SupportSQLiteDatabase)
-                         *
-                         */
                         override fun migrate(database: SupportSQLiteDatabase) {
                             // Re-create thermal minute, hour, and day tables
                             database.execSQL(

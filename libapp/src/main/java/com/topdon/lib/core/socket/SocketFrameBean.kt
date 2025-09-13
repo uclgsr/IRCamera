@@ -5,37 +5,37 @@ package com.topdon.lib.core.socket
  * @param isMaxShow maximum温point是否Show/Display
  * @param isMinShow minimum温point是否Show/Display
  * @param isCenterShow centerpoint是否Show/Display
- * @param maxX maximum温point X axiscoordinate
- * @param maxY maximum温point Y axiscoordinate
+ * @param maxX maximum温point X 轴坐标
+ * @param maxY maximum温point Y 轴坐标
  * @param maxValue maximum温pointtemperature值，单位摄氏度*10
- * @param minX minimum温point X axiscoordinate
- * @param minY minimum温point Y axiscoordinate
+ * @param minX minimum温point X 轴坐标
+ * @param minY minimum温point Y 轴坐标
  * @param minValue minimum温pointtemperature值，单位摄氏度*10
- * @param centerX centerpoint X axiscoordinate
- * @param centerY centerpoint Y axiscoordinate
+ * @param centerX centerpoint X 轴坐标
+ * @param centerY centerpoint Y 轴坐标
  * @param centerValue centerpointtemperature值，单位摄氏度*10
  * @param isMaxWarn 整帧高温point报警是否开启
  * @param isMinWarn 整帧低温point报警是否开启
  * @param isCenterWarn 整帧centerpoint报警是否开启
  *
  * @param isP1Show point1是否Show/Display
- * @param p1X point1 X axiscoordinate
- * @param p1Y point1 Y axiscoordinate
+ * @param p1X point1 X 轴坐标
+ * @param p1Y point1 Y 轴坐标
  * @param p1Value point1temperature值，单位摄氏度*10
  * @param isP1MaxWarn point1高温point报警是否开启
  * @param isP1MinWarn point1低温point报警是否开启
  * @param isP1CenterWarn point1centerpoint报警是否开启
  *
  * @param isL1Show line1是否Show/Display
- * @param l1StartX line1起始point X axiscoordinate
- * @param l1StartY line1起始point Y axiscoordinate
- * @param l1EndX line1终止point X axiscoordinate
- * @param l1EndY line1终止point Y axiscoordinate
- * @param l1MaxX line1maximum温point X axiscoordinate
- * @param l1MaxY line1maximum温point Y axiscoordinate
+ * @param l1StartX line1起始point X 轴坐标
+ * @param l1StartY line1起始point Y 轴坐标
+ * @param l1EndX line1终止point X 轴坐标
+ * @param l1EndY line1终止point Y 轴坐标
+ * @param l1MaxX line1maximum温point X 轴坐标
+ * @param l1MaxY line1maximum温point Y 轴坐标
  * @param l1MaxValue line1maximum温pointtemperature值，单位摄氏度*10
- * @param l1MinX line1minimum温point X axiscoordinate
- * @param l1MinY line1minimum温point Y axiscoordinate
+ * @param l1MinX line1minimum温point X 轴坐标
+ * @param l1MinY line1minimum温point Y 轴坐标
  * @param l1MinValue line1minimum温pointtemperature值，单位摄氏度*10
  * @param l1AveValue line1average温，单位摄氏度*10
  * @param isL1MaxWarn line1高温point报警是否开启
@@ -59,7 +59,7 @@ data class SocketFrameBean(
     val isMaxWarn: Boolean,
     val isMinWarn: Boolean,
     val isCenterWarn: Boolean,
-    // Pointtemperature measurement结果
+    // pointtemperature measurement结果
     val isP1Show: Boolean,
     val p1X: Int,
     val p1Y: Int,
@@ -81,7 +81,7 @@ data class SocketFrameBean(
     val isP3MaxWarn: Boolean,
     val isP3MinWarn: Boolean,
     val isP3CenterWarn: Boolean,
-    // Linetemperature measurement结果
+    // linetemperature measurement结果
     val isL1Show: Boolean,
     val l1StartX: Int,
     val l1StartY: Int,
@@ -127,7 +127,7 @@ data class SocketFrameBean(
     val isL3MaxWarn: Boolean,
     val isL3MinWarn: Boolean,
     val isL3CenterWarn: Boolean,
-    // Regiontemperature measurement结果
+    // regiontemperature measurement结果
     val isR1Show: Boolean,
     val r1StartX: Int,
     val r1StartY: Int,
@@ -174,13 +174,6 @@ data class SocketFrameBean(
     val isR3MinWarn: Boolean,
     val isR3CenterWarn: Boolean,
 ) {
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param byteArray Parameter for operation (type: ByteArray)
-     *
-     */
     constructor(byteArray: ByteArray) : this(
         isMaxShow = byteArray[0].toInt() and 0xff == 1,
         isMinShow = byteArray[1].toInt() and 0xff == 1,
@@ -311,118 +304,60 @@ data class SocketFrameBean(
     )
 
     companion object {
-    /**
-     * Executes Boolean functionality.
-     */
         private fun Boolean.openText(): String = if (this) "开启" else "Close"
 
-    /**
-     * Executes Int functionality.
-     */
         private fun Int.toCStr(): String = "${this / 10}${if (this % 10 == 0) "" else ".${this % 10}"}°C"
     }
 
-    /**
-     * Executes tostring operation with thermal imaging domain optimization.
-     *
-     */
     override fun toString(): String {
         val stringBuilder = StringBuilder()
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isMaxShow) {
             stringBuilder.append("高温point ($maxX, $maxY) temperature${maxValue.toCStr()} 报警${isMaxWarn.openText()}\n")
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isMinShow) {
             stringBuilder.append("低温point ($minX, $minY) temperature${minValue.toCStr()} 报警${isMinWarn.openText()}\n")
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isCenterShow) {
             stringBuilder.append("centerpoint ($centerX, $centerY) temperature${centerValue.toCStr()} 报警${isCenterWarn.openText()}\n")
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isP1Show) {
             stringBuilder.append("point1 ($p1X, $p1Y) temperature${p1Value.toCStr()}\n")
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isP2Show) {
             stringBuilder.append("point2 ($p2X, $p2Y) temperature${p2Value.toCStr()}\n")
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isP3Show) {
             stringBuilder.append("point3 ($p3X, $p3Y) temperature${p3Value.toCStr()}\n")
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isL1Show) {
             stringBuilder.append("line1 ($l1StartX, $l1StartY)-($l1EndX, $l1EndY) ")
             stringBuilder.append("minimum温${l1MinValue.toCStr()}($l1MinX, $l1MinY) maximum温${l1MaxValue.toCStr()}($l1MaxX, $l1MaxY) ")
             stringBuilder.append("average温${l1AveValue.toCStr()}\n")
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isL2Show) {
             stringBuilder.append("line2 ($l2StartX, $l2StartY)-($l2EndX, $l2EndY) ")
             stringBuilder.append("minimum温${l2MinValue.toCStr()}($l2MinX, $l2MinY) maximum温${l2MaxValue.toCStr()}($l2MaxX, $l2MaxY) ")
             stringBuilder.append("average温${l2AveValue.toCStr()}\n")
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isL3Show) {
             stringBuilder.append("line3 ($l3StartX, $l3StartY)-($l3EndX, $l3EndY) ")
             stringBuilder.append("minimum温${l3MinValue.toCStr()}($l3MinX, $l3MinY) maximum温${l3MaxValue.toCStr()}($l3MaxX, $l3MaxY) ")
             stringBuilder.append("average温${l3AveValue.toCStr()}\n")
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isR1Show) {
             stringBuilder.append("area1 ($r1StartX, $r1StartY)-($r1EndX, $r1EndY) ")
             stringBuilder.append("minimum温${r1MinValue.toCStr()}($r1MinX, $r1MinY) maximum温${r1MaxValue.toCStr()}($r1MaxX, $r1MaxY) ")
             stringBuilder.append("average温${r1AveValue.toCStr()}\n")
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isR2Show) {
             stringBuilder.append("area2 ($r2StartX, $r2StartY)-($r2EndX, $r2EndY) ")
             stringBuilder.append("minimum温${r2MinValue.toCStr()}($r2MinX, $r2MinY) maximum温${r2MaxValue.toCStr()}($r2MaxX, $r2MaxY) ")
             stringBuilder.append("average温${l2AveValue.toCStr()}\n")
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isR3Show) {
             stringBuilder.append("area3 ($r3StartX, $r3StartY)-($r3EndX, $r3EndY) ")
             stringBuilder.append("minimum温${r3MinValue.toCStr()}($r3MinX, $r3MinY) maximum温${r3MaxValue.toCStr()}($r3MaxX, $r3MaxY) ")

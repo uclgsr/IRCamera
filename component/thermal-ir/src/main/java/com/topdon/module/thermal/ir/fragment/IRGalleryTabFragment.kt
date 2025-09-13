@@ -25,25 +25,11 @@ import com.topdon.lib.ui.R as UiR
 图库 Tab 页，下分image和video.
  *
 需要传递parameter：
-- [ExtraKeyConfig.HAS_BACK_ICON] - 图库是否有Return箭头，default false
-- [ExtraKeyConfig.CAN_SWITCH_DIR] - 图库是否可switch 有linedevice、TS004、TC007 目录，default true
+- [ExtraKeyConfig.HAS_BACK_ICON] - 图库是否有Return箭头，默认 false
+- [ExtraKeyConfig.CAN_SWITCH_DIR] - 图库是否可switch 有linedevice、TS004、TC007 目录，默认 true
 - [ExtraKeyConfig.DIR_TYPE] - 进入图库时初始的目录type 具体取值由 [DirType] 定义
  *
  * Created by chenggeng.lin on 2023/11/14.
- */
-/**
- * Specialized thermal imaging component providing IRGalleryTabFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
  */
 class IRGalleryTabFragment : BaseFragment() {
     /**
@@ -71,16 +57,8 @@ class IRGalleryTabFragment : BaseFragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager2: ViewPager2
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView(): Int = R.layout.fragment_gallery_tab
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         // Initialize views with findViewById
         titleView = requireView().findViewById(R.id.title_view)
@@ -91,10 +69,6 @@ class IRGalleryTabFragment : BaseFragment() {
         hasBackIcon = arguments?.getBoolean(ExtraKeyConfig.HAS_BACK_ICON, false) ?: false
         canSwitchDir = arguments?.getBoolean(ExtraKeyConfig.CAN_SWITCH_DIR, false) ?: false
         currentDirType =
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (arguments?.getInt(ExtraKeyConfig.DIR_TYPE, 0) ?: 0) {
                 DirType.TS004_LOCALE.ordinal -> DirType.TS004_LOCALE
                 DirType.TS004_REMOTE.ordinal -> DirType.TS004_REMOTE
@@ -103,10 +77,6 @@ class IRGalleryTabFragment : BaseFragment() {
             }
 
         tvTitleDir.text =
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (currentDirType) {
                 DirType.LINE -> getString(R.string.tc_has_line_device)
                 DirType.TC007 -> "TC007"
@@ -117,10 +87,6 @@ class IRGalleryTabFragment : BaseFragment() {
             val popup = GalleryChangePopup(requireContext())
             popup.onPickListener = { position, str ->
                 currentDirType =
-                    /**
-                     * Executes when operation with thermal imaging domain optimization.
-                     *
-                     */
                     when (position) {
                         0 -> DirType.LINE
                         1 -> DirType.TS004_LOCALE
@@ -135,32 +101,16 @@ class IRGalleryTabFragment : BaseFragment() {
         titleView.setTitleText(if (canSwitchDir) "" else getString(R.string.app_gallery))
         titleView.setLeftDrawable(if (hasBackIcon) R.drawable.ic_back_white_svg else 0)
         titleView.setLeftClickListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (viewModel.isEditModeLD.value == true) { // 当前为编辑state，Exit编辑
                 viewModel.isEditModeLD.value = false
             } else { // 当前为非编辑state，Exit页area
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (hasBackIcon) {
-                    /**
-                     * Executes requireactivity operation with thermal imaging domain optimization.
-                     *
-                     */
                     requireActivity().finish()
                 }
             }
         }
         titleView.setRightDrawable(UiR.drawable.ic_toolbar_check_svg)
         titleView.setRightClickListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (viewModel.isEditModeLD.value == true) { // 当前为编辑state，全选
                 viewModel.selectAllIndex.value = viewPager2.currentItem
             } else { // 当前为非编辑state，进入编辑
@@ -170,19 +120,11 @@ class IRGalleryTabFragment : BaseFragment() {
 
         viewPagerAdapter = ViewPagerAdapter(this)
         viewPager2.adapter = viewPagerAdapter
-        /**
-         * Executes tablayoutmediator operation with thermal imaging domain optimization.
-         *
-         */
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
             tab.setText(if (position == 0) R.string.album_menu_Photos else R.string.app_video)
         }.attach()
 
         viewModel.isEditModeLD.observe(viewLifecycleOwner) { isEditMode ->
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isEditMode) {
                 titleView.setLeftDrawable(LibCoreR.drawable.svg_x_cc)
             } else {
@@ -192,10 +134,6 @@ class IRGalleryTabFragment : BaseFragment() {
             titleView.setRightText(if (isEditMode) getString(R.string.report_select_all) else "")
             tabLayout.isVisible = !isEditMode
             viewPager2.isUserInputEnabled = !isEditMode
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isEditMode) {
                 titleView.setTitleText(getString(R.string.chosen_item, viewModel.selectSizeLD.value))
                 tvTitleDir.isVisible = false
@@ -205,10 +143,6 @@ class IRGalleryTabFragment : BaseFragment() {
             }
         }
         viewModel.selectSizeLD.observe(viewLifecycleOwner) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (viewModel.isEditModeLD.value == true) {
                 titleView.setTitleText(getString(R.string.chosen_item, it))
                 tvTitleDir.isVisible = false
@@ -219,27 +153,12 @@ class IRGalleryTabFragment : BaseFragment() {
         }
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
     private inner class ViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-        /**
-         * Retrieves the itemcount with optimized performance for thermal imaging operations.
-         *
-         */
         override fun getItemCount() = 2
 
-        /**
-         * Executes createfragment operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param position Parameter for operation (type: Int)
-         *
-         */
         override fun createFragment(position: Int): Fragment {
             val bundle = Bundle()
             bundle.putBoolean(ExtraKeyConfig.IS_VIDEO, position == 1)

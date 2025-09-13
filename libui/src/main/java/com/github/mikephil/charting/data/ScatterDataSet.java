@@ -16,20 +16,6 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Specialized thermal imaging component providing ScatterDataSet functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class ScatterDataSet extends LineScatterCandleRadarDataSet<Entry> implements IScatterDataSet {
 
     /**
@@ -55,33 +41,17 @@ public class ScatterDataSet extends LineScatterCandleRadarDataSet<Entry> impleme
      */
     private int mScatterShapeHoleColor = ColorTemplate.COLOR_NONE;
 
-    /**
-     * Executes scatterdataset operation with thermal imaging domain optimization.
-     *
-     */
     public ScatterDataSet(List<Entry> yVals, String label) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(yVals, label);
     }
 
     @Override
     public DataSet<Entry> copy() {
         List<Entry> entries = new ArrayList<Entry>();
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < mValues.size(); i++) {
             entries.add(mValues.get(i).copy());
         }
         ScatterDataSet copied = new ScatterDataSet(entries, getLabel());
-        /**
-         * Executes copy operation with thermal imaging domain optimization.
-         *
-         */
         copy(copied);
         return copied;
     }
@@ -165,10 +135,6 @@ public class ScatterDataSet extends LineScatterCandleRadarDataSet<Entry> impleme
 
     public static IShapeRenderer getRendererForShape(ScatterChart.ScatterShape shape) {
 
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (shape) {
             case SQUARE:
                 return new SquareShapeRenderer();

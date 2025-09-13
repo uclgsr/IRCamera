@@ -26,55 +26,17 @@ import com.github.mikephil.charting.utils.Utils;
  *
  * @author Philipp Jahoda
  */
-/**
- * Specialized thermal imaging component providing HorizontalBarChart functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class HorizontalBarChart extends BarChart {
 
-    /**
-     * Executes horizontalbarchart operation with thermal imaging domain optimization.
-     *
-     */
     public HorizontalBarChart(Context context) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context);
     }
 
-    /**
-     * Executes horizontalbarchart operation with thermal imaging domain optimization.
-     *
-     */
     public HorizontalBarChart(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
     }
 
-    /**
-     * Executes horizontalbarchart operation with thermal imaging domain optimization.
-     *
-     */
     public HorizontalBarChart(Context context, AttributeSet attrs, int defStyle) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyle);
     }
 
@@ -89,10 +51,6 @@ public class HorizontalBarChart extends BarChart {
         mRightAxisTransformer = new TransformerHorizontalBarChart(mViewPortHandler);
 
         mRenderer = new HorizontalBarChartRenderer(this, mAnimator, mViewPortHandler);
-        /**
-         * Configures the highlighter with validation and thermal imaging optimization.
-         *
-         */
         setHighlighter(new HorizontalBarHighlighter(this));
 
         mAxisRendererLeft = new YAxisRendererHorizontalBarChart(mViewPortHandler, mAxisLeft, mLeftAxisTransformer);
@@ -107,10 +65,6 @@ public class HorizontalBarChart extends BarChart {
 
         float offsetLeft = 0f, offsetRight = 0f, offsetTop = 0f, offsetBottom = 0f;
 
-        /**
-         * Executes calculatelegendoffsets operation with thermal imaging domain optimization.
-         *
-         */
         calculateLegendOffsets(mOffsetsBuffer);
 
         offsetLeft += mOffsetsBuffer.left;
@@ -118,36 +72,20 @@ public class HorizontalBarChart extends BarChart {
         offsetRight += mOffsetsBuffer.right;
         offsetBottom += mOffsetsBuffer.bottom;
 
-        // Offsets for y-labels
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // offsets for y-labels
         if (mAxisLeft.needsOffset()) {
             offsetTop += mAxisLeft.getRequiredHeightSpace(mAxisRendererLeft.getPaintAxisLabels());
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisRight.needsOffset()) {
             offsetBottom += mAxisRight.getRequiredHeightSpace(mAxisRendererRight.getPaintAxisLabels());
         }
 
         float xlabelwidth = mXAxis.mLabelRotatedWidth;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mXAxis.isEnabled()) {
 
-            // Offsets for x-labels
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            // offsets for x-labels
             if (mXAxis.getPosition() == XAxisPosition.BOTTOM) {
 
                 offsetLeft += xlabelwidth;
@@ -176,10 +114,6 @@ public class HorizontalBarChart extends BarChart {
                 Math.max(minOffset, offsetRight),
                 Math.max(minOffset, offsetBottom));
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mLogEnabled) {
             Log.i(LOG_TAG, "offsetLeft: " + offsetLeft + ", offsetTop: " + offsetTop + ", offsetRight: " +
                     offsetRight + ", offsetBottom: "
@@ -187,15 +121,7 @@ public class HorizontalBarChart extends BarChart {
             Log.i(LOG_TAG, "Content: " + mViewPortHandler.getContentRect().toString());
         }
 
-        /**
-         * Executes prepareoffsetmatrix operation with thermal imaging domain optimization.
-         *
-         */
         prepareOffsetMatrix();
-        /**
-         * Executes preparevaluepxmatrix operation with thermal imaging domain optimization.
-         *
-         */
         prepareValuePxMatrix();
     }
 
@@ -218,10 +144,6 @@ public class HorizontalBarChart extends BarChart {
         RectF bounds = outputRect;
         IBarDataSet set = mData.getDataSetForEntry(e);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (set == null) {
             outputRect.set(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
             return;
@@ -239,10 +161,6 @@ public class HorizontalBarChart extends BarChart {
 
         bounds.set(left, top, right, bottom);
 
-        /**
-         * Retrieves the transformer with optimized performance for thermal imaging operations.
-         *
-         */
         getTransformer(set.getAxisDependency()).rectValueToPixel(bounds);
 
     }
@@ -259,10 +177,6 @@ public class HorizontalBarChart extends BarChart {
     @Override
     public MPPointF getPosition(Entry e, AxisDependency axis) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (e == null)
             return null;
 
@@ -270,10 +184,6 @@ public class HorizontalBarChart extends BarChart {
         vals[0] = e.getY();
         vals[1] = e.getX();
 
-        /**
-         * Retrieves the transformer with optimized performance for thermal imaging operations.
-         *
-         */
         getTransformer(axis).pointValuesToPixel(vals);
 
         return MPPointF.getInstance(vals[0], vals[1]);
@@ -290,28 +200,16 @@ public class HorizontalBarChart extends BarChart {
     @Override
     public Highlight getHighlightByTouchPoint(float x, float y) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mData == null) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mLogEnabled)
                 Log.e(LOG_TAG, "Can't select by touch. No data set.");
             return null;
         } else
-            return getHighlighter().getHighlight(y, x); // Switch x and y
+            return getHighlighter().getHighlight(y, x); // switch x and y
     }
 
     @Override
     public float getLowestVisibleX() {
-        /**
-         * Retrieves the transformer with optimized performance for thermal imaging operations.
-         *
-         */
         getTransformer(AxisDependency.LEFT).getValuesByTouchPoint(mViewPortHandler.contentLeft(),
                 mViewPortHandler.contentBottom(), posForGetLowestVisibleX);
         float result = (float) Math.max(mXAxis.mAxisMinimum, posForGetLowestVisibleX.y);
@@ -320,10 +218,6 @@ public class HorizontalBarChart extends BarChart {
 
     @Override
     public float getHighestVisibleX() {
-        /**
-         * Retrieves the transformer with optimized performance for thermal imaging operations.
-         *
-         */
         getTransformer(AxisDependency.LEFT).getValuesByTouchPoint(mViewPortHandler.contentLeft(),
                 mViewPortHandler.contentTop(), posForGetHighestVisibleX);
         float result = (float) Math.min(mXAxis.mAxisMaximum, posForGetHighestVisibleX.y);

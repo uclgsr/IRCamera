@@ -4,20 +4,6 @@ package com.github.mikephil.charting.buffer;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
-/**
- * Specialized thermal imaging component providing BarBuffer functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class BarBuffer extends AbstractBuffer<IBarDataSet> {
 
     protected int mDataSetIndex = 0;
@@ -60,18 +46,10 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
         float size = data.getEntryCount() * phaseX;
         float barWidthHalf = mBarWidth / 2f;
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < size; i++) {
 
             BarEntry e = data.getEntryForIndex(i);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if(e == null)
                 continue;
 
@@ -79,20 +57,12 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
             float y = e.getY();
             float[] vals = e.getYVals();
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!mContainsStacks || vals == null) {
 
                 float left = x - barWidthHalf;
                 float right = x + barWidthHalf;
                 float bottom, top;
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (mInverted) {
                     bottom = y >= 0 ? y : 0;
                     top = y <= 0 ? y : 0;
@@ -101,20 +71,12 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
                     bottom = y <= 0 ? y : 0;
                 }
 
-                // Multiply the height of the rect with the phase
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+                // multiply the height of the rect with the phase
                 if (top > 0)
                     top *= phaseY;
                 else
                     bottom *= phaseY;
 
-                /**
-                 * Executes addbar operation with thermal imaging domain optimization.
-                 *
-                 */
                 addBar(left, top, right, bottom);
 
             } else {
@@ -123,19 +85,11 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
                 float negY = -e.getNegativeSum();
                 float yStart = 0f;
 
-                // Fill the stack
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
+                // fill the stack
                 for (int k = 0; k < vals.length; k++) {
 
                     float value = vals[k];
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (value == 0.0f && (posY == 0.0f || negY == 0.0f)) {
                         // Take care of the situation of a 0.0 value, which overlaps a non-zero bar
                         y = value;
@@ -154,10 +108,6 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
                     float right = x + barWidthHalf;
                     float bottom, top;
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (mInverted) {
                         bottom = y >= yStart ? y : yStart;
                         top = y <= yStart ? y : yStart;
@@ -166,23 +116,15 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
                         bottom = y <= yStart ? y : yStart;
                     }
 
-                    // Multiply the height of the rect with the phase
+                    // multiply the height of the rect with the phase
                     top *= phaseY;
                     bottom *= phaseY;
 
-                    /**
-                     * Executes addbar operation with thermal imaging domain optimization.
-                     *
-                     */
                     addBar(left, top, right, bottom);
                 }
             }
         }
 
-        /**
-         * Executes reset operation with thermal imaging domain optimization.
-         *
-         */
         reset();
     }
 }

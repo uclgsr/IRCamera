@@ -8,23 +8,9 @@ import android.os.Handler
  * This abstract class defines the interface for all Shimmer devices
  *
  * Based on the official Shimmer Android API structure from:
- * https:// Github.com/ShimmerEngineering/ShimmerAndroidAPI
+ * https://github.com/ShimmerEngineering/ShimmerAndroidAPI
  *
  * Compatible with shimmerdriver v0.11.4_beta
- */
-/**
- * Specialized thermal imaging component providing ShimmerDevice functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
  */
 abstract class ShimmerDevice(
     protected val context: Context,
@@ -222,10 +208,6 @@ abstract class ShimmerDevice(
     open fun resetToDefaultConfiguration() {
         writeSamplingRate(128.0)
         writeEnabledSensors(0x10L) // GSR sensor
-        /**
-         * Configures the gsrrange with validation and thermal imaging optimization.
-         *
-         */
         setGSRRange(GSR_RANGE_AUTO)
     }
 

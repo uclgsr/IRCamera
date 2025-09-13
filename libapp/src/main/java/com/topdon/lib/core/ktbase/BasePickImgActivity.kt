@@ -18,19 +18,10 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 /**
- * Specialized thermal imaging component providing BasePickImgActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+ * des:
+ * author: CaiSongL
+ * date: 2024/9/3 9:25
+ **/
 abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
     protected lateinit var binding: ActivityImagePickIrPlushBinding
 
@@ -44,42 +35,19 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
      */
     private var hasTakePhoto = false
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView(): Int {
         return R.layout.activity_image_pick_ir_plush
     }
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityImagePickIrPlushBinding.inflate(layoutInflater)
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(binding.root)
 
         
@@ -95,60 +63,28 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         binding.imgPick.setOnClickListener(this)
 
         binding.titleView.setLeftClickListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (hasTakePhoto) {
-                /**
-                 * Executes switchphotostate operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchPhotoState(false)
             } else {
-                /**
-                 * Executes finish operation with thermal imaging domain optimization.
-                 *
-                 */
                 finish()
             }
         }
         binding.titleView.setRightClickListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (hasTakePhoto) {
                 val absolutePath: String = intent.getStringExtra(RESULT_IMAGE_PATH)!!
                 ImageUtils.save(binding.imageEditView.buildResultBitmap(), File(absolutePath), Bitmap.CompressFormat.PNG)
                 val intent = Intent()
                 intent.putExtra(RESULT_IMAGE_PATH, absolutePath)
-                /**
-                 * Configures the result with validation and thermal imaging optimization.
-                 *
-                 */
                 setResult(RESULT_OK, intent)
-                /**
-                 * Executes finish operation with thermal imaging domain optimization.
-                 *
-                 */
                 finish()
             }
         }
 
-        /**
-         * Executes resize operation with thermal imaging domain optimization.
-         *
-         */
         resize()
     }
 
     /**
      * Executes resize functionality.
-     */
-    /**
-     * Executes resize operation with thermal imaging domain optimization.
-     *
      */
     private fun resize() {
         val widthPixels = resources.displayMetrics.widthPixels
@@ -163,10 +99,6 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         val bottomHeight = ivPickHeight.coerceAtLeast(menuHeight)
         val canUseHeight = heightPixels - binding.titleView.measuredHeight - bottomHeight
         val wantHeight = (widthPixels * 256f / 192).toInt()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (wantHeight <= canUseHeight) { 
             binding.fragmentContainerView.layoutParams =
                 binding.fragmentContainerView.layoutParams.apply {
@@ -196,30 +128,11 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         return null
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
             binding.imgPick -> {
                 lifecycleScope.launch {
-                    /**
-                     * Retrieves the pickbitmap with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getPickBitmap()?.let {
-                        /**
-                         * Executes switchphotostate operation with thermal imaging domain optimization.
-                         *
-                         */
                         switchPhotoState(true)
                         binding.imageEditView.sourceBitmap = it
                         binding.imageEditView.clear()
@@ -257,20 +170,8 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
     }
 
     @Deprecated("This method is deprecated")
-    /**
-     * Executes onbackpressed operation with thermal imaging domain optimization.
-     *
-     */
     override fun onBackPressed() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (hasTakePhoto) {
-            /**
-             * Executes switchphotostate operation with thermal imaging domain optimization.
-             *
-             */
             switchPhotoState(false)
         } else {
             @Suppress("DEPRECATION")
@@ -280,13 +181,6 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
 
     /**
      * switch 已拍照mode/未拍照mode.
-     */
-    /**
-     * Executes switchphotostate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param hasTakePhoto Parameter for operation (type: Boolean)
-     *
      */
     private fun switchPhotoState(hasTakePhoto: Boolean) {
         this.hasTakePhoto = hasTakePhoto
@@ -301,18 +195,6 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
      * Show/DisplayExit不savetip弹框
      * @param listener click弹框上ExitEventListener
      */
-    /**
-     * Executes showExitTipsDialog functionality.
-     */
-    /**
-     * Executes showexittipsdialog operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param listener Event listener for callbacks (type: (()
-     *
-     * @return Operation result or configured object (type: Unit)))
-     *
-     */
     private fun showExitTipsDialog(listener: (() -> Unit)) {
         TipDialog.Builder(this)
             .setMessage(R.string.diy_tip_save)
@@ -323,16 +205,8 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
             .create().show()
     }
 
-    /**
-     * Executes disconnected operation with thermal imaging domain optimization.
-     *
-     */
     override fun disConnected() {
         super.disConnected()
-        /**
-         * Executes finish operation with thermal imaging domain optimization.
-         *
-         */
         finish()
     }
 }

@@ -12,18 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Specialized thermal imaging component providing AxisBase functionality for the IRCamera system.
+ * Base-class of all axes (previously called labels).
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author Philipp Jahoda
  */
 public abstract class AxisBase extends ComponentBase {
 
@@ -162,10 +153,6 @@ public abstract class AxisBase extends ComponentBase {
 
     /**
      * default constructor
-     */
-    /**
-     * Executes axisbase operation with thermal imaging domain optimization.
-     *
      */
     public AxisBase() {
         this.mTextSize = Utils.convertDpToPixel(10f);
@@ -327,16 +314,8 @@ public abstract class AxisBase extends ComponentBase {
      */
     public void setLabelCount(int count) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (count > 25)
             count = 25;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (count < 2)
             count = 2;
 
@@ -357,10 +336,6 @@ public abstract class AxisBase extends ComponentBase {
      */
     public void setLabelCount(int count, boolean force) {
 
-        /**
-         * Configures the labelcount with validation and thermal imaging optimization.
-         *
-         */
         setLabelCount(count);
         mForceLabels = force;
     }
@@ -415,7 +390,7 @@ public abstract class AxisBase extends ComponentBase {
      */
     public void setGranularity(float granularity) {
         mGranularity = granularity;
-        // Set this to true if it was disabled, as it makes no sense to call this method with granularity disabled
+        // set this to true if it was disabled, as it makes no sense to call this method with granularity disabled
         mGranularityEnabled = true;
     }
 
@@ -427,10 +402,6 @@ public abstract class AxisBase extends ComponentBase {
     public void addLimitLine(LimitLine l) {
         mLimitLines.add(l);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mLimitLines.size() > 6) {
             Log.e("MPAndroiChart",
                     "Warning! You have more than 6 LimitLines on your axis, do you really want " +
@@ -499,17 +470,9 @@ public abstract class AxisBase extends ComponentBase {
 
         String longest = "";
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < mEntries.length; i++) {
             String text = getFormattedLabel(i);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (text != null && longest.length() < text.length())
                 longest = text;
         }
@@ -519,10 +482,6 @@ public abstract class AxisBase extends ComponentBase {
 
     public String getFormattedLabel(int index) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (index < 0 || index >= mEntries.length)
             return "";
         else
@@ -540,10 +499,6 @@ public abstract class AxisBase extends ComponentBase {
      */
     public void setValueFormatter(ValueFormatter f) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (f == null)
             mAxisValueFormatter = new DefaultAxisValueFormatter(mDecimals);
         else
@@ -557,10 +512,6 @@ public abstract class AxisBase extends ComponentBase {
      */
     public ValueFormatter getValueFormatter() {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisValueFormatter == null ||
                 (mAxisValueFormatter instanceof DefaultAxisValueFormatter &&
                         ((DefaultAxisValueFormatter)mAxisValueFormatter).getDecimalDigits() != mDecimals))
@@ -741,10 +692,6 @@ public abstract class AxisBase extends ComponentBase {
      */
     @Deprecated
     public void setAxisMinValue(float min) {
-        /**
-         * Configures the axisminimum with validation and thermal imaging optimization.
-         *
-         */
         setAxisMinimum(min);
     }
 
@@ -768,10 +715,6 @@ public abstract class AxisBase extends ComponentBase {
      */
     @Deprecated
     public void setAxisMaxValue(float max) {
-        /**
-         * Configures the axismaximum with validation and thermal imaging optimization.
-         *
-         */
         setAxisMaximum(max);
     }
 
@@ -784,18 +727,14 @@ public abstract class AxisBase extends ComponentBase {
      */
     public void calculate(float dataMin, float dataMax) {
 
-        // If custom, use value as is, else use data value
+        // if custom, use value as is, else use data value
         float min = mCustomAxisMin ? mAxisMinimum : (dataMin - mSpaceMin);
         float max = mCustomAxisMax ? mAxisMaximum : (dataMax + mSpaceMax);
 
-        // Temporary range (before calculations)
+        // temporary range (before calculations)
         float range = Math.abs(max - min);
 
-        // In case all values are equal
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // in case all values are equal
         if (range == 0f) {
             max = max + 1f;
             min = min - 1f;
@@ -804,7 +743,7 @@ public abstract class AxisBase extends ComponentBase {
         this.mAxisMinimum = min;
         this.mAxisMaximum = max;
 
-        // Actual range
+        // actual range
         this.mAxisRange = Math.abs(max - min);
     }
 

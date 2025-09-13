@@ -10,20 +10,6 @@ import android.graphics.drawable.Drawable;
  * @author Philipp Jahoda
  */
 @SuppressLint("ParcelCreator")
-/**
- * Specialized thermal imaging component providing CandleEntry functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class CandleEntry extends Entry {
 
     /** shadow-high value */
@@ -47,15 +33,7 @@ public class CandleEntry extends Entry {
      * @param open The open value
      * @param close The close value
      */
-    /**
-     * Executes candleentry operation with thermal imaging domain optimization.
-     *
-     */
     public CandleEntry(float x, float shadowH, float shadowL, float open, float close) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(x, (shadowH + shadowL) / 2f);
 
         this.mShadowHigh = shadowH;
@@ -74,16 +52,8 @@ public class CandleEntry extends Entry {
      * @param close
      * @param data Spot for additional data this Entry represents
      */
-    /**
-     * Executes candleentry operation with thermal imaging domain optimization.
-     *
-     */
     public CandleEntry(float x, float shadowH, float shadowL, float open, float close,
                        Object data) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(x, (shadowH + shadowL) / 2f, data);
 
         this.mShadowHigh = shadowH;
@@ -102,16 +72,8 @@ public class CandleEntry extends Entry {
      * @param close
      * @param icon Icon image
      */
-    /**
-     * Executes candleentry operation with thermal imaging domain optimization.
-     *
-     */
     public CandleEntry(float x, float shadowH, float shadowL, float open, float close,
                        Drawable icon) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(x, (shadowH + shadowL) / 2f, icon);
 
         this.mShadowHigh = shadowH;
@@ -131,16 +93,8 @@ public class CandleEntry extends Entry {
      * @param icon Icon image
      * @param data Spot for additional data this Entry represents
      */
-    /**
-     * Executes candleentry operation with thermal imaging domain optimization.
-     *
-     */
     public CandleEntry(float x, float shadowH, float shadowL, float open, float close,
                        Drawable icon, Object data) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(x, (shadowH + shadowL) / 2f, icon, data);
 
         this.mShadowHigh = shadowH;

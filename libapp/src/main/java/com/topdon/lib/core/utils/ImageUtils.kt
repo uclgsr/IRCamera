@@ -9,23 +9,6 @@ import com.elvishew.xlog.XLog
 import com.topdon.lib.core.config.FileConfig.lineIrGalleryDir
 import java.io.*
 
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for ImageUtils operations.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 object ImageUtils {
     /**
      * 生成imagereport时存在cache目录下的临时imagefile.
@@ -44,22 +27,11 @@ object ImageUtils {
      * savedimage到 图库/APPname 下，filename为 APPname_时间戳.jpg
      * 这里是thermal imagingcapture 和 2D编辑 的image.
      */
-    /**
-     * Executes save functionality.
-     */
-    /**
-     * Executes save operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param bitmap Parameter for operation (type: Bitmap)
-     * @param isTC007 Parameter for operation (type: Boolean = false)
-     *
-     */
     fun save(
         bitmap: Bitmap,
         isTC007: Boolean = false,
     ): String {
-        // Storage目录，User可以自定义
+        // storage目录，User可以自定义
         val dicName = if (isTC007) "TC007" else CommUtils.getAppName()
         val fileName = "${dicName}_${System.currentTimeMillis()}.jpg"
         val saveFile = ImageUtils.save2Album(bitmap, dicName, Bitmap.CompressFormat.JPEG)
@@ -81,19 +53,6 @@ object ImageUtils {
     }
 
     
-    /**
-     * Executes saveLiteFrame functionality.
-     */
-    /**
-     * Executes saveliteframe operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param bs Parameter for operation (type: ByteArray)
-     * @param capital Parameter for operation (type: ByteArray)
-     * @param nuct Parameter for operation (type: ByteArray)
-     * @param name Parameter for operation (type: String)
-     *
-     */
     fun saveLiteFrame(
         bs: ByteArray,
         capital: ByteArray,
@@ -113,18 +72,6 @@ object ImageUtils {
     }
 
     
-    /**
-     * Executes saveFrame functionality.
-     */
-    /**
-     * Executes saveframe operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param bs Parameter for operation (type: ByteArray)
-     * @param capital Parameter for operation (type: ByteArray)
-     * @param name Parameter for operation (type: String)
-     *
-     */
     fun saveFrame(
         bs: ByteArray,
         capital: ByteArray,
@@ -144,14 +91,6 @@ object ImageUtils {
 
     /**
      * saved一帧的argbdata
-     */
-    /**
-     * Executes saveoneframeagrb operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param bs Parameter for operation (type: ByteArray)
-     * @param name Parameter for operation (type: String)
-     *
      */
     fun saveOneFrameAGRB(
         bs: ByteArray,

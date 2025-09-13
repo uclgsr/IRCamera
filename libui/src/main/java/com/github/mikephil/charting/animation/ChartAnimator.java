@@ -12,20 +12,6 @@ import com.github.mikephil.charting.animation.Easing.EasingFunction;
  * @author Philipp Jahoda
  * @author Mick Ashton
  */
-/**
- * Thermal imaging UI animation system. Provides smooth transitions and visual effects for ChartAnimator components.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class ChartAnimator {
 
     /** object that is updated upon animation update */
@@ -42,10 +28,6 @@ public class ChartAnimator {
     public ChartAnimator() { }
 
     @RequiresApi(11)
-    /**
-     * Executes chartanimator operation with thermal imaging domain optimization.
-     *
-     */
     public ChartAnimator(AnimatorUpdateListener listener) {
         mListener = listener;
     }
@@ -77,10 +59,6 @@ public class ChartAnimator {
      */
     @RequiresApi(11)
     public void animateX(int durationMillis) {
-        /**
-         * Executes animatex operation with thermal imaging domain optimization.
-         *
-         */
         animateX(durationMillis, Easing.Linear);
     }
 
@@ -106,10 +84,6 @@ public class ChartAnimator {
      */
     @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY) {
-        /**
-         * Executes animatexy operation with thermal imaging domain optimization.
-         *
-         */
         animateXY(durationMillisX, durationMillisY, Easing.Linear, Easing.Linear);
     }
 
@@ -126,10 +100,6 @@ public class ChartAnimator {
         ObjectAnimator xAnimator = xAnimator(durationMillisX, easing);
         ObjectAnimator yAnimator = yAnimator(durationMillisY, easing);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (durationMillisX > durationMillisY) {
             xAnimator.addUpdateListener(mListener);
         } else {
@@ -155,10 +125,6 @@ public class ChartAnimator {
         ObjectAnimator xAnimator = xAnimator(durationMillisX, easingX);
         ObjectAnimator yAnimator = yAnimator(durationMillisY, easingY);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (durationMillisX > durationMillisY) {
             xAnimator.addUpdateListener(mListener);
         } else {
@@ -176,10 +142,6 @@ public class ChartAnimator {
      */
     @RequiresApi(11)
     public void animateY(int durationMillis) {
-        /**
-         * Executes animatey operation with thermal imaging domain optimization.
-         *
-         */
         animateY(durationMillis, Easing.Linear);
     }
 
@@ -212,10 +174,6 @@ public class ChartAnimator {
      * @param phase float value between 0 - 1
      */
     public void setPhaseY(float phase) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (phase > 1f) {
             phase = 1f;
         } else if (phase < 0f) {
@@ -239,10 +197,6 @@ public class ChartAnimator {
      * @param phase float value between 0 - 1
      */
     public void setPhaseX(float phase) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (phase > 1f) {
             phase = 1f;
         } else if (phase < 0f) {

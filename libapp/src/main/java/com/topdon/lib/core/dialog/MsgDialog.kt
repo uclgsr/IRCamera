@@ -25,42 +25,15 @@ import com.topdon.lib.core.utils.ScreenUtil
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing MsgDialog functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class MsgDialog : Dialog {
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : super(context)
 
+    constructor(context: Context, themeResId: Int) : super(context, themeResId)
+
 /**
- * Specialized thermal imaging component providing Builder functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
+ * Builder manages camera operations and image capture functionality.
  *
  * @author IRCamera Development Team
- * @version 2.0
  * @since 1.0
  */
     class Builder {
@@ -76,27 +49,10 @@ class MsgDialog : Dialog {
         private var messageText: TextView? = null
         private var closeImg: ImageView? = null
 
-        /**
-         * Executes constructor operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param context Parameter for operation (type: Context)
-         *
-         */
         constructor(context: Context) {
             this.context = context
         }
 
-    /**
-     * Sets img configuration.
-     */
-        /**
-         * Configures the img with validation and thermal imaging optimization.
-         *
-         * @param
-         * @param res Parameter for operation (type: Int)
-         *
-         */
         fun setImg(
             @DrawableRes res: Int,
         ): Builder {
@@ -104,17 +60,11 @@ class MsgDialog : Dialog {
             return this
         }
 
-    /**
-     * Sets message configuration.
-     */
         fun setMessage(message: String): Builder {
             this.message = message
             return this
         }
 
-    /**
-     * Sets message configuration.
-     */
         fun setMessage(
             @StringRes message: Int,
         ): Builder {
@@ -122,9 +72,6 @@ class MsgDialog : Dialog {
             return this
         }
 
-    /**
-     * Sets closelistener configuration.
-     */
         fun setCloseListener(listener: OnClickListener): Builder {
             this.positiveClickListener = listener
             return this
@@ -133,10 +80,6 @@ class MsgDialog : Dialog {
     /**
      * Executes dismiss functionality.
      */
-        /**
-         * Executes dismiss operation with thermal imaging domain optimization.
-         *
-         */
         fun dismiss() {
             this.dialog!!.dismiss()
         }
@@ -154,18 +97,10 @@ class MsgDialog : Dialog {
             closeImg = binding.dialogMsgClose
             dialog!!.addContentView(
                 binding.root,
-                /**
-                 * Executes layoutparams operation with thermal imaging domain optimization.
-                 *
-                 */
                 LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT),
             )
             val lp = dialog!!.window!!.attributes
             val wRatio =
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                     
                     0.9
@@ -178,24 +113,12 @@ class MsgDialog : Dialog {
 
             dialog!!.setCanceledOnTouchOutside(false)
             closeImg!!.setOnClickListener {
-                /**
-                 * Executes dismiss operation with thermal imaging domain optimization.
-                 *
-                 */
                 dismiss()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (positiveClickListener != null) {
                     positiveClickListener!!.onClick(dialog!!)
                 }
             }
             
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (imgRes != 0) {
                 tipImg?.visibility = View.VISIBLE
                 tipImg?.setImageResource(imgRes)
@@ -203,10 +126,6 @@ class MsgDialog : Dialog {
                 tipImg?.visibility = View.GONE
             }
             
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (message != null) {
                 messageText?.visibility = View.VISIBLE
                 messageText?.setText(message, TextView.BufferType.NORMAL)
@@ -220,18 +139,12 @@ class MsgDialog : Dialog {
     }
 
     /**
+     * 提交Callback
+     */
 /**
- * Specialized thermal imaging component providing OnClickListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
+ * OnClickListener manages camera operations and image capture functionality.
  *
  * @author IRCamera Development Team
- * @version 2.0
  * @since 1.0
  */
     interface OnClickListener {

@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -22,24 +22,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * data参见 http:// Www.360doc.com/content/12/0602/07/3899427_215339300.shtml
+ * data参见 http://www.360doc.com/content/12/0602/07/3899427_215339300.shtml
  *
  * @author 贵州山野羡民（1032694760@qq.com）
  * @since 2021/6/9 11:31
- */
-/**
- * Specialized thermal imaging component providing CarPlateProvider functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
  */
 public class CarPlateProvider implements LinkageProvider {
     private static final String[] ABBREVIATIONS = {
@@ -70,24 +56,12 @@ public class CarPlateProvider implements LinkageProvider {
     @Override
     public List<String> linkageSecondData(int firstIndex) {
         List<String> letters = new ArrayList<>();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (firstIndex == INDEX_NO_FOUND) {
             firstIndex = 0;
         }
         String province = provideFirstData().get(firstIndex);
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (province) {
             case "京":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'M'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -96,19 +70,11 @@ public class CarPlateProvider implements LinkageProvider {
                 break;
             case "津":
             case "青":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'H'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 break;
             case "冀":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'H'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -118,10 +84,6 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.add("T");
                 break;
             case "晋":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'M'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -130,10 +92,6 @@ public class CarPlateProvider implements LinkageProvider {
                 break;
             case "蒙":
             case "赣":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'M'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -141,10 +99,6 @@ public class CarPlateProvider implements LinkageProvider {
                 break;
             case "辽":
             case "甘":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'P'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -153,10 +107,6 @@ public class CarPlateProvider implements LinkageProvider {
                 break;
             case "吉":
             case "闽":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'K'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -164,10 +114,6 @@ public class CarPlateProvider implements LinkageProvider {
                 break;
             case "黑":
             case "新":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'R'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -175,30 +121,18 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.remove("O");
                 break;
             case "沪":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'D'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.add("R");
                 break;
             case "苏":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'N'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("I");
                 break;
             case "浙":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'L'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -206,10 +140,6 @@ public class CarPlateProvider implements LinkageProvider {
                 break;
             case "皖":
             case "鄂":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'S'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -217,10 +147,6 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.remove("O");
                 break;
             case "鲁":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'V'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -229,10 +155,6 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.add("Y");
                 break;
             case "豫":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'U'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -240,10 +162,6 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.remove("O");
                 break;
             case "湘":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'N'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -252,10 +170,6 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.add("U");
                 break;
             case "粤":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'Z'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -263,10 +177,6 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.remove("O");
                 break;
             case "桂":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'P'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -276,19 +186,11 @@ public class CarPlateProvider implements LinkageProvider {
                 break;
             case "琼":
             case "宁":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'E'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 break;
             case "渝":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'D'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -296,10 +198,6 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.remove("E");
                 break;
             case "川":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'Z'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -309,10 +207,6 @@ public class CarPlateProvider implements LinkageProvider {
                 break;
             case "贵":
             case "藏":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'J'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -321,10 +215,6 @@ public class CarPlateProvider implements LinkageProvider {
             case "云":
                 // “A-V”为昆明市东川区（原东川市）
                 letters.add("A-V");
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'S'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -333,10 +223,6 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.remove("O");
                 break;
             case "陕":
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (char i = 'A'; i <= 'K'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -355,23 +241,11 @@ public class CarPlateProvider implements LinkageProvider {
 
     @Override
     public int findFirstIndex(Object firstValue) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (firstValue == null) {
             return INDEX_NO_FOUND;
         }
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0, n = ABBREVIATIONS.length; i < n; i++) {
             String abbreviation = ABBREVIATIONS[i];
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (abbreviation.equals(firstValue.toString())) {
                 return i;
             }
@@ -381,24 +255,12 @@ public class CarPlateProvider implements LinkageProvider {
 
     @Override
     public int findSecondIndex(int firstIndex, Object secondValue) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (secondValue == null) {
             return INDEX_NO_FOUND;
         }
         List<String> letters = linkageSecondData(firstIndex);
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0, n = letters.size(); i < n; i++) {
             String letter = letters.get(i);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (letter.equals(secondValue.toString())) {
                 return i;
             }

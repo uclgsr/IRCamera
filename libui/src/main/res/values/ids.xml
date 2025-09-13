@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Resource definitions - ids -->
 <resources>
 
     <item name="statusbarutil_fake_status_bar_view" type="id" />

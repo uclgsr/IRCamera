@@ -14,23 +14,6 @@ import java.util.List;
  *
  * @author Philipp Jahoda
  */
-/**
- * Temperature measurement and calibration utility for thermal imaging. Provides precision temperature calculations with ColorTemplate algorithms.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class ColorTemplate {
 
     /**
@@ -69,10 +52,6 @@ public class ColorTemplate {
             Color.rgb(140, 234, 255), Color.rgb(255, 140, 157)
     };
     public static final int[] MATERIAL_COLORS = {
-            /**
-             * Executes rgb operation with thermal imaging domain optimization.
-             *
-             */
             rgb("#2ecc71"), rgb("#f1c40f"), rgb("#e74c3c"), rgb("#3498db")
     };
 
@@ -107,10 +86,6 @@ public class ColorTemplate {
      * @return
      */
     public static int colorWithAlpha(int color, int alpha) {
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (color & 0xffffff) | ((alpha & 0xff) << 24);
     }
 
@@ -126,13 +101,6 @@ public class ColorTemplate {
 
         List<Integer> result = new ArrayList<Integer>();
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param i Parameter for operation (type: colors)
-         *
-         */
         for (int i : colors) {
             result.add(r.getColor(i));
         }
@@ -151,13 +119,6 @@ public class ColorTemplate {
 
         List<Integer> result = new ArrayList<Integer>();
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param i Parameter for operation (type: colors)
-         *
-         */
         for (int i : colors) {
             result.add(i);
         }

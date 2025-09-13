@@ -15,39 +15,17 @@ import androidx.lifecycle.LifecycleOwner
 import com.hjq.permissions.XXPermissions
 
 /**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for WifiUtil operations.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * WIFI 相关工具class.
  */
 object WifiUtil {
     /**
      * 不带双引号的 SSID.
      */
     fun ScanResult.getWifiName(): String =
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Build.VERSION.SDK_INT < 33) {
             @Suppress("DEPRECATION")
             SSID
         } else {
-            /**
-             * Executes removequotation operation with thermal imaging domain optimization.
-             *
-             */
             removeQuotation(wifiSsid.toString())
         }
 
@@ -71,9 +49,6 @@ object WifiUtil {
      * Get/Retrievecurrentconnection的 Wifi ssid，如果有的话，移除首尾的双引号。
      * @return 若未connection WIFI 或 无 [Manifest.permission.ACCESS_FINE_LOCATION] Permission，则为 null
      */
-    /**
-     * Retrieves currentwifissid information.
-     */
     fun getCurrentWifiSSID(context: Context): String? {
         if (!XXPermissions.isGranted(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             return null
@@ -86,86 +61,64 @@ object WifiUtil {
     /**
      * 在给定 activity 生命周期内add WIFI 开关stateListener.
      */
-/**
- * Specialized thermal imaging component providing WifiStateObserver functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+    fun addWifiStateListener(
+        activity: ComponentActivity,
+        listener: ((isEnable: Boolean) -> Unit),
+    ) {
+        activity.lifecycle.addObserver(WifiStateObserver(activity, WifiStateReceiver(listener)))
+    }
+
+    /**
+     * 在给定 activity 生命周期内add WIFI 扫描结果Listener.
+     */
+    fun addWifiScanListener(
+        activity: ComponentActivity,
+        listener: ((isSuccess: Boolean) -> Unit),
+    ) {
+        activity.lifecycle.addObserver(WifiScanObserver(activity, WifiScanReceiver(listener)))
+    }
+
     private class WifiStateObserver(val context: Context, val receiver: BroadcastReceiver) : DefaultLifecycleObserver {
-        /**
-         * Executes oncreate operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param owner Parameter for operation (type: LifecycleOwner)
-         *
-         */
         override fun onCreate(owner: LifecycleOwner) {
             context.registerReceiver(receiver, IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION))
         }
 
-        /**
-         * Executes ondestroy operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param owner Parameter for operation (type: LifecycleOwner)
-         *
-         */
         override fun onDestroy(owner: LifecycleOwner) {
             context.unregisterReceiver(receiver)
             owner.lifecycle.removeObserver(this)
-/**
- * Specialized thermal imaging component providing WifiStateReceiver functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
-/**
- * Specialized thermal imaging component providing WifiScanReceiver functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+        }
+    }
+
+    private class WifiScanObserver(val context: Context, val receiver: BroadcastReceiver) : DefaultLifecycleObserver {
+        override fun onCreate(owner: LifecycleOwner) {
+            context.registerReceiver(receiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
+        }
+
+        override fun onDestroy(owner: LifecycleOwner) {
+            context.unregisterReceiver(receiver)
+            owner.lifecycle.removeObserver(this)
+        }
+    }
+
+    /**
+     * WIFI state变更广播Listener.
+     */
+    private class WifiStateReceiver(val listener: ((isEnable: Boolean) -> Unit)) : BroadcastReceiver() {
+        override fun onReceive(
+            context: Context?,
+            intent: Intent?,
+        ) {
+            when (intent?.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)) {
+                WifiManager.WIFI_STATE_ENABLED -> listener.invoke(true)
+                WifiManager.WIFI_STATE_DISABLED, WifiManager.WIFI_STATE_UNKNOWN -> listener.invoke(false)
+            }
+        }
+    }
+
+    /**
+     * WIFI 扫描结果广播Listener.
+     */
     private class WifiScanReceiver(val listener: ((isSuccess: Boolean) -> Unit)) : BroadcastReceiver() {
-        /**
-         * Executes onreceive operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param context Parameter for operation (type: Context)
-         * @param intent Parameter for operation (type: Intent?)
-         *
-         */
         override fun onReceive(
             context: Context,
             intent: Intent?,

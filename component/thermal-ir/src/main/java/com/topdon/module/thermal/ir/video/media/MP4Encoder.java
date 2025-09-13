@@ -25,24 +25,10 @@ import android.util.Log;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-/**
- * Specialized thermal imaging component providing MP4Encoder functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class MP4Encoder extends Encoder {
 
-    private static final int BIT_RATE = 600000;// 码率2000000
-    private static final int FRAME_RATE = 20;// 帧数
+    private static final int BIT_RATE = 600000;//码率2000000
+    private static final int FRAME_RATE = 20;//帧数
     private static final int I_FRAME_INTERVAL = 5;
     private static final long ONE_SEC = 1000000;
     private static final String TAG = MP4Encoder.class.getSimpleName();
@@ -50,7 +36,7 @@ public class MP4Encoder extends Encoder {
     private int addedFrameCount;
     // Fixed: Use dynamic buffer sizing to prevent BufferOverflowException on high Android versions
     // Audio processing disabled - adaptive buffer size based on codec capabilities
-    // Private byte[] audioArray = new byte[getOptimalBufferSize()];
+    // private byte[] audioArray = new byte[getOptimalBufferSize()];
     private MediaCodec audioCodec;
     private int audioTrackIndex;
     private BufferInfo bufferInfo;
@@ -86,10 +72,6 @@ public class MP4Encoder extends Encoder {
             audioCodec = MediaCodec.createEncoderByType(MIMETYPE_AUDIO_AAC);
             MediaFormat audioFormat = MediaFormat.createAudioFormat(MIMETYPE_AUDIO_AAC, 44100, 1);
             int profile;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 profile = MPEG2ProfileHigh;
             } else {
@@ -107,46 +89,22 @@ public class MP4Encoder extends Encoder {
 
     @Override
     protected void onStop() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isStarted) {
-            /**
-             * Executes encode operation with thermal imaging domain optimization.
-             *
-             */
             encode();
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (this.addedFrameCount > 0) {
                 Log.i(TAG, String.format("Total frame count = %s", this.addedFrameCount));
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (videoCodec != null) {
                     videoCodec.stop();
                     videoCodec.release();
                     videoCodec = null;
                     Log.i(TAG, "RELEASE VIDEO CODEC");
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (audioCodec != null) {
                     audioCodec.stop();
                     audioCodec.release();
                     audioCodec = null;
                     Log.i(TAG, "RELEASE AUDIO CODEC");
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (mediaMuxer != null) {
                     mediaMuxer.stop();
                     mediaMuxer.release();
@@ -162,70 +120,38 @@ public class MP4Encoder extends Encoder {
 
     @Override
     protected void onAddFrame(Bitmap bitmap) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isStarted) {
             Log.d(TAG, "already finished. can't add Frame ");
         } else if (bitmap == null) {
             Log.e(TAG, "Bitmap is null");
         } else {
             int inputBufIndex = videoCodec.dequeueInputBuffer(TIMEOUT_US);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (inputBufIndex >= 0) {
-// Byte[] input = getNV12(bitmap.getWidth(), bitmap.getHeight(), bitmap);
+//                byte[] input = getNV12(bitmap.getWidth(), bitmap.getHeight(), bitmap);
                 byte[] input = EncodeYuvTools.INSTANCE.getNV12(bitmap.getWidth(), bitmap.getHeight(), bitmap, getColorFormat());
                 ByteBuffer inputBuffer = videoCodec.getInputBuffer(inputBufIndex);
                 inputBuffer.clear();
                 inputBuffer.put(input);
                 videoCodec.queueInputBuffer(inputBufIndex, 0, input.length,
-                        /**
-                         * Retrieves the presentationtimeusec with optimized performance for thermal imaging operations.
-                         *
-                         */
                         getPresentationTimeUsec(addedFrameCount), 0);
             }
             int audioInputBufferIndex = audioCodec.dequeueInputBuffer(TIMEOUT_US);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (audioInputBufferIndex >= -1) {
 //                ByteBuffer encoderInputBuffer = audioCodec.getInputBuffer(audioInputBufferIndex);
-// EncoderInputBuffer.clear();
-// EncoderInputBuffer.put(audioArray);
-// AudioCodec.queueInputBuffer(audioInputBufferIndex, 0, audioArray.length,
-// GetPresentationTimeUsec(addedFrameCount), 0);
+//                encoderInputBuffer.clear();
+//                encoderInputBuffer.put(audioArray);
+//                audioCodec.queueInputBuffer(audioInputBufferIndex, 0, audioArray.length,
+//                        getPresentationTimeUsec(addedFrameCount), 0);
             }
             addedFrameCount++;
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (addedFrameCount > encodedFrameCount) {
-                /**
-                 * Executes encode operation with thermal imaging domain optimization.
-                 *
-                 */
                 encode();
             }
         }
     }
 
     private void encode() {
-        /**
-         * Executes encodevideo operation with thermal imaging domain optimization.
-         *
-         */
         encodeVideo();
-        /**
-         * Executes encodeaudio operation with thermal imaging domain optimization.
-         *
-         */
         encodeAudio();
 
     }
@@ -234,19 +160,11 @@ public class MP4Encoder extends Encoder {
         int audioStatus = audioCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_US);
         Log.i(TAG, "Audio encoderStatus = " + audioStatus + ", presentationTimeUs = "
                 + bufferInfo.presentationTimeUs);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (audioStatus == INFO_OUTPUT_FORMAT_CHANGED) {
             MediaFormat audioFormat = audioCodec.getOutputFormat();
             Log.i(TAG, String.format("output format changed. audio format: %s", audioFormat.toString()));
             audioTrackIndex = mediaMuxer.addTrack(audioFormat);
             trackCount++;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (trackCount == 2) {
                 Log.i(TAG, "started media muxer.");
                 mediaMuxer.start();
@@ -256,17 +174,9 @@ public class MP4Encoder extends Encoder {
             Log.d(TAG, "no output from audio encoder available");
         } else {
             ByteBuffer audioData = audioCodec.getOutputBuffer(audioStatus);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (audioData != null) {
                 audioData.position(bufferInfo.offset);
                 audioData.limit(bufferInfo.offset + bufferInfo.size);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isMuxerStarted) {
                     mediaMuxer.writeSampleData(audioTrackIndex, audioData, bufferInfo);
                 }
@@ -279,19 +189,11 @@ public class MP4Encoder extends Encoder {
         int encoderStatus = videoCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_US);
         Log.i(TAG, "Video encoderStatus = " + encoderStatus + ", presentationTimeUs = "
                 + bufferInfo.presentationTimeUs);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (encoderStatus == INFO_OUTPUT_FORMAT_CHANGED) {
             MediaFormat videoFormat = videoCodec.getOutputFormat();
             Log.i(TAG, String.format("output format changed. video format: %s", videoFormat.toString()));
             videoTrackIndex = mediaMuxer.addTrack(videoFormat);
             trackCount++;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (trackCount == 2) {
                 Log.i(TAG, "started media muxer.");
                 mediaMuxer.start();
@@ -301,17 +203,9 @@ public class MP4Encoder extends Encoder {
             Log.d(TAG, "no output from video encoder available");
         } else {
             ByteBuffer encodedData = videoCodec.getOutputBuffer(encoderStatus);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (encodedData != null) {
                 encodedData.position(bufferInfo.offset);
                 encodedData.limit(bufferInfo.offset + bufferInfo.size);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isMuxerStarted) {
                     mediaMuxer.writeSampleData(videoTrackIndex, encodedData, bufferInfo);
                 }
@@ -323,15 +217,11 @@ public class MP4Encoder extends Encoder {
     }
 
     private static long getPresentationTimeUsec(int frameIndex) {
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (((long) frameIndex) * ONE_SEC) / 20;
     }
 
     /**
-COLOR_FormatYUV420SemiPlanar default
+COLOR_FormatYUV420SemiPlanar 默认
 COLOR_FormatYUV420Planar     个例使用
      */
     private int getColorFormat() {

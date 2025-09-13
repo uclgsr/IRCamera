@@ -23,20 +23,6 @@ import com.topdon.menu.R as MenuR
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing MenuAIAdapter functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.ItemView>() {
     /**
      * currentselected的选项 code.
@@ -48,21 +34,9 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
      * - Low temperature source: 2
      */
     var selectCode: Int = -1
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (field != value) {
                 field = value
-                /**
-                 * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-                 *
-                 */
                 notifyDataSetChanged()
             }
         }
@@ -73,33 +47,17 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
     var onTempSourceListener: ((code: Int) -> Unit)? = null
 
     private val secondBean =
-        /**
-         * Executes arraylistof operation with thermal imaging domain optimization.
-         *
-         */
         arrayListOf(
-            /**
-             * Executes colorbean operation with thermal imaging domain optimization.
-             *
-             */
             ColorBean(
                 MenuR.drawable.selector_menu2_source_1_auto,
                 context.getString(R.string.main_tab_second_dynamic_recognition),
                 ObserveBean.TYPE_DYN_R,
             ),
-            /**
-             * Executes colorbean operation with thermal imaging domain optimization.
-             *
-             */
             ColorBean(
                 MenuR.drawable.selector_menu2_source_2_high,
                 context.getString(R.string.main_tab_second_high_temperature_source),
                 ObserveBean.TYPE_TMP_H_S,
             ),
-            /**
-             * Executes colorbean operation with thermal imaging domain optimization.
-             *
-             */
             ColorBean(
                 MenuR.drawable.selector_menu2_source_3_low,
                 context.getString(R.string.main_tab_second_low_temperature_source),
@@ -107,14 +65,6 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
             ),
         )
 
-    /**
-     * Executes oncreateviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param parent Parameter for operation (type: ViewGroup)
-     * @param viewType Parameter for operation (type: Int)
-     *
-     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -123,22 +73,10 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
         return ItemView(binding)
     }
 
-    /**
-     * Executes onbindviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param holder Parameter for operation (type: ItemView)
-     * @param position Parameter for operation (type: Int)
-     *
-     */
     override fun onBindViewHolder(
         holder: ItemView,
         position: Int,
     ) {
-        /**
-         * Executes with operation with thermal imaging domain optimization.
-         *
-         */
         with(holder.binding) {
             itemMenuTabImg.setImageResource(secondBean[position].res)
             itemMenuTabLay.setOnClickListener {
@@ -149,10 +87,6 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
             itemMenuTabText.text = secondBean[position].name
             itemMenuTabText.isSelected = secondBean[position].code == selectCode
             itemMenuTabText.setTextColor(
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (secondBean[position].code == selectCode) {
                     ContextCompat.getColor(context, UiR.color.white)
                 } else {
@@ -162,10 +96,6 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
         }
     }
 
-    /**
-     * Retrieves the itemcount with optimized performance for thermal imaging operations.
-     *
-     */
     override fun getItemCount(): Int {
         return secondBean.size
     }

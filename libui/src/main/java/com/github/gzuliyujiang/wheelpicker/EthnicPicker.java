@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -35,20 +35,6 @@ import java.util.List;
  * @since 2021/6/12 13:50
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-/**
- * Specialized thermal imaging component providing EthnicPicker functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class EthnicPicker extends OptionPicker {
     public static String JSON = "[{\"code\":\"01\",\"name\":\"汉族\",\"spelling\":\"Han\"}," +
             "{\"code\":\"02\",\"name\":\"蒙古族\",\"spelling\":\"Mongol\"}," +
@@ -108,50 +94,22 @@ public class EthnicPicker extends OptionPicker {
             "{\"code\":\"56\",\"name\":\"基诺族\",\"spelling\":\"Jino\"}]";
     private int ethnicSpec = EthnicSpec.DEFAULT;
 
-    /**
-     * Executes ethnicpicker operation with thermal imaging domain optimization.
-     *
-     */
     public EthnicPicker(@NonNull Activity activity) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity);
     }
 
-    /**
-     * Executes ethnicpicker operation with thermal imaging domain optimization.
-     *
-     */
     public EthnicPicker(@NonNull Activity activity, int themeResId) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity, themeResId);
     }
 
     public void setEthnicSpec(@EthnicSpec int ethnicSpec) {
         this.ethnicSpec = ethnicSpec;
-        /**
-         * Configures the data with validation and thermal imaging optimization.
-         *
-         */
         setData(provideData());
     }
 
     @Override
     public void setDefaultValue(Object item) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (item instanceof String) {
-            /**
-             * Configures the defaultvaluebyname with validation and thermal imaging optimization.
-             *
-             */
             setDefaultValueByName(item.toString());
         } else {
             super.setDefaultValue(item);
@@ -181,10 +139,6 @@ public class EthnicPicker extends OptionPicker {
         ArrayList<EthnicEntity> data = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(JSON);
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0, n = jsonArray.length(); i < n; i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 EthnicEntity entity = new EthnicEntity();
@@ -196,10 +150,6 @@ public class EthnicPicker extends OptionPicker {
         } catch (JSONException e) {
             DialogLog.print(e);
         }
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (ethnicSpec) {
             case EthnicSpec.DEFAULT:
                 EthnicEntity other = new EthnicEntity();

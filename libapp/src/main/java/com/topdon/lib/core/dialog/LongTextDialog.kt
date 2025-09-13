@@ -20,55 +20,18 @@ import com.topdon.lib.core.utils.ScreenUtil
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing LongTextDialog functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class LongTextDialog(context: Context, val title: String?, val content: String?) : Dialog(context, R.style.InfoDialog) {
     private val binding: DialogLongTextBinding = DialogLongTextBinding.inflate(LayoutInflater.from(context))
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /**
-         * Configures the cancelable with validation and thermal imaging optimization.
-         *
-         */
         setCancelable(true)
-        /**
-         * Configures the canceledontouchoutside with validation and thermal imaging optimization.
-         *
-         */
         setCanceledOnTouchOutside(true)
 
         binding.tvTitle.text = title
         binding.tvText.text = content
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(binding.root)
         binding.tvIKnow.setOnClickListener {
-            /**
-             * Executes dismiss operation with thermal imaging domain optimization.
-             *
-             */
             dismiss()
         }
 

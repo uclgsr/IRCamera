@@ -21,33 +21,8 @@ import java.nio.ByteBuffer
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for LiteSurfaceView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class LiteSurfaceView
     @JvmOverloads
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet? = null)
-     *
-     */
     constructor(
         context: Context,
         attrs: AttributeSet? = null,
@@ -64,24 +39,12 @@ class LiteSurfaceView
     /**
      * Executes scalebitmap functionality.
      */
-        /**
-         * Executes scalebitmap operation with thermal imaging domain optimization.
-         *
-         */
         fun scaleBitmap(): Bitmap {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (tmpData == null) {
                     tmpData = ByteArray(mIrRotateData!!.size)
                 }
                 System.arraycopy(mIrRotateData!!, 0, tmpData!!, 0, mIrRotateData!!.size)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (imageBitmap == null || imageBitmap!!.getWidth() != mFinalImageWidth) {
                     imageBitmap =
                         Bitmap.createBitmap(mFinalImageWidth, mFinalImageHeight, Bitmap.Config.ARGB_8888)

@@ -19,18 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * Specialized thermal imaging component providing GSRDataPersistence functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Enhanced GSR data persistence with proper timestamping and cross-sensor alignment
+ * Provides research-grade CSV output with multiple timestamp formats for compatibility
  */
 class GSRDataPersistence(
     private val context: Context,
@@ -63,20 +53,12 @@ class GSRDataPersistence(
             csvWriter = FileWriter(csvFile!!, true)
 
             // Write CSV header with comprehensive timestamp information
-            /**
-             * Executes writecsvheader operation with thermal imaging domain optimization.
-             *
-             */
             writeCsvHeader()
 
             Log.i(TAG, "GSR data persistence initialized for session: $sessionId")
             Log.i(TAG, "CSV file: ${csvFile!!.absolutePath}")
 
             // Start background batch writer
-            /**
-             * Executes startbatchwriter operation with thermal imaging domain optimization.
-             *
-             */
             startBatchWriter()
 
             true
@@ -93,10 +75,6 @@ class GSRDataPersistence(
         val baseDir = File(context.getExternalFilesDir(null), "GSR_Sessions")
         val sessionDir = File(baseDir, sessionId)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!sessionDir.exists()) {
             sessionDir.mkdirs()
         }
@@ -122,48 +100,20 @@ class GSRDataPersistence(
                 val header =
                     buildString {
                         // Timestamp columns (multiple formats for compatibility)
-                        /**
-                         * Executes append operation with thermal imaging domain optimization.
-                         *
-                         */
                         append(TimestampRecord.getCsvHeader())
-                        /**
-                         * Executes append operation with thermal imaging domain optimization.
-                         *
-                         */
                         append(",")
 
                         // GSR sensor data columns
-                        /**
-                         * Executes append operation with thermal imaging domain optimization.
-                         *
-                         */
                         append("gsr_raw_value,gsr_microsiemens,gsr_resistance_kohm,")
 
                         // PPG sensor data columns (if available)
-                        /**
-                         * Executes append operation with thermal imaging domain optimization.
-                         *
-                         */
                         append("ppg_raw_value,ppg_filtered,heart_rate_bpm,")
 
                         // Device and quality metrics
-                        /**
-                         * Executes append operation with thermal imaging domain optimization.
-                         *
-                         */
                         append("device_id,battery_level,signal_quality,")
-                        /**
-                         * Executes append operation with thermal imaging domain optimization.
-                         *
-                         */
                         append("sampling_rate_hz,packet_sequence,")
 
                         // Session and participant info
-                        /**
-                         * Executes append operation with thermal imaging domain optimization.
-                         *
-                         */
                         append("session_id,participant_id,recording_mode")
                     }
 
@@ -185,10 +135,6 @@ class GSRDataPersistence(
     fun queueDataRecord(gsrData: GSRSampleData) {
         val timestamp = TimestampManager.createTimestampRecord()
         val record =
-            /**
-             * Executes gsrdatarecord operation with thermal imaging domain optimization.
-             *
-             */
             GSRDataRecord(
                 timestamp = timestamp,
                 gsrRawValue = gsrData.rawValue,
@@ -217,10 +163,6 @@ class GSRDataPersistence(
         scope.launch {
             while (isWriting.get() || dataQueue.isNotEmpty()) {
                 try {
-                    /**
-                     * Executes writebatch operation with thermal imaging domain optimization.
-                     *
-                     */
                     writeBatch()
                     kotlinx.coroutines.delay(FLUSH_INTERVAL_MS)
                 } catch (e: Exception) {
@@ -237,18 +179,10 @@ class GSRDataPersistence(
         if (dataQueue.isEmpty()) return
 
         val batch = mutableListOf<GSRDataRecord>()
-        /**
-         * Executes repeat operation with thermal imaging domain optimization.
-         *
-         */
         repeat(BATCH_SIZE) {
             dataQueue.poll()?.let { batch.add(it) }
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (batch.isEmpty()) return
 
         writeMutex.withLock {
@@ -285,15 +219,7 @@ class GSRDataPersistence(
         isWriting.set(false)
 
         // Write remaining data
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (dataQueue.isNotEmpty()) {
-            /**
-             * Executes writebatch operation with thermal imaging domain optimization.
-             *
-             */
             writeBatch()
         }
 
@@ -305,15 +231,7 @@ class GSRDataPersistence(
     /**
      * Cleanup resources
      */
-    /**
-     * Executes cleanup operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun cleanup() {
-        /**
-         * Executes stoppersistence operation with thermal imaging domain optimization.
-         *
-         */
         stopPersistence()
 
         writeMutex.withLock {
@@ -329,10 +247,6 @@ class GSRDataPersistence(
 
     /**
      * Get recording statistics
-     */
-    /**
-     * Retrieves the statistics with optimized performance for thermal imaging operations.
-     *
      */
     fun getStatistics(): GSRPersistenceStats {
         return GSRPersistenceStats(
@@ -371,48 +285,20 @@ data class GSRDataRecord(
     fun toCsvLine(): String {
         return buildString {
             // Timestamp data
-            /**
-             * Executes append operation with thermal imaging domain optimization.
-             *
-             */
             append(timestamp.toCsvFormat())
-            /**
-             * Executes append operation with thermal imaging domain optimization.
-             *
-             */
             append(",")
 
             // GSR sensor data
-            /**
-             * Executes append operation with thermal imaging domain optimization.
-             *
-             */
             append("$gsrRawValue,$gsrMicrosiemens,$gsrResistanceKohm,")
 
             // PPG sensor data
-            /**
-             * Executes append operation with thermal imaging domain optimization.
-             *
-             */
             append("$ppgRawValue,$ppgFiltered,$heartRateBpm,")
 
             // Device and quality metrics
-            /**
-             * Executes append operation with thermal imaging domain optimization.
-             *
-             */
             append("$deviceId,$batteryLevel,$signalQuality,")
-            /**
-             * Executes append operation with thermal imaging domain optimization.
-             *
-             */
             append("$samplingRateHz,$packetSequence,")
 
             // Session information
-            /**
-             * Executes append operation with thermal imaging domain optimization.
-             *
-             */
             append("$sessionId,$participantId,$recordingMode")
         }
     }

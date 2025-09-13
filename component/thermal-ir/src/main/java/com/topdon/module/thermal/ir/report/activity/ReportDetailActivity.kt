@@ -33,18 +33,8 @@ report详情interface.
  */
 // Legacy ARouter route annotation - now using NavigationManager
 /**
- * Specialized thermal imaging component providing ReportDetailActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Report detail activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
  */
 class ReportDetailActivity : BaseActivity() {
     // View declarations
@@ -64,16 +54,8 @@ class ReportDetailActivity : BaseActivity() {
      */
     private var pdfFilePath: String? = null
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.activity_report_detail
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         // Initialize views
         titleView = findViewById(R.id.title_view)
@@ -88,41 +70,21 @@ class ReportDetailActivity : BaseActivity() {
         titleView.setLeftDrawable(UiR.drawable.svg_arrow_left_e8)
         titleView.setRightDrawable(R.drawable.ic_share_black_svg)
         titleView.setLeftClickListener {
-            /**
-             * Executes finish operation with thermal imaging domain optimization.
-             *
-             */
             finish()
         }
         titleView.setRightClickListener {
-            /**
-             * Executes savewithpdf operation with thermal imaging domain optimization.
-             *
-             */
             saveWithPDF()
         }
 
         reportInfoView.refreshInfo(reportBean?.report_info)
         reportInfoView.refreshCondition(reportBean?.detection_condition)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (reportBean?.report_info?.is_report_watermark == 1) {
             watermarkView.watermarkText = reportBean?.report_info?.report_watermark
         }
 
         val irList = reportBean?.infrared_data
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (irList != null) {
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (i in irList.indices) {
                 val reportShowView = ReportIRShowView(this)
                 reportShowView.refreshData(i == 0, i == irList.size - 1, irList[i])
@@ -135,55 +97,20 @@ class ReportDetailActivity : BaseActivity() {
         }
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
-    /**
-     * Executes saveWithPDF functionality.
-     */
-    /**
-     * Executes savewithpdf operation with thermal imaging domain optimization.
-     *
-     */
     private fun saveWithPDF() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (TextUtils.isEmpty(pdfFilePath)) {
-            /**
-             * Manages thermal camera operations with hardware-optimized performance and error handling.
-             *
-             */
             showCameraLoading()
             lifecycleScope.launch(Dispatchers.IO) {
                 val name = reportBean?.report_info?.report_number
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (name != null) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (File(FileConfig.getPdfDir() + "/$name.pdf").exists() &&
                         !TextUtils.isEmpty(pdfFilePath)
                     ) {
                         lifecycleScope.launch {
-                            /**
-                             * Manages thermal camera operations with hardware-optimized performance and error handling.
-                             *
-                             */
                             dismissCameraLoading()
-                            /**
-                             * Executes actionshare operation with thermal imaging domain optimization.
-                             *
-                             */
                             actionShare()
                         }
                         return@launch
@@ -195,44 +122,21 @@ class ReportDetailActivity : BaseActivity() {
                         scrollView, getPrintViewList(), watermarkView,
                     )
                 lifecycleScope.launch {
-                    /**
-                     * Manages thermal camera operations with hardware-optimized performance and error handling.
-                     *
-                     */
                     dismissCameraLoading()
-                    /**
-                     * Executes actionshare operation with thermal imaging domain optimization.
-                     *
-                     */
                     actionShare()
                 }
             }
         } else {
-            /**
-             * Executes actionshare operation with thermal imaging domain optimization.
-             *
-             */
             actionShare()
         }
     }
 
-    /**
-     * Executes actionShare functionality.
-     */
-    /**
-     * Executes actionshare operation with thermal imaging domain optimization.
-     *
-     */
     private fun actionShare() {
         val uri = FileTools.getUri(File(pdfFilePath!!))
         val shareIntent = Intent()
         shareIntent.action = Intent.ACTION_SEND
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
         shareIntent.type = "application/pdf"
-        /**
-         * Executes startactivity operation with thermal imaging domain optimization.
-         *
-         */
         startActivity(Intent.createChooser(shareIntent, getString(LibCoreR.string.battery_share)))
     }
 
@@ -240,23 +144,12 @@ class ReportDetailActivity : BaseActivity() {
 get需要转为 PDF 的所有 View 列表.
 注意：watermark View 不在列表内，需要自行processing.
      */
-    /**
-     * Retrieves printviewlist information.
-     */
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
         result.add(reportInfoView)
         val childCount = llContent.childCount
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in 0 until childCount) {
             val childView = llContent.getChildAt(i)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (childView is ReportIRShowView) {
                 result.addAll(childView.getPrintViewList())
             }

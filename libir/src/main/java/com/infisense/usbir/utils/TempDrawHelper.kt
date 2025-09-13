@@ -21,27 +21,10 @@ import kotlin.math.min
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Temperature measurement and calibration utility for thermal imaging. Provides precision temperature calculations with TempDrawHelper algorithms.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class TempDrawHelper {
     companion object {
         /**
-         * point是a十字架，该值为十字架的长度，单位 px.
+         * point是一个十字架，该值为十字架的长度，单位 px.
          */
         private val POINT_SIZE: Int = SizeUtils.dp2px(16f)
 
@@ -51,12 +34,12 @@ class TempDrawHelper {
         private val CIRCLE_RADIUS: Int = SizeUtils.dp2px(3f)
 
         /**
-         * temperature值text，与实心圆圆心的偏移量，防止text与实心圆重叠，Xaxis为该值，Yaxis为该值/2，单位 px.
+         * temperature值text，与实心圆圆心的偏移量，防止text与实心圆重叠，X轴为该值，Y轴为该值/2，单位 px.
          */
         private val TEMP_TEXT_OFFSET = SizeUtils.dp2px(6f)
 
         /**
-         * 修正指定十字架的 View coordinate值，确保十字架不会超出 View 界外.
+         * 修正指定十字架的 View 坐标值，确保十字架不会超出 View 界外.
          */
         fun Float.correctPoint(max: Int): Int =
             this.toInt()
@@ -64,7 +47,7 @@ class TempDrawHelper {
                 .coerceAtMost(max - POINT_SIZE / 2)
 
         /**
-         * 修正line、area、maximum温point、minimum温point的 View coordinate值，确保实心圆不会超出 View 界外。
+         * 修正line、area、maximum温point、minimum温point的 View 坐标值，确保实心圆不会超出 View 界外。
          */
         fun Float.correct(max: Int): Int =
             this.toInt()
@@ -118,7 +101,7 @@ class TempDrawHelper {
 
     /**
      * 高温temperaturetext、低温temperaturetext、趋势图 AB 两个字母、point/line/areaname Paint，
-     * colordefault白色，大小default 14sp，可由textcolor、大小settings更改.
+     * color默认白色，大小默认 14sp，可由textcolor、大小settings更改.
      */
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -137,21 +120,9 @@ class TempDrawHelper {
     // ******************************************** Draw ********************************************
 
     /**
-     * 在 (x,y) 画a十字.
+     * 在 (x,y) 画一个十字.
      *
      * 注意，不对 x、y 进行processing，传进来是哪就在哪绘制。
-     */
-    /**
-     * Executes drawPoint functionality.
-     */
-    /**
-     * Executes drawpoint operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     * @param x Parameter for operation (type: Int)
-     * @param y Parameter for operation (type: Int)
-     *
      */
     fun drawPoint(
         canvas: Canvas,
@@ -169,21 +140,7 @@ class TempDrawHelper {
     /**
      * connection (startX, startY)、(stopX, stopY) 两point绘制一条line段.
      *
-     * 注意，不对 coordinateparameter 进行processing，传进来是哪就在哪绘制。
-     */
-    /**
-     * Executes drawLine functionality.
-     */
-    /**
-     * Executes drawline operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     * @param startX Parameter for operation (type: Int)
-     * @param startY Parameter for operation (type: Int)
-     * @param stopX Parameter for operation (type: Int)
-     * @param stopY Parameter for operation (type: Int)
-     *
+     * 注意，不对 坐标parameter 进行processing，传进来是哪就在哪绘制。
      */
     fun drawLine(
         canvas: Canvas,
@@ -196,23 +153,9 @@ class TempDrawHelper {
     }
 
     /**
-     * 按指定range绘制a矩形.
+     * 按指定range绘制一个矩形.
      *
-     * 注意，不对 coordinateparameter 进行processing，传进来是哪就在哪绘制。
-     */
-    /**
-     * Executes drawRect functionality.
-     */
-    /**
-     * Executes drawrect operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     * @param left Parameter for operation (type: Int)
-     * @param top Parameter for operation (type: Int)
-     * @param right Parameter for operation (type: Int)
-     * @param bottom Parameter for operation (type: Int)
-     *
+     * 注意，不对 坐标parameter 进行processing，传进来是哪就在哪绘制。
      */
     fun drawRect(
         canvas: Canvas,
@@ -226,32 +169,15 @@ class TempDrawHelper {
         val rightF: Float = right.toFloat()
         val bottomF: Float = bottom.toFloat()
         val points =
-            /**
-             * Executes floatarrayof operation with thermal imaging domain optimization.
-             *
-             */
             floatArrayOf(leftF, topF, rightF, topF, rightF, topF, rightF, bottomF, rightF, bottomF, leftF, bottomF, leftF, bottomF, leftF, topF)
         canvas.drawLines(points, linePaint)
     }
 
     /**
-     * 在 (x,y) 画a实心圆。
+     * 在 (x,y) 画一个实心圆。
      *
      * 注意，不对 x、y 进行processing，传进来是哪就在哪绘制。
      * @param isMax true-maximum温红色 false-minimum温蓝色
-     */
-    /**
-     * Executes drawCircle functionality.
-     */
-    /**
-     * Executes drawcircle operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     * @param x Parameter for operation (type: Int)
-     * @param y Parameter for operation (type: Int)
-     * @param isMax Parameter for operation (type: Boolean)
-     *
      */
     fun drawCircle(
         canvas: Canvas,
@@ -263,14 +189,11 @@ class TempDrawHelper {
     }
 
     /**
-     * 指定的 (x,y) coordinate为实心圆圆心，以该实心圆为基准绘制指定text。
+     * 指定的 (x,y) 坐标为实心圆圆心，以该实心圆为基准绘制指定text。
      * 若空间允许则放置在实心圆圆心右上方，否则根据实际情况放置在下方、左方或左下方.
      *
      * 注意，不对 x、y 进行processing，传进来是哪就在哪绘制。
-     * @param x 实心圆圆心的 View 尺寸coordinate
-     */
-    /**
-     * Processes temperature measurement data.
+     * @param x 实心圆圆心的 View 尺寸坐标
      */
     fun drawTempText(
         canvas: Canvas,
@@ -283,19 +206,11 @@ class TempDrawHelper {
         var textY: Float = (y - TEMP_TEXT_OFFSET).toFloat()
 
         val textWidth: Float = textPaint.measureText(text)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (x > width - textWidth - TEMP_TEXT_OFFSET) { // 超出右边界，那就挪到左边
             textX = x - TEMP_TEXT_OFFSET - textWidth
         }
 
         val textFontTop: Float = -textPaint.getFontMetrics().top
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (y < textFontTop + TEMP_TEXT_OFFSET / 2) { // 超出上边界，那就挪到下area
             textY = y + TEMP_TEXT_OFFSET / 2 + textFontTop
         }
@@ -304,26 +219,10 @@ class TempDrawHelper {
     }
 
     /**
-     * 指定的 (startX, startY)、(stopX, stopY) coordinate为line段，
+     * 指定的 (startX, startY)、(stopX, stopY) 坐标为line段，
      * 以该line段为基准绘制趋势图的 "A"、"B" text。
      *
-     * 注意，不对 coordinateparameter 进行processing，传进来是哪就在哪绘制。
-     */
-    /**
-     * Executes drawTrendText functionality.
-     */
-    /**
-     * Executes drawtrendtext operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     * @param width Parameter for operation (type: Int)
-     * @param height Parameter for operation (type: Int)
-     * @param startX Parameter for operation (type: Int)
-     * @param startY Parameter for operation (type: Int)
-     * @param stopX Parameter for operation (type: Int)
-     * @param stopY Parameter for operation (type: Int)
-     *
+     * 注意，不对 坐标parameter 进行processing，传进来是哪就在哪绘制。
      */
     fun drawTrendText(
         canvas: Canvas,
@@ -354,26 +253,11 @@ class TempDrawHelper {
     }
 
     /**
-     * 指定的 (x,y) coordinate为实心圆圆心，以该实心圆为基准绘制指定pointnametext。
+     * 指定的 (x,y) 坐标为实心圆圆心，以该实心圆为基准绘制指定pointnametext。
      * 若空间允许则放置在实心圆圆心正下方，否则放正上方.
      *
      * 注意，不对 x、y 进行processing，传进来是哪就在哪绘制。
-     * @param x 实心圆圆心的 View 尺寸coordinate
-     */
-    /**
-     * Executes drawPointName functionality.
-     */
-    /**
-     * Executes drawpointname operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     * @param name Parameter for operation (type: String)
-     * @param width Parameter for operation (type: Int)
-     * @param height Parameter for operation (type: Int)
-     * @param x Parameter for operation (type: Int)
-     * @param y Parameter for operation (type: Int)
-     *
+     * @param x 实心圆圆心的 View 尺寸坐标
      */
     fun drawPointName(
         canvas: Canvas,
@@ -389,24 +273,12 @@ class TempDrawHelper {
         var textX = x - textWidth / 2
         var textY = y + POINT_SIZE / 2 + textHeight
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (textX < 0) { 
             textX = 0f
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (textX + textWidth > width) { 
             textX = width - textWidth
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (textY > height) { // 若名字放point下area要超出range时，放point上area
             textY = y - POINT_SIZE / 2 - textPaint.fontMetrics.bottom
         }
@@ -414,27 +286,10 @@ class TempDrawHelper {
     }
 
     /**
-     * 指定的 line段或矩形 coordinate为range，
+     * 指定的 line段或矩形 坐标为range，
      * 以该range为基准绘制指定linenametext，放置于rangecenter。
      *
      * 注意，不对 x、y 进行processing，传进来是哪就在哪绘制。
-     */
-    /**
-     * Executes drawPointRectName functionality.
-     */
-    /**
-     * Executes drawpointrectname operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     * @param name Parameter for operation (type: String)
-     * @param width Parameter for operation (type: Int)
-     * @param height Parameter for operation (type: Int)
-     * @param left Parameter for operation (type: Int)
-     * @param top Parameter for operation (type: Int)
-     * @param right Parameter for operation (type: Int)
-     * @param bottom Parameter for operation (type: Int)
-     *
      */
     fun drawPointRectName(
         canvas: Canvas,
@@ -456,31 +311,15 @@ class TempDrawHelper {
         var textX: Float = centerX - textWidth / 2
         var textY: Float = centerY + offset
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (textX < 0) { 
             textX = 0f
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (textX + textWidth > width) { 
             textX = width - textWidth
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (textY < textHeight) { 
             textY = textHeight
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (textY > height) { 
             textY = height.toFloat()
         }

@@ -11,21 +11,8 @@ import com.topdon.module.thermal.ir.report.bean.ReportConditionBean
 import com.topdon.module.thermal.ir.report.bean.ReportInfoBean
 
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ReportInfoView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Report info view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class ReportInfoView : LinearLayout {
     // View declarations
@@ -48,46 +35,15 @@ class ReportInfoView : LinearLayout {
     private lateinit var tvEmissivity: android.widget.TextView
     private lateinit var clTop: androidx.constraintlayout.widget.ConstraintLayout
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         LayoutInflater.from(context).inflate(R.layout.view_report_info, this, true)
-        /**
-         * Initializes the views component for thermal imaging operations.
-         *
-         */
         initViews()
     }
 
-    /**
-     * Initializes views component.
-     */
     private fun initViews() {
         tvReportName = findViewById(R.id.tv_report_name)
         tvReportAuthor = findViewById(R.id.tv_report_author)
@@ -112,13 +68,6 @@ class ReportInfoView : LinearLayout {
     /**
 根据指定的reportinforefresh对应 View.
      */
-    /**
-     * Executes refreshinfo operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param reportInfoBean Parameter for operation (type: ReportInfoBean?)
-     *
-     */
     fun refreshInfo(reportInfoBean: ReportInfoBean?) {
         tvReportName.text = reportInfoBean?.report_name
 
@@ -134,13 +83,6 @@ class ReportInfoView : LinearLayout {
 
     /**
 根据指定的检测条件inforefresh对应 View.
-     */
-    /**
-     * Executes refreshcondition operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param conditionBean Parameter for operation (type: ReportConditionBean?)
-     *
      */
     fun refreshCondition(conditionBean: ReportConditionBean?) {
         clReportCondition.isVisible = conditionBean?.is_ambient_humidity == 1 ||
@@ -167,10 +109,6 @@ class ReportInfoView : LinearLayout {
 
     /**
 get需要转为 PDF 的所有 View 列表.
-     */
-    /**
-     * Retrieves the printviewlist with optimized performance for thermal imaging operations.
-     *
      */
     fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()

@@ -22,20 +22,6 @@ import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
-/**
- * Specialized thermal imaging component providing TS004Repository functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 object TS004Repository {
     /**
      * Executes any functionality.
@@ -44,9 +30,6 @@ object TS004Repository {
 
     var netWork: Network? = null
 
-    /**
-     * Retrieves okhttpclient information.
-     */
     private fun getOKHttpClient(): OkHttpClient {
         val build =
             OkHttpClient.Builder()
@@ -62,12 +45,9 @@ object TS004Repository {
         return build.build()
     }
 
-    /**
-     * Retrieves ts004service information.
-     */
     private fun getTS004Service(): TS004Service =
         Retrofit.Builder()
-            .baseUrl("http:// 192.168.40.1:8080")
+            .baseUrl("http://192.168.40.1:8080")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .client(getOKHttpClient())
@@ -87,17 +67,9 @@ object TS004Repository {
             var successCount = 0
             dataMap.forEach {
                 val isSuccess = download(it.key, it.value)
-                /**
-                 * Executes launch operation with thermal imaging domain optimization.
-                 *
-                 */
                 launch(Dispatchers.Main) {
                     listener.invoke(it.key, isSuccess)
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isSuccess) {
                     successCount++
                 }
@@ -106,29 +78,13 @@ object TS004Repository {
         }
     }
 
-    /**
-     * Executes download operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param url Parameter for operation (type: String)
-     * @param file Parameter for operation (type: File)
-     *
-     */
     suspend fun download(
         url: String,
         file: File,
     ): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             val responseBody =
                 try {
-                    /**
-                     * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getTS004Service().download(url)
                 } catch (_: Exception) {
                     return@withContext false
@@ -141,10 +97,6 @@ object TS004Repository {
 
                 val buffer = ByteArray(4096)
                 var readLength = inputStream.read(buffer)
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (readLength != -1) {
                     fileOutputString.write(buffer, 0, readLength)
                     readLength = inputStream.read(buffer)
@@ -163,15 +115,7 @@ object TS004Repository {
     /**
      * Synchronize时间.
      */
-    /**
-     * Executes synctime operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun syncTime(): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val calendar = Calendar.getInstance()
@@ -183,10 +127,6 @@ object TS004Repository {
                 paramMap["min"] = calendar.get(Calendar.MINUTE)
                 paramMap["sec"] = calendar.get(Calendar.SECOND)
                 paramMap["usec"] = calendar.get(Calendar.MILLISECOND)
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().syncTime(paramMap.toBody()).isSuccess()
             } catch (_: Exception) {
                 false
@@ -196,23 +136,11 @@ object TS004Repository {
     /**
      * Synchronize时区.
      */
-    /**
-     * Executes synctimezone operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun syncTimeZone(): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["timezone"] = TimeZone.getDefault().rawOffset / 1000 / 60 / 60
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().syncTimeZone(paramMap.toBody()).isSuccess()
             } catch (_: Exception) {
                 false
@@ -222,21 +150,9 @@ object TS004Repository {
     /**
      * Get/Retrieveversioninfo
      */
-    /**
-     * Retrieves the version with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getVersion(): TS004Response<VersionBean>? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().getVersion()
             } catch (_: Exception) {
                 null
@@ -246,21 +162,9 @@ object TS004Repository {
     /**
      * Get/Retrievedeviceinfo
      */
-    /**
-     * Retrieves the deviceinfo with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getDeviceInfo(): TS004Response<DeviceInfo>? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().getDeviceInfo()
             } catch (_: Exception) {
                 null
@@ -276,10 +180,6 @@ object TS004Repository {
             try {
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["fileType"] = fileType
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().getFileCount(paramMap.toBody()).data?.fileCount ?: 0
             } catch (e: Exception) {
                 null
@@ -287,7 +187,7 @@ object TS004Repository {
         }
 
     /**
-     * Get/Retrieve指定type的最新的afile.
+     * Get/Retrieve指定type的最新的一个file.
      * @param fileType 0-image 1-录像 2-所有
      */
     suspend fun getNewestFile(fileType: Int): List<FileBean>? =
@@ -297,10 +197,6 @@ object TS004Repository {
                 paramMap["pageNum"] = 1
                 paramMap["pageCount"] = 1
                 paramMap["fileType"] = fileType
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().getFileList(paramMap.toBody()).data?.filelist ?: return@withContext ArrayList()
             } catch (_: Exception) {
                 null
@@ -315,10 +211,6 @@ object TS004Repository {
         withContext(Dispatchers.IO) {
             try {
                 val fileCount = getFileCount(fileType) ?: return@withContext ArrayList()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (fileCount < 1) {
                     return@withContext ArrayList()
                 }
@@ -327,16 +219,8 @@ object TS004Repository {
                 paramMap["pageNum"] = 1
                 paramMap["pageCount"] = fileCount
                 paramMap["fileType"] = fileType
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().getFileList(paramMap.toBody()).data?.filelist ?: ArrayList()
             } catch (_: Exception) {
-                /**
-                 * Executes arraylist operation with thermal imaging domain optimization.
-                 *
-                 */
                 ArrayList()
             }
         }
@@ -351,20 +235,12 @@ object TS004Repository {
         pageNum: Int,
         pageCount: Int,
     ): List<FileBean>? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["pageNum"] = pageNum
                 paramMap["pageCount"] = pageCount
                 paramMap["fileType"] = fileType
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().getFileList(paramMap.toBody()).data?.filelist ?: ArrayList()
             } catch (_: Exception) {
                 null
@@ -380,24 +256,12 @@ object TS004Repository {
         withContext(Dispatchers.IO) {
             try {
                 val idArray: Array<IdData> =
-                    /**
-                     * Executes array operation with thermal imaging domain optimization.
-                     *
-                     */
                     Array(ids.size) {
-                        /**
-                         * Executes iddata operation with thermal imaging domain optimization.
-                         *
-                         */
                         IdData(ids[it])
                     }
 
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["filelist"] = idArray
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().deleteFile(paramMap.toBody()).isSuccess()
             } catch (_: Exception) {
                 false
@@ -407,66 +271,31 @@ object TS004Repository {
     /**
      * 执行firmwareUpgrade.
      */
-    /**
-     * Executes updatefirmware operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param file Parameter for operation (type: File)
-     *
-     */
     suspend fun updateFirmware(file: File): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val isStartSuccess = getTS004Service().firmwareUpdateStart().isSuccess()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isStartSuccess) {
                     return@withContext false
                 }
 
                 val isSendStartSuccess = sendUpgradeFileStart(file)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isSendStartSuccess) {
                     return@withContext false
                 }
 
                 val isSendFileSuccess = sendUpgradeFile(file)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isSendFileSuccess) {
                     return@withContext false
                 }
 
                 val isEndSuccess = sendUpgradeFileEnd(file)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isEndSuccess) {
                     return@withContext false
                 }
 
                 var status = getTS004Service().getUpgradeStatus().data?.status
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (status == 0 || status == 1 || status == 2) { 
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(1000)
                     status = getTS004Service().getUpgradeStatus().data?.status
                 }
@@ -477,46 +306,20 @@ object TS004Repository {
             }
         }
 
-    /**
-     * Executes sendupgradefilestart operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param file Parameter for operation (type: File)
-     *
-     */
     private suspend fun sendUpgradeFileStart(file: File): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["saveAsFile"] = true
                 paramMap["MD5"] = EncryptUtils.encryptMD5File2String(file).lowercase(Locale.ROOT)
                 paramMap["length"] = file.length()
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().sendUpgradeFileStart(paramMap.toBody()).isSuccess()
             } catch (_: Exception) {
                 false
             }
         }
 
-    /**
-     * Executes sendupgradefile operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param file Parameter for operation (type: File)
-     *
-     */
     private suspend fun sendUpgradeFile(file: File): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             var fileInputStream: FileInputStream? = null
             try {
@@ -525,21 +328,9 @@ object TS004Repository {
                 var hasReadCount = 0
                 var byteArray = ByteArray(1024 * 1024 * 5) 
                 var readCount = fileInputStream.read(byteArray)
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (readCount != -1) {
                     hasReadCount += readCount
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (hasReadCount == 1024 * 1024 * 5) {
-                        /**
-                         * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                         *
-                         */
                         getTS004Service().sendUpgradeFile(byteArray.toRequestBody())
                         hasReadCount = 0
                         byteArray = ByteArray(1024 * 1024 * 5) 
@@ -547,17 +338,9 @@ object TS004Repository {
                     readCount = fileInputStream.read(byteArray, hasReadCount, byteArray.size - hasReadCount)
                 }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (hasReadCount > 0) {
                     val lastArray = ByteArray(hasReadCount)
                     System.arraycopy(byteArray, 0, lastArray, 0, hasReadCount)
-                    /**
-                     * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getTS004Service().sendUpgradeFile(lastArray.toRequestBody())
                 }
 
@@ -569,26 +352,11 @@ object TS004Repository {
             }
         }
 
-    /**
-     * Executes sendupgradefileend operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param file Parameter for operation (type: File)
-     *
-     */
     private suspend fun sendUpgradeFileEnd(file: File): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["MD5"] = EncryptUtils.encryptMD5File2String(file).lowercase(Locale.ROOT)
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().sendUpgradeFileEnd(paramMap.toBody()).isSuccess()
             } catch (_: Exception) {
                 false
@@ -605,10 +373,6 @@ object TS004Repository {
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["enable"] = false
                 paramMap["mode"] = mode
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().setPseudoColor(paramMap.toBody()).isSuccess()
             } catch (e: Exception) {
                 false
@@ -618,24 +382,9 @@ object TS004Repository {
     /**
      * Get/Retrievepseudo color样式
      */
-    /**
-     * Retrieves the pseudocolor with optimized performance for thermal imaging operations.
-     *
-     * @note This method is optimized for thermal imaging pseudo color processing.
-     * Ensure proper thermal calibration before use.
-     *
-     */
     suspend fun getPseudoColor(): TS004Response<PseudoColorBean>? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().getPseudoColor()
             } catch (_: Exception) {
                 null
@@ -651,10 +400,6 @@ object TS004Repository {
             try {
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["state"] = state
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().setRangeFind(paramMap.toBody()).isSuccess()
             } catch (e: Exception) {
                 false
@@ -664,21 +409,9 @@ object TS004Repository {
     /**
      * Get/Retrieve测距
      */
-    /**
-     * Retrieves the rangefind with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getRangeFind(): TS004Response<RangeBean>? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().getRangeFind()
             } catch (_: Exception) {
                 null
@@ -694,10 +427,6 @@ object TS004Repository {
             try {
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["brightness"] = brightness
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().setPanelParam(paramMap.toBody()).isSuccess()
             } catch (e: Exception) {
                 false
@@ -707,21 +436,9 @@ object TS004Repository {
     /**
      * Get/Retrieve屏幕brightness
      */
-    /**
-     * Retrieves the panelparam with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getPanelParam(): TS004Response<BrightnessBean>? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().getPanelParam()
             } catch (_: Exception) {
                 null
@@ -737,10 +454,6 @@ object TS004Repository {
             try {
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["enable"] = enable
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().setPip(paramMap.toBody()).isSuccess()
             } catch (e: Exception) {
                 false
@@ -750,21 +463,9 @@ object TS004Repository {
     /**
      * Get/Retrieve画中画
      */
-    /**
-     * Retrieves the pip with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getPip(): TS004Response<PipBean>? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().getPip()
             } catch (_: Exception) {
                 null
@@ -781,10 +482,6 @@ object TS004Repository {
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["enable"] = true
                 paramMap["factor"] = factor
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().setZoom(paramMap.toBody()).isSuccess()
             } catch (e: Exception) {
                 false
@@ -794,21 +491,9 @@ object TS004Repository {
     /**
      * Get/Retrieve放大倍数
      */
-    /**
-     * Retrieves the zoom with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getZoom(): TS004Response<ZoomBean>? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().getZoom()
             } catch (_: Exception) {
                 null
@@ -822,10 +507,6 @@ object TS004Repository {
     suspend fun setSnapshot(): Boolean =
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().setSnapshot().isSuccess()
             } catch (e: Exception) {
                 false
@@ -841,10 +522,6 @@ object TS004Repository {
             try {
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["enable"] = enable
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().setVRecord(paramMap.toBody()).isSuccess()
             } catch (e: Exception) {
                 false
@@ -854,21 +531,9 @@ object TS004Repository {
     /**
      * Get/Retrieverecordingstate
      */
-    /**
-     * Retrieves the recordstatus with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getRecordStatus(): TS004Response<RecordStatusBean>? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().getVRecord()
             } catch (_: Exception) {
                 null
@@ -878,21 +543,9 @@ object TS004Repository {
     /**
      * Get/Retrievestorage分区info
      */
-    /**
-     * Retrieves the freespace with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getFreeSpace(): FreeSpaceBean? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().freeSpace().data
             } catch (_: Exception) {
                 null
@@ -902,21 +555,9 @@ object TS004Repository {
     /**
      * Get/Retrievestorage分区info
      */
-    /**
-     * Retrieves the formatstorage with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getFormatStorage(): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().formatStorage().isSuccess()
             } catch (_: Exception) {
                 false
@@ -926,22 +567,10 @@ object TS004Repository {
     /**
      * Restore出厂settings
      */
-    /**
-     * Retrieves the resetall with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getResetAll(): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 // 因艾睿interface历史遗留问题，别的interface都是 status 0 表示success，这个interface特殊processing，100 表示success
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().resetAll().status == 100
             } catch (_: Exception) {
                 false
@@ -957,10 +586,6 @@ object TS004Repository {
             try {
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["state"] = state
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().setTISR(paramMap.toBody()).isSuccess()
             } catch (e: Exception) {
                 false
@@ -970,21 +595,9 @@ object TS004Repository {
     /**
      * Get/Retrieve超分state
      */
-    /**
-     * Retrieves the tisr with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getTISR(): TS004Response<TISRBean>? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Retrieves the ts004service with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTS004Service().getTISR()
             } catch (_: Exception) {
                 null

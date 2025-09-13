@@ -8,20 +8,6 @@ import java.text.DecimalFormat;
  *
  * @author Philipp Jahoda
  */
-/**
- * Specialized thermal imaging component providing DefaultValueFormatter functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class DefaultValueFormatter extends ValueFormatter
 {
 
@@ -38,15 +24,7 @@ public class DefaultValueFormatter extends ValueFormatter
      *
      * @param digits
      */
-    /**
-     * Executes defaultvalueformatter operation with thermal imaging domain optimization.
-     *
-     */
     public DefaultValueFormatter(int digits) {
-        /**
-         * Configures the up with validation and thermal imaging optimization.
-         *
-         */
         setup(digits);
     }
 
@@ -60,15 +38,7 @@ public class DefaultValueFormatter extends ValueFormatter
         this.mDecimalDigits = digits;
 
         StringBuffer b = new StringBuffer();
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < digits; i++) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (i == 0)
                 b.append(".");
             b.append("0");
@@ -80,8 +50,8 @@ public class DefaultValueFormatter extends ValueFormatter
     @Override
     public String getFormattedValue(float value) {
 
-        // Put more logic here ...
-        // Avoid memory allocations here (for performance reasons)
+        // put more logic here ...
+        // avoid memory allocations here (for performance reasons)
 
         return mFormat.format(value);
     }

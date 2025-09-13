@@ -10,20 +10,6 @@ import com.github.mikephil.charting.utils.Utils;
  *
  * @author Philipp Jahoda
  */
-/**
- * Specialized thermal imaging component providing XAxis functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class XAxis extends AxisBase {
 
     /**
@@ -73,15 +59,7 @@ public class XAxis extends AxisBase {
         TOP, BOTTOM, BOTH_SIDED, TOP_INSIDE, BOTTOM_INSIDE
     }
 
-    /**
-     * Executes xaxis operation with thermal imaging domain optimization.
-     *
-     */
     public XAxis() {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super();
 
         mYOffset = Utils.convertDpToPixel(4.f); // -3

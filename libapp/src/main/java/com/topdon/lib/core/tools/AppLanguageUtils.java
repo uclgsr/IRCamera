@@ -17,23 +17,6 @@ import java.util.Locale;
  * English-only language utilities
  */
 
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for AppLanguageUtils operations.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class AppLanguageUtils {
 
     /**
@@ -48,10 +31,10 @@ public class AppLanguageUtils {
         Resources resources = context.getResources();
         Configuration configuration = resources.getConfiguration();
 
-        // App locale - always English
+        // app locale - always English
         Locale locale = Locale.ENGLISH;
         configuration.setLocale(locale);
-        // UpdateConfiguration
+        // updateConfiguration
         DisplayMetrics dm = resources.getDisplayMetrics();
         resources.updateConfiguration(configuration, dm);
     }
@@ -71,10 +54,6 @@ public class AppLanguageUtils {
     }
 
     public static Context attachBaseContext(Context context, String language) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return updateResources(context, language);
         } else {

@@ -11,18 +11,9 @@ import java.time.Instant
 import java.util.*
 
 /**
- * Specialized thermal imaging component providing DeviceAuthenticationManager functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Device authentication and pairing manager
+ * Implements secure device pairing with token-based authentication
+ * while maintaining trust-all TLS for development environment
  */
 class DeviceAuthenticationManager(private val context: Context) {
     companion object {
@@ -43,10 +34,6 @@ class DeviceAuthenticationManager(private val context: Context) {
 
     init {
         // Initialize device authentication
-        /**
-         * Initializes the ializedeviceauth component for thermal imaging operations.
-         *
-         */
         initializeDeviceAuth()
     }
 
@@ -59,88 +46,30 @@ class DeviceAuthenticationManager(private val context: Context) {
         val capabilities: List<String>,
     )
 
-/**
- * Specialized thermal imaging component providing AuthEventListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+    data class AuthToken(
+        val token: String,
+        val deviceId: String,
+        val issuedAt: Long,
+        val expiresAt: Long,
+        val controllerId: String,
+        val permissions: List<String>,
+    )
+
     interface AuthEventListener {
-    /**
-     * Executes onPairingRequested functionality.
-     */
-        /**
-         * Executes onpairingrequested operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param controllerId Parameter for operation (type: String)
-         * @param controllerName Parameter for operation (type: String)
-         *
-         */
         fun onPairingRequested(
             controllerId: String,
             controllerName: String,
         )
 
-    /**
-     * Executes onPairingCompleted functionality.
-     */
-        /**
-         * Executes onpairingcompleted operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param controllerId Parameter for operation (type: String)
-         * @param success Parameter for operation (type: Boolean)
-         *
-         */
         fun onPairingCompleted(
             controllerId: String,
             success: Boolean,
         )
 
-    /**
-     * Executes onAuthTokenReceived functionality.
-     */
-        /**
-         * Executes onauthtokenreceived operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param token Parameter for operation (type: AuthToken)
-         *
-         */
         fun onAuthTokenReceived(token: AuthToken)
 
-    /**
-     * Executes onAuthTokenExpired functionality.
-     */
-        /**
-         * Executes onauthtokenexpired operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param controllerId Parameter for operation (type: String)
-         *
-         */
         fun onAuthTokenExpired(controllerId: String)
 
-    /**
-     * Executes onAuthenticationFailed functionality.
-     */
-        /**
-         * Executes onauthenticationfailed operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param controllerId Parameter for operation (type: String)
-         * @param reason Parameter for operation (type: String)
-         *
-         */
         fun onAuthenticationFailed(
             controllerId: String,
             reason: String,
@@ -149,9 +78,6 @@ class DeviceAuthenticationManager(private val context: Context) {
 
     private var authEventListener: AuthEventListener? = null
 
-    /**
-     * Sets autheventlistener configuration.
-     */
     fun setAuthEventListener(listener: AuthEventListener?) {
         authEventListener = listener
     }
@@ -210,13 +136,6 @@ class DeviceAuthenticationManager(private val context: Context) {
     /**
      * Check if token is expired
      */
-    /**
-     * Executes istokenexpired operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param token Parameter for operation (type: String)
-     *
-     */
     private fun isTokenExpired(token: String): Boolean {
         try {
             // Simple token format: base64(timestamp + random)
@@ -235,20 +154,9 @@ class DeviceAuthenticationManager(private val context: Context) {
      *
      * @return A 6-digit PIN string for device pairing
      */
-    /**
-     * Executes generatePairingPin functionality.
-     */
-    /**
-     * Executes generatepairingpin operation with thermal imaging domain optimization.
-     *
-     */
     fun generatePairingPin(): String {
         val random = SecureRandom()
         val pin = StringBuilder()
-        /**
-         * Executes repeat operation with thermal imaging domain optimization.
-         *
-         */
         repeat(PAIRING_PIN_LENGTH) {
             pin.append(random.nextInt(10))
         }
@@ -265,9 +173,6 @@ class DeviceAuthenticationManager(private val context: Context) {
      *
      * @return The current pairing PIN string, or null if not available
      */
-    /**
-     * Retrieves currentpairingpin information.
-     */
     fun getCurrentPairingPin(): String? {
         return prefs.getString(PREF_PAIRING_PIN, null)
     }
@@ -280,13 +185,6 @@ class DeviceAuthenticationManager(private val context: Context) {
      * during the discovery and pairing process.
      *
      * @return A PairingRequest object with device details and credentials
-     */
-    /**
-     * Executes createPairingRequest functionality.
-     */
-    /**
-     * Executes createpairingrequest operation with thermal imaging domain optimization.
-     *
      */
     fun createPairingRequest(): PairingRequest {
         val pin = getCurrentPairingPin() ?: generatePairingPin()
@@ -311,47 +209,21 @@ class DeviceAuthenticationManager(private val context: Context) {
      * @return true if pairing was successful and credentials stored, false otherwise
      * @throws JSONException if response format is invalid
      */
-    /**
-     * Executes processPairingResponse functionality.
-     */
-    /**
-     * Executes processpairingresponse operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param response Parameter for operation (type: JSONObject)
-     *
-     */
     fun processPairingResponse(response: JSONObject): Boolean {
         try {
             val success = response.getBoolean("success")
             val controllerId = response.getString("controller_id")
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (success) {
                 // Store paired controller
                 val pairedControllers = getPairedControllers().toMutableSet()
                 pairedControllers.add(controllerId)
-                /**
-                 * Executes storepairedcontrollers operation with thermal imaging domain optimization.
-                 *
-                 */
                 storePairedControllers(pairedControllers)
 
                 // Process authentication token if provided
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (response.has("auth_token")) {
                     val tokenData = response.getJSONObject("auth_token")
                     val authToken =
-                        /**
-                         * Executes authtoken operation with thermal imaging domain optimization.
-                         *
-                         */
                         AuthToken(
                             token = tokenData.getString("token"),
                             deviceId = deviceId!!,
@@ -364,10 +236,6 @@ class DeviceAuthenticationManager(private val context: Context) {
                                 },
                         )
 
-                    /**
-                     * Executes storeauthtoken operation with thermal imaging domain optimization.
-                     *
-                     */
                     storeAuthToken(controllerId, authToken)
                     authEventListener?.onAuthTokenReceived(authToken)
                 }
@@ -396,10 +264,6 @@ class DeviceAuthenticationManager(private val context: Context) {
             val tokenData = JSONObject(tokenJson)
 
             val authToken =
-                /**
-                 * Executes authtoken operation with thermal imaging domain optimization.
-                 *
-                 */
                 AuthToken(
                     token = tokenData.getString("token"),
                     deviceId = tokenData.getString("device_id"),
@@ -413,15 +277,7 @@ class DeviceAuthenticationManager(private val context: Context) {
                 )
 
             // Check if token is expired
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Instant.now().epochSecond > authToken.expiresAt) {
-                /**
-                 * Executes removeauthtoken operation with thermal imaging domain optimization.
-                 *
-                 */
                 removeAuthToken(controllerId)
                 authEventListener?.onAuthTokenExpired(controllerId)
                 return null
@@ -443,40 +299,12 @@ class DeviceAuthenticationManager(private val context: Context) {
     ) {
         try {
             val tokenData =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("token", authToken.token)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("device_id", authToken.deviceId)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("issued_at", authToken.issuedAt)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("expires_at", authToken.expiresAt)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("controller_id", authToken.controllerId)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("permissions", authToken.permissions)
                 }
 
@@ -504,36 +332,12 @@ class DeviceAuthenticationManager(private val context: Context) {
         val authToken = getAuthToken(controllerId)
 
         return JSONObject().apply {
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("message_type", messageType)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("device_id", deviceId)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("timestamp", Instant.now().epochSecond)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("data", data)
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (authToken != null) {
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("auth_token", authToken.token)
             }
         }
@@ -551,10 +355,6 @@ class DeviceAuthenticationManager(private val context: Context) {
             // In production, this would validate the auth_token field
 
             val messageDeviceId = message.optString("device_id", "")
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (messageDeviceId.isNotEmpty() && messageDeviceId != deviceId) {
                 Log.w(TAG, "Message device ID mismatch")
                 return false
@@ -562,10 +362,6 @@ class DeviceAuthenticationManager(private val context: Context) {
 
             // Check if controller is paired
             val pairedControllers = getPairedControllers()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (controllerId !in pairedControllers) {
                 Log.w(TAG, "Message from non-paired controller: $controllerId")
                 return false
@@ -587,10 +383,6 @@ class DeviceAuthenticationManager(private val context: Context) {
             val array = org.json.JSONArray(pairedJson)
             (0 until array.length()).map { array.getString(it) }.toSet()
         } catch (e: Exception) {
-            /**
-             * Executes emptyset operation with thermal imaging domain optimization.
-             *
-             */
             emptySet()
         }
     }
@@ -607,25 +399,10 @@ class DeviceAuthenticationManager(private val context: Context) {
     /**
      * Remove paired controller
      */
-    /**
-     * Executes unpaircontroller operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param controllerId Parameter for operation (type: String)
-     *
-     */
     fun unpairController(controllerId: String) {
         val pairedControllers = getPairedControllers().toMutableSet()
         pairedControllers.remove(controllerId)
-        /**
-         * Executes storepairedcontrollers operation with thermal imaging domain optimization.
-         *
-         */
         storePairedControllers(pairedControllers)
-        /**
-         * Executes removeauthtoken operation with thermal imaging domain optimization.
-         *
-         */
         removeAuthToken(controllerId)
         Log.d(TAG, "Unpaired controller: $controllerId")
     }
@@ -633,17 +410,9 @@ class DeviceAuthenticationManager(private val context: Context) {
     /**
      * Clear all pairing data
      */
-    /**
-     * Executes clearallpairings operation with thermal imaging domain optimization.
-     *
-     */
     fun clearAllPairings() {
         val pairedControllers = getPairedControllers()
         pairedControllers.forEach { removeAuthToken(it) }
-        /**
-         * Executes storepairedcontrollers operation with thermal imaging domain optimization.
-         *
-         */
         storePairedControllers(emptySet())
         prefs.edit().remove(PREF_PAIRING_PIN).apply()
         Log.d(TAG, "Cleared all pairing data")
@@ -659,18 +428,10 @@ class DeviceAuthenticationManager(private val context: Context) {
     /**
      * Get current device ID
      */
-    /**
-     * Retrieves the deviceid with optimized performance for thermal imaging operations.
-     *
-     */
     fun getDeviceId(): String? = deviceId
 
     /**
      * Get current device token
-     */
-    /**
-     * Retrieves the devicetoken with optimized performance for thermal imaging operations.
-     *
      */
     fun getDeviceToken(): String? = deviceToken
 

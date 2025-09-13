@@ -34,20 +34,6 @@ import com.topdon.lib.ui.R as RUi // For string resources from libui
 // Return result
 - [ExtraKeyConfig.CUSTOM_PSEUDO_BEAN] - 自定义rendering相关set项.
  */
-/**
- * Advanced pseudo color management system for thermal imaging visualization. Handles color palette conversion and thermal data mapping with PseudoSetActivity implementation.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class PseudoSetActivity : BaseActivity(), View.OnClickListener {
     /**
 // 从上一interface传递过来的，自定义rendering相关set项.
@@ -104,16 +90,8 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
     private lateinit var tvOverGrey: TextView
     private lateinit var tvOverColor: TextView
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.activity_pseudo_set
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         // Initialize views - migrated from synthetic views
         etMaxTemp = findViewById(R.id.et_max_temp)
@@ -167,10 +145,6 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
 
         val isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
         customPseudoBean = intent.getParcelableExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN) ?: CustomPseudoBean.loadFromShared(isTC007)
-        /**
-         * Executes switchdynamiccustom operation with thermal imaging domain optimization.
-         *
-         */
         switchDynamicCustom(customPseudoBean.isUseCustomPseudo)
 
         // Load temperature configuration
@@ -179,24 +153,12 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
         tvMaxTempUnit.text = UnitTools.showUnit()
         tvMinTempUnit.text = UnitTools.showUnit()
 
-        /**
-         * Executes switchcolortype operation with thermal imaging domain optimization.
-         *
-         */
         switchColorType(customPseudoBean.isColorCustom)
 
         // Load custom color configuration
         pseudoPickView.onSelectChangeListener = {
-            /**
-             * Executes reset6customcolor operation with thermal imaging domain optimization.
-             *
-             */
             reset6CustomColor()
             colorSelectView.reset()
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (pseudoPickView.sourceColors[it]) {
                 0xff0000ff.toInt() -> viewCustomColor1.isSelected = true
                 0xffff0000.toInt() -> viewCustomColor2.isSelected = true
@@ -222,16 +184,8 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
         viewRecommendColor3.background = buildRectDrawableArray(ColorRecommend.getColorByIndex(isTC007, 2))
         viewRecommendColor4.background = buildRectDrawableArray(ColorRecommend.colorList4)
         viewRecommendColor5.background = buildRectDrawableArray(ColorRecommend.colorList5)
-        /**
-         * Executes switchrecommendcolorindex operation with thermal imaging domain optimization.
-         *
-         */
         switchRecommendColorIndex(customPseudoBean.customRecommendIndex)
 
-        /**
-         * Executes switchusegray operation with thermal imaging domain optimization.
-         *
-         */
         switchUseGray(customPseudoBean.isUseGray)
 
         clDynamic.setOnClickListener(this)
@@ -257,15 +211,7 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
         tvCancel.setOnClickListener(this)
 
         colorSelectView.onSelectListener = {
-            /**
-             * Executes reset6customcolor operation with thermal imaging domain optimization.
-             *
-             */
             reset6CustomColor()
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (it) {
                 0xff0000ff.toInt() -> viewCustomColor1.isSelected = true
                 0xffff0000.toInt() -> viewCustomColor2.isSelected = true
@@ -278,115 +224,56 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
             clDynamic -> { // 动态渲染
-                /**
-                 * Executes switchdynamiccustom operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchDynamicCustom(false)
             }
             clCustom -> { // 自定义
-                /**
-                 * Executes switchdynamiccustom operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchDynamicCustom(true)
             }
             tvColorCustom -> { // 颜色-自定义
-                /**
-                 * Executes switchcolortype operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchColorType(true)
             }
             tvColorRecommend -> { // 颜色-推荐
-                /**
-                 * Executes switchcolortype operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchColorType(false)
-                /**
-                 * Executes switchrecommendcolorindex operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchRecommendColorIndex(customPseudoBean.customRecommendIndex)
             }
 
             viewCustomColor1 -> { // 颜色-自定义-颜色值拾取1
-                /**
-                 * Executes reset6customcolor operation with thermal imaging domain optimization.
-                 *
-                 */
                 reset6CustomColor()
                 viewCustomColor1.isSelected = true
                 colorSelectView.selectColor(0xff0000ff.toInt())
                 pseudoPickView.refreshColor(0xff0000ff.toInt())
             }
             viewCustomColor2 -> { // 颜色-自定义-颜色值拾取2
-                /**
-                 * Executes reset6customcolor operation with thermal imaging domain optimization.
-                 *
-                 */
                 reset6CustomColor()
                 viewCustomColor2.isSelected = true
                 colorSelectView.selectColor(0xffff0000.toInt())
                 pseudoPickView.refreshColor(0xffff0000.toInt())
             }
             viewCustomColor3 -> { // 颜色-自定义-颜色值拾取3
-                /**
-                 * Executes reset6customcolor operation with thermal imaging domain optimization.
-                 *
-                 */
                 reset6CustomColor()
                 viewCustomColor3.isSelected = true
                 colorSelectView.selectColor(0xff00ff00.toInt())
                 pseudoPickView.refreshColor(0xff00ff00.toInt())
             }
             viewCustomColor4 -> { // 颜色-自定义-颜色值拾取4
-                /**
-                 * Executes reset6customcolor operation with thermal imaging domain optimization.
-                 *
-                 */
                 reset6CustomColor()
                 viewCustomColor4.isSelected = true
                 colorSelectView.selectColor(0xffffff00.toInt())
                 pseudoPickView.refreshColor(0xffffff00.toInt())
             }
             viewCustomColor5 -> { // 颜色-自定义-颜色值拾取5
-                /**
-                 * Executes reset6customcolor operation with thermal imaging domain optimization.
-                 *
-                 */
                 reset6CustomColor()
                 viewCustomColor5.isSelected = true
                 colorSelectView.selectColor(0xff000000.toInt())
                 pseudoPickView.refreshColor(0xff000000.toInt())
             }
             viewCustomColor6 -> { // 颜色-自定义-颜色值拾取6
-                /**
-                 * Executes reset6customcolor operation with thermal imaging domain optimization.
-                 *
-                 */
                 reset6CustomColor()
                 viewCustomColor6.isSelected = true
                 colorSelectView.selectColor(0xffffffff.toInt())
@@ -401,76 +288,36 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
             }
 
             viewRecommendBgColor1 -> { // 颜色-推荐-iron red
-                /**
-                 * Executes switchrecommendcolorindex operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchRecommendColorIndex(0)
             }
             viewRecommendBgColor2 -> { // 颜色-推荐-黑红
-                /**
-                 * Executes switchrecommendcolorindex operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchRecommendColorIndex(1)
             }
             viewRecommendBgColor3 -> { // 颜色-推荐-自然
-                /**
-                 * Executes switchrecommendcolorindex operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchRecommendColorIndex(2)
             }
             viewRecommendBgColor4 -> { // 颜色-推荐-岩浆
-                /**
-                 * Executes switchrecommendcolorindex operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchRecommendColorIndex(3)
             }
             viewRecommendBgColor5 -> { // 颜色-推荐-辉金
-                /**
-                 * Executes switchrecommendcolorindex operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchRecommendColorIndex(4)
             }
 
-            clOverGrey -> { // Grayscale渐变
-                /**
-                 * Executes switchusegray operation with thermal imaging domain optimization.
-                 *
-                 */
+            clOverGrey -> { // grayscale渐变
                 switchUseGray(true)
             }
             clOverColor -> { // 等色
-                /**
-                 * Executes switchusegray operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchUseGray(false)
             }
 
             tvConfirm -> { // 确定
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (clCustomContent.isVisible) { // 使用自定义渲染
                     val inputMax = etMaxTemp.text.toString()
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (inputMax.isEmpty()) {
                         ToastUtils.showShort(RUi.string.tip_input_format)
                         return
                     }
                     val inputMin = etMinTemp.text.toString()
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (inputMin.isEmpty()) {
                         ToastUtils.showShort(RUi.string.tip_input_format)
                         return
@@ -488,18 +335,10 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
                         } catch (e: NumberFormatException) {
                             null
                         }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (maxTemp == null || minTemp == null || maxTemp < minTemp || maxTemp > 550f || minTemp < -20f) {
                         ToastUtils.showShort(RUi.string.tip_input_format)
                         return
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (maxTemp - minTemp < 0.1f) {
                         ToastUtils.showShort(RUi.string.tip_input_format)
                         return
@@ -514,27 +353,11 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
 
                 val resultIntent = Intent()
                 resultIntent.putExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN, customPseudoBean)
-                /**
-                 * Configures the result with validation and thermal imaging optimization.
-                 *
-                 */
                 setResult(RESULT_OK, resultIntent)
-                /**
-                 * Executes finish operation with thermal imaging domain optimization.
-                 *
-                 */
                 finish()
             }
             tvCancel -> { // Cancel
-                /**
-                 * Configures the result with validation and thermal imaging optimization.
-                 *
-                 */
                 setResult(RESULT_CANCELED)
-                /**
-                 * Executes finish operation with thermal imaging domain optimization.
-                 *
-                 */
                 finish()
             }
         }
@@ -544,26 +367,12 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
 // 在 动态rendering 与 自定义 之间switch.
 @param isToCustom true-switch到自定义 false-switch到动态rendering
      */
-    /**
-     * Executes switchDynamicCustom functionality.
-     */
-    /**
-     * Executes switchdynamiccustom operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isToCustom Parameter for operation (type: Boolean)
-     *
-     */
     private fun switchDynamicCustom(isToCustom: Boolean) {
         customPseudoBean.isUseCustomPseudo = isToCustom
         clCustomContent.isVisible = isToCustom
         clDynamic.isSelected = !isToCustom
         clCustom.isSelected = isToCustom
         ivDynamic.setImageResource(
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isToCustom) R.drawable.svg_pseudo_set_dynamic_not_select else R.drawable.svg_pseudo_set_dynamic_select,
         )
         ivCustom.setImageResource(if (isToCustom) R.drawable.svg_pseudo_set_custom_select else R.drawable.svg_pseudo_set_custom_not_select)
@@ -574,16 +383,6 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
     /**
 // 在自定义rendering-颜色set中的 自定义 与 推荐 之间switch.
 @param isToCustom true-switch到自定义 false-switch到推荐
-     */
-    /**
-     * Executes switchColorType functionality.
-     */
-    /**
-     * Executes switchcolortype operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isToCustom Parameter for operation (type: Boolean)
-     *
      */
     private fun switchColorType(isToCustom: Boolean) {
         customPseudoBean.isColorCustom = isToCustom
@@ -611,21 +410,7 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
 switch 推荐颜色 中的 5 个option.
 @param 0-iron red 1-黑红 2-自然 3-岩浆 4-辉金
      */
-    /**
-     * Executes switchRecommendColorIndex functionality.
-     */
-    /**
-     * Executes switchrecommendcolorindex operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param index Parameter for operation (type: Int)
-     *
-     */
     private fun switchRecommendColorIndex(index: Int) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (customPseudoBean.customRecommendIndex) {
             0 -> {
                 tvRecommendColor1.setTextColor(0x80ffffff.toInt())
@@ -648,10 +433,6 @@ switch 推荐颜色 中的 5 个option.
                 viewRecommendBgColor5.setBackgroundResource(RCore.drawable.bg_corners04_stroke_30_ff)
             }
         }
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (index) {
             0 -> {
                 tvRecommendColor1.setTextColor(0xffffba42.toInt())
@@ -677,48 +458,20 @@ switch 推荐颜色 中的 5 个option.
         customPseudoBean.customRecommendIndex = index
     }
 
-    /**
-     * Executes switchUseGray functionality.
-     */
-    /**
-     * Executes switchusegray operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isUseGray Parameter for operation (type: Boolean)
-     *
-     */
     private fun switchUseGray(isUseGray: Boolean) {
         ivOverGreySelect.isVisible = isUseGray
         ivOverColorSelect.isVisible = !isUseGray
         tvOverGrey.setTextColor(if (isUseGray) 0xffffba42.toInt() else 0xffffffff.toInt())
         tvOverColor.setTextColor(if (isUseGray) 0xffffffff.toInt() else 0xffffba42.toInt())
         clOverGrey.setBackgroundResource(
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isUseGray) RCore.drawable.bg_corners05_solid_2a183e_stroke_theme else RCore.drawable.bg_corners05_solid_626569,
         )
         clOverColor.setBackgroundResource(
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isUseGray) RCore.drawable.bg_corners05_solid_626569 else RCore.drawable.bg_corners05_solid_2a183e_stroke_theme,
         )
         customPseudoBean.isUseGray = isUseGray
     }
 
-    /**
-     * Executes buildRectDrawableArray functionality.
-     */
-    /**
-     * Executes buildrectdrawablearray operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param color Parameter for operation (type: IntArray)
-     *
-     */
     private fun buildRectDrawableArray(color: IntArray): GradientDrawable {
         val drawable = GradientDrawable()
         drawable.shape = GradientDrawable.RECTANGLE

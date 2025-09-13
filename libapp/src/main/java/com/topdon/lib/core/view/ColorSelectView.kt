@@ -10,21 +10,8 @@ import android.view.View
 import androidx.annotation.ColorInt
 
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ColorSelectView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * 颜色selection自定义 View.
+ * 只支持在已经定死的 120 种颜色中拾取一种.
  */
 class ColorSelectView : View {
     companion object {
@@ -34,83 +21,32 @@ class ColorSelectView : View {
         private const val DEFAULT_STROKE_WIDTH = 3
 
         private val ROW_COLOR_1 =
-            /**
-             * Executes intarrayof operation with thermal imaging domain optimization.
-             *
-             */
             intArrayOf(0xFFFEFFFE.toInt(), 0xFFEBEBEB.toInt(), 0xFFD6D6D6.toInt(), 0xFFC2C2C2.toInt(), 0xFFADADAD.toInt(), 0xFF999999.toInt(), 0xFF858585.toInt(), 0xFF707070.toInt(), 0xFF5C5C5C.toInt(), 0xFF474747.toInt(), 0xFF333333.toInt(), 0xFF000000.toInt())
         private val ROW_COLOR_2 =
-            /**
-             * Executes intarrayof operation with thermal imaging domain optimization.
-             *
-             */
             intArrayOf(0xFF00374A.toInt(), 0xFF011D57.toInt(), 0xFF11053B.toInt(), 0xFF2E063D.toInt(), 0xFF3C071B.toInt(), 0xFF5C0701.toInt(), 0xFF5A1C00.toInt(), 0xFF583300.toInt(), 0xFF563D00.toInt(), 0xFF666100.toInt(), 0xFF4F5504.toInt(), 0xFF263E0F.toInt())
         private val ROW_COLOR_3 =
-            /**
-             * Executes intarrayof operation with thermal imaging domain optimization.
-             *
-             */
             intArrayOf(0xFF004D65.toInt(), 0xFF012F7B.toInt(), 0xFF1A0A52.toInt(), 0xFF450D59.toInt(), 0xFF551029.toInt(), 0xFF831100.toInt(), 0xFF7B2900.toInt(), 0xFF7A4A00.toInt(), 0xFF785800.toInt(), 0xFF8D8602.toInt(), 0xFF6F760A.toInt(), 0xFF38571A.toInt())
         private val ROW_COLOR_4 =
-            /**
-             * Executes intarrayof operation with thermal imaging domain optimization.
-             *
-             */
             intArrayOf(0xFF016E8F.toInt(), 0xFF0042A9.toInt(), 0xFF2C0977.toInt(), 0xFF61187C.toInt(), 0xFF791A3D.toInt(), 0xFFB51A00.toInt(), 0xFFAD3E00.toInt(), 0xFFA96800.toInt(), 0xFFA67B01.toInt(), 0xFFC4BC00.toInt(), 0xFF9BA50E.toInt(), 0xFF4E7A27.toInt())
         private val ROW_COLOR_5 =
-            /**
-             * Executes intarrayof operation with thermal imaging domain optimization.
-             *
-             */
             intArrayOf(0xFF008CB4.toInt(), 0xFF0056D6.toInt(), 0xFF371A94.toInt(), 0xFF7A219E.toInt(), 0xFF99244F.toInt(), 0xFFE22400.toInt(), 0xFFDA5100.toInt(), 0xFFD38301.toInt(), 0xFFD19D01.toInt(), 0xFFF5EC00.toInt(), 0xFFC3D117.toInt(), 0xFF669D34.toInt())
         private val ROW_COLOR_6 =
-            /**
-             * Executes intarrayof operation with thermal imaging domain optimization.
-             *
-             */
             intArrayOf(0xFF00A1D8.toInt(), 0xFF0061FD.toInt(), 0xFF4D22B2.toInt(), 0xFF982ABC.toInt(), 0xFFB92D5D.toInt(), 0xFFFF4015.toInt(), 0xFFFF6A00.toInt(), 0xFFFFAB01.toInt(), 0xFFFCC700.toInt(), 0xFFFEFB41.toInt(), 0xFFD9EC37.toInt(), 0xFF76BB40.toInt())
         private val ROW_COLOR_7 =
-            /**
-             * Executes intarrayof operation with thermal imaging domain optimization.
-             *
-             */
             intArrayOf(0xFF01C7FC.toInt(), 0xFF3A87FD.toInt(), 0xFF5E30EB.toInt(), 0xFFBE38F3.toInt(), 0xFFE63B7A.toInt(), 0xFFFE6250.toInt(), 0xFFFE8648.toInt(), 0xFFFEB43F.toInt(), 0xFFFECB3E.toInt(), 0xFFFFF76B.toInt(), 0xFFE4EF65.toInt(), 0xFF96D35F.toInt())
         private val ROW_COLOR_8 =
-            /**
-             * Executes intarrayof operation with thermal imaging domain optimization.
-             *
-             */
             intArrayOf(0xFF52D6FC.toInt(), 0xFF74A7FF.toInt(), 0xFF864FFD.toInt(), 0xFFD357FE.toInt(), 0xFFEE719E.toInt(), 0xFFFF8C82.toInt(), 0xFFFEA57D.toInt(), 0xFFFEC777.toInt(), 0xFFFED977.toInt(), 0xFFFFF994.toInt(), 0xFFEAF28F.toInt(), 0xFFB1DD8B.toInt())
         private val ROW_COLOR_9 =
-            /**
-             * Executes intarrayof operation with thermal imaging domain optimization.
-             *
-             */
             intArrayOf(0xFF93E3FC.toInt(), 0xFFA7C6FF.toInt(), 0xFFB18CFE.toInt(), 0xFFE292FE.toInt(), 0xFFF4A4C0.toInt(), 0xFFFFB5AF.toInt(), 0xFFFFC5AB.toInt(), 0xFFFED9A8.toInt(), 0xFFFDE4A8.toInt(), 0xFFFFFBB9.toInt(), 0xFFF1F7B7.toInt(), 0xFFCDE8B5.toInt())
         private val ROW_COLOR_10 =
-            /**
-             * Executes intarrayof operation with thermal imaging domain optimization.
-             *
-             */
             intArrayOf(0xFFCBF0FF.toInt(), 0xFFD2E2FE.toInt(), 0xFFD8C9FE.toInt(), 0xFFEFCAFE.toInt(), 0xFFF9D3E0.toInt(), 0xFFFFDAD8.toInt(), 0xFFFFE2D6.toInt(), 0xFFFEECD4.toInt(), 0xFFFEF1D5.toInt(), 0xFFFDFBDD.toInt(), 0xFFF6FADB.toInt(), 0xFFDEEED4.toInt())
 
         private val COLOR =
-            /**
-             * Executes arrayof operation with thermal imaging domain optimization.
-             *
-             */
             arrayOf(ROW_COLOR_1, ROW_COLOR_2, ROW_COLOR_3, ROW_COLOR_4, ROW_COLOR_5, ROW_COLOR_6, ROW_COLOR_7, ROW_COLOR_8, ROW_COLOR_9, ROW_COLOR_10)
 
-    /**
-     * Retrieves rowfromcolor information.
-     */
         private fun getRowFromColor(
             @ColorInt color: Int,
         ): Int =
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (color) {
                 0xFFFEFFFE.toInt(), 0xFFEBEBEB.toInt(), 0xFFD6D6D6.toInt(), 0xFFC2C2C2.toInt(), 0xFFADADAD.toInt(), 0xFF999999.toInt(), 0xFF858585.toInt(), 0xFF707070.toInt(), 0xFF5C5C5C.toInt(), 0xFF474747.toInt(), 0xFF333333.toInt(), 0xFF000000.toInt() -> 0
                 0xFF00374A.toInt(), 0xFF011D57.toInt(), 0xFF11053B.toInt(), 0xFF2E063D.toInt(), 0xFF3C071B.toInt(), 0xFF5C0701.toInt(), 0xFF5A1C00.toInt(), 0xFF583300.toInt(), 0xFF563D00.toInt(), 0xFF666100.toInt(), 0xFF4F5504.toInt(), 0xFF263E0F.toInt() -> 1
@@ -125,16 +61,9 @@ class ColorSelectView : View {
                 else -> -1
             }
 
-    /**
-     * Retrieves columnfromcolor information.
-     */
         private fun getColumnFromColor(
             @ColorInt color: Int,
         ): Int =
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (color) {
                 0xFFFEFFFE.toInt(), 0xFF00374A.toInt(), 0xFF004D65.toInt(), 0xFF016E8F.toInt(), 0xFF008CB4.toInt(), 0xFF00A1D8.toInt(), 0xFF01C7FC.toInt(), 0xFF52D6FC.toInt(), 0xFF93E3FC.toInt(), 0xFFCBF0FF.toInt() -> 0
                 0xFFEBEBEB.toInt(), 0xFF011D57.toInt(), 0xFF012F7B.toInt(), 0xFF0042A9.toInt(), 0xFF0056D6.toInt(), 0xFF0061FD.toInt(), 0xFF3A87FD.toInt(), 0xFF74A7FF.toInt(), 0xFFA7C6FF.toInt(), 0xFFD2E2FE.toInt() -> 1
@@ -156,15 +85,7 @@ class ColorSelectView : View {
      * 是否需要整体描边.
      */
     var isNeedStroke: Boolean = false
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes invalidate operation with thermal imaging domain optimization.
-             *
-             */
             invalidate()
             field = value
         }
@@ -174,42 +95,17 @@ class ColorSelectView : View {
      */
     var onSelectListener: ((color: Int) -> Unit)? = null
 
-    /**
-     * Executes reset functionality.
-     */
-    /**
-     * Executes reset operation with thermal imaging domain optimization.
-     *
-     */
     fun reset() {
         currentRow = -1
         currentColumn = -1
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate()
     }
 
-    /**
-     * Executes selectColor functionality.
-     */
-    /**
-     * Executes selectcolor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param color Parameter for operation (type: Int)
-     *
-     */
     fun selectColor(
         @ColorInt color: Int,
     ) {
         currentRow = getRowFromColor(color)
         currentColumn = getColumnFromColor(color)
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate()
     }
 
@@ -222,49 +118,15 @@ class ColorSelectView : View {
 
     private val path = Path()
     private val itemPaint = Paint() // 未selected画笔
-    private val itemSelectPaint = Paint() // Selected描边效果画笔
+    private val itemSelectPaint = Paint() // selected描边效果画笔
     private val strokePaint = Paint() // 整体描边效果画笔
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     * @param defStyleRes Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
         context,
         attrs,
@@ -289,14 +151,6 @@ class ColorSelectView : View {
         strokePaint.strokeWidth = strokeWidth / 2f
     }
 
-    /**
-     * Executes onmeasure operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param widthMeasureSpec Parameter for operation (type: Int)
-     * @param heightMeasureSpec Parameter for operation (type: Int)
-     *
-     */
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
@@ -311,30 +165,15 @@ class ColorSelectView : View {
 
         val wantHeight = itemSize * 10 + strokeWidth
         val height =
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (heightMode) {
                 MeasureSpec.EXACTLY -> heightSize
                 MeasureSpec.AT_MOST -> wantHeight.coerceAtMost(heightSize)
                 MeasureSpec.UNSPECIFIED -> wantHeight
                 else -> wantHeight
             }
-        /**
-         * Configures the measureddimension with validation and thermal imaging optimization.
-         *
-         */
         setMeasuredDimension(width, height)
     }
 
-    /**
-     * Executes ondraw operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     *
-     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val itemSize = (measuredWidth - strokeWidth) / 12f
@@ -342,10 +181,6 @@ class ColorSelectView : View {
         val margin = strokeWidth / 2f
 
         // 绘制描边
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isNeedStroke) {
             path.rewind()
             path.moveTo(margin, margin + connerSize)
@@ -360,21 +195,9 @@ class ColorSelectView : View {
             canvas.drawPath(path, strokePaint)
         }
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (row in 0 until 10) {
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (column in 0 until 12) {
                 itemPaint.color = COLOR[row][column]
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (row == 0 && column == 0) {
                     path.rewind()
                     path.moveTo(margin, margin + connerSize)
@@ -419,20 +242,12 @@ class ColorSelectView : View {
             }
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (currentRow >= 0 && currentColumn >= 0) {
             val left = margin + itemSize * currentColumn
             val top = margin + itemSize * currentRow
             val right = left + itemSize
             val bottom = top + itemSize
             path.rewind()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (currentRow == 0 && currentColumn == 0) {
                 path.moveTo(left, top + connerSize)
                 path.quadTo(left, top, left + connerSize, top)
@@ -440,10 +255,6 @@ class ColorSelectView : View {
                 path.moveTo(left, top + strokeWidth)
                 path.quadTo(left, top, left + strokeWidth, top)
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (currentRow == 0 && currentColumn == 11) {
                 path.lineTo(right - connerSize, top)
                 path.quadTo(right, top, right, top + connerSize)
@@ -451,10 +262,6 @@ class ColorSelectView : View {
                 path.lineTo(right - strokeWidth, top)
                 path.quadTo(right, top, right, top + strokeWidth)
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (currentRow == 9 && currentColumn == 11) {
                 path.lineTo(right, bottom - connerSize)
                 path.quadTo(right, bottom, right - connerSize, bottom)
@@ -462,10 +269,6 @@ class ColorSelectView : View {
                 path.lineTo(right, bottom - strokeWidth)
                 path.quadTo(right, bottom, right - strokeWidth, bottom)
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (currentRow == 9 && currentColumn == 0) {
                 path.lineTo(left + connerSize, bottom)
                 path.quadTo(left, bottom, left, bottom - connerSize)
@@ -481,18 +284,7 @@ class ColorSelectView : View {
     private var downRow = 0
     private var downColumn = 0
 
-    /**
-     * Executes ontouchevent operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: MotionEvent?)
-     *
-     */
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (event == null) {
             return false
         }
@@ -503,27 +295,15 @@ class ColorSelectView : View {
         val column = (x / itemSize + (if (x % itemSize > 0) 1 else 0) - 1).coerceAtMost(11).coerceAtLeast(0)
         val row = (y / itemSize + (if (y % itemSize > 0) 1 else 0) - 1).coerceAtMost(9).coerceAtLeast(0)
 
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 downRow = row
                 downColumn = column
             }
             MotionEvent.ACTION_UP -> {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (row == downRow && column == downColumn) {
                     currentRow = row
                     currentColumn = column
-                    /**
-                     * Executes invalidate operation with thermal imaging domain optimization.
-                     *
-                     */
                     invalidate()
 
                     onSelectListener?.invoke(COLOR[row][column])
@@ -533,21 +313,7 @@ class ColorSelectView : View {
         return true
     }
 
-    /**
-     * Executes dp2px functionality.
-     */
-    /**
-     * Executes dp2px operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param dpValue Parameter for operation (type: Float)
-     *
-     */
     private fun dp2px(dpValue: Float): Int {
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (dpValue * density + 0.5f).toInt()
     }
 }

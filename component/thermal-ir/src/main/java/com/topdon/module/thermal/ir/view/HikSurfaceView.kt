@@ -14,7 +14,7 @@ import com.infisense.usbir.utils.IRImageHelp
 import com.infisense.usbir.utils.OpencvTools
 import com.infisense.usbir.utils.PseudocodeUtils
 import com.topdon.lib.core.bean.AlarmBean
-// Import com.topdon.pseudo.bean.CustomPseudoBean  // Temporarily disabled - pseudo component dependency
+// import com.topdon.pseudo.bean.CustomPseudoBean  // Temporarily disabled - pseudo component dependency
 import com.topdon.module.thermal.ir.bean.DataBean // Use local data bean instead
 import java.nio.ByteBuffer
 
@@ -22,22 +22,10 @@ import java.nio.ByteBuffer
 进行 Hik module预览的 SurfaceView.
  *
  * Created by LCG on 2024/11/30.
+ */
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for HikSurfaceView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Hik surface view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class HikSurfaceView : SurfaceView {
     companion object {
@@ -51,10 +39,6 @@ class HikSurfaceView : SurfaceView {
 是否enabled超分
      */
     var isOpenAmplify: Boolean = false
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             field = value
             val isPortrait = rotateAngle == 90 || rotateAngle == 270
@@ -64,7 +48,7 @@ class HikSurfaceView : SurfaceView {
         }
 
     /**
-thermal imaging画area逆时针rotationangle，取值 0、90、180、270，default 270
+thermal imaging画area逆时针rotation角度，取值 0、90、180、270，默认 270
      */
     @Volatile
     var rotateAngle: Int = 270
@@ -99,19 +83,9 @@ temperature报警用来outline的工具class.
     /**
 refresh自定义renderingconfiguration
      */
-    /**
-     * Processes pseudo color configuration for thermal imaging visualization with advanced color mapping algorithms.
-     *
-     * @param
-     * @param it Parameter for operation (type: DataBean)
-     *
-     * @note This method is optimized for thermal imaging pseudo color processing.
-     * Ensure proper thermal calibration before use.
-     *
-     */
     fun refreshCustomPseudo(it: DataBean) {
         // Temporarily disabled - pseudo component dependency
-        // IrImageHelp.setColorList(it.getColorList(), it.getPlaceList(), it.isUseGray, it.maxTemp, it.minTemp)
+        // irImageHelp.setColorList(it.getColorList(), it.getPlaceList(), it.isUseGray, it.maxTemp, it.minTemp)
     }
 
     /**
@@ -124,9 +98,6 @@ refresh自定义renderingconfiguration
 set当前使用的pseudo-color代号
      *
 1-White Hot 3-Iron Red 4-Rainbow 1 5-Rainbow 2 6-Rainbow 3 7-Red Hot 8-Hot Iron 9-Rainbow 4 10-Rainbow 5 11-Black Hot
-     */
-    /**
-     * Sets pseudocode configuration.
      */
     fun setPseudoCode(code: Int) {
         pseudoType = PseudocodeUtils.changePseudocodeModeByOld(code)
@@ -162,46 +133,12 @@ temperaturearray
      */
     private val tempArray = ByteArray(256 * 192 * 2)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     * @param defStyleRes Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
         context,
         attrs,
@@ -215,29 +152,13 @@ temperaturearray
     /**
 getscaling为当前 View 尺寸的image.
      */
-    /**
-     * Retrieves the scalebitmap with optimized performance for thermal imaging operations.
-     *
-     */
     fun getScaleBitmap(): Bitmap =
-        /**
-         * Executes synchronized operation with thermal imaging domain optimization.
-         *
-         */
         synchronized(this) {
             Bitmap.createScaledBitmap(bitmap, width, height, true)
         }
 
     /**
 使用指定的 YUV datarefresh画area
-     */
-    /**
-     * Executes refresh operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param yuvArray Parameter for operation (type: ByteArray)
-     * @param newTempArray Temperature value in Celsius (type: ByteArray)
-     *
      */
     fun refresh(
         yuvArray: ByteArray,
@@ -259,10 +180,6 @@ raw data的宽高，即不应用rotation的宽高
 temperature报警outline或矩形
         val newArray = irImageHelp.contourDetection(alarmBean, sourceArgbArray, tempArray, sourceWidth, sourceHeight) ?: sourceArgbArray
 rotation
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (rotateAngle) {
             90 -> LibIRProcess.rotateLeft90(newArray, imageRes, IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888, rotateArgbArray)
             180 -> LibIRProcess.rotate180(newArray, imageRes, IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888, rotateArgbArray)
@@ -270,20 +187,12 @@ rotation
             else -> System.arraycopy(newArray, 0, rotateArgbArray, 0, rotateArgbArray.size)
         }
 超分
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isOpenAmplify) {
             val width: Int = if (rotateAngle == 90 || rotateAngle == 270) sourceWidth else sourceHeight
             val height: Int = if (rotateAngle == 90 || rotateAngle == 270) sourceHeight else sourceWidth
             OpencvTools.supImage(rotateArgbArray, width, height, amplifyArray)
         }
 
-        /**
-         * Executes synchronized operation with thermal imaging domain optimization.
-         *
-         */
         synchronized(this) {
             bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(if (isOpenAmplify) amplifyArray else rotateArgbArray))
         }

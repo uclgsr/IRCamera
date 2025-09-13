@@ -32,20 +32,6 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-/**
- * Specialized thermal imaging component providing PieChartRenderer functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class PieChartRenderer extends DataRenderer {
 
     protected PieChart mChart;
@@ -81,16 +67,8 @@ public class PieChartRenderer extends DataRenderer {
 
     protected Canvas mBitmapCanvas;
 
-    /**
-     * Executes piechartrenderer operation with thermal imaging domain optimization.
-     *
-     */
     public PieChartRenderer(PieChart chart, ChartAnimator animator,
                             ViewPortHandler viewPortHandler) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(animator, viewPortHandler);
         mChart = chart;
 
@@ -138,7 +116,7 @@ public class PieChartRenderer extends DataRenderer {
 
     @Override
     public void initBuffers() {
-        // TODO: Auto-generated method stub
+        // TODO Auto-generated method stub
     }
 
     @Override
@@ -149,18 +127,10 @@ public class PieChartRenderer extends DataRenderer {
 
         Bitmap drawBitmap = mDrawBitmap == null ? null : mDrawBitmap.get();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (drawBitmap == null
                 || (drawBitmap.getWidth() != width)
                 || (drawBitmap.getHeight() != height)) {
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (width > 0 && height > 0) {
                 drawBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
                 mDrawBitmap = new WeakReference<>(drawBitmap);
@@ -173,24 +143,9 @@ public class PieChartRenderer extends DataRenderer {
 
         PieData pieData = mChart.getData();
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param set Parameter for operation (type: pieData.getDataSets()
-         *
-         */
         for (IPieDataSet set : pieData.getDataSets()) {
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (set.isVisible() && set.getEntryCount() > 0)
-                /**
-                 * Executes drawdataset operation with thermal imaging domain optimization.
-                 *
-                 */
                 drawDataSet(c, set);
         }
     }
@@ -222,7 +177,7 @@ public class PieChartRenderer extends DataRenderer {
                         Math.pow(arcEndPointY - arcStartPointY, 2));
 
         // After reducing space from both sides of the "slice",
-        // The angle of the contained triangle should stay the same.
+        //   the angle of the contained triangle should stay the same.
         // So let's find out the height of that triangle.
         float containedTriangleHeight = (float) (basePointsDistance / 2.0 *
                 Math.tan((180.0 - angle) / 2.0 * Utils.DEG2RAD));
@@ -246,10 +201,6 @@ public class PieChartRenderer extends DataRenderer {
      */
     protected float getSliceSpace(IPieDataSet dataSet) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!dataSet.isAutomaticallyDisableSliceSpacingEnabled())
             return dataSet.getSliceSpace();
 
@@ -284,16 +235,8 @@ public class PieChartRenderer extends DataRenderer {
         final boolean drawRoundedSlices = drawInnerArc && mChart.isDrawRoundedSlicesEnabled();
 
         int visibleAngleCount = 0;
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int j = 0; j < entryCount; j++) {
-            // Draw only if the value is greater than zero
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            // draw only if the value is greater than zero
             if ((Math.abs(dataSet.getEntryForIndex(j).getY()) > Utils.FLOAT_EPSILON)) {
                 visibleAngleCount++;
             }
@@ -301,10 +244,6 @@ public class PieChartRenderer extends DataRenderer {
 
         final float sliceSpace = visibleAngleCount <= 1 ? 0.f : getSliceSpace(dataSet);
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int j = 0; j < entryCount; j++) {
 
             float sliceAngle = drawAngles[j];
@@ -312,21 +251,13 @@ public class PieChartRenderer extends DataRenderer {
 
             Entry e = dataSet.getEntryForIndex(j);
 
-            // Draw only if the value is greater than zero
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            // draw only if the value is greater than zero
             if (!(Math.abs(e.getY()) > Utils.FLOAT_EPSILON)) {
                 angle += sliceAngle * phaseX;
                 continue;
             }
 
             // Don't draw if it's highlighted, unless the chart uses rounded slices
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mChart.needsHighlight(j) && !drawRoundedSlices) {
                 angle += sliceAngle * phaseX;
                 continue;
@@ -341,20 +272,12 @@ public class PieChartRenderer extends DataRenderer {
                     sliceSpace / (Utils.FDEG2RAD * radius);
             final float startAngleOuter = rotationAngle + (angle + sliceSpaceAngleOuter / 2.f) * phaseY;
             float sweepAngleOuter = (sliceAngle - sliceSpaceAngleOuter) * phaseY;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (sweepAngleOuter < 0.f) {
                 sweepAngleOuter = 0.f;
             }
 
             mPathBuffer.reset();
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (drawRoundedSlices) {
                 float x = center.x + (radius - roundedRadius) * (float) Math.cos(startAngleOuter * Utils.FDEG2RAD);
                 float y = center.y + (radius - roundedRadius) * (float) Math.sin(startAngleOuter * Utils.FDEG2RAD);
@@ -364,19 +287,11 @@ public class PieChartRenderer extends DataRenderer {
             float arcStartPointX = center.x + radius * (float) Math.cos(startAngleOuter * Utils.FDEG2RAD);
             float arcStartPointY = center.y + radius * (float) Math.sin(startAngleOuter * Utils.FDEG2RAD);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (sweepAngleOuter >= 360.f && sweepAngleOuter % 360f <= Utils.FLOAT_EPSILON) {
                 // Android is doing "mod 360"
                 mPathBuffer.addCircle(center.x, center.y, radius, Path.Direction.CW);
             } else {
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (drawRoundedSlices) {
                     mPathBuffer.arcTo(roundedCircleBox, startAngleOuter + 180, -180);
                 }
@@ -395,22 +310,10 @@ public class PieChartRenderer extends DataRenderer {
                     center.x + innerRadius,
                     center.y + innerRadius);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (drawInnerArc && (innerRadius > 0.f || accountForSliceSpacing)) {
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (accountForSliceSpacing) {
                     float minSpacedRadius =
-                            /**
-                             * Executes calculateminimumradiusforspacedslice operation with thermal imaging domain optimization.
-                             *
-                             */
                             calculateMinimumRadiusForSpacedSlice(
                                     center, radius,
                                     sliceAngle * phaseY,
@@ -418,10 +321,6 @@ public class PieChartRenderer extends DataRenderer {
                                     startAngleOuter,
                                     sweepAngleOuter);
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (minSpacedRadius < 0.f)
                         minSpacedRadius = -minSpacedRadius;
 
@@ -433,28 +332,16 @@ public class PieChartRenderer extends DataRenderer {
                         sliceSpace / (Utils.FDEG2RAD * innerRadius);
                 final float startAngleInner = rotationAngle + (angle + sliceSpaceAngleInner / 2.f) * phaseY;
                 float sweepAngleInner = (sliceAngle - sliceSpaceAngleInner) * phaseY;
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sweepAngleInner < 0.f) {
                     sweepAngleInner = 0.f;
                 }
                 final float endAngleInner = startAngleInner + sweepAngleInner;
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sweepAngleOuter >= 360.f && sweepAngleOuter % 360f <= Utils.FLOAT_EPSILON) {
                     // Android is doing "mod 360"
                     mPathBuffer.addCircle(center.x, center.y, innerRadius, Path.Direction.CCW);
                 } else {
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (drawRoundedSlices) {
                         float x = center.x + (radius - roundedRadius) * (float) Math.cos(endAngleInner * Utils.FDEG2RAD);
                         float y = center.y + (radius - roundedRadius) * (float) Math.sin(endAngleInner * Utils.FDEG2RAD);
@@ -473,24 +360,12 @@ public class PieChartRenderer extends DataRenderer {
                 }
             } else {
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sweepAngleOuter % 360f > Utils.FLOAT_EPSILON) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (accountForSliceSpacing) {
 
                         float angleMiddle = startAngleOuter + sweepAngleOuter / 2.f;
 
                         float sliceSpaceOffset =
-                                /**
-                                 * Executes calculateminimumradiusforspacedslice operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 calculateMinimumRadiusForSpacedSlice(
                                         center,
                                         radius,
@@ -533,7 +408,7 @@ public class PieChartRenderer extends DataRenderer {
 
         MPPointF center = mChart.getCenterCircleBox();
 
-        // Get whole the radius
+        // get whole the radius
         float radius = mChart.getRadius();
         float rotationAngle = mChart.getRotationAngle();
         float[] drawAngles = mChart.getDrawAngles();
@@ -546,17 +421,9 @@ public class PieChartRenderer extends DataRenderer {
         final float holeRadiusPercent = mChart.getHoleRadius() / 100.f;
         float labelRadiusOffset = radius / 10f * 3.6f;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mChart.isDrawHoleEnabled()) {
             labelRadiusOffset = (radius - (radius * holeRadiusPercent)) / 2f;
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!mChart.isDrawSlicesUnderHoleEnabled() && mChart.isDrawRoundedSlicesEnabled()) {
                 // Add curved circle slice and spacing to rotation angle, so that it sits nicely inside
                 rotationAngle += roundedRadius * 360 / (Math.PI * 2 * radius);
@@ -579,31 +446,19 @@ public class PieChartRenderer extends DataRenderer {
 
         float offset = Utils.convertDpToPixel(5.f);
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < dataSets.size(); i++) {
 
             IPieDataSet dataSet = dataSets.get(i);
 
             final boolean drawValues = dataSet.isDrawValuesEnabled();
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!drawValues && !drawEntryLabels)
                 continue;
 
             final PieDataSet.ValuePosition xValuePosition = dataSet.getXValuePosition();
             final PieDataSet.ValuePosition yValuePosition = dataSet.getYValuePosition();
 
-            // Apply the text-styling defined by the DataSet
-            /**
-             * Executes applyvaluetextstyle operation with thermal imaging domain optimization.
-             *
-             */
+            // apply the text-styling defined by the DataSet
             applyValueTextStyle(dataSet);
 
             float lineHeight = Utils.calcTextHeight(mValuePaint, "Q")
@@ -622,18 +477,10 @@ public class PieChartRenderer extends DataRenderer {
             iconsOffset.x = Utils.convertDpToPixel(iconsOffset.x);
             iconsOffset.y = Utils.convertDpToPixel(iconsOffset.y);
 
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int j = 0; j < entryCount; j++) {
 
                 PieEntry entry = dataSet.getEntryForIndex(j);
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (xIndex == 0)
                     angle = 0.f;
                 else
@@ -642,7 +489,7 @@ public class PieChartRenderer extends DataRenderer {
                 final float sliceAngle = drawAngles[xIndex];
                 final float sliceSpaceMiddleAngle = sliceSpace / (Utils.FDEG2RAD * labelRadius);
 
-                // Offset needed to center the drawn text in the slice
+                // offset needed to center the drawn text in the slice
                 final float angleOffset = (sliceAngle - sliceSpaceMiddleAngle / 2.f) / 2.f;
 
                 angle = angle + angleOffset;
@@ -666,10 +513,6 @@ public class PieChartRenderer extends DataRenderer {
                 final boolean drawYInside = drawValues &&
                         yValuePosition == PieDataSet.ValuePosition.INSIDE_SLICE;
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (drawXOutside || drawYOutside) {
 
                     final float valueLineLength1 = dataSet.getValueLinePart1Length();
@@ -681,10 +524,6 @@ public class PieChartRenderer extends DataRenderer {
 
                     float line1Radius;
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (mChart.isDrawHoleEnabled())
                         line1Radius = (radius - (radius * holeRadiusPercent))
                                 * valueLinePart1OffsetPercentage
@@ -703,20 +542,12 @@ public class PieChartRenderer extends DataRenderer {
                     final float pt1x = labelRadius * (1 + valueLineLength1) * sliceXBase + center.x;
                     final float pt1y = labelRadius * (1 + valueLineLength1) * sliceYBase + center.y;
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (transformedAngle % 360.0 >= 90.0 && transformedAngle % 360.0 <= 270.0) {
                         pt2x = pt1x - polyline2Width;
                         pt2y = pt1y;
 
                         mValuePaint.setTextAlign(Align.RIGHT);
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if(drawXOutside)
                             mEntryLabelsPaint.setTextAlign(Align.RIGHT);
 
@@ -727,10 +558,6 @@ public class PieChartRenderer extends DataRenderer {
                         pt2y = pt1y;
                         mValuePaint.setTextAlign(Align.LEFT);
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if(drawXOutside)
                             mEntryLabelsPaint.setTextAlign(Align.LEFT);
 
@@ -738,16 +565,8 @@ public class PieChartRenderer extends DataRenderer {
                         labelPty = pt2y;
                     }
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (dataSet.getValueLineColor() != ColorTemplate.COLOR_NONE) {
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (dataSet.isUsingSliceColorAsValueLineColor()) {
                             mValueLinePaint.setColor(dataSet.getColor(j));
                         }
@@ -756,114 +575,50 @@ public class PieChartRenderer extends DataRenderer {
                         c.drawLine(pt1x, pt1y, pt2x, pt2y, mValueLinePaint);
                     }
 
-                    // Draw everything, depending on settings
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
+                    // draw everything, depending on settings
                     if (drawXOutside && drawYOutside) {
 
-                        /**
-                         * Executes drawvalue operation with thermal imaging domain optimization.
-                         *
-                         */
                         drawValue(c, formattedValue, labelPtx, labelPty, dataSet.getValueTextColor(j));
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (j < data.getEntryCount() && entryLabel != null) {
-                            /**
-                             * Executes drawentrylabel operation with thermal imaging domain optimization.
-                             *
-                             */
                             drawEntryLabel(c, entryLabel, labelPtx, labelPty + lineHeight);
                         }
 
                     } else if (drawXOutside) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (j < data.getEntryCount() && entryLabel != null) {
-                            /**
-                             * Executes drawentrylabel operation with thermal imaging domain optimization.
-                             *
-                             */
                             drawEntryLabel(c, entryLabel, labelPtx, labelPty + lineHeight / 2.f);
                         }
                     } else if (drawYOutside) {
 
-                        /**
-                         * Executes drawvalue operation with thermal imaging domain optimization.
-                         *
-                         */
                         drawValue(c, formattedValue, labelPtx, labelPty + lineHeight / 2.f, dataSet.getValueTextColor(j));
                     }
                 }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (drawXInside || drawYInside) {
-                    // Calculate the text position
+                    // calculate the text position
                     float x = labelRadius * sliceXBase + center.x;
                     float y = labelRadius * sliceYBase + center.y;
 
                     mValuePaint.setTextAlign(Align.CENTER);
 
-                    // Draw everything, depending on settings
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
+                    // draw everything, depending on settings
                     if (drawXInside && drawYInside) {
 
-                        /**
-                         * Executes drawvalue operation with thermal imaging domain optimization.
-                         *
-                         */
                         drawValue(c, formattedValue, x, y, dataSet.getValueTextColor(j));
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (j < data.getEntryCount() && entryLabel != null) {
-                            /**
-                             * Executes drawentrylabel operation with thermal imaging domain optimization.
-                             *
-                             */
                             drawEntryLabel(c, entryLabel, x, y + lineHeight);
                         }
 
                     } else if (drawXInside) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (j < data.getEntryCount() && entryLabel != null) {
-                            /**
-                             * Executes drawentrylabel operation with thermal imaging domain optimization.
-                             *
-                             */
                             drawEntryLabel(c, entryLabel, x, y + lineHeight / 2f);
                         }
                     } else if (drawYInside) {
-                        /**
-                         * Executes drawvalue operation with thermal imaging domain optimization.
-                         *
-                         */
                         drawValue(c, formattedValue, x, y + lineHeight / 2f, dataSet.getValueTextColor(j));
                     }
                 }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (entry.getIcon() != null && dataSet.isDrawIconsEnabled()) {
 
                     Drawable icon = entry.getIcon();
@@ -910,16 +665,8 @@ public class PieChartRenderer extends DataRenderer {
 
     @Override
     public void drawExtras(Canvas c) {
-        /**
-         * Executes drawhole operation with thermal imaging domain optimization.
-         *
-         */
         drawHole(c);
         c.drawBitmap(mDrawBitmap.get(), 0, 0, null);
-        /**
-         * Executes drawcentertext operation with thermal imaging domain optimization.
-         *
-         */
         drawCenterText(c);
     }
 
@@ -931,32 +678,20 @@ public class PieChartRenderer extends DataRenderer {
      */
     protected void drawHole(Canvas c) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mChart.isDrawHoleEnabled() && mBitmapCanvas != null) {
 
             float radius = mChart.getRadius();
             float holeRadius = radius * (mChart.getHoleRadius() / 100);
             MPPointF center = mChart.getCenterCircleBox();
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Color.alpha(mHolePaint.getColor()) > 0) {
-                // Draw the hole-circle
+                // draw the hole-circle
                 mBitmapCanvas.drawCircle(
                         center.x, center.y,
                         holeRadius, mHolePaint);
             }
 
-            // Only draw the circle if it can be seen (not covered by the hole)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            // only draw the circle if it can be seen (not covered by the hole)
             if (Color.alpha(mTransparentCirclePaint.getColor()) > 0 &&
                     mChart.getTransparentCircleRadius() > mChart.getHoleRadius()) {
 
@@ -965,13 +700,13 @@ public class PieChartRenderer extends DataRenderer {
 
                 mTransparentCirclePaint.setAlpha((int) ((float) alpha * mAnimator.getPhaseX() * mAnimator.getPhaseY()));
 
-                // Draw the transparent-circle
+                // draw the transparent-circle
                 mHoleCirclePath.reset();
                 mHoleCirclePath.addCircle(center.x, center.y, secondHoleRadius, Path.Direction.CW);
                 mHoleCirclePath.addCircle(center.x, center.y, holeRadius, Path.Direction.CCW);
                 mBitmapCanvas.drawPath(mHoleCirclePath, mTransparentCirclePaint);
 
-                // Reset alpha
+                // reset alpha
                 mTransparentCirclePaint.setAlpha(alpha);
             }
             MPPointF.recycleInstance(center);
@@ -987,10 +722,6 @@ public class PieChartRenderer extends DataRenderer {
 
         CharSequence centerText = mChart.getCenterText();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mChart.isDrawCenterTextEnabled() && centerText != null) {
 
             MPPointF center = mChart.getCenterCircleBox();
@@ -1012,10 +743,6 @@ public class PieChartRenderer extends DataRenderer {
             boundingRect.set(holeRect);
 
             float radiusPercent = mChart.getCenterTextRadiusPercent() / 100f;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (radiusPercent > 0.0) {
                 boundingRect.inset(
                         (boundingRect.width() - boundingRect.width() * radiusPercent) / 2.f,
@@ -1023,10 +750,6 @@ public class PieChartRenderer extends DataRenderer {
                 );
             }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!centerText.equals(mCenterTextLastValue) || !boundingRect.equals(mCenterTextLastBounds)) {
 
                 // Next time we won't recalculate StaticLayout...
@@ -1042,14 +765,10 @@ public class PieChartRenderer extends DataRenderer {
                         Layout.Alignment.ALIGN_CENTER, 1.f, 0.f, false);
             }
 
-            // Float layoutWidth = Utils.getStaticLayoutMaxWidth(mCenterTextLayout);
+            //float layoutWidth = Utils.getStaticLayoutMaxWidth(mCenterTextLayout);
             float layoutHeight = mCenterTextLayout.getHeight();
 
             c.save();
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Build.VERSION.SDK_INT >= 18) {
                 Path path = mDrawCenterTextPathBuffer;
                 path.reset();
@@ -1077,10 +796,6 @@ public class PieChartRenderer extends DataRenderer {
          */
 
         final boolean drawInnerArc = mChart.isDrawHoleEnabled() && !mChart.isDrawSlicesUnderHoleEnabled();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (drawInnerArc && mChart.isDrawRoundedSlicesEnabled())
             return;
 
@@ -1101,19 +816,11 @@ public class PieChartRenderer extends DataRenderer {
         final RectF highlightedCircleBox = mDrawHighlightedRectF;
         highlightedCircleBox.set(0,0,0,0);
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < indices.length; i++) {
 
-            // Get the index to highlight
+            // get the index to highlight
             int index = (int) indices[i].getX();
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (index >= drawAngles.length)
                 continue;
 
@@ -1121,34 +828,18 @@ public class PieChartRenderer extends DataRenderer {
                     .getDataSetByIndex(indices[i]
                             .getDataSetIndex());
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (set == null || !set.isHighlightEnabled())
                 continue;
 
             final int entryCount = set.getEntryCount();
             int visibleAngleCount = 0;
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int j = 0; j < entryCount; j++) {
-                // Draw only if the value is greater than zero
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+                // draw only if the value is greater than zero
                 if ((Math.abs(set.getEntryForIndex(j).getY()) > Utils.FLOAT_EPSILON)) {
                     visibleAngleCount++;
                 }
             }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (index == 0)
                 angle = 0.f;
             else
@@ -1178,30 +869,18 @@ public class PieChartRenderer extends DataRenderer {
 
             final float startAngleOuter = rotationAngle + (angle + sliceSpaceAngleOuter / 2.f) * phaseY;
             float sweepAngleOuter = (sliceAngle - sliceSpaceAngleOuter) * phaseY;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (sweepAngleOuter < 0.f) {
                 sweepAngleOuter = 0.f;
             }
 
             final float startAngleShifted = rotationAngle + (angle + sliceSpaceAngleShifted / 2.f) * phaseY;
             float sweepAngleShifted = (sliceAngle - sliceSpaceAngleShifted) * phaseY;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (sweepAngleShifted < 0.f) {
                 sweepAngleShifted = 0.f;
             }
 
             mPathBuffer.reset();
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (sweepAngleOuter >= 360.f && sweepAngleOuter % 360f <= Utils.FLOAT_EPSILON) {
                 // Android is doing "mod 360"
                 mPathBuffer.addCircle(center.x, center.y, highlightedRadius, Path.Direction.CW);
@@ -1219,16 +898,8 @@ public class PieChartRenderer extends DataRenderer {
             }
 
             float sliceSpaceRadius = 0.f;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (accountForSliceSpacing) {
                 sliceSpaceRadius =
-                        /**
-                         * Executes calculateminimumradiusforspacedslice operation with thermal imaging domain optimization.
-                         *
-                         */
                         calculateMinimumRadiusForSpacedSlice(
                                 center, radius,
                                 sliceAngle * phaseY,
@@ -1245,24 +916,12 @@ public class PieChartRenderer extends DataRenderer {
                     center.x + innerRadius,
                     center.y + innerRadius);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (drawInnerArc &&
                     (innerRadius > 0.f || accountForSliceSpacing)) {
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (accountForSliceSpacing) {
                     float minSpacedRadius = sliceSpaceRadius;
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (minSpacedRadius < 0.f)
                         minSpacedRadius = -minSpacedRadius;
 
@@ -1274,19 +933,11 @@ public class PieChartRenderer extends DataRenderer {
                         sliceSpace / (Utils.FDEG2RAD * innerRadius);
                 final float startAngleInner = rotationAngle + (angle + sliceSpaceAngleInner / 2.f) * phaseY;
                 float sweepAngleInner = (sliceAngle - sliceSpaceAngleInner) * phaseY;
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sweepAngleInner < 0.f) {
                     sweepAngleInner = 0.f;
                 }
                 final float endAngleInner = startAngleInner + sweepAngleInner;
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sweepAngleOuter >= 360.f && sweepAngleOuter % 360f <= Utils.FLOAT_EPSILON) {
                     // Android is doing "mod 360"
                     mPathBuffer.addCircle(center.x, center.y, innerRadius, Path.Direction.CCW);
@@ -1304,16 +955,8 @@ public class PieChartRenderer extends DataRenderer {
                 }
             } else {
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sweepAngleOuter % 360f > Utils.FLOAT_EPSILON) {
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (accountForSliceSpacing) {
                         final float angleMiddle = startAngleOuter + sweepAngleOuter / 2.f;
 
@@ -1352,19 +995,11 @@ public class PieChartRenderer extends DataRenderer {
      */
     protected void drawRoundedSlices(Canvas c) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!mChart.isDrawRoundedSlicesEnabled())
             return;
 
         IPieDataSet dataSet = mChart.getData().getDataSet();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!dataSet.isVisible())
             return;
 
@@ -1374,27 +1009,19 @@ public class PieChartRenderer extends DataRenderer {
         MPPointF center = mChart.getCenterCircleBox();
         float r = mChart.getRadius();
 
-        // Calculate the radius of the "slice-circle"
+        // calculate the radius of the "slice-circle"
         float circleRadius = (r - (r * mChart.getHoleRadius() / 100f)) / 2f;
 
         float[] drawAngles = mChart.getDrawAngles();
         float angle = mChart.getRotationAngle();
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int j = 0; j < dataSet.getEntryCount(); j++) {
 
             float sliceAngle = drawAngles[j];
 
             Entry e = dataSet.getEntryForIndex(j);
 
-            // Draw only if the value is greater than zero
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            // draw only if the value is greater than zero
             if ((Math.abs(e.getY()) > Utils.FLOAT_EPSILON)) {
 
                 float x = (float) ((r - circleRadius)
@@ -1421,16 +1048,8 @@ public class PieChartRenderer extends DataRenderer {
             mBitmapCanvas.setBitmap(null);
             mBitmapCanvas = null;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mDrawBitmap != null) {
             Bitmap drawBitmap = mDrawBitmap.get();
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (drawBitmap != null) {
                 drawBitmap.recycle();
             }

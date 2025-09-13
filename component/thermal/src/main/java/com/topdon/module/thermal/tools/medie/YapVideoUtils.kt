@@ -5,43 +5,16 @@ import android.graphics.Canvas
 import android.view.View
 
 /**
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for YapVideoUtils operations.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Yap video view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
+@Suppress("DEPRECATION")
 object YapVideoUtils {
-    /**
-     * Executes convertViewToBitmap functionality.
-     */
-    /**
-     * Executes convertviewtobitmap operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param view Parameter for operation (type: View)
-     *
-     */
     fun convertViewToBitmap(view: View): Bitmap {
         var bitmap: Bitmap?
         view.destroyDrawingCache()
         view.buildDrawingCache()
         bitmap = view.drawingCache
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (bitmap == null) {
             bitmap =
                 Bitmap.createBitmap(

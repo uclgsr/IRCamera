@@ -63,23 +63,12 @@ data class GSRSample(
 data class SyncMark(
     val timestamp: Long,
     val utcTimestamp: Long,
-    val eventType: String, // E.g., "THERMAL_CAPTURE", "SYNC_FLASH", "USER_TRIGGER"
+    val eventType: String, // e.g., "THERMAL_CAPTURE", "SYNC_FLASH", "USER_TRIGGER"
     val sessionId: String,
     val metadata: Map<String, String> = emptyMap(),
 ) {
-    /**
-     * Executes toCsvRow functionality.
-     */
-    /**
-     * Executes tocsvrow operation with thermal imaging domain optimization.
-     *
-     */
     fun toCsvRow(): Array<String> {
         val metadataJson =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (metadata.isNotEmpty()) {
                 metadata.entries.joinToString(";") { "${it.key}=${it.value}" }
             } else {

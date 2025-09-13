@@ -30,20 +30,6 @@ import com.topdon.lib.core.tools.UnitTools
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing EmissivityTipPopup functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
     private lateinit var binding: LayoutPopupTipEmissivityBinding
 
@@ -64,32 +50,16 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
         view = binding.root
     }
 
-    /**
-     * Sets title configuration.
-     */
-    /**
-     * Configures the title with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param title Parameter for operation (type: String)
-     *
-     */
     fun setTitle(title: String): EmissivityTipPopup {
         titleText?.text = title
         return this
     }
 
-    /**
-     * Sets message configuration.
-     */
     fun setMessage(message: String): EmissivityTipPopup {
         messageText?.text = message
         return this
     }
 
-    /**
-     * Sets databean configuration.
-     */
     fun setDataBean(
         environment: Float,
         distance: Float,
@@ -103,9 +73,6 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
         return this
     }
 
-    /**
-     * Sets cancellistener configuration.
-     */
     fun setCancelListener(event: ((check: Boolean) -> Unit)?): EmissivityTipPopup {
         this.closeEvent = event
         return this
@@ -114,24 +81,12 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
     /**
      * Executes build functionality.
      */
-    /**
-     * Executes build operation with thermal imaging domain optimization.
-     *
-     */
     fun build(): PopupWindow {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (popupWindow == null) {
             binding.tvEnvironmentTitle.text = context.getString(R.string.thermal_config_environment) + ":"
             binding.tvDistanceTitle.text = context.getString(R.string.thermal_config_distance) + ":"
 
             binding.tvTitle.visibility = View.GONE
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (text.isNotEmpty()) {
                 binding.tvEmissivityMaterials.text = text
                 binding.tvEmissivityMaterials.visibility = View.VISIBLE
@@ -146,10 +101,6 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
             binding.tvEnvironmentValue.text = UnitTools.showC(environment)
             binding.tvDistanceValue.text = "${NumberTools.to02(distance)}m"
             popupWindow =
-                /**
-                 * Executes popupwindow operation with thermal imaging domain optimization.
-                 *
-                 */
                 PopupWindow(
                     view,
                     SizeUtils.dp2px(275f),
@@ -159,36 +110,21 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
                 isFocusable = true
                 isOutsideTouchable = true
                 isTouchable = true
-                /**
-                 * Configures the backgrounddrawable with validation and thermal imaging optimization.
-                 *
-                 */
                 setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) 
             }
             binding.dialogTipSuccessBtn.setOnClickListener {
                 NavigationManager.build(RouterConfig.IR_SETTING)
                     .withBoolean(ExtraKeyConfig.IS_TC007, isTC007)
                     .navigation(context)
-                /**
-                 * Executes dismiss operation with thermal imaging domain optimization.
-                 *
-                 */
                 dismiss()
             }
         }
-        // SettingsPopupWindow的其他property和listener...
+        // settingsPopupWindow的其他property和Listener器...
         return popupWindow!!
     }
 
     /**
      * Executes show functionality.
-     */
-    /**
-     * Executes show operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param anchorView Parameter for operation (type: View)
-     *
      */
     fun show(anchorView: View) {
         popupWindow?.showAtLocation(anchorView, Gravity.CENTER, -SizeUtils.dp2px(10f), 0)
@@ -196,10 +132,6 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
 
     /**
      * Executes dismiss functionality.
-     */
-    /**
-     * Executes dismiss operation with thermal imaging domain optimization.
-     *
      */
     fun dismiss() {
         popupWindow?.dismiss()

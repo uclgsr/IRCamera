@@ -42,32 +42,13 @@ import java.io.InputStream
  * Created by fengjibo on 2024/1/10.
  */
 /**
-/**
- * Specialized thermal imaging component providing ManualStep2Activity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Manual step2 activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
  */
 class ManualStep2Activity :
-    /**
-     * Executes baseactivity operation with thermal imaging domain optimization.
-     *
-     */
     BaseActivity(),
     OnUSBConnectListener,
     View.OnClickListener {
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView(): Int {
         return R.layout.activity_manual_step2
     }
@@ -86,10 +67,10 @@ class ManualStep2Activity :
      */
     private val mIrPid = 0x5830
     private val mIrFps = 25
-    private var mIrCameraWidth = 0 // Sensor的原始宽度
-    private var mIrCameraHeight = 0 // Sensor的原始高度
-    private var mImageWidth = 0 // 经过rotation后的image宽度
-    private var mImageHeight = 0 // 经过rotation后的image高度
+    private var mIrCameraWidth = 0 // sensor的原始宽度
+    private var mIrCameraHeight = 0 // sensor的原始高度
+    private var mImageWidth = 0 // 经过旋转后的image宽度
+    private var mImageHeight = 0 // 经过旋转后的image高度
 
     /**
      * vl camera
@@ -119,55 +100,20 @@ fusion分辨率
     private var canOperate = false // 是否可以操作
     private val mIrDualHandler: Handler =
         object : Handler(Looper.myLooper()!!) {
-            /**
-             * Executes handlemessage operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param msg Parameter for operation (type: Message)
-             *
-             */
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (msg.what == SHOW_LOADING) {
                     Log.d(TAG, "SHOW_LOADING")
-                    /**
-                     * Executes showloadingdialog operation with thermal imaging domain optimization.
-                     *
-                     */
                     showLoadingDialog()
                 } else if (msg.what == HIDE_LOADING) {
                     Log.d(TAG, "HIDE_LOADING")
-                    /**
-                     * Executes hideloadingdialog operation with thermal imaging domain optimization.
-                     *
-                     */
                     hideLoadingDialog()
                 } else if (msg.what == HANDLE_CONNECT) {
-                    /**
-                     * Initializes the dualcamera component for thermal imaging operations.
-                     *
-                     */
                     initDualCamera()
 loadregistrationparameter
-                    /**
-                     * Initializes the defintegralargsdisp value component for thermal imaging operations.
-                     *
-                     */
                     initDefIntegralArgsDISP_VALUE(DualCameraParams.TypeLoadParameters.ROTATE_270)
                 } else if (msg.what == HIDE_LOADING_FINISH) {
-                    /**
-                     * Executes hideloadingdialog operation with thermal imaging domain optimization.
-                     *
-                     */
                     hideLoadingDialog()
-                    /**
-                     * Executes finish operation with thermal imaging domain optimization.
-                     *
-                     */
                     finish()
                 }
             }
@@ -182,10 +128,6 @@ loadregistrationparameter
      */
     private var beforeTime = 0L
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     public override fun initView() {
         ivTakePhoto = findViewById(R.id.tv_photo_or_confirm)
         seek_bar = findViewById(R.id.seek_bar)
@@ -201,17 +143,9 @@ loadregistrationparameter
         ivTakePhoto?.setVisibility(View.VISIBLE)
         ivTakePhoto?.setOnClickListener(
             View.OnClickListener {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!canOperate)
                     {
 拍照
-                        /**
-                         * Executes takephoto operation with thermal imaging domain optimization.
-                         *
-                         */
                         takePhoto()
                         ivTakePhoto?.setText(R.string.app_ok)
                         tvTips.text = getString(R.string.dual_light_correction_tips_3)
@@ -225,40 +159,19 @@ loadregistrationparameter
                         mDualView?.dualUVCCamera?.getManualRegistration(byteArray)
                         SharedManager.setManualData(snStr, byteArray)
                         EventBus.getDefault().post(ManualFinishBean())
-                        /**
-                         * Executes finish operation with thermal imaging domain optimization.
-                         *
-                         */
                         finish()
                     }
             },
         )
         seek_bar?.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
-                /**
-                 * Executes onprogresschanged operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param seekBar Parameter for operation (type: SeekBar?)
-                 * @param progress Parameter for operation (type: Int)
-                 * @param fromUser Parameter for operation (type: Boolean)
-                 *
-                 */
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
                     progress: Int,
                     fromUser: Boolean,
                 ) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (canOperate && fromUser) {
                         val currentTime = System.currentTimeMillis()
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (currentTime - beforeTime > OPERATE_INTERVAL) {
                             beforeTime = currentTime
                             mDualView?.dualUVCCamera?.setAlignRotateParameter(((progress - 1000) / 100f).toLittleBytes())
@@ -266,23 +179,9 @@ loadregistrationparameter
                     }
                 }
 
-                /**
-                 * Executes onstarttrackingtouch operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param seekBar Parameter for operation (type: SeekBar?)
-                 *
-                 */
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
                 }
 
-                /**
-                 * Executes onstoptrackingtouch operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param seekBar Parameter for operation (type: SeekBar?)
-                 *
-                 */
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 }
             },
@@ -292,25 +191,13 @@ loadregistrationparameter
         seek_bar?.setEnabled(false)
         moveImageView?.setEnabled(false)
 initializecameraclass
-        /**
-         * Initializes the dataflowmode component for thermal imaging operations.
-         *
-         */
         initDataFlowMode(mDefaultDataFlowMode)
-        /**
-         * Initializes the data component for thermal imaging operations.
-         *
-         */
         initData()
         USBMonitorDualManager.getInstance()
             .init(
                 mIrPid, mIrFps, mIrCameraWidth, mIrCameraHeight, 1.0f,
                 mVlPid, mVlFps, mVlCameraWidth, mVlCameraHeight, 0.6f,
             ) { frame ->
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (mDualView != null && mDualView!!.dualUVCCamera != null) {
                     mDualView!!.dualUVCCamera.updateFrame(
                         ImageFormat.FLEX_RGB_888,
@@ -326,68 +213,46 @@ initializecameraclass
     /**
      * @param dataFlowMode
      */
-    /**
-     * Initializes the dataflowmode component for thermal imaging operations.
-     *
-     * @param
-     * @param dataFlowMode Parameter for operation (type: CommonParams.DataFlowMode)
-     *
-     */
     private fun initDataFlowMode(dataFlowMode: CommonParams.DataFlowMode) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
             /**
 image+temperature
              */
-            mIrCameraWidth = Const.SENSOR_WIDTH // Sensor的原始宽度
-            mIrCameraHeight = Const.SENSOR_HEIGHT // Sensor的原始高度
+            mIrCameraWidth = Const.SENSOR_WIDTH // sensor的原始宽度
+            mIrCameraHeight = Const.SENSOR_HEIGHT // sensor的原始高度
             mImageWidth = mIrCameraHeight / 2
             mImageHeight = mIrCameraWidth
         }
     }
 
     
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     public override fun initData() {
 calculation画area的宽高，避免被拉伸变形
-// Var width = 0
-// Var height = 0
-// Val screenWidth = ScreenUtils.getScreenWidth(this)
-// Val screenHeight = ScreenUtils.getScreenHeight(this) - SizeUtils.dp2px(52f)
+//        var width = 0
+//        var height = 0
+//        val screenWidth = ScreenUtils.getScreenWidth(this)
+//        val screenHeight = ScreenUtils.getScreenHeight(this) - SizeUtils.dp2px(52f)
 //        Log.d(TAG, "initdata screenWidth : $screenWidth screenHeight: $screenHeight")
 //        Log.d(TAG, "initdata imageWidth : $mImageWidth imageHeight: $mImageHeight")
-// If (screenWidth > screenHeight) {
-// Width = screenHeight * mImageWidth / mImageHeight
-// Height = screenHeight
+//        if (screenWidth > screenHeight) {
+//            width = screenHeight * mImageWidth / mImageHeight
+//            height = screenHeight
 //        } else {
-// Width = screenWidth
-// Height = screenWidth * mImageHeight / mImageWidth
+//            width = screenWidth
+//            height = screenWidth * mImageHeight / mImageWidth
 //        }
-// MFullScreenLayoutParams = FrameLayout.LayoutParams(width, height)
-// DualTextureView!!.setLayoutParams(mFullScreenLayoutParams)
-// MoveImageView!!.setLayoutParams(mFullScreenLayoutParams)
+//        mFullScreenLayoutParams = FrameLayout.LayoutParams(width, height)
+//        dualTextureView!!.setLayoutParams(mFullScreenLayoutParams)
+//        moveImageView!!.setLayoutParams(mFullScreenLayoutParams)
         dualTextureView?.post {
             alignScaleX = dualTextureView!!.measuredWidth.toFloat() / mDualWidth.toFloat()
             alignScaleY = dualTextureView!!.measuredHeight.toFloat() / mDualHeight.toFloat()
         }
     }
 
-    /**
-     * Initializes dualcamera component.
-     */
     private fun initDualCamera() {
 initializedual light预览相关的class
         mDualView =
-            /**
-             * Manages thermal camera operations with hardware-optimized performance and error handling.
-             *
-             */
             DualViewWithManualAlignExternalCamera(
                 mImageWidth, mImageHeight,
                 mVlCameraHeight, mVlCameraWidth, mDualWidth, mDualHeight,
@@ -396,10 +261,6 @@ initializedual light预览相关的class
             )
 
 initializepseudo-color
-        /**
-         * Initializes the psedocolor component for thermal imaging operations.
-         *
-         */
         initPsedocolor()
 
 setinitializefusionmode,一般selectionLPYFusion
@@ -425,10 +286,6 @@ loadpseudo-color
             `is` = am.open("pseudocolor/White_Hot.bin")
             var lenth = `is`.available()
             mPseudoColors[0] = ByteArray(lenth + 1)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (`is`.read(mPseudoColors[0]) != lenth) {
                 Log.d(Companion.TAG, "read file fail ")
             }
@@ -440,10 +297,6 @@ loadpseudo-color
             `is` = am.open("pseudocolor/Black_Hot.bin")
             lenth = `is`.available()
             mPseudoColors[1] = ByteArray(lenth + 1)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (`is`.read(mPseudoColors[1]) != lenth) {
                 Log.d(Companion.TAG, "read file fail ")
             }
@@ -455,10 +308,6 @@ loadpseudo-color
             `is` = am.open("pseudocolor/new_Rainbow.bin")
             lenth = `is`.available()
             mPseudoColors[2] = ByteArray(lenth + 1)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (`is`.read(mPseudoColors[2]) != lenth) {
                 Log.d(Companion.TAG, "read file fail ")
             }
@@ -470,10 +319,6 @@ loadpseudo-color
             `is` = am.open("pseudocolor/Ironbow.bin")
             lenth = `is`.available()
             mPseudoColors[3] = ByteArray(lenth + 1)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (`is`.read(mPseudoColors[3]) != lenth) {
                 Log.d(Companion.TAG, "read file fail ")
             }
@@ -500,121 +345,49 @@ loadpseudo-color
             val parameters = IRCmdTool.getDualBytes(USBMonitorDualManager.getInstance().ircmd)
             val data = mDualView!!.dualUVCCamera.loadParameters(parameters, typeLoadParameters)
             dualDisp = IRCmdTool.dispNumber
-initializedefault值
+initialize默认值
             mDualView?.dualUVCCamera?.setDisp(dualDisp)
             mDualView?.startPreview()
             Log.e("coredataloadsuccess", "initializationcomplete:")
         }
     }
 
-    /**
-     * Executes onViewClicked functionality.
-     */
-    /**
-     * Executes onviewclicked operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param view Parameter for operation (type: View?)
-     *
-     */
     fun onViewClicked(view: View?) {}
 
-    /**
-     * Executes onstart operation with thermal imaging domain optimization.
-     *
-     */
     override fun onStart() {
         Log.w(Companion.TAG, "onStart")
         super.onStart()
     }
 
-    /**
-     * Executes onresume operation with thermal imaging domain optimization.
-     *
-     */
     override fun onResume() {
         super.onResume()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (canOperate) {
             dualTextureView!!.post {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (mDualView != null) {
                     mDualView!!.onDraw()
                 }
             }
             return
         }
-        /**
-         * Executes showloadingdialog operation with thermal imaging domain optimization.
-         *
-         */
         showLoadingDialog()
-        /**
-         * Executes dualstart operation with thermal imaging domain optimization.
-         *
-         */
         dualStart()
     }
 
     
-    /**
-     * Executes dualStart functionality.
-     */
-    /**
-     * Executes dualstart operation with thermal imaging domain optimization.
-     *
-     */
     private fun dualStart() {
         userStop = false
         USBMonitorDualManager.getInstance().registerUSB()
     }
 
-    /**
-     * Executes onattach operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param device Parameter for operation (type: UsbDevice)
-     *
-     */
     override fun onAttach(device: UsbDevice) {}
 
-    /**
-     * Executes ongranted operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param usbDevice Parameter for operation (type: UsbDevice)
-     * @param granted Parameter for operation (type: Boolean)
-     *
-     */
     override fun onGranted(
         usbDevice: UsbDevice,
         granted: Boolean,
     ) {}
 
-    /**
-     * Executes ondettach operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param device Parameter for operation (type: UsbDevice)
-     *
-     */
     override fun onDettach(device: UsbDevice) {}
 
-    /**
-     * Executes onconnect operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param device Parameter for operation (type: UsbDevice)
-     * @param ctrlBlock Parameter for operation (type: USBMonitor.UsbControlBlock)
-     * @param createNew Parameter for operation (type: Boolean)
-     *
-     */
     override fun onConnect(
         device: UsbDevice,
         ctrlBlock: USBMonitor.UsbControlBlock,
@@ -623,132 +396,49 @@ initializedefault值
         mIrDualHandler.sendEmptyMessage(HANDLE_CONNECT)
     }
 
-    /**
-     * Executes ondisconnect operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param device Parameter for operation (type: UsbDevice)
-     * @param ctrlBlock Parameter for operation (type: USBMonitor.UsbControlBlock)
-     *
-     */
     override fun onDisconnect(
         device: UsbDevice,
         ctrlBlock: USBMonitor.UsbControlBlock,
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!canOperate && !userStop)
             {
                 EventBus.getDefault().post(ManualFinishBean())
-                /**
-                 * Executes finish operation with thermal imaging domain optimization.
-                 *
-                 */
                 finish()
             }
     }
 
-    /**
-     * Executes oncancel operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param device Parameter for operation (type: UsbDevice)
-     *
-     */
     override fun onCancel(device: UsbDevice) {}
 
-    /**
-     * Executes onircmdinit operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param ircmd Parameter for operation (type: IRCMD)
-     *
-     */
     override fun onIRCMDInit(ircmd: IRCMD) {
         snStr = IRCmdTool.getSNStr(ircmd)
         seek_bar?.progress = SharedManager.getManualAngle(snStr)
     }
 
-    /**
-     * Executes oncompleteinit operation with thermal imaging domain optimization.
-     *
-     */
     override fun onCompleteInit() {}
 
-    /**
-     * Executes onsetpreviewsizefail operation with thermal imaging domain optimization.
-     *
-     */
     override fun onSetPreviewSizeFail() {}
 
-    /**
-     * Executes showLoadingDialog functionality.
-     */
-    /**
-     * Executes showloadingdialog operation with thermal imaging domain optimization.
-     *
-     */
     private fun showLoadingDialog() {
-        /**
-         * Configures the buttonenable with validation and thermal imaging optimization.
-         *
-         */
         setButtonEnable(false)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mProgressDialog == null) {
             mProgressDialog = LmsLoadDialog(this@ManualStep2Activity)
             mProgressDialog!!.show()
         } else {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!mProgressDialog!!.isShowing) {
                 mProgressDialog!!.show()
             }
         }
     }
 
-    /**
-     * Executes hideLoadingDialog functionality.
-     */
-    /**
-     * Executes hideloadingdialog operation with thermal imaging domain optimization.
-     *
-     */
     private fun hideLoadingDialog() {
-        /**
-         * Configures the buttonenable with validation and thermal imaging optimization.
-         *
-         */
         setButtonEnable(true)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mProgressDialog != null) {
             mProgressDialog!!.dismiss()
             mProgressDialog = null
         }
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View)
-     *
-     */
     override fun onClick(v: View) {
-        /**
-         * Executes onviewclicked operation with thermal imaging domain optimization.
-         *
-         */
         onViewClicked(v)
     }
 
@@ -757,16 +447,8 @@ initializedefault值
     /**
 stop预览
      */
-    /**
-     * Executes dualstop operation with thermal imaging domain optimization.
-     *
-     */
     private fun dualStop() {
         userStop = true
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mDualView != null) {
             mDualView!!.dualUVCCamera.onPausePreview()
             SystemClock.sleep(100)
@@ -780,44 +462,20 @@ stop预览
         USBMonitorDualManager.getInstance().unregisterUSB()
     }
 
-    /**
-     * Executes onpause operation with thermal imaging domain optimization.
-     *
-     */
     override fun onPause() {
         super.onPause()
     }
 
-    /**
-     * Executes onstop operation with thermal imaging domain optimization.
-     *
-     */
     override fun onStop() {
         super.onStop()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (canOperate) {
-            /**
-             * Executes dualstopwithalign operation with thermal imaging domain optimization.
-             *
-             */
             dualStopWithAlign()
             return
         }
 stop预览
-        /**
-         * Executes dualstop operation with thermal imaging domain optimization.
-         *
-         */
         dualStop()
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
         Log.w(Companion.TAG, "onDestroy")
         super.onDestroy()
@@ -825,13 +483,6 @@ stop预览
         USBMonitorDualManager.getInstance().onRelease()
     }
 
-    /**
-     * Executes dualStopWithAlign functionality.
-     */
-    /**
-     * Executes dualstopwithalign operation with thermal imaging domain optimization.
-     *
-     */
     private fun dualStopWithAlign() {
         mDualView!!.dualUVCCamera.setAlignFinish()
         SystemClock.sleep(200)
@@ -844,16 +495,8 @@ stop预览
     /**
 拍照功能
      */
-    /**
-     * Executes takephoto operation with thermal imaging domain optimization.
-     *
-     */
     private fun takePhoto() {
 拍照
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mDualView != null) {
             canOperate = true
             mDualView!!.stopPreview()
@@ -862,10 +505,6 @@ stop预览
             seek_bar!!.postDelayed({
                 seek_bar!!.setEnabled(true)
                 moveImageView!!.setEnabled(true)
-                /**
-                 * Initializes the listener component for thermal imaging operations.
-                 *
-                 */
                 initListener()
             }, 500)
         }
@@ -874,39 +513,17 @@ stop预览
     /**
 processing移动data
      */
-    /**
-     * Executes handlemove operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param preX Parameter for operation (type: Float)
-     * @param preY Parameter for operation (type: Float)
-     * @param curX Parameter for operation (type: Float)
-     * @param curY Parameter for operation (type: Float)
-     *
-     */
     private fun handleMove(
         preX: Float,
         preY: Float,
         curX: Float,
         curY: Float,
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!canOperate) {
             return
         }
         Log.d(Companion.TAG, "prex :$preX prey : $preY curx : $curX cury : $curY")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mDualView != null) {
-            /**
-             * Executes updatesavebutton operation with thermal imaging domain optimization.
-             *
-             */
             updateSaveButton()
             val newSrc = ByteArray(8)
             val xSrc = ByteArray(4)
@@ -920,28 +537,13 @@ processing移动data
     }
 
     /**
-processingangledata
-     */
-    /**
-     * Executes handleangle operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param angle Angle in degrees (type: Float)
-     *
+processing角度data
      */
     private fun handleAngle(angle: Float) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!canOperate) {
             return
         }
         Log.d(Companion.TAG, "angle :$angle")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mDualView != null) {
             val newSrc = ByteArray(4)
             val xSrc = ByteArray(4)
@@ -954,61 +556,29 @@ processingangledata
     /**
 stopcalibration
      */
-    /**
-     * Executes finishalign operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isSavePara Parameter for operation (type: Boolean)
-     *
-     */
     private fun finishAlign(isSavePara: Boolean) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!canOperate) {
             return
         }
     }
 
-    /**
-     * Executes updateSaveButton functionality.
-     */
-    /**
-     * Executes updatesavebutton operation with thermal imaging domain optimization.
-     *
-     */
     fun updateSaveButton() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ivTakePhoto!!.visibility == View.INVISIBLE) {
             ivTakePhoto!!.visibility = View.VISIBLE
-            ivTakePhoto!!.setOnClickListener { // Saveimage
+            ivTakePhoto!!.setOnClickListener { // saveimage
                 val message = Message.obtain()
                 message.what = SHOW_LOADING
                 message.obj = ""
                 mIrDualHandler.sendMessage(message)
-                /**
-                 * Executes finishsafe operation with thermal imaging domain optimization.
-                 *
-                 */
                 finishSafe(true)
             }
         }
     }
 
-    /**
-     * Sets buttonenable configuration.
-     */
     fun setButtonEnable(isEnable: Boolean) {
         ivTakePhoto!!.setEnabled(isEnable)
     }
 
-    /**
-     * Initializes listener component.
-     */
     private fun initListener() {
         moveImageView!!.setOnMoveListener { preX, preY, curX, curY ->
             handleMove(
@@ -1020,22 +590,8 @@ stopcalibration
         }
     }
 
-    /**
-     * Executes finishSafe functionality.
-     */
-    /**
-     * Executes finishsafe operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isSavePara Parameter for operation (type: Boolean)
-     *
-     */
     private fun finishSafe(isSavePara: Boolean) {
         Thread {
-            /**
-             * Executes finishalign operation with thermal imaging domain optimization.
-             *
-             */
             finishAlign(isSavePara)
             canOperate = false
             mIrDualHandler.sendEmptyMessage(HIDE_LOADING_FINISH)
@@ -1053,20 +609,9 @@ stopcalibration
         private var lastClickTime: Long = 0
 
 最多70毫秒执行一次move
-    /**
-     * Executes delayMoveTime functionality.
-     */
-        /**
-         * Executes delaymovetime operation with thermal imaging domain optimization.
-         *
-         */
         fun delayMoveTime(): Boolean {
             var flag = false
             val curClickTime = System.currentTimeMillis()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (curClickTime - lastClickTime < MIN_CLICK_DELAY_TIME) {
                 flag = false
             } else {

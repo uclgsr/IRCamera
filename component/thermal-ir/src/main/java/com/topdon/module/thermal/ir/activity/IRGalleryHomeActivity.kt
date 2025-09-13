@@ -19,46 +19,17 @@ import com.topdon.module.thermal.ir.viewmodel.IRGalleryTabViewModel
  * Created by LCG on 2024/2/22.
  */
 // Legacy ARouter route annotation - now using NavigationManager
-/**
- * Specialized thermal imaging component providing IRGalleryHomeActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class IRGalleryHomeActivity : BaseActivity() {
     private var isTS004Remote = false
 
     private val viewModel: IRGalleryTabViewModel by viewModels()
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView(): Int = R.layout.activity_ir_gallery_home
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isTS004Remote = intent.getIntExtra(ExtraKeyConfig.DIR_TYPE, 0) == DirType.TS004_REMOTE.ordinal
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (savedInstanceState == null) {
             val bundle = Bundle()
             bundle.putBoolean(ExtraKeyConfig.CAN_SWITCH_DIR, false)
@@ -73,10 +44,6 @@ class IRGalleryHomeActivity : BaseActivity() {
 
         val callback =
             object : OnBackPressedCallback(true) {
-                /**
-                 * Executes handleonbackpressed operation with thermal imaging domain optimization.
-                 *
-                 */
                 override fun handleOnBackPressed() {
                     viewModel.isEditModeLD.value = false
                 }
@@ -88,24 +55,12 @@ class IRGalleryHomeActivity : BaseActivity() {
         }
     }
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
         super.onDestroy()
     }

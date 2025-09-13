@@ -10,15 +10,15 @@ import com.blankj.utilcode.util.CollectionUtils
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
 // Removed house module imports - module removed as unused
-// Import com.topdon.house.activity.SignInputActivity
-// Import com.topdon.house.event.HouseReportAddEvent
-// Import com.topdon.house.util.PDFUtil
-// Import com.topdon.house.viewmodel.DetectViewModel
-// Import com.topdon.house.viewmodel.ReportViewModel
-// Import com.topdon.lib.core.bean.HouseRepPreviewAlbumItemBean
-// Import com.topdon.lib.core.bean.HouseRepPreviewBean
-// Import com.topdon.lib.core.bean.HouseRepPreviewItemBean
-// Import com.topdon.lib.core.bean.HouseRepPreviewProjectItemBean
+// import com.topdon.house.activity.SignInputActivity
+// import com.topdon.house.event.HouseReportAddEvent
+// import com.topdon.house.util.PDFUtil
+// import com.topdon.house.viewmodel.DetectViewModel
+// import com.topdon.house.viewmodel.ReportViewModel
+// import com.topdon.lib.core.bean.HouseRepPreviewAlbumItemBean
+// import com.topdon.lib.core.bean.HouseRepPreviewBean
+// import com.topdon.lib.core.bean.HouseRepPreviewItemBean
+// import com.topdon.lib.core.bean.HouseRepPreviewProjectItemBean
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.db.AppDatabase
 import com.topdon.lib.core.db.entity.HouseReport
@@ -84,27 +84,15 @@ data class HouseRepPreviewAlbumItemBean(
 - [ExtraKeyConfig.IS_REPORT] - true-查看report即查看 false-查看检测即生成
 - [ExtraKeyConfig.LONG_ID] - 房屋检测Id(生成时)  房屋reportId(查看时）
  */
+// Legacy ARouter route annotation - now using NavigationManager
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ReportPreviewActivity display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Report preview activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
  */
 class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
     // Disabled - ViewModels from removed house module
-    // Private val detectViewModel: DetectViewModel by viewModels()
-    // Private val reportViewModel: ReportViewModel by viewModels()
+    // private val detectViewModel: DetectViewModel by viewModels()
+    // private val reportViewModel: ReportViewModel by viewModels()
 
     // View declarations
     private lateinit var tvSave: android.widget.TextView
@@ -135,16 +123,8 @@ true-查看report即查看 false-查看检测即生成
     private var houseReport = HouseReport()
     private var mPreviewBean: HouseRepPreviewBean? = null
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.activity_report_preview
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         // Initialize views
         tvSave = findViewById(R.id.tv_save)
@@ -168,10 +148,6 @@ true-查看report即查看 false-查看检测即生成
         tvCost = findViewById(R.id.tv_cost)
         rcyFloor = findViewById(R.id.rcy_floor)
 
-        /**
-         * Executes showloadingdialog operation with thermal imaging domain optimization.
-         *
-         */
         showLoadingDialog("")
         isReport = intent.getBooleanExtra(ExtraKeyConfig.IS_REPORT, false)
         tvSave.isEnabled = false
@@ -183,10 +159,6 @@ true-查看report即查看 false-查看检测即生成
         rlyInspectorSignature.setOnClickListener(this)
         rlyHouseOwnerSignature.setOnClickListener(this)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (clSign.isShown)
             {
                 val mAppBarChildAt: View = layAppbar.getChildAt(0)
@@ -195,61 +167,42 @@ true-查看report即查看 false-查看检测即生成
             }
 
         // Disabled - ViewModels from removed house module
-        // DetectViewModel.detectLD.observe(this) {
-        // TvSave.isEnabled = it != null
-        // If (it != null) {
-        // HouseReport = it.toHouseReport()
-        // MPreviewBean = convertDataModel(houseReport)
-        // SetAdapter()
+        // detectViewModel.detectLD.observe(this) {
+        //     tvSave.isEnabled = it != null
+        //     if (it != null) {
+        //         houseReport = it.toHouseReport()
+        //         mPreviewBean = convertDataModel(houseReport)
+        //         setAdapter()
         //     }
-        // DismissLoadingDialog()
+        //     dismissLoadingDialog()
         // }
-        // ReportViewModel.reportLD.observe(this) {
-        // TvSave.isEnabled = it != null
-        // If (it != null) {
-        // HouseReport = it
-        // MPreviewBean = convertDataModel(it)
-        // SetAdapter()
+        // reportViewModel.reportLD.observe(this) {
+        //     tvSave.isEnabled = it != null
+        //     if (it != null) {
+        //         houseReport = it
+        //         mPreviewBean = convertDataModel(it)
+        //         setAdapter()
         //     }
-        // DismissLoadingDialog()
+        //     dismissLoadingDialog()
         // }
 
         // Disabled - ViewModels from removed house module
-/**
- * Executes if operation with thermal imaging domain optimization.
- *
- */
-if (isReport) {// 查看report
-        // ReportViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
-} else {// 生成report
-        // DetectViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
+if (isReport) {//查看report
+        //     reportViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
+} else {//生成report
+        //     detectViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
         // }
 
         // Temporary stub - disable save functionality without ViewModels
         tvSave.isEnabled = false
-        /**
-         * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-         *
-         */
         dismissLoadingDialog()
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        /**
-         * Configures the avatorchange with validation and thermal imaging optimization.
-         *
-         */
         setAvatorChange()
     }
 
-    /**
-     * Sets avatorchange configuration.
-     */
     private fun setAvatorChange() {
         layAppbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
 verticalOffset始终为0以下的负数
@@ -258,17 +211,6 @@ verticalOffset始终为0以下的负数
         }
     }
 
-    /**
-     * Changes alpha settings.
-     */
-    /**
-     * Updates the alpha configuration with real-time thermal imaging support.
-     *
-     * @param
-     * @param color Parameter for operation (type: Int)
-     * @param fraction Parameter for operation (type: Float)
-     *
-     */
     private fun changeAlpha(
         color: Int,
         fraction: Float,
@@ -280,84 +222,49 @@ verticalOffset始终为0以下的负数
         return Color.argb(alpha, red, green, blue)
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
             toolbarBackImg -> {
-                /**
-                 * Executes finish operation with thermal imaging domain optimization.
-                 *
-                 */
                 finish()
             }
 
             rlyInspectorSignature -> {
                 // Disabled - SignInputActivity from removed house module
-                // Var intent = Intent(this, SignInputActivity::class.java)
-                // Intent.putExtra(ExtraKeyConfig.IS_PICK_INSPECTOR, true)
-                // StartActivityForResult(intent, 1000)
+                // var intent = Intent(this, SignInputActivity::class.java)
+                // intent.putExtra(ExtraKeyConfig.IS_PICK_INSPECTOR, true)
+                // startActivityForResult(intent, 1000)
             }
 
             rlyHouseOwnerSignature -> {
                 // Disabled - SignInputActivity from removed house module
-                // Var intent = Intent(this, SignInputActivity::class.java)
-                // Intent.putExtra(ExtraKeyConfig.IS_PICK_INSPECTOR, false)
-                // StartActivityForResult(intent, 1001)
+                // var intent = Intent(this, SignInputActivity::class.java)
+                // intent.putExtra(ExtraKeyConfig.IS_PICK_INSPECTOR, false)
+                // startActivityForResult(intent, 1001)
             }
 
             tvSave -> {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isReport) { // 分享
                     lifecycleScope.launch {
-                        /**
-                         * Executes showloadingdialog operation with thermal imaging domain optimization.
-                         *
-                         */
                         showLoadingDialog()
                         // Disabled - PDFUtil from removed house module
                         // PDFUtil.delAllPDF(this@ReportPreviewActivity)
-                        // Val pdfUri: Uri? = PDFUtil.savePDF(this@ReportPreviewActivity, houseReport)
-                        /**
-                         * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-                         *
-                         */
+                        // val pdfUri: Uri? = PDFUtil.savePDF(this@ReportPreviewActivity, houseReport)
                         dismissLoadingDialog()
 
                         // Disabled PDF functionality - house module removed
                         TToast.shortToast(this@ReportPreviewActivity, "PDF sharing disabled - house module removed")
 
                         // Original PDF sharing code commented out:
-                        // If (pdfUri != null) {
-                        // Val shareIntent = Intent()
-                        // ShareIntent.action = Intent.ACTION_SEND
-                        // ShareIntent.putExtra(Intent.EXTRA_STREAM, pdfUri)
-                        // ShareIntent.type = "application/pdf"
-                        // StartActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
+                        // if (pdfUri != null) {
+                        //     val shareIntent = Intent()
+                        //     shareIntent.action = Intent.ACTION_SEND
+                        //     shareIntent.putExtra(Intent.EXTRA_STREAM, pdfUri)
+                        //     shareIntent.type = "application/pdf"
+                        //     startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
                         // }
                     }
                 } else { // 定稿并save
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (houseReport.inspectorWhitePath.isEmpty() || houseReport.houseOwnerWhitePath.isEmpty()) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (clSign.bottom + layAppbar.height > llSave.top) {
                             layAppbar.setExpanded(false, true)
                             scrollView.smoothScrollTo(0, clSign.top)
@@ -365,10 +272,6 @@ verticalOffset始终为0以下的负数
                         TToast.shortToast(this, R.string.pdf_sign_tips)
                         return
                     }
-                    /**
-                     * Executes showloadingdialog operation with thermal imaging domain optimization.
-                     *
-                     */
                     showLoadingDialog("")
                     lifecycleScope.launch(Dispatchers.IO) {
                         val currentTime = System.currentTimeMillis()
@@ -376,18 +279,10 @@ verticalOffset始终为0以下的负数
                         houseReport.updateTime = currentTime
                         AppDatabase.getInstance().houseReportDao().insert(houseReport)
                         lifecycleScope.launch(Dispatchers.Main) {
-                            /**
-                             * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-                             *
-                             */
                             dismissLoadingDialog()
                             TToast.shortToast(this@ReportPreviewActivity, R.string.pdf_saved_tips)
                             // Disabled - HouseReportAddEvent from removed house module
                             // EventBus.getDefault().post(HouseReportAddEvent())
-                            /**
-                             * Executes finish operation with thermal imaging domain optimization.
-                             *
-                             */
                             finish()
                         }
                     }
@@ -396,32 +291,15 @@ verticalOffset始终为0以下的负数
         }
     }
 
-    /**
-     * Executes onactivityresult operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param requestCode Parameter for operation (type: Int)
-     * @param resultCode Parameter for operation (type: Int)
-     * @param data Parameter for operation (type: Intent?)
-     *
-     */
     override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,
         data: Intent?,
     ) {
         super.onActivityResult(requestCode, resultCode, data)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (resultCode == RESULT_OK) {
             val whitePath = data?.getStringExtra(ExtraKeyConfig.RESULT_PATH_WHITE) ?: return
             val blackPath = data.getStringExtra(ExtraKeyConfig.RESULT_PATH_BLACK) ?: return
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (requestCode) {
                 1000 -> {
 检测师签名
@@ -440,16 +318,6 @@ verticalOffset始终为0以下的负数
         }
     }
 
-    /**
-     * Executes convertDataModel functionality.
-     */
-    /**
-     * Executes convertdatamodel operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param houseReport Parameter for operation (type: HouseReport)
-     *
-     */
     private fun convertDataModel(houseReport: HouseReport): HouseRepPreviewBean {
         var houseRepPreviewBean = HouseRepPreviewBean()
         houseRepPreviewBean.housePhoto = houseReport.imagePath
@@ -459,22 +327,10 @@ verticalOffset始终为0以下的负数
             "${getString(R.string.detect_time)}${": "}${TimeTool.formatDetectTime(houseReport.detectTime)}"
         houseRepPreviewBean.inspectorName = houseReport.inspectorName
         houseRepPreviewBean.houseYear =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (houseReport.year == null) "--" else "${houseReport.year?.toString()}${getString(R.string.year)}"
         houseRepPreviewBean.houseArea =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (houseReport.houseSpace.isEmpty()) "--" else "${houseReport.houseSpace} ${houseReport.getSpaceUnitStr()}"
         houseRepPreviewBean.expenses =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (houseReport.cost.isEmpty()) "--" else "${resources.getStringArray(R.array.currency)[houseReport.costUnit]} ${houseReport.cost}"
         houseRepPreviewBean.itemBeans = ArrayList<HouseRepPreviewItemBean>()
         houseReport.dirList.forEachIndexed { _, dirReport ->
@@ -489,54 +345,30 @@ verticalOffset始终为0以下的负数
                 projectItemBean.projectName = itemReport.itemName
                 projectItemBean.state = itemReport.state.toString()
                 projectItemBean.remark = itemReport.inputText
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (itemReport.state > 0 || itemReport.inputText.isNotEmpty()) {
                     itemBean.projectItemBeans?.add(projectItemBean)
                 }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (itemReport.getImageSize() > 0) {
                     var albumItemBean: HouseRepPreviewAlbumItemBean? = null
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (itemReport.image1.isNotEmpty()) {
                         albumItemBean = HouseRepPreviewAlbumItemBean()
                         albumItemBean.photoPath = itemReport.image1
                         albumItemBean.title = itemReport.itemName
                         itemBean.albumItemBeans?.add(albumItemBean)
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (itemReport.image2.isNotEmpty()) {
                         albumItemBean = HouseRepPreviewAlbumItemBean()
                         albumItemBean.photoPath = itemReport.image2
                         albumItemBean.title = itemReport.itemName
                         itemBean.albumItemBeans?.add(albumItemBean)
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (itemReport.image3.isNotEmpty()) {
                         albumItemBean = HouseRepPreviewAlbumItemBean()
                         albumItemBean.photoPath = itemReport.image3
                         albumItemBean.title = itemReport.itemName
                         itemBean.albumItemBeans?.add(albumItemBean)
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (itemReport.image4.isNotEmpty()) {
                         albumItemBean = HouseRepPreviewAlbumItemBean()
                         albumItemBean.photoPath = itemReport.image4
@@ -551,17 +383,9 @@ verticalOffset始终为0以下的负数
                     CollectionUtils.isEmpty(
                         itemBean.albumItemBeans,
                     )
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (CollectionUtils.isNotEmpty(itemBean.projectItemBeans)) {
                 itemBean.projectItemBeans?.add(0, HouseRepPreviewProjectItemBean())
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isEmpty) {
                 houseRepPreviewBean.itemBeans?.add(itemBean)
             }
@@ -571,9 +395,6 @@ verticalOffset始终为0以下的负数
         return houseRepPreviewBean
     }
 
-    /**
-     * Sets adapter configuration.
-     */
     private fun setAdapter() {
         mPreviewBean?.let {
             Glide.with(this).load(it.housePhoto).into(ivHeaderBg)
@@ -587,10 +408,6 @@ verticalOffset始终为0以下的负数
 
             rcyFloor.layoutManager = LinearLayoutManager(this)
             val reportPreviewAdapter =
-                /**
-                 * Executes reportpreviewadapter operation with thermal imaging domain optimization.
-                 *
-                 */
                 ReportPreviewAdapter(
                     this,
                     it.itemBeans?.map { itemBean ->

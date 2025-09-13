@@ -17,20 +17,6 @@ import com.energy.iruvc.usb.USBMonitor;
  * @UpdateRemark:
  * @Version: 1.0.0
  */
-/**
- * Specialized thermal imaging component providing OnUSBConnectListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public interface OnUSBConnectListener {
 
     void onAttach(UsbDevice device);

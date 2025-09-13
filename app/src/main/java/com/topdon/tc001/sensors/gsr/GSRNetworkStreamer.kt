@@ -27,20 +27,6 @@ import java.util.concurrent.atomic.AtomicLong
  *
  * @author IRCamera Android Sensor Node (Spoke) - Hub-Spoke Integration
  */
-/**
- * Specialized thermal imaging component providing GSRNetworkStreamer functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class GSRNetworkStreamer(
     private val context: Context,
     private val sessionId: String,
@@ -86,52 +72,24 @@ class GSRNetworkStreamer(
                 Log.i(TAG, "Initializing GSR network streamer for session: $sessionId")
 
                 networkClient =
-                    /**
-                     * Executes enhancednetworkclient operation with thermal imaging domain optimization.
-                     *
-                     */
                     EnhancedNetworkClient(context).apply {
                         // Set connection parameters for GSR streaming
-                        /**
-                         * Configures the connectiontimeout with validation and thermal imaging optimization.
-                         *
-                         */
                         setConnectionTimeout(10000)
-                        /**
-                         * Configures the heartbeatinterval with validation and thermal imaging optimization.
-                         *
-                         */
                         setHeartbeatInterval(HEARTBEAT_INTERVAL_MS)
-                        /**
-                         * Configures the compressionenabled with validation and thermal imaging optimization.
-                         *
-                         */
                         setCompressionEnabled(true)
                     }
 
                 // Connect to PC hub
                 val connected = networkClient?.connect() ?: false
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!connected) {
                     Log.e(TAG, "Failed to connect to PC hub")
                     return@withContext false
                 }
 
                 // Perform initial time synchronization
-                /**
-                 * Executes performtimesync operation with thermal imaging domain optimization.
-                 *
-                 */
                 performTimeSync()
 
                 // Register GSR stream with hub
-                /**
-                 * Executes registergsrstream operation with thermal imaging domain optimization.
-                 *
-                 */
                 registerGSRStream()
 
                 Log.i(TAG, "GSR network streamer initialized successfully")
@@ -159,30 +117,18 @@ class GSRNetworkStreamer(
             // Start streaming job
             streamingJob =
                 streamingScope.launch {
-                    /**
-                     * Executes streamgsrdata operation with thermal imaging domain optimization.
-                     *
-                     */
                     streamGSRData()
                 }
 
             // Start heartbeat job
             heartbeatJob =
                 streamingScope.launch {
-                    /**
-                     * Executes sendheartbeats operation with thermal imaging domain optimization.
-                     *
-                     */
                     sendHeartbeats()
                 }
 
             // Start quality reporting job
             qualityReportingJob =
                 streamingScope.launch {
-                    /**
-                     * Executes reportqualitymetrics operation with thermal imaging domain optimization.
-                     *
-                     */
                     reportQualityMetrics()
                 }
 
@@ -198,15 +144,7 @@ class GSRNetworkStreamer(
     /**
      * Stop streaming GSR data
      */
-    /**
-     * Executes stopstreaming operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun stopStreaming(): Boolean {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!_isStreaming.get()) {
             return true
         }
@@ -220,17 +158,9 @@ class GSRNetworkStreamer(
             qualityReportingJob?.cancel()
 
             // Send final batch of buffered data
-            /**
-             * Executes flushbuffer operation with thermal imaging domain optimization.
-             *
-             */
             flushBuffer()
 
             // Send stream end notification
-            /**
-             * Executes sendstreamendnotification operation with thermal imaging domain optimization.
-             *
-             */
             sendStreamEndNotification()
 
             Log.i(TAG, "GSR streaming stopped for session: $sessionId")
@@ -259,10 +189,6 @@ class GSRNetworkStreamer(
             sampleBuffer.offer(syncedSample)
 
             // Prevent buffer overflow
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (sampleBuffer.size > BUFFER_SIZE) {
                 sampleBuffer.poll() // Remove oldest sample
                 Log.w(TAG, "GSR sample buffer overflow, dropping oldest sample")
@@ -275,54 +201,22 @@ class GSRNetworkStreamer(
     /**
      * Main streaming coroutine
      */
-    /**
-     * Executes streamgsrdata operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun streamGSRData() {
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (_isStreaming.get()) {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sampleBuffer.size >= BATCH_SIZE || shouldFlushBuffer()) {
-                    /**
-                     * Executes sendbatch operation with thermal imaging domain optimization.
-                     *
-                     */
                     sendBatch()
                 }
 
                 // Periodic time synchronization
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (System.currentTimeMillis() - lastSyncTime > syncInterval) {
-                    /**
-                     * Executes performtimesync operation with thermal imaging domain optimization.
-                     *
-                     */
                     performTimeSync()
                 }
 
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(STREAM_INTERVAL_MS)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in GSR streaming loop", e)
                 networkErrors.incrementAndGet()
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(1000) // Error recovery delay
             }
         }
@@ -335,30 +229,18 @@ class GSRNetworkStreamer(
         val batch = mutableListOf<GSRSample>()
 
         // Collect batch of samples
-        /**
-         * Executes repeat operation with thermal imaging domain optimization.
-         *
-         */
         repeat(BATCH_SIZE) {
             sampleBuffer.poll()?.let { sample ->
                 batch.add(sample)
             }
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (batch.isEmpty()) return
 
         try {
             val batchMessage = createBatchMessage(batch)
             val sent = networkClient?.sendMessage(batchMessage) ?: false
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (sent) {
                 samplesSent.addAndGet(batch.size.toLong())
                 bytesTransmitted.addAndGet(batchMessage.toString().length.toLong())
@@ -384,63 +266,19 @@ class GSRNetworkStreamer(
     private fun createBatchMessage(batch: List<GSRSample>): JSONObject {
         return JSONObject().apply {
             put("type", GSR_STREAM_TYPE)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("session_id", sessionId)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("timestamp", System.currentTimeMillis())
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("sample_count", batch.size)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put(
                 "samples",
                 org.json.JSONArray().apply {
                     batch.forEach { sample ->
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put(
-                            /**
-                             * Executes jsonobject operation with thermal imaging domain optimization.
-                             *
-                             */
                             JSONObject().apply {
-                                /**
-                                 * Executes put operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 put("timestamp", sample.timestamp)
-                                /**
-                                 * Executes put operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 put("gsr_value", sample.gsrValue)
-                                /**
-                                 * Executes put operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 put("raw_value", sample.rawValue)
-                                /**
-                                 * Executes put operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 put("quality", sample.quality)
-                                /**
-                                 * Executes put operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 put("device_id", sample.deviceId)
                             },
                         )
@@ -456,20 +294,8 @@ class GSRNetworkStreamer(
     private suspend fun performTimeSync() {
         try {
             val syncRequest =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("type", "time_sync_request")
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("client_timestamp", System.nanoTime())
                 }
 
@@ -499,30 +325,10 @@ class GSRNetworkStreamer(
         while (_isStreaming.get()) {
             try {
                 val heartbeat =
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("type", "heartbeat")
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("session_id", sessionId)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("timestamp", System.currentTimeMillis())
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("buffer_size", sampleBuffer.size)
                     }
 
@@ -531,10 +337,6 @@ class GSRNetworkStreamer(
                 Log.w(TAG, "Failed to send heartbeat", e)
             }
 
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(HEARTBEAT_INTERVAL_MS)
         }
     }
@@ -546,55 +348,15 @@ class GSRNetworkStreamer(
         while (_isStreaming.get()) {
             try {
                 val metrics =
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("type", "quality_metrics")
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("session_id", sessionId)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("timestamp", System.currentTimeMillis())
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("samples_sent", samplesSent.get())
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("samples_acknowledged", samplesAcknowledged.get())
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("bytes_transmitted", bytesTransmitted.get())
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("network_errors", networkErrors.get())
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("buffer_size", sampleBuffer.size)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("uptime_ms", System.currentTimeMillis() - startTime)
                     }
 
@@ -603,10 +365,6 @@ class GSRNetworkStreamer(
                 Log.w(TAG, "Failed to send quality metrics", e)
             }
 
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(QUALITY_REPORTING_INTERVAL_MS)
         }
     }
@@ -617,30 +375,10 @@ class GSRNetworkStreamer(
     private suspend fun registerGSRStream() {
         try {
             val registration =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("type", "stream_registration")
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("stream_type", GSR_STREAM_TYPE)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", sessionId)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put(
                         "device_id",
                         android.provider.Settings.Secure.getString(
@@ -648,15 +386,7 @@ class GSRNetworkStreamer(
                             android.provider.Settings.Secure.ANDROID_ID,
                         ),
                     )
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("sampling_rate", 128) // Hz
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("timestamp", System.currentTimeMillis())
                 }
 
@@ -673,40 +403,12 @@ class GSRNetworkStreamer(
     private suspend fun sendStreamEndNotification() {
         try {
             val endNotification =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("type", "stream_end")
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("stream_type", GSR_STREAM_TYPE)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", sessionId)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("total_samples", samplesSent.get())
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("total_bytes", bytesTransmitted.get())
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("timestamp", System.currentTimeMillis())
                 }
 
@@ -737,10 +439,6 @@ class GSRNetworkStreamer(
     /**
      * Get streaming statistics
      */
-    /**
-     * Retrieves the streamingstats with optimized performance for thermal imaging operations.
-     *
-     */
     fun getStreamingStats(): Map<String, Any> {
         return mapOf(
             "samples_sent" to samplesSent.get(),
@@ -756,15 +454,7 @@ class GSRNetworkStreamer(
     /**
      * Cleanup resources
      */
-    /**
-     * Executes cleanup operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun cleanup() {
-        /**
-         * Executes stopstreaming operation with thermal imaging domain optimization.
-         *
-         */
         stopStreaming()
         streamingScope.cancel()
         networkClient?.disconnect()

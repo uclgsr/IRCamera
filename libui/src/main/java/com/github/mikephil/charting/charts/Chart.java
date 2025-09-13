@@ -56,18 +56,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 /**
- * Specialized thermal imaging component providing Chart functionality for the IRCamera system.
+ * Baseclass of all Chart-Views.
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author Philipp Jahoda
  */
 public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Entry>>> extends
         ViewGroup
@@ -215,22 +206,18 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     protected void init() {
 
         setWillNotDraw(false);
-        // SetLayerType(View.LAYER_TYPE_HARDWARE, null);
+        // setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         mAnimator = new ChartAnimator(new AnimatorUpdateListener() {
 
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 // ViewCompat.postInvalidateOnAnimation(Chart.this);
-                /**
-                 * Executes postinvalidate operation with thermal imaging domain optimization.
-                 *
-                 */
                 postInvalidate();
             }
         });
 
-        // Initialize the utils
+        // initialize the utils
         Utils.init(getContext());
         mMaxHighlightDistance = Utils.convertDpToPixel(500f);
 
@@ -244,50 +231,46 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mDescPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         mInfoPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mInfoPaint.setColor(Color.rgb(247, 189, 51)); // Orange
+        mInfoPaint.setColor(Color.rgb(247, 189, 51)); // orange
         mInfoPaint.setTextAlign(Align.CENTER);
         mInfoPaint.setTextSize(Utils.convertDpToPixel(12f));
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mLogEnabled)
             Log.i("", "Chart.init()");
     }
 
-    // Public void initWithDummyData() {
+    // public void initWithDummyData() {
     // ColorTemplate template = new ColorTemplate();
-    // Template.addColorsForDataSets(ColorTemplate.COLORFUL_COLORS,
-    // GetContext());
+    // template.addColorsForDataSets(ColorTemplate.COLORFUL_COLORS,
+    // getContext());
     //
-    // SetColorTemplate(template);
-    // SetDrawYValues(false);
+    // setColorTemplate(template);
+    // setDrawYValues(false);
     //
     // ArrayList<String> xVals = new ArrayList<String>();
     // Calendar calendar = Calendar.getInstance();
-    // For (int i = 0; i < 12; i++) {
-    // XVals.add(calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT,
+    // for (int i = 0; i < 12; i++) {
+    // xVals.add(calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT,
     // Locale.getDefault()));
     // }
     //
     // ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
-    // For (int i = 0; i < 3; i++) {
+    // for (int i = 0; i < 3; i++) {
     //
     // ArrayList<Entry> yVals = new ArrayList<Entry>();
     //
-    // For (int j = 0; j < 12; j++) {
-    // Float val = (float) (Math.random() * 100);
-    // YVals.add(new Entry(val, j));
+    // for (int j = 0; j < 12; j++) {
+    // float val = (float) (Math.random() * 100);
+    // yVals.add(new Entry(val, j));
     // }
     //
     // DataSet set = new DataSet(yVals, "DataSet " + i);
-    // DataSets.add(set); // Add the datasets
+    // dataSets.add(set); // add the datasets
     // }
-    // // Create a data object with the datasets
+    // // create a data object with the datasets
     // ChartData data = new ChartData(xVals, dataSets);
-    // SetData(data);
-    // Invalidate();
+    // setData(data);
+    // invalidate();
     // }
 
     /**
@@ -301,48 +284,21 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mData = data;
         mOffsetsCalculated = false;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (data == null) {
             return;
         }
 
-        // Calculate how many digits are needed
-        /**
-         * Configures the updefaultformatter with validation and thermal imaging optimization.
-         *
-         */
+        // calculate how many digits are needed
         setupDefaultFormatter(data.getYMin(), data.getYMax());
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param set Parameter for operation (type: mData.getDataSets()
-         *
-         */
         for (IDataSet set : mData.getDataSets()) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (set.needsFormatter() || set.getValueFormatter() == mDefaultValueFormatter)
                 set.setValueFormatter(mDefaultValueFormatter);
         }
 
-        // Let the chart know there is new data
-        /**
-         * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-         *
-         */
+        // let the chart know there is new data
         notifyDataSetChanged();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mLogEnabled)
             Log.i(LOG_TAG, "Data is set.");
     }
@@ -356,10 +312,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mOffsetsCalculated = false;
         mIndicesToHighlight = null;
         mChartTouchListener.setLastHighlighted(null);
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -369,10 +321,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public void clearValues() {
         mData.clearValues();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -384,18 +332,10 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public boolean isEmpty() {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mData == null)
             return true;
         else {
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mData.getEntryCount() <= 0)
                 return true;
             else
@@ -431,10 +371,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
         float reference = 0f;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mData == null || mData.getEntryCount() < 2) {
 
             reference = Math.max(Math.abs(min), Math.abs(max));
@@ -444,7 +380,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
         int digits = Utils.getDecimals(reference);
 
-        // Setup the formatter with a new number of digits
+        // setup the formatter with a new number of digits
         mDefaultValueFormatter.setup(digits);
     }
 
@@ -455,20 +391,12 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // Super.onDraw(canvas);
+        // super.onDraw(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mData == null) {
 
             boolean hasText = !TextUtils.isEmpty(mNoDataText);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (hasText) {
                 MPPointF c = getCenter();
                 canvas.drawText(mNoDataText, c.x, c.y, mInfoPaint);
@@ -477,16 +405,8 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
             return;
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!mOffsetsCalculated) {
 
-            /**
-             * Executes calculateoffsets operation with thermal imaging domain optimization.
-             *
-             */
             calculateOffsets();
             mOffsetsCalculated = true;
         }
@@ -497,11 +417,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     protected void drawDescription(Canvas c) {
 
-        // Check if description should be drawn
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // check if description should be drawn
         if (mDescription != null && mDescription.isEnabled()) {
 
             MPPointF position = mDescription.getPosition();
@@ -513,11 +429,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
             float x, y;
 
-            // If no position specified, draw on default position
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            // if no position specified, draw on default position
             if (position == null) {
                 x = getWidth() - mViewPortHandler.offsetRight() - mDescription.getXOffset();
                 y = getHeight() - mViewPortHandler.offsetBottom() - mDescription.getYOffset();
@@ -610,10 +522,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     protected void setLastHighlighted(Highlight[] highs) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (highs == null || highs.length <= 0 || highs[0] == null) {
             mChartTouchListener.setLastHighlighted(null);
         } else {
@@ -631,20 +539,12 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public void highlightValues(Highlight[] highs) {
 
-        // Set the indices to highlight
+        // set the indices to highlight
         mIndicesToHighlight = highs;
 
-        /**
-         * Configures the lasthighlighted with validation and thermal imaging optimization.
-         *
-         */
         setLastHighlighted(highs);
 
-        // Redraw the chart
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
+        // redraw the chart
         invalidate();
     }
 
@@ -656,10 +556,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * @param dataSetIndex The dataset index to search in
      */
     public void highlightValue(float x, int dataSetIndex) {
-        /**
-         * Executes highlightvalue operation with thermal imaging domain optimization.
-         *
-         */
         highlightValue(x, dataSetIndex, true);
     }
 
@@ -672,10 +568,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * @param dataSetIndex The dataset index to search in
      */
     public void highlightValue(float x, float y, int dataSetIndex) {
-        /**
-         * Executes highlightvalue operation with thermal imaging domain optimization.
-         *
-         */
         highlightValue(x, y, dataSetIndex, true);
     }
 
@@ -687,10 +579,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * @param callListener Should the listener be called for this change
      */
     public void highlightValue(float x, int dataSetIndex, boolean callListener) {
-        /**
-         * Executes highlightvalue operation with thermal imaging domain optimization.
-         *
-         */
         highlightValue(x, Float.NaN, dataSetIndex, callListener);
     }
 
@@ -704,21 +592,9 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public void highlightValue(float x, float y, int dataSetIndex, boolean callListener) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dataSetIndex < 0 || dataSetIndex >= mData.getDataSetCount()) {
-            /**
-             * Executes highlightvalue operation with thermal imaging domain optimization.
-             *
-             */
             highlightValue(null, callListener);
         } else {
-            /**
-             * Executes highlightvalue operation with thermal imaging domain optimization.
-             *
-             */
             highlightValue(new Highlight(x, y, dataSetIndex), callListener);
         }
     }
@@ -730,10 +606,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * @param highlight contains information about which entry should be highlighted
      */
     public void highlightValue(Highlight highlight) {
-        /**
-         * Executes highlightvalue operation with thermal imaging domain optimization.
-         *
-         */
         highlightValue(highlight, false);
     }
 
@@ -749,67 +621,39 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
         Entry e = null;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (high == null)
             mIndicesToHighlight = null;
         else {
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mLogEnabled)
                 Log.i(LOG_TAG, "Highlighted: " + high.toString());
 
             e = mData.getEntryForHighlight(high);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (e == null) {
                 mIndicesToHighlight = null;
                 high = null;
             } else {
 
-                // Set the indices to highlight
+                // set the indices to highlight
                 mIndicesToHighlight = new Highlight[]{
                         high
                 };
             }
         }
 
-        /**
-         * Configures the lasthighlighted with validation and thermal imaging optimization.
-         *
-         */
         setLastHighlighted(mIndicesToHighlight);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (callListener && mSelectionListener != null) {
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!valuesToHighlight())
                 mSelectionListener.onNothingSelected();
             else {
-                // Notify the listener
+                // notify the listener
                 mSelectionListener.onValueSelected(e, high);
             }
         }
 
-        // Redraw the chart
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
+        // redraw the chart
         invalidate();
     }
 
@@ -824,10 +668,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public Highlight getHighlightByTouchPoint(float x, float y) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mData == null) {
             Log.e(LOG_TAG, "Can't select by touch. No data set.");
             return null;
@@ -874,18 +714,10 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     protected void drawMarkers(Canvas canvas) {
 
-        // If there is no marker view or drawing marker is disabled
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // if there is no marker view or drawing marker is disabled
         if (mMarker == null || !isDrawMarkersEnabled() || !valuesToHighlight())
             return;
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < mIndicesToHighlight.length; i++) {
 
             Highlight highlight = mIndicesToHighlight[i];
@@ -893,32 +725,24 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
             IDataSet set = mData.getDataSetByIndex(highlight.getDataSetIndex());
 
             Entry e = mData.getEntryForHighlight(mIndicesToHighlight[i]);
-            // TODO: Attempt to invoke interface method 'int com.github.mikephil.charting.interfaces.datasets.IDataSet.getEntryIndex(com.github.mikephil.charting.data.Entry)' on a null object reference
+            //TODO Attempt to invoke interface method 'int com.github.mikephil.charting.interfaces.datasets.IDataSet.getEntryIndex(com.github.mikephil.charting.data.Entry)' on a null object reference
             try {
                 int entryIndex = set.getEntryIndex(e);
 
-                // Make sure entry not null
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+                // make sure entry not null
                 if (e == null || entryIndex > set.getEntryCount() * mAnimator.getPhaseX())
                     continue;
 
                 float[] pos = getMarkerPosition(highlight);
 
-                // Check bounds
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+                // check bounds
                 if (!mViewPortHandler.isInBounds(pos[0], pos[1]))
                     continue;
 
-                // Callbacks to update the content
+                // callbacks to update the content
                 mMarker.refreshContent(e, highlight);
 
-                // Draw the marker
+                // draw the marker
                 mMarker.draw(canvas, pos[0], pos[1]);
             }catch (Exception exception){
                 Log.e("Test",exception.getMessage());
@@ -987,17 +811,9 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public void setDragDecelerationFrictionCoef(float newValue) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (newValue < 0.f)
             newValue = 0.f;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (newValue >= 1f)
             newValue = 0.999f;
 
@@ -1241,25 +1057,9 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * @param bottom
      */
     public void setExtraOffsets(float left, float top, float right, float bottom) {
-        /**
-         * Configures the extraleftoffset with validation and thermal imaging optimization.
-         *
-         */
         setExtraLeftOffset(left);
-        /**
-         * Configures the extratopoffset with validation and thermal imaging optimization.
-         *
-         */
         setExtraTopOffset(top);
-        /**
-         * Configures the extrarightoffset with validation and thermal imaging optimization.
-         *
-         */
         setExtraRightOffset(right);
-        /**
-         * Configures the extrabottomoffset with validation and thermal imaging optimization.
-         *
-         */
         setExtraBottomOffset(bottom);
     }
 
@@ -1396,10 +1196,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
     @Deprecated
     public void setMarkerView(IMarker v) {
-        /**
-         * Configures the marker with validation and thermal imaging optimization.
-         *
-         */
         setMarker(v);
     }
 
@@ -1518,10 +1314,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public void setPaint(Paint p, int which) {
 
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (which) {
             case PAINT_INFO:
                 mInfoPaint = p;
@@ -1539,10 +1331,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * @return
      */
     public Paint getPaint(int which) {
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (which) {
             case PAINT_INFO:
                 return mInfoPaint;
@@ -1560,10 +1348,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
     @Deprecated
     public void setDrawMarkerViews(boolean enabled) {
-        /**
-         * Configures the drawmarkers with validation and thermal imaging optimization.
-         *
-         */
         setDrawMarkers(enabled);
     }
 
@@ -1623,10 +1407,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public void setRenderer(DataRenderer renderer) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (renderer != null)
             mRenderer = renderer;
     }
@@ -1667,24 +1447,16 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         Canvas canvas = new Canvas(returnedBitmap);
         // Get the view's background
         Drawable bgDrawable = getBackground();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (bgDrawable != null)
-            // Has background drawable, then draw it on the canvas
+            // has background drawable, then draw it on the canvas
             bgDrawable.draw(canvas);
         else
-            // Does not have background drawable, then draw white background on
-            // The canvas
+            // does not have background drawable, then draw white background on
+            // the canvas
             canvas.drawColor(Color.WHITE);
-        // Draw the view on the canvas
-        /**
-         * Executes draw operation with thermal imaging domain optimization.
-         *
-         */
+        // draw the view on the canvas
         draw(canvas);
-        // Return the bitmap
+        // return the bitmap
         return returnedBitmap;
     }
 
@@ -1737,11 +1509,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public boolean saveToGallery(String fileName, String subFolderPath, String fileDescription, CompressFormat
             format, int quality) {
-        // Restrain quality
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // restrain quality
         if (quality < 0 || quality > 100)
             quality = 50;
 
@@ -1749,51 +1517,27 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
         File extBaseDir = Environment.getExternalStorageDirectory();
         File file = new File(extBaseDir.getAbsolutePath() + "/DCIM/" + subFolderPath);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!file.exists()) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!file.mkdirs()) {
                 return false;
             }
         }
 
         String mimeType = "";
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (format) {
             case PNG:
                 mimeType = "image/png";
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!fileName.endsWith(".png"))
                     fileName += ".png";
                 break;
             case WEBP:
                 mimeType = "image/webp";
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!fileName.endsWith(".webp"))
                     fileName += ".webp";
                 break;
             case JPEG:
             default:
                 mimeType = "image/jpeg";
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!(fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")))
                     fileName += ".jpg";
                 break;
@@ -1820,7 +1564,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
         ContentValues values = new ContentValues(8);
 
-        // Store the details
+        // store the details
         values.put(Images.Media.TITLE, fileName);
         values.put(Images.Media.DISPLAY_NAME, fileName);
         values.put(Images.Media.DATE_ADDED, currentTime);
@@ -1878,15 +1622,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public void addViewportJob(Runnable job) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mViewPortHandler.hasChartDimens()) {
-            /**
-             * Executes post operation with thermal imaging domain optimization.
-             *
-             */
             post(job);
         } else {
             mJobs.add(job);
@@ -1906,15 +1642,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < getChildCount(); i++) {
-            /**
-             * Retrieves the childat with optimized performance for thermal imaging operations.
-             *
-             */
             getChildAt(i).layout(left, top, right, bottom);
         }
     }
@@ -1923,77 +1651,34 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int size = (int) Utils.convertDpToPixel(50f);
-        /**
-         * Configures the measureddimension with validation and thermal imaging optimization.
-         *
-         */
         setMeasuredDimension(
                 Math.max(getSuggestedMinimumWidth(),
-                        /**
-                         * Executes resolvesize operation with thermal imaging domain optimization.
-                         *
-                         */
                         resolveSize(size,
                                 widthMeasureSpec)),
                 Math.max(getSuggestedMinimumHeight(),
-                        /**
-                         * Executes resolvesize operation with thermal imaging domain optimization.
-                         *
-                         */
                         resolveSize(size,
                                 heightMeasureSpec)));
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mLogEnabled)
             Log.i(LOG_TAG, "OnSizeChanged()");
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (w > 0 && h > 0 && w < 10000 && h < 10000) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mLogEnabled)
                 Log.i(LOG_TAG, "Setting chart dimens, width: " + w + ", height: " + h);
             mViewPortHandler.setChartDimens(w, h);
         } else {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mLogEnabled)
                 Log.w(LOG_TAG, "*Avoiding* setting chart dimens! width: " + w + ", height: " + h);
         }
 
         // This may cause the chart view to mutate properties affecting the view port --
-        // Lets do this before we try to run any pending jobs on the view port itself
-        /**
-         * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-         *
-         */
+        //   lets do this before we try to run any pending jobs on the view port itself
         notifyDataSetChanged();
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param r Parameter for operation (type: mJobs)
-         *
-         */
         for (Runnable r : mJobs) {
-            /**
-             * Executes post operation with thermal imaging domain optimization.
-             *
-             */
             post(r);
         }
 
@@ -2010,21 +1695,9 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public void setHardwareAccelerationEnabled(boolean enabled) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (enabled)
-            /**
-             * Configures the layertype with validation and thermal imaging optimization.
-             *
-             */
             setLayerType(View.LAYER_TYPE_HARDWARE, null);
         else
-            /**
-             * Configures the layertype with validation and thermal imaging optimization.
-             *
-             */
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
@@ -2032,17 +1705,9 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        // Log.i(LOG_TAG, "Detaching...");
+        //Log.i(LOG_TAG, "Detaching...");
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mUnbind)
-            /**
-             * Executes unbinddrawables operation with thermal imaging domain optimization.
-             *
-             */
             unbindDrawables(this);
     }
 
@@ -2053,33 +1718,17 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
     /**
      * Unbind all drawables to avoid memory leaks.
-     * Link: http:// Stackoverflow.com/a/6779164/1590502
+     * Link: http://stackoverflow.com/a/6779164/1590502
      *
      * @param view
      */
     private void unbindDrawables(View view) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (view.getBackground() != null) {
             view.getBackground().setCallback(null);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (view instanceof ViewGroup) {
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                /**
-                 * Executes unbinddrawables operation with thermal imaging domain optimization.
-                 *
-                 */
                 unbindDrawables(((ViewGroup) view).getChildAt(i));
             }
             ((ViewGroup) view).removeAllViews();
@@ -2090,7 +1739,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * Set this to true to enable "unbinding" of drawables. When a View is detached
      * from a window. This helps avoid memory leaks.
      * Default: false
-     * Link: http:// Stackoverflow.com/a/6779164/1590502
+     * Link: http://stackoverflow.com/a/6779164/1590502
      *
      * @param enabled
      */

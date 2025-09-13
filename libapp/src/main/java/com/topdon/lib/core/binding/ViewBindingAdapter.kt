@@ -11,21 +11,9 @@ import androidx.databinding.BindingAdapter
 import com.blankj.utilcode.util.SizeUtils
 
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ViewBindingAdapter display and interaction.
+ * RecyclerView 的 BindingAdapter.
  *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Created by LCG on 2024/11/5.
  */
 object ViewBindingAdapter {
     /**
@@ -33,35 +21,16 @@ object ViewBindingAdapter {
      */
     @JvmStatic
     @BindingAdapter("bgEffect")
-    /**
-     * Sets bgeffect configuration.
-     */
     fun setBgEffect(
         view: View,
         wantEffect: Boolean,
     ) {
         val oldDrawable: Drawable? = view.background
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oldDrawable is LayerDrawable) {
             val layerCount = oldDrawable.numberOfLayers
             val drawableList = ArrayList<Drawable>(layerCount + 1)
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (i in 0 until layerCount) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (oldDrawable.getId(i) == android.R.id.hint) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (wantEffect) {
                         return
                     }
@@ -69,60 +38,32 @@ object ViewBindingAdapter {
                     drawableList.add(oldDrawable.getDrawable(i))
                 }
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (wantEffect) {
                 val typedArray: TypedArray = view.context.obtainStyledAttributes(intArrayOf(android.R.attr.selectableItemBackground))
                 val effectDrawable: Drawable? = typedArray.getDrawable(0)
                 typedArray.recycle()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (effectDrawable != null) {
                     drawableList.add(effectDrawable)
                 }
             } else {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (drawableList.size == layerCount) { // 本来就没有 hint
                     return
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (drawableList.isEmpty()) { // 只有1个且为 hint，移除
                     view.background = null
                     return
                 }
             }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (drawableList.size == 1) {
                 view.background = drawableList[0]
                 return
             }
 
             val newDrawable = LayerDrawable(drawableList.toArray(arrayOf()))
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (drawableList.size == 2 && drawableList[0] is GradientDrawable) {
                 oldDrawable.setId(0, android.R.id.content)
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (wantEffect) {
                 oldDrawable.setId(drawableList.size - 1, android.R.id.hint)
             }
@@ -133,10 +74,6 @@ object ViewBindingAdapter {
             typedArray.recycle()
 
             val newDrawable = LayerDrawable(if (oldDrawable == null) arrayOf(effectDrawable) else arrayOf(oldDrawable, effectDrawable))
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (oldDrawable is GradientDrawable) {
                 newDrawable.setId(0, android.R.id.content)
             }
@@ -152,9 +89,6 @@ object ViewBindingAdapter {
      */
     @JvmStatic
     @BindingAdapter("bgColor")
-    /**
-     * Sets bgcolor configuration.
-     */
     fun setBgColor(
         view: View,
         @ColorInt color: Int,
@@ -176,9 +110,6 @@ object ViewBindingAdapter {
      */
     @JvmStatic
     @BindingAdapter(value = ["bgCorners", "bgCornersLT", "bgCornersRT", "bgCornersLB", "bgCornersRB"], requireAll = false)
-    /**
-     * Sets bgcorners configuration.
-     */
     fun setBgCorners(
         view: View,
         bgCorners: Int = 0,
@@ -192,10 +123,6 @@ object ViewBindingAdapter {
         val lb: Int = SizeUtils.dp2px(bgCornersLB?.toFloat() ?: bgCorners.toFloat())
         val rb: Int = SizeUtils.dp2px(bgCornersRB?.toFloat() ?: bgCorners.toFloat())
         val radii =
-            /**
-             * Executes floatarrayof operation with thermal imaging domain optimization.
-             *
-             */
             floatArrayOf(lt.toFloat(), lt.toFloat(), rt.toFloat(), rt.toFloat(), rb.toFloat(), rb.toFloat(), lb.toFloat(), lb.toFloat())
         val gradientDrawable: GradientDrawable = buildGradientDrawable(view)
         gradientDrawable.shape = GradientDrawable.RECTANGLE
@@ -210,9 +137,6 @@ object ViewBindingAdapter {
      */
     @JvmStatic
     @BindingAdapter(value = ["bgStrokeWidth", "bgStrokeColor"], requireAll = false)
-    /**
-     * Sets bgstroke configuration.
-     */
     fun setBgStroke(
         view: View,
         width: Int,
@@ -228,9 +152,6 @@ object ViewBindingAdapter {
      */
     @JvmStatic
     @BindingAdapter(value = ["bgStartColor", "bgCenterColor", "bgEndColor"], requireAll = false)
-    /**
-     * Sets bggradientcolor configuration.
-     */
     fun setBgGradientColor(
         view: View,
         @ColorInt startColor: Int,
@@ -244,16 +165,13 @@ object ViewBindingAdapter {
 
     /**
      * 使用矩形 shape 为指定 view 的 background settings指定type渐变parameter.
-     * @param angle line性渐变：渐变angle，必须为 45 的倍数，0为从左到右 90为从上到下 -90或270为从下到上
+     * @param angle line性渐变：渐变角度，必须为 45 的倍数，0为从左到右 90为从上到下 -90或270为从下到上
      * @param radius 放射渐变：直径百分比
-     * @param centerX 放射渐变或扫描渐变：centerpointXaxis百分比
-     * @param centerY 放射渐变或扫描渐变：centerpointYaxis百分比
+     * @param centerX 放射渐变或扫描渐变：centerpointX轴百分比
+     * @param centerY 放射渐变或扫描渐变：centerpointY轴百分比
      */
     @JvmStatic
     @BindingAdapter(value = ["bgAngle", "bgRadius", "bgCenterX", "bgCenterY"], requireAll = false)
-    /**
-     * Sets bggradient configuration.
-     */
     fun setBgGradient(
         view: View,
         angle: Int?,
@@ -262,25 +180,13 @@ object ViewBindingAdapter {
         centerY: Float?,
     ) {
         val gradientDrawable: GradientDrawable = buildGradientDrawable(view)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (angle == null) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (radius == null) {
                 gradientDrawable.gradientType = GradientDrawable.SWEEP_GRADIENT
             } else {
                 gradientDrawable.gradientType = GradientDrawable.RADIAL_GRADIENT
                 gradientDrawable.gradientRadius = radius
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (centerX != null && centerY != null) {
                 gradientDrawable.setGradientCenter(centerX, centerY)
             }
@@ -292,9 +198,6 @@ object ViewBindingAdapter {
     }
 
     @JvmStatic
-    /**
-     * Retrieves orientation information.
-     */
     private fun getOrientation(angle: Int): GradientDrawable.Orientation {
         return when ((angle % 360 + 360) % 360) {
             0 -> GradientDrawable.Orientation.LEFT_RIGHT
@@ -324,41 +227,18 @@ object ViewBindingAdapter {
     /**
      * Executes buildgradientdrawable functionality.
      */
-    /**
-     * Executes buildgradientdrawable operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param view Parameter for operation (type: View)
-     *
-     */
     private fun buildGradientDrawable(view: View): GradientDrawable {
         val oldDrawable: Drawable? = view.background
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oldDrawable is GradientDrawable) {
             return oldDrawable
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oldDrawable is ColorDrawable) {
             val drawable = GradientDrawable()
             drawable.setColor(oldDrawable.color)
             return drawable
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oldDrawable is LayerDrawable) {
             val drawable: Drawable? = oldDrawable.findDrawableByLayerId(android.R.id.content)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (drawable is GradientDrawable) {
                 return drawable
             }
@@ -374,23 +254,11 @@ object ViewBindingAdapter {
     /**
      * Executes buildeffectdrawable functionality.
      */
-    /**
-     * Executes buildeffectdrawable operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param view Parameter for operation (type: View)
-     * @param bgDrawable Parameter for operation (type: GradientDrawable)
-     *
-     */
     private fun buildEffectDrawable(
         view: View,
         bgDrawable: GradientDrawable,
     ): Drawable {
         val oldDrawable: Drawable? = view.background
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oldDrawable is LayerDrawable) {
             val effectDrawable: Drawable = oldDrawable.findDrawableByLayerId(android.R.id.hint) ?: return bgDrawable
             val newDrawable = LayerDrawable(arrayOf(bgDrawable, effectDrawable))

@@ -23,36 +23,16 @@ thermal imaging 拍照/录像 menu.
  * Created by LCG on 2025/1/3.
  */
 /**
- * Temperature measurement and calibration utility for thermal imaging. Provides precision temperature calculations with CameraItemPopup algorithms.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Camera item popup view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
+@SuppressLint("SetTextI18n")
 class CameraItemPopup(val context: Context, private val saveSetBean: SaveSettingBean) : PopupWindow(), View.OnClickListener {
     /**
 手动快门是否处于selectedstate
      */
     var isShutterSelect: Boolean
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = binding.ivShutter.isSelected
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             binding.ivShutter.isSelected = value
         }
@@ -61,15 +41,7 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
 录音开关是否处于selectedstate
      */
     var isAudioSelect: Boolean
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = binding.ivAudio.isSelected
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             binding.ivAudio.isSelected = value
         }
@@ -117,29 +89,10 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
         binding.clSetting.setOnClickListener(this)
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
             binding.clDelay ->
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (onDelayClickListener?.invoke() == true) {
-                    /**
-                     * Executes when operation with thermal imaging domain optimization.
-                     *
-                     */
                     when (saveSetBean.delayCaptureSecond) {
                         0 -> {
                             saveSetBean.delayCaptureSecond = 3
@@ -159,10 +112,6 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
             binding.clAuto -> { // 自动快门
                 saveSetBean.isAutoShutter = !saveSetBean.isAutoShutter
                 binding.ivAuto.isSelected = saveSetBean.isAutoShutter
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (SharedManager.isTipShutter && !saveSetBean.isAutoShutter) {
                     TipShutterDialog.Builder(context)
                         .setMessage(R.string.shutter_tips)
@@ -174,10 +123,6 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
                 onAutoCLickListener?.invoke(saveSetBean.isAutoShutter)
             }
             binding.clShutter ->
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!binding.ivShutter.isSelected) {
                     onShutterClickListener?.invoke()
                 }
@@ -186,23 +131,9 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
         }
     }
 
-    /**
-     * Executes showAsUp functionality.
-     */
-    /**
-     * Executes showasup operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param anchor Parameter for operation (type: View)
-     *
-     */
     fun showAsUp(anchor: View) {
         val locationArray = IntArray(2)
         anchor.getLocationInWindow(locationArray)
-        /**
-         * Executes showatlocation operation with thermal imaging domain optimization.
-         *
-         */
         showAtLocation(anchor, Gravity.NO_GRAVITY, 0, locationArray[1] - height)
     }
 }

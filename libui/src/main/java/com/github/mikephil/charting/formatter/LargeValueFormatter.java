@@ -7,24 +7,10 @@ import java.text.DecimalFormat;
  * Outputs: 856 = 856; 1000 = 1k; 5821 = 5.8k; 10500 = 10k; 101800 = 102k;
  * 2000000 = 2m; 7800000 = 7.8m; 92150000 = 92m; 123200000 = 123m; 9999999 =
  * 10m; 1000000000 = 1b; Special thanks to Roman Gromov
- * (https:// Github.com/romangromov) for this piece of code.
+ * (https://github.com/romangromov) for this piece of code.
  *
  * @author Philipp Jahoda
  * @author Oleksandr Tyshkovets <olexandr.tyshkovets@gmail.com>
- */
-/**
- * Specialized thermal imaging component providing LargeValueFormatter functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
  */
 public class LargeValueFormatter extends ValueFormatter
 {
@@ -36,10 +22,6 @@ public class LargeValueFormatter extends ValueFormatter
     private DecimalFormat mFormat;
     private String mText = "";
 
-    /**
-     * Executes largevalueformatter operation with thermal imaging domain optimization.
-     *
-     */
     public LargeValueFormatter() {
         mFormat = new DecimalFormat("###E00");
     }
@@ -50,10 +32,6 @@ public class LargeValueFormatter extends ValueFormatter
      * @param appendix a text that will be appended
      */
     public LargeValueFormatter(String appendix) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this();
         mText = appendix;
     }
@@ -88,7 +66,7 @@ public class LargeValueFormatter extends ValueFormatter
 
     /**
      * Formats each number properly. Special thanks to Roman Gromov
-     * (https:// Github.com/romangromov) for this piece of code.
+     * (https://github.com/romangromov) for this piece of code.
      */
     private String makePretty(double number) {
 
@@ -100,10 +78,6 @@ public class LargeValueFormatter extends ValueFormatter
 
         r = r.replaceAll("E[0-9][0-9]", mSuffix[combined / 3]);
 
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (r.length() > mMaxLength || r.matches("[0-9]+\\.[a-z]")) {
             r = r.substring(0, r.length() - 2) + r.substring(r.length() - 1);
         }

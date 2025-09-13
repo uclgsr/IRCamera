@@ -12,43 +12,20 @@ import com.topdon.lib.core.bean.CameraItemBean
 import kotlinx.coroutines.delay
 
 /**
- * Specialized thermal imaging component providing IRTool functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+ * des:
+ * author: CaiSongL
+ * date: 2024/8/2 16:43
+ **/
 object IRTool {
     const val TAG: String = "IRTool"
 
     /**
 自动快门开关
      */
-    /**
-     * Configures the autoshutter with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param isAutoShutter Parameter for operation (type: Boolean)
-     *
-     */
     fun setAutoShutter(isAutoShutter: Boolean)  {
         val basicAutoFFCStatusSet: IrcmdError? =
             DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                 ?.basicAutoFFCStatusSet(
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isAutoShutter) {
                         CommonParams.AutoFFCStatus.AUTO_FFC_ENABLE
                     } else {
@@ -64,10 +41,6 @@ object IRTool {
     /**
 手动打快门
      */
-    /**
-     * Configures the oneshutter with validation and thermal imaging optimization.
-     *
-     */
     fun setOneShutter()  {
         val basicFFCUpdate = DeviceIrcmdControlManager.getInstance().ircmdEngine?.basicFFCUpdate()
         Log.d(
@@ -79,42 +52,13 @@ object IRTool {
     /**
      *
      *
-/**
- * Executes 常温 operation with thermal imaging domain optimization.
- *
- * @param
- * @param gainType Parameter for operation (type: Int)
- * @param levelValue Parameter for operation (type: Int)
- * @param levelValue Parameter for operation (type: Int)
- * @param openMirror Parameter for operation (type: Boolean)
- * @param https Parameter for operation (type: // Alidocs.dingtalk.com/i/p/QqWXwywDMb9xKG31/docs/14lgGw3P8vL0P2qbu7OR39d5V5daZ90D Setp1：插上module出图并确保当前module达到热稳定state，一般需要预热3-5分钟。 预热complete后，移动module至calibration靶area前，靠近但不接触靶area。靶area的成像覆盖全部视场、 无杂散光进入为最佳)
- *
- */
 常温 ([CameraItemBean.TYPE_TMP_C] = 1）也就是高gain
      *
 high temperature ([CameraItemBean.TYPE_TMP_H] = 0) 也就是低gain
      *
-/**
- * Executes 自动 operation with thermal imaging domain optimization.
- *
- */
 自动 ([CameraItemBean.TYPE_TMP_ZD] = -1)
      */
-    /**
-     * Executes basicGainSet functionality.
-     */
-    /**
-     * Executes basicgainset operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param gainType Parameter for operation (type: Int)
-     *
-     */
     fun basicGainSet(gainType: Int)  {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (gainType == CameraItemBean.TYPE_TMP_ZD)
             {
                 CameraPreviewManager.getInstance().setAutoSwitchGainEnable(true)
@@ -138,13 +82,6 @@ high temperature ([CameraItemBean.TYPE_TMP_H] = 0) 也就是低gain
     /**
 contrast：parameter是0-100
      */
-    /**
-     * Executes basicglobalcontrastlevelset operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param levelValue Parameter for operation (type: Int)
-     *
-     */
     fun basicGlobalContrastLevelSet(levelValue: Int)  {
         val basicGlobalContrastLevelSetResult =
             DeviceIrcmdControlManager.getInstance().ircmdEngine
@@ -158,17 +95,10 @@ contrast：parameter是0-100
     /**
 锐度：parameter是0-100，也就是细节
      */
-    /**
-     * Executes basicimagedetailenhancelevelset operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param levelValue Parameter for operation (type: Int)
-     *
-     */
     fun basicImageDetailEnhanceLevelSet(levelValue: Int)  {
-// Val professionModeSetResult = DeviceIrcmdControlManager.getInstance().ircmdEngine
+//        val professionModeSetResult = DeviceIrcmdControlManager.getInstance().ircmdEngine
 //            .advProfessionModeSet(CommonParams.ProfessionMode.valueOf(0))
-// Val basicImageDetailEnhanceLevelSetResult = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
+//        val basicImageDetailEnhanceLevelSetResult = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
 //            ?.basicImageDetailEnhanceLevelSet(levelValue);
 //        Log.d(TAG, "basicImageDetailEnhanceLevelSet=" + basicImageDetailEnhanceLevelSetResult)
     }
@@ -176,22 +106,11 @@ contrast：parameter是0-100
     /**
 set镜像
      */
-    /**
-     * Executes basicmirrorandflipstatusset operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param openMirror Parameter for operation (type: Boolean)
-     *
-     */
     fun basicMirrorAndFlipStatusSet(openMirror: Boolean)  {
 setimage镜像或翻转 PASS
         val basicMirrorAndFlipStatusSet =
             DeviceIrcmdControlManager.getInstance().ircmdEngine
                 ?.basicMirrorAndFlipStatusSet(
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (openMirror) {
                         CommonParams.MirrorFlipType.ONLY_FLIP
                     } else {
@@ -203,7 +122,7 @@ setimage镜像或翻转 PASS
 
     /**
 一次complete的锅盖calibration流程
-     * https:// Alidocs.dingtalk.com/i/p/QqWXwywDMb9xKG31/docs/14lgGw3P8vL0P2qbu7OR39d5V5daZ90D
+     * https://alidocs.dingtalk.com/i/p/QqWXwywDMb9xKG31/docs/14lgGw3P8vL0P2qbu7OR39d5V5daZ90D
 Setp1：插上module出图并确保当前module达到热稳定state，一般需要预热3-5分钟。
 预热complete后，移动module至calibration靶area前，靠近但不接触靶area。靶area的成像覆盖全部视场、 无杂散光进入为最佳)；
 Setp2：reset锅盖calibrationdata，确保calibration准确性
@@ -215,13 +134,6 @@ Setp7：如果calibration有误，或者需要Cancel自动calibration结果，�
      * mIrcmdEngine.advRmcoverCaliCancel();
 如果观察calibration没有问题，即可save锅盖calibrationdata，可调用指令
      * mIrcmdEngine.basicSaveData(CommonParams.DeviceDataSaveType.BASIC_SAVE_RMCOVER_DATA);
-     */
-    /**
-     * Executes onceAuto functionality.
-     */
-    /**
-     * Executes onceauto operation with thermal imaging domain optimization.
-     *
      */
     fun onceAuto(): Boolean  {
         // Setp2
@@ -252,24 +164,12 @@ high/low gainmode下各做一组锅盖calibration，如此module的锅盖calibra
         basicGainSet(CameraItemBean.TYPE_TMP_C)
         delay(2000)
         XLog.d(TAG, "onceAuto=start")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!onceAuto())
             {
                 return false
             }
         XLog.d(TAG, "basicGainSet=start")
-        /**
-         * Executes basicgainset operation with thermal imaging domain optimization.
-         *
-         */
         basicGainSet(CameraItemBean.TYPE_TMP_H)
-        /**
-         * Executes delay operation with thermal imaging domain optimization.
-         *
-         */
         delay(2000)
         XLog.d(TAG, "onceAuto=start")
         return onceAuto()
@@ -278,20 +178,9 @@ high/low gainmode下各做一组锅盖calibration，如此module的锅盖calibra
     /**
 enabledcore内部环境variable修正
      */
-    /**
-     * Executes advenvcorrectswitchset operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param open Parameter for operation (type: Boolean)
-     *
-     */
     fun advEnvCorrectSwitchSet(open: Boolean)  {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
             ?.advEnvCorrectSwitchSet(
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (open) {
                     CommonParams.BasicEnableStatus.BASIC_ENABLE
                 } else {
@@ -304,16 +193,6 @@ enabledcore内部环境variable修正
 core校正的
 反射率：range:1~16384
      */
-    /**
-     * Executes advEnvCorrectEMSSet functionality.
-     */
-    /**
-     * Executes advenvcorrectemsset operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param value Parameter for operation (type: Int)
-     *
-     */
     fun advEnvCorrectEMSSet(value: Int)  {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
             .advEnvCorrectEMSSet(value)
@@ -321,28 +200,7 @@ core校正的
 
     /**
 core校正的
-/**
- * Handles temperature measurement and calibration with precision thermal data processing.
- *
- * @param
- * @param units Parameter for operation (type: Celsius)
- * @param range Parameter for operation (type: 233~373)
- *
- * @note Temperature values are in Celsius unless otherwise specified.
- * Accuracy depends on thermal camera calibration.
- *
- */
 反射temperature(units:Celsius)：range:233~373
-     */
-    /**
-     * Executes advEnvCorrectTUSet functionality.
-     */
-    /**
-     * Executes advenvcorrecttuset operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param value Parameter for operation (type: Int)
-     *
      */
     fun advEnvCorrectTUSet(value: Int)  {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
@@ -357,9 +215,6 @@ lite项目的temperature correction
 @param tau_data_L ByteArray 低gain修正表
      * @return Float
      */
-    /**
-     * Processes temperature measurement data.
-     */
     fun temperatureCorrection(
         temp: Float,
         params_array: FloatArray,
@@ -370,10 +225,6 @@ lite项目的temperature correction
         var newTemp = temp
 getgainstate PASS
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tau_data_H == null || tau_data_L == null) return temp
             newTemp =
                 LibIRTempAC020.temperatureCorrection(
@@ -385,10 +236,6 @@ getgainstate PASS
                     params_array[3],
                     params_array[4],
                     params_array[5],
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (basicGainGetValue == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN,
                 )
         } catch (e: Exception) {
@@ -401,14 +248,10 @@ getgainstate PASS
     /**
 set场景mode三
      */
-    /**
-     * Configures the mode with validation and thermal imaging optimization.
-     *
-     */
     fun setMode()  {
-// Val professionModeSetResult = DeviceIrcmdControlManager.getInstance().ircmdEngine
+//        val professionModeSetResult = DeviceIrcmdControlManager.getInstance().ircmdEngine
 //            .advProfessionModeSet(CommonParams.ProfessionMode.valueOf(0))
-// Val ircmdError = DeviceIrcmdControlManager.getInstance().ircmdEngine
+//        val ircmdError = DeviceIrcmdControlManager.getInstance().ircmdEngine
 //            .basicImageSceneModeSet(3)
 //        Log.d(TAG, "setModel=${ircmdError}")
     }

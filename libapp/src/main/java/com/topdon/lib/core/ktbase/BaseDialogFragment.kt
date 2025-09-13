@@ -16,18 +16,9 @@ import androidx.fragment.app.FragmentActivity
 import com.topdon.lib.core.R
 
 /**
- * Specialized thermal imaging component providing BaseDialogFragment functionality for the IRCamera system.
+ * 使用 DataBinding 的基础 DialogFragment.
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Created by LCG on 2024/10/14.
  */
 abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment() {
     /**
@@ -75,38 +66,18 @@ abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment
     @StyleRes
     protected open fun getDialogThemeResId(): Int = R.style.base_dialog
 
-    /**
-     * Executes oncreatedialog operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = Dialog(requireContext(), getDialogThemeResId())
         dialog.setCancelable(isCancelable)
         dialog.setCanceledOnTouchOutside(isCanceledOnTouchOutSide)
         dialog.window?.let {
             val layoutParams = it.attributes
-            /**
-             * Executes afterdialogcreate operation with thermal imaging domain optimization.
-             *
-             */
             afterDialogCreate(layoutParams)
             dialog.onWindowAttributesChanged(layoutParams)
         }
         return dialog
     }
 
-    /**
-     * Executes oncreateview operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param inflater Parameter for operation (type: LayoutInflater)
-     * @param container Parameter for operation (type: ViewGroup?)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -117,29 +88,13 @@ abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment
         return binding.root
     }
 
-    /**
-     * Executes onviewcreated operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param view Parameter for operation (type: View)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        /**
-         * Initializes the view component for thermal imaging operations.
-         *
-         */
         initView(savedInstanceState)
     }
 
-    /**
-     * Executes ondestroyview operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -148,25 +103,10 @@ abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment
     /**
      * Executes show functionality.
      */
-    /**
-     * Executes show operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     fun show(context: Context) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isAdded) {
             return
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (context is FragmentActivity) {
             super.show(context.supportFragmentManager, null)
             context.supportFragmentManager.executePendingTransactions()

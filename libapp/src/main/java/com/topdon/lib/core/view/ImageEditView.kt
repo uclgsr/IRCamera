@@ -15,44 +15,33 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ImageEditView display and interaction.
+ * 给一张图画 圆、矩形、箭头的自定义 View.
  *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Created by LCG on 2024/1/27.
  */
 class ImageEditView : View {
     companion object {
         /**
-         * default画笔宽度，单位 px.
+         * 默认画笔宽度，单位 px.
          */
         private const val PAINT_WIDTH = 6
 
         /**
-/**
- * Specialized thermal imaging component providing Type functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+         * 默认画笔宽度的一半，单位px.
+         */
+        private const val HALF_PAINT_WIDTH = 3
+
+        /**
+         * 箭头等边三角形边长，照钉钉截图估算，line宽3，边长16，故而视为画笔宽度5倍.
+         */
+        private const val ARROW_WIDTH = 30
+
+        /**
+         * 默认画笔颜色.
+         */
+        private const val PAINT_COLOR = 0xffe22400.toInt()
+    }
+
     enum class Type {
         /**
          * 圆
@@ -71,7 +60,7 @@ class ImageEditView : View {
     }
 
     /**
-     * 当前绘制的type，default圆形.
+     * 当前绘制的type，默认圆形.
      */
     var type: Type = Type.CIRCLE
 
@@ -79,21 +68,9 @@ class ImageEditView : View {
      * 画笔颜色.
      */
     var color: Int
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = paint.color
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             paint.color = value
-            /**
-             * Executes invalidate operation with thermal imaging domain optimization.
-             *
-             */
             invalidate()
         }
 
@@ -105,18 +82,10 @@ class ImageEditView : View {
             if (value == null) { // 没有把背景图清掉的需求，故而此处直接 return
                 return
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (width == 0 || height == 0) {
                 bgBitmap = null
             } else {
                 bgBitmap = Bitmap.createScaledBitmap(value, width, height, true)
-                /**
-                 * Executes invalidate operation with thermal imaging domain optimization.
-                 *
-                 */
                 invalidate()
             }
             field = value
@@ -146,46 +115,12 @@ class ImageEditView : View {
      */
     private val path = Path()
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     * @param defStyleRes Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
         context,
         attrs,
@@ -198,37 +133,15 @@ class ImageEditView : View {
         paint.isDither = true
     }
 
-    /**
-     * Executes clear functionality.
-     */
-    /**
-     * Executes clear operation with thermal imaging domain optimization.
-     *
-     */
     fun clear() {
         hasEditData = false
         canvas?.drawColor(0x00000000, PorterDuff.Mode.CLEAR)
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate()
     }
 
-    /**
-     * Executes buildResultBitmap functionality.
-     */
-    /**
-     * Executes buildresultbitmap operation with thermal imaging domain optimization.
-     *
-     */
     fun buildResultBitmap(): Bitmap? {
         val bgBitmap = this.bgBitmap ?: return null
         val editBitmap = this.editBitmap
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (hasEditData && editBitmap != null) {
             val canvas = Canvas(bgBitmap)
             canvas.drawBitmap(editBitmap, 0f, 0f, null)
@@ -237,17 +150,6 @@ class ImageEditView : View {
     }
 
     @SuppressLint("DrawAllocation")
-    /**
-     * Executes onlayout operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param changed Parameter for operation (type: Boolean)
-     * @param left Parameter for operation (type: Int)
-     * @param top Parameter for operation (type: Int)
-     * @param right Parameter for operation (type: Int)
-     * @param bottom Parameter for operation (type: Int)
-     *
-     */
     override fun onLayout(
         changed: Boolean,
         left: Int,
@@ -257,16 +159,8 @@ class ImageEditView : View {
     ) {
         super.onLayout(changed, left, top, right, bottom)
         val oldBitmap = editBitmap
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (oldBitmap == null || oldBitmap.width != measuredWidth || oldBitmap.height != measuredHeight) {
             val newBitmap =
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (oldBitmap == null) {
                     Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
                 } else {
@@ -276,17 +170,9 @@ class ImageEditView : View {
             editBitmap = newBitmap
         }
         sourceBitmap?.let {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (bgBitmap == null) {
                 bgBitmap = Bitmap.createScaledBitmap(it, measuredWidth, measuredHeight, true)
             } else {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (bgBitmap?.width != measuredWidth || bgBitmap?.height != measuredHeight) {
                     bgBitmap = Bitmap.createScaledBitmap(it, measuredWidth, measuredHeight, true)
                 }
@@ -294,13 +180,6 @@ class ImageEditView : View {
         }
     }
 
-    /**
-     * Executes ondraw operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     *
-     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         bgBitmap?.let {
@@ -309,35 +188,13 @@ class ImageEditView : View {
         editBitmap?.let {
             canvas.drawBitmap(it, 0f, 0f, null)
         }
-        /**
-         * Executes drawedit operation with thermal imaging domain optimization.
-         *
-         */
         drawEdit(canvas)
     }
 
-    /**
-     * Executes drawEdit functionality.
-     */
-    /**
-     * Executes drawedit operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas?)
-     *
-     */
     private fun drawEdit(canvas: Canvas?) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (downX == 0 && downY == 0 && currentX == 0 && currentY == 0) {
             return
         }
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (type) {
             Type.CIRCLE -> {
                 paint.style = Paint.Style.STROKE
@@ -356,10 +213,6 @@ class ImageEditView : View {
                 canvas?.drawRect(left, top, right, bottom, paint)
             }
             Type.ARROW -> {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (abs(downX - currentX) < ARROW_WIDTH && abs(downY - currentY) < ARROW_WIDTH) {
                     return
                 }
@@ -367,12 +220,8 @@ class ImageEditView : View {
                 paint.style = Paint.Style.FILL
                 path.reset()
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
-                if (downX == currentX) { // 垂直于Xaxis的直line
-                    // 由于直line有一定的宽度，而三角形顶point为apoint，此处绘制的直line往后退一point
+                if (downX == currentX) { // 垂直于X轴的直line
+                    // 由于直line有一定的宽度，而三角形顶point为一个point，此处绘制的直line往后退一point
                     val endY = if (downY > currentY) currentY + PAINT_WIDTH else (currentY - PAINT_WIDTH)
                     canvas?.drawLine(downX.toFloat(), downY.toFloat(), currentX.toFloat(), endY.toFloat(), paint)
 
@@ -387,8 +236,8 @@ class ImageEditView : View {
                     path.lineTo(x2, y)
                     path.close()
                     canvas?.drawPath(path, paint)
-                } else if (downY == currentY) { // 垂直于Yaxis的直line
-                    // 由于直line有一定的宽度，而三角形顶point为apoint，此处绘制的直line往后退一point
+                } else if (downY == currentY) { // 垂直于Y轴的直line
+                    // 由于直line有一定的宽度，而三角形顶point为一个point，此处绘制的直line往后退一point
                     val endX = if (downX > currentX) currentX + PAINT_WIDTH else (currentX - PAINT_WIDTH)
                     canvas?.drawLine(downX.toFloat(), downY.toFloat(), endX.toFloat(), currentY.toFloat(), paint)
 
@@ -405,25 +254,17 @@ class ImageEditView : View {
                     canvas?.drawPath(path, paint)
                 } else {
                     // 有两条直line：
-                    // Y = k1 * x + b1 是User绘制的直line，称为直line1
-                    // Y = k2 * x + b2 是垂直于直line1且过三角形交point的直line，称为直line2
+                    // y = k1 * x + b1 是User绘制的直line，称为直line1
+                    // y = k2 * x + b2 是垂直于直line1且过三角形交point的直line，称为直line2
                     val k1: Float = (downY - currentY).toFloat() / (downX - currentX).toFloat()
                     val b1: Float = downY - k1 * downX
                     val a1: Float = -b1 / k1
 
-                    // 由于直line有一定的宽度，而三角形顶point为apoint，此处绘制的直line往后退一point
+                    // 由于直line有一定的宽度，而三角形顶point为一个point，此处绘制的直line往后退一point
                     val backWidth = PAINT_WIDTH
                     val endY: Float =
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (k1 > 0) {
                             val hypotenuse: Float = sqrt((currentX - a1).pow(2) + currentY.toFloat().pow(2)) // 斜边长
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (currentX > downX) { // 左上到右下
                                 currentY * (hypotenuse - backWidth) / hypotenuse
                             } else { // 右下到左上
@@ -431,10 +272,6 @@ class ImageEditView : View {
                             }
                         } else {
                             val hypotenuse: Float = sqrt((a1 - currentX).pow(2) + currentY.toFloat().pow(2)) // 斜边长
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (currentX > downX) { // 左下到右上
                                 currentY * (hypotenuse + backWidth) / hypotenuse
                             } else { // 右上到左下
@@ -444,19 +281,11 @@ class ImageEditView : View {
                     val endX = (endY - b1) / k1
                     canvas?.drawLine(downX.toFloat(), downY.toFloat(), endX, endY, paint)
 
-                    // Calculation两条直line的交point x,y
+                    // calculation两条直line的交point x,y
                     val triangleH: Float = (ARROW_WIDTH / 2) * sqrt(3f)
                     val y: Float =
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (k1 > 0) {
                             val hypotenuse: Float = sqrt((currentX - a1).pow(2) + currentY.toFloat().pow(2)) // 斜边长
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (currentX > downX) { // 左上到右下
                                 currentY * (hypotenuse - triangleH) / hypotenuse
                             } else { // 右下到左上
@@ -464,10 +293,6 @@ class ImageEditView : View {
                             }
                         } else {
                             val hypotenuse: Float = sqrt((a1 - currentX).pow(2) + currentY.toFloat().pow(2)) // 斜边长
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (currentX > downX) { // 左下到右上
                                 currentY * (hypotenuse + triangleH) / hypotenuse
                             } else { // 右上到左下
@@ -502,64 +327,33 @@ class ImageEditView : View {
     private var currentY = 0
 
     @SuppressLint("ClickableViewAccessibility")
-    /**
-     * Executes ontouchevent operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: MotionEvent?)
-     *
-     */
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (event == null || !isEnabled) {
             return false
         }
         currentX = event.x.toInt().coerceAtLeast(HALF_PAINT_WIDTH).coerceAtMost(width - HALF_PAINT_WIDTH)
         currentY = event.y.toInt().coerceAtLeast(HALF_PAINT_WIDTH).coerceAtMost(height - HALF_PAINT_WIDTH)
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 downX = event.x.toInt().coerceAtLeast(HALF_PAINT_WIDTH).coerceAtMost(width - HALF_PAINT_WIDTH)
                 downY = event.y.toInt().coerceAtLeast(HALF_PAINT_WIDTH).coerceAtMost(height - HALF_PAINT_WIDTH)
             }
             MotionEvent.ACTION_MOVE -> {
-                /**
-                 * Executes invalidate operation with thermal imaging domain optimization.
-                 *
-                 */
                 invalidate()
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                /**
-                 * Executes drawedit operation with thermal imaging domain optimization.
-                 *
-                 */
                 drawEdit(canvas)
                 downX = 0
                 downY = 0
                 currentX = 0
                 currentY = 0
                 hasEditData = true
-                /**
-                 * Executes invalidate operation with thermal imaging domain optimization.
-                 *
-                 */
                 invalidate()
             }
         }
         return true
     }
 
-    /**
-     * Executes ondetachedfromwindow operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         canvas = null

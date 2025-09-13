@@ -36,18 +36,8 @@ import org.greenrobot.eventbus.ThreadMode
  */
 // Legacy ARouter route annotation - now using NavigationManager
 /**
- * Specialized thermal imaging component providing ReportCreateSecondActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Report create second activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
  */
 class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
     // View references using findViewById with lazy initialization
@@ -89,10 +79,6 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
 
     override fun initContentView() = R.layout.activity_report_create_second
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         // Views are now initialized using lazy properties - no manual findViewById needed
 
@@ -100,57 +86,21 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         imageTempBean = intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN)
         reportIRList = intent.getParcelableArrayListExtra(ExtraKeyConfig.REPORT_IR_LIST) ?: ArrayList(10)
 
-        /**
-         * Executes refreshimg operation with thermal imaging domain optimization.
-         *
-         */
         refreshImg(currentFilePath)
-        /**
-         * Executes refreshdata operation with thermal imaging domain optimization.
-         *
-         */
         refreshData(imageTempBean)
 
         tvAddImage.setOnClickListener(this)
         tvPreview.setOnClickListener(this)
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    /**
-     * Executes onReportCreate functionality.
-     */
-    /**
-     * Executes onreportcreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: ReportCreateEvent)
-     *
-     */
     fun onReportCreate(event: ReportCreateEvent) {
-        /**
-         * Executes finish operation with thermal imaging domain optimization.
-         *
-         */
         finish()
     }
 
-    /**
-     * Executes refreshImg functionality.
-     */
-    /**
-     * Executes refreshimg operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param absolutePath Parameter for operation (type: String?)
-     *
-     */
     private fun refreshImg(absolutePath: String?) {
         lifecycleScope.launch {
             val drawable = GlideLoader.getDrawable(this@ReportCreateSecondActivity, absolutePath)
@@ -164,16 +114,6 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    /**
-     * Executes refreshData functionality.
-     */
-    /**
-     * Executes refreshdata operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param imageTempBean Temperature value in Celsius (type: ImageTempBean?)
-     *
-     */
     private fun refreshData(imageTempBean: ImageTempBean?) {
         scrollView.scrollTo(0, 0)
 
@@ -181,147 +121,72 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         reportTempViewFull.refreshData(imageTempBean?.full)
 
         reportTempViewPoint1.isVisible = (imageTempBean?.pointList?.size ?: 0) > 0
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.pointList?.size ?: 0) > 0) {
             reportTempViewPoint1.refreshData(imageTempBean?.pointList?.get(0))
         }
         reportTempViewPoint2.isVisible = (imageTempBean?.pointList?.size ?: 0) > 1
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.pointList?.size ?: 0) > 1) {
             reportTempViewPoint2.refreshData(imageTempBean?.pointList?.get(1))
         }
         reportTempViewPoint3.isVisible = (imageTempBean?.pointList?.size ?: 0) > 2
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.pointList?.size ?: 0) > 2) {
             reportTempViewPoint3.refreshData(imageTempBean?.pointList?.get(2))
         }
         reportTempViewPoint4.isVisible = (imageTempBean?.pointList?.size ?: 0) > 3
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.pointList?.size ?: 0) > 3) {
             reportTempViewPoint4.refreshData(imageTempBean?.pointList?.get(3))
         }
         reportTempViewPoint5.isVisible = (imageTempBean?.pointList?.size ?: 0) > 4
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.pointList?.size ?: 0) > 4) {
             reportTempViewPoint5.refreshData(imageTempBean?.pointList?.get(4))
         }
 
         reportTempViewLine1.isVisible = (imageTempBean?.lineList?.size ?: 0) > 0
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.lineList?.size ?: 0) > 0) {
             reportTempViewLine1.refreshData(imageTempBean?.lineList?.get(0))
         }
         reportTempViewLine2.isVisible = (imageTempBean?.lineList?.size ?: 0) > 1
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.lineList?.size ?: 0) > 1) {
             reportTempViewLine2.refreshData(imageTempBean?.lineList?.get(1))
         }
         reportTempViewLine3.isVisible = (imageTempBean?.lineList?.size ?: 0) > 2
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.lineList?.size ?: 0) > 2) {
             reportTempViewLine3.refreshData(imageTempBean?.lineList?.get(2))
         }
         reportTempViewLine4.isVisible = (imageTempBean?.lineList?.size ?: 0) > 3
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.lineList?.size ?: 0) > 3) {
             reportTempViewLine4.refreshData(imageTempBean?.lineList?.get(3))
         }
         reportTempViewLine5.isVisible = (imageTempBean?.lineList?.size ?: 0) > 4
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.lineList?.size ?: 0) > 4) {
             reportTempViewLine5.refreshData(imageTempBean?.lineList?.get(4))
         }
 
         reportTempViewRect1.isVisible = (imageTempBean?.rectList?.size ?: 0) > 0
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.rectList?.size ?: 0) > 0) {
             reportTempViewRect1.refreshData(imageTempBean?.rectList?.get(0))
         }
         reportTempViewRect2.isVisible = (imageTempBean?.rectList?.size ?: 0) > 1
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.rectList?.size ?: 0) > 1) {
             reportTempViewRect2.refreshData(imageTempBean?.rectList?.get(1))
         }
         reportTempViewRect3.isVisible = (imageTempBean?.rectList?.size ?: 0) > 2
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.rectList?.size ?: 0) > 2) {
             reportTempViewRect3.refreshData(imageTempBean?.rectList?.get(2))
         }
         reportTempViewRect4.isVisible = (imageTempBean?.rectList?.size ?: 0) > 3
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.rectList?.size ?: 0) > 3) {
             reportTempViewRect4.refreshData(imageTempBean?.rectList?.get(3))
         }
         reportTempViewRect5.isVisible = (imageTempBean?.rectList?.size ?: 0) > 4
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((imageTempBean?.rectList?.size ?: 0) > 4) {
             reportTempViewRect5.refreshData(imageTempBean?.rectList?.get(4))
         }
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
-            tvAddImage -> { // Addimage
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+            tvAddImage -> { // addimage
                 if (reportIRList.size >= 9) {
                     ToastUtils.showShort(R.string.album_report_max_image_tips)
                     return
@@ -330,10 +195,6 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                 reportIRBeanList.add(buildReportIr(currentFilePath))
                 val reportInfo = intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
                 val reportCondition = intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (reportInfo != null && reportCondition != null) {
                     NavigationManager.getInstance()
                         .build(RouterConfig.REPORT_PICK_IMG)
@@ -360,56 +221,15 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    /**
-     * Executes buildReportIr functionality.
-     */
-    /**
-     * Executes buildreportir operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param filePath Parameter for operation (type: String)
-     *
-     */
     private fun buildReportIr(filePath: String): ReportIRBean {
         val full: ReportTempBean? =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (imageTempBean?.full != null) {
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 ReportTempBean(
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if ((reportTempViewFull as? ReportIRInputView)?.getMaxInput()?.isNotEmpty() == true) (reportTempViewFull as ReportIRInputView).getMaxInput() + UnitTools.showUnit() else "",
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if ((reportTempViewFull as? ReportIRInputView)?.isSwitchMaxCheck() == true && (reportTempViewFull as ReportIRInputView).getMaxInput().isNotEmpty()) 1 else 0,
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if ((reportTempViewFull as? ReportIRInputView)?.getMinInput()?.isNotEmpty() == true) (reportTempViewFull as ReportIRInputView).getMinInput() + UnitTools.showUnit() else "",
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if ((reportTempViewFull as? ReportIRInputView)?.isSwitchMinCheck() == true && (reportTempViewFull as ReportIRInputView).getMinInput().isNotEmpty()) 1 else 0,
                     (reportTempViewFull as? ReportIRInputView)?.getExplainInput() ?: "",
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if ((reportTempViewFull as? ReportIRInputView)?.isSwitchExplainCheck() == true && (reportTempViewFull as ReportIRInputView).getExplainInput().isNotEmpty()) 1 else 0,
                 )
             } else {
@@ -426,9 +246,6 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
 Buildreportpointlineareadata列表.
 @param type 1-point 2-line 3-area
      */
-    /**
-     * Processes temperature measurement data.
-     */
     private fun buildReportTempBeanList(type: Int): ArrayList<ReportTempBean> {
         val size =
             when (type) {
@@ -437,22 +254,10 @@ Buildreportpointlineareadata列表.
                 else -> imageTempBean?.rectList?.size ?: 0
             }
         val resultList = ArrayList<ReportTempBean>(size)
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in 0 until size) {
             val reportTempView =
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (type) {
-                    1 -> { // Point
-                        /**
-                         * Executes when operation with thermal imaging domain optimization.
-                         *
-                         */
+                    1 -> { // point
                         when (i) {
                             0 -> reportTempViewPoint1
                             1 -> reportTempViewPoint2
@@ -461,11 +266,7 @@ Buildreportpointlineareadata列表.
                             else -> reportTempViewPoint5
                         }
                     }
-                    2 -> { // Line
-                        /**
-                         * Executes when operation with thermal imaging domain optimization.
-                         *
-                         */
+                    2 -> { // line
                         when (i) {
                             0 -> reportTempViewLine1
                             1 -> reportTempViewLine2
@@ -474,11 +275,7 @@ Buildreportpointlineareadata列表.
                             else -> reportTempViewLine5
                         }
                     }
-                    else -> { // Area
-                        /**
-                         * Executes when operation with thermal imaging domain optimization.
-                         *
-                         */
+                    else -> { // area
                         when (i) {
                             0 -> reportTempViewRect1
                             1 -> reportTempViewRect2
@@ -487,80 +284,22 @@ Buildreportpointlineareadata列表.
                     }
                 }
             val reportTempBean =
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
-                if (type == 1) { // Point的data封装不太一样
-                    /**
-                     * Handles temperature measurement and calibration with precision thermal data processing.
-                     *
-                     * @note Temperature values are in Celsius unless otherwise specified.
-                     * Accuracy depends on thermal camera calibration.
-                     *
-                     */
+                if (type == 1) { // point的data封装不太一样
                     ReportTempBean(
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if ((reportTempView as? ReportIRInputView)?.getMaxInput()?.isNotEmpty() == true) (reportTempView as ReportIRInputView).getMaxInput() + UnitTools.showUnit() else "",
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if ((reportTempView as? ReportIRInputView)?.isSwitchMaxCheck() == true && (reportTempView as ReportIRInputView).getMaxInput().isNotEmpty()) 1 else 0,
                         (reportTempView as? ReportIRInputView)?.getExplainInput() ?: "",
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if ((reportTempView as? ReportIRInputView)?.isSwitchExplainCheck() == true && (reportTempView as ReportIRInputView).getExplainInput().isNotEmpty()) 1 else 0,
                     )
                 } else {
-                    /**
-                     * Handles temperature measurement and calibration with precision thermal data processing.
-                     *
-                     * @note Temperature values are in Celsius unless otherwise specified.
-                     * Accuracy depends on thermal camera calibration.
-                     *
-                     */
                     ReportTempBean(
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if ((reportTempView as? ReportIRInputView)?.getMaxInput()?.isNotEmpty() == true) (reportTempView as ReportIRInputView).getMaxInput() + UnitTools.showUnit() else "",
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if ((reportTempView as? ReportIRInputView)?.isSwitchMaxCheck() == true && (reportTempView as ReportIRInputView).getMaxInput().isNotEmpty()) 1 else 0,
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if ((reportTempView as? ReportIRInputView)?.getMinInput()?.isNotEmpty() == true) (reportTempView as ReportIRInputView).getMinInput() + UnitTools.showUnit() else "",
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if ((reportTempView as? ReportIRInputView)?.isSwitchMinCheck() == true && (reportTempView as ReportIRInputView).getMinInput().isNotEmpty()) 1 else 0,
                         (reportTempView as? ReportIRInputView)?.getExplainInput() ?: "",
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if ((reportTempView as? ReportIRInputView)?.isSwitchExplainCheck() == true && (reportTempView as ReportIRInputView).getExplainInput().isNotEmpty()) 1 else 0,
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if ((reportTempView as? ReportIRInputView)?.getAverageInput()?.isNotEmpty() == true) (reportTempView as ReportIRInputView).getAverageInput() + UnitTools.showUnit() else "",
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if ((reportTempView as? ReportIRInputView)?.isSwitchAverageCheck() == true && (reportTempView as ReportIRInputView).getAverageInput().isNotEmpty()) 1 else 0,
                     )
                 }

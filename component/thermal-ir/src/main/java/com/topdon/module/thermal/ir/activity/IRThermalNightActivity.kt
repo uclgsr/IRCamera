@@ -73,7 +73,7 @@ import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.*
 import com.topdon.lib.core.repository.GalleryRepository
 import com.topdon.lib.core.tools.*
-// Import com.topdon.lib.core.utils.BitmapUtils
+// import com.topdon.lib.core.utils.BitmapUtils
 import com.topdon.lib.core.utils.CommUtils
 import com.topdon.lib.core.utils.Constants
 import com.topdon.lib.core.utils.ImageUtils
@@ -105,7 +105,7 @@ import com.topdon.module.thermal.ir.repository.ConfigRepository
 import com.topdon.module.thermal.ir.utils.IRConfigData
 import com.topdon.module.thermal.ir.video.VideoRecordFFmpeg
 import com.topdon.module.thermal.ir.view.compass.SensorService
-// Import com.topdon.pseudo.activity.PseudoSetActivity
+// import com.topdon.pseudo.activity.PseudoSetActivity
 import com.topdon.pseudo.bean.CustomPseudoBean
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -116,18 +116,8 @@ import kotlin.math.roundToInt
 
 // Legacy ARouter route annotation - now using NavigationManager
 /**
- * Specialized thermal imaging component providing IRThermalNightActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * I r thermal night activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
  */
 open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     /**
@@ -139,7 +129,7 @@ data流mode。
     protected val defaultDataFlowMode = CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT
 
     /**
-目前对core进行一些configuration如emissivity、temperature measurement距离、自动快门reset，是在 start 调用后，另起a协程，
+目前对core进行一些configuration如emissivity、temperature measurement距离、自动快门reset，是在 start 调用后，另起一个协程，
 不断循环判断 ircmd 是否initialize完毕，直到 ircmd 的initializeCallback中set为 false 后，
 才执行configurationinitialize操作，这个variable就是干这个活，后续有空了要Optimize流程，不用这么绕。
      */
@@ -169,36 +159,8 @@ high/low gain 1:低gain 0: 高gain
     protected var alarmBean = SaveSettingUtil.alarmBean
 
     // Fallback BitmapUtils object to resolve compilation issues
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for BitmapUtils operations.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * <h3>Usage Example:</h3>
- * <pre>{@code
- * // Use BitmapUtils for thermal operations
- * val result = BitmapUtils.processTemperatureData(thermalFrame);
- * }</pre>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     private object BitmapUtils {
         @JvmStatic
-    /**
-     * Executes mergeBitmapByView functionality.
-     */
-        /**
-         * Executes mergebitmapbyview operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param bitmap1 Parameter for operation (type: Bitmap?)
-         * @param bitmap2 Parameter for operation (type: Bitmap?)
-         * @param view Parameter for operation (type: View?)
-         *
-         */
         fun mergeBitmapByView(
             bitmap1: Bitmap?,
             bitmap2: Bitmap?,
@@ -208,19 +170,6 @@ high/low gain 1:低gain 0: 高gain
         }
 
         @JvmStatic
-    /**
-     * Executes mergeBitmap functionality.
-     */
-        /**
-         * Executes mergebitmap operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param bitmap1 Parameter for operation (type: Bitmap?)
-         * @param bitmap2 Parameter for operation (type: Bitmap?)
-         * @param x Parameter for operation (type: Int = 0)
-         * @param y Parameter for operation (type: Int = 0)
-         *
-         */
         fun mergeBitmap(
             bitmap1: Bitmap?,
             bitmap2: Bitmap?,
@@ -231,20 +180,6 @@ high/low gain 1:低gain 0: 高gain
         }
 
         @JvmStatic
-    /**
-     * Executes drawCenterLable functionality.
-     */
-        /**
-         * Executes drawcenterlable operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param bitmap Parameter for operation (type: Bitmap?)
-         * @param title Parameter for operation (type: String?)
-         * @param address Parameter for operation (type: String? = null)
-         * @param time Parameter for operation (type: String? = null)
-         * @param seekBarWidth Parameter for operation (type: Int = 0)
-         *
-         */
         fun drawCenterLable(
             bitmap: Bitmap?,
             title: String?,
@@ -258,8 +193,8 @@ high/low gain 1:低gain 0: 高gain
 
     protected var customPseudoBean = CustomPseudoBean.loadFromShared()
 
-    private var initRotate = 0 // 初始angle
-    private var correctRotate = 0 // 矫正angle
+    private var initRotate = 0 // 初始角度
+    private var correctRotate = 0 // 矫正角度
 
     private var isShowC: Boolean = false
     private lateinit var orientationEventListener: OrientationEventListener
@@ -291,12 +226,8 @@ high/low gain 1:低gain 0: 高gain
     private lateinit var compass: ICompass
     private lateinit var sensorService: SensorService
     // Add missing compass view property - commented out as it doesn't exist in layout
-    // Private lateinit var compassView: View
+    // private lateinit var compassView: View
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.activity_thermal_ir_night
 
     /**
@@ -311,10 +242,10 @@ true-temperature measurementmode false-观测mode
      */
     private var isTs001TempMode = true
 
-当前selected的tab position，default是1
+当前selected的tab position，默认是1
     protected var curChooseTabPos = 1
 
-default是1-measurementmode 2-标靶type
+默认是1-measurementmode 2-标靶type
     private var curTargetStyle = 1
 
     /**
@@ -341,7 +272,7 @@ default是1-measurementmode 2-标靶type
     protected val tvTypeInd by lazy { findViewById<TextView>(R.id.tv_type_ind) }
 
     // TimeDownView not found in current layout - commented out for now
-    // // Protected val timeDownView by lazy { findViewById<com.topdon.module.thermal.ir.view.TimeDownView>(R.id.timeDownView) }
+    // // protected val timeDownView by lazy { findViewById<com.topdon.module.thermal.ir.view.TimeDownView>(R.id.timeDownView) }
     private val temperatureIvLock by lazy { findViewById<ImageView>(R.id.temperature_iv_lock) }
     private val temperatureIvInput by lazy { findViewById<ImageView>(R.id.temperature_iv_input) }
     private val popTimeLay by lazy { findViewById<View>(R.id.pop_time_lay) }
@@ -355,29 +286,21 @@ default是1-measurementmode 2-标靶type
     protected val temperatureSeekbar by lazy { findViewById<com.topdon.lib.ui.widget.seekbar.RangeSeekBar>(R.id.temperature_seekbar) }
 
     // Additional view references for findViewById modernization
-    // Private val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }  // ID doesn't exist
+    // private val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }  // ID doesn't exist
     private val tvTitleTemp by lazy { findViewById<TextView>(R.id.tv_title_temp) }
     private val tvTitleObserve by lazy { findViewById<TextView>(R.id.tv_title_observe) }
 
-    // Private val drawIndPath by lazy { findViewById<View>(R.id.draw_ind_path) }  // ID doesn't exist
-    // Private val viewCarDetect by lazy { findViewById<View>(R.id.view_car_detect) }  // ID doesn't exist
-    // Private val tvDetectPrompt by lazy { findViewById<TextView>(R.id.tv_detect_prompt) }  // ID doesn't exist
-    // Private val rlContent by lazy { findViewById<View>(R.id.rl_content) }  // ID doesn't exist
+    // private val drawIndPath by lazy { findViewById<View>(R.id.draw_ind_path) }  // ID doesn't exist
+    // private val viewCarDetect by lazy { findViewById<View>(R.id.view_car_detect) }  // ID doesn't exist
+    // private val tvDetectPrompt by lazy { findViewById<TextView>(R.id.tv_detect_prompt) }  // ID doesn't exist
+    // private val rlContent by lazy { findViewById<View>(R.id.rl_content) }  // ID doesn't exist
     protected var compassView: com.topdon.module.thermal.ir.view.compass.LinearCompassView? = null
     // Removed viewStubCamera references as the layout resource doesn't exist
 
     private val bitmapWidth: Int
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = if (isOpenAmplify) imageWidth * ImageThreadTC.MULTIPLE else imageWidth
 
     private val bitmapHeight: Int
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = if (isOpenAmplify) imageHeight * ImageThreadTC.MULTIPLE else imageHeight
 
     /**
@@ -387,10 +310,6 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
 
     open fun switchAmplify() {
         lifecycleScope.launch {
-            /**
-             * Executes withcontext operation with thermal imaging domain optimization.
-             *
-             */
             withContext(Dispatchers.IO) {
                 try {
                     SupHelp.getInstance().initA4KCPP()
@@ -406,19 +325,11 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
                     XLog.e("超分initializationfailed")
                 }
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!SupHelp.getInstance().loadOpenclSuccess)
                 {
                     return@launch
                 }
             isOpenAmplify = !isOpenAmplify
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (saveSetBean.isRotatePortrait()) {
                 bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888)
             } else {
@@ -428,13 +339,9 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
             imageThread?.setOpenAmplify(isOpenAmplify)
             cameraView.bitmap = bitmap
             cameraView.isOpenAmplify = isOpenAmplify
-            // TitleView already initialized as class property
+            // titleView already initialized as class property
             titleView.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)
             SaveSettingUtil.isOpenAmplify = isOpenAmplify
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isOpenAmplify)
                 {
                     ToastUtils.showShort(R.string.tips_tisr_on)
@@ -447,11 +354,7 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
 
     open fun initAmplify(show: Boolean)  {
         lifecycleScope.launch {
-            // TitleView already initialized as class property
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            // titleView already initialized as class property
             if (show)
                 {
                     titleView.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)
@@ -459,24 +362,12 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
                 {
                     titleView.setRight2Drawable(0)
                 }
-            /**
-             * Executes withcontext operation with thermal imaging domain optimization.
-             *
-             */
             withContext(Dispatchers.IO) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isOpenAmplify)
                     {
                         SupHelp.getInstance().initA4KCPP()
                     }
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (saveSetBean.isRotatePortrait()) {
                 bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888)
             } else {
@@ -490,15 +381,11 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
     }
 
     @SuppressLint("SetTextI18n")
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         // Initialize camera view
         cameraView = findViewById(R.id.cameraView)
         temperatureView = findViewById(R.id.temperatureView)
-        // // TitleView, thermalRecyclerNight, thermalLay, tvTypeInd, timeDownView already handled by lazy properties
+        // // titleView, thermalRecyclerNight, thermalLay, tvTypeInd, timeDownView already handled by lazy properties
 
         // Use lazy properties instead of redundant findViewById calls
         viewMenuFirst = findViewById(R.id.view_menu_first)
@@ -509,41 +396,25 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
         clTrendOpen = findViewById(R.id.cl_trend_open)
         llTrendClose = findViewById(R.id.ll_trend_close)
         val thermalText = findViewById<TextView>(R.id.thermal_text)
-        // ThermalLay already handled by lazy property
+        // thermalLay already handled by lazy property
         val ivTrendClose = findViewById<ImageView>(R.id.iv_trend_close)
         val ivTrendOpen = findViewById<ImageView>(R.id.iv_trend_open)
 
         // Missing findViewById declarations for synthetic views
-        // TvTypeInd already handled by lazy property
+        // tvTypeInd already handled by lazy property
         spaceChart = findViewById(R.id.space_chart)
 
         titleView.setLeftClickListener {
-            // TimeDownView check commented out since view doesn't exist
-            // If (timeDownView.isRunning) {
-            // Return@setLeftClickListener
+            // timeDownView check commented out since view doesn't exist
+            // if (timeDownView.isRunning) {
+            //     return@setLeftClickListener
             // }
-            /**
-             * Configures the result with validation and thermal imaging optimization.
-             *
-             */
             setResult(200)
-            /**
-             * Executes finish operation with thermal imaging domain optimization.
-             *
-             */
             finish()
         }
         titleView.setRight2ClickListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (SupHelp.getInstance().loadOpenclSuccess)
                 {
-                    /**
-                     * Executes switchamplify operation with thermal imaging domain optimization.
-                     *
-                     */
                     switchAmplify()
                 } else
                 {
@@ -557,21 +428,9 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
         titleView.setRightClickListener {
             val config = ConfigRepository.readConfig(false)
             var text = ""
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (tmp in IRConfigData.irConfigData(this@IRThermalNightActivity)) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (config.radiation.toString() == tmp.value)
                     {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (text.isEmpty())
                             {
                                 text = "${resources.getString(LibcoreR.string.tc_temp_test_materials)} : "
@@ -579,18 +438,10 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
                         text += "${tmp.name}/"
                     }
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (text.isNotEmpty())
                 {
                     text = text.substring(0, text.length - 1)
                 }
-            /**
-             * Executes emissivitytippopup operation with thermal imaging domain optimization.
-             *
-             */
             EmissivityTipPopup(this@IRThermalNightActivity, false)
                 .setDataBean(config.environment, config.distance, config.radiation, text)
                 .build()
@@ -598,50 +449,24 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
         }
         tvTitleTemp.isSelected = true
         tvTitleTemp.setOnClickListener {
-            /**
-             * Executes switchts001mode operation with thermal imaging domain optimization.
-             *
-             */
             switchTs001Mode(true)
         }
         tvTitleObserve.setOnClickListener {
-            /**
-             * Executes switchts001mode operation with thermal imaging domain optimization.
-             *
-             */
             switchTs001Mode(false)
         }
 
-        // ViewCarDetect.findViewById<LinearLayout>(R.id.ll_car_detect_info) - resource not found
+        // viewCarDetect.findViewById<LinearLayout>(R.id.ll_car_detect_info) - resource not found
         // LongTextDialog(this, SharedManager.getCarDetectInfo().item, SharedManager.getCarDetectInfo().description).show()
         BarUtils.setStatusBarColor(this, 0xff16131e.toInt())
         BarUtils.setNavBarColor(window, 0xff16131e.toInt())
-        /**
-         * Initializes the recycler component for thermal imaging operations.
-         *
-         */
         initRecycler()
         viewMenuFirst.onTabClickListener = {
             // ViewStub removed - resource not found
             popupWindow?.dismiss()
             temperatureView.isEnabled = it.selectPosition == 1
-            /**
-             * Handles temperature measurement and calibration with precision thermal data processing.
-             *
-             * @note Temperature values are in Celsius unless otherwise specified.
-             * Accuracy depends on thermal camera calibration.
-             *
-             */
             showTempRecyclerNight(it.isObserveMode, it.selectPosition)
         }
         temperatureSeekbar.setIndicatorTextDecimalFormat("0.0")
-        /**
-         * Handles temperature measurement and calibration with precision thermal data processing.
-         *
-         * @note Temperature values are in Celsius unless otherwise specified.
-         * Accuracy depends on thermal camera calibration.
-         *
-         */
         updateTemperatureSeekBar(false) // 加锁
         isShowC = getTemperature() == 1
         temperatureView.setTextSize(saveSetBean.tempTextSize)
@@ -651,10 +476,6 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
                 realLeftValue = UnitTools.showUnitValue(min, isShowC)
                 realRightValue = UnitTools.showUnitValue(max, isShowC)
                 this@IRThermalNightActivity.runOnUiThread {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (!customPseudoBean.isUseCustomPseudo) {
 动态renderingmode
                         try {
@@ -664,10 +485,6 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
                                 realLeftValue,
                                 realRightValue,
                             )
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (editMinValue != Float.MIN_VALUE && editMaxValue != Float.MAX_VALUE) {
                                 imageThread?.setLimit(
                                     editMaxValue, editMinValue,
@@ -701,13 +518,9 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
                         }
                     }
                     try {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isVideo) {
                             cl_seek_bar.requestLayout()
-                            // Cl_seek_bar.updateBitmap() - synthetic method removed
+                            // cl_seek_bar.updateBitmap() - synthetic method removed
                         }
                     } catch (e: Exception) {
                         Log.w("pseudo color条updateexception:", "${e.message}")
@@ -721,20 +534,12 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
             }
         temperatureView.setOnTrendChangeListener {
             lifecycleScope.launch(Dispatchers.Main) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (clTrendOpen.isVisible) {
-                    // ViewChartTrend.refresh(it) - synthetic method removed
+                    // viewChartTrend.refresh(it) - synthetic method removed
                 }
             }
         }
         temperatureView.setOnTrendAddListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (hasClickTrendDel) {
                 hasClickTrendDel = false
                 clTrendOpen.isVisible = true
@@ -742,77 +547,38 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
             }
         }
         temperatureView.setOnTrendRemoveListener {
-            // ViewChartTrend.setToEmpty() - synthetic method removed
+            // viewChartTrend.setToEmpty() - synthetic method removed
         }
 
-        // ThermalRecyclerNight.isVideoMode - synthetic property removed
-        // ThermalRecyclerNight.fenceSelectType - synthetic property removed
-        // ThermalRecyclerNight.isUnitF - synthetic property removed
-        // ThermalRecyclerNight.setSettingRotate - synthetic method removed
-        // ThermalRecyclerNight.setTempLevel - synthetic method removed
+        // thermalRecyclerNight.isVideoMode - synthetic property removed
+        // thermalRecyclerNight.fenceSelectType - synthetic property removed
+        // thermalRecyclerNight.isUnitF - synthetic property removed
+        // thermalRecyclerNight.setSettingRotate - synthetic method removed
+        // thermalRecyclerNight.setTempLevel - synthetic method removed
 
 判断font color是否save
-        // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+        // thermalRecyclerNight.setSettingSelected - synthetic method removed
 
         popTimeLay.visibility = View.GONE
         cameraPreview.visibility = View.INVISIBLE
-        /**
-         * Initializes the orientationeventlistener component for thermal imaging operations.
-         *
-         */
         initOrientationEventListener()
-        /**
-         * Handles temperature measurement and calibration with precision thermal data processing.
-         *
-         * @note Temperature values are in Celsius unless otherwise specified.
-         * Accuracy depends on thermal camera calibration.
-         *
-         */
         addTemperatureListener()
         cameraView.postDelayed(500) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (SaveSettingUtil.isOpenTwoLight && XXPermissions.isGranted(this, Permission.CAMERA)) {
-                /**
-                 * Manages thermal camera operations with hardware-optimized performance and error handling.
-                 *
-                 */
                 cameraPreviewConfig(false)
             }
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ScreenTool.isIPad(this)) {
             clSeekBar.setPadding(0, SizeUtils.dp2px(40f), 0, SizeUtils.dp2px(40f))
         }
         DragViewUtil.registerDragAction(zoomView)
-        /**
-         * Initializes the compass component for thermal imaging operations.
-         *
-         */
         initCompass()
-        // Distance_measure_view?.moveListener - synthetic property removed
-        // ThermalText.text - it parameter removed
+        // distance_measure_view?.moveListener - synthetic property removed
+        // thermalText.text - it parameter removed
         lifecycleScope.launch {
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(1000)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!SharedManager.isHideEmissivityTips)
                 {
-                    /**
-                     * Executes showemissivitytips operation with thermal imaging domain optimization.
-                     *
-                     */
                     showEmissivityTips()
                 }
         }
@@ -825,10 +591,6 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
             clTrendOpen.isVisible = true
             llTrendClose.isVisible = false
         }
-        /**
-         * Executes startusb operation with thermal imaging domain optimization.
-         *
-         */
         startUSB(isRestart = false, false)
     }
 
@@ -836,21 +598,7 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
 仅 TS001 时，switch temperature measurement/观测 mode.
 @param isToTemp true-switch到temperature measurement false-switch到观测
      */
-    /**
-     * Executes switchTs001Mode functionality.
-     */
-    /**
-     * Executes switchts001mode operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isToTemp Temperature value in Celsius (type: Boolean)
-     *
-     */
     private fun switchTs001Mode(isToTemp: Boolean) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isToTemp == isTs001TempMode) {
             return
         }
@@ -863,93 +611,58 @@ disabledsetmenu的 PopupWindow
         // ViewStub removed - resource not found
         popupWindow?.dismiss()
 
-        /**
-         * Manages thermal camera operations with hardware-optimized performance and error handling.
-         *
-         */
         showCameraLoading()
 
-        /**
-         * Executes stopifvideoing operation with thermal imaging domain optimization.
-         *
-         */
-        stopIfVideoing() // End正在执行的录像
+        stopIfVideoing() // end正在执行的录像
 
 end正在执行的连续拍照
         isAutoCamera = false
         autoJob?.cancel()
 
 end正在执行的延迟拍照
-        // If (timeDownView.isRunning) {
-        // TimeDownView.cancel()
-        // UpdateDelayView()
+        // if (timeDownView.isRunning) {
+        //     timeDownView.cancel()
+        //     updateDelayView()
         // }
 
 reset等温尺
-        /**
-         * Configures the deflimit with validation and thermal imaging optimization.
-         *
-         */
         setDefLimit()
-        /**
-         * Handles temperature measurement and calibration with precision thermal data processing.
-         *
-         * @note Temperature values are in Celsius unless otherwise specified.
-         * Accuracy depends on thermal camera calibration.
-         *
-         */
         updateTemperatureSeekBar(false) // 加锁
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isToTemp) { // 观测->temperature measurement
 Restorevisible light
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (SaveSettingUtil.isOpenTwoLight && XXPermissions.isGranted(this, Permission.CAMERA)) {
-                /**
-                 * Manages thermal camera operations with hardware-optimized performance and error handling.
-                 *
-                 */
                 cameraPreviewConfig(false)
             }
 
 disabled AI algorithm(动态识别、high temperature源、low temperature源)
             aiConfig = ObserveBean.TYPE_NONE
             imageThread?.typeAi = aiConfig
-            thermalRecyclerNight // SetTempSource - synthetic method removed
+            thermalRecyclerNight // setTempSource - synthetic method removed
 
 disabled标靶
-            // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-            // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-            // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-            // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-            // ThermalRecyclerNight.setTargetMode - synthetic method removed
+            // thermalRecyclerNight.setTargetSelected - synthetic method removed
+            // thermalRecyclerNight.setTargetSelected - synthetic method removed
+            // thermalRecyclerNight.setTargetSelected - synthetic method removed
+            // thermalRecyclerNight.setTargetSelected - synthetic method removed
+            // thermalRecyclerNight.setTargetMode - synthetic method removed
             targetMeasureMode = ObserveBean.TYPE_MEASURE_PERSON
             targetStyle = ObserveBean.TYPE_TARGET_HORIZONTAL
             targetColorType = ObserveBean.TYPE_TARGET_COLOR_GREEN
-            // ZoomView.hideView - synthetic method removed
+            // zoomView.hideView - synthetic method removed
 
 disabled指南针
             saveSetBean.isOpenCompass = false
-            // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+            // thermalRecyclerNight.setSettingSelected - synthetic method removed
             compassView?.visibility = View.GONE
             zoomView?.visibility = View.GONE
-            /**
-             * Executes stopcompass operation with thermal imaging domain optimization.
-             *
-             */
             stopCompass()
             zoomView // .del() - synthetic method removed
 
 refreshpseudo-color bardisplaystate
             saveSetBean.isOpenPseudoBar = SaveSettingUtil.isOpenPseudoBar
             cl_seek_bar.isVisible = saveSetBean.isOpenPseudoBar
-            // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+            // thermalRecyclerNight.setSettingSelected - synthetic method removed
             temperatureSeekbar?.setPseudocode(pseudoColorMode)
 
 Clearhigh temperaturepoint、low temperaturepoint
@@ -958,34 +671,22 @@ Clearhigh temperaturepoint、low temperaturepoint
             temperatureView.isUserLowTemp = false
             temperatureView.isVisible = true
             temperatureView.temperatureRegionMode = REGION_MODE_CENTER
-            /**
-             * Executes showcross operation with thermal imaging domain optimization.
-             *
-             */
             showCross(false)
-            // ThermalRecyclerNight.clearTempPointSelect() - synthetic method removed
-            // ThermalRecyclerNight.fenceSelectType - synthetic property removed
+            // thermalRecyclerNight.clearTempPointSelect() - synthetic method removed
+            // thermalRecyclerNight.fenceSelectType - synthetic property removed
 
 警示是否Open
             alarmBean = SaveSettingUtil.alarmBean
             imageThread?.alarmBean = alarmBean
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (alarmBean.isHighOpen || alarmBean.isLowOpen) {
-                // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+                // thermalRecyclerNight.setSettingSelected - synthetic method removed
                 AlarmHelp.getInstance(this).updateData(alarmBean)
             } else {
-                // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+                // thermalRecyclerNight.setSettingSelected - synthetic method removed
                 AlarmHelp.getInstance(this).updateData(null, null, null)
             }
-        } else { // Temperature measurement->观测
+        } else { // temperature measurement->观测
 disabled画中画
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isOpenPreview) {
                 isOpenPreview = false
                 cameraPreview.closeCamera()
@@ -1001,36 +702,21 @@ Clearpoint、line、area、full image、趋势图
             spaceChart.isVisible = false
             clTrendOpen.isVisible = false
             llTrendClose.isVisible = false
-            /**
-             * Executes showcross operation with thermal imaging domain optimization.
-             *
-             */
             showCross(false)
 
 switch到low temperaturemode
-            /**
-             * Handles temperature measurement and calibration with precision thermal data processing.
-             *
-             * @note Temperature values are in Celsius unless otherwise specified.
-             * Accuracy depends on thermal camera calibration.
-             *
-             */
             switchTempGain(isLow = true, false)
 
 switch到动态识别
             aiConfig = SaveSettingUtil.aiTraceType
             imageThread?.typeAi = aiConfig
-            thermalRecyclerNight // SetTempSource - synthetic method removed
+            thermalRecyclerNight // setTempSource - synthetic method removed
 
 指南针是否Open
             saveSetBean.isOpenCompass = SaveSettingUtil.isOpenCompass
-            // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+            // thermalRecyclerNight.setSettingSelected - synthetic method removed
 
 高low temperaturedisplay
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (SaveSettingUtil.isOpenHighPoint || SaveSettingUtil.isOpenLowPoint)
                 {
                     temperatureView.temperatureRegionMode = REGION_MODE_RESET
@@ -1046,16 +732,12 @@ switch到动态识别
             targetStyle = SaveSettingUtil.targetType
             targetColorType = SaveSettingUtil.targetColorType
             thermalRecyclerNight.setTargetMode(targetMeasureMode)
-            // ThermalRecyclerNight.setTargetSelected - synthetic method removed
+            // thermalRecyclerNight.setTargetSelected - synthetic method removed
 
 disabledpseudo-color bar
             cl_seek_bar.visibility = View.GONE
 
 弹出观测modedescriptiontip框
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (SharedManager.isTipObservePhoto) {
                 TipObserveDialog.Builder(this)
                     .setTitle(R.string.app_tip)
@@ -1075,30 +757,14 @@ disabledtemperature报警
 disabled自定义rendering
         customPseudoBean.isUseCustomPseudo = false
         customPseudoBean.saveToShared()
-        /**
-         * Executes updateimageandseekbarcolorlist operation with thermal imaging domain optimization.
-         *
-         */
         updateImageAndSeekbarColorList(customPseudoBean)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!SaveSettingUtil.isSaveSetting) {
 resetpseudo-color
-            /**
-             * Configures the pcolor with validation and thermal imaging optimization.
-             *
-             */
             setPColor(3)
 
 reset延时拍照
             cameraDelaySecond = DELAY_TIME_0
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (cameraItemAdapter != null) {
                 cameraItemAdapter!!.data[0].time = DELAY_TIME_0
                 cameraItemAdapter!!.notifyItemChanged(0)
@@ -1107,10 +773,6 @@ reset延时拍照
 reset录音开关
             isRecordAudio = false
             videoRecord?.updateAudioState(false)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (cameraItemAdapter != null) {
                 cameraItemAdapter!!.data[3].isSel = false
                 cameraItemAdapter!!.notifyItemChanged(3)
@@ -1119,10 +781,6 @@ reset录音开关
 reset自动快门
             isAutoShutter = true
             ircmd?.setAutoShutter(isAutoShutter)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (cameraItemAdapter != null) {
                 cameraItemAdapter!!.data[1].isSel = true
                 cameraItemAdapter!!.notifyItemChanged(1)
@@ -1140,12 +798,8 @@ reset锐度（细节）
             saveSetBean.ddeConfig = 2
             ircmd?.setPropDdeLevel(saveSetBean.ddeConfig)
 
-resetrotationangle
+resetrotation角度
             saveSetBean.rotateAngle = DeviceConfig.S_ROTATE_ANGLE
-            /**
-             * Executes updaterotateangle operation with thermal imaging domain optimization.
-             *
-             */
             updateRotateAngle(saveSetBean.rotateAngle)
 
 resetfont color及大小
@@ -1159,7 +813,7 @@ reset标靶-scaling
 
 reset镜像
             saveSetBean.isOpenMirror = false
-            // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+            // thermalRecyclerNight.setSettingSelected - synthetic method removed
             ircmd?.setMirror(saveSetBean.isOpenMirror)
         }
 
@@ -1169,10 +823,6 @@ reset镜像
         viewMenuFirst.isObserveMode = !isToTemp
 
 指南针displaystate改变
-        /**
-         * Executes updatecompass operation with thermal imaging domain optimization.
-         *
-         */
         updateCompass()
 
         /**
@@ -1184,31 +834,12 @@ reset镜像
         }
     }
 
-    /**
-     * Executes showEmissivityTips functionality.
-     */
-    /**
-     * Executes showemissivitytips operation with thermal imaging domain optimization.
-     *
-     */
     private fun showEmissivityTips()  {
         val config = ConfigRepository.readConfig(false)
         var text = ""
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (tmp in IRConfigData.irConfigData(this)) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (config.radiation.toString() == tmp.value)
                 {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (text.isEmpty())
                         {
                             text = "${resources.getString(LibcoreR.string.tc_temp_test_materials)} : "
@@ -1216,10 +847,6 @@ reset镜像
                     text += "${tmp.name}/"
                 }
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (text.isNotEmpty())
             {
                 text = text.substring(0, text.length - 1)
@@ -1234,44 +861,18 @@ reset镜像
         dialog.show()
     }
 
-    /**
-     * Executes updateCompass functionality.
-     */
-    /**
-     * Executes updatecompass operation with thermal imaging domain optimization.
-     *
-     */
     private fun updateCompass() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (curChooseTabPos == 1) {
             compassView?.visibility = View.GONE
-            /**
-             * Executes stopcompass operation with thermal imaging domain optimization.
-             *
-             */
             stopCompass()
         } else {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (saveSetBean.isOpenCompass) {
-                /**
-                 * Executes startcompass operation with thermal imaging domain optimization.
-                 *
-                 */
                 startCompass()
                 compassView?.visibility = View.VISIBLE
             }
         }
     }
 
-    /**
-     * Initializes compass component.
-     */
     private fun initCompass() {
         sensorService = SensorService(this)
         hasCompass = sensorService.hasCompass()
@@ -1280,21 +881,9 @@ reset镜像
 
     var isTouchSeekBar = false
     private val pseudoSetResult =
-        /**
-         * Executes registerforactivityresult operation with thermal imaging domain optimization.
-         *
-         */
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (it.resultCode == RESULT_OK) {
                 lifecycleScope.launch {
-                    /**
-                     * Executes updateimageandseekbarcolorlist operation with thermal imaging domain optimization.
-                     *
-                     */
                     updateImageAndSeekbarColorList(
                         it.data?.getParcelableExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN)
                             ?: CustomPseudoBean(),
@@ -1305,34 +894,13 @@ reset镜像
         }
 
 update自定义pseudo-color的颜色的property值
-    /**
-     * Executes updateImageAndSeekbarColorList functionality.
-     */
-    /**
-     * Executes updateimageandseekbarcolorlist operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param customPseudoBean Pseudo color configuration parameter (type: CustomPseudoBean?)
-     *
-     */
     private fun updateImageAndSeekbarColorList(customPseudoBean: CustomPseudoBean?) {
         customPseudoBean?.let {
             temperatureSeekbar.setColorList(customPseudoBean.getColorList()?.reversedArray())
             temperatureSeekbar.setPlaces(customPseudoBean.getPlaceList())
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (it.isUseCustomPseudo) {
                 temperatureIvLock.visibility = View.INVISIBLE
                 tvTempContent.visibility = View.VISIBLE
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 updateTemperatureSeekBar(false) // 加锁
                 temperatureSeekbar.setRangeAndPro(
                     UnitTools.showUnitValue(it.minTemp),
@@ -1340,37 +908,18 @@ update自定义pseudo-color的颜色的property值
                     UnitTools.showUnitValue(it.minTemp),
                     UnitTools.showUnitValue(it.maxTemp),
                 )
-                /**
-                 * Configures the deflimit with validation and thermal imaging optimization.
-                 *
-                 */
                 setDefLimit()
                 thermalRecyclerNight.setPseudoColor(-1)
                 temperatureIvInput.setImageResource(R.drawable.ir_model)
             } else {
                 temperatureIvLock.visibility = View.VISIBLE
                 thermalRecyclerNight.setPseudoColor(pseudoColorMode)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (this.customPseudoBean.isUseCustomPseudo) {
-                    /**
-                     * Configures the deflimit with validation and thermal imaging optimization.
-                     *
-                     */
                     setDefLimit()
                 }
                 tvTempContent.visibility = View.GONE
                 temperatureIvInput.setImageResource(R.drawable.ic_color_edit)
             }
-            /**
-             * Configures the custompseudocolorlist with validation and thermal imaging optimization.
-             *
-             * @note This method is optimized for thermal imaging pseudo color processing.
-             * Ensure proper thermal calibration before use.
-             *
-             */
             setCustomPseudoColorList(
                 customPseudoBean.getColorList(),
                 customPseudoBean.getPlaceList(),
@@ -1382,40 +931,15 @@ update自定义pseudo-color的颜色的property值
         }
     }
 
-    /**
-     * Processes temperature measurement data.
-     */
     private fun addTemperatureListener() {
         temperatureIvLock.setOnClickListener {
             if (temperatureIvLock.visibility != View.VISIBLE) {
                 return@setOnClickListener
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (temperatureIvLock.contentDescription == "lock") {
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 updateTemperatureSeekBar(true) // 解锁
             } else {
-                /**
-                 * Configures the deflimit with validation and thermal imaging optimization.
-                 *
-                 */
                 setDefLimit()
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 updateTemperatureSeekBar(false) // 加锁
             }
         }
@@ -1426,17 +950,6 @@ update自定义pseudo-color的颜色的property值
         }
         temperatureSeekbar.setOnRangeChangedListener(
             object : OnRangeChangedListener {
-                /**
-                 * Executes onrangechanged operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param view Parameter for operation (type: RangeSeekBar?)
-                 * @param leftValue Parameter for operation (type: Float)
-                 * @param rightValue Parameter for operation (type: Float)
-                 * @param isFromUser Parameter for operation (type: Boolean)
-                 * @param tempMode Temperature value in Celsius (type: Int)
-                 *
-                 */
                 override fun onRangeChanged(
                     view: RangeSeekBar?,
                     leftValue: Float,
@@ -1444,16 +957,8 @@ update自定义pseudo-color的颜色的property值
                     isFromUser: Boolean,
                     tempMode: Int,
                 ) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isTouchSeekBar) {
                         editMinValue =
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (tempMode == RangeSeekBar.TEMP_MODE_MIN || tempMode == RangeSeekBar.TEMP_MODE_INTERVAL)
                                 {
                                     UnitTools.showToCValue(leftValue, isShowC)
@@ -1462,10 +967,6 @@ update自定义pseudo-color的颜色的property值
                                     Float.MIN_VALUE
                                 }
                         editMaxValue =
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (tempMode == RangeSeekBar.TEMP_MODE_MAX || tempMode == RangeSeekBar.TEMP_MODE_INTERVAL)
                                 {
                                     UnitTools.showToCValue(rightValue, isShowC)
@@ -1482,14 +983,6 @@ update自定义pseudo-color的颜色的property值
                     }
                 }
 
-                /**
-                 * Executes onstarttrackingtouch operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param view Parameter for operation (type: RangeSeekBar?)
-                 * @param isLeft Parameter for operation (type: Boolean)
-                 *
-                 */
                 override fun onStartTrackingTouch(
                     view: RangeSeekBar?,
                     isLeft: Boolean,
@@ -1497,14 +990,6 @@ update自定义pseudo-color的颜色的property值
                     isTouchSeekBar = true
                 }
 
-                /**
-                 * Executes onstoptrackingtouch operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param view Parameter for operation (type: RangeSeekBar?)
-                 * @param isLeft Parameter for operation (type: Boolean)
-                 *
-                 */
                 override fun onStopTrackingTouch(
                     view: RangeSeekBar?,
                     isLeft: Boolean,
@@ -1518,10 +1003,6 @@ update自定义pseudo-color的颜色的property值
     /**
 maximum最low temperature复原
      */
-    /**
-     * Configures the deflimit with validation and thermal imaging optimization.
-     *
-     */
     private fun setDefLimit() {
         editMaxValue = Float.MAX_VALUE
         editMinValue = Float.MIN_VALUE
@@ -1529,18 +1010,11 @@ maximum最low temperature复原
         temperatureSeekbar.setRangeAndPro(editMinValue, editMaxValue, realLeftValue, realRightValue) // 初始位置
     }
 
-    /**
-     * Processes temperature measurement data.
-     */
     private fun updateTemperatureSeekBar(isEnabled: Boolean) {
         temperatureSeekbar.isEnabled = isEnabled
-        // TemperatureSeekbar.drawIndPath(isEnabled) // Method may not exist on RangeSeekBar
+        // temperatureSeekbar.drawIndPath(isEnabled) // Method may not exist on RangeSeekBar
         temperatureIvLock.setImageResource(if (isEnabled) R.drawable.svg_pseudo_bar_unlock else R.drawable.svg_pseudo_bar_lock)
         temperatureIvLock.contentDescription = if (isEnabled) "unlock" else "lock"
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isEnabled) {
             temperatureSeekbar.tempMode = RangeSeekBar.TEMP_MODE_CLOSE
             temperatureSeekbar.leftSeekBar.indicatorBackgroundColor = 0xffe17606.toInt()
@@ -1553,55 +1027,21 @@ maximum最low temperature复原
         }
     }
 
-    /**
-     * Initializes orientationeventlistener component.
-     */
     private fun initOrientationEventListener() {
         orientationEventListener =
             object : OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
-                /**
-                 * Executes onorientationchanged operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param orientation Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onOrientationChanged(orientation: Int) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (orientation == ORIENTATION_UNKNOWN) {
                         return
                     }
-                    /**
-                     * Executes startorientation operation with thermal imaging domain optimization.
-                     *
-                     */
                     startOrientation()
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (mOrientation == 1) {
                         return
                     }
                     requestedOrientation =
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if ((orientation in 315..360) || (orientation in 0..45)) {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (isRotation && saveSetBean.rotateAngle != 270) {
                                 saveSetBean.rotateAngle = 270
-                                /**
-                                 * Executes updaterotateangle operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 updateRotateAngle(saveSetBean.rotateAngle)
                                 isRotation = !isRotation
                                 isReverseRotation = true
@@ -1610,21 +1050,9 @@ maximum最low temperature复原
                             ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                         } else {
                             (
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (orientation in 135..225) {
-                                    /**
-                                     * Executes if operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     if (isReverseRotation && saveSetBean.rotateAngle != 90) {
                                         saveSetBean.rotateAngle = 90
-                                        /**
-                                         * Executes updaterotateangle operation with thermal imaging domain optimization.
-                                         *
-                                         */
                                         updateRotateAngle(saveSetBean.rotateAngle)
                                         isReverseRotation = !isReverseRotation
                                         isRotation = true
@@ -1642,16 +1070,6 @@ maximum最low temperature复原
             }
     }
 
-    /**
-     * Executes updateRotateAngle functionality.
-     */
-    /**
-     * Executes updaterotateangle operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param rotateAngle Angle in degrees (type: Int)
-     *
-     */
     private fun updateRotateAngle(rotateAngle: Int) {
 Clearlimitset
         imageThread?.setLimit(
@@ -1661,10 +1079,6 @@ Clearlimitset
             downColor,
         ) // 自定义颜色
         lifecycleScope.launch {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (curChooseTabPos == Constants.IR_TEMPERATURE_MODE)
                 {
                     temperatureView.clear()
@@ -1673,17 +1087,9 @@ Clearlimitset
                     spaceChart.isVisible = false
                     clTrendOpen.isVisible = false
                     llTrendClose.isVisible = false
-                    // ThermalRecyclerNight.fenceSelectType - synthetic property removed
+                    // thermalRecyclerNight.fenceSelectType - synthetic property removed
                 }
-            /**
-             * Configures the rotate with validation and thermal imaging optimization.
-             *
-             */
             setRotate(rotateAngle)
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(100)
             thermalRecyclerNight.setSettingRotate(rotateAngle)
         }
@@ -1697,40 +1103,20 @@ Clearlimitset
         iruvc?.setRotate(rotateInt)
         imageThread?.interrupt()
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rotateInt == 0 || rotateInt == 180) {
             bitmap = Bitmap.createBitmap(bitmapHeight, bitmapWidth, Bitmap.Config.ARGB_8888)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (getProductName() != PRODUCT_NAME_TCP)
                 {
                     temperatureView.setImageSize(imageHeight, imageWidth, this)
                 }
             cameraView.setImageSize(imageHeight, imageWidth)
-            /**
-             * Configures the viewlay with validation and thermal imaging optimization.
-             *
-             */
             setViewLay(false)
         } else {
             bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (getProductName() != PRODUCT_NAME_TCP) {
                 temperatureView.setImageSize(imageWidth, imageHeight, this)
             }
             cameraView.setImageSize(imageWidth, imageHeight)
-            /**
-             * Configures the viewlay with validation and thermal imaging optimization.
-             *
-             */
             setViewLay(true)
         }
 
@@ -1739,122 +1125,58 @@ Clearlimitset
         } catch (e: InterruptedException) {
             Log.e(TAG, "imageThread.join(): catch an interrupted exception")
         }
-        /**
-         * Executes startisp operation with thermal imaging domain optimization.
-         *
-         */
         startISP()
 
         cameraView.bitmap = bitmap
         imageThread?.setBitmap(bitmap)
         runOnUiThread {
             cl_seek_bar.requestLayout()
-            cl_seek_bar // UpdateBitmap() removed - synthetic method
+            cl_seek_bar // updateBitmap() removed - synthetic method
         }
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
-        /**
-         * Initializes the datair component for thermal imaging operations.
-         *
-         */
         initDataIR()
         AlarmHelp.getInstance(this).updateData(alarmBean)
-        /**
-         * Executes updatecompass operation with thermal imaging domain optimization.
-         *
-         */
         updateCompass()
     }
 
-    /**
-     * Executes onstart operation with thermal imaging domain optimization.
-     *
-     */
     override fun onStart() {
         super.onStart()
-        /**
-         * Executes irstart operation with thermal imaging domain optimization.
-         *
-         */
         irStart()
     }
 
     open fun irStart()  {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isrun) {
             syncimage.valid = true
             tvTypeInd?.visibility = GONE
-            /**
-             * Executes startisp operation with thermal imaging domain optimization.
-             *
-             */
             startISP()
             temperatureView.start()
             cameraView?.start()
             isrun = true
-// Restoreconfiguration
-            /**
-             * Executes configparam operation with thermal imaging domain optimization.
-             *
-             */
+//Restoreconfiguration
             configParam()
             thermalRecyclerNight.updateCameraModel()
-            /**
-             * Initializes the irconfig component for thermal imaging operations.
-             *
-             */
             initIRConfig()
         }
     }
 
-    /**
-     * Executes onresume operation with thermal imaging domain optimization.
-     *
-     */
     override fun onResume() {
         super.onResume()
         emissivityConfig = ConfigRepository.readConfig(false)
         isShowC = getTemperature() == 1
         DeviceTools.isConnect()
-        /**
-         * Executes updatecompass operation with thermal imaging domain optimization.
-         *
-         */
         updateCompass()
         AlarmHelp.getInstance(this).onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         thermalRecyclerNight.refreshImg()
-        /**
-         * Executes startorientation operation with thermal imaging domain optimization.
-         *
-         */
         startOrientation()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (curChooseTabPos != 1 && isOpenTarget && zoomView.visibility == View.VISIBLE) {
             zoomView?.updateSelectBitmap(targetMeasureMode, targetStyle, targetColorType, thermalLay)
         }
-        /**
-         * Configures the cardetectprompt with validation and thermal imaging optimization.
-         *
-         */
         setCarDetectPrompt()
     }
 
-    /**
-     * Executes onpause operation with thermal imaging domain optimization.
-     *
-     */
     override fun onPause() {
         super.onPause()
         AlarmHelp.getInstance(this).pause()
@@ -1864,66 +1186,30 @@ Clearlimitset
         orientationEventListener.disable()
     }
 
-    /**
-     * Executes onconfigurationchanged operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param newConfig Parameter for operation (type: Configuration)
-     *
-     */
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        /**
-         * Executes startorientation operation with thermal imaging domain optimization.
-         *
-         */
         startOrientation()
     }
 
-    /**
-     * Executes startOrientation functionality.
-     */
-    /**
-     * Executes startorientation operation with thermal imaging domain optimization.
-     *
-     */
     private fun startOrientation() {
         orientationEventListener.enable()
         mOrientation =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION) == 0) {
                 1
             } else {
                 2
             }
-        Log.w("Test自动rotation: ", "mOrientation: $mOrientation")
+        Log.w("Test自动旋转: ", "mOrientation: $mOrientation")
     }
 
-    /**
-     * Initializes recycler component.
-     */
     private fun initRecycler() {
         thermalRecyclerNight.onCameraClickListener = {
             setCamera(it)
         }
         thermalRecyclerNight.onFenceListener = { fenceType, isSelected ->
-            /**
-             * Configures the temp with validation and thermal imaging optimization.
-             *
-             * @note Temperature values are in Celsius unless otherwise specified.
-             * Accuracy depends on thermal camera calibration.
-             *
-             */
             setTemp(fenceType, isSelected)
         }
         thermalRecyclerNight.onColorListener = { _, it, _ ->
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (customPseudoBean.isUseCustomPseudo) {
                 TipDialog.Builder(this)
                     .setTitleMessage(getString(R.string.app_tip))
@@ -1931,60 +1217,25 @@ Clearlimitset
                     .setPositiveListener(R.string.app_yes) {
                         customPseudoBean.isUseCustomPseudo = false
                         customPseudoBean.saveToShared()
-                        /**
-                         * Configures the pcolor with validation and thermal imaging optimization.
-                         *
-                         */
                         setPColor(it)
-                        /**
-                         * Configures the deflimit with validation and thermal imaging optimization.
-                         *
-                         */
                         setDefLimit()
-                        /**
-                         * Executes updateimageandseekbarcolorlist operation with thermal imaging domain optimization.
-                         *
-                         */
                         updateImageAndSeekbarColorList(customPseudoBean)
                     }.setCancelListener(R.string.app_no) {
                     }
                     .create().show()
             } else {
-                /**
-                 * Configures the pcolor with validation and thermal imaging optimization.
-                 *
-                 */
                 setPColor(it)
             }
         }
         thermalRecyclerNight.onSettingListener = { type, isSelected ->
-            /**
-             * Configures the setting with validation and thermal imaging optimization.
-             *
-             */
             setSetting(type, isSelected)
         }
         thermalRecyclerNight.onTempLevelListener = {
             temperatureMode = it
             SaveSettingUtil.temperatureMode = temperatureMode
-            /**
-             * Configures the temperaturemode with validation and thermal imaging optimization.
-             *
-             * @note Temperature values are in Celsius unless otherwise specified.
-             * Accuracy depends on thermal camera calibration.
-             *
-             */
             setTemperatureMode(it, true)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
-            if (it == CameraItemBean.TYPE_TMP_H && SharedManager.isTipHighTemp) { // Switch到高温档
+            if (it == CameraItemBean.TYPE_TMP_H && SharedManager.isTipHighTemp) { // switch到高温档
                 val message =
-                    /**
-                     * Executes spanbuilder operation with thermal imaging domain optimization.
-                     *
-                     */
                     SpanBuilder(getString(R.string.tc_high_temp_test_tips1))
                         .appendDrawable(
                             this@IRThermalNightActivity,
@@ -2001,45 +1252,21 @@ Clearlimitset
             }
         }
         thermalRecyclerNight.onTwoLightListener = { twoLightType, isSelected ->
-            /**
-             * Configures the twolight with validation and thermal imaging optimization.
-             *
-             */
             setTwoLight(twoLightType, isSelected)
         }
         cameraPreview.cameraPreViewCloseListener = {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isOpenPreview) {
                 popupWindow?.dismiss()
-                /**
-                 * Manages thermal camera operations with hardware-optimized performance and error handling.
-                 *
-                 */
                 cameraPreviewConfig(false)
             }
         }
         thermalRecyclerNight.onTempSourceListener = {
-            /**
-             * Configures the aistate with validation and thermal imaging optimization.
-             *
-             */
             setAiState(it)
         }
         thermalRecyclerNight.onTargetListener = {
-            /**
-             * Configures the target with validation and thermal imaging optimization.
-             *
-             */
             setTarget(it)
         }
         thermalRecyclerNight.onTempPointListener = { type, isSelected ->
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (type) {
                 TempPointType.HIGH -> {
                     SaveSettingUtil.isOpenHighPoint = isSelected
@@ -2066,17 +1293,10 @@ Clearlimitset
         }
     }
 
-    /**
-     * Sets temperaturemode configuration.
-     */
     private fun setTemperatureMode(
         tempMode: Int,
         isShowLoading: Boolean,
     ) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (tempMode) {
             CameraItemBean.TYPE_TMP_ZD -> autoConfig()
             CameraItemBean.TYPE_TMP_C -> switchTempGain(true, isShowLoading)
@@ -2088,69 +1308,30 @@ Clearlimitset
 在高low temperaturegain之间switch
 @param isLow true-switch到low temperature(高gain） false-switch到high temperature(低gain)
      */
-    /**
-     * Processes temperature measurement data.
-     */
     private fun switchTempGain(
         isLow: Boolean,
         isShowLoading: Boolean,
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if ((gainSelChar == 1 && isLow) || (gainSelChar == 0 && !isLow)) { // 已处于目标mode
             return
         }
         isTempShowDialog = true
         thermalRecyclerNight.setTempLevel(if (isLow) 1 else 0)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isShowLoading) {
-            /**
-             * Manages thermal camera operations with hardware-optimized performance and error handling.
-             *
-             */
             showCameraLoading()
         }
-        /**
-         * Executes switchautogain operation with thermal imaging domain optimization.
-         *
-         */
         switchAutoGain(false)
         lifecycleScope.launch(Dispatchers.IO) {
             ircmd?.setPropTPDParams(
                 CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL,
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isLow) CommonParams.PropTPDParamsValue.GAINSELStatus.GAIN_SEL_HIGH else CommonParams.PropTPDParamsValue.GAINSELStatus.GAIN_SEL_LOW,
             )
             gainSelChar = if (isLow) 1 else 0
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(4000)
-            /**
-             * Executes launch operation with thermal imaging domain optimization.
-             *
-             */
             launch(Dispatchers.Main) {
-                /**
-                 * Manages thermal camera operations with hardware-optimized performance and error handling.
-                 *
-                 */
                 dismissCameraLoading()
                 isTempShowDialog = false
             }
-            /**
-             * Configures the tsbin with validation and thermal imaging optimization.
-             *
-             */
             setTsBin()
         }
     }
@@ -2164,28 +1345,13 @@ AI-动态识别、high temperature源、low temperature源之间switch
         imageThread?.typeAi = isTempSource
     }
 
-    /**
-     * Processes temperature measurement data.
-     */
     private fun showTempRecyclerNight(
         isObserveMode: Boolean,
         position: Int,
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isObserveMode) { // 观测mode
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (position) {
                 1 -> { // AI追踪
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (SharedManager.isTipAIRecognition) {
                         val dialog =
                             TipObserveDialog.Builder(this)
@@ -2201,30 +1367,22 @@ AI-动态识别、high temperature源、low temperature源之间switch
                 3 -> { // 标靶
                     isOpenTarget = true
                     SaveSettingUtil.isOpenTarget = isOpenTarget
-                    // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-                    // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-                    // ThermalRecyclerNight.setTargetSelected - synthetic method removed
+                    // thermalRecyclerNight.setTargetSelected - synthetic method removed
+                    // thermalRecyclerNight.setTargetSelected - synthetic method removed
+                    // thermalRecyclerNight.setTargetSelected - synthetic method removed
                     zoomView.visibility = View.VISIBLE
                     zoomView.updateTargetBitmap(targetMeasureMode, targetStyle, targetColorType, thermalLay)
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (!SharedManager.getTargetPop()) {
-                        // ThermalRecyclerNight.setTargetSelected - synthetic method removed
+                        // thermalRecyclerNight.setTargetSelected - synthetic method removed
                         val dialog = TipGuideDialog.newInstance()
                         dialog.closeEvent = {
-                            // ThermalRecyclerNight.setTargetSelected - synthetic method removed
+                            // thermalRecyclerNight.setTargetSelected - synthetic method removed
                             SharedManager.saveTargetPop(it)
                         }
                         dialog.show(supportFragmentManager, "")
                     }
                 }
-                4 -> { // Calibration
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
+                4 -> { // calibration
                     if (SharedManager.isTipCoordinate) {
                         val dialog =
                             TipObserveDialog.Builder(this)
@@ -2238,11 +1396,7 @@ AI-动态识别、high temperature源、low temperature源之间switch
                     }
                 }
             }
-        } else { // Temperature measurementmode
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+        } else { // temperature measurementmode
             if (position == 4 && !isOpenPreview) {
                 thermalRecyclerNight.setTwoLightSelected(TwoLightType.P_IN_P, false)
             }
@@ -2260,86 +1414,48 @@ AI-动态识别、high temperature源、low temperature源之间switch
 第 1 个menu-拍照录像 各个操作的clickEventListener.
 @param actionCode: 0-拍照/录像  1-图库  2-更多menu  3-switch到拍照  4-switch到录像
      */
-    /**
-     * Sets camera configuration.
-     */
-    /**
-     * Configures the camera with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param actionCode Parameter for operation (type: Int)
-     *
-     */
     private fun setCamera(actionCode: Int) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (actionCode) {
             0 -> { // 拍照/录像
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isVideo) {
-                    /**
-                     * Manages thermal camera operations with hardware-optimized performance and error handling.
-                     *
-                     */
                     centerCamera()
                     return
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (cameraDelaySecond > 0) {
                     autoJob?.cancel()
                 }
-                // If (timeDownView.isRunning) {
-                // TimeDownView.cancel()
-                // UpdateDelayView()
+                // if (timeDownView.isRunning) {
+                //     timeDownView.cancel()
+                //     updateDelayView()
                 // } else {
-                // If (timeDownView.downTimeWatcher == null) {
-                // TimeDownView.setOnTimeDownListener(object : TimeDownView.DownTimeWatcher {
-                // Override fun onTime(num: Int) {
-                // UpdateDelayView()
+                //     if (timeDownView.downTimeWatcher == null) {
+                //         timeDownView.setOnTimeDownListener(object : TimeDownView.DownTimeWatcher {
+                //             override fun onTime(num: Int) {
+                //                 updateDelayView()
                 //             }
                 //
-                // Override fun onLastTime(num: Int) {
+                //             override fun onLastTime(num: Int) {
                 //             }
                 //
-                // Override fun onLastTimeFinish(num: Int) {
-                // If(thermalRecyclerNight.isVideoMode){
-                // UpdateVideoDelayView()
+                //             override fun onLastTimeFinish(num: Int) {
+                //                 if(thermalRecyclerNight.isVideoMode){
+                //                     updateVideoDelayView()
                 //                 }else{
-                // UpdateDelayView()
+                //                     updateDelayView()
                 //                 }
-                // CenterCamera()
+                //                 centerCamera()
                 //             }
                 //         })
                 //     }
-                // TimeDownView.downSecond(cameraDelaySecond)
+                //     timeDownView.downSecond(cameraDelaySecond)
                 // }
             }
             1 -> { // 图库
                 lifecycleScope.launch {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isVideo) {
                         videoRecord?.stopRecord()
                         isVideo = false
-                        /**
-                         * Executes videotimeclose operation with thermal imaging domain optimization.
-                         *
-                         */
                         videoTimeClose()
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(500)
                     }
                     NavigationManager.getInstance()
@@ -2349,35 +1465,24 @@ AI-动态识别、high temperature源、low temperature源之间switch
                 }
             }
             2 -> { // 更多menu
-                /**
-                 * Configures the tingcamera with validation and thermal imaging optimization.
-                 *
-                 */
                 settingCamera()
             }
-            3 -> { // Switch到拍照
+            3 -> { // switch到拍照
                 autoJob?.cancel()
                 SaveSettingUtil.isVideoMode = false
             }
-            4 -> { // Switch到录像
+            4 -> { // switch到录像
                 autoJob?.cancel()
                 SaveSettingUtil.isVideoMode = true
             }
         }
     }
 
-    /**
-     * Executes updateVideoDelayView functionality.
-     */
-    /**
-     * Executes updatevideodelayview operation with thermal imaging domain optimization.
-     *
-     */
     private fun updateVideoDelayView()  {
         try {
-            // If (timeDownView.isRunning) {
-            // LifecycleScope.launch(Dispatchers.Main) {
-            // ThermalRecyclerNight.setToRecord(true)
+            // if (timeDownView.isRunning) {
+            //     lifecycleScope.launch(Dispatchers.Main) {
+            //         thermalRecyclerNight.setToRecord(true)
             //     }
             // }
             lifecycleScope.launch(Dispatchers.Main) {
@@ -2391,15 +1496,11 @@ AI-动态识别、high temperature源、low temperature源之间switch
     /**
 进入延迟UI
      */
-    /**
-     * Executes updatedelayview operation with thermal imaging domain optimization.
-     *
-     */
     private fun updateDelayView() {
         try {
-            // If (timeDownView.isRunning) {
-            // LifecycleScope.launch(Dispatchers.Main) {
-            // ThermalRecyclerNight.setToRecord(true)
+            // if (timeDownView.isRunning) {
+            //     lifecycleScope.launch(Dispatchers.Main) {
+            //         thermalRecyclerNight.setToRecord(true)
             //     }
             // } else {
             lifecycleScope.launch(Dispatchers.Main) {
@@ -2412,76 +1513,34 @@ AI-动态识别、high temperature源、low temperature源之间switch
     }
 
 temperaturemeasurement
-    /**
-     * Sets temp configuration.
-     */
-    /**
-     * Configures the temp with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param fenceType Parameter for operation (type: FenceType)
-     * @param isSelected Parameter for operation (type: Boolean)
-     *
-     * @note Temperature values are in Celsius unless otherwise specified.
-     * Accuracy depends on thermal camera calibration.
-     *
-     */
     private fun setTemp(
         fenceType: FenceType,
         isSelected: Boolean,
     ) {
         temperatureView.isEnabled = true
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (fenceType) {
-            FenceType.POINT -> { // Point
+            FenceType.POINT -> { // point
                 temperatureView.visibility = View.VISIBLE
                 temperatureView.temperatureRegionMode = REGION_MODE_POINT
-                /**
-                 * Executes showcross operation with thermal imaging domain optimization.
-                 *
-                 */
                 showCross(true)
             }
-            FenceType.LINE -> { // Line
+            FenceType.LINE -> { // line
                 temperatureView.visibility = View.VISIBLE
                 temperatureView.temperatureRegionMode = REGION_MODE_LINE
-                /**
-                 * Executes showcross operation with thermal imaging domain optimization.
-                 *
-                 */
                 showCross(true)
             }
-            FenceType.RECT -> { // Area
+            FenceType.RECT -> { // area
                 temperatureView.visibility = View.VISIBLE
                 temperatureView.temperatureRegionMode = REGION_MODE_RECTANGLE
-                /**
-                 * Executes showcross operation with thermal imaging domain optimization.
-                 *
-                 */
                 showCross(true)
             }
             FenceType.FULL -> { // 全图
                 temperatureView.visibility = View.VISIBLE
                 temperatureView.isShowFull = isSelected
-                /**
-                 * Executes showcross operation with thermal imaging domain optimization.
-                 *
-                 */
                 showCross(true)
             }
             FenceType.TREND -> { // 趋势图
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (SharedManager.isNeedShowTrendTips) {
-                    /**
-                     * Executes nottipsselectdialog operation with thermal imaging domain optimization.
-                     *
-                     */
                     NotTipsSelectDialog(this)
                         .setTipsResId(R.string.thermal_trend_tips)
                         .setOnConfirmListener {
@@ -2491,22 +1550,14 @@ temperaturemeasurement
                 }
                 temperatureView.visibility = View.VISIBLE
                 temperatureView.temperatureRegionMode = REGION_NODE_TREND
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!spaceChart.isVisible) { // 当前趋势图如果已Show/Display着的话，则不去更改
                     spaceChart.isVisible = true
                     clTrendOpen.isVisible = false
                     llTrendClose.isVisible = true
                 }
-                /**
-                 * Executes showcross operation with thermal imaging domain optimization.
-                 *
-                 */
                 showCross(true)
             }
-            FenceType.DEL -> { // Delete
+            FenceType.DEL -> { // delete
                 hasClickTrendDel = true
                 temperatureView.clear()
                 temperatureView.visibility = View.INVISIBLE
@@ -2514,30 +1565,12 @@ temperaturemeasurement
                 spaceChart.isVisible = false
                 clTrendOpen.isVisible = false
                 llTrendClose.isVisible = false
-                /**
-                 * Executes showcross operation with thermal imaging domain optimization.
-                 *
-                 */
                 showCross(false)
             }
         }
     }
 
-    /**
-     * Executes showCross functionality.
-     */
-    /**
-     * Executes showcross operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param boolean Parameter for operation (type: Boolean)
-     *
-     */
     private fun showCross(boolean: Boolean) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (cameraView != null) {
             cameraView.setShowCross(boolean)
         }
@@ -2549,13 +1582,9 @@ setpseudo-color
         temperatureSeekbar.setPseudocode(pseudoColorMode)
         /**
 setpseudo-color【set pseudocolor】
-/**
- * Executes firmwarecoreimplementation operation with thermal imaging domain optimization.
- *
- */
 firmwarecoreimplementation(部分pseudo-color为预留,set后可能无效果)
          */
-        imageThread?.pseudocolorMode = pseudoColorMode // Settingspseudo color
+        imageThread?.pseudocolorMode = pseudoColorMode // settingspseudo color
         SaveSettingUtil.pseudoColorMode = pseudoColorMode
         thermalRecyclerNight.setPseudoColor(code)
     }
@@ -2565,40 +1594,17 @@ firmwarecoreimplementation(部分pseudo-color为预留,set后可能无效果)
     /**
 displaytemperature报警set弹框.
      */
-    /**
-     * Handles temperature measurement and calibration with precision thermal data processing.
-     *
-     * @note Temperature values are in Celsius unless otherwise specified.
-     * Accuracy depends on thermal camera calibration.
-     *
-     */
     private fun showTempAlarmSetDialog() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (tempAlarmSetDialog == null) {
             tempAlarmSetDialog = TempAlarmSetDialog(this, false)
             tempAlarmSetDialog?.onSaveListener = {
-                // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+                // thermalRecyclerNight.setSettingSelected - synthetic method removed
                 alarmBean = it
                 imageThread?.alarmBean = alarmBean
                 SaveSettingUtil.alarmBean = alarmBean
                 AlarmHelp.getInstance(this).updateData(
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (alarmBean.isLowOpen) alarmBean.lowTemp else null,
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (alarmBean.isHighOpen) alarmBean.highTemp else null,
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (alarmBean.isRingtoneOpen) alarmBean.ringtoneType else null,
                 )
             }
@@ -2612,39 +1618,15 @@ displaytemperature报警set弹框.
         isSelected: Boolean,
     ) {
         popupWindow?.dismiss()
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (twoLightType) {
             TwoLightType.P_IN_P -> { // 画中画
-                /**
-                 * Manages thermal camera operations with hardware-optimized performance and error handling.
-                 *
-                 */
                 cameraPreviewConfig(true)
             }
-            TwoLightType.BLEND_EXTENT -> { // Fusion度
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+            TwoLightType.BLEND_EXTENT -> { // fusion度
                 if (!isOpenPreview && isSelected) { // 未Open画中画时自动Open画中画
-                    /**
-                     * Manages thermal camera operations with hardware-optimized performance and error handling.
-                     *
-                     */
                     cameraPreviewConfig(false)
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isSelected) {
-                    /**
-                     * Executes showblendextentpopup operation with thermal imaging domain optimization.
-                     *
-                     */
                     showBlendExtentPopup()
                 }
             }
@@ -2653,68 +1635,34 @@ displaytemperature报警set弹框.
         }
     }
 
-    private var defaultIsPortrait = DeviceConfig.IS_PORTRAIT // Default横屏
+    private var defaultIsPortrait = DeviceConfig.IS_PORTRAIT // 默认横屏
 
-    /**
-     * Sets setting configuration.
-     */
     private fun setSetting(
         type: SettingType,
         isSelected: Boolean,
     ) {
         popupWindow?.dismiss()
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (type) {
-            SettingType.PSEUDO_BAR -> { // Pseudo color条
+            SettingType.PSEUDO_BAR -> { // pseudo color条
                 saveSetBean.isOpenPseudoBar = !saveSetBean.isOpenPseudoBar
                 cl_seek_bar.isVisible = saveSetBean.isOpenPseudoBar
-                // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+                // thermalRecyclerNight.setSettingSelected - synthetic method removed
             }
-            SettingType.CONTRAST -> { // Contrast
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+            SettingType.CONTRAST -> { // contrast
                 if (!isSelected) {
-                    /**
-                     * Executes showcontrastpopup operation with thermal imaging domain optimization.
-                     *
-                     */
                     showContrastPopup()
                 }
             }
             SettingType.DETAIL -> { // 细节
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isSelected) {
-                    /**
-                     * Executes showsharpnesspopup operation with thermal imaging domain optimization.
-                     *
-                     */
                     showSharpnessPopup()
                 }
             }
             SettingType.ALARM -> { // 预警
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 showTempAlarmSetDialog()
             }
-            SettingType.ROTATE -> { // Rotation
+            SettingType.ROTATE -> { // 旋转
                 saveSetBean.rotateAngle = if (saveSetBean.rotateAngle == 0) 270 else (saveSetBean.rotateAngle - 90)
-                /**
-                 * Executes updaterotateangle operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateRotateAngle(saveSetBean.rotateAngle)
                 zoomView // .del() - synthetic method removed
             }
@@ -2725,35 +1673,23 @@ displaytemperature报警set弹框.
                     saveSetBean.tempTextSize = SizeUtils.sp2px(textSize.toFloat())
                     temperatureView.setTextSize(saveSetBean.tempTextSize)
                     temperatureView.setLinePaintColor(saveSetBean.tempTextColor)
-                    // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+                    // thermalRecyclerNight.setSettingSelected - synthetic method removed
                 }
                 colorPickDialog.show()
             }
             SettingType.MIRROR -> { // 镜像
                 saveSetBean.isOpenMirror = !saveSetBean.isOpenMirror
-                // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+                // thermalRecyclerNight.setSettingSelected - synthetic method removed
                 ircmd?.setMirror(saveSetBean.isOpenMirror)
             }
 
             SettingType.COMPASS -> { // 指南针
                 saveSetBean.isOpenCompass = !saveSetBean.isOpenCompass
-                // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+                // thermalRecyclerNight.setSettingSelected - synthetic method removed
                 compassView?.isVisible = saveSetBean.isOpenCompass
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (saveSetBean.isOpenCompass) {
-                    /**
-                     * Executes startcompass operation with thermal imaging domain optimization.
-                     *
-                     */
                     startCompass()
                 } else {
-                    /**
-                     * Executes stopcompass operation with thermal imaging domain optimization.
-                     *
-                     */
                     stopCompass()
                 }
             }
@@ -2763,134 +1699,61 @@ watermarkmenu只有 2D 编辑才有
         }
     }
 
-    /**
-     * Sets aistate configuration.
-     */
     private fun setAiState(it: Int) {
         aiConfig = it
         SaveSettingUtil.aiTraceType = it
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (it) {
-            ObserveBean.TYPE_NONE -> { // Clear
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
+            ObserveBean.TYPE_NONE -> { // clear
                 switchTempSource(ObserveBean.TYPE_NONE)
             }
             ObserveBean.TYPE_DYN_R -> { // 动态识别
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 switchTempSource(ObserveBean.TYPE_DYN_R)
             }
 
             ObserveBean.TYPE_TMP_H_S -> { // 高温源
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 switchTempSource(ObserveBean.TYPE_TMP_H_S)
             }
 
             ObserveBean.TYPE_TMP_L_S -> { // 低温源
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 switchTempSource(ObserveBean.TYPE_TMP_L_S)
             }
         }
     }
 
-    /**
-     * Sets target configuration.
-     */
-    /**
-     * Configures the target with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param targetType Parameter for operation (type: TargetType)
-     *
-     */
     private fun setTarget(targetType: TargetType) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (targetType) {
-            TargetType.MODE -> { // Measurementmode
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+            TargetType.MODE -> { // measurementmode
                 if (curTargetStyle == 1 && popupWindow?.isShowing == true) {
                     popupWindow?.dismiss()
                 } else {
                     popupWindow?.dismiss()
-                    /**
-                     * Executes showtargetmodepopup operation with thermal imaging domain optimization.
-                     *
-                     */
                     showTargetModePopup()
                 }
             }
             TargetType.STYLE -> { // 标靶风格
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (curTargetStyle == 2 && popupWindow?.isShowing == true) {
                     popupWindow?.dismiss()
                 } else {
                     popupWindow?.dismiss()
-                    /**
-                     * Executes showtargetstylepopup operation with thermal imaging domain optimization.
-                     *
-                     */
                     showTargetStylePopup()
                 }
             }
             TargetType.COLOR -> { // 标靶颜色
                 popupWindow?.dismiss()
-                /**
-                 * Executes showtargetcolordialog operation with thermal imaging domain optimization.
-                 *
-                 */
                 showTargetColorDialog()
             }
-            TargetType.DELETE -> { // Delete
+            TargetType.DELETE -> { // delete
                 popupWindow?.dismiss()
                 isOpenTarget = false
                 SaveSettingUtil.isOpenTarget = isOpenTarget
-                // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-                // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-                // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-                // ThermalRecyclerNight.setTargetSelected - synthetic method removed
+                // thermalRecyclerNight.setTargetSelected - synthetic method removed
+                // thermalRecyclerNight.setTargetSelected - synthetic method removed
+                // thermalRecyclerNight.setTargetSelected - synthetic method removed
+                // thermalRecyclerNight.setTargetSelected - synthetic method removed
                 zoomView // .del() - synthetic method removed
             }
             TargetType.HELP -> { // 帮助
                 popupWindow?.dismiss()
-                /**
-                 * Executes showtargethelpdialog operation with thermal imaging domain optimization.
-                 *
-                 */
                 showTargetHelpDialog()
             }
         }
@@ -2919,9 +1782,9 @@ display标靶measurementmode（人、羊、狗、鸟） PopupWindow.
     private fun showTargetModePopup() {
         zoomView.visibility = View.VISIBLE
         zoomView?.updateSelectBitmap(targetMeasureMode, targetStyle, targetColorType, thermalLay)
-        // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-        // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-        // ThermalRecyclerNight.setTargetSelected - synthetic method removed
+        // thermalRecyclerNight.setTargetSelected - synthetic method removed
+        // thermalRecyclerNight.setTargetSelected - synthetic method removed
+        // thermalRecyclerNight.setTargetSelected - synthetic method removed
         popupWindow = PopupWindow(this)
         val contentView = LayoutInflater.from(this).inflate(R.layout.layout_measure_mode, null)
         popupWindow?.contentView = contentView
@@ -2936,21 +1799,9 @@ display标靶measurementmode（人、羊、狗、鸟） PopupWindow.
         val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler_view)
         val measureItemAdapter = MeasureItemAdapter(this)
         recyclerView?.layoutManager =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (ScreenUtil.isPortrait(this)) {
-                /**
-                 * Executes gridlayoutmanager operation with thermal imaging domain optimization.
-                 *
-                 */
                 GridLayoutManager(this, measureItemAdapter.itemCount)
             } else {
-                /**
-                 * Executes linearlayoutmanager operation with thermal imaging domain optimization.
-                 *
-                 */
                 LinearLayoutManager(this, RecyclerView.VERTICAL, false)
             }
         measureItemAdapter.selected(targetMeasureMode)
@@ -2966,8 +1817,8 @@ display标靶measurementmode（人、羊、狗、鸟） PopupWindow.
             CommonParams.PropImageParams.IMAGE_PROP_LEVEL_CONTRAST,
             mode,
         )
-// PopupWindow?.setOnDismissListener {
-// ThermalRecyclerNight.modeStats = 620
+//        popupWindow?.setOnDismissListener {
+//            thermalRecyclerNight.modeStats = 620
 //        }
 在控件上方display
         popupWindow?.showAsDropDown(thermalLay, 0, getPopupWindowY(contentHeight), Gravity.NO_GRAVITY)
@@ -2977,16 +1828,12 @@ display标靶measurementmode（人、羊、狗、鸟） PopupWindow.
     /**
 display标靶风格selection PopupWindow
      */
-    /**
-     * Executes showtargetstylepopup operation with thermal imaging domain optimization.
-     *
-     */
     private fun showTargetStylePopup() {
         zoomView.visibility = View.VISIBLE
         zoomView?.updateSelectBitmap(targetMeasureMode, targetStyle, targetColorType, thermalLay)
-        // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-        // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-        // ThermalRecyclerNight.setTargetSelected - synthetic method removed
+        // thermalRecyclerNight.setTargetSelected - synthetic method removed
+        // thermalRecyclerNight.setTargetSelected - synthetic method removed
+        // thermalRecyclerNight.setTargetSelected - synthetic method removed
         popupWindow = PopupWindow(this)
         val contentView =
             LayoutInflater.from(this).inflate(R.layout.layout_second_target, null)
@@ -3004,16 +1851,8 @@ display标靶风格selection PopupWindow
         // Camera setting disabled - recyclerView not available
         /*
         recyclerView.layoutManager = if (ScreenUtil.isPortrait(this)) {
-            /**
-             * Executes gridlayoutmanager operation with thermal imaging domain optimization.
-             *
-             */
             GridLayoutManager(this, targetItemAdapter.itemCount)
         } else {
-            /**
-             * Executes linearlayoutmanager operation with thermal imaging domain optimization.
-             *
-             */
             LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         }
          */
@@ -3024,38 +1863,27 @@ display标靶风格selection PopupWindow
             zoomView?.updateSelectBitmap(targetMeasureMode, targetStyle, targetColorType, thermalLay)
         }
         recyclerView?.adapter = targetItemAdapter
-// PopupWindow?.setOnDismissListener {
-// ThermalRecyclerNight.targetStats = 600
+//        popupWindow?.setOnDismissListener {
+//            thermalRecyclerNight.targetStats = 600
 //        }
 在控件上方display
         popupWindow?.showAsDropDown(
             thermalLay,
             0,
-            /**
-             * Retrieves the popupwindowy with optimized performance for thermal imaging operations.
-             *
-             */
             getPopupWindowY(contentHeight),
             Gravity.NO_GRAVITY,
         )
         curTargetStyle = 2
     }
 
-    /**
-     * Executes showTargetColorDialog functionality.
-     */
-    /**
-     * Executes showtargetcolordialog operation with thermal imaging domain optimization.
-     *
-     */
     private fun showTargetColorDialog() {
         TipTargetColorDialog.Builder(this)
             .setTargetColor(targetColorType)
             .setCancelListener {
-                // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-                // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-                // ThermalRecyclerNight.setTargetSelected - synthetic method removed
-                // ThermalRecyclerNight.setTargetSelected - synthetic method removed
+                // thermalRecyclerNight.setTargetSelected - synthetic method removed
+                // thermalRecyclerNight.setTargetSelected - synthetic method removed
+                // thermalRecyclerNight.setTargetSelected - synthetic method removed
+                // thermalRecyclerNight.setTargetSelected - synthetic method removed
                 targetColorType = it
                 SaveSettingUtil.targetColorType = targetColorType
                 zoomView?.updateTargetBitmap(targetMeasureMode, targetStyle, targetColorType, thermalLay)
@@ -3063,18 +1891,11 @@ display标靶风格selection PopupWindow
             .create().show()
     }
 
-    /**
-     * Executes showTargetHelpDialog functionality.
-     */
-    /**
-     * Executes showtargethelpdialog operation with thermal imaging domain optimization.
-     *
-     */
     private fun showTargetHelpDialog()  {
-        // ThermalRecyclerNight.setTargetSelected - synthetic method removed
+        // thermalRecyclerNight.setTargetSelected - synthetic method removed
         val dialog = TipGuideDialog.newInstance()
         dialog.closeEvent = {
-            // ThermalRecyclerNight.setTargetSelected - synthetic method removed
+            // thermalRecyclerNight.setTargetSelected - synthetic method removed
         }
         dialog.show(supportFragmentManager, "")
     }
@@ -3083,10 +1904,6 @@ display标靶风格selection PopupWindow
 
     /**
 displayfusion度set弹框
-     */
-    /**
-     * Executes showblendextentpopup operation with thermal imaging domain optimization.
-     *
      */
     private fun showBlendExtentPopup() {
         val seekBarPopup = SeekBarPopup(this, true)
@@ -3114,8 +1931,8 @@ displayfusion度set弹框
     private var imageWidth = cameraWidth
     private var imageHeight = cameraHeight - tempHeight
 
-    private val imageBytes = ByteArray(imageWidth * imageHeight * 2) // Imagedata
-    private val temperatureBytes = ByteArray(imageWidth * imageHeight * 2) // Temperaturedata
+    private val imageBytes = ByteArray(imageWidth * imageHeight * 2) // imagedata
+    private val temperatureBytes = ByteArray(imageWidth * imageHeight * 2) // temperaturedata
     protected var imageEditBytes = ByteArray(imageWidth * imageHeight * 4) // 编辑imagedata
     private val syncimage = SynchronizedBitmap()
 
@@ -3125,28 +1942,10 @@ displayfusion度set弹框
     private var isTS001 = false
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    /**
-     * Executes irEvent functionality.
-     */
-    /**
-     * Executes irevent operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: IRMsgEvent)
-     *
-     */
     fun irEvent(event: IRMsgEvent) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (event.code == MsgCode.RESTART_USB) {
             isOnRestart = true
 坏frame
-            /**
-             * Executes startusb operation with thermal imaging domain optimization.
-             *
-             */
             startUSB(isRestart = true, true)
             ToastUtils.showShort("出现坏帧")
         }
@@ -3155,17 +1954,9 @@ displayfusion度set弹框
     /**
 初始data
      */
-    /**
-     * Initializes the datair component for thermal imaging operations.
-     *
-     */
     private fun initDataIR() {
         imageWidth = cameraHeight - tempHeight
         imageHeight = cameraWidth
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (saveSetBean.isRotatePortrait()) {
             bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888)
             temperatureView.setImageSize(imageWidth, imageHeight, this@IRThermalNightActivity)
@@ -3184,26 +1975,14 @@ displayfusion度set弹框
         temperatureView.setSyncimage(syncimage)
         temperatureView.setTemperature(temperatureBytes)
 initialize观测-动态追踪
-        thermalRecyclerNight // SetTempSource - synthetic method removed
-        /**
-         * Configures the viewlay with validation and thermal imaging optimization.
-         *
-         */
+        thermalRecyclerNight // setTempSource - synthetic method removed
         setViewLay(defaultIsPortrait)
 初始全局temperature measurement
         temperatureView.post {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!temperaturerun) {
                 temperaturerun = true
 需等待renderingcomplete再display
                 temperatureView.visibility = View.VISIBLE
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isTS001 || SaveSettingUtil.isMeasureTempMode) {
                     temperatureView.postDelayed({
                         temperatureView.temperatureRegionMode = REGION_MODE_CENTER // 全屏temperature measurement
@@ -3212,25 +1991,14 @@ initialize观测-动态追踪
             }
         }
         cl_seek_bar.requestLayout()
-        cl_seek_bar // UpdateBitmap() removed - synthetic method
+        cl_seek_bar // updateBitmap() removed - synthetic method
     }
 
     /**
 @param isPortrait    true: 竖屏
      */
-    /**
-     * Configures the viewlay with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param isPortrait Parameter for operation (type: Boolean)
-     *
-     */
     private fun setViewLay(isPortrait: Boolean) {
         val params = thermalLay.layoutParams as ConstraintLayout.LayoutParams
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isPortrait) {
             params.dimensionRatio = "192:256"
         } else {
@@ -3244,15 +2012,7 @@ initialize观测-动态追踪
         }
         thermalLay.viewTreeObserver.addOnGlobalLayoutListener(
             object : ViewTreeObserver.OnGlobalLayoutListener {
-                /**
-                 * Executes ongloballayout operation with thermal imaging domain optimization.
-                 *
-                 */
                 override fun onGlobalLayout() {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (saveSetBean.isRotatePortrait() && thermalLay.measuredHeight > thermalLay.measuredWidth) {
                         val childLayoutParams = temperatureView.layoutParams
                         childLayoutParams.width = thermalLay.measuredWidth
@@ -3281,13 +2041,6 @@ image信号processing
             imageThread = ImageThreadTC(this@IRThermalNightActivity, imageWidth, imageHeight)
             imageThread?.setDataFlowMode(defaultDataFlowMode)
             imageThread?.setSyncImage(syncimage)
-            /**
-             * Configures the custompseudocolorlist with validation and thermal imaging optimization.
-             *
-             * @note This method is optimized for thermal imaging pseudo color processing.
-             * Ensure proper thermal calibration before use.
-             *
-             */
             setCustomPseudoColorList(
                 customPseudoBean.getColorList(),
                 customPseudoBean.getPlaceList(),
@@ -3311,10 +2064,6 @@ image信号processing
         }
     }
 
-    /**
-     * Executes onrestart operation with thermal imaging domain optimization.
-     *
-     */
     override fun onRestart() {
         super.onRestart()
         isOnRestart = true
@@ -3328,51 +2077,19 @@ image信号processing
         isBadFrames: Boolean,
     ) {
         isOnRestart = true
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isBadFrames)
             {
-                /**
-                 * Manages thermal camera operations with hardware-optimized performance and error handling.
-                 *
-                 */
                 showCameraLoading()
             }
         iruvc =
-            /**
-             * Executes iruvctc operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param object Parameter for operation (type: ConnectCallback {                     override fun onCameraOpened(uvcCamera: UVCCamera)
-             * @param settingsonCameraOpened Camera configuration or reference (type: $uvcCamera}")
-             * @param ircmd Parameter for operation (type: IRCMD)
-             * @param object Parameter for operation (type: USBMonitorCallback {                     override fun onAttach()
-             *
-             */
             IRUVCTC(
                 cameraWidth, cameraHeight, this, syncimage,
                 defaultDataFlowMode,
                 object : ConnectCallback {
-                    /**
-                     * Manages thermal camera operations with hardware-optimized performance and error handling.
-                     *
-                     * @param
-                     * @param uvcCamera Camera configuration or reference (type: UVCCamera)
-                     *
-                     */
                     override fun onCameraOpened(uvcCamera: UVCCamera) {
                         XLog.w("settingsonCameraOpened:$uvcCamera}")
                     }
 
-                    /**
-                     * Executes onircmdcreate operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param ircmd Parameter for operation (type: IRCMD)
-                     *
-                     */
                     override fun onIRCMDCreate(ircmd: IRCMD) {
                         this@IRThermalNightActivity.ircmd = ircmd
 需要等IRCMDinitializecomplete之后才可以调用
@@ -3380,52 +2097,20 @@ image信号processing
                     }
                 },
                 object : USBMonitorCallback {
-                    /**
-                     * Executes onattach operation with thermal imaging domain optimization.
-                     *
-                     */
                     override fun onAttach() {}
 
-                    /**
-                     * Executes ongranted operation with thermal imaging domain optimization.
-                     *
-                     */
                     override fun onGranted() {}
 
-                    /**
-                     * Executes onconnect operation with thermal imaging domain optimization.
-                     *
-                     */
                     override fun onConnect() {}
 
-                    /**
-                     * Executes ondisconnect operation with thermal imaging domain optimization.
-                     *
-                     */
                     override fun onDisconnect() {
                     }
 
-                    /**
-                     * Executes ondettach operation with thermal imaging domain optimization.
-                     *
-                     */
                     override fun onDettach() {
-                        /**
-                         * Executes finish operation with thermal imaging domain optimization.
-                         *
-                         */
                         finish()
                     }
 
-                    /**
-                     * Executes oncancel operation with thermal imaging domain optimization.
-                     *
-                     */
                     override fun onCancel() {
-                        /**
-                         * Executes finish operation with thermal imaging domain optimization.
-                         *
-                         */
                         finish()
                     }
                 },
@@ -3446,30 +2131,14 @@ image信号processing
             this@IRThermalNightActivity.runOnUiThread {
 第一次进入，还会执行高低low temperatureswitch，这里没必要dismissCameraLoading
 从第二次start，需要执行dismiss，否则dialog不消失
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isOnRestart) {
-                    /**
-                     * Manages thermal camera operations with hardware-optimized performance and error handling.
-                     *
-                     */
                     dismissCameraLoading()
                     isOnRestart = false
                 }
             }
 使用Toast来displayexceptioninfo
             lifecycleScope.launch {
-                /**
-                 * Executes withcontext operation with thermal imaging domain optimization.
-                 *
-                 */
                 withContext(Dispatchers.IO) {
-                    /**
-                     * Configures the tsbin with validation and thermal imaging optimization.
-                     *
-                     */
                     setTsBin()
                 }
             }
@@ -3481,13 +2150,6 @@ image信号processing
     private var gainStatus = CommonParams.GainStatus.HIGH_GAIN
 
 setTS001的temperature校正
-    /**
-     * Sets tsbin configuration.
-     */
-    /**
-     * Configures the tsbin with validation and thermal imaging optimization.
-     *
-     */
     private fun setTsBin() {
         ircmd?.let {
             val getSnBytes = ByteArray(16)
@@ -3495,34 +2157,26 @@ setTS001的temperature校正
             ircmd?.getDeviceInfo(
                 CommonParams.DeviceInfoType.DEV_INFO_FW_BUILD_VERSION_INFO,
                 fwBuildVersionInfoBytes,
-            ) // Ok
+            ) // ok
             val arm = String(fwBuildVersionInfoBytes.copyOfRange(0, 8))
-            it.getDeviceInfo(CommonParams.DeviceInfoType.DEV_INFO_GET_SN, getSnBytes) // Ok
-            val snStr = String(getSnBytes) // Sn
+            it.getDeviceInfo(CommonParams.DeviceInfoType.DEV_INFO_GET_SN, getSnBytes) // ok
+            val snStr = String(getSnBytes) // sn
             val infoBuilder = StringBuilder()
             infoBuilder.append("Firmware version: ").append(arm).append("<br>")
             infoBuilder.append("SN: ").append(snStr).append("<br>")
             val str =
                 HtmlCompat.fromHtml(infoBuilder.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (str.contains("Mini256", true)) {
                 lifecycleScope.launch(Dispatchers.Main) {
                     tvTitleTemp.isVisible = true
                     tvTitleObserve.isVisible = true
                 }
 根据不同的high/low gainload不同的等效大气透过率表
-// GetUTable()
+//                getUTable()
                 val value = IntArray(1)
                 ircmd!!.getPropTPDParams(CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL, value)
                 Log.d(TAG, "TPD_PROP_GAIN_SEL=" + value[0])
                 gainStatus =
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (value[0] == 1) {
 当前core为高gain
                         CommonParams.GainStatus.HIGH_GAIN
@@ -3531,25 +2185,13 @@ setTS001的temperature校正
 当前core为低gain
                         CommonParams.GainStatus.LOW_GAIN
                     }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (nuc_table_low == null) {
                     return@let
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (ts_data_H == null)
                     {
                         ts_data_H = CommonUtils.getTauData(this@IRThermalNightActivity, "ts/TS001_H.bin")
                     }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (ts_data_L == null)
                     {
                         ts_data_L = CommonUtils.getTauData(this@IRThermalNightActivity, "ts/TS001_L.bin")
@@ -3558,21 +2200,13 @@ setTS001的temperature校正
             } else {
                 isTS001 = false
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!DeviceTools.isTC001PlusConnect())
                 {
-                    /**
-                     * Initializes the amplify component for thermal imaging operations.
-                     *
-                     */
                     initAmplify(true)
                 } else
                 {
-// IsOpenAmplify = false
-// InitAmplify(false)
+//                isOpenAmplify = false
+//                initAmplify(false)
                 }
         }
     }
@@ -3580,51 +2214,23 @@ setTS001的temperature校正
     /**
 单point修正过程
      */
-    /**
-     * Handles temperature measurement and calibration with precision thermal data processing.
-     *
-     * @param
-     * @param temp Temperature value in Celsius (type: Float)
-     * @param gainStatus Parameter for operation (type: CommonParams.GainStatus)
-     * @param tempInfo Temperature value in Celsius (type: Long)
-     *
-     * @note Temperature values are in Celsius unless otherwise specified.
-     * Accuracy depends on thermal camera calibration.
-     *
-     */
     private fun tempCorrect(
         temp: Float,
         gainStatus: CommonParams.GainStatus,
         tempInfo: Long,
     ): Float {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isTS001) {
 不是ts001不需要修正
             return temp
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ts_data_H == null || ts_data_L == null) {
             return temp
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (emissivityConfig == null)
             {
                 emissivityConfig = ConfigRepository.readConfig(false)
             }
         val paramsArray =
-            /**
-             * Executes floatarrayof operation with thermal imaging domain optimization.
-             *
-             */
             floatArrayOf(
                 temp,
                 emissivityConfig!!.radiation,
@@ -3660,27 +2266,12 @@ setTS001的temperature校正
     /**
 IRmodeconfigurationinitialize
      */
-    /**
-     * Initializes the irconfig component for thermal imaging operations.
-     *
-     */
     protected fun initIRConfig() {
 pseudo-color bardisplay
         cl_seek_bar.isVisible = curChooseTabPos == 1 && saveSetBean.isOpenPseudoBar
-        // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+        // thermalRecyclerNight.setSettingSelected - synthetic method removed
         temperatureSeekbar?.setPseudocode(pseudoColorMode)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (customPseudoBean.isUseCustomPseudo) {
-            /**
-             * Processes pseudo color configuration for thermal imaging visualization with advanced color mapping algorithms.
-             *
-             * @note This method is optimized for thermal imaging pseudo color processing.
-             * Ensure proper thermal calibration before use.
-             *
-             */
             updateCustomPseudo()
         } else {
             temperatureIvLock.visibility = View.VISIBLE
@@ -3688,18 +2279,10 @@ pseudo-color bardisplay
             temperatureIvInput.setImageResource(R.drawable.ic_color_edit)
             thermalRecyclerNight.setPseudoColor(pseudoColorMode)
         }
-        // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+        // thermalRecyclerNight.setSettingSelected - synthetic method removed
     }
 
-    /**
-     * Executes onstop operation with thermal imaging domain optimization.
-     *
-     */
     override fun onStop() {
-        /**
-         * Executes irstop operation with thermal imaging domain optimization.
-         *
-         */
         irStop()
         super.onStop()
     }
@@ -3707,42 +2290,22 @@ pseudo-color bardisplay
     open fun irStop() {
         try {
             configJob?.cancel()
-            // TimeDownView?.cancel()
+            // timeDownView?.cancel()
             imageThread?.interrupt()
             imageThread?.join()
             syncimage.valid = false
             temperatureView.stop()
             cameraView?.stop()
             isrun = false
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isVideo) {
                 isVideo = false
                 videoRecord?.stopRecord()
-                /**
-                 * Executes videotimeclose operation with thermal imaging domain optimization.
-                 *
-                 */
                 videoTimeClose()
-                /**
-                 * Executes coroutinescope operation with thermal imaging domain optimization.
-                 *
-                 */
                 CoroutineScope(Dispatchers.Main).launch {
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(500)
                     EventBus.getDefault().post(GalleryAddEvent())
                 }
                 lifecycleScope.launch {
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(500)
                     thermalRecyclerNight.refreshImg()
                 }
@@ -3751,28 +2314,16 @@ pseudo-color bardisplay
         }
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
         super.onDestroy()
         AlarmHelp.getInstance(application).onDestroy(SaveSettingUtil.isSaveSetting)
         temp_bg?.stopAnimation()
-        // TimeDownView?.cancel()
-        /**
-         * Executes stopcompass operation with thermal imaging domain optimization.
-         *
-         */
+        // timeDownView?.cancel()
         stopCompass()
         try {
             iruvc?.stopPreview()
             iruvc?.unregisterUSB()
             imageThread?.join()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (tempinfo != 0L && isTS001) {
                 IRUtils.releaseTemperatureCorrection(
                     IRCMDType.USB_IR_256_384,
@@ -3785,8 +2336,8 @@ pseudo-color bardisplay
         }
 
 某些特定客户的特殊device需要使用该Commanddisabledsensor
-// If (Usbcontorl.isload) {
-Usbcontorl.usb3803_mode_setting(0) // Disabled5V
+//        if (Usbcontorl.isload) {
+Usbcontorl.usb3803_mode_setting(0) //disabled5V
 //        }
     }
 
@@ -3819,9 +2370,6 @@ modify自定义pseudo-colorproperty，抽出method，方便dual lightinterface�
         imageThread?.setColorList(colorList, places, isUseGray, customMaxTemp, customMinTemp)
     }
 
-    /**
-     * Handles pseudo color configuration for thermal imaging.
-     */
     private fun updateCustomPseudo() {
         temperatureSeekbar.setColorList(customPseudoBean.getColorList()?.reversedArray())
         temperatureSeekbar.setPlaces(customPseudoBean.getPlaceList())
@@ -3838,55 +2386,22 @@ modify自定义pseudo-colorproperty，抽出method，方便dual lightinterface�
     }
 
     private val permissionList by lazy {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (this.applicationInfo.targetSdkVersion >= 34)
             {
-                /**
-                 * Executes mutablelistof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mutableListOf(
                     Permission.WRITE_EXTERNAL_STORAGE,
                 )
             } else if (this.applicationInfo.targetSdkVersion == 33) {
-            /**
-             * Executes mutablelistof operation with thermal imaging domain optimization.
-             *
-             */
             mutableListOf(
                 Permission.READ_MEDIA_VIDEO,
                 Permission.READ_MEDIA_IMAGES,
                 Permission.WRITE_EXTERNAL_STORAGE,
             )
         } else {
-            /**
-             * Executes mutablelistof operation with thermal imaging domain optimization.
-             *
-             */
             mutableListOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
         }
     }
 
-    /**
-     * Executes countDownCoroutines functionality.
-     */
-    /**
-     * Executes countdowncoroutines operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param total Parameter for operation (type: Int)
-     * @param timeDelay Parameter for operation (type: Long)
-     * @param scope Parameter for operation (type: CoroutineScope)
-     * @param onTick Parameter for operation (type: (Int)
-     * @param onStart Parameter for operation (type: (()
-     * @param onFinish Parameter for operation (type: (()
-     *
-     * @return Operation result or configured object (type: Unit,         onStart: (() -> Unit)? = null,         onFinish: (() -> Unit)? = null,     ): Job)
-     *
-     */
     private fun countDownCoroutines(
         total: Int,
         timeDelay: Long,
@@ -3896,20 +2411,8 @@ modify自定义pseudo-colorproperty，抽出method，方便dual lightinterface�
         onFinish: (() -> Unit)? = null,
     ): Job {
         return flow {
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (i in total downTo 1) {
-                /**
-                 * Executes emit operation with thermal imaging domain optimization.
-                 *
-                 */
                 emit(i)
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(timeDelay)
             }
         }.flowOn(Dispatchers.Main)
@@ -3921,56 +2424,25 @@ modify自定义pseudo-colorproperty，抽出method，方便dual lightinterface�
 
 拍照中间button
     @SuppressLint("CheckResult")
-    /**
-     * Executes centerCamera functionality.
-     */
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
-     */
     private fun centerCamera() {
         storageRequestType = 0
-        /**
-         * Executes checkstoragepermission operation with thermal imaging domain optimization.
-         *
-         */
         checkStoragePermission()
     }
 
     private var showCameraSetting = false
     private val cameraItemBeanList by lazy {
-        /**
-         * Executes mutablelistof operation with thermal imaging domain optimization.
-         *
-         */
         mutableListOf(
-            /**
-             * Manages thermal camera operations with hardware-optimized performance and error handling.
-             *
-             */
             CameraItemBean(
                 "延迟",
                 CameraItemBean.TYPE_DELAY,
                 time = SaveSettingUtil.delayCaptureSecond,
             ),
-            /**
-             * Manages thermal camera operations with hardware-optimized performance and error handling.
-             *
-             */
             CameraItemBean(
                 "自动快门",
                 CameraItemBean.TYPE_ZDKM,
                 isSel = SaveSettingUtil.isAutoShutter,
             ),
-            /**
-             * Manages thermal camera operations with hardware-optimized performance and error handling.
-             *
-             */
             CameraItemBean("手动快门", CameraItemBean.TYPE_SDKM),
-            /**
-             * Manages thermal camera operations with hardware-optimized performance and error handling.
-             *
-             */
             CameraItemBean(
                 "声音",
                 CameraItemBean.TYPE_AUDIO,
@@ -3982,10 +2454,6 @@ modify自定义pseudo-colorproperty，抽出method，方便dual lightinterface�
                         )
                         == PackageManager.PERMISSION_GRANTED,
             ),
-            /**
-             * Manages thermal camera operations with hardware-optimized performance and error handling.
-             *
-             */
             CameraItemBean("settings", CameraItemBean.TYPE_SETTING),
         )
     }
@@ -3995,20 +2463,13 @@ modify自定义pseudo-colorproperty，抽出method，方便dual lightinterface�
     private var isAutoShutter: Boolean = SaveSettingUtil.isAutoShutter
 
 拍照右边button
-    /**
-     * Sets tingcamera configuration.
-     */
     private fun settingCamera() {
         showCameraSetting = !showCameraSetting
         if (showCameraSetting) {
             // ViewStubCamera layout resource doesn't exist - using recyclerView directly
             // ViewStubUtils.showViewStub(viewStubCamera, true, callback = { view: View? ->
-            // View?.let {
+            //     view?.let {
                     /*
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (ScreenUtil.isPortrait(this)) {
                         recyclerView.layoutManager = GridLayoutManager(this, cameraItemBeanList.size)
                     } else {
@@ -4019,10 +2480,6 @@ modify自定义pseudo-colorproperty，抽出method，方便dual lightinterface�
                      */
             cameraItemAdapter = CameraItemAdapter(cameraItemBeanList)
             cameraItemAdapter?.listener = listener@{ position, _ ->
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (cameraItemAdapter!!.data[position].type) {
                     CameraItemBean.TYPE_SETTING -> {
                         NavigationManager.getInstance().build(RouterConfig.IR_CAMERA_SETTING)
@@ -4031,15 +2488,11 @@ modify自定义pseudo-colorproperty，抽出method，方便dual lightinterface�
                     }
 
                     CameraItemBean.TYPE_DELAY -> {
-                        // If (timeDownView.isRunning) {
-                        // Return@listener
+                        // if (timeDownView.isRunning) {
+                        //    return@listener
                         // }
                         cameraItemAdapter!!.data[position].changeDelayType()
                         cameraItemAdapter!!.notifyItemChanged(position)
-                        /**
-                         * Executes when operation with thermal imaging domain optimization.
-                         *
-                         */
                         when (cameraItemAdapter!!.data[position].time) {
                             CameraItemBean.DELAY_TIME_0 -> {
                                 ToastUtils.showShort(R.string.off_photography)
@@ -4058,17 +2511,9 @@ modify自定义pseudo-colorproperty，抽出method，方便dual lightinterface�
                     }
 
                     CameraItemBean.TYPE_AUDIO -> {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (!cameraItemAdapter!!.data[position].isSel) {
                             storageRequestType = 1
                             audioPosition = position
-                            /**
-                             * Executes checkstoragepermission operation with thermal imaging domain optimization.
-                             *
-                             */
                             checkStoragePermission()
                         } else {
                             isRecordAudio = false
@@ -4084,19 +2529,11 @@ modify自定义pseudo-colorproperty，抽出method，方便dual lightinterface�
                         lifecycleScope.launch {
                             cameraItemAdapter!!.data[position].isSel = true
                             cameraItemAdapter!!.notifyItemChanged(position)
-                            /**
-                             * Executes delay operation with thermal imaging domain optimization.
-                             *
-                             */
                             delay(500)
                             cameraItemAdapter!!.data[position].isSel = false
                             cameraItemAdapter!!.notifyItemChanged(position)
                         }
 手动快门
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (syncimage.type == 1) {
                             ircmd?.tc1bShutterManual()
                         } else {
@@ -4112,10 +2549,6 @@ modify自定义pseudo-colorproperty，抽出method，方便dual lightinterface�
                         SaveSettingUtil.isAutoShutter = isAutoShutter
                         cameraItemAdapter!!.data[position].isSel = !cameraItemAdapter!!.data[position].isSel
                         cameraItemAdapter!!.notifyItemChanged(position)
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (SharedManager.isTipShutter && !isAutoShutter) {
                             val dialog =
                                 TipShutterDialog.Builder(this)
@@ -4133,7 +2566,7 @@ modify自定义pseudo-colorproperty，抽出method，方便dual lightinterface�
                 cameraItemAdapter!!.data[position].isSel = !cameraItemAdapter!!.data[position].isSel
                 cameraItemAdapter!!.notifyItemChanged(position)
             }
-            // RecyclerView.adapter = cameraItemAdapter  // Commented out as recyclerView doesn't exist
+            // recyclerView.adapter = cameraItemAdapter  // Commented out as recyclerView doesn't exist
             // ViewStubCamera layout resource doesn't exist - commented out ViewStub callback
             //     }
             // }
@@ -4143,10 +2576,6 @@ modify自定义pseudo-colorproperty，抽出method，方便dual lightinterface�
     }
 
     open fun getCameraViewBitmap(): Bitmap {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isOpenAmplify)
             {
 enabled超分button，则取原始image的超分进行processing四倍
@@ -4159,48 +2588,21 @@ enabled超分button，则取原始image的超分进行processing四倍
     }
 
 拍照
-    /**
-     * Executes camera functionality.
-     */
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
-     */
     private fun camera() {
         lifecycleScope.launch(Dispatchers.Default) {
-            /**
-             * Executes launch operation with thermal imaging domain optimization.
-             *
-             */
             launch(Dispatchers.Main) {
                 thermalRecyclerNight.setToCamera()
             }
             try {
-                /**
-                 * Executes synchronized operation with thermal imaging domain optimization.
-                 *
-                 */
                 synchronized(syncimage.dataLock) {
 get展示imageinfo的图层data
                     var cameraViewBitmap: Bitmap? =
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isOpenAmplify) {
                             OpencvTools.supImageFourExToBitmap(getCameraViewBitmap())
                         } else {
-                            /**
-                             * Retrieves the cameraviewbitmap with optimized performance for thermal imaging operations.
-                             *
-                             */
                             getCameraViewBitmap()
                         }
 visible light
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isOpenPreview) {
                         cameraViewBitmap = BitmapUtils.mergeBitmapByView(cameraViewBitmap, cameraPreview.getBitmap(), cameraPreview)
 画中画原图save
@@ -4209,18 +2611,14 @@ visible light
                         }
                     }
 
-// Gettemperature图层的data，包括pointline框，temperature值等，重新合成bitmap
-// If ((curChooseTabPos == 1 && temperatureView.temperatureRegionMode != REGION_MODE_CLEAN) ||
+// gettemperature图层的data，包括pointline框，temperature值等，重新合成bitmap
+//                    if ((curChooseTabPos == 1 && temperatureView.temperatureRegionMode != REGION_MODE_CLEAN) ||
 //                        (curChooseTabPos == 2 && temperatureView.isUserHighTemp && temperatureView.isUserLowTemp)) {
-// CameraViewBitmap = BitmapUtils.mergeBitmap(cameraViewBitmap, temperatureView.regionAndValueBitmap, 0, 0)
+//                        cameraViewBitmap = BitmapUtils.mergeBitmap(cameraViewBitmap, temperatureView.regionAndValueBitmap, 0, 0)
 //                    }
 
 Mergepseudo-color bar
                     val isShowPseudoBar = cl_seek_bar.visibility == VISIBLE
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isShowPseudoBar) {
                         val seekBarBitmap = cl_seek_bar.drawToBitmap()
                         cameraViewBitmap =
@@ -4235,10 +2633,6 @@ Mergepseudo-color bar
 
 Merge指南针
                     val compassBitmap: Bitmap? =
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (compassView?.visibility == VISIBLE) {
                             compassView?.drawToBitmap()
                         } else {
@@ -4257,10 +2651,6 @@ Merge指南针
 
 产品在 2023/11/24 Test用例评审上确定拍照不需要savetemperature报警闪烁效果
                     /*if (temp_bg.isVisible) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (alphaPaint == null) {
                             alphaPaint = Paint()
                         }
@@ -4269,20 +2659,12 @@ Merge指南针
                     }*/
 
 gettemperature图层的data，包括pointline框，temperature值等，重新合成bitmap
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if ((curChooseTabPos == 1 && temperatureView.temperatureRegionMode != REGION_MODE_CLEAN) ||
                         (curChooseTabPos == 2 && temperatureView.isUserHighTemp() && temperatureView.isUserLowTemp())
                     ) {
                         cameraViewBitmap = BitmapUtils.mergeBitmap(cameraViewBitmap, temperatureView.regionAndValueBitmap, 0, 0)
                     }
 add汽车检测
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (layCarDetectPrompt.isVisible)
                         {
                             cameraViewBitmap =
@@ -4293,25 +2675,13 @@ add汽车检测
                         }
 addwatermark
                     val watermarkBean = SharedManager.watermarkBean
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (watermarkBean.isOpen) {
                         cameraViewBitmap =
                             BitmapUtils.drawCenterLable(
                                 cameraViewBitmap,
                                 watermarkBean.title,
                                 watermarkBean.address,
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (watermarkBean.isAddTime) TimeTool.getNowTime() else "",
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (temperatureSeekbar.isVisible)
                                     {
                                         temperatureSeekbar.measuredWidth
@@ -4329,11 +2699,7 @@ addwatermark
                     val value = IntArray(1)
                     ircmd?.getPropTPDParams(CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL, value)
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
-                    if (curChooseTabPos == 1) { // Temperature measurementmode才需要savetemperaturedata
+                    if (curChooseTabPos == 1) { // temperature measurementmode才需要savetemperaturedata
                         val capital =
                             FrameStruct.toCode(
                                 name = getProductName(),
@@ -4358,10 +2724,6 @@ addwatermark
                         ImageUtils.saveFrame(bs = imageEditBytes, capital = capital, name = name)
                     }
 
-                    /**
-                     * Executes launch operation with thermal imaging domain optimization.
-                     *
-                     */
                     launch(Dispatchers.Main) {
                         thermalRecyclerNight.refreshImg()
                     }
@@ -4390,10 +2752,6 @@ initializevideo采集component
      */
     open fun initVideoRecordFFmpeg() {
         videoRecord =
-            /**
-             * Executes videorecordffmpeg operation with thermal imaging domain optimization.
-             *
-             */
             VideoRecordFFmpeg(
                 cameraView,
                 cameraPreview,
@@ -4406,38 +2764,15 @@ initializevideo采集component
             )
     }
 
-    /**
-     * Executes video functionality.
-     */
-    /**
-     * Executes video operation with thermal imaging domain optimization.
-     *
-     */
     private fun video() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isVideo) {
 startrecording
-            /**
-             * Initializes the videorecordffmpeg component for thermal imaging operations.
-             *
-             */
             initVideoRecordFFmpeg()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!videoRecord!!.canStartVideoRecord(null)) {
                 return
             }
             videoRecord?.stopVideoRecordListener = { isShowVideoRecordTips ->
                 this@IRThermalNightActivity.runOnUiThread {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isShowVideoRecordTips) {
                         try {
                             val dialog =
@@ -4450,38 +2785,22 @@ startrecording
                     }
                     videoRecord?.stopRecord()
                     isVideo = false
-                    /**
-                     * Executes videotimeclose operation with thermal imaging domain optimization.
-                     *
-                     */
                     videoTimeClose()
                     lifecycleScope.launch(Dispatchers.Main) {
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(500)
                         thermalRecyclerNight.refreshImg()
                     }
                 }
             }
-            cl_seek_bar // UpdateBitmap() removed - synthetic method
+            cl_seek_bar // updateBitmap() removed - synthetic method
             videoRecord?.updateAudioState(isRecordAudio)
             videoRecord?.startRecord()
             isVideo = true
             lifecycleScope.launch(Dispatchers.Main) {
                 thermalRecyclerNight.setToRecord(false)
             }
-            /**
-             * Executes videotimeshow operation with thermal imaging domain optimization.
-             *
-             */
             videoTimeShow()
         } else {
-            /**
-             * Executes stopifvideoing operation with thermal imaging domain optimization.
-             *
-             */
             stopIfVideoing()
         }
     }
@@ -4489,28 +2808,12 @@ startrecording
     /**
 如果正在进行录像，则stop录像.
      */
-    /**
-     * Executes stopifvideoing operation with thermal imaging domain optimization.
-     *
-     */
     private fun stopIfVideoing() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isVideo) {
             isVideo = false
             videoRecord?.stopRecord()
-            /**
-             * Executes videotimeclose operation with thermal imaging domain optimization.
-             *
-             */
             videoTimeClose()
             lifecycleScope.launch(Dispatchers.Main) {
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(500)
                 thermalRecyclerNight.refreshImg()
                 EventBus.getDefault().post(GalleryAddEvent())
@@ -4520,52 +2823,21 @@ startrecording
 
     private var flow: Job? = null
 
-    /**
-     * Executes videoTimeShow functionality.
-     */
-    /**
-     * Executes videotimeshow operation with thermal imaging domain optimization.
-     *
-     */
     private fun videoTimeShow() {
         flow =
             lifecycleScope.launch {
                 val time = 60 * 60 * 4
                 flow {
-                    /**
-                     * Executes repeat operation with thermal imaging domain optimization.
-                     *
-                     */
                     repeat(time) {
-                        /**
-                         * Executes emit operation with thermal imaging domain optimization.
-                         *
-                         */
                         emit(it)
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(1000)
                     }
                 }.collect {
-                    /**
-                     * Executes launch operation with thermal imaging domain optimization.
-                     *
-                     */
                     launch(Dispatchers.Main) {
                         popTimeText.text = TimeTool.showVideoTime(it * 1000L)
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (it == time - 1) {
 stop
-                        /**
-                         * Executes video operation with thermal imaging domain optimization.
-                         *
-                         */
                         video()
                     }
                 }
@@ -4573,10 +2845,6 @@ stop
         popTimeLay.visibility = View.VISIBLE
     }
 
-    /**
-     * Executes videotimeclose operation with thermal imaging domain optimization.
-     *
-     */
     protected fun videoTimeClose() {
         flow?.cancel()
         flow = null
@@ -4588,12 +2856,8 @@ stop
     /**
 displaycontrastset PopupWindow
      */
-    /**
-     * Executes showcontrastpopup operation with thermal imaging domain optimization.
-     *
-     */
     private fun showContrastPopup() {
-        // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+        // thermalRecyclerNight.setSettingSelected - synthetic method removed
 
         val seekBarPopup = SeekBarPopup(this)
         seekBarPopup.progress = NumberTools.scale(saveSetBean.contrastValue / 2.56f, 0).toInt()
@@ -4602,15 +2866,12 @@ displaycontrastset PopupWindow
             ircmd?.setContrast(saveSetBean.contrastValue)
         }
         seekBarPopup.setOnDismissListener {
-            // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+            // thermalRecyclerNight.setSettingSelected - synthetic method removed
         }
         seekBarPopup.show(thermalLay, !saveSetBean.isRotatePortrait())
         popupWindow = seekBarPopup
     }
 
-    /**
-     * Retrieves popupwindowy information.
-     */
     private fun getPopupWindowY(contentHeight: Int): Int {
         if (!saveSetBean.isRotatePortrait()) {
             return 0
@@ -4629,18 +2890,10 @@ displaycontrastset PopupWindow
     private var nowZoomLevel = 1
 
     /**
-/**
- * Executes display细节 operation with thermal imaging domain optimization.
- *
- */
 display细节(锐度) set PopupWindow
      */
-    /**
-     * Executes showsharpnesspopup operation with thermal imaging domain optimization.
-     *
-     */
     private fun showSharpnessPopup() {
-        // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+        // thermalRecyclerNight.setSettingSelected - synthetic method removed
 
         val maxSharpness = 4 // 实际contrast取值 [0, 4]，用于百分比conversion
         val seekBarPopup = SeekBarPopup(this)
@@ -4651,52 +2904,36 @@ display细节(锐度) set PopupWindow
             ircmd?.setPropDdeLevel(saveSetBean.ddeConfig)
         }
         seekBarPopup.setOnDismissListener {
-            // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+            // thermalRecyclerNight.setSettingSelected - synthetic method removed
         }
         seekBarPopup.show(thermalLay, !saveSetBean.isRotatePortrait())
         popupWindow = seekBarPopup
     }
 
-// IMAGE_PROP_LEVEL_SNR (0~3) 空域降噪(default2) 看不出
-// IMAGE_PROP_LEVEL_TNR (0~3) 时域降噪(default2) 看不出
+//IMAGE_PROP_LEVEL_SNR (0~3) 空域降噪(默认2) 看不出
+//IMAGE_PROP_LEVEL_TNR (0~3) 时域降噪(默认2) 看不出
 
     /**
 自动gain
-IMAGE_PROP_MODE_AGC: default2
-IMAGE_PROP_ONOFF_AGC: default1
+IMAGE_PROP_MODE_AGC: 默认2
+IMAGE_PROP_ONOFF_AGC: 默认1
      */
     open fun autoConfig() {
         lifecycleScope.launch(Dispatchers.IO) {
             iruvc?.let {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!it.auto_gain_switch) {
-                    /**
-                     * Executes switchautogain operation with thermal imaging domain optimization.
-                     *
-                     */
                     switchAutoGain(true)
                     gainSelChar = CameraItemBean.TYPE_TMP_ZD
-                    /**
-                     * Executes withcontext operation with thermal imaging domain optimization.
-                     *
-                     */
                     withContext(Dispatchers.Main) {
                         ToastTools.showShort(R.string.auto_open)
                     }
                 }
-// Else {
-// SwitchAutoGain(false)
+//                else {
+//                    switchAutoGain(false)
 //                    R.string.auto_close
 //                }
             }
         }
-        /**
-         * Manages thermal camera operations with hardware-optimized performance and error handling.
-         *
-         */
         dismissCameraLoading()
         thermalRecyclerNight.setTempLevel(CameraItemBean.TYPE_TMP_ZD)
     }
@@ -4710,38 +2947,18 @@ IMAGE_PROP_ONOFF_AGC: default1
     private val timeMillis = 150L
 
 configuration
-    /**
-     * Executes configparam operation with thermal imaging domain optimization.
-     *
-     */
     protected fun configParam() {
         configJob =
             lifecycleScope.launch {
-// ShowLoading()
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
+//            showLoading()
                 while (isConfigWait && isActive) {
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(200)
                 }
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(500)
                 val config = ConfigRepository.readConfig(false)
                 val disChar = (config.distance * 128).toInt() // 距离(米)
                 val emsChar = (config.radiation * 128).toInt() // 发射率
                 XLog.w("settingsTPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(timeMillis)
 emissivity
                 // / Emissivity property. unit:1/128, range:1-128(0.01-1)
@@ -4749,10 +2966,6 @@ emissivity
                     CommonParams.PropTPDParams.TPD_PROP_EMS,
                     CommonParams.PropTPDParamsValue.NumberType(emsChar.toString()),
                 )
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(timeMillis)
 距离
                 ircmd?.setPropTPDParams(
@@ -4760,46 +2973,19 @@ emissivity
                     CommonParams.PropTPDParamsValue.NumberType(disChar.toString()),
                 )
 sethigh temperature、low temperature
-                /**
-                 * Configures the temperaturemode with validation and thermal imaging optimization.
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 setTemperatureMode(temperatureMode, false)
 自动快门
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(timeMillis)
                 XLog.w("settingsTPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isFirst && isrun) {
 Restore镜像
-                    // ThermalRecyclerNight.setSettingSelected - synthetic method removed
+                    // thermalRecyclerNight.setSettingSelected - synthetic method removed
                     ircmd?.setMirror(saveSetBean.isOpenMirror)
 自动快门
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(timeMillis)
-                    /**
-                     * Executes withcontext operation with thermal imaging domain optimization.
-                     *
-                     */
                     withContext(Dispatchers.IO) {
 部分机型在disabled自动快门，初始会花屏
                         ircmd?.setAutoShutter(true)
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(2500)
                         ircmd?.setAutoShutter(isAutoShutter)
                         isFirst = false
@@ -4808,29 +2994,13 @@ set锐度（细节）
                     ircmd?.setPropDdeLevel(saveSetBean.ddeConfig)
 复位contrast
                     ircmd?.setContrast(saveSetBean.contrastValue)
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (SaveSettingUtil.isSaveSetting) {
                         XLog.i("configuration中的mode为：${if (SaveSettingUtil.isMeasureTempMode) "temperature measurement" else "观测"}mode")
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isTS001)
                             {
-                                /**
-                                 * Executes switchts001mode operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 switchTs001Mode(SaveSettingUtil.isMeasureTempMode)
                             } else
                             {
-                                /**
-                                 * Executes switchts001mode operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 switchTs001Mode(true)
                             }
                     }
@@ -4839,16 +3009,8 @@ set锐度（细节）
                     CommonParams.PropImageParams.IMAGE_PROP_ONOFF_AGC,
                     CommonParams.PropImageParamsValue.StatusSwith.ON,
                 )
-                /**
-                 * Executes printsn operation with thermal imaging domain optimization.
-                 *
-                 */
                 printSN()
 手动快门
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (syncimage.type == 1) {
                     ircmd?.tc1bShutterManual()
                 } else {
@@ -4859,9 +3021,6 @@ set锐度（细节）
     }
 
 settdpparameter
-    /**
-     * Sets tpdparams configuration.
-     */
     private fun setTpdParams(
         params: CommonParams.PropTPDParams,
         value: String,
@@ -4870,9 +3029,6 @@ settdpparameter
     }
 
 setimgparameter
-    /**
-     * Sets imageparams configuration.
-     */
     private fun setImageParams(
         params: CommonParams.PropImageParams,
         value: String,
@@ -4886,13 +3042,6 @@ setimgparameter
     private var downColor = 0
 
 temperature range
-    /**
-     * Executes addLimit functionality.
-     */
-    /**
-     * Executes addlimit operation with thermal imaging domain optimization.
-     *
-     */
     private fun addLimit() {
         ThermalInputDialog.Builder(this)
             .setMessage(getString(R.string.thermal_threshold_setting))
@@ -4918,23 +3067,8 @@ temperature range
     /**
 switch 画中画 enabled或disabled state
      */
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
-     * @param
-     * @param needShowTip Parameter for operation (type: Boolean)
-     *
-     */
     private fun cameraPreviewConfig(needShowTip: Boolean) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!CheckDoubleClick.isFastDoubleClick()) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isOpenPreview) {
 disabledcamera
                 isOpenPreview = false
@@ -4943,119 +3077,44 @@ disabledcamera
                 cameraPreview.visibility = View.INVISIBLE
                 SaveSettingUtil.isOpenTwoLight = false
             } else {
-                /**
-                 * Manages thermal camera operations with hardware-optimized performance and error handling.
-                 *
-                 */
                 checkCameraPermission(needShowTip)
             }
         }
     }
 
-    /**
-     * Executes disconnected operation with thermal imaging domain optimization.
-     *
-     */
     override fun disConnected() {
         super.disConnected()
-        /**
-         * Executes finish operation with thermal imaging domain optimization.
-         *
-         */
         finish()
     }
 
-    /**
-     * Executes onbackpressed operation with thermal imaging domain optimization.
-     *
-     */
     override fun onBackPressed() {
-        /**
-         * Configures the result with validation and thermal imaging optimization.
-         *
-         */
         setResult(200)
-        /**
-         * Executes finish operation with thermal imaging domain optimization.
-         *
-         */
         finish()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    /**
-     * Executes iruvctc functionality.
-     */
-    /**
-     * Executes iruvctc operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: PreviewComplete)
-     *
-     */
     fun iruvctc(event: PreviewComplete) {
-        /**
-         * Executes dealy16modepreviewcomplete operation with thermal imaging domain optimization.
-         *
-         */
         dealY16ModePreviewComplete()
     }
 
-    /**
-     * Executes dealY16ModePreviewComplete functionality.
-     */
-    /**
-     * Executes dealy16modepreviewcomplete operation with thermal imaging domain optimization.
-     *
-     */
     private fun dealY16ModePreviewComplete() {
         iruvc?.setFrameReady(true)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    /**
-     * Executes cameraEvent functionality.
-     */
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
-     * @param
-     * @param event Parameter for operation (type: DeviceCameraEvent)
-     *
-     */
     fun cameraEvent(event: DeviceCameraEvent) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (event.action) {
             100 -> {
 准备image
-                /**
-                 * Manages thermal camera operations with hardware-optimized performance and error handling.
-                 *
-                 */
                 showCameraLoading()
             }
 
             101 -> {
 displayimage
                 lifecycleScope.launch {
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(500)
                     isConfigWait = false
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(1000)
-                    /**
-                     * Manages thermal camera operations with hardware-optimized performance and error handling.
-                     *
-                     */
                     dismissCameraLoading()
                 }
             }
@@ -5065,10 +3124,6 @@ displayimage
     /**
 Recorddeviceinfo
      */
-    /**
-     * Executes printsn operation with thermal imaging domain optimization.
-     *
-     */
     private fun printSN() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -5077,9 +3132,9 @@ Recorddeviceinfo
                 ircmd?.getDeviceInfo(
                     CommonParams.DeviceInfoType.DEV_INFO_FW_BUILD_VERSION_INFO,
                     fwBuildVersionInfoBytes,
-                ) // Ok
-                ircmd?.getDeviceInfo(CommonParams.DeviceInfoType.DEV_INFO_GET_SN, getSnBytes) // Ok
-                val snStr = String(getSnBytes) // Sn
+                ) // ok
+                ircmd?.getDeviceInfo(CommonParams.DeviceInfoType.DEV_INFO_GET_SN, getSnBytes) // ok
+                val snStr = String(getSnBytes) // sn
                 val arm = String(fwBuildVersionInfoBytes.copyOfRange(0, 8))
                 SharedManager.setDeviceSn(snStr)
                 SharedManager.setDeviceVersion(arm)
@@ -5098,16 +3153,6 @@ Recorddeviceinfo
         }
     }
 
-    /**
-     * Handles temperature measurement and calibration with precision thermal data processing.
-     *
-     * @param
-     * @param temp Temperature value in Celsius (type: Float)
-     *
-     * @note Temperature values are in Celsius unless otherwise specified.
-     * Accuracy depends on thermal camera calibration.
-     *
-     */
     override fun tempCorrectByTs(temp: Float): Float {
         var tmp = temp
         try {
@@ -5118,34 +3163,16 @@ Recorddeviceinfo
         return tmp
     }
 
-    /**
-     * Executes startCompass functionality.
-     */
-    /**
-     * Executes startcompass operation with thermal imaging domain optimization.
-     *
-     */
     private fun startCompass() {
         compass.start(this::onCompassUpdate)
     }
 
-    /**
-     * Executes stopCompass functionality.
-     */
-    /**
-     * Executes stopcompass operation with thermal imaging domain optimization.
-     *
-     */
     private fun stopCompass() {
         compass.stop(this::onCompassUpdate)
     }
 
     /**
 方位改变Listener
-     */
-    /**
-     * Executes oncompassupdate operation with thermal imaging domain optimization.
-     *
      */
     private fun onCompassUpdate(): Boolean {
         val azimuthTxt = formatDegrees(compass.bearing.value, replace360 = true)
@@ -5154,16 +3181,7 @@ Recorddeviceinfo
     }
 
     /**
-根据sensor传回的值，calculation实际angle
-     */
-    /**
-     * Executes formatdegrees operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param degrees Parameter for operation (type: Float)
-     * @param decimalPlaces Parameter for operation (type: Int = 0)
-     * @param replace360 Parameter for operation (type: Boolean = false)
-     *
+根据sensor传回的值，calculation实际角度
      */
     private fun formatDegrees(
         degrees: Float,
@@ -5175,83 +3193,38 @@ Recorddeviceinfo
         return Pair(formatted.toFloat(), finalFormatted.toFloat())
     }
 
-    /**
-     * Executes checkCameraPermission functionality.
-     */
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
-     * @param
-     * @param needShowTip Parameter for operation (type: Boolean)
-     *
-     */
     private fun checkCameraPermission(needShowTip: Boolean) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!XXPermissions.isGranted(
                 this,
                 Permission.CAMERA,
             )
         ) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (BaseApplication.instance.isDomestic()) {
                 TipDialog.Builder(this)
                     .setMessage(getString(R.string.permission_request_camera_app, CommUtils.getAppName()))
                     .setCancelListener(R.string.app_cancel)
                     .setPositiveListener(R.string.app_confirm) {
-                        /**
-                         * Initializes the camerapermission component for thermal imaging operations.
-                         *
-                         */
                         initCameraPermission(needShowTip)
                     }
                     .create().show()
             } else {
-                /**
-                 * Initializes the camerapermission component for thermal imaging operations.
-                 *
-                 */
                 initCameraPermission(needShowTip)
             }
         } else {
-            /**
-             * Initializes the camerapermission component for thermal imaging operations.
-             *
-             */
             initCameraPermission(needShowTip)
         }
     }
 
-    /**
-     * Initializes camerapermission component.
-     */
     private fun initCameraPermission(needShowTip: Boolean) {
         XXPermissions.with(this@IRThermalNightActivity)
             .permission(Permission.CAMERA)
             .request(
                 object : OnPermissionCallback {
-                    /**
-                     * Executes ongranted operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param permissions Parameter for operation (type: MutableList<String>)
-                     * @param allGranted Parameter for operation (type: Boolean)
-                     *
-                     */
                     override fun onGranted(
                         permissions: MutableList<String>,
                         allGranted: Boolean,
                     ) {
                         try {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (allGranted) {
 画中画enabled
                                 thermalRecyclerNight.setTwoLightSelected(TwoLightType.P_IN_P, true)
@@ -5262,10 +3235,6 @@ Recorddeviceinfo
                                     cameraPreview.openCamera()
                                     SaveSettingUtil.isOpenTwoLight = true
                                 }
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (needShowTip && SharedManager.isTipPinP) {
                                     val dialog = TipPreviewDialog.newInstance()
                                     dialog.closeEvent = {
@@ -5282,28 +3251,12 @@ Recorddeviceinfo
                         }
                     }
 
-                    /**
-                     * Executes ondenied operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param permissions Parameter for operation (type: MutableList<String>)
-                     * @param doNotAskAgain Parameter for operation (type: Boolean)
-                     *
-                     */
                     override fun onDenied(
                         permissions: MutableList<String>,
                         doNotAskAgain: Boolean,
                     ) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (doNotAskAgain) {
 拒绝Authorization并且不再提醒
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_camera_content))
@@ -5326,90 +3279,36 @@ Recorddeviceinfo
             )
     }
 
-    /**
-     * Executes checkStoragePermission functionality.
-     */
-    /**
-     * Executes checkstoragepermission operation with thermal imaging domain optimization.
-     *
-     */
     private fun checkStoragePermission() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!XXPermissions.isGranted(this, permissionList)) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (BaseApplication.instance.isDomestic()) {
                 TipDialog.Builder(this)
                     .setMessage(getString(R.string.permission_request_storage_app, CommUtils.getAppName()))
                     .setCancelListener(R.string.app_cancel)
                     .setPositiveListener(R.string.app_confirm) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (storageRequestType == 0) {
-                            /**
-                             * Initializes the storagepermission component for thermal imaging operations.
-                             *
-                             */
                             initStoragePermission()
                         } else {
-                            /**
-                             * Initializes the audiopermission component for thermal imaging operations.
-                             *
-                             */
                             initAudioPermission()
                         }
                     }
                     .create().show()
             } else {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (storageRequestType == 0) {
-                    /**
-                     * Initializes the storagepermission component for thermal imaging operations.
-                     *
-                     */
                     initStoragePermission()
                 } else {
-                    /**
-                     * Initializes the audiopermission component for thermal imaging operations.
-                     *
-                     */
                     initAudioPermission()
                 }
             }
         } else {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (storageRequestType == 0) {
-                /**
-                 * Initializes the storagepermission component for thermal imaging operations.
-                 *
-                 */
                 initStoragePermission()
             } else {
-                /**
-                 * Initializes the audiopermission component for thermal imaging operations.
-                 *
-                 */
                 initAudioPermission()
             }
         }
     }
 
-    /**
-     * Initializes audiopermission component.
-     */
     private fun initAudioPermission()  {
         XXPermissions.with(this@IRThermalNightActivity)
             .permission(
@@ -5417,23 +3316,11 @@ Recorddeviceinfo
             )
             .request(
                 object : OnPermissionCallback {
-                    /**
-                     * Executes ongranted operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param permissions Parameter for operation (type: MutableList<String>)
-                     * @param allGranted Parameter for operation (type: Boolean)
-                     *
-                     */
                     override fun onGranted(
                         permissions: MutableList<String>,
                         allGranted: Boolean,
                     ) {
                         try {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (allGranted) {
 录音enabled
                                 isRecordAudio = true
@@ -5449,28 +3336,12 @@ Recorddeviceinfo
                         }
                     }
 
-                    /**
-                     * Executes ondenied operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param permissions Parameter for operation (type: MutableList<String>)
-                     * @param doNotAskAgain Parameter for operation (type: Boolean)
-                     *
-                     */
                     override fun onDenied(
                         permissions: MutableList<String>,
                         doNotAskAgain: Boolean,
                     ) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (doNotAskAgain) {
 拒绝Authorization并且不再提醒
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_microphone_content))
@@ -5492,9 +3363,6 @@ Recorddeviceinfo
             )
     }
 
-    /**
-     * Initializes storagepermission component.
-     */
     private fun initStoragePermission() {
         XXPermissions.with(this)
             .permission(
@@ -5502,54 +3370,22 @@ Recorddeviceinfo
             )
             .request(
                 object : OnPermissionCallback {
-                    /**
-                     * Executes ongranted operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param permissions Parameter for operation (type: MutableList<String>)
-                     * @param allGranted Parameter for operation (type: Boolean)
-                     *
-                     */
                     override fun onGranted(
                         permissions: MutableList<String>,
                         allGranted: Boolean,
                     ) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (allGranted) {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (!thermalRecyclerNight.isVideoMode) {
                                 val setting = SharedManager.continuousBean
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (setting.isOpen) {
-                                    /**
-                                     * Executes if operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     if (!isAutoCamera) {
 连续拍照
                                         autoJob =
-                                            /**
-                                             * Executes countdowncoroutines operation with thermal imaging domain optimization.
-                                             *
-                                             */
                                             countDownCoroutines(
                                                 setting.count,
                                                 setting.continuaTime,
                                                 this@IRThermalNightActivity.lifecycleScope,
                                                 onTick = {
-                                                    /**
-                                                     * Manages thermal camera operations with hardware-optimized performance and error handling.
-                                                     *
-                                                     */
                                                     camera()
                                                 }, onStart = {
                                                     tvTypeInd?.visibility = VISIBLE
@@ -5565,18 +3401,10 @@ Recorddeviceinfo
                                         autoJob?.cancel()
                                     }
                                 } else {
-                                    /**
-                                     * Manages thermal camera operations with hardware-optimized performance and error handling.
-                                     *
-                                     */
                                     camera()
                                 }
                             } else {
 recordingvideo
-                                /**
-                                 * Executes video operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 video()
                             }
                         } else {
@@ -5584,28 +3412,12 @@ recordingvideo
                         }
                     }
 
-                    /**
-                     * Executes ondenied operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param permissions Parameter for operation (type: MutableList<String>)
-                     * @param doNotAskAgain Parameter for operation (type: Boolean)
-                     *
-                     */
                     override fun onDenied(
                         permissions: MutableList<String>,
                         doNotAskAgain: Boolean,
                     ) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (doNotAskAgain) {
 拒绝Authorization并且不再提醒
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_storage_content))
@@ -5627,18 +3439,11 @@ recordingvideo
             )
     }
 
-    /**
-     * Sets cardetectprompt configuration.
-     */
     private fun setCarDetectPrompt()  {
         // Car detection views don't exist in layout - commenting out for now
         /*
         var carDetectInfo = SharedManager.getCarDetectInfo()
         var tvDetectPrompt = viewCarDetect.findViewById<TextView>(R.id.tv_detect_prompt)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if(carDetectInfo == null){
             tvDetectPrompt.text =  getString(R.string.abnormal_item1) + TemperatureUtil.getTempStr(40, 70)
         }else{
@@ -5648,10 +3453,6 @@ recordingvideo
         val test = intent.getBooleanExtra(ExtraKeyConfig.IS_CAR_DETECT_ENTER,false)
         layCarDetectPrompt.visibility = if(intent.getBooleanExtra(ExtraKeyConfig.IS_CAR_DETECT_ENTER,false)) View.VISIBLE else View.GONE
         viewCarDetect.findViewById<RelativeLayout>(R.id.rl_content).setOnClickListener {
-            /**
-             * Executes cardetectdialog operation with thermal imaging domain optimization.
-             *
-             */
             CarDetectDialog(this) {
                 var temperature = it.temperature.split("~")
                 tvDetectPrompt.text =  it.item + TemperatureUtil.getTempStr(temperature[0].toInt(), temperature[1].toInt())

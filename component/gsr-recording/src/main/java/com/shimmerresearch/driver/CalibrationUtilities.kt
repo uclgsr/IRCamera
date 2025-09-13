@@ -8,33 +8,9 @@ import kotlin.math.pow
  *
  * Provides conversion between raw ADC values and calibrated GSR measurements
  */
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for CalibrationUtilities operations.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 object CalibrationUtilities {
     // GSR calibration constants for different ranges
     private val GSR_UNCALIBRATED_TO_KOHMS =
-        /**
-         * Executes doublearrayof operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param 0 Parameter for operation (type: 10kΩ - 56kΩ             27.2518)
-         * @param 1 Parameter for operation (type: 56kΩ - 220kΩ             108.2072)
-         * @param 2 Parameter for operation (type: 220kΩ - 680kΩ             351.8677)
-         * @param 3 Parameter for operation (type: 680kΩ - 4.7MΩ         )
-         *
-         */
         doubleArrayOf(
             6.8129, // Range 0: 10kΩ - 56kΩ
             27.2518, // Range 1: 56kΩ - 220kΩ
@@ -43,10 +19,6 @@ object CalibrationUtilities {
         )
 
     private val GSR_OFFSET =
-        /**
-         * Executes doublearrayof operation with thermal imaging domain optimization.
-         *
-         */
         doubleArrayOf(
             2294.5, // Range 0 offset
             2617.0, // Range 1 offset
@@ -61,10 +33,6 @@ object CalibrationUtilities {
         uncalibratedData: Int,
         gsrRange: Int,
     ): Double {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (gsrRange < 0 || gsrRange > 3) return 0.0
 
         val offset = GSR_OFFSET[gsrRange]
@@ -109,10 +77,6 @@ object CalibrationUtilities {
         targetResistanceKohms: Double,
         gsrRange: Int,
     ): Int {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (gsrRange < 0 || gsrRange > 3) return 2048
 
         val offset = GSR_OFFSET[gsrRange]
@@ -124,10 +88,6 @@ object CalibrationUtilities {
         // Add some realistic noise (±5%)
         val noise = (Math.random() - 0.5) * 0.1 * calculatedADC
 
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (calculatedADC + noise).toInt().coerceIn(0, 4095) // 12-bit ADC
     }
 
@@ -156,19 +116,11 @@ object CalibrationUtilities {
         values: DoubleArray,
         windowSize: Int = 5,
     ): DoubleArray {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (values.size < windowSize) return values
 
         val smoothed = DoubleArray(values.size)
         val halfWindow = windowSize / 2
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in values.indices) {
             var sum = 0.0
             var count = 0
@@ -176,10 +128,6 @@ object CalibrationUtilities {
             val start = maxOf(0, i - halfWindow)
             val end = minOf(values.size - 1, i + halfWindow)
 
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (j in start..end) {
                 sum += values[j]
                 count++
@@ -203,21 +151,7 @@ object CalibrationUtilities {
         val isValidSignal: Boolean,
     )
 
-    /**
-     * Executes calculateGSRStatistics functionality.
-     */
-    /**
-     * Executes calculategsrstatistics operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param conductanceValues Parameter for operation (type: DoubleArray)
-     *
-     */
     fun calculateGSRStatistics(conductanceValues: DoubleArray): GSRStatistics {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (conductanceValues.isEmpty()) {
             return GSRStatistics(0.0, 0.0, 0.0, 0.0, 0.0, false)
         }

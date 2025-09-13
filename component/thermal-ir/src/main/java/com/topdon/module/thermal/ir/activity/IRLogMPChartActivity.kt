@@ -33,18 +33,8 @@ import com.topdon.lib.core.R as LibR
 
 // Legacy ARouter route annotation - now using NavigationManager
 /**
- * Specialized thermal imaging component providing IRLogMPChartActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * I r log m p chart activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
  */
 class IRLogMPChartActivity : BaseActivity() {
     private val viewModel: IRMonitorViewModel by viewModels()
@@ -55,53 +45,25 @@ class IRLogMPChartActivity : BaseActivity() {
     private var startTime = 0L
 
     private val permissionList by lazy {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (this.applicationInfo.targetSdkVersion >= 34)
             {
-                /**
-                 * Executes listof operation with thermal imaging domain optimization.
-                 *
-                 */
                 listOf(
                     Permission.WRITE_EXTERNAL_STORAGE,
                 )
             } else if (this.applicationInfo.targetSdkVersion == 33) {
-            /**
-             * Executes mutablelistof operation with thermal imaging domain optimization.
-             *
-             */
             mutableListOf(
                 Permission.WRITE_EXTERNAL_STORAGE,
             )
         } else {
-            /**
-             * Executes mutablelistof operation with thermal imaging domain optimization.
-             *
-             */
             mutableListOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
         }
     }
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.activity_ir_log_mp_chart
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         startTime = intent.getLongExtra(ExtraKeyConfig.TIME_MILLIS, 0)
         viewModel.detailListLD.observe(this) {
-            /**
-             * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-             *
-             */
             dismissLoadingDialog()
 
             val isPoint = it?.isNotEmpty() == true && it.first().type == "point"
@@ -122,10 +84,6 @@ class IRLogMPChartActivity : BaseActivity() {
                 .setMessage(LibR.string.tip_album_temp_exportfile)
                 .setPositiveListener(LibR.string.app_confirm) {
                     val tempData = viewModel.detailListLD.value
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (tempData?.isEmpty() == true) {
                         ToastTools.showShort("No data available")
                     } else {
@@ -135,48 +93,20 @@ class IRLogMPChartActivity : BaseActivity() {
                             )
                             .request(
                                 object : OnPermissionCallback {
-                                    /**
-                                     * Executes ongranted operation with thermal imaging domain optimization.
-                                     *
-                                     * @param
-                                     * @param permissions Parameter for operation (type: MutableList<String>)
-                                     * @param allGranted Parameter for operation (type: Boolean)
-                                     *
-                                     */
                                     override fun onGranted(
                                         permissions: MutableList<String>,
                                         allGranted: Boolean,
                                     ) {
-                                        /**
-                                         * Executes if operation with thermal imaging domain optimization.
-                                         *
-                                         */
                                         if (allGranted) {
                                             lifecycleScope.launch {
-                                                /**
-                                                 * Executes showloadingdialog operation with thermal imaging domain optimization.
-                                                 *
-                                                 */
                                                 showLoadingDialog()
                                                 var filePath: String? = null
-                                                /**
-                                                 * Executes withcontext operation with thermal imaging domain optimization.
-                                                 *
-                                                 */
                                                 withContext(Dispatchers.IO) {
                                                     tempData?.get(0)?.let {
                                                         filePath = ExcelUtil.exportExcel(tempData as java.util.ArrayList<ThermalEntity>?, "point" == it.type)
                                                     }
                                                 }
-                                                /**
-                                                 * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-                                                 *
-                                                 */
                                                 dismissLoadingDialog()
-                                                /**
-                                                 * Executes if operation with thermal imaging domain optimization.
-                                                 *
-                                                 */
                                                 if (filePath.isNullOrEmpty()) {
                                                     ToastTools.showShort(LibR.string.liveData_save_error)
                                                 } else {
@@ -185,10 +115,6 @@ class IRLogMPChartActivity : BaseActivity() {
                                                     shareIntent.action = Intent.ACTION_SEND
                                                     shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
                                                     shareIntent.type = "application/xlsx"
-                                                    /**
-                                                     * Executes startactivity operation with thermal imaging domain optimization.
-                                                     *
-                                                     */
                                                     startActivity(Intent.createChooser(shareIntent, getString(LibR.string.battery_share)))
                                                 }
                                             }
@@ -197,28 +123,12 @@ class IRLogMPChartActivity : BaseActivity() {
                                         }
                                     }
 
-                                    /**
-                                     * Executes ondenied operation with thermal imaging domain optimization.
-                                     *
-                                     * @param
-                                     * @param permissions Parameter for operation (type: MutableList<String>)
-                                     * @param doNotAskAgain Parameter for operation (type: Boolean)
-                                     *
-                                     */
                                     override fun onDenied(
                                         permissions: MutableList<String>,
                                         doNotAskAgain: Boolean,
                                     ) {
-                                        /**
-                                         * Executes if operation with thermal imaging domain optimization.
-                                         *
-                                         */
                                         if (doNotAskAgain) {
 拒绝Authorization并且不再提醒
-                                            /**
-                                             * Executes if operation with thermal imaging domain optimization.
-                                             *
-                                             */
                                             if (BaseApplication.instance.isDomestic())
                                                 {
                                                     ToastUtils.showShort(getString(LibR.string.app_storage_content))
@@ -248,26 +158,14 @@ class IRLogMPChartActivity : BaseActivity() {
         viewModel.queryDetail(startTime)
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
-    /**
-     * Executes onresume operation with thermal imaging domain optimization.
-     *
-     */
     override fun onResume() {
         super.onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    /**
-     * Executes onpause operation with thermal imaging domain optimization.
-     *
-     */
     override fun onPause() {
         super.onPause()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

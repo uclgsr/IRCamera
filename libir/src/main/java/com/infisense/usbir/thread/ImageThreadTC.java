@@ -34,26 +34,12 @@ import java.util.LinkedHashMap;
  * @UpdateDate:     2022.2.24 11:06
  * @UpdateRemark:
  */
-/**
- * Specialized thermal imaging component providing ImageThreadTC functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class ImageThreadTC extends Thread {
 
-    public static final int TYPE_AI_C = -1;// 不开启
-    public static final int TYPE_AI_D = 0;// 动态检测
-    public static final int TYPE_AI_H = 1;// High temperature source检测
-    public static final int TYPE_AI_L = 2;// Low temperature source检测
+    public static final int TYPE_AI_C = -1;//不开启
+    public static final int TYPE_AI_D = 0;//动态检测
+    public static final int TYPE_AI_H = 1;//high temperature source检测
+    public static final int TYPE_AI_L = 2;//low temperature source检测
 
     private byte[] imgTmp;
     private String TAG = "ImageThread";
@@ -64,13 +50,13 @@ public class ImageThreadTC extends Thread {
     private int imageHeight;
     private byte[] imageSrc;
     private byte[] temperatureSrc;
-    private boolean rotate; // 屏幕rotation
+    private boolean rotate; // 屏幕旋转
     //
     private CommonParams.DataFlowMode dataFlowMode = CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT;
     private byte[] imageYUV422;
     private byte[] imageARGB;
     private byte[] imageDst;
-    public byte[] imageTemp;// 艾睿需要的Testdata，processing完可以delete
+    public byte[] imageTemp;//艾睿需要的Testdata，processing完可以delete
 
     private byte[] imageY8;
     private float max = Float.MAX_VALUE;
@@ -139,10 +125,6 @@ public class ImageThreadTC extends Thread {
         this.rotateInt = rotateInt;
     }
 
-    /**
-     * Executes imagethreadtc operation with thermal imaging domain optimization.
-     *
-     */
     public ImageThreadTC(Context context, int imageWidth, int imageHeight) {
         Log.i(TAG, "ImageThread create->imageWidth = " + imageWidth + " imageHeight = " + imageHeight);
         this.mContext = context;
@@ -180,25 +162,9 @@ public class ImageThreadTC extends Thread {
 
     @Override
     public void run() {
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (!isInterrupted()) {
-            /**
-             * Executes synchronized operation with thermal imaging domain optimization.
-             *
-             */
             synchronized (syncimage.dataLock) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (syncimage.start) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (irImageHelp.getColorList() != null) {
                         LibIRProcess.convertYuyvMapToARGBPseudocolor(imageSrc, imageHeight * imageWidth, CommonParams.PseudoColorType.PSEUDO_1, imageARGB);
                     } else {
@@ -206,11 +172,7 @@ public class ImageThreadTC extends Thread {
                     }
                     /*
                      * 经过conversion之后的infrareddata
-                     * 其中的data是rotation90度的，需要rotation回来,infraredrotation的逻辑放在这里processing。
-                     */
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
+                     * 其中的data是旋转90度的，需要旋转回来,infrared旋转的逻辑放在这里processing。
                      */
                     if (rotateInt == 270) {
                         LibIRProcess.ImageRes_t imageRes = new LibIRProcess.ImageRes_t();
@@ -243,10 +205,6 @@ public class ImageThreadTC extends Thread {
                         imageDst, temperatureSrc,
                         (rotateInt == 270 || rotateInt == 90) ? imageWidth : imageHeight,
                         (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (typeAi == TYPE_AI_H){
                     byte[] dataArray = JNITool.INSTANCE.maxTempL(imageDst,temperatureSrc,
                             (rotateInt == 270 || rotateInt == 90) ? imageWidth : imageHeight,
@@ -269,21 +227,13 @@ public class ImageThreadTC extends Thread {
                     imageDst = grayData;
                 }else if (typeAi == TYPE_AI_D) {
                     int firstTime = 0;
-                    // 静态闯入algorithm
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
+                    //静态闯入algorithm
                     if (firstFrame == null || firstTemp == null) {
                         firstFrame = new byte[imageDst.length];
                         firstTemp = new byte[temperatureSrc.length];
                         System.arraycopy(imageDst, 0, firstFrame, 0, imageDst.length);
                         System.arraycopy(temperatureSrc, 0, firstTemp, 0, temperatureSrc.length);
                     } else {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (OpencvTools.getStatus(firstFrame, imageDst)) {
                             try {
                                 byte[] dataArray = JNITool.INSTANCE.diff2firstFrameByTempWH(
@@ -301,16 +251,12 @@ public class ImageThreadTC extends Thread {
                                 Log.e("静态闯入exception：", e.getMessage());
                             }
                         } else {
-                            // 相似度不同，则代表手机抖动
+                            //相似度不同，则代表手机抖动
                             System.arraycopy(imageDst, 0, firstFrame, 0, imageDst.length);
                             System.arraycopy(temperatureSrc, 0, firstTemp, 0, temperatureSrc.length);
                         }
                     }
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isOpenAmplify && SupHelp.getInstance().an4K != null){
                     OpencvTools.supImage(imageDst,
                             (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth ,
@@ -320,34 +266,14 @@ public class ImageThreadTC extends Thread {
 //                    Log.e("image总processing耗时：", String.valueOf(System.currentTimeMillis() - startImageTime));
             }
 
-            /**
-             * Executes synchronized operation with thermal imaging domain optimization.
-             *
-             */
             synchronized (syncimage.viewLock) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!syncimage.valid) {
                     try {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isOpenAmplify) {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (amplifyRotateArray!=null){
                                 bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(amplifyRotateArray));
                             }
                         } else {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (imageDst != null) {
                                 bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst));
                             }
@@ -370,10 +296,6 @@ public class ImageThreadTC extends Thread {
 
     public Bitmap getBaseBitmap(int rotateInt){
         Bitmap baseBitmap = null;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rotateInt == 0 || rotateInt == 180) {
             baseBitmap = Bitmap.createBitmap(256, 192, Bitmap.Config.ARGB_8888);
         }else {

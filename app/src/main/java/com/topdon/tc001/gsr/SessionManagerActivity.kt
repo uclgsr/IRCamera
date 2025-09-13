@@ -32,18 +32,8 @@ import java.util.Date
 import java.util.Locale
 
 /**
- * Specialized thermal imaging component providing SessionManagerActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Production-Ready Session Management UI
+ * Browse, manage, and delete recording sessions with comprehensive file cleanup
  */
 class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding>() {
     private lateinit var adapter: SessionAdapter
@@ -57,83 +47,33 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
     companion object {
         private const val TAG = "SessionManagerActivity"
 
-    /**
-     * Executes startActivity functionality.
-     */
-        /**
-         * Executes startactivity operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param context Parameter for operation (type: Context)
-         *
-         */
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, SessionManagerActivity::class.java))
         }
     }
 
-    /**
-     * Initializes the contentlayoutid component for thermal imaging operations.
-     *
-     */
     override fun initContentLayoutId() = R.layout.activity_session_manager
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        /**
-         * Initializes the ializeviews component for thermal imaging operations.
-         *
-         */
         initializeViews()
-        /**
-         * Configures the upsessionmanager with validation and thermal imaging optimization.
-         *
-         */
         setupSessionManager()
-        /**
-         * Configures the uprecyclerview with validation and thermal imaging optimization.
-         *
-         */
         setupRecyclerView()
-        /**
-         * Configures the upsearchandfilter with validation and thermal imaging optimization.
-         *
-         */
         setupSearchAndFilter()
-        /**
-         * Executes loadsessions operation with thermal imaging domain optimization.
-         *
-         */
         loadSessions()
     }
 
-    /**
-     * Initializes ializeviews component.
-     */
     private fun initializeViews() {
         // Setup toolbar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Session Manager"
     }
 
-    /**
-     * Sets upsessionmanager configuration.
-     */
     private fun setupSessionManager() {
         sessionManager = SessionManager.getInstance(this)
     }
 
-    /**
-     * Sets uprecyclerview configuration.
-     */
     private fun setupRecyclerView() {
         adapter =
             SessionAdapter(
@@ -148,41 +88,16 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
         binding.sessionsRecyclerView.adapter = adapter
     }
 
-    /**
-     * Sets upsearchandfilter configuration.
-     */
     private fun setupSearchAndFilter() {
         // Setup search functionality
         binding.searchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
-                /**
-                 * Executes onquerytextsubmit operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param query Parameter for operation (type: String?)
-                 *
-                 */
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    /**
-                     * Executes filtersessions operation with thermal imaging domain optimization.
-                     *
-                     */
                     filterSessions(query)
                     return true
                 }
 
-                /**
-                 * Executes onquerytextchange operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param newText Parameter for operation (type: String?)
-                 *
-                 */
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    /**
-                     * Executes filtersessions operation with thermal imaging domain optimization.
-                     *
-                     */
                     filterSessions(newText)
                     return true
                 }
@@ -192,10 +107,6 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
         // Setup filter spinner
         val filterOptions = arrayOf("All Sessions", "Recent", "Completed", "With Data")
         val spinnerAdapter =
-            /**
-             * Executes arrayadapter operation with thermal imaging domain optimization.
-             *
-             */
             ArrayAdapter(
                 this,
                 android.R.layout.simple_spinner_item,
@@ -206,63 +117,27 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
 
         binding.filterSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
-                /**
-                 * Executes onitemselected operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param parent Parameter for operation (type: AdapterView<*>)
-                 * @param view Parameter for operation (type: View?)
-                 * @param position Parameter for operation (type: Int)
-                 * @param id Parameter for operation (type: Long)
-                 *
-                 */
                 override fun onItemSelected(
                     parent: AdapterView<*>,
                     view: View?,
                     position: Int,
                     id: Long,
                 ) {
-                    /**
-                     * Executes filtersessionsbytype operation with thermal imaging domain optimization.
-                     *
-                     */
                     filterSessionsByType(position)
                 }
 
-                /**
-                 * Executes onnothingselected operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param parent Parameter for operation (type: AdapterView<*>)
-                 *
-                 */
                 override fun onNothingSelected(parent: AdapterView<*>) {
                     // Do nothing
                 }
             }
     }
 
-    /**
-     * Executes loadSessions functionality.
-     */
-    /**
-     * Executes loadsessions operation with thermal imaging domain optimization.
-     *
-     */
     private fun loadSessions() {
-        /**
-         * Executes showloading operation with thermal imaging domain optimization.
-         *
-         */
         showLoading(true)
 
         scope.launch {
             try {
                 val loadedSessions =
-                    /**
-                     * Executes withcontext operation with thermal imaging domain optimization.
-                     *
-                     */
                     withContext(Dispatchers.IO) {
                         // Load from SessionManager and also scan for historical sessions
                         val activeSessions = sessionManager.getActiveSessions()
@@ -273,37 +148,18 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
 
                 sessions.clear()
                 sessions.addAll(loadedSessions.sortedByDescending { it.startTime })
-                /**
-                 * Executes filtersessions operation with thermal imaging domain optimization.
-                 *
-                 */
                 filterSessions(binding.searchView.query?.toString())
 
                 Log.i(TAG, "Loaded ${sessions.size} sessions")
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load sessions", e)
-                /**
-                 * Executes showerror operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param sessions Parameter for operation (type: ${e.message}")
-                 *
-                 */
                 showError("Failed to load sessions: ${e.message}")
             } finally {
-                /**
-                 * Executes showloading operation with thermal imaging domain optimization.
-                 *
-                 */
                 showLoading(false)
             }
         }
     }
 
-    /**
-     * Executes loadhistoricalsessions operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun loadHistoricalSessions(): List<SessionInfo> {
         return withContext(Dispatchers.IO) {
             val historicalSessions = mutableListOf<SessionInfo>()
@@ -311,16 +167,8 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             try {
                 // Scan for session directories in external storage
                 val baseDir = File(getExternalFilesDir(null), "recordings")
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (baseDir.exists() && baseDir.isDirectory) {
                     baseDir.listFiles()?.forEach { sessionDir ->
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (sessionDir.isDirectory && sessionDir.name.startsWith("session_")) {
                             try {
                                 val sessionInfo = parseSessionFromDirectory(sessionDir)
@@ -339,50 +187,24 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
         }
     }
 
-    /**
-     * Executes parseSessionFromDirectory functionality.
-     */
-    /**
-     * Executes parsesessionfromdirectory operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param sessionDir Parameter for operation (type: File)
-     *
-     */
     private fun parseSessionFromDirectory(sessionDir: File): SessionInfo {
         val sessionId = sessionDir.name
         val metadataFile = File(sessionDir, "session_metadata.txt")
 
         val sessionInfo =
-            /**
-             * Executes sessioninfo operation with thermal imaging domain optimization.
-             *
-             */
             SessionInfo(
                 sessionId = sessionId,
                 startTime = sessionDir.lastModified(),
             )
 
         // Parse metadata if available
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (metadataFile.exists()) {
             try {
                 metadataFile.readLines().forEach { line ->
                     val parts = line.split(":", limit = 2)
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (parts.size >= 2) {
                         val key = parts[0]
                         val value = parts[1]
-                        /**
-                         * Executes when operation with thermal imaging domain optimization.
-                         *
-                         */
                         when (key.trim()) {
                             "participantId" -> sessionInfo.participantId = value.trim()
                             "studyName" -> sessionInfo.studyName = value.trim()
@@ -405,24 +227,10 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
         return sessionInfo
     }
 
-    /**
-     * Executes filterSessions functionality.
-     */
-    /**
-     * Executes filtersessions operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param query Parameter for operation (type: String?)
-     *
-     */
     private fun filterSessions(query: String?) {
         filteredSessions.clear()
 
         val filtered =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (query.isNullOrEmpty()) {
                 sessions
             } else {
@@ -435,33 +243,15 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
 
         filteredSessions.addAll(filtered)
         adapter.notifyDataSetChanged()
-        /**
-         * Executes updateemptyview operation with thermal imaging domain optimization.
-         *
-         */
         updateEmptyView()
     }
 
-    /**
-     * Executes filterSessionsByType functionality.
-     */
-    /**
-     * Executes filtersessionsbytype operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param filterIndex Parameter for operation (type: Int)
-     *
-     */
     private fun filterSessionsByType(filterIndex: Int) {
         val baseList = if (binding.searchView.query.isNullOrEmpty()) sessions else filteredSessions.toList()
 
         filteredSessions.clear()
 
         val filtered =
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (filterIndex) {
                 0 -> baseList // All Sessions
                 1 -> baseList.filter { it.isActive() } // Active Sessions
@@ -474,77 +264,26 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
 
         filteredSessions.addAll(filtered)
         adapter.notifyDataSetChanged()
-        /**
-         * Executes updateemptyview operation with thermal imaging domain optimization.
-         *
-         */
         updateEmptyView()
     }
 
-    /**
-     * Executes showLoading functionality.
-     */
-    /**
-     * Executes showloading operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param show Parameter for operation (type: Boolean)
-     *
-     */
     private fun showLoading(show: Boolean) {
         binding.loadingView.visibility = if (show) View.VISIBLE else View.GONE
         binding.sessionsRecyclerView.visibility = if (show) View.GONE else View.VISIBLE
     }
 
-    /**
-     * Executes updateEmptyView functionality.
-     */
-    /**
-     * Executes updateemptyview operation with thermal imaging domain optimization.
-     *
-     */
     private fun updateEmptyView() {
         binding.emptyView.visibility = if (filteredSessions.isEmpty()) View.VISIBLE else View.GONE
     }
 
-    /**
-     * Executes showError functionality.
-     */
-    /**
-     * Executes showerror operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param message Parameter for operation (type: String)
-     *
-     */
     private fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
-    /**
-     * Executes openSessionDetails functionality.
-     */
-    /**
-     * Executes opensessiondetails operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param session Parameter for operation (type: SessionInfo)
-     *
-     */
     private fun openSessionDetails(session: SessionInfo) {
         SessionDetailActivity.startActivity(this, session.sessionId)
     }
 
-    /**
-     * Executes confirmDeleteSession functionality.
-     */
-    /**
-     * Executes confirmdeletesession operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param session Parameter for operation (type: SessionInfo)
-     *
-     */
     private fun confirmDeleteSession(session: SessionInfo) {
         AlertDialog.Builder(this)
             .setTitle("Delete Session")
@@ -554,52 +293,22 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                     "GSR recordings, videos, and metadata.",
             )
             .setPositiveButton("Delete") { _, _ ->
-                /**
-                 * Executes deletesession operation with thermal imaging domain optimization.
-                 *
-                 */
                 deleteSession(session)
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
 
-    /**
-     * Executes deleteSession functionality.
-     */
-    /**
-     * Executes deletesession operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param session Parameter for operation (type: SessionInfo)
-     *
-     */
     private fun deleteSession(session: SessionInfo) {
         scope.launch {
             try {
                 val success =
-                    /**
-                     * Executes withcontext operation with thermal imaging domain optimization.
-                     *
-                     */
                     withContext(Dispatchers.IO) {
-                        /**
-                         * Executes deletesessionfiles operation with thermal imaging domain optimization.
-                         *
-                         */
                         deleteSessionFiles(session)
                     }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     // Remove from active sessions if present
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (sessionManager.isSessionActive(session.sessionId)) {
                         sessionManager.completeSession(session.sessionId)
                     }
@@ -608,61 +317,31 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                     sessions.remove(session)
                     filteredSessions.remove(session)
                     adapter.notifyDataSetChanged()
-                    /**
-                     * Executes updateemptyview operation with thermal imaging domain optimization.
-                     *
-                     */
                     updateEmptyView()
 
                     Toast.makeText(this@SessionManagerActivity, "Session deleted successfully", Toast.LENGTH_SHORT).show()
                     Log.i(TAG, "Session deleted: ${session.sessionId}")
                 } else {
-                    /**
-                     * Executes showerror operation with thermal imaging domain optimization.
-                     *
-                     */
                     showError("Failed to delete session files")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to delete session", e)
-                /**
-                 * Executes showerror operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param session Parameter for operation (type: ${e.message}")
-                 *
-                 */
                 showError("Failed to delete session: ${e.message}")
             }
         }
     }
 
-    /**
-     * Executes deletesessionfiles operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param session Parameter for operation (type: SessionInfo)
-     *
-     */
     private suspend fun deleteSessionFiles(session: SessionInfo): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 // Delete session directory and all contents
                 val sessionDir = File(getExternalFilesDir(null), "recordings/${session.sessionId}")
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sessionDir.exists()) {
                     sessionDir.deleteRecursively()
                 }
 
                 // Also check alternative directory structures
                 val altSessionDir = File(getExternalFilesDir(null), session.sessionId)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (altSessionDir.exists()) {
                     altSessionDir.deleteRecursively()
                 }
@@ -675,55 +354,34 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
         }
     }
 
-    /**
-     * Executes exportSession functionality.
-     */
-    /**
-     * Executes exportsession operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param session Parameter for operation (type: SessionInfo)
-     *
-     */
     private fun exportSession(session: SessionInfo) {
         // Launch session export functionality
         SessionExportActivity.startActivity(this, session.sessionId)
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+}
+
 /**
- * Specialized thermal imaging component providing SessionAdapter functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for SessionViewHolder display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * RecyclerView Adapter for Session List
  */
+class SessionAdapter(
+    private val context: Context,
+    private val sessions: List<SessionInfo>,
+    private val onSessionClick: (SessionInfo) -> Unit,
+    private val onSessionDelete: (SessionInfo) -> Unit,
+    private val onSessionExport: (SessionInfo) -> Unit,
+) : RecyclerView.Adapter<SessionAdapter.SessionViewHolder>() {
+    private val dateFormatter = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
+
     class SessionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val titleText: TextView = view.findViewById(R.id.session_title)
         val subtitleText: TextView = view.findViewById(R.id.session_subtitle)
@@ -734,14 +392,6 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
         val cardView: View = view
     }
 
-    /**
-     * Executes oncreateviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param parent Parameter for operation (type: ViewGroup)
-     * @param viewType Parameter for operation (type: Int)
-     *
-     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -750,14 +400,6 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
         return SessionViewHolder(view)
     }
 
-    /**
-     * Executes onbindviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param holder Parameter for operation (type: SessionViewHolder)
-     * @param position Parameter for operation (type: Int)
-     *
-     */
     override fun onBindViewHolder(
         holder: SessionViewHolder,
         position: Int,
@@ -774,18 +416,10 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
 
         // Status
         val statusText =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (session.isActive()) {
                 "🟢 Active"
             } else {
                 val duration =
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (session.endTime != null) {
                         val durationMs = session.endTime!! - session.startTime
                         val minutes = durationMs / (1000 * 60)
@@ -799,27 +433,11 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
 
         // Data types available
         val dataTypes = mutableListOf<String>()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (session.hasGSRData) dataTypes.add("GSR")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (session.hasRGBData) dataTypes.add("RGB")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (session.hasThermalData) dataTypes.add("Thermal")
 
         holder.dataTypesText.text =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (dataTypes.isNotEmpty()) {
                 "📊 ${dataTypes.joinToString(", ")}"
             } else {
@@ -832,9 +450,5 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
         holder.exportButton.setOnClickListener { onSessionExport(session) }
     }
 
-    /**
-     * Retrieves the itemcount with optimized performance for thermal imaging operations.
-     *
-     */
     override fun getItemCount(): Int = sessions.size
 }

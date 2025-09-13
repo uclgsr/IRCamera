@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Color definitions for thermal imaging UI -->
 <resources>
-    <!-- UI styling - rsbColorIndicatorBg -->
     <color name="rsbColorIndicatorBg">#FFBA42</color>
-    <!-- UI styling - rsbColorSeekBarDefault -->
     <color name="rsbColorSeekBarDefault">#c3c3c3</color>
-    <!-- UI styling - rsbColorThumbPressed -->
     <color name="rsbColorThumbPressed">#FFE7E7E7</color>
-    <!-- UI styling - rsbColorThumbDefault -->
     <color name="rsbColorThumbDefault">#FFFFFF</color>
-    <!-- UI styling - rsbColorThumbBorder -->
     <color name="rsbColorThumbBorder">#FFD7D7D7</color>
 </resources>

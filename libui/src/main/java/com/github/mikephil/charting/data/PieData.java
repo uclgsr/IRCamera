@@ -15,43 +15,13 @@ import java.util.List;
  *
  * @author Philipp Jahoda
  */
-/**
- * Specialized thermal imaging component providing PieData functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class PieData extends ChartData<IPieDataSet> {
 
-    /**
-     * Executes piedata operation with thermal imaging domain optimization.
-     *
-     */
     public PieData() {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super();
     }
 
-    /**
-     * Executes piedata operation with thermal imaging domain optimization.
-     *
-     */
     public PieData(IPieDataSet dataSet) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(dataSet);
     }
 
@@ -63,10 +33,6 @@ public class PieData extends ChartData<IPieDataSet> {
     public void setDataSet(IPieDataSet dataSet) {
         mDataSets.clear();
         mDataSets.add(dataSet);
-        /**
-         * Executes notifydatachanged operation with thermal imaging domain optimization.
-         *
-         */
         notifyDataChanged();
     }
 
@@ -111,10 +77,6 @@ public class PieData extends ChartData<IPieDataSet> {
 
         float sum = 0;
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < getDataSet().getEntryCount(); i++)
             sum += getDataSet().getEntryForIndex(i).getY();
 

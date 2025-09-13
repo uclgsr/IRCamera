@@ -16,55 +16,17 @@ import com.github.mikephil.charting.renderer.BubbleChartRenderer;
  *
  * @author Philipp Jahoda
  */
-/**
- * Specialized thermal imaging component providing BubbleChart functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class BubbleChart extends BarLineChartBase<BubbleData> implements BubbleDataProvider {
 
-    /**
-     * Executes bubblechart operation with thermal imaging domain optimization.
-     *
-     */
     public BubbleChart(Context context) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context);
     }
 
-    /**
-     * Executes bubblechart operation with thermal imaging domain optimization.
-     *
-     */
     public BubbleChart(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
     }
 
-    /**
-     * Executes bubblechart operation with thermal imaging domain optimization.
-     *
-     */
     public BubbleChart(Context context, AttributeSet attrs, int defStyle) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyle);
     }
 

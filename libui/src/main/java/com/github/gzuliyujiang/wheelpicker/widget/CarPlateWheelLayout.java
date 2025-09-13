@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -22,67 +22,25 @@ import androidx.annotation.NonNull;
 import com.github.gzuliyujiang.wheelpicker.impl.CarPlateProvider;
 
 /**
- * Specialized thermal imaging component providing CarPlateWheelLayout functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author 贵州山野羡民（1032694760@qq.com）
+ * @since 2021/6/9 11:57
  */
 public class CarPlateWheelLayout extends LinkageWheelLayout {
     private CarPlateProvider provider;
 
-    /**
-     * Executes carplatewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public CarPlateWheelLayout(Context context) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context);
     }
 
-    /**
-     * Executes carplatewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public CarPlateWheelLayout(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
     }
 
-    /**
-     * Executes carplatewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public CarPlateWheelLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyleAttr);
     }
 
-    /**
-     * Executes carplatewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public CarPlateWheelLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
@@ -90,25 +48,13 @@ public class CarPlateWheelLayout extends LinkageWheelLayout {
     protected void onInit(@NonNull Context context) {
         super.onInit(context);
         provider = new CarPlateProvider();
-        /**
-         * Configures the data with validation and thermal imaging optimization.
-         *
-         */
         setData(provider);
     }
 
     @Override
     protected void onAttributeSet(@NonNull Context context, @NonNull TypedArray typedArray) {
         super.onAttributeSet(context, typedArray);
-        /**
-         * Configures the firstvisible with validation and thermal imaging optimization.
-         *
-         */
         setFirstVisible(provider.firstLevelVisible());
-        /**
-         * Configures the thirdvisible with validation and thermal imaging optimization.
-         *
-         */
         setThirdVisible(provider.thirdLevelVisible());
     }
 

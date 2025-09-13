@@ -17,20 +17,6 @@ import com.topdon.lib.core.utils.CommUtils
  *
  * [SharedManager] saved不受“savedsettings开关”影响的configuration项.
  */
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for WifiSaveSettingUtil operations.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 object WifiSaveSettingUtil {
     /**
      * savedsettings开关使用的 SharedPreferences name.
@@ -44,10 +30,10 @@ object WifiSaveSettingUtil {
     const val TYPE_WIFI = 1
 
     /**
-     * savedsettings开关close时，要将所有影响的configuration项reset为default项.
+     * savedsettings开关close时，要将所有影响的configuration项reset为默认项.
      */
     fun reset() {
-        // Thermal imagingtemperature measurementobservationmode共有
+        // thermal imagingtemperature measurementobservationmode共有
         isMeasureTempMode = true
         isVideoMode = false
         isAutoShutter = true
@@ -58,7 +44,7 @@ object WifiSaveSettingUtil {
         pseudoColorMode = 3
         rotateAngle = DeviceConfig.S_ROTATE_ANGLE
 
-        // Temperature measurementmode独有
+        // temperature measurementmode独有
         isOpenPseudoBar = true
         isOpenTwoLight = false
         twoLightAlpha = 50
@@ -86,47 +72,23 @@ object WifiSaveSettingUtil {
     }
 
     var registrationX: Int
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("registrationX", 0) else 0
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             SPUtils.getInstance(SP_NAME).put("registrationX", value)
         }
     var registrationY: Int
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("registrationY", 0) else 0
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             SPUtils.getInstance(SP_NAME).put("registrationY", value)
         }
     var fusionType: Int
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("fusionType", FusionTypeIROnly) else FusionTypeIROnly
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             SPUtils.getInstance(SP_NAME).put("fusionType", value)
         }
 
     /**
-     * 是否开启savedsettings开关，defaultclose.
+     * 是否开启savedsettings开关，默认close.
      */
     var isSaveSetting: Boolean
         get() = SPUtils.getInstance(SP_NAME).getBoolean("isSaveSetting", true)
@@ -135,22 +97,18 @@ object WifiSaveSettingUtil {
         }
 
     /**
-     * thermal imaging是否处于temperature measurementmode，defaulttemperature measurementmode true-temperature measurement false-observation
+     * thermal imaging是否处于temperature measurementmode，默认temperature measurementmode true-temperature measurement false-observation
      */
     var isMeasureTempMode: Boolean
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getBoolean("isMeasureTempMode", true) else true
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isMeasureTempMode", value)
             }
         }
 
     /**
-     * thermal imaging是否selectionrecordingmode，defaultcapture true-recording false-capture
+     * thermal imaging是否selectionrecordingmode，默认capture true-recording false-capture
      */
     var isVideoMode: Boolean
         get() =
@@ -160,22 +118,14 @@ object WifiSaveSettingUtil {
             } else {
                 false
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isVideoMode", value)
             }
         }
 
     /**
-     * thermal imaging是否Open自动快门，defaultOpen true-Open false-close
+     * thermal imaging是否Open自动快门，默认Open true-Open false-close
      */
     var isAutoShutter: Boolean
         get() =
@@ -185,22 +135,14 @@ object WifiSaveSettingUtil {
             } else {
                 true
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isAutoShutter", value)
             }
         }
 
     /**
-     * thermal imagingrecording是否同时使用麦克风recording音频，defaultclose true-开启 false-close
+     * thermal imagingrecording是否同时使用麦克风recording音频，默认close true-开启 false-close
      */
     var isRecordAudio: Boolean
         get() =
@@ -210,22 +152,14 @@ object WifiSaveSettingUtil {
             } else {
                 false
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isRecordAudio", value)
             }
         }
 
     /**
-     * thermal imaging是否开启镜像，defaultclose即不镜像 true-镜像 false-不镜像
+     * thermal imaging是否开启镜像，默认close即不镜像 true-镜像 false-不镜像
      */
     var isOpenMirror: Boolean
         get() =
@@ -235,22 +169,14 @@ object WifiSaveSettingUtil {
             } else {
                 false
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isOpenMirror", value)
             }
         }
 
     /**
-     * delayedcapture或延时recording的延时秒数，单位秒，default0秒即不delayed.
+     * delayedcapture或延时recording的延时秒数，单位秒，默认0秒即不delayed.
      */
     var delayCaptureSecond: Int
         get() =
@@ -260,22 +186,14 @@ object WifiSaveSettingUtil {
             } else {
                 0
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("delayCaptureSecond", value)
             }
         }
 
     /**
-     * thermal imagingcontrast，取值range`[0,255]`，default 128
+     * thermal imagingcontrast，取值range`[0,255]`，默认 128
      */
     var contrastValue: Int
         get() =
@@ -285,37 +203,25 @@ object WifiSaveSettingUtil {
             } else {
                 128
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("contrastValue", value)
             }
         }
 
     /**
-     * thermal imagingpseudo colormode，取值为pseudo colorenum值，defaultiron red
+     * thermal imagingpseudo colormode，取值为pseudo colorenum值，默认iron red
      */
     var pseudoColorMode: Int
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("pseudoColorMode", 3) else 3
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("pseudoColorMode", value)
             }
         }
 
     /**
-     * thermal imaging画area逆时针rotation angle，取值 0、90、180、270，default [DeviceConfig.S_ROTATE_ANGLE]
+     * thermal imaging画area逆时针rotation angle，取值 0、90、180、270，默认 [DeviceConfig.S_ROTATE_ANGLE]
      */
     var rotateAngle: Int
         get() =
@@ -325,22 +231,14 @@ object WifiSaveSettingUtil {
             } else {
                 DeviceConfig.S_ROTATE_ANGLE
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("rotateAngle", value)
             }
         }
 
     /**
-     * thermal imaging-temperature measurementmode-是否开启pseudo color条，default开启 true-开启 false-close
+     * thermal imaging-temperature measurementmode-是否开启pseudo color条，默认开启 true-开启 false-close
      */
     var isOpenPseudoBar: Boolean
         get() =
@@ -350,22 +248,14 @@ object WifiSaveSettingUtil {
             } else {
                 true
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isOpenPseudoBar", value)
             }
         }
 
     /**
-     * thermal imaging-temperature measurementmode-是否开启dual light，defaultclose true-开启 false-close
+     * thermal imaging-temperature measurementmode-是否开启dual light，默认close true-开启 false-close
      */
     var isOpenTwoLight: Boolean
         get() =
@@ -375,52 +265,36 @@ object WifiSaveSettingUtil {
             } else {
                 false
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isOpenTwoLight", value)
             }
         }
 
     /**
-     * thermal imaging-temperature measurementmode-dual light开启时fusion度，取值`[0,100]`，0表示完全不透明，100表示完全透明，default 50%
+     * thermal imaging-temperature measurementmode-dual light开启时fusion度，取值`[0,100]`，0表示完全不透明，100表示完全透明，默认 50%
      */
     var twoLightAlpha: Int
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("twoLightAlpha", 50) else 50
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("twoLightAlpha", value)
             }
         }
 
     /**
-     * thermal imaging-temperature measurementmode-锐度(细节Enhance等级)，取值range`[0,4]`，default为 2
+     * thermal imaging-temperature measurementmode-锐度(细节Enhance等级)，取值range`[0,4]`，默认为 2
      */
     var ddeConfig: Int
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("ddeConfig", 2) else 2
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("ddeConfig", value)
             }
         }
 
     /**
-     * thermal imaging-temperature measurementmode-temperaturefontcolor值，default白色.
+     * thermal imaging-temperature measurementmode-temperaturefontcolor值，默认白色.
      */
     var tempTextColor: Int
         get() =
@@ -430,22 +304,14 @@ object WifiSaveSettingUtil {
             } else {
                 0xffffffff.toInt()
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("tempTextColor", value)
             }
         }
 
     /**
-     * thermal imaging-temperature measurementmode-temperaturefontcolor值，default14sp.
+     * thermal imaging-temperature measurementmode-temperaturefontcolor值，默认14sp.
      */
     var tempTextSize: Int
         get() =
@@ -455,22 +321,14 @@ object WifiSaveSettingUtil {
             } else {
                 14
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("tempTextSize", value)
             }
         }
 
     /**
-     * thermal imaging-temperature measurementmode-temperature level，defaultnormal temperature，取值
+     * thermal imaging-temperature measurementmode-temperature level，默认normal temperature，取值
      *
      * normal temperature ([CameraItemBean.TYPE_TMP_C] = 1）
      *
@@ -479,30 +337,14 @@ object WifiSaveSettingUtil {
      * 自动 ([CameraItemBean.TYPE_TMP_ZD] = -1)
      */
     var temperatureMode: Int
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME)
                     .getInt("temperatureMode", CameraItemBean.TYPE_TMP_C)
             } else {
                 CameraItemBean.TYPE_TMP_C
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("temperatureMode", value)
             }
@@ -517,28 +359,16 @@ object WifiSaveSettingUtil {
                 val json = SPUtils.getInstance(SP_NAME).getString("alarmBean", "")
                 if (json.isNullOrEmpty()) AlarmBean() else Gson().fromJson(json, AlarmBean::class.java)
             } else {
-                /**
-                 * Executes alarmbean operation with thermal imaging domain optimization.
-                 *
-                 */
                 AlarmBean()
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("alarmBean", Gson().toJson(value))
             }
         }
 
     /**
-     * thermal imaging-observationmode-是否开启指南针，defaultclose true-开启 false-close
+     * thermal imaging-observationmode-是否开启指南针，默认close true-开启 false-close
      */
     var isOpenCompass: Boolean
         get() =
@@ -548,22 +378,14 @@ object WifiSaveSettingUtil {
             } else {
                 false
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isOpenCompass", value)
             }
         }
 
     /**
-     * thermal imaging-observationmode-是否开启高温point，defaultclose true-开启 false-close
+     * thermal imaging-observationmode-是否开启高温point，默认close true-开启 false-close
      */
     var isOpenHighPoint: Boolean
         get() =
@@ -573,22 +395,14 @@ object WifiSaveSettingUtil {
             } else {
                 false
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isOpenHighPoint", value)
             }
         }
 
     /**
-     * thermal imaging-observationmode-是否开启低温point，defaultclose true-开启 false-close
+     * thermal imaging-observationmode-是否开启低温point，默认close true-开启 false-close
      */
     var isOpenLowPoint: Boolean
         get() =
@@ -598,22 +412,14 @@ object WifiSaveSettingUtil {
             } else {
                 false
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isOpenLowPoint", value)
             }
         }
 
     /**
-     * thermal imaging-observationmode-selectedAI追踪type，default未selected，取值
+     * thermal imaging-observationmode-selectedAI追踪type，默认未selected，取值
      *
      * 未selected ([ObserveBean.TYPE_NONE] = -1)
      *
@@ -624,37 +430,21 @@ object WifiSaveSettingUtil {
      * low temperature source ([ObserveBean.TYPE_TMP_L_S] = 2)
      */
     var aiTraceType: Int
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME)
                     .getInt("aiTraceType", ObserveBean.TYPE_NONE)
             } else {
                 ObserveBean.TYPE_NONE
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("aiTraceType", value)
             }
         }
 
     /**
-     * thermal imaging-observationmode-target-是否开启target，defaultclose true-开启 false-close
+     * thermal imaging-observationmode-target-是否开启target，默认close true-开启 false-close
      */
     var isOpenTarget: Boolean
         get() =
@@ -664,22 +454,14 @@ object WifiSaveSettingUtil {
             } else {
                 false
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isOpenTarget", value)
             }
         }
 
     /**
-     * thermal imaging-observationmode-target-targetmeasurement mode，defaulthuman，取值
+     * thermal imaging-observationmode-target-targetmeasurement mode，默认human，取值
      *
      * human ([ObserveBean.TYPE_MEASURE_PERSON] = 10)
      *
@@ -690,15 +472,7 @@ object WifiSaveSettingUtil {
      * bird ([ObserveBean.TYPE_MEASURE_BIRD] = 13)
      */
     var targetMeasureMode: Int
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).getInt(
                     "targetMeasureMode",
@@ -707,22 +481,14 @@ object WifiSaveSettingUtil {
             } else {
                 ObserveBean.TYPE_MEASURE_PERSON
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("targetMeasureMode", value)
             }
         }
 
     /**
-     * thermal imaging-observationmode-target-targettype，default横向，取值
+     * thermal imaging-observationmode-target-targettype，默认横向，取值
      *
      * 横向 ([ObserveBean.TYPE_TARGET_HORIZONTAL] = 15)
      *
@@ -731,15 +497,7 @@ object WifiSaveSettingUtil {
      * 圆形 ([ObserveBean.TYPE_TARGET_CIRCLE] = 17)
      */
     var targetType: Int
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).getInt(
                     "targetType",
@@ -748,22 +506,14 @@ object WifiSaveSettingUtil {
             } else {
                 ObserveBean.TYPE_TARGET_HORIZONTAL
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("targetType", value)
             }
         }
 
     /**
-     * thermal imaging-observationmode-target-targetcolor，default绿色，取值
+     * thermal imaging-observationmode-target-targetcolor，默认绿色，取值
      *
      * 绿色 ([ObserveBean.TYPE_TARGET_COLOR_GREEN] = 20)
      *
@@ -776,15 +526,7 @@ object WifiSaveSettingUtil {
      * 白色 ([ObserveBean.TYPE_TARGET_COLOR_WHITE] = 24)
      */
     var targetColorType: Int
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).getInt(
                     "targetColorType",
@@ -793,22 +535,14 @@ object WifiSaveSettingUtil {
             } else {
                 ObserveBean.TYPE_TARGET_COLOR_GREEN
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("targetColorType", value)
             }
         }
 
     /**
-     * report-作者name，default值 App name.
+     * report-作者name，默认值 App name.
      */
     var reportAuthorName: String
         get() =
@@ -818,22 +552,14 @@ object WifiSaveSettingUtil {
             } else {
                 CommUtils.getAppName()
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("reportAuthorName", value)
             }
         }
 
     /**
-     * report-watermark内容，default值 App name.
+     * report-watermark内容，默认值 App name.
      */
     var reportWatermarkText: String
         get() =
@@ -843,22 +569,14 @@ object WifiSaveSettingUtil {
             } else {
                 CommUtils.getAppName()
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("reportWatermarkText", value)
             }
         }
 
     /**
-     * report-环境湿度千分比，default值500，取值`[0, 1000]`
+     * report-环境湿度千分比，默认值500，取值`[0, 1000]`
      */
     var reportHumidity: Int
         get() =
@@ -868,15 +586,7 @@ object WifiSaveSettingUtil {
             } else {
                 500
             }
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("reportHumidity", value)
             }

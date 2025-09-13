@@ -9,31 +9,17 @@ import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.tools.DeviceTools
 
 /**
- * Specialized thermal imaging component providing NavigationManager functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Modern navigation system to replace ARouter
+ * Provides type-safe navigation with Intent-based routing
  */
+object NavigationManager {
+    /**
+     * Navigation builder class for fluent API
+     */
 /**
- * Specialized thermal imaging component providing NavigationBuilder functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
+ * NavigationBuilder manages camera operations and image capture functionality.
  *
  * @author IRCamera Development Team
- * @version 2.0
  * @since 1.0
  */
     class NavigationBuilder(private val route: String) {
@@ -43,14 +29,6 @@ import com.topdon.lib.core.tools.DeviceTools
     /**
      * Executes withstring functionality.
      */
-        /**
-         * Executes withstring operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param key Parameter for operation (type: String)
-         * @param value Parameter for operation (type: String)
-         *
-         */
         fun withString(
             key: String,
             value: String,
@@ -61,14 +39,6 @@ import com.topdon.lib.core.tools.DeviceTools
     /**
      * Executes withboolean functionality.
      */
-        /**
-         * Executes withboolean operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param key Parameter for operation (type: String)
-         * @param value Parameter for operation (type: Boolean)
-         *
-         */
         fun withBoolean(
             key: String,
             value: Boolean,
@@ -79,14 +49,6 @@ import com.topdon.lib.core.tools.DeviceTools
     /**
      * Executes withint functionality.
      */
-        /**
-         * Executes withint operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param key Parameter for operation (type: String)
-         * @param value Parameter for operation (type: Int)
-         *
-         */
         fun withInt(
             key: String,
             value: Int,
@@ -97,14 +59,6 @@ import com.topdon.lib.core.tools.DeviceTools
     /**
      * Executes withfloat functionality.
      */
-        /**
-         * Executes withfloat operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param key Parameter for operation (type: String)
-         * @param value Parameter for operation (type: Float)
-         *
-         */
         fun withFloat(
             key: String,
             value: Float,
@@ -115,14 +69,6 @@ import com.topdon.lib.core.tools.DeviceTools
     /**
      * Executes withlong functionality.
      */
-        /**
-         * Executes withlong operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param key Parameter for operation (type: String)
-         * @param value Parameter for operation (type: Long)
-         *
-         */
         fun withLong(
             key: String,
             value: Long,
@@ -133,14 +79,6 @@ import com.topdon.lib.core.tools.DeviceTools
     /**
      * Executes withparcelable functionality.
      */
-        /**
-         * Executes withparcelable operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param key Parameter for operation (type: String)
-         * @param value Parameter for operation (type: Parcelable)
-         *
-         */
         fun withParcelable(
             key: String,
             value: Parcelable,
@@ -151,14 +89,6 @@ import com.topdon.lib.core.tools.DeviceTools
     /**
      * Executes withparcelablearraylist functionality.
      */
-        /**
-         * Executes withparcelablearraylist operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param key Parameter for operation (type: String)
-         * @param value Parameter for operation (type: ArrayList<out Parcelable>)
-         *
-         */
         fun withParcelableArrayList(
             key: String,
             value: ArrayList<out Parcelable>,
@@ -169,13 +99,6 @@ import com.topdon.lib.core.tools.DeviceTools
     /**
      * Executes withextras functionality.
      */
-        /**
-         * Executes withextras operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param bundle Parameter for operation (type: Bundle)
-         *
-         */
         fun withExtras(bundle: Bundle) =
             apply {
                 extras.putAll(bundle)
@@ -184,14 +107,6 @@ import com.topdon.lib.core.tools.DeviceTools
     /**
      * Executes navigation functionality.
      */
-        /**
-         * Executes navigation operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param context Parameter for operation (type: Context)
-         * @param requestCode Parameter for operation (type: Int? = null)
-         *
-         */
         fun navigation(
             context: Context,
             requestCode: Int? = null,
@@ -200,10 +115,6 @@ import com.topdon.lib.core.tools.DeviceTools
             val intent = createIntent(context, route)
             intent.putExtras(extras)
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (requestCode != null && context is Activity) {
                 context.startActivityForResult(intent, requestCode)
             } else {
@@ -232,10 +143,6 @@ import com.topdon.lib.core.tools.DeviceTools
         route: String,
     ): Intent {
         val activityClass =
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (route) {
                 // App routes
                 RouterConfig.MAIN -> getClassByName("com.topdon.tc001.MainActivity")
@@ -282,18 +189,10 @@ import com.topdon.lib.core.tools.DeviceTools
                 // Report routes
                 RouterConfig.REPORT_CREATE_FIRST -> getClassByName("com.topdon.module.thermal.ir.report.activity.ReportCreateFirstActivity")
                 RouterConfig.REPORT_CREATE_SECOND ->
-                    /**
-                     * Retrieves the classbyname with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getClassByName(
                         "com.topdon.module.thermal.ir.report.activity.ReportCreateSecondActivity",
                     )
                 RouterConfig.REPORT_PREVIEW_SECOND ->
-                    /**
-                     * Retrieves the classbyname with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getClassByName(
                         "com.topdon.module.thermal.ir.report.activity.ReportPreviewSecondActivity",
                     )
@@ -354,10 +253,6 @@ import com.topdon.lib.core.tools.DeviceTools
                 else -> RouterConfig.IR_IMG_PICK
             }
 
-        /**
-         * Executes build operation with thermal imaging domain optimization.
-         *
-         */
         build(route)
             .withString("RESULT_IMAGE_PATH", imgPath)
             .navigation(activity, 101)

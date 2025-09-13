@@ -21,39 +21,14 @@ import com.topdon.lib.ui.R as UiR
  * @date: 2023/4/4 14:28
  */
 /**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for IRImageUtil operations.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * I r image util utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
  */
 object IRImageUtil {
     /**
 伽马contrast
 @param contrast      contrast 1: 复位  0: Enhance   2: 减弱变灰
 @param brightness    brightness
-     */
-    /**
-     * Executes showContrast functionality.
-     */
-    /**
-     * Executes showcontrast operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param imageView Parameter for operation (type: ImageView)
-     * @param contrast Parameter for operation (type: Double)
-     * @param brightness Parameter for operation (type: Double)
-     *
      */
     fun showContrast(
         imageView: ImageView,
@@ -65,15 +40,7 @@ object IRImageUtil {
             val lookUpTableData = ByteArray((lookUpTable.total() * lookUpTable.channels()).toInt())
             Log.w("123", "lookUpTableData: ${lookUpTableData.size}")
             Log.w("123", "contrast: $contrast")
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (i in 0 until lookUpTable.cols()) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (i % 10 == 0) {
                     Log.i("123", "$i, lutGamma x: ${i / 255.0}, ${lutGamma(x = i / 255.0, gamma = contrast) * 255.0}")
                 }
@@ -83,10 +50,10 @@ object IRImageUtil {
             lookUpTable.put(0, 0, lookUpTableData)
             val srcMat = Utils.loadResource(com.blankj.utilcode.util.Utils.getApp(), UiR.drawable.ic_main_menu_battery) // BGR
             val dstMat = Mat()
-            Core.LUT(srcMat, lookUpTable, dstMat) // Contrast
-            Core.add(dstMat, Scalar(brightness, brightness, brightness), dstMat) // Brightness
+            Core.LUT(srcMat, lookUpTable, dstMat) // contrast
+            Core.add(dstMat, Scalar(brightness, brightness, brightness), dstMat) // brightness
             val resultMat = Mat()
-            Imgproc.cvtColor(dstMat, resultMat, Imgproc.COLOR_BGR2RGBA) // Android对应imageformat
+            Imgproc.cvtColor(dstMat, resultMat, Imgproc.COLOR_BGR2RGBA) // android对应imageformat
             val bitmap = Bitmap.createBitmap(resultMat.size().width.toInt(), resultMat.size().height.toInt(), Bitmap.Config.ARGB_8888)
             Utils.matToBitmap(resultMat, bitmap)
             imageView.setImageBitmap(bitmap)
@@ -99,21 +66,9 @@ object IRImageUtil {
 
     /**
 伽马曲line
-     * https:// Www.cnblogs.com/AlgrithmsRookie/p/13212369.html
+     * https://www.cnblogs.com/AlgrithmsRookie/p/13212369.html
 @param a     [0 ~ 1]交界point
 @param gamma 变化强度
-     */
-    /**
-     * Executes lutGamma functionality.
-     */
-    /**
-     * Executes lutgamma operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param x Parameter for operation (type: Double)
-     * @param a Parameter for operation (type: Double = 0.5)
-     * @param gamma Parameter for operation (type: Double)
-     *
      */
     private fun lutGamma(
         @FloatRange(from = 0.0, to = 1.0) x: Double,
@@ -121,10 +76,6 @@ object IRImageUtil {
         gamma: Double,
     ): Double {
         val y =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (x <= a) {
                 a - a * ((1 - x / a).pow(gamma))
             } else {
@@ -138,17 +89,6 @@ object IRImageUtil {
      * @param sharpen [1,3,5]
      *
 kernel_size  锐化程度,set是奇正数
-     */
-    /**
-     * Executes showSharpen functionality.
-     */
-    /**
-     * Executes showsharpen operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param imageView Parameter for operation (type: ImageView)
-     * @param sharpen Parameter for operation (type: Double)
-     *
      */
     private fun showSharpen(
         imageView: ImageView,
@@ -172,8 +112,8 @@ kernel_size  锐化程度,set是奇正数
         Core.convertScaleAbs(dstMat, absDst)
         Log.w("123", "convertScaleAbs absDst: $absDst")
         val preMat = Mat()
-        Core.addWeighted(srcMat, 1.0, absDst, sharpen, 0.0, preMat) // Fusion
-        Imgproc.cvtColor(preMat, dstMat, Imgproc.COLOR_BGR2RGBA) // Android对应imageformat
+        Core.addWeighted(srcMat, 1.0, absDst, sharpen, 0.0, preMat) // fusion
+        Imgproc.cvtColor(preMat, dstMat, Imgproc.COLOR_BGR2RGBA) // android对应imageformat
         val bitmap = Bitmap.createBitmap(dstMat.size().width.toInt(), dstMat.size().height.toInt(), Bitmap.Config.ARGB_8888)
         Utils.matToBitmap(dstMat, bitmap)
         imageView.setImageBitmap(bitmap)

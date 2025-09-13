@@ -23,18 +23,8 @@ import java.util.concurrent.atomic.AtomicLong
 import kotlin.coroutines.coroutineContext
 
 /**
- * Specialized thermal imaging component providing GSRRecorder functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Core GSR recorder with Shimmer3 device integration
+ * Uses official Shimmer Android API with fallback to simulated data
  */
 class GSRRecorder(
     private val context: Context,
@@ -52,10 +42,6 @@ class GSRRecorder(
         private const val SESSION_METADATA_FILENAME = "session_metadata.json"
 
         private val SIGNALS_HEADER =
-            /**
-             * Executes arrayof operation with thermal imaging domain optimization.
-             *
-             */
             arrayOf(
                 "timestamp_ms",
                 "utc_timestamp_ms",
@@ -66,10 +52,6 @@ class GSRRecorder(
             )
 
         private val SYNC_MARKS_HEADER =
-            /**
-             * Executes arrayof operation with thermal imaging domain optimization.
-             *
-             */
             arrayOf(
                 "timestamp_ms",
                 "utc_timestamp_ms",
@@ -81,106 +63,35 @@ class GSRRecorder(
 
     private val sampleIntervalMs = 1000L / samplingRateHz
     private val isRecording = AtomicBoolean(false)
-/**
- * Specialized thermal imaging component providing GSRRecordingListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
-    interface GSRRecordingListener {
+    private val sampleIndex = AtomicLong(0)
+
+    private var currentSession: SessionInfo? = null
+    private var sessionDirectory: File? = null
+    private var recordingJob: Job? = null
+    private var signalsWriter: CSVWriter? = null
+    private var syncMarksWriter: CSVWriter? = null
+
+    private val listeners = mutableListOf<GSRRecordingListener>()
+
     /**
-     * Executes onRecordingStarted functionality.
+     * Interface for listening to GSR recording events
      */
-        /**
-         * Executes onrecordingstarted operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param sessionInfo Parameter for operation (type: SessionInfo)
-         *
-         */
+    interface GSRRecordingListener {
         fun onRecordingStarted(sessionInfo: SessionInfo)
 
-    /**
-     * Executes onRecordingStopped functionality.
-     */
-        /**
-         * Executes onrecordingstopped operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param sessionInfo Parameter for operation (type: SessionInfo)
-         *
-         */
         fun onRecordingStopped(sessionInfo: SessionInfo)
 
-    /**
-     * Executes onSampleRecorded functionality.
-     */
-        /**
-         * Executes onsamplerecorded operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param sample Parameter for operation (type: GSRSample)
-         *
-         */
         fun onSampleRecorded(sample: GSRSample)
 
-    /**
-     * Executes onSyncMarkAdded functionality.
-     */
-        /**
-         * Executes onsyncmarkadded operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param syncMark Parameter for operation (type: SyncMark)
-         *
-         */
         fun onSyncMarkAdded(syncMark: SyncMark)
 
-    /**
-     * Executes onError functionality.
-     */
-        /**
-         * Executes onerror operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param error Parameter for operation (type: String)
-         *
-         */
         fun onError(error: String)
     }
 
-    /**
-     * Executes addListener functionality.
-     */
-    /**
-     * Executes addlistener operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param listener Event listener for callbacks (type: GSRRecordingListener)
-     *
-     */
     fun addListener(listener: GSRRecordingListener) {
         listeners.add(listener)
     }
 
-    /**
-     * Executes removeListener functionality.
-     */
-    /**
-     * Executes removelistener operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param listener Event listener for callbacks (type: GSRRecordingListener)
-     *
-     */
     fun removeListener(listener: GSRRecordingListener) {
         listeners.remove(listener)
     }
@@ -192,16 +103,8 @@ class GSRRecorder(
         return if (useShimmerDevice) {
             Log.i(TAG, "Attempting to initialize Shimmer3 GSR device...")
             val success = shimmerRecorder.initializeDevice()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (success) {
                 Log.i(TAG, "Shimmer3 device initialized successfully")
-                /**
-                 * Configures the upshimmerlisteners with validation and thermal imaging optimization.
-                 *
-                 */
                 setupShimmerListeners()
                 true
             } else {
@@ -214,79 +117,33 @@ class GSRRecorder(
         }
     }
 
-    /**
-     * Sets upshimmerlisteners configuration.
-     */
     private fun setupShimmerListeners() {
         shimmerRecorder.addListener(
             object : ShimmerGSRRecorder.GSRRecordingListener {
-                /**
-                 * Executes onrecordingstarted operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param session Parameter for operation (type: SessionInfo)
-                 *
-                 */
                 override fun onRecordingStarted(session: SessionInfo) {
                     listeners.forEach { it.onRecordingStarted(session) }
                 }
 
-                /**
-                 * Executes onrecordingstopped operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param session Parameter for operation (type: SessionInfo)
-                 *
-                 */
                 override fun onRecordingStopped(session: SessionInfo) {
                     listeners.forEach { it.onRecordingStopped(session) }
                 }
 
-                /**
-                 * Executes onsamplerecorded operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param sample Parameter for operation (type: GSRSample)
-                 *
-                 */
                 override fun onSampleRecorded(sample: GSRSample) {
                     listeners.forEach { it.onSampleRecorded(sample) }
                 }
 
-                /**
-                 * Executes onsyncmarkrecorded operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param syncMark Parameter for operation (type: SyncMark)
-                 *
-                 */
                 override fun onSyncMarkRecorded(syncMark: SyncMark) {
                     listeners.forEach { it.onSyncMarkAdded(syncMark) }
                 }
 
-                /**
-                 * Executes onerror operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param error Parameter for operation (type: String)
-                 *
-                 */
                 override fun onError(error: String) {
                     listeners.forEach { it.onError(error) }
                 }
 
-                /**
-                 * Executes ondeviceconnected operation with thermal imaging domain optimization.
-                 *
-                 */
                 override fun onDeviceConnected() {
                     Log.i(TAG, "Shimmer3 GSR device connected")
                 }
 
-                /**
-                 * Executes ondevicedisconnected operation with thermal imaging domain optimization.
-                 *
-                 */
                 override fun onDeviceDisconnected() {
                     Log.w(TAG, "Shimmer3 GSR device disconnected")
                 }
@@ -302,10 +159,6 @@ class GSRRecorder(
         participantId: String? = null,
         studyName: String? = null,
     ): Boolean {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isRecording.get()) {
             Log.w(TAG, "Recording already in progress")
             return false
@@ -316,23 +169,10 @@ class GSRRecorder(
             shimmerRecorder.startRecording(sessionId)
         } else {
             // Use simulated data
-            /**
-             * Executes startsimulatedrecording operation with thermal imaging domain optimization.
-             *
-             */
             startSimulatedRecording(sessionId, participantId, studyName)
         }
     }
 
-    /**
-     * Executes startsimulatedrecording operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param sessionId Parameter for operation (type: String)
-     * @param participantId Parameter for operation (type: String?)
-     * @param studyName Parameter for operation (type: String?)
-     *
-     */
     private suspend fun startSimulatedRecording(
         sessionId: String,
         participantId: String?,
@@ -341,39 +181,19 @@ class GSRRecorder(
         try {
             // Create session directory
             sessionDirectory = createSessionDirectory(sessionId)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (sessionDirectory == null) {
-                /**
-                 * Executes notifyerror operation with thermal imaging domain optimization.
-                 *
-                 */
                 notifyError("Failed to create session directory")
                 return false
             }
 
             // Initialize CSV writers
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!initializeCsvWriters()) {
-                /**
-                 * Executes notifyerror operation with thermal imaging domain optimization.
-                 *
-                 */
                 notifyError("Failed to initialize CSV writers")
                 return false
             }
 
             // Create session info
             currentSession =
-                /**
-                 * Executes sessioninfo operation with thermal imaging domain optimization.
-                 *
-                 */
                 SessionInfo(
                     sessionId = sessionId,
                     startTime = System.currentTimeMillis(),
@@ -387,15 +207,7 @@ class GSRRecorder(
 
             // Start data generation coroutine for simulated data
             recordingJob =
-                /**
-                 * Executes coroutinescope operation with thermal imaging domain optimization.
-                 *
-                 */
                 CoroutineScope(Dispatchers.IO).launch {
-                    /**
-                     * Executes generatesimulatedgsrdata operation with thermal imaging domain optimization.
-                     *
-                     */
                     generateSimulatedGSRData()
                 }
 
@@ -407,34 +219,15 @@ class GSRRecorder(
             return true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start simulated recording", e)
-            /**
-             * Executes cleanup operation with thermal imaging domain optimization.
-             *
-             */
             cleanup()
-            /**
-             * Executes notifyerror operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param recording Parameter for operation (type: ${e.message}")
-             *
-             */
             notifyError("Failed to start recording: ${e.message}")
             return false
         }
     }
 
-    /**
-     * Executes generatesimulatedgsrdata operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun generateSimulatedGSRData() {
         val baseTime = System.currentTimeMillis()
 
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (isRecording.get()) {
             try {
                 val currentTime = System.currentTimeMillis()
@@ -464,10 +257,6 @@ class GSRRecorder(
                     val resistance = 1.0 / (finalConductance / 1000000.0) // Convert µS to kΩ
 
                     val sample =
-                        /**
-                         * Executes gsrsample operation with thermal imaging domain optimization.
-                         *
-                         */
                         GSRSample(
                             timestamp = currentTime,
                             utcTimestamp = utcTime,
@@ -479,10 +268,6 @@ class GSRRecorder(
 
                     // Write to CSV
                     signalsWriter?.writeNext(sample.toCsvRow())
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (currentIndex % 10 == 0L) { // Flush every 10 samples
                         signalsWriter?.flush()
                     }
@@ -491,25 +276,10 @@ class GSRRecorder(
                     listeners.forEach { it.onSampleRecorded(sample) }
                 }
 
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(sampleIntervalMs)
             } catch (e: Exception) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (coroutineContext.isActive) {
                     Log.e(TAG, "Error in simulated data generation", e)
-                    /**
-                     * Executes notifyerror operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param error Parameter for operation (type: ${e.message}")
-                     *
-                     */
                     notifyError("Data generation error: ${e.message}")
                 }
             }
@@ -519,15 +289,7 @@ class GSRRecorder(
     /**
      * Stop GSR recording session
      */
-    /**
-     * Executes stoprecording operation with thermal imaging domain optimization.
-     *
-     */
     fun stopRecording(): SessionInfo? {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isRecording.get()) {
             Log.w(TAG, "No recording in progress")
             return currentSession
@@ -538,21 +300,10 @@ class GSRRecorder(
         return if (useShimmerDevice) {
             shimmerRecorder.stopRecording()
         } else {
-            /**
-             * Executes stopsimulatedrecording operation with thermal imaging domain optimization.
-             *
-             */
             stopSimulatedRecording()
         }
     }
 
-    /**
-     * Executes stopSimulatedRecording functionality.
-     */
-    /**
-     * Executes stopsimulatedrecording operation with thermal imaging domain optimization.
-     *
-     */
     private fun stopSimulatedRecording(): SessionInfo? {
         recordingJob?.cancel()
         recordingJob = null
@@ -562,20 +313,12 @@ class GSRRecorder(
             session.sampleCount = sampleIndex.get()
 
             // Save session metadata
-            /**
-             * Executes savesessionmetadata operation with thermal imaging domain optimization.
-             *
-             */
             saveSessionMetadata(session)
 
             listeners.forEach { it.onRecordingStopped(session) }
             Log.i(TAG, "Simulated GSR recording stopped: sessionId=${session.sessionId}, samples=${session.sampleCount}")
         }
 
-        /**
-         * Executes cleanup operation with thermal imaging domain optimization.
-         *
-         */
         cleanup()
         val completedSession = currentSession
         currentSession = null
@@ -589,34 +332,15 @@ class GSRRecorder(
         eventType: String,
         metadata: String = "",
     ): Boolean {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isRecording.get()) return false
 
         return if (useShimmerDevice) {
             shimmerRecorder.triggerSyncEvent(eventType, metadata)
         } else {
-            /**
-             * Executes triggersimulatedsyncevent operation with thermal imaging domain optimization.
-             *
-             */
             triggerSimulatedSyncEvent(eventType, metadata)
         }
     }
 
-    /**
-     * Executes triggerSimulatedSyncEvent functionality.
-     */
-    /**
-     * Executes triggersimulatedsyncevent operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param eventType Parameter for operation (type: String)
-     * @param metadata Parameter for operation (type: String)
-     *
-     */
     private fun triggerSimulatedSyncEvent(
         eventType: String,
         metadata: String,
@@ -624,10 +348,6 @@ class GSRRecorder(
         try {
             currentSession?.let { session ->
                 val syncMark =
-                    /**
-                     * Executes syncmark operation with thermal imaging domain optimization.
-                     *
-                     */
                     SyncMark(
                         timestamp = System.currentTimeMillis(),
                         utcTimestamp = TimeUtil.getUtcTimestamp(),
@@ -648,39 +368,18 @@ class GSRRecorder(
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error recording sync event", e)
-            /**
-             * Executes notifyerror operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param event Parameter for operation (type: ${e.message}")
-             *
-             */
             notifyError("Error recording sync event: ${e.message}")
         }
 
         return false
     }
 
-    /**
-     * Executes createSessionDirectory functionality.
-     */
-    /**
-     * Executes createsessiondirectory operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param sessionId Parameter for operation (type: String)
-     *
-     */
     private fun createSessionDirectory(sessionId: String): File? {
         return try {
             val externalStorage = Environment.getExternalStorageDirectory()
             val sessionsDir = File(externalStorage, SESSIONS_DIR)
             val sessionDir = File(sessionsDir, sessionId)
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!sessionDir.exists() && !sessionDir.mkdirs()) {
                 Log.e(TAG, "Failed to create session directory: ${sessionDir.absolutePath}")
                 return null
@@ -694,49 +393,22 @@ class GSRRecorder(
         }
     }
 
-    /**
-     * Initializes ializecsvwriters component.
-     */
     private fun initializeCsvWriters(): Boolean {
         return try {
             sessionDirectory?.let { dir ->
                 // Initialize signals CSV writer
                 val signalsFile = File(dir, SIGNALS_FILENAME)
                 signalsWriter =
-                    /**
-                     * Executes csvwriter operation with thermal imaging domain optimization.
-                     *
-                     */
                     CSVWriter(FileWriter(signalsFile)).apply {
-                        /**
-                         * Executes writenext operation with thermal imaging domain optimization.
-                         *
-                         */
                         writeNext(SIGNALS_HEADER)
-                        /**
-                         * Executes flush operation with thermal imaging domain optimization.
-                         *
-                         */
                         flush()
                     }
 
                 // Initialize sync marks CSV writer
                 val syncMarksFile = File(dir, SYNC_MARKS_FILENAME)
                 syncMarksWriter =
-                    /**
-                     * Executes csvwriter operation with thermal imaging domain optimization.
-                     *
-                     */
                     CSVWriter(FileWriter(syncMarksFile)).apply {
-                        /**
-                         * Executes writenext operation with thermal imaging domain optimization.
-                         *
-                         */
                         writeNext(SYNC_MARKS_HEADER)
-                        /**
-                         * Executes flush operation with thermal imaging domain optimization.
-                         *
-                         */
                         flush()
                     }
 
@@ -748,16 +420,6 @@ class GSRRecorder(
         }
     }
 
-    /**
-     * Executes saveSessionMetadata functionality.
-     */
-    /**
-     * Executes savesessionmetadata operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param session Parameter for operation (type: SessionInfo)
-     *
-     */
     private fun saveSessionMetadata(session: SessionInfo) {
         try {
             sessionDirectory?.let { dir ->
@@ -774,13 +436,6 @@ class GSRRecorder(
         }
     }
 
-    /**
-     * Executes cleanup functionality.
-     */
-    /**
-     * Executes cleanup operation with thermal imaging domain optimization.
-     *
-     */
     private fun cleanup() {
         try {
             signalsWriter?.close()
@@ -793,16 +448,6 @@ class GSRRecorder(
         }
     }
 
-    /**
-     * Executes notifyError functionality.
-     */
-    /**
-     * Executes notifyerror operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param error Parameter for operation (type: String)
-     *
-     */
     private fun notifyError(error: String) {
         Log.e(TAG, error)
         listeners.forEach { it.onError(error) }
@@ -815,15 +460,7 @@ class GSRRecorder(
         if (useShimmerDevice) {
             shimmerRecorder.disconnect()
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isRecording.get()) {
-            /**
-             * Executes stoprecording operation with thermal imaging domain optimization.
-             *
-             */
             stopRecording()
         }
     }
@@ -867,15 +504,7 @@ class GSRRecorder(
         eventType: String,
         metadata: String = "",
     ): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isRecording.get()) {
                 Log.w(TAG, "Cannot add sync mark - recording not active")
                 return@withContext false
@@ -884,10 +513,6 @@ class GSRRecorder(
             return@withContext if (useShimmerDevice) {
                 shimmerRecorder.triggerSyncEvent(eventType, metadata)
             } else {
-                /**
-                 * Executes triggersimulatedsyncevent operation with thermal imaging domain optimization.
-                 *
-                 */
                 triggerSimulatedSyncEvent(eventType, metadata)
             }
         }

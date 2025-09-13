@@ -19,33 +19,19 @@ import com.topdon.module.thermal.ir.R
 3D 编辑使用的，长地像 SeekBar 的那个条条.
  */
 /**
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for TargetBarPickView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Target bar pick view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class TargetBarPickView : View {
     companion object {
         /**
-default条条背景颜色.
+默认条条背景颜色.
          */
         @ColorInt
         private const val DEFAULT_BG_COLOR = 0x7F000000.toInt()
 
         /**
-default进度条颜色.
+默认进度条颜色.
          */
         @ColorInt
         private const val DEFAULT_PROGRESS_COLOR = 0xffffffff.toInt()
@@ -78,41 +64,17 @@ Thumb outline尺寸，单位 dp.
 条条进度最大值.
      */
     var max: Int = 100
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (field != value) {
                 field = value
-                /**
-                 * Executes invalidate operation with thermal imaging domain optimization.
-                 *
-                 */
                 invalidate()
             }
         }
 
     var min: Int = 0
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (field != value) {
                 field = value
-                /**
-                 * Executes invalidate operation with thermal imaging domain optimization.
-                 *
-                 */
                 invalidate()
             }
         }
@@ -121,28 +83,13 @@ Thumb outline尺寸，单位 dp.
 条条当前进度.
      */
     private var progress: Int = 0
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (field != value) {
                 field = value.coerceAtLeast(min).coerceAtMost(max)
-                /**
-                 * Executes invalidate operation with thermal imaging domain optimization.
-                 *
-                 */
                 invalidate()
             }
         }
 
-    /**
-     * Sets progressandrefresh configuration.
-     */
     fun setProgressAndRefresh(progress: Int) {
         this.progress = progress
         onProgressChanged?.invoke(this.progress, max)
@@ -154,7 +101,7 @@ Thumb outline尺寸，单位 dp.
     private val barSize: Int
 
     /**
-顺时针rotationangle，仅支持 0、90、180、270.
+顺时针rotation角度，仅支持 0、90、180、270.
      */
     private val rotate: Int
 
@@ -168,46 +115,12 @@ tagtext.
     private val thumbRect = RectF()
     private val barRect = RectF()
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     * @param defStyleRes Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
         context,
         attrs,
@@ -230,18 +143,7 @@ tagtext.
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    /**
-     * Executes ontouchevent operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: MotionEvent?)
-     *
-     */
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (event == null) {
             return false
         }
@@ -251,10 +153,6 @@ tagtext.
         val barWidth: Float = barRect.width()
         val barHeight: Float = barRect.height()
         progress =
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (rotate) {
                 0 -> (x / barWidth * (max - min) + min).toInt()
                 180 -> ((barWidth - x) / barWidth * (max - min) + min).toInt()
@@ -262,10 +160,6 @@ tagtext.
                 else -> ((barHeight - y) / barHeight * (max - min) + min).toInt()
             }.coerceAtLeast(min).coerceAtMost(max)
 
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (event.action) {
             MotionEvent.ACTION_DOWN -> onStartTrackingTouch?.invoke(progress, max)
             MotionEvent.ACTION_MOVE -> onProgressChanged?.invoke(progress, max)
@@ -279,24 +173,12 @@ tagtext.
     /**
 calculation Thumb 宽度，单位 px.
      */
-    /**
-     * Executes computethumbwidth operation with thermal imaging domain optimization.
-     *
-     */
     private fun computeThumbWidth(): Int {
         val minTextWidth = paint.measureText(valueFormatListener.invoke(min)).toInt()
         val maxTextWidth = paint.measureText(valueFormatListener.invoke(max)).toInt()
         return minTextWidth.coerceAtLeast(maxTextWidth) + SizeUtils.dp2px(12f)
     }
 
-    /**
-     * Executes onmeasure operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param widthMeasureSpec Parameter for operation (type: Int)
-     * @param heightMeasureSpec Parameter for operation (type: Int)
-     *
-     */
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
@@ -310,22 +192,10 @@ calculation Thumb 宽度，单位 px.
         val thumbHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
 
         val width: Int =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rotate == 0 || rotate == 180) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (widthMode == MeasureSpec.UNSPECIFIED) ScreenUtil.getScreenWidth(context) else widthSize
             } else {
                 val wantWidth: Int = thumbWidth + paddingStart + paddingEnd
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (widthMode) {
                     MeasureSpec.EXACTLY -> widthSize
                     MeasureSpec.AT_MOST -> wantWidth.coerceAtMost(widthSize)
@@ -335,16 +205,8 @@ calculation Thumb 宽度，单位 px.
             }
 
         val height: Int =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rotate == 0 || rotate == 180) {
                 val wantHeight: Int = thumbHeight + paddingTop + paddingBottom
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (heightMode) {
                     MeasureSpec.EXACTLY -> heightSize
                     MeasureSpec.AT_MOST -> wantHeight.coerceAtMost(heightSize)
@@ -352,89 +214,35 @@ calculation Thumb 宽度，单位 px.
                     else -> wantHeight
                 }
             } else {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (heightMode == MeasureSpec.UNSPECIFIED) ScreenUtil.getScreenHeight(context) else heightSize
             }
 
-        /**
-         * Configures the measureddimension with validation and thermal imaging optimization.
-         *
-         */
         setMeasuredDimension(width, height)
     }
 
-    /**
-     * Executes ondraw operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     *
-     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (canvas == null) {
             return
         }
 
-        /**
-         * Executes computebarrect operation with thermal imaging domain optimization.
-         *
-         */
         computeBarRect()
-        /**
-         * Executes computethumbrect operation with thermal imaging domain optimization.
-         *
-         */
         computeThumbRect()
 
-        /**
-         * Executes cliptobarrect operation with thermal imaging domain optimization.
-         *
-         */
         clipToBarRect(canvas)
-        /**
-         * Executes drawbgbar operation with thermal imaging domain optimization.
-         *
-         */
         drawBgBar(canvas)
-        /**
-         * Executes drawprogress operation with thermal imaging domain optimization.
-         *
-         */
         drawProgress(canvas)
         canvas.restore()
 
-        /**
-         * Executes drawthumb operation with thermal imaging domain optimization.
-         *
-         */
         drawThumb(canvas)
-// DrawText(canvas)
+//        drawText(canvas)
     }
 
-    /**
-     * Executes computeBarRect functionality.
-     */
-    /**
-     * Executes computebarrect operation with thermal imaging domain optimization.
-     *
-     */
     private fun computeBarRect() {
         val textHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top
         val textMargin = SizeUtils.dp2px(4f)
         val thumbWidth = computeThumbWidth()
         val thumbHeight = textHeight + SizeUtils.dp2px(4f)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rotate == 0 || rotate == 180) {
             val labelTextSpace = if (labelText.isEmpty()) 0 else (paint.measureText(labelText).toInt() + SizeUtils.dp2px(6f))
             val leftText = valueFormatListener.invoke(if (rotate == 0) min else max)
@@ -456,20 +264,9 @@ calculation Thumb 宽度，单位 px.
         }
     }
 
-    /**
-     * Executes computeThumbRect functionality.
-     */
-    /**
-     * Executes computethumbrect operation with thermal imaging domain optimization.
-     *
-     */
     private fun computeThumbRect() {
         val thumbWidth = computeThumbWidth()
         val thumbHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rotate == 0 || rotate == 180) {
             val progressWidth = (barRect.width() * (progress - min) / (max - min)).toInt()
             val left =
@@ -495,23 +292,9 @@ calculation Thumb 宽度，单位 px.
         }
     }
 
-    /**
-     * Executes clipToBarRect functionality.
-     */
-    /**
-     * Executes cliptobarrect operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     *
-     */
     private fun clipToBarRect(canvas: Canvas) {
         canvas.save()
         val radius = (barSize / 2).toFloat()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rotate == 0 || rotate == 180) {
             path.rewind()
             path.moveTo(barRect.left + radius, barRect.top)
@@ -535,16 +318,6 @@ calculation Thumb 宽度，单位 px.
         }
     }
 
-    /**
-     * Executes drawBgBar functionality.
-     */
-    /**
-     * Executes drawbgbar operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     *
-     */
     private fun drawBgBar(canvas: Canvas) {
         paint.color = DEFAULT_BG_COLOR
 
@@ -552,24 +325,12 @@ calculation Thumb 宽度，单位 px.
         val top = barRect.top
         val right = barRect.right
         val bottom = barRect.bottom
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rotate == 0 || rotate == 180) {
             val thumbWidth = computeThumbWidth()
             val bgWidth = (barRect.width() * (max - progress) / (max - min).toFloat()).toInt()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (bgWidth == 0) {
                 return
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rotate == 0) {
                 canvas.drawRect((right - bgWidth + thumbWidth / 2).coerceAtLeast(left + thumbWidth), top, right, bottom, paint)
             } else {
@@ -578,17 +339,9 @@ calculation Thumb 宽度，单位 px.
         } else {
             val thumbHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
             val bgHeight = (barRect.height() * (max - progress) / (max - min).toFloat()).toInt()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (bgHeight == 0) {
                 return
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rotate == 90) {
                 canvas.drawRect(left, (bottom - bgHeight + thumbHeight / 2).coerceAtLeast(top + thumbHeight), right, bottom, paint)
             } else {
@@ -597,16 +350,6 @@ calculation Thumb 宽度，单位 px.
         }
     }
 
-    /**
-     * Executes drawProgress functionality.
-     */
-    /**
-     * Executes drawprogress operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     *
-     */
     private fun drawProgress(canvas: Canvas) {
         paint.color = DEFAULT_PROGRESS_COLOR
 
@@ -614,24 +357,12 @@ calculation Thumb 宽度，单位 px.
         val top = barRect.top
         val right = barRect.right
         val bottom = barRect.bottom
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rotate == 0 || rotate == 180) {
             val thumbWidth = computeThumbWidth()
             val progressWidth = (barRect.width() * (progress - min) / (max - min).toFloat()).toInt()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (progressWidth == 0) {
                 return
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rotate == 0) {
                 canvas.drawRect(left, top, (left + progressWidth - thumbWidth / 2).coerceAtMost(right - thumbWidth), bottom, paint)
             } else {
@@ -640,17 +371,9 @@ calculation Thumb 宽度，单位 px.
         } else {
             val thumbHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
             val progressHeight = (barRect.height() * (progress - min) / (max - min).toFloat()).toInt()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (progressHeight == 0) {
                 return
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rotate == 90) {
                 canvas.drawRect(left, top, right, (top + progressHeight - thumbHeight / 2).coerceAtMost(bottom - thumbHeight), paint)
             } else {
@@ -659,16 +382,6 @@ calculation Thumb 宽度，单位 px.
         }
     }
 
-    /**
-     * Executes drawThumb functionality.
-     */
-    /**
-     * Executes drawthumb operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     *
-     */
     private fun drawThumb(canvas: Canvas) {
         paint.style = Paint.Style.FILL
         val radius = SizeUtils.dp2px(THUMB_CORNERS).toFloat()

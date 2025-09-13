@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- UI layout - Layout Car Detect Prompt -->
-<!-- Linear container layout -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <!-- Linear container layout -->
     <LinearLayout
         android:id="@+id/ll_car_detect_info"
         android:layout_width="28dp"
@@ -22,7 +19,6 @@
 
     </LinearLayout>
 
-    <!-- Relative positioning container layout -->
     <RelativeLayout
         android:id="@+id/rl_content"
         android:layout_width="wrap_content"

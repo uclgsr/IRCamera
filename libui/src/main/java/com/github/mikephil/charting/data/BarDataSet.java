@@ -8,20 +8,6 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Specialized thermal imaging component providing BarDataSet functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> implements IBarDataSet {
 
     /**
@@ -56,46 +42,22 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
             "Stack"
     };
 
-    /**
-     * Executes bardataset operation with thermal imaging domain optimization.
-     *
-     */
     public BarDataSet(List<BarEntry> yVals, String label) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(yVals, label);
 
         mHighLightColor = Color.rgb(0, 0, 0);
 
-        /**
-         * Executes calcstacksize operation with thermal imaging domain optimization.
-         *
-         */
         calcStackSize(yVals);
-        /**
-         * Executes calcentrycountincludingstacks operation with thermal imaging domain optimization.
-         *
-         */
         calcEntryCountIncludingStacks(yVals);
     }
 
     @Override
     public DataSet<BarEntry> copy() {
         List<BarEntry> entries = new ArrayList<BarEntry>();
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < mValues.size(); i++) {
             entries.add(mValues.get(i).copy());
         }
         BarDataSet copied = new BarDataSet(entries, getLabel());
-        /**
-         * Executes copy operation with thermal imaging domain optimization.
-         *
-         */
         copy(copied);
         return copied;
     }
@@ -117,18 +79,10 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
 
         mEntryCountStacks = 0;
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < yVals.size(); i++) {
 
             float[] vals = yVals.get(i).getYVals();
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (vals == null)
                 mEntryCountStacks++;
             else
@@ -142,18 +96,10 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      */
     private void calcStackSize(List<BarEntry> yVals) {
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < yVals.size(); i++) {
 
             float[] vals = yVals.get(i).getYVals();
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (vals != null && vals.length > mStackSize)
                 mStackSize = vals.length;
         }
@@ -162,52 +108,24 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
     @Override
     protected void calcMinMax(BarEntry e) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (e != null && !Float.isNaN(e.getY())) {
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (e.getYVals() == null) {
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (e.getY() < mYMin)
                     mYMin = e.getY();
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (e.getY() > mYMax)
                     mYMax = e.getY();
             } else {
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (-e.getNegativeSum() < mYMin)
                     mYMin = -e.getNegativeSum();
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (e.getPositiveSum() > mYMax)
                     mYMax = e.getPositiveSum();
             }
 
-            /**
-             * Executes calcminmaxx operation with thermal imaging domain optimization.
-             *
-             */
             calcMinMaxX(e);
         }
     }

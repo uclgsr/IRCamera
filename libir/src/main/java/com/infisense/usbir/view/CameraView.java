@@ -18,21 +18,7 @@ import com.infisense.usbdual.Const;
 import com.infisense.usbir.utils.OpencvTools;
 
 /**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with CameraView functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * infraredimage展示控件，可以为TextureView或SurfaceView
  */
 public class CameraView extends TextureView {
     private String TAG = "CameraView";
@@ -50,7 +36,7 @@ public class CameraView extends TextureView {
      * 帧率展示
      */
     private Paint greenPaint;
-    private boolean drawLine = true;// 是否画center十字架
+    private boolean drawLine = true;//是否画center十字架
     public int productType = Const.TYPE_IR;
     private int irWidth = 192;
     private int irHeight = 256;
@@ -70,27 +56,11 @@ public class CameraView extends TextureView {
         this.irHeight = irHeight;
     }
 
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
-     */
     public CameraView(Context context) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this(context, null, 0);
     }
 
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
-     */
     public CameraView(Context context, AttributeSet attrs) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this(context, attrs, 0);
     }
 
@@ -100,43 +70,27 @@ public class CameraView extends TextureView {
      * @param defStyleAttr
      */
     public CameraView(Context context, AttributeSet attrs, int defStyleAttr) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyleAttr);
         //
-        paint = new Paint();  // 画笔
+        paint = new Paint();  //画笔
         paint = new Paint(Paint.FILTER_BITMAP_FLAG);
-// Paint = new Paint();  // 画笔
-        paint.setStrokeWidth(2);  // Settingsline宽。单位为像素
-        paint.setAntiAlias(true); // 抗锯齿
-        paint.setDither(true);    // 防抖动
-        paint.setColor(Color.WHITE);  // 画笔color
+//        paint = new Paint();  //画笔
+        paint.setStrokeWidth(2);  //settingsline宽。单位为像素
+        paint.setAntiAlias(true); //抗锯齿
+        paint.setDither(true);    //防抖动
+        paint.setColor(Color.WHITE);  //画笔color
         //
         greenPaint = new Paint();
         greenPaint.setStrokeWidth(6);
         greenPaint.setTextSize(56);
         greenPaint.setColor(Color.GREEN);
-        // Line程中绘制画area
+        // line程中绘制画area
         runnable = new Runnable() {
             @Override
             public void run() {
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (!cameraThread.isInterrupted()) {
-                    /**
-                     * Executes synchronized operation with thermal imaging domain optimization.
-                     *
-                     */
                     synchronized (syncimage.viewLock) {
                         //
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (syncimage.valid == false) {
                             try {
                                 syncimage.viewLock.wait();
@@ -146,24 +100,16 @@ public class CameraView extends TextureView {
                             }
                         }
                         //
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (syncimage.valid == true) {
                             canvas = lockCanvas();
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (canvas == null) {
                                 continue;
                             }
                             // 画areacenter的十字交叉line绘制
-                            paint.setStrokeWidth(2);  // Settingsline宽。单位为像素
-                            paint.setAntiAlias(true); // 抗锯齿
-                            paint.setDither(true);    // 防抖动
-                            paint.setColor(Color.WHITE);  // 画笔color
+                            paint.setStrokeWidth(2);  //settingsline宽。单位为像素
+                            paint.setAntiAlias(true); //抗锯齿
+                            paint.setDither(true);    //防抖动
+                            paint.setColor(Color.WHITE);  //画笔color
                             /**
                              * imageScale，这里简单的使用getWidth()作为宽，getHeight()作为高，可能会出现画area拉伸情况，
                              * 实际使用的时候请参考device的宽高按照device的image尺寸做等比例Scale
@@ -178,17 +124,9 @@ public class CameraView extends TextureView {
                                 canvas.drawLine(getWidth() / 2 - cross_len, getHeight() / 2,
                                         getWidth() / 2 + cross_len, getHeight() / 2, paint);
                                 canvas.drawLine(getWidth() / 2, getHeight() / 2 - cross_len,
-                                        /**
-                                         * Retrieves the width with optimized performance for thermal imaging operations.
-                                         *
-                                         */
                                         getWidth() / 2, getHeight() / 2 + cross_len, paint);
                             }
                             //
-                            /**
-                             * Executes unlockcanvasandpost operation with thermal imaging domain optimization.
-                             *
-                             */
                             unlockCanvasAndPost(canvas);
                             syncimage.valid = false;
                         }
@@ -230,10 +168,6 @@ public class CameraView extends TextureView {
 
     @NonNull
     public Bitmap getScaledBitmap() {
-        /**
-         * Executes synchronized operation with thermal imaging domain optimization.
-         *
-         */
         synchronized (syncimage.viewLock) {
             Bitmap sBitmap = null;
             sBitmap = Bitmap.createScaledBitmap(bitmap, getWidth(), getHeight(), true);
@@ -249,16 +183,8 @@ public class CameraView extends TextureView {
         try {
             cross_len = isShow ? 20 : 0;
             canvas.drawLine(getWidth() / 2f - cross_len, getHeight() / 2f,
-                    /**
-                     * Retrieves the width with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getWidth() / 2f + cross_len, getHeight() / 2f, paint);
             canvas.drawLine(getWidth() / 2f, getHeight() / 2f - cross_len,
-                    /**
-                     * Retrieves the width with optimized performance for thermal imaging operations.
-                     *
-                     */
                     getWidth() / 2f, getHeight() / 2f + cross_len, paint);
         }catch (Exception e){
             Log.e(TAG,"pointexception:"+e.getMessage());
@@ -268,10 +194,6 @@ public class CameraView extends TextureView {
     
     public void stop() {
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (cameraThread != null){
                 cameraThread.interrupt();
                 cameraThread.join();

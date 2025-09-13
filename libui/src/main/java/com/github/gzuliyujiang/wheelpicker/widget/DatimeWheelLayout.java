@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -47,20 +47,6 @@ import java.util.List;
  * @since 2019/5/14 15:26
  */
 @SuppressWarnings("unused")
-/**
- * Specialized thermal imaging component providing DatimeWheelLayout functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class DatimeWheelLayout extends BaseWheelLayout {
     private DateWheelLayout dateWheelLayout;
     private TimeWheelLayout timeWheelLayout;
@@ -68,51 +54,19 @@ public class DatimeWheelLayout extends BaseWheelLayout {
     private DatimeEntity endValue;
     private OnDatimeSelectedListener onDatimeSelectedListener;
 
-    /**
-     * Executes datimewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public DatimeWheelLayout(Context context) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context);
     }
 
-    /**
-     * Executes datimewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public DatimeWheelLayout(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
     }
 
-    /**
-     * Executes datimewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public DatimeWheelLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyleAttr);
     }
 
-    /**
-     * Executes datimewheellayout operation with thermal imaging domain optimization.
-     *
-     */
     public DatimeWheelLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
@@ -139,47 +93,15 @@ public class DatimeWheelLayout extends BaseWheelLayout {
         dateWheelLayout = findViewById(R.id.wheel_picker_date_wheel);
         timeWheelLayout = findViewById(R.id.wheel_picker_time_wheel);
 
-        // 初始color
-        /**
-         * Configures the curtainenabled with validation and thermal imaging optimization.
-         *
-         */
+        //初始color
         setCurtainEnabled(true);
-        /**
-         * Retrieves the monthlabelview with optimized performance for thermal imaging operations.
-         *
-         */
         getMonthLabelView().setTextColor(0xffffffff);
-        /**
-         * Retrieves the yearlabelview with optimized performance for thermal imaging operations.
-         *
-         */
         getYearLabelView().setTextColor(0xffffffff);
-        /**
-         * Retrieves the daylabelview with optimized performance for thermal imaging operations.
-         *
-         */
         getDayLabelView().setTextColor(0xffffffff);
-        /**
-         * Retrieves the hourlabelview with optimized performance for thermal imaging operations.
-         *
-         */
         getHourLabelView().setTextColor(0xffffffff);
-        /**
-         * Retrieves the minutelabelview with optimized performance for thermal imaging operations.
-         *
-         */
         getMinuteLabelView().setTextColor(0xffffffff);
-        /**
-         * Retrieves the secondlabelview with optimized performance for thermal imaging operations.
-         *
-         */
         getSecondLabelView().setTextColor(0xffffffff);
 
-        /**
-         * Executes post operation with thermal imaging domain optimization.
-         *
-         */
         post(() -> {
             View view_select_bg = findViewById(R.id.view_select_bg);
             ViewGroup.LayoutParams params = view_select_bg.getLayoutParams();
@@ -192,167 +114,47 @@ public class DatimeWheelLayout extends BaseWheelLayout {
     protected void onAttributeSet(@NonNull Context context, @NonNull TypedArray typedArray) {
         float density = context.getResources().getDisplayMetrics().density;
         float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
-        /**
-         * Configures the visibleitemcount with validation and thermal imaging optimization.
-         *
-         */
         setVisibleItemCount(typedArray.getInt(R.styleable.DatimeWheelLayout_wheel_visibleItemCount, 5));
-        /**
-         * Configures the samewidthenabled with validation and thermal imaging optimization.
-         *
-         */
         setSameWidthEnabled(typedArray.getBoolean(R.styleable.DatimeWheelLayout_wheel_sameWidthEnabled, false));
-        /**
-         * Configures the maxwidthtext with validation and thermal imaging optimization.
-         *
-         */
         setMaxWidthText(typedArray.getString(R.styleable.DatimeWheelLayout_wheel_maxWidthText));
-        /**
-         * Configures the selectedtextcolor with validation and thermal imaging optimization.
-         *
-         */
         setSelectedTextColor(typedArray.getColor(R.styleable.DatimeWheelLayout_wheel_itemTextColorSelected, 0xFF000000));
-        /**
-         * Configures the textcolor with validation and thermal imaging optimization.
-         *
-         */
         setTextColor(typedArray.getColor(R.styleable.DatimeWheelLayout_wheel_itemTextColor, 0xFF888888));
-        /**
-         * Configures the textsize with validation and thermal imaging optimization.
-         *
-         */
         setTextSize(typedArray.getDimension(R.styleable.DatimeWheelLayout_wheel_itemTextSize, 15 * scaledDensity));
-        /**
-         * Configures the selectedtextsize with validation and thermal imaging optimization.
-         *
-         */
         setSelectedTextSize(typedArray.getDimension(R.styleable.DatimeWheelLayout_wheel_itemTextSizeSelected, 15 * scaledDensity));
-        /**
-         * Configures the selectedtextbold with validation and thermal imaging optimization.
-         *
-         */
         setSelectedTextBold(typedArray.getBoolean(R.styleable.DatimeWheelLayout_wheel_itemTextBoldSelected, false));
-        /**
-         * Configures the textalign with validation and thermal imaging optimization.
-         *
-         */
         setTextAlign(typedArray.getInt(R.styleable.DatimeWheelLayout_wheel_itemTextAlign, ItemTextAlign.CENTER));
-        /**
-         * Configures the itemspace with validation and thermal imaging optimization.
-         *
-         */
         setItemSpace(typedArray.getDimensionPixelSize(R.styleable.DatimeWheelLayout_wheel_itemSpace,
                 (int) (20 * density)));
-        /**
-         * Configures the cyclicenabled with validation and thermal imaging optimization.
-         *
-         */
         setCyclicEnabled(typedArray.getBoolean(R.styleable.DatimeWheelLayout_wheel_cyclicEnabled, false));
-        /**
-         * Configures the indicatorenabled with validation and thermal imaging optimization.
-         *
-         */
         setIndicatorEnabled(typedArray.getBoolean(R.styleable.DatimeWheelLayout_wheel_indicatorEnabled, false));
-        /**
-         * Configures the indicatorcolor with validation and thermal imaging optimization.
-         *
-         */
         setIndicatorColor(typedArray.getColor(R.styleable.DatimeWheelLayout_wheel_indicatorColor, 0xFFC9C9C9));
-        /**
-         * Configures the indicatorsize with validation and thermal imaging optimization.
-         *
-         */
         setIndicatorSize(typedArray.getDimension(R.styleable.DatimeWheelLayout_wheel_indicatorSize, 1 * density));
-        /**
-         * Configures the curvedindicatorspace with validation and thermal imaging optimization.
-         *
-         */
         setCurvedIndicatorSpace(typedArray.getDimensionPixelSize(R.styleable.DatimeWheelLayout_wheel_curvedIndicatorSpace, (int) (1 * density)));
-        /**
-         * Configures the curtainenabled with validation and thermal imaging optimization.
-         *
-         */
         setCurtainEnabled(typedArray.getBoolean(R.styleable.DatimeWheelLayout_wheel_curtainEnabled, false));
-        /**
-         * Configures the curtaincolor with validation and thermal imaging optimization.
-         *
-         */
         setCurtainColor(typedArray.getColor(R.styleable.DatimeWheelLayout_wheel_curtainColor, 0x88FFFFFF));
-        /**
-         * Configures the curtaincorner with validation and thermal imaging optimization.
-         *
-         */
         setCurtainCorner(typedArray.getInt(R.styleable.DatimeWheelLayout_wheel_curtainCorner, CurtainCorner.NONE));
-        /**
-         * Configures the curtainradius with validation and thermal imaging optimization.
-         *
-         */
         setCurtainRadius(typedArray.getDimension(R.styleable.DatimeWheelLayout_wheel_curtainRadius, 0));
-        /**
-         * Configures the atmosphericenabled with validation and thermal imaging optimization.
-         *
-         */
         setAtmosphericEnabled(typedArray.getBoolean(R.styleable.DatimeWheelLayout_wheel_atmosphericEnabled, false));
-        /**
-         * Configures the curvedenabled with validation and thermal imaging optimization.
-         *
-         */
         setCurvedEnabled(typedArray.getBoolean(R.styleable.DatimeWheelLayout_wheel_curvedEnabled, false));
-        /**
-         * Configures the curvedmaxangle with validation and thermal imaging optimization.
-         *
-         */
         setCurvedMaxAngle(typedArray.getInteger(R.styleable.DatimeWheelLayout_wheel_curvedMaxAngle, 90));
-        /**
-         * Configures the datemode with validation and thermal imaging optimization.
-         *
-         */
         setDateMode(typedArray.getInt(R.styleable.DatimeWheelLayout_wheel_dateMode, DateMode.YEAR_MONTH_DAY));
-        /**
-         * Configures the timemode with validation and thermal imaging optimization.
-         *
-         */
         setTimeMode(typedArray.getInt(R.styleable.DatimeWheelLayout_wheel_timeMode, TimeMode.HOUR_24_NO_SECOND));
         String yearLabel = typedArray.getString(R.styleable.DatimeWheelLayout_wheel_yearLabel);
         String monthLabel = typedArray.getString(R.styleable.DatimeWheelLayout_wheel_monthLabel);
         String dayLabel = typedArray.getString(R.styleable.DatimeWheelLayout_wheel_dayLabel);
-        /**
-         * Configures the datelabel with validation and thermal imaging optimization.
-         *
-         */
         setDateLabel(yearLabel, monthLabel, dayLabel);
         String hourLabel = typedArray.getString(R.styleable.DatimeWheelLayout_wheel_hourLabel);
         String minuteLabel = typedArray.getString(R.styleable.DatimeWheelLayout_wheel_minuteLabel);
         String secondLabel = typedArray.getString(R.styleable.DatimeWheelLayout_wheel_secondLabel);
-        /**
-         * Configures the timelabel with validation and thermal imaging optimization.
-         *
-         */
         setTimeLabel(hourLabel, minuteLabel, secondLabel);
-        /**
-         * Configures the dateformatter with validation and thermal imaging optimization.
-         *
-         */
         setDateFormatter(new SimpleDateFormatter());
-        /**
-         * Configures the timeformatter with validation and thermal imaging optimization.
-         *
-         */
         setTimeFormatter(new SimpleTimeFormatter(timeWheelLayout));
     }
 
     @Override
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (visibility == VISIBLE && startValue == null && endValue == null) {
-            /**
-             * Configures the range with validation and thermal imaging optimization.
-             *
-             */
             setRange(DatimeEntity.now(), DatimeEntity.yearOnFuture(30), DatimeEntity.now());
         }
     }
@@ -361,10 +163,6 @@ public class DatimeWheelLayout extends BaseWheelLayout {
     public void onWheelSelected(WheelView view, int position) {
         dateWheelLayout.onWheelSelected(view, position);
         timeWheelLayout.onWheelSelected(view, position);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (onDatimeSelectedListener == null) {
             return;
         }
@@ -409,10 +207,6 @@ public class DatimeWheelLayout extends BaseWheelLayout {
      * settings日期时间range
      */
     public void setRange(DatimeEntity startValue, DatimeEntity endValue) {
-        /**
-         * Configures the range with validation and thermal imaging optimization.
-         *
-         */
         setRange(startValue, endValue, null);
     }
 
@@ -420,24 +214,12 @@ public class DatimeWheelLayout extends BaseWheelLayout {
      * settings日期时间range
      */
     public void setRange(DatimeEntity startValue, DatimeEntity endValue, DatimeEntity defaultValue) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (startValue == null) {
             startValue = DatimeEntity.now();
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (endValue == null) {
             endValue = DatimeEntity.yearOnFuture(10);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (defaultValue == null) {
             defaultValue = startValue;
         }
@@ -448,10 +230,6 @@ public class DatimeWheelLayout extends BaseWheelLayout {
     }
 
     public void setDefaultValue(DatimeEntity defaultValue) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (defaultValue == null) {
             defaultValue = DatimeEntity.now();
         }

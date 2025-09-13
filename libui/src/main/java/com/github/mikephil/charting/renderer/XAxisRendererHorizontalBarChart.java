@@ -19,34 +19,12 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.List;
 
-/**
- * Specialized thermal imaging component providing XAxisRendererHorizontalBarChart functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
 
     protected BarChart mChart;
 
-    /**
-     * Executes xaxisrendererhorizontalbarchart operation with thermal imaging domain optimization.
-     *
-     */
     public XAxisRendererHorizontalBarChart(ViewPortHandler viewPortHandler, XAxis xAxis,
             Transformer trans, BarChart chart) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(viewPortHandler, xAxis, trans);
 
         this.mChart = chart;
@@ -55,21 +33,13 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
     @Override
     public void computeAxis(float min, float max, boolean inverted) {
 
-        // Calculate the starting and entry point of the y-labels (depending on
-        // Zoom / contentrect bounds)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // calculate the starting and entry point of the y-labels (depending on
+        // zoom / contentrect bounds)
         if (mViewPortHandler.contentWidth() > 10 && !mViewPortHandler.isFullyZoomedOutY()) {
 
             MPPointD p1 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(), mViewPortHandler.contentBottom());
             MPPointD p2 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(), mViewPortHandler.contentTop());
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (inverted) {
 
                 min = (float) p2.y;
@@ -84,10 +54,6 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
             MPPointD.recycleInstance(p2);
         }
 
-        /**
-         * Executes computeaxisvalues operation with thermal imaging domain optimization.
-         *
-         */
         computeAxisValues(min, max);
     }
 
@@ -120,10 +86,6 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
     @Override
     public void renderAxisLabels(Canvas c) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!mXAxis.isEnabled() || !mXAxis.isDrawLabelsEnabled())
             return;
 
@@ -135,60 +97,32 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
 
         MPPointF pointF = MPPointF.getInstance(0,0);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mXAxis.getPosition() == XAxisPosition.TOP) {
             pointF.x = 0.0f;
             pointF.y = 0.5f;
-            /**
-             * Executes drawlabels operation with thermal imaging domain optimization.
-             *
-             */
             drawLabels(c, mViewPortHandler.contentRight() + xoffset, pointF);
 
         } else if (mXAxis.getPosition() == XAxisPosition.TOP_INSIDE) {
             pointF.x = 1.0f;
             pointF.y = 0.5f;
-            /**
-             * Executes drawlabels operation with thermal imaging domain optimization.
-             *
-             */
             drawLabels(c, mViewPortHandler.contentRight() - xoffset, pointF);
 
         } else if (mXAxis.getPosition() == XAxisPosition.BOTTOM) {
             pointF.x = 1.0f;
             pointF.y = 0.5f;
-            /**
-             * Executes drawlabels operation with thermal imaging domain optimization.
-             *
-             */
             drawLabels(c, mViewPortHandler.contentLeft() - xoffset, pointF);
 
         } else if (mXAxis.getPosition() == XAxisPosition.BOTTOM_INSIDE) {
             pointF.x = 1.0f;
             pointF.y = 0.5f;
-            /**
-             * Executes drawlabels operation with thermal imaging domain optimization.
-             *
-             */
             drawLabels(c, mViewPortHandler.contentLeft() + xoffset, pointF);
 
         } else { // BOTH SIDED
             pointF.x = 0.0f;
             pointF.y = 0.5f;
-            /**
-             * Executes drawlabels operation with thermal imaging domain optimization.
-             *
-             */
             drawLabels(c, mViewPortHandler.contentRight() + xoffset, pointF);
             pointF.x = 1.0f;
             pointF.y = 0.5f;
-            /**
-             * Executes drawlabels operation with thermal imaging domain optimization.
-             *
-             */
             drawLabels(c, mViewPortHandler.contentLeft() - xoffset, pointF);
         }
 
@@ -203,17 +137,9 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
 
         float[] positions = new float[mXAxis.mEntryCount * 2];
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < positions.length; i += 2) {
 
-            // Only fill x values
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            // only fill x values
             if (centeringEnabled) {
                 positions[i + 1] = mXAxis.mCenteredEntries[i / 2];
             } else {
@@ -223,25 +149,13 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
 
         mTrans.pointValuesToPixel(positions);
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < positions.length; i += 2) {
 
             float y = positions[i + 1];
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mViewPortHandler.isInBoundsY(y)) {
 
                 String label = mXAxis.getValueFormatter().getAxisLabel(mXAxis.mEntries[i / 2], mXAxis);
-                /**
-                 * Executes drawlabel operation with thermal imaging domain optimization.
-                 *
-                 */
                 drawLabel(c, label, pos, y, anchor, labelRotationAngleDegrees);
             }
         }
@@ -260,7 +174,7 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
         gridLinePath.moveTo(mViewPortHandler.contentRight(), y);
         gridLinePath.lineTo(mViewPortHandler.contentLeft(), y);
 
-        // Draw a path because lines don't support dashing on lower android versions
+        // draw a path because lines don't support dashing on lower android versions
         c.drawPath(gridLinePath, mGridPaint);
 
         gridLinePath.reset();
@@ -269,20 +183,12 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
     @Override
     public void renderAxisLine(Canvas c) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!mXAxis.isDrawAxisLineEnabled() || !mXAxis.isEnabled())
             return;
 
         mAxisLinePaint.setColor(mXAxis.getAxisLineColor());
         mAxisLinePaint.setStrokeWidth(mXAxis.getAxisLineWidth());
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mXAxis.getPosition() == XAxisPosition.TOP
                 || mXAxis.getPosition() == XAxisPosition.TOP_INSIDE
                 || mXAxis.getPosition() == XAxisPosition.BOTH_SIDED) {
@@ -291,10 +197,6 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
                     mViewPortHandler.contentBottom(), mAxisLinePaint);
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mXAxis.getPosition() == XAxisPosition.BOTTOM
                 || mXAxis.getPosition() == XAxisPosition.BOTTOM_INSIDE
                 || mXAxis.getPosition() == XAxisPosition.BOTH_SIDED) {
@@ -316,10 +218,6 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
 
 		List<LimitLine> limitLines = mXAxis.getLimitLines();
 
-  /**
-   * Executes if operation with thermal imaging domain optimization.
-   *
-   */
 		if (limitLines == null || limitLines.size() <= 0)
 			return;
 
@@ -330,18 +228,10 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
 		Path limitLinePath = mRenderLimitLinesPathBuffer;
         limitLinePath.reset();
 
-  /**
-   * Executes for operation with thermal imaging domain optimization.
-   *
-   */
 		for (int i = 0; i < limitLines.size(); i++) {
 
 			LimitLine l = limitLines.get(i);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if(!l.isEnabled())
                 continue;
 
@@ -364,15 +254,11 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
 
 			c.drawPath(limitLinePath, mLimitLinePaint);
 			limitLinePath.reset();
-			// C.drawLines(pts, mLimitLinePaint);
+			// c.drawLines(pts, mLimitLinePaint);
 
 			String label = l.getLabel();
 
-			// If drawing the limit-value label is enabled
-   /**
-    * Executes if operation with thermal imaging domain optimization.
-    *
-    */
+			// if drawing the limit-value label is enabled
 			if (label != null && !label.equals("")) {
 
 				mLimitLinePaint.setStyle(l.getTextStyle());
@@ -387,10 +273,6 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
 
                 final LimitLine.LimitLabelPosition position = l.getLabelPosition();
 
-    /**
-     * Executes if operation with thermal imaging domain optimization.
-     *
-     */
 				if (position == LimitLine.LimitLabelPosition.RIGHT_TOP) {
 
 					mLimitLinePaint.setTextAlign(Align.RIGHT);

@@ -18,19 +18,10 @@ import com.topdon.module.thermal.ir.R
 option拾取 PopupWindow.
  *
  * Created by LCG on 2024/1/5.
+ */
 /**
- * Specialized thermal imaging component providing OptionPickPopup functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Option pick popup view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class OptionPickPopup(
     private val context: Context,
@@ -53,7 +44,7 @@ optiontext顶部或底部 padding，单位 ***dp***
     }
 
     /**
-aoption被selectedEventListener.
+一个option被selectedEventListener.
      */
     var onPickListener: ((position: Int, str: String) -> Unit)? = null
 
@@ -76,10 +67,6 @@ aoption被selectedEventListener.
 
         val adapter = MyAdapter()
         adapter.onItemClickListener = {
-            /**
-             * Executes dismiss operation with thermal imaging domain optimization.
-             *
-             */
             dismiss()
             onPickListener?.invoke(it, strArray[it])
         }
@@ -87,37 +74,15 @@ aoption被selectedEventListener.
         recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
-    /**
-     * Executes show functionality.
-     */
-    /**
-     * Executes show operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param anchor Parameter for operation (type: View)
-     *
-     */
     fun show(anchor: View) {
         val locationArray = IntArray(2)
         anchor.getLocationInWindow(locationArray)
 
         val x = locationArray[0] + anchor.width - width + SizeUtils.dp2px(5f)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (context.resources.displayMetrics.heightPixels - locationArray[1] - anchor.height > height - SizeUtils.dp2px(5f)) { // 在 anchor 底部放得下
-            /**
-             * Executes showatlocation operation with thermal imaging domain optimization.
-             *
-             */
             showAtLocation(anchor, Gravity.NO_GRAVITY, x, locationArray[1] + anchor.height - SizeUtils.dp2px(5f))
         } else { // 下area放不下就放上area吧
-            /**
-             * Executes showatlocation operation with thermal imaging domain optimization.
-             *
-             */
             showAtLocation(anchor, Gravity.NO_GRAVITY, x, (locationArray[1] - height + SizeUtils.dp2px(5f)).coerceAtLeast(0))
         }
     }
@@ -128,14 +93,6 @@ item clickEventListener.
          */
         var onItemClickListener: ((position: Int) -> Unit)? = null
 
-        /**
-         * Executes oncreateviewholder operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param parent Parameter for operation (type: ViewGroup)
-         * @param viewType Parameter for operation (type: Int)
-         *
-         */
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
@@ -150,23 +107,11 @@ item clickEventListener.
             return ViewHolder(textView)
         }
 
-        /**
-         * Executes onbindviewholder operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param holder Parameter for operation (type: ViewHolder)
-         * @param position Parameter for operation (type: Int)
-         *
-         */
         override fun onBindViewHolder(
             holder: ViewHolder,
             position: Int,
         ) {
             holder.textView.text = strArray[position]
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (resIdArray != null && position < resIdArray.size) {
                 holder.textView.setOnlyDrawableStart(resIdArray[position])
             } else {
@@ -174,20 +119,12 @@ item clickEventListener.
             }
         }
 
-        /**
-         * Retrieves the itemcount with optimized performance for thermal imaging operations.
-         *
-         */
         override fun getItemCount(): Int = strArray.size
 
         inner class ViewHolder(val textView: MyTextView) : RecyclerView.ViewHolder(textView) {
             init {
                 textView.setOnClickListener {
                     val position = bindingAdapterPosition
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (position != RecyclerView.NO_POSITION) {
                         onItemClickListener?.invoke(position)
                     }

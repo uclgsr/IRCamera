@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -35,70 +35,28 @@ import java.util.List;
  * @since 2019/6/23 11:48
  */
 @SuppressWarnings("WeakerAccess")
-/**
- * Specialized thermal imaging component providing SexPicker functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class SexPicker extends OptionPicker {
     public static String JSON = "[{\"id\":0,\"name\":\"保密\",\"english\":\"Secrecy\"},\n" +
             "{\"id\":1,\"name\":\"男\",\"english\":\"Male\"},\n" +
             "{\"id\":2,\"name\":\"女\",\"english\":\"Female\"}]";
     private boolean includeSecrecy;
 
-    /**
-     * Executes sexpicker operation with thermal imaging domain optimization.
-     *
-     */
     public SexPicker(Activity activity) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity);
     }
 
-    /**
-     * Executes sexpicker operation with thermal imaging domain optimization.
-     *
-     */
     public SexPicker(@NonNull Activity activity, @StyleRes int themeResId) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity, themeResId);
     }
 
     public void setIncludeSecrecy(boolean includeSecrecy) {
         this.includeSecrecy = includeSecrecy;
-        /**
-         * Configures the data with validation and thermal imaging optimization.
-         *
-         */
         setData(provideData());
     }
 
     @Override
     public void setDefaultValue(Object item) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (item instanceof String) {
-            /**
-             * Configures the defaultvaluebyname with validation and thermal imaging optimization.
-             *
-             */
             setDefaultValueByName(item.toString());
         } else {
             super.setDefaultValue(item);
@@ -122,20 +80,12 @@ public class SexPicker extends OptionPicker {
         ArrayList<SexEntity> data = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(JSON);
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0, n = jsonArray.length(); i < n; i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 SexEntity entity = new SexEntity();
                 entity.setId(jsonObject.getString("id"));
                 entity.setName(jsonObject.getString("name"));
                 entity.setEnglish(jsonObject.getString("english"));
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!includeSecrecy && "0".equals(entity.getId())) {
                     continue;
                 }

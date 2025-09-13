@@ -1,4 +1,3 @@
 <resources>
-    <!-- UI styling - app name -->
     <string name="app_name">Library</string>
 </resources>

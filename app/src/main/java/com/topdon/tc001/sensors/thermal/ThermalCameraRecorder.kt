@@ -54,23 +54,6 @@ import org.greenrobot.eventbus.ThreadMode
  * 
  * @author IRCamera Android Sensor Node (Spoke)
  */
-/**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with ThermalCameraRecorder functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class ThermalCameraRecorder(
     private val context: Context,
     override val sensorId: String = "thermal_camera_1",
@@ -141,10 +124,6 @@ class ThermalCameraRecorder(
             Log.i(TAG, "Initializing thermal camera for sensor $sensorId")
             
             // Register for USB device lifecycle events
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!EventBus.getDefault().isRegistered(this@ThermalCameraRecorder)) {
                 EventBus.getDefault().register(this@ThermalCameraRecorder)
             }
@@ -155,17 +134,9 @@ class ThermalCameraRecorder(
             // Scan for thermal camera devices and check permissions
             val deviceFound = scanForThermalCameraDevices()
             
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!deviceFound) {
                 Log.w(TAG, "No thermal cameras found, enabling simulation mode")
                 isSimulationMode = true
-                /**
-                 * Executes emiterror operation with thermal imaging domain optimization.
-                 *
-                 */
                 emitError(ErrorType.DEVICE_ERROR, "No thermal camera detected - using simulation mode")
                 
                 // Test simulation mode by generating a test frame
@@ -173,10 +144,6 @@ class ThermalCameraRecorder(
                     Log.i(TAG, "Testing simulation mode with sample thermal frame generation")
                     try {
                         val testFrame = generateTestThermalFrame()
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (testFrame != null) {
                             Log.i(TAG, "Simulation mode test successful - thermal frame generated with ${testFrame.temperatureMatrix.size}x${testFrame.temperatureMatrix[0].size} matrix")
                             Log.d(TAG, "Test frame temperature range: ${testFrame.minTemperature}°C to ${testFrame.maxTemperature}°C")
@@ -193,26 +160,14 @@ class ThermalCameraRecorder(
             
             // Check if we have USB permission for the detected device
             val device = thermalCameraDevice
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (device != null) {
                 hasUsbPermission = usbManager?.hasPermission(device) ?: false
                 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!hasUsbPermission) {
                     Log.w(TAG, "USB permission not granted for thermal camera")
                     Log.i(TAG, "Device info: VID=${device.vendorId.toString(16)}, PID=${device.productId.toString(16)}, Name=${device.productName}")
                     
                     // Request USB permission using existing infrastructure
-                    /**
-                     * Executes requestusbpermission operation with thermal imaging domain optimization.
-                     *
-                     */
                     requestUsbPermission(device)
                     
                     // Return true to allow initialization to complete
@@ -224,17 +179,9 @@ class ThermalCameraRecorder(
                 // Initialize real thermal camera with permission
                 val connectionSuccess = initializeRealThermalCamera(device)
                 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!connectionSuccess) {
                     Log.w(TAG, "Failed to initialize real thermal camera, enabling simulation mode")
                     isSimulationMode = true
-                    /**
-                     * Executes emiterror operation with thermal imaging domain optimization.
-                     *
-                     */
                     emitError(ErrorType.DEVICE_ERROR, "Thermal camera initialization failed - using simulation mode")
                     return@withContext true // Allow simulation mode
                 }
@@ -242,10 +189,6 @@ class ThermalCameraRecorder(
                 Log.i(TAG, "Real thermal camera initialized successfully")
             }
             
-            /**
-             * Executes emitstatus operation with thermal imaging domain optimization.
-             *
-             */
             emitStatus()
             return@withContext true
             
@@ -258,10 +201,6 @@ class ThermalCameraRecorder(
                 Log.i(TAG, "Testing simulation mode due to initialization failure")
                 try {
                     val testFrame = generateTestThermalFrame()
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (testFrame != null) {
                         Log.i(TAG, "Simulation mode ready - can generate thermal frames (${testFrame.temperatureMatrix.size}x${testFrame.temperatureMatrix[0].size})")
                     } else {
@@ -272,22 +211,11 @@ class ThermalCameraRecorder(
                 }
             }
             
-            /**
-             * Executes emiterror operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param failed Parameter for operation (type: ${e.message} - using simulation mode")
-             *
-             */
             emitError(ErrorType.INITIALIZATION_FAILED, "Thermal camera initialization failed: ${e.message} - using simulation mode")
             return@withContext true // Allow simulation mode for development
         }
     }
     
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
-     */
     private suspend fun scanForThermalCameraDevices(): Boolean = withContext(Dispatchers.IO) {
         try {
             Log.i(TAG, "Scanning for thermal camera devices")
@@ -297,18 +225,10 @@ class ThermalCameraRecorder(
             
             Log.i(TAG, "Found ${deviceList.size} USB devices, scanning for thermal cameras")
             
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (device in deviceList.values) {
                 Log.d(TAG, "Checking device: VID=${device.vendorId.toString(16)}, PID=${device.productId.toString(16)}, Name=${device.productName}")
                 
                 // Check if this is a supported thermal camera device
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (device.isTcTsDevice()) {
                     Log.i(TAG, "Found thermal camera device: ${device.productName} (VID=${device.vendorId.toString(16)}, PID=${device.productId.toString(16)})")
                     thermalCameraDevice = device
@@ -325,16 +245,6 @@ class ThermalCameraRecorder(
         }
     }
     
-    /**
-     * Executes requestUsbPermission functionality.
-     */
-    /**
-     * Executes requestusbpermission operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param device Parameter for operation (type: UsbDevice)
-     *
-     */
     private fun requestUsbPermission(device: UsbDevice) {
         Log.i(TAG, "Requesting USB permission for thermal camera device: ${device.productName}")
         
@@ -345,10 +255,6 @@ class ThermalCameraRecorder(
             // First, try to get activity from context 
             val activity = getActivityFromContext(context)
             
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (activity != null) {
                 Log.i(TAG, "Using Activity context for USB permission request")
                 DeviceTools.requestUsb(activity, 0, device)
@@ -365,21 +271,11 @@ class ThermalCameraRecorder(
             // Fall back to simulation mode if permission request fails
             isSimulationMode = true
             recordingScope.launch {
-                /**
-                 * Executes emiterror operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param mode Parameter for operation (type: ${e.message}")
-                 *
-                 */
                 emitError(ErrorType.DEVICE_ERROR, "USB permission request failed - using simulation mode: ${e.message}")
             }
         }
     }
     
-    /**
-     * Retrieves activityfromcontext information.
-     */
     private fun getActivityFromContext(context: Context): android.app.Activity? {
         return when (context) {
             is android.app.Activity -> context
@@ -388,10 +284,6 @@ class ThermalCameraRecorder(
             is android.content.ContextWrapper -> {
                 // Unwrap ContextWrapper to find underlying Activity
                 var unwrapped = context.baseContext
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (unwrapped is android.content.ContextWrapper && unwrapped !is android.app.Activity) {
                     unwrapped = unwrapped.baseContext
                 }
@@ -405,13 +297,6 @@ class ThermalCameraRecorder(
     }
 
     
-    /**
-     * Initializes the ializerealthermalcamera component for thermal imaging operations.
-     *
-     * @param
-     * @param device Parameter for operation (type: UsbDevice)
-     *
-     */
     private suspend fun initializeRealThermalCamera(device: UsbDevice): Boolean = withContext(Dispatchers.IO) {
         try {
             Log.i(TAG, "Initializing real thermal camera with USB device: ${device.productName}")
@@ -432,10 +317,6 @@ class ThermalCameraRecorder(
         }
     }
     
-    /**
-     * Initializes the ializerealircamera component for thermal imaging operations.
-     *
-     */
     private suspend fun initializeRealIRCamera(): Boolean = withContext(Dispatchers.IO) {
         try {
             Log.i(TAG, "Initializing real IR camera using simplified approach")
@@ -453,25 +334,8 @@ class ThermalCameraRecorder(
         }
     }
     
-    /**
-     * Executes processRealIRFrame functionality.
-     */
-    /**
-     * Executes processrealirframe operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param image Parameter for operation (type: ByteArray?)
-     * @param temperature Temperature value in Celsius (type: ByteArray?)
-     * @param width Parameter for operation (type: Int)
-     * @param height Parameter for operation (type: Int)
-     *
-     */
     private fun processRealIRFrame(image: ByteArray?, temperature: ByteArray?, width: Int, height: Int) {
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (temperature == null || !_isRecording.get()) {
                 return
             }
@@ -484,20 +348,12 @@ class ThermalCameraRecorder(
                 val thermalData = processRealThermalData(temperature, width, height)
                 
                 // Save real IR thermal data
-                /**
-                 * Executes saverealirthermaldata operation with thermal imaging domain optimization.
-                 *
-                 */
                 saveRealIRThermalData(
                     timestamp = timestamp,
                     frameNumber = frameNumber,
                     thermalData = thermalData
                 )
                 
-                /**
-                 * Executes emitstatus operation with thermal imaging domain optimization.
-                 *
-                 */
                 emitStatus()
             }
             
@@ -505,30 +361,11 @@ class ThermalCameraRecorder(
             Log.e(TAG, "Failed to process real IR thermal frame", e)
             // Emit error asynchronously since this is called from callback
             GlobalScope.launch {
-                /**
-                 * Executes emiterror operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param failed Parameter for operation (type: ${e.message}")
-                 *
-                 */
                 emitError(ErrorType.DATA_CORRUPTION, "IR thermal frame processing failed: ${e.message}")
             }
         }
     }
     
-    /**
-     * Executes processRealThermalData functionality.
-     */
-    /**
-     * Executes processrealthermaldata operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param temperatureBytes Temperature value in Celsius (type: ByteArray)
-     * @param width Parameter for operation (type: Int)
-     * @param height Parameter for operation (type: Int)
-     *
-     */
     private fun processRealThermalData(temperatureBytes: ByteArray, width: Int, height: Int): ThermalFrameData {
         // Process real thermal data from IR camera
         val temperatureMatrix = Array(height) { FloatArray(width) }
@@ -537,21 +374,9 @@ class ThermalCameraRecorder(
         var sumTemp = 0f
         
         // Convert byte array to temperature matrix (IR camera specific format)
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (y in 0 until height) {
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (x in 0 until width) {
                 val index = y * width + x
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (index * 2 + 1 < temperatureBytes.size) {
                     // IR camera uses 16-bit temperature data
                     val tempRaw = ((temperatureBytes[index * 2].toInt() and 0xFF) or 
@@ -584,24 +409,11 @@ class ThermalCameraRecorder(
         )
     }
     
-    /**
-     * Executes saverealirthermaldata operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param timestamp Parameter for operation (type: Long)
-     * @param frameNumber Parameter for operation (type: Long)
-     * @param thermalData Parameter for operation (type: ThermalFrameData     )
-     *
-     */
     private suspend fun saveRealIRThermalData(
         timestamp: Long,
         frameNumber: Long,
         thermalData: ThermalFrameData
     ) {
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
         try {
             // Write thermal summary data to CSV
@@ -620,22 +432,10 @@ class ThermalCameraRecorder(
             
             // Write full temperature matrix from real IR camera data
             val frameData = mutableListOf<String>().apply {
-                /**
-                 * Executes add operation with thermal imaging domain optimization.
-                 *
-                 */
                 add(timestamp.toString())
-                /**
-                 * Executes add operation with thermal imaging domain optimization.
-                 *
-                 */
                 add(frameNumber.toString())
                 thermalData.temperatureMatrix.forEach { row ->
                     row.forEach { temp ->
-                        /**
-                         * Executes add operation with thermal imaging domain optimization.
-                         *
-                         */
                         add("%.2f".format(temp))
                     }
                 }
@@ -643,10 +443,6 @@ class ThermalCameraRecorder(
             framesCsvWriter?.writeNext(frameData.toTypedArray())
             
             // Flush data periodically
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (frameNumber % 30 == 0L) { // Every 30 frames (~3 seconds at 9 FPS)
                 csvWriter?.flush()
                 framesCsvWriter?.flush()
@@ -657,13 +453,6 @@ class ThermalCameraRecorder(
             Log.e(TAG, "Failed to save real IR thermal data", e)
             // Emit error asynchronously since this is called from data processing
             GlobalScope.launch {
-                /**
-                 * Executes emiterror operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param failed Parameter for operation (type: ${e.message}")
-                 *
-                 */
                 emitError(ErrorType.STORAGE_ERROR, "IR thermal data saving failed: ${e.message}")
             }
         }
@@ -683,10 +472,6 @@ class ThermalCameraRecorder(
 
     override suspend fun startRecording(sessionDirectory: String): Boolean = withContext(Dispatchers.IO) {
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (_isRecording.get()) {
                 Log.w(TAG, "Thermal camera already recording")
                 return@withContext true
@@ -696,55 +481,27 @@ class ThermalCameraRecorder(
             recordingStartTime = System.nanoTime()
             
             // Create output files
-            /**
-             * Configures the upoutputfiles with validation and thermal imaging optimization.
-             *
-             */
             setupOutputFiles()
             
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSimulationMode) {
                 Log.i(TAG, "Starting thermal recording in simulation mode")
-                /**
-                 * Executes startsimulatedthermalrecording operation with thermal imaging domain optimization.
-                 *
-                 */
                 startSimulatedThermalRecording()
             } else {
                 // Start real thermal capture using existing implementation
                 val thermalCamera = iruvctc
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (thermalCamera != null && isIRCameraConnected && hasUsbPermission) {
                     Log.i(TAG, "Starting real thermal capture")
                     
                     val startSuccess = try {
-                        /**
-                         * Manages thermal camera operations with hardware-optimized performance and error handling.
-                         *
-                         */
                         startRealIRCameraRecording(thermalCamera)
                     } catch (e: Exception) {
                         Log.e(TAG, "Failed to start thermal camera recording", e)
                         false
                     }
                     
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (!startSuccess) {
                         Log.w(TAG, "Failed to start real thermal streaming, switching to simulation mode")
                         isSimulationMode = true
-                        /**
-                         * Executes startsimulatedthermalrecording operation with thermal imaging domain optimization.
-                         *
-                         */
                         startSimulatedThermalRecording()
                     } else {
                         Log.i(TAG, "Real thermal streaming started successfully")
@@ -753,10 +510,6 @@ class ThermalCameraRecorder(
                 } else {
                     Log.w(TAG, "Thermal camera not ready (connected: $isIRCameraConnected, permission: $hasUsbPermission), using simulation mode")
                     isSimulationMode = true
-                    /**
-                     * Executes startsimulatedthermalrecording operation with thermal imaging domain optimization.
-                     *
-                     */
                     startSimulatedThermalRecording()
                 }
             }
@@ -765,39 +518,20 @@ class ThermalCameraRecorder(
             frameCount.set(0)
             
             Log.i(TAG, "Thermal camera recording started (simulation: $isSimulationMode)")
-            /**
-             * Executes emitstatus operation with thermal imaging domain optimization.
-             *
-             */
             emitStatus()
             return@withContext true
             
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start thermal camera recording", e)
-            /**
-             * Executes emiterror operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param recording Parameter for operation (type: ${e.message}")
-             *
-             */
             emitError(ErrorType.RECORDING_FAILED, "Failed to start thermal recording: ${e.message}")
             return@withContext false
         }
     }
     
-    /**
-     * Executes startsimulatedthermalrecording operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun startSimulatedThermalRecording() = withContext(Dispatchers.IO) {
         Log.i(TAG, "Starting simulated thermal data generation")
         
         // Verify simulation mode is enabled and validate setup
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isSimulationMode) {
             Log.w(TAG, "startSimulatedThermalRecording called but simulation mode is disabled")
             return@withContext
@@ -805,17 +539,9 @@ class ThermalCameraRecorder(
         
         // Test frame generation before starting recording loop
         val testFrame = generateTestThermalFrame()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (testFrame == null) {
             Log.e(TAG, "Simulation mode setup failed - cannot generate test frames")
             recordingScope.launch {
-                /**
-                 * Executes emiterror operation with thermal imaging domain optimization.
-                 *
-                 */
                 emitError(ErrorType.DEVICE_ERROR, "Simulation mode setup failed - thermal frame generation not working")
             }
             return@withContext
@@ -831,57 +557,29 @@ class ThermalCameraRecorder(
             var consecutiveFailures = 0
             val maxConsecutiveFailures = 5
             
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (_isRecording.get() && isSimulationMode) {
                 try {
-                    /**
-                     * Executes generatesimulatedthermalframe operation with thermal imaging domain optimization.
-                     *
-                     */
                     generateSimulatedThermalFrame()
                     consecutiveFailures = 0 // Reset failure counter on success
                     
                     // Log progress every 30 frames for debugging
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (frameCount.get() % 30 == 0L) {
                         Log.d(TAG, "Simulation mode: generated ${frameCount.get()} thermal frames (${String.format("%.1f", frameCount.get() / (thermalFrameRate * (System.nanoTime() - recordingStartTime) / 1_000_000_000.0)}s)")
                     }
                     
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(frameInterval) // Maintain proper frame rate
                     
                 } catch (e: Exception) {
                     consecutiveFailures++
                     Log.e(TAG, "Error generating simulated thermal frame (failure #$consecutiveFailures)", e)
                     
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (consecutiveFailures >= maxConsecutiveFailures) {
                         Log.e(TAG, "Too many consecutive simulation failures ($consecutiveFailures), stopping simulation")
-                        /**
-                         * Executes emiterror operation with thermal imaging domain optimization.
-                         *
-                         */
                         emitError(ErrorType.DEVICE_ERROR, "Simulation mode failed repeatedly - stopping thermal recording")
                         break
                     }
                     
                     // Brief delay before retry
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(100)
                 }
             }
@@ -890,10 +588,6 @@ class ThermalCameraRecorder(
         }
     }
     
-    /**
-     * Executes generatesimulatedthermalframe operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun generateSimulatedThermalFrame() = withContext(Dispatchers.IO) {
         val timestamp = System.nanoTime()
         val frameNumber = frameCount.incrementAndGet()
@@ -909,15 +603,7 @@ class ThermalCameraRecorder(
         val centerY = thermalResolution.second / 2
         val baseTemp = 25.0f + (frameNumber % 100) * 0.1f // Slowly varying base temperature
         
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (y in 0 until thermalResolution.second) {
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (x in 0 until thermalResolution.first) {
                 // Create a temperature gradient from center
                 val dx = (x - centerX).toFloat()
@@ -950,32 +636,16 @@ class ThermalCameraRecorder(
         )
         
         // Save simulated thermal data
-        /**
-         * Executes saverealirthermaldata operation with thermal imaging domain optimization.
-         *
-         */
         saveRealIRThermalData(timestamp, frameNumber, thermalData)
         
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (frameNumber % 30 == 0L) {
             Log.d(TAG, "Generated simulated thermal frame #$frameNumber (temp range: ${minTemp.format(2)} - ${maxTemp.format(2)}°C)")
         }
         
-        /**
-         * Executes emitstatus operation with thermal imaging domain optimization.
-         *
-         */
         emitStatus()
     }
     
     
-    /**
-     * Executes generatetestthermalframe operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun generateTestThermalFrame(): ThermalFrameData? = withContext(Dispatchers.IO) {
         return@withContext try {
             // Generate a simple test thermal data matrix to verify simulation mode works
@@ -987,15 +657,7 @@ class ThermalCameraRecorder(
             // Create a simple temperature pattern for testing
             val baseTemp = 25.0f // Room temperature baseline
             
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (y in 0 until thermalResolution.second) {
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (x in 0 until thermalResolution.first) {
                     // Simple gradient pattern
                     val temp = baseTemp + (x * 0.05f) + (y * 0.02f)
@@ -1010,10 +672,6 @@ class ThermalCameraRecorder(
             val avgTemp = sumTemp / (thermalResolution.first * thermalResolution.second)
             val centerTemp = temperatureMatrix[thermalResolution.second / 2][thermalResolution.first / 2]
             
-            /**
-             * Executes thermalframedata operation with thermal imaging domain optimization.
-             *
-             */
             ThermalFrameData(
                 temperatureMatrix = temperatureMatrix,
                 minTemperature = minTemp,
@@ -1030,18 +688,8 @@ class ThermalCameraRecorder(
         }
     }
     
-    /**
-     * Executes Float functionality.
-     */
     private fun Float.format(digits: Int) = "%.${digits}f".format(this)
     
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
-     * @param
-     * @param irCamera Camera configuration or reference (type: IRUVCTC)
-     *
-     */
     private suspend fun startRealIRCameraRecording(irCamera: IRUVCTC): Boolean {
         return try {
             // Start preview/recording on the real IR camera
@@ -1059,10 +707,6 @@ class ThermalCameraRecorder(
     
     override suspend fun stopRecording(): Boolean {
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!_isRecording.get()) {
                 Log.w(TAG, "Real IR thermal camera not recording")
                 return true
@@ -1070,28 +714,16 @@ class ThermalCameraRecorder(
             
             // Stop real IR thermal streaming using existing implementation
             val irCamera = iruvctc
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (irCamera != null && isIRCameraConnected) {
                 Log.i(TAG, "Stopping real IR thermal streaming")
                 
                 val stopSuccess = try {
-                    /**
-                     * Manages thermal camera operations with hardware-optimized performance and error handling.
-                     *
-                     */
                     stopRealIRCameraRecording(irCamera)
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to stop IR camera recording", e)
                     false
                 }
                 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!stopSuccess) {
                     Log.w(TAG, "Failed to stop IR thermal streaming gracefully")
                 } else {
@@ -1108,34 +740,16 @@ class ThermalCameraRecorder(
             framesCsvWriter = null
             
             Log.i(TAG, "Real IR thermal camera recording stopped")
-            /**
-             * Executes emitstatus operation with thermal imaging domain optimization.
-             *
-             */
             emitStatus()
             return true
             
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stop real IR thermal camera recording", e)
-            /**
-             * Executes emiterror operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param recording Parameter for operation (type: ${e.message}")
-             *
-             */
             emitError(ErrorType.RECORDING_FAILED, "Failed to stop real IR recording: ${e.message}")
             return false
         }
     }
     
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
-     * @param
-     * @param irCamera Camera configuration or reference (type: IRUVCTC)
-     *
-     */
     private suspend fun stopRealIRCameraRecording(irCamera: IRUVCTC): Boolean {
         return try {
             // Stop preview/recording on the real IR camera
@@ -1151,10 +765,6 @@ class ThermalCameraRecorder(
         }
     }
 
-    /**
-     * Configures the upoutputfiles with validation and thermal imaging optimization.
-     *
-     */
     private suspend fun setupOutputFiles() {
         // Create thermal data CSV file
         thermalDataFile = File(sessionDirectory, THERMAL_DATA_FILENAME)
@@ -1184,17 +794,9 @@ class ThermalCameraRecorder(
         framesCsvWriter?.writeNext(framesHeader.toTypedArray())
         
         // Write calibration data
-        /**
-         * Executes writethermalcalibration operation with thermal imaging domain optimization.
-         *
-         */
         writeThermalCalibration()
     }
 
-    /**
-     * Executes writethermalcalibration operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun writeThermalCalibration() {
         val calibrationFile = File(sessionDirectory, CALIBRATION_FILENAME)
         val deviceInfo = if (isSimulationMode) {
@@ -1257,36 +859,17 @@ class ThermalCameraRecorder(
             
         } catch (e: Exception) {
             Log.w(TAG, "Failed to add IR thermal sync marker", e)
-            /**
-             * Executes emiterror operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param failed Parameter for operation (type: ${e.message}")
-             *
-             */
             emitError(ErrorType.SYNC_FAILED, "IR thermal sync marker failed: ${e.message}")
         }
     }
 
     override suspend fun cleanup() {
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (_isRecording.get()) {
-                /**
-                 * Executes stoprecording operation with thermal imaging domain optimization.
-                 *
-                 */
                 stopRecording()
             }
             
             // Unregister from USB device lifecycle events
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (EventBus.getDefault().isRegistered(this@ThermalCameraRecorder)) {
                 EventBus.getDefault().unregister(this@ThermalCameraRecorder)
             }
@@ -1311,36 +894,14 @@ class ThermalCameraRecorder(
      * Handle USB device connection events from EventBus (via existing DeviceBroadcastReceiver)
      */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    /**
-     * Executes onDeviceConnectEvent functionality.
-     */
-    /**
-     * Executes ondeviceconnectevent operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: DeviceConnectEvent)
-     *
-     */
     fun onDeviceConnectEvent(event: DeviceConnectEvent) {
         try {
             Log.d(TAG, "USB device connection event: connected=${event.isConnect}, device=${event.device?.productName}")
             
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (event.isConnect) {
                 val connectedDevice = event.device
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (connectedDevice != null) {
                     // Check if this is a thermal camera device
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (connectedDevice.isTcTsDevice()) {
                         Log.i(TAG, "Thermal camera device connected with permission: ${connectedDevice.productName}")
                         
@@ -1352,17 +913,9 @@ class ThermalCameraRecorder(
                             // Try to initialize real thermal camera
                             val success = initializeRealThermalCamera(connectedDevice)
                             
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (success) {
                                 isSimulationMode = false
                                 Log.i(TAG, "Successfully switched to real thermal camera from device connect event")
-                                /**
-                                 * Executes emitstatus operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 emitStatus()
                             } else {
                                 Log.w(TAG, "Failed to initialize thermal camera from device connect event")
@@ -1375,10 +928,6 @@ class ThermalCameraRecorder(
             } else {
                 // Device disconnected - handled by DeviceBroadcastReceiver
                 val disconnectedDevice = thermalCameraDevice
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (disconnectedDevice != null) {
                     Log.w(TAG, "Thermal camera device disconnected, switching to simulation mode")
                     
@@ -1390,28 +939,12 @@ class ThermalCameraRecorder(
                         thermalCameraDevice = null
                         
                         // If recording, continue in simulation mode
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (_isRecording.get()) {
                             Log.i(TAG, "Continuing recording in simulation mode after device disconnect")
-                            /**
-                             * Executes startsimulatedthermalrecording operation with thermal imaging domain optimization.
-                             *
-                             */
                             startSimulatedThermalRecording()
                         }
                         
-                        /**
-                         * Executes emiterror operation with thermal imaging domain optimization.
-                         *
-                         */
                         emitError(ErrorType.DEVICE_ERROR, "Thermal camera disconnected - switched to simulation mode")
-                        /**
-                         * Executes emitstatus operation with thermal imaging domain optimization.
-                         *
-                         */
                         emitStatus()
                     }
                 }
@@ -1426,52 +959,26 @@ class ThermalCameraRecorder(
      * Handle USB permission events from EventBus (via existing DeviceBroadcastReceiver)
      */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    /**
-     * Executes onDevicePermissionEvent functionality.
-     */
-    /**
-     * Executes ondevicepermissionevent operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: DevicePermissionEvent)
-     *
-     */
     fun onDevicePermissionEvent(event: DevicePermissionEvent) {
         try {
             val device = event.device
             Log.d(TAG, "USB permission event for device: ${device?.productName}")
             
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (device != null && device.isTcTsDevice()) {
                 Log.i(TAG, "Processing USB permission event for thermal camera device")
                 
                 // Check if permission was granted by checking UsbManager
                 val manager = usbManager
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (manager != null) {
                     val permissionGranted = manager.hasPermission(device)
                     Log.i(TAG, "USB permission check result: granted=$permissionGranted")
                     
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (permissionGranted) {
                         recordingScope.launch {
                             thermalCameraDevice = device
                             hasUsbPermission = true
                             
                             val success = initializeRealThermalCamera(device)
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (success) {
                                 isSimulationMode = false
                                 Log.i(TAG, "Thermal camera initialized successfully after permission granted")
@@ -1479,20 +986,12 @@ class ThermalCameraRecorder(
                                 Log.w(TAG, "Failed to initialize thermal camera after permission granted")
                                 isSimulationMode = true
                             }
-                            /**
-                             * Executes emitstatus operation with thermal imaging domain optimization.
-                             *
-                             */
                             emitStatus()
                         }
                     } else {
                         Log.w(TAG, "USB permission denied for thermal camera, using simulation mode")
                         isSimulationMode = true
                         recordingScope.launch {
-                            /**
-                             * Executes emiterror operation with thermal imaging domain optimization.
-                             *
-                             */
                             emitError(ErrorType.DEVICE_ERROR, "USB permission denied - using simulation mode")
                         }
                     }
@@ -1504,21 +1003,9 @@ class ThermalCameraRecorder(
         }
     }
 
-    /**
-     * Retrieves the statusflow with optimized performance for thermal imaging operations.
-     *
-     */
     override fun getStatusFlow(): Flow<RecordingStatus> = _statusFlow.asSharedFlow()
-    /**
-     * Retrieves the errorflow with optimized performance for thermal imaging operations.
-     *
-     */
     override fun getErrorFlow(): Flow<SensorError> = _errorFlow.asSharedFlow()
 
-    /**
-     * Retrieves the recordingstats with optimized performance for thermal imaging operations.
-     *
-     */
     override fun getRecordingStats(): RecordingStats {
         val currentTime = System.nanoTime()
         val sessionDuration = if (recordingStartTime > 0) (currentTime - recordingStartTime) / 1_000_000 else 0L
@@ -1536,35 +1023,17 @@ class ThermalCameraRecorder(
         )
     }
 
-    /**
-     * Executes calculateStorageUsed functionality.
-     */
-    /**
-     * Executes calculatestorageused operation with thermal imaging domain optimization.
-     *
-     */
     private fun calculateStorageUsed(): Double {
         val dataSize = thermalDataFile?.length() ?: 0L
         val framesSize = thermalFramesFile?.length() ?: 0L
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (dataSize + framesSize) / (1024.0 * 1024.0)
     }
 
-    /**
-     * Retrieves syncmarkercount information.
-     */
     private fun getSyncMarkerCount(): Int {
         // Count sync markers in the CSV file (would require parsing in real implementation)
         return 0 // Simplified for now
     }
 
-    /**
-     * Executes emitstatus operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun emitStatus() {
         val status = RecordingStatus(
             sensorId = sensorId,
@@ -1578,15 +1047,6 @@ class ThermalCameraRecorder(
         _statusFlow.emit(status)
     }
 
-    /**
-     * Executes emiterror operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param errorType Parameter for operation (type: ErrorType)
-     * @param message Parameter for operation (type: String)
-     * @param isRecoverable Parameter for operation (type: Boolean = true)
-     *
-     */
     private suspend fun emitError(errorType: ErrorType, message: String, isRecoverable: Boolean = true) {
         val error = SensorError(
             sensorId = sensorId,

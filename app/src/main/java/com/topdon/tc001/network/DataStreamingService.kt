@@ -10,18 +10,8 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * Specialized thermal imaging component providing DataStreamingService functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Real-time data streaming service for sending sensor data to PC Controller
+ * Handles buffering, batching, and reliable delivery of sensor measurements
  */
 class DataStreamingService(
     private val context: Context,
@@ -56,84 +46,28 @@ class DataStreamingService(
         val x: Int,
         val y: Int,
         val sessionId: String,
-/**
- * Specialized thermal imaging component providing StreamingEventListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+    )
+
+    data class VideoMetadata(
+        val timestamp: Long,
+        val frameIndex: Long,
+        val frameSize: Int,
+        val sessionId: String,
+        val cameraType: String, // "rgb" or "thermal"
+    )
+
     interface StreamingEventListener {
-    /**
-     * Executes onStreamingStarted functionality.
-     */
-        /**
-         * Executes onstreamingstarted operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param sessionId Parameter for operation (type: String)
-         *
-         */
         fun onStreamingStarted(sessionId: String)
 
-    /**
-     * Executes onStreamingStopped functionality.
-     */
-        /**
-         * Executes onstreamingstopped operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param sessionId Parameter for operation (type: String)
-         *
-         */
         fun onStreamingStopped(sessionId: String)
 
-    /**
-     * Executes onBatchSent functionality.
-     */
-        /**
-         * Executes onbatchsent operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param batchSize Parameter for operation (type: Int)
-         * @param dataType Parameter for operation (type: String)
-         *
-         */
         fun onBatchSent(
             batchSize: Int,
             dataType: String,
         )
 
-    /**
-     * Executes onStreamingError functionality.
-     */
-        /**
-         * Executes onstreamingerror operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param error Parameter for operation (type: String)
-         *
-         */
         fun onStreamingError(error: String)
 
-    /**
-     * Executes onQueueFull functionality.
-     */
-        /**
-         * Executes onqueuefull operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param dataType Parameter for operation (type: String)
-         * @param droppedSamples Parameter for operation (type: Int)
-         *
-         */
         fun onQueueFull(
             dataType: String,
             droppedSamples: Int,
@@ -142,9 +76,6 @@ class DataStreamingService(
 
     private var eventListener: StreamingEventListener? = null
 
-    /**
-     * Sets eventlistener configuration.
-     */
     fun setEventListener(listener: StreamingEventListener?) {
         eventListener = listener
     }
@@ -159,10 +90,6 @@ class DataStreamingService(
                 return@withContext false
             }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!networkClient.isConnected()) {
                 Log.w(TAG, "Cannot start streaming - not connected to PC Controller")
                 return@withContext false
@@ -174,34 +101,18 @@ class DataStreamingService(
                 isConnected.set(true)
 
                 // Clear any existing queued data
-                /**
-                 * Executes clearqueues operation with thermal imaging domain optimization.
-                 *
-                 */
                 clearQueues()
 
                 // Start the batching and sending process
-                /**
-                 * Executes startbatchingprocess operation with thermal imaging domain optimization.
-                 *
-                 */
                 startBatchingProcess()
 
                 // Notify PC Controller that streaming started
                 val success = networkClient.startDataStreaming()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     eventListener?.onStreamingStarted(sessionId)
                     Log.i(TAG, "Data streaming started for session: $sessionId")
                     true
                 } else {
-                    /**
-                     * Executes stopstreaming operation with thermal imaging domain optimization.
-                     *
-                     */
                     stopStreaming()
                     false
                 }
@@ -230,10 +141,6 @@ class DataStreamingService(
                 batchingJob = null
 
                 // Send any remaining batched data
-                /**
-                 * Executes sendremainingdata operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendRemainingData()
 
                 // Notify PC Controller that streaming stopped
@@ -242,10 +149,6 @@ class DataStreamingService(
                 val sessionId = currentSessionId
                 currentSessionId = null
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sessionId != null) {
                     eventListener?.onStreamingStopped(sessionId)
                 }
@@ -264,17 +167,9 @@ class DataStreamingService(
     fun queueGSRSample(sample: GSRSample) {
         if (!isStreaming.get()) return
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (gsrQueue.size >= MAX_QUEUE_SIZE) {
             // Drop oldest samples to prevent memory overflow
             val dropped = minOf(BATCH_SIZE, gsrQueue.size / 2)
-            /**
-             * Executes repeat operation with thermal imaging domain optimization.
-             *
-             */
             repeat(dropped) { gsrQueue.poll() }
             eventListener?.onQueueFull("GSR", dropped)
             Log.w(TAG, "GSR queue full, dropped $dropped samples")
@@ -289,16 +184,8 @@ class DataStreamingService(
     fun queueThermalSample(sample: ThermalSample) {
         if (!isStreaming.get()) return
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (thermalQueue.size >= MAX_QUEUE_SIZE) {
             val dropped = minOf(BATCH_SIZE, thermalQueue.size / 2)
-            /**
-             * Executes repeat operation with thermal imaging domain optimization.
-             *
-             */
             repeat(dropped) { thermalQueue.poll() }
             eventListener?.onQueueFull("Thermal", dropped)
             Log.w(TAG, "Thermal queue full, dropped $dropped samples")
@@ -313,16 +200,8 @@ class DataStreamingService(
     fun queueVideoMetadata(metadata: VideoMetadata) {
         if (!isStreaming.get()) return
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (videoMetadataQueue.size >= MAX_QUEUE_SIZE) {
             val dropped = minOf(BATCH_SIZE, videoMetadataQueue.size / 2)
-            /**
-             * Executes repeat operation with thermal imaging domain optimization.
-             *
-             */
             repeat(dropped) { videoMetadataQueue.poll() }
             eventListener?.onQueueFull("VideoMetadata", dropped)
             Log.w(TAG, "Video metadata queue full, dropped $dropped samples")
@@ -331,79 +210,32 @@ class DataStreamingService(
         videoMetadataQueue.offer(metadata)
     }
 
-    /**
-     * Executes startBatchingProcess functionality.
-     */
-    /**
-     * Executes startbatchingprocess operation with thermal imaging domain optimization.
-     *
-     */
     private fun startBatchingProcess() {
         batchingJob =
             streamingScope.launch {
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (isStreaming.get() && isActive) {
                     try {
                         // Process GSR batches
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (gsrQueue.size >= BATCH_SIZE) {
-                            /**
-                             * Executes sendgsrbatch operation with thermal imaging domain optimization.
-                             *
-                             */
                             sendGSRBatch()
                         }
 
                         // Process thermal batches
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (thermalQueue.size >= BATCH_SIZE) {
-                            /**
-                             * Executes sendthermalbatch operation with thermal imaging domain optimization.
-                             *
-                             */
                             sendThermalBatch()
                         }
 
                         // Process video metadata batches
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (videoMetadataQueue.size >= BATCH_SIZE) {
-                            /**
-                             * Executes sendvideometadatabatch operation with thermal imaging domain optimization.
-                             *
-                             */
                             sendVideoMetadataBatch()
                         }
 
                         // Timeout-based batching for partial batches
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(BATCH_TIMEOUT_MS)
                     } catch (e: Exception) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isActive) {
                             Log.e(TAG, "Error in batching process", e)
                             eventListener?.onStreamingError("Batching error: ${e.message}")
-                            /**
-                             * Executes delay operation with thermal imaging domain optimization.
-                             *
-                             */
                             delay(1000) // Wait before retrying
                         }
                     }
@@ -411,112 +243,52 @@ class DataStreamingService(
             }
     }
 
-    /**
-     * Executes sendgsrbatch operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun sendGSRBatch() {
         val batch = mutableListOf<GSRSample>()
-        /**
-         * Executes repeat operation with thermal imaging domain optimization.
-         *
-         */
         repeat(minOf(BATCH_SIZE, gsrQueue.size)) {
             gsrQueue.poll()?.let { batch.add(it) }
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (batch.isNotEmpty()) {
             val batchData = createGSRBatchJson(batch)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (sendBatchWithRetry(batchData, "gsr")) {
                 eventListener?.onBatchSent(batch.size, "GSR")
             }
         }
     }
 
-    /**
-     * Executes sendthermalbatch operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun sendThermalBatch() {
         val batch = mutableListOf<ThermalSample>()
-        /**
-         * Executes repeat operation with thermal imaging domain optimization.
-         *
-         */
         repeat(minOf(BATCH_SIZE, thermalQueue.size)) {
             thermalQueue.poll()?.let { batch.add(it) }
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (batch.isNotEmpty()) {
             val batchData = createThermalBatchJson(batch)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (sendBatchWithRetry(batchData, "thermal")) {
                 eventListener?.onBatchSent(batch.size, "Thermal")
             }
         }
     }
 
-    /**
-     * Executes sendvideometadatabatch operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun sendVideoMetadataBatch() {
         val batch = mutableListOf<VideoMetadata>()
-        /**
-         * Executes repeat operation with thermal imaging domain optimization.
-         *
-         */
         repeat(minOf(BATCH_SIZE, videoMetadataQueue.size)) {
             videoMetadataQueue.poll()?.let { batch.add(it) }
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (batch.isNotEmpty()) {
             val batchData = createVideoMetadataBatchJson(batch)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (sendBatchWithRetry(batchData, "video_metadata")) {
                 eventListener?.onBatchSent(batch.size, "VideoMetadata")
             }
         }
     }
 
-    /**
-     * Executes sendbatchwithretry operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param batchData Parameter for operation (type: JSONObject)
-     * @param dataType Parameter for operation (type: String)
-     *
-     */
     private suspend fun sendBatchWithRetry(
         batchData: JSONObject,
         dataType: String,
     ): Boolean {
-        /**
-         * Executes repeat operation with thermal imaging domain optimization.
-         *
-         */
         repeat(RETRY_ATTEMPTS) { attempt ->
             try {
                 val success =
@@ -524,24 +296,12 @@ class DataStreamingService(
                         currentSessionId ?: "unknown",
                         batchData,
                     )
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     return true
                 }
             } catch (e: Exception) {
                 Log.w(TAG, "Batch send attempt ${attempt + 1} failed for $dataType", e)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (attempt < RETRY_ATTEMPTS - 1) {
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(RETRY_DELAY_MS)
                 }
             }
@@ -552,284 +312,91 @@ class DataStreamingService(
         return false
     }
 
-    /**
-     * Executes createGSRBatchJson functionality.
-     */
-    /**
-     * Executes creategsrbatchjson operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param samples Parameter for operation (type: List<GSRSample>)
-     *
-     */
     private fun createGSRBatchJson(samples: List<GSRSample>): JSONObject {
         val samplesArray = JSONArray()
         samples.forEach { sample ->
             val sampleJson =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("timestamp", sample.timestamp)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("sample_index", sample.sampleIndex)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("gsr_microsiemens", sample.conductance)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("gsr_raw", sample.rawValue)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("resistance", sample.resistance)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", sample.sessionId)
                 }
             samplesArray.put(sampleJson)
         }
 
         return JSONObject().apply {
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("data_type", "gsr_batch")
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("batch_size", samples.size)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("samples", samplesArray)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("synchronized_timestamp", networkClient.getSynchronizedTimestamp())
         }
     }
 
-    /**
-     * Executes createThermalBatchJson functionality.
-     */
-    /**
-     * Executes createthermalbatchjson operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param samples Parameter for operation (type: List<ThermalSample>)
-     *
-     */
     private fun createThermalBatchJson(samples: List<ThermalSample>): JSONObject {
         val samplesArray = JSONArray()
         samples.forEach { sample ->
             val sampleJson =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("timestamp", sample.timestamp)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("frame_index", sample.frameIndex)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("temperature", sample.temperature)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("x", sample.x)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("y", sample.y)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", sample.sessionId)
                 }
             samplesArray.put(sampleJson)
         }
 
         return JSONObject().apply {
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("data_type", "thermal_batch")
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("batch_size", samples.size)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("samples", samplesArray)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("synchronized_timestamp", networkClient.getSynchronizedTimestamp())
         }
     }
 
-    /**
-     * Executes createVideoMetadataBatchJson functionality.
-     */
-    /**
-     * Executes createvideometadatabatchjson operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param samples Parameter for operation (type: List<VideoMetadata>)
-     *
-     */
     private fun createVideoMetadataBatchJson(samples: List<VideoMetadata>): JSONObject {
         val samplesArray = JSONArray()
         samples.forEach { sample ->
             val sampleJson =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("timestamp", sample.timestamp)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("frame_index", sample.frameIndex)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("frame_size", sample.frameSize)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", sample.sessionId)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("camera_type", sample.cameraType)
                 }
             samplesArray.put(sampleJson)
         }
 
         return JSONObject().apply {
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("data_type", "video_metadata_batch")
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("batch_size", samples.size)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("samples", samplesArray)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("synchronized_timestamp", networkClient.getSynchronizedTimestamp())
         }
     }
 
-    /**
-     * Executes sendremainingdata operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun sendRemainingData() {
         // Send any remaining GSR data
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (gsrQueue.isNotEmpty()) {
-            /**
-             * Executes sendgsrbatch operation with thermal imaging domain optimization.
-             *
-             */
             sendGSRBatch()
         }
 
         // Send any remaining thermal data
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (thermalQueue.isNotEmpty()) {
-            /**
-             * Executes sendthermalbatch operation with thermal imaging domain optimization.
-             *
-             */
             sendThermalBatch()
         }
 
         // Send any remaining video metadata
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (videoMetadataQueue.isNotEmpty()) {
-            /**
-             * Executes sendvideometadatabatch operation with thermal imaging domain optimization.
-             *
-             */
             sendVideoMetadataBatch()
         }
     }
 
-    /**
-     * Executes clearQueues functionality.
-     */
-    /**
-     * Executes clearqueues operation with thermal imaging domain optimization.
-     *
-     */
     private fun clearQueues() {
         gsrQueue.clear()
         thermalQueue.clear()
@@ -855,30 +422,14 @@ class DataStreamingService(
     /**
      * Clean up resources
      */
-    /**
-     * Executes cleanup operation with thermal imaging domain optimization.
-     *
-     */
     fun cleanup() {
         runBlocking {
             // Stop streaming and wait for completion before canceling job
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isStreaming.get()) {
-                /**
-                 * Executes stopstreaming operation with thermal imaging domain optimization.
-                 *
-                 */
                 stopStreaming()
             }
         }
         streamingJob.cancel()
-        /**
-         * Executes clearqueues operation with thermal imaging domain optimization.
-         *
-         */
         clearQueues()
         eventListener = null
     }

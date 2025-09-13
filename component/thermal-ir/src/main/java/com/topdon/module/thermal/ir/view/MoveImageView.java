@@ -11,75 +11,26 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 
 @SuppressLint("AppCompatCustomView")
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for MoveImageView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class MoveImageView extends ImageView {
 
     private static final String TAG = "MoveImageView";
     private float mPreX;
     private float mPreY;
 
-    /**
-     * Executes moveimageview operation with thermal imaging domain optimization.
-     *
-     */
     public MoveImageView(Context context) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this(context, null);
     }
 
-    /**
-     * Executes moveimageview operation with thermal imaging domain optimization.
-     *
-     */
     public MoveImageView(Context context, @Nullable AttributeSet attrs) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this(context, attrs, -1);
     }
 
-    /**
-     * Executes moveimageview operation with thermal imaging domain optimization.
-     *
-     */
     public MoveImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyleAttr);
-        /**
-         * Initializes the  component for thermal imaging operations.
-         *
-         */
         init();
     }
 
     private void init() {
-        /**
-         * Configures the backgroundcolor with validation and thermal imaging optimization.
-         *
-         */
         setBackgroundColor(Color.TRANSPARENT);
     }
 
@@ -87,10 +38,6 @@ public class MoveImageView extends ImageView {
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
 
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 Log.d(TAG, "ACTION_DOWN");
@@ -106,10 +53,6 @@ public class MoveImageView extends ImageView {
                 float curX = event.getX();
                 float curY = event.getY();
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (onMoveListener != null && delayMoveTime()) {
 
                     Log.d(TAG, "ACTION_MOVE isFastClick");
@@ -134,20 +77,17 @@ public class MoveImageView extends ImageView {
 最多70毫秒执行一次move
     public static boolean delayMoveTime() {
         boolean flag = false;
-/**
- * Specialized thermal imaging component providing OnMoveListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+        long curClickTime = System.currentTimeMillis();
+        if ((curClickTime - lastClickTime) < MIN_CLICK_DELAY_TIME) {
+            flag = false;
+        } else {
+            flag = true;
+            lastClickTime = System.currentTimeMillis();
+        }
+        Log.d(TAG, "ACTION_MOVE isFastClick flag : " + flag);
+        return flag;
+    }
+
     public interface OnMoveListener {
         void onMove(float preX, float preY, float curX, float curY);
     }

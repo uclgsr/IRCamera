@@ -45,114 +45,46 @@ import kotlin.jvm.functions.Function0;
  * @author chuanfeng.bi
  * @date 2022/2/10 19:48
  */
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for AppVersionUtil operations.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class AppVersionUtil {
     private Context mContext;
     private DownloadCompleteReceiver completeReceiver; // Declare download completion broadcast receiver
     private DownloadManager dowanloadmanager = null;
     private DotIsShowListener dotIsShowListener = null;
-    private String fileName = "";// Filename
-    private Long mDownloadId = 0l;// Downloadid
+    private String fileName = "";//filename
+    private Long mDownloadId = 0l;//Downloadid
 
-    /**
-     * Executes appversionutil operation with thermal imaging domain optimization.
-     *
-     */
     public AppVersionUtil(Context context, DotIsShowListener dotIsShow) {
         this.mContext = context;
         this.dotIsShowListener = dotIsShow;
     }
 
     public void checkVersion( boolean isShowDialog) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dowanloadmanager == null) {
             dowanloadmanager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!NetworkUtil.isConnected(mContext)) {
             TToast.shortToast(mContext, com.topdon.lms.sdk.R.string.lms_setting_http_error);
             return;
         }
         LMS.getInstance().checkAppUpdate(commonBean -> {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (commonBean.code == SUCCESS) {
                 AppInfoBean appInfoBean = LMS.getInstance().getUpdateAppInfoBean();
                 XLog.w("bcf", "appupdateinfo:" + GsonUtils.toJson(appInfoBean));
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (appInfoBean != null) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (appInfoBean.getVersionCode() > getDealVersionCode()) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isShowDialog) {
                             String information = "";
-// ShowNewVersionDialog(appInfoBean);
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
+//                            showNewVersionDialog(appInfoBean);
                             if (appInfoBean.softConfigOtherTypeVOList != null) {
-                                /**
-                                 * Executes for operation with thermal imaging domain optimization.
-                                 *
-                                 * @param
-                                 * @param updateDescription Parameter for operation (type: appInfoBean.softConfigOtherTypeVOList)
-                                 *
-                                 */
                                 for (AppInfoBean.UpdateDescription updateDescription : appInfoBean.softConfigOtherTypeVOList) {
-                                    /**
-                                     * Executes if operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     if (updateDescription.descType == 3) {
                                         information = updateDescription.textDescription;
                                     }
                                 }
                             }
-                            /**
-                             * Executes showupdatedialog operation with thermal imaging domain optimization.
-                             *
-                             */
                             showUpdateDialog(mContext, appInfoBean.downloadPackageUrl, information,Integer.parseInt(appInfoBean.forcedUpgradeFlag));
                         }
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (dotIsShowListener != null) {
                             dotIsShowListener.isShow(true);
                             dotIsShowListener.version(appInfoBean.versionNo);
@@ -186,32 +118,13 @@ public class AppVersionUtil {
      */
     private void showNewVersionDialog(AppInfoBean bean) {
         String information = "";
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (bean.softConfigOtherTypeVOList != null) {
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param updateDescription Parameter for operation (type: bean.softConfigOtherTypeVOList)
-             *
-             */
             for (AppInfoBean.UpdateDescription updateDescription : bean.softConfigOtherTypeVOList) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (updateDescription.descType == 3) {
                     information = updateDescription.textDescription;
                 }
             }
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Integer.parseInt(bean.forcedUpgradeFlag) == 1) {
             // 强制update
             new TipDialog.Builder(mContext)
@@ -220,20 +133,12 @@ public class AppVersionUtil {
                     .setPositiveListener(R.string.app_confirm, new Function0<Unit>() {
                         @Override
                         public Unit invoke() {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if(mDownloadId>0l){
                                 TToast.shortToast(mContext, mContext.getString(R.string.installation_package_downloading));
                                 return null;
                             }else{
                                 TToast.shortToast(mContext, mContext.getString(R.string.installation_package_downloading_tips));
                             }
-                            /**
-                             * Executes startdownload operation with thermal imaging domain optimization.
-                             *
-                             */
                             startDownload(bean.downloadPackageUrl);
                             return null;
                         }
@@ -246,106 +151,70 @@ public class AppVersionUtil {
                     .setPositiveListener(R.string.app_confirm, new Function0<Unit>() {
                         @Override
                         public Unit invoke() {
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if(mDownloadId>0l){
                                 TToast.shortToast(mContext, mContext.getString(R.string.installation_package_downloading));
                                 return null;
                             }else{
                                 TToast.shortToast(mContext, mContext.getString(R.string.installation_package_downloading_tips));
                             }
-                            /**
-                             * Executes startdownload operation with thermal imaging domain optimization.
-                             *
-                             */
                             startDownload(bean.downloadPackageUrl);
                             return null;
                         }
                     })
-/**
- * Specialized thermal imaging component providing DotIsShowListener functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+                    .setCancelListener(R.string.app_cancel, new Function0<Unit>() {
+                        @Override
+                        public Unit invoke() {
+                            SharedManager.INSTANCE.setVersionCheckDate(System.currentTimeMillis());//refreshversiontip时间
+                            return null;
+                        }
+                    })
+                    .create().show();
+        }
+    }
+
     public interface DotIsShowListener {
         void isShow(boolean show);
 
         void version(String version);
     }
 
-    // StartDownload指定序号的apkfile
+    // startDownload指定序号的apkfile
     private void startDownload(String url) {
         completeReceiver = new DownloadCompleteReceiver();
         // RegisterReceive器，Register之后才能正常Receive广播
 
         IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Build.VERSION.SDK_INT < 33) {
             mContext.registerReceiver(completeReceiver, intentFilter);
         } else {
             mContext.registerReceiver(completeReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
         }
 
-        Uri uri = Uri.parse(url); // 根据Download地址BuildaUri对象
-        DownloadManager.Request down = new DownloadManager.Request(uri); // CreateaDownload请求对象，指定从哪里Downloadfile
-        down.setTitle(mContext.getString(R.string.tips_download_information)); // Settingstasktitle
-        down.setDescription(mContext.getString(R.string.installation_package_download_progress)); // Settingstask描述
-        // Settings允许Download的networktype
+        Uri uri = Uri.parse(url); // 根据Download地址Build一个Uri对象
+        DownloadManager.Request down = new DownloadManager.Request(uri); // create一个Download请求对象，指定从哪里Downloadfile
+        down.setTitle(mContext.getString(R.string.tips_download_information)); // settingstasktitle
+        down.setDescription(mContext.getString(R.string.installation_package_download_progress)); // settingstask描述
+        // settings允许Download的networktype
         down.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-        // Settingsnotification栏在Download进行时与complete后都Visible
+        // settingsnotification栏在Download进行时与complete后都Visible
         down.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        // SettingsDownloadfile在私有目录的savepath。从Android10start，只有save到公共目录的才会在系统Download页areaShow/Display，save到私有目录的不在系统Download页areaShow/Display
+        // settingsDownloadfile在私有目录的savepath。从Android10start，只有save到公共目录的才会在系统Download页areaShow/Display，save到私有目录的不在系统Download页areaShow/Display
         fileName = "topinfrared" + System.currentTimeMillis() + ".zip";
         down.setDestinationInExternalFilesDir(mContext, Environment.DIRECTORY_DOWNLOADS, fileName);
         DownloadManager downloadManager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
-        // SettingsDownloadfile在公共目录的savepath。save到公共目录需要申请storage卡的读写Permission
+        // settingsDownloadfile在公共目录的savepath。save到公共目录需要申请storage卡的读写Permission
         mDownloadId = downloadManager.enqueue(down); // 把Download请求对象加入到Downloadqueue
         VersionTools.INSTANCE.setMDownloadId(mDownloadId);
     }
 
-    // 定义aDownloadcomplete的广播Receive器。用于ReceiveDownloadcompleteEvent
-/**
- * Specialized thermal imaging component providing DownloadCompleteReceiver functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+    // 定义一个Downloadcomplete的广播Receive器。用于ReceiveDownloadcompleteEvent
     private class DownloadCompleteReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE))   // Download完毕
             {
                 // 从意图中解包获得Download编号
-                /**
-                 * Executes installapk operation with thermal imaging domain optimization.
-                 *
-                 */
                 installApk();
             }
         }
@@ -358,12 +227,8 @@ public class AppVersionUtil {
         mContext.unregisterReceiver(completeReceiver);
         try {
             File file = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), fileName);
-            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());// 本地file
+            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());//本地file
             List<File> files = ZipUtils.unzipFile(file, localFile);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (files != null && files.size() != 0) {
                 AppUtil.installApp(mContext, files.get(0));
             }
@@ -378,10 +243,6 @@ public class AppVersionUtil {
         LmsUpdateDialog.Build.INSTANCE.setContentStr(content)
                 .setUpgradeFlag(forcedUpgradeFlag)
                 .setSureEvent(() -> {
-                    /**
-                     * Executes download operation with thermal imaging domain optimization.
-                     *
-                     */
                     download(url);
                     return null;
                 })
@@ -394,7 +255,7 @@ public class AppVersionUtil {
     public void download(String url) {
         RequestParams params = new RequestParams();
         try {
-            // 这里为了解决 xutils 会把url转义 照成签名不对
+            //这里为了解决 xutils 会把url转义 照成签名不对
             String[] splitUrl = url.split("\\?");
             String[] urlParams = splitUrl[1].split("&");
             String[] params1 = urlParams[0].split("=");
@@ -438,10 +299,6 @@ public class AppVersionUtil {
             public void onSuccess(File result) {
                 XLog.e("bcf", "onSuccess,start install apk");
                 LmsUpdateDialog.Build.INSTANCE.dismiss();
-                /**
-                 * Executes installapknew operation with thermal imaging domain optimization.
-                 *
-                 */
                 installApkNew();
             }
 
@@ -468,12 +325,8 @@ public class AppVersionUtil {
     public void installApkNew() {
         try {
             File file = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), fileName);
-            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());// 本地file
+            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());//本地file
             List<File> files = ZipUtils.unzipFile(file, localFile);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (files != null && files.size() != 0) {
                 AppUtil.installApp(mContext, files.get(0));
             }

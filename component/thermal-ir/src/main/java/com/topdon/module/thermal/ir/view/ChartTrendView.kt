@@ -18,63 +18,26 @@ import com.topdon.lib.core.R as LibR
 import com.topdon.module.thermal.R as ThermalR
 
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ChartTrendView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Chart trend view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class ChartTrendView : LineChart {
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyle Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
         val textColor: Int = ContextCompat.getColor(context, LibR.color.chart_text)
         val axisChartColors: Int = ContextCompat.getColor(context, LibR.color.chart_axis)
 
         this.isDragEnabled = false
-        this.isScaleYEnabled = false // 禁止YaxisScale
-        this.isScaleXEnabled = false // 禁止XaxisScale
+        this.isScaleYEnabled = false // 禁止Y轴Scale
+        this.isScaleXEnabled = false // 禁止X轴Scale
         this.isDoubleTapToZoomEnabled = false // 双击不可Scale
         this.setScaleEnabled(false) // Scale
-        this.setPinchZoom(false) // Disable后，可以分别在xaxis和yaxis上进行Scale
+        this.setPinchZoom(false) // Disable后，可以分别在x轴和y轴上进行Scale
         this.setTouchEnabled(true)
         this.setDrawGridBackground(false)
         this.description = null // 图标描述文本
-        this.axisRight.isEnabled = false // 不绘制右侧Yaxis
+        this.axisRight.isEnabled = false // 不绘制右侧Y轴
         this.setExtraOffsets(
             0f,
             0f,
@@ -82,30 +45,22 @@ class ChartTrendView : LineChart {
             SizeUtils.dp2px(4f).toFloat(),
         ) // 图表region偏移
 
-        /**
-         * Configures the nodatatext with validation and thermal imaging optimization.
-         *
-         */
         setNoDataText(context.getString(ThermalR.string.lms_http_code998))
-        /**
-         * Configures the nodatatextcolor with validation and thermal imaging optimization.
-         *
-         */
         setNoDataTextColor(ContextCompat.getColor(context, LibR.color.chart_text))
 
         val mv = MyMarkerView(context, R.layout.marker_lay)
         mv.chartView = this
-        marker = mv // SettingsclickcoordinateShow/Displaytip框
+        marker = mv // settingsclick坐标Show/Displaytip框
 
         legend.form = Legend.LegendForm.CIRCLE
         legend.textColor = textColor
         legend.isEnabled = false // Hide曲linetag
 
-xaxis
+x轴
         val xAxis = this.xAxis
         xAxis.textColor = textColor
         xAxis.setDrawGridLines(false) // 竖向格line
-        xAxis.axisLineColor = 0x00000000 // Xaxis颜色
+        xAxis.axisLineColor = 0x00000000 // x轴颜色
         xAxis.setAvoidFirstLastClipping(true)
         xAxis.isEnabled = true
         xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -118,25 +73,10 @@ xaxis
         xAxis.setLabelCount(3, true)
         xAxis.valueFormatter =
             object : ValueFormatter() {
-                /**
-                 * Retrieves the formattedvalue with optimized performance for thermal imaging operations.
-                 *
-                 * @param
-                 * @param value Parameter for operation (type: Float)
-                 *
-                 */
                 override fun getFormattedValue(value: Float): String {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (value < 5) {
                         return "A"
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (value > 5) {
                         return "B"
                     }
@@ -144,23 +84,16 @@ xaxis
                 }
             }
 
-yaxis
+y轴
         val leftAxis = this.axisLeft
-        leftAxis.textColor = textColor // Yaxis文本颜色
-        leftAxis.axisLineColor = 0x00000000 // Yaxis颜色
+        leftAxis.textColor = textColor // y轴文本颜色
+        leftAxis.axisLineColor = 0x00000000 // y轴颜色
         leftAxis.setDrawGridLines(true) // 横向格line
-        leftAxis.gridColor = axisChartColors // Yaxis网格颜色
+        leftAxis.gridColor = axisChartColors // y轴网格颜色
         leftAxis.gridLineWidth = 1.5f
         leftAxis.setLabelCount(6, true)
         leftAxis.valueFormatter =
             object : ValueFormatter() {
-                /**
-                 * Retrieves the formattedvalue with optimized performance for thermal imaging operations.
-                 *
-                 * @param
-                 * @param value Parameter for operation (type: Float)
-                 *
-                 */
                 override fun getFormattedValue(value: Float): String = ""
             }
         leftAxis.textSize = 11f
@@ -170,26 +103,12 @@ yaxis
         data = LineData()
     }
 
-    /**
-     * Sets toempty configuration.
-     */
     fun setToEmpty() {
         axisLeft.valueFormatter =
             object : ValueFormatter() {
-                /**
-                 * Retrieves the formattedvalue with optimized performance for thermal imaging operations.
-                 *
-                 * @param
-                 * @param value Parameter for operation (type: Float)
-                 *
-                 */
                 override fun getFormattedValue(value: Float): String = ""
             }
         data = LineData()
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate()
     }
 
@@ -197,26 +116,8 @@ yaxis
 根据指定的datarefresh折line图data
 @param tempList temperature值列表，单位摄氏度
      */
-    /**
-     * Executes refresh functionality.
-     */
-    /**
-     * Executes refresh operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param tempList Temperature value in Celsius (type: List<Float>)
-     *
-     */
     fun refresh(tempList: List<Float>) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (tempList.isEmpty()) {
-            /**
-             * Configures the toempty with validation and thermal imaging optimization.
-             *
-             */
             setToEmpty()
             return
         }
@@ -226,25 +127,10 @@ yaxis
         xAxis.setLabelCount(3, true)
         xAxis.valueFormatter =
             object : ValueFormatter() {
-                /**
-                 * Retrieves the formattedvalue with optimized performance for thermal imaging operations.
-                 *
-                 * @param
-                 * @param value Parameter for operation (type: Float)
-                 *
-                 */
                 override fun getFormattedValue(value: Float): String {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (value < tempList.size / 3) {
                         return "A"
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (value > tempList.size * 2 / 3) {
                         return "B"
                     }
@@ -255,10 +141,6 @@ yaxis
         var max = tempList.first()
         var min = tempList.first()
         val entryList: ArrayList<Entry> = ArrayList(tempList.size)
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in tempList.indices) {
             val tempValue = tempList[i]
             max = max.coerceAtLeast(tempValue)
@@ -271,33 +153,22 @@ yaxis
         axisLeft.axisMinimum = (minUnit - (maxUnit - minUnit) / 3).coerceAtMost(minUnit - 0.3f)
         axisLeft.valueFormatter =
             object : ValueFormatter() {
-                /**
-                 * Retrieves the formattedvalue with optimized performance for thermal imaging operations.
-                 *
-                 * @param
-                 * @param value Parameter for operation (type: Float)
-                 *
-                 */
                 override fun getFormattedValue(value: Float): String = "${String.format("%.1f", value)}${UnitTools.showUnit()}"
             }
 
         val lineDataSet = LineDataSet(entryList, "point temp")
         lineDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
         lineDataSet.color = 0xffffffff.toInt() // 曲line颜色
-        lineDataSet.circleHoleColor = 0xffffffff.toInt() // Coordinate圆心颜色
-        lineDataSet.setCircleColor(0xffffffff.toInt()) // Coordinate颜色
+        lineDataSet.circleHoleColor = 0xffffffff.toInt() // 坐标圆心颜色
+        lineDataSet.setCircleColor(0xffffffff.toInt()) // 坐标颜色
         lineDataSet.valueTextColor = Color.WHITE
         lineDataSet.lineWidth = 2f
-        lineDataSet.circleRadius = 1f // Coordinatepoint半径
+        lineDataSet.circleRadius = 1f // 坐标point半径
         lineDataSet.fillAlpha = 200
         lineDataSet.valueTextSize = 10f
-        lineDataSet.setDrawValues(false) // Settings是否Show/Displaycoordinate值文本
+        lineDataSet.setDrawValues(false) // settings是否Show/Display坐标值文本
 
         data = LineData(lineDataSet)
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate()
     }
 }

@@ -26,37 +26,17 @@ import com.topdon.lib.core.R as LibR
  * @date: 2023/5/12 17:43
  */
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for PdfViewModel display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Pdf view model view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class PdfViewModel : BaseViewModel() {
     val listData = MutableLiveData<ReportData?>()
 
 getreport列表
-    /**
-     * Retrieves reportdata information.
-     */
     fun getReportData(
         isTC007: Boolean,
         page: Int,
     )  {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!NetworkUtil.isConnected(Utils.getApp())) {
             TToast.shortToast(Utils.getApp(), LibR.string.http_code_z5004)
             listData.postValue(null)
@@ -68,14 +48,6 @@ getreport列表
         }
     }
 
-    /**
-     * Retrieves the reportdatarepository with optimized performance for thermal imaging operations.
-     *
-     * @param
-     * @param isTC007 Parameter for operation (type: Boolean)
-     * @param page Parameter for operation (type: Int)
-     *
-     */
     private suspend fun getReportDataRepository(
         isTC007: Boolean,
         page: Int,
@@ -86,39 +58,25 @@ getreport列表
             isTC007,
             page,
             object : IResponseCallback {
-                /**
-                 * Executes onresponse operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param p0 Parameter for operation (type: String?)
-                 *
-                 */
                 override fun onResponse(p0: String?) {
                     result = Gson().fromJson(p0, ReportData::class.java)
-// Val testData : MutableList<ReportData.Records?> = mutableListOf()
-// Var tmp = ReportData.Records()
-// Tmp.uploadTime = TimeTool.getNowTime()
-// TestData.add(tmp)
-// Tmp = ReportData.Records()
-// Tmp.uploadTime = TimeTool.getNowTime()
-// TestData.add(tmp)
-// Tmp = ReportData.Records()
-// Tmp.uploadTime = TimeTool.getNowTime()
-// TestData.add(tmp)
-// Tmp = ReportData.Records()
-// Tmp.uploadTime = "1992-12-30 11:11"
-// TestData.add(tmp)
-// Result?.data?.records = testData
+//                val testData : MutableList<ReportData.Records?> = mutableListOf()
+//                var tmp = ReportData.Records()
+//                tmp.uploadTime = TimeTool.getNowTime()
+//                testData.add(tmp)
+//                tmp = ReportData.Records()
+//                tmp.uploadTime = TimeTool.getNowTime()
+//                testData.add(tmp)
+//                tmp = ReportData.Records()
+//                tmp.uploadTime = TimeTool.getNowTime()
+//                testData.add(tmp)
+//                tmp = ReportData.Records()
+//                tmp.uploadTime = "1992-12-30 11:11"
+//                testData.add(tmp)
+//                result?.data?.records = testData
                     downLatch.countDown()
                 }
 
-                /**
-                 * Executes onfail operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param p0 Parameter for operation (type: Exception?)
-                 *
-                 */
                 override fun onFail(p0: Exception?) {
                     result = ReportData()
                     result?.msg = p0?.message
@@ -127,14 +85,6 @@ getreport列表
                     TLog.e("bcf", "Get/Retrievereport列表failed：" + p0?.message)
                 }
 
-                /**
-                 * Executes onfail operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param failMsg Parameter for operation (type: String?)
-                 * @param errorCode Parameter for operation (type: String)
-                 *
-                 */
                 override fun onFail(
                     failMsg: String?,
                     errorCode: String,
@@ -143,10 +93,6 @@ getreport列表
                     try {
                         StringUtils.getResString(
                             LMS.mContext,
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (TextUtils.isEmpty(errorCode)) -500 else errorCode.toInt(),
                         ).let {
                             TToast.shortToast(LMS.mContext, it)
@@ -157,10 +103,6 @@ getreport列表
                 }
             },
         )
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             downLatch.await()
         }

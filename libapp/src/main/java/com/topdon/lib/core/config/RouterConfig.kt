@@ -1,19 +1,5 @@
 package com.topdon.lib.core.config
 
-/**
- * Configuration management system for thermal imaging parameters. Handles settings and calibration for RouterConfig operations.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 object RouterConfig {
     private const val GROUP_APP = "app"
     private const val GROUP_IR = "ir"
@@ -73,7 +59,7 @@ object RouterConfig {
     const val IR_CORRECTION_07 = "/$GROUP_THERMAL07/IR07CorrectionThreeActivity"
     const val IR_IMG_PICK_07 = "/$GROUP_THERMAL07/ImagePickTC007Activity"
 
-    // Report 生成report
+    // report 生成report
     const val REPORT_CREATE_FIRST = "/$GROUP_REPORT/create/first"
     const val REPORT_CREATE_SECOND = "/$GROUP_REPORT/create/second"
     const val REPORT_PREVIEW_FIRST = "/$GROUP_REPORT/preview/first"
@@ -95,7 +81,7 @@ object RouterConfig {
     const val STORAGE_SPACE = "/$GROUP_USER/storage_space"
     const val AUTO_SAVE = "/$GROUP_USER/auto_save"
 
-    // Dual light
+    // dual light
     const val MANUAL_START = "/$GROUP_CALIBRATE/manual/first"
     const val IR_FRAME_PLUSH = "/$GROUP_IR/frame/plush"
 

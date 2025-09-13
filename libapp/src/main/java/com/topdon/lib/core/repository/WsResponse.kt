@@ -16,7 +16,7 @@ data class WsResponse<T>(
  * websocket - pseudo color样式
  */
 data class WsPseudoColor(
-    val enable: Boolean?, // White hot-1，black hot-2，警示红-12, iron red-5，观鸟-16
+    val enable: Boolean?, // white hot-1，black hot-2，警示红-12, iron red-5，观鸟-16
     val mode: Int?,
 )
 

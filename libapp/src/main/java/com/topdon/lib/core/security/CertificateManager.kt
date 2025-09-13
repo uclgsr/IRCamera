@@ -11,18 +11,8 @@ import java.security.cert.X509Certificate
 import javax.net.ssl.*
 
 /**
- * Specialized thermal imaging component providing CertificateManager functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Manages TLS certificates for secure communication with PC controllers and thermal cameras.
+ * Handles device authentication and certificate validation.
  */
 class CertificateManager(private val context: Context) {
     companion object {
@@ -68,10 +58,6 @@ class CertificateManager(private val context: Context) {
             sslContext.init(
                 keyManager?.let { arrayOf(it) },
                 trustManager?.let { arrayOf(it) },
-                /**
-                 * Executes securerandom operation with thermal imaging domain optimization.
-                 *
-                 */
                 SecureRandom(),
             )
             Log.d(TAG, "SSL context created successfully")
@@ -110,10 +96,6 @@ class CertificateManager(private val context: Context) {
                     subject.contains("CN=TS004") ||
                     subject.contains("CN=TC007")
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isValidDevice) {
                 Log.w(TAG, "Invalid device certificate subject: $subject")
                 return false
@@ -144,18 +126,10 @@ class CertificateManager(private val context: Context) {
             val certificateFactory = CertificateFactory.getInstance("X.509")
             val certificate =
                 certificateFactory.generateCertificate(
-                    /**
-                     * Executes bytearrayinputstream operation with thermal imaging domain optimization.
-                     *
-                     */
                     ByteArrayInputStream(certificateData),
                 ) as X509Certificate
 
             // Validate the certificate before installing
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!validateDeviceCertificate(certificate)) {
                 Log.w(TAG, "Refusing to install invalid certificate")
                 return false
@@ -182,46 +156,22 @@ class CertificateManager(private val context: Context) {
                 authType: String,
             ) {
                 // For client certificates (when we're the server)
-                /**
-                 * Executes validatecertificatechain operation with thermal imaging domain optimization.
-                 *
-                 */
                 validateCertificateChain(chain, "client")
             }
 
-            /**
-             * Executes checkservertrusted operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param chain Parameter for operation (type: Array<X509Certificate>)
-             * @param authType Parameter for operation (type: String)
-             *
-             */
             override fun checkServerTrusted(
                 chain: Array<X509Certificate>,
                 authType: String,
             ) {
                 // For server certificates (thermal cameras, PC controllers)
-                /**
-                 * Executes validatecertificatechain operation with thermal imaging domain optimization.
-                 *
-                 */
                 validateCertificateChain(chain, "server")
             }
 
-            /**
-             * Retrieves the acceptedissuers with optimized performance for thermal imaging operations.
-             *
-             */
             override fun getAcceptedIssuers(): Array<X509Certificate> {
                 // Return trusted certificate authorities
                 return deviceKeyStore?.let { ks ->
                     val aliases = ks.aliases()
                     val certificates = mutableListOf<X509Certificate>()
-                    /**
-                     * Executes while operation with thermal imaging domain optimization.
-                     *
-                     */
                     while (aliases.hasMoreElements()) {
                         val alias = aliases.nextElement()
                         val cert = ks.getCertificate(alias) as? X509Certificate
@@ -231,25 +181,10 @@ class CertificateManager(private val context: Context) {
                 } ?: emptyArray()
             }
 
-    /**
-     * Executes validateCertificateChain functionality.
-     */
-            /**
-             * Executes validatecertificatechain operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param chain Parameter for operation (type: Array<X509Certificate>)
-             * @param type Parameter for operation (type: String)
-             *
-             */
             private fun validateCertificateChain(
                 chain: Array<X509Certificate>,
                 type: String,
             ) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (chain.isEmpty()) {
                     throw CertificateException("Empty certificate chain")
                 }
@@ -257,10 +192,6 @@ class CertificateManager(private val context: Context) {
                 val leafCertificate = chain[0]
 
                 // Validate the leaf certificate
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!validateDeviceCertificate(leafCertificate)) {
                     throw CertificateException("Invalid $type certificate")
                 }
@@ -292,10 +223,6 @@ class CertificateManager(private val context: Context) {
         return HostnameVerifier { hostname, session ->
             // Allow connections to known thermal camera IP addresses
             val validHosts =
-                /**
-                 * Configures the of with validation and thermal imaging optimization.
-                 *
-                 */
                 setOf(
                     "192.168.40.1", // Standard thermal camera IP
                     "localhost", // Local testing
@@ -306,10 +233,6 @@ class CertificateManager(private val context: Context) {
                 validHosts.contains(hostname) ||
                     hostname.matches(Regex("192\\.168\\.\\d+\\.\\d+")) // Local network IPs
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isValid) {
                 Log.w(TAG, "Hostname verification failed for: $hostname")
             }
@@ -347,20 +270,12 @@ class CertificateManager(private val context: Context) {
     ): Boolean { // 5 minutes default
         return try {
             val parts = token.split(":")
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (parts.size != 4) return false
 
             val timestamp = parts[1].toLong()
             val currentTime = System.currentTimeMillis()
 
             // Check token age
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (currentTime - timestamp > maxAgeMs) {
                 Log.w(TAG, "Auth token expired")
                 return false
@@ -370,10 +285,6 @@ class CertificateManager(private val context: Context) {
             val payload = "${parts[0]}:${parts[1]}:${parts[2]}"
             val expectedHash = payload.hashCode().toString(16)
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (parts[3] != expectedHash) {
                 Log.w(TAG, "Auth token hash mismatch")
                 return false

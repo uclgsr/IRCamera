@@ -23,57 +23,34 @@ import com.topdon.lib.core.utils.ScreenUtil
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing ConfirmSelectDialog functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog), View.OnClickListener {
     var onConfirmClickListener: ((isSelect: Boolean) -> Unit)? = null
     private lateinit var binding: DialogConfirmSelectBinding
 
     /**
-     * 是否Show/Display顶部info图标，default不Show/Display.
+     * 是否Show/Display顶部info图标，默认不Show/Display.
      */
     fun setShowIcon(isShowIcon: Boolean) {
         binding.ivIcon.isVisible = isShowIcon
     }
 
-    /**
-     * Sets titleres configuration.
-     */
     fun setTitleRes(
         @StringRes titleRes: Int,
     ) {
         binding.tvTitle.setText(titleRes)
     }
 
-    /**
-     * Sets titlestr configuration.
-     */
     fun setTitleStr(titleStr: String) {
         binding.tvTitle.text = titleStr
     }
 
     /**
-     * 是否Show/Displaytiptext及selected效果，default不Show/Display.
+     * 是否Show/Displaytiptext及selected效果，默认不Show/Display.
      */
     fun setShowMessage(isShowMessage: Boolean) {
         binding.rlMessage.isVisible = isShowMessage
     }
 
-    /**
-     * Sets messageres configuration.
-     */
     fun setMessageRes(
         @StringRes messageRes: Int,
     ) {
@@ -81,14 +58,14 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
     }
 
     /**
-     * 是否Show/DisplayCancelbutton，defaultShow/Display且defaulttext为“Cancel”.
+     * 是否Show/DisplayCancelbutton，默认Show/Display且默认text为“Cancel”.
      */
     fun setShowCancel(isShowCancel: Boolean) {
         binding.tvCancel.isVisible = isShowCancel
     }
 
     /**
-     * settingsCancelbuttontext，default为“Cancel”.
+     * settingsCancelbuttontext，默认为“Cancel”.
      */
     fun setCancelText(
         @StringRes cancelRes: Int,
@@ -97,7 +74,7 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
     }
 
     /**
-     * settingsConfirmbuttontext，default为“delete"
+     * settingsConfirmbuttontext，默认为“delete"
      */
     fun setConfirmText(
         @StringRes confirmRes: Int,
@@ -105,31 +82,12 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         binding.tvConfirm.setText(confirmRes)
     }
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /**
-         * Configures the cancelable with validation and thermal imaging optimization.
-         *
-         */
         setCancelable(true)
-        /**
-         * Configures the canceledontouchoutside with validation and thermal imaging optimization.
-         *
-         */
         setCanceledOnTouchOutside(true)
 
         binding = DialogConfirmSelectBinding.inflate(LayoutInflater.from(context))
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(binding.root)
 
         window?.let {
@@ -144,34 +102,15 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         binding.tvConfirm.setOnClickListener(this)
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
             binding.rlMessage -> { 
                 binding.ivSelect.isSelected = !binding.ivSelect.isSelected
             }
             binding.tvCancel -> { 
-                /**
-                 * Executes dismiss operation with thermal imaging domain optimization.
-                 *
-                 */
                 dismiss()
             }
             binding.tvConfirm -> { 
-                /**
-                 * Executes dismiss operation with thermal imaging domain optimization.
-                 *
-                 */
                 dismiss()
                 onConfirmClickListener?.invoke(binding.ivSelect.isSelected)
             }

@@ -21,57 +21,16 @@ import com.blankj.utilcode.util.SizeUtils
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for FenceView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class FenceView : View {
     var listener: CallBack? = null
 
     private val mPaint by lazy { Paint() }
     private val rect: Rect = Rect(0, 0, 0, 0) 
     private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor (context: Context) : super(context)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet)
-     *
-     */
     constructor (context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet)
-     * @param defStyle Parameter for operation (type: Int)
-     *
-     */
     constructor (context: Context, attrs: AttributeSet, defStyle: Int) : super(
         context,
         attrs,
@@ -86,21 +45,14 @@ class FenceView : View {
         mPaint.alpha = 255
     }
 
-    /**
-     * Executes ondraw operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     *
-     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 //        
-// Canvas.drawARGB(50, 255, 227, 0)
-// MPaint.color = Color.GREEN
+//        canvas.drawARGB(50, 255, 227, 0)
+//        mPaint.color = Color.GREEN
 //        
-// Canvas.drawRect(100f, 200f, 400f, 200f + 400, mPaint)
-// MPaint.color = Color.RED
+//        canvas.drawRect(100f, 200f, 400f, 200f + 400, mPaint)
+//        mPaint.color = Color.RED
         canvas.drawRect(rect, mPaint)
     }
 
@@ -110,28 +62,13 @@ class FenceView : View {
     var startPoint = intArrayOf(0, 0)
     var endPoint = intArrayOf(0, 0)
 
-    /**
-     * Executes ontouchevent operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: MotionEvent)
-     *
-     */
     override fun onTouchEvent(event: MotionEvent): Boolean {
         mX = event.x
         mY = event.y
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 rect.right += strokeWidth.toInt()
                 rect.bottom += strokeWidth.toInt()
-                /**
-                 * Executes invalidate operation with thermal imaging domain optimization.
-                 *
-                 */
                 invalidate() // Invalidate entire view
                 rect.left = mX.toInt()
                 rect.top = mY.toInt()
@@ -143,32 +80,16 @@ class FenceView : View {
             MotionEvent.ACTION_UP -> {
                 var x = mX.toInt()
                 var y = mY.toInt()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (x > right) {
                     x = right - 1
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (y > bottom) {
                     y = bottom - 1
                 }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (x < left) {
                     x = left + 1
                 }
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (y < top) {
                     y = top + 1
                 }
@@ -176,10 +97,6 @@ class FenceView : View {
                 endPoint[1] = y
 
                 old =
-                    /**
-                     * Executes rect operation with thermal imaging domain optimization.
-                     *
-                     */
                     Rect(
                         rect.left,
                         rect.top,
@@ -189,23 +106,11 @@ class FenceView : View {
                 rect.right = x
                 rect.bottom = y
                 old.union(x, y)
-                /**
-                 * Executes invalidate operation with thermal imaging domain optimization.
-                 *
-                 */
                 invalidate() // Invalidate entire view
-                /**
-                 * Executes result operation with thermal imaging domain optimization.
-                 *
-                 */
                 result()
             }
             MotionEvent.ACTION_MOVE -> {
                 old =
-                    /**
-                     * Executes rect operation with thermal imaging domain optimization.
-                     *
-                     */
                     Rect(
                         rect.left,
                         rect.top,
@@ -215,10 +120,6 @@ class FenceView : View {
                 rect.right = mX.toInt()
                 rect.bottom = mY.toInt()
                 old.union(mX.toInt(), mY.toInt())
-                /**
-                 * Executes invalidate operation with thermal imaging domain optimization.
-                 *
-                 */
                 invalidate() // Invalidate entire view
             }
         }
@@ -228,23 +129,11 @@ class FenceView : View {
     /**
      * Executes result functionality.
      */
-    /**
-     * Executes result operation with thermal imaging domain optimization.
-     *
-     */
     private fun result() {
         val point1 = intArrayOf(startPoint[0], startPoint[1])
         val point2 = intArrayOf(endPoint[0], endPoint[1])
         
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in 0..1) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (startPoint[i] > endPoint[i]) {
                 point1[i] = endPoint[i]
                 point2[i] = startPoint[i]
@@ -252,13 +141,9 @@ class FenceView : View {
         }
         Log.i(
             "123",
-            "原始coordinate start:${startPoint.contentToString()}, end:${endPoint.contentToString()}",
+            "原始坐标 start:${startPoint.contentToString()}, end:${endPoint.contentToString()}",
         )
-        Log.w("123", "修正coordinate start:${point1.contentToString()}, end:${point2.contentToString()}")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        Log.w("123", "修正坐标 start:${point1.contentToString()}, end:${point2.contentToString()}")
         if (listener != null) {
             listener!!.callback(point1, point2, intArrayOf(width, height))
         }
@@ -274,48 +159,25 @@ class FenceView : View {
         rect.right = 0
         rect.top = 0
         rect.bottom = 0
-        /**
-         * Executes result operation with thermal imaging domain optimization.
-         *
-         */
         result()
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate()
     }
 
+    
 /**
- * Specialized thermal imaging component providing CallBack functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
+ * Custom Call back view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * CallBack manages camera operations and image capture functionality.
  *
  * @author IRCamera Development Team
- * @version 2.0
  * @since 1.0
  */
     interface CallBack {
         /**
          * startPoint: 左上角
          * endPoint: 右下角
-         */
-    /**
-     * Executes callback functionality.
-     */
-        /**
-         * Executes callback operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param startPoint Parameter for operation (type: IntArray)
-         * @param endPoint Parameter for operation (type: IntArray)
-         * @param srcRect Parameter for operation (type: IntArray)
-         *
          */
         fun callback(
             startPoint: IntArray,

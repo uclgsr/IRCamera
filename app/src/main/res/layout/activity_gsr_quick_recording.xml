@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Activity layout - Activity Gsr Quick Recording -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -14,7 +13,6 @@
         android:background="@color/c_bg_white"
         tools:context=".gsr.GSRQuickRecordingActivity">
 
-        <!-- Linear container layout -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,7 +38,6 @@
                 app:cardCornerRadius="8dp"
                 app:cardBackgroundColor="#FF2A2A2A">
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -84,7 +81,6 @@
                 app:cardCornerRadius="8dp"
                 app:cardBackgroundColor="#FF2A2A2A">
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -130,7 +126,6 @@
                 app:cardCornerRadius="8dp"
                 app:cardBackgroundColor="#FF2A2A2A">
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -167,7 +162,6 @@
                 app:cardCornerRadius="8dp"
                 app:cardBackgroundColor="#FF2A2A2A">
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

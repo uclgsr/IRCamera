@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Activity layout - Activity Gsr Settings -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -8,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="#16131e">
 
-    <!-- Linear container layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +22,6 @@
             app:cardElevation="2dp"
             app:cardBackgroundColor="#2a2a2a">
 
-            <!-- Linear container layout -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,7 +37,6 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -64,7 +60,6 @@
 
                 </LinearLayout>
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -88,7 +83,6 @@
 
                 </LinearLayout>
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -123,7 +117,6 @@
             app:cardElevation="2dp"
             app:cardBackgroundColor="#2a2a2a">
 
-            <!-- Linear container layout -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -139,7 +132,6 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -166,7 +158,6 @@
 
                 </LinearLayout>
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -190,7 +181,6 @@
 
                 </LinearLayout>
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -242,7 +232,6 @@
             app:cardElevation="2dp"
             app:cardBackgroundColor="#2a2a2a">
 
-            <!-- Linear container layout -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -258,7 +247,6 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -281,7 +269,6 @@
 
                 </LinearLayout>
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -305,7 +292,6 @@
 
                 </LinearLayout>
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -329,7 +315,6 @@
 
                 </LinearLayout>
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -364,7 +349,6 @@
             app:cardElevation="2dp"
             app:cardBackgroundColor="#2a2a2a">
 
-            <!-- Linear container layout -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -380,7 +364,6 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -403,7 +386,6 @@
 
                 </LinearLayout>
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -427,7 +409,6 @@
 
                 </LinearLayout>
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -463,7 +444,6 @@
             app:cardElevation="2dp"
             app:cardBackgroundColor="#2a2a2a">
 
-            <!-- Linear container layout -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -479,7 +459,6 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -505,7 +484,6 @@
 
                 </LinearLayout>
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -528,7 +506,6 @@
 
                 </LinearLayout>
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -563,7 +540,6 @@
             app:cardElevation="2dp"
             app:cardBackgroundColor="#2a2a2a">
 
-            <!-- Linear container layout -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -579,7 +555,6 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -602,7 +577,6 @@
 
                 </LinearLayout>
 
-                <!-- Linear container layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -23,31 +23,14 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import java.util.List;
 
 /**
- * Specialized thermal imaging component providing HorizontalBarChartRenderer functionality for the IRCamera system.
+ * Renderer for the HorizontalBarChart.
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author Philipp Jahoda
  */
 public class HorizontalBarChartRenderer extends BarChartRenderer {
 
-    /**
-     * Executes horizontalbarchartrenderer operation with thermal imaging domain optimization.
-     *
-     */
     public HorizontalBarChartRenderer(BarDataProvider chart, ChartAnimator animator,
                                       ViewPortHandler viewPortHandler) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(chart, animator, viewPortHandler);
 
         mValuePaint.setTextAlign(Align.LEFT);
@@ -59,10 +42,6 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
         BarData barData = mChart.getBarData();
         mBarBuffers = new HorizontalBarBuffer[barData.getDataSetCount()];
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < mBarBuffers.length; i++) {
             IBarDataSet set = barData.getDataSetByIndex(i);
             mBarBuffers[i] = new HorizontalBarBuffer(set.getEntryCount() * 4 * (set.isStacked() ? set.getStackSize() : 1),
@@ -85,11 +64,7 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
         float phaseX = mAnimator.getPhaseX();
         float phaseY = mAnimator.getPhaseY();
 
-        // Draw the bar shadow before the values
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // draw the bar shadow before the values
         if (mChart.isDrawBarShadowEnabled()) {
             mShadowPaint.setColor(dataSet.getBarShadowColor());
 
@@ -99,10 +74,6 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
             final float barWidthHalf = barWidth / 2.0f;
             float x;
 
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0, count = Math.min((int)(Math.ceil((float)(dataSet.getEntryCount()) * phaseX)), dataSet.getEntryCount());
                  i < count;
                  i++) {
@@ -116,17 +87,9 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
 
                 trans.rectValueToPixel(mBarShadowRectBuffer);
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!mViewPortHandler.isInBoundsTop(mBarShadowRectBuffer.bottom))
                     continue;
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!mViewPortHandler.isInBoundsBottom(mBarShadowRectBuffer.top))
                     break;
 
@@ -137,7 +100,7 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
             }
         }
 
-        // Initialize the buffer
+        // initialize the buffer
         BarBuffer buffer = mBarBuffers[index];
         buffer.setPhases(phaseX, phaseY);
         buffer.setDataSet(index);
@@ -150,51 +113,27 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
 
         final boolean isSingleColor = dataSet.getColors().size() == 1;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isSingleColor) {
             mRenderPaint.setColor(dataSet.getColor());
         }
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int j = 0; j < buffer.size(); j += 4) {
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!mViewPortHandler.isInBoundsTop(buffer.buffer[j + 3]))
                 break;
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!mViewPortHandler.isInBoundsBottom(buffer.buffer[j + 1]))
                 continue;
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isSingleColor) {
                 // Set the color for the currently drawn value. If the index
-                // Is out of bounds, reuse colors.
+                // is out of bounds, reuse colors.
                 mRenderPaint.setColor(dataSet.getColor(j / 4));
             }
 
             c.drawRect(buffer.buffer[j], buffer.buffer[j + 1], buffer.buffer[j + 2],
                     buffer.buffer[j + 3], mRenderPaint);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (drawBorder) {
                 c.drawRect(buffer.buffer[j], buffer.buffer[j + 1], buffer.buffer[j + 2],
                         buffer.buffer[j + 3], mBarBorderPaint);
@@ -204,11 +143,7 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
 
     @Override
     public void drawValues(Canvas c) {
-        // If values are drawn
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // if values are drawn
         if (isDrawingValuesAllowed(mChart)) {
 
             List<IBarDataSet> dataSets = mChart.getBarData().getDataSets();
@@ -218,34 +153,22 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
             float negOffset = 0f;
             final boolean drawValueAboveBar = mChart.isDrawValueAboveBarEnabled();
 
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0; i < mChart.getBarData().getDataSetCount(); i++) {
 
                 IBarDataSet dataSet = dataSets.get(i);
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!shouldDrawValues(dataSet))
                     continue;
 
                 boolean isInverted = mChart.isInverted(dataSet.getAxisDependency());
 
-                // Apply the text-styling defined by the DataSet
-                /**
-                 * Executes applyvaluetextstyle operation with thermal imaging domain optimization.
-                 *
-                 */
+                // apply the text-styling defined by the DataSet
                 applyValueTextStyle(dataSet);
                 final float halfTextHeight = Utils.calcTextHeight(mValuePaint, "10") / 2f;
 
                 ValueFormatter formatter = dataSet.getValueFormatter();
 
-                // Get the buffer
+                // get the buffer
                 BarBuffer buffer = mBarBuffers[i];
 
                 final float phaseY = mAnimator.getPhaseY();
@@ -254,39 +177,19 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
                 iconsOffset.x = Utils.convertDpToPixel(iconsOffset.x);
                 iconsOffset.y = Utils.convertDpToPixel(iconsOffset.y);
 
-                // If only single values are drawn (sum)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+                // if only single values are drawn (sum)
                 if (!dataSet.isStacked()) {
 
-                    /**
-                     * Executes for operation with thermal imaging domain optimization.
-                     *
-                     */
                     for (int j = 0; j < buffer.buffer.length * mAnimator.getPhaseX(); j += 4) {
 
                         float y = (buffer.buffer[j + 1] + buffer.buffer[j + 3]) / 2f;
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (!mViewPortHandler.isInBoundsTop(buffer.buffer[j + 1]))
                             break;
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (!mViewPortHandler.isInBoundsX(buffer.buffer[j]))
                             continue;
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (!mViewPortHandler.isInBoundsBottom(buffer.buffer[j + 1]))
                             continue;
 
@@ -294,32 +197,17 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
                         float val = entry.getY();
                         String formattedValue = formatter.getBarLabel(entry);
 
-                        // Calculate the correct offset depending on the draw position of the value
+                        // calculate the correct offset depending on the draw position of the value
                         float valueTextWidth = Utils.calcTextWidth(mValuePaint, formattedValue);
                         posOffset = (drawValueAboveBar ? valueOffsetPlus : -(valueTextWidth + valueOffsetPlus));
                         negOffset = (drawValueAboveBar ? -(valueTextWidth + valueOffsetPlus) : valueOffsetPlus);
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isInverted) {
                             posOffset = -posOffset - valueTextWidth;
                             negOffset = -negOffset - valueTextWidth;
                         }
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (dataSet.isDrawValuesEnabled()) {
-                            /**
-                             * Executes drawvalue operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param posOffset Parameter for operation (type: negOffset)
-                             *
-                             */
                             drawValue(c,
                                     formattedValue,
                                     buffer.buffer[j + 2] + (val >= 0 ? posOffset : negOffset),
@@ -327,10 +215,6 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
                                     dataSet.getValueTextColor(j / 2));
                         }
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (entry.getIcon() != null && dataSet.isDrawIconsEnabled()) {
 
                             Drawable icon = entry.getIcon();
@@ -351,7 +235,7 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
                         }
                     }
 
-                    // If each value of a potential stack should be drawn
+                    // if each value of a potential stack should be drawn
                 } else {
 
                     Transformer trans = mChart.getTransformer(dataSet.getAxisDependency());
@@ -359,10 +243,6 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
                     int bufferIndex = 0;
                     int index = 0;
 
-                    /**
-                     * Executes while operation with thermal imaging domain optimization.
-                     *
-                     */
                     while (index < dataSet.getEntryCount() * mAnimator.getPhaseX()) {
 
                         BarEntry entry = dataSet.getEntryForIndex(index);
@@ -370,74 +250,39 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
                         int color = dataSet.getValueTextColor(index);
                         float[] vals = entry.getYVals();
 
-                        // We still draw stacked bars, but there is one
-                        // Non-stacked
-                        // In between
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
+                        // we still draw stacked bars, but there is one
+                        // non-stacked
+                        // in between
                         if (vals == null) {
 
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (!mViewPortHandler.isInBoundsTop(buffer.buffer[bufferIndex + 1]))
                                 break;
 
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (!mViewPortHandler.isInBoundsX(buffer.buffer[bufferIndex]))
                                 continue;
 
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (!mViewPortHandler.isInBoundsBottom(buffer.buffer[bufferIndex + 1]))
                                 continue;
 
                             String formattedValue = formatter.getBarLabel(entry);
 
-                            // Calculate the correct offset depending on the draw position of the value
+                            // calculate the correct offset depending on the draw position of the value
                             float valueTextWidth = Utils.calcTextWidth(mValuePaint, formattedValue);
                             posOffset = (drawValueAboveBar ? valueOffsetPlus : -(valueTextWidth + valueOffsetPlus));
                             negOffset = (drawValueAboveBar ? -(valueTextWidth + valueOffsetPlus) : valueOffsetPlus);
 
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (isInverted) {
                                 posOffset = -posOffset - valueTextWidth;
                                 negOffset = -negOffset - valueTextWidth;
                             }
 
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (dataSet.isDrawValuesEnabled()) {
-                                /**
-                                 * Executes drawvalue operation with thermal imaging domain optimization.
-                                 *
-                                 * @param
-                                 * @param posOffset Parameter for operation (type: negOffset)
-                                 *
-                                 */
                                 drawValue(c, formattedValue,
                                         buffer.buffer[bufferIndex + 2]
                                                 + (entry.getY() >= 0 ? posOffset : negOffset),
                                         buffer.buffer[bufferIndex + 1] + halfTextHeight, color);
                             }
 
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (entry.getIcon() != null && dataSet.isDrawIconsEnabled()) {
 
                                 Drawable icon = entry.getIcon();
@@ -465,19 +310,11 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
                             float posY = 0f;
                             float negY = -entry.getNegativeSum();
 
-                            /**
-                             * Executes for operation with thermal imaging domain optimization.
-                             *
-                             */
                             for (int k = 0, idx = 0; k < transformed.length; k += 2, idx++) {
 
                                 float value = vals[idx];
                                 float y;
 
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (value == 0.0f && (posY == 0.0f || negY == 0.0f)) {
                                     // Take care of the situation of a 0.0 value, which overlaps a non-zero bar
                                     y = value;
@@ -494,24 +331,16 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
 
                             trans.pointValuesToPixel(transformed);
 
-                            /**
-                             * Executes for operation with thermal imaging domain optimization.
-                             *
-                             */
                             for (int k = 0; k < transformed.length; k += 2) {
 
                                 final float val = vals[k / 2];
                                 String formattedValue = formatter.getBarStackedLabel(val, entry);
 
-                                // Calculate the correct offset depending on the draw position of the value
+                                // calculate the correct offset depending on the draw position of the value
                                 float valueTextWidth = Utils.calcTextWidth(mValuePaint, formattedValue);
                                 posOffset = (drawValueAboveBar ? valueOffsetPlus : -(valueTextWidth + valueOffsetPlus));
                                 negOffset = (drawValueAboveBar ? -(valueTextWidth + valueOffsetPlus) : valueOffsetPlus);
 
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (isInverted) {
                                     posOffset = -posOffset - valueTextWidth;
                                     negOffset = -negOffset - valueTextWidth;
@@ -525,43 +354,19 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
                                         + (drawBelow ? negOffset : posOffset);
                                 float y = (buffer.buffer[bufferIndex + 1] + buffer.buffer[bufferIndex + 3]) / 2f;
 
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (!mViewPortHandler.isInBoundsTop(y))
                                     break;
 
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (!mViewPortHandler.isInBoundsX(x))
                                     continue;
 
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (!mViewPortHandler.isInBoundsBottom(y))
                                     continue;
 
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (dataSet.isDrawValuesEnabled()) {
-                                    /**
-                                     * Executes drawvalue operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     drawValue(c, formattedValue, x, y + halfTextHeight, color);
                                 }
 
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (entry.getIcon() != null && dataSet.isDrawIconsEnabled()) {
 
                                     Drawable icon = entry.getIcon();

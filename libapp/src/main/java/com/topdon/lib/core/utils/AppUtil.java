@@ -17,37 +17,12 @@ import com.elvishew.xlog.XLog;
 import java.io.File;
 import java.util.List;
 
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for AppUtil operations.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class AppUtil {
     public static boolean isAppInstalled(Context context, String packageName) {
         PackageManager packageManager = context.getPackageManager();
-        // Get/Retrieve系统中Install的应用包的info
+        //Get/Retrieve系统中Install的应用包的info
         List<PackageInfo> listPackageInfo = packageManager.getInstalledPackages(0);
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < listPackageInfo.size(); i++) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (listPackageInfo.get(i).packageName.equalsIgnoreCase(packageName)) {
                 return true;
             }
@@ -61,19 +36,11 @@ public class AppUtil {
         resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         resolveIntent.setPackage(pi.packageName);
         List<ResolveInfo> apps = context.getPackageManager().queryIntentActivities(resolveIntent, 0);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (apps == null || apps.size() <= 0) {
 //            LLog.e("bcf","该应用没有启动入口无法启动");
             return;
         }
         ResolveInfo ri = apps.iterator().next();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ri != null) {
             String name = ri.activityInfo.packageName;
             String className = ri.activityInfo.name;
@@ -95,11 +62,7 @@ public class AppUtil {
     public static void installApp(Context context, File apkPath) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        // /< 判断是否是AndroidN以及更高的version
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        ///< 判断是否是AndroidN以及更高的version
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             // 不能再用setFlags了， setflags会reset之前的settings， 要么 setflags 多个|拼接，要么addflag
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -120,26 +83,11 @@ public class AppUtil {
     public static boolean isProcessRunning(Context context, String serviceName) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> runningServiceInfos = am.getRunningServices(200);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (runningServiceInfos.size() <= 0) {
             return false;
         }
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param serviceInfo Parameter for operation (type: runningServiceInfos)
-         *
-         */
         for (ActivityManager.RunningServiceInfo serviceInfo : runningServiceInfos) {
             XLog.w("bcf", "process名=" + serviceInfo.service.getClassName());
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (serviceInfo.process.equals(serviceName)) {
                 return true;
             }
@@ -156,26 +104,11 @@ public class AppUtil {
     public static boolean isServiceRunning(Context context, String serviceName) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> runningServiceInfos = am.getRunningServices(200);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (runningServiceInfos.size() <= 0) {
             return false;
         }
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param serviceInfo Parameter for operation (type: runningServiceInfos)
-         *
-         */
         for (ActivityManager.RunningServiceInfo serviceInfo : runningServiceInfos) {
             XLog.w("bcf", "class名=" + serviceInfo.service.getClassName());
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (serviceInfo.service.getClassName().equals(serviceName)) {
                 return true;
             }

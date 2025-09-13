@@ -1,112 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Color definitions for thermal imaging UI -->
 <resources>
-    <!-- UI styling - colorPrimary -->
     <color name="colorPrimary">#000000</color>
-    <!-- UI styling - colorPrimaryDark -->
     <color name="colorPrimaryDark">#000000</color>
-    <!-- UI styling - colorAccent -->
     <color name="colorAccent">#FFBA42</color>
 
-    <!-- UI styling - font color -->
     <color name="font_color">#333333</color>
-    <!-- UI styling - font second color -->
     <color name="font_second_color">#666666</color>
-    <!-- UI styling - font third color -->
     <color name="font_third_color">#999999</color>
-    <!-- UI styling - toastTextColor -->
     <color name="toastTextColor">#FFFFFF</color>
 
-    <!-- UI styling - chart bg -->
     <color name="chart_bg">#16131E</color>
-    <!-- Text appearance styling -->
     <color name="chart_text">#ffffff</color>
-    <!-- UI styling - chart axis -->
     <color name="chart_axis">#4cf9f9f9</color>
 
-    <!-- UI styling - chart line max -->
     <color name="chart_line_max">#FFFF4747</color>
-    <!-- UI styling - chart point max -->
     <color name="chart_point_max">#D18888</color>
-    <!-- UI styling - chart bg top max -->
     <color name="chart_bg_top_max">#ffD13F3F</color>
-    <!-- UI styling - chart bg bottom max -->
     <color name="chart_bg_bottom_max">#00D13F3F</color>
 
-    <!-- UI styling - chart line min -->
     <color name="chart_line_min">#FF06aaff</color>
-    <!-- UI styling - chart point min -->
     <color name="chart_point_min">#7EA0CA</color>
-    <!-- UI styling - chart bg top min -->
     <color name="chart_bg_top_min">#ff3f7ad1</color>
-    <!-- UI styling - chart bg bottom min -->
     <color name="chart_bg_bottom_min">#003f7ad1</color>
 
-    <!-- UI styling - chart line center -->
     <color name="chart_line_center">#4ea83a</color>
-    <!-- UI styling - chart point center -->
     <color name="chart_point_center">#97CC8C</color>
-    <!-- UI styling - chart bg top center -->
     <color name="chart_bg_top_center">#3E8A2D</color>
-    <!-- UI styling - chart bg bottom center -->
     <color name="chart_bg_bottom_center">#00DF9A24</color>
 
-    <!-- UI styling - black -->
     <color name="black">#ff000000</color>
-    <!-- UI styling - white -->
     <color name="white">#ffffffff</color>
-    <!-- UI styling - white 80 -->
     <color name="white_80">#ccffffff</color>
 
-    <!-- UI styling - circle white -->
     <color name="circle_white">#80ffffff</color>
 
-    <!-- UI styling - grey -->
     <color name="grey">#FFE9EEF4</color>
 
-    <!-- UI styling - tx 333 -->
     <color name="tx_333">#FFFFFFFF</color>
-    <!-- UI styling - color FFBA42 -->
     <color name="color_FFBA42">#FFFFBA42</color>
-    <!-- UI styling - color E74380 -->
     <color name="color_E74380">#FFE74380</color>
-    <!-- UI styling - color 16131E -->
     <color name="color_16131E">#FF16131E</color>
-    <!-- UI styling - color 8A898E -->
     <color name="color_8A898E">#8A898E</color>
-    <!-- UI styling - color 23202E -->
     <color name="color_23202E">#23202E</color>
-    <!-- UI styling - color 06AAFF -->
     <color name="color_06AAFF">#06AAFF</color>
 
-    <!-- UI styling - c bg white -->
     <color name="c_bg_white">#FF16131E</color>
-    <!-- UI styling - color font -->
     <color name="color_font">#ffffff</color>
-    <!-- UI styling - color bg min -->
     <color name="color_bg_min">#ffffff</color>
-    <!-- UI styling - dialog line color -->
     <color name="dialog_line_color">#3B3E44</color>
-    <!-- UI styling - dialog font third color -->
     <color name="dialog_font_third_color">#EEEEEE</color>
-    <!-- UI styling - color font five -->
     <color name="color_font_five">#9Bffffff</color>
-    <!-- UI styling - color img calibration normal -->
     <color name="color_img_calibration_normal">#ffffff</color>
-    <!-- UI styling - color img calibration left -->
     <color name="color_img_calibration_left">#66ffffff</color>
-    <!-- UI styling - color img calibration right -->
     <color name="color_img_calibration_right">#FFBA42</color>
-    <!-- UI styling - color img calibration button -->
     <color name="color_img_calibration_button">#55272F</color>
 
-    <!-- UI styling - toolbar 8A898E -->
     <color name="toolbar_8A898E">#FF8A898E</color>
-    <!-- UI styling - toolbar 16131E -->
     <color name="toolbar_16131E">#FF16131E</color>
-    <!-- UI styling - color B3FFFFFF -->
     <color name="color_B3FFFFFF">#B3FFFFFF</color>
-    <!-- UI styling - toolbar 5F16131E -->
     <color name="toolbar_5F16131E">#5F16131E</color>
 
     <!-- Green point color for connection status -->
@@ -114,9 +65,7 @@
 
     <!-- LMS color palette -->
     <color name="lms_color_333">#333333</color>
-    <!-- UI styling - lms color 999 -->
     <color name="lms_color_999">#999999</color>
-    <!-- UI styling - transparent -->
     <color name="transparent">#00000000</color>
 
 </resources>

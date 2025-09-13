@@ -3,43 +3,20 @@ package com.topdon.tc001.camera.core
 import android.util.Log
 
 /**
- * Specialized thermal imaging component providing ModeManager functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
-/**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with CameraMode functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Deterministic state machine for camera mode management
+ * Two exclusive modes: RAW mode (50MP DNG stream) OR Video mode (4K60 if exposed, else 4K30)
  */
+class ModeManager {
+    companion object {
+        private const val TAG = "ModeManager"
+    }
+
     enum class CameraMode {
         RAW_50MP,
         VIDEO_4K,
         PREVIEW_ONLY,
     }
 
-/**
- * Specialized thermal imaging component providing State functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     enum class State {
         IDLE,
         SWITCHING,
@@ -73,20 +50,12 @@ import android.util.Log
             return false
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (currentMode == targetMode) {
             Log.i(TAG, "Already in target mode: $targetMode")
             return true
         }
 
         // Validate mode is supported
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isModeSupported(targetMode)) {
             val error = "Mode $targetMode not supported on this device"
             Log.e(TAG, error)
@@ -115,10 +84,6 @@ import android.util.Log
         }
 
         currentState =
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (currentMode) {
                 CameraMode.RAW_50MP -> State.RAW_ACTIVE
                 CameraMode.VIDEO_4K -> State.VIDEO_ACTIVE
@@ -132,18 +97,7 @@ import android.util.Log
     /**
      * Report mode switch failed
      */
-    /**
-     * Executes reportmodeswitchfailed operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param error Parameter for operation (type: String)
-     *
-     */
     fun reportModeSwitchFailed(error: String) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (currentState != State.SWITCHING) {
             Log.w(TAG, "No mode switch in progress to fail")
             return
@@ -159,18 +113,10 @@ import android.util.Log
     /**
      * Get current mode
      */
-    /**
-     * Retrieves the currentmode with optimized performance for thermal imaging operations.
-     *
-     */
     fun getCurrentMode(): CameraMode = currentMode
 
     /**
      * Get current state
-     */
-    /**
-     * Retrieves the currentstate with optimized performance for thermal imaging operations.
-     *
      */
     fun getCurrentState(): State = currentState
 
@@ -193,10 +139,6 @@ import android.util.Log
     fun getAvailableModes(): List<CameraMode> {
         val modes = mutableListOf(CameraMode.PREVIEW_ONLY, CameraMode.VIDEO_4K)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isModeSupported(CameraMode.RAW_50MP)) {
             modes.add(CameraMode.RAW_50MP)
         }

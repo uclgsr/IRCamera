@@ -25,18 +25,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
- * Temperature measurement and calibration utility for thermal imaging. Provides precision temperature calculations with TempCompensation algorithms.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+Tiny2c冷开机temperature补偿方案
  */
 public class TempCompensation {
     private final String TAG = "TempCompensation";
@@ -85,10 +74,6 @@ start时间
     private static TempCompensation mInstance;
 
     public static synchronized TempCompensation getInstance() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mInstance == null) {
             mInstance = new TempCompensation();
         }
@@ -100,10 +85,6 @@ getnuc-tdata
      */
     public void getNucTData() {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (DeviceIrcmdControlManager.getInstance().getIrcmdEngine() == null){
             return;
         }
@@ -111,10 +92,6 @@ getnuc-tdata
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine().basicDeviceInfoGet(CommonParams.DeviceInfoType.TYPE_DEVICE_SN, snData);
         String sn = new String(snData).trim().replace("\0", "");
         File file = new File(BaseApplication.instance.getExternalCacheDir(), "NUC_T_HIGH_" + sn + ".bin");
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (file.exists()) {
             Log.d(TAG, "File exists, reading from: " + file.getAbsolutePath());
             byte[] nucTableHighByte = FileUtil.readFile2BytesByStream(BaseApplication.instance.getApplicationContext(), file);
@@ -122,13 +99,6 @@ getnuc-tdata
             Log.d(TAG, "getNucTData int: " + Arrays.toString(nucT));
         } else {
             Log.d(TAG, "getNucTData path: " + file.getAbsolutePath());
-            /**
-             * Executes readflashdata operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param DEFAULT_DATA_NUC_T_HIGH Parameter for operation (type: " + progress)
-             *
-             */
             readFlashData(CommonParams.SdFilePath.DEFAULT_DATA_NUC_T_HIGH, file.getPath(),
                     progress -> Log.d(TAG, "getNucTData readFlashData DEFAULT_DATA_NUC_T_HIGH : " + progress));
             byte[] nucTableHighByte = FileUtil.readFile2BytesByStream(BaseApplication.instance.getApplicationContext(), file);
@@ -147,10 +117,6 @@ getnuc-tdata
     private void readFlashData(CommonParams.SdFilePath sdFilePath, String localFilePath,
                                IFileHandleCallback iFileHandleCallback) {
         IrcamEngine ircamEngine = CameraPreviewManager.getInstance().getIrcamEngine();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ircamEngine == null) {
             return;
         }
@@ -161,10 +127,6 @@ getnuc-tdata
             e.printStackTrace();
             Log.d(TAG, sdFilePath + "  advFileRead fail !");
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (result != 0) {
             Log.d(TAG, sdFilePath + "  advFileRead fail !");
         }
@@ -174,17 +136,9 @@ getnuc-tdata
 流程start
      */
     public void startTempCompensation() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Const.DEVICE_TYPE != DeviceType.DEVICE_TYPE_TC2C) {
             return;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (handlerThread != null) {
             return;
         }
@@ -205,35 +159,19 @@ getnuc-tdata
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 try {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (HANDLER_KEY_INIT == msg.what) {
                         Log.d(TAG, "HANDLER_KEY_INIT");
                         isStart = true;
 disabled自动快门
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (DeviceIrcmdControlManager.getInstance().getIrcmdEngine()!=null){
                             IrcmdError basicAutoFFCStatusSet = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                                     .basicAutoFFCStatusSet(CommonParams.AutoFFCStatus.AUTO_FFC_DISABLED);
                             Log.d(TAG, "basicAutoFFCStatusSet=" + basicAutoFFCStatusSet);
                         }
 getNUC-T
-                        /**
-                         * Retrieves the nuctdata with optimized performance for thermal imaging operations.
-                         *
-                         */
                         getNucTData();
                     } else if (HANDLER_KEY_1s == msg.what) {
 手动打快门
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (DeviceIrcmdControlManager.getInstance().getIrcmdEngine() != null){
                             IrcmdError nativeAdvManualFFCUpdateResult = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                                     .basicFFCUpdate();
@@ -245,10 +183,6 @@ getNUC-T
                                     .advDeviceRealtimeStatusGet(CommonParams.RealtimeStatusType.ADV_IR_SENSOR_VTEMP,
                                             nativeAdvDeviceRealtimeStatusGetValue);
                             Log.d(TAG, "advDeviceRealtimeStatusGetResult=" + advDeviceRealtimeStatusGetResult);
-/**
- * Executes 第一次 operation with thermal imaging domain optimization.
- *
- */
 第一次(1s时)打完快门RecordVtemp_start
                             vTempStart = nativeAdvDeviceRealtimeStatusGetValue[0];
                             Log.d(TAG, "Vtemp_start=" + vTempStart);
@@ -259,10 +193,6 @@ start补偿
                             startTime = System.currentTimeMillis();
                         }
                     } else if (HANDLER_KEY_AFTER == msg.what) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (DeviceIrcmdControlManager.getInstance().getIrcmdEngine() != null){
                             Log.d(TAG, "打快门");
 手动打快门
@@ -282,7 +212,7 @@ start补偿
                 }
             }
         };
-        // Init
+        // init
         handler.sendEmptyMessage(HANDLER_KEY_INIT);
         // 1s
         handler.sendEmptyMessageDelayed(HANDLER_KEY_1s, 1000);
@@ -298,10 +228,6 @@ start补偿
      * @return
      */
     public float compensateTemp(float temp) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isCompensation) {
             return temp;
         }
@@ -316,10 +242,6 @@ getΔNUC和ΔVTEMP值
         if (!isCompensation) {
             return;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (DeviceIrcmdControlManager.getInstance()
                 .getIrcmdEngine() != null){
             Log.d(TAG, "getDeltaNucAndVTemp start");
@@ -349,10 +271,6 @@ getΔNUC
      * @return
      */
     private float getNewTempValue(float temp,long deltaTime,short[] nucT,int deltaNUC) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (nucT == null) {
             return temp;
         }
@@ -366,10 +284,6 @@ get新的nuc
         int nucOut = nuc + deltaNUC;
 大于20s后，line性减小
         long edgeTime = (ALL_DURATION - 10) * 1000L;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (deltaTime > edgeTime) {
             nucOut = nuc + deltaNUC * (int) (deltaTime % edgeTime / 1000 * -0.1 + 1);
         }
@@ -383,18 +297,7 @@ get新temperature值
 
 持续30s
         isCompensation = deltaTime < ALL_DURATION * 1000L;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isCompensation) {
-            /**
-             * Handles temperature measurement and calibration with precision thermal data processing.
-             *
-             * @note Temperature values are in Celsius unless otherwise specified.
-             * Accuracy depends on thermal camera calibration.
-             *
-             */
             stopTempCompensation(true);
         }
         return newTempFloat;
@@ -406,10 +309,6 @@ get新temperature值
      * @return
      */
     private float getNewTempValue(float temp) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (nucT == null) {
             return temp;
         }
@@ -424,10 +323,6 @@ get新的nuc
         int nucOut = nuc + deltaNUC;
 大于20s后，line性减小
         long edgeTime = (ALL_DURATION - 10) * 1000L;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (deltaTime > edgeTime) {
             nucOut = nuc + deltaNUC * (int) (deltaTime % edgeTime / 1000 * -0.1 + 1);
         }
@@ -441,18 +336,7 @@ get新temperature值
 
 持续30s
         isCompensation = deltaTime < ALL_DURATION * 1000L;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isCompensation) {
-            /**
-             * Handles temperature measurement and calibration with precision thermal data processing.
-             *
-             * @note Temperature values are in Celsius unless otherwise specified.
-             * Accuracy depends on thermal camera calibration.
-             *
-             */
             stopTempCompensation(true);
         }
         return newTempFloat;
@@ -462,35 +346,19 @@ get新temperature值
 stoptemperature补偿
      */
     public void stopTempCompensation(boolean autoStop) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Const.DEVICE_TYPE != DeviceType.DEVICE_TYPE_TC2C) {
             return;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (autoStop && isStart && DeviceIrcmdControlManager.getInstance().getIrcmdEngine() != null) {
 stop补偿，Restore自动快门
             IrcmdError basicAutoFFCStatusSet = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                     .basicAutoFFCStatusSet(CommonParams.AutoFFCStatus.AUTO_FFC_ENABLE);
             Log.d(TAG, "basicAutoFFCStatusSet=" + basicAutoFFCStatusSet);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (handlerThread != null) {
             handlerThread.quitSafely();
             handlerThread = null;
@@ -500,10 +368,6 @@ stop补偿，Restore自动快门
     }
     private short[] byteToShort(byte[] data) {
         short[] shortValue = new short[data.length / 2];
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < shortValue.length; i++) {
             shortValue[i] = (short) ((data[i * 2] & 0xff) | ((data[i * 2 + 1] & 0xff) << 8));
         }

@@ -16,46 +16,26 @@ data class CustomPseudoBean(
     var colors: IntArray? = null, // 7 个色块颜色值
     var zAltitudes: IntArray? = null, // 7 个色块海拔
     var places: FloatArray? = null, // 7 个色块占比值
-    var isUseCustomPseudo: Boolean = false, // True-自定义渲染 false-动态渲染
-    var maxTemp: Float = 50f, // 自定义渲染maximum温，单位摄氏度，default50摄氏度
-    var minTemp: Float = 0f, // 自定义渲染minimum温，单位摄氏度，default0摄氏度
-    var isColorCustom: Boolean = true, // True-自定义渲染颜色为自定义 false-自定义渲染颜色为推荐
+    var isUseCustomPseudo: Boolean = false, // true-自定义渲染 false-动态渲染
+    var maxTemp: Float = 50f, // 自定义渲染maximum温，单位摄氏度，默认50摄氏度
+    var minTemp: Float = 0f, // 自定义渲染minimum温，单位摄氏度，默认0摄氏度
+    var isColorCustom: Boolean = true, // true-自定义渲染颜色为自定义 false-自定义渲染颜色为推荐
     var customMinColor: Int = 0xff0000FF.toInt(), // 自定义渲染自定义颜色最小值(minimum温)
     var customMiddleColor: Int = 0xFFFF0000.toInt(), // 自定义渲染自定义颜色中间值
     var customMaxColor: Int = 0xFFFFFF00.toInt(), // 自定义渲染自定义颜色最大值(maximum温)
     var customRecommendIndex: Int = 0, // 自定义渲染颜色推荐 index
-    var isUseGray: Boolean = true, // True-自定义渲染使用grayscale渐变 false-自定义渲染使用等色
+    var isUseGray: Boolean = true, // true-自定义渲染使用grayscale渐变 false-自定义渲染使用等色
 ) : Parcelable {
     companion object {
-    /**
-     * Executes loadFromShared functionality.
-     */
-        /**
-         * Executes loadfromshared operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param isTC007 Parameter for operation (type: Boolean = false)
-         *
-         */
         fun loadFromShared(isTC007: Boolean = false): CustomPseudoBean {
             val json = if (isTC007) SharedManager.getTC0007CustomPseudo() else SharedManager.getCustomPseudo()
             return if (json.isNotEmpty()) {
                 Gson().fromJson(json, CustomPseudoBean::class.java)
             } else {
-                /**
-                 * Processes pseudo color configuration for thermal imaging visualization with advanced color mapping algorithms.
-                 *
-                 * @note This method is optimized for thermal imaging pseudo color processing.
-                 * Ensure proper thermal calibration before use.
-                 *
-                 */
                 CustomPseudoBean()
             }
         }
 
-    /**
-     * Handles pseudo color configuration for thermal imaging.
-     */
         fun toCustomPseudoBean(byteArray: ByteArray): CustomPseudoBean {
             val buffer: ByteBuffer = ByteBuffer.wrap(byteArray)
 
@@ -63,38 +43,22 @@ data class CustomPseudoBean(
             var zAltitudes: IntArray? = null
             var places: FloatArray? = null
             val colorSize: Int = byteArray[0].toInt() and 0xff
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (colorSize > 0) {
                 colors = IntArray(colorSize)
                 zAltitudes = IntArray(colorSize)
                 places = FloatArray(colorSize)
 
                 buffer.position(2)
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (i in colors.indices) {
                     colors[i] = buffer.getInt()
                 }
 
                 buffer.position(2 + 7 * 4)
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (i in zAltitudes.indices) {
                     zAltitudes[i] = buffer.get().toInt() and 0xff
                 }
 
                 buffer.position(2 + 7 * 4 + 7)
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (i in places.indices) {
                     places[i] = buffer.getFloat()
                 }
@@ -110,10 +74,6 @@ data class CustomPseudoBean(
             var customMaxColor = buffer.int
             val customRecommendIndex = buffer.int
             val isUseGray = buffer.get() == 0.toByte()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (customMinColor == 0 && customMiddleColor == 0 && customMaxColor == 0)
                 {
                     maxTemp = 50f
@@ -142,21 +102,7 @@ data class CustomPseudoBean(
         }
     }
 
-    /**
-     * Executes saveToShared functionality.
-     */
-    /**
-     * Executes savetoshared operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isTC007 Parameter for operation (type: Boolean = false)
-     *
-     */
     fun saveToShared(isTC007: Boolean = false) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isTC007) {
             SharedManager.saveTC007CustomPseudo(Gson().toJson(this))
         } else {
@@ -164,9 +110,6 @@ data class CustomPseudoBean(
         }
     }
 
-    /**
-     * Retrieves colorlist information.
-     */
     fun getColorList(isTC007: Boolean = false): IntArray? {
         // Note: Synchronization of places calculation required across all usage locations
         if (!isUseCustomPseudo) { // 都没开自定义渲染
@@ -177,15 +120,7 @@ data class CustomPseudoBean(
             val places = getCustomPlaces()
             val actualColors = IntArray(sourceColors.size)
             System.arraycopy(sourceColors, 0, actualColors, 0, sourceColors.size)
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (i in places.size - 1 downTo 1) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (places[i - 1] == places[i]) {
                     actualColors[i - 1] = actualColors[i]
                 }
@@ -196,27 +131,17 @@ data class CustomPseudoBean(
         }
     }
 
-    /**
-     * Retrieves placelist information.
-     */
     fun getPlaceList(): FloatArray? {
         if (!isUseCustomPseudo) { // 都没开自定义渲染
             return null
         }
         return if (isColorCustom) { // 自定义颜色
-            /**
-             * Retrieves the customplaces with optimized performance for thermal imaging operations.
-             *
-             */
             getCustomPlaces()
         } else { // 推荐颜色
             null
         }
     }
 
-    /**
-     * Retrieves customcolors information.
-     */
     fun getCustomColors(): IntArray {
         if (colors == null) { // 老data
             colors = intArrayOf(customMinColor, customMiddleColor, customMaxColor)
@@ -224,9 +149,6 @@ data class CustomPseudoBean(
         return colors!!
     }
 
-    /**
-     * Retrieves customzaltitudes information.
-     */
     fun getCustomZAltitudes(): IntArray {
         if (zAltitudes == null) {
             zAltitudes = intArrayOf(0, 0, 0)
@@ -234,9 +156,6 @@ data class CustomPseudoBean(
         return zAltitudes!!
     }
 
-    /**
-     * Retrieves customplaces information.
-     */
     fun getCustomPlaces(): FloatArray {
         if (places == null) {
             places = floatArrayOf(0f, 0.5f, 1f)
@@ -244,45 +163,26 @@ data class CustomPseudoBean(
         return places!!
     }
 
-    /**
-     * Executes toByteArray functionality.
-     */
-    /**
-     * Executes tobytearray operation with thermal imaging domain optimization.
-     *
-     */
     fun toByteArray(): ByteArray {
         val buffer: ByteBuffer = ByteBuffer.allocate(92)
 
         val colors: IntArray = getCustomColors()
 
-        buffer.put(colors.size.toByte()) // ColorSize
+        buffer.put(colors.size.toByte()) // colorSize
         buffer.put(selectIndex.toByte())
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (color in colors) {
             buffer.putInt(color)
         }
         buffer.position(2 + 7 * 4)
 
         val zAltitudes: IntArray = getCustomZAltitudes()
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (zAltitude in zAltitudes) {
             buffer.put(zAltitude.toByte())
         }
         buffer.position(2 + 7 * 4 + 7)
 
         val places: FloatArray = getCustomPlaces()
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (place in places) {
             buffer.putFloat(place)
         }

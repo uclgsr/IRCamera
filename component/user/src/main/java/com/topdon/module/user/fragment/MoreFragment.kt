@@ -46,20 +46,6 @@ import com.topdon.lib.core.R as RCore
 - [ExtraKeyConfig.IS_TC007] - 当前device是否为 TC007
  */
 // Legacy ARouter route annotation - now using NavigationManager
-/**
- * Specialized thermal imaging component providing MoreFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class MoreFragment : BaseFragment(), View.OnClickListener {
     /**
 从上一interface传递过来的，当前是否为 TC007 devicetype.
@@ -85,16 +71,8 @@ TC007 firmwareUpgrade ViewModel.
     private lateinit var itemSettingBottomText: TextView
     private lateinit var tvRightText: TextView
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.fragment_more
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         isTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
 
@@ -111,10 +89,10 @@ TC007 firmwareUpgrade ViewModel.
         itemSettingBottomText = requireView().findViewById(R.id.item_setting_bottom_text)
         tvRightText = requireView().findViewById(R.id.tv_right_text)
 
-        settingItemModel.setOnClickListener(this) // Temperature修正
-        settingItemCorrection.setOnClickListener(this) // Image校正
-        settingItemDual.setOnClickListener(this) // Dual light校正
-        settingItemUnit.setOnClickListener(this) // Temperature单温
+        settingItemModel.setOnClickListener(this) // temperature修正
+        settingItemCorrection.setOnClickListener(this) // image校正
+        settingItemDual.setOnClickListener(this) // dual light校正
+        settingItemUnit.setOnClickListener(this) // temperature单温
         settingVersion.setOnClickListener(this) // TC007firmwareUpgrade
         settingDeviceInformation.setOnClickListener(this) // TC007deviceinfo
         settingReset.setOnClickListener(this) // TC007Restore出厂settings
@@ -126,25 +104,13 @@ TC007 firmwareUpgrade ViewModel.
         settingDeviceInformation.isVisible = isTC007
         settingItemDual.isVisible = !isTC007 && DeviceTools.isTC001PlusConnect()
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isTC007) {
-            /**
-             * Executes refresh07connect operation with thermal imaging domain optimization.
-             *
-             */
             refresh07Connect(WebSocketProxy.getInstance().isTC007Connect())
         }
 
         val settingItemAutoShow = requireView().findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.setting_item_auto_show)
         settingItemAutoShow.isChecked = if (isTC007) SharedManager.isConnect07AutoOpen else SharedManager.isConnectAutoOpen
         settingItemAutoShow.setOnCheckedChangeListener { _, isChecked ->
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isTC007) {
                 SharedManager.isConnect07AutoOpen = isChecked
             } else {
@@ -154,18 +120,10 @@ TC007 firmwareUpgrade ViewModel.
 
         settingItemConfigSelect.isChecked = if (isTC007) WifiSaveSettingUtil.isSaveSetting else SaveSettingUtil.isSaveSetting
         settingItemConfigSelect.setOnCheckedChangeListener { _, isChecked ->
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isChecked) {
                 TipDialog.Builder(requireContext())
                     .setMessage(RCore.string.save_setting_tips)
                     .setPositiveListener(RCore.string.app_ok) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isTC007)
                             {
                                 WifiSaveSettingUtil.isSaveSetting = true
@@ -180,10 +138,6 @@ TC007 firmwareUpgrade ViewModel.
                     .setCanceled(false)
                     .create().show()
             } else {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isTC007)
                     {
                         WifiSaveSettingUtil.reset()
@@ -198,115 +152,46 @@ TC007 firmwareUpgrade ViewModel.
 
         firmwareViewModel.firmwareDataLD.observe(this) {
             tvUpgradePoint.isVisible = it != null
-            /**
-             * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-             *
-             */
             dismissLoadingDialog()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (it == null) { // 请求success但没有firmwareUpgrade包，即已是最新
                 ToastUtils.showShort(RCore.string.setting_firmware_update_latest_version)
             } else {
-                /**
-                 * Executes showfirmwareupdialog operation with thermal imaging domain optimization.
-                 *
-                 */
                 showFirmwareUpDialog(it)
             }
         }
         firmwareViewModel.failLD.observe(this) {
-            /**
-             * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-             *
-             */
             dismissLoadingDialog()
             TToast.shortToast(requireContext(), if (it) RCore.string.upgrade_bind_error else RCore.string.operation_failed_tips)
             tvUpgradePoint.isVisible = false
         }
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
-    /**
-     * Executes connected operation with thermal imaging domain optimization.
-     *
-     */
     override fun connected() {
         settingItemDual.isVisible = !isTC007 && DeviceTools.isTC001PlusConnect()
     }
 
-    /**
-     * Executes disconnected operation with thermal imaging domain optimization.
-     *
-     */
     override fun disConnected() {
         settingItemDual.isVisible = false
     }
 
-    /**
-     * Executes onsocketconnected operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isTS004 Parameter for operation (type: Boolean)
-     *
-     */
     override fun onSocketConnected(isTS004: Boolean) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isTS004 && isTC007) {
-            /**
-             * Executes refresh07connect operation with thermal imaging domain optimization.
-             *
-             */
             refresh07Connect(true)
         }
     }
 
-    /**
-     * Executes onsocketdisconnected operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isTS004 Parameter for operation (type: Boolean)
-     *
-     */
     override fun onSocketDisConnected(isTS004: Boolean) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isTS004 && isTC007) {
-            /**
-             * Executes refresh07connect operation with thermal imaging domain optimization.
-             *
-             */
             refresh07Connect(false)
         }
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
-            settingItemModel -> { // Temperature修正
+            settingItemModel -> { // temperature修正
                 NavigationManager.getInstance().build(
                     RouterConfig.IR_SETTING,
                 ).withBoolean(ExtraKeyConfig.IS_TC007, isTC007).navigation(requireContext())
@@ -314,7 +199,7 @@ TC007 firmwareUpgrade ViewModel.
             settingItemDual -> {
                 NavigationManager.getInstance().build(RouterConfig.MANUAL_START).navigation(requireContext())
             }
-            settingItemUnit -> { // Temperature单位
+            settingItemUnit -> { // temperature单位
                 NavigationManager.getInstance().build(RouterConfig.UNIT).navigation(requireContext())
             }
             settingItemCorrection -> { // 锅盖校正
@@ -324,24 +209,12 @@ TC007 firmwareUpgrade ViewModel.
             }
             settingVersion -> { // TC007firmwareUpgrade
 由于双通道方案存在问题，V3.30临时使用 apk 内置firmwareUpgrade包，此处comment强制Login逻辑
-// If (LMS.getInstance().isLogin) {
+//               if (LMS.getInstance().isLogin) {
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (firmwareData != null) {
-                    /**
-                     * Executes showfirmwareupdialog operation with thermal imaging domain optimization.
-                     *
-                     */
                     showFirmwareUpDialog(firmwareData)
                 } else {
                     XLog.i("TC007 firmwareUpgrade - click查询")
-                    /**
-                     * Executes showloadingdialog operation with thermal imaging domain optimization.
-                     *
-                     */
                     showLoadingDialog()
                     firmwareViewModel.queryFirmware(false)
                 }
@@ -350,10 +223,6 @@ TC007 firmwareUpgrade ViewModel.
 //               }
             }
             settingDeviceInformation -> { // TC007deviceinfo
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (WebSocketProxy.getInstance().isTC007Connect()) {
                     NavigationManager.getInstance()
                         .build(RouterConfig.DEVICE_INFORMATION)
@@ -362,15 +231,7 @@ TC007 firmwareUpgrade ViewModel.
                 }
             }
             settingReset -> { // TC007Restore出厂settings
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (WebSocketProxy.getInstance().isTC007Connect()) {
-                    /**
-                     * Executes restorefactory operation with thermal imaging domain optimization.
-                     *
-                     */
                     restoreFactory()
                 }
             }
@@ -387,17 +248,9 @@ TC007 firmwareUpgrade ViewModel.
         settingReset.setRightTextId(if (isConnect) 0 else RCore.string.app_no_connect)
         tvRightText.isVisible = isConnect
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isConnect) {
             lifecycleScope.launch {
                 val productBean: ProductBean? = TC007Repository.getProductInfo()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (productBean == null) {
                     TToast.shortToast(requireContext(), RCore.string.operation_failed_tips)
                 } else {
@@ -412,13 +265,6 @@ TC007 firmwareUpgrade ViewModel.
     /**
 displayfirmwareUpgradetip弹框.
      */
-    /**
-     * Executes showfirmwareupdialog operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param firmwareData Parameter for operation (type: FirmwareViewModel.FirmwareData)
-     *
-     */
     private fun showFirmwareUpDialog(firmwareData: FirmwareViewModel.FirmwareData) {
         val dialog = FirmwareUpDialog(requireContext())
         dialog.titleStr = "${getString(RCore.string.update_new_version)} ${firmwareData.version}"
@@ -427,51 +273,25 @@ displayfirmwareUpgradetip弹框.
         dialog.isShowRestartTips = true
         dialog.onConfirmClickListener = {
 由于双通道方案存在问题，V3.30临时使用 apk 内置firmwareUpgrade包，此处commentDownload逻辑
-            // DownloadFirmware(firmwareData)
-            /**
-             * Executes installfirmware operation with thermal imaging domain optimization.
-             *
-             */
+            // downloadFirmware(firmwareData)
             installFirmware(FileConfig.getFirmwareFile(firmwareData.downUrl))
         }
         dialog.show()
     }
 
-    /**
-     * Retrieves filesizestr information.
-     */
     private fun getFileSizeStr(size: Long): String =
         if (size < 1024) {
             "${size}B"
         } else if (size < 1024 * 1024) {
-            /**
-             * Executes decimalformat operation with thermal imaging domain optimization.
-             *
-             */
             DecimalFormat("#.0").format(size.toDouble() / 1024) + "KB"
         } else if (size < 1024 * 1024 * 1024) {
-            /**
-             * Executes decimalformat operation with thermal imaging domain optimization.
-             *
-             */
             DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024) + "MB"
         } else {
-            /**
-             * Executes decimalformat operation with thermal imaging domain optimization.
-             *
-             */
             DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024 / 1024) + "GB"
         }
 
     /**
 Download指定firmwareUpgrade包
-     */
-    /**
-     * Executes downloadfirmware operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param firmwareData Parameter for operation (type: FirmwareViewModel.FirmwareData)
-     *
      */
     private fun downloadFirmware(firmwareData: FirmwareViewModel.FirmwareData) {
         lifecycleScope.launch {
@@ -484,36 +304,14 @@ Download指定firmwareUpgrade包
                     progressDialog.refreshProgress(current, total)
                 }
             progressDialog.dismiss()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSuccess) {
-                /**
-                 * Executes installfirmware operation with thermal imaging domain optimization.
-                 *
-                 */
                 installFirmware(file)
             } else {
-                /**
-                 * Executes showredownloaddialog operation with thermal imaging domain optimization.
-                 *
-                 */
                 showReDownloadDialog(firmwareData)
             }
         }
     }
 
-    /**
-     * Executes installFirmware functionality.
-     */
-    /**
-     * Executes installfirmware operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param file Parameter for operation (type: File)
-     *
-     */
     private fun installFirmware(file: File) {
         lifecycleScope.launch {
             XLog.d("TC007 firmwareUpgrade - startInstallfirmwareUpgrade包")
@@ -522,10 +320,6 @@ Download指定firmwareUpgrade包
 
             val isSuccess = TC007Repository.updateFirmware(file)
             installDialog.dismiss()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSuccess) {
                 XLog.d("TC007 firmwareUpgrade - firmwareUpgrade包Send往 TC007 success，即将disconnectconnection")
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
@@ -534,10 +328,6 @@ Download指定firmwareUpgrade包
                     .setMessage(RCore.string.firmware_up_success)
                     .setPositiveListener(RCore.string.app_confirm) {
                         NavigationManager.getInstance().build(RouterConfig.MAIN).navigation(requireContext())
-                        /**
-                         * Executes requireactivity operation with thermal imaging domain optimization.
-                         *
-                         */
                         requireActivity().finish()
                     }
                     .setCancelListener(RCore.string.app_cancel) {
@@ -545,25 +335,11 @@ Download指定firmwareUpgrade包
                     .create().show()
             } else {
                 XLog.w("TC007 firmwareUpgrade - firmwareUpgrade包Send往 TC007 failed!")
-                /**
-                 * Executes showreinstalldialog operation with thermal imaging domain optimization.
-                 *
-                 */
                 showReInstallDialog(file)
             }
         }
     }
 
-    /**
-     * Executes showReInstallDialog functionality.
-     */
-    /**
-     * Executes showreinstalldialog operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param file Parameter for operation (type: File)
-     *
-     */
     private fun showReInstallDialog(file: File) {
         val dialog = ConfirmSelectDialog(requireContext())
         dialog.setShowIcon(true)
@@ -571,25 +347,11 @@ Download指定firmwareUpgrade包
         dialog.setCancelText(RCore.string.ts004_install_cancel)
         dialog.setConfirmText(RCore.string.ts004_install_continue)
         dialog.onConfirmClickListener = {
-            /**
-             * Executes installfirmware operation with thermal imaging domain optimization.
-             *
-             */
             installFirmware(file)
         }
         dialog.show()
     }
 
-    /**
-     * Executes showReDownloadDialog functionality.
-     */
-    /**
-     * Executes showredownloaddialog operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param firmwareData Parameter for operation (type: FirmwareViewModel.FirmwareData)
-     *
-     */
     private fun showReDownloadDialog(firmwareData: FirmwareViewModel.FirmwareData) {
         val dialog = ConfirmSelectDialog(requireContext())
         dialog.setShowIcon(true)
@@ -597,31 +359,16 @@ Download指定firmwareUpgrade包
         dialog.setCancelText(RCore.string.ts004_download_cancel)
         dialog.setConfirmText(RCore.string.ts004_download_continue)
         dialog.onConfirmClickListener = {
-            /**
-             * Executes downloadfirmware operation with thermal imaging domain optimization.
-             *
-             */
             downloadFirmware(firmwareData)
         }
         dialog.show()
     }
 
-    /**
-     * Executes restoreFactory functionality.
-     */
-    /**
-     * Executes restorefactory operation with thermal imaging domain optimization.
-     *
-     */
     private fun restoreFactory() {
         TipDialog.Builder(requireContext())
             .setTitleMessage(getString(RCore.string.ts004_reset_tip1, "TC007"))
             .setMessage(getString(RCore.string.ts004_reset_tip2))
             .setPositiveListener(RCore.string.app_ok) {
-                /**
-                 * Executes resetall operation with thermal imaging domain optimization.
-                 *
-                 */
                 resetAll()
             }
             .setCancelListener(RCore.string.app_cancel) {
@@ -630,48 +377,21 @@ Download指定firmwareUpgrade包
             .create().show()
     }
 
-    /**
-     * Executes resetAll functionality.
-     */
-    /**
-     * Executes resetall operation with thermal imaging domain optimization.
-     *
-     */
     private fun resetAll() {
-        /**
-         * Executes showloadingdialog operation with thermal imaging domain optimization.
-         *
-         */
         showLoadingDialog(RCore.string.ts004_reset_tip3)
         lifecycleScope.launch {
             val isSuccess = TC007Repository.resetToFactory()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isSuccess) {
                 XLog.d("TC007 Restore出厂settingssuccess，即将disconnectconnection")
                 TToast.shortToast(requireContext(), RCore.string.ts004_reset_tip4)
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
                 EventBus.getDefault().post(TS004ResetEvent())
                 NavigationManager.getInstance().build(RouterConfig.MAIN).navigation(requireContext())
-                /**
-                 * Executes requireactivity operation with thermal imaging domain optimization.
-                 *
-                 */
                 requireActivity().finish()
             } else {
                 TToast.shortToast(requireContext(), RCore.string.operation_failed_tips)
             }
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(500)
-            /**
-             * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-             *
-             */
             dismissLoadingDialog()
         }
     }

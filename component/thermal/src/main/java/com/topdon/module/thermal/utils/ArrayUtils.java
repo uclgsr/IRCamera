@@ -1,29 +1,29 @@
-// Package com.topdon.module.thermal.utils;
+//package com.topdon.module.thermal.utils;
 //
-// Import java.util.ArrayList;
+//import java.util.ArrayList;
 //
-// Public class ArrayUtils {
+//public class ArrayUtils {
 //
-// Public static int getMaxIndex(float[] data) {
-// Int maxIndex = 0;
-// For (int i = 0; i < data.length - 2; i++) {
-// If (data[i + 1] > data[maxIndex]) {
-// MaxIndex = i + 1;
+//    public static int getMaxIndex(float[] data) {
+//        int maxIndex = 0;
+//        for (int i = 0; i < data.length - 2; i++) {
+//            if (data[i + 1] > data[maxIndex]) {
+//                maxIndex = i + 1;
 //            }
 //        }
-// Return maxIndex;
+//        return maxIndex;
 //    }
 //
-// Public static int getMinIndex(float[] data) {
-// Int minIndex = 0;
-// For (int i = 0; i < data.length - 2; i++) {
-// If (data[i + 1] == 0) {
-// Continue;
+//    public static int getMinIndex(float[] data) {
+//        int minIndex = 0;
+//        for (int i = 0; i < data.length - 2; i++) {
+//            if (data[i + 1] == 0) {
+//                continue;
 //            }
-// If (data[i + 1] < data[minIndex]) {
-// MinIndex = i + 1;
+//            if (data[i + 1] < data[minIndex]) {
+//                minIndex = i + 1;
 //            }
 //        }
-// Return minIndex;
+//        return minIndex;
 //    }
-// }
+//}

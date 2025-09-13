@@ -6,7 +6,6 @@
         <!-- Data binding placeholder -->
     </data>
 
-    <!-- Linear container layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -44,7 +43,6 @@
             app:cardElevation="2dp"
             app:cardBackgroundColor="#2a2a2a">
 
-            <!-- Linear container layout -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,7 +82,6 @@
             app:cardElevation="2dp"
             app:cardBackgroundColor="#2a2a2a">
 
-            <!-- Linear container layout -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

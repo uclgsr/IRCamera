@@ -16,44 +16,18 @@ import com.topdon.lib.core.db.entity.ItemDetect
  * Created by LCG on 2024/8/19.
  */
 @Dao
-/**
- * Specialized thermal imaging component providing HouseDetectDao functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 abstract class HouseDetectDao {
     /**
-     * 按指定的info新建a检测data，目录及项目使用default值.
+     * 按指定的info新建一个检测data，目录及项目使用默认值.
      */
     @Transaction
     open fun insert(houseDetect: HouseDetect): Long {
         val id: Long = insertDetect(houseDetect)
         val dirList: ArrayList<DirDetect> = DirDetect.buildDefaultDirList(parentId = id)
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in dirList.indices) {
             val dirId = insertDir(dirList[i])
             val itemList: ArrayList<ItemDetect> = ItemDetect.buildDefaultItemList(dirId, i)
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (item in itemList) {
-                /**
-                 * Executes insertitem operation with thermal imaging domain optimization.
-                 *
-                 */
                 insertItem(item)
             }
         }
@@ -61,24 +35,16 @@ abstract class HouseDetectDao {
     }
 
     /**
-     * 为指定检测插入default的目录列表.
+     * 为指定检测插入默认的目录列表.
      */
     @Transaction
     open fun insertDefaultDirs(houseDetect: HouseDetect) {
         houseDetect.dirList = DirDetect.buildDefaultDirList(parentId = houseDetect.id)
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in houseDetect.dirList.indices) {
             val dir: DirDetect = houseDetect.dirList[i]
             dir.id = insertDir(dir)
             dir.houseDetect = houseDetect
             dir.itemList = ItemDetect.buildDefaultItemList(dir.id, i)
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (item in dir.itemList) {
                 item.id = insertItem(item)
                 item.dirDetect = dir
@@ -90,16 +56,8 @@ abstract class HouseDetectDao {
     open fun queryById(id: Long): HouseDetect? {
         val houseDetect: HouseDetect = queryDetectById(id) ?: return null
         val dirList: List<DirDetect> = queryDirList(id)
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (dir in dirList) {
             val itemList: List<ItemDetect> = queryItemList(dir.id)
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (item in itemList) {
                 item.dirDetect = dir
             }
@@ -116,10 +74,6 @@ abstract class HouseDetectDao {
     open fun queryDir(dirId: Long): DirDetect? {
         val dir: DirDetect = queryDirById(dirId) ?: return null
         val itemList: List<ItemDetect> = queryItemList(dirId)
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (item in itemList) {
             item.dirDetect = dir
         }
@@ -135,39 +89,19 @@ abstract class HouseDetectDao {
         for (i in houseDetect.dirList.indices) {
             val dir = houseDetect.dirList[i]
             dir.position = i
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
-            if (dir.id == 0L) { // Copy的目录
+            if (dir.id == 0L) { // copy的目录
                 dir.id = insertDir(dir)
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (item in dir.itemList) {
                     item.parentId = dir.id
                     item.id = insertItem(item)
                     item.dirDetect = dir
                 }
             } else {
-                /**
-                 * Executes updatedir operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateDir(dir)
                 oldDirList.remove(dir)
             }
         }
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (delDir in oldDirList) {
-            /**
-             * Executes deletedir operation with thermal imaging domain optimization.
-             *
-             */
             deleteDir(delDir)
         }
     }
@@ -179,76 +113,40 @@ abstract class HouseDetectDao {
         if (dirDetect.itemList.isEmpty()) { // 所有子项目都没了，这个目录也干掉
             deleteDir(dirDetect)
         } else {
-            /**
-             * Executes updatedir operation with thermal imaging domain optimization.
-             *
-             */
-            updateDir(dirDetect) // Update目录name及数量
+            updateDir(dirDetect) // update目录name及数量
             val oldItemList: ArrayList<ItemDetect> = ArrayList(queryItemList(dirDetect.id))
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (i in dirDetect.itemList.indices) {
                 val item = dirDetect.itemList[i]
                 item.position = i
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
-                if (item.id == 0L) { // Copy的项目
+                if (item.id == 0L) { // copy的项目
                     item.id = insertItem(item)
                 } else {
-                    /**
-                     * Executes updateitem operation with thermal imaging domain optimization.
-                     *
-                     */
                     updateItem(item)
                     oldItemList.remove(item)
                 }
             }
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (delItem in oldItemList) {
-                /**
-                 * Executes deleteitem operation with thermal imaging domain optimization.
-                 *
-                 */
                 deleteItem(delItem)
             }
         }
     }
 
     /**
-     * copya检测，注意由于在列表中触发，列表不需要目录及项目，故而Return值中的目录及项目未load
+     * copy一个检测，注意由于在列表中触发，列表不需要目录及项目，故而Return值中的目录及项目未load
      */
     @Transaction
     open fun copyDetect(oldDetect: HouseDetect): HouseDetect {
         val newDetect = oldDetect.copyOne()
         newDetect.id = insertDetect(newDetect)
         val dirList: List<DirDetect> = queryDirList(oldDetect.id)
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (dir in dirList) {
             val itemList: List<ItemDetect> = queryItemList(dir.id)
             dir.id = 0
             dir.parentId = newDetect.id
             val dirId: Long = insertDir(dir)
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (item in itemList) {
                 item.id = 0
                 item.parentId = dirId
-                /**
-                 * Executes insertitem operation with thermal imaging domain optimization.
-                 *
-                 */
                 insertItem(item)
             }
         }
@@ -263,31 +161,19 @@ abstract class HouseDetectDao {
         dirList: ArrayList<DirDetect>,
         position: Int,
     ): DirDetect {
-        // Copy位置后area所有目录 position 需偏移一位
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
+        // copy位置后area所有目录 position 需偏移一位
         for (i in position + 1 until dirList.size) {
             val dir: DirDetect = dirList[i]
             dir.position += 1
-            /**
-             * Executes updatedir operation with thermal imaging domain optimization.
-             *
-             */
             updateDir(dir)
         }
 
-        // Addcopy的目录
+        // addcopy的目录
         val oldDir = dirList[position]
         val newDir = oldDir.copyOne()
         newDir.id = insertDir(newDir)
 
-        // Addcopy的目录下的项目列表
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
+        // addcopy的目录下的项目列表
         for (item in newDir.itemList) {
             item.parentId = newDir.id
             item.id = insertItem(item)
@@ -304,46 +190,26 @@ abstract class HouseDetectDao {
         itemList: ArrayList<ItemDetect>,
         position: Int,
     ): ItemDetect {
-        // Copy位置后area所有项目 position 需偏移一位
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
+        // copy位置后area所有项目 position 需偏移一位
         for (i in position + 1 until itemList.size) {
             val item: ItemDetect = itemList[i]
             item.position += 1
-            /**
-             * Executes updateitem operation with thermal imaging domain optimization.
-             *
-             */
             updateItem(item)
         }
 
-        // Addcopy的项目
+        // addcopy的项目
         val oldItem = itemList[position]
         val newItem = oldItem.copyOne(position = oldItem.position + 1, itemName = oldItem.copyName())
         newItem.id = insertItem(newItem)
 
-        // Copy后目录里的3个数量可能需要refresh
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // copy后目录里的3个数量可能需要refresh
         if (newItem.state > 0) {
             val dir = newItem.dirDetect
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (newItem.state) {
                 1 -> dir.goodCount++
                 2 -> dir.warnCount++
                 3 -> dir.dangerCount++
             }
-            /**
-             * Executes updatedir operation with thermal imaging domain optimization.
-             *
-             */
             updateDir(dir)
         }
         return newItem

@@ -21,33 +21,12 @@ import java.io.InputStream
  * @date: 2023/10/28 15:35
  */
 /**
- * Specialized thermal imaging component providing AlgorithmImageActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Algorithm image activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
  */
 class AlgorithmImageActivity : AppCompatActivity() {
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(R.layout.activity_image_color)
         val imageView = findViewById<ImageView>(R.id.img)
         val imgARGB = findViewById<ImageView>(R.id.img_argb)
@@ -64,10 +43,6 @@ class AlgorithmImageActivity : AppCompatActivity() {
         var buffer = ByteArray(0)
         buffer =
             try {
-                /**
-                 * Executes bytearray operation with thermal imaging domain optimization.
-                 *
-                 */
                 ByteArray(inputStream!!.available())
             } catch (e: IOException) {
                 throw RuntimeException(e)
@@ -97,10 +72,6 @@ class AlgorithmImageActivity : AppCompatActivity() {
             }
         bufferB =
             try {
-                /**
-                 * Executes bytearray operation with thermal imaging domain optimization.
-                 *
-                 */
                 ByteArray(inputStream!!.available())
             } catch (e: IOException) {
                 throw RuntimeException(e)
@@ -139,10 +110,6 @@ get下一frame的imagedata
             resMat.put(0, 0, nextImageBytes)
             Imgproc.cvtColor(resMat, resMat, Imgproc.COLOR_YUV2GRAY_YUYV)
             val image = Mat()
-            /**
-             * Executes applycolormap operation with thermal imaging domain optimization.
-             *
-             */
             applyColorMap(resMat, image, 15)
             Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2RGBA)
             val startTime = System.currentTimeMillis()
@@ -173,10 +140,6 @@ get下一frame的imagedata
             resMat.put(0, 0, nextImageBytes)
             Imgproc.cvtColor(resMat, resMat, Imgproc.COLOR_YUV2GRAY_YUYV)
             val nextImage = Mat()
-            /**
-             * Executes applycolormap operation with thermal imaging domain optimization.
-             *
-             */
             applyColorMap(resMat, nextImage, 15)
             Imgproc.cvtColor(nextImage, nextImage, Imgproc.COLOR_BGR2RGBA)
 
@@ -185,15 +148,11 @@ get下一frame的imagedata
             baseMat.put(0, 0, baseImageBytes)
             Imgproc.cvtColor(baseMat, baseMat, Imgproc.COLOR_YUV2GRAY_YUYV)
             val baseImage = Mat()
-            /**
-             * Executes applycolormap operation with thermal imaging domain optimization.
-             *
-             */
             applyColorMap(baseMat, baseImage, 15)
             Imgproc.cvtColor(baseImage, baseImage, Imgproc.COLOR_BGR2RGBA)
 
-// Val tmp = Mat(192, 256, CvType.CV_8UC4)
-// Tmp.put(0,0,ImageColorTools.matToByteArrayBy4(baseImage))
+//            val tmp = Mat(192, 256, CvType.CV_8UC4)
+//            tmp.put(0,0,ImageColorTools.matToByteArrayBy4(baseImage))
 //            Imgproc.cvtColor(tmp,tmp, COLOR_RGBA2GRAY)
 
             val startTime = System.currentTimeMillis()

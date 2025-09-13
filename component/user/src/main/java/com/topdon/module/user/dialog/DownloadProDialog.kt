@@ -13,45 +13,16 @@ import com.topdon.lib.core.R as LibAppR
 import com.topdon.lib.core.R as RCore
 
 /**
- * Specialized thermal imaging component providing DownloadProDialog functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+Download进度tip弹框.
+ * Created by LCG on 2024/3/5.
  */
 class DownloadProDialog(context: Context) : Dialog(context, LibAppR.style.InfoDialog) {
     private val rootView: View = LayoutInflater.from(context).inflate(R.layout.dialog_download_pro, null)
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /**
-         * Configures the cancelable with validation and thermal imaging optimization.
-         *
-         */
         setCancelable(false)
-        /**
-         * Configures the canceledontouchoutside with validation and thermal imaging optimization.
-         *
-         */
         setCanceledOnTouchOutside(false)
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(rootView)
 
         window?.let {
@@ -64,14 +35,6 @@ class DownloadProDialog(context: Context) : Dialog(context, LibAppR.style.InfoDi
 
     /**
 refresh进度值
-     */
-    /**
-     * Executes refreshprogress operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param current Parameter for operation (type: Long)
-     * @param total Parameter for operation (type: Long)
-     *
      */
     fun refreshProgress(
         current: Long,
@@ -87,29 +50,14 @@ refresh进度值
         tvProgress.text = "$progress%"
     }
 
-    /**
-     * Retrieves filesizestr information.
-     */
     private fun getFileSizeStr(size: Long): String =
         if (size < 1024) {
             "${size}B"
         } else if (size < 1024 * 1024) {
-            /**
-             * Executes decimalformat operation with thermal imaging domain optimization.
-             *
-             */
             DecimalFormat("#.0").format(size.toDouble() / 1024) + "KB"
         } else if (size < 1024 * 1024 * 1024) {
-            /**
-             * Executes decimalformat operation with thermal imaging domain optimization.
-             *
-             */
             DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024) + "MB"
         } else {
-            /**
-             * Executes decimalformat operation with thermal imaging domain optimization.
-             *
-             */
             DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024 / 1024) + "GB"
         }
 }

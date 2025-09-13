@@ -50,20 +50,6 @@ import java.util.*
  * 
  * @author IRCamera Android Sensor Node (Spoke)
  */
-/**
- * Specialized thermal imaging component providing HubSpokeIntegrationActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrationBinding>() {
 
     companion object {
@@ -71,10 +57,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         private const val DEFAULT_PC_CONTROLLER_PORT = 8080
     }
 
-    /**
-     * Initializes the contentlayoutid component for thermal imaging operations.
-     *
-     */
     override fun initContentLayoutId(): Int = R.layout.activity_hub_spoke_integration
 
     // Core components
@@ -92,14 +74,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private var isServiceBound = false
 
     private val serviceConnection = object : ServiceConnection {
-        /**
-         * Executes onserviceconnected operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param name Parameter for operation (type: ComponentName?)
-         * @param service Parameter for operation (type: IBinder?)
-         *
-         */
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as RecordingService.RecordingServiceBinder
             recordingService = binder.getService()
@@ -107,30 +81,11 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             isServiceBound = true
             
             Log.i(TAG, "Connected to RecordingService")
-            /**
-             * Configures the uprecordingmonitoring with validation and thermal imaging optimization.
-             *
-             */
             setupRecordingMonitoring()
-            /**
-             * Configures the upnetworkmonitoring with validation and thermal imaging optimization.
-             *
-             */
             setupNetworkMonitoring()
-            /**
-             * Executes updateui operation with thermal imaging domain optimization.
-             *
-             */
             updateUI()
         }
 
-        /**
-         * Executes onservicedisconnected operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param name Parameter for operation (type: ComponentName?)
-         *
-         */
         override fun onServiceDisconnected(name: ComponentName?) {
             recordingService = null
             isServiceBound = false
@@ -138,57 +93,22 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
     }
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        /**
-         * Initializes the ializeviews component for thermal imaging operations.
-         *
-         */
         initializeViews()
-        /**
-         * Initializes the ializecomponents component for thermal imaging operations.
-         *
-         */
         initializeComponents()
-        /**
-         * Configures the upclicklisteners with validation and thermal imaging optimization.
-         *
-         */
         setupClickListeners()
-        /**
-         * Executes bindtorecordingservice operation with thermal imaging domain optimization.
-         *
-         */
         bindToRecordingService()
         
-        /**
-         * Executes updateui operation with thermal imaging domain optimization.
-         *
-         */
         updateUI()
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
         super.onDestroy()
         
         lifecycleScope.launch {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (::networkServer.isInitialized) {
                     networkServer.cleanup()
                 }
@@ -197,22 +117,11 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             }
         }
         
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isServiceBound) {
-            /**
-             * Executes unbindservice operation with thermal imaging domain optimization.
-             *
-             */
             unbindService(serviceConnection)
         }
     }
 
-    /**
-     * Initializes ializeviews component.
-     */
     private fun initializeViews() {
         // Set default session directory using binding
         val timestamp = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault()).format(Date())
@@ -220,9 +129,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         binding.sessionDirectoryEditText.setText(defaultSessionDir)
     }
 
-    /**
-     * Initializes ializecomponents component.
-     */
     private fun initializeComponents() {
         timeManager = TimeManager.getInstance(this)
         
@@ -234,10 +140,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         Log.i(TAG, "Enhanced BLE Module initialized with Nordic BLE backend")
         
         // Initialize Enhanced BLE Manager for advanced multi-device coordination
-        /**
-         * Initializes the ializeadvancedblecoordination component for thermal imaging operations.
-         *
-         */
         initializeAdvancedBleCoordination()
         
         // Initialize network server (will be managed by service later)
@@ -259,17 +161,9 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 Log.i(TAG, "Advanced BLE coordination initialized for hub-spoke system")
                 
                 // Setup BLE device monitoring for real-time status updates
-                /**
-                 * Configures the upbledevicemonitoring with validation and thermal imaging optimization.
-                 *
-                 */
                 setupBleDeviceMonitoring()
                 
                 // Auto-discover and setup GSR sensors for physiological sensing
-                /**
-                 * Executes discovergsrsensorsforhubspoke operation with thermal imaging domain optimization.
-                 *
-                 */
                 discoverGsrSensorsForHubSpoke()
                 
             } catch (e: Exception) {
@@ -286,17 +180,9 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             try {
                 // Monitor system BLE status and update UI
                 launch {
-                    /**
-                     * Executes while operation with thermal imaging domain optimization.
-                     *
-                     */
                     while (isServiceBound || !isDestroyed) {
                         try {
                             val systemStatus = unifiedBleManager.getSystemStatus()
-                            /**
-                             * Executes updateblestatusui operation with thermal imaging domain optimization.
-                             *
-                             */
                             updateBleStatusUI(systemStatus)
                             
                             // Log system status for debugging
@@ -326,10 +212,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             try {
                 // Start BLE device discovery to find available GSR sensors
                 enhancedBLE.addScanListener(object : com.topdon.ble.callback.ScanListener {
-                    /**
-                     * Executes onscanstart operation with thermal imaging domain optimization.
-                     *
-                     */
                     override fun onScanStart() {
                         Log.d(TAG, "Hub-spoke GSR sensor discovery started")
                         runOnUiThread {
@@ -337,29 +219,13 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                         }
                     }
                     
-                    /**
-                     * Executes onscanstop operation with thermal imaging domain optimization.
-                     *
-                     */
                     override fun onScanStop() {
                         Log.d(TAG, "Hub-spoke GSR sensor discovery stopped")
                     }
                     
-                    /**
-                     * Executes onscanresult operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param device Parameter for operation (type: Device)
-                     * @param isConnectedBySys Parameter for operation (type: Boolean)
-                     *
-                     */
                     override fun onScanResult(device: Device, isConnectedBySys: Boolean) {
                         // Check if device is a GSR sensor (Shimmer3 GSR+)
                         val deviceName = device.name?.uppercase() ?: ""
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (deviceName.contains("SHIMMER") || deviceName.contains("GSR")) {
                             Log.i(TAG, "GSR sensor detected for hub-spoke: ${device.name} (${device.address})")
                             
@@ -368,23 +234,11 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                             
                             runOnUiThread {
                                 binding.statusTextView.text = "GSR sensor found: ${device.name}"
-                                /**
-                                 * Executes updatediscovereddevicesui operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 updateDiscoveredDevicesUI(device, device.getRssi())
                             }
                         }
                     }
                     
-                    /**
-                     * Executes onscanerror operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param errorCode Parameter for operation (type: Int)
-                     * @param errorMsg Parameter for operation (type: String?)
-                     *
-                     */
                     override fun onScanError(errorCode: Int, errorMsg: String?) {
                         Log.e(TAG, "Hub-spoke GSR sensor discovery failed: $errorCode, message: $errorMsg")
                         runOnUiThread {
@@ -412,17 +266,13 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private fun updateBleStatusUI(systemStatus: com.topdon.ble.UnifiedBleManager.SystemBleStatus?) {
         runOnUiThread {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (systemStatus != null) {
                     val statusText = "BLE: ${systemStatus.activeConnections} active, " +
                             "${systemStatus.totalDevicesConnected} total devices, " +
                             "Multi-device: ${if (systemStatus.multiDeviceMode) "ON" else "OFF"}"
                     
                     // Update BLE status display (assuming there's a BLE status TextView)
-                    // Binding.bleStatusTextView.text = statusText
+                    // binding.bleStatusTextView.text = statusText
                     
                     // Update connection indicator based on active connections
                     val hasActiveDevices = systemStatus.activeConnections > 0
@@ -445,10 +295,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private fun updateDiscoveredDevicesUI(device: Device, rssi: Int) {
         try {
             // Add device to the connected devices list
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!connectedBLEDevices.any { it.address == device.address }) {
                 connectedBLEDevices.add(device)
                 Log.i(TAG, "Added discovered BLE device: ${device.name} (${device.address})")
@@ -456,7 +302,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             
             // Update device count display
             val deviceCountText = "Discovered BLE devices: ${connectedBLEDevices.size}"
-            // Binding.deviceCountTextView.text = deviceCountText
+            // binding.deviceCountTextView.text = deviceCountText
             
             Log.d(TAG, deviceCountText)
             
@@ -465,70 +311,33 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
     }
 
-    /**
-     * Sets upclicklisteners configuration.
-     */
     private fun setupClickListeners() {
         binding.connectButton.setOnClickListener {
             connectToPCController()
         }
         
         binding.disconnectButton.setOnClickListener {
-            /**
-             * Executes disconnectfrompccontroller operation with thermal imaging domain optimization.
-             *
-             */
             disconnectFromPCController()
         }
         
         binding.startRecordingButton.setOnClickListener {
-            /**
-             * Executes startcoordinatedrecording operation with thermal imaging domain optimization.
-             *
-             */
             startCoordinatedRecording()
         }
         
         binding.stopRecordingButton.setOnClickListener {
-            /**
-             * Executes stopcoordinatedrecording operation with thermal imaging domain optimization.
-             *
-             */
             stopCoordinatedRecording()
         }
         
         binding.addSyncMarkerButton.setOnClickListener {
-            /**
-             * Executes addsyncmarker operation with thermal imaging domain optimization.
-             *
-             */
             addSyncMarker()
         }
     }
 
-    /**
-     * Executes bindToRecordingService functionality.
-     */
-    /**
-     * Executes bindtorecordingservice operation with thermal imaging domain optimization.
-     *
-     */
     private fun bindToRecordingService() {
         val intent = Intent(this, RecordingService::class.java)
-        /**
-         * Executes bindservice operation with thermal imaging domain optimization.
-         *
-         */
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
-    /**
-     * Executes connectToPCController functionality.
-     */
-    /**
-     * Executes connecttopccontroller operation with thermal imaging domain optimization.
-     *
-     */
     private fun connectToPCController() {
         // In the new server architecture, we don't connect TO the PC
         // Instead, we ensure our server is ready and display connection info
@@ -538,10 +347,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 binding.statusTextView.text = "Preparing to accept PC Controller connections..."
                 
                 // Use RecordingService to ensure the network server is ready
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isServiceBound) {
                     // The service automatically starts the network server
                     // Just ensure it's running and display connection info
@@ -569,32 +374,17 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 Log.e(TAG, "Error setting up network server", e)
             } finally {
                 binding.progressBar.visibility = View.GONE
-                /**
-                 * Executes updateui operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateUI()
             }
         }
     }
 
-    /**
-     * Executes disconnectFromPCController functionality.
-     */
-    /**
-     * Executes disconnectfrompccontroller operation with thermal imaging domain optimization.
-     *
-     */
     private fun disconnectFromPCController() {
         lifecycleScope.launch {
             try {
                 binding.statusTextView.text = "Disconnecting from PC Controller..."
                 
                 // Use RecordingService to handle the disconnection
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isServiceBound) {
                     RecordingService.disconnectFromPC(this@HubSpokeIntegrationActivity)
                     
@@ -613,29 +403,14 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 Log.e(TAG, "Disconnect error", e)
                 binding.statusTextView.text = "Disconnect error: ${e.message}"
             } finally {
-                /**
-                 * Executes updateui operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateUI()
             }
         }
     }
     }
 
-    /**
-     * Executes startCoordinatedRecording functionality.
-     */
-    /**
-     * Executes startcoordinatedrecording operation with thermal imaging domain optimization.
-     *
-     */
     private fun startCoordinatedRecording() {
         val sessionDirectory = binding.sessionDirectoryEditText.text.toString().trim()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (sessionDirectory.isEmpty()) {
             android.widget.Toast.makeText(this, "Please enter session directory", android.widget.Toast.LENGTH_SHORT).show()
             return
@@ -648,10 +423,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 
                 // Create session directory
                 val sessionDir = File(sessionDirectory)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!sessionDir.exists()) {
                     sessionDir.mkdirs()
                 }
@@ -665,10 +436,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     recordingController.startRecording(sessionDirectory)
                 }
                 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     binding.statusTextView.text = "Coordinated recording session started"
                     android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Recording started", android.widget.Toast.LENGTH_SHORT).show()
@@ -683,22 +450,11 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Recording error", android.widget.Toast.LENGTH_SHORT).show()
             } finally {
                 binding.progressBar.visibility = View.GONE
-                /**
-                 * Executes updateui operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateUI()
             }
         }
     }
 
-    /**
-     * Executes stopCoordinatedRecording functionality.
-     */
-    /**
-     * Executes stopcoordinatedrecording operation with thermal imaging domain optimization.
-     *
-     */
     private fun stopCoordinatedRecording() {
         lifecycleScope.launch {
             try {
@@ -714,10 +470,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     recordingController.stopRecording()
                 }
                 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     binding.statusTextView.text = "Coordinated recording session stopped"
                     android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Recording stopped", android.widget.Toast.LENGTH_SHORT).show()
@@ -731,22 +483,11 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 binding.statusTextView.text = "Recording stop error: ${e.message}"
             } finally {
                 binding.progressBar.visibility = View.GONE
-                /**
-                 * Executes updateui operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateUI()
             }
         }
     }
 
-    /**
-     * Executes addSyncMarker functionality.
-     */
-    /**
-     * Executes addsyncmarker operation with thermal imaging domain optimization.
-     *
-     */
     private fun addSyncMarker() {
         lifecycleScope.launch {
             try {
@@ -756,10 +497,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     "user_initiated" to "true"
                 )
                 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (recordingService?.isConnectedToPC() == true) {
                     // Add sync marker through recording service (will distribute to PC)
                     RecordingService.addSyncMarker(this@HubSpokeIntegrationActivity, markerType, System.nanoTime())
@@ -779,9 +516,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
     }
 
-    /**
-     * Sets uprecordingmonitoring configuration.
-     */
     private fun setupRecordingMonitoring() {
         if (!::recordingController.isInitialized) return
         
@@ -789,10 +523,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         recordingController.recordingStateFlow
             .onEach { state ->
                 runOnUiThread {
-                    /**
-                     * Executes when operation with thermal imaging domain optimization.
-                     *
-                     */
                     when (state) {
                         RecordingState.STARTING -> binding.statusTextView.text = "Starting sensors..."
                         RecordingState.RECORDING -> binding.statusTextView.text = "Recording in progress"
@@ -800,10 +530,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                         RecordingState.STOPPED -> binding.statusTextView.text = "Recording stopped"
                         RecordingState.ERROR -> binding.statusTextView.text = "Recording error"
                     }
-                    /**
-                     * Executes updateui operation with thermal imaging domain optimization.
-                     *
-                     */
                     updateUI()
                 }
             }
@@ -815,25 +541,9 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 runOnUiThread {
                     val statusText = buildString {
                         statusList.forEach { status ->
-                            /**
-                             * Executes append operation with thermal imaging domain optimization.
-                             *
-                             */
                             append("${status.sensorType}: ")
-                            /**
-                             * Executes append operation with thermal imaging domain optimization.
-                             *
-                             */
                             append(if (status.isRecording) "Recording" else "Stopped")
-                            /**
-                             * Executes append operation with thermal imaging domain optimization.
-                             *
-                             */
                             append(" (${status.samplesRecorded} samples, ")
-                            /**
-                             * Executes append operation with thermal imaging domain optimization.
-                             *
-                             */
                             append("${String.format("%.1f", status.storageUsedMB)}MB)\n")
                         }
                     }
@@ -843,44 +553,22 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             .launchIn(lifecycleScope)
     }
 
-    /**
-     * Sets upnetworkmonitoring configuration.
-     */
     private fun setupNetworkMonitoring() {
         // Monitor connection state through recording service
         lifecycleScope.launch {
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (!isDestroyed) {
                 try {
                     val isConnected = recordingService?.isConnectedToPC() ?: false
                     runOnUiThread {
                         binding.connectionStatusTextView.text = "Connection: ${if (isConnected) "Connected" else "Waiting for PC"}"
-                        /**
-                         * Executes updateui operation with thermal imaging domain optimization.
-                         *
-                         */
                         updateUI()
                     }
                     
                     // Monitor time sync quality if connected
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isConnected) {
                         val syncQuality = timeManager.getSyncQuality()
                         runOnUiThread {
                             binding.syncQualityTextView.text = buildString {
-                                /**
-                                 * Executes append operation with thermal imaging domain optimization.
-                                 *
-                                 * @param
-                                 * @param Sync Parameter for operation (type: ${syncQuality.level}")
-                                 *
-                                 */
                                 append("Sync: ${syncQuality.level}")
                                 syncQuality.qualityMs?.let { append(" (${it}ms)") }
                                 syncQuality.timeSinceSyncMs?.let { append(" - ${it / 1000}s ago") }
@@ -901,13 +589,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
     }
 
-    /**
-     * Executes updateUI functionality.
-     */
-    /**
-     * Executes updateui operation with thermal imaging domain optimization.
-     *
-     */
     private fun updateUI() {
         val isConnected = recordingService?.isConnectedToPC() ?: false
         val isRecording = ::recordingController.isInitialized && recordingController.isRecording
@@ -921,28 +602,16 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         binding.pcAddressEditText.isEnabled = !isConnected
         binding.sessionDirectoryEditText.isEnabled = !isRecording
         
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isConnected) {
             binding.connectionStatusTextView.text = "Connection: Waiting for PC Controller"
             binding.syncQualityTextView.text = "Sync: Not Available"
         }
         
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isRecording) {
             binding.sensorStatusTextView.text = "Sensors: Idle"
         }
         
         // Update BLE device status
-        /**
-         * Executes updatebledevicestatus operation with thermal imaging domain optimization.
-         *
-         */
         updateBLEDeviceStatus()
     }
     
@@ -950,18 +619,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
      * Update BLE device connection status in the UI
      * Part of systematic harmonization for enhanced BLE monitoring
      */
-    /**
-     * Executes updateBLEDeviceStatus functionality.
-     */
-    /**
-     * Executes updatebledevicestatus operation with thermal imaging domain optimization.
-     *
-     */
     private fun updateBLEDeviceStatus() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (::enhancedBLE.isInitialized) {
             val bleDeviceCount = connectedBLEDevices.size
             val statusText = if (bleDeviceCount > 0) {
@@ -971,13 +629,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             }
             
             // Update the sensor status to include BLE device information
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param Sensors Parameter for operation (type: Idle")
-             *
-             */
             if (binding.sensorStatusTextView.text.toString().startsWith("Sensors: Idle")) {
                 binding.sensorStatusTextView.text = "Sensors: Idle | $statusText"
             }
@@ -993,16 +644,8 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             while (interfaces.hasMoreElements()) {
                 val networkInterface = interfaces.nextElement()
                 val addresses = networkInterface.inetAddresses
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (addresses.hasMoreElements()) {
                     val address = addresses.nextElement()
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (!address.isLoopbackAddress && address is java.net.Inet4Address) {
                         return address.hostAddress ?: "Unknown"
                     }

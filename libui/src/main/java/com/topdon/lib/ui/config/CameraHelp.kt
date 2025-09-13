@@ -5,22 +5,10 @@ package com.topdon.lib.ui.config
  * @author: CaiSongL
  * @date: 2023/4/4 9:57
  */
+
 /**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with CameraHelp functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Camera help utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
  */
 object CameraHelp {
     /**
@@ -43,7 +31,7 @@ object CameraHelp {
      */
     val TYPE_SET_ALARM = 12 
     /**
-     * rotation
+     * 旋转
      */
     val TYPE_SET_ROTATE = 1
 
@@ -70,7 +58,7 @@ object CameraHelp {
     // TS001 -- targetmenu
     val TYPE_SET_TARGET_MODE = 30 
     val TYPE_SET_TARGET_ZOOM = 31 
-    val TYPE_SET_MEASURE_MODE = 32 // Measurement mode
+    val TYPE_SET_MEASURE_MODE = 32 // measurement mode
     val TYPE_SET_TARGET_COLOR = 33 
     val TYPE_SET_TARGET_DELETE = 34 
     val TYPE_SET_TARGET_HELP = 35 

@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -56,7 +56,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 滚轮控件。Adapted from https:// Github.com/florent37/SingleDateAndTimePicker/.../WheelPicker.java
+ * 滚轮控件。Adapted from https://github.com/florent37/SingleDateAndTimePicker/.../WheelPicker.java
  *
  * @author 贵州山野羡民（1032694760@qq.com）
  * @see TextProvider
@@ -64,23 +64,6 @@ import java.util.List;
  * @since 2019/5/8 11:11
  */
 @SuppressWarnings({"unused"})
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for WheelView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class WheelView extends View implements Runnable {
     @Deprecated
     public static final int SCROLL_STATE_IDLE = ScrollState.IDLE;
@@ -146,70 +129,26 @@ public class WheelView extends View implements Runnable {
     private boolean isForceFinishScroll;
     private final AttributeSet attrs;
 
-    /**
-     * Executes wheelview operation with thermal imaging domain optimization.
-     *
-     */
     public WheelView(Context context) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this(context, null);
     }
 
-    /**
-     * Executes wheelview operation with thermal imaging domain optimization.
-     *
-     */
     public WheelView(Context context, AttributeSet attrs) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this(context, attrs, R.attr.WheelStyle);
     }
 
-    /**
-     * Executes wheelview operation with thermal imaging domain optimization.
-     *
-     */
     public WheelView(Context context, AttributeSet attrs, int defStyleAttr) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyleAttr);
         this.attrs = attrs;
-        /**
-         * Initializes the attrs component for thermal imaging operations.
-         *
-         */
         initAttrs(context, attrs, defStyleAttr, R.style.WheelDefault);
-        /**
-         * Initializes the textpaint component for thermal imaging operations.
-         *
-         */
         initTextPaint();
-        /**
-         * Executes updatevisibleitemcount operation with thermal imaging domain optimization.
-         *
-         */
         updateVisibleItemCount();
         scroller = new Scroller(context);
         ViewConfiguration configuration = ViewConfiguration.get(context);
         minimumVelocity = configuration.getScaledMinimumFlingVelocity();
         maximumVelocity = configuration.getScaledMaximumFlingVelocity();
         touchSlop = configuration.getScaledTouchSlop();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isInEditMode()) {
-            /**
-             * Configures the data with validation and thermal imaging optimization.
-             *
-             */
             setData(generatePreviewData());
         }
     }
@@ -222,40 +161,16 @@ public class WheelView extends View implements Runnable {
     }
 
     public void setStyle(@StyleRes int style) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (attrs == null) {
             throw new RuntimeException("Please use " + getClass().getSimpleName() + " in xml");
         }
-        /**
-         * Initializes the attrs component for thermal imaging operations.
-         *
-         */
         initAttrs(getContext(), attrs, R.attr.WheelStyle, style);
-        /**
-         * Initializes the textpaint component for thermal imaging operations.
-         *
-         */
         initTextPaint();
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
     private void initAttrs(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (attrs == null) {
             float density = context.getResources().getDisplayMetrics().density;
             float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
@@ -286,10 +201,6 @@ public class WheelView extends View implements Runnable {
         }
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.WheelView,
                 defStyleAttr, defStyleRes);
-        /**
-         * Executes onattributeset operation with thermal imaging domain optimization.
-         *
-         */
         onAttributeSet(context, typedArray);
         typedArray.recycle();
     }
@@ -334,19 +245,11 @@ public class WheelView extends View implements Runnable {
 
     private void updateVisibleItemCount() {
         final int minCount = 2;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (visibleItemCount < minCount) {
             throw new ArithmeticException("Visible item count can not be less than " + minCount);
         }
-        // Visible条目只能是奇数个，settingsVisible条目时偶数个将自动矫正为奇数个
+        //Visible条目只能是奇数个，settingsVisible条目时偶数个将自动矫正为奇数个
         int evenNumberFlag = 2;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (visibleItemCount % evenNumberFlag == 0) {
             visibleItemCount += 1;
         }
@@ -356,10 +259,6 @@ public class WheelView extends View implements Runnable {
 
     private void computeTextWidthAndHeight() {
         textMaxWidth = textMaxHeight = 0;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (sameWidthEnabled) {
             textMaxWidth = (int) paint.measureText(formatItem(0));
         } else if (!TextUtils.isEmpty(maxWidthText)) {
@@ -367,10 +266,6 @@ public class WheelView extends View implements Runnable {
         } else {
             // 未指定最宽的文本，须遍历measurement查找最宽的作为基准
             int itemCount = getItemCount();
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0; i < itemCount; ++i) {
                 int width = (int) paint.measureText(formatItem(i));
                 textMaxWidth = Math.max(textMaxWidth, width);
@@ -386,34 +281,18 @@ public class WheelView extends View implements Runnable {
 
     public <T> T getItem(int position) {
         final int size = data.size();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (size == 0) {
             return null;
         }
         int index = (position + size) % size;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (index >= 0 && index <= size - 1) {
-            // Noinspection unchecked
-            /**
-             * Executes return operation with thermal imaging domain optimization.
-             *
-             */
+            //noinspection unchecked
             return (T) data.get(index);
         }
         return null;
     }
 
     public int getPosition(Object item) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (item == null) {
             return 0;
         }
@@ -434,15 +313,7 @@ public class WheelView extends View implements Runnable {
 
     public void setVisibleItemCount(@IntRange(from = 2) int count) {
         visibleItemCount = count;
-        /**
-         * Executes updatevisibleitemcount operation with thermal imaging domain optimization.
-         *
-         */
         updateVisibleItemCount();
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout();
     }
 
@@ -452,15 +323,7 @@ public class WheelView extends View implements Runnable {
 
     public void setCyclicEnabled(boolean isCyclic) {
         this.cyclicEnabled = isCyclic;
-        /**
-         * Executes computeflinglimitycoordinate operation with thermal imaging domain optimization.
-         *
-         */
         computeFlingLimitYCoordinate();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -477,99 +340,48 @@ public class WheelView extends View implements Runnable {
     }
 
     public void setData(List<?> newData) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (newData == null) {
             newData = new ArrayList<>();
         }
         data = newData;
-        /**
-         * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-         *
-         */
         notifyDataSetChanged(0, false);
     }
 
     public void setDefaultValue(Object value) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (value == null) {
             return;
         }
         boolean found = false;
         int position = 0;
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param item Parameter for operation (type: data)
-         *
-         */
         for (Object item : data) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (item.equals(value)) {
                 found = true;
                 break;
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (formatter != null && formatter.formatItem(item).equals(formatter.formatItem(value))) {
                 found = true;
                 break;
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (item instanceof TextProvider) {
                 String text = ((TextProvider) item).provideText();
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (text.equals(value.toString())) {
                     found = true;
                     break;
                 }
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (item.toString().equals(value.toString())) {
                 found = true;
                 break;
             }
             position++;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!found) {
             position = 0;
         }
-        /**
-         * Configures the defaultposition with validation and thermal imaging optimization.
-         *
-         */
         setDefaultPosition(position);
     }
 
     public void setDefaultPosition(int position) {
-        /**
-         * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-         *
-         */
         notifyDataSetChanged(position, false);
     }
 
@@ -579,20 +391,8 @@ public class WheelView extends View implements Runnable {
 
     public void setSameWidthEnabled(boolean sameWidthEnabled) {
         this.sameWidthEnabled = sameWidthEnabled;
-        /**
-         * Executes computetextwidthandheight operation with thermal imaging domain optimization.
-         *
-         */
         computeTextWidthAndHeight();
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -601,28 +401,12 @@ public class WheelView extends View implements Runnable {
     }
 
     public void setMaxWidthText(String text) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (null == text) {
             throw new NullPointerException("Maximum width text can not be null!");
         }
         maxWidthText = text;
-        /**
-         * Executes computetextwidthandheight operation with thermal imaging domain optimization.
-         *
-         */
         computeTextWidthAndHeight();
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -633,10 +417,6 @@ public class WheelView extends View implements Runnable {
 
     public void setTextColor(@ColorInt int color) {
         textColor = color;
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -647,15 +427,7 @@ public class WheelView extends View implements Runnable {
 
     public void setSelectedTextColor(@ColorInt int color) {
         selectedTextColor = color;
-        /**
-         * Executes computecurrentitemrect operation with thermal imaging domain optimization.
-         *
-         */
         computeCurrentItemRect();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -666,20 +438,8 @@ public class WheelView extends View implements Runnable {
 
     public void setTextSize(@Px float size) {
         textSize = size;
-        /**
-         * Executes computetextwidthandheight operation with thermal imaging domain optimization.
-         *
-         */
         computeTextWidthAndHeight();
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -690,20 +450,8 @@ public class WheelView extends View implements Runnable {
 
     public void setSelectedTextSize(@Px float size) {
         selectedTextSize = size;
-        /**
-         * Executes computetextwidthandheight operation with thermal imaging domain optimization.
-         *
-         */
         computeTextWidthAndHeight();
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -713,20 +461,8 @@ public class WheelView extends View implements Runnable {
 
     public void setSelectedTextBold(boolean bold) {
         this.selectedTextBold = bold;
-        /**
-         * Executes computetextwidthandheight operation with thermal imaging domain optimization.
-         *
-         */
         computeTextWidthAndHeight();
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -737,15 +473,7 @@ public class WheelView extends View implements Runnable {
 
     public void setItemSpace(@Px int space) {
         itemSpace = space;
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -755,15 +483,7 @@ public class WheelView extends View implements Runnable {
 
     public void setIndicatorEnabled(boolean indicatorEnabled) {
         this.indicatorEnabled = indicatorEnabled;
-        /**
-         * Executes computeindicatorrect operation with thermal imaging domain optimization.
-         *
-         */
         computeIndicatorRect();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -774,15 +494,7 @@ public class WheelView extends View implements Runnable {
 
     public void setIndicatorSize(@Px float size) {
         indicatorSize = size;
-        /**
-         * Executes computeindicatorrect operation with thermal imaging domain optimization.
-         *
-         */
         computeIndicatorRect();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -793,10 +505,6 @@ public class WheelView extends View implements Runnable {
 
     public void setIndicatorColor(@ColorInt int color) {
         indicatorColor = color;
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -807,15 +515,7 @@ public class WheelView extends View implements Runnable {
 
     public void setCurvedIndicatorSpace(@Px int space) {
         curvedIndicatorSpace = space;
-        /**
-         * Executes computeindicatorrect operation with thermal imaging domain optimization.
-         *
-         */
         computeIndicatorRect();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -825,22 +525,10 @@ public class WheelView extends View implements Runnable {
 
     public void setCurtainEnabled(boolean curtainEnabled) {
         this.curtainEnabled = curtainEnabled;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (curtainEnabled) {
             indicatorEnabled = false;
         }
-        /**
-         * Executes computecurrentitemrect operation with thermal imaging domain optimization.
-         *
-         */
         computeCurrentItemRect();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -851,10 +539,6 @@ public class WheelView extends View implements Runnable {
 
     public void setCurtainColor(@ColorInt int color) {
         curtainColor = color;
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -865,10 +549,6 @@ public class WheelView extends View implements Runnable {
 
     public void setCurtainCorner(@CurtainCorner int curtainCorner) {
         this.curtainCorner = curtainCorner;
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -879,10 +559,6 @@ public class WheelView extends View implements Runnable {
 
     public void setCurtainRadius(@Px float curtainRadius) {
         this.curtainRadius = curtainRadius;
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -892,10 +568,6 @@ public class WheelView extends View implements Runnable {
 
     public void setAtmosphericEnabled(boolean atmosphericEnabled) {
         this.atmosphericEnabled = atmosphericEnabled;
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -905,15 +577,7 @@ public class WheelView extends View implements Runnable {
 
     public void setCurvedEnabled(boolean isCurved) {
         this.curvedEnabled = isCurved;
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -923,15 +587,7 @@ public class WheelView extends View implements Runnable {
 
     public void setCurvedMaxAngle(int curvedMaxAngle) {
         this.curvedMaxAngle = curvedMaxAngle;
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
@@ -942,28 +598,12 @@ public class WheelView extends View implements Runnable {
 
     public void setTextAlign(@ItemTextAlign int align) {
         textAlign = align;
-        /**
-         * Executes updatepainttextalign operation with thermal imaging domain optimization.
-         *
-         */
         updatePaintTextAlign();
-        /**
-         * Executes computedrawncentercoordinate operation with thermal imaging domain optimization.
-         *
-         */
         computeDrawnCenterCoordinate();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
     private void updatePaintTextAlign() {
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (textAlign) {
             case ItemTextAlign.LEFT:
                 paint.setTextAlign(Paint.Align.LEFT);
@@ -983,49 +623,21 @@ public class WheelView extends View implements Runnable {
     }
 
     public void setTypeface(Typeface typeface) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (typeface == null) {
             return;
         }
         paint.setTypeface(typeface);
-        /**
-         * Executes computetextwidthandheight operation with thermal imaging domain optimization.
-         *
-         */
         computeTextWidthAndHeight();
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
     private void notifyDataSetChanged(int position, boolean smooth) {
         position = Math.min(position, getItemCount() - 1);
         position = Math.max(position, 0);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (smooth) {
-            /**
-             * Executes smoothscrollto operation with thermal imaging domain optimization.
-             *
-             */
             smoothScrollTo(position);
         } else {
-            /**
-             * Executes scrollto operation with thermal imaging domain optimization.
-             *
-             */
             scrollTo(position);
         }
     }
@@ -1040,10 +652,6 @@ public class WheelView extends View implements Runnable {
         int resultWidth = textMaxWidth;
         int resultHeight = textMaxHeight * visibleItemCount + itemSpace * (visibleItemCount - 1);
         // Correct view sizes again if curved is enable
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (curvedEnabled) {
             resultHeight = (int) (2 * resultHeight / Math.PI);
         }
@@ -1053,27 +661,15 @@ public class WheelView extends View implements Runnable {
         // Consideration sizes of parent can influence the view sizes
         resultWidth = measureSize(modeWidth, sizeWidth, resultWidth);
         resultHeight = measureSize(modeHeight, sizeHeight, resultHeight);
-        /**
-         * Configures the measureddimension with validation and thermal imaging optimization.
-         *
-         */
         setMeasuredDimension(resultWidth, resultHeight);
     }
 
     private int measureSize(int mode, int sizeExpect, int sizeActual) {
         int realSize;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mode == MeasureSpec.EXACTLY) {
             realSize = sizeExpect;
         } else {
             realSize = sizeActual;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mode == MeasureSpec.AT_MOST) {
                 realSize = Math.min(realSize, sizeExpect);
             }
@@ -1085,48 +681,24 @@ public class WheelView extends View implements Runnable {
     protected void onSizeChanged(int w, int h, int ow, int oh) {
         // Set content region
         rectDrawn.set(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(),
-                /**
-                 * Retrieves the height with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getHeight() - getPaddingBottom());
         // Get the center coordinates of content region
         wheelCenterXCoordinate = rectDrawn.centerX();
         wheelCenterYCoordinate = rectDrawn.centerY();
         // Correct item drawn center
-        /**
-         * Executes computedrawncentercoordinate operation with thermal imaging domain optimization.
-         *
-         */
         computeDrawnCenterCoordinate();
         halfWheelHeight = rectDrawn.height() / 2;
         itemHeight = rectDrawn.height() / visibleItemCount;
         halfItemHeight = itemHeight / 2;
         // Initialize fling max Y-coordinates
-        /**
-         * Executes computeflinglimitycoordinate operation with thermal imaging domain optimization.
-         *
-         */
         computeFlingLimitYCoordinate();
         // Correct region of indicator
-        /**
-         * Executes computeindicatorrect operation with thermal imaging domain optimization.
-         *
-         */
         computeIndicatorRect();
         // Correct region of current select item
-        /**
-         * Executes computecurrentitemrect operation with thermal imaging domain optimization.
-         *
-         */
         computeCurrentItemRect();
     }
 
     private void computeDrawnCenterCoordinate() {
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (textAlign) {
             case ItemTextAlign.LEFT:
                 drawnCenterXCoordinate = rectDrawn.left;
@@ -1151,10 +723,6 @@ public class WheelView extends View implements Runnable {
     }
 
     private void computeIndicatorRect() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!indicatorEnabled) {
             return;
         }
@@ -1169,10 +737,6 @@ public class WheelView extends View implements Runnable {
     }
 
     private void computeCurrentItemRect() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!curtainEnabled && selectedTextColor == -1) {
             return;
         }
@@ -1182,52 +746,24 @@ public class WheelView extends View implements Runnable {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (null != onWheelChangedListener) {
             onWheelChangedListener.onWheelScrolled(this, scrollOffsetYCoordinate);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (itemHeight - halfDrawnItemCount <= 0) {
             return;
         }
-        /**
-         * Executes drawallitem operation with thermal imaging domain optimization.
-         *
-         */
         drawAllItem(canvas);
-        /**
-         * Executes drawcurtain operation with thermal imaging domain optimization.
-         *
-         */
         drawCurtain(canvas);
-        /**
-         * Executes drawindicator operation with thermal imaging domain optimization.
-         *
-         */
         drawIndicator(canvas);
     }
 
     private void drawAllItem(Canvas canvas) {
         int drawnDataStartPos = -1 * scrollOffsetYCoordinate / itemHeight - halfDrawnItemCount;
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int drawnDataPosition = drawnDataStartPos + defaultItemPosition,
              drawnOffsetPos = -1 * halfDrawnItemCount;
              drawnDataPosition < drawnDataStartPos + defaultItemPosition + drawnItemCount;
              drawnDataPosition++, drawnOffsetPos++) {
 
-            /**
-             * Initializes the textpaint component for thermal imaging operations.
-             *
-             */
             initTextPaint();
             boolean isCenterItem = drawnDataPosition == drawnDataStartPos + defaultItemPosition + drawnItemCount / 2;
 
@@ -1240,16 +776,8 @@ public class WheelView extends View implements Runnable {
             float degree = computeDegree(drawnItemCenterYCoordinate, ratio);
             float distanceToCenter = computeYCoordinateAtAngle(degree);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (curvedEnabled) {
                 int transXCoordinate = wheelCenterXCoordinate;
-                /**
-                 * Executes switch operation with thermal imaging domain optimization.
-                 *
-                 */
                 switch (textAlign) {
                     case ItemTextAlign.LEFT:
                         transXCoordinate = rectDrawn.left;
@@ -1279,111 +807,55 @@ public class WheelView extends View implements Runnable {
                 matrixRotate.postConcat(matrixDepth);
             }
 
-            /**
-             * Executes computeandsetatmospheric operation with thermal imaging domain optimization.
-             *
-             */
             computeAndSetAtmospheric(centerYCoordinateAbs);
             // Correct item's drawn center Y coordinate base on curved state
             float drawCenterYCoordinate = curvedEnabled ? drawnCenterYCoordinate - distanceToCenter
                     : drawnItemCenterYCoordinate;
-            /**
-             * Executes drawitemrect operation with thermal imaging domain optimization.
-             *
-             */
             drawItemRect(canvas, drawnDataPosition, isCenterItem, drawCenterYCoordinate);
         }
     }
 
     private void drawItemRect(Canvas canvas, int dataPosition, boolean isCenterItem, float drawCenterYCoordinate) {
         // Judges need to draw different color for current item or not
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (selectedTextColor == -1) {
             canvas.save();
             canvas.clipRect(rectDrawn);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (curvedEnabled) {
                 canvas.concat(matrixRotate);
             }
-            /**
-             * Executes drawitemtext operation with thermal imaging domain optimization.
-             *
-             */
             drawItemText(canvas, dataPosition, drawCenterYCoordinate);
             canvas.restore();
             return;
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (textSize == selectedTextSize) {
             canvas.save();
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (curvedEnabled) {
                 canvas.concat(matrixRotate);
             }
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 canvas.clipOutRect(rectCurrentItem);
             } else {
                 canvas.clipRect(rectCurrentItem, Region.Op.DIFFERENCE);
             }
-            /**
-             * Executes drawitemtext operation with thermal imaging domain optimization.
-             *
-             */
             drawItemText(canvas, dataPosition, drawCenterYCoordinate);
             canvas.restore();
             paint.setColor(selectedTextColor);
             canvas.save();
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (curvedEnabled) {
                 canvas.concat(matrixRotate);
             }
             canvas.clipRect(rectCurrentItem);
-            /**
-             * Executes drawitemtext operation with thermal imaging domain optimization.
-             *
-             */
             drawItemText(canvas, dataPosition, drawCenterYCoordinate);
             canvas.restore();
             return;
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isCenterItem) {
             canvas.save();
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (curvedEnabled) {
                 canvas.concat(matrixRotate);
             }
-            /**
-             * Executes drawitemtext operation with thermal imaging domain optimization.
-             *
-             */
             drawItemText(canvas, dataPosition, drawCenterYCoordinate);
             canvas.restore();
             return;
@@ -1393,17 +865,9 @@ public class WheelView extends View implements Runnable {
         paint.setTextSize(selectedTextSize);
         paint.setFakeBoldText(selectedTextBold);
         canvas.save();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (curvedEnabled) {
             canvas.concat(matrixRotate);
         }
-        /**
-         * Executes drawitemtext operation with thermal imaging domain optimization.
-         *
-         */
         drawItemText(canvas, dataPosition, drawCenterYCoordinate);
         canvas.restore();
     }
@@ -1414,26 +878,14 @@ public class WheelView extends View implements Runnable {
         int measuredWidth = getMeasuredWidth();
         float ellipsisWidth = paint.measureText(ellipsis);
         String data = obtainItemText(dataPosition);
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (paint.measureText(data) + ellipsisWidth - measuredWidth > 0) {
             // 超出控件宽度则省略部分text
             int length = data.length();
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (length > 1) {
                 data = data.substring(0, length - 1);
                 hasCut = true;
             }
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (hasCut) {
             data = data + ellipsis;
         }
@@ -1443,10 +895,6 @@ public class WheelView extends View implements Runnable {
     private float computeDegree(int drawnItemCenterYCoordinate, float ratio) {
         // Correct unit
         int unit = 0;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (drawnItemCenterYCoordinate > drawnCenterYCoordinate) {
             unit = 1;
         } else if (drawnItemCenterYCoordinate < drawnCenterYCoordinate) {
@@ -1456,10 +904,6 @@ public class WheelView extends View implements Runnable {
     }
 
     private float clamp(float value, float min, float max) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (value < min) {
             return min;
         }
@@ -1469,25 +913,13 @@ public class WheelView extends View implements Runnable {
     private String obtainItemText(int drawnDataPosition) {
         String data = "";
         final int itemCount = getItemCount();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (cyclicEnabled) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (itemCount != 0) {
                 int actualPosition = drawnDataPosition % itemCount;
                 actualPosition = actualPosition < 0 ? (actualPosition + itemCount) : actualPosition;
                 data = formatItem(actualPosition);
             }
         } else {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isPositionInRange(drawnDataPosition, itemCount)) {
                 data = formatItem(drawnDataPosition);
             }
@@ -1500,28 +932,12 @@ public class WheelView extends View implements Runnable {
     }
 
     public String formatItem(Object item) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (item == null) {
             return "";
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (item instanceof TextProvider) {
-            /**
-             * Executes return operation with thermal imaging domain optimization.
-             *
-             */
             return ((TextProvider) item).provideText();
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (formatter != null) {
             return formatter.formatItem(item);
         }
@@ -1529,10 +945,6 @@ public class WheelView extends View implements Runnable {
     }
 
     private void computeAndSetAtmospheric(int abs) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (atmosphericEnabled) {
             int alpha = (int) ((drawnCenterYCoordinate - abs) * 1.0F / drawnCenterYCoordinate * 255);
             alpha = Math.max(alpha, 0);
@@ -1542,10 +954,6 @@ public class WheelView extends View implements Runnable {
 
     private void drawCurtain(Canvas canvas) {
         // Need to draw curtain or not
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!curtainEnabled) {
             return;
         }
@@ -1555,17 +963,9 @@ public class WheelView extends View implements Runnable {
         int blue = Color.blue(curtainColor);
         paint.setColor(0);
         paint.setStyle(Paint.Style.FILL);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (curtainRadius > 0) {
             Path path = new Path();
             float[] radii;
-            /**
-             * Executes switch operation with thermal imaging domain optimization.
-             *
-             */
             switch (curtainCorner) {
                 case CurtainCorner.ALL:
                     radii = new float[]{
@@ -1606,10 +1006,6 @@ public class WheelView extends View implements Runnable {
 
     private void drawIndicator(Canvas canvas) {
         // Need to draw indicator or not
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!indicatorEnabled) {
             return;
         }
@@ -1629,102 +1025,46 @@ public class WheelView extends View implements Runnable {
     }
 
     private float sinDegree(float degree) {
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (float) Math.sin(Math.toRadians(degree));
     }
 
     private int computeDepth(float degree) {
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (int) (halfWheelHeight - Math.cos(Math.toRadians(degree)) * halfWheelHeight);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isEnabled()) {
-            /**
-             * Executes switch operation with thermal imaging domain optimization.
-             *
-             */
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    /**
-                     * Executes handleactiondown operation with thermal imaging domain optimization.
-                     *
-                     */
                     handleActionDown(event);
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    /**
-                     * Executes handleactionmove operation with thermal imaging domain optimization.
-                     *
-                     */
                     handleActionMove(event);
                     break;
                 case MotionEvent.ACTION_UP:
-                    /**
-                     * Executes handleactionup operation with thermal imaging domain optimization.
-                     *
-                     */
                     handleActionUp(event);
                     break;
                 case MotionEvent.ACTION_CANCEL:
-                    /**
-                     * Executes handleactioncancel operation with thermal imaging domain optimization.
-                     *
-                     */
                     handleActionCancel(event);
                     break;
                 default:
                     break;
             }
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isClick) {
-            // OnTouchEvent should call performClick when a click is detected
-            /**
-             * Executes performclick operation with thermal imaging domain optimization.
-             *
-             */
+            //onTouchEvent should call performClick when a click is detected
             performClick();
         }
         return true;
     }
 
     private void handleActionDown(MotionEvent event) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (null != getParent()) {
-            /**
-             * Retrieves the parent with optimized performance for thermal imaging operations.
-             *
-             */
             getParent().requestDisallowInterceptTouchEvent(true);
         }
-        /**
-         * Executes obtainorcleartracker operation with thermal imaging domain optimization.
-         *
-         */
         obtainOrClearTracker();
         tracker.addMovement(event);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!scroller.isFinished()) {
             scroller.abortAnimation();
             isForceFinishScroll = true;
@@ -1734,71 +1074,35 @@ public class WheelView extends View implements Runnable {
 
     private void handleActionMove(MotionEvent event) {
         int endPoint = computeDistanceToEndPoint(scroller.getFinalY() % itemHeight);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Math.abs(downPointYCoordinate - event.getY()) < touchSlop && endPoint > 0) {
             isClick = true;
             return;
         }
         isClick = false;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (null != tracker) {
             tracker.addMovement(event);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (null != onWheelChangedListener) {
             onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.DRAGGING);
         }
         // Scroll WheelPicker's content
         float move = event.getY() - lastPointYCoordinate;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Math.abs(move) < 1) {
             return;
         }
         scrollOffsetYCoordinate += move;
         lastPointYCoordinate = (int) event.getY();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 
     private void handleActionUp(MotionEvent event) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (null != getParent()) {
-            /**
-             * Retrieves the parent with optimized performance for thermal imaging operations.
-             *
-             */
             getParent().requestDisallowInterceptTouchEvent(false);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isClick) {
             return;
         }
         int yVelocity = 0;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (null != tracker) {
             tracker.addMovement(event);
             tracker.computeCurrentVelocity(1000, maximumVelocity);
@@ -1807,10 +1111,6 @@ public class WheelView extends View implements Runnable {
 
         // Judge scroll or fling base on current velocity
         isForceFinishScroll = false;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Math.abs(yVelocity) > minimumVelocity) {
             scroller.fling(0, scrollOffsetYCoordinate, 0, yVelocity, 0,
                     0, minFlingYCoordinate, maxFlingYCoordinate);
@@ -1821,15 +1121,7 @@ public class WheelView extends View implements Runnable {
             scroller.startScroll(0, scrollOffsetYCoordinate, 0, endPoint);
         }
         // Correct coordinates
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!cyclicEnabled) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (scroller.getFinalY() > maxFlingYCoordinate) {
                 scroller.setFinalY(maxFlingYCoordinate);
             } else if (scroller.getFinalY() < minFlingYCoordinate) {
@@ -1837,37 +1129,17 @@ public class WheelView extends View implements Runnable {
             }
         }
         handler.post(this);
-        /**
-         * Executes canceltracker operation with thermal imaging domain optimization.
-         *
-         */
         cancelTracker();
     }
 
     private void handleActionCancel(MotionEvent event) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (null != getParent()) {
-            /**
-             * Retrieves the parent with optimized performance for thermal imaging operations.
-             *
-             */
             getParent().requestDisallowInterceptTouchEvent(false);
         }
-        /**
-         * Executes canceltracker operation with thermal imaging domain optimization.
-         *
-         */
         cancelTracker();
     }
 
     private void obtainOrClearTracker() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (null == tracker) {
             tracker = VelocityTracker.obtain();
         } else {
@@ -1876,10 +1148,6 @@ public class WheelView extends View implements Runnable {
     }
 
     private void cancelTracker() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (null != tracker) {
             tracker.recycle();
             tracker = null;
@@ -1892,15 +1160,7 @@ public class WheelView extends View implements Runnable {
     }
 
     private int computeDistanceToEndPoint(int remainder) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Math.abs(remainder) > halfItemHeight) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (scrollOffsetYCoordinate < 0) {
                 return -itemHeight - remainder;
             } else {
@@ -1913,113 +1173,53 @@ public class WheelView extends View implements Runnable {
 
     @Override
     public void run() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (itemHeight == 0) {
             return;
         }
         int itemCount = getItemCount();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (itemCount == 0) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (null != onWheelChangedListener) {
                 onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.IDLE);
             }
             return;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (scroller.isFinished() && !isForceFinishScroll) {
             int position = computePosition(itemCount);
             position = position < 0 ? position + itemCount : position;
             currentPosition = position;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (null != onWheelChangedListener) {
                 onWheelChangedListener.onWheelSelected(this, position);
                 onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.IDLE);
             }
-            /**
-             * Executes postinvalidate operation with thermal imaging domain optimization.
-             *
-             */
             postInvalidate();
             return;
         }
         // Scroll not finished
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (scroller.computeScrollOffset()) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (null != onWheelChangedListener) {
                 onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.SCROLLING);
             }
             scrollOffsetYCoordinate = scroller.getCurrY();
             int position = computePosition(itemCount);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (lastScrollPosition != position) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (position == 0 && lastScrollPosition == itemCount - 1) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (null != onWheelChangedListener) {
                         onWheelChangedListener.onWheelLoopFinished(this);
                     }
                 }
                 lastScrollPosition = position;
             }
-            /**
-             * Executes postinvalidate operation with thermal imaging domain optimization.
-             *
-             */
             postInvalidate();
             handler.postDelayed(this, 20);
         }
     }
 
     private int computePosition(int itemCount) {
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (-1 * scrollOffsetYCoordinate / itemHeight + defaultItemPosition) % itemCount;
     }
 
     public final void smoothScrollTo(final int position) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isInEditMode()) {
-            /**
-             * Executes scrollto operation with thermal imaging domain optimization.
-             *
-             */
             scrollTo(position);
             return;
         }
@@ -2031,20 +1231,12 @@ public class WheelView extends View implements Runnable {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 scrollOffsetYCoordinate = (int) animation.getAnimatedValue();
-                /**
-                 * Executes invalidate operation with thermal imaging domain optimization.
-                 *
-                 */
                 invalidate();
             }
         });
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                /**
-                 * Executes scrollto operation with thermal imaging domain optimization.
-                 *
-                 */
                 scrollTo(position);
             }
         });
@@ -2056,30 +1248,10 @@ public class WheelView extends View implements Runnable {
         defaultItem = getItem(position);
         defaultItemPosition = position;
         currentPosition = position;
-        /**
-         * Executes computeflinglimitycoordinate operation with thermal imaging domain optimization.
-         *
-         */
         computeFlingLimitYCoordinate();
-        /**
-         * Executes updatepainttextalign operation with thermal imaging domain optimization.
-         *
-         */
         updatePaintTextAlign();
-        /**
-         * Executes computetextwidthandheight operation with thermal imaging domain optimization.
-         *
-         */
         computeTextWidthAndHeight();
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout();
-        /**
-         * Executes invalidate operation with thermal imaging domain optimization.
-         *
-         */
         invalidate();
     }
 

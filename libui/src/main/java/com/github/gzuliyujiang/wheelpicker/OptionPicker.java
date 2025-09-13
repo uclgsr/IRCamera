@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -38,20 +38,6 @@ import java.util.List;
  * @since 2019/5/8 10:04
  */
 @SuppressWarnings({"unused"})
-/**
- * Specialized thermal imaging component providing OptionPicker functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class OptionPicker extends ModalDialog {
     protected OptionWheelLayout wheelLayout;
     private OnOptionPickedListener onOptionPickedListener;
@@ -60,27 +46,11 @@ public class OptionPicker extends ModalDialog {
     private Object defaultValue;
     protected int defaultPosition = -1;
 
-    /**
-     * Executes optionpicker operation with thermal imaging domain optimization.
-     *
-     */
     public OptionPicker(@NonNull Activity activity) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity);
     }
 
-    /**
-     * Executes optionpicker operation with thermal imaging domain optimization.
-     *
-     */
     public OptionPicker(@NonNull Activity activity, @StyleRes int themeResId) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity, themeResId);
     }
 
@@ -88,10 +58,10 @@ public class OptionPicker extends ModalDialog {
     @Override
     protected View createBodyView() {
         wheelLayout = new OptionWheelLayout(activity);
-        wheelLayout.setCurtainEnabled(true);// Selected栏是否有背景color
-        wheelLayout.setCurtainColor(ContextCompat.getColor(getContext(), R.color.wheel_select_bg));       // Selected栏背景color
-        wheelLayout.setSelectedTextColor(ContextCompat.getColor(getContext(), R.color.wheel_select_text));// Selectedtextcolor
-        wheelLayout.setTextColor(ContextCompat.getColor(getContext(), R.color.wheel_unselect_text));      // 未selectedtextcolor
+        wheelLayout.setCurtainEnabled(true);//selected栏是否有背景color
+        wheelLayout.setCurtainColor(ContextCompat.getColor(getContext(), R.color.wheel_select_bg));       //selected栏背景color
+        wheelLayout.setSelectedTextColor(ContextCompat.getColor(getContext(), R.color.wheel_select_text));//selectedtextcolor
+        wheelLayout.setTextColor(ContextCompat.getColor(getContext(), R.color.wheel_unselect_text));      //未selectedtextcolor
         return wheelLayout;
     }
 
@@ -99,25 +69,13 @@ public class OptionPicker extends ModalDialog {
     protected void initData() {
         super.initData();
         initialized = true;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (data == null || data.size() == 0) {
             data = provideData();
         }
         wheelLayout.setData(data);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (defaultValue != null) {
             wheelLayout.setDefaultValue(defaultValue);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (defaultPosition != -1) {
             wheelLayout.setDefaultPosition(defaultPosition);
         }
@@ -130,10 +88,6 @@ public class OptionPicker extends ModalDialog {
 
     @Override
     protected void onOk() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (onOptionPickedListener != null) {
             int position = wheelLayout.getWheelView().getCurrentPosition();
             Object item = wheelLayout.getWheelView().getCurrentItem();
@@ -150,19 +104,11 @@ public class OptionPicker extends ModalDialog {
     }
 
     public void setData(Object... data) {
-        /**
-         * Configures the data with validation and thermal imaging optimization.
-         *
-         */
         setData(Arrays.asList(data));
     }
 
     public void setData(List<?> data) {
         this.data = data;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (initialized) {
             wheelLayout.setData(data);
         }
@@ -170,10 +116,6 @@ public class OptionPicker extends ModalDialog {
 
     public void setDefaultValue(Object item) {
         this.defaultValue = item;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (initialized) {
             wheelLayout.setDefaultValue(item);
         }
@@ -181,10 +123,6 @@ public class OptionPicker extends ModalDialog {
 
     public void setDefaultPosition(int position) {
         this.defaultPosition = position;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (initialized) {
             wheelLayout.setDefaultPosition(position);
         }

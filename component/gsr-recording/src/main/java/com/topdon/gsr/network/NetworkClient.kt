@@ -17,18 +17,8 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.net.ssl.*
 
 /**
- * Specialized thermal imaging component providing NetworkClient functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Network client for communicating with PC Controller
+ * Implements device pairing, discovery, and remote measurement initiation
  */
 class NetworkClient(private val context: Context) {
     companion object {
@@ -63,170 +53,49 @@ class NetworkClient(private val context: Context) {
     private lateinit var errorRecoveryManager: NetworkErrorRecoveryManager
 
     // Authentication manager
-/**
- * Specialized thermal imaging component providing NetworkEventListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+    private val authManager = DeviceAuthenticationManager(context)
+
+    data class ControllerInfo(
+        val ipAddress: String,
+        val port: Int,
+        val deviceName: String,
+        val capabilities: List<String>,
+        val lastSeen: Long = System.currentTimeMillis(),
+    )
+
     interface NetworkEventListener {
-    /**
-     * Executes onControllerDiscovered functionality.
-     */
-        /**
-         * Executes oncontrollerdiscovered operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param controller Parameter for operation (type: ControllerInfo)
-         *
-         */
         fun onControllerDiscovered(controller: ControllerInfo)
 
-    /**
-     * Executes onConnected functionality.
-     */
-        /**
-         * Executes onconnected operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param controller Parameter for operation (type: ControllerInfo)
-         *
-         */
         fun onConnected(controller: ControllerInfo)
 
-    /**
-     * Executes onDisconnected functionality.
-     */
-        /**
-         * Executes ondisconnected operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param reason Parameter for operation (type: String)
-         *
-         */
         fun onDisconnected(reason: String)
 
-    /**
-     * Executes onRemoteMeasurementRequest functionality.
-     */
-        /**
-         * Executes onremotemeasurementrequest operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param sessionInfo Parameter for operation (type: SessionInfo)
-         *
-         */
         fun onRemoteMeasurementRequest(sessionInfo: SessionInfo)
 
-    /**
-     * Executes onSyncFlash functionality.
-     */
-        /**
-         * Executes onsyncflash operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param durationMs Duration in milliseconds (type: Int)
-         *
-         */
         fun onSyncFlash(durationMs: Int)
 
-    /**
-     * Executes onTimeSynchronized functionality.
-     */
-        /**
-         * Executes ontimesynchronized operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param offsetNanoseconds Parameter for operation (type: Long)
-         *
-         */
         fun onTimeSynchronized(offsetNanoseconds: Long)
 
-    /**
-     * Executes onDataStreamingStarted functionality.
-     */
-        /**
-         * Executes ondatastreamingstarted operation with thermal imaging domain optimization.
-         *
-         */
         fun onDataStreamingStarted()
 
-    /**
-     * Executes onDataStreamingStopped functionality.
-     */
-        /**
-         * Executes ondatastreamingstopped operation with thermal imaging domain optimization.
-         *
-         */
         fun onDataStreamingStopped()
 
-    /**
-     * Executes onError functionality.
-     */
-        /**
-         * Executes onerror operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param operation Parameter for operation (type: String)
-         * @param error Parameter for operation (type: String)
-         *
-         */
         fun onError(
             operation: String,
             error: String,
         )
 
         // Authentication events
-    /**
-     * Executes onPairingRequested functionality.
-     */
-        /**
-         * Executes onpairingrequested operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param controllerId Parameter for operation (type: String)
-         * @param controllerName Parameter for operation (type: String)
-         *
-         */
         fun onPairingRequested(
             controllerId: String,
             controllerName: String,
         )
 
-    /**
-     * Executes onPairingCompleted functionality.
-     */
-        /**
-         * Executes onpairingcompleted operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param controllerId Parameter for operation (type: String)
-         * @param success Parameter for operation (type: Boolean)
-         *
-         */
         fun onPairingCompleted(
             controllerId: String,
             success: Boolean,
         )
 
-    /**
-     * Executes onAuthenticationRequired functionality.
-     */
-        /**
-         * Executes onauthenticationrequired operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param controllerId Parameter for operation (type: String)
-         *
-         */
         fun onAuthenticationRequired(controllerId: String)
     }
 
@@ -235,53 +104,21 @@ class NetworkClient(private val context: Context) {
     init {
         // Initialize error recovery manager
         errorRecoveryManager = NetworkErrorRecoveryManager(context, this)
-        /**
-         * Configures the uperrorrecoverylistener with validation and thermal imaging optimization.
-         *
-         */
         setupErrorRecoveryListener()
-        /**
-         * Configures the upauthenticationlistener with validation and thermal imaging optimization.
-         *
-         */
         setupAuthenticationListener()
     }
 
-    /**
-     * Sets eventlistener configuration.
-     */
     fun setEventListener(listener: NetworkEventListener?) {
         eventListener = listener
     }
 
-    /**
-     * Sets uperrorrecoverylistener configuration.
-     */
     private fun setupErrorRecoveryListener() {
         errorRecoveryManager.setEventListener(
             object : NetworkErrorRecoveryManager.RecoveryEventListener {
-                /**
-                 * Executes onrecoverystarted operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param reason Parameter for operation (type: String)
-                 *
-                 */
                 override fun onRecoveryStarted(reason: String) {
                     Log.i(TAG, "Network recovery started: $reason")
                 }
 
-                /**
-                 * Handles temperature measurement and calibration with precision thermal data processing.
-                 *
-                 * @param
-                 * @param attempt Temperature value in Celsius (type: Int)
-                 * @param maxAttempts Temperature value in Celsius (type: Int)
-                 *
-                 * @note Temperature values are in Celsius unless otherwise specified.
-                 * Accuracy depends on thermal camera calibration.
-                 *
-                 */
                 override fun onRecoveryAttempt(
                     attempt: Int,
                     maxAttempts: Int,
@@ -289,48 +126,20 @@ class NetworkClient(private val context: Context) {
                     Log.i(TAG, "Recovery attempt $attempt/$maxAttempts")
                 }
 
-                /**
-                 * Executes onrecoverysuccess operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param controller Parameter for operation (type: ControllerInfo)
-                 *
-                 */
                 override fun onRecoverySuccess(controller: ControllerInfo) {
                     Log.i(TAG, "Network recovery successful")
                     eventListener?.onConnected(controller)
                 }
 
-                /**
-                 * Executes onrecoveryfailed operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param reason Parameter for operation (type: String)
-                 *
-                 */
                 override fun onRecoveryFailed(reason: String) {
                     Log.e(TAG, "Network recovery failed: $reason")
                     eventListener?.onError("recovery", reason)
                 }
 
-                /**
-                 * Executes onconnectionhealthchanged operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param isHealthy Parameter for operation (type: Boolean)
-                 *
-                 */
                 override fun onConnectionHealthChanged(isHealthy: Boolean) {
                     Log.d(TAG, "Connection health: ${if (isHealthy) "good" else "poor"}")
                 }
 
-                /**
-                 * Executes onrapidfailuredetected operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param failureCount Parameter for operation (type: Int)
-                 *
-                 */
                 override fun onRapidFailureDetected(failureCount: Int) {
                     Log.w(TAG, "Rapid failure detected: $failureCount failures")
                     eventListener?.onError("rapid_failure", "Detected $failureCount rapid failures")
@@ -339,20 +148,9 @@ class NetworkClient(private val context: Context) {
         )
     }
 
-    /**
-     * Sets upauthenticationlistener configuration.
-     */
     private fun setupAuthenticationListener() {
         authManager.setAuthEventListener(
             object : DeviceAuthenticationManager.AuthEventListener {
-                /**
-                 * Executes onpairingrequested operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param controllerId Parameter for operation (type: String)
-                 * @param controllerName Parameter for operation (type: String)
-                 *
-                 */
                 override fun onPairingRequested(
                     controllerId: String,
                     controllerName: String,
@@ -360,14 +158,6 @@ class NetworkClient(private val context: Context) {
                     eventListener?.onPairingRequested(controllerId, controllerName)
                 }
 
-                /**
-                 * Executes onpairingcompleted operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param controllerId Parameter for operation (type: String)
-                 * @param success Parameter for operation (type: Boolean)
-                 *
-                 */
                 override fun onPairingCompleted(
                     controllerId: String,
                     success: Boolean,
@@ -375,37 +165,15 @@ class NetworkClient(private val context: Context) {
                     eventListener?.onPairingCompleted(controllerId, success)
                 }
 
-                /**
-                 * Executes onauthtokenreceived operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param token Parameter for operation (type: DeviceAuthenticationManager.AuthToken)
-                 *
-                 */
                 override fun onAuthTokenReceived(token: DeviceAuthenticationManager.AuthToken) {
                     Log.d(TAG, "Authentication token received for controller: ${token.controllerId}")
                 }
 
-                /**
-                 * Executes onauthtokenexpired operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param controllerId Parameter for operation (type: String)
-                 *
-                 */
                 override fun onAuthTokenExpired(controllerId: String) {
                     Log.w(TAG, "Authentication token expired for controller: $controllerId")
                     eventListener?.onAuthenticationRequired(controllerId)
                 }
 
-                /**
-                 * Executes onauthenticationfailed operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param controllerId Parameter for operation (type: String)
-                 * @param reason Parameter for operation (type: String)
-                 *
-                 */
                 override fun onAuthenticationFailed(
                     controllerId: String,
                     reason: String,
@@ -428,10 +196,6 @@ class NetworkClient(private val context: Context) {
                 val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
                 val dhcpInfo = wifiManager.dhcpInfo
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (dhcpInfo.gateway == 0) {
                     Log.w(TAG, "No gateway found, cannot discover controllers")
                     return@withContext controllers
@@ -448,16 +212,8 @@ class NetworkClient(private val context: Context) {
                         async {
                             val host = "$subnet.$hostNum"
                             try {
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (isHostReachable(host, PC_CONTROLLER_PORT, 1000)) {
                                     val controller = queryController(host)
-                                    /**
-                                     * Executes if operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     if (controller != null) {
                                         discoveredControllers[host] = controller
                                         eventListener?.onControllerDiscovered(controller)
@@ -494,30 +250,14 @@ class NetworkClient(private val context: Context) {
         ipAddress: String,
         port: Int = PC_CONTROLLER_PORT,
     ): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (isConnected) {
-                    /**
-                     * Executes disconnect operation with thermal imaging domain optimization.
-                     *
-                     */
                     disconnect()
                 }
 
                 Log.i(TAG, "Connecting to PC Controller at $ipAddress:$port with TLS")
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (useTLS) {
                     // Create TLS connection
                     val trustManager = createTrustAllManager()
@@ -547,34 +287,18 @@ class NetworkClient(private val context: Context) {
 
                 // Perform time synchronization first
                 val syncSuccess = performTimeSync()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!syncSuccess) {
                     Log.w(TAG, "Time synchronization failed, but continuing...")
                 }
 
                 // Start message listening
-                /**
-                 * Executes startmessagelistener operation with thermal imaging domain optimization.
-                 *
-                 */
                 startMessageListener()
 
                 // Send device registration
                 val registrationSuccess = registerDevice()
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (registrationSuccess) {
                     // Start heartbeat
-                    /**
-                     * Executes startheartbeat operation with thermal imaging domain optimization.
-                     *
-                     */
                     startHeartbeat()
 
                     val controller =
@@ -592,10 +316,6 @@ class NetworkClient(private val context: Context) {
                     Log.i(TAG, "Successfully connected and registered with PC Controller")
                     true
                 } else {
-                    /**
-                     * Executes disconnect operation with thermal imaging domain optimization.
-                     *
-                     */
                     disconnect()
                     false
                 }
@@ -603,10 +323,6 @@ class NetworkClient(private val context: Context) {
                 Log.e(TAG, "Failed to connect to PC Controller", e)
                 errorRecoveryManager.handleNetworkError("connect", e.message ?: "Connection failed")
                 eventListener?.onError("connect", e.message ?: "Connection failed")
-                /**
-                 * Executes disconnect operation with thermal imaging domain optimization.
-                 *
-                 */
                 disconnect()
                 false
             }
@@ -647,55 +363,19 @@ class NetworkClient(private val context: Context) {
         sessionId: String,
         data: JSONObject,
     ): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isConnected) return@withContext false
 
             try {
                 val message =
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("message_type", "measurement_data")
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_id", deviceId)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("session_id", sessionId)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("timestamp", getCurrentTimestamp())
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("data", data)
                     }
 
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(message)
                 true
             } catch (e: Exception) {
@@ -713,51 +393,19 @@ class NetworkClient(private val context: Context) {
         status: String,
         batteryLevel: Int? = null,
     ): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isConnected) return@withContext false
 
             try {
                 val message =
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("message_type", "device_status")
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_id", deviceId)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("status", status)
                         batteryLevel?.let { put("battery_level", it) }
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("timestamp", getCurrentTimestamp())
                     }
 
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(message)
                 true
             } catch (e: Exception) {
@@ -766,22 +414,10 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Executes registerdevice operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun registerDevice(): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val capabilities =
-                    /**
-                     * Executes listof operation with thermal imaging domain optimization.
-                     *
-                     */
                     listOf(
                         "gsr",
                         "thermal",
@@ -790,52 +426,16 @@ class NetworkClient(private val context: Context) {
                     )
 
                 val registrationMessage =
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("message_type", "device_register")
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_id", deviceId)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_type", "android_phone")
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("capabilities", org.json.JSONArray(capabilities))
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("ip_address", getLocalIpAddress())
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("port", PC_CONTROLLER_PORT)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("timestamp", getCurrentTimestamp())
                     }
 
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(registrationMessage)
 
                 // Wait for ACK
@@ -848,28 +448,13 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Executes startMessageListener functionality.
-     */
-    /**
-     * Executes startmessagelistener operation with thermal imaging domain optimization.
-     *
-     */
     private fun startMessageListener() {
         heartbeatScope.launch {
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (isConnected && isActive) {
                 try {
                     val message = receiveMessage(1000)
                     message?.let { handleIncomingMessage(it) }
                 } catch (e: Exception) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isConnected) {
                         Log.e(TAG, "Message listener error", e)
                         eventListener?.onError("message_listener", e.message ?: "Listener error")
@@ -880,59 +465,20 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    /**
-     * Executes startHeartbeat functionality.
-     */
-    /**
-     * Executes startheartbeat operation with thermal imaging domain optimization.
-     *
-     */
     private fun startHeartbeat() {
         heartbeatScope.launch {
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (isConnected && isActive) {
                 try {
                     val heartbeatMessage =
-                        /**
-                         * Executes jsonobject operation with thermal imaging domain optimization.
-                         *
-                         */
                         JSONObject().apply {
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put("message_type", "device_heartbeat")
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put("device_id", deviceId)
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put("timestamp", getCurrentTimestamp())
                         }
 
-                    /**
-                     * Executes sendmessage operation with thermal imaging domain optimization.
-                     *
-                     */
                     sendMessage(heartbeatMessage)
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(HEARTBEAT_INTERVAL)
                 } catch (e: Exception) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isConnected) {
                         Log.e(TAG, "Heartbeat failed", e)
                     }
@@ -942,43 +488,21 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    /**
-     * Executes handleIncomingMessage functionality.
-     */
-    /**
-     * Executes handleincomingmessage operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param message Parameter for operation (type: JSONObject)
-     *
-     */
     private fun handleIncomingMessage(message: JSONObject) {
         val messageType = message.optString("message_type")
 
         // Check for custom message handlers first
         messageHandlers[messageType]?.let { handler ->
-            /**
-             * Executes handler operation with thermal imaging domain optimization.
-             *
-             */
             handler(message)
             return
         }
 
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (messageType) {
             "session_start" -> {
                 val sessionId = message.optString("session_id")
                 val sessionName = message.optString("session_name", "Remote Session")
 
                 val sessionInfo =
-                    /**
-                     * Executes sessioninfo operation with thermal imaging domain optimization.
-                     *
-                     */
                     SessionInfo(
                         sessionId = sessionId,
                         startTime = System.currentTimeMillis(),
@@ -1028,18 +552,7 @@ class NetworkClient(private val context: Context) {
             output.flush()
         }
 
-    /**
-     * Executes receivemessage operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param timeoutMs Parameter for operation (type: Long)
-     *
-     */
     private suspend fun receiveMessage(timeoutMs: Long): JSONObject? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             val input = inputStream ?: return@withContext null
 
@@ -1049,10 +562,6 @@ class NetworkClient(private val context: Context) {
                 socket?.soTimeout = timeoutMs.toInt()
 
                 val messageLength = input.readInt()
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (messageLength > 1024 * 1024) { // 1MB limit
                     throw IOException("Message too large: $messageLength bytes")
                 }
@@ -1063,10 +572,6 @@ class NetworkClient(private val context: Context) {
                 sslSocket?.soTimeout = originalTimeout ?: CONNECTION_TIMEOUT.toInt()
                 socket?.soTimeout = originalTimeout ?: CONNECTION_TIMEOUT.toInt()
 
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject(String(messageData, Charsets.UTF_8))
             } catch (e: SocketTimeoutException) {
                 null // Normal timeout, not an error
@@ -1085,49 +590,21 @@ class NetworkClient(private val context: Context) {
                 var totalOffset = 0L
                 var successfulAttempts = 0
 
-                /**
-                 * Executes repeat operation with thermal imaging domain optimization.
-                 *
-                 */
                 repeat(attempts) {
                     val t1 = System.nanoTime() // Client timestamp before request
 
                     val syncRequest =
-                        /**
-                         * Executes jsonobject operation with thermal imaging domain optimization.
-                         *
-                         */
                         JSONObject().apply {
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put("message_type", "time_sync_request")
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put("device_id", deviceId)
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put("client_timestamp", t1)
                         }
 
-                    /**
-                     * Executes sendmessage operation with thermal imaging domain optimization.
-                     *
-                     */
                     sendMessage(syncRequest)
 
                     val response = receiveMessage(2000)
                     val t4 = System.nanoTime() // Client timestamp after response
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (response?.optString("message_type") == "time_sync_response") {
                         val t2 = response.optLong("server_receive_timestamp") // Server timestamp when request received
                         val t3 = response.optLong("server_send_timestamp") // Server timestamp when response sent
@@ -1142,17 +619,9 @@ class NetworkClient(private val context: Context) {
                         Log.d(TAG, "Time sync attempt ${it + 1}: offset=${offset}ns, delay=${networkDelay}ns")
                     }
 
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(100) // Small delay between attempts
                 }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (successfulAttempts > 0) {
                     clockOffset = totalOffset / successfulAttempts
                     eventListener?.onTimeSynchronized(clockOffset)
@@ -1185,23 +654,11 @@ class NetworkClient(private val context: Context) {
                 authType: String,
             ) {}
 
-            /**
-             * Executes checkservertrusted operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param chain Parameter for operation (type: Array<X509Certificate>)
-             * @param authType Parameter for operation (type: String)
-             *
-             */
             override fun checkServerTrusted(
                 chain: Array<X509Certificate>,
                 authType: String,
             ) {}
 
-            /**
-             * Retrieves the acceptedissuers with optimized performance for thermal imaging operations.
-             *
-             */
             override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
         }
     }
@@ -1215,32 +672,12 @@ class NetworkClient(private val context: Context) {
 
             try {
                 val message =
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("message_type", "start_data_stream")
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_id", deviceId)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("timestamp", getSynchronizedTimestamp())
                     }
 
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(message)
                 eventListener?.onDataStreamingStarted()
                 Log.i(TAG, "Data streaming started")
@@ -1260,32 +697,12 @@ class NetworkClient(private val context: Context) {
 
             try {
                 val message =
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("message_type", "stop_data_stream")
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_id", deviceId)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("timestamp", getSynchronizedTimestamp())
                     }
 
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(message)
                 eventListener?.onDataStreamingStopped()
                 Log.i(TAG, "Data streaming stopped")
@@ -1296,18 +713,7 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Executes querycontroller operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param host Parameter for operation (type: String)
-     *
-     */
     private suspend fun queryController(host: String): ControllerInfo? =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val socket = Socket()
@@ -1318,20 +724,8 @@ class NetworkClient(private val context: Context) {
 
                 // Send info query
                 val query =
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("message_type", "info_query")
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_id", deviceId)
                     }
 
@@ -1349,15 +743,7 @@ class NetworkClient(private val context: Context) {
 
                 socket.close()
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (response.optString("message_type") == "info_response") {
-                    /**
-                     * Executes controllerinfo operation with thermal imaging domain optimization.
-                     *
-                     */
                     ControllerInfo(
                         ipAddress = host,
                         port = PC_CONTROLLER_PORT,
@@ -1373,24 +759,11 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Executes ishostreachable operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param host Parameter for operation (type: String)
-     * @param port Parameter for operation (type: Int)
-     * @param timeoutMs Parameter for operation (type: Int)
-     *
-     */
     private suspend fun isHostReachable(
         host: String,
         port: Int,
         timeoutMs: Int,
     ): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val socket = Socket()
@@ -1402,21 +775,7 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Executes intToIp functionality.
-     */
-    /**
-     * Executes inttoip operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param ipAddress Parameter for operation (type: Int)
-     *
-     */
     private fun intToIp(ipAddress: Int): String {
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (
             (ipAddress and 0xFF).toString() + "." +
                 ((ipAddress shr 8) and 0xFF).toString() + "." +
@@ -1425,26 +784,13 @@ class NetworkClient(private val context: Context) {
         )
     }
 
-    /**
-     * Executes isConnected functionality.
-     */
-    /**
-     * Executes isconnected operation with thermal imaging domain optimization.
-     *
-     */
     fun isConnected(): Boolean = isConnected
 
-    /**
-     * Retrieves currenttimestamp information.
-     */
     private fun getCurrentTimestamp(): String {
         return Instant.now().atZone(ZoneId.systemDefault())
             .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
     }
 
-    /**
-     * Retrieves localipaddress information.
-     */
     private fun getLocalIpAddress(): String {
         try {
             val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -1456,9 +802,6 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    /**
-     * Retrieves discoveredcontrollers information.
-     */
     fun getDiscoveredControllers(): List<ControllerInfo> = discoveredControllers.values.toList()
 
     /**
@@ -1481,15 +824,7 @@ class NetworkClient(private val context: Context) {
     /**
      * Clean up all resources
      */
-    /**
-     * Executes cleanup operation with thermal imaging domain optimization.
-     *
-     */
     fun cleanup() {
-        /**
-         * Executes disconnect operation with thermal imaging domain optimization.
-         *
-         */
         disconnect()
         errorRecoveryManager.cleanup()
         discoveredControllers.clear()
@@ -1516,23 +851,11 @@ class NetworkClient(private val context: Context) {
     ): JSONObject {
         val startTime = System.currentTimeMillis()
 
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (System.currentTimeMillis() - startTime < timeoutMs) {
             val message = receiveMessage(1000L)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (message?.optString("type") == messageType) {
                 return message
             }
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(100L)
         }
 
@@ -1546,10 +869,6 @@ class NetworkClient(private val context: Context) {
         withContext(Dispatchers.IO) {
             discoveredControllers.values.forEach { controller ->
                 try {
-                    /**
-                     * Executes sendmessage operation with thermal imaging domain optimization.
-                     *
-                     */
                     sendMessage(message)
                 } catch (e: Exception) {
                     Log.w(TAG, "Failed to broadcast to ${controller.ipAddress}", e)
@@ -1579,17 +898,9 @@ class NetworkClient(private val context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val controllers = discoverControllers()
-                /**
-                 * Executes callback operation with thermal imaging domain optimization.
-                 *
-                 */
                 callback(true)
             } catch (e: Exception) {
                 Log.e(TAG, "Discovery failed", e)
-                /**
-                 * Executes callback operation with thermal imaging domain optimization.
-                 *
-                 */
                 callback(false)
             }
         }
@@ -1603,24 +914,12 @@ class NetworkClient(private val context: Context) {
         port: Int,
         callback: (Boolean) -> Unit,
     ) {
-        /**
-         * Executes coroutinescope operation with thermal imaging domain optimization.
-         *
-         */
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val success = connectToController(ipAddress, port)
-                /**
-                 * Executes callback operation with thermal imaging domain optimization.
-                 *
-                 */
                 callback(success)
             } catch (e: Exception) {
                 Log.e(TAG, "Connection failed", e)
-                /**
-                 * Executes callback operation with thermal imaging domain optimization.
-                 *
-                 */
                 callback(false)
             }
         }
@@ -1662,10 +961,6 @@ class NetworkClient(private val context: Context) {
     /**
      * Get current pairing PIN
      */
-    /**
-     * Retrieves the currentpairingpin with optimized performance for thermal imaging operations.
-     *
-     */
     fun getCurrentPairingPin(): String? {
         return authManager.getCurrentPairingPin()
     }
@@ -1678,52 +973,16 @@ class NetworkClient(private val context: Context) {
             try {
                 val pairingRequest = authManager.createPairingRequest()
                 val message =
-                    /**
-                     * Executes jsonobject operation with thermal imaging domain optimization.
-                     *
-                     */
                     JSONObject().apply {
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("message_type", "pairing_request")
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_id", pairingRequest.deviceId)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_name", pairingRequest.deviceName)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("device_type", pairingRequest.deviceType)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("pairing_pin", pairingRequest.pairingPin)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("timestamp", pairingRequest.timestamp)
-                        /**
-                         * Executes put operation with thermal imaging domain optimization.
-                         *
-                         */
                         put("capabilities", org.json.JSONArray(pairingRequest.capabilities))
                     }
 
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(message)
                 Log.d(TAG, "Pairing request sent to ${controllerInfo.ipAddress}")
                 true
@@ -1771,10 +1030,6 @@ class NetworkClient(private val context: Context) {
     /**
      * Clear all pairing data
      */
-    /**
-     * Executes clearallpairings operation with thermal imaging domain optimization.
-     *
-     */
     fun clearAllPairings() {
         authManager.clearAllPairings()
     }
@@ -1787,17 +1042,9 @@ class NetworkClient(private val context: Context) {
         data: JSONObject,
         controllerId: String,
     ): Boolean =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             try {
                 val authenticatedMessage = authManager.createAuthenticatedMessage(messageType, data, controllerId)
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(authenticatedMessage)
                 true
             } catch (e: Exception) {

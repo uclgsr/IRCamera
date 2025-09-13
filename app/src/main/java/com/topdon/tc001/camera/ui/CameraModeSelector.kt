@@ -20,34 +20,8 @@ import kotlinx.coroutines.*
  *
  * Features Samsung S22 compatibility indicators and performance warnings.
  */
-/**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with CameraModeSelector functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class CameraModeSelector
     @JvmOverloads
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet? = null)
-     * @param defStyleAttr Parameter for operation (type: Int = 0)
-     *
-     */
     constructor(
         context: Context,
         attrs: AttributeSet? = null,
@@ -66,16 +40,9 @@ class CameraModeSelector
         private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
         init {
-            /**
-             * Initializes the view component for thermal imaging operations.
-             *
-             */
             initView()
         }
 
-    /**
-     * Initializes view component.
-     */
         private fun initView() {
             LayoutInflater.from(context).inflate(R.layout.camera_mode_selector, this, true)
 
@@ -87,61 +54,31 @@ class CameraModeSelector
             performanceWarning = findViewById(R.id.performance_warning)
             switchingProgressBar = findViewById(R.id.switching_progress_bar)
 
-            /**
-             * Configures the upmodebuttons with validation and thermal imaging optimization.
-             *
-             */
             setupModeButtons()
-            /**
-             * Configures the upmodechangelistener with validation and thermal imaging optimization.
-             *
-             */
             setupModeChangeListener()
         }
 
-    /**
-     * Sets upmodebuttons configuration.
-     */
         private fun setupModeButtons() {
             rawModeButton.apply {
                 text = "RAW 50MP"
-                /**
-                 * Configures the compounddrawableswithintrinsicbounds with validation and thermal imaging optimization.
-                 *
-                 */
                 setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_camera_raw, 0, 0, 0)
             }
 
             videoModeButton.apply {
                 text = "4K Video"
-                /**
-                 * Configures the compounddrawableswithintrinsicbounds with validation and thermal imaging optimization.
-                 *
-                 */
                 setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_videocam, 0, 0, 0)
             }
 
             previewModeButton.apply {
                 text = "Preview"
-                /**
-                 * Configures the compounddrawableswithintrinsicbounds with validation and thermal imaging optimization.
-                 *
-                 */
                 setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_preview, 0, 0, 0)
             }
 
             // Default to preview mode
             previewModeButton.isChecked = true
-            /**
-             * Executes updatemodeinfo operation with thermal imaging domain optimization.
-             *
-             */
             updateModeInfo(RGBCameraRecorder.CameraMode.PREVIEW_ONLY)
         }
 
-    /**
-     * Sets upmodechangelistener configuration.
-     */
         private fun setupModeChangeListener() {
             modeSegmentedControl.setOnCheckedChangeListener { _, checkedId ->
                 if (switchingProgressBar.visibility == VISIBLE) {
@@ -150,10 +87,6 @@ class CameraModeSelector
                 }
 
                 val selectedMode =
-                    /**
-                     * Executes when operation with thermal imaging domain optimization.
-                     *
-                     */
                     when (checkedId) {
                         R.id.raw_mode_button -> RGBCameraRecorder.CameraMode.RAW_50MP
                         R.id.video_mode_button -> RGBCameraRecorder.CameraMode.VIDEO_4K
@@ -161,10 +94,6 @@ class CameraModeSelector
                         else -> RGBCameraRecorder.CameraMode.PREVIEW_ONLY
                     }
 
-                /**
-                 * Executes switchtomode operation with thermal imaging domain optimization.
-                 *
-                 */
                 switchToMode(selectedMode)
             }
         }
@@ -190,113 +119,42 @@ class CameraModeSelector
         private fun switchToMode(mode: RGBCameraRecorder.CameraMode) {
             val recorder = cameraRecorder ?: return
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (recorder.getCurrentMode() == mode) {
-                /**
-                 * Executes updatemodeinfo operation with thermal imaging domain optimization.
-                 *
-                 */
                 updateModeInfo(mode)
                 return
             }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (recorder.isRecording()) {
-                /**
-                 * Executes showerror operation with thermal imaging domain optimization.
-                 *
-                 */
                 showError("Cannot switch modes while recording. Stop recording first.")
-                /**
-                 * Executes reverttocurrentmode operation with thermal imaging domain optimization.
-                 *
-                 */
                 revertToCurrentMode()
                 return
             }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!recorder.isModeSupported(mode)) {
-                /**
-                 * Executes showerror operation with thermal imaging domain optimization.
-                 *
-                 */
                 showError("${mode.displayName} is not supported on this device.")
-                /**
-                 * Executes reverttocurrentmode operation with thermal imaging domain optimization.
-                 *
-                 */
                 revertToCurrentMode()
                 return
             }
 
             // Show switching progress
-            /**
-             * Executes showswitchingprogress operation with thermal imaging domain optimization.
-             *
-             */
             showSwitchingProgress(true)
 
             coroutineScope.launch {
                 try {
                     val success = recorder.switchMode(mode)
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (success) {
-                        /**
-                         * Executes updatemodeinfo operation with thermal imaging domain optimization.
-                         *
-                         */
                         updateModeInfo(mode)
                         onModeChangeListener?.invoke(mode)
-                        /**
-                         * Executes showmodechangesuccess operation with thermal imaging domain optimization.
-                         *
-                         */
                         showModeChangeSuccess(mode)
                     } else {
-                        /**
-                         * Executes showerror operation with thermal imaging domain optimization.
-                         *
-                         */
                         showError("Failed to switch to ${mode.displayName}")
-                        /**
-                         * Executes reverttocurrentmode operation with thermal imaging domain optimization.
-                         *
-                         */
                         revertToCurrentMode()
                     }
                 } catch (e: Exception) {
-                    /**
-                     * Executes showerror operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param error Parameter for operation (type: ${e.message}")
-                     *
-                     */
                     showError("Mode switch error: ${e.message}")
-                    /**
-                     * Executes reverttocurrentmode operation with thermal imaging domain optimization.
-                     *
-                     */
                     revertToCurrentMode()
                 } finally {
-                    /**
-                     * Executes showswitchingprogress operation with thermal imaging domain optimization.
-                     *
-                     */
                     showSwitchingProgress(false)
                 }
             }
@@ -326,47 +184,17 @@ class CameraModeSelector
 
             val capabilityInfo =
                 buildString {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (rawSupported) {
                         val maxRes = recorder.getMaxRawResolution()
-                        /**
-                         * Executes append operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param RAW Parameter for operation (type: ${maxRes?.width}×${maxRes?.height}\n")
-                         *
-                         */
                         append("✓ RAW: ${maxRes?.width}×${maxRes?.height}\n")
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (videoSupported) {
                         val videoRes = recorder.getCurrentVideoResolution()
-                        /**
-                         * Executes append operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param Video Parameter for operation (type: ${videoRes.width}×${videoRes.height}")
-                         *
-                         */
                         append("✓ Video: ${videoRes.width}×${videoRes.height}")
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (highSpeed60) append(" @60fps") else append(" @30fps")
                     }
                 }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (capabilityInfo.isNotEmpty()) {
                 modeInfoText.text = capabilityInfo
             }
@@ -379,27 +207,15 @@ class CameraModeSelector
             when (mode) {
                 RGBCameraRecorder.CameraMode.RAW_50MP -> {
                     modeInfoText.text = "High-resolution RAW capture\n~15fps streaming, DNG format"
-                    /**
-                     * Executes showperformancewarning operation with thermal imaging domain optimization.
-                     *
-                     */
                     showPerformanceWarning("RAW mode uses significant memory and storage")
                 }
                 RGBCameraRecorder.CameraMode.VIDEO_4K -> {
                     val fps = if (cameraRecorder?.supportsHighSpeed60fps() == true) "30-60fps" else "30fps"
                     modeInfoText.text = "4K video recording\n$fps, H.264 encoding"
-                    /**
-                     * Executes showperformancewarning operation with thermal imaging domain optimization.
-                     *
-                     */
                     showPerformanceWarning("4K recording may cause device heating")
                 }
                 RGBCameraRecorder.CameraMode.PREVIEW_ONLY -> {
                     modeInfoText.text = "Preview mode only\nLow power consumption"
-                    /**
-                     * Executes hideperformancewarning operation with thermal imaging domain optimization.
-                     *
-                     */
                     hidePerformanceWarning()
                 }
             }
@@ -449,20 +265,12 @@ class CameraModeSelector
         private fun revertToCurrentMode() {
             val currentMode = cameraRecorder?.getCurrentMode() ?: RGBCameraRecorder.CameraMode.PREVIEW_ONLY
 
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (currentMode) {
                 RGBCameraRecorder.CameraMode.RAW_50MP -> rawModeButton.isChecked = true
                 RGBCameraRecorder.CameraMode.VIDEO_4K -> videoModeButton.isChecked = true
                 RGBCameraRecorder.CameraMode.PREVIEW_ONLY -> previewModeButton.isChecked = true
             }
 
-            /**
-             * Executes updatemodeinfo operation with thermal imaging domain optimization.
-             *
-             */
             updateModeInfo(currentMode)
         }
 
@@ -486,17 +294,9 @@ class CameraModeSelector
                 RGBCameraRecorder.CameraMode.VIDEO_4K -> videoModeButton.isChecked = true
                 RGBCameraRecorder.CameraMode.PREVIEW_ONLY -> previewModeButton.isChecked = true
             }
-            /**
-             * Executes updatemodeinfo operation with thermal imaging domain optimization.
-             *
-             */
             updateModeInfo(mode)
         }
 
-        /**
-         * Executes ondetachedfromwindow operation with thermal imaging domain optimization.
-         *
-         */
         override fun onDetachedFromWindow() {
             super.onDetachedFromWindow()
             coroutineScope.cancel()

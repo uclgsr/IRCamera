@@ -15,10 +15,10 @@ data class SoftwareInfo(
     val app_language: String, // APP语言
     val sdk_version: String, // SDKversion
 ) : Parcelable {
-    val software_code = BaseApplication.instance.getSoftWareCode() // Softwareencoding
+    val software_code = BaseApplication.instance.getSoftWareCode() // softwareencoding
     val system_language = AppLanguageUtils.getSystemLanguage() // 系统语言
-    val app_version = "1.10.000" // Softwareversion
-    val hardware_version = "" // Hardwareversion
+    val app_version = "1.10.000" // softwareversion
+    val hardware_version = "" // hardwareversion
     val app_sn = ""
     val mobile_phone_model = Build.BRAND // 手机model
     val system_version = Build.VERSION.RELEASE // 系统version

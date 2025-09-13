@@ -7,18 +7,9 @@ import android.graphics.Typeface;
 import com.github.mikephil.charting.utils.Utils;
 
 /**
- * Specialized thermal imaging component providing ComponentBase functionality for the IRCamera system.
+ * This class encapsulates everything both Axis, Legend and LimitLines have in common.
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author Philipp Jahoda
  */
 public abstract class ComponentBase {
 
@@ -122,16 +113,8 @@ public abstract class ComponentBase {
      */
     public void setTextSize(float size) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (size > 24f)
             size = 24f;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (size < 6f)
             size = 6f;
 

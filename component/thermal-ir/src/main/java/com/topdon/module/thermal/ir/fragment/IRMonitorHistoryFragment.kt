@@ -33,36 +33,17 @@ import java.util.Calendar
 import androidx.recyclerview.widget.RecyclerView as AndroidRecyclerView
 
 /**
- * Specialized thermal imaging component providing IRMonitorHistoryFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * I r monitor history fragment for thermal imaging components.
+ * Handles specific UI sections and user interactions.
  */
 class IRMonitorHistoryFragment : Fragment() {
     private val adapter = MyAdapter(ArrayList())
 
     private val viewModel: IRMonitorViewModel by viewModels()
 
-    // FindViewById declarations
+    // findViewById declarations
     private lateinit var recyclerView: AndroidRecyclerView
 
-    /**
-     * Executes oncreateview operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param inflater Parameter for operation (type: LayoutInflater)
-     * @param container Parameter for operation (type: ViewGroup?)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -73,14 +54,6 @@ class IRMonitorHistoryFragment : Fragment() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    /**
-     * Executes onviewcreated operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param view Parameter for operation (type: View)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -117,41 +90,21 @@ class IRMonitorHistoryFragment : Fragment() {
         adapter.isUseEmpty = true
         viewModel.recordListLD.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!adapter.hasEmptyView())
                     {
                         adapter.setEmptyView(R.layout.layout_empty)
                     }
-                /**
-                 * Executes withcontext operation with thermal imaging domain optimization.
-                 *
-                 */
                 withContext(Dispatchers.IO) {
                     var lastTime = 0L
                     val nowCalendar = Calendar.getInstance()
                     val lastCalendar = Calendar.getInstance()
-                    /**
-                     * Executes for operation with thermal imaging domain optimization.
-                     *
-                     */
                     for (tmp in it) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (lastTime == 0L)
                             {
                                 tmp.showTitle = true
                             }
                         nowCalendar.timeInMillis = tmp.startTime
                         lastCalendar.timeInMillis = lastTime
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (nowCalendar.get(Calendar.MONTH) != lastCalendar.get(Calendar.MONTH))
                             {
                                 tmp.showTitle = true
@@ -164,29 +117,21 @@ class IRMonitorHistoryFragment : Fragment() {
         }
     }
 
-    /**
-     * Executes onresume operation with thermal imaging domain optimization.
-     *
-     */
     override fun onResume() {
         super.onResume()
         viewModel.queryRecordList()
     }
 
-/**
- * Specialized thermal imaging component providing MyAdapter functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+    override fun onDestroyView() {
+        super.onDestroyView()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMonitorCreate(event: MonitorCreateEvent) {
+        viewModel.queryRecordList()
+    }
+
     private class MyAdapter(dataList: MutableList<ThermalDao.Record>?) :
         BaseQuickAdapter<
             ThermalDao.Record,
@@ -203,14 +148,6 @@ item 长按EventListener.
          */
         var onItemLongClickListener: ((position: Int) -> Unit)? = null
 
-        /**
-         * Executes convert operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param holder Parameter for operation (type: BaseViewHolder)
-         * @param item Parameter for operation (type: ThermalDao.Record)
-         *
-         */
         override fun convert(
             holder: BaseViewHolder,
             item: ThermalDao.Record,
@@ -232,10 +169,6 @@ item 长按EventListener.
             val tvType = holder.itemView.findViewById<View>(R.id.tv_type)
             val viewContentBg = holder.itemView.findViewById<View>(R.id.view_content_bg)
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (item.showTitle || position == 0 || data.size == 1) {
                 groupTitle?.isVisible = true
                 viewLineTop?.isVisible = false
@@ -251,10 +184,6 @@ item 长按EventListener.
             (tvDate as? android.widget.TextView)?.text = "$year-$month"
             (tvTime as? android.widget.TextView)?.text = "$month-$day"
             (tvDuration as? android.widget.TextView)?.text = TimeTool.showVideoTime(record.duration * 1000L)
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (record.type) {
                 "point" -> (tvType as? android.widget.TextView)?.setText(R.string.thermal_point)
                 "line" -> (tvType as? android.widget.TextView)?.setText(R.string.thermal_line)
@@ -262,19 +191,11 @@ item 长按EventListener.
             }
 
             viewContentBg?.setOnClickListener {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (position != AndroidRecyclerView.NO_POSITION) {
                     onItemClickListener?.invoke(position)
                 }
             }
             viewContentBg?.setOnLongClickListener {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (position != AndroidRecyclerView.NO_POSITION) {
                     onItemLongClickListener?.invoke(position)
                 }

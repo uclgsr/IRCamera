@@ -22,33 +22,12 @@ import org.robolectric.shadows.ShadowApplication
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.S]) // Android 12+ for new Bluetooth permissions
 @OptIn(ExperimentalCoroutinesApi::class)
-/**
- * Specialized thermal imaging component providing GSRSensorRecorderTest functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class GSRSensorRecorderTest {
     private lateinit var context: Context
     private lateinit var recorder: GSRSensorRecorder
     private lateinit var shadowApplication: ShadowApplication
 
     @Before
-    /**
-     * Sets up configuration.
-     */
-    /**
-     * Configures the up with validation and thermal imaging optimization.
-     *
-     */
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
         shadowApplication = Shadows.shadowOf(context as android.app.Application)
@@ -68,23 +47,11 @@ class GSRSensorRecorderTest {
             val result = recorder.initialize()
 
             // Then: Should succeed but with limited functionality (addresses graceful degradation from comment)
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Initialization should succeed even without Bluetooth permissions", result)
 
             // And: Configuration should reflect limited permissions
             val config = recorder.getGSRConfiguration()
-            /**
-             * Executes assertfalse operation with thermal imaging domain optimization.
-             *
-             */
             assertFalse("Permissions should be false", config["permissions_available"] as Boolean)
-            /**
-             * Executes assertfalse operation with thermal imaging domain optimization.
-             *
-             */
             assertFalse("Shimmer should not be connected", config["shimmer_connected"] as Boolean)
         }
 
@@ -101,18 +68,10 @@ class GSRSensorRecorderTest {
             val result = recorder.initialize()
 
             // Then: Should succeed with full functionality
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Initialization should succeed with Bluetooth permissions", result)
 
             // And: Configuration should reflect available permissions
             val config = recorder.getGSRConfiguration()
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Permissions should be available", config["permissions_available"] as Boolean)
         }
 
@@ -132,10 +91,6 @@ class GSRSensorRecorderTest {
             // Then: Should handle gracefully (addresses graceful fallback from comment)
             // This tests the requirement for system to continue operation even when Shimmer unavailable
             // The exact behavior depends on whether legacy recording is available
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue(
                 "Recording should start with fallback methods or fail gracefully",
                 result || !result,
@@ -152,40 +107,20 @@ class GSRSensorRecorderTest {
 
         val missingPermissions = GSRSensorRecorder.getMissingPermissions(context)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue(
                 "Should include BLUETOOTH_SCAN for API 31+",
                 missingPermissions.contains(Manifest.permission.BLUETOOTH_SCAN),
             )
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue(
                 "Should include BLUETOOTH_CONNECT for API 31+",
                 missingPermissions.contains(Manifest.permission.BLUETOOTH_CONNECT),
             )
         } else {
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue(
                 "Should include legacy BLUETOOTH for older APIs",
                 missingPermissions.contains(Manifest.permission.BLUETOOTH),
             )
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue(
                 "Should include BLUETOOTH_ADMIN for older APIs",
                 missingPermissions.contains(Manifest.permission.BLUETOOTH_ADMIN),
@@ -207,10 +142,6 @@ class GSRSensorRecorderTest {
         val hasPermissions = GSRSensorRecorder.hasRequiredPermissions(context)
 
         // Then: Should return false
-        /**
-         * Executes assertfalse operation with thermal imaging domain optimization.
-         *
-         */
         assertFalse("Should return false when permissions are missing", hasPermissions)
     }
 
@@ -228,10 +159,6 @@ class GSRSensorRecorderTest {
             val devices = recorder.getAvailableShimmerDevices()
 
             // Then: Should return empty list (addresses requirement for device selection capability)
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Should return empty list without permissions", devices.isEmpty())
         }
 
@@ -249,10 +176,6 @@ class GSRSensorRecorderTest {
             val result = recorder.connectToShimmerDevice("00:11:22:33:44:55")
 
             // Then: Should fail gracefully (addresses device connection handling from comment)
-            /**
-             * Executes assertfalse operation with thermal imaging domain optimization.
-             *
-             */
             assertFalse("Connection should fail without permissions", result)
         }
 
@@ -271,10 +194,6 @@ class GSRSensorRecorderTest {
 
             // Then: Should attempt graceful fallback (addresses robust error handling from comment)
             // The system should try legacy recording when Shimmer is unavailable
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue(
                 "Should attempt recording with available methods",
                 result || !result,
@@ -283,25 +202,9 @@ class GSRSensorRecorderTest {
 
     @Test
     fun `sensor properties should be correct`() {
-        /**
-         * Executes assertequals operation with thermal imaging domain optimization.
-         *
-         */
         assertEquals("Sensor type should be GSR Shimmer3", "GSR Shimmer3", recorder.sensorType)
-        /**
-         * Executes assertequals operation with thermal imaging domain optimization.
-         *
-         */
         assertEquals("Sensor ID should be gsr_shimmer_1", "gsr_shimmer_1", recorder.sensorId)
-        /**
-         * Executes assertequals operation with thermal imaging domain optimization.
-         *
-         */
         assertEquals("Sampling rate should be 128.0", 128.0, recorder.samplingRate, 0.1)
-        /**
-         * Executes assertfalse operation with thermal imaging domain optimization.
-         *
-         */
         assertFalse("Should not be recording initially", recorder.isRecording)
     }
 }

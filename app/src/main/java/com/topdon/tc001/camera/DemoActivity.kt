@@ -11,18 +11,8 @@ import com.topdon.tc001.camera.core.ModeManager
 import kotlinx.coroutines.*
 
 /**
- * Specialized thermal imaging component providing DemoActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Demo activity for testing the clean Camera2System
+ * Shows how to use the new clean architecture
  */
 class DemoActivity : AppCompatActivity() {
     companion object {
@@ -36,38 +26,19 @@ class DemoActivity : AppCompatActivity() {
     private lateinit var buttonPreview: Button
     private lateinit var buttonRecord: Button
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Create simple layout programmatically for demo
         textureView = TextureView(this)
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(textureView)
 
         // Initialize clean Camera2 system
         camera2System = Camera2System(this, textureView)
-        /**
-         * Configures the upcallbacks with validation and thermal imaging optimization.
-         *
-         */
         setupCallbacks()
 
         // Initialize camera
         lifecycleScope.launch {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (camera2System.initialize()) {
                 Log.i(TAG, "Camera2System initialized successfully")
                 val caps = camera2System.getDeviceCaps()
@@ -78,9 +49,6 @@ class DemoActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Sets upcallbacks configuration.
-     */
     private fun setupCallbacks() {
         camera2System.onError = { error ->
             Log.e(TAG, "Camera error: $error")
@@ -116,72 +84,29 @@ class DemoActivity : AppCompatActivity() {
     }
 
     // Demo method to test mode switching
-    /**
-     * Executes testModeSwitch functionality.
-     */
-    /**
-     * Executes testmodeswitch operation with thermal imaging domain optimization.
-     *
-     */
     private fun testModeSwitch() {
         lifecycleScope.launch {
             // Test RAW mode
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (camera2System.switchMode(ModeManager.CameraMode.RAW_50MP)) {
                 Log.i(TAG, "Switched to RAW mode")
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(2000)
 
                 // Test recording
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (camera2System.startRecording("demo_session_raw")) {
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(5000) // Record for 5 seconds
                     camera2System.stopRecording()
                 }
             }
 
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(1000)
 
             // Test Video mode
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)) {
                 Log.i(TAG, "Switched to Video mode")
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(2000)
 
                 // Test recording
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (camera2System.startRecording("demo_session_video")) {
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(5000) // Record for 5 seconds
                     camera2System.stopRecording()
                 }
@@ -189,31 +114,15 @@ class DemoActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Executes onresume operation with thermal imaging domain optimization.
-     *
-     */
     override fun onResume() {
         super.onResume()
         // Start demo after a delay
         lifecycleScope.launch {
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(3000) // Wait for camera to initialize
-            /**
-             * Executes testmodeswitch operation with thermal imaging domain optimization.
-             *
-             */
             testModeSwitch()
         }
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
         super.onDestroy()
         camera2System.release()

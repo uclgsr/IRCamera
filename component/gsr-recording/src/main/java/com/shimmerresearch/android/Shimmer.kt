@@ -14,22 +14,8 @@ import java.util.concurrent.atomic.AtomicBoolean
  * This is a Kotlin adapter that implements the official Shimmer API interface
  * while providing fallback simulation for development and testing
  *
- * Based on: https:// Github.com/ShimmerEngineering/ShimmerAndroidAPI
+ * Based on: https://github.com/ShimmerEngineering/ShimmerAndroidAPI
  * Version: Compatible with v3.2.3Beta
- */
-/**
- * Specialized thermal imaging component providing Shimmer functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
  */
 class Shimmer(private val handler: Handler, private val context: Context) {
     companion object {
@@ -107,19 +93,11 @@ class Shimmer(private val handler: Handler, private val context: Context) {
         deviceName = name
 
         connectionState = STATE_CONNECTING
-        /**
-         * Executes sendmessage operation with thermal imaging domain optimization.
-         *
-         */
         sendMessage(MESSAGE_STATE_CHANGE, STATE_CONNECTING, -1, null)
 
         try {
             // Try to create real Shimmer device connection using official API
             val realShimmer = createRealShimmerConnection(address, name)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (realShimmer != null) {
                 realShimmerInstance = realShimmer
                 Log.i(TAG, "Successfully connected to real Shimmer device")
@@ -133,10 +111,6 @@ class Shimmer(private val handler: Handler, private val context: Context) {
         handler.postDelayed({
             isConnected.set(true)
             connectionState = STATE_CONNECTED
-            /**
-             * Executes sendmessage operation with thermal imaging domain optimization.
-             *
-             */
             sendMessage(MESSAGE_STATE_CHANGE, STATE_CONNECTED, -1, null)
             connectionCallback?.invoke("CONNECTED")
             Log.i(TAG, "Simulated Shimmer connected successfully")
@@ -159,10 +133,6 @@ class Shimmer(private val handler: Handler, private val context: Context) {
                 method.invoke(device)
                 isStreaming.set(true)
                 connectionState = STATE_STREAMING
-                /**
-                 * Executes sendmessage operation with thermal imaging domain optimization.
-                 *
-                 */
                 sendMessage(MESSAGE_STATE_CHANGE, STATE_STREAMING, -1, null)
                 Log.i(TAG, "Started streaming from real Shimmer device")
                 return
@@ -174,15 +144,7 @@ class Shimmer(private val handler: Handler, private val context: Context) {
         // Fallback to simulated streaming
         isStreaming.set(true)
         connectionState = STATE_STREAMING
-        /**
-         * Executes sendmessage operation with thermal imaging domain optimization.
-         *
-         */
         sendMessage(MESSAGE_STATE_CHANGE, STATE_STREAMING, -1, null)
-        /**
-         * Executes startsimulationdatageneration operation with thermal imaging domain optimization.
-         *
-         */
         startSimulationDataGeneration()
         Log.i(TAG, "Started simulated Shimmer3 GSR streaming at ${samplingRate.toInt()}Hz")
     }
@@ -229,10 +191,6 @@ class Shimmer(private val handler: Handler, private val context: Context) {
         }
 
         realShimmerInstance = null
-        /**
-         * Executes sendmessage operation with thermal imaging domain optimization.
-         *
-         */
         sendMessage(MESSAGE_STATE_CHANGE, STATE_NONE, -1, null)
         connectionCallback?.invoke("DISCONNECTED")
         Log.i(TAG, "Shimmer disconnected")
@@ -461,10 +419,6 @@ class Shimmer(private val handler: Handler, private val context: Context) {
             val connectMethod = shimmerClass.getMethod("connect", String::class.java, String::class.java)
             connectMethod.invoke(shimmerInstance, address, name)
 
-            /**
-             * Configures the uprealdevicecallbacks with validation and thermal imaging optimization.
-             *
-             */
             setupRealDeviceCallbacks(shimmerInstance)
             shimmerInstance
         } catch (e: Exception) {
@@ -496,10 +450,6 @@ class Shimmer(private val handler: Handler, private val context: Context) {
             CoroutineScope(Dispatchers.IO).launch {
                 var sampleCount = 0L
 
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (isStreaming.get() && isActive) {
                     try {
                         val objectCluster = ObjectCluster()
@@ -514,16 +464,8 @@ class Shimmer(private val handler: Handler, private val context: Context) {
                         sendMessage(MESSAGE_READ, 0, 0, objectCluster)
 
                         sampleCount++
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(SIMULATION_DATA_INTERVAL_MS)
                     } catch (e: Exception) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isActive) {
                             Log.e(TAG, "Error in data simulation", e)
                         }

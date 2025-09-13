@@ -18,20 +18,6 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
-/**
- * Specialized thermal imaging component providing RadarChartRenderer functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class RadarChartRenderer extends LineRadarRenderer {
 
     protected RadarChart mChart;
@@ -42,16 +28,8 @@ public class RadarChartRenderer extends LineRadarRenderer {
     protected Paint mWebPaint;
     protected Paint mHighlightCirclePaint;
 
-    /**
-     * Executes radarchartrenderer operation with thermal imaging domain optimization.
-     *
-     */
     public RadarChartRenderer(RadarChart chart, ChartAnimator animator,
                               ViewPortHandler viewPortHandler) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(animator, viewPortHandler);
         mChart = chart;
 
@@ -72,7 +50,7 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
     @Override
     public void initBuffers() {
-        // TODO: Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
@@ -83,24 +61,9 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
         int mostEntries = radarData.getMaxEntryCountSet().getEntryCount();
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param set Parameter for operation (type: radarData.getDataSets()
-         *
-         */
         for (IRadarDataSet set : radarData.getDataSets()) {
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (set.isVisible()) {
-                /**
-                 * Executes drawdataset operation with thermal imaging domain optimization.
-                 *
-                 */
                 drawDataSet(c, set, mostEntries);
             }
         }
@@ -121,8 +84,8 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
         float sliceangle = mChart.getSliceAngle();
 
-        // Calculate the factor that is needed for transforming the value to
-        // Pixels
+        // calculate the factor that is needed for transforming the value to
+        // pixels
         float factor = mChart.getFactor();
 
         MPPointF center = mChart.getCenterOffsets();
@@ -132,10 +95,6 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
         boolean hasMovedToPoint = false;
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int j = 0; j < dataSet.getEntryCount(); j++) {
 
             mRenderPaint.setColor(dataSet.getColor(j));
@@ -147,17 +106,9 @@ public class RadarChartRenderer extends LineRadarRenderer {
                     (e.getY() - mChart.getYChartMin()) * factor * phaseY,
                     sliceangle * j * phaseX + mChart.getRotationAngle(), pOut);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Float.isNaN(pOut.x))
                 continue;
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!hasMovedToPoint) {
                 surface.moveTo(pOut.x, pOut.y);
                 hasMovedToPoint = true;
@@ -165,41 +116,21 @@ public class RadarChartRenderer extends LineRadarRenderer {
                 surface.lineTo(pOut.x, pOut.y);
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dataSet.getEntryCount() > mostEntries) {
-            // If this is not the largest set, draw a line to the center before closing
+            // if this is not the largest set, draw a line to the center before closing
             surface.lineTo(center.x, center.y);
         }
 
         surface.close();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dataSet.isDrawFilledEnabled()) {
 
             final Drawable drawable = dataSet.getFillDrawable();
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (drawable != null) {
 
-                /**
-                 * Executes drawfilledpath operation with thermal imaging domain optimization.
-                 *
-                 */
                 drawFilledPath(c, surface, drawable);
             } else {
 
-                /**
-                 * Executes drawfilledpath operation with thermal imaging domain optimization.
-                 *
-                 */
                 drawFilledPath(c, surface, dataSet.getFillColor(), dataSet.getFillAlpha());
             }
         }
@@ -207,11 +138,7 @@ public class RadarChartRenderer extends LineRadarRenderer {
         mRenderPaint.setStrokeWidth(dataSet.getLineWidth());
         mRenderPaint.setStyle(Paint.Style.STROKE);
 
-        // Draw the line (only if filled is disabled or alpha is below 255)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // draw the line (only if filled is disabled or alpha is below 255)
         if (!dataSet.isDrawFilledEnabled() || dataSet.getFillAlpha() < 255)
             c.drawPath(surface, mRenderPaint);
 
@@ -227,8 +154,8 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
         float sliceangle = mChart.getSliceAngle();
 
-        // Calculate the factor that is needed for transforming the value to
-        // Pixels
+        // calculate the factor that is needed for transforming the value to
+        // pixels
         float factor = mChart.getFactor();
 
         MPPointF center = mChart.getCenterOffsets();
@@ -237,26 +164,14 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
         float yoffset = Utils.convertDpToPixel(5f);
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < mChart.getData().getDataSetCount(); i++) {
 
             IRadarDataSet dataSet = mChart.getData().getDataSetByIndex(i);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!shouldDrawValues(dataSet))
                 continue;
 
-            // Apply the text-styling defined by the DataSet
-            /**
-             * Executes applyvaluetextstyle operation with thermal imaging domain optimization.
-             *
-             */
+            // apply the text-styling defined by the DataSet
             applyValueTextStyle(dataSet);
 
             ValueFormatter formatter = dataSet.getValueFormatter();
@@ -265,10 +180,6 @@ public class RadarChartRenderer extends LineRadarRenderer {
             iconsOffset.x = Utils.convertDpToPixel(iconsOffset.x);
             iconsOffset.y = Utils.convertDpToPixel(iconsOffset.y);
 
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int j = 0; j < dataSet.getEntryCount(); j++) {
 
                 RadarEntry entry = dataSet.getEntryForIndex(j);
@@ -279,22 +190,10 @@ public class RadarChartRenderer extends LineRadarRenderer {
                          sliceangle * j * phaseX + mChart.getRotationAngle(),
                          pOut);
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (dataSet.isDrawValuesEnabled()) {
-                    /**
-                     * Executes drawvalue operation with thermal imaging domain optimization.
-                     *
-                     */
                     drawValue(c, formatter.getRadarLabel(entry), pOut.x, pOut.y - yoffset, dataSet.getValueTextColor(j));
                 }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (entry.getIcon() != null && dataSet.isDrawIconsEnabled()) {
 
                     Drawable icon = entry.getIcon();
@@ -305,7 +204,7 @@ public class RadarChartRenderer extends LineRadarRenderer {
                             sliceangle * j * phaseX + mChart.getRotationAngle(),
                             pIcon);
 
-                    // Noinspection SuspiciousNameCombination
+                    //noinspection SuspiciousNameCombination
                     pIcon.y += iconsOffset.x;
 
                     Utils.drawImage(
@@ -334,10 +233,6 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
     @Override
     public void drawExtras(Canvas c) {
-        /**
-         * Executes drawweb operation with thermal imaging domain optimization.
-         *
-         */
         drawWeb(c);
     }
 
@@ -345,14 +240,14 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
         float sliceangle = mChart.getSliceAngle();
 
-        // Calculate the factor that is needed for transforming the value to
-        // Pixels
+        // calculate the factor that is needed for transforming the value to
+        // pixels
         float factor = mChart.getFactor();
         float rotationangle = mChart.getRotationAngle();
 
         MPPointF center = mChart.getCenterOffsets();
 
-        // Draw the web lines that come from the center
+        // draw the web lines that come from the center
         mWebPaint.setStrokeWidth(mChart.getWebLineWidth());
         mWebPaint.setColor(mChart.getWebColor());
         mWebPaint.setAlpha(mChart.getWebAlpha());
@@ -361,10 +256,6 @@ public class RadarChartRenderer extends LineRadarRenderer {
         int maxEntryCount = mChart.getData().getMaxEntryCountSet().getEntryCount();
 
         MPPointF p = MPPointF.getInstance(0,0);
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < maxEntryCount; i += xIncrements) {
 
             Utils.getPosition(
@@ -377,7 +268,7 @@ public class RadarChartRenderer extends LineRadarRenderer {
         }
         MPPointF.recycleInstance(p);
 
-        // Draw the inner-web
+        // draw the inner-web
         mWebPaint.setStrokeWidth(mChart.getWebLineWidthInner());
         mWebPaint.setColor(mChart.getWebColorInner());
         mWebPaint.setAlpha(mChart.getWebAlpha());
@@ -386,16 +277,8 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
         MPPointF p1out = MPPointF.getInstance(0,0);
         MPPointF p2out = MPPointF.getInstance(0,0);
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int j = 0; j < labelCount; j++) {
 
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0; i < mChart.getData().getEntryCount(); i++) {
 
                 float r = (mChart.getYAxis().mEntries[j] - mChart.getYChartMin()) * factor;
@@ -416,8 +299,8 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
         float sliceangle = mChart.getSliceAngle();
 
-        // Calculate the factor that is needed for transforming the value to
-        // Pixels
+        // calculate the factor that is needed for transforming the value to
+        // pixels
         float factor = mChart.getFactor();
 
         MPPointF center = mChart.getCenterOffsets();
@@ -425,30 +308,15 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
         RadarData radarData = mChart.getData();
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param high Parameter for operation (type: indices)
-         *
-         */
         for (Highlight high : indices) {
 
             IRadarDataSet set = radarData.getDataSetByIndex(high.getDataSetIndex());
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (set == null || !set.isHighlightEnabled())
                 continue;
 
             RadarEntry e = set.getEntryForIndex((int) high.getX());
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isInBoundsX(e, set))
                 continue;
 
@@ -461,46 +329,22 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
             high.setDraw(pOut.x, pOut.y);
 
-            // Draw the lines
-            /**
-             * Executes drawhighlightlines operation with thermal imaging domain optimization.
-             *
-             */
+            // draw the lines
             drawHighlightLines(c, pOut.x, pOut.y, set);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (set.isDrawHighlightCircleEnabled()) {
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!Float.isNaN(pOut.x) && !Float.isNaN(pOut.y)) {
 
                     int strokeColor = set.getHighlightCircleStrokeColor();
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (strokeColor == ColorTemplate.COLOR_NONE) {
                         strokeColor = set.getColor(0);
                     }
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (set.getHighlightCircleStrokeAlpha() < 255) {
                         strokeColor = ColorTemplate.colorWithAlpha(strokeColor, set.getHighlightCircleStrokeAlpha());
                     }
 
-                    /**
-                     * Executes drawhighlightcircle operation with thermal imaging domain optimization.
-                     *
-                     */
                     drawHighlightCircle(c,
                             pOut,
                             set.getHighlightCircleInnerRadius(),
@@ -529,18 +373,10 @@ public class RadarChartRenderer extends LineRadarRenderer {
         outerRadius = Utils.convertDpToPixel(outerRadius);
         innerRadius = Utils.convertDpToPixel(innerRadius);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (fillColor != ColorTemplate.COLOR_NONE) {
             Path p = mDrawHighlightCirclePathBuffer;
             p.reset();
             p.addCircle(point.x, point.y, outerRadius, Path.Direction.CW);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (innerRadius > 0.f) {
                 p.addCircle(point.x, point.y, innerRadius, Path.Direction.CCW);
             }
@@ -549,10 +385,6 @@ public class RadarChartRenderer extends LineRadarRenderer {
             c.drawPath(p, mHighlightCirclePaint);
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (strokeColor != ColorTemplate.COLOR_NONE) {
             mHighlightCirclePaint.setColor(strokeColor);
             mHighlightCirclePaint.setStyle(Paint.Style.STROKE);

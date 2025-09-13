@@ -18,22 +18,10 @@ import androidx.core.app.ActivityCompat;
 import com.topdon.lib.core.BaseApplication;
 
 /**
- * Specialized thermal imaging component providing EasyWifi functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+ * des:
+ * author: CaiSongL
+ * date: 2024/5/23 17:39
+ **/
 public class EasyWifi {
     private static volatile EasyWifi mInstance;
     private WifiConnectCallback wifiConnectCallback;
@@ -46,23 +34,18 @@ public class EasyWifi {
         WEP,
         WPA_EAP,
         WPA_PSK,
-/**
- * Specialized thermal imaging component providing WifiConnectCallback functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+        WPA2,
+        WPA3
+    }
+
+    /* loaded from: classes2.dex */
+    public enum WifiCapability {
+        WIFI_CIPHER_WEP,
+        WIFI_CIPHER_WPA,
+        WIFI_CIPHER_NO_PASS
+    }
+
+    /* loaded from: classes2.dex */
     public interface WifiConnectCallback {
         void onFailure();
 
@@ -70,16 +53,8 @@ public class EasyWifi {
     }
 
     public static EasyWifi getInstance() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mInstance == null) {
             synchronized (EasyWifi.class) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (mInstance == null) {
                     mInstance = new EasyWifi();
                 }
@@ -109,47 +84,23 @@ public class EasyWifi {
     }
 
     public void connectByNew(String str, String str2) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            /**
-             * Executes connectbynew operation with thermal imaging domain optimization.
-             *
-             */
             connectByNew(str, str2, WiFiEncryptionStandard.WPA2);
         } else {
             // Fallback to old method for API < 29 - assume WPA encryption
-            /**
-             * Executes connectbyold operation with thermal imaging domain optimization.
-             *
-             */
             connectByOld(str, str2, WifiCapability.WIFI_CIPHER_WPA);
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public void connectByNew(String str, String str2, WiFiEncryptionStandard wiFiEncryptionStandard) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             // Fallback to old method for API < 29 - assume WPA encryption
-            /**
-             * Executes connectbyold operation with thermal imaging domain optimization.
-             *
-             */
             connectByOld(str, str2, WifiCapability.WIFI_CIPHER_WPA);
             return;
         }
         
         WifiNetworkSpecifier build = new WifiNetworkSpecifier.Builder().setSsid(str).setWpa2Passphrase(str2).build();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (wiFiEncryptionStandard == WiFiEncryptionStandard.WPA3) {
             build = new WifiNetworkSpecifier.Builder().setSsid(str).setWpa3Passphrase(str2).build();
         }
@@ -157,26 +108,18 @@ public class EasyWifi {
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                .setNetworkSpecifier(build).build(), new ConnectivityManager.NetworkCallback() { // From class: com.ir.networklib.EasyWifi.1
-            @Override // Android.net.ConnectivityManager.NetworkCallback
+                .setNetworkSpecifier(build).build(), new ConnectivityManager.NetworkCallback() { // from class: com.ir.networklib.EasyWifi.1
+            @Override // android.net.ConnectivityManager.NetworkCallback
             public void onAvailable(Network network) {
                 super.onAvailable(network);
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (EasyWifi.this.wifiConnectCallback != null) {
                     EasyWifi.this.wifiConnectCallback.onSuccess(network);
                 }
             }
 
-            @Override // Android.net.ConnectivityManager.NetworkCallback
+            @Override // android.net.ConnectivityManager.NetworkCallback
             public void onUnavailable() {
                 super.onUnavailable();
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (EasyWifi.this.wifiConnectCallback != null) {
                     EasyWifi.this.wifiConnectCallback.onFailure();
                 }
@@ -186,10 +129,6 @@ public class EasyWifi {
 
     public boolean connectByOld(String str, String str2, WifiCapability wifiCapability) {
         int addNetwork = this.wifiManager.addNetwork(createWifiConfig(str, str2, wifiCapability));
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (addNetwork == -1) {
             Log.e(this.TAG, "操作failed,需要您到手机wifilist中Cancel对deviceconnection的saved");
         }
@@ -200,10 +139,6 @@ public class EasyWifi {
 
     private WifiConfiguration isExist(String str) {
         // Check for required permissions
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ActivityCompat.checkSelfPermission(BaseApplication.instance, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(BaseApplication.instance, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
             Log.w(TAG, "Missing WiFi permissions");
@@ -211,18 +146,7 @@ public class EasyWifi {
         }
         
         try {
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param wifiConfiguration Parameter for operation (type: this.wifiManager.getConfiguredNetworks()
-             *
-             */
             for (WifiConfiguration wifiConfiguration : this.wifiManager.getConfiguredNetworks()) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (wifiConfiguration.SSID.equals("\"" + str + "\"")) {
                     return wifiConfiguration;
                 }
@@ -242,18 +166,10 @@ public class EasyWifi {
         wifiConfiguration.allowedProtocols.clear();
         wifiConfiguration.SSID = "\"" + str + "\"";
         WifiConfiguration isExist = isExist(str);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isExist != null) {
             Log.d(this.TAG, "createWifiConfig: 移除网路（true:success，false:failed），结果=" + this.wifiManager.removeNetwork(isExist.networkId) + "移除后saved" + this.wifiManager.saveConfiguration());
         }
         Log.d(this.TAG, "createWifiConfig: currentssid=" + str);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (wifiCapability == WifiCapability.WIFI_CIPHER_NO_PASS) {
             wifiConfiguration.allowedKeyManagement.set(0);
         } else if (wifiCapability == WifiCapability.WIFI_CIPHER_WEP) {
@@ -284,10 +200,6 @@ public class EasyWifi {
 
     public static boolean isWifi(ConnectivityManager connectivityManager) {
         NetworkCapabilities networkCapabilities;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (connectivityManager.getActiveNetwork() != null && (networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork())) != null) {
             return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
         }
@@ -297,17 +209,13 @@ public class EasyWifi {
     public void setNetworkType(NetType netType) {
         Log.d(this.TAG, "selectNetworkType: 强制使用wifinetwork或者移动datanetwork");
         NetworkRequest.Builder builder = new NetworkRequest.Builder();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (netType == NetType.WIFI) {
             builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI);
         } else {
             builder.addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR);
         }
-        getConnectivityManager().requestNetwork(builder.build(), new ConnectivityManager.NetworkCallback() { // From class: com.ir.networklib.EasyWifi.2
-            @Override // Android.net.ConnectivityManager.NetworkCallback
+        getConnectivityManager().requestNetwork(builder.build(), new ConnectivityManager.NetworkCallback() { // from class: com.ir.networklib.EasyWifi.2
+            @Override // android.net.ConnectivityManager.NetworkCallback
             public void onAvailable(Network network) {
                 try {
                     Log.d(EasyWifi.this.TAG, "settingsnetworktype时onAvailable: ");

@@ -12,20 +12,9 @@ import com.energy.iruvc.utils.CommonParams.PropImageParamsValue.MirrorFlipType
  * settings自动快门开启或close
  * @param isAutoShutter true-开启自动快门 false-close自动快门
  */
-    /**
-     * Executes IRCMD functionality.
-     */
 fun IRCMD.setAutoShutter(isAutoShutter: Boolean) {
-    /**
-     * Configures the propautoshutterparameter with validation and thermal imaging optimization.
-     *
-     */
     setPropAutoShutterParameter(
         PropAutoShutterParameter.SHUTTER_PROP_SWITCH,
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isAutoShutter) StatusSwith.ON else StatusSwith.OFF,
     )
 }
@@ -34,20 +23,9 @@ fun IRCMD.setAutoShutter(isAutoShutter: Boolean) {
  * settings镜像开启或close
  * @param isMirror true-开启 false-close
  */
-    /**
-     * Executes IRCMD functionality.
-     */
 fun IRCMD.setMirror(isMirror: Boolean) {
-    /**
-     * Configures the propimageparams with validation and thermal imaging optimization.
-     *
-     */
     setPropImageParams(
         PropImageParams.IMAGE_PROP_SEL_MIRROR_FLIP,
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isMirror) MirrorFlipType.ONLY_FLIP else MirrorFlipType.NO_MIRROR_FLIP,
     )
 }
@@ -56,14 +34,7 @@ fun IRCMD.setMirror(isMirror: Boolean) {
  * settingscontrast
  * @param value 取值range `[0, 255]`
  */
-    /**
-     * Executes IRCMD functionality.
-     */
 fun IRCMD.setContrast(value: Int) {
-    /**
-     * Configures the propimageparams with validation and thermal imaging optimization.
-     *
-     */
     setPropImageParams(PropImageParams.IMAGE_PROP_LEVEL_CONTRAST, PropImageParamsValue.NumberType(value.toString()))
 }
 
@@ -71,14 +42,7 @@ fun IRCMD.setContrast(value: Int) {
  * settings锐度（细节）
  * @param level 取值range `[0,4]`
  */
-    /**
-     * Executes IRCMD functionality.
-     */
 fun IRCMD.setPropDdeLevel(level: Int) {
-    /**
-     * Executes when operation with thermal imaging domain optimization.
-     *
-     */
     when (level) {
         0 -> setPropImageParams(PropImageParams.IMAGE_PROP_LEVEL_DDE, DDEType.DDE_0)
         1 -> setPropImageParams(PropImageParams.IMAGE_PROP_LEVEL_DDE, DDEType.DDE_1)

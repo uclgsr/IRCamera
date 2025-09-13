@@ -1,54 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- String resources for thermal imaging interface -->
 <resources>
-    <!-- UI styling - app name -->
     <string name="app_name">TOPINFRARED</string>
-    <!-- UI styling - tip export data -->
     <string name="tip_export_data">Exporting data</string>
-    <!-- UI styling - app cancel -->
     <string name="app_cancel">Cancel</string>
-    <!-- UI styling - app ok -->
     <string name="app_ok">OK</string>
-    <!-- UI styling - app message -->
     <string name="app_message">Message</string>
-    <!-- Temperature display styling -->
     <string name="temperature_limit_upper">Max</string>
-    <!-- Temperature display styling -->
     <string name="temperature_limit_lower">Min</string>
-    <!-- UI styling - color board -->
     <string name="color_board">color board</string>
-    <!-- UI styling - app confirm -->
     <string name="app_confirm">Confirm</string>
-    <!-- UI styling - select monitor type step1 -->
     <string name="select_monitor_type_step1">1. Select monitoring type</string>
-    <!-- UI styling - select monitor type step2 -->
     <string name="select_monitor_type_step2">2. Select the area you want to monitor on the screen.</string>
-    <!-- UI styling - select monitor return -->
     <string name="select_monitor_return">Back</string>
-    <!-- UI styling - ui fill in the complete -->
     <string name="ui_fill_in_the_complete">Please fill in completely</string>
-    <!-- UI styling - tip input format -->
     <string name="tip_input_format">Irregular input</string>
-    <!-- UI styling - preview step 1 -->
     <string name="preview_step_1">1. Drag Image</string>
-    <!-- UI styling - preview step 2 -->
     <string name="preview_step_2">2. Pinch to Zoom</string>
-    <!-- UI styling - target tips step 1 -->
     <string name="target_tips_step_1">1.Tap Observation Type and choose an object to observe.</string>
-    <!-- UI styling - target tips step 2 -->
     <string name="target_tips_step_2">2.Tap Target and choose a target style.</string>
-    <!-- UI styling - target tips step 3 -->
     <string name="target_tips_step_3">3.Move the target or the camera to align the object with the center of the target.</string>
-    <!-- UI styling - target tips step 4 -->
     <string name="target_tips_step_4">4.Observe the object and the number on the target (the distance between the camera and the object). As shown in the picture below, the distance between the camera and the object is 20 meters.</string>
-    <!-- UI styling - device loading tip -->
     <string name="device_loading_tip">Loading…</string>
-    <!-- Temperature display styling -->
     <string name="temp_report_no_more">All content is displayed</string>
-    <!-- Temperature display styling -->
     <string name="temp_text_standard">Standard</string>
-    <!-- Temperature display styling -->
     <string name="temp_text_big">Big</string>
-    <!-- Temperature display styling -->
     <string name="temp_text_sup_big">Super Big</string>
 </resources>

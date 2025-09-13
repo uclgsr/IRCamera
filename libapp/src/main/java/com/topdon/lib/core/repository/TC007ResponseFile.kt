@@ -21,10 +21,6 @@ data class TC007Response<T>(
     /**
      * 判断请求是否success.
      */
-    /**
-     * Executes issuccess operation with thermal imaging domain optimization.
-     *
-     */
     fun isSuccess(): Boolean = Code == 200
 }
 
@@ -42,9 +38,6 @@ data class ProductBean(
     val Code: String,
     val SoftwareVersion: Version07Bean?,
 ) {
-    /**
-     * Retrieves versionstr information.
-     */
     fun getVersionStr(): String = "${SoftwareVersion?.Major ?: "-"}.${SoftwareVersion?.Minor ?: "-"}${SoftwareVersion?.Build ?: "-"}"
 }
 
@@ -66,15 +59,8 @@ data class BatteryInfo(
     /**
      * Executes ischarging functionality.
      */
-    /**
-     * Executes ischarging operation with thermal imaging domain optimization.
-     *
-     */
     fun isCharging(): Boolean = Status == "Charging"
 
-    /**
-     * Retrieves battery information.
-     */
     fun getBattery(): Int? =
         try {
             Remaining?.toInt()
@@ -97,7 +83,7 @@ data class TC07UpgradeStatus(
 
 /**
  * TC007 interfaceReturn：temperature measurementpropertyparameter
- * @param Fps temperature measurement帧率[0,采集帧率]，default12，maximum支持12
+ * @param Fps temperature measurement帧率[0,采集帧率]，默认12，maximum支持12
  * @param Level temperature measurement档位 0-高gain 1-低gain 3-自动switch
  * @param OsdMode temperature measurementinfo叠加方式 0-videoencoding前叠加 1-码流info叠加(encoding后预览时叠加) 2-无叠加
  * @param TempUnit temperature单位 0-摄氏度 1-开尔文 2-华氏度
@@ -136,17 +122,10 @@ data class TempFrameParam(
     val FrameLow: FrameParam,
     val FrameCenter: FrameParam,
 ) {
-// Constructor(isEnable: Boolean): this(FrameParam(isEnable), FrameParam(isEnable), FrameParam(isEnable))
+//    constructor(isEnable: Boolean): this(FrameParam(isEnable), FrameParam(isEnable), FrameParam(isEnable))
 }
 
 internal data class PointParam(val X: Int, val Y: Int) {
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param point Parameter for operation (type: Point?)
-     *
-     */
     constructor(point: Point?) : this(point?.x ?: 0, point?.y ?: 0)
 }
 
@@ -159,14 +138,6 @@ internal data class TempPointParam(
     val Point: PointParam,
     val Target: TargetParam,
 ) {
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param id Parameter for operation (type: Int)
-     * @param point Parameter for operation (type: Point?)
-     *
-     */
     constructor(id: Int, point: Point?) : this(
         Enable = point != null,
         ID = id,
@@ -183,15 +154,6 @@ internal data class TempLineParam(
     val Line: LineParam,
     val Target: TargetParam,
 ) {
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param id Parameter for operation (type: Int)
-     * @param start Parameter for operation (type: Point?)
-     * @param end Parameter for operation (type: Point?)
-     *
-     */
     constructor(id: Int, start: Point?, end: Point?) : this(
         Enable = start != null && end != null,
         ID = id,
@@ -210,14 +172,6 @@ internal data class TempRectParam(
     val Rectangle: RectParam,
     val Target: TargetParam,
 ) {
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param id Parameter for operation (type: Int)
-     * @param rect Parameter for operation (type: Rect?)
-     *
-     */
     constructor(id: Int, rect: Rect?) : this(
         Enable = rect != null,
         ID = id,
@@ -227,13 +181,6 @@ internal data class TempRectParam(
     )
 
     data class RectParam(val Point0: PointParam, val Point1: PointParam, val Point2: PointParam, val Point3: PointParam) {
-        /**
-         * Executes constructor operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param rect Parameter for operation (type: Rect?)
-         *
-         */
         constructor(rect: Rect?) : this(
             Point0 = PointParam(rect?.left ?: 0, rect?.top ?: 0),
             Point1 = PointParam(rect?.right ?: 0, rect?.top ?: 0),
@@ -295,10 +242,10 @@ data class CustomColor(
 )
 
 data class Param(
-    var brightness: Int = 50, // Brightness, 0-100, default50
-    var contrast: Int = 50, // Contrast, 0-100, default50
-    var saturation: Int = 50, // Saturation, 0-100, default50
-    var sharpness: Int = 50, // 锐度, 0-100, default50
+    var brightness: Int = 50, // brightness, 0-100, 默认50
+    var contrast: Int = 50, // contrast, 0-100, 默认50
+    var saturation: Int = 50, // saturation, 0-100, 默认50
+    var sharpness: Int = 50, // 锐度, 0-100, 默认50
     var flipMode: Int = 0, // 翻转, 0:正常, 1:水平翻转 2:垂直翻转 3:180度翻转
 )
 

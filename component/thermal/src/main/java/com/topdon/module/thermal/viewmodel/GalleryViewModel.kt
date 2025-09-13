@@ -14,68 +14,38 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for GalleryViewModel display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Gallery view model view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class GalleryViewModel : BaseViewModel() {
     val galleryLiveData = SingleLiveEvent<ArrayList<String>>()
 
-    /**
-     * Retrieves data information.
-     */
     fun getData() {
         viewModelScope.launch {
             getGalleryList().collect { it ->
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (it.size == 0) {
                     Log.w("123", "file不存在")
                 } else {
-// It.forEach { Log.w("123", "it:$it") }
+//                    it.forEach { Log.w("123", "it:$it") }
                     galleryLiveData.postValue(it)
                 }
             }
         }
     }
 
-    /**
-     * Retrieves videodata information.
-     */
     fun getVideoData() {
         viewModelScope.launch {
             getVideoList().collect { it ->
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (it.size == 0) {
                     Log.w("123", "file不存在")
                 } else {
-// It.forEach { Log.w("123", "it:$it") }
+//                    it.forEach { Log.w("123", "it:$it") }
                     galleryLiveData.postValue(it)
                 }
             }
         }
     }
 
-    /**
-     * Retrieves gallerylist information.
-     */
     private fun getGalleryList(): Flow<ArrayList<String>> {
         val flow =
             flow {
@@ -83,25 +53,13 @@ class GalleryViewModel : BaseViewModel() {
                     Utils.getApp()
                         .getExternalFilesDir("Pictures")!!.absolutePath + File.separator + "thermal"
                 val file = File(path)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (file.isDirectory) {
                     val list = arrayListOf<String>()
                     file.list()?.forEach { fileName ->
                         list.add("$path/$fileName")
                     }
-                    /**
-                     * Executes emit operation with thermal imaging domain optimization.
-                     *
-                     */
                     emit(list)
                 } else {
-                    /**
-                     * Executes emit operation with thermal imaging domain optimization.
-                     *
-                     */
                     emit(arrayListOf<String>())
                 }
             }.map {
@@ -110,33 +68,18 @@ class GalleryViewModel : BaseViewModel() {
         return flow
     }
 
-    /**
-     * Retrieves videolist information.
-     */
     private fun getVideoList(): Flow<ArrayList<String>> {
         val flow =
             flow {
                 val path = FileConfig.lineGalleryDir
                 val file = File(path)
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (file.isDirectory) {
                     val list = arrayListOf<String>()
                     file.list()?.forEach { fileName ->
                         list.add("$path/$fileName")
                     }
-                    /**
-                     * Executes emit operation with thermal imaging domain optimization.
-                     *
-                     */
                     emit(list)
                 } else {
-                    /**
-                     * Executes emit operation with thermal imaging domain optimization.
-                     *
-                     */
                     emit(arrayListOf<String>())
                 }
             }.map {

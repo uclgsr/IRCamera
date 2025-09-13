@@ -22,20 +22,6 @@ import com.github.mikephil.charting.utils.Utils;
  *
  * @author Philipp Jahoda
  */
-/**
- * Specialized thermal imaging component providing RadarChart functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class RadarChart extends PieRadarChartBase<RadarData> {
 
     /**
@@ -81,39 +67,15 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
     protected YAxisRendererRadarChart mYAxisRenderer;
     protected XAxisRendererRadarChart mXAxisRenderer;
 
-    /**
-     * Executes radarchart operation with thermal imaging domain optimization.
-     *
-     */
     public RadarChart(Context context) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context);
     }
 
-    /**
-     * Executes radarchart operation with thermal imaging domain optimization.
-     *
-     */
     public RadarChart(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
     }
 
-    /**
-     * Executes radarchart operation with thermal imaging domain optimization.
-     *
-     */
     public RadarChart(Context context, AttributeSet attrs, int defStyle) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyle);
     }
 
@@ -143,33 +105,17 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
 
     @Override
     public void notifyDataSetChanged() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mData == null)
             return;
 
-        /**
-         * Executes calcminmax operation with thermal imaging domain optimization.
-         *
-         */
         calcMinMax();
 
         mYAxisRenderer.computeAxis(mYAxis.mAxisMinimum, mYAxis.mAxisMaximum, mYAxis.isInverted());
         mXAxisRenderer.computeAxis(mXAxis.mAxisMinimum, mXAxis.mAxisMaximum, false);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mLegend != null && !mLegend.isLegendCustom())
             mLegendRenderer.computeLegend(mData);
 
-        /**
-         * Executes calculateoffsets operation with thermal imaging domain optimization.
-         *
-         */
         calculateOffsets();
     }
 
@@ -177,52 +123,28 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mData == null)
             return;
 
-// If (mYAxis.isEnabled())
-// MYAxisRenderer.computeAxis(mYAxis.mAxisMinimum, mYAxis.mAxisMaximum, mYAxis.isInverted());
+//        if (mYAxis.isEnabled())
+//            mYAxisRenderer.computeAxis(mYAxis.mAxisMinimum, mYAxis.mAxisMaximum, mYAxis.isInverted());
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mXAxis.isEnabled())
             mXAxisRenderer.computeAxis(mXAxis.mAxisMinimum, mXAxis.mAxisMaximum, false);
 
         mXAxisRenderer.renderAxisLabels(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mDrawWeb)
             mRenderer.drawExtras(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mYAxis.isEnabled() && mYAxis.isDrawLimitLinesBehindDataEnabled())
             mYAxisRenderer.renderLimitLines(canvas);
 
         mRenderer.drawData(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (valuesToHighlight())
             mRenderer.drawHighlighted(canvas, mIndicesToHighlight);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mYAxis.isEnabled() && !mYAxis.isDrawLimitLinesBehindDataEnabled())
             mYAxisRenderer.renderLimitLines(canvas);
 
@@ -232,16 +154,8 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
 
         mLegendRenderer.renderLegend(canvas);
 
-        /**
-         * Executes drawdescription operation with thermal imaging domain optimization.
-         *
-         */
         drawDescription(canvas);
 
-        /**
-         * Executes drawmarkers operation with thermal imaging domain optimization.
-         *
-         */
         drawMarkers(canvas);
     }
 
@@ -267,7 +181,7 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
     @Override
     public int getIndexForAngle(float angle) {
 
-        // Take the current angle of the chart into consideration
+        // take the current angle of the chart into consideration
         float a = Utils.getNormalizedAngle(angle - getRotationAngle());
 
         float sliceangle = getSliceAngle();
@@ -276,18 +190,10 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
 
         int index = 0;
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < max; i++) {
 
             float referenceAngle = sliceangle * (i + 1) - sliceangle / 2f;
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (referenceAngle > a) {
                 index = i;
                 break;

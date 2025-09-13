@@ -33,8 +33,8 @@ import com.topdon.lib.core.R as RCore
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseFragment
 import com.topdon.lib.core.socket.WebSocketProxy
-// Import com.topdon.lib.core.tools.AppLanguageUtils
-// Import com.topdon.lib.core.tools.ConstantLanguages
+// import com.topdon.lib.core.tools.AppLanguageUtils
+// import com.topdon.lib.core.tools.ConstantLanguages
 import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.lib.core.utils.Constants
 import com.topdon.lib.core.utils.NetWorkUtils
@@ -45,7 +45,7 @@ import com.topdon.lms.sdk.bean.FeedBackBean
 import com.topdon.lms.sdk.feedback.activity.FeedbackActivity
 import com.topdon.module.user.R
 import com.topdon.module.user.activity.MoreActivity
-// Import com.zoho.salesiqembed.ZohoSalesIQ  // ZohoSalesIQ dependency not available
+// import com.zoho.salesiqembed.ZohoSalesIQ  // ZohoSalesIQ dependency not available
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -61,26 +61,8 @@ import org.greenrobot.eventbus.ThreadMode
  *
  * Created by LCG on 2024/4/19.
  */
-/**
- * Specialized thermal imaging component providing MineFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class MineFragment : BaseFragment(), View.OnClickListener {
     /**
-/**
- * Executes onresume operation with thermal imaging domain optimization.
- *
- */
 onResume() 阶段是否需要refreshLoginstate相关 UI.
      */
     private var isNeedRefreshLogin = false
@@ -99,16 +81,8 @@ onResume() 阶段是否需要refreshLoginstate相关 UI.
     private lateinit var dragCustomerView: View
     private lateinit var viewWinterPoint: View
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView(): Int = R.layout.fragment_mine
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         // Initialize views
         ivWinter = requireView().findViewById(R.id.iv_winter)
@@ -133,34 +107,19 @@ onResume() 阶段是否需要refreshLoginstate相关 UI.
         settingElectronicManual.setOnClickListener(this)
         settingFaq.setOnClickListener(this)
         settingFeedback.setOnClickListener(this)
-        settingItemUnit.setOnClickListener(this) // Temperature单温
+        settingItemUnit.setOnClickListener(this) // temperature单温
         dragCustomerView.setOnClickListener(this)
 
         viewWinterPoint.isVisible = !SharedManager.hasClickWinter
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (BaseApplication.instance.isDomestic()) { // 国内版
             // Language selection removed - English only
         }
 
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
-                /**
-                 * Executes onresume operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param owner Parameter for operation (type: LifecycleOwner)
-                 *
-                 */
                 override fun onResume(owner: LifecycleOwner) {
 要是当前已connection TS004、TC007，切到流量上，不然LoginRegister意见反馈那些没网
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(false)
                     }
@@ -169,82 +128,31 @@ onResume() 阶段是否需要refreshLoginstate相关 UI.
         )
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    /**
-     * Executes updatePDF functionality.
-     */
-    /**
-     * Executes updatepdf operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: PDFEvent)
-     *
-     */
     fun updatePDF(event: PDFEvent) {
         isNeedRefreshLogin = true
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    /**
-     * Executes onWinterClick functionality.
-     */
-    /**
-     * Executes onwinterclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: WinterClickEvent)
-     *
-     */
     fun onWinterClick(event: WinterClickEvent) {
         viewWinterPoint.isVisible = false
     }
 
-    /**
-     * Executes onresume operation with thermal imaging domain optimization.
-     *
-     */
     override fun onResume() {
         super.onResume()
-        /**
-         * Updates the loginstyle configuration with real-time thermal imaging support.
-         *
-         */
         changeLoginStyle()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isNeedRefreshLogin) {
             isNeedRefreshLogin = false
-            /**
-             * Executes checkloginresult operation with thermal imaging domain optimization.
-             *
-             */
             checkLoginResult()
         }
     }
 
     // Language picker removed - English only app
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
             ivWinter -> { // 冬季特辑入口
                 viewWinterPoint.isVisible = false
@@ -252,18 +160,11 @@ onResume() 阶段是否需要refreshLoginstate相关 UI.
                 EventBus.getDefault().post(WinterClickEvent())
 
                 val url =
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param https Parameter for operation (type: // Api.topdon.com/")
-                     *
-                     */
-                    if (UrlConstant.BASE_URL == "https:// Api.topdon.com/") {
-                        "https:// App.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
+                    if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
+                        "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
                             "languageId=1" // Fixed to English (languageId=1)
                     } else {
-                        "http:// 172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
+                        "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
                     }
 
                 NavigationManager.getInstance().build(RouterConfig.WEB_VIEW)
@@ -271,31 +172,15 @@ onResume() 阶段是否需要refreshLoginstate相关 UI.
                     .navigation(requireContext())
             }
             settingUserLay, settingUserImgNight -> {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (UserInfoManager.getInstance().isLogin()) {
                     isNeedRefreshLogin = true
                     LMS.getInstance().activityUserInfo()
                 } else {
-                    /**
-                     * Executes loginaction operation with thermal imaging domain optimization.
-                     *
-                     */
                     loginAction()
                 }
             }
             settingUserText -> {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!LMS.getInstance().isLogin) {
-                    /**
-                     * Executes loginaction operation with thermal imaging domain optimization.
-                     *
-                     */
                     loginAction()
                 }
             }
@@ -310,16 +195,8 @@ onResume() 阶段是否需要refreshLoginstate相关 UI.
                 ).withInt(Constants.SETTING_TYPE, Constants.SETTING_FAQ).navigation(requireContext())
             }
             settingFeedback -> { // 意见反馈
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (LMS.getInstance().isLogin) {
                     val devSn = SharedManager.getDeviceSn()
-                    /**
-                     * Executes feedbackbean operation with thermal imaging domain optimization.
-                     *
-                     */
                     FeedBackBean().apply {
                         logPath = logPath
                         sn = devSn
@@ -328,41 +205,25 @@ onResume() 阶段是否需要refreshLoginstate相关 UI.
                     }.let { feedBackBean ->
                         val intent = Intent(requireContext(), FeedbackActivity::class.java)
                         intent.putExtra(FeedbackActivity.FEEDBACKBEAN, feedBackBean)
-                        /**
-                         * Executes startactivity operation with thermal imaging domain optimization.
-                         *
-                         */
                         startActivity(intent)
                     }
                 } else {
-                    /**
-                     * Executes loginaction operation with thermal imaging domain optimization.
-                     *
-                     */
                     loginAction()
                 }
             }
-            settingItemUnit -> { // Temperature单位
+            settingItemUnit -> { // temperature单位
                 NavigationManager.getInstance().build(RouterConfig.UNIT).navigation(requireContext())
             }
-            settingItemVersion -> { // Version
+            settingItemVersion -> { // version
                 NavigationManager.getInstance().build(RouterConfig.VERSION).navigation(requireContext())
             }
             settingItemClear -> { // Clearcache，实际已Hide
-                /**
-                 * Executes clearcache operation with thermal imaging domain optimization.
-                 *
-                 */
                 clearCache()
             }
             dragCustomerView -> { // 客服
 //                ActivityUtil.goSystemCustomer(requireContext())
                 val sn = SharedManager.getDeviceSn()
                 // ZohoSalesIQ functionality disabled - dependency not available
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!TextUtils.isEmpty(sn)) {
                     // ZohoSalesIQ.Visitor.addInfo("SN", sn)
                 }
@@ -372,36 +233,14 @@ onResume() 阶段是否需要refreshLoginstate相关 UI.
         }
     }
 
-    /**
-     * Executes loginAction functionality.
-     */
-    /**
-     * Executes loginaction operation with thermal imaging domain optimization.
-     *
-     */
     private fun loginAction() {
         isNeedRefreshLogin = true
-/**
- * Executes activitylogin operation with thermal imaging domain optimization.
- *
- */
 activityLogin()Callback不可靠，但必然触发onResume()
         val bgBitmap = BitmapFactory.decodeResource(resources, LibAppR.mipmap.ic_default_user_head) // Use available resource from libapp
         LMS.getInstance().activityLogin(null, null, false, null, bgBitmap)
     }
 
-    /**
-     * Executes checkLoginResult functionality.
-     */
-    /**
-     * Executes checkloginresult operation with thermal imaging domain optimization.
-     *
-     */
     private fun checkLoginResult() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (LMS.getInstance().isLogin) {
 Loginsuccessful
             LMS.getInstance().getUserInfo { userinfo: CommonBean ->
@@ -418,10 +257,6 @@ Loginsuccessful
                     )
 
 updateui
-                    /**
-                     * Updates the loginstyle configuration with real-time thermal imaging support.
-                     *
-                     */
                     changeLoginStyle()
                 } catch (e: Exception) {
                     XLog.e(" Loginexception: ${e.message}")
@@ -430,18 +265,11 @@ updateui
         } else {
 Loginfailed
             XLog.e(" Loginfailed")
-            /**
-             * Updates the loginstyle configuration with real-time thermal imaging support.
-             *
-             */
             changeLoginStyle()
-            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // Restoredefault头像
+            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // Restore默认头像
         }
     }
 
-    /**
-     * Changes loginstyle settings.
-     */
     private fun changeLoginStyle() {
         if (LMS.getInstance().isLogin) {
             val layoutParams = ConstraintLayout.LayoutParams(0, ConstraintLayout.LayoutParams.WRAP_CONTENT)
@@ -461,19 +289,11 @@ Loginfailed
             tvEmail.text = SharedManager.getUsername()
             settingUserLay.visibility = View.VISIBLE
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (settingUserImgNight != null) {
                 GlideLoader.loadCircle(
                     settingUserImgNight,
                     SharedManager.getHeadIcon(),
                     LibAppR.mipmap.ic_default_user_head,
-                    /**
-                     * Executes requestoptions operation with thermal imaging domain optimization.
-                     *
-                     */
                     RequestOptions().optionalCircleCrop(),
                 )
             }
@@ -491,7 +311,7 @@ Loginfailed
             settingUserText.layoutParams = layoutParams
             settingUserText.setText(
                 // AppLanguageUtils.attachBaseContext(
-                // Context, ConstantLanguages.ENGLISH).getString(RCore.string.app_sign_in))
+                // context, ConstantLanguages.ENGLISH).getString(RCore.string.app_sign_in))
                 context?.getString(RCore.string.app_sign_in) ?: "Sign In",
             )
             val drawable = ContextCompat.getDrawable(requireContext(), R.mipmap.ic_arrow_login)
@@ -500,28 +320,16 @@ Loginfailed
             settingUserLay.visibility = View.GONE
             val tvEmail = requireView().findViewById<TextView>(R.id.tv_email)
             tvEmail.text = ""
-            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // Restoredefault头像
+            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // Restore默认头像
         }
     }
 
     /**
 Clearbuffer
      */
-    /**
-     * Executes clearcache operation with thermal imaging domain optimization.
-     *
-     */
     private fun clearCache() {
         lifecycleScope.launch {
-            /**
-             * Executes showloadingdialog operation with thermal imaging domain optimization.
-             *
-             */
             showLoadingDialog()
-            /**
-             * Executes withcontext operation with thermal imaging domain optimization.
-             *
-             */
             withContext(Dispatchers.IO) {
                 try {
                     AppDatabase.getInstance().thermalDao().deleteByUserId(SharedManager.getUserId())
@@ -529,21 +337,9 @@ Clearbuffer
                 } catch (e: Exception) {
                     XLog.w("Clearcacheexception: ${e.message}")
                 }
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(1000)
             }
-            /**
-             * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-             *
-             */
             dismissLoadingDialog()
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(50)
             TipDialog.Builder(requireContext())
                 .setMessage(RCore.string.clear_finish)

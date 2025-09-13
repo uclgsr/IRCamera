@@ -23,47 +23,19 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for GSRDataViewActivity display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * GSR Data View Activity
+ * Detailed view of GSR CSV data files with statistics and export options
  */
 class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     companion object {
         private const val EXTRA_FILE_PATH = "file_path"
 
-    /**
-     * Executes startActivity functionality.
-     */
-        /**
-         * Executes startactivity operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param context Parameter for operation (type: Context)
-         * @param filePath Parameter for operation (type: String)
-         *
-         */
         fun startActivity(
             context: Context,
             filePath: String,
         ) {
             val intent =
                 Intent(context, GSRDataViewActivity::class.java).apply {
-                    /**
-                     * Executes putextra operation with thermal imaging domain optimization.
-                     *
-                     */
                     putExtra(EXTRA_FILE_PATH, filePath)
                 }
             context.startActivity(intent)
@@ -86,67 +58,33 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
 
     // Extended data point for export functionality
     data class GSRDataPoint(
-        val timestamp: Long, // Nanoseconds
-        val gsrValue: Double, // Microsiemens
-        val gsrRaw: Int, // Raw ADC value (0-4095)
-        val resistance: Double, // Kohms
-        val ppgValue: Int, // Raw PPG value
-        val ppgRaw: Int = ppgValue, // Alias for ppgValue
+        val timestamp: Long, // nanoseconds
+        val gsrValue: Double, // microsiemens
+        val gsrRaw: Int, // raw ADC value (0-4095)
+        val resistance: Double, // kohms
+        val ppgValue: Int, // raw PPG value
+        val ppgRaw: Int = ppgValue, // alias for ppgValue
         val syncMarker: Boolean = false,
         val notes: String? = null,
     )
 
-    /**
-     * Initializes the contentlayoutid component for thermal imaging operations.
-     *
-     */
     override fun initContentLayoutId() = R.layout.activity_gsr_data_view
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         filePath = intent.getStringExtra(EXTRA_FILE_PATH) ?: ""
         file = File(filePath)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!file.exists()) {
-            /**
-             * Executes finish operation with thermal imaging domain optimization.
-             *
-             */
             finish()
             return
         }
 
-        /**
-         * Configures the upui with validation and thermal imaging optimization.
-         *
-         */
         setupUI()
-        /**
-         * Executes loadgsrdata operation with thermal imaging domain optimization.
-         *
-         */
         loadGSRData()
     }
 
-    /**
-     * Sets upui configuration.
-     */
-    /**
-     * Configures the upui with validation and thermal imaging optimization.
-     *
-     */
     private fun setupUI() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = file.name
@@ -158,10 +96,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
 
         // Display basic file info
         val fileSize =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (file.length() >= 1024 * 1024) {
                 "%.1f MB".format(file.length() / (1024.0 * 1024.0))
             } else {
@@ -177,13 +111,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             """.trimIndent()
     }
 
-    /**
-     * Executes loadGSRData functionality.
-     */
-    /**
-     * Executes loadgsrdata operation with thermal imaging domain optimization.
-     *
-     */
     private fun loadGSRData() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -193,19 +120,11 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
 
                 val rows =
                     dataLines.mapIndexed { index, line ->
-                        /**
-                         * Executes parsegsrdatarow operation with thermal imaging domain optimization.
-                         *
-                         */
                         parseGSRDataRow(line, index + 2) // +2 because we skip header and 0-based index
                     }.filterNotNull()
 
                 val statistics = calculateStatistics(rows)
 
-                /**
-                 * Executes withcontext operation with thermal imaging domain optimization.
-                 *
-                 */
                 withContext(Dispatchers.Main) {
                     dataRows.clear()
                     dataRows.addAll(rows)
@@ -232,17 +151,9 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                         )
 
                     // Convert data for export functions
-                    /**
-                     * Executes loadgsrdatapoints operation with thermal imaging domain optimization.
-                     *
-                     */
                     loadGSRDataPoints()
                 }
             } catch (e: Exception) {
-                /**
-                 * Executes withcontext operation with thermal imaging domain optimization.
-                 *
-                 */
                 withContext(Dispatchers.Main) {
                     binding.statisticsText.text = "Error loading GSR data: ${e.message}"
                 }
@@ -250,32 +161,13 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         }
     }
 
-    /**
-     * Executes parseGSRDataRow functionality.
-     */
-    /**
-     * Executes parsegsrdatarow operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param line Parameter for operation (type: String)
-     * @param rowNumber Parameter for operation (type: Int)
-     *
-     */
     private fun parseGSRDataRow(
         line: String,
         rowNumber: Int,
     ): GSRDataRow? {
         return try {
             val parts = line.split(",")
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (parts.size >= 4) {
-                /**
-                 * Executes gsrdatarow operation with thermal imaging domain optimization.
-                 *
-                 */
                 GSRDataRow(
                     timestamp = parts[0].trim(),
                     gsrValue = parts[1].trim().toDouble(),
@@ -291,21 +183,7 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         }
     }
 
-    /**
-     * Executes calculateStatistics functionality.
-     */
-    /**
-     * Executes calculatestatistics operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param rows Parameter for operation (type: List<GSRDataRow>)
-     *
-     */
     private fun calculateStatistics(rows: List<GSRDataRow>): GSRStatistics {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (rows.isEmpty()) {
             return GSRStatistics(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
         }
@@ -340,41 +218,17 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         val resistanceMean: Double,
     )
 
-    /**
-     * Executes formatDuration functionality.
-     */
-    /**
-     * Executes formatduration operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param seconds Parameter for operation (type: Long)
-     *
-     */
     private fun formatDuration(seconds: Long): String {
         val minutes = seconds / 60
         val remainingSeconds = seconds % 60
         return "%d:%02d".format(minutes, remainingSeconds)
     }
 
-    /**
-     * Executes oncreateoptionsmenu operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param menu Parameter for operation (type: Menu?)
-     *
-     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.gsr_data_view_menu, menu)
         return true
     }
 
-    /**
-     * Executes onoptionsitemselected operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param item Parameter for operation (type: MenuItem)
-     *
-     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -382,26 +236,14 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                 true
             }
             R.id.action_export -> {
-                /**
-                 * Executes exportdata operation with thermal imaging domain optimization.
-                 *
-                 */
                 exportData()
                 true
             }
             R.id.action_share -> {
-                /**
-                 * Executes sharedata operation with thermal imaging domain optimization.
-                 *
-                 */
                 shareData()
                 true
             }
             R.id.action_plot -> {
-                /**
-                 * Executes plotdata operation with thermal imaging domain optimization.
-                 *
-                 */
                 plotData()
                 true
             }
@@ -409,74 +251,29 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         }
     }
 
-    /**
-     * Executes exportData functionality.
-     */
-    /**
-     * Executes exportdata operation with thermal imaging domain optimization.
-     *
-     */
     private fun exportData() {
         lifecycleScope.launch {
             try {
                 val exportResult =
-                    /**
-                     * Executes withcontext operation with thermal imaging domain optimization.
-                     *
-                     */
                     withContext(Dispatchers.IO) {
-                        /**
-                         * Executes exportgsrdatatoformats operation with thermal imaging domain optimization.
-                         *
-                         */
                         exportGSRDataToFormats()
                     }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (exportResult.isSuccess) {
-                    /**
-                     * Executes showexportsuccessdialog operation with thermal imaging domain optimization.
-                     *
-                     */
                     showExportSuccessDialog(exportResult.getOrNull())
                 } else {
-                    /**
-                     * Executes showerrordialog operation with thermal imaging domain optimization.
-                     *
-                     */
                     showErrorDialog("Export Failed", exportResult.exceptionOrNull()?.message ?: "Unknown error occurred")
                 }
             } catch (e: Exception) {
-                /**
-                 * Executes showerrordialog operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param data Parameter for operation (type: ${e.message}")
-                 *
-                 */
                 showErrorDialog("Export Error", "Failed to export data: ${e.message}")
             }
         }
     }
 
-    /**
-     * Executes exportGSRDataToFormats functionality.
-     */
-    /**
-     * Executes exportgsrdatatoformats operation with thermal imaging domain optimization.
-     *
-     */
     private fun exportGSRDataToFormats(): Result<ExportResult> {
         return try {
             val fileName = file.nameWithoutExtension
             val exportDir = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "GSR_Exports")
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!exportDir.exists()) {
                 exportDir.mkdirs()
             }
@@ -488,37 +285,21 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
 
             // 1. Enhanced CSV with statistics
             val enhancedCsvFile = File(exportDir, "${fileName}_enhanced_$timestamp.csv")
-            /**
-             * Executes exportenhancedcsv operation with thermal imaging domain optimization.
-             *
-             */
             exportEnhancedCSV(enhancedCsvFile)
             exportedFiles.add(enhancedCsvFile)
 
             // 2. Excel-compatible format
             val excelFile = File(exportDir, "${fileName}_excel_$timestamp.csv")
-            /**
-             * Executes exportexcelcompatiblecsv operation with thermal imaging domain optimization.
-             *
-             */
             exportExcelCompatibleCSV(excelFile)
             exportedFiles.add(excelFile)
 
             // 3. JSON format for web applications
             val jsonFile = File(exportDir, "${fileName}_data_$timestamp.json")
-            /**
-             * Executes exportjsonformat operation with thermal imaging domain optimization.
-             *
-             */
             exportJSONFormat(jsonFile)
             exportedFiles.add(jsonFile)
 
             // 4. Statistical summary
             val summaryFile = File(exportDir, "${fileName}_summary_$timestamp.txt")
-            /**
-             * Executes exportstatisticalsummary operation with thermal imaging domain optimization.
-             *
-             */
             exportStatisticalSummary(summaryFile)
             exportedFiles.add(summaryFile)
 
@@ -528,16 +309,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         }
     }
 
-    /**
-     * Executes exportEnhancedCSV functionality.
-     */
-    /**
-     * Executes exportenhancedcsv operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param outputFile Parameter for operation (type: File)
-     *
-     */
     private fun exportEnhancedCSV(outputFile: File) {
         val writer = FileWriter(outputFile)
         val csvWriter = CSVWriter(writer)
@@ -551,10 +322,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
 
         // Data header
         csvWriter.writeNext(
-            /**
-             * Executes arrayof operation with thermal imaging domain optimization.
-             *
-             */
             arrayOf(
                 "timestamp_ns", "timestamp_ms", "timestamp_iso",
                 "gsr_raw", "gsr_microsiemens", "gsr_normalized",
@@ -574,10 +341,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             val qualityScore = calculateDataQuality(dataPoint, index)
 
             csvWriter.writeNext(
-                /**
-                 * Executes arrayof operation with thermal imaging domain optimization.
-                 *
-                 */
                 arrayOf(
                     dataPoint.timestamp.toString(),
                     timestampMs.toString(),
@@ -588,10 +351,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                     dataPoint.ppgRaw.toString(),
                     "%.4f".format(normalizedPPG),
                     "%.2f".format(qualityScore),
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (dataPoint.syncMarker) "SYNC" else "",
                     dataPoint.notes ?: "",
                 ),
@@ -601,26 +360,12 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         csvWriter.close()
     }
 
-    /**
-     * Executes exportExcelCompatibleCSV functionality.
-     */
-    /**
-     * Executes exportexcelcompatiblecsv operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param outputFile Parameter for operation (type: File)
-     *
-     */
     private fun exportExcelCompatibleCSV(outputFile: File) {
         val writer = FileWriter(outputFile)
         val csvWriter = CSVWriter(writer)
 
         // Excel-friendly header
         csvWriter.writeNext(
-            /**
-             * Executes arrayof operation with thermal imaging domain optimization.
-             *
-             */
             arrayOf(
                 "Date",
                 "Time",
@@ -636,10 +381,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val timeFormat = SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault())
             val durationSeconds =
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (gsrDataPoints.isNotEmpty()) {
                     (dataPoint.timestamp - gsrDataPoints.first().timestamp) / 1000000000.0
                 } else {
@@ -647,10 +388,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                 }
 
             csvWriter.writeNext(
-                /**
-                 * Executes arrayof operation with thermal imaging domain optimization.
-                 *
-                 */
                 arrayOf(
                     dateFormat.format(date),
                     timeFormat.format(date),
@@ -665,28 +402,11 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         csvWriter.close()
     }
 
-    /**
-     * Executes exportJSONFormat functionality.
-     */
-    /**
-     * Executes exportjsonformat operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param outputFile Parameter for operation (type: File)
-     *
-     */
     private fun exportJSONFormat(outputFile: File) {
         val jsonData = mutableMapOf<String, Any>()
 
         // Metadata
         jsonData["metadata"] =
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param HH Parameter for operation (type: mm:ss'Z'")
-             *
-             */
             mapOf(
                 "sourceFile" to file.name,
                 "exportDate" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(Date()),
@@ -702,27 +422,15 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         // Data points
         val dataArray =
             gsrDataPoints.map { dataPoint ->
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "timestamp" to dataPoint.timestamp,
                     "gsr" to
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "raw" to dataPoint.gsrRaw,
                             "microsiemens" to dataPoint.gsrValue,
                             "normalized" to normalizeGSRValue(dataPoint.gsrValue.toFloat()),
                         ),
                     "ppg" to
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "raw" to dataPoint.ppgRaw,
                             "value" to dataPoint.ppgValue,
@@ -738,16 +446,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         outputFile.writeText(gson.toJson(jsonData))
     }
 
-    /**
-     * Executes exportStatisticalSummary functionality.
-     */
-    /**
-     * Executes exportstatisticalsummary operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param outputFile Parameter for operation (type: File)
-     *
-     */
     private fun exportStatisticalSummary(outputFile: File) {
         val summary = StringBuilder()
         val stats = calculateStatistics()
@@ -792,16 +490,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         val exportDirectory: File,
     )
 
-    /**
-     * Executes showExportSuccessDialog functionality.
-     */
-    /**
-     * Executes showexportsuccessdialog operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param result Parameter for operation (type: ExportResult?)
-     *
-     */
     private fun showExportSuccessDialog(result: ExportResult?) {
         result?.let { exportResult ->
             val message =
@@ -818,10 +506,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                 .setTitle("Export Complete")
                 .setMessage(message)
                 .setPositiveButton("Open Folder") { _, _ ->
-                    /**
-                     * Executes openexportfolder operation with thermal imaging domain optimization.
-                     *
-                     */
                     openExportFolder(exportResult.exportDirectory)
                 }
                 .setNegativeButton("OK", null)
@@ -829,29 +513,11 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         }
     }
 
-    /**
-     * Executes openExportFolder functionality.
-     */
-    /**
-     * Executes openexportfolder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param directory Parameter for operation (type: File)
-     *
-     */
     private fun openExportFolder(directory: File) {
         try {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setDataAndType(android.net.Uri.fromFile(directory), "resource/folder")
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (intent.resolveActivityInfo(packageManager, 0) != null) {
-                /**
-                 * Executes startactivity operation with thermal imaging domain optimization.
-                 *
-                 */
                 startActivity(intent)
             } else {
                 Toast.makeText(this, "No file manager found", Toast.LENGTH_SHORT).show()
@@ -861,47 +527,17 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         }
     }
 
-    /**
-     * Executes shareData functionality.
-     */
-    /**
-     * Executes sharedata operation with thermal imaging domain optimization.
-     *
-     */
     private fun shareData() {
         val shareIntent =
-            /**
-             * Executes intent operation with thermal imaging domain optimization.
-             *
-             */
             Intent().apply {
                 action = Intent.ACTION_SEND
-                /**
-                 * Executes putextra operation with thermal imaging domain optimization.
-                 *
-                 */
                 putExtra(Intent.EXTRA_TEXT, "GSR Data from ${file.name}")
-                /**
-                 * Executes putextra operation with thermal imaging domain optimization.
-                 *
-                 */
                 putExtra(Intent.EXTRA_STREAM, android.net.Uri.fromFile(file))
                 type = "text/csv"
             }
-        /**
-         * Executes startactivity operation with thermal imaging domain optimization.
-         *
-         */
         startActivity(Intent.createChooser(shareIntent, "Share GSR Data"))
     }
 
-    /**
-     * Executes plotData functionality.
-     */
-    /**
-     * Executes plotdata operation with thermal imaging domain optimization.
-     *
-     */
     private fun plotData() {
         lifecycleScope.launch {
             try {
@@ -911,15 +547,7 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
 
                 // Prepare plot data in background
                 val plotData =
-                    /**
-                     * Executes withcontext operation with thermal imaging domain optimization.
-                     *
-                     */
                     withContext(Dispatchers.Default) {
-                        /**
-                         * Executes prepareplotdata operation with thermal imaging domain optimization.
-                         *
-                         */
                         preparePlotData()
                     }
 
@@ -928,47 +556,17 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                 // Launch plotting activity
                 val intent =
                     Intent(this@GSRDataViewActivity, GSRPlotActivity::class.java).apply {
-                        /**
-                         * Executes putextra operation with thermal imaging domain optimization.
-                         *
-                         */
                         putExtra("plot_data", plotData)
-                        /**
-                         * Executes putextra operation with thermal imaging domain optimization.
-                         *
-                         */
                         putExtra("file_name", file.name)
-                        /**
-                         * Executes putextra operation with thermal imaging domain optimization.
-                         *
-                         */
                         putExtra("data_points", gsrDataPoints.size)
                     }
-                /**
-                 * Executes startactivity operation with thermal imaging domain optimization.
-                 *
-                 */
                 startActivity(intent)
             } catch (e: Exception) {
-                /**
-                 * Executes showerrordialog operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param plot Parameter for operation (type: ${e.message}")
-                 *
-                 */
                 showErrorDialog("Plot Error", "Failed to generate plot: ${e.message}")
             }
         }
     }
 
-    /**
-     * Executes preparePlotData functionality.
-     */
-    /**
-     * Executes prepareplotdata operation with thermal imaging domain optimization.
-     *
-     */
     private fun preparePlotData(): GSRPlotData {
         // Prepare data for plotting
         val timestamps = gsrDataPoints.map { (it.timestamp - gsrDataPoints.first().timestamp) / 1000000.0 } // Convert to seconds
@@ -995,10 +593,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             gsrEvents = gsrEvents,
             statistics = stats,
             metadata =
-                /**
-                 * Executes plotmetadata operation with thermal imaging domain optimization.
-                 *
-                 */
                 PlotMetadata(
                     fileName = file.name,
                     duration = timestamps.lastOrNull() ?: 0.0,
@@ -1008,25 +602,10 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         )
     }
 
-    /**
-     * Executes calculateMovingAverage functionality.
-     */
-    /**
-     * Executes calculatemovingaverage operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param values Parameter for operation (type: List<Double>)
-     * @param windowSize Parameter for operation (type: Int)
-     *
-     */
     private fun calculateMovingAverage(
         values: List<Double>,
         windowSize: Int,
     ): List<Double> {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (windowSize <= 1) return values
 
         return values.mapIndexed { index, _ ->
@@ -1037,17 +616,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         }
     }
 
-    /**
-     * Executes detectGSREvents functionality.
-     */
-    /**
-     * Executes detectgsrevents operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param gsrValues Parameter for operation (type: List<Double>)
-     * @param timestamps Parameter for operation (type: List<Double>)
-     *
-     */
     private fun detectGSREvents(
         gsrValues: List<Double>,
         timestamps: List<Double>,
@@ -1060,23 +628,11 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                 kotlin.math.sqrt(variance) * 2.0 // 2 standard deviations
             }
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in 1 until gsrValues.size) {
             val change = kotlin.math.abs(gsrValues[i] - gsrValues[i - 1])
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (change > threshold) {
                 val eventType = if (gsrValues[i] > gsrValues[i - 1]) "INCREASE" else "DECREASE"
                 events.add(
-                    /**
-                     * Executes gsrevent operation with thermal imaging domain optimization.
-                     *
-                     */
                     GSREvent(
                         timestamp = timestamps[i],
                         type = eventType,
@@ -1090,17 +646,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         return events
     }
 
-    /**
-     * Executes calculateTimeWindowedStatistics functionality.
-     */
-    /**
-     * Executes calculatetimewindowedstatistics operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param values Parameter for operation (type: List<Double>)
-     * @param timestamps Parameter for operation (type: List<Double>)
-     *
-     */
     private fun calculateTimeWindowedStatistics(
         values: List<Double>,
         timestamps: List<Double>,
@@ -1110,10 +655,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         val stats = mutableListOf<TimeWindowStats>()
 
         var currentTime = 0.0
-        /**
-         * Executes while operation with thermal imaging domain optimization.
-         *
-         */
         while (currentTime < maxTime) {
             val windowEnd = currentTime + windowDuration
             val windowValues =
@@ -1121,20 +662,12 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                     timestamps[index] >= currentTime && timestamps[index] < windowEnd
                 }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (windowValues.isNotEmpty()) {
                 val mean = windowValues.sum() / windowValues.size
                 val variance = windowValues.map { (it - mean) * (it - mean) }.sum() / windowValues.size
                 val stdDev = kotlin.math.sqrt(variance)
 
                 stats.add(
-                    /**
-                     * Executes timewindowstats operation with thermal imaging domain optimization.
-                     *
-                     */
                     TimeWindowStats(
                         startTime = currentTime,
                         endTime = windowEnd,
@@ -1153,17 +686,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         return stats
     }
 
-    /**
-     * Executes createProgressDialog functionality.
-     */
-    /**
-     * Executes createprogressdialog operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param title Parameter for operation (type: String)
-     * @param message Parameter for operation (type: String)
-     *
-     */
     private fun createProgressDialog(
         title: String,
         message: String,
@@ -1176,59 +698,20 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     }
 
     // Helper functions for data analysis
-    /**
-     * Executes normalizeGSRValue functionality.
-     */
-    /**
-     * Executes normalizegsrvalue operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param gsrValue Parameter for operation (type: Float)
-     *
-     */
     private fun normalizeGSRValue(gsrValue: Float): Double {
         // Normalize GSR value to 0-1 range based on typical physiological range
         val minGSR = 0.1 // Minimum typical GSR in µS
         val maxGSR = 50.0 // Maximum typical GSR in µS
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return ((gsrValue - minGSR) / (maxGSR - minGSR)).coerceIn(0.0, 1.0)
     }
 
-    /**
-     * Executes normalizePPGValue functionality.
-     */
-    /**
-     * Executes normalizeppgvalue operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param ppgValue Parameter for operation (type: Int)
-     *
-     */
     private fun normalizePPGValue(ppgValue: Int): Double {
         // Normalize PPG value based on typical ADC range
         val minPPG = 0
         val maxPPG = 4095 // 12-bit ADC range
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (ppgValue.toDouble() / maxPPG).coerceIn(0.0, 1.0)
     }
 
-    /**
-     * Executes calculateDataQuality functionality.
-     */
-    /**
-     * Executes calculatedataquality operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param dataPoint Parameter for operation (type: GSRDataPoint)
-     * @param index Parameter for operation (type: Int)
-     *
-     */
     private fun calculateDataQuality(
         dataPoint: GSRDataPoint,
         index: Int,
@@ -1237,35 +720,19 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         var quality = 100.0
 
         // Check for unrealistic values
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dataPoint.gsrValue < 0.01 || dataPoint.gsrValue > 100.0) {
             quality -= 30.0
         }
 
         // Check for PPG signal quality
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (dataPoint.ppgValue < 100 || dataPoint.ppgValue > 3900) {
             quality -= 20.0
         }
 
         // Check for rapid changes (potential artifacts)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (index > 0 && index < gsrDataPoints.size - 1) {
             val prevChange = kotlin.math.abs(dataPoint.gsrValue - gsrDataPoints[index - 1].gsrValue)
             val nextChange = kotlin.math.abs(gsrDataPoints[index + 1].gsrValue - dataPoint.gsrValue)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (prevChange > 5.0 || nextChange > 5.0) {
                 quality -= 15.0
             }
@@ -1274,13 +741,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         return quality.coerceIn(0.0, 100.0)
     }
 
-    /**
-     * Executes calculateRecordingDuration functionality.
-     */
-    /**
-     * Executes calculaterecordingduration operation with thermal imaging domain optimization.
-     *
-     */
     private fun calculateRecordingDuration(): Double {
         return if (gsrDataPoints.size >= 2) {
             (gsrDataPoints.last().timestamp - gsrDataPoints.first().timestamp) / 1000000000.0
@@ -1289,33 +749,15 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         }
     }
 
-    /**
-     * Executes calculateSamplingRate functionality.
-     */
-    /**
-     * Executes calculatesamplingrate operation with thermal imaging domain optimization.
-     *
-     */
     private fun calculateSamplingRate(): Double {
         return if (gsrDataPoints.size >= 2) {
             val duration = calculateRecordingDuration()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (duration > 0) gsrDataPoints.size / duration else 0.0
         } else {
             0.0
         }
     }
 
-    /**
-     * Executes calculateStatistics functionality.
-     */
-    /**
-     * Executes calculatestatistics operation with thermal imaging domain optimization.
-     *
-     */
     private fun calculateStatistics(): Map<String, Double> {
         val gsrValues = gsrDataPoints.map { it.gsrValue.toDouble() }
         val ppgValues = gsrDataPoints.map { it.ppgValue.toDouble() }
@@ -1338,19 +780,12 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             "ppgMax" to (ppgValues.maxOrNull() ?: 0.0),
             "averageQuality" to
                 gsrDataPoints.mapIndexed { index, point ->
-                    /**
-                     * Executes calculatedataquality operation with thermal imaging domain optimization.
-                     *
-                     */
                     calculateDataQuality(point, index)
                 }.average(),
             "syncMarkers" to gsrDataPoints.count { it.syncMarker }.toDouble(),
         )
     }
 
-    /**
-     * Retrieves deviceinfo information.
-     */
     private fun getDeviceInfo(): String {
         return "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL} (Android ${android.os.Build.VERSION.RELEASE})"
     }
@@ -1379,10 +814,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                 // Convert timestamp string to nanoseconds
                 val timestampNs = System.nanoTime() // Placeholder - real implementation would parse timestamp
                 val gsrDataPoint =
-                    /**
-                     * Executes gsrdatapoint operation with thermal imaging domain optimization.
-                     *
-                     */
                     GSRDataPoint(
                         timestamp = timestampNs,
                         gsrValue = row.gsrValue,

@@ -4,18 +4,9 @@ package com.github.mikephil.charting.highlight;
 import com.github.mikephil.charting.components.YAxis;
 
 /**
- * Specialized thermal imaging component providing Highlight functionality for the IRCamera system.
+ * Contains information needed to determine the highlighted value.
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author Philipp Jahoda
  */
 public class Highlight {
 
@@ -75,15 +66,7 @@ public class Highlight {
         this.mDataSetIndex = dataSetIndex;
     }
 
-    /**
-     * Executes highlight operation with thermal imaging domain optimization.
-     *
-     */
     public Highlight(float x, int dataSetIndex, int stackIndex) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this(x, Float.NaN, dataSetIndex);
         this.mStackIndex = stackIndex;
     }
@@ -94,10 +77,6 @@ public class Highlight {
      * @param x            the x-value of the highlighted value
      * @param y            the y-value of the highlighted value
      * @param dataSetIndex the index of the DataSet the highlighted value belongs to
-     */
-    /**
-     * Executes highlight operation with thermal imaging domain optimization.
-     *
      */
     public Highlight(float x, float y, float xPx, float yPx, int dataSetIndex, YAxis.AxisDependency axis) {
         this.mX = x;
@@ -117,15 +96,7 @@ public class Highlight {
      * @param stackIndex   references which value of a stacked-bar entry has been
      *                     selected
      */
-    /**
-     * Executes highlight operation with thermal imaging domain optimization.
-     *
-     */
     public Highlight(float x, float y, float xPx, float yPx, int dataSetIndex, int stackIndex, YAxis.AxisDependency axis) {
-        /**
-         * Executes this operation with thermal imaging domain optimization.
-         *
-         */
         this(x, y, xPx, yPx, dataSetIndex, axis);
         this.mStackIndex = stackIndex;
     }
@@ -245,17 +216,9 @@ public class Highlight {
      */
     public boolean equalTo(Highlight h) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (h == null)
             return false;
         else {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (this.mDataSetIndex == h.mDataSetIndex && this.mX == h.mX
                     && this.mStackIndex == h.mStackIndex && this.mDataIndex == h.mDataIndex)
                 return true;

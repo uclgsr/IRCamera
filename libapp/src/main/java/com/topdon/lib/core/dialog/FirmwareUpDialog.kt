@@ -21,20 +21,6 @@ import com.topdon.lib.core.utils.ScreenUtil
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing FirmwareUpDialog functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), View.OnClickListener {
     private var _binding: DialogFirmwareUpBinding? = null
     private val binding get() = _binding!!
@@ -52,15 +38,7 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), 
      * file大小text，如 "大小: 239.6MB"
      */
     var sizeStr: CharSequence?
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = binding.tvSize.text
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             binding.tvSize.text = value
         }
@@ -75,7 +53,7 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), 
         }
 
     /**
-     * 是否Show/Display底部device重启tip，目前仅firmwareUpgrade需要Show/Display，defaultHide(Gone).
+     * 是否Show/Display底部device重启tip，目前仅firmwareUpgrade需要Show/Display，默认Hide(Gone).
      */
     var isShowRestartTips: Boolean
         get() = binding.tvRestartTips.isVisible
@@ -84,7 +62,7 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), 
         }
 
     /**
-     * 是否Show/DisplayCancelbutton，defaultShow/Display.
+     * 是否Show/DisplayCancelbutton，默认Show/Display.
      */
     var isShowCancel: Boolean
         get() = binding.tvCancel.isVisible
@@ -102,30 +80,11 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), 
      */
     var onConfirmClickListener: (() -> Unit)? = null
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = DialogFirmwareUpBinding.inflate(LayoutInflater.from(context))
-        /**
-         * Configures the cancelable with validation and thermal imaging optimization.
-         *
-         */
         setCancelable(false)
-        /**
-         * Configures the canceledontouchoutside with validation and thermal imaging optimization.
-         *
-         */
         setCanceledOnTouchOutside(false)
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(binding.root)
 
         window?.let {
@@ -139,42 +98,19 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), 
         binding.tvConfirm.setOnClickListener(this)
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
             binding.tvCancel -> { 
-                /**
-                 * Executes dismiss operation with thermal imaging domain optimization.
-                 *
-                 */
                 dismiss()
                 onCancelClickListener?.invoke()
             }
             binding.tvConfirm -> { 
-                /**
-                 * Executes dismiss operation with thermal imaging domain optimization.
-                 *
-                 */
                 dismiss()
                 onConfirmClickListener?.invoke()
             }
         }
     }
 
-    /**
-     * Executes ondetachedfromwindow operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         _binding = null

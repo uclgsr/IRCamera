@@ -20,52 +20,23 @@ import retrofit2.http.Query
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing TC007Service functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 interface TC007Service {
     /**
      * Get/Retrieve产品info
      */
     @GET("/v1/system/product/info/dj")
-    /**
-     * Retrieves the productinfo with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getProductInfo(): TC007Response<ProductBean>
 
     /**
      * Get/Retrievedevice电池info
      */
     @GET("/v1/system/local/battery")
-    /**
-     * Retrieves the batteryinfo with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getBatteryInfo(): TC007Response<BatteryInfo>
 
     /**
      * Synchronize时间.
      */
     @PUT("/v1/system/local/time")
-    /**
-     * Executes synctime operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param requestBody Parameter for operation (type: RequestBody)
-     *
-     */
     suspend fun syncTime(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
@@ -87,30 +58,18 @@ interface TC007Service {
      * 查询firmwareUpgradestate.
      */
     @GET("/v1/system/upgrade/status")
-    /**
-     * Retrieves the upgradestatus with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getUpgradeStatus(): TC007Response<TC07UpgradeStatus>
 
     /**
      * Restore出厂settings
      */
     @PUT("/v1/system/magic/factory")
-    /**
-     * Executes resettofactory operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun resetToFactory(): TC007Response<Boolean>
 
     /**
      * 执行锅盖calibration
      */
     @PUT("/v1/camera/videoin/thermal/lid")
-    /**
-     * Executes correction operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun correction(): TC007Response<Any?>
 
     /**
@@ -136,13 +95,6 @@ interface TC007Service {
     ): TC007Response<Any?>
 
     @GET("/v1/thermal/temp/frame")
-    /**
-     * Retrieves the tempframe with optimized performance for thermal imaging operations.
-     *
-     * @note Temperature values are in Celsius unless otherwise specified.
-     * Accuracy depends on thermal camera calibration.
-     *
-     */
     suspend fun getTempFrame(): TC007Response<TempFrameParam>
 
     /**
@@ -181,10 +133,6 @@ interface TC007Service {
      * 拍照
      */
     @PUT("/v1/storage/picture/snap/manual")
-    /**
-     * Retrieves the photo with optimized performance for thermal imaging operations.
-     *
-     */
     suspend fun getPhoto(): TC007Response<PhotoBean>
 
     /**
@@ -197,76 +145,33 @@ interface TC007Service {
     ): TC007Response<Any?>
 
     @GET("/v1/camera/videoin/mode")
-    /**
-     * Retrieves the mode with optimized performance for thermal imaging operations.
-     *
-     * @param
-     * @param mode Parameter for operation (type: Int)
-     *
-     */
     suspend fun getMode(
         @Query("mode") mode: Int,
     ): TC007Response<Any?>
 
     @GET("/v1/camera/videoin/fusion/ratio")
-    /**
-     * Retrieves the ratio with optimized performance for thermal imaging operations.
-     *
-     * @param
-     * @param default Parameter for operation (type: String)
-     *
-     */
     suspend fun getRatio(
         @Query("default") default: String,
     ): TC007Response<WifiAttributeBean?>
 
     @PUT("/v1/camera/videoin/fusion/ratio")
-    /**
-     * Configures the ratio with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param requestBody Parameter for operation (type: RequestBody)
-     *
-     */
     suspend fun setRatio(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
 
     @PUT("/v1/camera/videoin/registration")
-    /**
-     * Configures the registration with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param requestBody Parameter for operation (type: RequestBody)
-     *
-     */
     suspend fun setRegistration(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
 
-    // Dual lightregistration
+    // dual lightregistration
     @GET("/v1/camera/videoin/registration")
-    /**
-     * Retrieves the registration with optimized performance for thermal imaging operations.
-     *
-     * @param
-     * @param mode Parameter for operation (type: Int)
-     * @param default Parameter for operation (type: String)
-     *
-     */
     suspend fun getRegistration(
         @Query("chn") mode: Int,
         @Query("default") default: String,
     ): TC007Response<WifiAttributeBean?>
 
     @PUT("/v1/camera/videoin/thermal/pallete/dj")
-    /**
-     * Configures the pallete with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param requestBody Parameter for operation (type: RequestBody)
-     *
-     */
     suspend fun setPallete(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
@@ -282,63 +187,30 @@ interface TC007Service {
      * default
      * string
      * 可选
-     * true：defaultconfiguration；false：当前configuration
+     * true：默认configuration；false：当前configuration
      * 示例值:
      * false
      */
     @GET("/v1/thermal/env/attribute")
-    /**
-     * Retrieves the attribute with optimized performance for thermal imaging operations.
-     *
-     * @param
-     * @param mode Parameter for operation (type: Int)
-     * @param default Parameter for operation (type: String)
-     *
-     */
     suspend fun getAttribute(
         @Query("chn") mode: Int,
         @Query("default") default: String,
     ): TC007Response<AttributeBean?>
 
     @POST("/v1/camera/videoin/param")
-    /**
-     * Configures the param with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param requestBody Parameter for operation (type: RequestBody)
-     *
-     */
     suspend fun setParam(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
 
     @POST("/v1/system/local/font")
-    /**
-     * Configures the font with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param requestBody Parameter for operation (type: RequestBody)
-     *
-     */
     suspend fun setFont(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
 
     @PUT("/v1/camera/videoin/thermal/correction")
-    /**
-     * Configures the correction with validation and thermal imaging optimization.
-     *
-     */
     suspend fun setCorrection(): TC007Response<Any?>
 
     @POST("/v1/thermal/temp/isotherm")
-    /**
-     * Configures the isotherm with validation and thermal imaging optimization.
-     *
-     * @param
-     * @param requestBody Parameter for operation (type: RequestBody)
-     *
-     */
     suspend fun setIsotherm(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>

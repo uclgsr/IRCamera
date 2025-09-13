@@ -15,20 +15,6 @@ import com.github.mikephil.charting.utils.Utils;
  * 
  * @author Philipp Jahoda
  */
-/**
- * Specialized thermal imaging component providing LimitLine functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class LimitLine extends ComponentBase {
 
     /** limit / maximum (the y-value or xIndex) */
@@ -63,10 +49,6 @@ public class LimitLine extends ComponentBase {
      * @param limit - the position (the value) on the y-axis (y-value) or x-axis
      *            (xIndex) where this line should appear
      */
-    /**
-     * Executes limitline operation with thermal imaging domain optimization.
-     *
-     */
     public LimitLine(float limit) {
         mLimit = limit;
     }
@@ -77,10 +59,6 @@ public class LimitLine extends ComponentBase {
      * @param limit - the position (the value) on the y-axis (y-value) or x-axis
      *            (xIndex) where this line should appear
      * @param label - provide "" if no label is required
-     */
-    /**
-     * Executes limitline operation with thermal imaging domain optimization.
-     *
      */
     public LimitLine(float limit, String label) {
         mLimit = limit;
@@ -104,16 +82,8 @@ public class LimitLine extends ComponentBase {
      */
     public void setLineWidth(float width) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (width < 0.2f)
             width = 0.2f;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (width > 12.0f)
             width = 12.0f;
         mLineWidth = Utils.convertDpToPixel(width);

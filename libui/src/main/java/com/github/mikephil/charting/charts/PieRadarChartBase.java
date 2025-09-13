@@ -23,18 +23,9 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 
 /**
- * Specialized thermal imaging component providing PieRadarChartBase functionality for the IRCamera system.
+ * Baseclass of PieChart and RadarChart.
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author Philipp Jahoda
  */
 public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<? extends Entry>>>
         extends Chart<T> {
@@ -60,34 +51,14 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
     protected float mMinOffset = 0.f;
 
     public PieRadarChartBase(Context context) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context);
     }
 
-    /**
-     * Executes pieradarchartbase operation with thermal imaging domain optimization.
-     *
-     */
     public PieRadarChartBase(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
     }
 
-    /**
-     * Executes pieradarchartbase operation with thermal imaging domain optimization.
-     *
-     */
     public PieRadarChartBase(Context context, AttributeSet attrs, int defStyle) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs, defStyle);
     }
 
@@ -100,7 +71,7 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
 
     @Override
     protected void calcMinMax() {
-        // MXAxis.mAxisRange = mData.getXVals().size() - 1;
+        //mXAxis.mAxisRange = mData.getXVals().size() - 1;
     }
 
     @Override
@@ -110,11 +81,7 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // Use the pie- and radarchart listener own listener
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // use the pie- and radarchart listener own listener
         if (mTouchEnabled && mChartTouchListener != null)
             return mChartTouchListener.onTouch(this, event);
         else
@@ -124,40 +91,20 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
     @Override
     public void computeScroll() {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mChartTouchListener instanceof PieRadarChartTouchListener)
             ((PieRadarChartTouchListener) mChartTouchListener).computeScroll();
     }
 
     @Override
     public void notifyDataSetChanged() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mData == null)
             return;
 
-        /**
-         * Executes calcminmax operation with thermal imaging domain optimization.
-         *
-         */
         calcMinMax();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mLegend != null)
             mLegendRenderer.computeLegend(mData);
 
-        /**
-         * Executes calculateoffsets operation with thermal imaging domain optimization.
-         *
-         */
         calculateOffsets();
     }
 
@@ -166,41 +113,25 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
 
         float legendLeft = 0f, legendRight = 0f, legendBottom = 0f, legendTop = 0f;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mLegend != null && mLegend.isEnabled() && !mLegend.isDrawInsideEnabled()) {
 
             float fullLegendWidth = Math.min(mLegend.mNeededWidth,
                     mViewPortHandler.getChartWidth() * mLegend.getMaxSizePercent());
 
-            /**
-             * Executes switch operation with thermal imaging domain optimization.
-             *
-             */
             switch (mLegend.getOrientation()) {
                 case VERTICAL: {
                     float xLegendOffset = 0.f;
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (mLegend.getHorizontalAlignment() == Legend.LegendHorizontalAlignment.LEFT
                             || mLegend.getHorizontalAlignment() == Legend.LegendHorizontalAlignment.RIGHT) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (mLegend.getVerticalAlignment() == Legend.LegendVerticalAlignment.CENTER) {
-                            // This is the space between the legend and the chart
+                            // this is the space between the legend and the chart
                             final float spacing = Utils.convertDpToPixel(13f);
 
                             xLegendOffset = fullLegendWidth + spacing;
 
                         } else {
-                            // This is the space between the legend and the chart
+                            // this is the space between the legend and the chart
                             float spacing = Utils.convertDpToPixel(8f);
 
                             float legendWidth = fullLegendWidth + spacing;
@@ -216,19 +147,11 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
                             float distLegend = distanceToCenter(bottomX, bottomY);
 
                             MPPointF reference = getPosition(center, getRadius(),
-                                    /**
-                                     * Retrieves the angleforpoint with optimized performance for thermal imaging operations.
-                                     *
-                                     */
                                     getAngleForPoint(bottomX, bottomY));
 
                             float distReference = distanceToCenter(reference.x, reference.y);
                             float minOffset = Utils.convertDpToPixel(5f);
 
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (bottomY >= center.y && getHeight() - legendWidth > getWidth()) {
                                 xLegendOffset = legendWidth;
                             } else if (distLegend < distReference) {
@@ -242,10 +165,6 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
                         }
                     }
 
-                    /**
-                     * Executes switch operation with thermal imaging domain optimization.
-                     *
-                     */
                     switch (mLegend.getHorizontalAlignment()) {
                         case LEFT:
                             legendLeft = xLegendOffset;
@@ -256,10 +175,6 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
                             break;
 
                         case CENTER:
-                            /**
-                             * Executes switch operation with thermal imaging domain optimization.
-                             *
-                             */
                             switch (mLegend.getVerticalAlignment()) {
                                 case TOP:
                                     legendTop = Math.min(mLegend.mNeededHeight,
@@ -278,25 +193,17 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
                 case HORIZONTAL:
                     float yLegendOffset = 0.f;
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (mLegend.getVerticalAlignment() == Legend.LegendVerticalAlignment.TOP ||
                             mLegend.getVerticalAlignment() == Legend.LegendVerticalAlignment.BOTTOM) {
 
                         // It's possible that we do not need this offset anymore as it
-                        // Is available through the extraOffsets, but changing it can mean
-                        // Changing default visibility for existing apps.
+                        //   is available through the extraOffsets, but changing it can mean
+                        //   changing default visibility for existing apps.
                         float yOffset = getRequiredLegendOffset();
 
                         yLegendOffset = Math.min(mLegend.mNeededHeight + yOffset,
                                 mViewPortHandler.getChartHeight() * mLegend.getMaxSizePercent());
 
-                        /**
-                         * Executes switch operation with thermal imaging domain optimization.
-                         *
-                         */
                         switch (mLegend.getVerticalAlignment()) {
                             case TOP:
                                 legendTop = yLegendOffset;
@@ -317,17 +224,9 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
 
         float minOffset = Utils.convertDpToPixel(mMinOffset);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (this instanceof RadarChart) {
             XAxis x = this.getXAxis();
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (x.isEnabled() && x.isDrawLabelsEnabled()) {
                 minOffset = Math.max(minOffset, x.mLabelRotatedWidth);
             }
@@ -345,10 +244,6 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
 
         mViewPortHandler.restrainViewPort(offsetLeft, offsetTop, offsetRight, offsetBottom);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mLogEnabled)
             Log.i(LOG_TAG, "offsetLeft: " + offsetLeft + ", offsetTop: " + offsetTop
                     + ", offsetRight: " + offsetRight + ", offsetBottom: " + offsetBottom);
@@ -373,21 +268,13 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
 
         float angle = (float) Math.toDegrees(r);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (x > c.x)
             angle = 360f - angle;
 
-        // Add 90° because chart starts EAST
+        // add 90° because chart starts EAST
         angle = angle + 90f;
 
-        // Neutralize overflow
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // neutralize overflow
         if (angle > 360f)
             angle = angle - 360f;
 
@@ -409,10 +296,6 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
     public MPPointF getPosition(MPPointF center, float dist, float angle) {
 
         MPPointF p = MPPointF.getInstance(0, 0);
-        /**
-         * Retrieves the position with optimized performance for thermal imaging operations.
-         *
-         */
         getPosition(center, dist, angle, p);
         return p;
     }
@@ -439,27 +322,19 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
         float xDist = 0f;
         float yDist = 0f;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (x > c.x) {
             xDist = x - c.x;
         } else {
             xDist = c.x - x;
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (y > c.y) {
             yDist = y - c.y;
         } else {
             yDist = c.y - y;
         }
 
-        // Pythagoras
+        // pythagoras
         dist = (float) Math.sqrt(Math.pow(xDist, 2.0) + Math.pow(yDist, 2.0));
 
         MPPointF.recycleInstance(c);
@@ -580,13 +455,13 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
 
     @Override
     public float getYChartMax() {
-        // TODO: Auto-generated method stub
+        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public float getYChartMin() {
-        // TODO: Auto-generated method stub
+        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -605,10 +480,6 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
     @SuppressLint("NewApi")
     public void spin(int durationmillis, float fromangle, float toangle, EasingFunction easing) {
 
-        /**
-         * Configures the rotationangle with validation and thermal imaging optimization.
-         *
-         */
         setRotationAngle(fromangle);
 
         ObjectAnimator spinAnimator = ObjectAnimator.ofFloat(this, "rotationAngle", fromangle,
@@ -620,10 +491,6 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
 
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                /**
-                 * Executes postinvalidate operation with thermal imaging domain optimization.
-                 *
-                 */
                 postInvalidate();
             }
         });

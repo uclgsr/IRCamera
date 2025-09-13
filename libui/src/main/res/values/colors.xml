@@ -1,43 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Color definitions for thermal imaging UI -->
 <resources>
-    <!-- UI styling - white -->
     <color name="white">#FFFFFF</color>
-    <!-- UI styling - black -->
     <color name="black">#000000</color>
     
-    <!-- UI styling - colorAccent -->
     <color name="colorAccent">#FF2B79D8</color>
-    <!-- UI styling - font third color -->
     <color name="font_third_color">#999999</color>
-    <!-- UI styling - color FFBA42 -->
     <color name="color_FFBA42">#FFFFBA42</color>
 
-    <!-- UI styling - color default max -->
     <color name="color_default_max">#FFF3812F</color>
-    <!-- UI styling - color default min -->
     <color name="color_default_min">#FF28C445</color>
-    <!-- UI styling - color select1 -->
     <color name="color_select1">#FF000000</color>
-    <!-- UI styling - color select2 -->
     <color name="color_select2">#FFFFFFFF</color>
-    <!-- UI styling - color select3 -->
     <color name="color_select3">#FF2B79D8</color>
-    <!-- UI styling - color select4 -->
     <color name="color_select4">#FFFF0000</color>
-    <!-- UI styling - color select5 -->
     <color name="color_select5">#FF0FA752</color>
-    <!-- UI styling - color select6 -->
     <color name="color_select6">#808080</color>
 
-    <!-- UI styling - wheel select bg -->
     <color name="wheel_select_bg">#1A2B79D7</color>
-    <!-- Text appearance styling -->
     <color name="wheel_select_text">#FFFFFF</color>
-    <!-- Text appearance styling -->
     <color name="wheel_unselect_text">#B2FFFFFF</color>
-    <!-- UI styling - ui main custom color -->
     <color name="ui_main_custom_color">#8A898E</color>
-    <!-- UI styling - color green point -->
     <color name="color_green_point">#0CEB82</color>
 </resources>

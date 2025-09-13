@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.ImageView
 import com.topdon.lib.core.navigation.NavigationManager
 // Removed house module import - module removed as unused
-// Import com.topdon.house.activity.HouseHomeActivity
+// import com.topdon.house.activity.HouseHomeActivity
 import com.topdon.lib.core.bean.event.WinterClickEvent
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.ExtraKeyConfig
@@ -23,18 +23,8 @@ import com.topdon.module.thermal.ir.activity.MonitoryHomeActivity
 import org.greenrobot.eventbus.EventBus
 
 /**
- * Specialized thermal imaging component providing AbilityFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Ability fragment for thermal imaging components.
+ * Handles specific UI sections and user interactions.
  */
 class AbilityFragment : BaseFragment(), View.OnClickListener {
     private var mIsTC007 = false
@@ -45,16 +35,8 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
     private lateinit var viewHouse: View
     private lateinit var viewCar: View
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.fragment_ability
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         mIsTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
 
@@ -70,91 +52,49 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
         viewCar.setOnClickListener(this)
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
             ivWinter -> { // 冬季特辑入口
                 SharedManager.hasClickWinter = true
                 EventBus.getDefault().post(WinterClickEvent())
                 val url =
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     * @param
-                     * @param https Parameter for operation (type: // Api.topdon.com/")
-                     *
-                     */
-                    if (UrlConstant.BASE_URL == "https:// Api.topdon.com/") {
-                        "https:// App.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
+                    if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
+                        "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
                             "languageId=1" // Fixed to English (languageId=1)
                     } else {
-                        "http:// 172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
+                        "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
                     }
                 NavigationManager.getInstance().build(RouterConfig.WEB_VIEW)
                     .withString(ExtraKeyConfig.URL, url)
                     .navigation(requireContext())
             }
-            viewMonitory -> { // Temperature监控
+            viewMonitory -> { // temperature监控
                 val intent = Intent(requireContext(), MonitoryHomeActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
-                /**
-                 * Executes startactivity operation with thermal imaging domain optimization.
-                 *
-                 */
                 startActivity(intent)
             }
 
             viewHouse -> { // 房屋检测
                 // Disabled - HouseHomeActivity from removed house module
-                // Val intent = Intent(requireContext(), HouseHomeActivity::class.java)
-                // Intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
-                // StartActivity(intent)
+                // val intent = Intent(requireContext(), HouseHomeActivity::class.java)
+                // intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
+                // startActivity(intent)
             }
 
             viewCar -> { // 汽车检测
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (mIsTC007) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07)
                             .withBoolean(ExtraKeyConfig.IS_CAR_DETECT_ENTER, true)
                             .navigation(requireContext())
                     }
                 } else {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (DeviceTools.isTC001PlusConnect()) {
                         var intent = Intent(requireContext(), IRThermalPlusActivity::class.java)
                         intent.putExtra(ExtraKeyConfig.IS_CAR_DETECT_ENTER, true)
-                        /**
-                         * Executes startactivity operation with thermal imaging domain optimization.
-                         *
-                         */
                         startActivity(intent)
                     } else if (DeviceTools.isTC001LiteConnect()) {
                         NavigationManager.getInstance().build(RouterConfig.IR_TCLITE)
@@ -167,10 +107,6 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
                     } else if (DeviceTools.isConnect(isSendConnectEvent = false, true)) {
                         var intent = Intent(requireContext(), IRThermalNightActivity::class.java)
                         intent.putExtra(ExtraKeyConfig.IS_CAR_DETECT_ENTER, true)
-                        /**
-                         * Executes startactivity operation with thermal imaging domain optimization.
-                         *
-                         */
                         startActivity(intent)
                     } else {
                         TipDialog.Builder(requireContext())

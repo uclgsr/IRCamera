@@ -1,32 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Color definitions for thermal imaging UI -->
 <resources>
-    <!-- UI styling - black -->
     <color name="black">#FF000000</color>
-    <!-- UI styling - white -->
     <color name="white">#FFFFFFFF</color>
-    <!-- UI styling - color CCFFFFFF -->
     <color name="color_CCFFFFFF">#CCFFFFFF</color>
-    <!-- UI styling - c bg white -->
     <color name="c_bg_white">#FF16131E</color>
     
     <!-- Camera Mode Selector Colors -->
     <color name="primary_color">#FF2196F3</color>
-    <!-- UI styling - background card -->
     <color name="background_card">#FF1E1E1E</color>
-    <!-- UI styling - background secondary -->
     <color name="background_secondary">#FF2E2E2E</color>
-    <!-- UI styling - border light -->
     <color name="border_light">#FF424242</color>
-    <!-- Text appearance styling -->
     <color name="text_primary">#FFFFFFFF</color>
-    <!-- Text appearance styling -->
     <color name="text_secondary">#FFCCCCCC</color>
-    <!-- Text appearance styling -->
     <color name="text_tertiary">#FF999999</color>
-    <!-- Text appearance styling -->
     <color name="text_hint">#BDBDBD</color>
-    <!-- Text appearance styling -->
     <color name="segmented_button_text">@color/text_primary</color>
     
     <!-- GSR Device Management Colors -->
@@ -34,41 +21,30 @@
     
     <!-- Status Colors -->
     <color name="status_connected">#4CAF50</color>
-    <!-- UI styling - status connecting -->
     <color name="status_connecting">#FF9800</color>
-    <!-- UI styling - status disconnected -->
     <color name="status_disconnected">#F44336</color>
-    <!-- UI styling - status available -->
     <color name="status_available">#2196F3</color>
     
     <!-- Progress Colors -->
     <color name="signal_strength_color">#2196F3</color>
-    <!-- UI styling - battery level color -->
     <color name="battery_level_color">#4CAF50</color>
     
     <!-- Background Colors -->
     <color name="header_background">#E8F5E8</color>
-    <!-- UI styling - card background -->
     <color name="card_background">#FFFFFF</color>
-    <!-- UI styling - card background accent -->
     <color name="card_background_accent">#E3F2FD</color>
     
     <!-- Button Colors -->
     <color name="button_primary">#1976D2</color>
-    <!-- UI styling - button secondary -->
     <color name="button_secondary">#757575</color>
-    <!-- UI styling - button accent -->
     <color name="button_accent">#FF5722</color>
     
     <!-- GSR Multi-Modal Recording Colors -->
     <color name="fab_gsr_background">#FF1565C0</color>
-    <!-- UI styling - gsr pulse color -->
     <color name="gsr_pulse_color">#FF00E676</color>
-    <!-- UI styling - gsr recording active -->
     <color name="gsr_recording_active">#FFFF5722</color>
     
     <!-- Material Design Colors -->
     <color name="colorPrimary">#FF1976D2</color>
-    <!-- UI styling - colorAccent -->
     <color name="colorAccent">#FF03DAC5</color>
 </resources>

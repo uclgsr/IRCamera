@@ -21,87 +21,33 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O], manifest = Config.NONE)
 @OptIn(ExperimentalCoroutinesApi::class)
-/**
- * Advanced pseudo color management system for thermal imaging visualization. Handles color palette conversion and thermal data mapping with PseudoColorModuleTest implementation.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class PseudoColorModuleTest {
     private lateinit var context: Context
 
     @Before
-    /**
-     * Sets up configuration.
-     */
-    /**
-     * Configures the up with validation and thermal imaging optimization.
-     *
-     */
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
     }
 
     @Test
-    /**
-     * Executes testContextAccess functionality.
-     */
-    /**
-     * Executes testcontextaccess operation with thermal imaging domain optimization.
-     *
-     */
     fun testContextAccess() {
-        /**
-         * Executes assertnotnull operation with thermal imaging domain optimization.
-         *
-         */
         assertNotNull("Context should be available", context)
-        /**
-         * Executes assertnotnull operation with thermal imaging domain optimization.
-         *
-         */
         assertNotNull("Package name should be available", context.packageName)
     }
 
     @Test
-    /**
-     * Handles pseudo color configuration for thermal imaging.
-     */
     fun testCustomPseudoBeanCreation() {
         // Test CustomPseudoBean data class functionality
         try {
             val pseudoBean = CustomPseudoBean()
-            /**
-             * Executes assertnotnull operation with thermal imaging domain optimization.
-             *
-             */
             assertNotNull("CustomPseudoBean should be created", pseudoBean)
         } catch (e: Exception) {
             // Bean may require specific initialization
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("CustomPseudoBean creation test attempted", true)
         }
     }
 
     @Test
-    /**
-     * Executes testColorRecommendConstants functionality.
-     */
-    /**
-     * Executes testcolorrecommendconstants operation with thermal imaging domain optimization.
-     *
-     */
     fun testColorRecommendConstants() {
         // Test ColorRecommend constants are accessible
         try {
@@ -110,25 +56,14 @@ class PseudoColorModuleTest {
 
             // Test that constants are defined
             val fields = colorRecommendClass.declaredFields
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("ColorRecommend should have color constants", fields.isNotEmpty())
         } catch (e: ClassNotFoundException) {
             // Constants may not be accessible in test environment
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("ColorRecommend constants test attempted", true)
         }
     }
 
     @Test
-    /**
-     * Handles pseudo color configuration for thermal imaging.
-     */
     fun testPseudoColorProcessing() =
         runTest {
             // Test pseudo color processing with mock temperature data
@@ -141,49 +76,26 @@ class PseudoColorModuleTest {
                     mockTemperatureRange.start + (mockTemperatureRange.endInclusive - mockTemperatureRange.start) * step / (temperatureSteps - 1)
                 }
 
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Temperature data should be generated", temperatures.isNotEmpty())
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Temperature range should be valid", temperatures.first() <= temperatures.last())
 
             // Test pseudo color mapping logic
             temperatures.forEach { temp ->
                 // Normalize temperature to 0-1 range
                 val normalized = (temp - mockTemperatureRange.start) / (mockTemperatureRange.endInclusive - mockTemperatureRange.start)
-                /**
-                 * Executes asserttrue operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertTrue("Normalized temperature should be 0-1", normalized >= 0f && normalized <= 1f)
 
                 // Test color mapping (pseudo HSV to RGB conversion)
                 val hue = (1f - normalized) * 240f // Blue (cold) to Red (hot)
-                /**
-                 * Executes asserttrue operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertTrue("Hue should be valid HSV range", hue >= 0f && hue <= 360f)
             }
         }
 
     @Test
-    /**
-     * Handles pseudo color configuration for thermal imaging.
-     */
     fun testPseudoColorConfigurations() =
         runTest {
             // Test different pseudo color configurations
             val colorConfigurations =
-                /**
-                 * Executes listof operation with thermal imaging domain optimization.
-                 *
-                 */
                 listOf(
                     "rainbow",
                     "iron",
@@ -195,23 +107,11 @@ class PseudoColorModuleTest {
 
             colorConfigurations.forEach { config ->
                 // Test configuration validation
-                /**
-                 * Executes assertfalse operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertFalse("Configuration should not be empty", config.isEmpty())
-                /**
-                 * Executes asserttrue operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertTrue("Configuration should be valid string", config.isNotBlank())
 
                 // Test configuration processing
                 val processedConfig = config.lowercase().trim()
-                /**
-                 * Executes assertequals operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertEquals("Processed config should match expected", config, processedConfig)
 
                 // Test color palette generation for each configuration
@@ -219,90 +119,42 @@ class PseudoColorModuleTest {
                 val colorPalette =
                     (0 until paletteSize).map { index ->
                         val normalized = index.toFloat() / (paletteSize - 1)
-                        /**
-                         * Processes pseudo color configuration for thermal imaging visualization with advanced color mapping algorithms.
-                         *
-                         * @note This method is optimized for thermal imaging pseudo color processing.
-                         * Ensure proper thermal calibration before use.
-                         *
-                         */
                         generatePseudoColor(normalized, config)
                     }
 
-                /**
-                 * Executes assertequals operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertEquals("Color palette should have correct size", paletteSize, colorPalette.size)
-                /**
-                 * Executes asserttrue operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertTrue("All colors should be valid", colorPalette.all { it != 0 })
             }
         }
 
     @Test
-    /**
-     * Handles pseudo color configuration for thermal imaging.
-     */
     fun testPseudoActivityCreation() {
         // Test pseudo activity classes can be referenced
         try {
             val pseudoSetActivity = Class.forName("com.topdon.pseudo.activity.PseudoSetActivity")
-            /**
-             * Executes assertnotnull operation with thermal imaging domain optimization.
-             *
-             */
             assertNotNull("PseudoSetActivity should be accessible", pseudoSetActivity)
         } catch (e: ClassNotFoundException) {
             // Activities may not be testable without full Android framework
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("PseudoSetActivity accessibility test attempted", true)
         }
     }
 
     @Test
-    /**
-     * Handles pseudo color configuration for thermal imaging.
-     */
     fun testPseudoViewCreation() {
         // Test pseudo view classes can be referenced
         try {
             val pseudoPickView = Class.forName("com.topdon.pseudo.view.PseudoPickView")
-            /**
-             * Executes assertnotnull operation with thermal imaging domain optimization.
-             *
-             */
             assertNotNull("PseudoPickView should be accessible", pseudoPickView)
         } catch (e: ClassNotFoundException) {
             // Views may not be testable without full Android framework
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("PseudoPickView accessibility test attempted", true)
         }
     }
 
     @Test
-    /**
-     * Executes testColorConversions functionality.
-     */
-    /**
-     * Executes testcolorconversions operation with thermal imaging domain optimization.
-     *
-     */
     fun testColorConversions() {
         // Test basic color conversion utilities
         val testColors =
-            /**
-             * Executes listof operation with thermal imaging domain optimization.
-             *
-             */
             listOf(
                 Color.RED,
                 Color.GREEN,
@@ -318,40 +170,17 @@ class PseudoColorModuleTest {
             val green = Color.green(color)
             val blue = Color.blue(color)
 
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Red component should be valid", red >= 0 && red <= 255)
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Green component should be valid", green >= 0 && green <= 255)
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Blue component should be valid", blue >= 0 && blue <= 255)
 
             // Test color reconstruction
             val reconstructed = Color.rgb(red, green, blue)
-            /**
-             * Executes assertequals operation with thermal imaging domain optimization.
-             *
-             */
             assertEquals("Color should be reconstructed correctly", color, reconstructed)
         }
     }
 
     @Test
-    /**
-     * Executes testThermalColorMapping functionality.
-     */
-    /**
-     * Executes testthermalcolormapping operation with thermal imaging domain optimization.
-     *
-     */
     fun testThermalColorMapping() =
         runTest {
             // Test thermal color mapping ranges
@@ -364,53 +193,26 @@ class PseudoColorModuleTest {
             testTemperatures.forEach { temp ->
                 // Normalize temperature
                 val normalized = ((temp - minTemp) / tempRange).coerceIn(0f, 1f)
-                /**
-                 * Executes asserttrue operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertTrue("Normalized temperature should be in range", normalized >= 0f && normalized <= 1f)
 
                 // Test color mapping
                 val colorHue = (1f - normalized) * 240f // Blue to red spectrum
-                /**
-                 * Executes asserttrue operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertTrue("Color hue should be valid", colorHue >= 0f && colorHue <= 240f)
 
                 // Test HSV to RGB conversion principles
                 val hsv = floatArrayOf(colorHue, 1f, 1f)
                 val rgb = Color.HSVToColor(hsv)
 
-                /**
-                 * Executes assertnotequals operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertNotEquals("RGB color should be valid", 0, rgb)
-                /**
-                 * Executes asserttrue operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertTrue("RGB alpha should be opaque", Color.alpha(rgb) == 255)
             }
         }
 
     @Test
-    /**
-     * Executes testAdvancedColorMappingAlgorithms functionality.
-     */
-    /**
-     * Executes testadvancedcolormappingalgorithms operation with thermal imaging domain optimization.
-     *
-     */
     fun testAdvancedColorMappingAlgorithms() =
         runTest {
             // Test advanced color mapping algorithms
             val temperatureData =
-                /**
-                 * Executes floatarrayof operation with thermal imaging domain optimization.
-                 *
-                 */
                 floatArrayOf(
                     15.5f,
                     18.2f,
@@ -427,22 +229,10 @@ class PseudoColorModuleTest {
             val equalizedMapping =
                 sortedTemps.mapIndexed { index, temp ->
                     val equalizedValue = index.toFloat() / (sortedTemps.size - 1)
-                    /**
-                     * Executes pair operation with thermal imaging domain optimization.
-                     *
-                     */
                     Pair(temp, equalizedValue)
                 }
 
-            /**
-             * Executes assertequals operation with thermal imaging domain optimization.
-             *
-             */
             assertEquals("Equalized mapping should have same size", temperatureData.size, equalizedMapping.size)
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue(
                 "Equalized values should be in range",
                 equalizedMapping.all { it.second >= 0f && it.second <= 1f },
@@ -470,91 +260,34 @@ class PseudoColorModuleTest {
 
                 val interpolatedColor = Color.rgb(interpolatedR, interpolatedG, interpolatedB)
 
-                /**
-                 * Executes asserttrue operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertTrue("Interpolated color should be valid", interpolatedColor != 0)
-                /**
-                 * Executes asserttrue operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertTrue("Interpolated red should be in range", Color.red(interpolatedColor) in 0..255)
-                /**
-                 * Executes asserttrue operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertTrue("Interpolated green should be in range", Color.green(interpolatedColor) in 0..255)
-                /**
-                 * Executes asserttrue operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertTrue("Interpolated blue should be in range", Color.blue(interpolatedColor) in 0..255)
             }
         }
 
     @Test
-    /**
-     * Executes testSystemServiceAccess functionality.
-     */
-    /**
-     * Executes testsystemserviceaccess operation with thermal imaging domain optimization.
-     *
-     */
     fun testSystemServiceAccess() {
         // Test system services that pseudo color processing might use
         val displayService = context.getSystemService(Context.DISPLAY_SERVICE)
-        /**
-         * Executes assertnotnull operation with thermal imaging domain optimization.
-         *
-         */
         assertNotNull("Display service should be available", displayService)
 
         val powerService = context.getSystemService(Context.POWER_SERVICE)
-        /**
-         * Executes assertnotnull operation with thermal imaging domain optimization.
-         *
-         */
         assertNotNull("Power service should be available", powerService)
     }
 
     @Test
-    /**
-     * Executes testResourceAccess functionality.
-     */
-    /**
-     * Executes testresourceaccess operation with thermal imaging domain optimization.
-     *
-     */
     fun testResourceAccess() {
         val resources = context.resources
-        /**
-         * Executes assertnotnull operation with thermal imaging domain optimization.
-         *
-         */
         assertNotNull("Resources should be available", resources)
 
         val displayMetrics = resources.displayMetrics
-        /**
-         * Executes assertnotnull operation with thermal imaging domain optimization.
-         *
-         */
         assertNotNull("Display metrics should be available", displayMetrics)
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Display density should be positive", displayMetrics.density > 0)
     }
 
     @Test
-    /**
-     * Executes testAsyncOperations functionality.
-     */
-    /**
-     * Executes testasyncoperations operation with thermal imaging domain optimization.
-     *
-     */
     fun testAsyncOperations() =
         runTest {
             // Test that coroutines work with pseudo color processing context
@@ -564,17 +297,10 @@ class PseudoColorModuleTest {
                     context.packageName
                 }
 
-            /**
-             * Executes assertequals operation with thermal imaging domain optimization.
-             *
-             */
             assertEquals("Async pseudo operation should return correct value", context.packageName, result)
         }
 
     // Helper function to generate pseudo colors based on configuration
-    /**
-     * Handles pseudo color configuration for thermal imaging.
-     */
     private fun generatePseudoColor(
         normalized: Float,
         config: String,

@@ -4,25 +4,7 @@ import android.graphics.DashPathEffect;
 
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-/**
- * Specialized thermal imaging component providing LegendEntry functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class LegendEntry {
-    /**
-     * Executes legendentry operation with thermal imaging domain optimization.
-     *
-     */
     public LegendEntry() {
 
     }
@@ -35,10 +17,6 @@ public class LegendEntry {
      * @param formLineWidth Set to NaN to use the legend's default.
      * @param formLineDashEffect Set to nil to use the legend's default.
      * @param formColor The color for drawing the form.
-     */
-    /**
-     * Executes legendentry operation with thermal imaging domain optimization.
-     *
      */
     public LegendEntry(String label,
                        Legend.LegendForm form,

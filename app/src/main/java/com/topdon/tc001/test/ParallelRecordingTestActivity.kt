@@ -23,20 +23,6 @@ import java.io.File
  * - Real-time status monitoring
  * - Graceful session continuation with available sensors
  */
-/**
- * Specialized thermal imaging component providing ParallelRecordingTestActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class ParallelRecordingTestActivity : ComponentActivity() {
     companion object {
         private const val TAG = "ParallelRecordingTest"
@@ -50,70 +36,32 @@ class ParallelRecordingTestActivity : ComponentActivity() {
     private lateinit var stopButton: Button
     private lateinit var testButton: Button
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Create simple test UI programmatically (since we don't have layout files in this PR)
-        /**
-         * Executes createtestui operation with thermal imaging domain optimization.
-         *
-         */
         createTestUI()
 
         // Initialize recording controller
         recordingController = RecordingController(this, this)
 
-        /**
-         * Configures the upeventhandlers with validation and thermal imaging optimization.
-         *
-         */
         setupEventHandlers()
-        /**
-         * Executes updateui operation with thermal imaging domain optimization.
-         *
-         */
         updateUI()
     }
 
-    /**
-     * Executes createTestUI functionality.
-     */
-    /**
-     * Executes createtestui operation with thermal imaging domain optimization.
-     *
-     */
     private fun createTestUI() {
         // Create simple vertical layout programmatically
         val layout =
             android.widget.LinearLayout(this).apply {
                 orientation = android.widget.LinearLayout.VERTICAL
-                /**
-                 * Configures the padding with validation and thermal imaging optimization.
-                 *
-                 */
                 setPadding(32, 32, 32, 32)
             }
 
         // Title
         val titleText =
-            /**
-             * Executes textview operation with thermal imaging domain optimization.
-             *
-             */
             TextView(this).apply {
                 text = "Parallel Recording Test"
                 textSize = 20f
-                /**
-                 * Configures the padding with validation and thermal imaging optimization.
-                 *
-                 */
                 setPadding(0, 0, 0, 24)
             }
         layout.addView(titleText)
@@ -124,36 +72,20 @@ class ParallelRecordingTestActivity : ComponentActivity() {
 
         // Status text
         statusText =
-            /**
-             * Executes textview operation with thermal imaging domain optimization.
-             *
-             */
             TextView(this).apply {
                 text = "Press 'Initialize Sensors' to begin"
-                /**
-                 * Configures the padding with validation and thermal imaging optimization.
-                 *
-                 */
                 setPadding(0, 16, 0, 16)
             }
         layout.addView(statusText)
 
         // Buttons
         initializeButton =
-            /**
-             * Executes button operation with thermal imaging domain optimization.
-             *
-             */
             Button(this).apply {
                 text = "Initialize Sensors"
             }
         layout.addView(initializeButton)
 
         startButton =
-            /**
-             * Executes button operation with thermal imaging domain optimization.
-             *
-             */
             Button(this).apply {
                 text = "Start Recording"
                 isEnabled = false
@@ -161,10 +93,6 @@ class ParallelRecordingTestActivity : ComponentActivity() {
         layout.addView(startButton)
 
         stopButton =
-            /**
-             * Executes button operation with thermal imaging domain optimization.
-             *
-             */
             Button(this).apply {
                 text = "Stop Recording"
                 isEnabled = false
@@ -172,59 +100,33 @@ class ParallelRecordingTestActivity : ComponentActivity() {
         layout.addView(stopButton)
 
         testButton =
-            /**
-             * Executes button operation with thermal imaging domain optimization.
-             *
-             */
             Button(this).apply {
                 text = "Test Sensor Connections"
                 isEnabled = false
             }
         layout.addView(testButton)
 
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(layout)
     }
 
-    /**
-     * Sets upeventhandlers configuration.
-     */
     private fun setupEventHandlers() {
         initializeButton.setOnClickListener {
             initializeSensors()
         }
 
         startButton.setOnClickListener {
-            /**
-             * Executes startrecording operation with thermal imaging domain optimization.
-             *
-             */
             startRecording()
         }
 
         stopButton.setOnClickListener {
-            /**
-             * Executes stoprecording operation with thermal imaging domain optimization.
-             *
-             */
             stopRecording()
         }
 
         testButton.setOnClickListener {
-            /**
-             * Executes testsensorconnections operation with thermal imaging domain optimization.
-             *
-             */
             testSensorConnections()
         }
     }
 
-    /**
-     * Initializes ializesensors component.
-     */
     private fun initializeSensors() {
         lifecycleScope.launch {
             try {
@@ -233,10 +135,6 @@ class ParallelRecordingTestActivity : ComponentActivity() {
 
                 val success = recordingController.initializeSensors()
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     val summary = recordingController.getSensorStatusSummary()
                     statusText.text = "Initialization complete: ${summary.totalSensorsInitialized}/3 sensors available\n${summary.statusMessage}"
@@ -260,13 +158,6 @@ class ParallelRecordingTestActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * Executes startRecording functionality.
-     */
-    /**
-     * Executes startrecording operation with thermal imaging domain optimization.
-     *
-     */
     private fun startRecording() {
         lifecycleScope.launch {
             try {
@@ -277,10 +168,6 @@ class ParallelRecordingTestActivity : ComponentActivity() {
 
                 val success = recordingController.startRecording(sessionDir.absolutePath)
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     val summary = recordingController.getSensorStatusSummary()
                     statusText.text = "Recording started!\n${summary.statusMessage}"
@@ -304,13 +191,6 @@ class ParallelRecordingTestActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * Executes stopRecording functionality.
-     */
-    /**
-     * Executes stoprecording operation with thermal imaging domain optimization.
-     *
-     */
     private fun stopRecording() {
         lifecycleScope.launch {
             try {
@@ -318,10 +198,6 @@ class ParallelRecordingTestActivity : ComponentActivity() {
 
                 val success = recordingController.stopRecording()
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (success) {
                     val summary = recordingController.getSensorStatusSummary()
                     statusText.text = "Recording stopped.\n${summary.statusMessage}"
@@ -345,13 +221,6 @@ class ParallelRecordingTestActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * Executes testSensorConnections functionality.
-     */
-    /**
-     * Executes testsensorconnections operation with thermal imaging domain optimization.
-     *
-     */
     private fun testSensorConnections() {
         lifecycleScope.launch {
             try {
@@ -361,23 +230,9 @@ class ParallelRecordingTestActivity : ComponentActivity() {
 
                 val resultText =
                     buildString {
-                        /**
-                         * Executes appendline operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param Results Parameter for operation (type: ")
-                         *
-                         */
                         appendLine("Sensor Connection Test Results:")
                         testResults.forEach { (sensorId, success) ->
                             val status = if (success) "✅ OK" else "❌ FAILED"
-                            /**
-                             * Executes appendline operation with thermal imaging domain optimization.
-                             *
-                             * @param
-                             * @param sensorId Parameter for operation (type: $status")
-                             *
-                             */
                             appendLine("$sensorId: $status")
                         }
                     }
@@ -391,22 +246,11 @@ class ParallelRecordingTestActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * Executes updateUI functionality.
-     */
-    /**
-     * Executes updateui operation with thermal imaging domain optimization.
-     *
-     */
     private fun updateUI() {
         // Initial UI state
         statusIndicator.visibility = android.view.View.VISIBLE
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
         super.onDestroy()
 

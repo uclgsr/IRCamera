@@ -4,18 +4,8 @@ import android.util.Log
 import org.json.JSONObject
 
 /**
- * Specialized thermal imaging component providing ProtocolVersion functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Protocol versioning system for PC-to-phone communication
+ * Phase 0 implementation - Freeze minimal protocol version v1
  */
 object ProtocolVersion {
     private const val TAG = "ProtocolVersion"
@@ -26,10 +16,6 @@ object ProtocolVersion {
 
     // Protocol capabilities for v1
     private val V1_CAPABILITIES =
-        /**
-         * Configures the of with validation and thermal imaging optimization.
-         *
-         */
         setOf(
             "session_start",
             "session_stop",
@@ -67,35 +53,11 @@ object ProtocolVersion {
     fun createHandshakeMessage(deviceId: String): JSONObject {
         return JSONObject().apply {
             put("message_type", "protocol_handshake")
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("protocol_version", CURRENT_VERSION)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("min_supported_version", MIN_SUPPORTED_VERSION)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("device_id", deviceId)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("device_type", "android_sensor_node")
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("capabilities", V1_CAPABILITIES.joinToString(","))
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("timestamp", System.currentTimeMillis())
         }
     }
@@ -109,10 +71,6 @@ object ProtocolVersion {
             val remoteMinVersion = response.optString("min_supported_version", remoteVersion)
             val remoteCapabilities = response.optString("capabilities", "").split(",").filter { it.isNotEmpty() }.toSet()
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isVersionSupported(remoteVersion)) {
                 return HandshakeResult(
                     success = false,
@@ -128,10 +86,6 @@ object ProtocolVersion {
                     else -> false
                 }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isCompatible) {
                 return HandshakeResult(
                     success = false,
@@ -167,28 +121,12 @@ object ProtocolVersion {
         content: JSONObject = JSONObject(),
     ): JSONObject {
         return JSONObject().apply {
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("protocol_version", CURRENT_VERSION)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("message_type", messageType)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("timestamp", System.currentTimeMillis())
 
             // Merge content
             content.keys().forEach { key ->
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put(key, content.get(key))
             }
         }
@@ -201,10 +139,6 @@ object ProtocolVersion {
         val version = message.optString("protocol_version", CURRENT_VERSION)
         val isValid = isVersionSupported(version)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isValid) {
             Log.w(TAG, "Received message with unsupported protocol version: $version")
         }

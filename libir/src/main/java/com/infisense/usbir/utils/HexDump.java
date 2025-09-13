@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http:// Www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,41 +24,16 @@ package com.infisense.usbir.utils;
  * @UpdateDate:     2022.9.8 10:25
  * @UpdateRemark:
  */
-/**
- * Specialized thermal imaging component providing HexDump functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class HexDump {
     private final static char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
     private final static char[] HEX_LOWER_CASE_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     public static String dumpHexString(byte[] array) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (array == null) return "(null)";
         return dumpHexString(array, 0, array.length);
     }
 
     public static String dumpHexString(byte[] array, int offset, int length) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (array == null) return "(null)";
         StringBuilder result = new StringBuilder();
 
@@ -68,27 +43,11 @@ public class HexDump {
         result.append("\n0x");
         result.append(toHexString(offset));
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = offset; i < offset + length; i++) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (lineIndex == 16) {
                 result.append(" ");
 
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (int j = 0; j < 16; j++) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (line[j] > ' ' && line[j] < '~') {
                         result.append(new String(line, j, 1));
                     } else {
@@ -109,30 +68,14 @@ public class HexDump {
             line[lineIndex++] = b;
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (lineIndex != 16) {
             int count = (16 - lineIndex) * 3;
             count++;
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0; i < count; i++) {
                 result.append(" ");
             }
 
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0; i < lineIndex; i++) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (line[i] > ' ' && line[i] < '~') {
                     result.append(new String(line, i, 1));
                 } else {
@@ -165,10 +108,6 @@ public class HexDump {
         char[] buf = new char[length * 2];
 
         int bufIndex = 0;
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = offset; i < offset + length; i++) {
             byte b = array[i];
             buf[bufIndex++] = digits[(b >>> 4) & 0x0F];
@@ -200,20 +139,8 @@ public class HexDump {
     }
 
     private static int toByte(char c) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (c >= '0' && c <= '9') return (c - '0');
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (c >= 'A' && c <= 'F') return (c - 'A' + 10);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (c >= 'a' && c <= 'f') return (c - 'a' + 10);
 
         throw new RuntimeException("Invalid hex char '" + c + "'");
@@ -223,10 +150,6 @@ public class HexDump {
         int length = hexString.length();
         byte[] buffer = new byte[length / 2];
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < length; i += 2) {
             buffer[i / 2] = (byte) ((toByte(hexString.charAt(i)) << 4) | toByte(hexString.charAt(i + 1)));
         }
@@ -280,12 +203,8 @@ public class HexDump {
     public static void float2byte(float num, byte[] numbyte) {
         int fbit = Float.floatToIntBits(num);
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < 4; i++) {
-            numbyte[i] = (byte) (fbit >> (i * 8)); // Little-endian
+            numbyte[i] = (byte) (fbit >> (i * 8)); //little-endian
         }
     }
 }

@@ -12,23 +12,6 @@ package com.infisense.usbir.utils;
  * @UpdateRemark:
  * @Version: 1.0.0
  */
-/**
- * Specialized thermal imaging component providing USBMonitorCallback functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public interface USBMonitorCallback {
 
     void onAttach();

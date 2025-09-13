@@ -24,20 +24,6 @@ import java.lang.ref.WeakReference;
  *
  * @author Philipp Jahoda
  */
-/**
- * Specialized thermal imaging component providing MarkerImage functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class MarkerImage implements IMarker {
 
     private Context mContext;
@@ -56,17 +42,9 @@ public class MarkerImage implements IMarker {
      * @param context
      * @param drawableResourceId the drawable resource to render
      */
-    /**
-     * Executes markerimage operation with thermal imaging domain optimization.
-     *
-     */
     public MarkerImage(Context context, int drawableResourceId) {
         mContext = context;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
             mDrawable = mContext.getResources().getDrawable(drawableResourceId, null);
@@ -80,10 +58,6 @@ public class MarkerImage implements IMarker {
     public void setOffset(MPPointF offset) {
         mOffset = offset;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mOffset == null) {
             mOffset = new MPPointF();
         }
@@ -102,10 +76,6 @@ public class MarkerImage implements IMarker {
     public void setSize(FSize size) {
         mSize = size;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mSize == null) {
             mSize = new FSize();
         }
@@ -135,35 +105,19 @@ public class MarkerImage implements IMarker {
         float width = mSize.width;
         float height = mSize.height;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (width == 0.f && mDrawable != null) {
             width = mDrawable.getIntrinsicWidth();
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (height == 0.f && mDrawable != null) {
             height = mDrawable.getIntrinsicHeight();
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (posX + mOffset2.x < 0) {
             mOffset2.x = - posX;
         } else if (chart != null && posX + width + mOffset2.x > chart.getWidth()) {
             mOffset2.x = chart.getWidth() - posX - width;
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (posY + mOffset2.y < 0) {
             mOffset2.y = - posY;
         } else if (chart != null && posY + height + mOffset2.y > chart.getHeight()) {
@@ -181,10 +135,6 @@ public class MarkerImage implements IMarker {
     @Override
     public void draw(Canvas canvas, float posX, float posY) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mDrawable == null) return;
 
         MPPointF offset = getOffsetForDrawingAtPoint(posX, posY);
@@ -192,17 +142,9 @@ public class MarkerImage implements IMarker {
         float width = mSize.width;
         float height = mSize.height;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (width == 0.f) {
             width = mDrawable.getIntrinsicWidth();
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (height == 0.f) {
             height = mDrawable.getIntrinsicHeight();
         }
@@ -215,7 +157,7 @@ public class MarkerImage implements IMarker {
                 mDrawableBoundsCache.top + (int)height);
 
         int saveId = canvas.save();
-        // Translate to the correct position and draw
+        // translate to the correct position and draw
         canvas.translate(posX + offset.x, posY + offset.y);
         mDrawable.draw(canvas);
         canvas.restoreToCount(saveId);

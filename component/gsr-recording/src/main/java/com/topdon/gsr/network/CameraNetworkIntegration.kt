@@ -11,21 +11,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with CameraNetworkIntegration functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Camera-Network Integration service for real-time thermal and RGB streaming
+ * Provides optimized frame streaming with adaptive quality and compression
  */
 class CameraNetworkIntegration(
     private val context: Context,
@@ -103,44 +90,16 @@ class CameraNetworkIntegration(
 
             // Send stream initialization message to PC Controller
             val initMessage =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("type", "camera_stream_init")
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", sessionId)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put(
                         "streams",
                         org.json.JSONArray().apply {
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put(RGB_STREAM_ID)
-                            /**
-                             * Executes put operation with thermal imaging domain optimization.
-                             *
-                             */
                             put(THERMAL_STREAM_ID)
                         },
                     )
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("timestamp", System.currentTimeMillis())
                 }
 
@@ -150,20 +109,8 @@ class CameraNetworkIntegration(
     /**
      * Start RGB camera streaming
      */
-    /**
-     * Executes startrgbstreaming operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun startRgbStreaming() =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isRgbStreamingActive.getAndSet(true)) {
                 Log.w(TAG, "RGB streaming already active")
                 return@withContext
@@ -173,50 +120,18 @@ class CameraNetworkIntegration(
 
             rgbStreamingJob =
                 streamingScope.launch {
-                    /**
-                     * Executes while operation with thermal imaging domain optimization.
-                     *
-                     */
                     while (isRgbStreamingActive.get()) {
-                        /**
-                         * Executes processrgbframequeue operation with thermal imaging domain optimization.
-                         *
-                         */
                         processRgbFrameQueue()
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(16L) // ~60 FPS processing
                     }
                 }
 
             // Notify PC Controller that RGB streaming started
             val startMessage =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("type", "stream_started")
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("stream_id", RGB_STREAM_ID)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", currentSessionId)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("timestamp", System.currentTimeMillis())
                 }
 
@@ -237,50 +152,18 @@ class CameraNetworkIntegration(
 
             thermalStreamingJob =
                 streamingScope.launch {
-                    /**
-                     * Executes while operation with thermal imaging domain optimization.
-                     *
-                     */
                     while (isThermalStreamingActive.get()) {
-                        /**
-                         * Executes processthermalframequeue operation with thermal imaging domain optimization.
-                         *
-                         */
                         processThermalFrameQueue()
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(33L) // ~30 FPS processing for thermal
                     }
                 }
 
             // Notify PC Controller that thermal streaming started
             val startMessage =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("type", "stream_started")
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("stream_id", THERMAL_STREAM_ID)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", currentSessionId)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("timestamp", System.currentTimeMillis())
                 }
 
@@ -296,10 +179,6 @@ class CameraNetworkIntegration(
         height: Int,
         format: String,
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isRgbStreamingActive.get()) return
 
         val frameId = rgbFrameCount.incrementAndGet()
@@ -307,10 +186,6 @@ class CameraNetworkIntegration(
 
         try {
             // Check if queue is getting full
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rgbFrameQueue.size >= MAX_FRAME_QUEUE_SIZE * FRAME_DROP_THRESHOLD) {
                 // Drop oldest frame to prevent memory issues
                 rgbFrameQueue.poll()?.let {
@@ -321,10 +196,6 @@ class CameraNetworkIntegration(
 
             // Create RGB frame
             val rgbFrame =
-                /**
-                 * Executes rgbframe operation with thermal imaging domain optimization.
-                 *
-                 */
                 RgbFrame(
                     frameId = frameId,
                     timestamp = timestamp,
@@ -345,17 +216,6 @@ class CameraNetworkIntegration(
     /**
      * Process thermal frame data
      */
-    /**
-     * Executes processthermalframe operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param thermalData Parameter for operation (type: FloatArray)
-     * @param width Parameter for operation (type: Int)
-     * @param height Parameter for operation (type: Int)
-     * @param minTemp Temperature value in Celsius (type: Float)
-     * @param maxTemp Temperature value in Celsius (type: Float)
-     *
-     */
     fun processThermalFrame(
         thermalData: FloatArray,
         width: Int,
@@ -363,10 +223,6 @@ class CameraNetworkIntegration(
         minTemp: Float,
         maxTemp: Float,
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isThermalStreamingActive.get()) return
 
         val frameId = thermalFrameCount.incrementAndGet()
@@ -374,10 +230,6 @@ class CameraNetworkIntegration(
 
         try {
             // Check if queue is getting full
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (thermalFrameQueue.size >= MAX_FRAME_QUEUE_SIZE * FRAME_DROP_THRESHOLD) {
                 // Drop oldest frame
                 thermalFrameQueue.poll()?.let {
@@ -387,10 +239,6 @@ class CameraNetworkIntegration(
             }
 
             val thermalFrame =
-                /**
-                 * Executes thermalframe operation with thermal imaging domain optimization.
-                 *
-                 */
                 ThermalFrame(
                     frameId = frameId,
                     timestamp = timestamp,
@@ -432,60 +280,16 @@ class CameraNetworkIntegration(
         try {
             // Create frame message
             val frameMessage =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("type", "rgb_frame")
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("stream_id", RGB_STREAM_ID)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("frame_id", frame.frameId)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("timestamp", frame.timestamp)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("width", frame.width)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("height", frame.height)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("format", frame.format)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("quality", frame.quality)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("data_size", frame.imageData.size)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", frame.sessionId)
                 }
 
@@ -496,10 +300,6 @@ class CameraNetworkIntegration(
                 priority = QualityOfServiceManager.Priority.HIGH,
                 sessionId = frame.sessionId,
                 metadata =
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf(
                         "stream_id" to RGB_STREAM_ID,
                         "frame_id" to frame.frameId.toString(),
@@ -521,10 +321,6 @@ class CameraNetworkIntegration(
         return try {
             // Convert float array to byte array for transmission
             val byteBuffer = ByteBuffer.allocate(thermalData.size * 4)
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (value in thermalData) {
                 byteBuffer.putFloat(value)
             }
@@ -533,19 +329,11 @@ class CameraNetworkIntegration(
             // Apply simple run-length encoding for similar adjacent values
             val compressed = ByteArrayOutputStream()
             var i = 0
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (i < thermalBytes.size) {
                 val currentByte = thermalBytes[i]
                 var count = 1
 
                 // Count consecutive identical bytes (up to 255)
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (i + count < thermalBytes.size &&
                     thermalBytes[i + count] == currentByte &&
                     count < 255
@@ -553,10 +341,6 @@ class CameraNetworkIntegration(
                     count++
                 }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (count > 3) {
                     // Use run-length encoding for sequences > 3
                     compressed.write(0xFF) // Escape byte
@@ -565,15 +349,7 @@ class CameraNetworkIntegration(
                     i += count
                 } else {
                     // Write bytes directly
-                    /**
-                     * Executes for operation with thermal imaging domain optimization.
-                     *
-                     */
                     for (j in 0 until count) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (currentByte.toInt() == 0xFF) {
                             // Escape the escape byte
                             compressed.write(0xFF)
@@ -590,10 +366,6 @@ class CameraNetworkIntegration(
             Log.w(TAG, "Failed to compress thermal data, using float-to-byte conversion", e)
             // Fallback: simple float to byte conversion
             val byteBuffer = ByteBuffer.allocate(thermalData.size * 4)
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (value in thermalData) {
                 byteBuffer.putFloat(value)
             }
@@ -613,60 +385,16 @@ class CameraNetworkIntegration(
 
             // Create frame message
             val frameMessage =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("type", "thermal_frame")
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("stream_id", THERMAL_STREAM_ID)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("frame_id", frame.frameId)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("timestamp", frame.timestamp)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("width", frame.width)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("height", frame.height)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("min_temp", frame.minTemp)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("max_temp", frame.maxTemp)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("data_size", compressedThermalData.size)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", frame.sessionId)
                 }
 
@@ -677,10 +405,6 @@ class CameraNetworkIntegration(
                 priority = QualityOfServiceManager.Priority.NORMAL,
                 sessionId = frame.sessionId,
                 metadata =
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf(
                         "stream_id" to THERMAL_STREAM_ID,
                         "frame_id" to frame.frameId.toString(),
@@ -711,20 +435,8 @@ class CameraNetworkIntegration(
     /**
      * Stop RGB streaming
      */
-    /**
-     * Executes stoprgbstreaming operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun stopRgbStreaming() =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isRgbStreamingActive.getAndSet(false)) {
                 Log.w(TAG, "RGB streaming not active")
                 return@withContext
@@ -737,30 +449,10 @@ class CameraNetworkIntegration(
 
             // Notify PC Controller
             val stopMessage =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("type", "stream_stopped")
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("stream_id", RGB_STREAM_ID)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", currentSessionId)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("timestamp", System.currentTimeMillis())
                 }
 
@@ -770,20 +462,8 @@ class CameraNetworkIntegration(
     /**
      * Stop thermal streaming
      */
-    /**
-     * Executes stopthermalstreaming operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun stopThermalStreaming() =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isThermalStreamingActive.getAndSet(false)) {
                 Log.w(TAG, "Thermal streaming not active")
                 return@withContext
@@ -796,30 +476,10 @@ class CameraNetworkIntegration(
 
             // Notify PC Controller
             val stopMessage =
-                /**
-                 * Executes jsonobject operation with thermal imaging domain optimization.
-                 *
-                 */
                 JSONObject().apply {
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("type", "stream_stopped")
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("stream_id", THERMAL_STREAM_ID)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("session_id", currentSessionId)
-                    /**
-                     * Executes put operation with thermal imaging domain optimization.
-                     *
-                     */
                     put("timestamp", System.currentTimeMillis())
                 }
 
@@ -834,10 +494,6 @@ class CameraNetworkIntegration(
 
         // RGB stream metrics
         metrics.add(
-            /**
-             * Executes streammetrics operation with thermal imaging domain optimization.
-             *
-             */
             StreamMetrics(
                 streamId = RGB_STREAM_ID,
                 isActive = isRgbStreamingActive.get(),
@@ -851,10 +507,6 @@ class CameraNetworkIntegration(
 
         // Thermal stream metrics
         metrics.add(
-            /**
-             * Executes streammetrics operation with thermal imaging domain optimization.
-             *
-             */
             StreamMetrics(
                 streamId = THERMAL_STREAM_ID,
                 isActive = isThermalStreamingActive.get(),
@@ -884,10 +536,6 @@ class CameraNetworkIntegration(
     suspend fun stopAllStreaming() =
         withContext(Dispatchers.IO) {
             stopRgbStreaming()
-            /**
-             * Executes stopthermalstreaming operation with thermal imaging domain optimization.
-             *
-             */
             stopThermalStreaming()
 
             rgbFrameQueue.clear()

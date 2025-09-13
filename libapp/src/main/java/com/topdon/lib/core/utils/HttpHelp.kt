@@ -8,29 +8,13 @@ import com.topdon.lms.sdk.utils.LanguageUtil
 import com.topdon.lms.sdk.xutils.http.RequestParams
 
 /**
- * Specialized thermal imaging component providing HttpHelp functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author: CaiSongL
+ * @date: 2023/5/12 17:17
  */
 object HttpHelp {
     /**
      * Get/Retrieve首次reportlist
      * modelId：TC001 是950, TC002 是951, TC003是952
-     */
-    /**
-     * Retrieves firstreportdata information.
      */
     fun getFirstReportData(
         isTC007: Boolean,

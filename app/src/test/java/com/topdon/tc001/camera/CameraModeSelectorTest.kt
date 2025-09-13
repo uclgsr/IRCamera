@@ -22,23 +22,6 @@ import org.robolectric.RobolectricTestRunner
  * and performance indicator behavior.
  */
 @RunWith(RobolectricTestRunner::class)
-/**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with CameraModeSelectorTest functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class CameraModeSelectorTest {
 
     private lateinit var context: Context
@@ -48,13 +31,6 @@ class CameraModeSelectorTest {
     private lateinit var mockModeChangedListener: (CameraMode) -> Unit
 
     @Before
-    /**
-     * Sets up configuration.
-     */
-    /**
-     * Configures the up with validation and thermal imaging optimization.
-     *
-     */
     fun setup() {
         MockKAnnotations.init(this)
         context = ApplicationProvider.getApplicationContext()
@@ -72,10 +48,6 @@ class CameraModeSelectorTest {
         val initialMode = CameraMode.VIDEO_4K
         cameraModeSelector.setCurrentMode(initialMode)
         
-        /**
-         * Executes assertequals operation with thermal imaging domain optimization.
-         *
-         */
         assertEquals(initialMode, cameraModeSelector.getCurrentMode())
     }
 
@@ -91,10 +63,6 @@ class CameraModeSelectorTest {
         cameraModeSelector.onModeChangedListener?.invoke(targetMode)
         
         verify { mockModeChangedListener(capture(modeSlot)) }
-        /**
-         * Executes assertequals operation with thermal imaging domain optimization.
-         *
-         */
         assertEquals(targetMode, modeSlot.captured)
     }
 
@@ -109,10 +77,6 @@ class CameraModeSelectorTest {
         
         allModes.forEach { mode ->
             cameraModeSelector.setCurrentMode(mode)
-            /**
-             * Executes assertequals operation with thermal imaging domain optimization.
-             *
-             */
             assertEquals("Mode $mode should be settable", mode, cameraModeSelector.getCurrentMode())
         }
     }
@@ -125,22 +89,10 @@ class CameraModeSelectorTest {
         val previewMode = CameraMode.PREVIEW_ONLY
         
         // RAW and 4K should potentially trigger performance warnings
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("RAW mode should have performance considerations", rawMode == CameraMode.RAW_50MP)
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("4K video should have performance considerations", videoMode == CameraMode.VIDEO_4K)
         
         // Preview mode should be lightweight
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Preview mode should be lightweight", previewMode == CameraMode.PREVIEW_ONLY)
     }
 
@@ -151,10 +103,6 @@ class CameraModeSelectorTest {
         
         samsungDevicePatterns.forEach { pattern ->
             val isSamsungS22 = pattern.startsWith("SM-S9")
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Samsung S22 pattern should be detected", isSamsungS22)
         }
         
@@ -162,10 +110,6 @@ class CameraModeSelectorTest {
         val nonSamsungPatterns = listOf("Pixel", "OnePlus", "LG-")
         nonSamsungPatterns.forEach { pattern ->
             val isSamsungS22 = pattern.startsWith("SM-S9")
-            /**
-             * Executes assertfalse operation with thermal imaging domain optimization.
-             *
-             */
             assertFalse("Non-Samsung devices should not match S22 pattern", isSamsungS22)
         }
     }
@@ -179,22 +123,10 @@ class CameraModeSelectorTest {
             cameraModeSelector.setCurrentMode(mode)
             
             // Verify the mode is properly set
-            /**
-             * Executes assertequals operation with thermal imaging domain optimization.
-             *
-             */
             assertEquals("UI should reflect current mode", mode, cameraModeSelector.getCurrentMode())
             
             // Verify the mode has correct display properties
-            /**
-             * Executes assertnotnull operation with thermal imaging domain optimization.
-             *
-             */
             assertNotNull("Mode should have display name", mode.displayName)
-            /**
-             * Executes assertnotnull operation with thermal imaging domain optimization.
-             *
-             */
             assertNotNull("Mode should have description", mode.description)
         }
     }
@@ -207,25 +139,13 @@ class CameraModeSelectorTest {
         
         // Set initial mode
         cameraModeSelector.setCurrentMode(initialMode)
-        /**
-         * Executes assertequals operation with thermal imaging domain optimization.
-         *
-         */
         assertEquals(initialMode, cameraModeSelector.getCurrentMode())
         
         // Switch to target mode
         cameraModeSelector.setCurrentMode(targetMode)
-        /**
-         * Executes assertequals operation with thermal imaging domain optimization.
-         *
-         */
         assertEquals(targetMode, cameraModeSelector.getCurrentMode())
         
         // Verify only one mode is selected at a time
-        /**
-         * Executes assertnotequals operation with thermal imaging domain optimization.
-         *
-         */
         assertNotEquals("Only one mode should be selected", initialMode, targetMode)
     }
 
@@ -233,19 +153,11 @@ class CameraModeSelectorTest {
     fun `test error handling for invalid modes`() {
         // Test error handling for edge cases
         val validModes = CameraMode.values()
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Should have at least 3 camera modes", validModes.size >= 3)
         
         // All defined modes should be valid
         validModes.forEach { mode ->
             cameraModeSelector.setCurrentMode(mode)
-            /**
-             * Executes assertequals operation with thermal imaging domain optimization.
-             *
-             */
             assertEquals("All defined modes should be settable", mode, cameraModeSelector.getCurrentMode())
         }
     }
@@ -254,25 +166,9 @@ class CameraModeSelectorTest {
     fun `test mode descriptions and display names`() {
         // Test that all modes have proper descriptions
         CameraMode.values().forEach { mode ->
-            /**
-             * Executes assertnotnull operation with thermal imaging domain optimization.
-             *
-             */
             assertNotNull("Mode ${mode.name} should have display name", mode.displayName)
-            /**
-             * Executes assertnotnull operation with thermal imaging domain optimization.
-             *
-             */
             assertNotNull("Mode ${mode.name} should have description", mode.description)
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Display name should not be empty", mode.displayName.isNotEmpty())
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Description should not be empty", mode.description.isNotEmpty())
         }
     }
@@ -286,20 +182,12 @@ class CameraModeSelectorTest {
         
         resourceIntensiveModes.forEach { mode ->
             // These modes should potentially show performance warnings
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Resource intensive modes should be flagged", 
                 mode == CameraMode.RAW_50MP || mode == CameraMode.VIDEO_4K)
         }
         
         lightweightModes.forEach { mode ->
             // Lightweight modes should not need warnings
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Lightweight modes should not need warnings", 
                 mode == CameraMode.PREVIEW_ONLY)
         }
@@ -317,15 +205,7 @@ class CameraModeSelectorTest {
         validTransitions.forEach { (fromMode, toModes) ->
             toModes.forEach { toMode ->
                 // All transitions should be valid in this dual-mode system
-                /**
-                 * Executes assertnotnull operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertNotNull("Transition from $fromMode to $toMode should be valid", toMode)
-                /**
-                 * Executes asserttrue operation with thermal imaging domain optimization.
-                 *
-                 */
                 assertTrue("All modes should be accessible", true)
             }
         }
@@ -345,10 +225,6 @@ class CameraModeSelectorTest {
         val switchDuration = switchEndTime - switchStartTime
         
         // UI switching should be instantaneous (< 50ms)
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("UI mode switching should be fast", switchDuration < 50)
     }
 }

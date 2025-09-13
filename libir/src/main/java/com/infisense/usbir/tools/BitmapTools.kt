@@ -6,58 +6,22 @@ import com.topdon.lib.core.utils.ByteUtils.bytesToInt
 import com.topdon.lib.core.utils.ByteUtils.descBytes
 
 /**
- * Specialized thermal imaging component providing BitmapTools functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author: CaiSongL
+ * @date: 2023/4/13 9:33
  */
 object BitmapTools {
     /**
      * Executes readtempvalue functionality.
      */
-    /**
-     * Handles temperature measurement and calibration with precision thermal data processing.
-     *
-     * @param
-     * @param bytes Parameter for operation (type: ByteArray)
-     *
-     * @note Temperature values are in Celsius unless otherwise specified.
-     * Accuracy depends on thermal camera calibration.
-     *
-     */
     private fun readTempValue(bytes: ByteArray): Float {
         val data: ByteArray = bytes.descBytes()
         val scale = 16
         val tempInt = data.bytesToInt() / 4
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
     }
 
     /**
      * Executes replacebitmapcolor functionality.
-     */
-    /**
-     * Executes replacebitmapcolor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param imageBytes Parameter for operation (type: ByteArray)
-     * @param tempBytes Temperature value in Celsius (type: ByteArray)
-     * @param max Parameter for operation (type: Float = 40f)
-     * @param min Parameter for operation (type: Float = 20f)
-     * @param maxColor Parameter for operation (type: Int)
-     * @param minColor Parameter for operation (type: Int)
-     *
      */
     fun replaceBitmapColor(
         imageBytes: ByteArray,
@@ -67,18 +31,10 @@ object BitmapTools {
         @ColorInt maxColor: Int,
         @ColorInt minColor: Int,
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (max < min) {
             return
         }
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (maxColor == 0 && minColor == 0) {
                 var data: ByteArray
                 val len = imageBytes.size / 4
@@ -87,19 +43,11 @@ object BitmapTools {
                 var g: Int
                 var b: Int
                 var grey: Int
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (i in 0 until len) {
                     data = tempBytes.copyOfRange(i * 2, i * 2 + 2)
                     value = readTempValue(data)
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (value > max || value < min) {
-                        // Max color
+                        // max color
                         r = imageBytes[i * 4].toInt() and 0xff
                         g = imageBytes[i * 4 + 1].toInt() and 0xff
                         b = imageBytes[i * 4 + 2].toInt() and 0xff
@@ -123,30 +71,18 @@ object BitmapTools {
                 val minG = ((minColor shr 8) and 0xff).toByte()
                 val minB = ((minColor shr 0) and 0xff).toByte()
                 var value: Float
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (i in 0 until len) {
                     data = tempBytes.copyOfRange(i * 2, i * 2 + 2)
                     value = readTempValue(data)
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (value > max) {
-                        // Max color
+                        // max color
                         imageBytes[i * 4] = maxR 
                         imageBytes[i * 4 + 1] = maxG 
                         imageBytes[i * 4 + 2] = maxB 
                         imageBytes[i * 4 + 3] = maxA 
                     }
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (value < min) {
-                        // Min color
+                        // min color
                         imageBytes[i * 4] = minR
                         imageBytes[i * 4 + 1] = minG
                         imageBytes[i * 4 + 2] = minB

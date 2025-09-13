@@ -7,18 +7,9 @@ import androidx.room.PrimaryKey
 import com.blankj.utilcode.util.TimeUtils
 
 /**
- * Specialized thermal imaging component providing HouseBase functionality for the IRCamera system.
+ * 房屋检测 - 检测与report都有的栏位.
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Created by LCG on 2024/1/15.
  */
 open class HouseBase {
     @PrimaryKey(autoGenerate = true)
@@ -96,33 +87,14 @@ open class HouseBase {
     @ColumnInfo
     var updateTime: Long = 0
 
-    /**
-     * Executes equals operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param other Parameter for operation (type: Any?)
-     *
-     */
     override fun equals(other: Any?): Boolean = other is HouseBase && other.id == id
 
-    /**
-     * Executes hashcode operation with thermal imaging domain optimization.
-     *
-     */
     override fun hashCode(): Int = id.toInt()
 
     /**
      * Get/Retrieve房屋area积单位.
      */
-    /**
-     * Retrieves the spaceunitstr with optimized performance for thermal imaging operations.
-     *
-     */
     fun getSpaceUnitStr(): String =
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (houseSpaceUnit) {
             0 -> "ac"
             1 -> "m²"
@@ -132,15 +104,7 @@ open class HouseBase {
     /**
      * Get/Retrieve检测费用货币单位.
      */
-    /**
-     * Retrieves the costunitstr with optimized performance for thermal imaging operations.
-     *
-     */
     fun getCostUnitStr(): String =
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (costUnit) {
             1 -> "EUR" // 欧元EUR
             2 -> "GBP" // 英镑GBP
@@ -151,20 +115,18 @@ open class HouseBase {
             7 -> "RMB" // 人民币RMB
             8 -> "HKD" // 港币HKD
             else -> "USD" // 美元USD
+        }
+
+    /**
+     * Get/Retrieve该report对应的 PDF filename
+     */
+    fun getPdfFileName(): String = "TC_${TimeUtils.millis2String(createTime, "yyyyMMdd_HHmmss")}.pdf"
+}
+
 /**
- * Specialized thermal imaging component providing HouseDetect functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * 房屋检测 - 一项检测.
  */
+@Entity
 class HouseDetect : HouseBase() {
     /**
      * 该检测或下的目录列表
@@ -173,7 +135,7 @@ class HouseDetect : HouseBase() {
     var dirList: ArrayList<DirDetect> = ArrayList()
 
     /**
-     * Returna id 为 0，nameadd (1)，其余property完全一致的新对象.
+     * Return一个 id 为 0，nameadd (1)，其余property完全一致的新对象.
      */
     fun copyOne(): HouseDetect {
         val newDetect = HouseDetect()
@@ -193,13 +155,6 @@ class HouseDetect : HouseBase() {
         return newDetect
     }
 
-    /**
-     * Executes toHouseReport functionality.
-     */
-    /**
-     * Executes tohousereport operation with thermal imaging domain optimization.
-     *
-     */
     fun toHouseReport(): HouseReport {
         val houseReport = HouseReport()
         houseReport.id = 0
@@ -217,31 +172,23 @@ class HouseDetect : HouseBase() {
         houseReport.updateTime = updateTime
 
         val newDirList: ArrayList<DirReport> = ArrayList(dirList.size)
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (dirDetect in dirList) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (dirDetect.itemList.isNotEmpty()) {
                 val dirRepost: DirReport = dirDetect.toDirReport()
+                if (dirRepost.itemList.isNotEmpty()) {
+                    newDirList.add(dirRepost)
+                }
+            }
+        }
+        houseReport.dirList = newDirList
+        return houseReport
+    }
+}
+
 /**
- * Specialized thermal imaging component providing HouseReport functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * 房屋检测 - 一项report.
  */
+@Entity
 class HouseReport : HouseBase() {
     /**
      * 检测师签名image（白色笔刷版）在本地绝对path

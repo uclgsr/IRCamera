@@ -29,23 +29,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for BitmapUtils operations.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class BitmapUtils {
 
     public static Bitmap mirror(Bitmap rawBitmap) {
@@ -57,25 +40,17 @@ public class BitmapUtils {
     public static Bitmap rotateBitmap(Bitmap bm, int degree) {
         Bitmap returnBm = null;
 
-        // 根据rotation angle，生成rotation矩阵
+        // 根据rotation angle，生成旋转矩阵
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
         try {
-            // 将原始image按照rotation矩阵进行rotation，并得到新的image
+            // 将原始image按照旋转矩阵进行旋转，并得到新的image
             returnBm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
         } catch (OutOfMemoryError e) {
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (returnBm == null) {
             returnBm = bm;
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (bm != returnBm) {
             bm.recycle();
         }
@@ -86,10 +61,6 @@ public class BitmapUtils {
      * 将bitmapconversion成bytes
      */
     public static byte[] bitmapToBytes(Bitmap bitmap, int quality) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (bitmap == null) {
             return null;
         }
@@ -118,10 +89,6 @@ public class BitmapUtils {
         byte[] bytes = bitmapToBytes(bitmap, 100);
         OutputStream out = null;
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!file.exists() && file.isDirectory()) {
                 file.mkdirs();
             }
@@ -132,10 +99,6 @@ public class BitmapUtils {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (out != null) {
                 try {
                     out.close();
@@ -156,7 +119,7 @@ public class BitmapUtils {
     public static Bitmap imageZoom(Bitmap bitmap, double width) {
         // 将bitmap放至array中，意在获得bitmap的大小（与实际读取的原file要大）
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        // Format、质量、输出流
+        // format、质量、输出流
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
         byte[] b = baos.toByteArray();
         Bitmap newBitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
@@ -173,10 +136,6 @@ public class BitmapUtils {
      * @return Bitmap
      */
     public static Bitmap scaleWithWH(Bitmap bitmap, double w, double h) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (w == 0 || h == 0 || bitmap == null) {
             return bitmap;
         } else {
@@ -201,25 +160,13 @@ public class BitmapUtils {
      * @return bitmap
      */
     public static boolean saveFile(String file, Bitmap bmp) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (TextUtils.isEmpty(file) || bmp == null) return false;
 
         File f = new File(file);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (f.exists()) {
             f.delete();
         } else {
             File p = f.getParentFile();
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!p.exists()) {
                 p.mkdirs();
             }
@@ -237,17 +184,13 @@ public class BitmapUtils {
     }
 
     /**
-     * 把两个位图覆盖合成为a位图，以底层位图的长宽为基准
+     * 把两个位图覆盖合成为一个位图，以底层位图的长宽为基准
      *
      * @param backBitmap  在底部的位图
      * @param frontBitmap 盖在上area的位图
      * @return
      */
     public static Bitmap mergeBitmap(Bitmap backBitmap, Bitmap frontBitmap, int leftFront, int topFront) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (backBitmap == null || backBitmap.isRecycled()
                 || frontBitmap == null || frontBitmap.isRecycled()) {
             return null;
@@ -256,16 +199,12 @@ public class BitmapUtils {
         Canvas canvas = new Canvas(bitmap);
         canvas.drawBitmap(backBitmap, 0, 0, null);
         canvas.drawBitmap(frontBitmap, leftFront, topFront, null);
-// If (!frontBitmap.isRecycled()){
-// FrontBitmap.recycle();
+//        if (!frontBitmap.isRecycled()){
+//            frontBitmap.recycle();
 //        }
         return bitmap;
     }
     public static Bitmap mergeBitmapAlpha(Bitmap backBitmap, Bitmap frontBitmap,Paint paint, int leftFront, int topFront) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (backBitmap == null || backBitmap.isRecycled()
                 || frontBitmap == null || frontBitmap.isRecycled()) {
             return null;
@@ -274,17 +213,13 @@ public class BitmapUtils {
         Canvas canvas = new Canvas(bitmap);
         canvas.drawBitmap(backBitmap, 0, 0, null);
         canvas.drawBitmap(frontBitmap, leftFront, topFront, paint);
-// If (!frontBitmap.isRecycled()){
-// FrontBitmap.recycle();
+//        if (!frontBitmap.isRecycled()){
+//            frontBitmap.recycle();
 //        }
         return bitmap;
     }
 
     public static Bitmap mergeBitmapByView(Bitmap backBitmap, Bitmap frontBitmap, BitmapViewListener view) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (backBitmap == null || backBitmap.isRecycled()
                 || frontBitmap == null || frontBitmap.isRecycled()) {
             return null;
@@ -294,10 +229,6 @@ public class BitmapUtils {
         Bitmap bitmap = backBitmap.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(bitmap);
         canvas.drawBitmap(backBitmap, 0, 0, null);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (view.getViewScale() != 1){
             frontBitmap = scaleWithWH(frontBitmap,view.getViewWidth(),view.getViewHeight());
         }
@@ -308,19 +239,11 @@ public class BitmapUtils {
 
     @NonNull
     public static Bitmap mergeBitmapByViewNonNull(@NonNull Bitmap backBitmap, @Nullable Bitmap frontBitmap, BitmapViewListener view) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (frontBitmap == null || frontBitmap.isRecycled()) {
             return backBitmap;
         }
 
         Bitmap bitmap;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (backBitmap.isRecycled()) {
             bitmap = Bitmap.createBitmap(backBitmap.getWidth(), backBitmap.getHeight(), backBitmap.getConfig());
         } else {
@@ -331,10 +254,6 @@ public class BitmapUtils {
         Paint paint = new Paint();
         paint.setAlpha((int) (view.getViewAlpha() * 255));
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (view.getViewScale() != 1){
             frontBitmap = scaleWithWH(frontBitmap,view.getViewWidth(),view.getViewHeight());
         }
@@ -344,19 +263,11 @@ public class BitmapUtils {
     }
 
     public static void mergeBitmapByView(Bitmap frontBitmap, BitmapViewListener view,Canvas canvas) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (frontBitmap == null || frontBitmap.isRecycled()) {
             return;
         }
         Paint paint = new Paint();
         paint.setAlpha((int) (view.getViewAlpha() * 255));
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (view.getViewScale() != 1){
             frontBitmap = scaleWithWH(frontBitmap,view.getViewWidth(),view.getViewHeight());
         }
@@ -364,17 +275,13 @@ public class BitmapUtils {
     }
 
     /**
-     * 把两个位图覆盖合成为a位图，以底层位图的长宽为基准
+     * 把两个位图覆盖合成为一个位图，以底层位图的长宽为基准
      * @param bytes  在底部的位图
      * @param bytes2 盖在上area的位图
      */
     public static void savaRawFile(byte[] bytes, byte[] bytes2) {
         try {
             File path = new File("/sdcard");
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!path.exists() && path.isDirectory()) {
                 path.mkdirs();
             }
@@ -400,44 +307,32 @@ public class BitmapUtils {
      * @return
      */
     public static Bitmap drawCenterLable(Bitmap bmp, String title,String address,String time,int seekBarWidth) {
-        // Create一样大小的image
+        //create一样大小的image
         Bitmap newBmp = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), Bitmap.Config.ARGB_8888);
-        // Create画布
+        //create画布
         Canvas canvas = new Canvas(newBmp);
-        canvas.drawBitmap(bmp, 0, 0, null);  // 绘制原始image
+        canvas.drawBitmap(bmp, 0, 0, null);  //绘制原始image
         canvas.save();
         TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.WHITE); // 白色半透明
+        paint.setColor(Color.WHITE); //白色半透明
         paint.setTextSize(SizeUtils.sp2px(12));
         paint.setDither(true);
         paint.setFilterBitmap(true);
-        Rect rectText = new Rect();  // 得到text占用宽高， 单位：像素
+        Rect rectText = new Rect();  //得到text占用宽高， 单位：像素
         paint.getTextBounds("占位高度文本", 0,"占位高度文本".length(), rectText);
-        double beginX = SizeUtils.dp2px(10);  // 45度angle值是1.414
+        double beginX = SizeUtils.dp2px(10);  //45度角度值是1.414
         double beginY = bmp.getHeight() - SizeUtils.dp2px(10);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!TextUtils.isEmpty(time)){
             beginY = beginY - (rectText.bottom - rectText.top);
             canvas.drawText(time, (int)beginX, (int)beginY, paint);
             beginY -= SizeUtils.dp2px(6);
         }
-        int lineWidth = bmp.getWidth() - SizeUtils.dp2px(20) - seekBarWidth;// 一行的可Show/Display内容宽度
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        int lineWidth = bmp.getWidth() - SizeUtils.dp2px(20) - seekBarWidth;//一行的可Show/Display内容宽度
         if (!TextUtils.isEmpty(address)){
             int textHeight = (rectText.bottom - rectText.top);
             paint.getTextBounds(address, 0,address.length(), rectText);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rectText.width() > lineWidth){
-                // 字符太长，进行换行processing
+                //字符太长，进行换行processing
                 StaticLayout staticLayout = new StaticLayout(address,
                         paint, lineWidth,
                         Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
@@ -452,19 +347,11 @@ public class BitmapUtils {
             }
             beginY -= SizeUtils.dp2px(6);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!TextUtils.isEmpty(title)){
             int textHeight = (rectText.bottom - rectText.top);
             paint.getTextBounds(title, 0,title.length(), rectText);
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (rectText.width() > lineWidth){
-                // 字符太长，进行换行processing
+                //字符太长，进行换行processing
                 StaticLayout staticLayout = new StaticLayout(title,
                         paint, lineWidth,
                         Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);

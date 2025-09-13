@@ -42,20 +42,6 @@ import com.github.mikephil.charting.utils.Utils;
  * @author Philipp Jahoda
  */
 @SuppressLint("RtlHardcoded")
-/**
- * Specialized thermal imaging component providing BarLineChartBase functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<? extends
         IBarLineScatterCandleBubbleDataSet<? extends Entry>>>
         extends Chart<T> implements BarLineScatterCandleBubbleDataProvider {
@@ -148,33 +134,17 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     protected XAxisRenderer mXAxisRenderer;
 
     // /** the approximator object used for data filtering */
-    // Private Approximator mApproximator;
+    // private Approximator mApproximator;
 
     public BarLineChartBase(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    /**
-     * Executes barlinechartbase operation with thermal imaging domain optimization.
-     *
-     */
     public BarLineChartBase(Context context, AttributeSet attrs) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context, attrs);
     }
 
-    /**
-     * Executes barlinechartbase operation with thermal imaging domain optimization.
-     *
-     */
     public BarLineChartBase(Context context) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(context);
     }
 
@@ -193,19 +163,15 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         mXAxisRenderer = new XAxisRenderer(mViewPortHandler, mXAxis, mLeftAxisTransformer);
 
-        /**
-         * Configures the highlighter with validation and thermal imaging optimization.
-         *
-         */
         setHighlighter(new ChartHighlighter(this));
 
         mChartTouchListener = new BarLineChartTouchListener(this, mViewPortHandler.getMatrixTouch(), 3f);
 
         mGridBackgroundPaint = new Paint();
         mGridBackgroundPaint.setStyle(Style.FILL);
-        // MGridBackgroundPaint.setColor(Color.WHITE);
-        mGridBackgroundPaint.setColor(Color.rgb(240, 240, 240)); // Light
-        // Grey
+        // mGridBackgroundPaint.setColor(Color.WHITE);
+        mGridBackgroundPaint.setColor(Color.rgb(240, 240, 240)); // light
+        // grey
 
         mBorderPaint = new Paint();
         mBorderPaint.setStyle(Style.STROKE);
@@ -213,7 +179,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mBorderPaint.setStrokeWidth(Utils.convertDpToPixel(1f));
     }
 
-    // For performance tracking
+    // for performance tracking
     private long totalTime = 0;
     private long drawCycles = 0;
 
@@ -221,52 +187,24 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mData == null)
             return;
 
         long starttime = System.currentTimeMillis();
 
-        // Execute all drawing commands
-        /**
-         * Executes drawgridbackground operation with thermal imaging domain optimization.
-         *
-         */
+        // execute all drawing commands
         drawGridBackground(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAutoScaleMinMaxEnabled) {
-            /**
-             * Executes autoscale operation with thermal imaging domain optimization.
-             *
-             */
             autoScale();
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisLeft.isEnabled())
             mAxisRendererLeft.computeAxis(mAxisLeft.mAxisMinimum, mAxisLeft.mAxisMaximum, mAxisLeft.isInverted());
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisRight.isEnabled())
             mAxisRendererRight.computeAxis(mAxisRight.mAxisMinimum, mAxisRight.mAxisMaximum, mAxisRight.isInverted());
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mXAxis.isEnabled())
             mXAxisRenderer.computeAxis(mXAxis.mAxisMinimum, mXAxis.mAxisMaximum, false);
 
@@ -274,80 +212,40 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mAxisRendererLeft.renderAxisLine(canvas);
         mAxisRendererRight.renderAxisLine(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mXAxis.isDrawGridLinesBehindDataEnabled())
             mXAxisRenderer.renderGridLines(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisLeft.isDrawGridLinesBehindDataEnabled())
             mAxisRendererLeft.renderGridLines(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisRight.isDrawGridLinesBehindDataEnabled())
             mAxisRendererRight.renderGridLines(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mXAxis.isEnabled() && mXAxis.isDrawLimitLinesBehindDataEnabled())
             mXAxisRenderer.renderLimitLines(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisLeft.isEnabled() && mAxisLeft.isDrawLimitLinesBehindDataEnabled())
             mAxisRendererLeft.renderLimitLines(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisRight.isEnabled() && mAxisRight.isDrawLimitLinesBehindDataEnabled())
             mAxisRendererRight.renderLimitLines(canvas);
 
-        // Make sure the data cannot be drawn outside the content-rect
+        // make sure the data cannot be drawn outside the content-rect
         int clipRestoreCount = canvas.save();
         canvas.clipRect(mViewPortHandler.getContentRect());
 
         mRenderer.drawData(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!mXAxis.isDrawGridLinesBehindDataEnabled())
             mXAxisRenderer.renderGridLines(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!mAxisLeft.isDrawGridLinesBehindDataEnabled())
             mAxisRendererLeft.renderGridLines(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!mAxisRight.isDrawGridLinesBehindDataEnabled())
             mAxisRendererRight.renderGridLines(canvas);
 
-        // If highlighting is enabled
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // if highlighting is enabled
         if (valuesToHighlight())
             mRenderer.drawHighlighted(canvas, mIndicesToHighlight);
 
@@ -356,24 +254,12 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         mRenderer.drawExtras(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mXAxis.isEnabled() && !mXAxis.isDrawLimitLinesBehindDataEnabled())
             mXAxisRenderer.renderLimitLines(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisLeft.isEnabled() && !mAxisLeft.isDrawLimitLinesBehindDataEnabled())
             mAxisRendererLeft.renderLimitLines(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisRight.isEnabled() && !mAxisRight.isDrawLimitLinesBehindDataEnabled())
             mAxisRendererRight.renderLimitLines(canvas);
 
@@ -381,10 +267,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mAxisRendererLeft.renderAxisLabels(canvas);
         mAxisRendererRight.renderAxisLabels(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isClipValuesToContentEnabled()) {
             clipRestoreCount = canvas.save();
             canvas.clipRect(mViewPortHandler.getContentRect());
@@ -398,22 +280,10 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         mLegendRenderer.renderLegend(canvas);
 
-        /**
-         * Executes drawdescription operation with thermal imaging domain optimization.
-         *
-         */
         drawDescription(canvas);
 
-        /**
-         * Executes drawmarkers operation with thermal imaging domain optimization.
-         *
-         */
         drawMarkers(canvas);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mLogEnabled) {
             long drawtime = (System.currentTimeMillis() - starttime);
             totalTime += drawtime;
@@ -434,10 +304,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     protected void prepareValuePxMatrix() {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mLogEnabled)
             Log.i(LOG_TAG, "Preparing Value-Px Matrix, xmin: " + mXAxis.mAxisMinimum + ", xmax: "
                     + mXAxis.mAxisMaximum + ", xdelta: " + mXAxis.mAxisRange);
@@ -461,55 +327,27 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     @Override
     public void notifyDataSetChanged() {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mData == null) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mLogEnabled)
                 Log.i(LOG_TAG, "Preparing... DATA NOT SET.");
             return;
         } else {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mLogEnabled)
                 Log.i(LOG_TAG, "Preparing...");
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mRenderer != null)
             mRenderer.initBuffers();
 
-        /**
-         * Executes calcminmax operation with thermal imaging domain optimization.
-         *
-         */
         calcMinMax();
 
         mAxisRendererLeft.computeAxis(mAxisLeft.mAxisMinimum, mAxisLeft.mAxisMaximum, mAxisLeft.isInverted());
         mAxisRendererRight.computeAxis(mAxisRight.mAxisMinimum, mAxisRight.mAxisMaximum, mAxisRight.isInverted());
         mXAxisRenderer.computeAxis(mXAxis.mAxisMinimum, mXAxis.mAxisMaximum, false);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mLegend != null)
             mLegendRenderer.computeLegend(mData);
 
-        /**
-         * Executes calculateoffsets operation with thermal imaging domain optimization.
-         *
-         */
         calculateOffsets();
     }
 
@@ -525,28 +363,16 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         mXAxis.calculate(mData.getXMin(), mData.getXMax());
 
-        // Calculate axis range (min / max) according to provided data
+        // calculate axis range (min / max) according to provided data
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisLeft.isEnabled())
             mAxisLeft.calculate(mData.getYMin(AxisDependency.LEFT),
                     mData.getYMax(AxisDependency.LEFT));
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisRight.isEnabled())
             mAxisRight.calculate(mData.getYMin(AxisDependency.RIGHT),
                     mData.getYMax(AxisDependency.RIGHT));
 
-        /**
-         * Executes calculateoffsets operation with thermal imaging domain optimization.
-         *
-         */
         calculateOffsets();
     }
 
@@ -555,7 +381,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         mXAxis.calculate(mData.getXMin(), mData.getXMax());
 
-        // Calculate axis range (min / max) according to provided data
+        // calculate axis range (min / max) according to provided data
         mAxisLeft.calculate(mData.getYMin(AxisDependency.LEFT), mData.getYMax(AxisDependency.LEFT));
         mAxisRight.calculate(mData.getYMin(AxisDependency.RIGHT), mData.getYMax(AxisDependency
                 .RIGHT));
@@ -568,23 +394,11 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         offsets.top = 0.f;
         offsets.bottom = 0.f;
 
-        // Setup offsets for legend
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // setup offsets for legend
         if (mLegend != null && mLegend.isEnabled() && !mLegend.isDrawInsideEnabled()) {
-            /**
-             * Executes switch operation with thermal imaging domain optimization.
-             *
-             */
             switch (mLegend.getOrientation()) {
                 case VERTICAL:
 
-                    /**
-                     * Executes switch operation with thermal imaging domain optimization.
-                     *
-                     */
                     switch (mLegend.getHorizontalAlignment()) {
                         case LEFT:
                             offsets.left += Math.min(mLegend.mNeededWidth,
@@ -600,10 +414,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
                         case CENTER:
 
-                            /**
-                             * Executes switch operation with thermal imaging domain optimization.
-                             *
-                             */
                             switch (mLegend.getVerticalAlignment()) {
                                 case TOP:
                                     offsets.top += Math.min(mLegend.mNeededHeight,
@@ -626,10 +436,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
                 case HORIZONTAL:
 
-                    /**
-                     * Executes switch operation with thermal imaging domain optimization.
-                     *
-                     */
                     switch (mLegend.getVerticalAlignment()) {
                         case TOP:
                             offsets.top += Math.min(mLegend.mNeededHeight,
@@ -656,18 +462,10 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     @Override
     public void calculateOffsets() {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!mCustomViewPortEnabled) {
 
             float offsetLeft = 0f, offsetRight = 0f, offsetTop = 0f, offsetBottom = 0f;
 
-            /**
-             * Executes calculatelegendoffsets operation with thermal imaging domain optimization.
-             *
-             */
             calculateLegendOffsets(mOffsetsBuffer);
 
             offsetLeft += mOffsetsBuffer.left;
@@ -675,38 +473,22 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
             offsetRight += mOffsetsBuffer.right;
             offsetBottom += mOffsetsBuffer.bottom;
 
-            // Offsets for y-labels
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
+            // offsets for y-labels
             if (mAxisLeft.needsOffset()) {
                 offsetLeft += mAxisLeft.getRequiredWidthSpace(mAxisRendererLeft
                         .getPaintAxisLabels());
             }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mAxisRight.needsOffset()) {
                 offsetRight += mAxisRight.getRequiredWidthSpace(mAxisRendererRight
                         .getPaintAxisLabels());
             }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mXAxis.isEnabled() && mXAxis.isDrawLabelsEnabled()) {
 
                 float xLabelHeight = mXAxis.mLabelRotatedHeight + mXAxis.getYOffset();
 
-                // Offsets for x-labels
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+                // offsets for x-labels
                 if (mXAxis.getPosition() == XAxisPosition.BOTTOM) {
 
                     offsetBottom += xLabelHeight;
@@ -735,10 +517,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
                     Math.max(minOffset, offsetRight),
                     Math.max(minOffset, offsetBottom));
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mLogEnabled) {
                 Log.i(LOG_TAG, "offsetLeft: " + offsetLeft + ", offsetTop: " + offsetTop
                         + ", offsetRight: " + offsetRight + ", offsetBottom: " + offsetBottom);
@@ -746,15 +524,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
             }
         }
 
-        /**
-         * Executes prepareoffsetmatrix operation with thermal imaging domain optimization.
-         *
-         */
         prepareOffsetMatrix();
-        /**
-         * Executes preparevaluepxmatrix operation with thermal imaging domain optimization.
-         *
-         */
         prepareValuePxMatrix();
     }
 
@@ -763,20 +533,12 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      */
     protected void drawGridBackground(Canvas c) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mDrawGridBackground) {
 
-            // Draw the grid background
+            // draw the grid background
             c.drawRect(mViewPortHandler.getContentRect(), mGridBackgroundPaint);
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mDrawBorders) {
             c.drawRect(mViewPortHandler.getContentRect(), mBorderPaint);
         }
@@ -790,10 +552,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      * @return
      */
     public Transformer getTransformer(AxisDependency which) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (which == AxisDependency.LEFT)
             return mLeftAxisTransformer;
         else
@@ -804,18 +562,10 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mChartTouchListener == null || mData == null)
             return false;
 
-        // Check if touch gestures are enabled
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // check if touch gestures are enabled
         if (!mTouchEnabled)
             return false;
         else
@@ -825,10 +575,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     @Override
     public void computeScroll() {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mChartTouchListener instanceof BarLineChartTouchListener)
             ((BarLineChartTouchListener) mChartTouchListener).computeScroll();
     }
@@ -856,17 +602,9 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         MPPointF.recycleInstance(center);
 
         // Range might have changed, which means that Y-axis labels
-        // Could have changed in size, affecting Y-axis size.
+        // could have changed in size, affecting Y-axis size.
         // So we need to recalculate offsets.
-        /**
-         * Executes calculateoffsets operation with thermal imaging domain optimization.
-         *
-         */
         calculateOffsets();
-        /**
-         * Executes postinvalidate operation with thermal imaging domain optimization.
-         *
-         */
         postInvalidate();
     }
 
@@ -883,17 +621,9 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         MPPointF.recycleInstance(center);
 
         // Range might have changed, which means that Y-axis labels
-        // Could have changed in size, affecting Y-axis size.
+        // could have changed in size, affecting Y-axis size.
         // So we need to recalculate offsets.
-        /**
-         * Executes calculateoffsets operation with thermal imaging domain optimization.
-         *
-         */
         calculateOffsets();
-        /**
-         * Executes postinvalidate operation with thermal imaging domain optimization.
-         *
-         */
         postInvalidate();
     }
 
@@ -906,17 +636,9 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mViewPortHandler.refresh(mZoomMatrixBuffer, this, false);
 
         // Range might have changed, which means that Y-axis labels
-        // Could have changed in size, affecting Y-axis size.
+        // could have changed in size, affecting Y-axis size.
         // So we need to recalculate offsets.
-        /**
-         * Executes calculateoffsets operation with thermal imaging domain optimization.
-         *
-         */
         calculateOffsets();
-        /**
-         * Executes postinvalidate operation with thermal imaging domain optimization.
-         *
-         */
         postInvalidate();
     }
 
@@ -935,17 +657,9 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mViewPortHandler.refresh(mZoomMatrixBuffer, this, false);
 
         // Range might have changed, which means that Y-axis labels
-        // Could have changed in size, affecting Y-axis size.
+        // could have changed in size, affecting Y-axis size.
         // So we need to recalculate offsets.
-        /**
-         * Executes calculateoffsets operation with thermal imaging domain optimization.
-         *
-         */
         calculateOffsets();
-        /**
-         * Executes postinvalidate operation with thermal imaging domain optimization.
-         *
-         */
         postInvalidate();
     }
 
@@ -962,10 +676,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     public void zoom(float scaleX, float scaleY, float xValue, float yValue, AxisDependency axis) {
 
         Runnable job = ZoomJob.getInstance(mViewPortHandler, scaleX, scaleY, xValue, yValue, getTransformer(axis), axis, this);
-        /**
-         * Executes addviewportjob operation with thermal imaging domain optimization.
-         *
-         */
         addViewportJob(job);
     }
 
@@ -1003,10 +713,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         Runnable job = AnimatedZoomJob.getInstance(mViewPortHandler, this, getTransformer(axis), getAxis(axis), mXAxis
                         .mAxisRange, scaleX, scaleY, mViewPortHandler.getScaleX(), mViewPortHandler.getScaleY(),
                 xValue, yValue, (float) origin.x, (float) origin.y, duration);
-        /**
-         * Executes addviewportjob operation with thermal imaging domain optimization.
-         *
-         */
         addViewportJob(job);
 
         MPPointD.recycleInstance(origin);
@@ -1023,15 +729,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mViewPortHandler.fitScreen(save);
         mViewPortHandler.refresh(save, this, false);
 
-        /**
-         * Executes calculateoffsets operation with thermal imaging domain optimization.
-         *
-         */
         calculateOffsets();
-        /**
-         * Executes postinvalidate operation with thermal imaging domain optimization.
-         *
-         */
         postInvalidate();
     }
 
@@ -1132,16 +830,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     public void moveViewToX(float xValue) {
 
         Runnable job = MoveViewJob.getInstance(mViewPortHandler, xValue, 0f,
-                /**
-                 * Retrieves the transformer with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTransformer(AxisDependency.LEFT), this);
 
-        /**
-         * Executes addviewportjob operation with thermal imaging domain optimization.
-         *
-         */
         addViewportJob(job);
     }
 
@@ -1159,16 +849,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         float yInView = getAxisRange(axis) / mViewPortHandler.getScaleY();
 
         Runnable job = MoveViewJob.getInstance(mViewPortHandler, xValue, yValue + yInView / 2f,
-                /**
-                 * Retrieves the transformer with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTransformer(axis), this);
 
-        /**
-         * Executes addviewportjob operation with thermal imaging domain optimization.
-         *
-         */
         addViewportJob(job);
     }
 
@@ -1190,16 +872,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         float yInView = getAxisRange(axis) / mViewPortHandler.getScaleY();
 
         Runnable job = AnimatedMoveViewJob.getInstance(mViewPortHandler, xValue, yValue + yInView / 2f,
-                /**
-                 * Retrieves the transformer with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTransformer(axis), this, (float) bounds.x, (float) bounds.y, duration);
 
-        /**
-         * Executes addviewportjob operation with thermal imaging domain optimization.
-         *
-         */
         addViewportJob(job);
 
         MPPointD.recycleInstance(bounds);
@@ -1217,16 +891,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         float valsInView = getAxisRange(axis) / mViewPortHandler.getScaleY();
 
         Runnable job = MoveViewJob.getInstance(mViewPortHandler, 0f, yValue + valsInView / 2f,
-                /**
-                 * Retrieves the transformer with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTransformer(axis), this);
 
-        /**
-         * Executes addviewportjob operation with thermal imaging domain optimization.
-         *
-         */
         addViewportJob(job);
     }
 
@@ -1246,16 +912,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         Runnable job = MoveViewJob.getInstance(mViewPortHandler,
                 xValue - xInView / 2f, yValue + yInView / 2f,
-                /**
-                 * Retrieves the transformer with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTransformer(axis), this);
 
-        /**
-         * Executes addviewportjob operation with thermal imaging domain optimization.
-         *
-         */
         addViewportJob(job);
     }
 
@@ -1278,16 +936,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         Runnable job = AnimatedMoveViewJob.getInstance(mViewPortHandler,
                 xValue - xInView / 2f, yValue + yInView / 2f,
-                /**
-                 * Retrieves the transformer with optimized performance for thermal imaging operations.
-                 *
-                 */
                 getTransformer(axis), this, (float) bounds.x, (float) bounds.y, duration);
 
-        /**
-         * Executes addviewportjob operation with thermal imaging domain optimization.
-         *
-         */
         addViewportJob(job);
 
         MPPointD.recycleInstance(bounds);
@@ -1314,25 +964,13 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
                                    final float right, final float bottom) {
 
         mCustomViewPortEnabled = true;
-        /**
-         * Executes post operation with thermal imaging domain optimization.
-         *
-         */
         post(new Runnable() {
 
             @Override
             public void run() {
 
                 mViewPortHandler.restrainViewPort(left, top, right, bottom);
-                /**
-                 * Executes prepareoffsetmatrix operation with thermal imaging domain optimization.
-                 *
-                 */
                 prepareOffsetMatrix();
-                /**
-                 * Executes preparevaluepxmatrix operation with thermal imaging domain optimization.
-                 *
-                 */
                 prepareValuePxMatrix();
             }
         });
@@ -1344,10 +982,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      */
     public void resetViewPortOffsets() {
         mCustomViewPortEnabled = false;
-        /**
-         * Executes calculateoffsets operation with thermal imaging domain optimization.
-         *
-         */
         calculateOffsets();
     }
 
@@ -1363,10 +997,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      * @return
      */
     protected float getAxisRange(AxisDependency axis) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (axis == AxisDependency.LEFT)
             return mAxisLeft.mAxisRange;
         else
@@ -1403,20 +1033,12 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      */
     public MPPointF getPosition(Entry e, AxisDependency axis) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (e == null)
             return null;
 
         mGetPositionBuffer[0] = e.getX();
         mGetPositionBuffer[1] = e.getY();
 
-        /**
-         * Retrieves the transformer with optimized performance for thermal imaging operations.
-         *
-         */
         getTransformer(axis).pointValuesToPixel(mGetPositionBuffer);
 
         return MPPointF.getInstance(mGetPositionBuffer[0], mGetPositionBuffer[1]);
@@ -1670,19 +1292,11 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      */
     public MPPointD getValuesByTouchPoint(float x, float y, AxisDependency axis) {
         MPPointD result = MPPointD.getInstance(0, 0);
-        /**
-         * Retrieves the valuesbytouchpoint with optimized performance for thermal imaging operations.
-         *
-         */
         getValuesByTouchPoint(x, y, axis, result);
         return result;
     }
 
     public void getValuesByTouchPoint(float x, float y, AxisDependency axis, MPPointD outputPoint) {
-        /**
-         * Retrieves the transformer with optimized performance for thermal imaging operations.
-         *
-         */
         getTransformer(axis).getValuesByTouchPoint(x, y, outputPoint);
     }
 
@@ -1708,10 +1322,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      */
     public Entry getEntryByTouchPoint(float x, float y) {
         Highlight h = getHighlightByTouchPoint(x, y);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (h != null) {
             return mData.getEntryForHighlight(h);
         }
@@ -1727,10 +1337,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      */
     public IBarLineScatterCandleBubbleDataSet getDataSetByTouchPoint(float x, float y) {
         Highlight h = getHighlightByTouchPoint(x, y);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (h != null) {
             return mData.getDataSetByIndex(h.getDataSetIndex());
         }
@@ -1750,10 +1356,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      */
     @Override
     public float getLowestVisibleX() {
-        /**
-         * Retrieves the transformer with optimized performance for thermal imaging operations.
-         *
-         */
         getTransformer(AxisDependency.LEFT).getValuesByTouchPoint(mViewPortHandler.contentLeft(),
                 mViewPortHandler.contentBottom(), posForGetLowestVisibleX);
         float result = (float) Math.max(mXAxis.mAxisMinimum, posForGetLowestVisibleX.x);
@@ -1773,10 +1375,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      */
     @Override
     public float getHighestVisibleX() {
-        /**
-         * Retrieves the transformer with optimized performance for thermal imaging operations.
-         *
-         */
         getTransformer(AxisDependency.LEFT).getValuesByTouchPoint(mViewPortHandler.contentRight(),
                 mViewPortHandler.contentBottom(), posForGetHighestVisibleX);
         float result = (float) Math.min(mXAxis.mAxisMaximum, posForGetHighestVisibleX.x);
@@ -1849,10 +1447,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      * @return
      */
     public YAxis getAxis(AxisDependency axis) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (axis == AxisDependency.LEFT)
             return mAxisLeft;
         else
@@ -1967,16 +1561,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      * @return
      */
     public boolean isAnyAxisInverted() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisLeft.isInverted())
             return true;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxisRight.isInverted())
             return true;
         return false;
@@ -2006,10 +1592,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     public void setPaint(Paint p, int which) {
         super.setPaint(p, which);
 
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (which) {
             case PAINT_GRID_BACKGROUND:
                 mGridBackgroundPaint = p;
@@ -2020,17 +1602,9 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     @Override
     public Paint getPaint(int which) {
         Paint p = super.getPaint(which);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (p != null)
             return p;
 
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (which) {
             case PAINT_GRID_BACKGROUND:
                 return mGridBackgroundPaint;
@@ -2047,34 +1621,18 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         // Saving current position of chart.
         mOnSizeChangedBuffer[0] = mOnSizeChangedBuffer[1] = 0;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mKeepPositionOnRotation) {
             mOnSizeChangedBuffer[0] = mViewPortHandler.contentLeft();
             mOnSizeChangedBuffer[1] = mViewPortHandler.contentTop();
-            /**
-             * Retrieves the transformer with optimized performance for thermal imaging operations.
-             *
-             */
             getTransformer(AxisDependency.LEFT).pixelsToValue(mOnSizeChangedBuffer);
         }
 
-        // Superclass transforms chart.
+        //Superclass transforms chart.
         super.onSizeChanged(w, h, oldw, oldh);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mKeepPositionOnRotation) {
 
-            // Restoring old position of chart.
-            /**
-             * Retrieves the transformer with optimized performance for thermal imaging operations.
-             *
-             */
+            //Restoring old position of chart.
             getTransformer(AxisDependency.LEFT).pointValuesToPixel(mOnSizeChangedBuffer);
             mViewPortHandler.centerViewPort(mOnSizeChangedBuffer, this);
         } else {

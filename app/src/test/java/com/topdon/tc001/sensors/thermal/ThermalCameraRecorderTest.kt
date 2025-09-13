@@ -14,23 +14,9 @@ import io.mockk.*
 import org.junit.After
 
 /**
-/**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with ThermalCameraRecorderTest functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Unit tests for ThermalCameraRecorder USB permission integration
  */
+@ExperimentalCoroutinesApi
 class ThermalCameraRecorderTest {
 
     private lateinit var context: Context
@@ -39,13 +25,6 @@ class ThermalCameraRecorderTest {
     private lateinit var mockUsbDevice: UsbDevice
 
     @Before
-    /**
-     * Sets up configuration.
-     */
-    /**
-     * Configures the up with validation and thermal imaging optimization.
-     *
-     */
     fun setup() {
         // Mock Android context and USB manager
         context = mockk(relaxed = true)
@@ -66,13 +45,6 @@ class ThermalCameraRecorderTest {
     }
 
     @After
-    /**
-     * Executes teardown functionality.
-     */
-    /**
-     * Executes teardown operation with thermal imaging domain optimization.
-     *
-     */
     fun teardown() {
         runTest {
             thermalCameraRecorder.cleanup()
@@ -80,13 +52,6 @@ class ThermalCameraRecorderTest {
     }
 
     @Test
-    /**
-     * Executes testInitializationWithoutUsbDevice functionality.
-     */
-    /**
-     * Executes testinitializationwithoutusbdevice operation with thermal imaging domain optimization.
-     *
-     */
     fun testInitializationWithoutUsbDevice() = runTest {
         // Setup: No USB devices available
         every { usbManager.deviceList } returns hashMapOf()
@@ -95,36 +60,17 @@ class ThermalCameraRecorderTest {
         val result = thermalCameraRecorder.initialize()
         
         // Should succeed and enable simulation mode
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Initialization should succeed", result)
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Should be in simulation mode", thermalCameraRecorder.isSimulationMode())
     }
 
     @Test
-    /**
-     * Executes testInitializationWithUsbDeviceButNoPermission functionality.
-     */
-    /**
-     * Executes testinitializationwithusbdevicebutnopermission operation with thermal imaging domain optimization.
-     *
-     */
     fun testInitializationWithUsbDeviceButNoPermission() = runTest {
         // Setup: USB device available but no permission
         every { usbManager.deviceList } returns hashMapOf("device1" to mockUsbDevice)
         every { usbManager.hasPermission(mockUsbDevice) } returns false
         
         // Mock the DeviceConfig.isTcTsDevice extension function
-        /**
-         * Executes mockkstatic operation with thermal imaging domain optimization.
-         *
-         */
         mockkStatic("com.topdon.lib.core.config.DeviceConfigKt")
         every { mockUsbDevice.isTcTsDevice() } returns true
         
@@ -132,10 +78,6 @@ class ThermalCameraRecorderTest {
         val result = thermalCameraRecorder.initialize()
         
         // Should complete initialization (true) but remain in simulation mode pending permission
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Initialization should complete", result)
         
         // Verify USB permission was requested
@@ -143,23 +85,12 @@ class ThermalCameraRecorderTest {
     }
 
     @Test
-    /**
-     * Executes testInitializationWithUsbDeviceAndPermission functionality.
-     */
-    /**
-     * Executes testinitializationwithusbdeviceandpermission operation with thermal imaging domain optimization.
-     *
-     */
     fun testInitializationWithUsbDeviceAndPermission() = runTest {
         // Setup: USB device available with permission
         every { usbManager.deviceList } returns hashMapOf("device1" to mockUsbDevice)
         every { usbManager.hasPermission(mockUsbDevice) } returns true
         
         // Mock the DeviceConfig.isTcTsDevice extension function
-        /**
-         * Executes mockkstatic operation with thermal imaging domain optimization.
-         *
-         */
         mockkStatic("com.topdon.lib.core.config.DeviceConfigKt")
         every { mockUsbDevice.isTcTsDevice() } returns true
         
@@ -167,22 +98,11 @@ class ThermalCameraRecorderTest {
         val result = thermalCameraRecorder.initialize()
         
         // Should succeed and NOT be in simulation mode
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Initialization should succeed", result)
         // Note: In real implementation this would depend on actual hardware initialization
     }
 
     @Test
-    /**
-     * Executes testSimulationModeFrameGeneration functionality.
-     */
-    /**
-     * Executes testsimulationmodeframegeneration operation with thermal imaging domain optimization.
-     *
-     */
     fun testSimulationModeFrameGeneration() = runTest {
         // Setup: Force simulation mode
         every { usbManager.deviceList } returns hashMapOf()
@@ -194,49 +114,22 @@ class ThermalCameraRecorderTest {
         val sessionDir = "/tmp/test_session"
         val recordingStarted = thermalCameraRecorder.startRecording(sessionDir)
         
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Recording should start successfully", recordingStarted)
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Should be recording", thermalCameraRecorder.isRecording)
         
         // Stop recording
         val recordingStopped = thermalCameraRecorder.stopRecording()
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Recording should stop successfully", recordingStopped)
-        /**
-         * Executes assertfalse operation with thermal imaging domain optimization.
-         *
-         */
         assertFalse("Should not be recording", thermalCameraRecorder.isRecording)
     }
 
     @Test
-    /**
-     * Executes testDeviceConnectionEvent functionality.
-     */
-    /**
-     * Executes testdeviceconnectionevent operation with thermal imaging domain optimization.
-     *
-     */
     fun testDeviceConnectionEvent() = runTest {
         // Setup: Initialize with no device
         every { usbManager.deviceList } returns hashMapOf()
         thermalCameraRecorder.initialize()
         
         // Mock the DeviceConfig.isTcTsDevice extension function
-        /**
-         * Executes mockkstatic operation with thermal imaging domain optimization.
-         *
-         */
         mockkStatic("com.topdon.lib.core.config.DeviceConfigKt")
         every { mockUsbDevice.isTcTsDevice() } returns true
         
@@ -249,23 +142,12 @@ class ThermalCameraRecorderTest {
     }
 
     @Test
-    /**
-     * Executes testDevicePermissionEvent functionality.
-     */
-    /**
-     * Executes testdevicepermissionevent operation with thermal imaging domain optimization.
-     *
-     */
     fun testDevicePermissionEvent() = runTest {
         // Setup: Initialize with device but no permission
         every { usbManager.deviceList } returns hashMapOf("device1" to mockUsbDevice)
         every { usbManager.hasPermission(mockUsbDevice) } returns false
         
         // Mock the DeviceConfig.isTcTsDevice extension function
-        /**
-         * Executes mockkstatic operation with thermal imaging domain optimization.
-         *
-         */
         mockkStatic("com.topdon.lib.core.config.DeviceConfigKt")
         every { mockUsbDevice.isTcTsDevice() } returns true
         
@@ -281,23 +163,12 @@ class ThermalCameraRecorderTest {
     }
 
     @Test
-    /**
-     * Executes testDeviceDisconnectionEvent functionality.
-     */
-    /**
-     * Executes testdevicedisconnectionevent operation with thermal imaging domain optimization.
-     *
-     */
     fun testDeviceDisconnectionEvent() = runTest {
         // Setup: Initialize with device
         every { usbManager.deviceList } returns hashMapOf("device1" to mockUsbDevice)
         every { usbManager.hasPermission(mockUsbDevice) } returns true
         
         // Mock the DeviceConfig.isTcTsDevice extension function
-        /**
-         * Executes mockkstatic operation with thermal imaging domain optimization.
-         *
-         */
         mockkStatic("com.topdon.lib.core.config.DeviceConfigKt")
         every { mockUsbDevice.isTcTsDevice() } returns true
         
@@ -308,17 +179,10 @@ class ThermalCameraRecorderTest {
         thermalCameraRecorder.onDeviceConnectEvent(disconnectEvent)
         
         // Should switch to simulation mode
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Should switch to simulation mode", thermalCameraRecorder.isSimulationMode())
     }
 
     // Extension function to access private isSimulationMode field for testing
-    /**
-     * Executes ThermalCameraRecorder functionality.
-     */
     private fun ThermalCameraRecorder.isSimulationMode(): Boolean {
         // In a real implementation, this would require either:
         // 1. Making isSimulationMode internal/public
@@ -328,10 +192,6 @@ class ThermalCameraRecorderTest {
         return true // Placeholder - would need proper implementation
     }
 }
-        /**
-         * Executes clearallmocks operation with thermal imaging domain optimization.
-         *
-         */
         clearAllMocks()
     }
 
@@ -344,10 +204,6 @@ class ThermalCameraRecorderTest {
         val result = thermalCameraRecorder.initialize()
 
         // Then: Should succeed and enable simulation mode
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Initialization should succeed with simulation mode", result)
     }
 
@@ -362,10 +218,6 @@ class ThermalCameraRecorderTest {
         val result = thermalCameraRecorder.initialize()
 
         // Then: Should succeed with real hardware connection
-        /**
-         * Executes asserttrue operation with thermal imaging domain optimization.
-         *
-         */
         assertTrue("Initialization should succeed with real hardware", result)
     }
 
@@ -396,10 +248,6 @@ class ThermalCameraRecorderTest {
         val result = thermalCameraRecorder.initialize()
 
         // Then: Should fail initial hardware connection but enable simulation mode
-        /**
-         * Executes assertfalse operation with thermal imaging domain optimization.
-         *
-         */
         assertFalse("Initial initialization should return false when permission is needed", result)
         
         // Simulate permission denied response
@@ -418,10 +266,6 @@ class ThermalCameraRecorderTest {
         try {
             // When: Start recording in simulation mode
             val recordingStarted = thermalCameraRecorder.startRecording(tempDir.absolutePath)
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Recording should start in simulation mode", recordingStarted)
             
             // Wait for simulation frames to be generated
@@ -429,15 +273,7 @@ class ThermalCameraRecorderTest {
             
             // Then: Should have recorded simulated frames
             val stats = thermalCameraRecorder.getRecordingStats()
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Should have recorded simulated thermal frames", stats.totalSamplesRecorded > 0)
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Should have positive data rate", stats.averageDataRate > 0.0)
             
             // Stop recording
@@ -448,45 +284,17 @@ class ThermalCameraRecorderTest {
             val thermalFramesFile = java.io.File(tempDir, "thermal_frames.csv")
             val calibrationFile = java.io.File(tempDir, "thermal_calibration.json")
             
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Thermal data CSV should exist", thermalDataFile.exists())
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Thermal frames CSV should exist", thermalFramesFile.exists())
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Calibration JSON should exist", calibrationFile.exists())
             
             // Verify files have content
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Thermal data file should have content", thermalDataFile.length() > 0)
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Thermal frames file should have content", thermalFramesFile.length() > 0)
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Calibration file should have content", calibrationFile.length() > 0)
             
             // Verify calibration file indicates simulation mode
             val calibContent = calibrationFile.readText()
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Calibration should indicate simulation mode", 
                       calibContent.contains("\"simulation_mode\": true"))
             
@@ -509,10 +317,6 @@ class ThermalCameraRecorderTest {
         try {
             // Start recording
             thermalCameraRecorder.startRecording(tempDir.absolutePath)
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Should be recording", thermalCameraRecorder.isRecording)
             
             // Simulate USB device detach event
@@ -520,20 +324,12 @@ class ThermalCameraRecorderTest {
             thermalCameraRecorder.onDeviceConnectEvent(disconnectEvent)
             
             // Should continue recording in simulation mode
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Recording should continue after USB detach", thermalCameraRecorder.isRecording)
             
             // Wait for simulation to kick in
             kotlinx.coroutines.delay(500)
             
             val stats = thermalCameraRecorder.getRecordingStats() 
-            /**
-             * Executes asserttrue operation with thermal imaging domain optimization.
-             *
-             */
             assertTrue("Should continue generating frames in simulation", stats.totalSamplesRecorded > 0)
             
         } finally {

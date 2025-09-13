@@ -21,20 +21,6 @@ import java.util.concurrent.atomic.AtomicLong
  * - Comprehensive error handling and sensor availability detection
  * - Research-grade synchronization with unified timestamps
  */
-/**
- * Specialized thermal imaging component providing ParallelMultiModalRecorder functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class ParallelMultiModalRecorder(
     private val context: Context,
     private val thermalRecorder: EnhancedThermalRecorder,
@@ -81,10 +67,6 @@ class ParallelMultiModalRecorder(
     fun initialize() {
         rgbCameraRecorder =
             RGBCameraRecorder(context, rgbTextureView).apply {
-                /**
-                 * Initializes the ialize component for thermal imaging operations.
-                 *
-                 */
                 initialize()
 
                 onRecordingStarted = {
@@ -114,19 +96,11 @@ class ParallelMultiModalRecorder(
         sessionId: String? = null,
         rgbSettings: RGBCameraRecorder.RecordingSettings = RGBCameraRecorder.RecordingSettings(),
     ): Boolean {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isRecording.get()) {
             Log.w(TAG, "Already recording")
             return false
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (selectedSensors.isEmpty()) {
             Log.w(TAG, "No sensors selected for recording")
             onError?.invoke("No sensors selected for recording")
@@ -153,31 +127,15 @@ class ParallelMultiModalRecorder(
                 selectedSensors.forEach { sensor ->
                     val job =
                         async {
-                            /**
-                             * Executes when operation with thermal imaging domain optimization.
-                             *
-                             */
                             when (sensor) {
                                 SensorSelectionDialog.SensorType.THERMAL -> {
                                     // Thermal recording via GSR recorder (includes thermal support)
                                     val success = thermalRecorder.startRecording(unifiedSessionId, null, true)
-                                    /**
-                                     * Executes if operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     if (success) {
                                         // Add initial sync marker with precise timing
-                                        /**
-                                         * Executes delay operation with thermal imaging domain optimization.
-                                         *
-                                         */
                                         delay(50) // Small delay to ensure recording is active
                                         thermalRecorder.triggerSyncEvent(
                                             "PARALLEL_THERMAL_START",
-                                            /**
-                                             * Executes mapof operation with thermal imaging domain optimization.
-                                             *
-                                             */
                                             mapOf(
                                                 "sync_timestamp" to synchronizedTimestamp.toString(),
                                                 "selected_sensors" to selectedSensors.map { it.displayName }.joinToString(","),
@@ -185,10 +143,6 @@ class ParallelMultiModalRecorder(
                                             ),
                                         )
                                     }
-                                    /**
-                                     * Executes pair operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     Pair(sensor, success)
                                 }
 
@@ -196,20 +150,12 @@ class ParallelMultiModalRecorder(
                                     // RGB camera recording
                                     rgbCameraRecorder?.updateSettings(rgbSettings)
                                     val success = rgbCameraRecorder?.startRecording(unifiedSessionId) ?: false
-                                    /**
-                                     * Executes pair operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     Pair(sensor, success)
                                 }
 
                                 SensorSelectionDialog.SensorType.GSR -> {
                                     // GSR recording (handled by thermal recorder)
                                     // This is already covered by THERMAL sensor
-                                    /**
-                                     * Executes pair operation with thermal imaging domain optimization.
-                                     *
-                                     */
                                     Pair(sensor, selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL))
                                 }
                             }
@@ -222,31 +168,15 @@ class ParallelMultiModalRecorder(
                 val failedSensors = results.filter { !it.second }.map { it.first }
                 val successfulSensors = results.filter { it.second }.map { it.first }.toSet()
 
-                /**
-                 * Executes withcontext operation with thermal imaging domain optimization.
-                 *
-                 */
                 withContext(Dispatchers.Main) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (successfulSensors.isEmpty()) {
                         // All sensors failed to start
                         Log.e(TAG, "All sensors failed to start: $failedSensors")
                         onError?.invoke("Failed to start any sensors: ${failedSensors.map { it.displayName }.joinToString(", ")}")
-                        /**
-                         * Executes cleanup operation with thermal imaging domain optimization.
-                         *
-                         */
                         cleanup()
                         return@withContext
                     }
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (failedSensors.isNotEmpty()) {
                         // Some sensors failed, but continue with successful ones
                         Log.w(TAG, "Some sensors failed to start: $failedSensors")
@@ -264,17 +194,9 @@ class ParallelMultiModalRecorder(
                     }
 
                     // Add comprehensive sync event marking parallel start completion
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
                         thermalRecorder.triggerSyncEvent(
                             "PARALLEL_RECORDING_STARTED",
-                            /**
-                             * Executes mapof operation with thermal imaging domain optimization.
-                             *
-                             */
                             mapOf(
                                 "sync_timestamp" to synchronizedTimestamp.toString(),
                                 "selected_sensors" to selectedSensors.map { it.displayName }.joinToString(","),
@@ -288,19 +210,11 @@ class ParallelMultiModalRecorder(
 
                     // Create session data
                     val session =
-                        /**
-                         * Executes parallelrecordingsession operation with thermal imaging domain optimization.
-                         *
-                         */
                         ParallelRecordingSession(
                             sessionId = unifiedSessionId,
                             selectedSensors = selectedSensors,
                             startTimestamp = synchronizedTimestamp,
                             rgbVideoFile =
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (successfulSensors.contains(SensorSelectionDialog.SensorType.RGB)) {
                                     rgbCameraRecorder?.getCurrentVideoFile()
                                 } else {
@@ -322,10 +236,6 @@ class ParallelMultiModalRecorder(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start parallel recording", e)
             onError?.invoke("Failed to start parallel recording: ${e.message}")
-            /**
-             * Executes cleanup operation with thermal imaging domain optimization.
-             *
-             */
             cleanup()
             return false
         }
@@ -350,17 +260,9 @@ class ParallelMultiModalRecorder(
             Log.i(TAG, "Recording duration: ${recordingDuration}ms")
 
             // Add sync event before stopping
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
                 thermalRecorder.triggerSyncEvent(
                     "PARALLEL_RECORDING_STOPPING",
-                    /**
-                     * Executes mapof operation with thermal imaging domain optimization.
-                     *
-                     */
                     mapOf(
                         "sync_timestamp" to stopTimestamp.toString(),
                         "session_duration" to recordingDuration.toString(),
@@ -376,10 +278,6 @@ class ParallelMultiModalRecorder(
                 selectedSensors.forEach { sensor ->
                     val job =
                         async {
-                            /**
-                             * Executes when operation with thermal imaging domain optimization.
-                             *
-                             */
                             when (sensor) {
                                 SensorSelectionDialog.SensorType.THERMAL,
                                 SensorSelectionDialog.SensorType.GSR,
@@ -402,20 +300,12 @@ class ParallelMultiModalRecorder(
                 // Wait for all to stop
                 stopJobs.awaitAll()
 
-                /**
-                 * Executes withcontext operation with thermal imaging domain optimization.
-                 *
-                 */
                 withContext(Dispatchers.Main) {
                     isRecording.set(false)
 
                     // Create final session with all output files
                     val sessionDir = thermalRecorder.getSessionDirectory()
                     val finalSession =
-                        /**
-                         * Executes parallelrecordingsession operation with thermal imaging domain optimization.
-                         *
-                         */
                         ParallelRecordingSession(
                             sessionId = sessionId,
                             selectedSensors = selectedSensors,
@@ -423,10 +313,6 @@ class ParallelMultiModalRecorder(
                             endTimestamp = stopTimestamp,
                             recordingDuration = recordingDuration,
                             thermalVideoFile =
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
                                     // The thermal video file would be created by the existing thermal recording system
                                     null // Will be set by the thermal recording system
@@ -434,20 +320,12 @@ class ParallelMultiModalRecorder(
                                     null
                                 },
                             rgbVideoFile =
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (selectedSensors.contains(SensorSelectionDialog.SensorType.RGB)) {
                                     rgbCameraRecorder?.getCurrentVideoFile()
                                 } else {
                                     null
                                 },
                             gsrDataFile =
-                                /**
-                                 * Executes if operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 if (selectedSensors.contains(SensorSelectionDialog.SensorType.GSR)) {
                                     sessionDir?.let { File(it, "signals.csv") }
                                 } else {
@@ -479,10 +357,6 @@ class ParallelMultiModalRecorder(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stop parallel recording", e)
             onError?.invoke("Failed to stop parallel recording: ${e.message}")
-            /**
-             * Executes cleanup operation with thermal imaging domain optimization.
-             *
-             */
             cleanup()
             return null
         }
@@ -495,47 +369,19 @@ class ParallelMultiModalRecorder(
         eventName: String,
         metadata: Map<String, String> = emptyMap(),
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isRecording.get()) return
 
         val timestamp = TimeUtil.getSynchronizedTimestamp()
         val eventData =
             metadata.toMutableMap().apply {
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("sync_timestamp", timestamp.toString())
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("event_name", eventName)
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("session_id", currentSessionId ?: "unknown")
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("active_sensors", selectedSensors.map { it.displayName }.joinToString(","))
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("timing_source", "samsung_s22_ground_truth")
             }
 
         // Add sync event to GSR/thermal recorder if active
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
             thermalRecorder.triggerSyncEvent("PARALLEL_CROSS_MODAL_$eventName", eventData)
         }
@@ -554,10 +400,6 @@ class ParallelMultiModalRecorder(
 
         val currentFacing = rgbCameraRecorder?.getCurrentCameraFacing()
         val newFacing =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (currentFacing == RGBCameraRecorder.CameraFacing.BACK) {
                 RGBCameraRecorder.CameraFacing.FRONT
             } else {
@@ -568,21 +410,9 @@ class ParallelMultiModalRecorder(
         val success = runBlocking { rgbCameraRecorder?.switchCamera(newFacing) ?: false }
         val resultFacing = if (success) newFacing else currentFacing
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isRecording.get()) {
-            /**
-             * Executes addparallelsyncevent operation with thermal imaging domain optimization.
-             *
-             */
             addParallelSyncEvent(
                 "RGB_CAMERA_SWITCHED",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "new_camera_facing" to (resultFacing?.displayName ?: "unknown"),
                 ),
@@ -603,21 +433,9 @@ class ParallelMultiModalRecorder(
 
         rgbCameraRecorder?.updateSettings(settings)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isRecording.get()) {
-            /**
-             * Executes addparallelsyncevent operation with thermal imaging domain optimization.
-             *
-             */
             addParallelSyncEvent(
                 "RGB_SETTINGS_CHANGED",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "resolution" to settings.resolution.displayName,
                     "frame_rate" to settings.frameRate.toString(),
@@ -632,19 +450,10 @@ class ParallelMultiModalRecorder(
      */
     fun isRecording() = isRecording.get()
 
-    /**
-     * Retrieves currentsessionid information.
-     */
     fun getCurrentSessionId() = currentSessionId
 
-    /**
-     * Retrieves selectedsensors information.
-     */
     fun getSelectedSensors() = selectedSensors.toSet()
 
-    /**
-     * Retrieves sessiondirectory information.
-     */
     fun getSessionDirectory(): File? = thermalRecorder.getSessionDirectory()
 
     /**
@@ -657,9 +466,6 @@ class ParallelMultiModalRecorder(
             null
         }
 
-    /**
-     * Retrieves rgbcamerafacing information.
-     */
     fun getRGBCameraFacing() =
         if (selectedSensors.contains(SensorSelectionDialog.SensorType.RGB)) {
             rgbCameraRecorder?.getCurrentCameraFacing()
@@ -667,33 +473,15 @@ class ParallelMultiModalRecorder(
             null
         }
 
-    /**
-     * Retrieves availablergbcameras information.
-     */
     fun getAvailableRGBCameras() = rgbCameraRecorder?.getAvailableCameraFacing() ?: emptyList()
 
-    /**
-     * Retrieves supportedrgbresolutions information.
-     */
     fun getSupportedRGBResolutions() = rgbCameraRecorder?.getSupportedResolutions() ?: emptyList()
 
     /**
      * Cleanup all resources
      */
-    /**
-     * Executes cleanup operation with thermal imaging domain optimization.
-     *
-     */
     fun cleanup() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isRecording.get()) {
-            /**
-             * Executes stopparallelrecording operation with thermal imaging domain optimization.
-             *
-             */
             stopParallelRecording()
         }
 

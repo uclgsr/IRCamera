@@ -31,23 +31,6 @@ import kotlin.math.abs
  *
  * @author IRCamera Android Sensor Node (Spoke)
  */
-/**
- * Specialized thermal imaging component providing TimeManager functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class TimeManager(
     private val context: Context,
 ) {
@@ -62,9 +45,6 @@ class TimeManager(
         @Volatile
         private var INSTANCE: TimeManager? = null
 
-    /**
-     * Retrieves instance information.
-     */
         fun getInstance(context: Context): TimeManager {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: TimeManager(context.applicationContext).also { INSTANCE = it }
@@ -89,9 +69,6 @@ class TimeManager(
      * Get the current synchronized timestamp in nanoseconds.
      * This is the primary method for generating timestamps for sensor data.
      */
-    /**
-     * Retrieves currenttimestampns information.
-     */
     fun getCurrentTimestampNs(): Long {
         val monotonicTime = SystemClock.elapsedRealtimeNanos()
         val offset = clockOffsetNs.get()
@@ -112,14 +89,6 @@ class TimeManager(
      * @param port Time sync port on PC Controller
      * @return true if synchronization successful, false otherwise
      */
-    /**
-     * Executes synchronizewithpc operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param pcControllerAddress Parameter for operation (type: String)
-     * @param port Parameter for operation (type: Int = 8082)
-     *
-     */
     suspend fun synchronizeWithPC(
         pcControllerAddress: String,
         port: Int = 8082,
@@ -128,10 +97,6 @@ class TimeManager(
             try {
                 Log.i(TAG, "Starting time synchronization with PC Controller: $pcControllerAddress:$port")
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!isNetworkAvailable()) {
                     Log.w(TAG, "Network not available for time synchronization")
                     return@withContext false
@@ -142,25 +107,13 @@ class TimeManager(
                 var successCount = 0
 
                 // Perform multiple sync rounds for accuracy
-                /**
-                 * Executes repeat operation with thermal imaging domain optimization.
-                 *
-                 */
                 repeat(SYNC_RETRY_COUNT) { attempt ->
                     try {
                         val syncResult = performTimeSyncRound(pcControllerAddress, port)
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (syncResult != null) {
                             successCount++
 
                             // Use the measurement with the lowest RTT for best accuracy
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (syncResult.roundTripTimeNs < bestRtt) {
                                 bestRtt = syncResult.roundTripTimeNs
                                 bestOffset = syncResult.clockOffsetNs
@@ -173,20 +126,12 @@ class TimeManager(
                         }
 
                         // Brief delay between rounds
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(100)
                     } catch (e: Exception) {
                         Log.w(TAG, "Sync round ${attempt + 1} failed", e)
                     }
                 }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (bestOffset != null && successCount > 0) {
                     // Apply the best clock offset
                     clockOffsetNs.set(bestOffset!!)
@@ -195,10 +140,6 @@ class TimeManager(
                     isTimeSynced = true
 
                     // Start drift monitoring
-                    /**
-                     * Executes startdriftmonitoring operation with thermal imaging domain optimization.
-                     *
-                     */
                     startDriftMonitoring()
 
                     Log.i(TAG, "Time synchronization successful: offset=${bestOffset}ns, quality=${bestRtt / 1_000_000}ms")
@@ -214,14 +155,6 @@ class TimeManager(
         }
     }
 
-    /**
-     * Executes performtimesyncround operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param pcAddress Parameter for operation (type: String)
-     * @param port Parameter for operation (type: Int)
-     *
-     */
     private suspend fun performTimeSyncRound(
         pcAddress: String,
         port: Int,
@@ -237,10 +170,6 @@ class TimeManager(
                 // Record local time after response
                 val t4 = SystemClock.elapsedRealtimeNanos()
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (syncResponse != null) {
                     // Calculate clock offset using NTP algorithm
                     val t2 = syncResponse.pcReceiveTime
@@ -250,10 +179,6 @@ class TimeManager(
                     val networkDelay = roundTripTime / 2
                     val clockOffset = ((t2 - t1) + (t3 - t4)) / 2
 
-                    /**
-                     * Executes timesyncresult operation with thermal imaging domain optimization.
-                     *
-                     */
                     TimeSyncResult(
                         clockOffsetNs = clockOffset,
                         roundTripTimeNs = roundTripTime,
@@ -269,15 +194,6 @@ class TimeManager(
         }
     }
 
-    /**
-     * Executes sendtimesyncrequest operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param pcAddress Parameter for operation (type: String)
-     * @param port Parameter for operation (type: Int)
-     * @param localTime Parameter for operation (type: Long)
-     *
-     */
     private suspend fun sendTimeSyncRequest(
         pcAddress: String,
         port: Int,
@@ -285,10 +201,6 @@ class TimeManager(
     ): TimeSyncResponse? {
         // Real network communication with PC Controller using TCP socket
         return try {
-            /**
-             * Executes withcontext operation with thermal imaging domain optimization.
-             *
-             */
             withContext(Dispatchers.IO) {
                 // Create TCP socket connection to PC Controller
                 val socket = java.net.Socket()
@@ -332,16 +244,6 @@ class TimeManager(
         }
     }
 
-    /**
-     * Executes parseTimeSyncResponse functionality.
-     */
-    /**
-     * Executes parsetimesyncresponse operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param responseJson Parameter for operation (type: String)
-     *
-     */
     private fun parseTimeSyncResponse(responseJson: String): TimeSyncResponse? {
         return try {
             // Parse real JSON response from PC Controller
@@ -350,10 +252,6 @@ class TimeManager(
             var pcReceiveTime: Long? = null
             var pcSendTime: Long? = null
 
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (line in lines) {
                 when {
                     line.contains("pc_receive_time") -> {
@@ -365,15 +263,7 @@ class TimeManager(
                 }
             }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (pcReceiveTime != null && pcSendTime != null) {
-                /**
-                 * Executes timesyncresponse operation with thermal imaging domain optimization.
-                 *
-                 */
                 TimeSyncResponse(
                     pcReceiveTime = pcReceiveTime,
                     pcSendTime = pcSendTime,
@@ -388,36 +278,17 @@ class TimeManager(
         }
     }
 
-    /**
-     * Executes startDriftMonitoring functionality.
-     */
-    /**
-     * Executes startdriftmonitoring operation with thermal imaging domain optimization.
-     *
-     */
     private fun startDriftMonitoring() {
         driftMonitoringJob?.cancel()
         driftMonitoringJob =
             syncScope.launch {
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (isActive && isTimeSynced) {
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(DRIFT_MONITORING_INTERVAL_MS)
 
                     try {
                         // Check if resync is needed based on time since last sync
                         val timeSinceSync = (getCurrentTimestampNs() - lastSyncTimestamp.get()) / 1_000_000
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (timeSinceSync > 300_000) { // 5 minutes
                             Log.i(TAG, "Clock drift monitoring: time since last sync = ${timeSinceSync}ms")
                             // Could trigger automatic resync here if needed
@@ -429,13 +300,6 @@ class TimeManager(
             }
     }
 
-    /**
-     * Executes isNetworkAvailable functionality.
-     */
-    /**
-     * Executes isnetworkavailable operation with thermal imaging domain optimization.
-     *
-     */
     private fun isNetworkAvailable(): Boolean {
         return try {
             val network = connectivityManager.activeNetwork
@@ -452,10 +316,6 @@ class TimeManager(
     fun getSyncQuality(): SyncQuality {
         val qualityMs = syncQualityMs.get()
         val timeSinceSync =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (lastSyncTimestamp.get() > 0) {
                 (getCurrentTimestampNs() - lastSyncTimestamp.get()) / 1_000_000
             } else {
@@ -532,22 +392,19 @@ class TimeManager(
 private data class TimeSyncResult(
     val clockOffsetNs: Long,
     val roundTripTimeNs: Long,
+    val networkDelayNs: Long,
+)
+
 /**
- * Specialized thermal imaging component providing SyncQualityLevel functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Response from PC Controller time sync request
+ */
+private data class TimeSyncResponse(
+    val pcReceiveTime: Long,
+    val pcSendTime: Long,
+)
+
+/**
+ * Synchronization quality levels
  */
 enum class SyncQualityLevel {
     NOT_SYNCED,

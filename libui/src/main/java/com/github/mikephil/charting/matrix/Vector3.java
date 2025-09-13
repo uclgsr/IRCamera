@@ -2,18 +2,7 @@
 package com.github.mikephil.charting.matrix;
 
 /**
- * Specialized thermal imaging component providing Vector3 functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Simple 3D vector class. Handles basic vector math for 3D vectors.
  */
 public final class Vector3 {
     public float x;
@@ -25,47 +14,19 @@ public final class Vector3 {
     public static final Vector3 UNIT_Y = new Vector3(0, 1, 0);
     public static final Vector3 UNIT_Z = new Vector3(0, 0, 1);
 
-    /**
-     * Executes vector3 operation with thermal imaging domain optimization.
-     *
-     */
     public Vector3() {
     }
 
-    /**
-     * Executes vector3 operation with thermal imaging domain optimization.
-     *
-     */
     public Vector3(float[] array)
     {
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(array[0], array[1], array[2]);
     }
 
-    /**
-     * Executes vector3 operation with thermal imaging domain optimization.
-     *
-     */
     public Vector3(float xValue, float yValue, float zValue) {
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(xValue, yValue, zValue);
     }
 
-    /**
-     * Executes vector3 operation with thermal imaging domain optimization.
-     *
-     */
     public Vector3(Vector3 other) {
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(other);
     }
 
@@ -107,10 +68,6 @@ public final class Vector3 {
     }
 
     public final void divide(float magnitude) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (magnitude != 0.0f) {
             x /= magnitude;
             y /= magnitude;
@@ -131,10 +88,6 @@ public final class Vector3 {
     }
 
     public final float dot(Vector3 other) {
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (x * other.x) + (y * other.y) + (z * other.z);
     }
 
@@ -145,18 +98,10 @@ public final class Vector3 {
     }
 
     public final float length() {
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (float) Math.sqrt(length2());
     }
 
     public final float length2() {
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (x * x) + (y * y) + (z * z);
     }
 
@@ -164,10 +109,6 @@ public final class Vector3 {
         float dx = x - other.x;
         float dy = y - other.y;
         float dz = z - other.z;
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (dx * dx) + (dy * dy) + (dz * dz);
     }
 
@@ -175,10 +116,6 @@ public final class Vector3 {
         final float magnitude = length();
 
         // TODO: I'm choosing safety over speed here.
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (magnitude != 0.0f) {
             x /= magnitude;
             y /= magnitude;
@@ -189,10 +126,6 @@ public final class Vector3 {
     }
 
     public final void zero() {
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(0.0f, 0.0f, 0.0f);
     }
 

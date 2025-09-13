@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Dimension values for thermal imaging layouts -->
 <resources>
-    <!-- UI styling -  65dp -->
     <dimen name="_65dp">65dp</dimen>
-    <!-- UI styling - app font 13 -->
     <dimen name="app_font_13">13sp</dimen>
-    <!-- UI styling - app font 15 -->
     <dimen name="app_font_15">15sp</dimen>
-    <!-- UI styling - app small font -->
     <dimen name="app_small_font">12sp</dimen>
-    <!-- UI styling - app btn big height -->
     <dimen name="app_btn_big_height">48dp</dimen>
 </resources>

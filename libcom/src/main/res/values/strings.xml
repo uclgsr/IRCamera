@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- String resources for thermal imaging interface -->
 <resources>
-    <!-- UI styling - detail date -->
     <string name="detail_date">time</string>
-    <!-- Temperature display styling -->
     <string name="chart_temperature_low">Lowest Temperature</string>
-    <!-- Temperature display styling -->
     <string name="chart_temperature_high">Highest Temperature</string>
-    <!-- Temperature display styling -->
     <string name="chart_temperature">Temperature</string>
 </resources>

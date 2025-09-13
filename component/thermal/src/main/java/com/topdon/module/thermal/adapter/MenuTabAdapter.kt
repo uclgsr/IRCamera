@@ -11,18 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.topdon.module.thermal.R
 
 /**
- * Specialized thermal imaging component providing MenuTabAdapter functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Menu tab view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class MenuTabAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -37,22 +27,8 @@ class MenuTabAdapter(val context: Context) :
         private const val TYPE_ITEM_MORE = 301
     }
 
-    /**
-     * Executes selected functionality.
-     */
-    /**
-     * Executes selected operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param index Parameter for operation (type: Int)
-     *
-     */
     fun selected(index: Int) {
         selected = index
-        /**
-         * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-         *
-         */
         notifyDataSetChanged()
     }
 
@@ -76,10 +52,6 @@ class MenuTabAdapter(val context: Context) :
 
 选框
     private val secondMenusStr =
-        /**
-         * Executes arraylistof operation with thermal imaging domain optimization.
-         *
-         */
         arrayListOf(
             "point",
             "line",
@@ -91,12 +63,8 @@ class MenuTabAdapter(val context: Context) :
 
 选框
     private val fourthMenusStr =
-        /**
-         * Executes arraylistof operation with thermal imaging domain optimization.
-         *
-         */
         arrayListOf(
-            "rotation",
+            "旋转",
             "Enhance",
             "画中画",
             "色带",
@@ -126,16 +94,9 @@ set - Using available resources as placeholders
             com.topdon.lib.ui.R.drawable.ic_menu_thermal7004_svg,
         )
 
-    /**
-     * Initializes type component.
-     */
     fun initType(type: Int) {
         this.type = type
         datas =
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (type) {
                 1 -> firstMenus
                 2 -> secondMenus
@@ -144,30 +105,14 @@ set - Using available resources as placeholders
                 else -> thirdMenus
             }
         dataStrList =
-            /**
-             * Executes when operation with thermal imaging domain optimization.
-             *
-             */
             when (type) {
                 2 -> secondMenusStr
                 4 -> fourthMenusStr
                 else -> secondMenusStr
             }
-        /**
-         * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-         *
-         */
         notifyDataSetChanged()
     }
 
-    /**
-     * Executes oncreateviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param parent Parameter for operation (type: ViewGroup)
-     * @param viewType Parameter for operation (type: Int)
-     *
-     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -176,63 +121,31 @@ set - Using available resources as placeholders
             val view =
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_menu_tab_view, parent, false)
-            /**
-             * Executes itemview operation with thermal imaging domain optimization.
-             *
-             */
             ItemView(view)
         } else {
             val view =
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_menu_tab_more_view, parent, false)
-            /**
-             * Executes itemmoreview operation with thermal imaging domain optimization.
-             *
-             */
             ItemMoreView(view)
         }
     }
 
-    /**
-     * Executes onbindviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param holder Parameter for operation (type: RecyclerView.ViewHolder)
-     * @param position Parameter for operation (type: Int)
-     *
-     */
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (holder is BaseItemView) {
             holder.img.setImageResource(datas[position])
             holder.lay.setOnClickListener {
                 val index = type * 1000 + position + 1
                 listener?.onClick(index)
-                /**
-                 * Executes selected operation with thermal imaging domain optimization.
-                 *
-                 */
                 selected(position)
             }
             holder.img.isSelected = position == selected
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (holder is ItemView) {
                 holder.name.text = dataStrList[position]
                 holder.name.isSelected = position == selected
                 holder.name.setTextColor(
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (position == selected) {
                         ContextCompat.getColor(context, com.topdon.lib.core.R.color.white)
                     } else {
@@ -243,28 +156,21 @@ set - Using available resources as placeholders
         }
     }
 
-    /**
-     * Retrieves the itemcount with optimized performance for thermal imaging operations.
-     *
-     */
     override fun getItemCount(): Int {
         return datas.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (type == 3) {
+            TYPE_ITEM_MORE
+        } else {
+            TYPE_ITEM
+        }
+    }
+
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for BaseItemView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Base item view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
     open class BaseItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         lateinit var lay: View
@@ -275,31 +181,24 @@ set - Using available resources as placeholders
         var name: TextView
 
         init {
+            lay = itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_menu_tab_lay)
+            img = itemView.findViewById<ImageView>(R.id.item_menu_tab_img)
+            name = itemView.findViewById<TextView>(R.id.item_menu_tab_text)
+        }
+    }
+
+    inner class ItemMoreView(itemView: View) : BaseItemView(itemView) {
+        init {
+            lay = itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_menu_tab_more_lay)
+            img = itemView.findViewById<ImageView>(R.id.item_menu_tab_more_img)
+        }
+    }
+
 /**
- * Specialized thermal imaging component providing OnItemClickListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom On item click listener view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
     interface OnItemClickListener {
-    /**
-     * Executes onClick functionality.
-     */
-        /**
-         * Executes onclick operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param index Parameter for operation (type: Int)
-         *
-         */
         fun onClick(index: Int)
     }
 }

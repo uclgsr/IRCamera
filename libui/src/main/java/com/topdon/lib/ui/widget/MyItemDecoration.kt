@@ -26,20 +26,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing MyItemDecoration functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     /**
      * 整个 RecyclerView 左侧间距，单位 dp.
@@ -90,16 +76,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
      */
     private val density: Float = context.resources.displayMetrics.density
 
-    /**
-     * Retrieves the itemoffsets with optimized performance for thermal imaging operations.
-     *
-     * @param
-     * @param outRect Parameter for operation (type: Rect)
-     * @param view Parameter for operation (type: View)
-     * @param parent Parameter for operation (type: RecyclerView)
-     * @param state Parameter for operation (type: RecyclerView.State)
-     *
-     */
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -112,67 +88,27 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         val position = parent.getChildAdapterPosition(view)
         val layoutManager = parent.layoutManager
 
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (layoutManager) {
             is GridLayoutManager -> {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (layoutManager.orientation == LinearLayoutManager.VERTICAL) {
-                    /**
-                     * Configures the verticalmulti with validation and thermal imaging optimization.
-                     *
-                     */
                     setVerticalMulti(outRect, position, itemCount, layoutManager.spanCount)
                 } else {
-                    /**
-                     * Configures the horizontalmulti with validation and thermal imaging optimization.
-                     *
-                     */
                     setHorizontalMulti(outRect, position, itemCount, layoutManager.spanCount)
                 }
             }
             is LinearLayoutManager -> {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (layoutManager.orientation == LinearLayoutManager.VERTICAL) {
-                    /**
-                     * Configures the verticalone with validation and thermal imaging optimization.
-                     *
-                     */
                     setVerticalOne(outRect, position, itemCount)
                 } else {
-                    /**
-                     * Configures the horizontalone with validation and thermal imaging optimization.
-                     *
-                     */
                     setHorizontalOne(outRect, position, itemCount)
                 }
             }
             is StaggeredGridLayoutManager -> {
                 val layoutParams = view.layoutParams
                 val spanIndex = if (layoutParams is StaggeredGridLayoutManager.LayoutParams) layoutParams.spanIndex else 0
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (layoutManager.orientation == LinearLayoutManager.VERTICAL) {
-                    /**
-                     * Configures the verticalmultistaggered with validation and thermal imaging optimization.
-                     *
-                     */
                     setVerticalMultiStaggered(outRect, position, itemCount, layoutManager.spanCount, spanIndex)
                 } else {
-                    /**
-                     * Configures the horizontalmulti with validation and thermal imaging optimization.
-                     *
-                     */
                     setHorizontalMulti(outRect, position, itemCount, layoutManager.spanCount)
                 }
             }
@@ -182,9 +118,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     /**
      * 当 RecyclerView 为纵向且只有 1 列时，settings间距.
      * @param itemCount data总条数
-     */
-    /**
-     * Sets verticalone configuration.
      */
     private fun setVerticalOne(
         outRect: Rect,
@@ -201,9 +134,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     /**
      * 当 RecyclerView 为横向且只有 1 行时，settings间距.
      * @param itemCount data总条数
-     */
-    /**
-     * Sets horizontalone configuration.
      */
     private fun setHorizontalOne(
         outRect: Rect,
@@ -222,9 +152,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
      * @param itemCount data总条数
      * @param spanCount 总列数(共有多少列)
      */
-    /**
-     * Sets verticalmulti configuration.
-     */
     private fun setVerticalMulti(
         outRect: Rect,
         position: Int,
@@ -232,8 +159,8 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         spanCount: Int,
     ) {
         val totalRow = itemCount / spanCount + if (itemCount % spanCount == 0) 0 else 1 
-        val rowPosition = position / spanCount // Current position 在第几行[0, totalRow)
-        val columnPosition = position % spanCount // Current position 在第几列[0, spanCount)
+        val rowPosition = position / spanCount // current position 在第几行[0, totalRow)
+        val columnPosition = position % spanCount // current position 在第几列[0, spanCount)
 
         val left: Int = dp2px(if (columnPosition == 0) wholeLeft ?: ((itemLeft ?: 0f) * 2) else (itemLeft ?: 0f))
         val right: Int = dp2px(if (columnPosition == spanCount - 1) wholeRight ?: ((itemRight ?: 0f) * 2) else (itemRight ?: 0f))
@@ -248,9 +175,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
      * @param spanCount 总列数(共有多少列)
      * @param spanIndex currentdata在列数中的index[0, spanCount)，即第几列
      */
-    /**
-     * Sets verticalmultistaggered configuration.
-     */
     private fun setVerticalMultiStaggered(
         outRect: Rect,
         position: Int,
@@ -259,7 +183,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         spanIndex: Int,
     ) {
         val totalRow = itemCount / spanCount + if (itemCount % spanCount == 0) 0 else 1 
-        val rowPosition = position / spanCount // Currentposition在第几行[0, totalRow)
+        val rowPosition = position / spanCount // currentposition在第几行[0, totalRow)
 
         val left: Int = dp2px(if (spanIndex == 0) wholeLeft ?: ((itemLeft ?: 0f) * 2) else (itemLeft ?: 0f))
         val right: Int = dp2px(if (spanIndex == spanCount - 1) wholeRight ?: ((itemRight ?: 0f) * 2) else (itemRight ?: 0f))
@@ -273,9 +197,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
      * @param itemCount data总条数
      * @param spanCount 总行数(共有多少行)
      */
-    /**
-     * Sets horizontalmulti configuration.
-     */
     private fun setHorizontalMulti(
         outRect: Rect,
         position: Int,
@@ -287,13 +208,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
 
     /**
      * Executes dp2px functionality.
-     */
-    /**
-     * Executes dp2px operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param dpValue Parameter for operation (type: Float)
-     *
      */
     private fun dp2px(dpValue: Float): Int = (dpValue * density + 0.5f).toInt()
 }

@@ -13,18 +13,9 @@ import com.csl.irCamera.R
 import com.kylecorry.andromeda.core.ui.setCompoundDrawables
 
 /**
- * Specialized thermal imaging component providing DelPopup functionality for the IRCamera system.
+ * 首页-device列表-deletedeviceConfirm PopupWindow.
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Created by LCG on 2024/4/24.
  */
 class DelPopup(val context: Context) : PopupWindow() {
     var onDelListener: (() -> Unit)? = null
@@ -40,10 +31,6 @@ class DelPopup(val context: Context) : PopupWindow() {
         textView.setCompoundDrawables(size = SizeUtils.sp2px(16f), left = R.drawable.svg_main_device_del)
         textView.minWidth = (widthPixels * 128f / 375).toInt()
         textView.setOnClickListener {
-            /**
-             * Executes dismiss operation with thermal imaging domain optimization.
-             *
-             */
             dismiss()
             onDelListener?.invoke()
         }
@@ -63,26 +50,12 @@ class DelPopup(val context: Context) : PopupWindow() {
         height = textView.measuredHeight
     }
 
-    /**
-     * Executes show functionality.
-     */
-    /**
-     * Executes show operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param anchor Parameter for operation (type: View)
-     *
-     */
     fun show(anchor: View) {
         val locationArray = IntArray(2)
         anchor.getLocationInWindow(locationArray)
 
         val x = (context.resources.displayMetrics.widthPixels - width) / 2
         val y = locationArray[1] - SizeUtils.dp2px(12f)
-        /**
-         * Executes showatlocation operation with thermal imaging domain optimization.
-         *
-         */
         showAtLocation(anchor, Gravity.NO_GRAVITY, x, y)
     }
 }

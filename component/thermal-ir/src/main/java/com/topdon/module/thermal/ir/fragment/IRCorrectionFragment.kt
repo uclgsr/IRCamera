@@ -38,23 +38,12 @@ import org.greenrobot.eventbus.ThreadMode
 thermal imaging选取point
  */
 /**
-/**
- * Specialized thermal imaging component providing IRCorrectionFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * I r correction fragment for thermal imaging components.
+ * Handles specific UI sections and user interactions.
  */
 class IRCorrectionFragment : BaseFragment(), ITsTempListener {
 
-defaultdata流mode：image+temperature复合data */
+默认data流mode：image+temperature复合data */
     protected var defaultDataFlowMode = CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT
 
     private var ircmd: IRCMD? = null
@@ -64,23 +53,11 @@ defaultdata流mode：image+temperature复合data */
     private var cameraView: CameraView? = null
     private lateinit var thermalLay: ViewGroup
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.fragment_ir_monitor_thermal
 
-    private var rotateAngle = 270 // 校对defaultangle270
+    private var rotateAngle = 270 // 校对默认角度270
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
-        /**
-         * Executes requireactivity operation with thermal imaging domain optimization.
-         *
-         */
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         // Initialize views with findViewById
@@ -88,17 +65,9 @@ defaultdata流mode：image+temperature复合data */
         cameraView = requireView().findViewById<CameraView>(R.id.cameraView)
         thermalLay = requireView().findViewById<ViewGroup>(R.id.thermal_lay)
 
-        /**
-         * Initializes the datair component for thermal imaging operations.
-         *
-         */
         initDataIR()
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
     }
 
@@ -117,26 +86,8 @@ defaultdata流mode：image+temperature复合data */
     private var pseudocolorMode = 0
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    /**
-     * Executes irEvent functionality.
-     */
-    /**
-     * Executes irevent operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: IRMsgEvent)
-     *
-     */
     fun irEvent(event: IRMsgEvent) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (event.code == MsgCode.RESTART_USB) {
-            /**
-             * Manages thermal camera operations with hardware-optimized performance and error handling.
-             *
-             */
             restartUsbCamera()
         }
     }
@@ -144,18 +95,10 @@ defaultdata流mode：image+temperature复合data */
     /**
 初始data
      */
-    /**
-     * Initializes the datair component for thermal imaging operations.
-     *
-     */
     private fun initDataIR() {
         imageWidth = cameraHeight - tempHeight
         imageHeight = cameraWidth
         temperatureView.setTextSize(SaveSettingUtil.tempTextSize)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ScreenUtil.isPortrait(requireContext())) {
             bitmap = Bitmap.createBitmap(imageWidth, imageHeight, Bitmap.Config.ARGB_8888)
             temperatureView.setImageSize(imageWidth, imageHeight, this@IRCorrectionFragment)
@@ -173,16 +116,8 @@ defaultdata流mode：image+temperature复合data */
         temperatureView.setSyncimage(syncimage)
         temperatureView.setTemperature(temperature)
         temperatureView.isEnabled = false
-        /**
-         * Configures the viewlay with validation and thermal imaging optimization.
-         *
-         */
         setViewLay()
 某些特定客户的特殊device需要使用该Commanddisabledsensor
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Usbcontorl.isload) {
             Usbcontorl.usb3803_mode_setting(1) // Open5V
             Log.w("123", "Open5V")
@@ -193,10 +128,6 @@ defaultdata流mode：image+temperature复合data */
 
     /**
 image信号processing
-     */
-    /**
-     * Executes startisp operation with thermal imaging domain optimization.
-     *
      */
     private fun startISP() {
         try {
@@ -215,51 +146,16 @@ image信号processing
     }
 
     
-    /**
-     * Executes startUSB functionality.
-     */
-    /**
-     * Executes startusb operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param isRestart Parameter for operation (type: Boolean)
-     *
-     */
     private fun startUSB(isRestart: Boolean) {
         context?.let {
             iruvc =
-                /**
-                 * Executes iruvctc operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param object Parameter for operation (type: ConnectCallback {                         override fun onCameraOpened(uvcCamera: UVCCamera)
-                 * @param ircmd Parameter for operation (type: IRCMD)
-                 * @param object Parameter for operation (type: USBMonitorCallback {                         override fun onAttach()
-                 *
-                 * @return Operation result or configured object (type: onIRCMDCreate",                             )                             this@IRCorrectionFragment.ircmd = ircmd 需要等IRCMDinitializecomplete之后才可以调用 // Ircmd.setPseudoColor(CommonParams.PreviewPathChannel.PREVIEW_PATH0, //                            PseudocodeUtils.changePseudocodeModeByOld(pseudocolorMode))                         }                     },                     object : USBMonitorCallback)
-                 *
-                 */
                 IRUVCTC(
                     cameraWidth, cameraHeight, context, syncimage,
                     defaultDataFlowMode,
                     object : ConnectCallback {
-                        /**
-                         * Manages thermal camera operations with hardware-optimized performance and error handling.
-                         *
-                         * @param
-                         * @param uvcCamera Camera configuration or reference (type: UVCCamera)
-                         *
-                         */
                         override fun onCameraOpened(uvcCamera: UVCCamera) {
                         }
 
-                        /**
-                         * Executes onircmdcreate operation with thermal imaging domain optimization.
-                         *
-                         * @param
-                         * @param ircmd Parameter for operation (type: IRCMD)
-                         *
-                         */
                         override fun onIRCMDCreate(ircmd: IRCMD) {
                             Log.i(
                                 TAG,
@@ -267,47 +163,23 @@ image信号processing
                             )
                             this@IRCorrectionFragment.ircmd = ircmd
 需要等IRCMDinitializecomplete之后才可以调用
-// Ircmd.setPseudoColor(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
+//                        ircmd.setPseudoColor(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
 //                            PseudocodeUtils.changePseudocodeModeByOld(pseudocolorMode))
                         }
                     },
                     object : USBMonitorCallback {
-                        /**
-                         * Executes onattach operation with thermal imaging domain optimization.
-                         *
-                         */
                         override fun onAttach() {}
 
-                        /**
-                         * Executes ongranted operation with thermal imaging domain optimization.
-                         *
-                         */
                         override fun onGranted() {}
 
-                        /**
-                         * Executes onconnect operation with thermal imaging domain optimization.
-                         *
-                         */
                         override fun onConnect() {}
 
-                        /**
-                         * Executes ondisconnect operation with thermal imaging domain optimization.
-                         *
-                         */
                         override fun onDisconnect() {}
 
-                        /**
-                         * Executes ondettach operation with thermal imaging domain optimization.
-                         *
-                         */
                         override fun onDettach() {
                             activity?.finish()
                         }
 
-                        /**
-                         * Executes oncancel operation with thermal imaging domain optimization.
-                         *
-                         */
                         override fun onCancel() {
                             activity?.finish()
                         }
@@ -322,78 +194,35 @@ image信号processing
     }
 
     
-    /**
-     * Executes restartUsbCamera functionality.
-     */
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
-     */
     private fun restartUsbCamera() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (iruvc != null) {
             iruvc!!.stopPreview()
             iruvc!!.unregisterUSB()
         }
-        /**
-         * Executes startusb operation with thermal imaging domain optimization.
-         *
-         */
         startUSB(true)
     }
 
-    /**
-     * Executes onstart operation with thermal imaging domain optimization.
-     *
-     */
     override fun onStart() {
         super.onStart()
         Log.w(TAG, "onStart")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!isrun) {
 初始configuration,pseudo-coloriron red
             temperatureView.postDelayed({
                 pseudocolorMode = 3
-                /**
-                 * Executes startusb operation with thermal imaging domain optimization.
-                 *
-                 */
                 startUSB(false)
-                /**
-                 * Executes startisp operation with thermal imaging domain optimization.
-                 *
-                 */
                 startISP()
                 temperatureView.start()
                 cameraView?.start()
                 isrun = true
 Restoreconfiguration
-                /**
-                 * Executes configparam operation with thermal imaging domain optimization.
-                 *
-                 */
                 configParam()
             }, 1500)
         }
     }
 
-    /**
-     * Executes onstop operation with thermal imaging domain optimization.
-     *
-     */
     override fun onStop() {
         super.onStop()
         Log.w(TAG, "onStop")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (iruvc != null) {
             iruvc!!.stopPreview()
             iruvc!!.unregisterUSB()
@@ -405,10 +234,6 @@ Restoreconfiguration
         isrun = false
     }
 
-    /**
-     * Executes ondestroy operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroy() {
         super.onDestroy()
         Log.w(TAG, "onDestroy")
@@ -420,42 +245,18 @@ Restoreconfiguration
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    /**
-     * Executes iruvctc functionality.
-     */
-    /**
-     * Executes iruvctc operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param event Parameter for operation (type: PreviewComplete)
-     *
-     */
     fun iruvctc(event: PreviewComplete) {
-        /**
-         * Executes dealy16modepreviewcomplete operation with thermal imaging domain optimization.
-         *
-         */
         dealY16ModePreviewComplete()
     }
 
     var frameReady = false
 
-    /**
-     * Executes dealY16ModePreviewComplete functionality.
-     */
-    /**
-     * Executes dealy16modepreviewcomplete operation with thermal imaging domain optimization.
-     *
-     */
     private fun dealY16ModePreviewComplete() {
         isConfigWait = false
         iruvc?.setFrameReady(true)
         frameReady = true
     }
 
-    /**
-     * Sets viewlay configuration.
-     */
     private fun setViewLay() {
         thermalLay.post {
             if (ScreenUtil.isPortrait(requireContext())) {
@@ -474,48 +275,18 @@ Restoreconfiguration
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    /**
-     * Executes cameraEvent functionality.
-     */
-    /**
-     * Manages thermal camera operations with hardware-optimized performance and error handling.
-     *
-     * @param
-     * @param event Parameter for operation (type: DeviceCameraEvent)
-     *
-     */
     fun cameraEvent(event: DeviceCameraEvent) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (event.action) {
             100 -> {
 准备image
-                /**
-                 * Executes showloadingdialog operation with thermal imaging domain optimization.
-                 *
-                 */
                 showLoadingDialog()
             }
             101 -> {
 displayimage
                 lifecycleScope.launch {
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(500)
                     isConfigWait = false
-                    /**
-                     * Executes delay operation with thermal imaging domain optimization.
-                     *
-                     */
                     delay(1000)
-                    /**
-                     * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-                     *
-                     */
                     dismissLoadingDialog()
                 }
             }
@@ -525,25 +296,10 @@ displayimage
     private var isConfigWait = true
 
 configuration
-    /**
-     * Executes configParam functionality.
-     */
-    /**
-     * Executes configparam operation with thermal imaging domain optimization.
-     *
-     */
     private fun configParam() {
         lifecycleScope.launch {
             isConfigWait = true
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (isConfigWait) {
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(100)
             }
             val config = ConfigRepository.readConfig(false)
@@ -551,20 +307,12 @@ configuration
             val emsChar = (config.radiation * 128).toInt() // 发射率
             XLog.w("settingsTPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
             val timeMillis = 250L
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(timeMillis)
 emissivity
             ircmd?.setPropTPDParams(
                 CommonParams.PropTPDParams.TPD_PROP_EMS,
                 CommonParams.PropTPDParamsValue.NumberType(emsChar.toString()),
             )
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(timeMillis)
 距离
             ircmd?.setPropTPDParams(
@@ -572,37 +320,21 @@ emissivity
                 CommonParams.PropTPDParamsValue.NumberType(disChar.toString()),
             )
 自动快门
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(timeMillis)
             ircmd?.zoomCenterDown(
                 CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                 CommonParams.ZoomScaleStep.ZOOM_STEP2,
             )
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(timeMillis)
             ircmd?.zoomCenterDown(
                 CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                 CommonParams.ZoomScaleStep.ZOOM_STEP2,
             )
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(timeMillis)
             ircmd?.zoomCenterDown(
                 CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                 CommonParams.ZoomScaleStep.ZOOM_STEP2,
             )
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(timeMillis)
             ircmd?.zoomCenterDown(
                 CommonParams.PreviewPathChannel.PREVIEW_PATH0,
@@ -610,15 +342,7 @@ emissivity
             )
             iruvc?.let {
 部分机型在disabled自动快门，初始会花屏
-                /**
-                 * Executes withcontext operation with thermal imaging domain optimization.
-                 *
-                 */
                 withContext(Dispatchers.IO) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (SaveSettingUtil.isAutoShutter) {
                         ircmd?.setPropAutoShutterParameter(
                             CommonParams.PropAutoShutterParameter.SHUTTER_PROP_SWITCH,
@@ -634,28 +358,16 @@ emissivity
                 }
             }
 复位contrast、细节
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(timeMillis)
             ircmd?.setPropImageParams(
                 CommonParams.PropImageParams.IMAGE_PROP_LEVEL_CONTRAST,
                 CommonParams.PropImageParamsValue.NumberType(128.toString()),
             )
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(timeMillis)
             ircmd?.setPropImageParams(
                 CommonParams.PropImageParams.IMAGE_PROP_LEVEL_DDE,
                 CommonParams.PropImageParamsValue.DDEType.DDE_2,
             )
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(timeMillis)
             ircmd?.setPropImageParams(
                 CommonParams.PropImageParams.IMAGE_PROP_ONOFF_AGC,
@@ -664,15 +376,7 @@ emissivity
         }
     }
 
-    /**
-     * Executes autostart operation with thermal imaging domain optimization.
-     *
-     */
     suspend fun autoStart() {
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
 ToastUtils.showShort("taskstart")
 锅盖start
@@ -685,10 +389,6 @@ ToastUtils.showShort("taskstart")
 //            CalibrationTools.shutter(irCmd = ircmd, syncImage = syncimage)
 XLog.w("锅盖矫正："+"手动打快门Command")
 4 disabled锅盖校正
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(2000)
             XLog.w("锅盖矫正：" + "Close锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, false)
@@ -696,17 +396,9 @@ XLog.w("锅盖矫正："+"手动打快门Command")
             CalibrationTools.pot(irCmd = ircmd!!, 1)
             XLog.w("锅盖矫正：" + "Send锅盖标")
 6 Open锅盖校正
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(5000)
             XLog.w("锅盖矫正：" + "Open锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, true)
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(20000)
             XLog.w("锅盖矫正：" + "20000")
 high temperature
@@ -714,20 +406,12 @@ high temperature
 //            CalibrationTools.shutter(irCmd = ircmd, syncImage = syncimage)
 XLog.w("锅盖矫正："+"手动打快门Command")
 12 disabled锅盖校正
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(2000)
             CalibrationTools.stsSwitch(irCmd = ircmd, false)
             XLog.w("锅盖矫正：" + "Close锅盖校正")
 13 Send锅盖标
             CalibrationTools.pot(irCmd = ircmd!!, 1)
 14 Open锅盖校正
-            /**
-             * Executes delay operation with thermal imaging domain optimization.
-             *
-             */
             delay(5000)
             XLog.w("锅盖矫正：" + "Open锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, true)

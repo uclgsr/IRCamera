@@ -17,21 +17,7 @@ import com.energy.iruvc.utils.IFrameCallback;
 import com.energy.iruvc.uvc.UVCCamera;
 
 /**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with DualViewWithManualAlignExternalCamera functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Created by fengjibo on 2024/1/10.
  */
 public class DualViewWithManualAlignExternalCamera extends BaseParamDualView{
         private final String TAG = "DualViewWithManualAlignExternalCamera";
@@ -66,24 +52,12 @@ public class DualViewWithManualAlignExternalCamera extends BaseParamDualView{
                 System.arraycopy(frame, 0, mixData, 0, fusionLength);
 
                 mSurface = cameraview.getHolder().getSurface();
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (mSurface != null) {
                     mSurfaceNativeWindow.onDrawFrame(mSurface, mixData, mDualWidth, mDualHeight);
                 }
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (!firstFrame) {
                     firstFrame = true;
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (handler != null) {
                         handler.sendEmptyMessage(HIDE_LOADING);
                     }
@@ -96,10 +70,6 @@ public class DualViewWithManualAlignExternalCamera extends BaseParamDualView{
             public void onFrame(byte[] frame) {
                 System.arraycopy(frame, 0, mixData, 0, fusionLength);
                 mSurface = cameraview.getHolder().getSurface();
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (mSurface != null) {
                     mSurfaceNativeWindow.onDrawFrame(mSurface, mixData, mDualWidth, mDualHeight);
                 }
@@ -112,10 +82,6 @@ public class DualViewWithManualAlignExternalCamera extends BaseParamDualView{
          */
         public DualViewWithManualAlignExternalCamera(int irWidth, int irHeight, int vlWidth, int vlHeight, int dualWidth, int dualHeight,
                                                      SurfaceView cameraview, UVCCamera iruvc, CommonParams.DataFlowMode dataFlowMode) {
-            /**
-             * Executes super operation with thermal imaging domain optimization.
-             *
-             */
             super(irWidth, irHeight, vlWidth, vlHeight, dualWidth, dualHeight);
             this.cameraview = cameraview;
             // DualUVCCamera initialize
@@ -133,7 +99,7 @@ public class DualViewWithManualAlignExternalCamera extends BaseParamDualView{
                     .build();
             //
             mSurfaceNativeWindow = new SurfaceNativeWindow();
-// DualUVCCamera.setImageRotate(DualCameraParams.TypeLoadParameters.ROTATE_180);
+//            dualUVCCamera.setImageRotate(DualCameraParams.TypeLoadParameters.ROTATE_180);
             dualUVCCamera.addIrUVCCamera(iruvc);
             fusionLength = mDualWidth * mDualHeight * 4;
             mixData = new byte[fusionLength];
@@ -172,16 +138,8 @@ public class DualViewWithManualAlignExternalCamera extends BaseParamDualView{
         }
 
         public void onDraw() {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (dualUVCCamera != null) {
                 mSurface = cameraview.getHolder().getSurface();
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (mSurface != null) {
                     mSurfaceNativeWindow.onDrawFrame(mSurface, mixData, mDualWidth, mDualHeight);
                 }

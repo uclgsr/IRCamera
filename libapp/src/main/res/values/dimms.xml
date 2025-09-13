@@ -1,34 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Resource definitions - dimms -->
 <resources>
-    <!-- UI styling - app font -->
     <dimen name="app_font">16sp</dimen>
-    <!-- UI styling - app small font -->
     <dimen name="app_small_font">14sp</dimen>
-    <!-- UI styling - app smaller font -->
     <dimen name="app_smaller_font">12sp</dimen>
-    <!-- UI styling - app font 10 -->
     <dimen name="app_font_10">10sp</dimen>
-    <!-- UI styling - app font 11 -->
     <dimen name="app_font_11">11sp</dimen>
-    <!-- UI styling - app font 13 -->
     <dimen name="app_font_13">13sp</dimen>
-    <!-- UI styling - app font 15 -->
     <dimen name="app_font_15">15sp</dimen>
-    <!-- UI styling - main item font -->
     <dimen name="main_item_font">14sp</dimen>
-    <!-- UI styling - app title font -->
     <dimen name="app_title_font">20sp</dimen>
-    <!-- UI styling - app btn corners -->
     <dimen name="app_btn_corners">2dp</dimen>
 
     <!--    ui-->
     <dimen name="login_btn_height">42dp</dimen>
-    <!-- UI styling - app btn big height -->
     <dimen name="app_btn_big_height">42dp</dimen>
-    <!-- UI styling - app btn height -->
     <dimen name="app_btn_height">36dp</dimen>
-    <!-- UI styling - tab second img height -->
     <dimen name="tab_second_img_height">62dp</dimen>
 
     <!--    thermal-->
@@ -36,15 +22,10 @@
     <item name="setting_wp" format="float" type="dimen">0.2</item>
     <item name="model_line_start" format="float" type="dimen">0.03</item>
     <item name="model_line_end" format="float" type="dimen">0.96</item>
-    <!-- UI styling - setting item top -->
     <dimen name="setting_item_top">8dp</dimen>
-    <!-- Temperature display styling -->
     <dimen name="temperature_padding_top">2dp</dimen>
-    <!-- Temperature display styling -->
     <dimen name="temperature_padding_start">5dp</dimen>
-    <!-- Temperature display styling -->
     <dimen name="temperature_padding_end">14dp</dimen>
-    <!-- Temperature display styling -->
     <dimen name="temperature_unit_end">4dp</dimen>
 
     <!--    main-->

@@ -1,22 +1,5 @@
 package com.topdon.lib.core.utils
 
-/**
- * Specialized thermal imaging component providing WsCmdConstants functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 object WsCmdConstants {
     const val AR_COMMAND_IP: String = "127.0.0.1"
     const val AR_COMMAND_LOGIN: Int = 1
@@ -54,7 +37,7 @@ object WsCmdConstants {
     const val AR_COMMAND_RECORD_STATUS_GET: String = "AR_COMMAND_RECORD_STATUS_GET" // Get/Retrieverecordingstate
     const val AR_COMMAND_LASER_SET: String = "AR_COMMAND_LASER_SET"
     const val AR_COMMAND_LASER_GET: String = "AR_COMMAND_LASER_GET"
-    const val AR_COMMAND_PIP_SET: String = "AR_COMMAND_PIP_SET" // Picture-in-picture
+    const val AR_COMMAND_PIP_SET: String = "AR_COMMAND_PIP_SET" // picture-in-picture
     const val AR_COMMAND_PIP_GET: Int = 108 // Get/Retrievepicture-in-picture
     const val AR_COMMAND_ZOOM_SET: String = "AR_COMMAND_ZOOM_SET" 
     const val AR_COMMAND_ZOOM_GET: Int = 110 // Get/Retrieve放大倍数
@@ -86,7 +69,7 @@ object WsCmdConstants {
     const val AR_COMMAND_IMG_PARAM_GET: String = "AR_COMMAND_IMG_PARAM_GET"
     const val AR_COMMAND_IR_IMG_PARAM_SET: String = "AR_COMMAND_IR_IMG_PARAM_SET"
     const val AR_COMMAND_IR_IMG_PARAM_GET: String = "AR_COMMAND_IR_IMG_PARAM_GET"
-    const val AR_COMMAND_PSEUDO_COLOR_SET: String = "AR_COMMAND_PSEUDO_COLOR_SET" // Pseudo color
+    const val AR_COMMAND_PSEUDO_COLOR_SET: String = "AR_COMMAND_PSEUDO_COLOR_SET" // pseudo color
     const val AR_COMMAND_PSEUDO_COLOR_GET: Int = 209 // Get/Retrievepseudo color样式
     const val AR_COMMAND_DO_NUC: String = "AR_COMMAND_DO_NUC"
     const val AR_COMMAND_TEMPERATURE_STATE_SET: String = "AR_COMMAND_TEMPERATURE_STATE_SET"

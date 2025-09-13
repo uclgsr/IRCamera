@@ -3,18 +3,7 @@ package android.yt.jni;
 import android.util.Log;
 
 /**
- * Specialized thermal imaging component providing Usbjni functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * usb3803_hub是系统中的so库，部分Customize的机型有可能会add应用包名的白名单，也会导致不出图
  */
 public class Usbjni {
 

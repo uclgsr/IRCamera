@@ -5,43 +5,27 @@ import android.view.animation.RotateAnimation
 import android.view.animation.ScaleAnimation
 
 /**
- * Thermal imaging UI animation system. Provides smooth transitions and visual effects for AnimaUtils components.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author: CaiSongL
+ * @date: 2022/6/9 22:14
  */
 public object AnimaUtils {
     /**
-     * defaultanimationduration
+     * 默认动画持续时间
      */
     const val DEFAULT_ANIMATION_DURATION: Long = 400
 
     /**
-     * Get/Retrievearotationanimation
+     * Get/Retrieve一个旋转动画
      *
-     * @param fromDegrees       startangle
-     * @param toDegrees         endangle
-     * @param pivotXType        rotationcenterpointXaxiscoordinaterelativetype
-     * @param pivotXValue       rotationcenterpointXaxiscoordinate
-     * @param pivotYType        rotationcenterpointYaxiscoordinaterelativetype
-     * @param pivotYValue       rotationcenterpointYaxiscoordinate
-     * @param durationMillis    duration
-     * @param animationListener animationlistener
-     * @return arotationanimation
-     */
-    /**
-     * Retrieves rotateanimation information.
+     * @param fromDegrees       start角度
+     * @param toDegrees         end角度
+     * @param pivotXType        旋转centerpointX轴坐标相对type
+     * @param pivotXValue       旋转centerpointX轴坐标
+     * @param pivotYType        旋转centerpointY轴坐标相对type
+     * @param pivotYValue       旋转centerpointY轴坐标
+     * @param durationMillis    持续时间
+     * @param animationListener 动画Listener器
+     * @return 一个旋转动画
      */
     fun getRotateAnimation(
         fromDegrees: Float,
@@ -54,10 +38,6 @@ public object AnimaUtils {
         animationListener: Animation.AnimationListener?,
     ): RotateAnimation {
         val rotateAnimation =
-            /**
-             * Executes rotateanimation operation with thermal imaging domain optimization.
-             *
-             */
             RotateAnimation(
                 fromDegrees,
                 toDegrees,
@@ -67,10 +47,6 @@ public object AnimaUtils {
                 pivotYValue,
             )
         rotateAnimation.duration = durationMillis
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (animationListener != null) {
             rotateAnimation.setAnimationListener(animationListener)
         }
@@ -78,14 +54,11 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea根据视图自身centerpointrotation的animation
+     * Get/Retrieve一个根据视图自身centerpoint旋转的动画
      *
-     * @param durationMillis    animationduration
-     * @param animationListener animationlistener
-     * @return a根据centerpointrotation的animation
-     */
-    /**
-     * Retrieves rotateanimationbycenter information.
+     * @param durationMillis    动画持续时间
+     * @param animationListener 动画Listener器
+     * @return 一个根据centerpoint旋转的动画
      */
     fun getRotateAnimationByCenter(
         durationMillis: Long,
@@ -104,26 +77,20 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea根据centerpointrotation的animation
+     * Get/Retrieve一个根据centerpoint旋转的动画
      *
-     * @param duration animationduration
-     * @return a根据centerpointrotation的animation
-     */
-    /**
-     * Retrieves rotateanimationbycenter information.
+     * @param duration 动画持续时间
+     * @return 一个根据centerpoint旋转的动画
      */
     fun getRotateAnimationByCenter(duration: Long): RotateAnimation {
         return getRotateAnimationByCenter(duration, null)
     }
 
     /**
-     * Get/Retrievea根据视图自身centerpointrotation的animation
+     * Get/Retrieve一个根据视图自身centerpoint旋转的动画
      *
-     * @param animationListener animationlistener
-     * @return a根据centerpointrotation的animation
-     */
-    /**
-     * Retrieves rotateanimationbycenter information.
+     * @param animationListener 动画Listener器
+     * @return 一个根据centerpoint旋转的动画
      */
     fun getRotateAnimationByCenter(animationListener: Animation.AnimationListener?): RotateAnimation {
         return getRotateAnimationByCenter(
@@ -133,28 +100,21 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea根据centerpointrotation的animation
+     * Get/Retrieve一个根据centerpoint旋转的动画
      *
-     * @return a根据centerpointrotation的animation，defaultduration为DEFAULT_ANIMATION_DURATION
+     * @return 一个根据centerpoint旋转的动画，默认持续时间为DEFAULT_ANIMATION_DURATION
      */
     val rotateAnimationByCenter: RotateAnimation
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = getRotateAnimationByCenter(DEFAULT_ANIMATION_DURATION, null)
 
     /**
-     * Get/Retrievea透明度渐变animation
+     * Get/Retrieve一个透明度渐变动画
      *
      * @param fromAlpha         start时的透明度
      * @param toAlpha           end时的透明度都
-     * @param durationMillis    duration
-     * @param animationListener animationlistener
-     * @return a透明度渐变animation
-     */
-    /**
-     * Retrieves alphaanimation information.
+     * @param durationMillis    持续时间
+     * @param animationListener 动画Listener器
+     * @return 一个透明度渐变动画
      */
     fun getAlphaAnimation(
         fromAlpha: Float,
@@ -164,10 +124,6 @@ public object AnimaUtils {
     ): AlphaAnimation {
         val alphaAnimation = AlphaAnimation(fromAlpha, toAlpha)
         alphaAnimation.duration = durationMillis
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (animationListener != null) {
             alphaAnimation.setAnimationListener(animationListener)
         }
@@ -175,15 +131,12 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea透明度渐变animation
+     * Get/Retrieve一个透明度渐变动画
      *
      * @param fromAlpha      start时的透明度
      * @param toAlpha        end时的透明度都
-     * @param durationMillis duration
-     * @return a透明度渐变animation
-     */
-    /**
-     * Retrieves alphaanimation information.
+     * @param durationMillis 持续时间
+     * @return 一个透明度渐变动画
      */
     fun getAlphaAnimation(
         fromAlpha: Float,
@@ -194,15 +147,12 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea透明度渐变animation
+     * Get/Retrieve一个透明度渐变动画
      *
      * @param fromAlpha         start时的透明度
      * @param toAlpha           end时的透明度都
-     * @param animationListener animationlistener
-     * @return a透明度渐变animation，defaultduration为DEFAULT_ANIMATION_DURATION
-     */
-    /**
-     * Retrieves alphaanimation information.
+     * @param animationListener 动画Listener器
+     * @return 一个透明度渐变动画，默认持续时间为DEFAULT_ANIMATION_DURATION
      */
     fun getAlphaAnimation(
         fromAlpha: Float,
@@ -218,14 +168,11 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea透明度渐变animation
+     * Get/Retrieve一个透明度渐变动画
      *
      * @param fromAlpha start时的透明度
      * @param toAlpha   end时的透明度都
-     * @return a透明度渐变animation，defaultduration为DEFAULT_ANIMATION_DURATION
-     */
-    /**
-     * Retrieves alphaanimation information.
+     * @return 一个透明度渐变动画，默认持续时间为DEFAULT_ANIMATION_DURATION
      */
     fun getAlphaAnimation(
         fromAlpha: Float,
@@ -240,14 +187,11 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea由完全Show/Display变为不Visible的透明度渐变animation
+     * Get/Retrieve一个由完全Show/Display变为不Visible的透明度渐变动画
      *
-     * @param durationMillis    duration
-     * @param animationListener animationlistener
-     * @return a由完全Show/Display变为不Visible的透明度渐变animation
-     */
-    /**
-     * Retrieves hiddenalphaanimation information.
+     * @param durationMillis    持续时间
+     * @param animationListener 动画Listener器
+     * @return 一个由完全Show/Display变为不Visible的透明度渐变动画
      */
     fun getHiddenAlphaAnimation(
         durationMillis: Long,
@@ -257,26 +201,20 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea由完全Show/Display变为不Visible的透明度渐变animation
+     * Get/Retrieve一个由完全Show/Display变为不Visible的透明度渐变动画
      *
-     * @param durationMillis duration
-     * @return a由完全Show/Display变为不Visible的透明度渐变animation
-     */
-    /**
-     * Retrieves hiddenalphaanimation information.
+     * @param durationMillis 持续时间
+     * @return 一个由完全Show/Display变为不Visible的透明度渐变动画
      */
     fun getHiddenAlphaAnimation(durationMillis: Long): AlphaAnimation {
         return getHiddenAlphaAnimation(durationMillis, null)
     }
 
     /**
-     * Get/Retrievea由完全Show/Display变为不Visible的透明度渐变animation
+     * Get/Retrieve一个由完全Show/Display变为不Visible的透明度渐变动画
      *
-     * @param animationListener animationlistener
-     * @return a由完全Show/Display变为不Visible的透明度渐变animation，defaultduration为DEFAULT_ANIMATION_DURATION
-     */
-    /**
-     * Retrieves hiddenalphaanimation information.
+     * @param animationListener 动画Listener器
+     * @return 一个由完全Show/Display变为不Visible的透明度渐变动画，默认持续时间为DEFAULT_ANIMATION_DURATION
      */
     fun getHiddenAlphaAnimation(animationListener: Animation.AnimationListener?): AlphaAnimation {
         return getHiddenAlphaAnimation(
@@ -286,26 +224,19 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea由完全Show/Display变为不Visible的透明度渐变animation
+     * Get/Retrieve一个由完全Show/Display变为不Visible的透明度渐变动画
      *
-     * @return a由完全Show/Display变为不Visible的透明度渐变animation，defaultduration为DEFAULT_ANIMATION_DURATION
+     * @return 一个由完全Show/Display变为不Visible的透明度渐变动画，默认持续时间为DEFAULT_ANIMATION_DURATION
      */
     val hiddenAlphaAnimation: AlphaAnimation
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = getHiddenAlphaAnimation(DEFAULT_ANIMATION_DURATION, null)
 
     /**
-     * Get/Retrievea由不Visible变为完全Show/Display的透明度渐变animation
+     * Get/Retrieve一个由不Visible变为完全Show/Display的透明度渐变动画
      *
-     * @param durationMillis    duration
-     * @param animationListener animationlistener
-     * @return a由不Visible变为完全Show/Display的透明度渐变animation
-     */
-    /**
-     * Retrieves showalphaanimation information.
+     * @param durationMillis    持续时间
+     * @param animationListener 动画Listener器
+     * @return 一个由不Visible变为完全Show/Display的透明度渐变动画
      */
     fun getShowAlphaAnimation(
         durationMillis: Long,
@@ -315,26 +246,20 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea由不Visible变为完全Show/Display的透明度渐变animation
+     * Get/Retrieve一个由不Visible变为完全Show/Display的透明度渐变动画
      *
-     * @param durationMillis duration
-     * @return a由不Visible变为完全Show/Display的透明度渐变animation
-     */
-    /**
-     * Retrieves showalphaanimation information.
+     * @param durationMillis 持续时间
+     * @return 一个由不Visible变为完全Show/Display的透明度渐变动画
      */
     fun getShowAlphaAnimation(durationMillis: Long): AlphaAnimation {
         return getAlphaAnimation(0.0f, 1.0f, durationMillis, null)
     }
 
     /**
-     * Get/Retrievea由不Visible变为完全Show/Display的透明度渐变animation
+     * Get/Retrieve一个由不Visible变为完全Show/Display的透明度渐变动画
      *
-     * @param animationListener animationlistener
-     * @return a由不Visible变为完全Show/Display的透明度渐变animation，defaultduration为DEFAULT_ANIMATION_DURATION
-     */
-    /**
-     * Retrieves showalphaanimation information.
+     * @param animationListener 动画Listener器
+     * @return 一个由不Visible变为完全Show/Display的透明度渐变动画，默认持续时间为DEFAULT_ANIMATION_DURATION
      */
     fun getShowAlphaAnimation(animationListener: Animation.AnimationListener?): AlphaAnimation {
         return getAlphaAnimation(
@@ -346,36 +271,25 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea由不Visible变为完全Show/Display的透明度渐变animation
+     * Get/Retrieve一个由不Visible变为完全Show/Display的透明度渐变动画
      *
-     * @return a由不Visible变为完全Show/Display的透明度渐变animation，defaultduration为DEFAULT_ANIMATION_DURATION
+     * @return 一个由不Visible变为完全Show/Display的透明度渐变动画，默认持续时间为DEFAULT_ANIMATION_DURATION
      */
     val showAlphaAnimation: AlphaAnimation
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = getAlphaAnimation(0.0f, 1.0f, DEFAULT_ANIMATION_DURATION, null)
 
     /**
-     * Get/Retrievea缩小animation
+     * Get/Retrieve一个缩小动画
      *
      * @param durationMillis   时间
      * @param animationListener  Listener
-     * @return a缩小animation
-     */
-    /**
-     * Retrieves lessenscaleanimation information.
+     * @return 一个缩小动画
      */
     fun getLessenScaleAnimation(
         durationMillis: Long,
         animationListener: Animation.AnimationListener?,
     ): ScaleAnimation {
         val scaleAnimation =
-            /**
-             * Executes scaleanimation operation with thermal imaging domain optimization.
-             *
-             */
             ScaleAnimation(
                 1.0f,
                 0.0f,
@@ -390,26 +304,20 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea缩小animation
+     * Get/Retrieve一个缩小动画
      *
      * @param durationMillis 时间
-     * @return a缩小animation
-     */
-    /**
-     * Retrieves lessenscaleanimation information.
+     * @return 一个缩小动画
      */
     fun getLessenScaleAnimation(durationMillis: Long): ScaleAnimation {
         return getLessenScaleAnimation(durationMillis, null)
     }
 
     /**
-     * Get/Retrievea缩小animation
+     * Get/Retrieve一个缩小动画
      *
      * @param animationListener  Listener
-     * @return Returna缩小的animation
-     */
-    /**
-     * Retrieves lessenscaleanimation information.
+     * @return Return一个缩小的动画
      */
     fun getLessenScaleAnimation(animationListener: Animation.AnimationListener?): ScaleAnimation {
         return getLessenScaleAnimation(
@@ -419,24 +327,17 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea放大animation
+     * Get/Retrieve一个放大动画
      * @param durationMillis   时间
      * @param animationListener  Listener
      *
-     * @return Returna放大的效果
-     */
-    /**
-     * Retrieves amplificationanimation information.
+     * @return Return一个放大的效果
      */
     fun getAmplificationAnimation(
         durationMillis: Long,
         animationListener: Animation.AnimationListener?,
     ): ScaleAnimation {
         val scaleAnimation =
-            /**
-             * Executes scaleanimation operation with thermal imaging domain optimization.
-             *
-             */
             ScaleAnimation(
                 0.0f,
                 1.0f,
@@ -451,27 +352,21 @@ public object AnimaUtils {
     }
 
     /**
-     * Get/Retrievea放大animation
+     * Get/Retrieve一个放大动画
      *
      * @param durationMillis   时间
      *
-     * @return Returna放大的效果
-     */
-    /**
-     * Retrieves amplificationanimation information.
+     * @return Return一个放大的效果
      */
     fun getAmplificationAnimation(durationMillis: Long): ScaleAnimation {
         return getAmplificationAnimation(durationMillis, null)
     }
 
     /**
-     * Get/Retrievea放大animation
+     * Get/Retrieve一个放大动画
      *
      * @param animationListener  Listener
-     * @return Returna放大的效果
-     */
-    /**
-     * Retrieves amplificationanimation information.
+     * @return Return一个放大的效果
      */
     fun getAmplificationAnimation(animationListener: Animation.AnimationListener?): ScaleAnimation {
         return getAmplificationAnimation(

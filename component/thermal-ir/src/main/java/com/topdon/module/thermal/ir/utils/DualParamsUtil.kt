@@ -4,33 +4,10 @@ import com.energy.iruvc.utils.DualCameraParams
 import com.topdon.lib.core.common.SaveSettingUtil
 
 /**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for DualParamsUtil operations.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Dual params util utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
  */
 object DualParamsUtil {
-    /**
-     * Executes wifiFusionTypeToParams functionality.
-     */
-    /**
-     * Executes wififusiontypetoparams operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param fusionType Parameter for operation (type: Int)
-     *
-     */
     fun wifiFusionTypeToParams(fusionType: Int): Int  {
         return when (fusionType) {
             SaveSettingUtil.FusionTypeVLOnly -> 3
@@ -41,16 +18,6 @@ object DualParamsUtil {
         }
     }
 
-    /**
-     * Executes fusionTypeToParams functionality.
-     */
-    /**
-     * Executes fusiontypetoparams operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param fusionType Parameter for operation (type: Int)
-     *
-     */
     fun fusionTypeToParams(fusionType: Int): DualCameraParams.FusionType {
         return when (fusionType) {
             SaveSettingUtil.FusionTypeVLOnly -> DualCameraParams.FusionType.VLOnly
@@ -64,16 +31,6 @@ object DualParamsUtil {
         }
     }
 
-    /**
-     * Executes paramsToFusionType functionality.
-     */
-    /**
-     * Executes paramstofusiontype operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param fusionTypeP Parameter for operation (type: DualCameraParams.FusionType)
-     *
-     */
     fun paramsToFusionType(fusionTypeP: DualCameraParams.FusionType): Int  {
         return when (fusionTypeP) {
             DualCameraParams.FusionType.VLOnly -> SaveSettingUtil.FusionTypeVLOnly

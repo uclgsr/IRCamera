@@ -8,21 +8,8 @@ import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for WatermarkView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Watermark view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class WatermarkView : View {
     /**
@@ -31,10 +18,6 @@ class WatermarkView : View {
     var watermarkText: String? = null
         set(value) {
             field = value
-            /**
-             * Executes invalidate operation with thermal imaging domain optimization.
-             *
-             */
             invalidate()
         }
 
@@ -42,34 +25,10 @@ class WatermarkView : View {
 
     private val textPaint: TextPaint = TextPaint()
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         textPaint.isFakeBoldText = true
         textPaint.isAntiAlias = true
@@ -77,22 +36,11 @@ class WatermarkView : View {
         textPaint.textSize = SizeUtils.sp2px(80f).toFloat()
     }
 
-    /**
-     * Executes ondraw operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     *
-     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         watermarkText?.let {
             var hasAddCount = 0
             var hasUseHeight = 0f
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (hasUseHeight < height + marginTop) {
                 canvas?.save()
                 canvas?.rotate(15f)

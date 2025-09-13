@@ -20,10 +20,6 @@ data class TS004Response<T>(
     /**
      * 判断请求是否success.
      */
-    /**
-     * Executes issuccess operation with thermal imaging domain optimization.
-     *
-     */
     fun isSuccess(): Boolean = status == 0
 }
 
@@ -167,10 +163,6 @@ data class FreeSpaceBean(
 ) {
     /**
      * Executes hasusesize functionality.
-     */
-    /**
-     * Executes hasusesize operation with thermal imaging domain optimization.
-     *
      */
     fun hasUseSize(): Long = system + image_size + video_size
 }

@@ -27,20 +27,6 @@ import com.topdon.menu.R as MenuR
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing MenuTargetAdapter functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((code: Int) -> Unit)? = null
 
@@ -51,10 +37,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         targetType: TargetType,
         isSelected: Boolean,
     ) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (targetType) {
             TargetType.MODE -> secondBean[0].isSelect = isSelected
             TargetType.STYLE -> secondBean[1].isSelect = isSelected
@@ -62,56 +44,28 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             TargetType.DELETE -> secondBean[3].isSelect = isSelected
             TargetType.HELP -> secondBean[4].isSelect = isSelected
         }
-        /**
-         * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-         *
-         */
         notifyDataSetChanged()
     }
 
     private val secondBean =
-        /**
-         * Executes arraylistof operation with thermal imaging domain optimization.
-         *
-         */
         arrayListOf(
-            /**
-             * Executes colorbean operation with thermal imaging domain optimization.
-             *
-             */
             ColorBean(
                 MenuR.drawable.selector_menu2_target_1_person,
                 context.getString(R.string.main_tab_second_measure_mode),
                 CameraHelp.TYPE_SET_MEASURE_MODE,
             ),
-            /**
-             * Executes colorbean operation with thermal imaging domain optimization.
-             *
-             */
             ColorBean(
                 MenuR.drawable.selector_menu2_target_2_style,
                 context.getString(R.string.main_tab_first_target),
                 CameraHelp.TYPE_SET_TARGET_MODE,
             ),
 //      ColorBean(UiR.drawable.ic_menu_second_zoom, context.getString(R.string.main_tab_second_zoom), CameraHelp.TYPE_SET_TARGET_ZOOM),
-            /**
-             * Executes colorbean operation with thermal imaging domain optimization.
-             *
-             */
             ColorBean(
                 MenuR.drawable.selector_menu2_target_3_color,
                 context.getString(R.string.main_tab_second_target_color),
                 CameraHelp.TYPE_SET_TARGET_COLOR,
             ),
-            /**
-             * Executes colorbean operation with thermal imaging domain optimization.
-             *
-             */
             ColorBean(MenuR.drawable.selector_menu2_del, context.getString(R.string.thermal_delete), CameraHelp.TYPE_SET_TARGET_DELETE),
-            /**
-             * Executes colorbean operation with thermal imaging domain optimization.
-             *
-             */
             ColorBean(
                 MenuR.drawable.selector_menu2_target_4_help,
                 context.getString(R.string.main_tab_second_target_help),
@@ -122,26 +76,11 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
     /**
      * refreshmeasurement mode图标
      */
-    /**
-     * Executes upcurrentmeasuremode operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param measureMode Parameter for operation (type: Int)
-     *
-     */
     fun upCurrentMeasureMode(measureMode: Int) {
         secondBean.clear()
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (measureMode) {
             ObserveBean.TYPE_MEASURE_PERSON -> {
                 secondBean.add(
-                    /**
-                     * Executes colorbean operation with thermal imaging domain optimization.
-                     *
-                     */
                     ColorBean(
                         MenuR.drawable.selector_menu2_target_1_person,
                         context.getString(R.string.main_tab_second_measure_mode),
@@ -151,10 +90,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             }
             ObserveBean.TYPE_MEASURE_SHEEP -> {
                 secondBean.add(
-                    /**
-                     * Executes colorbean operation with thermal imaging domain optimization.
-                     *
-                     */
                     ColorBean(
                         MenuR.drawable.selector_menu2_target_1_sheep,
                         context.getString(R.string.main_tab_second_measure_mode),
@@ -164,10 +99,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             }
             ObserveBean.TYPE_MEASURE_DOG -> {
                 secondBean.add(
-                    /**
-                     * Executes colorbean operation with thermal imaging domain optimization.
-                     *
-                     */
                     ColorBean(
                         MenuR.drawable.selector_menu2_target_1_dog,
                         context.getString(R.string.main_tab_second_measure_mode),
@@ -177,10 +108,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             }
             ObserveBean.TYPE_MEASURE_BIRD -> {
                 secondBean.add(
-                    /**
-                     * Executes colorbean operation with thermal imaging domain optimization.
-                     *
-                     */
                     ColorBean(
                         MenuR.drawable.selector_menu2_target_1_bird,
                         context.getString(R.string.main_tab_second_measure_mode),
@@ -190,10 +117,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             }
         }
         secondBean.add(
-            /**
-             * Executes colorbean operation with thermal imaging domain optimization.
-             *
-             */
             ColorBean(
                 MenuR.drawable.selector_menu2_target_2_style,
                 context.getString(R.string.main_tab_first_target),
@@ -201,10 +124,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             ),
         )
         secondBean.add(
-            /**
-             * Executes colorbean operation with thermal imaging domain optimization.
-             *
-             */
             ColorBean(
                 MenuR.drawable.selector_menu2_target_3_color,
                 context.getString(R.string.main_tab_second_target_color),
@@ -212,38 +131,18 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             ),
         )
         secondBean.add(
-            /**
-             * Executes colorbean operation with thermal imaging domain optimization.
-             *
-             */
             ColorBean(MenuR.drawable.selector_menu2_del, context.getString(R.string.thermal_delete), CameraHelp.TYPE_SET_TARGET_DELETE),
         )
         secondBean.add(
-            /**
-             * Executes colorbean operation with thermal imaging domain optimization.
-             *
-             */
             ColorBean(
                 MenuR.drawable.selector_menu2_target_4_help,
                 context.getString(R.string.main_tab_second_target_help),
                 CameraHelp.TYPE_SET_TARGET_HELP,
             ),
         )
-        /**
-         * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-         *
-         */
         notifyDataSetChanged()
     }
 
-    /**
-     * Executes oncreateviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param parent Parameter for operation (type: ViewGroup)
-     * @param viewType Parameter for operation (type: Int)
-     *
-     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -252,32 +151,16 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         return ItemView(view)
     }
 
-    /**
-     * Executes onbindviewholder operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param holder Parameter for operation (type: RecyclerView.ViewHolder)
-     * @param position Parameter for operation (type: Int)
-     *
-     */
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (holder is ItemView) {
             val bean = secondBean[position]
             holder.name.text = bean.name
             holder.img.setImageResource(bean.res)
 
             holder.img.isSelected = bean.isSelect
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (bean.isSelect) {
                 holder.name.setTextColor(ContextCompat.getColor(context, UiR.color.white))
             } else {
@@ -286,19 +169,11 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
 
             holder.lay.setOnClickListener {
                 listener?.invoke(bean.code)
-                /**
-                 * Executes notifydatasetchanged operation with thermal imaging domain optimization.
-                 *
-                 */
                 notifyDataSetChanged()
             }
         }
     }
 
-    /**
-     * Retrieves the itemcount with optimized performance for thermal imaging operations.
-     *
-     */
     override fun getItemCount(): Int {
         return secondBean.size
     }
@@ -309,14 +184,14 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         val name: TextView = itemView.findViewById(UiR.id.item_menu_tab_text)
 
         init {
-// Val canSeeCount = 4.5 
-// Val with = (ScreenUtils.getScreenWidth() / canSeeCount).toInt()
+//            val canSeeCount = 4.5 
+//            val with = (ScreenUtils.getScreenWidth() / canSeeCount).toInt()
             itemView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-// Val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()
-// Val layoutParams = itemView.item_menu_tab_img.layoutParams
-// LayoutParams.width = imageSize
-// LayoutParams.height = imageSize
-// ItemView.item_menu_tab_img.layoutParams = layoutParams
+//            val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()
+//            val layoutParams = itemView.item_menu_tab_img.layoutParams
+//            layoutParams.width = imageSize
+//            layoutParams.height = imageSize
+//            itemView.item_menu_tab_img.layoutParams = layoutParams
         }
     }
 }

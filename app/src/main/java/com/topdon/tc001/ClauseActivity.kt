@@ -25,48 +25,19 @@ import java.util.*
 import com.topdon.lib.core.R as LibCoreR
 
 /**
-/**
- * Specialized thermal imaging component providing ClauseActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * 条款
  */
+// Legacy ARouter route annotation - now using NavigationManager
 class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
     private lateinit var dialog: TipProgressDialog
 
-    /**
-     * Initializes the contentlayoutid component for thermal imaging operations.
-     *
-     */
     override fun initContentLayoutId() = R.layout.activity_clause
 
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /**
-         * Initializes the view component for thermal imaging operations.
-         *
-         */
         initView()
     }
 
-    /**
-     * Initializes view component.
-     */
     private fun initView() {
         dialog =
             TipProgressDialog.Builder(this)
@@ -78,10 +49,6 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
         binding.clauseYearTxt.text = getString(R.string.version_year, "2023-$year")
 
         binding.clauseAgreeBtn.setOnClickListener {
-            /**
-             * Executes confirminitapp operation with thermal imaging domain optimization.
-             *
-             */
             confirmInitApp()
         }
         binding.clauseDisagreeBtn.setOnClickListener {
@@ -89,10 +56,6 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
             TipDialog.Builder(this)
                 .setMessage(getString(R.string.privacy_tips))
                 .setPositiveListener(R.string.privacy_confirm) {
-                    /**
-                     * Executes confirminitapp operation with thermal imaging domain optimization.
-                     *
-                     */
                     confirmInitApp()
                 }
                 .setCancelListener(R.string.privacy_cancel) {
@@ -103,14 +66,10 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
         }
         val keyUseType = if (BaseApplication.instance.isDomestic()) 1 else 0
         binding.clauseItem.setOnClickListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!NetworkUtil.isConnected(this)) {
                 TToast.shortToast(this, R.string.lms_setting_http_error)
             } else {
-                // Service条款
+                // service条款
                 NavigationManager.getInstance()
                     .build(RouterConfig.POLICY)
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 1)
@@ -119,10 +78,6 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
             }
         }
         binding.clauseItem2.setOnClickListener {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!NetworkUtil.isConnected(this)) {
                 TToast.shortToast(this, R.string.lms_setting_http_error)
             } else {
@@ -136,10 +91,6 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
         }
         binding.clauseItem3.setOnClickListener {
             // 第三方
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!NetworkUtil.isConnected(this)) {
                 TToast.shortToast(this, R.string.lms_setting_http_error)
             } else {
@@ -151,10 +102,6 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
             }
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (BaseApplication.instance.isDomestic()) {
             binding.tvPrivacy.text = "    ${getString(R.string.privacy_agreement_tips_new, CommUtils.getAppName())}"
             binding.tvPrivacy.visibility = android.view.View.VISIBLE
@@ -165,69 +112,28 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
         binding.clauseName.text = CommUtils.getAppName()
     }
 
-    /**
-     * Executes confirmInitApp functionality.
-     */
-    /**
-     * Executes confirminitapp operation with thermal imaging domain optimization.
-     *
-     */
     private fun confirmInitApp() {
         lifecycleScope.launch {
-            /**
-             * Executes showloading operation with thermal imaging domain optimization.
-             *
-             */
             showLoading()
-            // Initialization
+            // initialization
             App.delayInit()
-            /**
-             * Executes async operation with thermal imaging domain optimization.
-             *
-             */
             async(Dispatchers.IO) {
                 // 等待1000ms initializationend
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(1000)
                 return@async
             }.await().let {
                 NavigationManager.build(RouterConfig.MAIN).navigation(this@ClauseActivity)
                 SharedManager.setHasShowClause(true)
-                /**
-                 * Executes dismissloading operation with thermal imaging domain optimization.
-                 *
-                 */
                 dismissLoading()
-                /**
-                 * Executes finish operation with thermal imaging domain optimization.
-                 *
-                 */
                 finish()
             }
         }
     }
 
-    /**
-     * Executes showLoading functionality.
-     */
-    /**
-     * Executes showloading operation with thermal imaging domain optimization.
-     *
-     */
     private fun showLoading() {
         dialog.show()
     }
 
-    /**
-     * Executes dismissLoading functionality.
-     */
-    /**
-     * Executes dismissloading operation with thermal imaging domain optimization.
-     *
-     */
     private fun dismissLoading() {
         dialog.dismiss()
     }

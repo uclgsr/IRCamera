@@ -24,20 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Specialized thermal imaging component providing LegendRenderer functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class LegendRenderer extends Renderer {
 
     /**
@@ -56,10 +42,6 @@ public class LegendRenderer extends Renderer {
     protected Legend mLegend;
 
     public LegendRenderer(ViewPortHandler viewPortHandler, Legend legend) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(viewPortHandler);
 
         this.mLegend = legend;
@@ -99,19 +81,11 @@ public class LegendRenderer extends Renderer {
      */
     public void computeLegend(ChartData<?> data) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!mLegend.isLegendCustom()) {
 
             computedEntries.clear();
 
-            // Loop for building up the colors and labels used in the legend
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
+            // loop for building up the colors and labels used in the legend
             for (int i = 0; i < data.getDataSetCount(); i++) {
 
                 IDataSet dataSet = data.getDataSetByIndex(i);
@@ -119,20 +93,12 @@ public class LegendRenderer extends Renderer {
                 List<Integer> clrs = dataSet.getColors();
                 int entryCount = dataSet.getEntryCount();
 
-                // If we have a barchart with stacked bars
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
+                // if we have a barchart with stacked bars
                 if (dataSet instanceof IBarDataSet && ((IBarDataSet) dataSet).isStacked()) {
 
                     IBarDataSet bds = (IBarDataSet) dataSet;
                     String[] sLabels = bds.getStackLabels();
 
-                    /**
-                     * Executes for operation with thermal imaging domain optimization.
-                     *
-                     */
                     for (int j = 0; j < clrs.size() && j < bds.getStackSize(); j++) {
 
                         computedEntries.add(new LegendEntry(
@@ -145,12 +111,8 @@ public class LegendRenderer extends Renderer {
                         ));
                     }
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (bds.getLabel() != null) {
-                        // Add the legend description label
+                        // add the legend description label
                         computedEntries.add(new LegendEntry(
                                 dataSet.getLabel(),
                                 Legend.LegendForm.NONE,
@@ -165,10 +127,6 @@ public class LegendRenderer extends Renderer {
 
                     IPieDataSet pds = (IPieDataSet) dataSet;
 
-                    /**
-                     * Executes for operation with thermal imaging domain optimization.
-                     *
-                     */
                     for (int j = 0; j < clrs.size() && j < entryCount; j++) {
 
                         computedEntries.add(new LegendEntry(
@@ -181,12 +139,8 @@ public class LegendRenderer extends Renderer {
                         ));
                     }
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (pds.getLabel() != null) {
-                        // Add the legend description label
+                        // add the legend description label
                         computedEntries.add(new LegendEntry(
                                 dataSet.getLabel(),
                                 Legend.LegendForm.NONE,
@@ -221,24 +175,16 @@ public class LegendRenderer extends Renderer {
                             increasingColor
                     ));
 
-                } else { // All others
+                } else { // all others
 
-                    /**
-                     * Executes for operation with thermal imaging domain optimization.
-                     *
-                     */
                     for (int j = 0; j < clrs.size() && j < entryCount; j++) {
 
                         String label;
 
-                        // If multiple colors are set for a DataSet, group them
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
+                        // if multiple colors are set for a DataSet, group them
                         if (j < clrs.size() - 1 && j < entryCount - 1) {
                             label = null;
-                        } else { // Add label to the last entry
+                        } else { // add label to the last entry
                             label = data.getDataSetByIndex(i).getLabel();
                         }
 
@@ -254,10 +200,6 @@ public class LegendRenderer extends Renderer {
                 }
             }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mLegend.getExtraEntries() != null) {
                 Collections.addAll(computedEntries, mLegend.getExtraEntries());
             }
@@ -267,17 +209,13 @@ public class LegendRenderer extends Renderer {
 
         Typeface tf = mLegend.getTypeface();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (tf != null)
             mLegendLabelPaint.setTypeface(tf);
 
         mLegendLabelPaint.setTextSize(mLegend.getTextSize());
         mLegendLabelPaint.setColor(mLegend.getTextColor());
 
-        // Calculate all dimensions of the mLegend
+        // calculate all dimensions of the mLegend
         mLegend.calculateDimensions(mLegendLabelPaint, mViewPortHandler);
     }
 
@@ -285,19 +223,11 @@ public class LegendRenderer extends Renderer {
 
     public void renderLegend(Canvas c) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!mLegend.isEnabled())
             return;
 
         Typeface tf = mLegend.getTypeface();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (tf != null)
             mLegendLabelPaint.setTypeface(tf);
 
@@ -319,33 +249,21 @@ public class LegendRenderer extends Renderer {
         Legend.LegendDirection direction = mLegend.getDirection();
         float defaultFormSize = Utils.convertDpToPixel(mLegend.getFormSize());
 
-        // Space between the entries
+        // space between the entries
         float stackSpace = Utils.convertDpToPixel(mLegend.getStackSpace());
 
         float yoffset = mLegend.getYOffset();
         float xoffset = mLegend.getXOffset();
         float originPosX = 0.f;
 
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (horizontalAlignment) {
             case LEFT:
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (orientation == Legend.LegendOrientation.VERTICAL)
                     originPosX = xoffset;
                 else
                     originPosX = mViewPortHandler.contentLeft() + xoffset;
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (direction == Legend.LegendDirection.RIGHT_TO_LEFT)
                     originPosX += mLegend.mNeededWidth;
 
@@ -353,19 +271,11 @@ public class LegendRenderer extends Renderer {
 
             case RIGHT:
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (orientation == Legend.LegendOrientation.VERTICAL)
                     originPosX = mViewPortHandler.getChartWidth() - xoffset;
                 else
                     originPosX = mViewPortHandler.contentRight() - xoffset;
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (direction == Legend.LegendDirection.LEFT_TO_RIGHT)
                     originPosX -= mLegend.mNeededWidth;
 
@@ -373,10 +283,6 @@ public class LegendRenderer extends Renderer {
 
             case CENTER:
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (orientation == Legend.LegendOrientation.VERTICAL)
                     originPosX = mViewPortHandler.getChartWidth() / 2.f;
                 else
@@ -389,10 +295,6 @@ public class LegendRenderer extends Renderer {
 
                 // Horizontally layed out legends do the center offset on a line basis,
                 // So here we offset the vertical ones only.
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (orientation == Legend.LegendOrientation.VERTICAL) {
                     originPosX += (direction == Legend.LegendDirection.LEFT_TO_RIGHT
                             ? -mLegend.mNeededWidth / 2.0 + xoffset
@@ -402,10 +304,6 @@ public class LegendRenderer extends Renderer {
                 break;
         }
 
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (orientation) {
             case HORIZONTAL: {
 
@@ -416,10 +314,6 @@ public class LegendRenderer extends Renderer {
                 float posX = originPosX;
                 float posY = 0.f;
 
-                /**
-                 * Executes switch operation with thermal imaging domain optimization.
-                 *
-                 */
                 switch (verticalAlignment) {
                     case TOP:
                         posY = yoffset;
@@ -436,29 +330,17 @@ public class LegendRenderer extends Renderer {
 
                 int lineIndex = 0;
 
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (int i = 0, count = entries.length; i < count; i++) {
 
                     LegendEntry e = entries[i];
                     boolean drawingForm = e.form != Legend.LegendForm.NONE;
                     float formSize = Float.isNaN(e.formSize) ? defaultFormSize : Utils.convertDpToPixel(e.formSize);
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (i < calculatedLabelBreakPoints.size() && calculatedLabelBreakPoints.get(i)) {
                         posX = originPosX;
                         posY += labelLineHeight + labelLineSpacing;
                     }
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (posX == originPosX &&
                             horizontalAlignment == Legend.LegendHorizontalAlignment.CENTER &&
                             lineIndex < calculatedLineSizes.size()) {
@@ -468,64 +350,28 @@ public class LegendRenderer extends Renderer {
                         lineIndex++;
                     }
 
-                    boolean isStacked = e.label == null; // Grouped forms have null labels
+                    boolean isStacked = e.label == null; // grouped forms have null labels
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (drawingForm) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (direction == Legend.LegendDirection.RIGHT_TO_LEFT)
                             posX -= formSize;
 
-                        /**
-                         * Executes drawform operation with thermal imaging domain optimization.
-                         *
-                         */
                         drawForm(c, posX, posY + formYOffset, e, mLegend);
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (direction == Legend.LegendDirection.LEFT_TO_RIGHT)
                             posX += formSize;
                     }
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (!isStacked) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (drawingForm)
                             posX += direction == Legend.LegendDirection.RIGHT_TO_LEFT ? -formToTextSpace :
                                     formToTextSpace;
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (direction == Legend.LegendDirection.RIGHT_TO_LEFT)
                             posX -= calculatedLabelSizes.get(i).width;
 
-                        /**
-                         * Executes drawlabel operation with thermal imaging domain optimization.
-                         *
-                         */
                         drawLabel(c, posX, posY + labelLineHeight, e.label);
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (direction == Legend.LegendDirection.LEFT_TO_RIGHT)
                             posX += calculatedLabelSizes.get(i).width;
 
@@ -538,15 +384,11 @@ public class LegendRenderer extends Renderer {
             }
 
             case VERTICAL: {
-                // Contains the stacked legend size in pixels
+                // contains the stacked legend size in pixels
                 float stack = 0f;
                 boolean wasStacked = false;
                 float posY = 0.f;
 
-                /**
-                 * Executes switch operation with thermal imaging domain optimization.
-                 *
-                 */
                 switch (verticalAlignment) {
                     case TOP:
                         posY = (horizontalAlignment == Legend.LegendHorizontalAlignment.CENTER
@@ -569,10 +411,6 @@ public class LegendRenderer extends Renderer {
                         break;
                 }
 
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (int i = 0; i < entries.length; i++) {
 
                     LegendEntry e = entries[i];
@@ -581,77 +419,37 @@ public class LegendRenderer extends Renderer {
 
                     float posX = originPosX;
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (drawingForm) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (direction == Legend.LegendDirection.LEFT_TO_RIGHT)
                             posX += stack;
                         else
                             posX -= formSize - stack;
 
-                        /**
-                         * Executes drawform operation with thermal imaging domain optimization.
-                         *
-                         */
                         drawForm(c, posX, posY + formYOffset, e, mLegend);
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (direction == Legend.LegendDirection.LEFT_TO_RIGHT)
                             posX += formSize;
                     }
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (e.label != null) {
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (drawingForm && !wasStacked)
                             posX += direction == Legend.LegendDirection.LEFT_TO_RIGHT ? formToTextSpace
                                     : -formToTextSpace;
                         else if (wasStacked)
                             posX = originPosX;
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (direction == Legend.LegendDirection.RIGHT_TO_LEFT)
                             posX -= Utils.calcTextWidth(mLegendLabelPaint, e.label);
 
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (!wasStacked) {
-                            /**
-                             * Executes drawlabel operation with thermal imaging domain optimization.
-                             *
-                             */
                             drawLabel(c, posX, posY + labelLineHeight, e.label);
                         } else {
                             posY += labelLineHeight + labelLineSpacing;
-                            /**
-                             * Executes drawlabel operation with thermal imaging domain optimization.
-                             *
-                             */
                             drawLabel(c, posX, posY + labelLineHeight, e.label);
                         }
 
-                        // Make a step down
+                        // make a step down
                         posY += labelLineHeight + labelLineSpacing;
                         stack = 0f;
                     } else {
@@ -684,10 +482,6 @@ public class LegendRenderer extends Renderer {
             LegendEntry entry,
             Legend legend) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (entry.formColor == ColorTemplate.COLOR_SKIP ||
                 entry.formColor == ColorTemplate.COLOR_NONE ||
                 entry.formColor == 0)
@@ -696,10 +490,6 @@ public class LegendRenderer extends Renderer {
         int restoreCount = c.save();
 
         Legend.LegendForm form = entry.form;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (form == Legend.LegendForm.DEFAULT)
             form = legend.getForm();
 
@@ -711,10 +501,6 @@ public class LegendRenderer extends Renderer {
                         : entry.formSize);
         final float half = formSize / 2f;
 
-        /**
-         * Executes switch operation with thermal imaging domain optimization.
-         *
-         */
         switch (form) {
             case NONE:
                 // Do nothing

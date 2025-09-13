@@ -10,18 +10,8 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * Specialized thermal imaging component providing FileTransferProtocol functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Advanced file transfer protocol for large video files and bulk data synchronization
+ * Supports resumable transfers, integrity verification, and bandwidth optimization
  */
 class FileTransferProtocol(
     private val context: Context,
@@ -42,7 +32,7 @@ class FileTransferProtocol(
     private val activeTransfers = ConcurrentHashMap<String, TransferSession>()
     private val transferQueue = mutableListOf<TransferRequest>()
     private val totalBytesTransferred = AtomicLong(0)
-    private val currentTransferSpeed = AtomicLong(0) // Bytes per second
+    private val currentTransferSpeed = AtomicLong(0) // bytes per second
 
     data class TransferRequest(
         val transferId: String,
@@ -62,36 +52,10 @@ class FileTransferProtocol(
         var resumeOffset: Long = 0,
     )
 
-/**
- * Specialized thermal imaging component providing TransferPriority functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     enum class TransferPriority(val weight: Int) {
-        /**
-         * Executes critical operation with thermal imaging domain optimization.
-         *
-         */
         CRITICAL(100), // Session data, logs
-        /**
-         * Executes high operation with thermal imaging domain optimization.
-         *
-         */
         HIGH(75), // Recent video files
-        /**
-         * Executes normal operation with thermal imaging domain optimization.
-         *
-         */
         NORMAL(50), // Standard video files
-        /**
-         * Executes low operation with thermal imaging domain optimization.
-         *
-         */
         LOW(25), // Archived data
     }
 
@@ -99,21 +63,11 @@ class FileTransferProtocol(
         val transferId: String,
         val bytesTransferred: Long,
         val totalBytes: Long,
-        val transferSpeed: Long, // Bytes/second
-        val estimatedTimeRemaining: Long, // Milliseconds
+        val transferSpeed: Long, // bytes/second
+        val estimatedTimeRemaining: Long, // milliseconds
         val status: TransferStatus,
     )
 
-/**
- * Specialized thermal imaging component providing TransferStatus functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     enum class TransferStatus {
         QUEUED,
         TRANSFERRING,
@@ -137,42 +91,20 @@ class FileTransferProtocol(
      * @throws FileNotFoundException if the specified file does not exist
      * @throws SecurityException if file access is denied
      */
-    /**
-     * Executes queuefiletransfer operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param filePath Parameter for operation (type: String)
-     * @param priority Parameter for operation (type: TransferPriority = TransferPriority.NORMAL)
-     * @param sessionId Parameter for operation (type: String)
-     * @param metadata Parameter for operation (type: Map<String)
-     *
-     */
     suspend fun queueFileTransfer(
         filePath: String,
         priority: TransferPriority = TransferPriority.NORMAL,
         sessionId: String,
         metadata: Map<String, String> = emptyMap(),
     ): String =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             val file = File(filePath)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!file.exists()) {
                 throw FileNotFoundException("File not found: $filePath")
             }
 
             val transferId = generateTransferId(filePath, sessionId)
             val request =
-                /**
-                 * Executes transferrequest operation with thermal imaging domain optimization.
-                 *
-                 */
                 TransferRequest(
                     transferId = transferId,
                     filePath = filePath,
@@ -182,20 +114,12 @@ class FileTransferProtocol(
                     metadata = metadata,
                 )
 
-            /**
-             * Executes synchronized operation with thermal imaging domain optimization.
-             *
-             */
             synchronized(transferQueue) {
                 transferQueue.add(request)
                 transferQueue.sortByDescending { it.priority.weight }
             }
 
             Log.d(TAG, "Queued file transfer: $transferId, size: ${file.length()} bytes")
-            /**
-             * Executes processtransferqueue operation with thermal imaging domain optimization.
-             *
-             */
             processTransferQueue()
             transferId
         }
@@ -207,19 +131,8 @@ class FileTransferProtocol(
      * Respects maximum concurrent transfer limits to avoid overwhelming
      * the network connection.
      */
-    /**
-     * Executes processTransferQueue functionality.
-     */
-    /**
-     * Executes processtransferqueue operation with thermal imaging domain optimization.
-     *
-     */
     private fun processTransferQueue() {
         transferScope.launch {
-            /**
-             * Executes processtransferqueueasync operation with thermal imaging domain optimization.
-             *
-             */
             processTransferQueueAsync()
         }
     }
@@ -231,39 +144,15 @@ class FileTransferProtocol(
      * Removes requests from queue and starts transfers until maximum
      * concurrent transfers is reached.
      */
-    /**
-     * Executes processtransferqueueasync operation with thermal imaging domain optimization.
-     *
-     */
     private suspend fun processTransferQueueAsync(): Unit =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (transferQueue.isNotEmpty() && activeTransfers.size < MAX_CONCURRENT_TRANSFERS) {
                 val request =
-                    /**
-                     * Executes synchronized operation with thermal imaging domain optimization.
-                     *
-                     */
                     synchronized(transferQueue) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (transferQueue.isEmpty()) return@synchronized null
                         transferQueue.removeAt(0) // Use removeAt(0) instead of removeFirst() for API compatibility
                     } ?: break
 
-                /**
-                 * Executes startfiletransfer operation with thermal imaging domain optimization.
-                 *
-                 */
                 startFileTransfer(request)
             }
         }
@@ -277,24 +166,9 @@ class FileTransferProtocol(
      *
      * @param request Transfer request containing file details and metadata
      */
-    /**
-     * Executes startfiletransfer operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param request Parameter for operation (type: TransferRequest)
-     *
-     */
     private suspend fun startFileTransfer(request: TransferRequest): Unit =
-        /**
-         * Executes withcontext operation with thermal imaging domain optimization.
-         *
-         */
         withContext(Dispatchers.IO) {
             val session =
-                /**
-                 * Executes transfersession operation with thermal imaging domain optimization.
-                 *
-                 */
                 TransferSession(
                     request = request,
                     startTime = System.currentTimeMillis(),
@@ -308,42 +182,22 @@ class FileTransferProtocol(
                 session.resumeOffset = resumeOffset
 
                 // Initialize transfer with PC Controller
-                /**
-                 * Initializes the ializetransfer component for thermal imaging operations.
-                 *
-                 */
                 initializeTransfer(session)
 
                 // Start chunked transfer
-                /**
-                 * Executes transferfileinchunks operation with thermal imaging domain optimization.
-                 *
-                 */
                 transferFileInChunks(session)
 
                 // Verify transfer integrity
-                /**
-                 * Executes verifytransferintegrity operation with thermal imaging domain optimization.
-                 *
-                 */
                 verifyTransferIntegrity(session)
 
                 Log.d(TAG, "Transfer completed: ${request.transferId}")
             } catch (e: Exception) {
                 Log.e(TAG, "Transfer failed: ${request.transferId}", e)
-                /**
-                 * Executes handletransfererror operation with thermal imaging domain optimization.
-                 *
-                 */
                 handleTransferError(session, e)
             } finally {
                 activeTransfers.remove(request.transferId)
                 // Process next queued transfer asynchronously to avoid recursion
                 transferScope.launch {
-                    /**
-                     * Executes processtransferqueueasync operation with thermal imaging domain optimization.
-                     *
-                     */
                     processTransferQueueAsync()
                 }
             }
@@ -355,45 +209,13 @@ class FileTransferProtocol(
     private suspend fun initializeTransfer(session: TransferSession) {
         val initMessage =
             JSONObject().apply {
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("type", "file_transfer_init")
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("transfer_id", session.request.transferId)
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("file_name", File(session.request.filePath).name)
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("file_size", session.request.fileSize)
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("session_id", session.request.sessionId)
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("resume_offset", session.resumeOffset)
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("chunk_size", CHUNK_SIZE)
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("metadata", JSONObject(session.request.metadata))
             }
 
@@ -401,10 +223,6 @@ class FileTransferProtocol(
 
         // Wait for acknowledgment
         val response = networkClient.waitForResponse("file_transfer_ack", TRANSFER_TIMEOUT_MS)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (response.optString("status") != "ready") {
             throw IOException("PC Controller not ready for transfer")
         }
@@ -418,16 +236,8 @@ class FileTransferProtocol(
             val file = File(session.request.filePath)
             val buffer = ByteArray(CHUNK_SIZE)
 
-            /**
-             * Executes fileinputstream operation with thermal imaging domain optimization.
-             *
-             */
             FileInputStream(file).use { inputStream ->
                 // Skip to resume offset if resuming
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (session.resumeOffset > 0) {
                     inputStream.skip(session.resumeOffset)
                     session.bytesTransferred.set(session.resumeOffset)
@@ -437,16 +247,8 @@ class FileTransferProtocol(
                 var chunkIndex = (session.resumeOffset / CHUNK_SIZE).toInt()
                 val startTime = System.currentTimeMillis()
 
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (inputStream.read(buffer).also { bytesRead = it } != -1) {
                     val chunkData =
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (bytesRead < CHUNK_SIZE) {
                             buffer.copyOf(bytesRead)
                         } else {
@@ -454,10 +256,6 @@ class FileTransferProtocol(
                         }
 
                     // Send chunk with metadata
-                    /**
-                     * Executes sendfilechunk operation with thermal imaging domain optimization.
-                     *
-                     */
                     sendFileChunk(session, chunkIndex, chunkData)
 
                     // Update progress
@@ -467,10 +265,6 @@ class FileTransferProtocol(
 
                     // Calculate transfer speed
                     val elapsedTime = System.currentTimeMillis() - startTime
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (elapsedTime > 0) {
                         val speed = (session.bytesTransferred.get() * 1000L) / elapsedTime
                         currentTransferSpeed.set(speed)
@@ -479,23 +273,11 @@ class FileTransferProtocol(
                     chunkIndex++
 
                     // Periodic integrity check
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (session.bytesTransferred.get() % INTEGRITY_CHECK_INTERVAL == 0L) {
-                        /**
-                         * Executes verifypartialintegrity operation with thermal imaging domain optimization.
-                         *
-                         */
                         verifyPartialIntegrity(session)
                     }
 
                     // Yield to prevent blocking other coroutines
-                    /**
-                     * Executes yield operation with thermal imaging domain optimization.
-                     *
-                     */
                     yield()
                 }
             }
@@ -510,30 +292,10 @@ class FileTransferProtocol(
         data: ByteArray,
     ) {
         val chunkMessage =
-            /**
-             * Executes jsonobject operation with thermal imaging domain optimization.
-             *
-             */
             JSONObject().apply {
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("type", "file_chunk")
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("transfer_id", session.request.transferId)
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("chunk_index", chunkIndex)
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("chunk_size", data.size)
             }
 
@@ -543,10 +305,6 @@ class FileTransferProtocol(
 
         // Wait for chunk acknowledgment
         val ack = networkClient.waitForResponse("chunk_ack", 5000L)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ack.optString("transfer_id") != session.request.transferId ||
             ack.optInt("chunk_index") != chunkIndex
         ) {
@@ -562,40 +320,16 @@ class FileTransferProtocol(
         val checksumHex = calculatedChecksum.joinToString("") { "%02x".format(it) }
 
         val verifyMessage =
-            /**
-             * Executes jsonobject operation with thermal imaging domain optimization.
-             *
-             */
             JSONObject().apply {
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("type", "file_transfer_verify")
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("transfer_id", session.request.transferId)
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("checksum", checksumHex)
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("algorithm", "SHA-256")
             }
 
         networkClient.sendMessage(verifyMessage)
 
         val response = networkClient.waitForResponse("transfer_verification", TRANSFER_TIMEOUT_MS)
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (response.optString("status") != "verified") {
             throw IOException("Transfer integrity verification failed")
         }
@@ -607,15 +341,7 @@ class FileTransferProtocol(
     private suspend fun checkResumeCapability(transferId: String): Long {
         val resumeQuery =
             JSONObject().apply {
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("type", "file_transfer_resume_query")
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("transfer_id", transferId)
             }
 
@@ -648,16 +374,8 @@ class FileTransferProtocol(
         Log.e(TAG, "Transfer error for ${session.request.transferId}", error)
 
         // Implement retry logic based on error type
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (error is IOException && session.resumeOffset < session.request.fileSize) {
             // Queue for retry if network error and transfer is resumable
-            /**
-             * Executes synchronized operation with thermal imaging domain optimization.
-             *
-             */
             synchronized(transferQueue) {
                 transferQueue.add(0, session.request) // Add to front of queue
             }
@@ -671,10 +389,6 @@ class FileTransferProtocol(
         return activeTransfers.values.map { session ->
             val elapsed = System.currentTimeMillis() - session.startTime
             val speed =
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (elapsed > 0) {
                     (session.bytesTransferred.get() * 1000L) / elapsed
                 } else {
@@ -682,20 +396,12 @@ class FileTransferProtocol(
                 }
 
             val remaining =
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (speed > 0) {
                     (session.request.fileSize - session.bytesTransferred.get()) / speed * 1000L
                 } else {
                     0L
                 }
 
-            /**
-             * Executes transferprogress operation with thermal imaging domain optimization.
-             *
-             */
             TransferProgress(
                 transferId = session.request.transferId,
                 bytesTransferred = session.bytesTransferred.get(),
@@ -710,31 +416,12 @@ class FileTransferProtocol(
     /**
      * Cancel active transfer
      */
-    /**
-     * Executes canceltransfer operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param transferId Parameter for operation (type: String)
-     *
-     */
     suspend fun cancelTransfer(transferId: String): Boolean {
         val session = activeTransfers[transferId] ?: return false
 
         val cancelMessage =
-            /**
-             * Executes jsonobject operation with thermal imaging domain optimization.
-             *
-             */
             JSONObject().apply {
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("type", "file_transfer_cancel")
-                /**
-                 * Executes put operation with thermal imaging domain optimization.
-                 *
-                 */
                 put("transfer_id", transferId)
             }
 
@@ -778,10 +465,6 @@ class FileTransferProtocol(
 
     /**
      * Cleanup resources
-     */
-    /**
-     * Executes cleanup operation with thermal imaging domain optimization.
-     *
      */
     fun cleanup() {
         transferJob.cancel()

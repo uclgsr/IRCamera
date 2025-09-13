@@ -17,28 +17,15 @@ import com.topdon.module.thermal.ir.report.bean.ImageTempBean
 import com.topdon.lib.core.R as LibR
 
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ReportIRInputView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Report i r input view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class ReportIRInputView : LinearLayout {
     companion object {
         private const val TYPE_FULL = 0 // 全图
-        private const val TYPE_POINT = 1 // Point
-        private const val TYPE_LINE = 2 // Line
-        private const val TYPE_RECT = 3 // Area
+        private const val TYPE_POINT = 1 // point
+        private const val TYPE_LINE = 2 // line
+        private const val TYPE_RECT = 3 // area
     }
 
     // View references - migrated from synthetic views
@@ -50,45 +37,13 @@ class ReportIRInputView : LinearLayout {
     private lateinit var clAverage: View
     private lateinit var clExplain: View
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     @SuppressLint("SetTextI18n")
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        /**
-         * Executes inflate operation with thermal imaging domain optimization.
-         *
-         */
         inflate(context, R.layout.view_report_ir_input, this)
-        /**
-         * Initializes the views component for thermal imaging operations.
-         *
-         */
         initViews()
 
         val etExplain = clExplain.findViewById<EditText>(R.id.et_item)
@@ -97,33 +52,17 @@ class ReportIRInputView : LinearLayout {
 
         val switchMax = clMax.findViewById<SwitchCompat>(R.id.switch_item)
         val etMax = clMax.findViewById<EditText>(R.id.et_item)
-        /**
-         * Configures the switchlistener with validation and thermal imaging optimization.
-         *
-         */
         setSwitchListener(switchMax, etMax)
 
         val switchMin = clMin.findViewById<SwitchCompat>(R.id.switch_item)
         val etMin = clMin.findViewById<EditText>(R.id.et_item)
-        /**
-         * Configures the switchlistener with validation and thermal imaging optimization.
-         *
-         */
         setSwitchListener(switchMin, etMin)
 
         val switchAverage = clAverage.findViewById<SwitchCompat>(R.id.switch_item)
         val etAverage = clAverage.findViewById<EditText>(R.id.et_item)
-        /**
-         * Configures the switchlistener with validation and thermal imaging optimization.
-         *
-         */
         setSwitchListener(switchAverage, etAverage)
 
         val switchExplain = clExplain.findViewById<SwitchCompat>(R.id.switch_item)
-        /**
-         * Configures the switchlistener with validation and thermal imaging optimization.
-         *
-         */
         setSwitchListener(switchExplain, etExplain)
 
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.ReportIRInputView)
@@ -134,16 +73,9 @@ class ReportIRInputView : LinearLayout {
         clTitle.isVisible = index == 0
         viewLine.isVisible = index > 0
 
-        /**
-         * Configures the uptypespecificviews with validation and thermal imaging optimization.
-         *
-         */
         setupTypeSpecificViews(type, index)
     }
 
-    /**
-     * Initializes views component.
-     */
     private fun initViews() {
         clTitle = findViewById(R.id.cl_title)
         viewLine = findViewById(R.id.view_line)
@@ -154,9 +86,6 @@ class ReportIRInputView : LinearLayout {
         clExplain = findViewById(R.id.cl_explain)
     }
 
-    /**
-     * Sets uptypespecificviews configuration.
-     */
     private fun setupTypeSpecificViews(
         type: Int,
         index: Int,
@@ -166,10 +95,6 @@ class ReportIRInputView : LinearLayout {
         val tvAverageName = clAverage.findViewById<TextView>(R.id.tv_item_name)
         val tvExplainName = clExplain.findViewById<TextView>(R.id.tv_item_name)
 
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (type) {
             TYPE_FULL -> {
                 tvTitle.setText(LibR.string.thermal_full_rect)
@@ -207,96 +132,46 @@ class ReportIRInputView : LinearLayout {
         }
     }
 
-    /**
-     * Executes isSwitchMaxCheck functionality.
-     */
-    /**
-     * Executes isswitchmaxcheck operation with thermal imaging domain optimization.
-     *
-     */
     fun isSwitchMaxCheck(): Boolean {
         val switchMax = clMax.findViewById<SwitchCompat>(R.id.switch_item)
         return switchMax.isChecked
     }
 
-    /**
-     * Executes isSwitchMinCheck functionality.
-     */
-    /**
-     * Executes isswitchmincheck operation with thermal imaging domain optimization.
-     *
-     */
     fun isSwitchMinCheck(): Boolean {
         val switchMin = clMin.findViewById<SwitchCompat>(R.id.switch_item)
         return switchMin.isChecked
     }
 
-    /**
-     * Executes isSwitchAverageCheck functionality.
-     */
-    /**
-     * Executes isswitchaveragecheck operation with thermal imaging domain optimization.
-     *
-     */
     fun isSwitchAverageCheck(): Boolean {
         val switchAverage = clAverage.findViewById<SwitchCompat>(R.id.switch_item)
         return switchAverage.isChecked
     }
 
-    /**
-     * Executes isSwitchExplainCheck functionality.
-     */
-    /**
-     * Executes isswitchexplaincheck operation with thermal imaging domain optimization.
-     *
-     */
     fun isSwitchExplainCheck(): Boolean {
         val switchExplain = clExplain.findViewById<SwitchCompat>(R.id.switch_item)
         return switchExplain.isChecked
     }
 
-    /**
-     * Retrieves maxinput information.
-     */
     fun getMaxInput(): String {
         val etMax = clMax.findViewById<EditText>(R.id.et_item)
         return etMax.text.toString()
     }
 
-    /**
-     * Retrieves mininput information.
-     */
     fun getMinInput(): String {
         val etMin = clMin.findViewById<EditText>(R.id.et_item)
         return etMin.text.toString()
     }
 
-    /**
-     * Retrieves averageinput information.
-     */
     fun getAverageInput(): String {
         val etAverage = clAverage.findViewById<EditText>(R.id.et_item)
         return etAverage.text.toString()
     }
 
-    /**
-     * Retrieves explaininput information.
-     */
     fun getExplainInput(): String {
         val etExplain = clExplain.findViewById<EditText>(R.id.et_item)
         return etExplain.text.toString()
     }
 
-    /**
-     * Executes refreshData functionality.
-     */
-    /**
-     * Executes refreshdata operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param tempBean Temperature value in Celsius (type: ImageTempBean.TempBean?)
-     *
-     */
     fun refreshData(tempBean: ImageTempBean.TempBean?) {
         val etMax = clMax.findViewById<EditText>(R.id.et_item)
         val etMin = clMin.findViewById<EditText>(R.id.et_item)
@@ -315,9 +190,6 @@ class ReportIRInputView : LinearLayout {
         etExplain.setText("")
     }
 
-    /**
-     * Sets switchlistener configuration.
-     */
     private fun setSwitchListener(
         switchCompat: SwitchCompat,
         editText: EditText,

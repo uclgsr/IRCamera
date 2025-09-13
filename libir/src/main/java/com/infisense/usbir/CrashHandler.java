@@ -19,18 +19,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Specialized thermal imaging component providing CrashHandler functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author: CaiSongL
+ * @date: 2023/5/24 9:47
  */
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
@@ -42,25 +32,13 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     /** errorLogfile */
     private File logFile ;
 
-    /**
-     * Executes crashhandler operation with thermal imaging domain optimization.
-     *
-     */
     private CrashHandler() {
 
     }
 
     public static CrashHandler getInstance() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (crashHandler == null) {
             synchronized (CrashHandler.class) {
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (crashHandler == null) {
                     crashHandler = new CrashHandler();
                 }
@@ -73,7 +51,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         mContext = context;
         logFile = new File(mContext.getCacheDir(),"crashLog.trace");
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-        // Settings为line程default的exceptionprocessing器
+        //settings为line程默认的exceptionprocessing器
         Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
@@ -81,11 +59,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     public void uncaughtException(Thread thread, Throwable ex) {
         // 打印exceptioninfo
         ex.printStackTrace();
-        // 我们没有processingexception 并且defaultexceptionprocessing不为空 则交给系统processing
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // 我们没有processingexception 并且默认exceptionprocessing不为空 则交给系统processing
         if (!handlelException(ex) && mDefaultHandler != null) {
             // 系统processing
             mDefaultHandler.uncaughtException(thread, ex);
@@ -97,24 +71,20 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             }
             try {
                 // UploaderrorLog到service器
-                /**
-                 * Executes uploaderrorfiletoserver operation with thermal imaging domain optimization.
-                 *
-                 */
                 upLoadErrorFileToServer(logFile);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 //            Intent intent = new Intent(mContext, SplashActivity.class);
 //            // 新开task栈
-// Intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-// MContext.startActivity(intent);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            mContext.startActivity(intent);
 //            // 杀死我们的process
 //            Timer timer = new Timer();
-// Timer.schedule(new TimerTask() {
+//            timer.schedule(new TimerTask() {
 //
 //                @Override
-// Public void run() {
+//                public void run() {
 //                    Process.killProcess(Process.myPid());
 //                }
 //            }, 2 * 1000);
@@ -123,10 +93,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     private boolean handlelException(Throwable ex) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (ex == null) {
             return false;
         }
@@ -145,10 +111,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
         PrintWriter pw = null;
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!logFile.exists()) {
                 logFile.createNewFile();
             }
@@ -179,11 +141,11 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
         PackageManager pm = mContext.getPackageManager();
         PackageInfo pi = pm.getPackageInfo(mContext.getPackageName(),PackageManager.GET_ACTIVITIES);
-        // Error发生时间
+        // error发生时间
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         pw.print("time : ");
         pw.println(time);
-        // Versioninfo
+        // versioninfo
         pw.print("versionCode : ");
         pw.println(pi.versionCode);
         // 应用version号
@@ -192,13 +154,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         try {
             /** 暴力反射Get/Retrievedata */
             Field[] Fields = Build.class.getDeclaredFields();
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param field Parameter for operation (type: Fields)
-             *
-             */
             for (Field field : Fields) {
                 field.setAccessible(true);
                 pw.print(field.getName() + " : ");

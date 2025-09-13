@@ -23,20 +23,6 @@ import java.text.DecimalFormat
 import com.topdon.lib.core.R as RCore
 
 // Legacy ARouter route annotation - now using NavigationManager
-/**
- * Specialized thermal imaging component providing StorageSpaceActivity functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
     // View references - migrated from synthetic views
     private lateinit var tvFormatStorage: TextView
@@ -51,52 +37,19 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
     private lateinit var customViewProgress: ProgressBarView
 
     companion object {
-    /**
-     * Executes formatFileSize functionality.
-     */
-        /**
-         * Executes formatfilesize operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param fileSize Parameter for operation (type: Long)
-         *
-         */
         private fun formatFileSize(fileSize: Long): String =
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (fileSize == 0L) {
                 "0"
             } else if (fileSize < 1024) {
-                /**
-                 * Executes decimalformat operation with thermal imaging domain optimization.
-                 *
-                 */
                 DecimalFormat("#.0").format(fileSize.toDouble())
             } else if (fileSize < 1048576) {
-                /**
-                 * Executes decimalformat operation with thermal imaging domain optimization.
-                 *
-                 */
                 DecimalFormat("#.0").format(fileSize.toDouble() / 1024)
             } else if (fileSize < 1073741824) {
-                /**
-                 * Executes decimalformat operation with thermal imaging domain optimization.
-                 *
-                 */
                 DecimalFormat("#.0").format(fileSize.toDouble() / 1048576)
             } else {
-                /**
-                 * Executes decimalformat operation with thermal imaging domain optimization.
-                 *
-                 */
                 DecimalFormat("#.0").format(fileSize.toDouble() / 1073741824)
             }
 
-    /**
-     * Retrieves unit information.
-     */
         private fun getUnit(fileSize: Long): String =
             if (fileSize < 1024) {
                 "B"
@@ -109,16 +62,8 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
             }
     }
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.activity_storage_space
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         // Initialize views - migrated from synthetic views
         tvFormatStorage = findViewById(R.id.tv_format_storage)
@@ -136,17 +81,9 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
     }
 
     @SuppressLint("SetTextI18n")
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
         lifecycleScope.launch {
             val freeSpaceBean = TS004Repository.getFreeSpace()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (freeSpaceBean == null) {
                 TToast.shortToast(this@StorageSpaceActivity, RCore.string.operation_failed_tips)
             } else {
@@ -175,55 +112,24 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
-            tvFormatStorage -> { // Format化storage
+            tvFormatStorage -> { // format化storage
                 TipDialog.Builder(this@StorageSpaceActivity)
                     .setTitleMessage(getString(RCore.string.more_storage_reset))
                     .setMessage(getString(RCore.string.more_storage_reset1))
                     .setShowRestartTops(true)
                     .setPositiveListener(RCore.string.app_ok) {
-                        /**
-                         * Executes showloadingdialog operation with thermal imaging domain optimization.
-                         *
-                         */
                         showLoadingDialog()
                         lifecycleScope.launch {
                             val isSuccess = TS004Repository.getFormatStorage()
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (isSuccess) {
                                 XLog.d("TS004 format化storagesuccess，即将disconnectconnection")
                                 (application as BaseApplication).disconnectWebSocket()
                                 NavigationManager.getInstance().build(RouterConfig.MAIN).navigation(this@StorageSpaceActivity)
-                                /**
-                                 * Executes finish operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 finish()
                             } else {
-                                /**
-                                 * Executes delay operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 delay(500)
-                                /**
-                                 * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-                                 *
-                                 */
                                 dismissLoadingDialog()
                                 TToast.shortToast(this@StorageSpaceActivity, RCore.string.operation_failed_tips)
                             }

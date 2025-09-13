@@ -26,27 +26,13 @@ import javax.crypto.spec.SecretKeySpec
  * - Hardware-backed key storage using Android Keystore
  * - Security monitoring and anomaly detection
  */
-/**
- * Specialized thermal imaging component providing AdvancedAuthenticationManager functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class AdvancedAuthenticationManager(private val context: Context) {
     companion object {
         private const val TAG = "AdvancedAuth"
 
         // Authentication levels
         const val AUTH_LEVEL_NONE = 0
-        const val AUTH_LEVEL_BASIC = 1 // Admin/admin
+        const val AUTH_LEVEL_BASIC = 1 // admin/admin
         const val AUTH_LEVEL_CERTIFICATE = 2 // Device certificates
         const val AUTH_LEVEL_TOKEN = 3 // Secure tokens with HMAC
         const val AUTH_LEVEL_BIOMETRIC = 4 // Biometric + hardware keys
@@ -85,133 +71,53 @@ class AdvancedAuthenticationManager(private val context: Context) {
     // Security monitoring
     private var securityMonitor: SecurityMonitor? = null
 
-/**
- * Specialized thermal imaging component providing DeviceRole functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     enum class DeviceRole(val level: Int, val permissions: Set<String>) {
-        /**
-         * Executes guest operation with thermal imaging domain optimization.
-         *
-         */
         GUEST(0, setOf("view_status")),
-        /**
-         * Executes observer operation with thermal imaging domain optimization.
-         *
-         */
         OBSERVER(1, setOf("view_status", "view_sessions", "download_data")),
-        /**
-         * Executes operator operation with thermal imaging domain optimization.
-         *
-         */
         OPERATOR(2, setOf("view_status", "view_sessions", "download_data", "start_recording", "stop_recording")),
-        /**
-         * Executes researcher operation with thermal imaging domain optimization.
-         *
-         */
         RESEARCHER(
             3,
-            /**
-             * Configures the of with validation and thermal imaging optimization.
-             *
-             */
             setOf("view_status", "view_sessions", "download_data", "start_recording", "stop_recording", "manage_sessions", "export_data"),
         ),
-        /**
-         * Executes administrator operation with thermal imaging domain optimization.
-         *
-         */
         ADMINISTRATOR(4, setOf("*")), // All permissions
     }
 
-/**
- * Specialized thermal imaging component providing AuthenticationResult functionality for the IRCamera system.
- *
-/**
- * Specialized thermal imaging component providing AuthenticationListener functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
+    enum class AuthenticationResult {
+        SUCCESS,
+        INVALID_CREDENTIALS,
+        CERTIFICATE_INVALID,
+        ACCOUNT_LOCKED,
+        INSUFFICIENT_PERMISSIONS,
+        TOKEN_EXPIRED,
+        HARDWARE_UNAVAILABLE,
+        BIOMETRIC_FAILED,
+        UNKNOWN_ERROR,
+    }
+
+    data class AuthenticationContext(
+        val deviceId: String,
+        val authLevel: Int,
+        val role: DeviceRole,
+        val sessionToken: String,
+        val expiryTime: Long,
+        val capabilities: Set<String>,
+    )
+
     interface AuthenticationListener {
-    /**
-     * Executes onAuthenticationSuccess functionality.
-     */
-        /**
-         * Executes onauthenticationsuccess operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param context Parameter for operation (type: AuthenticationContext)
-         *
-         */
         fun onAuthenticationSuccess(context: AuthenticationContext)
 
-    /**
-     * Executes onAuthenticationFailure functionality.
-     */
-        /**
-         * Executes onauthenticationfailure operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param reason Parameter for operation (type: AuthenticationResult)
-         * @param attemptsRemaining Temperature value in Celsius (type: Int)
-         *
-         */
         fun onAuthenticationFailure(
             reason: AuthenticationResult,
             attemptsRemaining: Int,
         )
 
-    /**
-     * Executes onSessionExpired functionality.
-     */
-        /**
-         * Executes onsessionexpired operation with thermal imaging domain optimization.
-         *
-         */
         fun onSessionExpired()
 
-    /**
-     * Executes onSecurityAlert functionality.
-     */
-        /**
-         * Executes onsecurityalert operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param alertType Parameter for operation (type: String)
-         * @param details Parameter for operation (type: Map<String)
-         *
-         */
         fun onSecurityAlert(
             alertType: String,
             details: Map<String, Any>,
         )
 
-    /**
-     * Executes onRoleChanged functionality.
-     */
-        /**
-         * Executes onrolechanged operation with thermal imaging domain optimization.
-         *
-         * @param
-         * @param newRole Parameter for operation (type: DeviceRole)
-         * @param permissions Parameter for operation (type: Set<String>)
-         *
-         */
         fun onRoleChanged(
             newRole: DeviceRole,
             permissions: Set<String>,
@@ -229,66 +135,30 @@ class AdvancedAuthenticationManager(private val context: Context) {
 
             // Initialize certificate management
             certificateManager =
-                /**
-                 * Executes certificatemanager operation with thermal imaging domain optimization.
-                 *
-                 */
                 CertificateManager(context, logger).apply {
-                    /**
-                     * Initializes the ialize component for thermal imaging operations.
-                     *
-                     */
                     initialize()
                 }
 
             // Initialize role-based access control
             roleManager =
-                /**
-                 * Executes rolebasedaccesscontrol operation with thermal imaging domain optimization.
-                 *
-                 */
                 RoleBasedAccessControl(context, logger).apply {
-                    /**
-                     * Initializes the ialize component for thermal imaging operations.
-                     *
-                     */
                     initialize()
                 }
 
             // Initialize security monitoring
             securityMonitor =
-                /**
-                 * Executes securitymonitor operation with thermal imaging domain optimization.
-                 *
-                 */
                 SecurityMonitor(context, logger).apply {
-                    /**
-                     * Initializes the ialize component for thermal imaging operations.
-                     *
-                     */
                     initialize()
-                    /**
-                     * Executes startmonitoring operation with thermal imaging domain optimization.
-                     *
-                     */
                     startMonitoring()
                 }
 
             // Initialize hardware keystore
-            /**
-             * Initializes the ializekeystore component for thermal imaging operations.
-             *
-             */
             initializeKeystore()
 
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 TAG,
                 "advanced_auth_initialized",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "certificate_enabled" to (certificateManager != null),
                     "rbac_enabled" to (roleManager != null),
@@ -304,10 +174,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "init_failed",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "error" to e.message.orEmpty(),
                 ),
@@ -332,20 +198,12 @@ class AdvancedAuthenticationManager(private val context: Context) {
         credentials: Map<String, Any>,
     ): AuthenticationResult {
         // Check if device is locked out
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isDeviceLocked(deviceId)) {
             return AuthenticationResult.ACCOUNT_LOCKED
         }
 
         try {
             val result =
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (authLevel) {
                     AUTH_LEVEL_BASIC -> authenticateBasic(deviceId, credentials)
                     AUTH_LEVEL_CERTIFICATE -> authenticateCertificate(deviceId, credentials)
@@ -354,21 +212,9 @@ class AdvancedAuthenticationManager(private val context: Context) {
                     else -> AuthenticationResult.INVALID_CREDENTIALS
                 }
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (result == AuthenticationResult.SUCCESS) {
-                /**
-                 * Executes onauthenticationsuccess operation with thermal imaging domain optimization.
-                 *
-                 */
                 onAuthenticationSuccess(deviceId, authLevel, credentials)
             } else {
-                /**
-                 * Executes onauthenticationfailure operation with thermal imaging domain optimization.
-                 *
-                 */
                 onAuthenticationFailure(deviceId, result)
             }
 
@@ -379,10 +225,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "auth_error",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "device_id" to deviceId,
                     "auth_level" to authLevel,
@@ -404,20 +246,12 @@ class AdvancedAuthenticationManager(private val context: Context) {
         val password = credentials["password"] as? String
 
         // Check basic credentials
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (username == "admin" && password == "admin") {
             return AuthenticationResult.SUCCESS
         }
 
         // Check for enhanced basic credentials
         val enhancedCredentials = getEnhancedBasicCredentials()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (enhancedCredentials.containsKey(username) && enhancedCredentials[username] == password) {
             return AuthenticationResult.SUCCESS
         }
@@ -436,10 +270,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
         val signature = credentials["signature"] as? ByteArray
         val challenge = credentials["challenge"] as? String
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (certificate == null || signature == null || challenge == null) {
             return AuthenticationResult.CERTIFICATE_INVALID
         }
@@ -459,28 +289,16 @@ class AdvancedAuthenticationManager(private val context: Context) {
         val timestamp = credentials["timestamp"] as? Long
         val hmac = credentials["hmac"] as? String
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (token == null || timestamp == null || hmac == null) {
             return AuthenticationResult.INVALID_CREDENTIALS
         }
 
         // Verify token hasn't expired
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (System.currentTimeMillis() - timestamp > TOKEN_VALIDITY_MS) {
             return AuthenticationResult.TOKEN_EXPIRED
         }
 
         // Verify HMAC
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!verifyHmac(deviceId, token, timestamp, hmac)) {
             return AuthenticationResult.INVALID_CREDENTIALS
         }
@@ -501,10 +319,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
         val hardwareKey = credentials["hardware_key"] as? ByteArray
         val biometricSignature = credentials["biometric_signature"] as? ByteArray
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (hardwareKey == null || biometricSignature == null) {
             return AuthenticationResult.HARDWARE_UNAVAILABLE
         }
@@ -544,10 +358,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
 
         // Create authentication context
         val context =
-            /**
-             * Executes authenticationcontext operation with thermal imaging domain optimization.
-             *
-             */
             AuthenticationContext(
                 deviceId = deviceId,
                 authLevel = authLevel,
@@ -562,10 +372,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
             StructuredLogger.LogLevel.INFO,
             TAG,
             "auth_success",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "device_id" to deviceId,
                 "auth_level" to authLevel,
@@ -578,10 +384,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
         authListener?.onAuthenticationSuccess(context)
 
         // Start session monitoring
-        /**
-         * Executes startsessionmonitoring operation with thermal imaging domain optimization.
-         *
-         */
         startSessionMonitoring(deviceId, sessionExpiry)
     }
 
@@ -597,20 +399,12 @@ class AdvancedAuthenticationManager(private val context: Context) {
         failedAttempts[deviceId] = attempts
 
         // Lock account if too many failures
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (attempts >= MAX_AUTH_ATTEMPTS) {
             lockoutExpiry[deviceId] = System.currentTimeMillis() + LOCKOUT_DURATION_MS
 
             // Send security alert
             securityMonitor?.reportSecurityEvent(
                 "account_locked",
-                /**
-                 * Executes mapof operation with thermal imaging domain optimization.
-                 *
-                 */
                 mapOf(
                     "device_id" to deviceId,
                     "failed_attempts" to attempts,
@@ -625,10 +419,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
             StructuredLogger.LogLevel.WARNING,
             TAG,
             "auth_failure",
-            /**
-             * Executes mapof operation with thermal imaging domain optimization.
-             *
-             */
             mapOf(
                 "device_id" to deviceId,
                 "reason" to result.name,
@@ -670,10 +460,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
         return when (authLevel) {
             AUTH_LEVEL_BASIC -> DeviceRole.OBSERVER
             AUTH_LEVEL_CERTIFICATE ->
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (deviceType) {
                     "PC_CONTROLLER" -> DeviceRole.ADMINISTRATOR
                     "ANDROID_PHONE" -> DeviceRole.OPERATOR
@@ -709,16 +495,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
     /**
      * Verify HMAC signature
      */
-    /**
-     * Executes verifyhmac operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param deviceId Parameter for operation (type: String)
-     * @param token Parameter for operation (type: String)
-     * @param timestamp Parameter for operation (type: Long)
-     * @param providedHmac Parameter for operation (type: String)
-     *
-     */
     private fun verifyHmac(
         deviceId: String,
         token: String,
@@ -743,15 +519,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
     /**
      * Verify hardware-backed key
      */
-    /**
-     * Executes verifyhardwarekey operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param deviceId Parameter for operation (type: String)
-     * @param hardwareKey Parameter for operation (type: ByteArray)
-     * @param signature Parameter for operation (type: ByteArray)
-     *
-     */
     private fun verifyHardwareKey(
         deviceId: String,
         hardwareKey: ByteArray,
@@ -761,10 +528,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
             val keyStore = KeyStore.getInstance("AndroidKeyStore")
             keyStore.load(null)
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!keyStore.containsAlias(KEYSTORE_ALIAS_DEVICE)) {
                 return false
             }
@@ -796,27 +559,12 @@ class AdvancedAuthenticationManager(private val context: Context) {
     /**
      * Get HMAC key for device
      */
-    /**
-     * Retrieves the hmackey with optimized performance for thermal imaging operations.
-     *
-     * @param
-     * @param deviceId Parameter for operation (type: String)
-     *
-     */
     private fun getHmacKey(deviceId: String): ByteArray {
         return try {
             val keyStore = KeyStore.getInstance("AndroidKeyStore")
             keyStore.load(null)
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!keyStore.containsAlias(KEYSTORE_ALIAS_HMAC)) {
-                /**
-                 * Executes generatehmackey operation with thermal imaging domain optimization.
-                 *
-                 */
                 generateHmacKey()
             }
 
@@ -834,15 +582,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
     private fun initializeKeystore() {
         try {
             generateDeviceKey()
-            /**
-             * Executes generatesessionkey operation with thermal imaging domain optimization.
-             *
-             */
             generateSessionKey()
-            /**
-             * Executes generatehmackey operation with thermal imaging domain optimization.
-             *
-             */
             generateHmacKey()
 
             Log.i(TAG, "Android Keystore initialized successfully")
@@ -892,10 +632,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
     /**
      * Generate HMAC key
      */
-    /**
-     * Executes generatehmackey operation with thermal imaging domain optimization.
-     *
-     */
     private fun generateHmacKey() {
         val keyGenerator = KeyGenerator.getInstance("HmacSHA256", "AndroidKeyStore")
         val keyGenParameterSpec =
@@ -913,28 +649,12 @@ class AdvancedAuthenticationManager(private val context: Context) {
     /**
      * Start session monitoring
      */
-    /**
-     * Executes startsessionmonitoring operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param deviceId Parameter for operation (type: String)
-     * @param expiryTime Parameter for operation (type: Long)
-     *
-     */
     private fun startSessionMonitoring(
         deviceId: String,
         expiryTime: Long,
     ) {
         scope.launch {
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (System.currentTimeMillis() < expiryTime && currentAuthLevel.get()) {
-                /**
-                 * Executes delay operation with thermal imaging domain optimization.
-                 *
-                 */
                 delay(60000) // Check every minute
 
                 // Check for suspicious activity
@@ -942,15 +662,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             }
 
             // Session expired
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (currentAuthLevel.get()) {
-                /**
-                 * Executes logout operation with thermal imaging domain optimization.
-                 *
-                 */
                 logout()
                 authListener?.onSessionExpired()
             }
@@ -959,10 +671,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
 
     /**
      * Logout and clear session
-     */
-    /**
-     * Executes logout operation with thermal imaging domain optimization.
-     *
      */
     fun logout() {
         currentAuthLevel.set(false)
@@ -988,10 +696,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
         return AuthenticationContext(
             deviceId = authenticatedDeviceId ?: return null,
             authLevel =
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (authenticatedRole) {
                     DeviceRole.GUEST -> AUTH_LEVEL_NONE
                     DeviceRole.OBSERVER -> AUTH_LEVEL_BASIC
@@ -1022,55 +726,19 @@ class AdvancedAuthenticationManager(private val context: Context) {
     fun getSecurityDiagnostics(): JSONObject {
         return JSONObject().apply {
             put("authentication_enabled", true)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("current_auth_level", if (isAuthenticated()) authenticatedRole.level else 0)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("session_active", isAuthenticated())
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("certificate_manager_active", certificateManager != null)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("rbac_active", roleManager != null)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("security_monitoring_active", securityMonitor != null)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("failed_attempts_count", failedAttempts.size)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("locked_devices_count", lockoutExpiry.count { it.value > System.currentTimeMillis() })
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("phase4_enabled", true)
         }
     }
 
     /**
      * Shutdown and cleanup
-     */
-    /**
-     * Executes shutdown operation with thermal imaging domain optimization.
-     *
      */
     fun shutdown() {
         scope.cancel()

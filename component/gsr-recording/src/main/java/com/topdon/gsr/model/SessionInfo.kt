@@ -27,9 +27,6 @@ data class SessionInfo(
      * Get session duration in milliseconds
      * Returns current duration if active, total duration if completed
      */
-    /**
-     * Retrieves durationms information.
-     */
     fun getDurationMs(): Long {
         val end = endTime ?: System.currentTimeMillis()
         return end - startTime
@@ -54,13 +51,6 @@ data class SessionInfo(
     /**
      * Add synchronization mark
      */
-    /**
-     * Executes addsyncmark operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param mark Parameter for operation (type: SyncMark)
-     *
-     */
     fun addSyncMark(mark: SyncMark) {
         syncMarks.add(mark)
     }
@@ -71,15 +61,7 @@ data class SessionInfo(
     fun getDataTypeSummary(): String {
         val types = mutableListOf<String>()
         if (hasGSRData) types.add("GSR")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (hasRGBData) types.add("RGB")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (hasThermalData) types.add("Thermal")
 
         return if (types.isEmpty()) "No data" else types.joinToString(", ")

@@ -19,23 +19,6 @@ import java.io.IOException
  * @author IRCamera Development Team
  * @since 1.0
  */
-/**
- * Specialized thermal imaging component providing IRImageHelp functionality for the IRCamera system.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class IRImageHelp {
     
     @Volatile
@@ -50,9 +33,6 @@ class IRImageHelp {
     private var maxRGB = IntArray(3)
     private var minRGB = IntArray(3)
 
-    /**
-     * Retrieves colorlist information.
-     */
     fun getColorList(): IntArray?  {
         return colorList
     }
@@ -62,9 +42,6 @@ class IRImageHelp {
      * @author: CaiSongL
      * @date: 2024/1/17 10:07
      */
-    /**
-     * Sets colorlist configuration.
-     */
     fun setColorList(
         colorList: IntArray?,
         places: FloatArray?,
@@ -72,10 +49,6 @@ class IRImageHelp {
         customMaxTemp: Float,
         customMinTemp: Float,
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (colorList == null) {
             this.isUseGray = true
         } else {
@@ -83,10 +56,6 @@ class IRImageHelp {
         }
         this.colorList = colorList
         this.places = places
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (colorList != null) {
             this.customMaxTemp = customMaxTemp
             this.customMinTemp = customMinTemp
@@ -109,9 +78,6 @@ class IRImageHelp {
      * @param imageHeight Int
      * @return ByteArray ： Returnprocessing后的imagedata，argbformat
      */
-    /**
-     * Handles pseudo color configuration for thermal imaging.
-     */
     fun customPseudoColor(
         imageDst: ByteArray,
         temperatureSrc: ByteArray,
@@ -119,19 +85,11 @@ class IRImageHelp {
         imageHeight: Int,
     ): ByteArray  {
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (colorList != null && temperatureSrc != null) {
                 var j = 0
                 val imageDstLength: Int = imageWidth * imageHeight * 4
                 // 遍历像素point，Filtertemperature阈值
                 var index = 0
-                /**
-                 * Executes while operation with thermal imaging domain optimization.
-                 *
-                 */
                 while (index < imageDstLength) {
                     
                     var temperature0: Float =
@@ -142,10 +100,6 @@ class IRImageHelp {
                             ) * 256
                         ).toFloat()
                     temperature0 = (temperature0 / 64 - 273.15).toFloat()
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (temperature0 >= customMinTemp && temperature0 <= customMaxTemp) {
                         // OpencvTools disabled due to missing AAR dependencies
                         // Using simple fallback color logic
@@ -157,10 +111,6 @@ class IRImageHelp {
                             colorList,
                             places
                         )
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (rgb != null) {
                             imageDst[index] = rgb[0].toByte()
                             imageDst[index + 1] = rgb[1].toByte()
@@ -173,10 +123,6 @@ class IRImageHelp {
                         imageDst[index + 1] = intensity.toByte()
                         imageDst[index + 2] = intensity.toByte()
                     } else if (temperature0 > customMaxTemp) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isUseGray) {
                         } else {
                             imageDst[index] = maxRGB[0].toByte()
@@ -184,10 +130,6 @@ class IRImageHelp {
                             imageDst[index + 2] = maxRGB[2].toByte()
                         }
                     } else if (temperature0 < customMinTemp) {
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isUseGray) {
                         } else {
                             imageDst[index] = minRGB[0].toByte()
@@ -199,7 +141,7 @@ class IRImageHelp {
                     index += 4
                     j += 2
                 }
-//                                        Log.w("Test上色耗时-总耗时", System.currentTimeMillis() - startTimeAll + "// ");
+//                                        Log.w("Test上色耗时-总耗时", System.currentTimeMillis() - startTimeAll + "//");
             }
         } catch (exception: Exception) {
             Log.e("上色exception", exception.message!!)
@@ -219,10 +161,6 @@ class IRImageHelp {
         imageWidth: Int,
         imageHeight: Int,
     )  {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (temperatureSrc != null && (max != Float.MAX_VALUE || min != Float.MIN_VALUE)) {
             var j = 0
             val imageDstLength: Int = imageWidth * imageHeight * 4
@@ -231,10 +169,6 @@ class IRImageHelp {
             val startTimeAll = System.currentTimeMillis()
             // 遍历像素point，Filtertemperature阈值
             var index = 0
-            /**
-             * Executes while operation with thermal imaging domain optimization.
-             *
-             */
             while (index < imageDstLength) {
                 
                 var temperature0: Float =
@@ -246,10 +180,6 @@ class IRImageHelp {
                     ).toFloat()
                 temperature0 = (temperature0 / 64 - 273.15).toFloat()
                 val y0: Int = imageDst!![j].toInt() and 0xff
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (temperature0 < biaochiMin || temperature0 > biaochiMax) {
                     val r: Int = imageDst!![index].toInt() and 0xff
                     val g: Int = imageDst!![index + 1].toInt() and 0xff
@@ -270,17 +200,6 @@ class IRImageHelp {
     /**
      * contourDetection 轮廓检测
      */
-    /**
-     * Executes contourdetection operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param alarmBean Parameter for operation (type: AlarmBean?)
-     * @param imageDst Parameter for operation (type: ByteArray?)
-     * @param temperatureSrc Temperature value in Celsius (type: ByteArray?)
-     * @param imageWidth Parameter for operation (type: Int)
-     * @param imageHeight Parameter for operation (type: Int)
-     *
-     */
     fun contourDetection(
         alarmBean: AlarmBean?,
         imageDst: ByteArray?,
@@ -288,15 +207,7 @@ class IRImageHelp {
         imageWidth: Int,
         imageHeight: Int,
     ): ByteArray?  {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (alarmBean != null && imageDst != null && temperatureSrc != null) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (alarmBean.isMarkOpen && (
                     (alarmBean.highTemp != Float.MAX_VALUE && alarmBean.isHighOpen) ||
                         (alarmBean.isLowOpen && alarmBean.lowTemp != Float.MIN_VALUE)
@@ -309,25 +220,13 @@ class IRImageHelp {
                             temperatureSrc,
                             imageHeight,
                             imageWidth,
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (alarmBean.isHighOpen) alarmBean.highTemp else Float.MAX_VALUE,
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (alarmBean.isLowOpen) alarmBean.lowTemp else Float.MIN_VALUE,
                             alarmBean.highColor,
                             alarmBean.lowColor,
                             alarmBean.markType,
                         )
                     val diffMat =
-                        /**
-                         * Executes mat operation with thermal imaging domain optimization.
-                         *
-                         */
                         Mat(
                             imageHeight,
                             imageWidth,

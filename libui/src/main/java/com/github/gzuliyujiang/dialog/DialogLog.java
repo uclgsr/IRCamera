@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -18,32 +18,16 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 /**
- * Specialized thermal imaging component providing DialogLog functionality for the IRCamera system.
+ * DebugLog工具class
  *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author 贵州山魈羡民 (1032694760@qq.com)
+ * @since 2021/3/26 21:34
  */
 public final class DialogLog {
     private static final String TAG = "AndroidPicker";
     private static boolean enable = false;
 
-    /**
-     * Executes dialoglog operation with thermal imaging domain optimization.
-     *
-     */
     private DialogLog() {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super();
     }
 
@@ -60,10 +44,6 @@ public final class DialogLog {
      * @param log Loginfo
      */
     public static void print(@NonNull Object log) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!enable) {
             return;
         }

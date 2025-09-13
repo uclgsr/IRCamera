@@ -23,20 +23,6 @@ import kotlin.math.*
  * - Continuous background synchronization
  * - Quality metrics and validation
  */
-/**
- * Specialized thermal imaging component providing EnhancedTimeSyncService functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class EnhancedTimeSyncService(
     private val context: Context,
     private val logger: StructuredLogger,
@@ -89,16 +75,6 @@ class EnhancedTimeSyncService(
         val measurements: List<TimeSyncMeasurement>,
     )
 
-/**
- * Specialized thermal imaging component providing SyncQuality functionality for the IRCamera system.
- *
- * This component is part of the IRCamera thermal imaging system, providing
- * specialized functionality for thermal data processing and visualization.
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
     enum class SyncQuality {
         EXCELLENT, // ±0.5ms accuracy
         GOOD, // ±1.0ms accuracy
@@ -125,32 +101,12 @@ class EnhancedTimeSyncService(
 
                 try {
                     // Initial synchronization with more rounds for accuracy
-                    /**
-                     * Executes performsynchronization operation with thermal imaging domain optimization.
-                     *
-                     */
                     performSynchronization(INITIAL_SYNC_ROUNDS, isInitial = true)
 
                     // Continuous synchronization loop
-                    /**
-                     * Executes while operation with thermal imaging domain optimization.
-                     *
-                     */
                     while (isRunning.get()) {
-                        /**
-                         * Executes delay operation with thermal imaging domain optimization.
-                         *
-                         */
                         delay(SYNC_INTERVAL_MS)
-                        /**
-                         * Executes if operation with thermal imaging domain optimization.
-                         *
-                         */
                         if (isRunning.get()) {
-                            /**
-                             * Executes performsynchronization operation with thermal imaging domain optimization.
-                             *
-                             */
                             performSynchronization(SYNC_ROUNDS, isInitial = false)
                         }
                     }
@@ -162,10 +118,6 @@ class EnhancedTimeSyncService(
                         StructuredLogger.LogLevel.ERROR,
                         "EnhancedTimeSyncService",
                         "service_error",
-                        /**
-                         * Executes mapof operation with thermal imaging domain optimization.
-                         *
-                         */
                         mapOf(
                             "error" to e.message.orEmpty(),
                         ),
@@ -191,70 +143,23 @@ class EnhancedTimeSyncService(
     /**
      * Get diagnostic information
      */
-    /**
-     * Retrieves the diagnostics with optimized performance for thermal imaging operations.
-     *
-     */
     fun getDiagnostics(): JSONObject {
         return JSONObject().apply {
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("is_running", isRunning.get())
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("current_offset_ms", currentOffset.get() / 1_000_000.0)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("current_rtt_ms", currentRTT.get() / 1_000_000.0)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("sync_quality", syncQuality.get().name)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("time_since_last_sync_ms", System.currentTimeMillis() - lastSyncTime.get())
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("clock_drift_ppm", clockDriftRate * 1_000_000)
-            /**
-             * Executes put operation with thermal imaging domain optimization.
-             *
-             */
             put("history_size", offsetHistory.size)
         }
     }
 
     // Implementation methods (simplified for length)
-    /**
-     * Executes performsynchronization operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param rounds Parameter for operation (type: Int)
-     * @param isInitial Parameter for operation (type: Boolean)
-     *
-     */
     private suspend fun performSynchronization(
         rounds: Int,
         isInitial: Boolean,
     ) { /* ... */ }
 
-    /**
-     * Executes calculateCurrentDrift functionality.
-     */
-    /**
-     * Executes calculatecurrentdrift operation with thermal imaging domain optimization.
-     *
-     */
     private fun calculateCurrentDrift(): Long = 0L
 }

@@ -13,18 +13,8 @@ import kotlinx.coroutines.*
 import java.io.File
 
 /**
- * Specialized thermal imaging component providing GSRDataFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * GSR Data Fragment
+ * Displays CSV data files from GSR recordings with metadata
  */
 class GSRDataFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
@@ -41,15 +31,6 @@ class GSRDataFragment : Fragment() {
         val createdDate: String,
     )
 
-    /**
-     * Executes oncreateview operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param inflater Parameter for operation (type: LayoutInflater)
-     * @param container Parameter for operation (type: ViewGroup?)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,14 +39,6 @@ class GSRDataFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_gsr_data, container, false)
     }
 
-    /**
-     * Executes onviewcreated operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param view Parameter for operation (type: View)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -75,57 +48,27 @@ class GSRDataFragment : Fragment() {
         recyclerView = view.findViewById(R.id.gsr_data_recycler)
         emptyView = view.findViewById(R.id.empty_view)
 
-        /**
-         * Configures the uprecyclerview with validation and thermal imaging optimization.
-         *
-         */
         setupRecyclerView()
-        /**
-         * Executes loadgsrdatafiles operation with thermal imaging domain optimization.
-         *
-         */
         loadGSRDataFiles()
     }
 
-    /**
-     * Sets uprecyclerview configuration.
-     */
     private fun setupRecyclerView() {
         adapter =
             GSRDataAdapter(dataFiles) { dataFile ->
-                /**
-                 * Executes opendatafile operation with thermal imaging domain optimization.
-                 *
-                 */
                 openDataFile(dataFile)
             }
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
     }
 
-    /**
-     * Executes loadGSRDataFiles functionality.
-     */
-    /**
-     * Executes loadgsrdatafiles operation with thermal imaging domain optimization.
-     *
-     */
     private fun loadGSRDataFiles() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val files = findGSRDataFiles()
-            /**
-             * Executes withcontext operation with thermal imaging domain optimization.
-             *
-             */
             withContext(Dispatchers.Main) {
                 dataFiles.clear()
                 dataFiles.addAll(files)
                 adapter.notifyDataSetChanged()
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (files.isEmpty()) {
                     recyclerView.visibility = View.GONE
                     emptyView.visibility = View.VISIBLE
@@ -137,22 +80,11 @@ class GSRDataFragment : Fragment() {
         }
     }
 
-    /**
-     * Executes findGSRDataFiles functionality.
-     */
-    /**
-     * Executes findgsrdatafiles operation with thermal imaging domain optimization.
-     *
-     */
     private fun findGSRDataFiles(): List<GSRDataFile> {
         val files = mutableListOf<GSRDataFile>()
 
         // Look for GSR data files in standard recording directories
         val recordingDir = File(context?.getExternalFilesDir(null), "GSR_Recordings")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (recordingDir.exists()) {
             recordingDir.listFiles { file ->
                 file.isFile && file.extension == "csv" && file.name.contains("gsr_data")
@@ -169,16 +101,6 @@ class GSRDataFragment : Fragment() {
         return files.sortedByDescending { it.file.lastModified() }
     }
 
-    /**
-     * Executes parseGSRFileMetadata functionality.
-     */
-    /**
-     * Executes parsegsrfilemetadata operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param file Parameter for operation (type: File)
-     *
-     */
     private fun parseGSRFileMetadata(file: File): GSRDataFile {
         // Parse filename and CSV header to extract metadata
         val filename = file.nameWithoutExtension
@@ -196,7 +118,7 @@ class GSRDataFragment : Fragment() {
             }
 
         // Estimate duration from sample count (128 Hz sampling)
-        val duration = sampleCount / 128 // Seconds
+        val duration = sampleCount / 128 // seconds
 
         val createdDate =
             java.text.SimpleDateFormat(
@@ -213,19 +135,16 @@ class GSRDataFragment : Fragment() {
             createdDate = createdDate,
         )
     }
+
+    private fun openDataFile(dataFile: GSRDataFile) {
+        // Open detailed data view activity
+        GSRDataViewActivity.startActivity(requireContext(), dataFile.file.absolutePath)
+    }
+}
+
 /**
- * Specialized thermal imaging component providing GSRVideoFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * GSR Video Fragment
+ * Displays recorded video files from multi-modal sessions
  */
 class GSRVideoFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
@@ -233,15 +152,6 @@ class GSRVideoFragment : Fragment() {
     private lateinit var adapter: GSRVideoAdapter
     private val videoFiles = mutableListOf<File>()
 
-    /**
-     * Executes oncreateview operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param inflater Parameter for operation (type: LayoutInflater)
-     * @param container Parameter for operation (type: ViewGroup?)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -250,14 +160,6 @@ class GSRVideoFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_gsr_video, container, false)
     }
 
-    /**
-     * Executes onviewcreated operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param view Parameter for operation (type: View)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -267,57 +169,27 @@ class GSRVideoFragment : Fragment() {
         recyclerView = view.findViewById(R.id.gsr_video_recycler)
         emptyView = view.findViewById(R.id.empty_view)
 
-        /**
-         * Configures the uprecyclerview with validation and thermal imaging optimization.
-         *
-         */
         setupRecyclerView()
-        /**
-         * Executes loadvideofiles operation with thermal imaging domain optimization.
-         *
-         */
         loadVideoFiles()
     }
 
-    /**
-     * Sets uprecyclerview configuration.
-     */
     private fun setupRecyclerView() {
         adapter =
             GSRVideoAdapter(videoFiles) { videoFile ->
-                /**
-                 * Executes openvideofile operation with thermal imaging domain optimization.
-                 *
-                 */
                 openVideoFile(videoFile)
             }
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
     }
 
-    /**
-     * Executes loadVideoFiles functionality.
-     */
-    /**
-     * Executes loadvideofiles operation with thermal imaging domain optimization.
-     *
-     */
     private fun loadVideoFiles() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val files = findVideoFiles()
-            /**
-             * Executes withcontext operation with thermal imaging domain optimization.
-             *
-             */
             withContext(Dispatchers.Main) {
                 videoFiles.clear()
                 videoFiles.addAll(files)
                 adapter.notifyDataSetChanged()
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (files.isEmpty()) {
                     recyclerView.visibility = View.GONE
                     emptyView.visibility = View.VISIBLE
@@ -329,22 +201,11 @@ class GSRVideoFragment : Fragment() {
         }
     }
 
-    /**
-     * Executes findVideoFiles functionality.
-     */
-    /**
-     * Executes findvideofiles operation with thermal imaging domain optimization.
-     *
-     */
     private fun findVideoFiles(): List<File> {
         val files = mutableListOf<File>()
 
         // Look for video files in recording directories
         val recordingDir = File(context?.getExternalFilesDir(null), "GSR_Recordings")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (recordingDir.exists()) {
             recordingDir.listFiles { file ->
                 file.isFile && (file.extension == "mp4" || file.extension == "mov")
@@ -353,19 +214,16 @@ class GSRVideoFragment : Fragment() {
 
         return files.sortedByDescending { it.lastModified() }
     }
+
+    private fun openVideoFile(videoFile: File) {
+        // Open video player activity
+        GSRVideoPlayerActivity.startActivity(requireContext(), videoFile.absolutePath)
+    }
+}
+
 /**
- * Specialized thermal imaging component providing GSRRawImageFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * GSR RAW Image Fragment
+ * Displays captured RAW DNG images from parallel recording
  */
 class GSRRawImageFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
@@ -373,15 +231,6 @@ class GSRRawImageFragment : Fragment() {
     private lateinit var adapter: GSRRawImageAdapter
     private val rawImageFiles = mutableListOf<File>()
 
-    /**
-     * Executes oncreateview operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param inflater Parameter for operation (type: LayoutInflater)
-     * @param container Parameter for operation (type: ViewGroup?)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -390,14 +239,6 @@ class GSRRawImageFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_gsr_raw_image, container, false)
     }
 
-    /**
-     * Executes onviewcreated operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param view Parameter for operation (type: View)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -407,57 +248,27 @@ class GSRRawImageFragment : Fragment() {
         recyclerView = view.findViewById(R.id.gsr_raw_image_recycler)
         emptyView = view.findViewById(R.id.empty_view)
 
-        /**
-         * Configures the uprecyclerview with validation and thermal imaging optimization.
-         *
-         */
         setupRecyclerView()
-        /**
-         * Executes loadrawimagefiles operation with thermal imaging domain optimization.
-         *
-         */
         loadRawImageFiles()
     }
 
-    /**
-     * Sets uprecyclerview configuration.
-     */
     private fun setupRecyclerView() {
         adapter =
             GSRRawImageAdapter(rawImageFiles) { rawImageFile ->
-                /**
-                 * Executes openrawimagefile operation with thermal imaging domain optimization.
-                 *
-                 */
                 openRawImageFile(rawImageFile)
             }
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
     }
 
-    /**
-     * Executes loadRawImageFiles functionality.
-     */
-    /**
-     * Executes loadrawimagefiles operation with thermal imaging domain optimization.
-     *
-     */
     private fun loadRawImageFiles() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val files = findRawImageFiles()
-            /**
-             * Executes withcontext operation with thermal imaging domain optimization.
-             *
-             */
             withContext(Dispatchers.Main) {
                 rawImageFiles.clear()
                 rawImageFiles.addAll(files)
                 adapter.notifyDataSetChanged()
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (files.isEmpty()) {
                     recyclerView.visibility = View.GONE
                     emptyView.visibility = View.VISIBLE
@@ -469,22 +280,11 @@ class GSRRawImageFragment : Fragment() {
         }
     }
 
-    /**
-     * Executes findRawImageFiles functionality.
-     */
-    /**
-     * Executes findrawimagefiles operation with thermal imaging domain optimization.
-     *
-     */
     private fun findRawImageFiles(): List<File> {
         val files = mutableListOf<File>()
 
         // Look for DNG files in recording directories
         val recordingDir = File(context?.getExternalFilesDir(null), "GSR_Recordings")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (recordingDir.exists()) {
             recordingDir.listFiles { file ->
                 file.isFile && file.extension == "dng"
@@ -493,19 +293,16 @@ class GSRRawImageFragment : Fragment() {
 
         return files.sortedByDescending { it.lastModified() }
     }
+
+    private fun openRawImageFile(rawImageFile: File) {
+        // Open RAW image viewer activity
+        GSRRawImageViewActivity.startActivity(requireContext(), rawImageFile.absolutePath)
+    }
+}
+
 /**
- * Specialized thermal imaging component providing GSRSessionFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * GSR Session Fragment
+ * Displays complete recording sessions with all associated files
  */
 class GSRSessionFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
@@ -525,15 +322,6 @@ class GSRSessionFragment : Fragment() {
         val sessionDirectory: File,
     )
 
-    /**
-     * Executes oncreateview operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param inflater Parameter for operation (type: LayoutInflater)
-     * @param container Parameter for operation (type: ViewGroup?)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -542,14 +330,6 @@ class GSRSessionFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_gsr_session, container, false)
     }
 
-    /**
-     * Executes onviewcreated operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param view Parameter for operation (type: View)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -559,57 +339,27 @@ class GSRSessionFragment : Fragment() {
         recyclerView = view.findViewById(R.id.gsr_session_recycler)
         emptyView = view.findViewById(R.id.empty_view)
 
-        /**
-         * Configures the uprecyclerview with validation and thermal imaging optimization.
-         *
-         */
         setupRecyclerView()
-        /**
-         * Executes loadsessions operation with thermal imaging domain optimization.
-         *
-         */
         loadSessions()
     }
 
-    /**
-     * Sets uprecyclerview configuration.
-     */
     private fun setupRecyclerView() {
         adapter =
             GSRSessionAdapter(sessions) { session ->
-                /**
-                 * Executes opensessiondetails operation with thermal imaging domain optimization.
-                 *
-                 */
                 openSessionDetails(session)
             }
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
     }
 
-    /**
-     * Executes loadSessions functionality.
-     */
-    /**
-     * Executes loadsessions operation with thermal imaging domain optimization.
-     *
-     */
     private fun loadSessions() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val sessionList = findCompleteSessions()
-            /**
-             * Executes withcontext operation with thermal imaging domain optimization.
-             *
-             */
             withContext(Dispatchers.Main) {
                 sessions.clear()
                 sessions.addAll(sessionList)
                 adapter.notifyDataSetChanged()
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (sessionList.isEmpty()) {
                     recyclerView.visibility = View.GONE
                     emptyView.visibility = View.VISIBLE
@@ -621,21 +371,10 @@ class GSRSessionFragment : Fragment() {
         }
     }
 
-    /**
-     * Executes findCompleteSessions functionality.
-     */
-    /**
-     * Executes findcompletesessions operation with thermal imaging domain optimization.
-     *
-     */
     private fun findCompleteSessions(): List<GSRSessionInfo> {
         val sessions = mutableListOf<GSRSessionInfo>()
 
         val recordingDir = File(context?.getExternalFilesDir(null), "GSR_Recordings")
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (recordingDir.exists()) {
             recordingDir.listFiles { file -> file.isDirectory }?.forEach { sessionDir ->
                 try {
@@ -650,16 +389,6 @@ class GSRSessionFragment : Fragment() {
         return sessions.sortedByDescending { it.sessionDirectory.lastModified() }
     }
 
-    /**
-     * Executes parseSessionDirectory functionality.
-     */
-    /**
-     * Executes parsesessiondirectory operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param sessionDir Parameter for operation (type: File)
-     *
-     */
     private fun parseSessionDirectory(sessionDir: File): GSRSessionInfo {
         val sessionId = sessionDir.name
 
@@ -684,7 +413,7 @@ class GSRSessionFragment : Fragment() {
             gsrDataFile?.let { file: File ->
                 try {
                     val sampleCount = file.readLines().size - 1L
-                    sampleCount / 128 // Seconds at 128 Hz
+                    sampleCount / 128 // seconds at 128 Hz
                 } catch (e: Exception) {
                     0L
                 }
@@ -703,16 +432,6 @@ class GSRSessionFragment : Fragment() {
         )
     }
 
-    /**
-     * Executes openSessionDetails functionality.
-     */
-    /**
-     * Executes opensessiondetails operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param session Parameter for operation (type: GSRSessionInfo)
-     *
-     */
     private fun openSessionDetails(session: GSRSessionInfo) {
         SessionDetailActivity.startActivity(requireContext(), session.sessionId)
     }

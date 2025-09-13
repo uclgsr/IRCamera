@@ -23,20 +23,6 @@ import org.greenrobot.eventbus.ThreadMode
  *
  * Created by LCG on 2024/11/5.
  */
-/**
- * Specialized thermal imaging component providing BaseBindingFragment functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
     /**
      * 在 [onDestroyView] 要将 binding 置为 null，
@@ -73,30 +59,14 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
         return binding.root
     }
 
-    /**
-     * Executes onviewcreated operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param view Parameter for operation (type: View)
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         EventBus.getDefault().register(this)
-        /**
-         * Initializes the view component for thermal imaging operations.
-         *
-         */
         initView(savedInstanceState)
     }
 
-    /**
-     * Executes ondestroyview operation with thermal imaging domain optimization.
-     *
-     */
     override fun onDestroyView() {
         super.onDestroyView()
         EventBus.getDefault().unregister(this)
@@ -111,10 +81,6 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
         if (event.isConnect) {
             connected()
         } else {
-            /**
-             * Executes disconnected operation with thermal imaging domain optimization.
-             *
-             */
             disConnected()
         }
     }
@@ -133,10 +99,6 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
         if (event.isConnect) {
             onSocketConnected(event.isTS004)
         } else {
-            /**
-             * Executes onsocketdisconnected operation with thermal imaging domain optimization.
-             *
-             */
             onSocketDisConnected(event.isTS004)
         }
     }
@@ -155,38 +117,16 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
     /**
      * Show/Displayload中弹框.
      */
-    /**
-     * Executes showloadingdialog operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param resId Parameter for operation (type: Int)
-     *
-     */
     fun showLoadingDialog(
         @StringRes resId: Int,
     ) {
-        /**
-         * Executes showloadingdialog operation with thermal imaging domain optimization.
-         *
-         */
         showLoadingDialog(getString(resId))
     }
 
     /**
      * Show/Displayload中弹框.
      */
-    /**
-     * Executes showloadingdialog operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param text Parameter for operation (type: CharSequence?)
-     *
-     */
     fun showLoadingDialog(text: CharSequence?) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (loadingDialog == null) {
             loadingDialog = LoadingDialog(requireContext())
         }
@@ -196,10 +136,6 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
 
     /**
      * Closeload中弹框.
-     */
-    /**
-     * Executes dismissloadingdialog operation with thermal imaging domain optimization.
-     *
      */
     fun dismissLoadingDialog() {
         loadingDialog?.dismiss()

@@ -21,23 +21,6 @@ import java.util.concurrent.TimeUnit
  * - Deterministic state machine
  * - Capabilities detection once at camera open
  */
-/**
- * Thermal camera interface and control system. Manages thermal imaging capture and processing with CameraController functionality.
- *
- * Provides advanced camera functionality for thermal imaging capture,
- * including temperature measurement and pseudo color visualization.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class CameraController(private val context: Context) {
     companion object {
         private const val TAG = "CameraController"
@@ -60,10 +43,6 @@ class CameraController(private val context: Context) {
     var onCameraError: ((String) -> Unit)? = null
 
     init {
-        /**
-         * Executes startbackgroundthread operation with thermal imaging domain optimization.
-         *
-         */
         startBackgroundThread()
     }
 
@@ -81,10 +60,6 @@ class CameraController(private val context: Context) {
             deviceCaps = detectCapabilities(characteristics)
             Log.i(TAG, "Device capabilities: $deviceCaps")
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!cameraOpenCloseLock.tryAcquire(CAMERA_OPEN_TIMEOUT_MS, TimeUnit.MILLISECONDS)) {
                 throw RuntimeException("Time out waiting to lock camera opening.")
             }
@@ -103,17 +78,6 @@ class CameraController(private val context: Context) {
     /**
      * Create capture session for specific mode
      * Fast switching without closing CameraDevice
-     */
-    /**
-     * Executes createCaptureSession functionality.
-     */
-    /**
-     * Executes createcapturesession operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param surfaces Parameter for operation (type: List<Surface>)
-     * @param callback Parameter for operation (type: CameraCaptureSession.StateCallback)
-     *
      */
     fun createCaptureSession(
         surfaces: List<Surface>,
@@ -157,10 +121,6 @@ class CameraController(private val context: Context) {
     /**
      * Check if camera is open
      */
-    /**
-     * Executes isopen operation with thermal imaging domain optimization.
-     *
-     */
     fun isOpen(): Boolean = cameraDevice != null
 
     /**
@@ -178,10 +138,6 @@ class CameraController(private val context: Context) {
     /**
      * Close camera and cleanup
      */
-    /**
-     * Executes close operation with thermal imaging domain optimization.
-     *
-     */
     fun close() {
         try {
             cameraOpenCloseLock.acquire()
@@ -195,10 +151,6 @@ class CameraController(private val context: Context) {
             cameraOpenCloseLock.release()
         }
 
-        /**
-         * Executes stopbackgroundthread operation with thermal imaging domain optimization.
-         *
-         */
         stopBackgroundThread()
     }
 
@@ -218,24 +170,12 @@ class CameraController(private val context: Context) {
         // High-speed: Check 3840×2160 with fpsRange including 60
         var supports4k60 = false
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Check high-speed video sizes and fps ranges directly from StreamConfigurationMap
                 map?.getHighSpeedVideoSizes()?.forEach { size ->
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (size.width == 3840 && size.height == 2160) {
                         // Check if any fps range includes 60
                         map.getHighSpeedVideoFpsRangesFor(size)?.forEach { range ->
-                            /**
-                             * Executes if operation with thermal imaging domain optimization.
-                             *
-                             */
                             if (range.upper >= 60) {
                                 supports4k60 = true
                             }
@@ -259,13 +199,6 @@ class CameraController(private val context: Context) {
 
     private val stateCallback =
         object : CameraDevice.StateCallback() {
-            /**
-             * Executes onopened operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param camera Camera configuration or reference (type: CameraDevice)
-             *
-             */
             override fun onOpened(camera: CameraDevice) {
                 cameraOpenCloseLock.release()
                 cameraDevice = camera
@@ -276,13 +209,6 @@ class CameraController(private val context: Context) {
                 }
             }
 
-            /**
-             * Executes ondisconnected operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param camera Camera configuration or reference (type: CameraDevice)
-             *
-             */
             override fun onDisconnected(camera: CameraDevice) {
                 cameraOpenCloseLock.release()
                 camera.close()
@@ -291,14 +217,6 @@ class CameraController(private val context: Context) {
                 onCameraError?.invoke("Camera disconnected")
             }
 
-            /**
-             * Executes onerror operation with thermal imaging domain optimization.
-             *
-             * @param
-             * @param camera Camera configuration or reference (type: CameraDevice)
-             * @param error Parameter for operation (type: Int)
-             *
-             */
             override fun onError(
                 camera: CameraDevice,
                 error: Int,
@@ -308,10 +226,6 @@ class CameraController(private val context: Context) {
                 cameraDevice = null
 
                 val errorMessage =
-                    /**
-                     * Executes when operation with thermal imaging domain optimization.
-                     *
-                     */
                     when (error) {
                         CameraDevice.StateCallback.ERROR_CAMERA_IN_USE -> "Camera is in use by another app"
                         CameraDevice.StateCallback.ERROR_MAX_CAMERAS_IN_USE -> "Too many cameras in use"
@@ -326,26 +240,12 @@ class CameraController(private val context: Context) {
             }
         }
 
-    /**
-     * Executes startBackgroundThread functionality.
-     */
-    /**
-     * Executes startbackgroundthread operation with thermal imaging domain optimization.
-     *
-     */
     private fun startBackgroundThread() {
         backgroundThread = HandlerThread("CameraBackground")
         backgroundThread!!.start()
         backgroundHandler = Handler(backgroundThread!!.looper)
     }
 
-    /**
-     * Executes stopBackgroundThread functionality.
-     */
-    /**
-     * Executes stopbackgroundthread operation with thermal imaging domain optimization.
-     *
-     */
     private fun stopBackgroundThread() {
         backgroundThread?.quitSafely()
         try {

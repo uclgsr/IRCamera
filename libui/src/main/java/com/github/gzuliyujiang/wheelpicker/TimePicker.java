@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http:// License.coscl.org.cn/MulanPSL2
+ *     http://license.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -31,46 +31,16 @@ import com.github.gzuliyujiang.wheelpicker.widget.TimeWheelLayout;
  * @since 2021/6/5 18:19
  */
 @SuppressWarnings("unused")
-/**
- * Specialized thermal imaging component providing TimePicker functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class TimePicker extends ModalDialog {
     protected TimeWheelLayout wheelLayout;
     private OnTimePickedListener onTimePickedListener;
     private OnTimeMeridiemPickedListener onTimeMeridiemPickedListener;
 
-    /**
-     * Executes timepicker operation with thermal imaging domain optimization.
-     *
-     */
     public TimePicker(@NonNull Activity activity) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity);
     }
 
-    /**
-     * Executes timepicker operation with thermal imaging domain optimization.
-     *
-     */
     public TimePicker(@NonNull Activity activity, @StyleRes int themeResId) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(activity, themeResId);
     }
 
@@ -91,17 +61,9 @@ public class TimePicker extends ModalDialog {
         int hour = wheelLayout.getSelectedHour();
         int minute = wheelLayout.getSelectedMinute();
         int second = wheelLayout.getSelectedSecond();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (onTimePickedListener != null) {
             onTimePickedListener.onTimePicked(hour, minute, second);
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (onTimeMeridiemPickedListener != null) {
             onTimeMeridiemPickedListener.onTimePicked(hour, minute, second, wheelLayout.isAnteMeridiem());
         }

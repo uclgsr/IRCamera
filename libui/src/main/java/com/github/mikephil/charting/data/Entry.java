@@ -14,29 +14,11 @@ import com.github.mikephil.charting.utils.Utils;
  * 
  * @author Philipp Jahoda
  */
-/**
- * Specialized thermal imaging component providing Entry functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class Entry extends BaseEntry implements Parcelable {
 
     /** the x value */
     private float x = 0f;
 
-    /**
-     * Executes entry operation with thermal imaging domain optimization.
-     *
-     */
     public Entry() {
 
     }
@@ -47,15 +29,7 @@ public class Entry extends BaseEntry implements Parcelable {
      * @param x the x value
      * @param y the y value (the actual value of the entry)
      */
-    /**
-     * Executes entry operation with thermal imaging domain optimization.
-     *
-     */
     public Entry(float x, float y) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(y);
         this.x = x;
     }
@@ -67,15 +41,7 @@ public class Entry extends BaseEntry implements Parcelable {
      * @param y the y value (the actual value of the entry)
      * @param data Spot for additional data this Entry represents.
      */
-    /**
-     * Executes entry operation with thermal imaging domain optimization.
-     *
-     */
     public Entry(float x, float y, Object data) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(y, data);
         this.x = x;
     }
@@ -87,15 +53,7 @@ public class Entry extends BaseEntry implements Parcelable {
      * @param y the y value (the actual value of the entry)
      * @param icon icon image
      */
-    /**
-     * Executes entry operation with thermal imaging domain optimization.
-     *
-     */
     public Entry(float x, float y, Drawable icon) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(y, icon);
         this.x = x;
     }
@@ -108,15 +66,7 @@ public class Entry extends BaseEntry implements Parcelable {
      * @param icon icon image
      * @param data Spot for additional data this Entry represents.
      */
-    /**
-     * Executes entry operation with thermal imaging domain optimization.
-     *
-     */
     public Entry(float x, float y, Drawable icon, Object data) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(y, icon, data);
         this.x = x;
     }
@@ -159,31 +109,15 @@ public class Entry extends BaseEntry implements Parcelable {
      */
     public boolean equalTo(Entry e) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (e == null)
             return false;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (e.getData() != this.getData())
             return false;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Math.abs(e.x - this.x) > Utils.FLOAT_EPSILON)
             return false;
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (Math.abs(e.getY() - this.getY()) > Utils.FLOAT_EPSILON)
             return false;
 
@@ -207,15 +141,7 @@ public class Entry extends BaseEntry implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeFloat(this.x);
         dest.writeFloat(this.getY());
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (getData() != null) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (getData() instanceof Parcelable) {
                 dest.writeInt(1);
                 dest.writeParcelable((Parcelable) this.getData(), flags);
@@ -227,17 +153,9 @@ public class Entry extends BaseEntry implements Parcelable {
         }
     }
 
-    /**
-     * Executes entry operation with thermal imaging domain optimization.
-     *
-     */
     protected Entry(Parcel in) {
         this.x = in.readFloat();
         this.setY(in.readFloat());
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (in.readInt() == 1) {
             this.setData(in.readParcelable(Object.class.getClassLoader()));
         }

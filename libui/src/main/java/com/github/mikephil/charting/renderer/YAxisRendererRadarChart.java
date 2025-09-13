@@ -13,33 +13,11 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.List;
 
-/**
- * Specialized thermal imaging component providing YAxisRendererRadarChart functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class YAxisRendererRadarChart extends YAxisRenderer {
 
     private RadarChart mChart;
 
-    /**
-     * Executes yaxisrendererradarchart operation with thermal imaging domain optimization.
-     *
-     */
     public YAxisRendererRadarChart(ViewPortHandler viewPortHandler, YAxis yAxis, RadarChart chart) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(viewPortHandler, yAxis, null);
 
         this.mChart = chart;
@@ -54,10 +32,6 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
         int labelCount = mAxis.getLabelCount();
         double range = Math.abs(yMax - yMin);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (labelCount == 0 || range <= 0 || Double.isInfinite(range)) {
             mAxis.mEntries = new float[]{};
             mAxis.mCenteredEntries = new float[]{};
@@ -71,20 +45,12 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
 
         // If granularity is enabled, then do not allow the interval to go below specified granularity.
         // This is used to avoid repeated values when rounding values for display.
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (mAxis.isGranularityEnabled())
             interval = interval < mAxis.getGranularity() ? mAxis.getGranularity() : interval;
 
         // Normalize interval
         double intervalMagnitude = Utils.roundToNextSignificant(Math.pow(10, (int) Math.log10(interval)));
         int intervalSigDigit = (int) (interval / intervalMagnitude);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (intervalSigDigit > 5) {
             // Use one order of magnitude higher, to avoid intervals like 0.9 or
             // 90
@@ -94,20 +60,12 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
         boolean centeringEnabled = mAxis.isCenterAxisLabelsEnabled();
         int n = centeringEnabled ? 1 : 0;
 
-        // Force label count
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // force label count
         if (mAxis.isForceLabelsEnabled()) {
 
             float step = (float) range / (float) (labelCount - 1);
             mAxis.mEntryCount = labelCount;
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mAxis.mEntries.length < labelCount) {
                 // Ensure stops contains at least numStops elements.
                 mAxis.mEntries = new float[labelCount];
@@ -115,10 +73,6 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
 
             float v = min;
 
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0; i < labelCount; i++) {
                 mAxis.mEntries[i] = v;
                 v += step;
@@ -126,14 +80,10 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
 
             n = labelCount;
 
-            // No forced count
+            // no forced count
         } else {
 
             double first = interval == 0.0 ? 0.0 : Math.ceil(yMin / interval) * interval;
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (centeringEnabled) {
                 first -= interval;
             }
@@ -143,15 +93,7 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
             double f;
             int i;
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (interval != 0.0) {
-                /**
-                 * Executes for operation with thermal imaging domain optimization.
-                 *
-                 */
                 for (f = first; f <= last; f += interval) {
                     ++n;
                 }
@@ -161,25 +103,13 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
 
             mAxis.mEntryCount = n;
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mAxis.mEntries.length < n) {
                 // Ensure stops contains at least numStops elements.
                 mAxis.mEntries = new float[n];
             }
 
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (f = first, i = 0; i < n; f += interval, ++i) {
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (f == 0.0) // Fix for negative zero case (Where value == -0.0, and 0.0 == -0.0)
                     f = 0.0;
 
@@ -187,37 +117,21 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
             }
         }
 
-        // Set decimals
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        // set decimals
         if (interval < 1) {
             mAxis.mDecimals = (int) Math.ceil(-Math.log10(interval));
         } else {
             mAxis.mDecimals = 0;
         }
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (centeringEnabled) {
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (mAxis.mCenteredEntries.length < n) {
                 mAxis.mCenteredEntries = new float[n];
             }
 
             float offset = (mAxis.mEntries[1] - mAxis.mEntries[0]) / 2f;
 
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int i = 0; i < n; i++) {
                 mAxis.mCenteredEntries[i] = mAxis.mEntries[i] + offset;
             }
@@ -231,10 +145,6 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
     @Override
     public void renderAxisLabels(Canvas c) {
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (!mYAxis.isEnabled() || !mYAxis.isDrawLabelsEnabled())
             return;
 
@@ -251,10 +161,6 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
                 ? mYAxis.mEntryCount
                 : (mYAxis.mEntryCount - 1);
 
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int j = from; j < to; j++) {
 
             float r = (mYAxis.mEntries[j] - mYAxis.mAxisMinimum) * factor;
@@ -275,33 +181,21 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
 
         List<LimitLine> limitLines = mYAxis.getLimitLines();
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (limitLines == null)
             return;
 
         float sliceangle = mChart.getSliceAngle();
 
-        // Calculate the factor that is needed for transforming the value to
-        // Pixels
+        // calculate the factor that is needed for transforming the value to
+        // pixels
         float factor = mChart.getFactor();
 
         MPPointF center = mChart.getCenterOffsets();
         MPPointF pOut = MPPointF.getInstance(0,0);
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (int i = 0; i < limitLines.size(); i++) {
 
             LimitLine l = limitLines.get(i);
 
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!l.isEnabled())
                 continue;
 
@@ -314,18 +208,10 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
             Path limitPath = mRenderLimitLinesPathBuffer;
             limitPath.reset();
 
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (int j = 0; j < mChart.getData().getMaxEntryCountSet().getEntryCount(); j++) {
 
                 Utils.getPosition(center, r, sliceangle * j + mChart.getRotationAngle(), pOut);
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (j == 0)
                     limitPath.moveTo(pOut.x, pOut.y);
                 else

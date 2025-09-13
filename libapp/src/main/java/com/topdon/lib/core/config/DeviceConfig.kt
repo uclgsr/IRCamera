@@ -2,20 +2,6 @@ package com.topdon.lib.core.config
 
 import android.hardware.usb.UsbDevice
 
-/**
- * Configuration management system for thermal imaging parameters. Handles settings and calibration for DeviceConfig operations.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 object DeviceConfig {
     const val TS004_NAME_START = "TS004_"
     const val TS004_PASSWORD = "TS004001"
@@ -24,7 +10,7 @@ object DeviceConfig {
     const val TC007_PASSWORD = "12345678"
 
     
-    // Vid:3034, pid:22592
+    // vid:3034, pid:22592
     const val IR_VENDOR_ID = 0x0BDA
     const val IR_PRODUCT_ID = 0x5840
 
@@ -52,10 +38,6 @@ object DeviceConfig {
      * Executes usbdevice functionality.
      */
     fun UsbDevice.isTcLiteDevice(): Boolean {
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (productId == TCLITE_PRODUCT_ID && vendorId == TCLITE_VENDOR_ID)
     }
 
@@ -68,10 +50,10 @@ object DeviceConfig {
     const val SN = "TC001A11000001"
 
 //    
-// Const val SKU = "TDBT006A11"
-// Const val SN = "BT006AAG100001"
+//    const val SKU = "TDBT006A11"
+//    const val SN = "BT006AAG100001"
 
-    // 横屏 TC003校对defaultangle0 default竖屏false initializesettingsinitDataIR()
+    // 横屏 TC003校对默认角度0 默认竖屏false initializesettingsinitDataIR()
     const val ROTATE_ANGLE = 0
     const val IS_PORTRAIT = false
 

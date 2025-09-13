@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Activity layout - Activity Multi Modal Recording -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -8,7 +7,6 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- Linear container layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -123,7 +121,6 @@
                 android:enabled="false" />
         </LinearLayout>
 
-        <!-- Linear container layout -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -216,7 +213,6 @@
             android:text="Metrics: 0 KB/s"
             android:padding="4dp" />
 
-        <!-- Linear container layout -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -7,23 +7,6 @@ import com.topdon.lib.core.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for PolicyViewModel display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class PolicyViewModel : BaseViewModel() {
     val htmlViewData = SingleLiveEvent<HtmlBean>()
 
@@ -33,10 +16,6 @@ class PolicyViewModel : BaseViewModel() {
     fun getUrl(type: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             val urlType =
-                /**
-                 * Executes when operation with thermal imaging domain optimization.
-                 *
-                 */
                 when (type) {
                     1 -> 21
                     2 -> 22
@@ -44,10 +23,6 @@ class PolicyViewModel : BaseViewModel() {
                     else -> 21
                 }
             val result = LmsRepository.getStatementUrl(urlType.toString())
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (result != null && !result.htmlContent.isNullOrBlank()) {
                 htmlViewData.postValue(HtmlBean(body = result.htmlContent, action = 1))
             } else {

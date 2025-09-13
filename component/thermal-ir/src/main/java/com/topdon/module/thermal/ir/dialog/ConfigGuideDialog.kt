@@ -33,19 +33,10 @@ import kotlinx.coroutines.launch
 temperature correction操作指引.
  *
  * Created by LCG on 2024/11/13.
+ */
 /**
- * Configuration management system for thermal imaging parameters. Handles settings and calibration for ConfigGuideDialog operations.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Config guide view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: DataBean) : Dialog(context, R.style.TransparentDialog) {
     // Initialize views with findViewById
@@ -63,29 +54,10 @@ class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: Da
     private lateinit var ivBlurBg: ImageView
 
     @SuppressLint("SetTextI18n")
-    /**
-     * Executes oncreate operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param savedInstanceState Parameter for operation (type: Bundle?)
-     *
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /**
-         * Configures the cancelable with validation and thermal imaging optimization.
-         *
-         */
         setCancelable(false)
-        /**
-         * Configures the canceledontouchoutside with validation and thermal imaging optimization.
-         *
-         */
         setCanceledOnTouchOutside(false)
-        /**
-         * Configures the contentview with validation and thermal imaging optimization.
-         *
-         */
         setContentView(LayoutInflater.from(context).inflate(R.layout.dialog_config_guide, null))
 
         // Initialize views
@@ -127,30 +99,12 @@ class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: Da
             SharedManager.configGuideStep = 2
         }
         tvIKnow.setOnClickListener {
-            /**
-             * Executes dismiss operation with thermal imaging domain optimization.
-             *
-             */
             dismiss()
             SharedManager.configGuideStep = 0
         }
     }
 
-    /**
-     * Executes blurBg functionality.
-     */
-    /**
-     * Executes blurbg operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param rootView Parameter for operation (type: View)
-     *
-     */
     fun blurBg(rootView: View) {
-        /**
-         * Executes coroutinescope operation with thermal imaging domain optimization.
-         *
-         */
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val sourceBitmap = Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
@@ -169,10 +123,6 @@ class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: Da
                 outputAllocation.copyTo(outputBitmap)
                 renderScript.destroy()
 
-                /**
-                 * Executes launch operation with thermal imaging domain optimization.
-                 *
-                 */
                 launch(Dispatchers.Main) {
                     ivBlurBg.isVisible = true
                     ivBlurBg.setImageBitmap(outputBitmap)

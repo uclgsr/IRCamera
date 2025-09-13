@@ -50,21 +50,8 @@ import com.topdon.lib.ui.R as UiR
  */
 // Legacy ARouter route annotation - now using NavigationManager
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ReportPreviewSecondActivity display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Report preview second activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
  */
 class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), View.OnClickListener {
     /**
@@ -92,18 +79,10 @@ true-TC007 false-其他插件式device
     private lateinit var tvToPdf: TextView
     private lateinit var tvComplete: TextView
 
-    /**
-     * Initializes the contentview component for thermal imaging operations.
-     *
-     */
     override fun initContentView() = R.layout.activity_report_preview_second
 
     override fun providerVMClass() = UpReportViewModel::class.java
 
-    /**
-     * Initializes the view component for thermal imaging operations.
-     *
-     */
     override fun initView() {
         // Initialize views - migrated from synthetic views
         titleView = findViewById(R.id.title_view)
@@ -121,10 +100,6 @@ true-TC007 false-其他插件式device
         titleView.setLeftDrawable(UiR.drawable.svg_arrow_left_e8)
         titleView.setRightDrawable(R.drawable.ic_report_exit_svg)
         titleView.setLeftClickListener {
-            /**
-             * Executes finish operation with thermal imaging domain optimization.
-             *
-             */
             finish()
         }
         titleView.setRightClickListener {
@@ -132,10 +107,6 @@ true-TC007 false-其他插件式device
                 .setMessage(LibCoreR.string.album_report_exit_tips)
                 .setPositiveListener(UiR.string.app_ok) {
                     EventBus.getDefault().post(ReportCreateEvent())
-                    /**
-                     * Executes finish operation with thermal imaging domain optimization.
-                     *
-                     */
                     finish()
                 }
                 .setCancelListener(UiR.string.app_cancel) {
@@ -147,24 +118,12 @@ true-TC007 false-其他插件式device
         reportInfoView.refreshInfo(reportBean?.report_info)
         reportInfoView.refreshCondition(reportBean?.detection_condition)
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (reportBean?.report_info?.is_report_watermark == 1) {
             watermarkView.watermarkText = reportBean?.report_info?.report_watermark
         }
 
         val irList = reportBean?.infrared_data
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (irList != null) {
-            /**
-             * Executes for operation with thermal imaging domain optimization.
-             *
-             */
             for (i in irList.indices) {
                 val reportShowView = ReportIRShowView(this)
                 reportShowView.refreshData(i == 0, i == irList.size - 1, irList[i])
@@ -180,19 +139,8 @@ true-TC007 false-其他插件式device
         tvComplete.setOnClickListener(this)
         lifecycle.addObserver(
             object : DefaultLifecycleObserver {
-                /**
-                 * Executes onresume operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param owner Parameter for operation (type: LifecycleOwner)
-                 *
-                 */
                 override fun onResume(owner: LifecycleOwner) {
 要是当前已connection TS004、TC007，切到流量上，不然LoginRegister意见反馈那些没网
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
                     }
@@ -201,88 +149,37 @@ true-TC007 false-其他插件式device
         )
     }
 
-    /**
-     * Initializes the data component for thermal imaging operations.
-     *
-     */
     override fun initData() {
         viewModel.commonBeanLD.observe(this) {
-            /**
-             * Manages thermal camera operations with hardware-optimized performance and error handling.
-             *
-             */
             dismissCameraLoading()
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (it.code == LMS.SUCCESS) {
                 EventBus.getDefault().post(ReportCreateEvent())
                 NavigationManager.getInstance().build(RouterConfig.REPORT_LIST)
                     .withBoolean(ExtraKeyConfig.IS_TC007, isTC007)
                     .navigation(this)
-                /**
-                 * Executes finish operation with thermal imaging domain optimization.
-                 *
-                 */
                 finish()
             } else {
                 ToastUtils.showShort(StringUtils.getResString(this, it.code.toString()))
             }
         }
         viewModel.exceptionLD.observe(this) {
-            /**
-             * Manages thermal camera operations with hardware-optimized performance and error handling.
-             *
-             */
             dismissCameraLoading()
-            /**
-             * Executes requesterror operation with thermal imaging domain optimization.
-             *
-             */
             requestError(it)
         }
     }
 
-    /**
-     * Executes onclick operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param v Parameter for operation (type: View?)
-     *
-     */
     override fun onClick(v: View?) {
-        /**
-         * Executes when operation with thermal imaging domain optimization.
-         *
-         */
         when (v) {
             tvToPdf -> { // 生成PDF
-                /**
-                 * Executes savewithpdf operation with thermal imaging domain optimization.
-                 *
-                 */
                 saveWithPDF()
             }
-            tvComplete -> { // Complete
+            tvComplete -> { // complete
 
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (LMS.getInstance().isLogin) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (!NetworkUtils.isConnected()) {
                         TToast.shortToast(this, LibCoreR.string.http_code_z5004)
                         return
                     }
-                    /**
-                     * Manages thermal camera operations with hardware-optimized performance and error handling.
-                     *
-                     */
                     showCameraLoading()
                     viewModel.upload(isTC007, reportBean)
                 } else {
@@ -292,48 +189,17 @@ true-TC007 false-其他插件式device
         }
     }
 
-    /**
-     * Executes saveWithPDF functionality.
-     */
-    /**
-     * Executes savewithpdf operation with thermal imaging domain optimization.
-     *
-     */
     private fun saveWithPDF() {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (TextUtils.isEmpty(pdfFilePath)) {
-            /**
-             * Manages thermal camera operations with hardware-optimized performance and error handling.
-             *
-             */
             showCameraLoading()
             lifecycleScope.launch(Dispatchers.IO) {
                 val name = reportBean?.report_info?.report_number
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (name != null) {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (File(FileConfig.getPdfDir() + "/$name.pdf").exists() &&
                         !TextUtils.isEmpty(pdfFilePath)
                     ) {
                         lifecycleScope.launch {
-                            /**
-                             * Manages thermal camera operations with hardware-optimized performance and error handling.
-                             *
-                             */
                             dismissCameraLoading()
-                            /**
-                             * Executes actionshare operation with thermal imaging domain optimization.
-                             *
-                             */
                             actionShare()
                         }
                         return@launch
@@ -346,44 +212,21 @@ true-TC007 false-其他插件式device
                     )
                 lifecycleScope.launch {
                     tvToPdf.text = getString(LibCoreR.string.battery_share)
-                    /**
-                     * Manages thermal camera operations with hardware-optimized performance and error handling.
-                     *
-                     */
                     dismissCameraLoading()
-                    /**
-                     * Executes actionshare operation with thermal imaging domain optimization.
-                     *
-                     */
                     actionShare()
                 }
             }
         } else {
-            /**
-             * Executes actionshare operation with thermal imaging domain optimization.
-             *
-             */
             actionShare()
         }
     }
 
-    /**
-     * Executes actionShare functionality.
-     */
-    /**
-     * Executes actionshare operation with thermal imaging domain optimization.
-     *
-     */
     private fun actionShare() {
         val uri = FileTools.getUri(File(pdfFilePath!!))
         val shareIntent = Intent()
         shareIntent.action = Intent.ACTION_SEND
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
         shareIntent.type = "application/pdf"
-        /**
-         * Executes startactivity operation with thermal imaging domain optimization.
-         *
-         */
         startActivity(Intent.createChooser(shareIntent, getString(LibCoreR.string.battery_share)))
     }
 
@@ -391,23 +234,12 @@ true-TC007 false-其他插件式device
 get需要转为 PDF 的所有 View 列表.
 注意：watermark View 不在列表内，需要自行processing.
      */
-    /**
-     * Retrieves printviewlist information.
-     */
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
         result.add(reportInfoView)
         val childCount = llContent.childCount
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in 0 until childCount) {
             val childView = llContent.getChildAt(i)
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (childView is ReportIRShowView) {
                 result.addAll(childView.getPrintViewList())
             }

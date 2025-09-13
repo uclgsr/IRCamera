@@ -3,35 +3,12 @@ package com.infisense.usbir.utils
 import com.energy.iruvc.utils.CommonParams
 
 /**
- * Advanced pseudo color management system for thermal imaging visualization. Handles color palette conversion and thermal data mapping with PseudocodeUtils implementation.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * @author: CaiSongL
+ * @date: 2023/6/2 9:36
  */
 object PseudocodeUtils {
     /**
      * Executes changedualpseudocodemodelbyold functionality.
-     */
-    /**
-     * Updates the dualpseudocodemodelbyold configuration with real-time thermal imaging support.
-     *
-     * @param
-     * @param oldPseudocodeMode Pseudo color configuration parameter (type: Int)
-     *
-     * @note This method is optimized for thermal imaging pseudo color processing.
-     * Ensure proper thermal calibration before use.
-     *
      */
     fun changeDualPseudocodeModelByOld(oldPseudocodeMode: Int): CommonParams.PseudoColorUsbDualType {
         return when (oldPseudocodeMode) {
@@ -74,16 +51,6 @@ object PseudocodeUtils {
     /**
      * 旧版sdk的兼容
      */
-    /**
-     * Updates the pseudocodemodebyold configuration with real-time thermal imaging support.
-     *
-     * @param
-     * @param oldPseudocodeMode Pseudo color configuration parameter (type: Int)
-     *
-     * @note This method is optimized for thermal imaging pseudo color processing.
-     * Ensure proper thermal calibration before use.
-     *
-     */
     fun changePseudocodeModeByOld(oldPseudocodeMode: Int): CommonParams.PseudoColorType {
         return when (oldPseudocodeMode) {
             1 -> {
@@ -124,16 +91,6 @@ object PseudocodeUtils {
 
     /**
      * Executes changepseudocodemodebynew functionality.
-     */
-    /**
-     * Updates the pseudocodemodebynew configuration with real-time thermal imaging support.
-     *
-     * @param
-     * @param pseudoColorType Pseudo color configuration parameter (type: CommonParams.PseudoColorType)
-     *
-     * @note This method is optimized for thermal imaging pseudo color processing.
-     * Ensure proper thermal calibration before use.
-     *
      */
     fun changePseudocodeModeByNew(pseudoColorType: CommonParams.PseudoColorType): Int {
         return when (pseudoColorType) {

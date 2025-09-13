@@ -14,7 +14,7 @@ import static com.topdon.lib.ui.widget.seekbar.DefVerticalRangeSeekBar.TEXT_DIRE
 
 /**
  * //                       _ooOoo_
- * // O8888888o
+ * //                      o8888888o
  * //                      88" . "88
  * //                      (| -_- |)
  * //                       O\ = /O
@@ -22,7 +22,7 @@ import static com.topdon.lib.ui.widget.seekbar.DefVerticalRangeSeekBar.TEXT_DIRE
  * //                 .   ' \\| |// `.
  * //                  / \\||| : |||// \
  * //                / _||||| -:- |||||- \
- * //                  | | \\\ - // / | |
+ * //                  | | \\\ - /// | |
  * //                | \_| ''\---/'' | |
  * //                 \ .-\__ `-` ___/-. /
  * //              ______`. .' /--.--\ `. . __
@@ -40,39 +40,13 @@ import static com.topdon.lib.ui.widget.seekbar.DefVerticalRangeSeekBar.TEXT_DIRE
  * 描    述:
  * =====================================================
  */
-/**
- * Specialized thermal imaging component providing DefVerticalSeekBar functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class DefVerticalSeekBar extends SeekBar {
 
     private int indicatorTextOrientation;
     DefVerticalRangeSeekBar verticalSeekBar;
 
-    /**
-     * Executes defverticalseekbar operation with thermal imaging domain optimization.
-     *
-     */
     public DefVerticalSeekBar(RangeSeekBar rangeSeekBar, AttributeSet attrs, boolean isLeft) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(rangeSeekBar, attrs, isLeft);
-        /**
-         * Initializes the attrs component for thermal imaging operations.
-         *
-         */
         initAttrs(attrs);
         verticalSeekBar = (DefVerticalRangeSeekBar) rangeSeekBar;
     }
@@ -89,21 +63,9 @@ public class DefVerticalSeekBar extends SeekBar {
 
     @Override
     protected void onDrawIndicator(Canvas canvas, Paint paint, String text2Draw) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (text2Draw == null) return;
-        // Draw indicator
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        //draw indicator
         if (indicatorTextOrientation == TEXT_DIRECTION_VERTICAL) {
-            /**
-             * Executes drawverticalindicator operation with thermal imaging domain optimization.
-             *
-             */
             drawVerticalIndicator(canvas, paint, text2Draw);
         } else {
             super.onDrawIndicator(canvas, paint, text2Draw);
@@ -111,26 +73,18 @@ public class DefVerticalSeekBar extends SeekBar {
     }
 
     protected void drawVerticalIndicator(Canvas canvas, Paint paint, String text2Draw) {
-        // Measure indicator text
+        //measure indicator text
         paint.setTextSize(getIndicatorTextSize());
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(getIndicatorBackgroundColor());
         paint.getTextBounds(text2Draw, 0, text2Draw.length(), indicatorTextRect);
 
         int realIndicatorWidth = indicatorTextRect.height() + getIndicatorPaddingLeft() + getIndicatorPaddingRight();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (getIndicatorWidth() > realIndicatorWidth) {
             realIndicatorWidth = getIndicatorWidth();
         }
 
         int realIndicatorHeight = indicatorTextRect.width() + getIndicatorPaddingTop() + getIndicatorPaddingBottom();
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (getIndicatorHeight() > realIndicatorHeight) {
             realIndicatorHeight = getIndicatorHeight();
         }
@@ -140,15 +94,11 @@ public class DefVerticalSeekBar extends SeekBar {
         indicatorRect.right = indicatorRect.left + realIndicatorWidth;
         indicatorRect.bottom = indicatorRect.top + realIndicatorHeight;
 
-        // Draw default indicator arrow
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        //draw default indicator arrow
         if (indicatorBitmap == null) {
-            // Arrow three point
-            // B   c
-            // A
+            //arrow three point
+            //  b   c
+            //    a
             int ax = scaleThumbWidth / 2;
             int ay = indicatorRect.bottom;
             int bx = ax - getIndicatorArrowSize();
@@ -167,10 +117,6 @@ public class DefVerticalSeekBar extends SeekBar {
         int defaultPaddingOffset = Utils.dp2px(getContext(), 1);
         int leftOffset = indicatorRect.width() / 2 - (int) (rangeSeekBar.getProgressWidth() * currPercent) - rangeSeekBar.getProgressLeft() + defaultPaddingOffset;
         int rightOffset = indicatorRect.width() / 2 - (int) (rangeSeekBar.getProgressWidth() * (1 - currPercent)) - rangeSeekBar.getProgressPaddingRight() + defaultPaddingOffset;
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (leftOffset > 0) {
             indicatorRect.left += leftOffset;
             indicatorRect.right += leftOffset;
@@ -179,11 +125,7 @@ public class DefVerticalSeekBar extends SeekBar {
             indicatorRect.right -= rightOffset;
         }
 
-        // Draw indicator background
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
+        //draw indicator background
         if (indicatorBitmap != null) {
             Utils.drawBitmap(canvas, paint, indicatorBitmap, indicatorRect);
         } else if (getIndicatorRadius() > 0f) {
@@ -192,44 +134,28 @@ public class DefVerticalSeekBar extends SeekBar {
             canvas.drawRect(indicatorRect, paint);
         }
 
-        // Draw indicator content text
+        //draw indicator content text
         int tx = indicatorRect.left + (indicatorRect.width() - indicatorTextRect.width()) / 2 + getIndicatorPaddingLeft() - getIndicatorPaddingRight();
         int ty = indicatorRect.bottom - (indicatorRect.height() - indicatorTextRect.height()) / 2 + getIndicatorPaddingTop() - getIndicatorPaddingBottom();
 
-        // Draw indicator text
+        //draw indicator text
         paint.setColor(getIndicatorTextColor());
 
         int degrees = 0;
         float rotateX = (tx + indicatorTextRect.width() / 2f);
         float rotateY = (ty - indicatorTextRect.height() / 2f);
 
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (indicatorTextOrientation == TEXT_DIRECTION_VERTICAL) {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (verticalSeekBar.getOrientation() == DIRECTION_LEFT) {
                 degrees = 90;
             } else if (verticalSeekBar.getOrientation() == DIRECTION_RIGHT) {
                 degrees = -90;
             }
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (degrees != 0) {
             canvas.rotate(degrees, rotateX, rotateY);
         }
         canvas.drawText(text2Draw, tx, ty, paint);
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (degrees != 0) {
             canvas.rotate(-degrees, rotateX, rotateY);
         }

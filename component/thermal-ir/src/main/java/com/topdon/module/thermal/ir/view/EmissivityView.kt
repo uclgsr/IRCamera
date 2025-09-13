@@ -14,27 +14,15 @@ import com.blankj.utilcode.util.SizeUtils
 常用材料emissivity 页area所用，一行常用材料emissivity.
  *
  * Created by LCG on 2024/10/14.
+ */
 /**
- * Custom thermal imaging view component with advanced rendering capabilities. Optimized for EmissivityView display and interaction.
- *
- * Custom view component optimized for thermal imaging display
- * with specialized rendering and interaction capabilities.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * Custom Emissivity view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class EmissivityView : View {
     companion object {
         /**
-defaultoutline尺寸，单位 dp.
+默认outline尺寸，单位 dp.
          */
         private const val DEFAULT_STROKE_WIDTH: Float = 0.5f
     }
@@ -63,46 +51,12 @@ defaultoutline尺寸，单位 dp.
     private val linePaint = Paint()
     private val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     *
-     */
     constructor(context: Context) : this(context, null)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    /**
-     * Executes constructor operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param context Parameter for operation (type: Context)
-     * @param attrs Parameter for operation (type: AttributeSet?)
-     * @param defStyleAttr Parameter for operation (type: Int)
-     * @param defStyleRes Parameter for operation (type: Int)
-     *
-     */
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
         context,
         attrs,
@@ -114,16 +68,6 @@ defaultoutline尺寸，单位 dp.
         linePaint.strokeWidth = strokeWidth
     }
 
-    /**
-     * Executes refreshText functionality.
-     */
-    /**
-     * Executes refreshtext operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param newList Parameter for operation (type: List<String>)
-     *
-     */
     fun refreshText(newList: List<String>) {
         textList.clear()
         textList.addAll(newList)
@@ -131,21 +75,9 @@ defaultoutline尺寸，单位 dp.
         textPaint.color = if (textList.size == 1) 0xffffffff.toInt() else 0xccffffff.toInt()
         textPaint.textSize = SizeUtils.sp2px(if (textList.size == 1) 12f else 11f).toFloat()
 
-        /**
-         * Executes requestlayout operation with thermal imaging domain optimization.
-         *
-         */
         requestLayout()
     }
 
-    /**
-     * Executes onmeasure operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param widthMeasureSpec Parameter for operation (type: Int)
-     * @param heightMeasureSpec Parameter for operation (type: Int)
-     *
-     */
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
@@ -157,16 +89,8 @@ defaultoutline尺寸，单位 dp.
 
 initialize layoutList
         layoutList.clear()
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (i in textList.indices) {
             val textWidth: Int =
-                /**
-                 * Executes if operation with thermal imaging domain optimization.
-                 *
-                 */
                 if (textList.size == 1) {
                     contentWidth - SizeUtils.dp2px(24f) // 左右各 12dp padding
                 } else {
@@ -181,46 +105,23 @@ initialize layoutList
 
 calculation最大高度
         var maxHeight = 0
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (layout in layoutList) {
             maxHeight = maxHeight.coerceAtLeast(layout.height)
         }
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (maxHeight == 0) { // 没有settings要Show/Display的字符时，给个占位的高度好了
             maxHeight = textPaint.fontMetricsInt.bottom - textPaint.fontMetricsInt.top
         }
         maxHeight += SizeUtils.dp2px(12f) // 上下各 6dp padding
 
 宽度为 UNSPECIFIED 的情况目前不存在，不考虑
-        /**
-         * Configures the measureddimension with validation and thermal imaging optimization.
-         *
-         */
         setMeasuredDimension(contentWidth + paddingStart + paddingEnd, maxHeight)
     }
 
-    /**
-     * Executes ondraw operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param canvas Parameter for operation (type: Canvas)
-     *
-     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.translate(paddingStart.toFloat(), 0f)
 
         val contentWidth = (width - paddingStart - paddingEnd).toFloat()
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (drawTopLine) {
             canvas.drawLine(0f, strokeWidth / 2, contentWidth, strokeWidth / 2, linePaint)
         }
@@ -228,10 +129,6 @@ calculation最大高度
         canvas.drawLine(strokeWidth / 2, 0f, strokeWidth / 2, height.toFloat(), linePaint)
 
         val padding = SizeUtils.dp2px(12f).toFloat()
-        /**
-         * Executes for operation with thermal imaging domain optimization.
-         *
-         */
         for (layout in layoutList) {
             canvas.save()
             canvas.translate(padding, if (isAlignTop) SizeUtils.dp2px(6f).toFloat() else (height - layout.height) / 2f)

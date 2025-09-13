@@ -20,45 +20,15 @@ import com.topdon.module.thermal.ir.databinding.PopSeekBarBinding
 @param hasTitle 是否有titletext
  */
 @SuppressLint("SetTextI18n")
-/**
- * Specialized thermal imaging component providing SeekBarPopup functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() {
     var progress: Int
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = binding.seekBar.progress
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             binding.seekBar.progress = value
         }
 
     var max: Int
-        /**
-         * Retrieves the  with optimized performance for thermal imaging operations.
-         *
-         */
         get() = binding.seekBar.max
-        /**
-         * Configures the  with validation and thermal imaging optimization.
-         *
-         */
         set(value) {
             binding.seekBar.max = value
         }
@@ -85,47 +55,20 @@ true-实时触发  false-Swipestop(stop)时才触发
         binding.tvValue.text = "$progress%"
         binding.seekBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
-                /**
-                 * Executes onprogresschanged operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param seekBar Parameter for operation (type: SeekBar?)
-                 * @param progress Parameter for operation (type: Int)
-                 * @param fromUser Parameter for operation (type: Boolean)
-                 *
-                 */
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
                     progress: Int,
                     fromUser: Boolean,
                 ) {
                     binding.tvValue.text = "$progress%"
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (isRealTimeTrigger) {
                         onValuePickListener?.invoke(progress)
                     }
                 }
 
-                /**
-                 * Executes onstarttrackingtouch operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param seekBar Parameter for operation (type: SeekBar?)
-                 *
-                 */
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
                 }
 
-                /**
-                 * Executes onstoptrackingtouch operation with thermal imaging domain optimization.
-                 *
-                 * @param
-                 * @param seekBar Parameter for operation (type: SeekBar)
-                 *
-                 */
                 override fun onStopTrackingTouch(seekBar: SeekBar) {
                     onValuePickListener?.invoke(seekBar.progress)
                 }
@@ -145,21 +88,9 @@ true-实时触发  false-Swipestop(stop)时才触发
         anchor: View,
         isDropDown: Boolean,
     ) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (isDropDown) {
-            /**
-             * Executes showasdropdown operation with thermal imaging domain optimization.
-             *
-             */
             showAsDropDown(anchor)
         } else {
-            /**
-             * Executes showasdropdown operation with thermal imaging domain optimization.
-             *
-             */
             showAsDropDown(anchor, 0, -height, Gravity.NO_GRAVITY)
         }
     }

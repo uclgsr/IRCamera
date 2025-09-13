@@ -5,30 +5,8 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.style.ImageSpan;
 
-/**
- * Specialized thermal imaging component providing MyImageSpan functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class MyImageSpan extends ImageSpan {
-    /**
-     * Executes myimagespan operation with thermal imaging domain optimization.
-     *
-     */
     public MyImageSpan(Drawable drawable) {
-        /**
-         * Executes super operation with thermal imaging domain optimization.
-         *
-         */
         super(drawable);
 
     }

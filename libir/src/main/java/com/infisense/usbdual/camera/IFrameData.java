@@ -5,20 +5,6 @@ import com.infisense.usbdual.Const;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-/**
- * Specialized thermal imaging component providing IFrameData functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class IFrameData {
     /**
      * fusionimagedata长度，ARGB，故值为：
@@ -59,7 +45,7 @@ public class IFrameData {
         if (fusionData == null) {
             fusionData = new byte[FUSION_LEN];
         }
-        System.arraycopy(frame, 0, fusionData, 0, fusionData.length);   // Fusionimagedata，ARGB
+        System.arraycopy(frame, 0, fusionData, 0, fusionData.length);   //fusionimagedata，ARGB
         return fusionData;
     }
 
@@ -70,7 +56,7 @@ public class IFrameData {
         if (irData == null) {
             irData = new byte[ORIGINAL_LEN];
         }
-        System.arraycopy(frame, FUSION_LEN, irData, 0, irData.length); // 原始infrareddata，YUV-Y16
+        System.arraycopy(frame, FUSION_LEN, irData, 0, irData.length); //原始infrareddata，YUV-Y16
         return irData;
     }
 
@@ -81,7 +67,7 @@ public class IFrameData {
         if (norTempData == null) {
             norTempData = new byte[ORIGINAL_LEN];
         }
-        System.arraycopy(frame, FUSION_LEN + ORIGINAL_LEN, norTempData, 0, norTempData.length); // 原始temperaturedata，YUV-Y16
+        System.arraycopy(frame, FUSION_LEN + ORIGINAL_LEN, norTempData, 0, norTempData.length); //原始temperaturedata，YUV-Y16
         return norTempData;
     }
 
@@ -92,7 +78,7 @@ public class IFrameData {
         if (remapTempData == null) {
             remapTempData = new byte[REMAP_TEMP_LEN];
         }
-        System.arraycopy(frame, FUSION_LEN + ORIGINAL_LEN + ORIGINAL_LEN, remapTempData, 0, remapTempData.length); // Scaletemperaturedata，YUV-422
+        System.arraycopy(frame, FUSION_LEN + ORIGINAL_LEN + ORIGINAL_LEN, remapTempData, 0, remapTempData.length); //Scaletemperaturedata，YUV-422
         return remapTempData;
     }
 }

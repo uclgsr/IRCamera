@@ -6,18 +6,8 @@ import android.util.Size
 import java.io.File
 
 /**
- * Specialized thermal imaging component providing VideoEngine functionality for the IRCamera system.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
+ * VideoEngine wraps MediaRecorder for 4K video recording
+ * Clean architecture component for Samsung S22 4K@60fps support
  */
 class VideoEngine {
     companion object {
@@ -32,20 +22,6 @@ class VideoEngine {
      * Prepare MediaRecorder for 4K recording
      * Returns surface for camera session
      */
-    /**
-     * Executes prepare functionality.
-     */
-    /**
-     * Executes prepare operation with thermal imaging domain optimization.
-     *
-     * @param
-     * @param outputFile Parameter for operation (type: File)
-     * @param videoSize Parameter for operation (type: Size)
-     * @param frameRate Parameter for operation (type: Int)
-     * @param bitRate Parameter for operation (type: Int)
-     * @param audioEnabled Parameter for operation (type: Boolean)
-     *
-     */
     fun prepare(
         outputFile: File,
         videoSize: Size,
@@ -54,91 +30,27 @@ class VideoEngine {
         audioEnabled: Boolean,
     ): android.view.Surface? {
         try {
-            /**
-             * Executes release operation with thermal imaging domain optimization.
-             *
-             */
             release() // Clean up any existing recorder
 
             mediaRecorder =
-                /**
-                 * Executes mediarecorder operation with thermal imaging domain optimization.
-                 *
-                 */
                 MediaRecorder().apply {
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (audioEnabled) {
-                        /**
-                         * Configures the audiosource with validation and thermal imaging optimization.
-                         *
-                         */
                         setAudioSource(MediaRecorder.AudioSource.MIC)
                     }
-                    /**
-                     * Configures the videosource with validation and thermal imaging optimization.
-                     *
-                     */
                     setVideoSource(MediaRecorder.VideoSource.SURFACE)
-                    /**
-                     * Configures the outputformat with validation and thermal imaging optimization.
-                     *
-                     */
                     setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                    /**
-                     * Configures the outputfile with validation and thermal imaging optimization.
-                     *
-                     */
                     setOutputFile(outputFile.absolutePath)
-                    /**
-                     * Configures the videoencodingbitrate with validation and thermal imaging optimization.
-                     *
-                     */
                     setVideoEncodingBitRate(bitRate)
-                    /**
-                     * Configures the videoframerate with validation and thermal imaging optimization.
-                     *
-                     */
                     setVideoFrameRate(frameRate)
-                    /**
-                     * Configures the videosize with validation and thermal imaging optimization.
-                     *
-                     */
                     setVideoSize(videoSize.width, videoSize.height)
-                    /**
-                     * Configures the videoencoder with validation and thermal imaging optimization.
-                     *
-                     */
                     setVideoEncoder(MediaRecorder.VideoEncoder.H264)
 
-                    /**
-                     * Executes if operation with thermal imaging domain optimization.
-                     *
-                     */
                     if (audioEnabled) {
-                        /**
-                         * Configures the audioencoder with validation and thermal imaging optimization.
-                         *
-                         */
                         setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-                        /**
-                         * Configures the audioencodingbitrate with validation and thermal imaging optimization.
-                         *
-                         */
                         setAudioEncodingBitRate(128000)
-                        /**
-                         * Configures the audiosamplingrate with validation and thermal imaging optimization.
-                         *
-                         */
                         setAudioSamplingRate(44100)
                     }
 
-                    /**
-                     * Executes prepare operation with thermal imaging domain optimization.
-                     *
-                     */
                     prepare()
                 }
 
@@ -148,10 +60,6 @@ class VideoEngine {
             return mediaRecorder?.surface
         } catch (e: Exception) {
             Log.e(TAG, "Failed to prepare MediaRecorder", e)
-            /**
-             * Executes release operation with thermal imaging domain optimization.
-             *
-             */
             release()
             return null
         }
@@ -160,16 +68,8 @@ class VideoEngine {
     /**
      * Start video recording
      */
-    /**
-     * Executes start operation with thermal imaging domain optimization.
-     *
-     */
     fun start(): Boolean {
         return try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (!isPrepared) {
                 Log.e(TAG, "MediaRecorder not prepared")
                 return false
@@ -188,16 +88,8 @@ class VideoEngine {
     /**
      * Stop video recording
      */
-    /**
-     * Executes stop operation with thermal imaging domain optimization.
-     *
-     */
     fun stop() {
         try {
-            /**
-             * Executes if operation with thermal imaging domain optimization.
-             *
-             */
             if (isRecording) {
                 mediaRecorder?.stop()
                 isRecording = false
@@ -214,10 +106,6 @@ class VideoEngine {
     fun release() {
         try {
             if (isRecording) {
-                /**
-                 * Executes stop operation with thermal imaging domain optimization.
-                 *
-                 */
                 stop()
             }
             mediaRecorder?.release()

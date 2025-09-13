@@ -17,29 +17,8 @@ import com.energy.iruvc.utils.CommonParams;
 
 import java.lang.reflect.Method;
 
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for ScreenUtils operations.
- *
- * This utility provides specialized functions for thermal imaging operations,
- * including temperature calculations, pseudo color management, and data processing.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 public class ScreenUtils {
 
-    /**
-     * Executes screenutils operation with thermal imaging domain optimization.
-     *
-     */
     private ScreenUtils() {
         /* cannot be instantiated */
         throw new UnsupportedOperationException("cannot be instantiated");
@@ -160,7 +139,7 @@ public class ScreenUtils {
         return totalHeight - contentHeight;
     }
 
-    // Get/Retrieve屏幕原始尺寸高度，包括虚拟功能键高度
+    //Get/Retrieve屏幕原始尺寸高度，包括虚拟功能键高度
     public static int getDpi(Context context) {
         int dpi = 0;
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -187,10 +166,6 @@ public class ScreenUtils {
      */
     public static int dip2px(Context context, float dpValue) {
         float scale = getScreenDendity(context);
-        /**
-         * Executes return operation with thermal imaging domain optimization.
-         *
-         */
         return (int) ((dpValue * scale) + 0.5f);
     }
 
@@ -198,7 +173,7 @@ public class ScreenUtils {
      * 屏幕密度比例
      */
     public static float getScreenDendity(Context context) {
-        return context.getResources().getDisplayMetrics().density;// 3
+        return context.getResources().getDisplayMetrics().density;//3
     }
 
     /**
@@ -218,7 +193,7 @@ public class ScreenUtils {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // ...To-do
+                        //...To-do
                         dismissListener.onDismiss();
                     }
                 });
@@ -232,10 +207,6 @@ public class ScreenUtils {
      * @return
      */
     public static int getPreviewFPSByDataFlowMode(CommonParams.DataFlowMode defaultDataFlowMode) {
-        /**
-         * Executes if operation with thermal imaging domain optimization.
-         *
-         */
         if (defaultDataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
             return 25;
         }

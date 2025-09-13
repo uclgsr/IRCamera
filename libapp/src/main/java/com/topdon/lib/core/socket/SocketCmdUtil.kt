@@ -5,24 +5,7 @@ import com.google.gson.Gson
 import org.json.JSONException
 import org.json.JSONObject
 
-/**
- * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for SocketCmdUtil operations.
- *
- * <h3>Technical Specifications:</h3>
- * <ul>
- *   <li>Thread-safe operations for thermal data processing</li>
- *   <li>Optimized performance for real-time thermal imaging</li>
- *   <li>Compatible with TC001 thermal camera hardware</li>
- * </ul>
- *
- * @author IRCamera Development Team
- * @version 2.0
- * @since 1.0
- */
 object SocketCmdUtil {
-    /**
-     * Retrieves socketcmd information.
-     */
     fun getSocketCmd(cmd: Int): String? {
         var cmdJson: String? = null
         try {
@@ -37,9 +20,6 @@ object SocketCmdUtil {
         }
     }
 
-    /**
-     * Retrieves cmdresponse information.
-     */
     fun getCmdResponse(response: String?): Int? {
         var cmd: Int? = null
         if (TextUtils.isEmpty(response)) return null
@@ -52,9 +32,6 @@ object SocketCmdUtil {
         return cmd
     }
 
-    /**
-     * Retrieves ipresponse information.
-     */
     fun getIpResponse(response: String?): String? {
         var ip: String? = null
         if (TextUtils.isEmpty(response)) return null
