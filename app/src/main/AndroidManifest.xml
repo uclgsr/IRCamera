@@ -125,6 +125,14 @@
 
         </activity>
 
+        <!-- Phase 2 Validation Activity for Hardware Testing -->
+        <activity
+            android:name="com.topdon.tc001.Phase2ValidationActivity"
+            android:screenOrientation="userPortrait"
+            android:label="Phase 2 Hardware Validation"
+            android:theme="@style/AppTheme"
+            android:exported="false" />
+
         <activity
             android:name="com.topdon.tc001.ClauseActivity"
             android:screenOrientation="userPortrait" />

@@ -343,13 +343,39 @@ class PermissionController(
         }.distinct()
     }
     
+    /**
+     * Public permission checking methods for Phase 2 validation
+     */
+    
+    /**
+     * Check if camera permission is granted
+     */
+    fun hasCameraPermission(): Boolean {
+        return isPermissionGranted(Manifest.permission.CAMERA)
+    }
+    
+    /**
+     * Check if audio recording permission is granted  
+     */
+    fun hasAudioPermission(): Boolean {
+        return isPermissionGranted(Manifest.permission.RECORD_AUDIO)
+    }
+    
+    /**
+     * Check if location permission is granted (required for BLE scanning)
+     */
+    fun hasLocationPermission(): Boolean {
+        return isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION) ||
+               isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
+    }
+    
     // Private helper methods
     
     private fun hasBasicPermissions(): Boolean {
         return CAMERA_PERMISSIONS.all { isPermissionGranted(it) }
     }
     
-    private fun hasBluetoothPermissions(): Boolean {
+    fun hasBluetoothPermissions(): Boolean {
         val requiredPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             BLUETOOTH_PERMISSIONS_ANDROID_12
         } else {
@@ -359,7 +385,7 @@ class PermissionController(
         return requiredPermissions.all { isPermissionGranted(it) }
     }
     
-    private fun hasStoragePermissions(): Boolean {
+    fun hasStoragePermissions(): Boolean {
         val requiredPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             STORAGE_PERMISSIONS_ANDROID_13
         } else {
@@ -369,12 +395,12 @@ class PermissionController(
         return requiredPermissions.all { isPermissionGranted(it) }
     }
     
-    private fun hasForegroundServicePermissions(): Boolean {
-        return FOREGROUND_SERVICE_PERMISSIONS.all { isPermissionGranted(it) }
+    fun hasNotificationPermissions(): Boolean {
+        return NOTIFICATION_PERMISSIONS.all { isPermissionGranted(it) }
     }
     
-    private fun hasNotificationPermissions(): Boolean {
-        return NOTIFICATION_PERMISSIONS.all { isPermissionGranted(it) }
+    private fun hasForegroundServicePermissions(): Boolean {
+        return FOREGROUND_SERVICE_PERMISSIONS.all { isPermissionGranted(it) }
     }
     
     private fun isPermissionGranted(permission: String): Boolean {
