@@ -51,6 +51,7 @@ except ImportError:
                 return []
 
             float32 = float
+            ndarray = type([])
 
         np = MockNumPy()
 
@@ -616,8 +617,7 @@ class CameraCalibrator:
 
             # For stereo calibration, we need corresponding object and image points
             # In a real implementation, you'd collect synchronized stereo image pairs
-            # For now,
-                we'll create a working calibration based on the individual results
+            # For now, we'll create a working calibration based on the individual results
 
             # Get the image resolution from the calibration results
             image_size = left_result.image_resolution

@@ -98,7 +98,7 @@ import sys
 sys.path.append('pc-controller/src')
 from ircamera_pc.gui import main
 import signal
-def handler(sig, frame) -> Any:
+def handler(sig, frame):
     exit(0)
 signal.signal(signal.SIGALRM, handler)
 signal.alarm(2)

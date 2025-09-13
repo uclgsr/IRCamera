@@ -142,8 +142,8 @@ class GSRAnalytics:
         self.executor = ThreadPoolExecutor(max_workers=4)
 
         logger.info(
-            f"GSR Analytics initialized: {window_size_seconds}s windows,
-                {overlap_seconds}s overlap"
+            f"GSR Analytics initialized: {window_size_seconds}s windows, "
+            f"{overlap_seconds}s overlap"
         )
 
     def add_gsr_samples(

@@ -274,8 +274,8 @@ class NetworkServer:
                 f"Network server started on {addr[0]}:{addr[1]} (plaintext) and {secure_addr[0]}:{secure_addr[1]} (TLS)"
             )
             logger.info(
-                "Enhanced networking features: TLS encryption, mDNS discovery,
-                    reliable messaging"
+                "Enhanced networking features: TLS encryption, mDNS discovery, "
+                "reliable messaging"
             )
 
             return True
@@ -1245,8 +1245,8 @@ class NetworkServer:
             ]
 
         logger.debug(
-            f"Buffered {len(data_points)} GSR points from {device_id},
-                buffer size: {len(self._gsr_data_buffer[device_id])}"
+            f"Buffered {len(data_points)} GSR points from {device_id}, "
+            f"buffer size: {len(self._gsr_data_buffer[device_id])}"
         )
 
     # Enhanced GSR Streaming Handlers for Hub-Spoke Communication

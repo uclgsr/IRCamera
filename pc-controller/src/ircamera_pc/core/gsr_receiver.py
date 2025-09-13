@@ -147,8 +147,8 @@ class GSRReceiver:
 
                 # Create indexes for performance
                 conn.execute(
-                    "CREATE INDEX IF NOT EXISTS idx_samples_device_session ON gsr_samples(device_id,
-                        session_id)"
+                    "CREATE INDEX IF NOT EXISTS idx_samples_device_session ON gsr_samples(device_id, "
+                    "session_id)"
                 )
                 conn.execute(
                     "CREATE INDEX IF NOT EXISTS idx_samples_timestamp ON gsr_samples(timestamp)"

@@ -29,7 +29,7 @@ except ImportError:
     from ..utils.simple_logger import logger
 
 from ..core.config import config
-from ..sync import EnhancedTimeSyncServer
+# from ..sync import EnhancedTimeSyncServer  # TODO: Implement when needed
 from .discovery import NetworkDiscoveryService
 from .enhanced_security import AuthLevel, EnhancedSecurityManager
 from .protocol import create_message, get_protocol_manager, validate_message

@@ -124,7 +124,7 @@ class IRCameraApp:
         self._timer: Optional[QTimer] = None
 
         logger.info(
-            "IRCamera Application initialized" "with system integration features"
+            "IRCamera Application initialized with system integration features"
         )
         components = [
             "Session Manager",

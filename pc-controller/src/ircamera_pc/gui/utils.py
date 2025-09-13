@@ -7,10 +7,20 @@ Utility functions and classes for GUI components.
 import sys
 
 from loguru import logger
-from PyQt6.QtCore import QObject, pyqtSignal
-
 from ..core.config import config
 from typing import Any
+
+try:
+    from PyQt6.QtCore import QObject, pyqtSignal
+    GUI_AVAILABLE = True
+except ImportError:
+    GUI_AVAILABLE = False
+    # Mock classes for headless mode
+    class QObject:
+        pass
+    
+    def pyqtSignal(*args, **kwargs):
+        return None
 
 
 class LogHandler(QObject):
