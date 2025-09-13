@@ -207,7 +207,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                  *
                  */
                 override fun onResume(owner: LifecycleOwner) {
-                    // 要是当前已connection TS004、TC007，切到流量上，不然LoginRegister意见反馈那些没网
+                    // 如果当前已连接 TS004 或 TC007，则切换到移动数据网络，否则 LoginRegister、意见反馈等功能将无法联网
                     /**
                      * Executes if operation with thermal imaging domain optimization.
                      *
