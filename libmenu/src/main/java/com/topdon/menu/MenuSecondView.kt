@@ -31,20 +31,17 @@ import kotlinx.coroutines.launch
 
 /**
  * Secondary menu component for thermal imaging interface.
- * Handles advanced menu operations and user interactions.
- */
+ * Handles advanced menu operations and user interactions. */
 @SuppressLint("NotifyDataSetChanged")
 /**
  * MenuSecondView implements custom user interface component functionality.
  *
  * @author IRCamera Development Team
- * @since 1.0
- */
+ * @since 1.0 */
 class MenuSecondView : FrameLayout {
     /**
-     * Menu type configuration to handle differences between device variations
-     * (single light, dual light, Lite, TC007, 2D editing). Uses enum for distinction.
-     */
+ * Menu type configuration to handle differences between device variations
+     * (single light, dual light, Lite, TC007, 2D editing). Uses enum for distinction. */
     private val menuType: MenuType
 
     // View binding for improved type safety and performance
@@ -53,7 +50,7 @@ class MenuSecondView : FrameLayout {
     // *********************************************  Public Methods  *********************************************
 
     /**
-     * Shows the corresponding menu based on the menu code.
+ * Shows the corresponding menu based on the menu code.
      * Temperature measurement: 0-> Capture      Observation 10->Capture
      *
      * Temperature measurement: 1-> Point/Line/Area
@@ -71,8 +68,7 @@ class MenuSecondView : FrameLayout {
      *
      * Temperature measurement: 5-> Temperature Level
      *
-     *                    Observation 14->High/Low Temperature Points
-     */
+     *                    Observation 14->High/Low Temperature Points */
     fun selectPosition(position: Int) {
         binding.cameraMenuView.isVisible = position == 0 || position == 10
         binding.recyclerFence.isVisible = position == 1
@@ -90,9 +86,8 @@ class MenuSecondView : FrameLayout {
     // *********************************************  Public Properties  *********************************************
 
     /**
-     * Menu 1 - Capture/Recording operations click event listener.
-     * actionCode: 0-Capture/Record  1-Gallery  2-More menu  3-Switch to capture  4-Switch to recording
-     */
+ * Menu 1 - Capture/Recording operations click event listener.
+     * actionCode: 0-Capture/Record  1-Gallery  2-More menu  3-Switch to capture  4-Switch to recording */
     var onCameraClickListener: ((actionCode: Int) -> Unit)?
         get() = binding.cameraMenuView.onCameraClickListener
         set(value) {
@@ -100,8 +95,7 @@ class MenuSecondView : FrameLayout {
         }
 
     /**
-     * Temperature measurement mode - Menu 2 - Point/Line/Area switch event listener.
-     */
+ * Temperature measurement mode - Menu 2 - Point/Line/Area switch event listener. */
     var onFenceListener: ((fenceType: FenceType, isSelected: Boolean) -> Unit)?
         get() = fenceAdapter.onFenceListener
         set(value) {
@@ -109,9 +103,8 @@ class MenuSecondView : FrameLayout {
         }
 
     /**
-     * Temperature measurement mode - Menu 3 - Dual Light click event listener.
-     * isSelected: true-switch to selected false-switch to unselected
-     */
+ * Temperature measurement mode - Menu 3 - Dual Light click event listener.
+     * isSelected: true-switch to selected false-switch to unselected */
     var onTwoLightListener: ((twoLightType: TwoLightType, isSelected: Boolean) -> Unit)?
         get() = twoLightAdapter.onTwoLightListener
         set(value) {
@@ -119,11 +112,10 @@ class MenuSecondView : FrameLayout {
         }
 
     /**
-     * Temperature measurement mode - Menu 4 - Pseudo Color / Observation mode - Menu 3 - Pseudo Color switch event listener.
+ * Temperature measurement mode - Menu 4 - Pseudo Color / Observation mode - Menu 3 - Pseudo Color switch event listener.
      * index - Selected pseudo color index in list (used by TC007)
      * code - Pseudo color encoding (legacy format, doesn't match index, used by non-TC007 devices)
-     * size - Number of preset pseudo colors (used by TC007)
-     */
+     * size - Number of preset pseudo colors (used by TC007) */
     var onColorListener: ((index: Int, code: Int, size: Int) -> Unit)?
         get() = colorAdapter.onColorListener
         set(value) {
@@ -131,12 +123,11 @@ class MenuSecondView : FrameLayout {
         }
 
     /**
-     * Temperature measurement mode - Menu 5 - Settings / Observation mode - Menu 6 - Settings click event listener.
+ * Temperature measurement mode - Menu 5 - Settings / Observation mode - Menu 6 - Settings click event listener.
      * isSelected: true-selected state when clicked false-unselected state when clicked
      * Warning, font, watermark are considered highlighted and selected only when effective. 
      * Here we maintain the original code logic, leaving the selection refresh of the settings 
-     * menu to the upper-layer listener, will consider changes later when time permits.
-     */
+     * menu to the upper-layer listener, will consider changes later when time permits. */
     var onSettingListener: ((type: SettingType, isSelected: Boolean) -> Unit)?
         get() = settingTeAdapter.onSettingListener
         set(value) {
@@ -145,13 +136,12 @@ class MenuSecondView : FrameLayout {
         }
 
     /**
-     * Temperature measurement mode - Menu 6 - High/Low temperature level click event listener.
+ * Temperature measurement mode - Menu 6 - High/Low temperature level click event listener.
      *
      * Due to legacy constraints (saved in SharedPreferences), the code values are:
      * - Auto switch: -1
      * - High temperature (low gain): 0
-     * - Normal temperature (high gain): 1
-     */
+     * - Normal temperature (high gain): 1 */
     var onTempLevelListener: ((code: Int) -> Unit)?
         get() = tempLevelAdapter.onTempLevelListener
         set(value) {
@@ -159,14 +149,13 @@ class MenuSecondView : FrameLayout {
         }
 
     /**
-     * Observation mode - Menu 2 - High/Low temperature source click event listener.
+ * Observation mode - Menu 2 - High/Low temperature source click event listener.
      *
      * Due to legacy constraints (saved in SharedPreferences), the code values are:
      * - Nothing selected: -1
      * - Dynamic recognition: 0
      * - High temperature source: 1
-     * - Low temperature source: 2
-     */
+     * - Low temperature source: 2 */
     var onTempSourceListener: ((code: Int) -> Unit)?
         get() = tempSourceAdapter.onTempSourceListener
         set(value) {
@@ -174,8 +163,7 @@ class MenuSecondView : FrameLayout {
         }
 
     /**
-     * Observation mode - Menu 4 - Target click event listener.
-     */
+ * Observation mode - Menu 4 - Target click event listener. */
     var onTargetListener: ((targetType: TargetType) -> Unit)?
         get() = targetAdapter.onTargetListener
         set(value) {
@@ -183,8 +171,7 @@ class MenuSecondView : FrameLayout {
         }
 
     /**
-     * Observation mode - Menu 5 - High/Low temperature points click event listener.
-     */
+ * Observation mode - Menu 5 - High/Low temperature points click event listener. */
     var onTempPointListener: ((type: TempPointType, isSelected: Boolean) -> Unit)?
         get() = tempPointAdapter.onTempPointListener
         set(value) {
@@ -192,48 +179,39 @@ class MenuSecondView : FrameLayout {
         }
 
     /**
-     * Adapter used for Temperature measurement mode - Menu 2 - Point/Line/Area.
-     */
+ * Adapter used for Temperature measurement mode - Menu 2 - Point/Line/Area. */
     private val fenceAdapter: FenceAdapter
 
     /**
-     * Adapter used for Temperature measurement mode - Menu 3 - Dual Light.
-     */
+ * Adapter used for Temperature measurement mode - Menu 3 - Dual Light. */
     private val twoLightAdapter: TwoLightAdapter
 
     /**
-     * Adapter used for Temperature measurement mode - Menu 4 - Pseudo Color or Observation mode - Menu 3 - Pseudo Color.
-     */
+ * Adapter used for Temperature measurement mode - Menu 4 - Pseudo Color or Observation mode - Menu 3 - Pseudo Color. */
     private val colorAdapter = ColorAdapter()
 
     /**
-     * Adapter used for Temperature measurement mode - Menu 5 - Settings.
-     */
+ * Adapter used for Temperature measurement mode - Menu 5 - Settings. */
     private val settingTeAdapter: SettingAdapter
 
     /**
-     * Adapter used for Temperature measurement mode - Menu 6 - High/Low temperature level.
-     */
+ * Adapter used for Temperature measurement mode - Menu 6 - High/Low temperature level. */
     private val tempLevelAdapter: TempLevelAdapter
 
     /**
-     * Adapter used for Observation mode - Menu 2 - High/Low temperature source.
-     */
+ * Adapter used for Observation mode - Menu 2 - High/Low temperature source. */
     private val tempSourceAdapter = TempSourceAdapter()
 
     /**
-     * Adapter used for Observation mode - Menu 4 - Target.
-     */
+ * Adapter used for Observation mode - Menu 4 - Target. */
     private val targetAdapter = TargetAdapter()
 
     /**
-     * Adapter used for Observation mode - Menu 5 - High/Low temperature points.
-     */
+ * Adapter used for Observation mode - Menu 5 - High/Low temperature points. */
     private val tempPointAdapter = TempPointAdapter()
 
     /**
-     * Adapter used for Observation mode - Menu 6 - Settings.
-     */
+ * Adapter used for Observation mode - Menu 6 - Settings. */
     private val settingObAdapter = SettingAdapter(isObserver = true)
 
     constructor(context: Context) : this(context, null)
@@ -316,10 +294,9 @@ class MenuSecondView : FrameLayout {
     // *********************************************  Menu 1 - Capture/Recording  *********************************************
 
     /**
-     * Whether currently in recording mode.
+ * Whether currently in recording mode.
      *
-     * true-recording mode false-capture mode
-     */
+     * true-recording mode false-capture mode */
     var isVideoMode: Boolean
         get() = binding.cameraMenuView.isVideoMode
         set(value) {
@@ -327,8 +304,7 @@ class MenuSecondView : FrameLayout {
         }
 
     /**
-     * For TS001 only, when switching between temperature measurement/observation modes, need to reset to capture state after closing delayed capture, continuous capture, or recording.
-     */
+ * For TS001 only, when switching between temperature measurement/observation modes, need to reset to capture state after closing delayed capture, continuous capture, or recording. */
     fun switchToCamera() {
         binding.cameraMenuView.canSwitchMode = true
         binding.cameraMenuView.isVideoMode = false
@@ -336,17 +312,15 @@ class MenuSecondView : FrameLayout {
     }
 
     /**
-     * Similar to reset, this method aims to reset state to non-capture, non-recording state and enable capture/recording switching.
-     * Called in the start() method of various thermal imaging Activities and in the current View
-     */
+ * Similar to reset, this method aims to reset state to non-capture, non-recording state and enable capture/recording switching.
+     * Called in the start() method of various thermal imaging Activities and in the current View */
     fun updateCameraModel() {
         binding.cameraMenuView.canSwitchMode = true
         binding.cameraMenuView.setToNormal()
     }
 
     /**
-     * Executes refreshimg functionality.
-     */
+ * Executes refreshimg functionality. */
     fun refreshImg(type: GalleryRepository.DirType = GalleryRepository.DirType.LINE) {
         updateCameraModel() // Restore state
         CoroutineScope(Dispatchers.IO).launch {
@@ -358,16 +332,14 @@ class MenuSecondView : FrameLayout {
     }
 
     /**
-     * Set the middle capture/recording button to capturing-immediate/capturing-delayed/recording state
-     */
+ * Set the middle capture/recording button to capturing-immediate/capturing-delayed/recording state */
     fun setToRecord(isDelay: Boolean) {
         binding.cameraMenuView.canSwitchMode = false
         binding.cameraMenuView.setToRecord(isDelay)
     }
 
     /**
-     * Set the middle capture/recording button to capturing-immediate state
-     */
+ * Set the middle capture/recording button to capturing-immediate state */
     fun setToCamera() {
         binding.cameraMenuView.setToRecord(false)
     }
@@ -375,8 +347,7 @@ class MenuSecondView : FrameLayout {
     // *****************************************  temperature measurementmode-menu2-point/line/area  *****************************************
 
     /**
-     * Temperature measurement mode - Menu 2 - Point/Line/Area currently selected menu type, null indicates all unselected.
-     */
+ * Temperature measurement mode - Menu 2 - Point/Line/Area currently selected menu type, null indicates all unselected. */
     var fenceSelectType: FenceType?
         get() = fenceAdapter.selectType
         set(value) {
@@ -385,12 +356,11 @@ class MenuSecondView : FrameLayout {
 
     // *****************************************  temperature measurementmode-menu3-dual light  *****************************************
     /**
-     * Currently selected dual light type
+ * Currently selected dual light type
      * - Single light: Should not use this property
      * - Lite: Should not use this property
      * - Dual light: Dual light 1, Dual light 2, Infrared, Visible light
-     * - TC007: Dual light, Infrared, Visible light, Picture-in-picture
-     */
+     * - TC007: Dual light, Infrared, Visible light, Picture-in-picture */
     var twoLightType: TwoLightType
         get() = twoLightAdapter.twoLightType
         set(value) {
@@ -398,12 +368,11 @@ class MenuSecondView : FrameLayout {
         }
 
     /**
-     * Set dual light multi-selection state
+ * Set dual light multi-selection state
      * - Single light: Picture-in-picture, Fusion level
      * - Lite: Picture-in-picture, Fusion level
      * - Dual light: Registration, Picture-in-picture, Fusion level
-     * - TC007: Registration, Fusion level
-     */
+     * - TC007: Registration, Fusion level */
     fun setTwoLightSelected(
         twoLightType: TwoLightType,
         isSelected: Boolean,
@@ -414,9 +383,8 @@ class MenuSecondView : FrameLayout {
     // **********************************  temperature measurementmode-menu4-pseudo color/observationmode-menu3-pseudo color  **********************************
 
     /**
-     * Select specified pseudo color in pseudo color menu based on pseudo color code. If unsupported code is passed, results in all unselected state。
-     * @param code 1-White Hot 3-Iron Red 4-Rainbow 1 5-Rainbow 2 6-Rainbow 3 7-Red Hot 8-Hot Iron 9-Rainbow 4 10-Rainbow 5 11-Black Hot
-     */
+ * Select specified pseudo color in pseudo color menu based on pseudo color code. If unsupported code is passed, results in all unselected state.
+     * @param code 1-White Hot 3-Iron Red 4-Rainbow 1 5-Rainbow 2 6-Rainbow 3 7-Red Hot 8-Hot Iron 9-Rainbow 4 10-Rainbow 5 11-Black Hot */
     fun setPseudoColor(code: Int) {
         colorAdapter.selectCode = code
     }
@@ -424,8 +392,7 @@ class MenuSecondView : FrameLayout {
     // **********************************  temperature measurementmode-menu5-settings or observationmode-menu6-settings  **********************************
 
     /**
-     * Set the selection state of specified option in settings menu
-     */
+ * Set the selection state of specified option in settings menu */
     fun setSettingSelected(
         settingType: SettingType,
         isSelected: Boolean,
@@ -435,21 +402,19 @@ class MenuSecondView : FrameLayout {
     }
 
     /**
-     * Set rotation angle for rotation option in settings menu
-     * @param rotateAngle Note! This value is the core rotation angle, not UI rotation angle
-     */
+ * Set rotation angle for rotation option in settings menu
+     * @param rotateAngle Note! This value is the core rotation angle, not UI rotation angle */
     fun setSettingRotate(rotateAngle: Int) {
         settingTeAdapter.rotateAngle = rotateAngle
         settingObAdapter.rotateAngle = rotateAngle
     }
 
-    // *****************************************  temperature measurementmode-menu6-high/low temperature档  *****************************************
+    // *****************************************  temperature measurement mode - menu 6 - high/low temperature level  *****************************************
 
     /**
-     * Whether temperature level uses Fahrenheit as unit
+ * Whether temperature level uses Fahrenheit as unit
      *
-     * true-Fahrenheit false-Celsius
-     */
+     * true-Fahrenheit false-Celsius */
     var isUnitF: Boolean
         get() = tempLevelAdapter.isUnitF
         set(value) {
@@ -457,28 +422,26 @@ class MenuSecondView : FrameLayout {
         }
 
     /**
-     * Set Temperature measurement mode - Menu 6 - High/Low temperature level.
+ * Set Temperature measurement mode - Menu 6 - High/Low temperature level.
      *
      * Due to legacy constraints (saved in SharedPreferences), the code values are:
      * - Auto switch: -1
      * - High temperature (low gain): 0
-     * - Normal temperature (high gain): 1
-     */
+     * - Normal temperature (high gain): 1 */
     fun setTempLevel(code: Int) {
         tempLevelAdapter.selectCode = code
     }
 
-    // *****************************************  observationmode-menu2-high/low temperature源  *****************************************
+    // *****************************************  observation mode - menu 2 - high/low temperature source  *****************************************
 
     /**
-     * Set Observation mode - Menu 2 - High/Low temperature source selection.
+ * Set Observation mode - Menu 2 - High/Low temperature source selection.
      *
      * Due to legacy constraints (saved in SharedPreferences), the code values are:
      * - Nothing selected: -1
      * - Dynamic recognition: 0
      * - High temperature source: 1
-     * - Low temperature source: 2
-     */
+     * - Low temperature source: 2 */
     fun setTempSource(code: Int) {
         tempSourceAdapter.selectCode = code
     }
@@ -486,8 +449,7 @@ class MenuSecondView : FrameLayout {
     // *****************************************  observationmode-menu4-target  *****************************************
 
     /**
-     * Set selection state of specified option in Observation mode - Menu 4 - Target
-     */
+ * Set selection state of specified option in Observation mode - Menu 4 - Target */
     fun setTargetSelected(
         targetType: TargetType,
         isSelected: Boolean,
@@ -496,23 +458,21 @@ class MenuSecondView : FrameLayout {
     }
 
     /**
-     * Set icon type for Observation mode - Menu 4 - Target - Measurement mode.
+ * Set icon type for Observation mode - Menu 4 - Target - Measurement mode.
      *
      * Due to legacy constraints (saved in SharedPreferences), the code values are:
      * - Human: 10
      * - Sheep: 11
      * - Dog: 12
-     * - Bird: 13
-     */
+     * - Bird: 13 */
     fun setTargetMode(modeCode: Int) {
         targetAdapter.setTargetMode(modeCode)
     }
 
-    // *****************************************  observationmode-menu5-high/low temperaturepoint  *****************************************
+    // *****************************************  observation mode - menu 5 - high/low temperature point  *****************************************
 
     /**
-     * Set selection state of high temperature point or low temperature point in Observation mode - Menu 5 - High/Low temperature points menu。
-     */
+ * Set selection state of high temperature point or low temperature point in Observation mode - Menu 5 - High/Low temperature points menu. */
     fun setTempPointSelect(
         tempPointType: TempPointType,
         isSelected: Boolean,
@@ -521,9 +481,8 @@ class MenuSecondView : FrameLayout {
     }
 
     /**
-     * Clear all selection states in Observation mode - Menu 5 - High/Low temperature points menu。
-     * Maintain original logic here, consider whether to directly delete selected items later。
-     */
+ * Clear all selection states in Observation mode - Menu 5 - High/Low temperature points menu.
+     * Maintain original logic here, consider whether to directly delete selected items later. */
     fun clearTempPointSelect() {
         tempPointAdapter.clearAllSelect()
     }

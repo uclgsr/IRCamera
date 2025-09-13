@@ -9,31 +9,33 @@ import com.topdon.menu.constant.FenceType
 import com.topdon.menu.constant.MenuType
 
 /**
- * point、line、area、全图、趋势图(可选)、delete menu Adapter.
+ * Point, line, area, full image, trend chart (optional), delete menu adapter.
  *
- * - 单光：   point、line、area、全图、趋势图、delete
- * - dual light：   point、line、area、全图、趋势图、delete
- * - Lite：  point、line、area、全图、趋势图、delete
- * - TC007： point、line、area、全图、趋势图、delete
- * - 2D 编辑：point、line、area、全图、delete
+ * Device support:
+ * - Single light: point, line, area, full image, trend chart, delete
+ * - Dual light: point, line, area, full image, trend chart, delete  
+ * - Lite: point, line, area, full image, trend chart, delete
+ * - TC007: point, line, area, full image, trend chart, delete
+ * - 2D editing: point, line, area, full image, delete
  *
- * point、line、area、趋势图、全图 与 delete互斥
+ * Selection rules:
+ * Point, line, area, trend chart, full image are mutually exclusive with delete.
  *
- * point、line、area、趋势图 互斥，全图独立可选
+ * Point, line, area, trend chart are mutually exclusive; full image is independently selectable.
  *
  * Created by LCG on 2024/11/18.
  */
 @SuppressLint("NotifyDataSetChanged")
 internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
     /**
-     * currentselected的menutype，if null indicates所有都未selected.
+     * Currently selected menu type. If null, indicates all are unselected.
      */
     var selectType: FenceType? = null
         set(value) {
             when (value) {
                 FenceType.FULL -> isFullSelect = true
                 FenceType.DEL -> isFullSelect = false
-                else -> { // point、line、area、趋势图，不会影响全图state
+                else -> { // point, line, area, trend chart will not affect full image state
                 }
             }
             field = value
@@ -41,12 +43,12 @@ internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
         }
 
     /**
-     * 全图是否已selected.
+     * Whether full image is selected.
      */
     private var isFullSelect: Boolean = false
 
     /**
-     * menuclickevent listener，目前都是single selection，等后续有空重构了，再搞成 IOS 那样“全图”可以多选。
+     * Menu click event listener. Currently single selection only. May refactor later to support iOS-style "full image" multi-selection.
      */
     var onFenceListener: ((fenceType: FenceType, isSelected: Boolean) -> Unit)? = null
 

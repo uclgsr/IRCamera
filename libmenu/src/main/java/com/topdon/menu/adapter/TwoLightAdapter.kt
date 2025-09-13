@@ -13,22 +13,22 @@ import com.topdon.menu.constant.TwoLightType
  *
  * - Single light: Picture-in-picture, Fusion level
  * - Lite: Picture-in-picture, Fusion level
- * - Dual light: Dual light 1, Dual light 2, Infrared, Visible light、registration、picture-in-picture、fusion度
- * - TC007：dual light、infrared、visible light、registration、picture-in-picture、fusion度
- * - 2D编辑：无该menu
+ * - Dual light: Dual light 1, Dual light 2, Infrared, Visible light, registration, picture-in-picture, fusion level
+ * - TC007: dual light, infrared, visible light, registration, picture-in-picture, fusion level
+ * - 2D editing: No such menu
  *
- * 单光、Lite：picture-in-picture、fusion度 独立可选
+ * Single light, Lite: picture-in-picture, fusion level independently selectable
  *
- * dual light：dual light1、dual light2、infrared、visible light 互斥； registration、picture-in-picture、fusion度 独立可选
+ * Dual light: dual light1, dual light2, infrared, visible light mutually exclusive; registration, picture-in-picture, fusion level independently selectable
  *
- * TC007: Dual light, Infrared, Visible light, Picture-in-picture 互斥；registration、fusion度 独立可选
+ * TC007: Dual light, Infrared, Visible light, Picture-in-picture mutually exclusive; registration, fusion level independently selectable
  *
  * Created by LCG on 2024/11/20.
  */
 @SuppressLint("NotifyDataSetChanged")
 internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter() {
     /**
-     * dual lightmenuclickevent listener。
+     * Dual light menu click event listener.
      */
     var onTwoLightListener: ((twoLightType: TwoLightType, isSelected: Boolean) -> Unit)? = null
 
@@ -58,7 +58,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
             for (data in dataList) {
                 if (data.isSingle) {
                     if (menuType == MenuType.TC007 && value == TwoLightType.TWO_LIGHT_1) {
-                        // TC007 时无论dual light1还是dual light2都视为dual light
+                        // In TC007, both dual light1 and dual light2 are treated as dual light
                         data.isSelected = data.twoLightType == TwoLightType.TWO_LIGHT_2
                     } else {
                         data.isSelected = data.twoLightType == value
@@ -69,7 +69,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
         }
 
     /**
-     * settings多选state
+     * Settings multi-select state
      * - Single light: Picture-in-picture, Fusion level
      * - Lite: Picture-in-picture, Fusion level
      * - Dual light: Registration, Picture-in-picture, Fusion level
@@ -79,13 +79,13 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
         twoLightType: TwoLightType,
         isSelected: Boolean,
     ) {
-        if (twoLightType == TwoLightType.TWO_LIGHT_1 || twoLightType == TwoLightType.TWO_LIGHT_2) { // dual light1、dual light2
+        if (twoLightType == TwoLightType.TWO_LIGHT_1 || twoLightType == TwoLightType.TWO_LIGHT_2) { // dual light1, dual light2
             return
         }
-        if (twoLightType == TwoLightType.IR || twoLightType == TwoLightType.LIGHT) { // 单infrared、visible light
+        if (twoLightType == TwoLightType.IR || twoLightType == TwoLightType.LIGHT) { // single infrared, visible light
             return
         }
-        if (menuType == MenuType.TC007 && twoLightType == TwoLightType.P_IN_P) { // TC007 时的picture-in-picture
+        if (menuType == MenuType.TC007 && twoLightType == TwoLightType.P_IN_P) { // picture-in-picture in TC007
             return
         }
         for (data in dataList) {
@@ -132,7 +132,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
         holder.binding.tvText.isSelected = data.isSelected
         holder.binding.clRoot.setOnClickListener {
             if (data.isSingle) { // single selection
-                if (!data.isSelected) { // single selection的情况下重复click忽略掉
+                if (!data.isSelected) { // repeated clicks ignored in single selection mode
                     twoLightType = data.twoLightType
                     onTwoLightListener?.invoke(data.twoLightType, true)
                 }
@@ -148,8 +148,8 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
     override fun getItemCount(): Int = dataList.size
 
     /**
-     * @param isSingle 是否single selection，目前只有1组互斥的single selection，故而 Boolean 足够用了
-     * @param isSelected current是否selected
+     * @param isSingle whether single selection. Currently only 1 group of mutually exclusive single selection, so Boolean is sufficient
+     * @param isSelected whether currently selected
      */
 /**
  * Custom Data view for thermal imaging display.
