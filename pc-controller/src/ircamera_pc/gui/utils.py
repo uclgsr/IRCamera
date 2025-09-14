@@ -5,10 +5,24 @@ Utility functions and classes for GUI components.
 """
 
 import sys
-
-from loguru import logger
-from ..core.config import config
+import logging
 from typing import Any
+
+try:
+    from loguru import logger
+except ImportError:
+    # Fallback to standard logging if loguru is not available
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logger = logging.getLogger(__name__)
+
+try:
+    from ..core.config import config
+except ImportError:
+    # Mock config for headless mode
+    class MockConfig:
+        def __getattr__(self, name):
+            return "default"
+    config = MockConfig()
 
 try:
     from PyQt6.QtCore import QObject, pyqtSignal
