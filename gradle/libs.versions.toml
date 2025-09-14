@@ -26,7 +26,7 @@ appsecretTopinfraredCn = "9D33C48FD7CE4440B7D922FBF9B6DE2A"
 appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
 
 # Kotlin and Core
-kotlin = "2.1.0"
+kotlin = "2.2.0"
 agp = "8.11.0"
 androidxCore = "1.12.0"
 androidxAppcompat = "1.6.1"
@@ -45,7 +45,7 @@ room = "2.5.2"
 work = "2.10.4"
 
 # Coroutines
-coroutines = "1.7.3"
+coroutines = "1.9.0"
 
 # Networking
 fastjson2 = "2.0.58"
@@ -133,7 +133,7 @@ huaweiAgcp = "1.6.0.300"
 
 # Build Tools
 androidGradlePlugin = "8.11.0"
-kotlinGradlePlugin = "2.1.0"
+kotlinGradlePlugin = "2.2.0"
 desugarJdkLibs = "2.1.5"
 
 [libraries]

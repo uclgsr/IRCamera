@@ -77,9 +77,9 @@ android {
         }
     }
 
-    lintOptions {
-        isAbortOnError = false
-        isCheckReleaseBuilds = false
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
         disable += listOf(
             "StringFormatInvalid",
             "StringFormatMatches",
@@ -108,17 +108,20 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-        apiVersion = "1.9"
-        languageVersion = "1.9"
-        freeCompilerArgs +=
-            listOf(
-                "-opt-in=kotlin.RequiresOptIn",
-                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                "-opt-in=kotlinx.coroutines.FlowPreview",
-                "-Xjvm-default=all",
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
+            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
+            freeCompilerArgs.addAll(
+                listOf(
+                    "-opt-in=kotlin.RequiresOptIn",
+                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    "-opt-in=kotlinx.coroutines.FlowPreview",
+                    "-Xjvm-default=all",
+                )
             )
+        }
     }
 
     java {
@@ -302,7 +305,7 @@ dependencies {
     implementation("com.opencsv:opencsv:5.12.0")
     implementation("com.google.code.gson:gson:2.13.2")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
@@ -311,6 +314,7 @@ dependencies {
     implementation("no.nordicsemi.android:ble-ktx:2.11.0")
 
 
+    // Shimmer GSR+ Sensor SDK - Updated to 3.2.4_beta for enhanced BLE stability
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))
     implementation(files("libs/shimmerdriverpc-0.11.5_beta.jar"))
@@ -333,7 +337,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.14.5")
     testImplementation("io.mockk:mockk-android:1.14.5")
 
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
 
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
