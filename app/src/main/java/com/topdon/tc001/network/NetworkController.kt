@@ -231,7 +231,11 @@ class NetworkController(private val context: Context) {
     private suspend fun handleStartRecordingCommand(connection: ClientConnection, json: JSONObject) {
         try {
             val sessionId = json.optString("session_id", "session_${System.currentTimeMillis()}")
-            val modalitiesArray = json.optJSONArray("modalities") ?: return
+            val modalitiesArray = json.optJSONArray("modalities")
+            if (modalitiesArray == null) {
+                sendResponse(connection, createErrorResponse("invalid_request", "Missing or invalid 'modalities' field"))
+                return
+            }
             val modalities = mutableListOf<String>()
             
             for (i in 0 until modalitiesArray.length()) {
