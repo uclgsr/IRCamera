@@ -227,14 +227,16 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             })
             
             // Start NetworkController server
-            val serverStarted = networkController?.start(8080)
-            if (serverStarted == true) {
-                Log.i(TAG, "NetworkController server started on port 8080")
-                _statusMessage.postValue(
-                    StatusMessage("PC remote control ready on port 8080", StatusMessage.Level.INFO)
-                )
-            } else {
-                Log.w(TAG, "Failed to start NetworkController server")
+            viewModelScope.launch {
+                val serverStarted = networkController?.start(8080)
+                if (serverStarted == true) {
+                    Log.i(TAG, "NetworkController server started on port 8080")
+                    _statusMessage.postValue(
+                        StatusMessage("PC remote control ready on port 8080", StatusMessage.Level.INFO)
+                    )
+                } else {
+                    Log.w(TAG, "Failed to start NetworkController server")
+                }
             }
             
             // Set up NetworkClient event listener for discovery

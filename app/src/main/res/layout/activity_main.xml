@@ -17,7 +17,7 @@
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/network_status_bar"
+            app:layout_constraintTop_toBottomOf="@+id/networkStatusBar"
             app:layout_constraintBottom_toTopOf="@+id/cl_bottom" />
 
         <!-- Enhanced Status Bar with GSR, Network, and Session Controls -->
