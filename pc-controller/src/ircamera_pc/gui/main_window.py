@@ -316,8 +316,7 @@ class MainWindow(QMainWindow):
     def _setup_network_callbacks(self) -> None:
         """Set up WebSocket server event callbacks - Phase 1 implementation."""
         # WebSocket server handles callbacks through message handlers internally
-        # For now,
-            we'll implement basic device tracking through the server's client management
+        # For now, we'll implement basic device tracking through the server's client management
         logger.info("WebSocket server callbacks configured")
 
     def _setup_system_integration_callbacks(self) -> None:

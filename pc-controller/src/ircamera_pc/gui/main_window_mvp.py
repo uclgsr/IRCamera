@@ -14,11 +14,16 @@ from PyQt6.QtCore import Qt, QTimer, pyqtSignal, pyqtSlot
 from PyQt6.QtGui import QFont, QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QFormLayout,
     QGroupBox,
     QHBoxLayout,
     QHeaderView,
     QInputDialog,
     QLabel,
+    QLineEdit,
     QMainWindow,
     QMessageBox,
     QPushButton,
@@ -32,7 +37,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from ..core.device_manager import DeviceConnectionState, DeviceInfo, DeviceManager
+from ..core.device_manager import DeviceConnectionState, DeviceInfo, DeviceManager, DeviceType
 from ..core.session_manager import EnhancedSessionManager, SessionConfiguration, SessionState
 
 
@@ -623,9 +628,28 @@ class MVPMainWindow(QMainWindow):
         
         add_device_layout = QHBoxLayout()
         
-        # TODO: Add form fields for manual device addition
-        manual_info_label = QLabel("Manual device addition and advanced controls will be implemented here.")
-        add_device_layout.addWidget(manual_info_label)
+        # Manual device addition form
+        from PyQt6.QtWidgets import QLineEdit, QComboBox
+        
+        add_device_layout.addWidget(QLabel("IP Address:"))
+        self.manual_ip_input = QLineEdit()
+        self.manual_ip_input.setPlaceholderText("e.g., 192.168.1.100")
+        add_device_layout.addWidget(self.manual_ip_input)
+        
+        add_device_layout.addWidget(QLabel("Port:"))
+        self.manual_port_input = QLineEdit()
+        self.manual_port_input.setPlaceholderText("8080")
+        self.manual_port_input.setText("8080")
+        add_device_layout.addWidget(self.manual_port_input)
+        
+        add_device_layout.addWidget(QLabel("Type:"))
+        self.manual_type_combo = QComboBox()
+        self.manual_type_combo.addItems(["ANDROID_SENSOR_NODE", "THERMAL_CAMERA_TS004", "THERMAL_CAMERA_TC007"])
+        add_device_layout.addWidget(self.manual_type_combo)
+        
+        self.add_manual_device_btn = QPushButton("Add Device")
+        self.add_manual_device_btn.clicked.connect(self._on_add_manual_device)
+        add_device_layout.addWidget(self.add_manual_device_btn)
         
         manual_layout.addLayout(add_device_layout)
         layout.addWidget(manual_group)
@@ -679,17 +703,27 @@ class MVPMainWindow(QMainWindow):
     def _connect_device(self, device_id: str):
         """Handle device connection request."""
         try:
-            # TODO: Implement actual device connection logic
-            # For now, just simulate connection
+            # Get device info from registry
             registry = self.device_manager.get_registry()
-            success = registry.update_device_state(device_id, DeviceConnectionState.ONLINE)
+            device_info = registry.get_device(device_id)
             
-            if success:
-                self.logging_console.add_log_message(f"Connected to device: {device_id}")
-                self.status_bar.showMessage(f"Device {device_id} connected", 3000)
-            else:
-                self.logging_console.add_log_message(f"Failed to connect to device: {device_id}", "ERROR")
-                
+            if not device_info:
+                self.logging_console.add_log_message(f"Device {device_id} not found in registry", "ERROR")
+                return
+            
+            # Use device manager to establish connection
+            async def connect_async():
+                success = await self.device_manager.connect_to_device(device_id)
+                if success:
+                    self.logging_console.add_log_message(f"Connected to device: {device_id}")
+                    self.status_bar.showMessage(f"Device {device_id} connected", 3000)
+                    self._update_device_display()
+                else:
+                    self.logging_console.add_log_message(f"Failed to connect to device: {device_id}", "ERROR")
+            
+            # Schedule async connection
+            asyncio.ensure_future(connect_async())
+            
         except Exception as e:
             self.logging_console.add_log_message(f"Error connecting device {device_id}: {e}", "ERROR")
             logger.error(f"Error connecting device: {e}")
@@ -724,13 +758,158 @@ class MVPMainWindow(QMainWindow):
     
     @pyqtSlot()
     def _add_device_manually(self):
-        """Handle manual device addition request."""
-        # TODO: Implement manual device addition dialog
-        QMessageBox.information(
-            self,
-            "Manual Device Addition",
-            "Manual device addition will be implemented in the next phase."
-        )
+        """Handle manual device addition request from dashboard."""
+        # Show dialog for manual device addition
+        self._show_manual_device_dialog()
+    
+    @pyqtSlot()
+    def _on_add_manual_device(self):
+        """Handle manual device addition from form."""
+        try:
+            # Get form values
+            ip_address = self.manual_ip_input.text().strip()
+            port_text = self.manual_port_input.text().strip()
+            device_type = self.manual_type_combo.currentText()
+            
+            # Validation
+            if not ip_address:
+                QMessageBox.warning(self, "Invalid Input", "Please enter an IP address.")
+                return
+                
+            try:
+                port = int(port_text) if port_text else 8080
+                if not (1 <= port <= 65535):
+                    raise ValueError("Port out of range")
+            except ValueError:
+                QMessageBox.warning(self, "Invalid Input", "Please enter a valid port number (1-65535).")
+                return
+            
+            # Create device info
+            device_id = f"manual_{ip_address}_{port}"
+            
+            # Convert string device type to enum
+            device_type_mapping = {
+                "ANDROID_SENSOR_NODE": DeviceType.ANDROID_SENSOR_NODE,
+                "THERMAL_CAMERA_TS004": DeviceType.THERMAL_CAMERA_TS004,
+                "THERMAL_CAMERA_TC007": DeviceType.THERMAL_CAMERA_TC007
+            }
+            device_type_enum = device_type_mapping.get(device_type, DeviceType.ANDROID_SENSOR_NODE)
+            
+            # Create discovered device for registry
+            from datetime import datetime
+            from ..network.discovery import DiscoveredDevice
+            
+            discovered_device = DiscoveredDevice(
+                service_name=f"manual_{ip_address}_{port}",
+                service_type="_ircamera._tcp.local.",
+                ip_address=ip_address,
+                port=port,
+                device_type=device_type_enum,
+                attributes={"manual": "true"},
+                discovered_at=datetime.now(),
+                last_seen=datetime.now()
+            )
+            
+            # Add to device registry
+            registry = self.device_manager.get_registry()
+            device_id = registry.register_device(discovered_device)
+            
+            # Clear form
+            self.manual_ip_input.clear()
+            self.manual_port_input.setText("8080")
+            
+            # Update display and log
+            self._update_device_display()
+            self.logging_console.add_log_message(f"Manually added device: {device_id}")
+            self.status_bar.showMessage(f"Device {device_id} added manually", 3000)
+            
+        except Exception as e:
+            self.logging_console.add_log_message(f"Error adding manual device: {e}", "ERROR")
+            logger.error(f"Error adding manual device: {e}")
+            QMessageBox.critical(self, "Error", f"Failed to add device: {e}")
+    
+    def _show_manual_device_dialog(self):
+        """Show dialog for manual device addition with more options."""
+        from PyQt6.QtWidgets import QDialog, QFormLayout, QDialogButtonBox
+        
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Add Device Manually")
+        dialog.setModal(True)
+        
+        layout = QFormLayout(dialog)
+        
+        # Form fields
+        ip_input = QLineEdit()
+        ip_input.setPlaceholderText("192.168.1.100")
+        layout.addRow("IP Address:", ip_input)
+        
+        port_input = QLineEdit()
+        port_input.setText("8080")
+        layout.addRow("Port:", port_input)
+        
+        name_input = QLineEdit()
+        name_input.setPlaceholderText("Optional device name")
+        layout.addRow("Device Name:", name_input)
+        
+        type_combo = QComboBox()
+        type_combo.addItems(["ANDROID_SENSOR_NODE", "THERMAL_CAMERA_TS004", "THERMAL_CAMERA_TC007"])
+        layout.addRow("Device Type:", type_combo)
+        
+        # Buttons
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        buttons.accepted.connect(dialog.accept)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            try:
+                ip = ip_input.text().strip()
+                port = int(port_input.text().strip()) if port_input.text().strip() else 8080
+                name = name_input.text().strip()
+                device_type = type_combo.currentText()
+                
+                if not ip:
+                    QMessageBox.warning(self, "Invalid Input", "Please enter an IP address.")
+                    return
+                
+                # Create device
+                device_id = f"manual_{ip}_{port}"
+                if name:
+                    device_id = f"manual_{name}_{ip}_{port}"
+                
+                # Convert string device type to enum
+                device_type_mapping = {
+                    "ANDROID_SENSOR_NODE": DeviceType.ANDROID_SENSOR_NODE,
+                    "THERMAL_CAMERA_TS004": DeviceType.THERMAL_CAMERA_TS004,
+                    "THERMAL_CAMERA_TC007": DeviceType.THERMAL_CAMERA_TC007
+                }
+                device_type_enum = device_type_mapping.get(device_type, DeviceType.ANDROID_SENSOR_NODE)
+                    
+                # Create discovered device for registry
+                from datetime import datetime
+                from ..network.discovery import DiscoveredDevice
+                
+                discovered_device = DiscoveredDevice(
+                    service_name=name if name else f"manual_{ip}_{port}",
+                    service_type="_ircamera._tcp.local.",
+                    ip_address=ip,
+                    port=port,
+                    device_type=device_type_enum,
+                    attributes={"manual": "true", "name": name} if name else {"manual": "true"},
+                    discovered_at=datetime.now(),
+                    last_seen=datetime.now()
+                )
+                
+                # Add to registry
+                registry = self.device_manager.get_registry()
+                device_id = registry.register_device(discovered_device)
+                
+                # Update display and log
+                self._update_device_display()
+                self.logging_console.add_log_message(f"Manually added device: {device_id}")
+                
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Failed to add device: {e}")
     
     @pyqtSlot(str, dict)
     def _create_session(self, session_name: str, config: dict):

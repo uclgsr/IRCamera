@@ -18,6 +18,8 @@ from PyQt6.QtWidgets import QApplication, QMessageBox
 from ..core.config import config
 from ..core.device_manager import DeviceManager
 from ..core.session_manager import EnhancedSessionManager
+from ..network.websocket_server import WebSocketServer
+from ..sync import EnhancedTimeSyncServer
 from .main_window_mvp import MVPMainWindow
 
 
@@ -38,10 +40,13 @@ class IRCameraHubApplication:
         self.main_window: Optional[MVPMainWindow] = None
         self.device_manager: Optional[DeviceManager] = None
         self.session_manager: Optional[EnhancedSessionManager] = None
+        self.websocket_server: Optional[WebSocketServer] = None
+        self.time_sync_server: Optional[EnhancedTimeSyncServer] = None
         
         # Configuration
         self.base_session_dir = Path(config.get("sessions.base_directory", "./sessions"))
         self.server_port = config.get("network.server_port", 8080)
+        self.time_sync_port = config.get("sync.server_port", 1234)
         
         # Async event loop integration
         self._loop: Optional[asyncio.AbstractEventLoop] = None
@@ -206,14 +211,106 @@ class IRCameraHubApplication:
             else:
                 logger.info("Device manager startup in progress...")
             
-            # TODO: Start network server
-            # TODO: Start time sync service
+            # Start WebSocket server
+            async def start_websocket():
+                return await self._start_websocket_server()
+            
+            ws_future = asyncio.ensure_future(start_websocket())
+            
+            # Start time sync service  
+            async def start_timesync():
+                return await self._start_time_sync_server()
+                
+            ts_future = asyncio.ensure_future(start_timesync())
+            
+            # Wait briefly for servers to start
+            for _ in range(30):  # Wait up to 0.3 seconds
+                self._process_async_events()
+                time.sleep(0.01)
+                if ws_future.done() and ts_future.done():
+                    break
+            
+            # Check results
+            if ws_future.done():
+                ws_result = ws_future.result()
+                if not ws_result:
+                    logger.warning("WebSocket server failed to start, continuing without it")
+                    self.main_window.logging_console.add_log_message("WebSocket server failed to start", "WARNING")
+            else:
+                logger.info("WebSocket server startup in progress...")
+                
+            if ts_future.done():
+                ts_result = ts_future.result()  
+                if not ts_result:
+                    logger.warning("Time sync server failed to start, continuing without it")
+                    self.main_window.logging_console.add_log_message("Time sync server failed to start", "WARNING")
+            else:
+                logger.info("Time sync server startup in progress...")
             
             logger.info("Core services startup initiated")
             return True
             
         except Exception as e:
             logger.error(f"Failed to start services: {e}")
+            return False
+    
+    async def _start_websocket_server(self) -> bool:
+        """
+        Start the WebSocket server for device communication.
+        
+        Returns:
+            True if started successfully
+        """
+        try:
+            logger.info(f"Starting WebSocket server on port {self.server_port}...")
+            
+            # Create WebSocket server instance
+            self.websocket_server = WebSocketServer(
+                host="0.0.0.0",
+                port=self.server_port
+            )
+            
+            # Start the server
+            success = await self.websocket_server.start()
+            
+            if success:
+                logger.info(f"WebSocket server started successfully on port {self.server_port}")
+                self.main_window.logging_console.add_log_message(f"WebSocket server started on port {self.server_port}")
+                return True
+            else:
+                logger.error("WebSocket server failed to start")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Failed to start WebSocket server: {e}")
+            return False
+    
+    async def _start_time_sync_server(self) -> bool:
+        """
+        Start the time synchronization server.
+        
+        Returns:
+            True if started successfully
+        """
+        try:
+            logger.info(f"Starting time sync server on port {self.time_sync_port}...")
+            
+            # Create time sync server instance
+            self.time_sync_server = EnhancedTimeSyncServer(port=self.time_sync_port)
+            
+            # Start the server
+            success = await self.time_sync_server.start()
+            
+            if success:
+                logger.info(f"Time sync server started successfully on port {self.time_sync_port}")
+                self.main_window.logging_console.add_log_message(f"Time sync server started on port {self.time_sync_port}")
+                return True
+            else:
+                logger.error("Time sync server failed to start")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Failed to start time sync server: {e}")
             return False
     
     def run(self) -> int:
@@ -260,15 +357,25 @@ class IRCameraHubApplication:
         logger.info("Cleaning up application resources...")
         
         try:
-            # Stop device manager
-            if self.device_manager:
-                async def stop_device_manager():
+            async def cleanup_async():
+                # Stop WebSocket server
+                if self.websocket_server:
+                    await self.websocket_server.stop()
+                    logger.info("WebSocket server stopped")
+                
+                # Stop time sync server  
+                if self.time_sync_server:
+                    await self.time_sync_server.stop()
+                    logger.info("Time sync server stopped")
+                
+                # Stop device manager
+                if self.device_manager:
                     await self.device_manager.stop()
                     logger.info("Device manager stopped")
-                
-                # Run cleanup in event loop
-                if self._loop and not self._loop.is_closed():
-                    self._loop.run_until_complete(stop_device_manager())
+            
+            # Run cleanup in event loop
+            if self._loop and not self._loop.is_closed():
+                self._loop.run_until_complete(cleanup_async())
             
             # Stop event loop timer
             if self._loop_timer:

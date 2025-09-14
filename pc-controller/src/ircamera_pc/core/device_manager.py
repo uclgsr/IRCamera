@@ -142,16 +142,16 @@ class DeviceRegistry:
         Returns:
             Device ID for the registered device
         """
-        device_id = f"{discovered_device.serviceName}_{discovered_device.ipAddress}_{discovered_device.port}"
+        device_id = f"{discovered_device.service_name}_{discovered_device.ip_address}_{discovered_device.port}"
         
         # Parse capabilities from discovery attributes
         capabilities = self._parse_capabilities(discovered_device.attributes)
         
         device_info = DeviceInfo(
             device_id=device_id,
-            device_name=discovered_device.serviceName,
+            device_name=discovered_device.service_name,
             device_type=discovered_device.device_type,
-            ip_address=discovered_device.ipAddress,
+            ip_address=discovered_device.ip_address,
             port=discovered_device.port,
             state=DeviceConnectionState.DISCOVERED,
             capabilities=capabilities
@@ -440,12 +440,14 @@ class DeviceManager:
         try:
             # Create discovered device manually
             discovered_device = DiscoveredDevice(
-                serviceName=device_name,
-                serviceType="_ircamera._tcp.local.",
-                ipAddress=ip_address,
+                service_name=device_name,
+                service_type="_ircamera._tcp.local.",
+                ip_address=ip_address,
                 port=port,
-                device_type=DeviceType.ANDROID_NODE,  # Default type
-                attributes={}
+                device_type=DeviceType.ANDROID_SENSOR_NODE,  # Default type
+                attributes={},
+                discovered_at=datetime.now(),
+                last_seen=datetime.now()
             )
             
             device_id = self.registry.register_device(discovered_device)
