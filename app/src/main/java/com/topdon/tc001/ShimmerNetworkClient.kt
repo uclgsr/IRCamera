@@ -193,15 +193,17 @@ class ShimmerNetworkClient(
         connectionJob = networkScope.launch {
             try {
                 while (isRunning.get() && isConnected.get()) {
-                    inputStream?.let { input ->
+                    val input = inputStream
+                    if (input != null) {
                         val line = input.readLine()
                         if (line != null) {
                             processServerMessage(line)
                         } else {
-
                             Log.w(TAG, "Server closed connection")
-                            break
+                            return@launch // Use return instead of break
                         }
+                    } else {
+                        return@launch
                     }
                 }
             } catch (e: Exception) {

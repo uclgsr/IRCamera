@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.csl.irCamera.R
 import com.topdon.tc001.controller.HardwareValidationController
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.controller.ValidationReport

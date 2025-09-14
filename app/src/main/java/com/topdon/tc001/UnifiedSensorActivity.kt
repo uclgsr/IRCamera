@@ -477,7 +477,7 @@ class UnifiedSensorActivity : AppCompatActivity() {
             SessionQuality.QualityLevel.EXCELLENT -> android.graphics.Color.GREEN
             SessionQuality.QualityLevel.GOOD -> android.graphics.Color.BLUE
             SessionQuality.QualityLevel.FAIR -> android.graphics.Color.YELLOW
-            SessionQuality.QualityLevel.POOR -> android.graphics.Color.ORANGE
+            SessionQuality.QualityLevel.POOR -> android.graphics.Color.rgb(255, 165, 0) // Orange
             SessionQuality.QualityLevel.CRITICAL -> android.graphics.Color.RED
         }
 

@@ -71,6 +71,7 @@ import com.topdon.tc001.network.NetworkClient
 import com.topdon.tc001.network.WebSocketClient
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import com.topdon.tc001.service.RecordingService
+import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.supervisor.CrashSafeSupervisor
 import com.topdon.tc001.utils.AppVersionUtil
 import kotlinx.coroutines.Dispatchers
@@ -1372,7 +1373,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
                 val controllers = networkClient?.getDiscoveredControllers()
                 if (!controllers.isNullOrEmpty()) {
-                    for (controller in controllers) {
+                    for (controller: NetworkClient.ControllerInfo in controllers) {
                         Log.i(TAG, "Reconnection attempt to ${controller.ipAddress}")
                         val success = networkClient?.connectToController(
                             controller.ipAddress,
