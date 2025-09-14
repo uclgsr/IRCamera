@@ -30,7 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
-\1temperature correction操作指引.
+// temperature correction操作指引.
  *
  * Created by LCG on 2024/11/13.
  */

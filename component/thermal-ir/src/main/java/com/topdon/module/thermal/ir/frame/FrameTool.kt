@@ -290,7 +290,7 @@ class FrameTool {
     }
 
     /**
-\1目标尺寸
+// 目标尺寸
      */
     private fun getDstImageRes(rotate: ImageParams): LibIRProcess.ImageRes_t {
         val dstImageRes = LibIRProcess.ImageRes_t() // 目标尺寸
@@ -340,7 +340,7 @@ class FrameTool {
     }
 
 //    fun getTemp() {
-\1// getfull image最high temperature和最low temperature的data
+// // getfull image最high temperature和最low temperature的data
 //        val irTemp = Libirtemp(256, 192)
 //        irTemp.settempdata(mixTemperatureBytes)
 //        val temperatureSampleEasyResult = irTemp.getTemperatureOfRect(Rect(0, 0, 256, 192))
@@ -348,7 +348,7 @@ class FrameTool {
 //    }
 
 //    fun getSrcTemp()：Libirt{
-\1// getfull image最high temperature和最low temperature的data
+// // getfull image最high temperature和最low temperature的data
 //        val irTemp = Libirtemp(256, 192)
 //        irTemp.settempdata(temperatureBytes)
 //        val temperatureSampleEasyResult = irTemp.getTemperatureOfRect(Rect(0, 0, 256, 192))

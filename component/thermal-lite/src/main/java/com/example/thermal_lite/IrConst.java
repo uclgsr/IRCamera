@@ -5,7 +5,7 @@ package com.example.thermal_lite;
  */
 public class IrConst {
 
-\1默认的出图data，可在“USB基础信息”中修改
+// 默认的出图data，可在“USB基础信息”中修改
     public static final int DEFAULT_STREAM_WIDTH = 256;
     public static final int DEFAULT_STREAM_HEIGHT = 386;
     public static final int DEFAULT_STREAM_FPS = 25;
@@ -17,7 +17,7 @@ public class IrConst {
     public static final String KEY_DEFAULT_STREAM_FPS = "KEY_DEFAULT_STREAM_FPS";
     public static final String KEY_DEFAULT_STREAM_BANDWIDTH = "KEY_DEFAULT_STREAM_BANDWIDTH";
     public static final String KEY_DEFAULT_DOUBLE_IMAGE = "KEY_DEFAULT_DOUBLE_IMAGE";
-\1统一修改当前load的距离修正表
+// 统一修改当前load的距离修正表
     public static final String TAU_HIGH_GAIN_ASSET_PATH = "lite/highF.bin";
     public static final String TAU_LOW_GAIN_ASSET_PATH = "lite/lowF.bin";
 

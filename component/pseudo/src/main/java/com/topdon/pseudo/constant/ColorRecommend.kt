@@ -46,7 +46,7 @@ object ColorRecommend {
 
     /**
      *
-\1@param index 0-铁红 1-黑红 2-自然 3-岩浆 4-辉金
+// @param index 0-铁红 1-黑红 2-自然 3-岩浆 4-辉金
      */
     fun getColorByIndex(
         isTC007: Boolean,

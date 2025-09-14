@@ -55,15 +55,15 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
-\1公共set页，即公共 “我的”
-\1[MoreActivity] - TS004 “我的”
-\1[MoreFragment] - 插件式 “我的”
+// 公共set页，即公共 “我的”
+// [MoreActivity] - TS004 “我的”
+// [MoreFragment] - 插件式 “我的”
  *
  * Created by LCG on 2024/4/19.
  */
 class MineFragment : BaseFragment(), View.OnClickListener {
     /**
-\1onResume() 阶段是否需要刷新登录状态相关 UI.
+// onResume() 阶段是否需要刷新登录状态相关 UI.
      */
     private var isNeedRefreshLogin = false
 
@@ -119,7 +119,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-\1要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+// 要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(false)
                     }
@@ -235,14 +235,14 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
     private fun loginAction() {
         isNeedRefreshLogin = true
-\1activityLogin()回调不可靠，但必然触发onResume()
+// activityLogin()回调不可靠，但必然触发onResume()
         val bgBitmap = BitmapFactory.decodeResource(resources, LibAppR.mipmap.ic_default_user_head) // Use available resource from libapp
         LMS.getInstance().activityLogin(null, null, false, null, bgBitmap)
     }
 
     private fun checkLoginResult() {
         if (LMS.getInstance().isLogin) {
-\1登录successful
+// 登录successful
             LMS.getInstance().getUserInfo { userinfo: CommonBean ->
                 try {
                     val json = userinfo.data
@@ -256,14 +256,14 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                         headUrl = infoData.avatar,
                     )
 
-\1updateui
+// updateui
                     changeLoginStyle()
                 } catch (e: Exception) {
                     XLog.e(" 登录异常: ${e.message}")
                 }
             }
         } else {
-\1登录failed
+// 登录failed
             XLog.e(" 登录失败")
             changeLoginStyle()
             settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // 恢复默认头像
@@ -325,7 +325,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
     }
 
     /**
-\1清除buffer
+// 清除buffer
      */
     private fun clearCache() {
         lifecycleScope.launch {

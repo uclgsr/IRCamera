@@ -13,7 +13,7 @@ import com.topdon.lib.core.R as LibAppR
 import com.topdon.lib.core.R as RCore
 
 /**
-\1下载进度提示弹框.
+// 下载进度提示弹框.
  * Created by LCG on 2024/3/5.
  */
 class DownloadProDialog(context: Context) : Dialog(context, LibAppR.style.InfoDialog) {
@@ -34,7 +34,7 @@ class DownloadProDialog(context: Context) : Dialog(context, LibAppR.style.InfoDi
     }
 
     /**
-\1刷新进度值
+// 刷新进度值
      */
     fun refreshProgress(
         current: Long,

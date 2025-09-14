@@ -60,7 +60,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                     index: Int,
                     time: Int,
                 ) {
-\1切换类型
+// 切换类型
                     chart.highlightValue(null) // 关闭高亮点Marker
                     selectType = index + 1
                     queryLog()
@@ -168,7 +168,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     private val textColor by lazy { ContextCompat.getColor(this, com.topdon.lib.core.R.color.chart_text) }
 
     /**
-\1曲线样式
+// 曲线样式
      */
     private fun createSet(
         index: Int,
@@ -188,7 +188,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         set.lineWidth = 2f
         set.circleRadius = 1f // 不显示坐标点
         set.setCircleColor(ContextCompat.getColor(this, lineChartColors[index])) // 坐标颜色(隐藏处理)
-\1set.setCircleColor(ContextCompat.getColor(this, R.color.white))//坐标颜色(hideprocessing)
+// set.setCircleColor(ContextCompat.getColor(this, R.color.white))//坐标颜色(hideprocessing)
         set.fillAlpha = 200
         set.valueTextSize = 10f
         set.setDrawValues(false) // 设置是否显示坐标值文本
@@ -306,7 +306,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     }
 
     /**
-\1x轴display多少个刻度
+// x轴display多少个刻度
      */
     private fun getLabCount(count: Int): Int {
         return when (count) {
@@ -318,7 +318,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         }
     }
 
-\1getdisplay最小区间
+// getdisplay最小区间
     private fun getMinimum(): Float {
         val min =
             when (selectType) {
@@ -331,7 +331,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         return min
     }
 
-\1getdisplay最大区间，以最小区间的50倍
+// getdisplay最大区间，以最小区间的50倍
     private fun getMaximum(): Float {
         return getMinimum() * 50f
     }

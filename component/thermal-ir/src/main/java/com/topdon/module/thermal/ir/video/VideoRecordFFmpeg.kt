@@ -71,11 +71,11 @@ import java.util.concurrent.atomic.AtomicReference
 import com.topdon.lib.core.R as LibcoreR
 
 /**
-\1软编吗
+// 软编吗
  * bitmap -> mp4
  *
-\1avcodec.AV_CODEC_ID_MPEG4 //播放正常
-\1avcodec.AV_CODEC_ID_H264 //不能拖拽进度条
+// avcodec.AV_CODEC_ID_MPEG4 //播放正常
+// avcodec.AV_CODEC_ID_H264 //不能拖拽进度条
  */
 /**
  * Custom Video record f fmpeg view for thermal imaging display.
@@ -104,7 +104,7 @@ class VideoRecordFFmpeg(
         const val AUDIO_CHANNELS = 1
 
         /**
-\1内存检测
+// 内存检测
          */
         fun canStartVideoRecord(
             context: Context,
@@ -223,17 +223,17 @@ class VideoRecordFFmpeg(
 
     /**
      *
-\1avcodec.AV_CODEC_ID_MPEG4 播放正常
-\1avcodec.AV_CODEC_ID_H264 不能拖拽进度条
+// avcodec.AV_CODEC_ID_MPEG4 播放正常
+// avcodec.AV_CODEC_ID_H264 不能拖拽进度条
      *
-\1个别机型使用H264编码无法打开视频,优先使用AV_CODEC_ID_MPEG4
+// 个别机型使用H264编码无法打开视频,优先使用AV_CODEC_ID_MPEG4
      */
     private fun getVideoCodec(): Int {
         return if (Build.BRAND == "motorola" && Build.MODEL == "XT2201-2") {
             XLog.i("使用视频编码AV_CODEC_ID_H264")
             avcodec.AV_CODEC_ID_H264
         } else {
-\1默认类型
+// 默认类型
             XLog.i("使用视频编码AV_CODEC_ID_MPEG4")
             avcodec.AV_CODEC_ID_MPEG4
         }
@@ -241,17 +241,17 @@ class VideoRecordFFmpeg(
 
     init {
         if ((cameraView.parent as ViewGroup).height > (cameraView.parent as ViewGroup).width) {
-\1竖屏
+// 竖屏
             width = 480
             height =
                 width * (cameraView.parent as ViewGroup).height / (cameraView.parent as ViewGroup).width
         } else {
-\1横屏
+// 横屏
             width = 640
             height =
                 width * (cameraView.parent as ViewGroup).height / (cameraView.parent as ViewGroup).width
         }
-\1宽高不能出现奇数
+// 宽高不能出现奇数
         if (height % 2 == 1) {
             height -= 1
         }
@@ -363,18 +363,18 @@ class VideoRecordFFmpeg(
                                 recorder!!.record(frame)
                                 frame.close()
                                 if (System.currentTimeMillis() - queTime > 60 * 1000) {
-\1间隔1分钟，校验下剩余空间
+// 间隔1分钟，校验下剩余空间
                                     if (!canStartVideoRecord(cameraView.context, exportedFile)) {
                                         exportDisposable?.dispose()
                                         stopVideoRecordListener?.invoke(false)
-\1录制的视频超出大小容量限制
+// 录制的视频超出大小容量限制
                                         return@Consumer
                                     }
                                     queTime = System.currentTimeMillis()
                                 }
                                 recorder?.timestamp?.let {
                                     if (it / 1000 > 60 * 60 * 1000) {
-\1thermal imaging录像限制60分钟
+// thermal imaging录像限制60分钟
                                         exportDisposable?.dispose()
                                         stopVideoRecordListener?.invoke(true)
                                         return@Consumer
@@ -402,7 +402,7 @@ class VideoRecordFFmpeg(
                                     for (i in 0 until tmpAudioData!!.capacity()) {
                                         tmpAudioData!!.put(i, 1.toShort())
                                     }
-\1使用当前时间戳
+// 使用当前时间戳
                                     if (currentTimestamp > (recorder?.timestamp ?: 0)) {
                                         recorder!!.timestamp = currentTimestamp
                                     }
@@ -412,7 +412,7 @@ class VideoRecordFFmpeg(
                                     )
                                 }
 //                        Log.w(
-\1"image大小",
+// "image大小",
 //                            "${System.currentTimeMillis() - time}======${frame.image.size}//${bufferSize}//${(recorder?.timestamp!! / 1000000L)}"
 //                        )
                             } catch (e: Exception) {
@@ -464,7 +464,7 @@ class VideoRecordFFmpeg(
             image: IplImage?,
             image2: IplImage?,
         ): IplImage? {
-\1未使用
+// 未使用
             return null
         }
     }
@@ -495,7 +495,7 @@ class VideoRecordFFmpeg(
     }
 
     /**
-\1内存检测
+// 内存检测
      */
     fun canStartVideoRecord(videoFile: File?): Boolean {
         val canStart =
@@ -505,7 +505,7 @@ class VideoRecordFFmpeg(
                         ?: 0
                 )
             ) > (500L * 1000 * 1000)
-\1Log.w("本地可用空间","" + SDCardUtils.getExternalAvailableSize() / 1000 / 1000)
+// Log.w("本地可用空间","" + SDCardUtils.getExternalAvailableSize() / 1000 / 1000)
         if (!canStart) {
             ThreadUtils.runOnUiThread {
                 TipDialog.Builder(cameraView.context)
@@ -596,8 +596,8 @@ class VideoRecordFFmpeg(
     }
 
     /**
-\1cameraViewBitmap是屏幕控件的实际宽高
-\1dstBitmap转成视频输出的
+// cameraViewBitmap是屏幕控件的实际宽高
+// dstBitmap转成视频输出的
      */
     private fun createBitmapFromView(): Bitmap {
         var cameraViewBitmap: Bitmap
@@ -630,11 +630,11 @@ class VideoRecordFFmpeg(
             }
         }
 
-\1pseudo-color bar
+// pseudo-color bar
         if (thermalPseudoBarView?.visibility == VISIBLE) {
             try {
                 thermalPseudoBarView?.viewBitmap?.let {
-\1Log.w("image对象processing耗时-彩条大小",it.byteCount.toString())
+// Log.w("image对象processing耗时-彩条大小",it.byteCount.toString())
                     cameraViewBitmap =
                         BitmapUtils.mergeBitmap(
                             cameraViewBitmap,
@@ -643,9 +643,9 @@ class VideoRecordFFmpeg(
                             (cameraViewBitmap!!.height - it.height) / 2,
                         )
                 }
-\1Log.w("image对象processing耗时-彩条",""+(System.currentTimeMillis() - startTime))
+// Log.w("image对象processing耗时-彩条",""+(System.currentTimeMillis() - startTime))
             } catch (e: Exception) {
-\1Log.e("image对象processing耗时-彩条",""+(System.currentTimeMillis() - startTime))
+// Log.e("image对象processing耗时-彩条",""+(System.currentTimeMillis() - startTime))
             }
         }
         if (true == tempBg?.isVisible) {
@@ -669,7 +669,7 @@ class VideoRecordFFmpeg(
                         carView?.drawToBitmap(), 0, 0,
                     )
             }
-\1指南针
+// 指南针
         compassView?.let {
             if (it.isVisible) {
                 try {
@@ -684,11 +684,11 @@ class VideoRecordFFmpeg(
                 } catch (e: Exception) {
                     Log.e(TAG, "图像对象处理异常 exception:${e.message}")
                 }
-\1Log.w("image对象processing耗时-指南针", "${System.currentTimeMillis() - startTime}")
+// Log.w("image对象processing耗时-指南针", "${System.currentTimeMillis() - startTime}")
             }
         }
 
-\1画中画
+// 画中画
         cameraPreview?.let {
             if (it.isVisible) {
                 val newBitmap: Bitmap? =
@@ -710,7 +710,7 @@ class VideoRecordFFmpeg(
                 Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             }
 
-\1添加watermark
+// 添加watermark
         val watermarkBean =
             if (isTC007)
                 {
@@ -739,9 +739,9 @@ class VideoRecordFFmpeg(
         address: String,
         time: String?,
     ): Bitmap {
-\1create一样大小的图片
+// create一样大小的图片
         val newBmp = Bitmap.createBitmap(bmp.width, bmp.height, Bitmap.Config.ARGB_8888)
-\1create画布
+// create画布
         val canvas = Canvas(newBmp)
         canvas.drawBitmap(bmp, 0f, 0f, null) // 绘制原始图片
         canvas.save()
@@ -757,7 +757,7 @@ class VideoRecordFFmpeg(
             val textHeight = (rectText.bottom - rectText.top)
             paint.getTextBounds(address, 0, address.length, rectText)
             if (rectText.width() > bmp.width - pix20) {
-\1字符太长，进行换行processing
+// 字符太长，进行换行processing
                 val staticLayout =
                     StaticLayout(
                         address,
@@ -783,7 +783,7 @@ class VideoRecordFFmpeg(
             val textHeight = rectText.bottom - rectText.top
             paint.getTextBounds(title, 0, title.length, rectText)
             if (rectText.width() > bmp.width - pix20) {
-\1字符太长，进行换行processing
+// 字符太长，进行换行processing
                 val staticLayout =
                     StaticLayout(
                         title,

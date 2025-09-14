@@ -22,8 +22,8 @@ import com.topdon.module.thermal.ir.activity.IRMonitorActivity
  */
 class IRMonitorCaptureFragment : BaseFragment() {
     /**
-\1从上一interface传递过来的，当前是否为 TC007 device类型.
-\1true-TC007 false-其他插件式device
+// 从上一interface传递过来的，当前是否为 TC007 device类型.
+// true-TC007 false-其他插件式device
      */
     private var isTC007 = false
 
@@ -81,7 +81,7 @@ class IRMonitorCaptureFragment : BaseFragment() {
     }
 
     /**
-\1刷新连接状态
+// 刷新连接状态
      */
     private fun refreshUI(isConnect: Boolean) {
         animationView.isVisible = !isConnect

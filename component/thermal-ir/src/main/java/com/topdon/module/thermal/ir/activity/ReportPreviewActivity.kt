@@ -80,9 +80,9 @@ data class HouseRepPreviewAlbumItemBean(
 )
 
 /**
-\1需要传递：
-\1- [ExtraKeyConfig.IS_REPORT] - true-查看报告即查看 false-查看检测即生成
-\1- [ExtraKeyConfig.LONG_ID] - 房屋检测Id(生成时)  房屋报告Id(查看时）
+// 需要传递：
+// - [ExtraKeyConfig.IS_REPORT] - true-查看报告即查看 false-查看检测即生成
+// - [ExtraKeyConfig.LONG_ID] - 房屋检测Id(生成时)  房屋报告Id(查看时）
  */
 // Legacy ARouter route annotation - now using NavigationManager
 /**
@@ -117,7 +117,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
     private lateinit var rcyFloor: androidx.recyclerview.widget.RecyclerView
 
     /**
-\1true-查看报告即查看 false-查看检测即生成
+// true-查看报告即查看 false-查看检测即生成
      */
     private var isReport = false
     private var houseReport = HouseReport()
@@ -187,9 +187,9 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
         // }
 
         // Disabled - ViewModels from removed house module
-\1if (isReport) {//查看报告
+// if (isReport) {//查看报告
         //     reportViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
-\1} else {//生成报告
+// } else {//生成报告
         //     detectViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
         // }
 
@@ -205,7 +205,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
 
     private fun setAvatorChange() {
         layAppbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-\1verticalOffset始终为0以下的负数
+// verticalOffset始终为0以下的负数
             val percent = abs(verticalOffset * 1.0f) / appBarLayout.totalScrollRange
             layToolbar.setBackgroundColor(changeAlpha(getColor(R.color.color_23202E), percent))
         }
@@ -302,14 +302,14 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             val blackPath = data.getStringExtra(ExtraKeyConfig.RESULT_PATH_BLACK) ?: return
             when (requestCode) {
                 1000 -> {
-\1检测师签名
+// 检测师签名
                     Glide.with(this).load(whitePath).into(ivInspectorSignature)
                     houseReport.inspectorWhitePath = whitePath
                     houseReport.inspectorBlackPath = blackPath
                 }
 
                 1001 -> {
-\1房主签名
+// 房主签名
                     Glide.with(this).load(whitePath).into(ivHouseOwnerSignature)
                     houseReport.houseOwnerWhitePath = whitePath
                     houseReport.houseOwnerBlackPath = blackPath

@@ -20,7 +20,7 @@ object IRTool {
     const val TAG: String = "IRTool"
 
     /**
-\1自动快门开关
+// 自动快门开关
      */
     fun setAutoShutter(isAutoShutter: Boolean)  {
         val basicAutoFFCStatusSet: IrcmdError? =
@@ -39,7 +39,7 @@ object IRTool {
     }
 
     /**
-\1手动打快门
+// 手动打快门
      */
     fun setOneShutter()  {
         val basicFFCUpdate = DeviceIrcmdControlManager.getInstance().ircmdEngine?.basicFFCUpdate()
@@ -52,11 +52,11 @@ object IRTool {
     /**
      *
      *
-\1常温 ([CameraItemBean.TYPE_TMP_C] = 1）也就是高gain
+// 常温 ([CameraItemBean.TYPE_TMP_C] = 1）也就是高gain
      *
-\1high temperature ([CameraItemBean.TYPE_TMP_H] = 0) 也就是低gain
+// high temperature ([CameraItemBean.TYPE_TMP_H] = 0) 也就是低gain
      *
-\1自动 ([CameraItemBean.TYPE_TMP_ZD] = -1)
+// 自动 ([CameraItemBean.TYPE_TMP_ZD] = -1)
      */
     fun basicGainSet(gainType: Int)  {
         if (gainType == CameraItemBean.TYPE_TMP_ZD)
@@ -80,7 +80,7 @@ object IRTool {
     }
 
     /**
-\1对比度：parameter是0-100
+// 对比度：parameter是0-100
      */
     fun basicGlobalContrastLevelSet(levelValue: Int)  {
         val basicGlobalContrastLevelSetResult =
@@ -93,7 +93,7 @@ object IRTool {
     }
 
     /**
-\1锐度：parameter是0-100，也就是细节
+// 锐度：parameter是0-100，也就是细节
      */
     fun basicImageDetailEnhanceLevelSet(levelValue: Int)  {
 //        val professionModeSetResult = DeviceIrcmdControlManager.getInstance().ircmdEngine
@@ -104,10 +104,10 @@ object IRTool {
     }
 
     /**
-\1set镜像
+// set镜像
      */
     fun basicMirrorAndFlipStatusSet(openMirror: Boolean)  {
-\1setimage镜像或翻转 PASS
+// setimage镜像或翻转 PASS
         val basicMirrorAndFlipStatusSet =
             DeviceIrcmdControlManager.getInstance().ircmdEngine
                 ?.basicMirrorAndFlipStatusSet(
@@ -121,18 +121,18 @@ object IRTool {
     }
 
     /**
-\1一次完成的锅盖calibration流程
+// 一次完成的锅盖calibration流程
      * https://alidocs.dingtalk.com/i/p/QqWXwywDMb9xKG31/docs/14lgGw3P8vL0P2qbu7OR39d5V5daZ90D
-\1Setp1：插上模组出图并确保当前模组达到热稳定状态，一般需要预热3-5分钟。
-\1预热完成后，移动模组至calibration靶面前，靠近但不接触靶面。靶面的成像覆盖全部视场、 无杂散光进入为最佳)；
-\1Setp2：重置锅盖calibrationdata，确保calibration准确性
-\1Setp3：disabled自动快门
-\1Setp4：打快门
-\1Setp5：进行自动锅盖calibration
-\1Setp6：恢复自动快门
-\1Setp7：如果calibration有误，或者需要取消自动calibration结果，可调用指令
+// Setp1：插上模组出图并确保当前模组达到热稳定状态，一般需要预热3-5分钟。
+// 预热完成后，移动模组至calibration靶面前，靠近但不接触靶面。靶面的成像覆盖全部视场、 无杂散光进入为最佳)；
+// Setp2：重置锅盖calibrationdata，确保calibration准确性
+// Setp3：disabled自动快门
+// Setp4：打快门
+// Setp5：进行自动锅盖calibration
+// Setp6：恢复自动快门
+// Setp7：如果calibration有误，或者需要取消自动calibration结果，可调用指令
      * mIrcmdEngine.advRmcoverCaliCancel();
-\1如果观察calibration没有问题，即可save锅盖calibrationdata，可调用指令
+// 如果观察calibration没有问题，即可save锅盖calibrationdata，可调用指令
      * mIrcmdEngine.basicSaveData(CommonParams.DeviceDataSaveType.BASIC_SAVE_RMCOVER_DATA);
      */
     fun onceAuto(): Boolean  {
@@ -158,7 +158,7 @@ object IRTool {
     }
 
     /**
-\1high/low gain模式下各做一组锅盖calibration，如此模组的锅盖calibration才是完整的流程
+// high/low gain模式下各做一组锅盖calibration，如此模组的锅盖calibration才是完整的流程
      */
     suspend fun autoStart(): Boolean  {
         basicGainSet(CameraItemBean.TYPE_TMP_C)
@@ -176,7 +176,7 @@ object IRTool {
     }
 
     /**
-\1enabled机芯内部环境变量修正
+// enabled机芯内部环境变量修正
      */
     fun advEnvCorrectSwitchSet(open: Boolean)  {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
@@ -190,8 +190,8 @@ object IRTool {
     }
 
     /**
-\1机芯校正的
-\1反射率：range:1~16384
+// 机芯校正的
+// 反射率：range:1~16384
      */
     fun advEnvCorrectEMSSet(value: Int)  {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
@@ -199,8 +199,8 @@ object IRTool {
     }
 
     /**
-\1机芯校正的
-\1反射temperature(units:Celsius)：range:233~373
+// 机芯校正的
+// 反射temperature(units:Celsius)：range:233~373
      */
     fun advEnvCorrectTUSet(value: Int)  {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
@@ -208,11 +208,11 @@ object IRTool {
     }
 
     /**
-\1lite项目的temperature correction
+// lite项目的temperature correction
      * @param temp Float
      * @param params_array FloatArray
-\1@param tau_data_H ByteArray 高gain修正表
-\1@param tau_data_L ByteArray 低gain修正表
+// @param tau_data_H ByteArray 高gain修正表
+// @param tau_data_L ByteArray 低gain修正表
      * @return Float
      */
     fun temperatureCorrection(
@@ -223,7 +223,7 @@ object IRTool {
         basicGainGetValue: Int,
     ): Float {
         var newTemp = temp
-\1getgain状态 PASS
+// getgain状态 PASS
         try {
             if (tau_data_H == null || tau_data_L == null) return temp
             newTemp =
@@ -246,7 +246,7 @@ object IRTool {
     }
 
     /**
-\1set场景模式三
+// set场景模式三
      */
     fun setMode()  {
 //        val professionModeSetResult = DeviceIrcmdControlManager.getInstance().ircmdEngine

@@ -15,7 +15,7 @@ object ConfigRepository {
         try {
             Gson().fromJson(if (isTC007) SharedManager.irConfigJsonTC007 else SharedManager.getIRConfig(), ModelBean::class.java)
         } catch (_: Exception) {
-\1当SP里没data必定抛异常，所以这里返回一个默认的
+// 当SP里没data必定抛异常，所以这里返回一个默认的
             ModelBean(DataBean(id = 0, use = true))
         }
 
@@ -31,7 +31,7 @@ object ConfigRepository {
     }
 
     /**
-\1读取选中的configuration信息
+// 读取选中的configuration信息
      */
     fun readConfig(isTC007: Boolean): DataBean {
         val config = read(isTC007)

@@ -8,7 +8,7 @@ import com.topdon.lib.core.ktbase.BaseViewModel
  */
 class ThermalViewModel : BaseViewModel() {
     /**
-\1修改yuvtemperature上下限的data
+// 修改yuvtemperature上下限的data
      * white:82 FF
      * black:82 00
      */

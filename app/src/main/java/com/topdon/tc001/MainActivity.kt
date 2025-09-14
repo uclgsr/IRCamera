@@ -770,7 +770,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         appVersionUtil?.checkVersion(isShow)
     }
     
-<<<<<<< HEAD
     // ==================== PHASE 0 BASELINE & GUARDRAILS ====================
     
     /**
@@ -958,36 +957,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Clean up on stop
         webSocketClient?.stop()
     }
-                
-                // Start automatic discovery and connection if enabled
-                if (FeatureFlags.MDNS_ENABLE) {
-                    startNetworkDiscovery()
-                } else {
-                    structuredLogger.log(
-                        StructuredLogger.LogLevel.INFO,
-                        "NetworkClient",
-                        "mdns_discovery_disabled"
-                    )
-                }
-                
-                // Wait for stop signal or connection status changes
-                while (!stopToken.isStopRequested() && connectionStatus != ConnectionStatus.ERROR) {
-                    kotlinx.coroutines.delay(1000)
-                }
-                
-            } catch (e: Exception) {
-                structuredLogger.log(
-                    StructuredLogger.LogLevel.ERROR,
-                    "NetworkClient",
-                    "supervised_execution_error",
-                    mapOf("error" to e.message)
-                )
-                
-                if (!stopToken.isStopRequested()) {
-                    kotlinx.coroutines.delay(10000) // Wait before retry
-                }
-            }
-        }
         
         // Cleanup WebSocket client
         webSocketClient?.stop()

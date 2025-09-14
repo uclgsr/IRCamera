@@ -19,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
-\1首页操作指引弹框.
+// 首页操作指引弹框.
  *
  * Created by LCG on 2024/4/8.
  */
@@ -29,12 +29,12 @@ import kotlinx.coroutines.launch
  */
 class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(context, R.style.TransparentDialog) {
     /**
-\1下一步点击事件监听，step：当前处于第`[1,3]`，在该步骤点击的下一步
+// 下一步点击事件监听，step：当前处于第`[1,3]`，在该步骤点击的下一步
      */
     var onNextClickListener: ((step: Int) -> Unit)? = null
 
     /**
-\1跳过点击事件监听.
+// 跳过点击事件监听.
      */
     var onSkinClickListener: (() -> Unit)? = null
 

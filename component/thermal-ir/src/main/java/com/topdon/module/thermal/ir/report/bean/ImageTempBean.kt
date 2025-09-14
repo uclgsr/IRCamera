@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 /**
-\1一张图片的点线面full imagetemperature信息.
+// 一张图片的点线面full imagetemperature信息.
  */
 /**
  * Image temp data model for thermal imaging information.

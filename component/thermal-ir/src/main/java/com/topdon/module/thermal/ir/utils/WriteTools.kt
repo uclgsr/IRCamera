@@ -27,7 +27,7 @@ object WriteTools {
     }
 
     /**
-\1查询MediaStore.Images.Media._ID
+// 查询MediaStore.Images.Media._ID
      */
     private fun queryId(uri: Uri): Long {
         val fileName = uri.path!!.substring(uri.path!!.lastIndexOf("/") + 1)

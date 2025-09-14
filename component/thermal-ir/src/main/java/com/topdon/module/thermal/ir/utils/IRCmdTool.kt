@@ -87,7 +87,7 @@ object IRCmdTool {
                     Log.e(TAG, "read file fail ")
                 }
                 parameters[length] = 1
-\1先从buffer中查找是否有save的对齐data，没有用initializedata
+// 先从buffer中查找是否有save的对齐data，没有用initializedata
                 val alignByte = SharedManager.getManualData(snStr)
                 System.arraycopy(alignByte, 0, parameters, calibrationDataSize + 1, alignByte.size)
                 XLog.w("机芯没存在校正数据，请联系厂商确认")
@@ -120,7 +120,7 @@ object IRCmdTool {
     }
 
     /**
-\1setemissivity unit:cnt(128cnt = 1)
+// setemissivity unit:cnt(128cnt = 1)
      * @param value 1 ~ 128
      */
     fun setTpdEms(
@@ -132,10 +132,10 @@ object IRCmdTool {
     }
 
     /**
-\1set距离 unit:cnt(128cnt = 1m, 默认值: 0.25 * 128 = 32)
+// set距离 unit:cnt(128cnt = 1m, 默认值: 0.25 * 128 = 32)
      * @param value 0 ~ 25600
      *
-\1现有sdk在setTPD_PROP_DISTANCE抛异常
+// 现有sdk在setTPD_PROP_DISTANCE抛异常
      */
     fun setTpdDis(
         irCmd: IRCMD?,
@@ -146,7 +146,7 @@ object IRCmdTool {
     }
 
     /**
-\1set对比度
+// set对比度
      * @param value 0 ~ 255
      */
     fun setLevelContrast(
@@ -158,7 +158,7 @@ object IRCmdTool {
     }
 
     /**
-\1set锐化
+// set锐化
      * @param value 0 ~ 4
      *
      */
@@ -179,7 +179,7 @@ object IRCmdTool {
     }
 
     /**
-\1set自动gain
+// set自动gain
      */
     fun setLevelAgc(
         irCmd: IRCMD?,
@@ -195,8 +195,8 @@ object IRCmdTool {
     }
 
     /**
-\1查询gain模式
-\1@return 1:高gain(常温)    0:低gain(high temperature)
+// 查询gain模式
+// @return 1:高gain(常温)    0:低gain(high temperature)
      */
     fun getTpdGainSel(irCmd: IRCMD?): Int {
         val result = queryTpdParam(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL)
@@ -208,8 +208,8 @@ object IRCmdTool {
     }
 
     /**
-\1setgain模式
-\1@param value 1:高gain(常温)    0:低gain(high temperature)
+// setgain模式
+// @param value 1:高gain(常温)    0:低gain(high temperature)
      */
     fun setTpdGainSel(
         irCmd: IRCMD?,
@@ -225,7 +225,7 @@ object IRCmdTool {
     }
 
     /**
-\1查询Tpd
+// 查询Tpd
      */
     fun queryTpdParam(
         irCmd: IRCMD?,
@@ -237,7 +237,7 @@ object IRCmdTool {
     }
 
     /**
-\1查询Image
+// 查询Image
      */
     fun queryImageParam(
         irCmd: IRCMD?,
@@ -249,7 +249,7 @@ object IRCmdTool {
     }
 
     /**
-\1setTpd
+// setTpd
      */
     private fun setTpdParams(
         irCmd: IRCMD?,
@@ -265,7 +265,7 @@ object IRCmdTool {
     }
 
     /**
-\1setimageparameter
+// setimageparameter
      */
     private fun setImageParams(
         irCmd: IRCMD?,
@@ -281,8 +281,8 @@ object IRCmdTool {
     }
 
     /**
-\1配准
-\1水平移动
+// 配准
+// 水平移动
      * @param value (-20 ~ 60)
      */
     fun setDisp(
@@ -303,7 +303,7 @@ object IRCmdTool {
     }
 
     /**
-\1@param moveX 在当前基础上要再偏移的数值
+// @param moveX 在当前基础上要再偏移的数值
      */
     fun setAlignTranslate(
         dualView: BaseDualView?,
@@ -324,7 +324,7 @@ object IRCmdTool {
     }
 
     /**
-\1打快门
+// 打快门
      */
     fun shutter(
         irCmd: IRCMD?,
@@ -333,13 +333,13 @@ object IRCmdTool {
         if (syncImage.type == 1) {
             irCmd?.tc1bShutterManual()
         } else {
-\1执行这段
+// 执行这段
             irCmd?.updateOOCOrB(CommonParams.UpdateOOCOrBType.B_UPDATE)
         }
     }
 
     /**
-\1自动快门
+// 自动快门
      */
     fun autoShutter(
         irCmd: IRCMD?,
@@ -350,9 +350,9 @@ object IRCmdTool {
     }
 
     /**
-\1enabled等温尺
-\1@param highC temperature上限，单位摄氏度
-\1@param lowC temperature下限，单位摄氏度
+// enabled等温尺
+// @param highC temperature上限，单位摄氏度
+// @param lowC temperature下限，单位摄氏度
      */
     fun setIsoColorOpen(
         dualUVCCamera: DualUVCCamera?,
@@ -377,25 +377,25 @@ object IRCmdTool {
     }
 
     /**
-\1disabled等温尺
+// disabled等温尺
      */
     fun setIsoColorClose(dualUVCCamera: DualUVCCamera?) {
         dualUVCCamera?.setIsothermal(DualCameraParams.IsothermalState.OFF)
     }
 
     /**
-\1amplification(仅对thermal imaging有效)
-\1ZoomScaleStep.ZOOM_STEP1: 2级倍率
-\1ZoomScaleStep.ZOOM_STEP2: 4级倍率
-\1ZoomScaleStep.ZOOM_STEP3: 8级倍率
-\1ZoomScaleStep.ZOOM_STEP4: 16级倍率
+// amplification(仅对thermal imaging有效)
+// ZoomScaleStep.ZOOM_STEP1: 2级倍率
+// ZoomScaleStep.ZOOM_STEP2: 4级倍率
+// ZoomScaleStep.ZOOM_STEP3: 8级倍率
+// ZoomScaleStep.ZOOM_STEP4: 16级倍率
      */
     fun setZoomUp(irCmd: IRCMD?) {
         irCmd?.zoomCenterUp(CommonParams.PreviewPathChannel.PREVIEW_PATH0, CommonParams.ZoomScaleStep.ZOOM_STEP2)
     }
 
     /**
-\1缩小
+// 缩小
      */
     fun setZoomDown(irCmd: IRCMD?) {
         irCmd?.zoomCenterDown(CommonParams.PreviewPathChannel.PREVIEW_PATH0, CommonParams.ZoomScaleStep.ZOOM_STEP2)

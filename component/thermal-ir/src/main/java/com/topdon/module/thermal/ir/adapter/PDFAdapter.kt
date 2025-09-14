@@ -75,7 +75,7 @@ class PDFAdapter : BaseQuickAdapter<ReportData.Records?, BaseViewHolder>, LoadMo
                 {
                     dataList[i]?.isShowTitleTime = true
                 } else {
-\1上一次
+// 上一次
                 val lastTimes = dataList[i - 1]?.uploadTime?.split(" ")
                 val times = dataList[i]?.uploadTime?.split(" ")
                 if (lastTimes?.size!! > 1 && times?.size!! > 1)

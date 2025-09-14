@@ -4,9 +4,9 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 /**
-\1检测条件.
+// 检测条件.
  *
-\1报告由 3 部分组成：报告信息、检测条件、infrareddata.
+// 报告由 3 部分组成：报告信息、检测条件、infrareddata.
  */
 /**
  * Report condition data model for thermal imaging information.

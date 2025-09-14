@@ -41,14 +41,14 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 /**
-\1temperature实时监控
+// temperature实时监控
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
     private lateinit var binding: ActivityIrMonitorChartLiteBinding
 
     /**
-\1从上一interface传递过来的，当前选中的 点/线/面 信息.
+// 从上一interface传递过来的，当前选中的 点/线/面 信息.
      */
     private var selectBean: SelectPositionBean = SelectPositionBean()
 
@@ -189,7 +189,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
     private var recordJob: Job? = null
 
     /**
-\1开始每隔1秒记录一个temperaturedata到data库.
+// 开始每隔1秒记录一个temperaturedata到data库.
      */
     private fun recordThermal() {
         recordJob =
@@ -236,11 +236,11 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
     fun cameraEvent(event: DeviceCameraEvent) {
         when (event.action) {
             100 -> {
-\1准备image
+// 准备image
                 showCameraLoading()
             }
             101 -> {
-\1displayimage
+// displayimage
                 dismissCameraLoading()
             }
         }
@@ -266,7 +266,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                     return temp!!
                 }
 
-\1getgain状态 PASS
+// getgain状态 PASS
             if (System.currentTimeMillis() - basicGainGetTime > 5000L)
                 {
                     try {

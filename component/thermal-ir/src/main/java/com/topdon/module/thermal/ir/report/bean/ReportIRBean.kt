@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 /**
-\1一张图片对应的data信息.
+// 一张图片对应的data信息.
  */
 /**
  * Report i r data model for thermal imaging information.

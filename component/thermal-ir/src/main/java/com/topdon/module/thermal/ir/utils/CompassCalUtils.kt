@@ -4,7 +4,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import kotlin.math.roundToLong
 
-\1get真实的x坐标
+// get真实的x坐标
 fun realX(
     str: String,
     x: Float,

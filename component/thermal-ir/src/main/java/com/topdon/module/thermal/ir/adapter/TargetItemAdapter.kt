@@ -79,7 +79,7 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         val img: ImageView = itemView.findViewById(R.id.item_menu_tab_img)
         val name: TextView = itemView.findViewById(R.id.item_menu_tab_text)
 //        init {
-\1val canSeeCount = itemCount.toFloat() //一屏可见的 item 数量，目前都是全都display完
+// val canSeeCount = itemCount.toFloat() //一屏可见的 item 数量，目前都是全都display完
 //            val with = (ScreenUtils.getScreenWidth() / canSeeCount).toInt()
 //            itemView.layoutParams = ViewGroup.LayoutParams((with * 0.95).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
 //            val imageSize = (ScreenUtils.getScreenWidth() * 29 / 375f).toInt()

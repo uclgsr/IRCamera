@@ -99,13 +99,13 @@ class AlgorithmImageActivity : AppCompatActivity() {
             val baseTemperatureBytes = ByteArray(192 * 256 * 2)
             val nextTemperatureBytes = ByteArray(192 * 256 * 2)
             val nextImageBytes = ByteArray(192 * 256 * 2)
-\1get上一frame的temperaturedata
+// get上一frame的temperaturedata
             System.arraycopy(buffer, 1024 + baseTemperatureBytes.size, baseTemperatureBytes, 0, baseTemperatureBytes.size)
-\1get下一frame的temperaturedata
+// get下一frame的temperaturedata
             System.arraycopy(bufferB, 1024 + nextTemperatureBytes.size, nextTemperatureBytes, 0, nextTemperatureBytes.size)
-\1get下一frame的imagedata
+// get下一frame的imagedata
             System.arraycopy(bufferB, 1024, nextImageBytes, 0, nextImageBytes.size)
-\1转成3通道data
+// 转成3通道data
             val resMat = Mat(192, 256, CvType.CV_8UC2)
             resMat.put(0, 0, nextImageBytes)
             Imgproc.cvtColor(resMat, resMat, Imgproc.COLOR_YUV2GRAY_YUYV)
@@ -130,12 +130,12 @@ class AlgorithmImageActivity : AppCompatActivity() {
         findViewById<View>(R.id.btn_u4).setOnClickListener {
             val baseImageBytes = ByteArray(192 * 256 * 2)
             val nextImageBytes = ByteArray(192 * 256 * 2)
-\1get上一frame的imagedata
+// get上一frame的imagedata
             System.arraycopy(buffer, 1024, baseImageBytes, 0, baseImageBytes.size)
-\1get下一frame的imagedata
+// get下一frame的imagedata
             System.arraycopy(bufferB, 1024, nextImageBytes, 0, nextImageBytes.size)
 
-\1转成4通道data
+// 转成4通道data
             val resMat = Mat(192, 256, CvType.CV_8UC2)
             resMat.put(0, 0, nextImageBytes)
             Imgproc.cvtColor(resMat, resMat, Imgproc.COLOR_YUV2GRAY_YUYV)
@@ -143,7 +143,7 @@ class AlgorithmImageActivity : AppCompatActivity() {
             applyColorMap(resMat, nextImage, 15)
             Imgproc.cvtColor(nextImage, nextImage, Imgproc.COLOR_BGR2RGBA)
 
-\1转成4通道data
+// 转成4通道data
             val baseMat = Mat(192, 256, CvType.CV_8UC2)
             baseMat.put(0, 0, baseImageBytes)
             Imgproc.cvtColor(baseMat, baseMat, Imgproc.COLOR_YUV2GRAY_YUYV)

@@ -26,9 +26,9 @@ import com.topdon.lib.ui.R as UiR
  */
 object IRImageUtil {
     /**
-\1伽马对比度
-\1@param contrast      对比度 1: 复位  0: 增强   2: 减弱变灰
-\1@param brightness    亮度
+// 伽马对比度
+// @param contrast      对比度 1: 复位  0: 增强   2: 减弱变灰
+// @param brightness    亮度
      */
     fun showContrast(
         imageView: ImageView,
@@ -65,10 +65,10 @@ object IRImageUtil {
     }
 
     /**
-\1伽马曲线
+// 伽马曲线
      * https://www.cnblogs.com/AlgrithmsRookie/p/13212369.html
-\1@param a     [0 ~ 1]交界点
-\1@param gamma 变化强度
+// @param a     [0 ~ 1]交界点
+// @param gamma 变化强度
      */
     private fun lutGamma(
         @FloatRange(from = 0.0, to = 1.0) x: Double,
@@ -85,10 +85,10 @@ object IRImageUtil {
     }
 
     /**
-\1锐化
+// 锐化
      * @param sharpen [1,3,5]
      *
-\1kernel_size  锐化程度,set是奇正数
+// kernel_size  锐化程度,set是奇正数
      */
     private fun showSharpen(
         imageView: ImageView,

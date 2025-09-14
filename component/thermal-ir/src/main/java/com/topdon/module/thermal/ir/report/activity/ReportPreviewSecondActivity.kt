@@ -42,11 +42,11 @@ import com.topdon.lib.core.R as LibCoreR
 import com.topdon.lib.ui.R as UiR
 
 /**
-\1生成报告第2步的预览interface.
+// 生成报告第2步的预览interface.
  *
-\1需要传递
-\1- 是否 TC007: [ExtraKeyConfig.IS_TC007]
-\1- 一份报告所有信息 [ExtraKeyConfig.REPORT_BEAN]
+// 需要传递
+// - 是否 TC007: [ExtraKeyConfig.IS_TC007]
+// - 一份报告所有信息 [ExtraKeyConfig.REPORT_BEAN]
  */
 // Legacy ARouter route annotation - now using NavigationManager
 /**
@@ -55,18 +55,18 @@ import com.topdon.lib.ui.R as UiR
  */
 class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), View.OnClickListener {
     /**
-\1从上一interface传递过来的，当前是否为 TC007 device类型.
-\1true-TC007 false-其他插件式device
+// 从上一interface传递过来的，当前是否为 TC007 device类型.
+// true-TC007 false-其他插件式device
      */
     private var isTC007 = false
 
     /**
-\1从上一interface传递过来的，报告所有信息.
+// 从上一interface传递过来的，报告所有信息.
      */
     private var reportBean: ReportBean? = null
 
     /**
-\1当前预览页面已生成的 PDF 文件绝对路径
+// 当前预览页面已生成的 PDF 文件绝对路径
      */
     private var pdfFilePath: String? = null
 
@@ -140,7 +140,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), 
         lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-\1要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+// 要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
                     }
@@ -231,8 +231,8 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), 
     }
 
     /**
-\1get需要转为 PDF 的所有 View 列表.
-\1注意：watermark View 不在列表内，需要自行processing.
+// get需要转为 PDF 的所有 View 列表.
+// 注意：watermark View 不在列表内，需要自行processing.
      */
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()

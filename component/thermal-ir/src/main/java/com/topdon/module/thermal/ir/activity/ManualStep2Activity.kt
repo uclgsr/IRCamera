@@ -83,7 +83,7 @@ class ManualStep2Activity :
     private val mVlCameraHeight = 720
 
     /**
-\1fusion分辨率
+// fusion分辨率
      */
     private val mDualWidth = 480
     private val mDualHeight = 640
@@ -92,7 +92,7 @@ class ManualStep2Activity :
     private var sId: String = ""
 
     /**
-\1手动配准的initializeparameter
+// 手动配准的initializeparameter
      */
     private val INIT_ALIGN_DATA = floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
     private var alignScaleX = 0f // 图和屏幕缩放比
@@ -110,7 +110,7 @@ class ManualStep2Activity :
                     hideLoadingDialog()
                 } else if (msg.what == HANDLE_CONNECT) {
                     initDualCamera()
-\1load配准parameter
+// load配准parameter
                     initDefIntegralArgsDISP_VALUE(DualCameraParams.TypeLoadParameters.ROTATE_270)
                 } else if (msg.what == HIDE_LOADING_FINISH) {
                     hideLoadingDialog()
@@ -124,7 +124,7 @@ class ManualStep2Activity :
     var dualTextureView: SurfaceView? = null
 
     /**
-\1上一次执行 move 或 rotation操作的时间戳.
+// 上一次执行 move 或 rotation操作的时间戳.
      */
     private var beforeTime = 0L
 
@@ -145,7 +145,7 @@ class ManualStep2Activity :
             View.OnClickListener {
                 if (!canOperate)
                     {
-\1拍照
+// 拍照
                         takePhoto()
                         ivTakePhoto?.setText(R.string.app_ok)
                         tvTips.text = getString(R.string.dual_light_correction_tips_3)
@@ -190,7 +190,7 @@ class ManualStep2Activity :
         seek_bar?.max = 2000
         seek_bar?.setEnabled(false)
         moveImageView?.setEnabled(false)
-\1initialize相机类
+// initialize相机类
         initDataFlowMode(mDefaultDataFlowMode)
         initData()
         USBMonitorDualManager.getInstance()
@@ -216,7 +216,7 @@ class ManualStep2Activity :
     private fun initDataFlowMode(dataFlowMode: CommonParams.DataFlowMode) {
         if (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
             /**
-\1image+temperature
+// image+temperature
              */
             mIrCameraWidth = Const.SENSOR_WIDTH // 传感器的原始宽度
             mIrCameraHeight = Const.SENSOR_HEIGHT // 传感器的原始高度
@@ -229,7 +229,7 @@ class ManualStep2Activity :
      *
      */
     public override fun initData() {
-\1calculation画面的宽高，避免被拉伸变形
+// calculation画面的宽高，避免被拉伸变形
 //        var width = 0
 //        var height = 0
 //        val screenWidth = ScreenUtils.getScreenWidth(this)
@@ -253,7 +253,7 @@ class ManualStep2Activity :
     }
 
     private fun initDualCamera() {
-\1initialize双光预览相关的类
+// initialize双光预览相关的类
         mDualView =
             DualViewWithManualAlignExternalCamera(
                 mImageWidth, mImageHeight,
@@ -262,13 +262,13 @@ class ManualStep2Activity :
                 mDefaultDataFlowMode,
             )
 
-\1initializepseudo-color
+// initializepseudo-color
         initPsedocolor()
 
-\1setinitializefusion模式,一般选择LPYFusion
+// setinitializefusion模式,一般选择LPYFusion
         mDualView!!.dualUVCCamera.setFusion(DualCameraParams.FusionType.LPYFusion)
 
-\1打开自动快门逻辑
+// 打开自动快门逻辑
         USBMonitorDualManager.getInstance().ircmd.setPropAutoShutterParameter(
             CommonParams.PropAutoShutterParameter.SHUTTER_PROP_SWITCH,
             CommonParams.PropAutoShutterParameterValue.StatusSwith.ON,
@@ -277,13 +277,13 @@ class ManualStep2Activity :
     }
 
     /**
-\1loadpseudo-color，setlens方向，pseudo-color，fusion模式等等
+// loadpseudo-color，setlens方向，pseudo-color，fusion模式等等
      */
     private fun initPsedocolor() {
         val am = assets
         var `is`: InputStream
         try {
-\1loadpseudo-color
+// loadpseudo-color
             mPseudoColors = arrayOfNulls(11)
             `is` = am.open("pseudocolor/White_Hot.bin")
             var lenth = `is`.available()
@@ -330,7 +330,7 @@ class ManualStep2Activity :
                 mPseudoColors[3],
             )
 
-\1这里可以setinitializepseudo-color
+// 这里可以setinitializepseudo-color
             mDualView!!.dualUVCCamera.setPseudocolor(CommonParams.PseudoColorUsbDualType.IRONBOW_MODE)
             `is`.close()
         } catch (e: IOException) {
@@ -339,15 +339,15 @@ class ManualStep2Activity :
     }
 
     /**
-\1一体式结构，双光配准的data，可从手机固定位置读取，如可从NV分区读写
-\1目前使用的是人工配准的方式，提供配准后的data文件放在asset目录下
+// 一体式结构，双光配准的data，可从手机固定位置读取，如可从NV分区读写
+// 目前使用的是人工配准的方式，提供配准后的data文件放在asset目录下
      */
     open fun initDefIntegralArgsDISP_VALUE(typeLoadParameters: DualCameraParams.TypeLoadParameters) {
         lifecycleScope.launch {
             val parameters = IRCmdTool.getDualBytes(USBMonitorDualManager.getInstance().ircmd)
             val data = mDualView!!.dualUVCCamera.loadParameters(parameters, typeLoadParameters)
             dualDisp = IRCmdTool.dispNumber
-\1initialize默认值
+// initialize默认值
             mDualView?.dualUVCCamera?.setDisp(dualDisp)
             mDualView?.startPreview()
             Log.e("机芯数据加载成功", "初始化完成:")
@@ -449,7 +449,7 @@ class ManualStep2Activity :
     var userStop = false
 
     /**
-\1停止预览
+// 停止预览
      */
     private fun dualStop() {
         userStop = true
@@ -476,7 +476,7 @@ class ManualStep2Activity :
             dualStopWithAlign()
             return
         }
-\1停止预览
+// 停止预览
         dualStop()
     }
 
@@ -497,10 +497,10 @@ class ManualStep2Activity :
     }
 
     /**
-\1拍照功能
+// 拍照功能
      */
     private fun takePhoto() {
-\1拍照
+// 拍照
         if (mDualView != null) {
             canOperate = true
             mDualView!!.stopPreview()
@@ -515,7 +515,7 @@ class ManualStep2Activity :
     }
 
     /**
-\1processing移动data
+// processing移动data
      */
     private fun handleMove(
         preX: Float,
@@ -541,7 +541,7 @@ class ManualStep2Activity :
     }
 
     /**
-\1processing角度data
+// processing角度data
      */
     private fun handleAngle(angle: Float) {
         if (!canOperate) {
@@ -558,7 +558,7 @@ class ManualStep2Activity :
     }
 
     /**
-\1停止calibration
+// 停止calibration
      */
     private fun finishAlign(isSavePara: Boolean) {
         if (!canOperate) {
@@ -612,7 +612,7 @@ class ManualStep2Activity :
         private const val MIN_CLICK_DELAY_TIME = 100
         private var lastClickTime: Long = 0
 
-\1最多70毫秒执行一次move
+// 最多70毫秒执行一次move
         fun delayMoveTime(): Boolean {
             var flag = false
             val curClickTime = System.currentTimeMillis()

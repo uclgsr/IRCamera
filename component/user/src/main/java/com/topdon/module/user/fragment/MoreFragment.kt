@@ -40,21 +40,21 @@ import java.text.DecimalFormat
 import com.topdon.lib.core.R as RCore
 
 /**
-\1插件式 “更多” 页面
+// 插件式 “更多” 页面
  *
-\1需要传递parameter：
-\1- [ExtraKeyConfig.IS_TC007] - 当前device是否为 TC007
+// 需要传递parameter：
+// - [ExtraKeyConfig.IS_TC007] - 当前device是否为 TC007
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class MoreFragment : BaseFragment(), View.OnClickListener {
     /**
-\1从上一interface传递过来的，当前是否为 TC007 device类型.
-\1true-TC007 false-其他插件式device
+// 从上一interface传递过来的，当前是否为 TC007 device类型.
+// true-TC007 false-其他插件式device
      */
     private var isTC007 = false
 
     /**
-\1TC007 固件升级 ViewModel.
+// TC007 固件升级 ViewModel.
      */
     private val firmwareViewModel: FirmwareViewModel by viewModels()
 
@@ -97,7 +97,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         settingDeviceInformation.setOnClickListener(this) // TC007设备信息
         settingReset.setOnClickListener(this) // TC007恢复出厂设置
 
-\1根据 2024/5/23 评审会结论，TC007没有多少需要恢复出厂的configuration，产品决定砍掉
+// 根据 2024/5/23 评审会结论，TC007没有多少需要恢复出厂的configuration，产品决定砍掉
         settingReset.isVisible = false
 
         settingVersion.isVisible = isTC007 && Build.VERSION.SDK_INT >= 29
@@ -208,7 +208,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                 ).withBoolean(ExtraKeyConfig.IS_TC007, isTC007).navigation(requireContext())
             }
             settingVersion -> { // TC007固件升级
-\1由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释强制登录逻辑
+// 由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释强制登录逻辑
 //               if (LMS.getInstance().isLogin) {
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
                 if (firmwareData != null) {
@@ -239,7 +239,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
     }
 
     /**
-\1仅 TC007 页面时，刷新连接或未连接状态.
+// 仅 TC007 页面时，刷新连接或未连接状态.
      */
     private fun refresh07Connect(isConnect: Boolean) {
         settingDeviceInformation.isRightArrowVisible = isConnect
@@ -263,7 +263,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
     }
 
     /**
-\1display固件升级提示弹框.
+// display固件升级提示弹框.
      */
     private fun showFirmwareUpDialog(firmwareData: FirmwareViewModel.FirmwareData) {
         val dialog = FirmwareUpDialog(requireContext())
@@ -272,7 +272,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         dialog.contentStr = firmwareData.updateStr
         dialog.isShowRestartTips = true
         dialog.onConfirmClickListener = {
-\1由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释下载逻辑
+// 由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释下载逻辑
             // downloadFirmware(firmwareData)
             installFirmware(FileConfig.getFirmwareFile(firmwareData.downUrl))
         }
@@ -291,7 +291,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         }
 
     /**
-\1下载指定固件升级包
+// 下载指定固件升级包
      */
     private fun downloadFirmware(firmwareData: FirmwareViewModel.FirmwareData) {
         lifecycleScope.launch {

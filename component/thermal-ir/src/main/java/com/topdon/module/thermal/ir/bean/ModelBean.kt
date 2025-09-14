@@ -1,7 +1,7 @@
 package com.topdon.module.thermal.ir.bean
 
 /**
-\1模式
+// 模式
  */
 /**
  * Model data model for thermal imaging information.

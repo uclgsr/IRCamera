@@ -45,10 +45,10 @@ import org.greenrobot.eventbus.EventBus
 import com.topdon.lib.core.R as LibR
 
 /**
-\1插件式 或 TC007 首页.
+// 插件式 或 TC007 首页.
  *
-\1需要传递parameter：
-\1- [ExtraKeyConfig.IS_TC007] - 当前device是否为 TC007
+// 需要传递parameter：
+// - [ExtraKeyConfig.IS_TC007] - 当前device是否为 TC007
  *
  * Created by LCG on 2024/4/18.
  */
@@ -57,8 +57,8 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityIrMainBinding
 
     /**
-\1从上一interface传递过来的，当前是否为 TC007 device类型.
-\1true-TC007 false-其他插件式device
+// 从上一interface传递过来的，当前是否为 TC007 device类型.
+// true-TC007 false-其他插件式device
      */
     private var isTC007 = false
 
@@ -158,7 +158,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             binding.clIconGallery -> { // 图库
                 checkStoragePermission()
             }
-\1view_main_thermal -> {//首页 - Commented out as not in view declarations
+// view_main_thermal -> {//首页 - Commented out as not in view declarations
             //     binding.viewPage.setCurrentItem(2, false)
             // }
             binding.clIconReport -> { // 报告
@@ -180,8 +180,8 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     /**
-\1刷新 5 个 tab 的选中状态
-\1@param index 当前选中哪个 tab，`[0, 4]`
+// 刷新 5 个 tab 的选中状态
+// @param index 当前选中哪个 tab，`[0, 4]`
      */
     private fun refreshTabSelect(index: Int) {
         binding.ivIconMonitor.isSelected = false
@@ -213,7 +213,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     /**
-\1display操作指引弹框.
+// display操作指引弹框.
      */
     private fun showGuideDialog() {
         if (SharedManager.homeGuideStep == 0) { // 已看过或不再提示
@@ -268,8 +268,8 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             window?.decorView?.setRenderEffect(RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.MIRROR))
         } else {
             lifecycleScope.launch {
-\1interface切换及temperature监控历史列表load均需要时间，所以需要等待1000毫秒再去刷新背景
-\1而若等待1000毫秒太过久，interface会非模糊1000毫秒，所以先刷新一次背景占位
+// interface切换及temperature监控历史列表load均需要时间，所以需要等待1000毫秒再去刷新背景
+// 而若等待1000毫秒太过久，interface会非模糊1000毫秒，所以先刷新一次背景占位
                 delay(100)
                 guideDialog.blurBg(binding.clRoot)
             }
@@ -320,7 +320,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     /**
-\1动态申请权限
+// 动态申请权限
      */
     private fun initStoragePermission(permissionList: List<String>) {
         if (PermissionUtils.isVisualUser())
@@ -346,7 +346,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-\1拒绝授权并且不再提醒
+// 拒绝授权并且不再提醒
                             TipDialog.Builder(this@IRMainActivity)
                                 .setTitleMessage(getString(LibR.string.app_tip))
                                 .setMessage(getString(LibR.string.app_album_content))

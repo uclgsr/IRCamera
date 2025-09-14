@@ -32,7 +32,7 @@ import com.topdon.lib.core.R as LibR
 class PdfViewModel : BaseViewModel() {
     val listData = MutableLiveData<ReportData?>()
 
-\1get报告列表
+// get报告列表
     fun getReportData(
         isTC007: Boolean,
         page: Int,

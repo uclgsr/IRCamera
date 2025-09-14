@@ -12,7 +12,7 @@ import com.topdon.module.thermal.adapter.GalleryAdapter
 import com.topdon.module.thermal.viewmodel.GalleryViewModel
 
 /**
-\1图片
+// 图片
  */
 /**
  * Gallery video fragment for thermal imaging components.

@@ -47,7 +47,7 @@ import java.io.File
 import java.math.BigDecimal
 
 /**
-\1thermal imaging
+// thermal imaging
  */
 /**
  * Thermal fragment for thermal imaging components.
@@ -63,7 +63,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
 
     override fun initContentView() = R.layout.fragment_thermal
 
-\1settemperature展示的位置
+// settemperature展示的位置
     private fun setViewPosition(
         imageView: ImageView,
         index: Int,
@@ -80,7 +80,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         val y1 = y * ph / rawHeight
         val maxX = x1 - imageView.width / 2
         val maxY = y1 - imageView.height / 2
-\1Log.w("123", "真实位置 maxX:$maxX, maxY:$maxY")
+// Log.w("123", "真实位置 maxX:$maxX, maxY:$maxY")
         imageView.x = maxX.toFloat()
         imageView.y = maxY.toFloat()
     }
@@ -153,9 +153,9 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
             cameraLayoutParams!!.height = irSurfaceViewHeight
             mFenceLayout!!.layoutParams = cameraLayoutParams
         }
-\1初始选取范围
+// 初始选取范围
         initFence()
-\1初始image
+// 初始image
         onIrVideoStart()
         mIrSurfaceView!!.post {
             Log.w("123", "w:${mIrSurfaceView!!.width}, h:${mIrSurfaceView!!.height}")
@@ -209,7 +209,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     }
 
     /**
-\1enabled视频流
+// enabled视频流
      */
     fun onIrVideoStart() {
         mIsIrVideoStart =
@@ -228,7 +228,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                         yuv: ByteArray,
                         temp: FloatArray,
                     ) {
-\1刷新image
+// 刷新image
                         if (mIrBitmap == null) {
                             mIrBitmap = Bitmap.createBitmap(256, 192, Bitmap.Config.ARGB_8888)
                         }
@@ -251,15 +251,15 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                         }
                         val centerIndex = rawWidth * (rawHeight / 2) + rawWidth / 2
                         try {
-\1选取区域
-\1calculation选取指定点
+// 选取区域
+// calculation选取指定点
                             val maxTempIndex = ArrayUtils.getMaxIndex(temp, rotateType, selectIndex)
                             val minTempIndex = ArrayUtils.getMinIndex(temp, rotateType, selectIndex)
                             maxIndex = maxTempIndex
                             minIndex = minTempIndex
-\1rotation后的temperaturearray
+// rotation后的temperaturearray
                             val rotateData = ArrayUtils.matrixRotate(srcData = temp, rotateType)
-\1calculation出temperature
+// calculation出temperature
                             val bigDecimal = BigDecimal.valueOf(rotateData[centerIndex].toDouble())
                             val maxBigDecimal = BigDecimal.valueOf(rotateData[maxTempIndex].toDouble())
                             val minBigDecimal = BigDecimal.valueOf(rotateData[minTempIndex].toDouble())
@@ -306,7 +306,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     }
 
     /**
-\1停止视频流
+// 停止视频流
      */
     fun onIrVideoStop() {
         mIsIrVideoStart =
@@ -340,7 +340,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     }
 
     /**
-\1temperaturedisplay
+// temperaturedisplay
      */
     fun onTempBtnClick() {
         if (mGuideInterface == null) {
@@ -381,10 +381,10 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
             .create().show()
     }
 
-\1***************************************专家模式**********************************************
+// ***************************************专家模式**********************************************
 
     /**
-\1专家模式
+// 专家模式
      */
     fun onExpertModeClick(view: View?) {
         System.arraycopy(EXPERT_HITS, 1, EXPERT_HITS, 0, EXPERT_HITS.size - 1)
@@ -431,67 +431,67 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         Log.w("123", "event:${event.action}")
         when (event.action) {
             1001 -> {
-\1拍照
+// 拍照
                 ToastTools.showShort("拍照")
                 picture()
             }
             1002 -> {
-\1录制
+// 录制
                 ToastTools.showShort("录制")
                 video()
             }
             2001 -> {
-\1添加点
+// 添加点
                 clearFenceUI()
                 addPoint()
             }
             2002 -> {
-\1添加线
+// 添加线
                 clearFenceUI()
                 addLine()
             }
             2003 -> {
-\1添加围栏
+// 添加围栏
                 clearFenceUI()
                 addFence()
             }
             2004 -> {
-\1添加temperature
+// 添加temperature
 //                onTempBtnClick()
                 addLimit()
             }
             2006 -> {
-\1清除还原
+// 清除还原
                 clearFence()
             }
             in 3000..3010 -> {
-\1setpseudo-color
+// setpseudo-color
                 setColor(event.action)
             }
             4001 -> {
-\1rotation
+// rotation
                 rotate()
                 clearFence()
             }
             4002 -> {
-\1image增强
+// image增强
                 enhance()
             }
             4003 -> {
-\1image增强
+// image增强
                 camera()
             }
             in 5000..5010 -> {
-\1全屏
+// 全屏
                 ToastTools.showShort("全屏")
             }
         }
     }
 
-\1复位
+// 复位
     private fun clearFence() {
         clearFenceUI()
-\1temperature限值
+// temperature限值
         upValue = 0f
         downValue = 0f
         selectType = 0
@@ -507,7 +507,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     }
 
     /**
-\1setpseudo-color
+// setpseudo-color
      */
     private fun setColor(action: Int) {
         var type: Int = action % 3000 - 1
@@ -518,7 +518,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     }
 
     /**
-\1色带
+// 色带
      */
     private fun updatePalette(index: Int) {
         if (mGuideInterface == null) {
@@ -542,7 +542,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         showFence(3)
     }
 
-\1display点线面布局
+// display点线面布局
     private fun showFence(index: Int) {
         if (fenceFlag.getIndex(index) == 0) {
             fenceFlag = 1.shl(4 * (index - 1)) // 设置001 or 010 or 100
@@ -566,7 +566,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                     startPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-\1get点
+// get点
                     selectType = 1
                     selectIndex =
                         Fence(srcRect = srcRect, rotateType = rotateType).getPointIndex(startPoint)
@@ -579,7 +579,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                     endPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-\1get线
+// get线
                     selectType = 2
                     selectIndex =
                         Fence(srcRect = srcRect, rotateType = rotateType)
@@ -593,7 +593,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                     endPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-\1get面
+// get面
                     selectType = 3
                     selectIndex =
                         Fence(srcRect = srcRect, rotateType = rotateType)
@@ -622,14 +622,14 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         YapVideoEncoder(this, File(latestResultPath)).start()
     }
 
-\1rotation
+// rotation
     private fun rotate() {
         rotateType = if (rotateType >= 3) 0 else rotateType + 1
         mIrSurfaceView!!.setMatrix(ThermalTool.getRotate(rotateType), 256f, 192f)
         ToastTools.showShort("旋转:${ThermalTool.getRotate(rotateType)}度")
     }
 
-\1image增强
+// image增强
     private fun enhance() {
         mIrSurfaceView!!.setOpenLut()
         val saturation = mIrSurfaceView?.getSaturationValue() ?: 0
@@ -642,8 +642,8 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                 mIrSurfaceView?.setSaturationValue(value)//设置对比度
             }
             .setListener { value: Int ->
-\1实时监听
-\1mIrSurfaceView?.setSaturationValue(value)//set对比度
+// 实时监听
+// mIrSurfaceView?.setSaturationValue(value)//set对比度
             }.create().show()
          */
     }
@@ -677,11 +677,11 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         // RxPermissions(requireActivity()).request(Manifest.permission.CAMERA)
         //     .subscribe { granted: Boolean ->
         if (isRunCamera) {
-\1disabled
+// disabled
             requireView().findViewById<FrameLayout>(R.id.temp_camera_layout).visibility = View.GONE
             isRunCamera = false
         } else {
-\1打开
+// 打开
             requireView().findViewById<FrameLayout>(R.id.temp_camera_layout).visibility = View.VISIBLE
             val tempCameraView = requireView().findViewById<com.topdon.lib.ui.camera.CameraView>(R.id.temp_camera_view)
             tempCameraView.post {

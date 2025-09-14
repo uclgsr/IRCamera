@@ -24,7 +24,7 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 /**
-\1TC007、2D 编辑 点线面temperature图层公共逻辑封装.
+// TC007、2D 编辑 点线面temperature图层公共逻辑封装.
  *
  * Created by LCG on 2024/5/7.
  */
@@ -35,23 +35,23 @@ import kotlin.math.sqrt
 abstract class TemperatureBaseView : View {
     companion object {
         /**
-\1支持点线面的默认最大数量.
+// 支持点线面的默认最大数量.
          */
         private const val DEFAULT_MAX_COUNT = 3
 
         /**
-\1选中操作灵敏度，当 Touch Down 坐标与点线面坐标偏差在该值范围内，视为选中，单位 px.
+// 选中操作灵敏度，当 Touch Down 坐标与点线面坐标偏差在该值范围内，视为选中，单位 px.
          */
         private val TOUCH_TOLERANCE = SizeUtils.dp2px(8f)
 
         /**
-\1删除操作灵敏度，当 Touch UP 与 Touch Down 坐标偏差在该值范围内，视为删除，单位 px.
+// 删除操作灵敏度，当 Touch UP 与 Touch Down 坐标偏差在该值范围内，视为删除，单位 px.
          */
         private val DELETE_TOLERANCE = SizeUtils.dp2px(2f)
     }
 
     /**
-\1操作模式，点、线、面、full image、清除.
+// 操作模式，点、线、面、full image、清除.
      */
     enum class Mode {
         POINT,
@@ -63,7 +63,7 @@ abstract class TemperatureBaseView : View {
     }
 
     /**
-\1当前是否display了full image.
+// 当前是否display了full image.
      */
     @Volatile
     var isShowFull: Boolean = true
@@ -76,7 +76,7 @@ abstract class TemperatureBaseView : View {
         }
 
     /**
-\1当前操作模式：点、线、面、full image、清除。
+// 当前操作模式：点、线、面、full image、清除。
      */
     @Volatile
     open var mode = Mode.FULL
@@ -98,7 +98,7 @@ abstract class TemperatureBaseView : View {
         }
 
     /**
-\1temperature值文字大小，单位 px.
+// temperature值文字大小，单位 px.
      */
     var tempTextSize: Int
         get() = helper.textSize
@@ -108,7 +108,7 @@ abstract class TemperatureBaseView : View {
         }
 
     /**
-\1temperature值文字、点线面名称文字 color value.
+// temperature值文字、点线面名称文字 color value.
      */
     var textColor: Int
         @ColorInt get() = helper.textColor
@@ -120,44 +120,44 @@ abstract class TemperatureBaseView : View {
         }
 
     /**
-\1由于 Touch 事件导致的点添加、移除、变更事件监听，坐标为通过 [setImageSize] set的坐标系
+// 由于 Touch 事件导致的点添加、移除、变更事件监听，坐标为通过 [setImageSize] set的坐标系
      */
     var onPointListener: ((pointList: List<Point>) -> Unit)? = null
 
     /**
-\1由于 Touch 事件导致的线添加、移除、变更事件监听，坐标为通过 [setImageSize] set的坐标系
+// 由于 Touch 事件导致的线添加、移除、变更事件监听，坐标为通过 [setImageSize] set的坐标系
      */
     var onLineListener: ((lineList: List<Point>) -> Unit)? = null
 
     /**
-\1由于 Touch 事件导致的面添加、移除、变更事件监听，坐标为通过 [setImageSize] set的坐标系
+// 由于 Touch 事件导致的面添加、移除、变更事件监听，坐标为通过 [setImageSize] set的坐标系
      */
     var onRectListener: ((rectList: List<Rect>) -> Unit)? = null
 
     /**
-\1由于 Touch 事件导致的趋势图添加或趋势图移除事件监听.
+// 由于 Touch 事件导致的趋势图添加或趋势图移除事件监听.
      *
-\1也就是说：将 [mode] set为 [Mode.CLEAR] 不会触发该回调.
+// 也就是说：将 [mode] set为 [Mode.CLEAR] 不会触发该回调.
      */
     var onTrendOperateListener: ((isAdd: Boolean) -> Unit)? = null
 
     /**
-\1以 View 尺寸为坐标系，当前已添加的点列表.
+// 以 View 尺寸为坐标系，当前已添加的点列表.
      */
     protected val pointList = ArrayList<Point>()
 
     /**
-\1以 View 尺寸为坐标系，当前已添加的线列表.
+// 以 View 尺寸为坐标系，当前已添加的线列表.
      */
     protected val lineList = ArrayList<Line>()
 
     /**
-\1以 View 尺寸为坐标系，当前已添加的面列表.
+// 以 View 尺寸为坐标系，当前已添加的面列表.
      */
     protected val rectList = ArrayList<Rect>()
 
     /**
-\1以 View 尺寸为坐标系，当前已添加的趋势图直线.
+// 以 View 尺寸为坐标系，当前已添加的趋势图直线.
      */
     @Volatile
     protected var trendLine: Line? = null
@@ -218,7 +218,7 @@ abstract class TemperatureBaseView : View {
     }
 
     /**
-\1支持点线面的最大数量，默认3.
+// 支持点线面的最大数量，默认3.
      */
     protected val maxCount: Int
 
@@ -251,10 +251,10 @@ abstract class TemperatureBaseView : View {
     // ******************************************** Draw ********************************************
 
     /**
-\1以 View 尺寸为坐标系，在 (x,y) 画一个十字.
+// 以 View 尺寸为坐标系，在 (x,y) 画一个十字.
      *
-\1注意，不对 x、y 进行processing，传进来是哪就在哪drawing。
-\1@param point 以 View 尺寸为坐标系的点
+// 注意，不对 x、y 进行processing，传进来是哪就在哪drawing。
+// @param point 以 View 尺寸为坐标系的点
      */
     protected fun drawPoint(
         canvas: Canvas,
@@ -264,14 +264,14 @@ abstract class TemperatureBaseView : View {
     }
 
     /**
-\1以 View 尺寸为坐标系，连接 (startX, startY)、(stopX, stopY) 两点drawing一条线段.
+// 以 View 尺寸为坐标系，连接 (startX, startY)、(stopX, stopY) 两点drawing一条线段.
      */
     protected fun drawLine(
         canvas: Canvas,
         line: Line,
     ) {
-\1由于线段与实心点的的drawing是分开的，线段使用当前 View 坐标，而实心点使用temperature(192x256)坐标conversion为 View 坐标
-\1故而这里需要把当前的坐标，尽量贴近temperature坐标的整数倍，否则会出现实心圆偏离直线太远的情况
+// 由于线段与实心点的的drawing是分开的，线段使用当前 View 坐标，而实心点使用temperature(192x256)坐标conversion为 View 坐标
+// 故而这里需要把当前的坐标，尽量贴近temperature坐标的整数倍，否则会出现实心圆偏离直线太远的情况
         val startX: Int = ((line.start.x / xScale).toInt() * xScale).toInt()
         val startY: Int = ((line.start.y / yScale).toInt() * yScale).toInt()
         val stopX: Int = ((line.end.x / xScale).toInt() * xScale).toInt()
@@ -280,7 +280,7 @@ abstract class TemperatureBaseView : View {
     }
 
     /**
-\1以 View 尺寸为坐标系，按指定范围drawing一个矩形.
+// 以 View 尺寸为坐标系，按指定范围drawing一个矩形.
      */
     protected fun drawRect(
         canvas: Canvas,
@@ -294,10 +294,10 @@ abstract class TemperatureBaseView : View {
     }
 
     /**
-\1以 View 尺寸为坐标系，在 (x,y) 画一个实心圆。
+// 以 View 尺寸为坐标系，在 (x,y) 画一个实心圆。
      *
-\1注意，不对 x、y 进行processing，传进来是哪就在哪drawing。
-\1@param isMax true-最high temperature红色 false-最low temperature蓝色
+// 注意，不对 x、y 进行processing，传进来是哪就在哪drawing。
+// @param isMax true-最high temperature红色 false-最low temperature蓝色
      */
     protected fun drawCircle(
         canvas: Canvas,
@@ -309,11 +309,11 @@ abstract class TemperatureBaseView : View {
     }
 
     /**
-\1以 View 尺寸为坐标系，指定的 (x,y) 坐标为实心圆圆心，以该实心圆为基准drawing指定文字。
-\1若空间允许则放置在实心圆圆心右上方，否则根据实际情况放置在下方、左方或左下方.
+// 以 View 尺寸为坐标系，指定的 (x,y) 坐标为实心圆圆心，以该实心圆为基准drawing指定文字。
+// 若空间允许则放置在实心圆圆心右上方，否则根据实际情况放置在下方、左方或左下方.
      *
-\1注意，不对 x、y 进行processing，传进来是哪就在哪drawing。
-\1@param x 实心圆圆心的 View 尺寸坐标
+// 注意，不对 x、y 进行processing，传进来是哪就在哪drawing。
+// @param x 实心圆圆心的 View 尺寸坐标
      */
     protected fun drawTempText(
         canvas: Canvas,
@@ -325,9 +325,9 @@ abstract class TemperatureBaseView : View {
     }
 
     /**
-\1以 View 尺寸为坐标系，以指定线段为基准drawing趋势图的 "A"、"B" 文字。
+// 以 View 尺寸为坐标系，以指定线段为基准drawing趋势图的 "A"、"B" 文字。
      *
-\1注意，不对 x、y 进行processing，传进来是哪就在哪drawing。
+// 注意，不对 x、y 进行processing，传进来是哪就在哪drawing。
      */
     protected fun drawTrendText(
         canvas: Canvas,
@@ -337,24 +337,24 @@ abstract class TemperatureBaseView : View {
     }
 
     /**
-\1以 View 尺寸为坐标系，指定的 (x,y) 坐标为实心圆圆心，以该实心圆为基准drawing指定点名称文字。
-\1若空间允许则放置在实心圆圆心正下方，否则放正上方.
+// 以 View 尺寸为坐标系，指定的 (x,y) 坐标为实心圆圆心，以该实心圆为基准drawing指定点名称文字。
+// 若空间允许则放置在实心圆圆心正下方，否则放正上方.
      */
     protected fun drawPointName(
         canvas: Canvas,
         name: String,
         point: Point,
     ) {
-\1由于十字与实心点的的drawing是分开的，十字使用当前 View 坐标，而实心点使用temperature(192x256)坐标
-\1故而这里需要把当前的坐标，conversion为temperature坐标的整数倍，否则会出现中心对不上的情况
+// 由于十字与实心点的的drawing是分开的，十字使用当前 View 坐标，而实心点使用temperature(192x256)坐标
+// 故而这里需要把当前的坐标，conversion为temperature坐标的整数倍，否则会出现中心对不上的情况
         val x = ((point.x / xScale).toInt() * xScale).toInt()
         val y = ((point.y / yScale).toInt() * yScale).toInt()
         helper.drawPointName(canvas, name, width, height, x, y)
     }
 
     /**
-\1以 View 尺寸为坐标系，指定的 线段或矩形 坐标为范围，
-\1以该范围为基准drawing指定线名称文字，放置于范围中心。
+// 以 View 尺寸为坐标系，指定的 线段或矩形 坐标为范围，
+// 以该范围为基准drawing指定线名称文字，放置于范围中心。
      */
     protected fun drawLineName(
         canvas: Canvas,
@@ -369,8 +369,8 @@ abstract class TemperatureBaseView : View {
     }
 
     /**
-\1以 View 尺寸为坐标系，指定的 线段或矩形 坐标为范围，
-\1以该范围为基准drawing指定线名称文字，放置于范围中心。
+// 以 View 尺寸为坐标系，指定的 线段或矩形 坐标为范围，
+// 以该范围为基准drawing指定线名称文字，放置于范围中心。
      */
     protected fun drawRectName(
         canvas: Canvas,
@@ -390,9 +390,9 @@ abstract class TemperatureBaseView : View {
     private var downY = 0
 
     /**
-\1是否为添加 点线面 模式。
+// 是否为添加 点线面 模式。
      *
-\1true-添加一个新点线面 false-移动一个已有点线面
+// true-添加一个新点线面 false-移动一个已有点线面
      */
     private var isAddAction = true
 
@@ -410,10 +410,10 @@ abstract class TemperatureBaseView : View {
         }
     }
 
-\1**************************************** 点 ****************************************
+// **************************************** 点 ****************************************
 
     /**
-\1Touch 时当前正在操作（添加、移动）的点.
+// Touch 时当前正在操作（添加、移动）的点.
      */
     protected var operatePoint: Point? = null
 
@@ -473,27 +473,27 @@ abstract class TemperatureBaseView : View {
         return null
     }
 
-\1**************************************** 线 ****************************************
+// **************************************** 线 ****************************************
 
     /**
-\1Touch 时当前正在操作（添加、移动）的线.
+// Touch 时当前正在操作（添加、移动）的线.
      */
     protected var operateLine: Line? = null
 
     /**
-\1Touch 时当前正在操作（添加、移动）的趋势图线.
+// Touch 时当前正在操作（添加、移动）的趋势图线.
      */
     protected var operateTrend: Line? = null
 
     private enum class LineMoveType { ALL, START, END, }
 
     /**
-\1线移动方式：整体移动、仅变更头、仅变更尾。
+// 线移动方式：整体移动、仅变更头、仅变更尾。
      */
     private var lineMoveType = LineMoveType.ALL
 
     /**
-\1仅整体移动线时，save DOWN 状态下的线初始坐标，用于calculation移动.
+// 仅整体移动线时，save DOWN 状态下的线初始坐标，用于calculation移动.
      */
     private val downLine: Line = Line(Point(0, 0), Point(0, 0))
 
@@ -583,7 +583,7 @@ abstract class TemperatureBaseView : View {
                 val y: Int = event.y.correct(height)
                 val line: Line = (if (isTrend) operateTrend else operateLine) ?: Line(Point(), Point())
                 if ((line.start.x / xScale).toInt() != (line.end.x / xScale).toInt() || (line.start.y / yScale).toInt() != (line.end.y / yScale).toInt()) {
-\1只有画出来的结果不是一个点才生效
+// 只有画出来的结果不是一个点才生效
                     if (isAddAction || abs(x - downX) > DELETE_TOLERANCE || abs(y - downY) > DELETE_TOLERANCE) {
                         if (isTrend) {
                             trendLine = line
@@ -631,7 +631,7 @@ abstract class TemperatureBaseView : View {
     }
 
     /**
-\1判断指定坐标 (x, y) 是否视为指定 Line 的选中.
+// 判断指定坐标 (x, y) 是否视为指定 Line 的选中.
      */
     private fun isLineConcat(
         line: Line?,
@@ -646,36 +646,36 @@ abstract class TemperatureBaseView : View {
         return abs(tempDistance) < TOUCH_TOLERANCE && x > min(line.start.x, line.end.x) - TOUCH_TOLERANCE && x < max(line.start.x, line.end.x) + TOUCH_TOLERANCE
     }
 
-\1**************************************** 面 ****************************************
+// **************************************** 面 ****************************************
 
     /**
-\1Touch 时当前正在操作（添加、移动）的面.
+// Touch 时当前正在操作（添加、移动）的面.
      */
     protected var operateRect: Rect? = null
 
     private enum class RectMoveType { ALL, EDGE, CORNER, }
 
     /**
-\1面移动方式：点击面内部-整体移动、点击面4条边-边移动、点击面4个角-角移动。
+// 面移动方式：点击面内部-整体移动、点击面4条边-边移动、点击面4个角-角移动。
      */
     private var rectMoveType = RectMoveType.ALL
 
     private enum class RectMoveEdge { LEFT, TOP, RIGHT, BOTTOM }
 
     /**
-\1仅边移动模式时，移动的是哪条边.
+// 仅边移动模式时，移动的是哪条边.
      */
     private var rectMoveEdge = RectMoveEdge.LEFT
 
     private enum class RectMoveCorner { LT, RT, RB, LB }
 
     /**
-\1仅角移动模式时，移动的是哪个角.
+// 仅角移动模式时，移动的是哪个角.
      */
     private var rectMoveCorner = RectMoveCorner.LT
 
     /**
-\1移动面时，save DOWN 状态下的面初始坐标，用于calculation移动.
+// 移动面时，save DOWN 状态下的面初始坐标，用于calculation移动.
      */
     private val downRect = Rect()
 
@@ -836,7 +836,7 @@ abstract class TemperatureBaseView : View {
                 if ((rect.left / xScale).toInt() != (rect.right / xScale).toInt() &&
                     (rect.top / yScale).toInt() != (rect.bottom / yScale).toInt()
                 ) {
-\1画出来的结果不是一条线才生效
+// 画出来的结果不是一条线才生效
                     if (isAddAction || abs(x - downX) > DELETE_TOLERANCE || abs(y - downY) > DELETE_TOLERANCE) {
                         synchronized(this) {
                             rectList.add(rect)

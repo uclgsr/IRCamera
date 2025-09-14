@@ -130,7 +130,7 @@ class ReportIRShowView : LinearLayout {
     }
 
     /**
-\1get需要转为 PDF 的所有 View 列表.
+// get需要转为 PDF 的所有 View 列表.
      */
     fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
@@ -273,7 +273,7 @@ class ReportIRShowView : LinearLayout {
         tvTitleRect4.isVisible = !clRect1.isVisible && !clRect2.isVisible && !clRect3.isVisible
         tvTitleRect5.isVisible = !clRect1.isVisible && !clRect2.isVisible && !clRect3.isVisible && !clRect4.isVisible
 
-\1把最后一条分割线藏起来
+// 把最后一条分割线藏起来
         if (rectList.isNotEmpty()) {
             when (rectList.size) {
                 1 -> hideLastLine(isLast, clRect1, rectList[0], TYPE_RECT)

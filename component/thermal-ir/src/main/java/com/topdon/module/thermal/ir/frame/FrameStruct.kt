@@ -155,12 +155,12 @@ class FrameStruct() {
             resultArray[658] = (textSize ushr 8).toByte()
             resultArray[659] = textSize.toByte()
 
-\1将 Float conversion为 4 字节
+// 将 Float conversion为 4 字节
             val envBytes = java.nio.ByteBuffer.allocate(4).putFloat(environment).array()
             val distanceBytes = java.nio.ByteBuffer.allocate(4).putFloat(distance).array()
             val radiationBytes = java.nio.ByteBuffer.allocate(4).putFloat(radiation).array()
 
-\1存储在 resultArray 中，[660, 663)是ambient temperature，[664, 667)是距离，[668, 671)是emissivity
+// 存储在 resultArray 中，[660, 663)是ambient temperature，[664, 667)是距离，[668, 671)是emissivity
             System.arraycopy(envBytes, 0, resultArray, 660, 4)
             System.arraycopy(distanceBytes, 0, resultArray, 664, 4)
             System.arraycopy(radiationBytes, 0, resultArray, 668, 4)

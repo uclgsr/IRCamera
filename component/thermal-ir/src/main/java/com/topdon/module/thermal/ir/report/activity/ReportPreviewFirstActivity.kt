@@ -10,11 +10,11 @@ import com.topdon.module.thermal.ir.report.view.WatermarkView
 import com.topdon.lib.ui.R as UiR
 
 /**
-\1生成报告第1步的预览interface.
+// 生成报告第1步的预览interface.
  *
-\1需要传递
-\1- 必选：报告信息 [ExtraKeyConfig.REPORT_INFO]
-\1- 可选：检测条件 [ExtraKeyConfig.REPORT_CONDITION]
+// 需要传递
+// - 必选：报告信息 [ExtraKeyConfig.REPORT_INFO]
+// - 可选：检测条件 [ExtraKeyConfig.REPORT_CONDITION]
  */
 // Legacy ARouter route annotation - now using NavigationManager
 /**

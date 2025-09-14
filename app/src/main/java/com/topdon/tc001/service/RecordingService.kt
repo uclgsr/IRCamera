@@ -71,14 +71,11 @@ class RecordingService : LifecycleService() {
         const val ACTION_START_RECORDING = "com.topdon.tc001.START_RECORDING"
         const val ACTION_STOP_RECORDING = "com.topdon.tc001.STOP_RECORDING"
         const val ACTION_ADD_SYNC_MARKER = "com.topdon.tc001.ADD_SYNC_MARKER"
-<<<<<<< HEAD
         const val ACTION_START_SERVER = "com.topdon.tc001.START_SERVER"
         const val ACTION_STOP_SERVER = "com.topdon.tc001.STOP_SERVER"
-=======
         const val ACTION_CONNECT_PC = "com.topdon.tc001.CONNECT_PC"
         const val ACTION_DISCONNECT_PC = "com.topdon.tc001.DISCONNECT_PC"
         const val ACTION_START_DISCOVERY = "com.topdon.tc001.START_DISCOVERY"
->>>>>>> dev
         
         // Extras
         const val EXTRA_SESSION_DIRECTORY = "session_directory"
@@ -243,7 +240,6 @@ class RecordingService : LifecycleService() {
         // Initialize recording controller
         recordingController = RecordingController(this, this)
         
-<<<<<<< HEAD
         // Initialize sensors under supervision
         crashSafeSupervisor.registerJob(
             id = "recording_service_init",
@@ -251,19 +247,16 @@ class RecordingService : LifecycleService() {
             critical = true,
             restartable = false
         ) { stopToken ->
-=======
         // Initialize both network client and server for maximum compatibility
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
         
         // Initialize sensors and dual network architecture
         lifecycleScope.launch {
->>>>>>> dev
             try {
                 val sensorsSuccess = recordingController.initializeSensors()
                 isInitialized = sensorsSuccess
                 
-<<<<<<< HEAD
                 if (success) {
                     structuredLogger.log(
                         StructuredLogger.LogLevel.INFO,
@@ -275,7 +268,6 @@ class RecordingService : LifecycleService() {
                     // Start server socket automatically if enabled
                     if (FeatureFlags.MDNS_ENABLE) {
                         startServerSocket()
-=======
                 val networkSuccess = initializeNetworkClient()
                 isNetworkInitialized = networkSuccess
                 
@@ -289,7 +281,6 @@ class RecordingService : LifecycleService() {
                         startNetworkDiscovery()
                     } else {
                         Log.w(TAG, "Network client initialization failed - running in server-only mode")
->>>>>>> dev
                     }
                 } else {
                     structuredLogger.log(
@@ -411,7 +402,6 @@ class RecordingService : LifecycleService() {
         
         lifecycleScope.launch {
             try {
-<<<<<<< HEAD
                 // Stop server socket first
                 stopServerSocket()
                 
@@ -436,7 +426,6 @@ class RecordingService : LifecycleService() {
                     crashSafeSupervisor.shutdown()
                 } catch (e: Exception) {
                     Log.e(TAG, "Error shutting down supervisor", e)
-=======
                 networkServer.stop()
                 isConnectedToPC = false
                 Log.i(TAG, "Network server stopped")
@@ -453,7 +442,6 @@ class RecordingService : LifecycleService() {
                     recordingController.cleanup()
                 } catch (e: Exception) {
                     Log.e(TAG, "Error during recording controller cleanup", e)
->>>>>>> dev
                 }
             }
         }
@@ -661,7 +649,6 @@ class RecordingService : LifecycleService() {
     /**
      * Initialize network client and set up command handlers
      */
-<<<<<<< HEAD
     fun getCurrentSession(): SessionInfo? {
         return currentSessionDirectory?.let { directory ->
             SessionInfo(
@@ -984,7 +971,6 @@ class RecordingService : LifecycleService() {
             } catch (e: Exception) {
                 Log.w(TAG, "Error handling message from $clientId", e)
                 break
-=======
     private suspend fun initializeNetworkClient(): Boolean {
         return try {
             val success = networkClient.initialize()
@@ -1213,12 +1199,10 @@ class RecordingService : LifecycleService() {
                 updateNotification("Disconnected from PC Controller") 
             } catch (e: Exception) {
                 Log.e(TAG, "Error disconnecting from PC", e)
->>>>>>> dev
             }
         }
     }
     
-<<<<<<< HEAD
     /**
      * Process message from PC client with protocol validation and structured logging
      */
@@ -1496,7 +1480,6 @@ class RecordingService : LifecycleService() {
                     mapOf("error" to e.message)
                 )
                 throw e
-=======
     private fun startPCDiscovery() {
         lifecycleScope.launch {
             try {
@@ -1633,7 +1616,6 @@ class RecordingService : LifecycleService() {
         }
     }
     
-<<<<<<< HEAD
     /**
      * Initialize network client and set up command handlers
      */
@@ -1786,13 +1768,11 @@ class RecordingService : LifecycleService() {
                     put("message", "Failed to start recording: ${e.message}")
                 }
                 networkClient.sendMessage(response)
->>>>>>> dev
             }
         }
     }
     
     /**
-<<<<<<< HEAD
      * Perform sync flash for PC synchronization
      */
     private fun performSyncFlash(durationMs: Int) {
@@ -1924,7 +1904,6 @@ class RecordingService : LifecycleService() {
         return activeConnections.keys.toList()
     }
 }
-=======
      * Handle stop recording command from PC Controller
      */
     private fun handleStopRecordingCommand(message: JSONObject) {
@@ -2093,7 +2072,6 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-=======
     // Network server setup and management
     
     private fun setupNetworkServer() {
@@ -2311,7 +2289,6 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Error sending status to PC", e)
         }
     }
->>>>>>> dev
 }
 
 /**
@@ -2322,4 +2299,3 @@ data class SessionInfo(
     val startTime: Long,
     val isRecording: Boolean
 )
->>>>>>> dev

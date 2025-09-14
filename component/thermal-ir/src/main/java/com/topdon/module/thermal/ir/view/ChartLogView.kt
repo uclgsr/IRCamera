@@ -85,7 +85,7 @@ class ChartLogView : LineChart {
             l.form = Legend.LegendForm.CIRCLE
             l.textColor = textColor
             l.isEnabled = false // 隐藏曲线标签
-\1x轴
+// x轴
             val xAxis = this.xAxis
             xAxis.textColor = textColor
             xAxis.setDrawGridLines(false) // 竖向格线
@@ -97,7 +97,7 @@ class ChartLogView : LineChart {
             xAxis.granularity = 1f
             xAxis.isGranularityEnabled = true // 重复值不显示
             xAxis.textSize = 8f
-\1y轴
+// y轴
             val leftAxis = this.axisLeft
             leftAxis.textColor = textColor // y轴文本颜色
             leftAxis.axisLineColor = 0x00000000 // y轴颜色
@@ -255,7 +255,7 @@ class ChartLogView : LineChart {
         )
 
     /**
-\1曲线样式
+// 曲线样式
      */
     private fun createSet(
         index: Int,

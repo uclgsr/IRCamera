@@ -9,7 +9,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
-\1双光校正 - 第1步.
+// 双光校正 - 第1步.
  * Created by LCG on 2023/12/29.
  */
 // Legacy ARouter route annotation - now using NavigationManager

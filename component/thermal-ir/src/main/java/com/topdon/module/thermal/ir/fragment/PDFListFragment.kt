@@ -58,8 +58,8 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
     private val fragmentPdfRecycler: RecyclerView by lazy { requireView().findViewById(R.id.fragment_pdf_recycler) }
 
     /**
-\1从上一interface传递过来的，当前是否为 TC007 device类型.
-\1true-TC007 false-其他插件式device
+// 从上一interface传递过来的，当前是否为 TC007 device类型.
+// true-TC007 false-其他插件式device
      */
     private var isTC007 = false
 
@@ -67,7 +67,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
     private var reportAdapter = PDFAdapter(R.layout.item_pdf)
 
     /**
-\1LMS 登录及退出登录广播.
+// LMS 登录及退出登录广播.
      */
     private val loginBroadcastReceiver = LoginBroadcastReceiver()
 
@@ -105,7 +105,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
                 tvEmpty?.setText(if (page == 1 && data.code != LMS.SUCCESS) R.string.request_fail else R.string.tip_no_more_data)
 
                 if (page == 1) {
-\1刷新
+// 刷新
                     if (data.code == LMS.SUCCESS)
                         {
                             reportAdapter.loadMoreModule.isEnableLoadMore = !data.data?.records.isNullOrEmpty()
@@ -152,7 +152,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
     }
 
     /**
-\1是否已调用过load初始data
+// 是否已调用过load初始data
      */
     private var hasLoadData = false
 
@@ -257,14 +257,14 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
         }
         reportAdapter.loadMoreModule.loadMoreView = CommLoadMoreView()
         reportAdapter.loadMoreModule.setOnLoadMoreListener {
-\1load更多
+// load更多
             viewModel.getReportData(isTC007, ++page)
         }
 
         fragmentPdfRecycler.adapter = reportAdapter
         fragmentPdfRecycler.layoutManager = LinearLayoutManager(requireContext())
         fragmentPdfRecyclerLay.setOnRefreshListener {
-\1刷新
+// 刷新
             page = 1
             viewModel.getReportData(isTC007, page)
         }

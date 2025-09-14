@@ -43,7 +43,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 /**
-\1选取区域监听
+// 选取区域监听
  */
 // Legacy ARouter route annotation - now using NavigationManager
 open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTempListener {
@@ -155,7 +155,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
     private var recordJob: Job? = null
 
     /**
-\1开始每隔1秒记录一个temperaturedata到data库.
+// 开始每隔1秒记录一个temperaturedata到data库.
      */
     private fun recordThermal() {
         recordJob =
@@ -234,11 +234,11 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                                 object :
                                     ViewTreeObserver.OnGlobalLayoutListener {
                                     override fun onGlobalLayout() {
-\1移除监听器以避免重复调用
+// 移除监听器以避免重复调用
                                         binding.thermalFragment.getViewTreeObserver().removeOnGlobalLayoutListener(this)
                                         irMonitorLiteFragment?.restTempView()
                                         irMonitorLiteFragment?.addTempLine(selectIndex!!)
-\1进行需要的操作
+// 进行需要的操作
                                     }
                                 },
                             )
@@ -290,7 +290,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                     return temp!!
                 }
 
-\1getgain状态 PASS
+// getgain状态 PASS
             if (System.currentTimeMillis() - basicGainGetTime > 5000L)
                 {
                     try {

@@ -41,7 +41,7 @@ import com.topdon.lib.core.R as LibR
 import com.topdon.lib.ui.R as UiR
 
 /**
-\1TS004 图片详情
+// TS004 图片详情
  */
 // Legacy ARouter route annotation - now using NavigationManager
 /**
@@ -50,18 +50,18 @@ import com.topdon.lib.ui.R as UiR
  */
 class IRGalleryDetail04Activity : BaseActivity() {
     /**
-\1是否查看远端data.
-\1true-远端data false-手机本地data
+// 是否查看远端data.
+// true-远端data false-手机本地data
      */
     private var isRemote = false
 
     /**
-\1当前展示图片在列表中的 position
+// 当前展示图片在列表中的 position
      */
     private var position = 0
 
     /**
-\1从上一interface传递过来的，当前展示的图片列表.
+// 从上一interface传递过来的，当前展示的图片列表.
      */
     private lateinit var dataList: ArrayList<GalleryBean>
 

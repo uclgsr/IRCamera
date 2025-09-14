@@ -16,7 +16,7 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.utils.IRConfigData
 
 /**
-\1temperature correction（ambient temperature、temperature measurement距离、emissivity修改那个页面）常用emissivity表 Adapter.
+// temperature correction（ambient temperature、temperature measurement距离、emissivity修改那个页面）常用emissivity表 Adapter.
  * Created by LCG on 2024/11/13.
  */
 /**

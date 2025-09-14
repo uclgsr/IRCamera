@@ -11,7 +11,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.module.thermal.ir.R
 
 /**
-\1图库目录切换 PopupWindow.
+// 图库目录切换 PopupWindow.
  *
  * Created by LCG on 2024/1/5.
  */
@@ -26,7 +26,7 @@ class GalleryChangePopup(private val context: Context) : PopupWindow() {
     private val tvTc007: TextView by lazy { contentView.findViewById(R.id.tv_tc007) }
 
     /**
-\1一个option被选中事件监听.
+// 一个option被选中事件监听.
      */
     var onPickListener: ((position: Int, str: String) -> Unit)? = null
 

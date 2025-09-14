@@ -66,7 +66,7 @@ class ReportInfoView : LinearLayout {
     }
 
     /**
-\1根据指定的报告信息刷新对应 View.
+// 根据指定的报告信息刷新对应 View.
      */
     fun refreshInfo(reportInfoBean: ReportInfoBean?) {
         tvReportName.text = reportInfoBean?.report_name
@@ -82,7 +82,7 @@ class ReportInfoView : LinearLayout {
     }
 
     /**
-\1根据指定的检测条件信息刷新对应 View.
+// 根据指定的检测条件信息刷新对应 View.
      */
     fun refreshCondition(conditionBean: ReportConditionBean?) {
         clReportCondition.isVisible = conditionBean?.is_ambient_humidity == 1 ||
@@ -108,7 +108,7 @@ class ReportInfoView : LinearLayout {
     }
 
     /**
-\1get需要转为 PDF 的所有 View 列表.
+// get需要转为 PDF 的所有 View 列表.
      */
     fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()

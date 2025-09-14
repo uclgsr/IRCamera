@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.EmptyCoroutineContext
 
 /**
-\1横向的指南针View
+// 横向的指南针View
  */
 /**
  * Custom Linear compass view for thermal imaging display.
@@ -158,12 +158,12 @@ class LinearCompassView : View {
         drawCompassLine()
     }
 
-\1drawing背景
+// drawing背景
     private fun drawBackGround() {
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
     }
 
-\1drawing角度
+// drawing角度
     private fun drawAzimuthArrow() {
         if (!showAzimuthArrow) {
             return
@@ -173,14 +173,14 @@ class LinearCompassView : View {
         canvas.drawText(text, realX(text, endWidth, textPaint), realY(text, endHeight, textPaint), textPaint)
     }
 
-\1drawing标记线
+// drawing标记线
     private fun drawCompassLine() {
-\1calculation指南针的线有几等份
+// calculation指南针的线有几等份
 //        val values = getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map { it.toInt() }
         drawCompass()
         val bottomHeight = height * 7 / 10f
         canvas.drawLine(0f, (bottomHeight - 1), width.toFloat(), bottomHeight, shortLinePaint)
-\1在中间位置drawing标志线
+// 在中间位置drawing标志线
         canvas.drawLine(
             width / 2f + markerSize / 2,
             height * (3 / 10f),
@@ -209,26 +209,26 @@ class LinearCompassView : View {
         getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map {
             it.toInt()
         }.toMutableList().forEach {
-\1calculation实际X的坐标
+// calculation实际X的坐标
             val x = toPixel(it.toFloat())
 
-\1最短：15度 最长：90度 起始点x坐标
+// 最短：15度 最长：90度 起始点x坐标
             val lineHeight =
                 when {
                     it % 90 == 0 -> (3 / 10f) * height
                     it % 15 == 0 -> (4 / 10f) * height
                     else -> (5 / 10f) * height
                 }
-\1起始点y
+// 起始点y
             val bottomHeight = height * 7 / 10f
 
-\1drawing标记线
+// drawing标记线
             when {
                 it % 90 == 0 -> canvas.drawLine(x, lineHeight, x, bottomHeight, longLinePaint)
                 else -> canvas.drawLine(x, lineHeight, x, bottomHeight, shortLinePaint)
             }
 
-\1drawing底部方位文本
+// drawing底部方位文本
             if (it % 45 == 0) {
                 val coord = getPositionText(it)
                 canvas.drawText(coord, realX(coord, x, positionPaint), realY(coord, height - 2f, positionPaint), positionPaint)

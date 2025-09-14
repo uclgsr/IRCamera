@@ -20,7 +20,7 @@ public class CommonUtil {
         AssetManager am = mContext.getAssets();
         InputStream is = null;
         try {
-\1根据不同的high/low gainload不同的等效大气透过率表
+// 根据不同的high/low gainload不同的等效大气透过率表
             is = am.open(assetTauName);
             int lenth = is.available();
             tau_data = new byte[lenth];
@@ -73,7 +73,7 @@ public class CommonUtil {
         return Math.round(value * factor) / factor;
     }
 
-\1frame率展示
+// frame率展示
     public static int mCount = 0;
     private static long mTimeStart = 0;
     private static double mFps = 0;

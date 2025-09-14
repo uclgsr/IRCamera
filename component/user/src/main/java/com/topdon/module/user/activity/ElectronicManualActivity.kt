@@ -16,7 +16,7 @@ import com.topdon.module.user.R
 import com.topdon.lib.core.R as RCore
 
 /**
-\1电子说明书 或 FAQ device类型选择页面
+// 电子说明书 或 FAQ device类型选择页面
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class ElectronicManualActivity : BaseActivity() {
@@ -39,14 +39,14 @@ class ElectronicManualActivity : BaseActivity() {
         adapter.onPickListener = { isTS001 ->
             if (isTS001) {
                 if (productType == Constants.SETTING_BOOK) {
-\1电子说明书-TS001
+                    // Electronic manual - TS001
                 } else {
                     // FAQ-TS001
                     NavigationManager.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", true).navigation(this)
                 }
             } else {
                 if (productType == Constants.SETTING_BOOK) {
-\1电子说明书-TS004
+                    // Electronic manual - TS004
                     NavigationManager.getInstance().build(RouterConfig.PDF).withBoolean("isTS001", false).navigation(this)
                 } else {
                     // FAQ-TS004
@@ -68,7 +68,7 @@ class ElectronicManualActivity : BaseActivity() {
         private val optionList: ArrayList<String> = ArrayList(2)
 
         init {
-\1由于 TC001 的说明书为旧版本 样式， 2024-4-9 产品决定先hide，只放 TS004 的说明书
+            // Due to TC001 manual being old version style, 2024-4-9 product decided to hide it first, only put TS004 manual
             if (isFAQ) {
                 optionList.add("TS001")
             }

@@ -47,18 +47,18 @@ import java.util.*
 import com.topdon.lib.core.R as LibR
 
 /**
-\1生成报告第1步（共2步）.
+// 生成报告第1步（共2步）.
  *
-\1需要传递
-\1- 是否 TC007: [ExtraKeyConfig.IS_TC007] （ambient temperature、emissivity等不同）
-\1- 当前编辑的图片绝对路径: [ExtraKeyConfig.FILE_ABSOLUTE_PATH] （本interface不使用，透传）
-\1- 当前编辑的图片点线面full imagetemperaturedata: [ExtraKeyConfig.IMAGE_TEMP_BEAN] （本interface不使用，透传）
+// 需要传递
+// - 是否 TC007: [ExtraKeyConfig.IS_TC007] （ambient temperature、emissivity等不同）
+// - 当前编辑的图片绝对路径: [ExtraKeyConfig.FILE_ABSOLUTE_PATH] （本interface不使用，透传）
+// - 当前编辑的图片点线面full imagetemperaturedata: [ExtraKeyConfig.IMAGE_TEMP_BEAN] （本interface不使用，透传）
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     /**
-\1从上一interface传递过来的，当前是否为 TC007 device类型.
-\1true-TC007 false-其他插件式device
+// 从上一interface传递过来的，当前是否为 TC007 device类型.
+// true-TC007 false-其他插件式device
      */
     private var isTC007 = false
     private var locationManager: LocationManager? = null
@@ -219,17 +219,17 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
 
     @SuppressLint("MissingPermission")
     private fun getLocation(): String? {
-\11.get位置管理器
+// 1.get位置管理器
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
-\12.get位置提供器，GPS或是NetWork
+// 2.get位置提供器，GPS或是NetWork
         val providers = locationManager?.getProviders(true)
         locationProvider =
             if (providers!!.contains(LocationManager.GPS_PROVIDER)) {
-\1如果是GPS
+// 如果是GPS
                 LocationManager.GPS_PROVIDER
             } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
-\1如果是Network
+// 如果是Network
                 LocationManager.NETWORK_PROVIDER
             } else {
                 return null
@@ -248,7 +248,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             }
     }
 
-\1getaddress信息:城市、街道等信息
+// getaddress信息:城市、街道等信息
     private fun getAddress(location: Location?): String {
         var result: List<Address?>? = null
         try {
@@ -329,12 +329,12 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-\1当前set的报告日期时间戳.
+// 当前set的报告日期时间戳.
      */
     private var startTime = 0L
 
     /**
-\1display时间拾取弹窗
+// display时间拾取弹窗
      */
     private fun selectTime() {
         val picker = DatimePicker(this)
@@ -353,10 +353,10 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
 
         val endTimeEntity = DatimeEntity.yearOnFuture(10)
         if (startTime == 0L) {
-\1set当前时间
+// set当前时间
             picker.wheelLayout.setRange(startTimeEntity, endTimeEntity, DatimeEntity.now())
         } else {
-\1set上一次选中时间
+// set上一次选中时间
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = startTime
             val year = calendar.get(Calendar.YEAR)
@@ -392,7 +392,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun initLocationPermission() {
-\1定位
+// 定位
         XXPermissions.with(this@ReportCreateFirstActivity)
             .permission(
                 permissionList,
@@ -434,7 +434,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                         never: Boolean,
                     ) {
                         if (never) {
-\1如果是被永久拒绝就跳转到应用权限系统set页面
+// 如果是被永久拒绝就跳转到应用权限系统set页面
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_location_content))

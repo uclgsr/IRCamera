@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 
 /**
-\1TC007 使用，不带temperature，仅用来操作点线面的 View.
+// TC007 使用，不带temperature，仅用来操作点线面的 View.
  *
  * Created by LCG on 2024/5/7.
  */
@@ -38,7 +38,7 @@ class Temperature07View : TemperatureBaseView {
             Mode.LINE -> operateLine?.let { drawLine(canvas, it) }
             Mode.RECT -> operateRect?.let { drawRect(canvas, it) }
             Mode.TREND -> {
-\1趋势图需求是在 TC007 项目暂停后加的，故而 TC007 没做
+// 趋势图需求是在 TC007 项目暂停后加的，故而 TC007 没做
             }
             else -> {
             }
@@ -48,7 +48,7 @@ class Temperature07View : TemperatureBaseView {
     // **************************************** Touch ****************************************
 
     /**
-\1当前是否处于触摸状态，TC007 触摸时才进行drawing.
+// 当前是否处于触摸状态，TC007 触摸时才进行drawing.
      */
     private var isTouching = false
 

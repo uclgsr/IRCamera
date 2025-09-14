@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.topdon.module.thermal.R
 
 /**
-\1set时间
+// set时间
  */
 /**
  * Custom Setting time view for thermal imaging display.

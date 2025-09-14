@@ -43,7 +43,7 @@ public class DeviceControlWorker {
                     mDeviceState = task.getDeviceState();
                     Log.d(TAG, "DeviceControlWorker do state : " + mDeviceState);
                     if (mDeviceControlCallback != null) {
-\1防止重复回调
+// 防止重复回调
                         if (mDeviceState != previousState) {
                             if (mDeviceState == DeviceState.OPEN) {
                                 mDeviceControlCallback.onConnected();

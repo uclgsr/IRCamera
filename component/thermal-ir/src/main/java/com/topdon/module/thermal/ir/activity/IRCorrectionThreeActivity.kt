@@ -9,7 +9,7 @@ import com.topdon.module.thermal.ir.fragment.IRCorrectionFragment
 
 /**
  *
-\1锅盖矫正
+// 锅盖矫正
  * @author: CaiSongL
  * @date: 2023/8/4 9:06
  */
