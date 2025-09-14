@@ -15,10 +15,7 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogTipOtgBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-/**
- * 提示窗
- * create by fylder on 2018/6/15
- **/
+
 class TipOtgDialog : Dialog {
     constructor(context: Context) : super(context)
 

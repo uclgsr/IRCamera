@@ -19,11 +19,7 @@ import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.tools.NumberTools
 import com.topdon.lib.core.tools.UnitTools
 
-/**
- * des:
- * author: CaiSongL
- * date: 2024/4/7 14:59
- **/
+
 class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
     private lateinit var binding: LayoutPopupTipEmissivityBinding
 

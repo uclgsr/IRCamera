@@ -5,11 +5,7 @@ import android.content.pm.PackageManager
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 
-/**
- * des:
- * author: CaiSongL
- * date: 2024/2/22 17:06S
- **/
+
 object CommUtils {
     fun getAppName(): String {
         var msg = ""

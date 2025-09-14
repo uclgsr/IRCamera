@@ -7,11 +7,7 @@ import androidx.preference.PreferenceManager
 import com.hjq.permissions.Permission
 import com.topdon.lib.core.utils.NetWorkUtils
 
-/**
- * des:
- * author: CaiSongL
- * date: 2024/4/28 17:08
- **/
+
 abstract class BaseWifiActivity : BaseActivity() {
     protected val permissionList by lazy {
         if (this.applicationInfo.targetSdkVersion >= 34) {

@@ -12,6 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+
 @RunWith(AndroidJUnit4::class)
 
 
@@ -27,16 +28,19 @@ class EnhancedBLEHarmonizationTest {
     fun setup() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
 
+        // Initialize Enhanced BLE with Nordic backend
         enhancedBLE =
             EasyBLE.getBuilder()
                 .setUseNordicBleBackend(true) // Enable Nordic BLE for enhanced reliability
                 .build()
 
+        // Initialize Standard BLE for comparison
         standardBLE =
             EasyBLE.getBuilder()
                 .setUseNordicBleBackend(false) // Use standard EasyBLE implementation
                 .build()
 
+        // Initialize enhanced components
         enhancedBleManager = EnhancedBleManager.getInstance()
         bleDeviceManager = BleDeviceManager(context)
     }
@@ -44,7 +48,7 @@ class EnhancedBLEHarmonizationTest {
     @Test
 
     fun testEnhancedBLEInitialization() {
-
+        // Verify enhanced BLE module initializes correctly
         assertNotNull("Enhanced BLE should be initialized", enhancedBLE)
 
         println("✅ Enhanced BLE initialization: PASSED")
@@ -54,7 +58,7 @@ class EnhancedBLEHarmonizationTest {
 
     fun testNordicBleBackendIntegration() =
         runBlocking {
-
+            // Test Nordic BLE backend initialization
             enhancedBleManager.initialize(context, enableNordicBackend = true)
 
             val systemStatus = enhancedBleManager.getSystemStatus()
@@ -67,11 +71,12 @@ class EnhancedBLEHarmonizationTest {
 
     fun testEnhancedConnectionReliability() =
         runBlocking {
-
+            // Test enhanced connection reliability features
             val testDeviceAddress = "12:34:56:78:9A:BC"
 
             enhancedBleManager.initialize(context, enableNordicBackend = true)
 
+            // Test connection with enhancements
             val connection =
                 enhancedBleManager.connectWithEnhancements(
                     deviceAddress = testDeviceAddress,
@@ -79,6 +84,7 @@ class EnhancedBLEHarmonizationTest {
                     observer = null,
                 )
 
+            // Verify metrics are being tracked
             val metrics = enhancedBleManager.getDeviceMetrics(testDeviceAddress)
             assertNotNull("Connection metrics should be tracked", metrics)
             assertTrue("Connect attempts should be recorded", metrics.connectAttempts.get() > 0)
@@ -89,11 +95,13 @@ class EnhancedBLEHarmonizationTest {
     @Test
 
     fun testGSRSensorOptimization() {
-
+        // Test GSR sensor detection and optimization
         val gsrDeviceAddress = "AA:BB:CC:DD:EE:FF"
 
+        // Mark device as GSR sensor
         enhancedBleManager.markAsGsrSensor(gsrDeviceAddress)
 
+        // Verify GSR sensor is properly marked
         val metrics = enhancedBleManager.getDeviceMetrics(gsrDeviceAddress)
         assertNotNull("GSR sensor metrics should be created", metrics)
         assertTrue("Device should be marked as GSR sensor", metrics.isGsrSensor.get())
@@ -104,7 +112,7 @@ class EnhancedBLEHarmonizationTest {
     @Test
 
     fun testMultiDeviceCoordination() {
-
+        // Test multi-device coordination for hub-spoke systems
         enhancedBleManager.enableMultiDeviceMode(true)
 
         val systemStatus = enhancedBleManager.getSystemStatus()
@@ -118,11 +126,13 @@ class EnhancedBLEHarmonizationTest {
 
     fun testUserComponentBleIntegration() =
         runBlocking {
-
+            // Test user component BLE device management
             bleDeviceManager.initialize(enableNordicBackend = true)
 
+            // Test device discovery functionality
             bleDeviceManager.startDeviceDiscovery()
 
+            // Verify BLE manager is working
             val systemStatus = bleDeviceManager.getSystemBleStatus()
             assertNotNull("System BLE status should be available", systemStatus)
 
@@ -135,7 +145,7 @@ class EnhancedBLEHarmonizationTest {
 
     fun testConnectionMetricsAndReliability() =
         runBlocking {
-
+            // Test connection metrics and reliability scoring
             val testDeviceAddress = "11:22:33:44:55:66"
 
             enhancedBleManager.initialize(context, enableNordicBackend = true)
@@ -144,17 +154,13 @@ class EnhancedBLEHarmonizationTest {
             val metrics = enhancedBleManager.getDeviceMetrics(testDeviceAddress)
             assertNotNull("Device metrics should exist", metrics)
 
+            // Test reliability calculation
             val reliabilityScore = metrics.reliabilityScore
-            assertTrue(
-                "Reliability score should be valid",
-                reliabilityScore >= 0.0 && reliabilityScore <= 1.0
-            )
+            assertTrue("Reliability score should be valid", reliabilityScore >= 0.0 && reliabilityScore <= 1.0)
 
+            // Test data integrity calculation
             val dataIntegrity = metrics.dataIntegrity
-            assertTrue(
-                "Data integrity should be valid",
-                dataIntegrity >= 0.0 && dataIntegrity <= 1.0
-            )
+            assertTrue("Data integrity should be valid", dataIntegrity >= 0.0 && dataIntegrity <= 1.0)
 
             println("✅ Connection metrics and reliability: PASSED")
         }
@@ -163,7 +169,7 @@ class EnhancedBLEHarmonizationTest {
 
     fun testDataLossDetectionAndRecovery() =
         runBlocking {
-
+            // Test data loss detection and error recovery
             val testDeviceAddress = "AA:11:BB:22:CC:33"
 
             enhancedBleManager.initialize(context, enableNordicBackend = true)
@@ -172,6 +178,7 @@ class EnhancedBLEHarmonizationTest {
             val metrics = enhancedBleManager.getDeviceMetrics(testDeviceAddress)
             assertNotNull("Metrics should exist for data loss testing", metrics)
 
+            // Simulate data packets and errors
             metrics.dataPacketsReceived.incrementAndGet()
             metrics.dataPacketsReceived.incrementAndGet()
             metrics.dataErrors.incrementAndGet() // 1 error out of 2 packets
@@ -185,10 +192,11 @@ class EnhancedBLEHarmonizationTest {
     @Test
 
     fun testAPICompatibility() {
-
+        // Verify that both enhanced and standard BLE maintain API compatibility
         assertNotNull("Enhanced BLE should be created", enhancedBLE)
         assertNotNull("Standard BLE should be created", standardBLE)
 
+        // Both should support the same core operations
         assertTrue("Enhanced BLE should support scanning", enhancedBLE != null)
         assertTrue("Standard BLE should support scanning", standardBLE != null)
 
@@ -198,7 +206,7 @@ class EnhancedBLEHarmonizationTest {
     @Test
 
     fun testGSRSensorRecorderIntegration() {
-
+        // Test GSR sensor recorder with enhanced BLE backend
         val gsrRecorder =
             GSRSensorRecorder(
                 context = context,
@@ -208,11 +216,7 @@ class EnhancedBLEHarmonizationTest {
             )
 
         assertNotNull("GSR recorder should be created with enhanced BLE", gsrRecorder)
-        assertEquals(
-            "GSR recorder should have correct sensor ID",
-            "test_gsr_enhanced",
-            gsrRecorder.sensorId
-        )
+        assertEquals("GSR recorder should have correct sensor ID", "test_gsr_enhanced", gsrRecorder.sensorId)
 
         println("✅ GSR sensor recorder integration: PASSED")
     }
@@ -221,19 +225,23 @@ class EnhancedBLEHarmonizationTest {
 
     fun testSystemWideHarmonization() =
         runBlocking {
+            // Test system-wide BLE harmonization across components
 
-
+            // Initialize enhanced manager
             enhancedBleManager.initialize(context, enableNordicBackend = true)
             enhancedBleManager.enableMultiDeviceMode(true)
 
+            // Initialize user component BLE manager
             bleDeviceManager.initialize(enableNordicBackend = true)
 
+            // Test that both components can work together
             val systemStatus = enhancedBleManager.getSystemStatus()
             val userSystemStatus = bleDeviceManager.getSystemBleStatus()
 
             assertNotNull("Enhanced manager system status should be available", systemStatus)
             assertNotNull("User component system status should be available", userSystemStatus)
 
+            // Both should report consistent multi-device mode
             assertTrue("Multi-device mode should be consistent", systemStatus.multiDeviceMode)
 
             println("✅ System-wide BLE harmonization: PASSED")
@@ -242,11 +250,13 @@ class EnhancedBLEHarmonizationTest {
     @Test
 
     fun testZeroBreakingChanges() {
+        // Test that existing BLE code works unchanged
 
-
+        // Legacy BLE usage pattern (should still work)
         val legacyBLE = EasyBLE.getBuilder().build()
         assertNotNull("Legacy BLE usage should still work", legacyBLE)
 
+        // New enhanced usage pattern
         val enhancedBLE =
             EasyBLE.getBuilder()
                 .setUseNordicBleBackend(true)
@@ -259,10 +269,12 @@ class EnhancedBLEHarmonizationTest {
     @Test
 
     fun testHubSpokeIntegrationCompatibility() {
+        // Test hub-spoke integration compatibility with enhanced BLE
 
-
+        // Simulate hub-spoke scenario
         enhancedBleManager.enableMultiDeviceMode(true)
 
+        // Add multiple devices for hub-spoke testing
         val device1 = "Device1:11:11:11:11:11"
         val device2 = "Device2:22:22:22:22:22"
 
@@ -286,19 +298,21 @@ class EnhancedBLEHarmonizationTest {
     @Test
 
     fun testComprehensiveBuildIntegration() {
-
+        // Test that all BLE-enabled components compile and integrate properly
 
         try {
-
+            // Test EasyBLE with Nordic backend
             val easyBLE =
                 EasyBLE.getBuilder()
                     .setUseNordicBleBackend(true)
                     .build()
             assertNotNull("EasyBLE should build successfully", easyBLE)
 
+            // Test Enhanced BLE Manager
             val manager = EnhancedBleManager.getInstance()
             assertNotNull("Enhanced BLE Manager should be available", manager)
 
+            // Test User Component BLE Manager
             val userManager = BleDeviceManager(context)
             assertNotNull("User BLE Manager should be available", userManager)
 
@@ -312,19 +326,15 @@ class EnhancedBLEHarmonizationTest {
 
     fun testAdvancedSensorFusionManager() =
         runBlocking {
-
+            // Test advanced sensor fusion capabilities
             val fusionManager = AdvancedSensorFusionManager.getInstance()
             assertNotNull("Fusion manager should be available", fusionManager)
 
-            fusionManager.registerSensorStream(
-                "GSR_01",
-                AdvancedSensorFusionManager.SensorType.GSR_PHYSIOLOGICAL
-            )
-            fusionManager.registerSensorStream(
-                "THERMAL_01",
-                AdvancedSensorFusionManager.SensorType.THERMAL_INFRARED
-            )
+            // Test sensor registration
+            fusionManager.registerSensorStream("GSR_01", AdvancedSensorFusionManager.SensorType.GSR_PHYSIOLOGICAL)
+            fusionManager.registerSensorStream("THERMAL_01", AdvancedSensorFusionManager.SensorType.THERMAL_INFRARED)
 
+            // Test data point processing
             val gsrData =
                 AdvancedSensorFusionManager.DataPoint(
                     System.nanoTime(),
@@ -334,6 +344,7 @@ class EnhancedBLEHarmonizationTest {
                 )
             fusionManager.processSensorData("GSR_01", gsrData)
 
+            // Test sync marker creation
             fusionManager.createSyncMarker("TEST_SYNC_001")
 
             println("✅ Advanced Sensor Fusion Manager: PASSED")
@@ -343,14 +354,17 @@ class EnhancedBLEHarmonizationTest {
 
     fun testPredictiveConnectionManager() =
         runBlocking {
-
+            // Test predictive connection management
             val predictiveManager = PredictiveConnectionManager.getInstance()
             assertNotNull("Predictive manager should be available", predictiveManager)
 
+            // Initialize with context
             predictiveManager.initialize(context)
 
+            // Register test device
             predictiveManager.registerDevice("PREDICT_TEST_01")
 
+            // Create and record connection event
             val connectionEvent =
                 PredictiveConnectionManager.ConnectionEvent(
                     System.currentTimeMillis(),
@@ -363,8 +377,9 @@ class EnhancedBLEHarmonizationTest {
                 )
             predictiveManager.recordConnectionEvent("PREDICT_TEST_01", connectionEvent)
 
+            // Test optimization recommendation
             val recommendation = predictiveManager.getOptimizationRecommendation("PREDICT_TEST_01")
-
+            // Recommendation might be null if insufficient data, which is acceptable
 
             println("✅ Predictive Connection Manager: PASSED")
         }
@@ -373,10 +388,11 @@ class EnhancedBLEHarmonizationTest {
 
     fun testResearchGradeBleManager() =
         runBlocking {
-
+            // Test research-grade BLE management
             val researchManager = ResearchGradeBleManager.getInstance()
             assertNotNull("Research manager should be available", researchManager)
 
+            // Test research session
             val session =
                 researchManager.startResearchSession(
                     "RESEARCH_001",
@@ -387,15 +403,12 @@ class EnhancedBLEHarmonizationTest {
             assertNotNull("Research session should be created", session)
             assertEquals("Session ID should match", "RESEARCH_001", session.sessionId)
 
+            // Test device registration
             val capabilities = ResearchGradeBleManager.DeviceCapabilities()
             val qualityProfile = ResearchGradeBleManager.DataQualityProfile()
-            researchManager.registerResearchDevice(
-                "RESEARCH_GSR_01",
-                "GSR",
-                capabilities,
-                qualityProfile
-            )
+            researchManager.registerResearchDevice("RESEARCH_GSR_01", "GSR", capabilities, qualityProfile)
 
+            // Test research data point
             val researchData =
                 ResearchGradeBleManager.ResearchDataPoint(
                     "RESEARCH_GSR_01",
@@ -408,6 +421,7 @@ class EnhancedBLEHarmonizationTest {
                 )
             researchManager.processResearchDataPoint(researchData)
 
+            // Get metrics
             val metrics = researchManager.getResearchMetrics()
             assertNotNull("Research metrics should be available", metrics)
             assertTrue("Should have processed data points", metrics.totalDataPoints.get() > 0)
@@ -419,26 +433,30 @@ class EnhancedBLEHarmonizationTest {
 
     fun testSecureBleManager() =
         runBlocking {
-
+            // Test secure BLE management
             val secureManager = SecureBleManager.getInstance()
             assertNotNull("Secure manager should be available", secureManager)
 
+            // Initialize with security settings
             secureManager.initialize(
                 context,
                 SecureBleManager.SecurityLevel.RESEARCH,
                 SecureBleManager.ComplianceMode.HIPAA,
             )
 
+            // Register secure device
             secureManager.registerSecureDevice("SECURE_GSR_01", SecureBleManager.SecurityLevel.HIGH)
 
-            val session =
-                secureManager.authenticateDevice("SECURE_GSR_01", "AUTH_RESPONSE_SECURE_GSR_01")
+            // Test authentication
+            val session = secureManager.authenticateDevice("SECURE_GSR_01", "AUTH_RESPONSE_SECURE_GSR_01")
             assertNotNull("Secure session should be created", session)
 
+            // Test data encryption
             val testData = "Sensitive physiological data".toByteArray()
             val encryptedPacket = secureManager.encryptData("SECURE_GSR_01", testData)
             assertNotNull("Data should be encrypted", encryptedPacket)
 
+            // Test data decryption
             if (encryptedPacket != null) {
                 val decryptedData = secureManager.decryptData(encryptedPacket)
                 assertNotNull("Data should be decrypted", decryptedData)
@@ -451,6 +469,7 @@ class EnhancedBLEHarmonizationTest {
                 }
             }
 
+            // Test compliance audit report
             val auditReport = secureManager.generateComplianceAuditReport()
             assertNotNull("Audit report should be generated", auditReport)
             assertTrue(
@@ -465,19 +484,17 @@ class EnhancedBLEHarmonizationTest {
 
     fun testAdvancedMultiModalSensorIntegration() =
         runBlocking {
-
+            // Test advanced integration across all managers
             val fusionManager = AdvancedSensorFusionManager.getInstance()
             val predictiveManager = PredictiveConnectionManager.getInstance()
             val researchManager = ResearchGradeBleManager.getInstance()
             val secureManager = SecureBleManager.getInstance()
 
+            // Initialize all systems
             predictiveManager.initialize(context)
-            secureManager.initialize(
-                context,
-                SecureBleManager.SecurityLevel.RESEARCH,
-                SecureBleManager.ComplianceMode.GDPR
-            )
+            secureManager.initialize(context, SecureBleManager.SecurityLevel.RESEARCH, SecureBleManager.ComplianceMode.GDPR)
 
+            // Start research session
             val session =
                 researchManager.startResearchSession(
                     "INTEGRATION_TEST_001",
@@ -486,27 +503,32 @@ class EnhancedBLEHarmonizationTest {
                     "TEST_RESEARCHER",
                 )
 
+            // Register devices across all systems
             val deviceId = "INTEGRATED_GSR_SENSOR_01"
 
+            // Predictive registration
             predictiveManager.registerDevice(deviceId)
 
+            // Security registration
             secureManager.registerSecureDevice(deviceId, SecureBleManager.SecurityLevel.HIGH)
 
+            // Research registration
             val capabilities = ResearchGradeBleManager.DeviceCapabilities()
             val qualityProfile = ResearchGradeBleManager.DataQualityProfile()
             researchManager.registerResearchDevice(deviceId, "GSR", capabilities, qualityProfile)
 
-            fusionManager.registerSensorStream(
-                deviceId,
-                AdvancedSensorFusionManager.SensorType.GSR_PHYSIOLOGICAL
-            )
+            // Fusion registration
+            fusionManager.registerSensorStream(deviceId, AdvancedSensorFusionManager.SensorType.GSR_PHYSIOLOGICAL)
 
+            // Test integrated data flow
             val rawData = doubleArrayOf(478.2, 0.85)
             val testData = "GSR:${rawData[0]},Quality:${rawData[1]}".toByteArray()
 
+            // Encrypt data
             val encryptedData = secureManager.encryptData(deviceId, testData)
             assertNotNull("Data should be encrypted in integrated flow", encryptedData)
 
+            // Process through research pipeline
             val researchDataPoint =
                 ResearchGradeBleManager.ResearchDataPoint(
                     deviceId,
@@ -519,6 +541,7 @@ class EnhancedBLEHarmonizationTest {
                 )
             researchManager.processResearchDataPoint(researchDataPoint)
 
+            // Add to sensor fusion
             val fusionDataPoint =
                 AdvancedSensorFusionManager.DataPoint(
                     System.nanoTime(),
@@ -528,6 +551,7 @@ class EnhancedBLEHarmonizationTest {
                 )
             fusionManager.processSensorData(deviceId, fusionDataPoint)
 
+            // Record connection event for predictive analysis
             val connectionEvent =
                 PredictiveConnectionManager.ConnectionEvent(
                     System.currentTimeMillis(),
@@ -540,22 +564,14 @@ class EnhancedBLEHarmonizationTest {
                 )
             predictiveManager.recordConnectionEvent(deviceId, connectionEvent)
 
+            // Verify integration metrics
             val researchMetrics = researchManager.getResearchMetrics()
             val securityMetrics = secureManager.getSecurityMetrics()
             val fusionMetrics = fusionManager.getFusionMetrics()
 
-            assertTrue(
-                "Research data should be processed",
-                researchMetrics.totalDataPoints.get() > 0
-            )
-            assertTrue(
-                "Security operations should be recorded",
-                securityMetrics.totalEncryptions.get() > 0
-            )
-            assertTrue(
-                "Fusion should have processed data",
-                fusionMetrics.fusedDataPoints.get() >= 0
-            )
+            assertTrue("Research data should be processed", researchMetrics.totalDataPoints.get() > 0)
+            assertTrue("Security operations should be recorded", securityMetrics.totalEncryptions.get() > 0)
+            assertTrue("Fusion should have processed data", fusionMetrics.fusedDataPoints.get() >= 0)
 
             println("✅ Advanced Multi-Modal Sensor Integration: PASSED")
         }
@@ -564,11 +580,13 @@ class EnhancedBLEHarmonizationTest {
 
     fun testCrossPlatformSynchronization() =
         runBlocking {
-
+            // Test cross-platform coordination features
             val researchManager = ResearchGradeBleManager.getInstance()
 
+            // Test PC Controller sync establishment
             researchManager.establishCrossPlatformSync("192.168.1.100", 8081)
 
+            // Test cross-platform message sending
             val message =
                 mapOf(
                     "messageType" to "SENSOR_STATUS",
@@ -578,6 +596,7 @@ class EnhancedBLEHarmonizationTest {
                 )
             researchManager.sendCrossPlatformMessage("SENSOR_STATUS_UPDATE", message)
 
+            // Verify timing synchronization
             val syncAccuracy = researchManager.getTimeSyncAccuracy()
             assertTrue("Sync accuracy should be measured", syncAccuracy >= 0)
 
@@ -588,10 +607,11 @@ class EnhancedBLEHarmonizationTest {
 
     fun testComprehensiveDataQualityAssurance() =
         runBlocking {
-
+            // Test comprehensive data quality and validation
             val researchManager = ResearchGradeBleManager.getInstance()
             val fusionManager = AdvancedSensorFusionManager.getInstance()
 
+            // Setup quality assurance test
             val session =
                 researchManager.startResearchSession(
                     "QA_TEST_001",
@@ -617,11 +637,9 @@ class EnhancedBLEHarmonizationTest {
                 }
 
             researchManager.registerResearchDevice(deviceId, "GSR", capabilities, qualityProfile)
-            fusionManager.registerSensorStream(
-                deviceId,
-                AdvancedSensorFusionManager.SensorType.GSR_PHYSIOLOGICAL
-            )
+            fusionManager.registerSensorStream(deviceId, AdvancedSensorFusionManager.SensorType.GSR_PHYSIOLOGICAL)
 
+            // Test high-quality data point
             val highQualityData =
                 ResearchGradeBleManager.ResearchDataPoint(
                     deviceId,
@@ -634,6 +652,7 @@ class EnhancedBLEHarmonizationTest {
                 )
             researchManager.processResearchDataPoint(highQualityData)
 
+            // Test low-quality data point (should trigger alerts)
             val lowQualityData =
                 ResearchGradeBleManager.ResearchDataPoint(
                     deviceId,
@@ -646,14 +665,13 @@ class EnhancedBLEHarmonizationTest {
                 )
             researchManager.processResearchDataPoint(lowQualityData)
 
+            // Verify quality metrics
             val metrics = researchManager.getResearchMetrics()
-            assertTrue(
-                "Should have processed quality test data",
-                metrics.totalDataPoints.get() >= 2
-            )
+            assertTrue("Should have processed quality test data", metrics.totalDataPoints.get() >= 2)
 
+            // Test fusion quality filtering
             val fusionMetrics = fusionManager.getFusionMetrics()
-
+            // Quality filtering may reject low-quality data
             assertTrue("Fusion metrics should be available", fusionMetrics != null)
 
             println("✅ Comprehensive Data Quality Assurance: PASSED")
@@ -667,7 +685,7 @@ class EnhancedBLEHarmonizationTest {
             println("================================================================")
 
             try {
-
+                // Run original harmonization tests
                 testEnhancedBLEInitialization()
                 testNordicBleBackendIntegration()
                 testEnhancedConnectionReliability()
@@ -683,6 +701,7 @@ class EnhancedBLEHarmonizationTest {
                 testHubSpokeIntegrationCompatibility()
                 testComprehensiveBuildIntegration()
 
+                // Run advanced continuation tests
                 testAdvancedSensorFusionManager()
                 testPredictiveConnectionManager()
                 testResearchGradeBleManager()
@@ -705,6 +724,7 @@ class EnhancedBLEHarmonizationTest {
                 println("✅ Build & Component Integration: WORKING")
                 println("✅ Zero Breaking Changes: WORKING")
 
+                // Advanced continuation features
                 println("\n🚀 ADVANCED CONTINUATION FEATURES:")
                 println("✅ Advanced Sensor Fusion: WORKING")
                 println("✅ Predictive Connection Management: WORKING")
