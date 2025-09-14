@@ -1064,6 +1064,147 @@ python test_comprehensive.py
 - **📊 Real-Time Enterprise Analytics**: Live data processing, streaming, and enterprise-grade analytics capabilities
 - **🔄 Complete Cross-References**: Fully linked enterprise documentation ecosystem with advanced navigation
 
+## 🎯 Multi-Modal Recording Integration
+
+The IRCamera app now supports comprehensive multi-modal recording combining thermal imaging, GSR (Galvanic Skin Response), and PC remote orchestration for advanced research and analysis applications.
+
+### 📊 Supported Modalities
+
+- **🌡️ Thermal Imaging**: Real-time thermal frame capture with statistics (min/avg/max temperature)
+- **🫀 GSR Sensor**: Shimmer3 GSR+ sensor integration via BLE for physiological data
+- **📹 RGB Camera**: Simultaneous RGB video recording with thermal alignment
+- **🖥️ PC Remote Control**: Hub-spoke architecture for coordinated multi-device recording
+
+### 🚀 Key Features
+
+#### Real-Time Data Synchronization
+- **Nanosecond Precision**: All sensors timestamped with unified clock
+- **Cross-Modal Alignment**: Automatic data alignment across thermal, GSR, and video streams
+- **Session Management**: Unified session folders with metadata and configuration
+
+#### PC Remote Orchestration
+- **JSON Command Protocol**: Simple REST-like commands for remote control
+- **Network Discovery**: Automatic PC controller discovery via mDNS
+- **Secure Communication**: TLS-encrypted command channels
+
+#### Enhanced UI Integration
+- **Live Status Indicators**: Real-time GSR sensor and network connection status
+- **Session Controls**: Start/stop recording with modality selection
+- **Error Management**: Comprehensive error handling and user feedback
+
+### 📡 PC Remote Control Protocol
+
+The app listens on port 8080 for JSON commands from PC controllers:
+
+#### Start Recording
+```json
+{
+  "command": "start_recording",
+  "session_id": "SESSION123",
+  "modalities": ["thermal", "GSR", "PPG"],
+  "saveImages": true,
+  "participantId": "P001",
+  "studyName": "Thermal Study"
+}
+```
+
+#### Stop Recording
+```json
+{
+  "command": "stop_recording"
+}
+```
+
+#### Response Format
+```json
+{
+  "status": "recording_started",
+  "message": "Recording session started",
+  "timestamp": 1640995200000,
+  "data": {
+    "session_id": "SESSION123",
+    "modalities": ["thermal", "GSR"]
+  }
+}
+```
+
+### 📂 Data Output Structure
+
+Each recording session creates a structured folder:
+
+```
+Sessions/
+└── SESSION123_20231201_143052/
+    ├── gsr_data_SESSION123_20231201_143052.csv
+    ├── thermal_stats_20231201_143052.csv
+    ├── thermal_frame_1_1638360000000.png (optional)
+    ├── session_metadata.json
+    └── sync_events.log
+```
+
+### 🔧 Integration Architecture
+
+```mermaid
+graph TB
+    subgraph "Android App"
+        UI[Enhanced UI Layer]
+        VM[MainActivityViewModel]
+        NC[NetworkController]
+        TR[ThermalRecorder]
+        GSR[GSRSensorRecorder]
+    end
+    
+    subgraph "PC Controller"
+        HUB[PC Hub]
+        CMD[Command Sender]
+        DATA[Data Collector]
+    end
+    
+    subgraph "Hardware"
+        TC[Thermal Camera]
+        SHIMMER[Shimmer3 GSR]
+        PHONE[Android Device]
+    end
+    
+    CMD -->|JSON Commands| NC
+    NC -->|Session Control| VM
+    VM -->|Coordinate| TR
+    VM -->|Coordinate| GSR
+    TC -->|Frame Data| TR
+    SHIMMER -->|BLE Data| GSR
+    TR -->|CSV + Images| DATA
+    GSR -->|CSV Data| DATA
+    UI -->|Status Updates| VM
+```
+
+### 🧪 Testing & Validation
+
+Comprehensive test coverage ensures reliability:
+
+- **NetworkController Tests**: JSON command parsing and protocol validation
+- **ThermalRecorder Tests**: Frame processing and CSV output verification
+- **Integration Tests**: Multi-modal session recording validation
+- **Performance Tests**: Real-time processing benchmarks
+
+### 📱 Enhanced UI Components
+
+The MainActivity now includes:
+
+- **GSR Status Indicator**: Real-time connection status and sensor health
+- **Network Status Display**: PC controller connection and communication status
+- **Session Control Button**: One-touch start/stop recording with modality selection
+- **Live Status Messages**: Toast notifications for errors and state changes
+
+### 🔄 Session Lifecycle
+
+1. **Initialization**: Components initialize and establish connections
+2. **Discovery**: Network discovery for PC controllers, GSR sensor scanning
+3. **Configuration**: Session parameters received via network or local UI
+4. **Recording**: Synchronized multi-modal data capture
+5. **Completion**: Orderly shutdown, data finalization, and cleanup
+
+This multi-modal integration transforms the IRCamera app into a comprehensive research platform capable of synchronized physiological and thermal data collection with enterprise-grade remote coordination capabilities.
+
 ## 🤝 Contributing
 
 We welcome contributions to the IRCamera platform:
