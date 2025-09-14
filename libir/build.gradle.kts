@@ -2,15 +2,7 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-parcelize")
-
-
 }
-
-
-
-
-
-
 
 android {
     namespace = "com.infisense.usbir"
@@ -18,11 +10,8 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-
         ndkVersion = libs.versions.ndkVersion.get()
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
         ndk {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a")
         }
@@ -71,7 +60,6 @@ android {
                     "**/libopen3d.so", // Third-party library with stripping issues
                     "**/libopencv_java4.so", // OpenCV library - large and causes stripping issues
                 )
-
             keepDebugSymbols += listOf("**/*.so")
         }
         resources {
@@ -88,11 +76,8 @@ android {
 }
 
 dependencies {
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-
-
     compileOnly(files("libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) // Required for infisense thermal camera classes
     compileOnly(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar")) // AC020 SDK for thermal-lite functionality
     compileOnly(files("libs/libirutils_1.2.0_2409241055.aar")) // IR utilities for thermal-lite
@@ -102,21 +87,15 @@ dependencies {
     compileOnly(files("libs/texturegesture-release.aar")) // Texture gesture functionality
     compileOnly(files("libs/jetified-tas_api-1.0.4.0.aar")) // TAS API
     compileOnly(files("libs/library_1.0.aar")) // Additional library support
-
     api("com.conghuahuadan:superlayout:1.1.0")
     api(libs.ir.layout) // IR layout utilities from CoderCaiSL jitpackMvn
     api(libs.andromeda.core) // Andromeda core for sensor functionality
     api(libs.andromeda.sense) // Andromeda sense for compass and sensors
     api(libs.javacv) // JavaCV for IR image processing
     api(libs.javacpp) // JavaCV native dependencies
-
     implementation(project(":libapp"))
-
     implementation(project(":BleModule"))
-
-
     compileOnly(files("../app/libs/libcommon_1.2.0_24052117.aar"))
-
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")

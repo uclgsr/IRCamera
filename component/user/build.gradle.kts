@@ -1,17 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-
-
 }
-
-
-
-
-
-
-
-
 
 android {
     namespace = "com.topdon.module.user"
@@ -19,8 +9,6 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -92,26 +80,20 @@ android {
 }
 
 dependencies {
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
     implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
     implementation(project(":libmenu"))
-
     implementation(project(":BleModule"))
-
-    compileOnly(files("../../shared/libs/lms_international-3.90.009.0.aar"))
-
+    compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.utilcode)
     implementation(libs.glide)
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

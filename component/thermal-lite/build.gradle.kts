@@ -1,16 +1,8 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-
-
     kotlin("plugin.parcelize")
 }
-
-
-
-
-
-
 
 android {
     namespace = "com.example.thermal_lite"
@@ -18,8 +10,6 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -36,7 +26,6 @@ android {
 
     androidComponents {
         beforeVariants { variant ->
-
             variant.enable = variant.buildType == "release"
         }
     }
@@ -70,34 +59,23 @@ android {
 }
 
 dependencies {
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
     implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
     implementation(project(":libmenu"))
-
     implementation(project(":component:CommonComponent"))
     implementation(project(":component:pseudo"))
-
     implementation(project(":component:thermal-ir"))
-
-
     implementation(project(":BleModule"))
-
     compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar")) // AC020 SDK for thermal-lite functionality
     compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar")) // IR utilities for thermal-lite
     compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) // Required for iruvc classes
-    compileOnly(files("../../shared/libs/lms_international-3.90.009.0.aar")) // LMS SDK for thermal-lite classes
-
-
+    compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar")) // LMS SDK for thermal-lite classes
     compileOnly(files("../../app/libs/libcommon_1.2.0_24052117.aar"))
-
-
     implementation(libs.bundles.ui.common)
     implementation(libs.utilcode)
-
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

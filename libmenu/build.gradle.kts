@@ -51,16 +51,11 @@ android {
 }
 
 dependencies {
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.material) // Requires ConstraintLayout, ViewPager2
-
     implementation(libs.glide)
-
     implementation(project(":libapp")) // Requires string resources
-
     implementation(project(":BleModule"))
-
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

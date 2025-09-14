@@ -26,7 +26,6 @@ android {
 
     androidComponents {
         beforeVariants { variant ->
-
             variant.enable = variant.buildType == "release"
         }
     }
@@ -51,11 +50,8 @@ android {
 }
 
 dependencies {
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
     implementation(libs.utilcode)
-
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

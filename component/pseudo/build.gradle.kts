@@ -7,9 +7,7 @@ plugins {
 
 kapt {
     arguments {
-
     }
-
     correctErrorTypes = true
     useBuildCache = true
 }
@@ -20,8 +18,6 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -38,7 +34,6 @@ android {
 
     androidComponents {
         beforeVariants { variant ->
-
             variant.enable = variant.buildType == "release"
         }
     }
@@ -66,22 +61,18 @@ android {
 }
 
 dependencies {
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
     implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
     implementation(project(":libmenu"))
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.utilcode)
     implementation(libs.glide)
-
     implementation(project(":BleModule"))
-
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

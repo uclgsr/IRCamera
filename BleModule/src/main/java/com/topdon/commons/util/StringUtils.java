@@ -104,8 +104,8 @@ public class StringUtils {
     public static String subZeroAndDot(String number) {
         if (TextUtils.isEmpty(number)) return number;
         if (number.indexOf(".") > 0) {
-            number = number.replace("0+?$", "");//去掉多余的0  
-            number = number.replace("[.]$", "");//如最后一位是.则去掉  
+            number = number.replace("0+?$", "");//去掉多余的0
+            number = number.replace("[.]$", "");//如最后一位是.则去掉
         }
         return number;
     }

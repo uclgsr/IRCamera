@@ -100,7 +100,7 @@ class Shimmer3GSRRecorder(
 
             when {
                 device.address.startsWith("00:06:66") -> priority += 100  // Primary Shimmer MAC
-                device.address.startsWith("d0:39:72") -> priority += 90   // Secondary Shimmer MAC  
+                device.address.startsWith("d0:39:72") -> priority += 90   // Secondary Shimmer MAC
                 device.address.startsWith("00:80:98") -> priority += 80   // Alternative MAC
             }
 

@@ -7,9 +7,7 @@ plugins {
 
 kapt {
     arguments {
-
     }
-
     correctErrorTypes = true
     useBuildCache = true
 }
@@ -20,12 +18,9 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-
         ndkVersion = libs.versions.ndkVersion.get()
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-
         ndk {
             abiFilters += listOf("armeabi-v7a", "x86", "arm64-v8a", "x86_64")
         }
@@ -43,7 +38,6 @@ android {
 
     androidComponents {
         beforeVariants { variant ->
-
             variant.enable = variant.buildType == "release"
         }
     }
@@ -55,15 +49,6 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-
-    /*
-    externalNativeBuild {
-        cmake {
-            path = file("src/main/cpp/CMakeLists.txt")
-            version = "3.18.1"
-        }
-    }
-     */
 
     ndkVersion = libs.versions.ndkVersion.get()
 
@@ -77,10 +62,8 @@ android {
 }
 
 dependencies {
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
-
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")

@@ -7,15 +7,12 @@ plugins {
 
 kapt {
     arguments {
-
         arg("room.schemaLocation", "$projectDir/schemas")
         arg("room.incremental", "true")
         arg("room.expandProjection", "true")
     }
-
     correctErrorTypes = true
     useBuildCache = true
-
     includeCompileClasspath = false
 }
 
@@ -42,7 +39,6 @@ android {
 
     androidComponents {
         beforeVariants { variant ->
-
             variant.enable = variant.buildType == "release"
         }
     }
@@ -81,9 +77,7 @@ android {
 
     packaging {
         jniLibs {
-
             pickFirsts += listOf("**/libc++_shared.so")
-
             excludes +=
                 listOf(
                     "**/libavcodec.so", // FFmpeg libraries with stripping issues
@@ -117,81 +111,50 @@ android {
     }
 }
 
-
-
-
-
-
 dependencies {
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
     api(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
-
     api(libs.androidx.appcompat)
     api(libs.androidx.preference)
     api(libs.fragment.ktx)
     api(libs.material)
-
     api(libs.lifecycle.runtime.ktx)
     api(libs.lifecycle.viewmodel.ktx)
     api(libs.lifecycle.livedata.ktx)
-
     kapt(libs.room.compiler)
     api(libs.room.ktx)
-
     api(libs.work.runtime.ktx)
-
     api(libs.retrofit2)
     api(libs.converter.gson)
     api(libs.adapter.rxjava2)
-
     api(libs.eventbus)
-
     api(libs.glide)
     kapt(libs.glide.compiler)
-
     api(libs.rxjava2)
     api(libs.rxandroid)
-
-
-
-
-
-
-
-
     api(libs.utilcode)
     api(libs.xxpermissions)
     api(libs.xlog)
     api(libs.photoview)
-
     api(libs.lottie)
-
     api(libs.brvah)
-
-
-
-
-
     api(libs.logging.interceptor)
     api(libs.colorpickerview)
     api(libs.nifty)
-
-
-
-
-
-
-
-
     api(libs.javacv)
     api(libs.javacpp)
-
     api(project(":BleModule"))
 
-
-    compileOnly(files("../shared/libs/lms_international-3.90.009.0.aar"))
-
-
+    val lmsAarCandidates = listOf(
+        file("libs/lms_international-3.90.009.0.aar"),
+        file("../app/libs/lms_international-3.90.009.0.aar"),
+        file("../shared/libs/lms_international-3.90.009.0.aar")
+    )
+    val lmsAar = lmsAarCandidates.firstOrNull { it.exists() && it.length() > 0L }
+    if (lmsAar != null) {
+        compileOnly(files(lmsAar))
+        logger.lifecycle("libapp: Using LMS AAR from ${lmsAar.absolutePath}")
+    } else {
+        logger.warn("libapp: Skipping lms_international AAR because no valid file found in libapp/app/shared libs")
+    }
 }

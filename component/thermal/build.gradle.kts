@@ -1,19 +1,8 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-
-
     id("kotlin-parcelize")
 }
-
-
-
-
-
-
-
-
-
 
 android {
     namespace = "com.topdon.module.thermal"
@@ -21,8 +10,6 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -39,7 +26,6 @@ android {
 
     androidComponents {
         beforeVariants { variant ->
-
             variant.enable = variant.buildType == "release"
         }
     }
@@ -62,7 +48,6 @@ android {
 
     buildFeatures {
         dataBinding = true
-
         viewBinding = true
     }
 
@@ -73,11 +58,9 @@ android {
     }
 
     lint {
-
         abortOnError = false
         checkReleaseBuilds = false
         ignoreWarnings = true
-
         disable.addAll(
             listOf(
                 "MissingClass",
@@ -101,36 +84,25 @@ android {
 }
 
 dependencies {
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
     implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
-    implementation(project(":libmenu")) // Required for MenuFirstTabView
-    implementation(project(":libmatrix")) // Required for GuideInterface and IrSurfaceView
-
-    implementation(project(":component:pseudo")) // Required for CustomPseudoBean class
-
-
+    implementation(project(":libmenu"))
+    implementation(project(":libmatrix"))
+    implementation(project(":component:pseudo"))
     implementation(project(":BleModule"))
-
-
-
-
     implementation(libs.bundles.ui.common)
     implementation(libs.utilcode)
     implementation(libs.mn.image.browser)
-
-
     compileOnly(files("../../libir/libs/suplib-release.aar")) // Required for SupHelp class
     compileOnly(files("../../libir/libs/ai-upscale-release.aar")) // AI upscale functionality
     compileOnly(files("../../libir/libs/texturegesture-release.aar")) // Texture gesture functionality
     compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) // Required for IRCMD classes
     compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar")) // AC020 SDK
     compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar")) // IR utilities
-    compileOnly(files("../../shared/libs/lms_international-3.90.009.0.aar")) // LMS SDK for thermal-ir classes
-
+    compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar")) // LMS SDK for thermal-ir classes
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

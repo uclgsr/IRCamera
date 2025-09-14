@@ -7,12 +7,10 @@ plugins {
 
 kapt {
     arguments {
-
         arg("room.schemaLocation", "$projectDir/schemas")
         arg("room.incremental", "true")
         arg("room.expandProjection", "true")
     }
-
     correctErrorTypes = true
     useBuildCache = true
 }
@@ -65,24 +63,16 @@ android {
     }
 
     lint {
-
         disable += listOf("WrongThread")
-
         abortOnError = false
         warningsAsErrors = false
     }
 }
 
 dependencies {
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
     implementation(project(":libapp"))
     implementation(project(":libmenu")) // Required for menu references in widget files
-
     implementation(project(":BleModule"))
-
     implementation(libs.bundles.ui.common)
-
-
 }

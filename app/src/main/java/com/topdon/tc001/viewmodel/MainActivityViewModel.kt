@@ -113,7 +113,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 // Initialize Thermal components
                 initializeThermalComponents()
                 
-                // Initialize Network components  
+                // Initialize Network components
                 initializeNetworkComponents()
                 
                 // Initialize Session management

@@ -27,7 +27,6 @@ android {
 
     androidComponents {
         beforeVariants { variant ->
-
             variant.enable = variant.buildType == "release"
         }
     }
@@ -55,44 +54,27 @@ android {
 }
 
 dependencies {
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.appcompat:appcompat:1.5.0")
     implementation("com.google.android.material:material:1.13.0")
     implementation("androidx.lifecycle:lifecycle-service:2.9.3")
     implementation("androidx.work:work-runtime-ktx:2.10.4")
     implementation("com.google.code.gson:gson:2.13.2")
-
     implementation(project(":BleModule"))
-
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-
     implementation("androidx.camera:camera-core:1.5.0")
     implementation("androidx.camera:camera-camera2:1.5.0")
     implementation("androidx.camera:camera-lifecycle:1.5.0")
     implementation("androidx.camera:camera-video:1.5.0")
     implementation("androidx.camera:camera-view:1.5.0")
     implementation("androidx.camera:camera-extensions:1.5.0")
-
     implementation("com.opencsv:opencsv:5.12.0")
-
-
-
-
-
-
-
-
-
     implementation("com.google.guava:guava:20.0")
     implementation("java3d:vecmath:1.3.1")
     implementation("org.apache.commons:commons-lang3:3.18.0")
-
     implementation("com.github.Jasonchenlijian:FastBle:2.4.0")
-
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

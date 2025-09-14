@@ -39,7 +39,7 @@ data class ShimmerDeviceInfo(
             var priority = 0
 
             when {
-                macAddress.startsWith("00:06:66", true) -> priority += 100  // Primary 
+                macAddress.startsWith("00:06:66", true) -> priority += 100  // Primary
                 macAddress.startsWith("d0:39:72", true) -> priority += 90   // Secondary
                 macAddress.startsWith("00:80:98", true) -> priority += 80   // Alternative
             }
