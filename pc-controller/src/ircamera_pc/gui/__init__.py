@@ -24,12 +24,22 @@ except ImportError:
     # Create dummy main function for headless mode
     def main(args=None):
         import sys
-        # Disable colors for better subprocess compatibility
-        from loguru import logger
-        logger.remove()
-        logger.add(sys.stderr, format="{time} | {level} | {name}:{function}:{line} - {message}", colorize=False)
-        logger.info("IRCamera Application initialized")
-        logger.info("Running in headless mode - GUI not available") 
+        import logging
+        
+        # Try loguru first, fallback to standard logging
+        try:
+            from loguru import logger
+            logger.remove()
+            logger.add(sys.stderr, format="{time} | {level} | {name}:{function}:{line} - {message}", colorize=False)
+            logger.info("IRCamera Application initialized")
+            logger.info("Running in headless mode - GUI not available")
+        except ImportError:
+            # Fallback to standard logging
+            logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
+            logger = logging.getLogger(__name__)
+            logger.info("IRCamera Application initialized")
+            logger.info("Running in headless mode - GUI not available")
+        
         return 0
         
     # Create dummy app class
