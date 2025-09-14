@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.csl.irCamera.R
@@ -19,9 +20,7 @@ import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class GSRDeviceManagementActivity :
-    BaseBindingActivity<ActivityGsrDeviceManagementBinding>(),
-    View.OnClickListener {
+class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     companion object {
         private const val TAG = "GSRDeviceManagement"
 

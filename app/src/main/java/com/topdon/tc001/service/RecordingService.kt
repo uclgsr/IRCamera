@@ -1517,7 +1517,7 @@ class RecordingService : LifecycleService() {
                                     }
                                 }
 
-                                private suspend fun sendResponseToPC(
+                                suspend fun sendResponseToPC(
                                     messageType: String,
                                     data: JSONObject = JSONObject()
                                 ) {
@@ -1546,7 +1546,7 @@ class RecordingService : LifecycleService() {
                                     }
                                 }
 
-                                private suspend fun sendStatusToPC() {
+                                suspend fun sendStatusToPC() {
                                     try {
                                         val statusData = JSONObject().apply {
                                             put("is_recording", recordingController.isRecording)
@@ -1565,7 +1565,7 @@ class RecordingService : LifecycleService() {
                                     }
                                 }
 
-                                private suspend fun initializeNetworkClient(): Boolean {
+                                suspend fun initializeNetworkClient(): Boolean {
                                     return try {
                                         val success = networkClient.initialize()
                                         if (success) {
@@ -1581,7 +1581,7 @@ class RecordingService : LifecycleService() {
                                     }
                                 }
 
-                                private fun setupNetworkCommandHandlers() {
+                                fun setupNetworkCommandHandlers() {
 
                                     networkClient.setMessageHandler("start_recording") { message ->
                                         handleStartRecordingCommand(message)
@@ -1676,7 +1676,7 @@ class RecordingService : LifecycleService() {
                                     })
                                 }
 
-                                private fun startNetworkDiscovery() {
+                                fun startNetworkDiscovery() {
                                     lifecycleScope.launch {
                                         try {
                                             networkClient.startDiscovery { success ->
@@ -1695,7 +1695,7 @@ class RecordingService : LifecycleService() {
                                     }
                                 }
 
-                                private fun handleStartRecordingCommand(message: JSONObject) {
+                                fun handleStartRecordingCommand(message: JSONObject) {
                                     lifecycleScope.launch {
                                         try {
                                             val sessionId = message.optString(
@@ -1737,14 +1737,14 @@ class RecordingService : LifecycleService() {
                                     }
                                 }
 
-                                private fun performSyncFlash(durationMs: Int) {
+                                fun performSyncFlash(durationMs: Int) {
 
 
-                                    addSyncMarker("pc_sync_flash", System.nanoTime())
+                                    this@RecordingService.addSyncMarker("pc_sync_flash", System.nanoTime())
                                 }
 
 
-                                private fun registerNsdService() {
+                                fun registerNsdService() {
                                     if (isServiceRegistered) {
                                         Log.i(TAG, "NSD service already registered")
                                         return
@@ -1804,7 +1804,7 @@ class RecordingService : LifecycleService() {
                                     }
                                 }
 
-                                private fun unregisterNsdService() {
+                                fun unregisterNsdService() {
                                     if (!isServiceRegistered || nsdServiceInfo == null) {
                                         return
                                     }

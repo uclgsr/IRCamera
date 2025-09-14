@@ -126,7 +126,7 @@ class HardwareValidationController(
                 return
             }
 
-            val cameraRecorder = RGBCameraRecorder(context, lifecycleOwner)
+            val cameraRecorder = RGBCameraRecorder(context)
             val initTime = measureTimeMillis {
 
 
@@ -171,7 +171,7 @@ class HardwareValidationController(
                 return
             }
 
-            val thermalRecorder = ThermalCameraRecorder(context, lifecycleOwner)
+            val thermalRecorder = ThermalCameraRecorder(context)
 
 
 
@@ -220,7 +220,7 @@ class HardwareValidationController(
                 return
             }
 
-            val gsrRecorder = GSRSensorRecorder(context, lifecycleOwner)
+            val gsrRecorder = GSRSensorRecorder(context)
 
 
 

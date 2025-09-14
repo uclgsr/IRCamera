@@ -164,7 +164,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         binding.viewSessionsButton.setOnClickListener {
             // Navigate to session manager
             try {
-                SessionManagerActivity.start(this)
+                SessionManagerActivity.startActivity(this)
             } catch (e: Exception) {
                 // Fallback to GSR Demo if SessionManagerActivity not available
                 GSRDemoActivity.start(this)
@@ -174,7 +174,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         binding.gsrSettingsButton.setOnClickListener {
             // Navigate to GSR settings
             try {
-                GSRSettingsActivity.start(this)
+                GSRSettingsActivity.startActivity(this)
             } catch (e: Exception) {
                 // Fallback to Multi-modal recording if GSRSettingsActivity not available
                 MultiModalRecordingActivity.start(this)

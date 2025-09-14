@@ -437,11 +437,11 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             .setTitleMessage("GSR Multi-modal Recording")
             .setMessage("Choose recording option:")
             .setPositiveListener("Dual-Mode Camera") {
-
+                // Dual-Mode Camera
                 showDualModeCameraOptions()
             }
             .setCancelListener("Quick Recording") {
-
+                // Quick Recording
                 try {
                     val intent = Intent(
                         requireContext(),
@@ -449,19 +449,20 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     )
                     startActivity(intent)
                 } catch (e: ClassNotFoundException) {
-
+                    // Fallback
                     NavigationManager.getInstance()
                         .build(RouterConfig.GSR_MULTI_MODAL)
                         .navigation(requireContext())
                 }
             }
-            .setNeutralListener("GSR Demo") {
-
+            .setNegativeListener("GSR Demo") {
+                // GSR Demo
                 NavigationManager.getInstance()
                     .build(RouterConfig.GSR_DEMO)
                     .navigation(requireContext())
             }
-            .create().show()
+            .create()
+            .show()
     }
 
     private fun showDualModeCameraOptions() {

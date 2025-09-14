@@ -9,6 +9,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicBoolean
 
 class DataManagementService(private val context: Context) {
     companion object {
@@ -37,9 +38,38 @@ class DataManagementService(private val context: Context) {
             EXPORTED,
             ERROR,
         }
+
+        enum class UploadStatus {
+            PENDING,
+            IN_PROGRESS,
+            COMPLETED,
+            FAILED
+        }
+
+        enum class FileType {
+            VIDEO,
+            CSV,
+            JSON,
+            IMAGE,
+            OTHER
+        }
     }
 
-    private val logger = StructuredLogger.getInstance()
+    data class SessionData(
+        val sessionId: String,
+        val startTime: Long,
+        val status: SessionStatus,
+        val files: MutableList<String> = mutableListOf()
+    )
+
+    data class FileMetadata(
+        val filePath: String,
+        val fileType: FileType,
+        val size: Long,
+        val timestamp: Long
+    )
+
+    private val logger = StructuredLogger.getInstance(context)
     private val activeSessions = ConcurrentHashMap<String, SessionData>()
     private val fileRegistry = ConcurrentHashMap<String, FileMetadata>()
     private val isInitialized = AtomicBoolean(false)
@@ -114,15 +144,14 @@ class DataManagementService(private val context: Context) {
 
         isInitialized.set(true)
 
-        logger.logEvent(
-            component = TAG,
-            event = "service_initialized",
-            details =
-                mapOf(
-                    "base_directory" to baseDirectory.absolutePath,
-                    "existing_sessions" to activeSessions.size,
-                    "registered_files" to fileRegistry.size,
-                ),
+        logger.logInfo(
+            TAG,
+            "service_initialized",
+            mapOf(
+                "base_directory" to baseDirectory.absolutePath,
+                "existing_sessions" to activeSessions.size,
+                "registered_files" to fileRegistry.size,
+            )
         )
     }
 
@@ -148,7 +177,7 @@ class DataManagementService(private val context: Context) {
         session.metadata["created_timestamp"] = System.currentTimeMillis()
         session.metadata["platform"] = "Android"
         session.metadata["app_version"] =
-            context.packageManager.getPackageInfo(context.packageName, 0).versionName
+            context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "unknown"
 
         val sessionDir = File(sessionsDirectory, sessionId)
         val deviceDir = File(sessionDir, deviceId)
@@ -158,9 +187,9 @@ class DataManagementService(private val context: Context) {
 
         activeSessions[sessionId] = session
 
-        logger.logEvent(
-            component = TAG,
-            event = "session_created",
+        logger.logInfo(
+            TAG,
+            "session_created",
             details =
                 mapOf(
                     "session_id" to sessionId,
@@ -184,9 +213,9 @@ class DataManagementService(private val context: Context) {
 
         createFileManifest(session)
 
-        logger.logEvent(
-            component = TAG,
-            event = "session_ended",
+        logger.logInfo(
+            TAG,
+            "session_ended",
             details =
                 mapOf(
                     "session_id" to sessionId,
@@ -209,9 +238,9 @@ class DataManagementService(private val context: Context) {
         try {
             val file = File(filePath)
             if (!file.exists()) {
-                logger.logEvent(
-                    component = TAG,
-                    event = "file_registration_error",
+                logger.logInfo(
+                    TAG,
+                    "file_registration_error",
                     details =
                         mapOf(
                             "file_path" to filePath,
@@ -249,9 +278,9 @@ class DataManagementService(private val context: Context) {
 
             activeSessions[sessionId]?.files?.add(metadata)
 
-            logger.logEvent(
-                component = TAG,
-                event = "file_registered",
+            logger.logInfo(
+                TAG,
+                "file_registered",
                 details =
                     mapOf(
                         "file_id" to fileId,
@@ -264,9 +293,9 @@ class DataManagementService(private val context: Context) {
 
             return metadata
         } catch (e: Exception) {
-            logger.logEvent(
-                component = TAG,
-                event = "file_registration_error",
+            logger.logInfo(
+                TAG,
+                "file_registration_error",
                 details =
                     mapOf(
                         "file_path" to filePath,
@@ -314,9 +343,9 @@ class DataManagementService(private val context: Context) {
 
                 uploadJobIds.add(jobId)
             } catch (e: Exception) {
-                logger.logEvent(
-                    component = TAG,
-                    event = "upload_queue_error",
+                logger.logInfo(
+                    TAG,
+                    "upload_queue_error",
                     details =
                         mapOf(
                             "file_id" to fileMetadata.fileId,
@@ -326,9 +355,9 @@ class DataManagementService(private val context: Context) {
             }
         }
 
-        logger.logEvent(
-            component = TAG,
-            event = "files_queued_for_upload",
+        logger.logInfo(
+            TAG,
+            "files_queued_for_upload",
             details =
                 mapOf(
                     "session_id" to sessionId,
@@ -365,9 +394,9 @@ class DataManagementService(private val context: Context) {
             session.status = SessionStatus.EXPORTED
             saveSessionMetadata(session)
 
-            logger.logEvent(
-                component = TAG,
-                event = "session_exported",
+            logger.logInfo(
+                TAG,
+                "session_exported",
                 details =
                     mapOf(
                         "session_id" to sessionId,
@@ -380,9 +409,9 @@ class DataManagementService(private val context: Context) {
 
             return exportFile.absolutePath
         } catch (e: Exception) {
-            logger.logEvent(
-                component = TAG,
-                event = "session_export_error",
+            logger.logInfo(
+                TAG,
+                "session_export_error",
                 details =
                     mapOf(
                         "session_id" to sessionId,
@@ -457,9 +486,9 @@ class DataManagementService(private val context: Context) {
             }
         }
 
-        logger.logEvent(
-            component = TAG,
-            event = "cleanup_completed",
+        logger.logInfo(
+            TAG,
+            "cleanup_completed",
             details =
                 mapOf(
                     "cleaned_sessions" to cleanedSessions,
@@ -492,9 +521,9 @@ class DataManagementService(private val context: Context) {
                 fileRegistry.remove(file.fileId)
             }
 
-            logger.logEvent(
-                component = TAG,
-                event = "session_archived",
+            logger.logInfo(
+                TAG,
+                "session_archived",
                 details =
                     mapOf(
                         "session_id" to sessionId,
@@ -505,9 +534,9 @@ class DataManagementService(private val context: Context) {
 
             return true
         } catch (e: Exception) {
-            logger.logEvent(
-                component = TAG,
-                event = "session_archive_error",
+            logger.logInfo(
+                TAG,
+                "session_archive_error",
                 details =
                     mapOf(
                         "session_id" to sessionId,
@@ -545,10 +574,10 @@ class DataManagementService(private val context: Context) {
                 }
             }
         } catch (e: Exception) {
-            logger.logEvent(
-                component = TAG,
-                event = "load_sessions_error",
-                details = mapOf("error" to e.message),
+            logger.logInfo(
+                TAG,
+                "load_sessions_error",
+                mapOf("error" to e.message),
             )
         }
     }
@@ -593,9 +622,9 @@ class DataManagementService(private val context: Context) {
 
             loadFileManifest(session)
         } catch (e: Exception) {
-            logger.logEvent(
-                component = TAG,
-                event = "load_session_metadata_error",
+            logger.logInfo(
+                TAG,
+                "load_session_metadata_error",
                 details =
                     mapOf(
                         "metadata_file" to metadataFile.absolutePath,
@@ -644,9 +673,9 @@ class DataManagementService(private val context: Context) {
                 fileRegistry[fileMetadata.fileId] = fileMetadata
             }
         } catch (e: Exception) {
-            logger.logEvent(
-                component = TAG,
-                event = "load_file_manifest_error",
+            logger.logInfo(
+                TAG,
+                "load_file_manifest_error",
                 details =
                     mapOf(
                         "session_id" to session.sessionId,
@@ -688,9 +717,9 @@ class DataManagementService(private val context: Context) {
 
             metadataFile.writeText(json.toString(2))
         } catch (e: Exception) {
-            logger.logEvent(
-                component = TAG,
-                event = "save_session_metadata_error",
+            logger.logInfo(
+                TAG,
+                "save_session_metadata_error",
                 details =
                     mapOf(
                         "session_id" to session.sessionId,
@@ -740,9 +769,9 @@ class DataManagementService(private val context: Context) {
 
             manifestFile.writeText(json.toString(2))
         } catch (e: Exception) {
-            logger.logEvent(
-                component = TAG,
-                event = "create_file_manifest_error",
+            logger.logInfo(
+                TAG,
+                "create_file_manifest_error",
                 details =
                     mapOf(
                         "session_id" to session.sessionId,

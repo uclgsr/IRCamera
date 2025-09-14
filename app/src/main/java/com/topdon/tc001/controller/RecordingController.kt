@@ -53,6 +53,7 @@ class RecordingController(
                 Log.i(TAG, "Initializing sensor recorders with robust error handling")
 
 
+                val rgbCamera = RGBCameraRecorder(context, "rgb_camera_1")
                 val thermalCamera = ThermalCameraRecorder(context, "thermal_camera_1")
                 val gsrSensor = GSRSensorRecorder(context, "gsr_shimmer_1")
 
