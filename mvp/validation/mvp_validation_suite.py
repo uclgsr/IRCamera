@@ -82,7 +82,7 @@ class MVPValidator:
     async def test_pc_controller_startup(self) -> bool:
         """Test MVP PC Controller can start in headless mode"""
         try:
-            mvp_controller_path = Path("mvp/pc-controller/mvp_dashboard.py")
+            mvp_controller_path = Path("../pc-controller/mvp_dashboard.py")
             if not mvp_controller_path.exists():
                 print(f"❌ MVP controller not found at: {mvp_controller_path}")
                 return False

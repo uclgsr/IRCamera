@@ -1,42 +1,42 @@
 {
   "PC Controller Headless Mode": {
     "passed": true,
-    "duration": 0.05033373832702637
+    "duration": 0.04495096206665039
   },
   "Network Protocol Compatibility": {
     "passed": true,
-    "duration": 0.0001201629638671875
+    "duration": 7.2479248046875e-05
   },
   "Android UI Integration": {
     "passed": true,
-    "duration": 0.00060272216796875
+    "duration": 0.0004241466522216797
   },
   "Time Synchronization": {
     "passed": true,
-    "duration": 0.0011928081512451172
+    "duration": 0.0011203289031982422
   },
   "Remote Commands": {
     "passed": true,
-    "duration": 4.315376281738281e-05
+    "duration": 2.5987625122070312e-05
   },
   "Security Features": {
     "passed": true,
-    "duration": 0.00022101402282714844
+    "duration": 0.00016045570373535156
   },
   "Error Recovery": {
     "passed": true,
-    "duration": 0.0002989768981933594
+    "duration": 0.00023317337036132812
   },
   "Build System": {
     "passed": true,
-    "duration": 0.0001201629638671875
+    "duration": 9.846687316894531e-05
   },
   "Deployment Readiness": {
     "passed": true,
-    "duration": 9.679794311523438e-05
+    "duration": 7.390975952148438e-05
   },
   "End-to-End Functionality": {
     "passed": true,
-    "duration": 4.100799560546875e-05
+    "duration": 2.5033950805664062e-05
   }
 }
