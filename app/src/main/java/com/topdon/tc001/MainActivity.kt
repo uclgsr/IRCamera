@@ -17,6 +17,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -36,6 +37,7 @@ import com.example.thermal_lite.activity.IRThermalLiteActivity
 import com.csl.irCamera.R
 import com.topdon.tc001.gsr.GSRQuickRecordingActivity
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
+import com.topdon.tc001.UnifiedSensorActivity
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
@@ -1845,14 +1847,40 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
      */
     private fun launchShimmerMvp() {
         try {
-            Log.i(TAG, "Launching Shimmer MVP Activity")
-            Toast.makeText(this, "Opening Shimmer GSR MVP", Toast.LENGTH_SHORT).show()
+            Log.i(TAG, "Showing developer sensor options")
             
-            val intent = Intent(this, ShimmerMvpActivity::class.java)
-            startActivity(intent)
+            // Create dialog to choose between MVP and comprehensive platform
+            val options = arrayOf(
+                "Shimmer GSR MVP",
+                "Unified Sensor Platform", 
+                "Cancel"
+            )
             
+            AlertDialog.Builder(this)
+                .setTitle("Developer Sensor Access")
+                .setItems(options) { _, which ->
+                    when (which) {
+                        0 -> {
+                            // Launch Shimmer MVP
+                            Toast.makeText(this, "Opening Shimmer GSR MVP", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, ShimmerMvpActivity::class.java)
+                            startActivity(intent)
+                        }
+                        1 -> {
+                            // Launch Unified Sensor Platform
+                            Toast.makeText(this, "Opening Unified Sensor Platform", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, UnifiedSensorActivity::class.java)
+                            startActivity(intent)
+                        }
+                        2 -> {
+                            // Cancel - do nothing
+                        }
+                    }
+                }
+                .show()
+                
         } catch (e: Exception) {
-            Log.e(TAG, "Error launching Shimmer MVP: ${e.message}")
+            Log.e(TAG, "Error launching sensor options: ${e.message}")
             Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }

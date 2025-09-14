@@ -133,6 +133,14 @@
             android:label="Shimmer GSR MVP"
             android:theme="@style/AppTheme" />
 
+        <!-- Unified Sensor Activity for comprehensive IRCamera extension -->
+        <activity
+            android:name="com.topdon.tc001.UnifiedSensorActivity"
+            android:screenOrientation="userPortrait"
+            android:exported="true"
+            android:label="Unified Sensor Platform"
+            android:theme="@style/AppTheme" />
+
         <!-- Phase 2 Validation Activity for Hardware Testing -->
         <activity
             android:name="com.topdon.tc001.Phase2ValidationActivity"
