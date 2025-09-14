@@ -208,9 +208,9 @@ def test_discovery_service():
         
         # Create mock discovered device
         mock_device = DiscoveredDevice(
-            serviceName="TestDevice",
-            serviceType="_ircamera._tcp.local.",
-            ipAddress="192.168.1.100",
+            service_name="TestDevice",
+            service_type="_ircamera._tcp.local.",
+            ip_address="192.168.1.100",
             port=8080,
             device_type=DeviceType.ANDROID_NODE,
             attributes=test_attributes
