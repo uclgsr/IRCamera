@@ -190,14 +190,34 @@ class TimeManager(
                         }
                         """.trimIndent()
 
-                    // Send request to PC Controller
-                    outputStream.write(requestJson.toByteArray(Charsets.UTF_8))
+                    // Send request to PC Controller with length prefix as expected by server
+                    val requestBytes = requestJson.toByteArray(Charsets.UTF_8)
+                    val lengthBytes = ByteArray(4)
+                    
+                    // Write 4-byte big-endian length prefix
+                    lengthBytes[0] = ((requestBytes.size shr 24) and 0xFF).toByte()
+                    lengthBytes[1] = ((requestBytes.size shr 16) and 0xFF).toByte()
+                    lengthBytes[2] = ((requestBytes.size shr 8) and 0xFF).toByte()
+                    lengthBytes[3] = (requestBytes.size and 0xFF).toByte()
+                    
+                    outputStream.write(lengthBytes)
+                    outputStream.write(requestBytes)
                     outputStream.flush()
 
-                    // Read response from PC Controller
-                    val buffer = ByteArray(1024)
-                    val bytesRead = inputStream.read(buffer)
-                    val responseStr = String(buffer, 0, bytesRead, Charsets.UTF_8)
+                    // Read response from PC Controller with length prefix
+                    // First read 4-byte length header
+                    val lengthBuffer = ByteArray(4)
+                    inputStream.read(lengthBuffer, 0, 4)
+                    
+                    val responseLength = ((lengthBuffer[0].toInt() and 0xFF) shl 24) or
+                                       ((lengthBuffer[1].toInt() and 0xFF) shl 16) or
+                                       ((lengthBuffer[2].toInt() and 0xFF) shl 8) or
+                                       (lengthBuffer[3].toInt() and 0xFF)
+                    
+                    // Then read the actual response data
+                    val responseBuffer = ByteArray(responseLength)
+                    inputStream.read(responseBuffer, 0, responseLength)
+                    val responseStr = String(responseBuffer, Charsets.UTF_8)
 
                     // Parse JSON response
                     val response = parseTimeSyncResponse(responseStr)
