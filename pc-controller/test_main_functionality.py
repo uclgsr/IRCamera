@@ -6,7 +6,6 @@ Test main functionality of the enhanced networking implementation.
 import asyncio
 import sys
 import tempfile
-import time
 from pathlib import Path
 
 # Add the src directory to Python path for imports

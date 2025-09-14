@@ -11,9 +11,7 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogTipObserveBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-/**
-    * 观测-弹框封装
-    */
+
 class TipObserveDialog : Dialog {
     constructor(context: Context) : super(context)
 

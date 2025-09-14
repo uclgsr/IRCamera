@@ -5,9 +5,7 @@ import com.infisense.usbdual.Const;
 
 import java.util.ArrayList;
 
-/**
- * Created by fengjibo on 2022/7/28.
- */
+
 public abstract class BaseDualView {
 
     protected ArrayList<OnFrameCallback> onFrameCallbacks;
@@ -18,11 +16,11 @@ public abstract class BaseDualView {
     protected int vlSize;
     protected int remapTempSize;
     protected byte[] remapTempData;//裁剪后的温度数据
-    protected byte[] mixData;//融合数据
+    protected byte[] mixData;//fusion数据
     protected byte[] normalTempData;//原始温度数据
     protected byte[] mixDataRotate;
-    protected byte[] irData;//原始红外数据
-    public byte[] vlData;//原始可见光数据
+    protected byte[] irData;//原始infrared数据
+    public byte[] vlData;//原始visible light数据
     public byte[] vlARGBData;
 
     public BaseDualView() {

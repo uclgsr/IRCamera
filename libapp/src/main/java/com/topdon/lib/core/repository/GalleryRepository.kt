@@ -29,30 +29,29 @@ object GalleryRepository {
     sourceDir: File,
     targetDir: File,
     ): Boolean {
-    return try {
-    if (!sourceDir.exists()) {
-    return false
-    }
-    if (!sourceDir.isDirectory) {
-    return false
-    }
-    val fileList = sourceDir.listFiles()
-    if (fileList?.isEmpty() == true)
-    {
-    return false
-    }
-    if (!targetDir.exists()) {
-    targetDir.mkdirs()
-    }
-    // 遍历要复制该目录下的全部文件
-    fileList?.forEach {
-    val path = sourceDir.absolutePath + File.separator + it.name
-    copyPictureFile(path, targetDir.absolutePath + File.separator + it.name)
-    }
-    return true
-    } catch (ex: Exception) {
-    false
-    }
+        return try {
+            if (!sourceDir.exists()) {
+                return false
+            }
+            if (!sourceDir.isDirectory) {
+                return false
+            }
+            val fileList = sourceDir.listFiles()
+            if (fileList?.isEmpty() == true) {
+                return false
+            }
+            if (!targetDir.exists()) {
+                targetDir.mkdirs()
+            }
+            // 遍历要复制该目录下的全部文件
+            fileList?.forEach {
+                val path = sourceDir.absolutePath + File.separator + it.name
+                copyPictureFile(path, targetDir.absolutePath + File.separator + it.name)
+            }
+            return true
+        } catch (ex: Exception) {
+            false
+        }
     }
 
     private fun copyPictureFile(
@@ -75,9 +74,7 @@ object GalleryRepository {
     }
     }
 
-    /**
-    * 读取本地图库指定设备类型的最新文件
-    */
+
     fun readLatest(dirType: DirType): String {
     var firstPath = ""
     try {
@@ -101,11 +98,7 @@ object GalleryRepository {
     return firstPath
     }
 
-    /**
-    * 分页加载
-    * @param pageNum 页码，从1开始
-    * @param pageCount 每页数据条数
-    */
+
     suspend fun loadByPage(
     isVideo: Boolean,
     dirType: DirType,
@@ -144,72 +137,66 @@ object GalleryRepository {
     }
     }
 
-    /**
-    * 仅供生成报告使用的，加载所有指定设备类型的图片.
-    */
+
     suspend fun loadAllReportImg(dirType: DirType): ArrayList<GalleryBean> =
-    withContext(Dispatchers.IO) {
-    val resultList: ArrayList<GalleryBean> = ArrayList()
-    try {
-    val allFileList = loadAllLocale(false, dirType)
-    allFileList.forEach {
-    resultList.add(GalleryBean(it))
-    }
-    if (resultList.isNotEmpty()) {
-    resultList.sortByDescending {
-    it.timeMillis
-    }
-    }
-    } catch (e: Exception) {
-    XLog.e("读取图库失败: ${e.message}")
-    }
-    return@withContext resultList
-    }
+        withContext(Dispatchers.IO) {
+            val resultList: ArrayList<GalleryBean> = ArrayList()
+            try {
+                val allFileList = loadAllLocale(false, dirType)
+                allFileList.forEach {
+                    resultList.add(GalleryBean(it))
+                }
+                if (resultList.isNotEmpty()) {
+                    resultList.sortByDescending {
+                        it.timeMillis
+                    }
+                }
+            } catch (e: Exception) {
+                XLog.e("读取图库失败: ${e.message}")
+            }
+            return@withContext resultList
+        }
 
-    /**
-    * 加载本地所有指定类型的图片或视频列表.
-    */
+
     private fun loadAllLocale(
-    isVideo: Boolean,
-    dirType: DirType,
+        isVideo: Boolean,
+        dirType: DirType,
     ): ArrayList<File> {
-    if (dirType == DirType.LINE) {
-    val sourFile = File(FileConfig.gallerySourDir)
-    if (sourFile.exists()) {
-    val isSuccess = copySourDir(sourFile, File(FileConfig.lineGalleryDir))
-    if (isSuccess) {
-    FileUtils.delete(sourFile)
-    MediaScannerConnection.scanFile(Utils.getApp(), arrayOf(FileConfig.lineGalleryDir), null, null)
-    }
-    }
-    }
-    val dirFile =
-    when (dirType) {
-    DirType.LINE -> File(FileConfig.lineGalleryDir)
-    DirType.TC007 -> File(FileConfig.tc007GalleryDir)
-    else -> File(FileConfig.ts004GalleryDir)
-    }
-    var files = dirFile.listFiles { pathname -> pathname?.isFile == true }
-    if (files.isNullOrEmpty()) {
-    files = loadAllLocaleByMediaStore(dirType)
+        if (dirType == DirType.LINE) {
+            val sourFile = File(FileConfig.gallerySourDir)
+            if (sourFile.exists()) {
+                val isSuccess = copySourDir(sourFile, File(FileConfig.lineGalleryDir))
+                if (isSuccess) {
+                    FileUtils.delete(sourFile)
+                    MediaScannerConnection.scanFile(Utils.getApp(), arrayOf(FileConfig.lineGalleryDir), null, null)
+                }
+            }
+        }
+        val dirFile =
+            when (dirType) {
+                DirType.LINE -> File(FileConfig.lineGalleryDir)
+                DirType.TC007 -> File(FileConfig.tc007GalleryDir)
+                else -> File(FileConfig.ts004GalleryDir)
+            }
+        var files = dirFile.listFiles { pathname -> pathname?.isFile == true }
+        if (files.isNullOrEmpty()) {
+            files = loadAllLocaleByMediaStore(dirType)
+        }
+
+        val resultList: ArrayList<File> = ArrayList(files.size)
+        files.forEach {
+            if (it.name.endsWith(if (isVideo) "MP4" else "JPG", true)) {
+                resultList.add(it)
+            }
+        }
+        // 按时间倒序
+        resultList.sortByDescending {
+            it.lastModified()
+        }
+        return resultList
     }
 
-    val resultList: ArrayList<File> = ArrayList(files.size)
-    files.forEach {
-    if (it.name.endsWith(if (isVideo) "MP4" else "JPG", true)) {
-    resultList.add(it)
-    }
-    }
-    // 按时间倒序
-    resultList.sortByDescending {
-    it.lastModified()
-    }
-    return resultList
-    }
 
-    /**
-    * 使用 MediaStore API 而不是 File 加载本地所有指定类型的图片或视频列表.
-    */
     private fun loadAllLocaleByMediaStore(dirType: DirType): Array<out File> {
     val tc001Files: MutableList<File> = ArrayList()
     // 定义查询的列

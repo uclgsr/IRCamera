@@ -6,19 +6,16 @@ import androidx.core.view.isVisible
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.module.user.databinding.ActivityUnitBinding
 
-/**
-    * 温度单位切换
-    */
-class UnitActivity : AppCompatActivity() {
 
+class UnitActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUnitBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    binding = ActivityUnitBinding.inflate(layoutInflater)
-    setContentView(binding.root)
+        super.onCreate(savedInstanceState)
+        binding = ActivityUnitBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-    initView()
+        initView()
     }
 
     private fun initView() {
@@ -40,4 +37,3 @@ class UnitActivity : AppCompatActivity() {
     }
     }
 }
-

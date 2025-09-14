@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
-  <com.topdon.lib.core.view.TitleView android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#16131e" app:titleText="@string/app_manual"/>
-  <TextView android:id="@+id/pdf_view" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@android:color/white" android:gravity="center" android:padding="20dp" android:text="PDF functionality will be available when library is added" android:textSize="16sp"/>
-</LinearLayout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <!-- Data binding placeholder -->
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.topdon.lib.core.view.TitleView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#16131e"
+            app:titleText="@string/app_manual" />
+
+        <TextView
+            android:id="@+id/pdf_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="PDF functionality will be available when library is added"
+            android:textSize="16sp" />
+    </LinearLayout>
+</layout>

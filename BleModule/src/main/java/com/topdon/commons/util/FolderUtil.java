@@ -6,13 +6,7 @@ import com.topdon.lms.sdk.LMS;
 
 import java.io.File;
 
-/**
- * @Desc 在APPlication 调用setFileName方法 传入文件名路径 区分APP
- * @ClassName FolderUtil
- * @Email 616862466@qq.com
- * @Author 子墨
- * @Date 2022/9/27 11:55
- */
+
 
 public class FolderUtil {
     public static String mPath = "/data/user/0/com.topdon.diag.artidiag/files";
@@ -20,20 +14,12 @@ public class FolderUtil {
     public static String fileName; //在APPlication 传入文件名路径 区分APP
     public static String tdartsSn;
 
-    /**
-     * 获取文件名
-     *
-     * @return String
-     */
+
     public static String getFileName() {
         return fileName;
     }
 
-    /**
-     * 区分应用文件名称
-     *
-     * @param mfileName 名称("/TopDon/AD200/")
-     */
+
     public static void setFileName(String mfileName) {
         fileName = mfileName;
     }
@@ -65,9 +51,7 @@ public class FolderUtil {
         }
     }
 
-    /**
-     * 出事下载车型软件
-     */
+
     public static void initFilePath() {
         String basePath = Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName;
         String downPath = basePath + "Download/";
@@ -253,11 +237,7 @@ public class FolderUtil {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName;
     }
 
-    /**
-     * 获取Tdarts根目录路径
-     *
-     * @return str
-     */
+
     public static String getTDartsRootPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + tdartsSn + "/";
     }
@@ -274,11 +254,7 @@ public class FolderUtil {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + mUserId + "/Immo/";
     }
 
-    /**
-     * 获取Tdarts sn下车型软件包路径
-     *
-     * @return str
-     */
+
     public static String getRfidTopScanPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + tdartsSn + "/RFID/";
     }
@@ -369,11 +345,7 @@ public class FolderUtil {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + mUserId + "/DataLog/IMMO/";
     }
 
-    /**
-     * 获取反馈日志路径
-     *
-     * @return string
-     */
+
     public static String getFeedbackLogPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + mUserId + "/FeedbackLog/";
     }
@@ -394,20 +366,12 @@ public class FolderUtil {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + "UserData/RFID/";
     }
 
-    /**
-     * 获取软件下载路径
-     *
-     * @return str
-     */
+
     public static String getSoftDownPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + "Download/";
     }
 
-    /**
-     * AUTOVINLOG
-     *
-     * @return string
-     */
+
     public static String getAutoVinLogPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + mUserId + "/autovinLog/";
     }

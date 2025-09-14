@@ -9,19 +9,16 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.blankj.utilcode.util.SizeUtils
-import kotlin.math.roundToInt
 import com.topdon.lib.ui.R as UiR
+import kotlin.math.roundToInt
 
-/**
-    * 支持竖向的 SeekBar。
-    * 暂不支持 thumbOffset.
-    */
+
+
+
 class Comm3DSeekBar : AppCompatSeekBar {
     private lateinit var mPaint: TextPaint
 
-    /**
-    * 0-横向 1-竖向
-    */
+
     private val orientation: Int
 
     private var mMaxWidth = 48
@@ -33,7 +30,7 @@ class Comm3DSeekBar : AppCompatSeekBar {
     // 进度文字位置信息
     private val mProgressTextRect: Rect = Rect()
 
-    // 滑块按钮宽度
+    // 滑块button宽度
     private val mThumbWidth: Int = SizeUtils.dp2px(50f)
 
     // 进度指示器宽度
@@ -220,15 +217,12 @@ class Comm3DSeekBar : AppCompatSeekBar {
     return true
     }
 
-    /**
-    * 通过级别分层进行粘性处理
-    */
-    fun stopTrackTouchLevel()  {
-    if (level > 0)
-    {
-    val newLevel = (progress.toFloat() / 100 * 4).roundToInt()
-    setProgress((newLevel.toFloat() / level * 100).toInt())
-    }
+
+    fun stopTrackTouchLevel() {
+        if (level > 0) {
+            val newLevel = (progress.toFloat() / 100 * 4).roundToInt()
+            setProgress((newLevel.toFloat() / level * 100).toInt())
+        }
     }
 
     private fun trackTouchEvent(event: MotionEvent) {

@@ -32,7 +32,7 @@ lint-results*.xml
 /build-cache/
 **/build-cache/
 *.war
-*.jar
+#*.jar
 .navigation/
 captures/
 .externalNativeBuild/

@@ -495,30 +495,16 @@ class RecordingController @Inject constructor(
     private val cameraRecorder: CameraRecorder,
     private val networkClient: NetworkClient
 ) {
-    /**
-     * Start a new recording session
-     * @param config Session configuration
-     * @return Session object or error
-     */
+    
     suspend fun startRecording(config: SessionConfig): Result<Session>
-
-    /**
-     * Stop current recording session
-     * @return Session data summary
-     */
+    
+    
     suspend fun stopRecording(): Result<SessionData>
-
-    /**
-     * Add synchronization marker
-     * @param eventType Type of sync event
-     * @param metadata Optional event metadata
-     */
+    
+    
     suspend fun addSyncMarker(eventType: String, metadata: Map<String, Any> = emptyMap())
-
-    /**
-     * Get current recording status
-     * @return Recording state and statistics
-     */
+    
+    
     fun getRecordingStatus(): RecordingStatus
 }
 ```
@@ -527,42 +513,22 @@ class RecordingController @Inject constructor(
 
 ```kotlin
 interface GSRRecorder {
-    /**
-     * Initialize Shimmer3 connection
-     * @return Success/failure result
-     */
+    
     suspend fun initialize(): Result<Unit>
-
-    /**
-     * Start GSR data collection
-     * @param session Session configuration
-     * @param syncTimeOffset Time synchronization offset
-     * @return Success/failure result
-     */
+    
+    
     suspend fun startRecording(session: Session, syncTimeOffset: Long): Result<Unit>
-
-    /**
-     * Stop GSR data collection
-     * @return Collected data summary
-     */
+    
+    
     suspend fun stopRecording(): Result<GSRData>
-
-    /**
-     * Check if device is connected
-     * @return Connection status
-     */
+    
+    
     fun isDeviceConnected(): Boolean
-
-    /**
-     * Get real-time sample rate
-     * @return Current sampling rate in Hz
-     */
+    
+    
     fun getCurrentSampleRate(): Float
-
-    /**
-     * Observe real-time GSR data
-     * @return Flow of GSR samples
-     */
+    
+    
     fun observeGSRData(): Flow<GSRSample>
 }
 ```
@@ -573,31 +539,16 @@ interface GSRRecorder {
 class NetworkClient @Inject constructor(
     private val securityManager: SecurityManager
 ) {
-    /**
-     * Discover PC Controllers on network
-     * @param timeoutMs Discovery timeout
-     * @return List of discovered controllers
-     */
+    
     suspend fun discoverPCControllers(timeoutMs: Long = 10000): List<PCController>
-
-    /**
-     * Connect to PC Controller
-     * @param controller Target PC Controller
-     * @return Connection result
-     */
+    
+    
     suspend fun connect(controller: PCController): Result<Connection>
-
-    /**
-     * Send message to PC Controller
-     * @param message Message to send
-     * @return Response message
-     */
+    
+    
     suspend fun sendMessage(message: Message): Result<Message>
-
-    /**
-     * Observe incoming messages
-     * @return Flow of received messages
-     */
+    
+    
     fun observeMessages(): Flow<Message>
 }
 ```

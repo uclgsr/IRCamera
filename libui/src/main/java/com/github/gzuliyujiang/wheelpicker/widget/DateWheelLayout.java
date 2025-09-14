@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present 贵州纳雍穿青人李裕江<1032694760@qq.com>
+ * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
  *
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -37,12 +37,7 @@ import com.topdon.lib.ui.R;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * 日期滚轮控件
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/5 16:12
- */
+
 @SuppressWarnings("unused")
 public class DateWheelLayout extends BaseWheelLayout {
     private NumberWheelView yearWheelView;
@@ -103,7 +98,7 @@ public class DateWheelLayout extends BaseWheelLayout {
         spaceStartView = findViewById(R.id.wheel_picker_date_start_view);
         spaceEndView = findViewById(R.id.wheel_picker_date_end_view);
 
-        //设置高度
+        //settings高度
         post(new Runnable() {
             @Override
             public void run() {
@@ -251,16 +246,12 @@ public class DateWheelLayout extends BaseWheelLayout {
         }
     }
 
-    /**
-     * 设置日期时间范围
-     */
+
     public void setRange(DateEntity startValue, DateEntity endValue) {
         setRange(startValue, endValue, null);
     }
 
-    /**
-     * 设置日期时间范围
-     */
+
     public void setRange(DateEntity startValue, DateEntity endValue, DateEntity defaultValue) {
         if (startValue == null) {
             startValue = DateEntity.today();
@@ -405,17 +396,17 @@ public class DateWheelLayout extends BaseWheelLayout {
             min = Math.min(startValue.getMonth(), endValue.getMonth());
             max = Math.max(startValue.getMonth(), endValue.getMonth());
         }
-        //当前所选年份和开始年份相同
+        //current所选年份和开始年份相同
         else if (year == startValue.getYear()) {
             min = startValue.getMonth();
             max = 12;
         }
-        //当前所选年份和结束年份相同
+        //current所选年份和结束年份相同
         else if (year == endValue.getYear()) {
             min = 1;
             max = endValue.getMonth();
         }
-        //当前所选年份在开始年份和结束年份之间
+        //current所选年份在开始年份和结束年份之间
         else {
             min = 1;
             max = 12;
@@ -462,9 +453,7 @@ public class DateWheelLayout extends BaseWheelLayout {
         dayWheelView.setDefaultValue(selectedDay);
     }
 
-    /**
-     * 根据年份及月份获取每月的天数，类似于{@link java.util.Calendar#getActualMaximum(int)}
-     */
+
     private int getTotalDaysInMonth(int year, int month) {
         switch (month) {
             case 1:

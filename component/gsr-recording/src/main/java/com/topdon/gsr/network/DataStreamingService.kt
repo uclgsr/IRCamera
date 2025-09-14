@@ -9,13 +9,10 @@ import org.json.JSONObject
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
-    * Real-time data streaming service for sending sensor data to PC Controller
-    * Handles buffering, batching, and reliable delivery of sensor measurements
-    */
+
 class DataStreamingService(
     private val context: Context,
-    private val networkClient: NetworkClient
+    private val networkClient: NetworkClient,
 ) {
     companion object {
     private const val TAG = "DataStreamingService"
@@ -40,28 +37,38 @@ class DataStreamingService(
     private var currentSessionId: String? = null
 
     data class ThermalSample(
-    val timestamp: Long,
-    val frameIndex: Long,
-    val temperature: Float,
-    val x: Int,
-    val y: Int,
-    val sessionId: String
+        val timestamp: Long,
+        val frameIndex: Long,
+        val temperature: Float,
+        val x: Int,
+        val y: Int,
+        val sessionId: String,
     )
 
     data class VideoMetadata(
-    val timestamp: Long,
-    val frameIndex: Long,
-    val frameSize: Int,
-    val sessionId: String,
-    val cameraType: String // "rgb" or "thermal"
+        val timestamp: Long,
+        val frameIndex: Long,
+        val frameSize: Int,
+        val sessionId: String,
+        val cameraType: String, // "rgb" or "thermal"
     )
 
     interface StreamingEventListener {
-    fun onStreamingStarted(sessionId: String)
-    fun onStreamingStopped(sessionId: String)
-    fun onBatchSent(batchSize: Int, dataType: String)
-    fun onStreamingError(error: String)
-    fun onQueueFull(dataType: String, droppedSamples: Int)
+        fun onStreamingStarted(sessionId: String)
+
+        fun onStreamingStopped(sessionId: String)
+
+        fun onBatchSent(
+            batchSize: Int,
+            dataType: String,
+        )
+
+        fun onStreamingError(error: String)
+
+        fun onQueueFull(
+            dataType: String,
+            droppedSamples: Int,
+        )
     }
 
     private var eventListener: StreamingEventListener? = null
@@ -70,88 +77,84 @@ class DataStreamingService(
     eventListener = listener
     }
 
-    /**
-    * Start real-time data streaming for a session
-    */
-    suspend fun startStreaming(sessionId: String): Boolean = withContext(Dispatchers.IO) {
-    if (isStreaming.get()) {
-    Log.w(TAG, "Data streaming already active")
-    return@withContext false
-    }
 
-    if (!networkClient.isConnected()) {
-    Log.w(TAG, "Cannot start streaming - not connected to PC Controller")
-    return@withContext false
-    }
+    suspend fun startStreaming(sessionId: String): Boolean =
+        withContext(Dispatchers.IO) {
+            if (isStreaming.get()) {
+                Log.w(TAG, "Data streaming already active")
+                return@withContext false
+            }
 
-    try {
-    currentSessionId = sessionId
-    isStreaming.set(true)
-    isConnected.set(true)
+            if (!networkClient.isConnected()) {
+                Log.w(TAG, "Cannot start streaming - not connected to PC Controller")
+                return@withContext false
+            }
 
-    // Clear any existing queued data
-    clearQueues()
+            try {
+                currentSessionId = sessionId
+                isStreaming.set(true)
+                isConnected.set(true)
 
-    // Start the batching and sending process
-    startBatchingProcess()
+                // Clear any existing queued data
+                clearQueues()
 
-    // Notify PC Controller that streaming started
-    val success = networkClient.startDataStreaming()
-    if (success) {
-    eventListener?.onStreamingStarted(sessionId)
-    Log.i(TAG, "Data streaming started for session: $sessionId")
-    true
-    } else {
-    stopStreaming()
-    false
-    }
-    } catch (e: Exception) {
-    Log.e(TAG, "Failed to start data streaming", e)
-    eventListener?.onStreamingError("Failed to start: ${e.message}")
-    false
-    }
-    }
+                // Start the batching and sending process
+                startBatchingProcess()
 
-    /**
-    * Stop real-time data streaming
-    */
-    suspend fun stopStreaming(): Boolean = withContext(Dispatchers.IO) {
-    if (!isStreaming.get()) {
-    Log.w(TAG, "Data streaming not active")
-    return@withContext false
-    }
+                // Notify PC Controller that streaming started
+                val success = networkClient.startDataStreaming()
+                if (success) {
+                    eventListener?.onStreamingStarted(sessionId)
+                    Log.i(TAG, "Data streaming started for session: $sessionId")
+                    true
+                } else {
+                    stopStreaming()
+                    false
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start data streaming", e)
+                eventListener?.onStreamingError("Failed to start: ${e.message}")
+                false
+            }
+        }
 
-    try {
-    isStreaming.set(false)
 
-    // Stop batching process
-    batchingJob?.cancel()
-    batchingJob = null
+    suspend fun stopStreaming(): Boolean =
+        withContext(Dispatchers.IO) {
+            if (!isStreaming.get()) {
+                Log.w(TAG, "Data streaming not active")
+                return@withContext false
+            }
 
-    // Send any remaining batched data
-    sendRemainingData()
+            try {
+                isStreaming.set(false)
 
-    // Notify PC Controller that streaming stopped
-    val success = networkClient.stopDataStreaming()
+                // Stop batching process
+                batchingJob?.cancel()
+                batchingJob = null
 
-    val sessionId = currentSessionId
-    currentSessionId = null
+                // Send any remaining batched data
+                sendRemainingData()
 
-    if (sessionId != null) {
-    eventListener?.onStreamingStopped(sessionId)
-    }
+                // Notify PC Controller that streaming stopped
+                val success = networkClient.stopDataStreaming()
 
-    Log.i(TAG, "Data streaming stopped")
-    true
-    } catch (e: Exception) {
-    Log.e(TAG, "Error stopping data streaming", e)
-    false
-    }
-    }
+                val sessionId = currentSessionId
+                currentSessionId = null
 
-    /**
-    * Queue GSR sample for streaming
-    */
+                if (sessionId != null) {
+                    eventListener?.onStreamingStopped(sessionId)
+                }
+
+                Log.i(TAG, "Data streaming stopped")
+                true
+            } catch (e: Exception) {
+                Log.e(TAG, "Error stopping data streaming", e)
+                false
+            }
+        }
+
+
     fun queueGSRSample(sample: GSRSample) {
     if (!isStreaming.get()) return
 
@@ -166,9 +169,7 @@ class DataStreamingService(
     gsrQueue.offer(sample)
     }
 
-    /**
-    * Queue thermal sample for streaming
-    */
+
     fun queueThermalSample(sample: ThermalSample) {
     if (!isStreaming.get()) return
 
@@ -182,9 +183,7 @@ class DataStreamingService(
     thermalQueue.offer(sample)
     }
 
-    /**
-    * Queue video metadata for streaming
-    */
+
     fun queueVideoMetadata(metadata: VideoMetadata) {
     if (!isStreaming.get()) return
 
@@ -199,35 +198,36 @@ class DataStreamingService(
     }
 
     private fun startBatchingProcess() {
-    batchingJob = streamingScope.launch {
-    while (isStreaming.get() && isActive) {
-    try {
-    // Process GSR batches
-    if (gsrQueue.size >= BATCH_SIZE) {
-    sendGSRBatch()
-    }
+        batchingJob =
+            streamingScope.launch {
+                while (isStreaming.get() && isActive) {
+                    try {
+                        // Process GSR batches
+                        if (gsrQueue.size >= BATCH_SIZE) {
+                            sendGSRBatch()
+                        }
 
-    // Process thermal batches
-    if (thermalQueue.size >= BATCH_SIZE) {
-    sendThermalBatch()
-    }
+                        // Process thermal batches
+                        if (thermalQueue.size >= BATCH_SIZE) {
+                            sendThermalBatch()
+                        }
 
-    // Process video metadata batches
-    if (videoMetadataQueue.size >= BATCH_SIZE) {
-    sendVideoMetadataBatch()
-    }
+                        // Process video metadata batches
+                        if (videoMetadataQueue.size >= BATCH_SIZE) {
+                            sendVideoMetadataBatch()
+                        }
 
-    // Timeout-based batching for partial batches
-    delay(BATCH_TIMEOUT_MS)
-    } catch (e: Exception) {
-    if (isActive) {
-    Log.e(TAG, "Error in batching process", e)
-    eventListener?.onStreamingError("Batching error: ${e.message}")
-    delay(1000) // Wait before retrying
-    }
-    }
-    }
-    }
+                        // Timeout-based batching for partial batches
+                        delay(BATCH_TIMEOUT_MS)
+                    } catch (e: Exception) {
+                        if (isActive) {
+                            Log.e(TAG, "Error in batching process", e)
+                            eventListener?.onStreamingError("Batching error: ${e.message}")
+                            delay(1000) // Wait before retrying
+                        }
+                    }
+                }
+            }
     }
 
     private suspend fun sendGSRBatch() {
@@ -272,43 +272,48 @@ class DataStreamingService(
     }
     }
 
-    private suspend fun sendBatchWithRetry(batchData: JSONObject, dataType: String): Boolean {
-    repeat(RETRY_ATTEMPTS) { attempt ->
-    try {
-    val success = networkClient.sendMeasurementData(
-    currentSessionId ?: "unknown",
-    batchData
-    )
-    if (success) {
-    return true
-    }
-    } catch (e: Exception) {
-    Log.w(TAG, "Batch send attempt ${attempt + 1} failed for $dataType", e)
-    if (attempt < RETRY_ATTEMPTS - 1) {
-    delay(RETRY_DELAY_MS)
-    }
-    }
-    }
+    private suspend fun sendBatchWithRetry(
+        batchData: JSONObject,
+        dataType: String,
+    ): Boolean {
+        repeat(RETRY_ATTEMPTS) { attempt ->
+            try {
+                val success =
+                    networkClient.sendMeasurementData(
+                        currentSessionId ?: "unknown",
+                        batchData,
+                    )
+                if (success) {
+                    return true
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Batch send attempt ${attempt + 1} failed for $dataType", e)
+                if (attempt < RETRY_ATTEMPTS - 1) {
+                    delay(RETRY_DELAY_MS)
+                }
+            }
+        }
 
-    Log.e(TAG, "Failed to send $dataType batch after $RETRY_ATTEMPTS attempts")
-    eventListener?.onStreamingError("Failed to send $dataType batch")
-    return false
+        Log.e(TAG, "Failed to send $dataType batch after $RETRY_ATTEMPTS attempts")
+        eventListener?.onStreamingError("Failed to send $dataType batch")
+        return false
     }
 
     private fun createGSRBatchJson(samples: List<GSRSample>): JSONObject {
-    val samplesArray = JSONArray()
-    samples.forEach { sample ->
-    val sampleJson = JSONObject().apply {
-    put("timestamp", sample.timestamp)
-    put("utc_timestamp", sample.utcTimestamp)
-    put("sample_index", sample.sampleIndex)
-    put("conductance", sample.conductance)
-    put("resistance", sample.resistance)
-    put("raw_value", sample.rawValue)
-    put("session_id", sample.sessionId)
-    }
-    samplesArray.put(sampleJson)
-    }
+        val samplesArray = JSONArray()
+        samples.forEach { sample ->
+            val sampleJson =
+                JSONObject().apply {
+                    put("timestamp", sample.timestamp)
+                    put("utc_timestamp", sample.utcTimestamp)
+                    put("sample_index", sample.sampleIndex)
+                    put("conductance", sample.conductance)
+                    put("resistance", sample.resistance)
+                    put("raw_value", sample.rawValue)
+                    put("session_id", sample.sessionId)
+                }
+            samplesArray.put(sampleJson)
+        }
 
     return JSONObject().apply {
     put("data_type", "gsr_batch")
@@ -319,18 +324,19 @@ class DataStreamingService(
     }
 
     private fun createThermalBatchJson(samples: List<ThermalSample>): JSONObject {
-    val samplesArray = JSONArray()
-    samples.forEach { sample ->
-    val sampleJson = JSONObject().apply {
-    put("timestamp", sample.timestamp)
-    put("frame_index", sample.frameIndex)
-    put("temperature", sample.temperature)
-    put("x", sample.x)
-    put("y", sample.y)
-    put("session_id", sample.sessionId)
-    }
-    samplesArray.put(sampleJson)
-    }
+        val samplesArray = JSONArray()
+        samples.forEach { sample ->
+            val sampleJson =
+                JSONObject().apply {
+                    put("timestamp", sample.timestamp)
+                    put("frame_index", sample.frameIndex)
+                    put("temperature", sample.temperature)
+                    put("x", sample.x)
+                    put("y", sample.y)
+                    put("session_id", sample.sessionId)
+                }
+            samplesArray.put(sampleJson)
+        }
 
     return JSONObject().apply {
     put("data_type", "thermal_batch")
@@ -341,17 +347,18 @@ class DataStreamingService(
     }
 
     private fun createVideoMetadataBatchJson(samples: List<VideoMetadata>): JSONObject {
-    val samplesArray = JSONArray()
-    samples.forEach { sample ->
-    val sampleJson = JSONObject().apply {
-    put("timestamp", sample.timestamp)
-    put("frame_index", sample.frameIndex)
-    put("frame_size", sample.frameSize)
-    put("session_id", sample.sessionId)
-    put("camera_type", sample.cameraType)
-    }
-    samplesArray.put(sampleJson)
-    }
+        val samplesArray = JSONArray()
+        samples.forEach { sample ->
+            val sampleJson =
+                JSONObject().apply {
+                    put("timestamp", sample.timestamp)
+                    put("frame_index", sample.frameIndex)
+                    put("frame_size", sample.frameSize)
+                    put("session_id", sample.sessionId)
+                    put("camera_type", sample.cameraType)
+                }
+            samplesArray.put(sampleJson)
+        }
 
     return JSONObject().apply {
     put("data_type", "video_metadata_batch")
@@ -384,32 +391,26 @@ class DataStreamingService(
     videoMetadataQueue.clear()
     }
 
-    /**
-    * Get current queue sizes for monitoring
-    */
+
     fun getQueueSizes(): Map<String, Int> {
-    return mapOf(
-    "gsr" to gsrQueue.size,
-    "thermal" to thermalQueue.size,
-    "video_metadata" to videoMetadataQueue.size
-    )
+        return mapOf(
+            "gsr" to gsrQueue.size,
+            "thermal" to thermalQueue.size,
+            "video_metadata" to videoMetadataQueue.size,
+        )
     }
 
-    /**
-    * Check if streaming is active
-    */
+
     fun isStreamingActive(): Boolean = isStreaming.get()
 
-    /**
-    * Clean up resources
-    */
-    suspend fun cleanup() {
-    // Stop streaming before cancelling jobs to ensure proper data flush
-    stopStreaming()
 
-    // Cancel all jobs after streaming is stopped
-    streamingJob.cancel()
-    clearQueues()
-    eventListener = null
+    suspend fun cleanup() {
+        // Stop streaming before cancelling jobs to ensure proper data flush
+        stopStreaming()
+
+        // Cancel all jobs after streaming is stopped
+        streamingJob.cancel()
+        clearQueues()
+        eventListener = null
     }
 }

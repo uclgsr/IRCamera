@@ -10,7 +10,7 @@ import socket
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Any
 
 try:
     from zeroconf import ServiceInfo, Zeroconf
@@ -30,16 +30,16 @@ except ImportError:
     except ImportError:
         # Fallback logger for testing
         class FallbackLogger:
-            def info(self, msg):
+            def info(self, msg) -> Any:
                 print(f"INFO: {msg}")
 
-            def debug(self, msg):
+            def debug(self, msg) -> Any:
                 print(f"DEBUG: {msg}")
 
-            def warning(self, msg):
+            def warning(self, msg) -> Any:
                 print(f"WARNING: {msg}")
 
-            def error(self, msg):
+            def error(self, msg) -> Any:
                 print(f"ERROR: {e}")
 
         logger = FallbackLogger()
@@ -49,7 +49,7 @@ try:
 except ImportError:
     # Fallback config for testing
     class FallbackConfig:
-        def get(self, key, default=None):
+        def get(self, key, default=None) -> Any:
             config_map = {
                 "network.discovery_port": 8081,
                 "version": "1.0.0",
@@ -106,11 +106,11 @@ class NetworkDiscoveryService:
         self.hostname = socket.gethostname()
         self.local_ip = self._get_local_ip()
 
-    def add_discovery_listener(self, callback: callable):
+    def add_discovery_listener(self, callback: None = callable) -> None:
         """Add a callback for discovery events."""
         self.discovery_listeners.append(callback)
 
-    def remove_discovery_listener(self, callback: callable):
+    def remove_discovery_listener(self, callback: None = callable) -> None:
         """Remove a discovery callback."""
         if callback in self.discovery_listeners:
             self.discovery_listeners.remove(callback)
@@ -146,7 +146,7 @@ class NetworkDiscoveryService:
             await self.stop_discovery()
             return False
 
-    async def stop_discovery(self):
+    async def stop_discovery(self) -> Any:
         """Stop the discovery service."""
         if not self.is_running:
             return
@@ -190,7 +190,7 @@ class NetworkDiscoveryService:
             if device.device_type == device_type
         ]
 
-    async def refresh_discovery(self):
+    async def refresh_discovery(self) -> Any:
         """Refresh device discovery by restarting the browser."""
         if self.is_running and self.service_browser:
             await self.service_browser.async_cancel()
@@ -410,15 +410,21 @@ class ServiceBrowserHandler:
         self.discovery_service = discovery_service
         self.service_type = service_type
 
-    def add_service(self, zc: Zeroconf, type_: str, name: str):
+    def add_service(
+        self, zc: None = Zeroconf, type_: None = str, name: None = str
+    ) -> None:
         """Called when a service is discovered."""
         asyncio.create_task(self._add_service_async(zc, type_, name))
 
-    def remove_service(self, zc: Zeroconf, type_: str, name: str):
+    def remove_service(
+        self, zc: None = Zeroconf, type_: None = str, name: None = str
+    ) -> None:
         """Called when a service is removed."""
         asyncio.create_task(self.discovery_service._on_device_lost(name))
 
-    def update_service(self, zc: Zeroconf, type_: str, name: str):
+    def update_service(
+        self, zc: None = Zeroconf, type_: None = str, name: None = str
+    ) -> None:
         """Called when a service is updated."""
         # Treat updates as new discoveries
         asyncio.create_task(self._add_service_async(zc, type_, name))

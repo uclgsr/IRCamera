@@ -26,19 +26,13 @@ import java.util.List;
 
 public class LegendRenderer extends Renderer {
 
-    /**
-     * paint for the legend labels
-     */
+
     protected Paint mLegendLabelPaint;
 
-    /**
-     * paint used for the legend forms
-     */
+
     protected Paint mLegendFormPaint;
 
-    /**
-     * the legend object this renderer renders
-     */
+
     protected Legend mLegend;
 
     public LegendRenderer(ViewPortHandler viewPortHandler, Legend legend) {
@@ -54,32 +48,19 @@ public class LegendRenderer extends Renderer {
         mLegendFormPaint.setStyle(Paint.Style.FILL);
     }
 
-    /**
-     * Returns the Paint object used for drawing the Legend labels.
-     *
-     * @return
-     */
+
     public Paint getLabelPaint() {
         return mLegendLabelPaint;
     }
 
-    /**
-     * Returns the Paint object used for drawing the Legend forms.
-     *
-     * @return
-     */
+
     public Paint getFormPaint() {
         return mLegendFormPaint;
     }
 
-
     protected List<LegendEntry> computedEntries = new ArrayList<>(16);
 
-    /**
-     * Prepares the legend and calculates all needed forms, labels and colors.
-     *
-     * @param data
-     */
+
     public void computeLegend(ChartData<?> data) {
 
         if (!mLegend.isLegendCustom()) {
@@ -467,16 +448,7 @@ public class LegendRenderer extends Renderer {
 
     private Path mLineFormPath = new Path();
 
-    /**
-     * Draws the Legend-form at the given position with the color at the given
-     * index.
-     *
-     * @param c      canvas to draw with
-     * @param x      position
-     * @param y      position
-     * @param entry  the entry to render
-     * @param legend the legend context
-     */
+
     protected void drawForm(
             Canvas c,
             float x, float y,
@@ -546,14 +518,7 @@ public class LegendRenderer extends Renderer {
         c.restoreToCount(restoreCount);
     }
 
-    /**
-     * Draws the provided label at the given position.
-     *
-     * @param c     canvas to draw with
-     * @param x
-     * @param y
-     * @param label the label to draw
-     */
+
     protected void drawLabel(Canvas c, float x, float y, String label) {
         c.drawText(label, x, y, mLegendLabelPaint);
     }

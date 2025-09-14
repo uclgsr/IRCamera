@@ -12,10 +12,7 @@
 //
 //import java.nio.ByteBuffer;
 //
-///**
-// * bytes -> bitmap
-// * 将源数据转出图像照片
-// */
+//
 //public class ImageThreadTCOld extends Thread {
 //
 //    private static final int TYPE_TINY1B = 1;
@@ -156,9 +153,9 @@
 //
 //            // imagerTemp2二次处理 (温度旋转后数据)
 //            if (max != Float.MAX_VALUE || min != Float.MIN_VALUE ) {
-//                // 当不设高温，只设置低温时
+//                // 当不设高温，只settings低温时
 //                if (max == -273) {
-//                    // 替换颜色的方法里最高温不能低于最低温
+//                    // 替换color的方法里最高温不能低于最低温
 //                    max = 1000000;
 //                }
 //                //FF808080固定触发
@@ -166,15 +163,15 @@
 //                    ImageTools.INSTANCE.readFrame(imageDst, temperatureSrc, max, min);//替换灰度处理
 //                } else {
 //                    Log.w("123", "max:" + max + ", min: " + min);
-////                    ImageTools.INSTANCE.readFrame(imageDst, temperatureSrc, max, min,maxColor,minColor);//替换颜色处理
-//                    BitmapTools.INSTANCE.replaceBitmapColor(imageDst, temperatureSrc, max, min,0,0);//替换颜色处理
+////                    ImageTools.INSTANCE.readFrame(imageDst, temperatureSrc, max, min,maxColor,minColor);//替换color处理
+//                    BitmapTools.INSTANCE.replaceBitmapColor(imageDst, temperatureSrc, max, min,0,0);//替换color处理
 //                }
 //                Log.w("原始图像:", imageDst.toString());
 //            }
 //            synchronized (syncImage.viewLock) {
 //                if (!syncImage.valid) {
 //                    if (bitmap != null) {
-//                        bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst)); //bitmap图像刷新数据
+//                        bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst)); //bitmap图像refresh数据
 //                    } else {
 //                        XLog.e("ImageThreadTC copyPixelsFromBuffer(): bitmap is null");
 //                    }
@@ -186,7 +183,7 @@
 //            try {
 //                SystemClock.sleep(20);
 //            } catch (Exception e) {
-//                XLog.e("Image Thread刷新异常: " + e.getMessage());
+//                XLog.e("Image Threadrefresh异常: " + e.getMessage());
 //            }
 //        }
 //        Log.w(TAG, "ImageThread exit:");

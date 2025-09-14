@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 
+
 class MenuRecyclerView : RecyclerView {
     constructor(context: Context) : this(context, null)
 

@@ -26,7 +26,6 @@ import static org.opencv.imgproc.Imgproc.*;
 
 public class OnlineMethod {
 
-
     static {
 //        new OpenCVNativeLoader().init();
         System.loadLibrary("opencv_java4");
@@ -130,7 +129,6 @@ public class OnlineMethod {
         tem.put(0,0,temp);
         tem.convertTo(tem, CV_8UC1);
 
-
         Mat thres_gray = new Mat();
         threshold(tem, thres_gray, low_t, 255, 4);
         List<MatOfPoint> cnts = new ArrayList<MatOfPoint>();
@@ -193,7 +191,6 @@ public class OnlineMethod {
         Utils.matToBitmap(mat, dstBitmap);
         return draw_temp_edge(src,temperature,low_t,color_l,type);
     }
-
 
     public static Bitmap draw_edge_from_temp_reigon_bitmap(byte[] image,byte[] temperature,int row, int col, double high_t, double low_t, int color_h, int color_l, int type) throws IOException {
         Mat src = draw_high_temp_edge(image,temperature,high_t,color_h,type);

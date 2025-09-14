@@ -8,9 +8,9 @@ import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import com.topdon.lib.ui.databinding.UiSteeringWheelViewBinding
 
-/**
-    * 校准方向
-    */
+
+
+
 class SteeringWheelView : LinearLayout, OnClickListener {
     var listener: ((action: Int, moveX: Int) -> Unit)? = null
     var moveX = 30
@@ -42,21 +42,20 @@ class SteeringWheelView : LinearLayout, OnClickListener {
     defStyleAttr,
     )
 
-    private fun initView() {
-    binding = UiSteeringWheelViewBinding.inflate(LayoutInflater.from(context), this, true)
 
-    binding.steeringWheelStartBtn.setOnClickListener(this)
-    binding.steeringWheelCenterBtn.setOnClickListener(this)
-    binding.steeringWheelEndBtn.setOnClickListener(this)
-    if (rotationIR == 270 || rotationIR == 90)
-    {
-    binding.tvConfirm.rotation = 270f
-    rotation = 90f
-    } else
-    {
-    binding.tvConfirm.rotation = 0f
-    rotation = 0f
-    }
+    private fun initView() {
+        binding = UiSteeringWheelViewBinding.inflate(LayoutInflater.from(context), this, true)
+
+        binding.steeringWheelStartBtn.setOnClickListener(this)
+        binding.steeringWheelCenterBtn.setOnClickListener(this)
+        binding.steeringWheelEndBtn.setOnClickListener(this)
+        if (rotationIR == 270 || rotationIR == 90) {
+            binding.tvConfirm.rotation = 270f
+            rotation = 90f
+        } else {
+            binding.tvConfirm.rotation = 0f
+            rotation = 0f
+        }
     }
 
     override fun onClick(v: View?) {

@@ -14,59 +14,37 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-/**
-    * 给一张图画 圆、矩形、箭头的自定义 View.
-    *
-    * Created by LCG on 2024/1/27.
-    */
+
 class ImageEditView : View {
     companion object {
-    /**
-    * 默认画笔宽度，单位 px.
-    */
-    private const val PAINT_WIDTH = 6
 
-    /**
-    * 默认画笔宽度的一半，单位px.
-    */
-    private const val HALF_PAINT_WIDTH = 3
+        private const val PAINT_WIDTH = 6
 
-    /**
-    * 箭头等边三角形边长，照钉钉截图估算，线宽3，边长16，故而视为画笔宽度5倍.
-    */
-    private const val ARROW_WIDTH = 30
 
-    /**
-    * 默认画笔颜色.
-    */
-    private const val PAINT_COLOR = 0xffe22400.toInt()
+        private const val HALF_PAINT_WIDTH = 3
+
+
+        private const val ARROW_WIDTH = 30
+
+
+        private const val PAINT_COLOR = 0xffe22400.toInt()
     }
 
     enum class Type {
-    /**
-    * 圆
-    */
-    CIRCLE,
 
-    /**
-    * 矩形
-    */
-    RECT,
+        CIRCLE,
 
-    /**
-    * 箭头
-    */
-    ARROW,
+
+        RECT,
+
+
+        ARROW,
     }
 
-    /**
-    * 当前绘制的类型，默认圆形.
-    */
+
     var type: Type = Type.CIRCLE
 
-    /**
-    * 画笔颜色.
-    */
+
     var color: Int
     get() = paint.color
     set(value) {
@@ -74,9 +52,7 @@ class ImageEditView : View {
     invalidate()
     }
 
-    /**
-    * 在该 bitmap 上放绘制编辑内容如圆、矩形、箭头.
-    */
+
     var sourceBitmap: Bitmap? = null
     set(value) {
     if (value == null) { // 没有把背景图清掉的需求，故而此处直接 return
@@ -91,28 +67,20 @@ class ImageEditView : View {
     field = value
     }
 
-    /**
-    * 当前是否有编辑内容.
-    */
+
     private var hasEditData = false
 
-    /**
-    * 保存背景图片的 Bitmap.
-    */
+
     private var bgBitmap: Bitmap? = null
 
-    /**
-    * 保存当前绘制编辑内容的 Bitmap.
-    */
+
     private var editBitmap: Bitmap? = null
 
     private var canvas: Canvas? = null
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
 
-    /**
-    * 绘制三角形的路径.
-    */
+
     private val path = Path()
 
     constructor(context: Context) : this(context, null)

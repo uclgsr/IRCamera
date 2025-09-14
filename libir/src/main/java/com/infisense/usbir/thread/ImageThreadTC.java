@@ -39,8 +39,8 @@ public class ImageThreadTC extends Thread {
 
     public static final int TYPE_AI_C = -1;//不开启
     public static final int TYPE_AI_D = 0;//动态检测
-    public static final int TYPE_AI_H = 1;//高温源检测
-    public static final int TYPE_AI_L = 2;//低温源检测
+    public static final int TYPE_AI_H = 1;//high temperature source检测
+    public static final int TYPE_AI_L = 2;//low temperature source检测
 
     private byte[] imgTmp;
     private String TAG = "ImageThread";
@@ -179,8 +179,8 @@ public class ImageThreadTC extends Thread {
                         LibIRProcess.convertYuyvMapToARGBPseudocolor(imageSrc, imageHeight * imageWidth, PseudocodeUtils.INSTANCE.changePseudocodeModeByOld(pseudocolorMode), imageARGB);
                     }
                     /*
-                     * 经过转换之后的红外数据
-                     * 其中的数据是旋转90度的，需要旋转回来,红外旋转的逻辑放在这里处理。
+                     * 经过转换之后的infrared数据
+                     * 其中的数据是旋转90度的，需要旋转回来,infrared旋转的逻辑放在这里处理。
                      */
                     if (rotateInt == 270) {
                         LibIRProcess.ImageRes_t imageRes = new LibIRProcess.ImageRes_t();
@@ -205,7 +205,7 @@ public class ImageThreadTC extends Thread {
                     }
                     irImageHelp.customPseudoColor(imageDst,temperatureSrc,imageWidth,imageHeight);
                     /*
-                     * 等温尺处理,展示伪彩的温度范围内信息
+                     * 等温尺处理,展示pseudo color的温度range内信息
                      */
                     irImageHelp.setPseudoColorMaxMin(imageDst,temperatureSrc,max,min,imageWidth,imageHeight);
                 }
@@ -296,7 +296,7 @@ public class ImageThreadTC extends Thread {
             try {
                 SystemClock.sleep(20);
             } catch (Exception e) {
-                XLog.e("Image Thread刷新异常: " + e.getMessage());
+                XLog.e("Image Threadrefresh异常: " + e.getMessage());
             }
         }
         Log.i(TAG, "ImageThread exit");

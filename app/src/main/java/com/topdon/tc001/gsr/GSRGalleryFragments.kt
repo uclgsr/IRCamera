@@ -12,10 +12,7 @@ import com.csl.irCamera.R
 import kotlinx.coroutines.*
 import java.io.File
 
-/**
-    * GSR Data Fragment
-    * Displays CSV data files from GSR recordings with metadata
-    */
+
 class GSRDataFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: View
@@ -142,10 +139,7 @@ class GSRDataFragment : Fragment() {
     }
 }
 
-/**
-    * GSR Video Fragment
-    * Displays recorded video files from multi-modal sessions
-    */
+
 class GSRVideoFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: View
@@ -221,10 +215,7 @@ class GSRVideoFragment : Fragment() {
     }
 }
 
-/**
-    * GSR RAW Image Fragment
-    * Displays captured RAW DNG images from parallel recording
-    */
+
 class GSRRawImageFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: View
@@ -300,10 +291,7 @@ class GSRRawImageFragment : Fragment() {
     }
 }
 
-/**
-    * GSR Session Fragment
-    * Displays complete recording sessions with all associated files
-    */
+
 class GSRSessionFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: View
@@ -374,17 +362,17 @@ class GSRSessionFragment : Fragment() {
     private fun findCompleteSessions(): List<GSRSessionInfo> {
     val sessions = mutableListOf<GSRSessionInfo>()
 
-    val recordingDir = File(context?.getExternalFilesDir(null), "GSR_Recordings")
-    if (recordingDir.exists()) {
-    recordingDir.listFiles { it.isDirectory }?.forEach { sessionDir ->
-    try {
-    val sessionInfo = parseSessionDirectory(sessionDir)
-    sessions.add(sessionInfo)
-    } catch (e: Exception) {
-    // Skip invalid session directories
-    }
-    }
-    }
+        val recordingDir = File(context?.getExternalFilesDir(null), "GSR_Recordings")
+        if (recordingDir.exists()) {
+            recordingDir.listFiles { file -> file.isDirectory }?.forEach { sessionDir ->
+                try {
+                    val sessionInfo = parseSessionDirectory(sessionDir)
+                    sessions.add(sessionInfo)
+                } catch (e: Exception) {
+                    // Skip invalid session directories
+                }
+            }
+        }
 
     return sessions.sortedByDescending { it.sessionDirectory.lastModified() }
     }
@@ -392,10 +380,10 @@ class GSRSessionFragment : Fragment() {
     private fun parseSessionDirectory(sessionDir: File): GSRSessionInfo {
     val sessionId = sessionDir.name
 
-    // Find session files
-    val gsrDataFile = sessionDir.listFiles { it.extension == "csv" && it.name.contains("gsr_data") }?.firstOrNull()
-    val videoFile = sessionDir.listFiles { it.extension == "mp4" || it.extension == "mov" }?.firstOrNull()
-    val rawImageCount = sessionDir.listFiles { it.extension == "dng" }?.size ?: 0
+        // Find session files
+        val gsrDataFile = sessionDir.listFiles { file -> file.extension == "csv" && file.name.contains("gsr_data") }?.firstOrNull()
+        val videoFile = sessionDir.listFiles { file -> file.extension == "mp4" || file.extension == "mov" }?.firstOrNull()
+        val rawImageCount = sessionDir.listFiles { file -> file.extension == "dng" }?.size ?: 0
 
     // Parse session metadata from files or directory name
     val parts = sessionId.split("_")
@@ -408,16 +396,16 @@ class GSRSessionFragment : Fragment() {
     java.util.Locale.getDefault(),
     ).format(java.util.Date(sessionDir.lastModified()))
 
-    // Estimate duration from GSR data if available
-    val duration =
-    gsrDataFile?.let { file ->
-    try {
-    val sampleCount = file.readLines().size - 1L
-    sampleCount / 128 // seconds at 128 Hz
-    } catch (e: Exception) {
-    0L
-    }
-    } ?: 0L
+        // Estimate duration from GSR data if available
+        val duration =
+            gsrDataFile?.let { file: File ->
+                try {
+                    val sampleCount = file.readLines().size - 1L
+                    sampleCount / 128 // seconds at 128 Hz
+                } catch (e: Exception) {
+                    0L
+                }
+            } ?: 0L
 
     return GSRSessionInfo(
     sessionId = sessionId,

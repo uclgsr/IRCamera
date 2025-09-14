@@ -111,7 +111,8 @@ def test_data_aggregation():
         # Get statistics
         stats = engine.get_statistics()
         print(
-            f"✓ Statistics: {stats.total_devices} devices, {stats.active_streams} streams"
+            f"✓ Statistics: {stats.total_devices} devices,
+                {stats.active_streams} streams"
         )
 
         # Clean up

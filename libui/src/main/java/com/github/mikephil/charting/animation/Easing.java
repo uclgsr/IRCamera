@@ -3,12 +3,7 @@ package com.github.mikephil.charting.animation;
 import android.animation.TimeInterpolator;
 import androidx.annotation.RequiresApi;
 
-/**
- * Easing options.
- *
- * @author Daniel Cohen Gindi
- * @author Mick Ashton
- */
+
 @SuppressWarnings("WeakerAccess")
 @RequiresApi(11)
 public class Easing {

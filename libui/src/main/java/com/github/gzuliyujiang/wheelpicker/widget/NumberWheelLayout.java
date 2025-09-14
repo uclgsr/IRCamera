@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present 贵州纳雍穿青人李裕江<1032694760@qq.com>
+ * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
  *
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -30,12 +30,7 @@ import com.topdon.lib.ui.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 数字滚轮控件
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/5 18:35
- */
+
 public class NumberWheelLayout extends OptionWheelLayout {
     private OnNumberSelectedListener onNumberSelectedListener;
 
@@ -106,18 +101,14 @@ public class NumberWheelLayout extends OptionWheelLayout {
         }
     }
 
-    /**
-     * @deprecated 使用 {@link #setRange} 代替
-     */
+    
     @Deprecated
     @Override
     public void setData(List<?> data) {
         throw new UnsupportedOperationException("Use setRange instead");
     }
 
-    /**
-     * @deprecated 使用 {@link #setOnNumberSelectedListener} 代替
-     */
+    
     @Deprecated
     @Override
     public void setOnOptionSelectedListener(OnOptionSelectedListener onOptionSelectedListener) {

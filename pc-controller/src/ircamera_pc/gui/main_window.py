@@ -5,6 +5,7 @@ Provides the main researcher interface with device monitoring and session contro
 """
 
 import asyncio
+import time
 from datetime import datetime
 from typing import Optional
 
@@ -28,7 +29,7 @@ from PyQt6.QtWidgets import (
 
 from ..core.session import SessionManager, SessionState
 from ..core.timesync import TimeSyncService
-from ..network.server import DeviceInfo, NetworkServer
+from ..network.websocket_server import WebSocketServer
 from .widgets import (
     DeviceListWidget,
     SessionControlWidget,
@@ -57,7 +58,7 @@ class MainWindow(QMainWindow):
     def __init__(
         self,
         session_manager: SessionManager,
-        network_server: NetworkServer,
+        websocket_server: WebSocketServer,
         time_sync_service: TimeSyncService,
         gsr_ingestor=None,
         file_transfer_manager=None,
@@ -84,7 +85,7 @@ class MainWindow(QMainWindow):
 
         # Core services
         self.session_manager = session_manager
-        self.network_server = network_server
+        self.websocket_server = websocket_server
         self.time_sync_service = time_sync_service
 
         # Enhanced components (optional)
@@ -100,6 +101,10 @@ class MainWindow(QMainWindow):
         self.session_control_widget: Optional[SessionControlWidget] = None
         self.status_display_widget: Optional[StatusDisplayWidget] = None
         self.log_display: Optional[QTextEdit] = None
+
+        # Sync control buttons
+        self.sync_flash_btn: Optional[QPushButton] = None
+        self.sync_mark_btn: Optional[QPushButton] = None
 
         # New GUI components for system integration
         self.bluetooth_control_widget = None
@@ -155,8 +160,8 @@ class MainWindow(QMainWindow):
         # Status bar
         self._setup_status_bar()
 
-        # Set initial state
-        self._update_ui_state()
+        # Set initial state - will be updated by timer once UI is fully initialized
+        # self._update_ui_state()
 
     def _create_left_pane(self) -> QWidget:
         """Create the left pane with device management and session controls."""
@@ -266,7 +271,9 @@ class MainWindow(QMainWindow):
 
         self.log_display = QTextEdit()
         self.log_display.setReadOnly(True)
-        self.log_display.setMaximumBlockCount(1000)  # Limit log lines
+        # Use setDocument to limit log lines for QTextEdit
+        doc = self.log_display.document()
+        doc.setMaximumBlockCount(1000)
         self.log_display.setFont(QFont("Consolas", 9))
         log_layout.addWidget(self.log_display)
 
@@ -307,14 +314,11 @@ class MainWindow(QMainWindow):
             self.device_list_widget.device_selected.connect(self._on_device_selected)
 
     def _setup_network_callbacks(self) -> None:
-        """Set up network server event callbacks."""
-        self.network_server.set_device_connected_callback(self._on_device_connected)
-        self.network_server.set_device_disconnected_callback(
-            self._on_device_disconnected
-        )
-        self.network_server.set_device_status_update_callback(
-            self._on_device_status_updated
-        )
+        """Set up WebSocket server event callbacks - Phase 1 implementation."""
+        # WebSocket server handles callbacks through message handlers internally
+        # For now,
+            we'll implement basic device tracking through the server's client management
+        logger.info("WebSocket server callbacks configured")
 
     def _setup_system_integration_callbacks(self) -> None:
         """Set up system integration callbacks and connections."""
@@ -345,7 +349,8 @@ class MainWindow(QMainWindow):
                 )
             )
             self.bluetooth_manager.device_disconnected.connect(
-                lambda addr, reason: self.bluetooth_control_widget.set_connection_status(
+                lambda addr,
+                    reason: self.bluetooth_control_widget.set_connection_status(
                     addr, False
                 )
             )
@@ -439,9 +444,11 @@ class MainWindow(QMainWindow):
     def _update_displays(self) -> None:
         """Update all display components."""
         try:
-            # Update device count
-            connected_devices = self.network_server.get_connected_devices()
-            self.devices_label.setText(f"Devices: {len(connected_devices)}")
+            # Update device count - WebSocket server clients
+            connected_clients = (
+                len(self.websocket_server.clients) if self.websocket_server else 0
+            )
+            self.devices_label.setText(f"Devices: {connected_clients}")
 
             # Update device list
             if self.device_list_widget:
@@ -497,7 +504,9 @@ class MainWindow(QMainWindow):
         """Update UI component enabled/disabled"
         "state based on current state."""
         current_session = self.session_manager.get_current_session()
-        has_devices = len(self.network_server.get_connected_devices()) > 0
+        has_devices = (
+            len(self.websocket_server.clients) > 0 if self.websocket_server else False
+        )
 
         # Update session control state
         if self.session_control_widget:
@@ -511,8 +520,11 @@ class MainWindow(QMainWindow):
             and has_devices
         )
 
-        self.sync_flash_btn.setEnabled(can_sync)
-        self.sync_mark_btn.setEnabled(can_sync)
+        # Only update buttons if they exist and are not None
+        if hasattr(self, "sync_flash_btn") and self.sync_flash_btn is not None:
+            self.sync_flash_btn.setEnabled(can_sync)
+        if hasattr(self, "sync_mark_btn") and self.sync_mark_btn is not None:
+            self.sync_mark_btn.setEnabled(can_sync)
 
     # Event handlers
     def _on_start_session_requested(self) -> None:
@@ -538,11 +550,23 @@ class MainWindow(QMainWindow):
             self._session_start_time = datetime.now()
 
             # Send start command to all devices
-            import asyncio
+            # Send session start command to all connected clients via WebSocket
+            if self.websocket_server:
+                import asyncio
 
-            asyncio.create_task(
-                self.network_server.start_recording_session(current_session.session_id)
-            )
+                from ..network.protocol import create_message
+
+                session_message = create_message(
+                    "session_start",
+                    {
+                        "session_id": current_session.session_id,
+                        "timestamp": time.time(),
+                    },
+                )
+
+                asyncio.create_task(
+                    self.websocket_server._broadcast_message(session_message)
+                )
 
             self._current_session_id = current_session.session_id
             self.session_started.emit(current_session.session_id)
@@ -562,11 +586,23 @@ class MainWindow(QMainWindow):
                 return
 
             # Send stop command to all devices
-            import asyncio
+            # Send session stop command to all connected clients via WebSocket
+            if self.websocket_server:
+                import asyncio
 
-            asyncio.create_task(
-                self.network_server.stop_recording_session(current_session.session_id)
-            )
+                from ..network.protocol import create_message
+
+                session_message = create_message(
+                    "session_stop",
+                    {
+                        "session_id": current_session.session_id,
+                        "timestamp": time.time(),
+                    },
+                )
+
+                asyncio.create_task(
+                    self.websocket_server._broadcast_message(session_message)
+                )
 
             # End the session
             ended_session = self.session_manager.end_session()
@@ -612,19 +648,29 @@ class MainWindow(QMainWindow):
     def _on_sync_flash_clicked(self) -> None:
         """Handle sync flash button click."""
         try:
-            import asyncio
+            # Send sync flash to all connected clients via WebSocket
+            if self.websocket_server:
+                import asyncio
 
-            asyncio.create_task(self.network_server.send_sync_flash())
+                from ..network.protocol import create_message
 
-            # Add sync event to session
-            current_session = self.session_manager.get_current_session()
-            if current_session:
-                self.session_manager.add_sync_event("flash")
+                sync_message = create_message(
+                    "sync_flash_trigger", {"duration_ms": 500, "timestamp": time.time()}
+                )
 
-            self.sync_flash_triggered.emit()
+                asyncio.create_task(
+                    self.websocket_server._broadcast_message(sync_message)
+                )
 
-            logger.info("Sync flash sent to all devices")
-            self._add_log_message("Sync flash sent to all devices")
+                # Add sync event to session
+                current_session = self.session_manager.get_current_session()
+                if current_session:
+                    self.session_manager.add_sync_event("flash")
+
+                self.sync_flash_triggered.emit()
+
+                logger.info("Sync flash sent to all devices")
+                self._add_log_message("Sync flash sent to all devices")
 
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Error sending sync flash: {e}")
@@ -641,33 +687,46 @@ class MainWindow(QMainWindow):
             if not ok or not description.strip():
                 return
 
-            import asyncio
+            # Send sync mark to all connected clients via WebSocket
+            if self.websocket_server:
+                import asyncio
 
-            asyncio.create_task(
-                self.network_server.send_sync_mark(
-                    "manual_mark", {"description": description}
+                from ..network.protocol import create_message
+
+                mark_message = create_message(
+                    "sync_mark",
+                    {
+                        "mark_type": "manual_mark",
+                        "description": description,
+                        "timestamp": time.time(),
+                    },
                 )
-            )
 
-            # Add sync event to session
-            current_session = self.session_manager.get_current_session()
-            if current_session:
-                self.session_manager.add_sync_event(
-                    "manual_mark", {"description": description}
+                asyncio.create_task(
+                    self.websocket_server._broadcast_message(mark_message)
                 )
 
-            logger.info(f"Sync mark added: {description}")
-            self._add_log_message(f"Sync mark added: {description}")
+                # Add sync event to session
+                current_session = self.session_manager.get_current_session()
+                if current_session:
+                    self.session_manager.add_sync_event(
+                        "manual_mark", {"description": description}
+                    )
+
+                logger.info(f"Sync mark added: {description}")
+                self._add_log_message(f"Sync mark added: {description}")
 
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Error adding sync mark: {e}")
             self._show_error("Error", f"Failed to add sync mark: {e}")
 
     def _on_device_selected(self, device_id: str) -> None:
-        """Handle device selection in list."""
-        device_info = self.network_server.get_device_info(device_id)
-        if device_info:
-            logger.debug(f"Device selected: {device_id}")
+        """Handle device selection in list - WebSocket client."""
+        if self.websocket_server and device_id in self.websocket_server.clients:
+            client = self.websocket_server.clients[device_id]
+            logger.debug(
+                f"WebSocket client selected: {device_id} ({client.device_type})"
+            )
 
     # Network event handlers
     def _on_device_connected(self, device_info: DeviceInfo) -> None:

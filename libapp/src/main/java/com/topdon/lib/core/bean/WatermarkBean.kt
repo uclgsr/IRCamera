@@ -5,15 +5,16 @@ import com.topdon.lib.core.utils.CommUtils
 
 data class WatermarkBean(
     var isOpen: Boolean = false,
-    var title: String = CommUtils.getAppName(), // 最多30个字符
-    var address: String = "", // 最多80个字符
+    var title: String = CommUtils.getAppName(), 
+    var address: String = "", 
     var isAddTime: Boolean = false,
 ) {
     companion object {
-    fun loadFromArray(data: ByteArray): WatermarkBean {
-    val titleLen = ByteUtils.bigBytesToInt(data[1], data[2], data[3], data[4])
-    val titleBytes = ByteArray(titleLen)
-    System.arraycopy(data, 5, titleBytes, 0, titleBytes.size)
+
+        fun loadFromArray(data: ByteArray): WatermarkBean {
+            val titleLen = ByteUtils.bigBytesToInt(data[1], data[2], data[3], data[4])
+            val titleBytes = ByteArray(titleLen)
+            System.arraycopy(data, 5, titleBytes, 0, titleBytes.size)
 
     val addressLen = ByteUtils.bigBytesToInt(data[125], data[126], data[127], data[128])
     val addressBytes = ByteArray(addressLen)
@@ -27,6 +28,7 @@ data class WatermarkBean(
     )
     }
     }
+
 
     fun toByteArray(): ByteArray {
     val result = ByteArray(450)

@@ -44,7 +44,7 @@ except ImportError:
             super().__init__()
             self.setMinimumSize(200, 150)
 
-        def set_sync_quality(self, quality):
+        def set_sync_quality(self, quality) -> None:
             pass
 
 
@@ -70,7 +70,7 @@ class DeviceListWidget(QWidget):
         self.status_label = QLabel("No devices connected")
         layout.addWidget(self.status_label)
 
-    def update_devices(self, devices: List[Dict]):
+    def update_devices(self, devices: List[Dict[str, Any]]) -> None:
         """Update the device list with current devices."""
         # Clear current list
         self.device_list.clear()
@@ -146,7 +146,7 @@ class SessionControlWidget(QWidget):
         self.timer_label.setStyleSheet("font-size: 16px; font-weight: bold;")
         layout.addWidget(self.timer_label)
 
-    def update_state(self, session, has_devices):
+    def update_state(self, session, has_devices) -> None:
         """Update widget state based on session and device status."""
         if session:
             self.session_label.setText(f"Session: {session.name}")
@@ -210,7 +210,7 @@ class StatusDisplayWidget(QWidget):
         self.data_aggregation = DataAggregationWidget()
         layout.addWidget(self.data_aggregation)
 
-    def update_time_sync_stats(self, stats):
+    def update_time_sync_stats(self, stats) -> None:
         """Update time synchronization statistics."""
         if stats:
             quality = stats.get("synchronization_rate", 0) * 100
@@ -224,7 +224,7 @@ class StatusDisplayWidget(QWidget):
             # Update data aggregation widget
             self.data_aggregation.set_sync_quality(quality)
 
-    def update_session_info(self, session):
+    def update_session_info(self, session) -> None:
         """Update session information."""
         if session:
             self.session_name_label.setText(f"Name: {session.name}")
@@ -260,11 +260,11 @@ class SystemIntegrationWidget(QWidget):
         self.status_label = QLabel("Ready")
         layout.addWidget(self.status_label)
 
-    def update_privilege_level(self, level: str):
+    def update_privilege_level(self, level: str) -> None:
         """Update privilege level display."""
         self.privilege_label.setText(f"Privilege Level: {level}")
 
-    def update_permissions(self, permissions: Dict):
+    def update_permissions(self, permissions: None = Dict) -> None:
         """Update permission status."""
         # Show permission status in tooltip or separate area
         perm_text = "\n".join(
@@ -272,7 +272,7 @@ class SystemIntegrationWidget(QWidget):
         )
         self.setToolTip(f"Permissions:\n{perm_text}")
 
-    def set_status_message(self, message: str, is_error: bool = False):
+    def set_status_message(self, message: str, is_error: bool = False) -> None:
         """Set status message."""
         self.status_label.setText(message)
         color = "red" if is_error else "green"
@@ -334,7 +334,7 @@ class BluetoothControlWidget(QWidget):
             device_addr = current_item.text().split(" ")[0]
             self.disconnect_requested.emit(device_addr)
 
-    def update_devices(self, devices):
+    def update_devices(self, devices) -> None:
         """Update discovered devices list."""
         self.device_list.clear()
         for device in devices:
@@ -342,12 +342,12 @@ class BluetoothControlWidget(QWidget):
             name = device.get("name", "Unknown Device")
             self.device_list.addItem(f"{addr} - {name}")
 
-    def set_connection_status(self, device_addr: str, connected: bool):
+    def set_connection_status(self, device_addr: str, connected: bool) -> None:
         """Update connection status for a device."""
         status = "Connected" if connected else "Disconnected"
         self.status_label.setText(f"{device_addr}: {status}")
 
-    def set_error_status(self, error: str):
+    def set_error_status(self, error: str) -> None:
         """Set error status."""
         self.status_label.setText(f"Error: {error}")
         self.status_label.setStyleSheet("color: red;")
@@ -446,7 +446,7 @@ class IntegrationManagementWidget(QWidget):
         # This would be connected to actual metric sources in production
         pass
 
-    def update_hub_status(self, connected: bool, address: str = ""):
+    def update_hub_status(self, connected: bool = False, address: str = "") -> None:
         """Update Hub connection status."""
         if connected:
             self.hub_status_label.setText(f"Hub: Connected ({address})")
@@ -457,7 +457,9 @@ class IntegrationManagementWidget(QWidget):
             self.hub_status_label.setStyleSheet("color: red;")
             self.hub_connect_btn.setText("Connect to Hub")
 
-    def update_spoke_count(self, count: int, active_spokes: List[str] = None):
+    def update_spoke_count(
+        self, count: int = 0, active_spokes: Optional[List[str]] = None
+    ) -> None:
         """Update active spoke count and list."""
         self.spoke_count_label.setText(f"Active Spokes: {count}")
         if count > 0:
@@ -468,7 +470,9 @@ class IntegrationManagementWidget(QWidget):
         else:
             self.spoke_count_label.setStyleSheet("color: gray;")
 
-    def update_sync_status(self, synchronized: bool, max_offset_ms: float = 0):
+    def update_sync_status(
+        self, synchronized: bool = False, max_offset_ms: float = 0
+    ) -> None:
         """Update time synchronization status."""
         if synchronized:
             self.sync_status_label.setText(
@@ -484,7 +488,7 @@ class IntegrationManagementWidget(QWidget):
 
     def update_metrics(
         self, data_rate_mbps: float, latency_ms: float, error_count: int
-    ):
+    ) -> None:
         """Update real-time performance metrics."""
         self.data_rate_label.setText(f"Data Rate: {data_rate_mbps:.2f} MB/s")
         self.latency_label.setText(f"Network Latency: {latency_ms:.1f} ms")
@@ -498,7 +502,7 @@ class IntegrationManagementWidget(QWidget):
         else:
             self.latency_label.setStyleSheet("color: red;")
 
-    def add_status_message(self, message: str, level: str = "INFO"):
+    def add_status_message(self, message: str, level: str = "INFO") -> None:
         """Add a status message to the log."""
         timestamp = QTimer().time().toString("hh:mm:ss")
         formatted_msg = f"[{timestamp}] {level}: {message}"
@@ -521,7 +525,7 @@ class IntegrationManagementWidget(QWidget):
         # Emit status change signal
         self.integration_status_changed.emit(message, level == "ERROR")
 
-    def set_integration_error(self, error: str):
+    def set_integration_error(self, error: str) -> None:
         """Handle integration errors."""
         self.add_status_message(f"Integration Error: {error}", "ERROR")
         self.logger.error(f"Integration error: {error}")
@@ -580,7 +584,7 @@ class WiFiControlWidget(QWidget):
         self.status_label = QLabel("Ready")
         layout.addWidget(self.status_label)
 
-    def update_networks(self, networks):
+    def update_networks(self, networks) -> None:
         """Update available networks list."""
         self.network_list.clear()
         for network in networks:
@@ -588,19 +592,19 @@ class WiFiControlWidget(QWidget):
             signal = network.get("signal_strength", 0)
             self.network_list.addItem(f"{ssid} ({signal}%)")
 
-    def set_connection_status(self, ssid: str, connected: bool, ip: str = ""):
+    def set_connection_status(self, ssid: str, connected: bool, ip: str = "") -> None:
         """Update connection status."""
         if connected:
             self.status_label.setText(f"Connected to {ssid} ({ip})")
         else:
             self.status_label.setText(f"Disconnected from {ssid}")
 
-    def set_hotspot_status(self, active: bool, message: str = ""):
+    def set_hotspot_status(self, active: bool, message: str = "") -> None:
         """Update hotspot status."""
         status = "Active" if active else "Inactive"
         self.status_label.setText(f"Hotspot: {status} {message}")
 
-    def set_error_status(self, error: str):
+    def set_error_status(self, error: str) -> None:
         """Set error status."""
         self.status_label.setText(f"Error: {error}")
         self.status_label.setStyleSheet("color: red;")

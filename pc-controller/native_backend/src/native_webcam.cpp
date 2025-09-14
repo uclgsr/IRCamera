@@ -5,10 +5,7 @@
 
 namespace ircamera {
 
-/**
- * Private implementation for NativeWebcam
- * Uses PIMPL pattern to hide OpenCV details
- */
+
 class NativeWebcam::Impl {
 public:
     explicit Impl(int device_id)

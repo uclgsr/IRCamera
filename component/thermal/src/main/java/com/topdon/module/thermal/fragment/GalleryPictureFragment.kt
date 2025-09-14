@@ -15,9 +15,8 @@ import com.topdon.module.thermal.tools.GlideImageEngine
 import com.topdon.module.thermal.viewmodel.GalleryViewModel
 import java.io.File
 
-/**
-    * 图片
-    */
+
+
 class GalleryPictureFragment : BaseViewModelFragment<GalleryViewModel>() {
     private val adapter by lazy { GalleryAdapter(requireContext()) }
 
@@ -64,9 +63,7 @@ class GalleryPictureFragment : BaseViewModelFragment<GalleryViewModel>() {
     viewModel.getData()
     }
 
-    /**
-    * 分享图片
-    */
+
     fun share(path: String) {
     val file = File(path)
     var intent = Intent()

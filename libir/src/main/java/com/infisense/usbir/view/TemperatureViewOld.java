@@ -30,9 +30,7 @@
 //
 //import java.util.ArrayList;
 //
-///**
-// *
-// */
+//
 //public class TemperatureViewOld extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener {
 //
 //    private final String TAG = "TemperatureView";
@@ -494,7 +492,7 @@
 //                            }
 //                        }
 //                        for (int i = lines.size(); i < drawCount; i++) {
-//                            //设置不计数状态
+//                            //settings不计数state
 //                            lineResultList.get(i).index = 0;
 //                        }
 //                        //点温度
@@ -535,7 +533,7 @@
 //                        surfaceViewCanvas.drawBitmap(regionAndValueBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
 //                        getHolder().unlockCanvasAndPost(surfaceViewCanvas);
 //                    }catch (Exception e){
-//                        XLog.e("Temperature View刷新异常: " + e.getMessage());
+//                        XLog.e("Temperature Viewrefresh异常: " + e.getMessage());
 //                    }
 //                }else {
 //                    TemperatureSampleResult temperatureSampleEasyResult = null;
@@ -563,11 +561,11 @@
 //
 ////                SystemClock.sleep(333);
 //                try {
-//                    SystemClock.sleep(1000);//设置刷新间隔
+//                    SystemClock.sleep(1000);//settingsrefresh间隔
 ////                    int[] value = new int[1];
 ////                    Libircmd.set_prop_tpd_params(Libircmd.TPD_PROP_GAIN_SEL, (char) 0, 1);
 //                } catch (Exception e) {
-//                    XLog.e("Temperature View刷新异常: " + e.getMessage());
+//                    XLog.e("Temperature Viewrefresh异常: " + e.getMessage());
 //                }
 //            }
 //            Log.d(TAG, "temperatureThread exit");
@@ -627,9 +625,7 @@
 //        Log.w(TAG, "surfaceDestroyed");
 //    }
 //
-//    /**
-//     * 温度测量选区
-//     */
+//
 //    @Override
 //    public boolean onTouch(View v, MotionEvent event) {
 //        if (!canTouch){
@@ -1203,9 +1199,7 @@
 //        }
 //    }
 //
-//    /**
-//     * 输入一个坐标,找出是否已经存在的直线,没有返回一条初始直线
-//     */
+//
 //    public Line getLine(Point point) {
 //        Line line = new Line();
 //        for (int index = 0; index < lines.size(); index++) {

@@ -6,17 +6,13 @@ import com.github.mikephil.charting.charts.PieRadarChartBase;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by philipp on 12/06/16.
- */
+
 public abstract class PieRadarHighlighter<T extends PieRadarChartBase> implements IHighlighter
 {
 
     protected T mChart;
 
-    /**
-     * buffer for storing previously highlighted values
-     */
+
     protected List<Highlight> mHighlightBuffer = new ArrayList<Highlight>();
 
     public PieRadarHighlighter(T chart) {
@@ -54,13 +50,6 @@ public abstract class PieRadarHighlighter<T extends PieRadarChartBase> implement
         }
     }
 
-    /**
-     * Returns the closest Highlight object of the given objects based on the touch position inside the chart.
-     *
-     * @param index
-     * @param x
-     * @param y
-     * @return
-     */
+
     protected abstract Highlight getClosestHighlight(int index, float x, float y);
 }

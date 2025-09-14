@@ -32,7 +32,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    
+
     // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
@@ -60,14 +60,18 @@ dependencies {
     api(libs.colorpickerview)
     implementation(libs.brvah)
 
-    implementation("org.apache.poi:poi-ooxml:3.17")
+    implementation("org.apache.poi:poi-ooxml:5.4.0")
     implementation("org.apache.xmlbeans:xmlbeans:3.1.0")
-    implementation("javax.xml.stream:stax-api:1.0")
-    implementation("com.fasterxml:aalto-xml:1.2.2")
+    implementation("javax.xml.stream:stax-api:1.0-2")
+    implementation("com.fasterxml:aalto-xml:1.3.3")
     implementation(project(":RangeSeekBar"))
-    
-    // Test dependencies
+
+    // Test dependencies - using Robolectric for context-based testing
     testImplementation(libs.junit)
+    testImplementation("org.robolectric:robolectric:4.10.3")
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
 }

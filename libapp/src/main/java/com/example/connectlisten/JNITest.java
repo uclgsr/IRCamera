@@ -1,6 +1,5 @@
 package com.example.connectlisten;
 
-
 import com.topdon.lib.core.so.algorithm;
 
 public class JNITest {

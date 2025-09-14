@@ -4,9 +4,7 @@ import com.elvishew.xlog.XLog
 import java.util.regex.Pattern
 
 object VersionTool {
-    /**
-    * V1.0 => 1.0
-    */
+
     fun getVersion(str: String): String {
     var versionStr = "1.0"
     if (str.uppercase().contains("V")) {
@@ -25,9 +23,7 @@ object VersionTool {
     return versionStr
     }
 
-    /**
-    * 检查是否需要更新最新版本
-    */
+
     fun checkNewVersion(
     serverVersionStr: String,
     localVersionStr: String,
@@ -43,9 +39,7 @@ object VersionTool {
     }
     }
 
-    /**
-    * 比较app版本大小
-    */
+
     fun checkVersion(
     remoteStr: String,
     localStr: String,

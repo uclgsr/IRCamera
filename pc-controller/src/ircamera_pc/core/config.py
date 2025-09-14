@@ -93,7 +93,7 @@ class ConfigManager:
             },
         }
 
-    def get(self, key: str, default: Any = None) -> Any:
+    def get(self, key: str, default: Optional[Any] = None) -> Any:
         """
         Get configuration value by dot-notation key.
 

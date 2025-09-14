@@ -90,7 +90,6 @@ public class XAxisRenderer extends AxisRenderer {
                 labelHeight,
                 mXAxis.getLabelRotationAngle());
 
-
         mXAxis.mLabelWidth = Math.round(labelWidth);
         mXAxis.mLabelHeight = Math.round(labelHeight);
         mXAxis.mLabelRotatedWidth = Math.round(labelRotatedSize.width);
@@ -171,11 +170,7 @@ public class XAxisRenderer extends AxisRenderer {
         }
     }
 
-    /**
-     * draws the x-labels on the specified y-position
-     *
-     * @param pos
-     */
+
     protected void drawLabels(Canvas c, float pos, MPPointF anchor) {
 
         final float labelRotationAngleDegrees = mXAxis.getLabelRotationAngle();
@@ -223,7 +218,7 @@ public class XAxisRenderer extends AxisRenderer {
                 //chart 绘制刻度文本  -------- start --------
 
                 if (i == 0 && mXAxis.isJumpFirstLabel()) {
-                    //不是哥们，你好歹好个参数来保存要不要绘制啊，查了我半天结果是因为你这里给跳过了
+                    //不是哥们，你好歹好个参数来saved要不要绘制啊，查了我半天结果是因为你这里给跳过了
                     //起始刻度不需要绘制
                     continue;
                 }
@@ -265,7 +260,6 @@ public class XAxisRenderer extends AxisRenderer {
         Path gridLinePath = mRenderGridLinesPath;
         gridLinePath.reset();
 
-
         for (int i = 0; i < positions.length; i += 2) {
             //chart 绘制刻度线   -------- start --------
 
@@ -288,14 +282,7 @@ public class XAxisRenderer extends AxisRenderer {
         return mGridClippingRect;
     }
 
-    /**
-     * Draws the grid line at the specified position using the provided path.
-     *
-     * @param c
-     * @param x
-     * @param y
-     * @param gridLinePath
-     */
+
     protected void drawGridLine(Canvas c, float x, float y, Path gridLinePath) {
 
         gridLinePath.moveTo(x, mViewPortHandler.contentBottom());
@@ -310,11 +297,7 @@ public class XAxisRenderer extends AxisRenderer {
     protected float[] mRenderLimitLinesBuffer = new float[2];
     protected RectF mLimitLineClippingRect = new RectF();
 
-    /**
-     * Draws the LimitLines associated with this axis to the screen.
-     *
-     * @param c
-     */
+
     @Override
     public void renderLimitLines(Canvas c) {
 
@@ -383,7 +366,6 @@ public class XAxisRenderer extends AxisRenderer {
             mLimitLinePaint.setColor(limitLine.getTextColor());
             mLimitLinePaint.setStrokeWidth(0.5f);
             mLimitLinePaint.setTextSize(limitLine.getTextSize());
-
 
             float xOffset = limitLine.getLineWidth() + limitLine.getXOffset();
 

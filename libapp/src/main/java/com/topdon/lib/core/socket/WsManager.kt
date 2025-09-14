@@ -232,15 +232,11 @@ class WsManager(private val wsUrl: String, private val okHttpClient: OkHttpClien
     }
 
     abstract class IWebSocketListener : WebSocketListener() {
-    /**
-    * 返回要发送的心跳消息，null 则不发送.
-    */
-    abstract fun onHeartBeat(): String?
 
-    /**
-    * 心跳超时处理.
-    */
-    abstract fun onHeartBeatTimeout()
+        abstract fun onHeartBeat(): String?
+
+
+        abstract fun onHeartBeatTimeout()
     }
 
     enum class State {

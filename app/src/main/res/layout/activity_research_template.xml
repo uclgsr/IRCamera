@@ -1,28 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="#f5f5f5">
-  <!-- Category Filter -->
-  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@android:color/white" android:elevation="4dp" android:padding="16dp" android:orientation="horizontal" android:gravity="center_vertical">
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Category: " android:textColor="#666666" android:textSize="14sp"/>
-    <Spinner android:id="@+id/category_spinner" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="8dp"/>
-  </LinearLayout>
-  <!-- Main Content -->
-  <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-      <!-- Templates Grid -->
-      <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-        <androidx.recyclerview.widget.RecyclerView android:id="@+id/templates_recycler_view" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="8dp" android:clipToPadding="false" android:nestedScrollingEnabled="false"/>
-        <!-- Empty View -->
-        <LinearLayout android:id="@+id/empty_view" android:layout_width="match_parent" android:layout_height="200dp" android:orientation="vertical" android:gravity="center" android:visibility="gone">
-          <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="No templates found" android:textColor="#666666" android:textSize="16sp"/>
-        </LinearLayout>
-      </FrameLayout>
-      <!-- Selected Template Details -->
-      <LinearLayout android:id="@+id/selected_template_container" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="16dp" android:background="@drawable/template_detail_background" android:orientation="vertical" android:padding="16dp" android:visibility="gone" android:elevation="2dp">
-        <TextView android:id="@+id/selected_template_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Template Name" android:textColor="@android:color/black" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
-        <TextView android:id="@+id/selected_template_description" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Template description" android:textColor="#666666" android:textSize="14sp" android:layout_marginBottom="12dp"/>
-        <TextView android:id="@+id/selected_template_instructions" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Template instructions and configuration" android:textColor="#333333" android:textSize="12sp" android:lineSpacingMultiplier="1.2" android:layout_marginBottom="16dp"/>
-        <Button android:id="@+id/start_recording_button" android:layout_width="match_parent" android:layout_height="48dp" android:text="Start Recording with Template" android:textColor="@android:color/white" android:background="@drawable/button_primary" android:enabled="false"/>
-      </LinearLayout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f5f5f5">
+
+    <!-- Category Filter -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        android:padding="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category: "
+            android:textColor="#666666"
+            android:textSize="14sp" />
+
+        <Spinner
+            android:id="@+id/category_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp" />
+
     </LinearLayout>
-  </ScrollView>
+
+    <!-- Main Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Templates Grid -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/templates_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false" />
+
+                <!-- Empty View -->
+                <LinearLayout
+                    android:id="@+id/empty_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No templates found"
+                        android:textColor="#666666"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!-- Selected Template Details -->
+            <LinearLayout
+                android:id="@+id/selected_template_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@drawable/template_detail_background"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone"
+                android:elevation="2dp">
+
+                <TextView
+                    android:id="@+id/selected_template_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Template Name"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/selected_template_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Template description"
+                    android:textColor="#666666"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:id="@+id/selected_template_instructions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Template instructions and configuration"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingMultiplier="1.2"
+                    android:layout_marginBottom="16dp" />
+
+                <Button
+                    android:id="@+id/start_recording_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="Start Recording with Template"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/button_primary"
+                    android:enabled="false" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
 </LinearLayout>
+
+</layout>

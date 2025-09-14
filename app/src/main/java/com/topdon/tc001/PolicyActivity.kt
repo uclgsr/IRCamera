@@ -17,18 +17,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
-    * 条款 1: 用户条款  2: 隐私条款  3: 第三方
-    *
-    * 服务返回有错误时,加载默认条款
-    */
+
 // Legacy ARouter route annotation - now using NavigationManager
 class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     private val mHandler = Handler(Looper.getMainLooper())
 
     companion object {
-    const val KEY_THEME_TYPE = "key_theme_type"
-    const val KEY_USE_TYPE = "key_use_type" // 使用类型 用本地和用网络
+        const val KEY_THEME_TYPE = "key_theme_type"
+        const val KEY_USE_TYPE = "key_use_type" // Usage type: local or network
     }
 
     private var themeType = 1
@@ -44,33 +40,33 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     }
 
     private fun initView() {
-    if (intent.hasExtra(KEY_THEME_TYPE)) {
-    themeType = intent.getIntExtra(KEY_THEME_TYPE, 1)
-    }
-    if (intent.hasExtra(KEY_USE_TYPE)) {
-    keyUseType = intent.getIntExtra(KEY_USE_TYPE, 0)
-    }
-    themeStr =
-    when (themeType) {
-    1 -> getString(R.string.user_services_agreement)
-    2 -> getString(R.string.privacy_policy)
-    3 -> getString(R.string.third_party_components)
-    else -> getString(R.string.user_services_agreement)
-    }
+        if (intent.hasExtra(KEY_THEME_TYPE)) {
+            themeType = intent.getIntExtra(KEY_THEME_TYPE, 1)
+        }
+        if (intent.hasExtra(KEY_USE_TYPE)) {
+            keyUseType = intent.getIntExtra(KEY_USE_TYPE, 0)
+        }
+        themeStr =
+            when (themeType) {
+                1 -> getString(R.string.user_services_agreement)
+                2 -> getString(R.string.privacy_policy)
+                3 -> getString(R.string.third_party_components)
+                else -> getString(R.string.user_services_agreement)
+            }
 
-    // Initialize views using view binding
-    binding.titleView.apply {
-    // Note: Title text setting is handled by the parent view implementation
-    // title_view.setTitleText(themeStr)
-    }
+        // Initialize views using view binding
+        binding.titleView.apply {
+            // Note: Title text setting is handled by the parent view implementation
+            // title_view.setTitleText(themeStr)
+        }
 
-    // Create a simple ViewModel-like observer pattern since we're using BaseBindingActivity
-    observeHtmlData()
+        // Create a simple ViewModel-like observer pattern since we're using BaseBindingActivity
+        observeHtmlData()
 
-    if (keyUseType != 0) {
-    loadHttpWhenNotInit(binding.policyWeb)
-    delayShowWebView()
-    }
+        if (keyUseType != 0) {
+            loadHttpWhenNotInit(binding.policyWeb)
+            delayShowWebView()
+        }
     }
 
     private fun observeHtmlData() {
@@ -83,9 +79,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     mHandler.removeCallbacksAndMessages(null)
     }
 
-    /**
-    * 为解决闪缩白屏问题，延时打开webView
-    */
+
     private fun delayShowWebView() {
     lifecycleScope.launch(Dispatchers.IO) {
     delay(200)
@@ -100,7 +94,6 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     showLoadingDialog()
     // Load data directly since we removed ViewModel
     loadDefaultContent()
-    }
     }
 
     private fun loadDefaultContent() {
@@ -163,14 +156,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     binding.policyWeb.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)
     }
 
-    /**
-    * 处理富文本
-    *
-    * @param bodyHTML body
-    * @param fontColor 需要改变的字体颜色
-    * @param backgroundColor 修改字体颜色
-    * @return String
-    */
+
     fun getHtmlData(
     htmlBody: String,
     fontColor: String,
@@ -216,9 +202,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     }
     }
 
-    /**
-    * 加载默认协议网址(英文版)
-    */
+
     fun loadHttp(view: android.webkit.WebView) {
     reloadCount--
     when (themeType) {

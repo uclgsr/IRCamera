@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 // Legacy ARouter route annotation - now using NavigationManager
+
 class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     private val viewModel: LogViewModel by viewModels()
 
@@ -46,32 +47,32 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
     toolbar?.title = getString(R.string.app_record)
 
-    chart = findViewById(R.id.log_chart_time_chart)
-    val recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.log_chart_time_recycler)
-    recyclerView.layoutManager = GridLayoutManager(this, 4)
-    recyclerView.adapter = adapter
-    adapter.listener =
-    object : SettingTimeAdapter.OnItemClickListener {
-    override fun onClick(
-    index: Int,
-    time: Int,
-    ) {
-    // 切换类型
-    chart.highlightValue(null) // 关闭高亮点Marker
-    selectType = index + 1
-    queryLog()
-    }
-    }
-    viewModel.resultLiveData.observe(this) {
-    dismissLoadingDialog()
-    try {
-    initEntry(it.dataList)
-    } catch (e: Exception) {
-    XLog.e("刷新图表异常:${e.message}")
-    ToastTools.showShort("图表异常，请重新加载")
-    }
-    }
-    clearEntity(true)
+        chart = findViewById(R.id.log_chart_time_chart)
+        val recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.log_chart_time_recycler)
+        recyclerView.layoutManager = GridLayoutManager(this, 4)
+        recyclerView.adapter = adapter
+        adapter.listener =
+            object : SettingTimeAdapter.OnItemClickListener {
+                override fun onClick(
+                    index: Int,
+                    time: Int,
+                ) {
+//切换类型
+                    chart.highlightValue(null) // 关闭高亮点Marker
+                    selectType = index + 1
+                    queryLog()
+                }
+            }
+        viewModel.resultLiveData.observe(this) {
+            dismissLoadingDialog()
+            try {
+                initEntry(it.dataList)
+            } catch (e: Exception) {
+                XLog.e("刷新图表异常:${e.message}")
+                ToastTools.showShort("图表异常，请重新加载")
+            }
+        }
+        clearEntity(true)
     }
 
     override fun initData() {
@@ -163,9 +164,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     )
     private val textColor by lazy { ContextCompat.getColor(this, com.topdon.lib.core.R.color.chart_text) }
 
-    /**
-    * 曲线样式
-    */
+
     private fun createSet(
     index: Int,
     label: String,
@@ -180,15 +179,15 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     set.setCircleColor(ContextCompat.getColor(this, com.topdon.lib.core.R.color.white)) // 坐标颜色
 //        set.fillColor = ContextCompat.getColor(this, R.color.purple_500)
 //        set.highLightColor = ContextCompat.getColor(this, R.color.white)
-    set.valueTextColor = Color.WHITE
-    set.lineWidth = 2f
-    set.circleRadius = 1f // 不显示坐标点
-    set.setCircleColor(ContextCompat.getColor(this, lineChartColors[index])) // 坐标颜色(隐藏处理)
-//        set.setCircleColor(ContextCompat.getColor(this, R.color.white))//坐标颜色(隐藏处理)
-    set.fillAlpha = 200
-    set.valueTextSize = 10f
-    set.setDrawValues(false) // 设置是否显示坐标值文本
-    return set
+        set.valueTextColor = Color.WHITE
+        set.lineWidth = 2f
+        set.circleRadius = 1f // 不显示坐标点
+        set.setCircleColor(ContextCompat.getColor(this, lineChartColors[index])) // 坐标颜色(隐藏处理)
+//set.setCircleColor(ContextCompat.getColor(this, R.color.white))//坐标颜色(hideprocessing)
+        set.fillAlpha = 200
+        set.valueTextSize = 10f
+        set.setDrawValues(false) // 设置是否显示坐标值文本
+        return set
     }
 
     private fun initEntry(data: ArrayList<ThermalEntity>) {
@@ -301,9 +300,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     override fun onNothingSelected() {
     }
 
-    /**
-    * x轴显示多少个刻度
-    */
+
     private fun getLabCount(count: Int): Int {
     return when (count) {
     in 0..2 -> 1
@@ -314,7 +311,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     }
     }
 
-    // 获取显示最小区间
+//getdisplay最小区间
     private fun getMinimum(): Float {
     val min =
     when (selectType) {
@@ -327,7 +324,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     return min
     }
 
-    // 获取显示最大区间，以最小区间的50倍
+//getdisplay最大区间，以最小区间的50倍
     private fun getMaximum(): Float {
     return getMinimum() * 50f
     }

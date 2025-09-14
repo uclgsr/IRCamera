@@ -17,22 +17,14 @@ import com.topdon.lib.core.view.ImageEditView
 import kotlinx.coroutines.launch
 import java.io.File
 
-/**
-    * des:
-    * author: CaiSongL
-    * date: 2024/9/3 9:25
-    **/
+
 abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
     protected lateinit var binding: ActivityImagePickIrPlushBinding
 
-    /**
-    * String 类型 - 拾取的图片在本地的绝对路径.
-    */
+
     val RESULT_IMAGE_PATH = "RESULT_IMAGE_PATH"
 
-    /**
-    * 当前是否已拍了一张照等待完成.
-    */
+
     private var hasTakePhoto = false
 
     override fun initContentView(): Int {
@@ -121,8 +113,8 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
     }
     }
 
-    open suspend fun getPickBitmap(): Bitmap?  {
-    return null
+    open suspend fun getPickBitmap(): Bitmap? {
+        return null
     }
 
     override fun onClick(v: View?) {
@@ -176,9 +168,7 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
     }
     }
 
-    /**
-    * 切换 已拍照模式/未拍照模式.
-    */
+
     private fun switchPhotoState(hasTakePhoto: Boolean) {
     this.hasTakePhoto = hasTakePhoto
     binding.imageEditView.isVisible = hasTakePhoto
@@ -188,10 +178,7 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
     binding.titleView.setRightDrawable(if (hasTakePhoto) R.drawable.app_save else 0)
     }
 
-    /**
-    * 显示退出不保存提示弹框
-    * @param listener 点击弹框上退出事件监听
-    */
+
     private fun showExitTipsDialog(listener: (() -> Unit)) {
     TipDialog.Builder(this)
     .setMessage(R.string.diy_tip_save)

@@ -2,10 +2,7 @@ package com.topdon.lib.core.bean
 
 import java.nio.ByteBuffer
 
-/**
-    * @author: CaiSongL
-    * @date: 2023/5/16 15:56
-    */
+
 data class AlarmBean(
     var isHighOpen: Boolean = false,
     var isLowOpen: Boolean = false,
@@ -22,12 +19,13 @@ data class AlarmBean(
     const val TYPE_ALARM_MARK_STROKE = 1
     const val TYPE_ALARM_MARK_MATRIX = 2
 
-    fun loadFromArray(data: ByteArray): AlarmBean {
-    val buffer = ByteBuffer.wrap(data)
-    val isHighOpen = buffer.get() == 1.toByte()
-    val isLowOpen = buffer.get() == 1.toByte()
-    val highTemp = buffer.float
-    val lowTemp = buffer.float
+
+        fun loadFromArray(data: ByteArray): AlarmBean {
+            val buffer = ByteBuffer.wrap(data)
+            val isHighOpen = buffer.get() == 1.toByte()
+            val isLowOpen = buffer.get() == 1.toByte()
+            val highTemp = buffer.float
+            val lowTemp = buffer.float
 
     val isMarkOpen = buffer.get() == 1.toByte()
     val highColor = buffer.int
@@ -52,6 +50,7 @@ data class AlarmBean(
     }
     }
 
+
     fun toByteArray(): ByteArray =
     ByteBuffer.allocate(28)
     .put(if (isHighOpen) 1 else 0)
@@ -66,8 +65,6 @@ data class AlarmBean(
     .putInt(ringtoneType)
     .array()
 
-    /**
-    * 判断温度报警是否开启
-    */
+
     fun isOpen(): Boolean = isHighOpen || isLowOpen
 }

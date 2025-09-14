@@ -27,7 +27,7 @@ from ircamera_pc.data.validator import DataValidator
 class TestDataAggregator(unittest.TestCase):
     """Comprehensive tests for DataAggregator functionality"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up test fixtures"""
         self.temp_dir = tempfile.mkdtemp()
         self.aggregator = DataAggregator(output_dir=self.temp_dir)
@@ -59,19 +59,19 @@ class TestDataAggregator(unittest.TestCase):
             {"timestamp": 1000001500, "id": "STIMULUS_2", "type": "auditory"},
         ]
 
-    def tearDown(self):
+    def tearDown(self) -> Any:
         """Clean up test files"""
         import shutil
 
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
-    def test_initialization(self):
+    def test_initialization(self) -> Any:
         """Test aggregator initialization"""
         self.assertIsNotNone(self.aggregator)
         self.assertEqual(self.aggregator.output_dir, self.temp_dir)
         self.assertEqual(len(self.aggregator.get_active_sessions()), 0)
 
-    def test_session_creation(self):
+    def test_session_creation(self) -> Any:
         """Test session creation and management"""
         session_id = self.aggregator.create_session(
             session_name="TestSession",
@@ -86,7 +86,7 @@ class TestDataAggregator(unittest.TestCase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(sessions[0]["participant_id"], "P001")
 
-    def test_data_ingestion(self):
+    def test_data_ingestion(self) -> Any:
         """Test multi-modal data ingestion"""
         session_id = self.aggregator.create_session("DataTest", "P001")
 
@@ -107,7 +107,7 @@ class TestDataAggregator(unittest.TestCase):
         self.assertIn("gsr", session_data)
         self.assertIn("thermal", session_data)
 
-    def test_sync_marker_integration(self):
+    def test_sync_marker_integration(self) -> Any:
         """Test sync marker processing and alignment"""
         session_id = self.aggregator.create_session("SyncTest", "P001")
 
@@ -121,7 +121,7 @@ class TestDataAggregator(unittest.TestCase):
         self.assertEqual(len(markers), 2)
         self.assertEqual(markers[0]["id"], "STIMULUS_1")
 
-    def test_temporal_alignment(self):
+    def test_temporal_alignment(self) -> Any:
         """Test temporal alignment of multi-modal data"""
         session_id = self.aggregator.create_session("AlignmentTest", "P001")
 
@@ -140,7 +140,7 @@ class TestDataAggregator(unittest.TestCase):
         self.assertIsNotNone(aligned_data)
         # Should have aligned the data within tolerance
 
-    def test_data_quality_validation(self):
+    def test_data_quality_validation(self) -> Any:
         """Test data quality validation and integrity checks"""
         session_id = self.aggregator.create_session("QualityTest", "P001")
 
@@ -174,7 +174,7 @@ class TestDataAggregator(unittest.TestCase):
         )
         self.assertLess(bad_quality_report["quality_score"], 0.5)
 
-    def test_real_time_processing(self):
+    def test_real_time_processing(self) -> Any:
         """Test real-time data processing capabilities"""
         session_id = self.aggregator.create_session("RealTimeTest", "P001")
 
@@ -193,7 +193,7 @@ class TestDataAggregator(unittest.TestCase):
         self.assertIsNotNone(rt_stats)
         self.assertIn("data_points_processed", rt_stats)
 
-    def test_concurrent_sessions(self):
+    def test_concurrent_sessions(self) -> Any:
         """Test handling multiple concurrent sessions"""
         # Create multiple sessions
         sessions = []
@@ -206,7 +206,7 @@ class TestDataAggregator(unittest.TestCase):
         # Ingest data to all sessions concurrently
         import threading
 
-        def ingest_to_session(session_id):
+        def ingest_to_session(session_id) -> Any:
             self.aggregator.ingest_sensor_data(
                 session_id, "ANDROID_001", "gsr", self.sample_gsr_data
             )
@@ -225,7 +225,7 @@ class TestDataAggregator(unittest.TestCase):
             session_data = self.aggregator.get_session_data(session_id)
             self.assertIn("gsr", session_data)
 
-    def test_memory_management(self):
+    def test_memory_management(self) -> Any:
         """Test memory management with large datasets"""
         session_id = self.aggregator.create_session("MemoryTest", "P001")
 
@@ -254,7 +254,7 @@ class TestDataAggregator(unittest.TestCase):
 class TestDataExporter(unittest.TestCase):
     """Tests for data export functionality"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up test fixtures"""
         self.temp_dir = tempfile.mkdtemp()
         self.exporter = DataExporter(output_dir=self.temp_dir)
@@ -282,13 +282,13 @@ class TestDataExporter(unittest.TestCase):
             ],
         }
 
-    def tearDown(self):
+    def tearDown(self) -> Any:
         """Clean up test files"""
         import shutil
 
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
-    def test_csv_export(self):
+    def test_csv_export(self) -> Any:
         """Test CSV export functionality"""
         output_file = os.path.join(self.temp_dir, "test_export.csv")
 
@@ -301,7 +301,7 @@ class TestDataExporter(unittest.TestCase):
         self.assertEqual(len(exported_df), 3)
         self.assertIn("gsr_microsiemens", exported_df.columns)
 
-    def test_excel_export(self):
+    def test_excel_export(self) -> Any:
         """Test Excel export with multiple sheets"""
         output_file = os.path.join(self.temp_dir, "test_export.xlsx")
 
@@ -315,7 +315,7 @@ class TestDataExporter(unittest.TestCase):
             self.assertIn("Thermal_Data", xl.sheet_names)
             self.assertIn("Sync_Markers", xl.sheet_names)
 
-    def test_hdf5_export(self):
+    def test_hdf5_export(self) -> Any:
         """Test HDF5 export for large datasets"""
         output_file = os.path.join(self.temp_dir, "test_export.h5")
 
@@ -329,7 +329,7 @@ class TestDataExporter(unittest.TestCase):
             self.assertIn("thermal_data", f.keys())
             self.assertEqual(len(f["gsr_data"]), 3)
 
-    def test_json_export(self):
+    def test_json_export(self) -> Any:
         """Test JSON export for metadata and annotations"""
         output_file = os.path.join(self.temp_dir, "test_export.json")
 
@@ -343,7 +343,7 @@ class TestDataExporter(unittest.TestCase):
             self.assertEqual(exported_data["session_id"], "TEST_SESSION_001")
             self.assertIn("sync_markers", exported_data)
 
-    def test_export_format_validation(self):
+    def test_export_format_validation(self) -> Any:
         """Test export format validation"""
         valid_formats = [
             ExportFormat.CSV,
@@ -358,7 +358,7 @@ class TestDataExporter(unittest.TestCase):
         # Test invalid format
         self.assertFalse(self.exporter.is_format_supported("invalid_format"))
 
-    def test_batch_export(self):
+    def test_batch_export(self) -> Any:
         """Test batch export of multiple sessions"""
         sessions = []
         for i in range(3):
@@ -380,7 +380,7 @@ class TestDataExporter(unittest.TestCase):
 class TestDataProcessor(unittest.TestCase):
     """Tests for data processing and analysis"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up test fixtures"""
         self.processor = DataProcessor()
 
@@ -395,7 +395,7 @@ class TestDataProcessor(unittest.TestCase):
             }
         )
 
-    def test_signal_filtering(self):
+    def test_signal_filtering(self) -> Any:
         """Test signal filtering and noise reduction"""
         # Apply low-pass filter
         filtered_data = self.processor.apply_lowpass_filter(
@@ -409,7 +409,7 @@ class TestDataProcessor(unittest.TestCase):
         filtered_std = np.std(filtered_data)
         self.assertLess(filtered_std, original_std)
 
-    def test_artifact_detection(self):
+    def test_artifact_detection(self) -> Any:
         """Test artifact detection in physiological signals"""
         # Introduce artificial artifacts
         corrupted_data = self.gsr_data["gsr_microsiemens"].copy()
@@ -425,7 +425,7 @@ class TestDataProcessor(unittest.TestCase):
         self.assertTrue(any(95 <= idx <= 110 for idx in artifacts))
         self.assertTrue(any(195 <= idx <= 215 for idx in artifacts))
 
-    def test_feature_extraction(self):
+    def test_feature_extraction(self) -> Any:
         """Test physiological feature extraction"""
         features = self.processor.extract_features(self.gsr_data["gsr_microsiemens"])
 
@@ -444,7 +444,7 @@ class TestDataProcessor(unittest.TestCase):
             self.assertIn(feature, features)
             self.assertIsInstance(features[feature], (int, float))
 
-    def test_synchronization_analysis(self):
+    def test_synchronization_analysis(self) -> Any:
         """Test cross-signal synchronization analysis"""
         # Create synthetic synchronized signals
         t = np.arange(0, 1000, 1)
@@ -458,7 +458,7 @@ class TestDataProcessor(unittest.TestCase):
         self.assertIsNotNone(coherence)
         self.assertGreater(np.max(correlation), 0.8)  # High correlation expected
 
-    def test_statistical_analysis(self):
+    def test_statistical_analysis(self) -> Any:
         """Test statistical analysis of sensor data"""
         stats = self.processor.compute_statistics(self.gsr_data["gsr_microsiemens"])
 
@@ -478,7 +478,7 @@ class TestDataProcessor(unittest.TestCase):
         for stat in expected_stats:
             self.assertIn(stat, stats)
 
-    def test_quality_metrics(self):
+    def test_quality_metrics(self) -> Any:
         """Test data quality metrics calculation"""
         quality_metrics = self.processor.calculate_quality_metrics(
             self.gsr_data["gsr_microsiemens"],
@@ -491,7 +491,7 @@ class TestDataProcessor(unittest.TestCase):
         self.assertIn("consistency", quality_metrics)
         self.assertBetween(quality_metrics["completeness"], 0.0, 1.0)
 
-    def assertBetween(self, value, min_val, max_val):
+    def assertBetween(self, value, min_val, max_val) -> Any:
         """Helper assertion for range checking"""
         self.assertGreaterEqual(value, min_val)
         self.assertLessEqual(value, max_val)
@@ -500,11 +500,11 @@ class TestDataProcessor(unittest.TestCase):
 class TestDataValidator(unittest.TestCase):
     """Tests for data validation functionality"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up test fixtures"""
         self.validator = DataValidator()
 
-    def test_timestamp_validation(self):
+    def test_timestamp_validation(self) -> Any:
         """Test timestamp validation and monotonicity"""
         # Valid timestamps
         valid_timestamps = [1000000000, 1000001000, 1000002000]
@@ -517,7 +517,7 @@ class TestDataValidator(unittest.TestCase):
         result = self.validator.validate_timestamps(invalid_timestamps)
         self.assertFalse(result["is_monotonic"])
 
-    def test_gsr_data_validation(self):
+    def test_gsr_data_validation(self) -> Any:
         """Test GSR-specific data validation"""
         # Valid GSR data
         valid_gsr = [
@@ -547,7 +547,7 @@ class TestDataValidator(unittest.TestCase):
         self.assertFalse(result["is_valid"])
         self.assertEqual(result["invalid_count"], 2)
 
-    def test_thermal_data_validation(self):
+    def test_thermal_data_validation(self) -> Any:
         """Test thermal camera data validation"""
         # Valid thermal data
         valid_thermal = [
@@ -574,7 +574,7 @@ class TestDataValidator(unittest.TestCase):
         result = self.validator.validate_thermal_data(invalid_thermal)
         self.assertFalse(result["is_valid"])
 
-    def test_sync_marker_validation(self):
+    def test_sync_marker_validation(self) -> Any:
         """Test sync marker validation"""
         # Valid sync markers
         valid_markers = [

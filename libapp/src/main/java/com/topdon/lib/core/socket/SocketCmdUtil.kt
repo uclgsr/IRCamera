@@ -6,18 +6,18 @@ import org.json.JSONException
 import org.json.JSONObject
 
 object SocketCmdUtil {
-    fun getSocketCmd(cmd: Int): String?  {
-    var cmdJson: String? = null
-    try {
-    val gson = Gson()
-    val paramMap: HashMap<String, Int> = HashMap()
-    paramMap["cmd"] = cmd
-    cmdJson = gson.toJson(paramMap)
-    } catch (e: Exception) {
-    e.printStackTrace()
-    } finally {
-    return cmdJson
-    }
+    fun getSocketCmd(cmd: Int): String? {
+        var cmdJson: String? = null
+        try {
+            val gson = Gson()
+            val paramMap: HashMap<String, Int> = HashMap()
+            paramMap["cmd"] = cmd
+            cmdJson = gson.toJson(paramMap)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            return cmdJson
+        }
     }
 
     fun getCmdResponse(response: String?): Int? {

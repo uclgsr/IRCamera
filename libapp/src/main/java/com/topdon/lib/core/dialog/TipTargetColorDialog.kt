@@ -14,9 +14,7 @@ import com.topdon.lib.core.bean.ObserveBean
 import com.topdon.lib.core.databinding.DialogTipTargetColorBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-/**
-    * 观测-标靶颜色
-    */
+
 class TipTargetColorDialog : Dialog {
     constructor(context: Context) : super(context)
 

@@ -1,11 +1,6 @@
 package com.shimmerresearch.driver
 
-/**
-    * Shimmer device configuration management
-    * Based on official Shimmer Android API configuration handling
-    *
-    * Compatible with shimmerdriver v0.11.4_beta
-    */
+
 class Configuration {
     companion object {
     // Shimmer device type constants
@@ -54,9 +49,7 @@ class Configuration {
     var firmwareVersion: String = "1.0.0"
     var hardwareVersion: String = "3.0"
 
-    /**
-    * Convert configuration to bytes for transmission
-    */
+
     fun toConfigurationBytes(): ByteArray {
     val config = ByteArray(12)
 
@@ -77,9 +70,7 @@ class Configuration {
     return config
     }
 
-    /**
-    * Parse configuration from bytes
-    */
+
     fun fromConfigurationBytes(config: ByteArray) {
     if (config.size >= 5) {
     val rateIndex = config[0].toInt()
@@ -93,9 +84,7 @@ class Configuration {
     }
     }
 
-    /**
-    * Validate configuration parameters
-    */
+
     fun isValid(): Boolean {
     val validSamplingRate = SAMPLING_RATES.any { it == samplingRate }
     val validGSRRange = gsrRange >= GSR_RANGE_10KOHM_56KOHM && gsrRange <= GSR_RANGE_AUTO

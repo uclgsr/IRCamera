@@ -16,13 +16,13 @@ import com.topdon.menu.constant.TargetType
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
-@Deprecated("旧的标靶菜单，已重构过了")
+
+@Deprecated("旧的targetmenu，已重构过了")
+
 class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((code: Int) -> Unit)? = null
 
-    /**
-    * 设置指定选项的选中状态
-    */
+
     fun setSelected(
     targetType: TargetType,
     isSelected: Boolean,
@@ -63,74 +63,72 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
     ),
     )
 
-    /**
-    * 刷新测量模式图标
-    */
-    fun upCurrentMeasureMode(measureMode: Int)  {
-    secondBean.clear()
-    when (measureMode) {
-    ObserveBean.TYPE_MEASURE_PERSON -> {
-    secondBean.add(
-    ColorBean(
-    MenuR.drawable.selector_menu2_target_1_person,
-    context.getString(R.string.main_tab_second_measure_mode),
-    CameraHelp.TYPE_SET_MEASURE_MODE,
-    ),
-    )
-    }
-    ObserveBean.TYPE_MEASURE_SHEEP -> {
-    secondBean.add(
-    ColorBean(
-    MenuR.drawable.selector_menu2_target_1_sheep,
-    context.getString(R.string.main_tab_second_measure_mode),
-    CameraHelp.TYPE_SET_MEASURE_MODE,
-    ),
-    )
-    }
-    ObserveBean.TYPE_MEASURE_DOG -> {
-    secondBean.add(
-    ColorBean(
-    MenuR.drawable.selector_menu2_target_1_dog,
-    context.getString(R.string.main_tab_second_measure_mode),
-    CameraHelp.TYPE_SET_MEASURE_MODE,
-    ),
-    )
-    }
-    ObserveBean.TYPE_MEASURE_BIRD -> {
-    secondBean.add(
-    ColorBean(
-    MenuR.drawable.selector_menu2_target_1_bird,
-    context.getString(R.string.main_tab_second_measure_mode),
-    CameraHelp.TYPE_SET_MEASURE_MODE,
-    ),
-    )
-    }
-    }
-    secondBean.add(
-    ColorBean(
-    MenuR.drawable.selector_menu2_target_2_style,
-    context.getString(R.string.main_tab_first_target),
-    CameraHelp.TYPE_SET_TARGET_MODE,
-    ),
-    )
-    secondBean.add(
-    ColorBean(
-    MenuR.drawable.selector_menu2_target_3_color,
-    context.getString(R.string.main_tab_second_target_color),
-    CameraHelp.TYPE_SET_TARGET_COLOR,
-    ),
-    )
-    secondBean.add(
-    ColorBean(MenuR.drawable.selector_menu2_del, context.getString(R.string.thermal_delete), CameraHelp.TYPE_SET_TARGET_DELETE),
-    )
-    secondBean.add(
-    ColorBean(
-    MenuR.drawable.selector_menu2_target_4_help,
-    context.getString(R.string.main_tab_second_target_help),
-    CameraHelp.TYPE_SET_TARGET_HELP,
-    ),
-    )
-    notifyDataSetChanged()
+
+    fun upCurrentMeasureMode(measureMode: Int) {
+        secondBean.clear()
+        when (measureMode) {
+            ObserveBean.TYPE_MEASURE_PERSON -> {
+                secondBean.add(
+                    ColorBean(
+                        MenuR.drawable.selector_menu2_target_1_person,
+                        context.getString(R.string.main_tab_second_measure_mode),
+                        CameraHelp.TYPE_SET_MEASURE_MODE,
+                    ),
+                )
+            }
+            ObserveBean.TYPE_MEASURE_SHEEP -> {
+                secondBean.add(
+                    ColorBean(
+                        MenuR.drawable.selector_menu2_target_1_sheep,
+                        context.getString(R.string.main_tab_second_measure_mode),
+                        CameraHelp.TYPE_SET_MEASURE_MODE,
+                    ),
+                )
+            }
+            ObserveBean.TYPE_MEASURE_DOG -> {
+                secondBean.add(
+                    ColorBean(
+                        MenuR.drawable.selector_menu2_target_1_dog,
+                        context.getString(R.string.main_tab_second_measure_mode),
+                        CameraHelp.TYPE_SET_MEASURE_MODE,
+                    ),
+                )
+            }
+            ObserveBean.TYPE_MEASURE_BIRD -> {
+                secondBean.add(
+                    ColorBean(
+                        MenuR.drawable.selector_menu2_target_1_bird,
+                        context.getString(R.string.main_tab_second_measure_mode),
+                        CameraHelp.TYPE_SET_MEASURE_MODE,
+                    ),
+                )
+            }
+        }
+        secondBean.add(
+            ColorBean(
+                MenuR.drawable.selector_menu2_target_2_style,
+                context.getString(R.string.main_tab_first_target),
+                CameraHelp.TYPE_SET_TARGET_MODE,
+            ),
+        )
+        secondBean.add(
+            ColorBean(
+                MenuR.drawable.selector_menu2_target_3_color,
+                context.getString(R.string.main_tab_second_target_color),
+                CameraHelp.TYPE_SET_TARGET_COLOR,
+            ),
+        )
+        secondBean.add(
+            ColorBean(MenuR.drawable.selector_menu2_del, context.getString(R.string.thermal_delete), CameraHelp.TYPE_SET_TARGET_DELETE),
+        )
+        secondBean.add(
+            ColorBean(
+                MenuR.drawable.selector_menu2_target_4_help,
+                context.getString(R.string.main_tab_second_target_help),
+                CameraHelp.TYPE_SET_TARGET_HELP,
+            ),
+        )
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(
@@ -173,8 +171,8 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
     val img: ImageView = itemView.findViewById(UiR.id.item_menu_tab_img)
     val name: TextView = itemView.findViewById(UiR.id.item_menu_tab_text)
 
-    init {
-//            val canSeeCount = 4.5 //一屏占4个
+        init {
+//            val canSeeCount = 4.5 
 //            val with = (ScreenUtils.getScreenWidth() / canSeeCount).toInt()
     itemView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 //            val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()

@@ -10,15 +10,9 @@ import androidx.annotation.ColorInt
 import androidx.databinding.BindingAdapter
 import com.blankj.utilcode.util.SizeUtils
 
-/**
-    * RecyclerView 的 BindingAdapter.
-    *
-    * Created by LCG on 2024/11/5.
-    */
+
 object ViewBindingAdapter {
-    /**
-    * 为 view 的 background 添加或移除 selectableItemBackground 效果.
-    */
+
     @JvmStatic
     @BindingAdapter("bgEffect")
     fun setBgEffect(
@@ -82,11 +76,7 @@ object ViewBindingAdapter {
     }
     }
 
-    /**
-    * 使用矩形 shape 将指定 view 的 background 填充颜色设置为指定颜色值.
-    *
-    * 注意：最好搭配其他 bgXXX 一起设置，只需要设置颜色的话用原生的 android:background 不是更好？
-    */
+
     @JvmStatic
     @BindingAdapter("bgColor")
     fun setBgColor(
@@ -98,16 +88,7 @@ object ViewBindingAdapter {
     view.background = buildEffectDrawable(view, gradientDrawable)
     }
 
-    /**
-    * 使用矩形 shape 为指定 view 的 background 设置圆角，单位**dp**.
-    *
-    * 注意：最好搭配其他 bgXXX 一起设置，否则光有圆角没颜色就相当于没设置。
-    * @param bgCorners 4个角的圆角值，单位dp
-    * @param bgCornersLT left-top 的圆角值，优先使用该值，单位dp
-    * @param bgCornersRT right-top 的圆角值，优先使用该值，单位dp
-    * @param bgCornersLB left-bottom 的圆角值，优先使用该值，单位dp
-    * @param bgCornersRB right-bottom 的圆角值，优先使用该值，单位dp
-    */
+
     @JvmStatic
     @BindingAdapter(value = ["bgCorners", "bgCornersLT", "bgCornersRT", "bgCornersLB", "bgCornersRB"], requireAll = false)
     fun setBgCorners(
@@ -130,11 +111,7 @@ object ViewBindingAdapter {
     view.background = buildEffectDrawable(view, gradientDrawable)
     }
 
-    /**
-    * 使用矩形 shape 为指定 view 的 background 设置描边.
-    * @param width 描边宽度，单位dp
-    * @param color 描边颜色值
-    */
+
     @JvmStatic
     @BindingAdapter(value = ["bgStrokeWidth", "bgStrokeColor"], requireAll = false)
     fun setBgStroke(
@@ -147,9 +124,7 @@ object ViewBindingAdapter {
     view.background = buildEffectDrawable(view, gradientDrawable)
     }
 
-    /**
-    * 使用矩形 shape 为指定 view 的 background 设置渐变颜色值.
-    */
+
     @JvmStatic
     @BindingAdapter(value = ["bgStartColor", "bgCenterColor", "bgEndColor"], requireAll = false)
     fun setBgGradientColor(
@@ -163,13 +138,7 @@ object ViewBindingAdapter {
     view.background = buildEffectDrawable(view, gradientDrawable)
     }
 
-    /**
-    * 使用矩形 shape 为指定 view 的 background 设置指定类型渐变参数.
-    * @param angle 线性渐变：渐变角度，必须为 45 的倍数，0为从左到右 90为从上到下 -90或270为从下到上
-    * @param radius 放射渐变：直径百分比
-    * @param centerX 放射渐变或扫描渐变：中心点X轴百分比
-    * @param centerY 放射渐变或扫描渐变：中心点Y轴百分比
-    */
+
     @JvmStatic
     @BindingAdapter(value = ["bgAngle", "bgRadius", "bgCenterX", "bgCenterY"], requireAll = false)
     fun setBgGradient(
@@ -212,18 +181,9 @@ object ViewBindingAdapter {
     }
     }
 
-    /**
-    * 从指定 view 的 background 中获取 GradientDrawable.
-    *
-    * 若指定 view 的 background 为 GradientDrawable，则直接返回；
-    *
-    * 若指定 view 的 background 为 ColorDrawable，返回新的相应颜色的 GradientDrawable；
-    *
-    * 若指定 view 的 background 为 LayerDrawable，则查找 background id 的 GradientDrawable；
-    *
-    * 其他情况新建 GradientDrawable 并返回。
-    */
+
     @JvmStatic
+
     private fun buildGradientDrawable(view: View): GradientDrawable {
     val oldDrawable: Drawable? = view.background
     if (oldDrawable is GradientDrawable) {
@@ -243,11 +203,9 @@ object ViewBindingAdapter {
     return GradientDrawable()
     }
 
-    /**
-    * 如果 view 此前的 background 已设置 bgEffect，则使用 bgDrawable 构建包含 bgEffect 的 LayerDrawable；
-    * 否则直接返回 bgDrawable
-    */
+
     @JvmStatic
+
     private fun buildEffectDrawable(
     view: View,
     bgDrawable: GradientDrawable,

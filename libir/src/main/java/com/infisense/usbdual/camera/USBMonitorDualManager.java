@@ -20,9 +20,7 @@ import com.infisense.usbdual.inf.OnUSBConnectListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by fengjibo on 2024/1/5.
- */
+
 public class USBMonitorDualManager {
 
     public static final String TAG = "USBMonitorDualManager";
@@ -175,10 +173,7 @@ public class USBMonitorDualManager {
                 mIrUvcCamera.setDefaultPreviewMaxFps(irFps);
                 // uvc开启
                 mIrUvcCamera.openUVCCamera(controlBlock);
-                /**
-                 * 调整带宽
-                 * 部分分辨率或在部分机型上，会出现无法出图，或出图一段时间后卡顿的问题，需要配置对应的带宽
-                 */
+
 
                 initIRCMD();
                 mIrUvcCamera.setUSBPreviewSize(irWidth, irHeight);
@@ -226,10 +221,7 @@ public class USBMonitorDualManager {
                 mVlUvcCamera.setDefaultPreviewMaxFps(vlFps);
                 // uvc开启
                 mVlUvcCamera.openUVCCamera(controlBlock);
-                /**
-                 * 调整带宽
-                 * 部分分辨率或在部分机型上，会出现无法出图，或出图一段时间后卡顿的问题，需要配置对应的带宽
-                 */
+
 
                 mVlUvcCamera.setUSBPreviewSize(vlWidth, vlHeight);
                 if (mVlIFrameCallback != null) {

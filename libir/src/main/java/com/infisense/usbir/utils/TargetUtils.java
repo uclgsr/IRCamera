@@ -253,16 +253,16 @@ public class TargetUtils {
     public static float getMeasureSize(int targetMeasureMode){
         float mMeasureSize = 180f;
         switch (targetMeasureMode) {
-            case ObserveBean.TYPE_MEASURE_PERSON://人
+            case ObserveBean.TYPE_MEASURE_PERSON://human
                 mMeasureSize = 180f;
                 break;
-            case ObserveBean.TYPE_MEASURE_SHEEP://羊
+            case ObserveBean.TYPE_MEASURE_SHEEP://sheep
                 mMeasureSize = 100f;
                 break;
-            case ObserveBean.TYPE_MEASURE_DOG://狗
+            case ObserveBean.TYPE_MEASURE_DOG://dog
                 mMeasureSize = 50f;
                 break;
-            case ObserveBean.TYPE_MEASURE_BIRD://鸟
+            case ObserveBean.TYPE_MEASURE_BIRD://bird
                 mMeasureSize = 20f;
                 break;
         }

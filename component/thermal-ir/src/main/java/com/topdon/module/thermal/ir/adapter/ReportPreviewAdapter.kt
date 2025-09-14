@@ -2,7 +2,6 @@ package com.topdon.module.thermal.ir.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -16,30 +15,33 @@ import com.blankj.utilcode.util.CollectionUtils
 // Removed house module import - module removed as unused
 // import com.topdon.house.activity.ImagesDetailActivity
 import com.topdon.lib.core.bean.HouseRepPreviewItemBean
-import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.view.DetectHorizontalScrollView.OnScrollStopListner
 
 
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRepPreviewItemBean>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     override fun getItemViewType(position: Int): Int {
     return position
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-    return ItemView(
-    LayoutInflater.from(parent.context).inflate(R.layout.item_report_floor, parent, false)
-    )
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
+        return ItemView(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_report_floor, parent, false),
+        )
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-    val data = dataList[position]
-    if (holder is ItemView) {
-    holder.tvFloorNumber.text = data.itemName
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
+        val data = dataList[position]
+        if (holder is ItemView) {
+            holder.tvFloorNumber.text = data.itemName
 
     holder.rcyReport.layoutManager = LinearLayoutManager(cxt)
     val reportPreviewAdapter =
@@ -56,36 +58,43 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
     holder.flyProject.visibility = View.GONE
     }
 
-    if (CollectionUtils.isNotEmpty(data.albumItemBeans)) {
-    holder.llyAlbum.visibility = View.VISIBLE
-    holder.rcyAlbum.layoutManager = GridLayoutManager(cxt, 3)
-    val albumAdapter = ReportPreviewAlbumAdapter(cxt, data.albumItemBeans)
-    holder.rcyAlbum.adapter = albumAdapter
-    albumAdapter.jumpListener = { _, position ->
-    // Disabled - ImagesDetailActivity from removed house module
-    // var intent = Intent(cxt, ImagesDetailActivity::class.java)
-    // var photos = ArrayList<String>()
-    // data.albumItemBeans.forEach {
-    //     photos.add(it.photoPath)
-    // }
-    // intent.putExtra(ExtraKeyConfig.IMAGE_PATH_LIST, photos)
-    // intent.putExtra(ExtraKeyConfig.CURRENT_ITEM, position)
-    // cxt.startActivity(intent)
+            if (CollectionUtils.isNotEmpty(data.albumItemBeans)) {
+                holder.llyAlbum.visibility = View.VISIBLE
+                holder.rcyAlbum.layoutManager = GridLayoutManager(cxt, 3)
+                val albumAdapter = ReportPreviewAlbumAdapter(cxt, data.albumItemBeans)
+                holder.rcyAlbum.adapter = albumAdapter
+                albumAdapter.jumpListener = { _, position ->
+                    // Disabled - ImagesDetailActivity from removed house module
+                    // var intent = Intent(cxt, ImagesDetailActivity::class.java)
+                    // var photos = ArrayList<String>()
+                    // data.albumItemBeans.forEach {
+                    //     photos.add(it.photoPath)
+                    // }
+                    // intent.putExtra(ExtraKeyConfig.IMAGE_PATH_LIST, photos)
+                    // intent.putExtra(ExtraKeyConfig.CURRENT_ITEM, position)
+                    // cxt.startActivity(intent)
 
-    // Temporary stub - show toast instead of navigating
-    TToast.shortToast(cxt, "Image detail view disabled - house module removed")
-    }
-    } else {
-    holder.llyAlbum.visibility = View.GONE
-    }
+                    // Temporary stub - show toast instead of navigating
+                    TToast.shortToast(cxt, "Image detail view disabled - house module removed")
+                }
+            } else {
+                holder.llyAlbum.visibility = View.GONE
+            }
 
-    holder.hsvReport.setOnTouchListener { _, event ->
-    if (event.action == MotionEvent.ACTION_UP) {
-    // Generic view doesn't have startScrollerTask method
-    // holder.hsvReport.startScrollerTask()
-    }
-    false
-    }
+            holder.hsvReport.setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_UP) {
+                    // Generic view doesn't have startScrollerTask method
+                    // holder.hsvReport.startScrollerTask()
+                }
+                false
+            }
+
+            // Scroll listener commented out due to type issues - would need proper MHorizontalScrollView import
+        /*
+        holder.hsvReport.setOnScrollStopListner(object : OnScrollStopListner {
+            override fun onScrollToRightEdge() {
+                holder.viewCategoryMask.visibility = View.VISIBLE
+            }
 
     // Scroll listener commented out due to type issues - would need proper MHorizontalScrollView import
     /*
@@ -102,18 +111,15 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
     holder.viewCategoryMask.visibility = View.GONE
     }
 
-    override fun onScrollStoped() {
-    }
-
-    override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
-    if (holder.viewCategoryMask.visibility == View.VISIBLE) {
-    return
-    }
-    holder.viewCategoryMask.visibility = View.VISIBLE
-    }
-    })
-    */
-    } // End of if (holder is ItemView) block
+            override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
+                if (holder.viewCategoryMask.visibility == View.VISIBLE) {
+                    return
+                }
+                holder.viewCategoryMask.visibility = View.VISIBLE
+            }
+        })
+         */
+        } // End of if (holder is ItemView) block
     }
 
     override fun getItemCount(): Int {

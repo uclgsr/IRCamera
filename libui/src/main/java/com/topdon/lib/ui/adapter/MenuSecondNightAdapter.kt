@@ -14,7 +14,8 @@ import com.topdon.lib.ui.config.CameraHelp
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
-@Deprecated("旧的高低温点菜单，已重构过了")
+
+@Deprecated("旧的high/low temperature点menu，已重构过了")
 class MenuSecondNightAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val curMultipleArray: HashMap<Int, Int> by lazy { hashMapOf() }
 
@@ -72,29 +73,30 @@ class MenuSecondNightAdapter(val context: Context) : RecyclerView.Adapter<Recycl
     }
 
     private fun multipleChoice(position: Int) {
-    // 1.计算curMultipleArray
-    if (position == secondBean.size - 1) {
-    curMultipleArray.clear()
-    curMultipleArray[position] = secondBean[position].code
-    } else {
-    if (curMultipleArray.contains(position)) {
-    curMultipleArray.remove(position)
-    } else {
-    curMultipleArray[position] = secondBean[position].code
-    }
-    if (curMultipleArray.contains(secondBean.size - 1)) {
-    curMultipleArray.remove(secondBean.size - 1)
-    }
-    }
-    // 2.执行listener
-    multipleListener?.invoke(secondBean[position].code, curMultipleArray.contains(position))
-    // 3.刷新数据
-    notifyDataSetChanged()
+        // 1.计算curMultipleArray
+        if (position == secondBean.size - 1) {
+            curMultipleArray.clear()
+            curMultipleArray[position] = secondBean[position].code
+        } else {
+            if (curMultipleArray.contains(position)) {
+                curMultipleArray.remove(position)
+            } else {
+                curMultipleArray[position] = secondBean[position].code
+            }
+            if (curMultipleArray.contains(secondBean.size - 1)) {
+                curMultipleArray.remove(secondBean.size - 1)
+            }
+        }
+        // 2.执行listener
+        multipleListener?.invoke(secondBean[position].code, curMultipleArray.contains(position))
+        // 3.refresh数据
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
     return secondBean.size
     }
+
 
     class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val lay: View = itemView.findViewById(UiR.id.item_menu_tab_lay)

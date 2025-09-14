@@ -3,17 +3,7 @@ package com.topdon.gsr.service
 import android.util.Log
 import com.topdon.gsr.model.GSRSample
 
-/**
-    * Enhanced Shimmer API Bridge with robust JAR file integration
-    * This class provides seamless integration with official Shimmer JAR files
-    * while maintaining compatibility and fallback capabilities
-    *
-    * Features:
-    * - Real-time processing using official Shimmer biophysical processing library
-    * - Graceful fallback for development and testing environments
-    * - Samsung S22 ground truth timing integration
-    * - Research-grade GSR data conversion and validation
-    */
+
 class ShimmerAPIBridge private constructor() {
     companion object {
     private const val TAG = "ShimmerAPIBridge"
@@ -33,10 +23,7 @@ class ShimmerAPIBridge private constructor() {
     initializeShimmerProcessing()
     }
 
-    /**
-    * Initialize Shimmer processing capabilities using reflection for safety
-    * This approach allows the code to work even if JAR files are missing or incompatible
-    */
+
     private fun initializeShimmerProcessing() {
     try {
     // Try to load and instantiate GSRMetrics class from the official JAR
@@ -64,19 +51,14 @@ class ShimmerAPIBridge private constructor() {
     }
     }
 
-    /**
-    * Setup enhanced fallback processing with research-grade algorithms
-    */
+
     private fun setupEnhancedFallback() {
     isOfficialAPIAvailable = false
     processingMode = "ENHANCED_FALLBACK"
     Log.i(TAG, "Using enhanced fallback GSR processing with research-grade algorithms")
     }
 
-    /**
-    * Process GSR data using the best available method
-    * Automatically selects between official JAR processing and enhanced fallback
-    */
+
     fun processGSRData(
     rawValue: Double,
     timestamp: Long,
@@ -89,9 +71,7 @@ class ShimmerAPIBridge private constructor() {
     }
     }
 
-    /**
-    * Process GSR data using official Shimmer algorithms via reflection
-    */
+
     private fun processWithOfficialAPI(
     rawValue: Double,
     timestamp: Long,
@@ -115,10 +95,7 @@ class ShimmerAPIBridge private constructor() {
     }
     }
 
-    /**
-    * Enhanced fallback processing with research-grade GSR algorithms
-    * Based on official Shimmer3 specifications and physiological research
-    */
+
     private fun processWithEnhancedFallback(
     rawValue: Double,
     timestamp: Long,
@@ -137,9 +114,7 @@ class ShimmerAPIBridge private constructor() {
     )
     }
 
-    /**
-    * Convert raw ADC value to conductance using official Shimmer processing
-    */
+
     private fun convertToConductanceOfficial(rawValue: Double): Double {
     return try {
     // This would call official GSRMetrics methods via reflection
@@ -152,9 +127,7 @@ class ShimmerAPIBridge private constructor() {
     }
     }
 
-    /**
-    * Convert raw ADC value to resistance using official Shimmer processing
-    */
+
     private fun convertToResistanceOfficial(conductance: Double): Double {
     return try {
     // This would call official GSRMetrics methods via reflection
@@ -165,10 +138,7 @@ class ShimmerAPIBridge private constructor() {
     }
     }
 
-    /**
-    * Convert raw ADC to resistance using enhanced Shimmer3 algorithm
-    * Based on official Shimmer3 GSR specifications and hardware configuration
-    */
+
     private fun convertToResistanceShimmer3(rawValue: Double): Double {
     // Enhanced Shimmer3 GSR resistance calculation
     // Uses the exact hardware specifications from Shimmer3 documentation
@@ -200,14 +170,10 @@ class ShimmerAPIBridge private constructor() {
     return resistanceKohms.coerceIn(10.0, 4700.0)
     }
 
-    /**
-    * Check if official Shimmer processing is available
-    */
+
     fun isOfficialProcessingAvailable(): Boolean = isOfficialAPIAvailable
 
-    /**
-    * Get detailed processing information
-    */
+
     fun getProcessingInfo(): String =
     when (processingMode) {
     "OFFICIAL_SHIMMER_JAR" -> "Official Shimmer GSRMetrics (JAR-based processing)"
@@ -215,9 +181,7 @@ class ShimmerAPIBridge private constructor() {
     else -> "Fallback GSR Processing"
     }
 
-    /**
-    * Get technical specifications
-    */
+
     fun getTechnicalSpecs(): Map<String, Any> =
     mapOf(
     "processing_mode" to processingMode,

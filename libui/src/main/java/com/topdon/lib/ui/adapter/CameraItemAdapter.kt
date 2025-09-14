@@ -10,11 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.core.R
 import com.topdon.lib.ui.R as UiR
 
-/**
-    * @author: CaiSongL
-    * @date: 2023/4/1 13:48
-    */
-@Deprecated("热成像-菜单-拍照已重构，不需要这个类了")
+
+
+@Deprecated("热成像-menu-capture已重构，不需要这个类了")
 class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapter.ViewHolder>() {
     val data: List<String> =
     listOf(

@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.topdon.lib.core.ktbase.BaseFragment
 import kotlinx.coroutines.Job
 
+
 open class BaseThermalFragment : BaseFragment() {
     var mIrBitmap: Bitmap? = null
     val REQUEST_CODE_FROM_UPGRADE = 1001

@@ -19,11 +19,7 @@ import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.tools.NumberTools
 import com.topdon.lib.core.tools.UnitTools
 
-/**
-    * des:
-    * author: CaiSongL
-    * date: 2024/4/7 14:59
-    **/
+
 class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
     private lateinit var binding: LayoutPopupTipEmissivityBinding
 
@@ -77,43 +73,41 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
     binding.tvEnvironmentTitle.text = context.getString(R.string.thermal_config_environment) + ":"
     binding.tvDistanceTitle.text = context.getString(R.string.thermal_config_distance) + ":"
 
-    binding.tvTitle.visibility = View.GONE
-    if (text.isNotEmpty())
-    {
-    binding.tvEmissivityMaterials.text = text
-    binding.tvEmissivityMaterials.visibility = View.VISIBLE
-    } else
-    {
-    binding.tvEmissivityMaterials.visibility = View.GONE
-    }
-    binding.dialogTipCancelBtn.visibility = View.GONE
-    binding.dialogTipSuccessBtn.text = context.getString(R.string.tc_modify_params)
-    binding.dialogTipCheck.visibility = View.GONE
-    binding.tvEmissivity.text = "${context?.getString(R.string.thermal_config_radiation)}: ${
-    NumberTools.to02(radiation)}"
-    binding.tvEnvironmentValue.text = UnitTools.showC(environment)
-    binding.tvDistanceValue.text = "${NumberTools.to02(distance)}m"
-    popupWindow =
-    PopupWindow(
-    view,
-    SizeUtils.dp2px(275f),
-    ViewGroup.LayoutParams.WRAP_CONTENT,
-    )
-    popupWindow?.apply {
-    isFocusable = true
-    isOutsideTouchable = true
-    isTouchable = true
-    setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 必要时可以替换为其他Drawable
-    }
-    binding.dialogTipSuccessBtn.setOnClickListener {
-    NavigationManager.build(RouterConfig.IR_SETTING)
-    .withBoolean(ExtraKeyConfig.IS_TC007, isTC007)
-    .navigation(context)
-    dismiss()
-    }
-    }
-    // 设置PopupWindow的其他属性和监听器...
-    return popupWindow!!
+            binding.tvTitle.visibility = View.GONE
+            if (text.isNotEmpty()) {
+                binding.tvEmissivityMaterials.text = text
+                binding.tvEmissivityMaterials.visibility = View.VISIBLE
+            } else {
+                binding.tvEmissivityMaterials.visibility = View.GONE
+            }
+            binding.dialogTipCancelBtn.visibility = View.GONE
+            binding.dialogTipSuccessBtn.text = context.getString(R.string.tc_modify_params)
+            binding.dialogTipCheck.visibility = View.GONE
+            binding.tvEmissivity.text = "${context?.getString(R.string.thermal_config_radiation)}: ${
+                NumberTools.to02(radiation)}"
+            binding.tvEnvironmentValue.text = UnitTools.showC(environment)
+            binding.tvDistanceValue.text = "${NumberTools.to02(distance)}m"
+            popupWindow =
+                PopupWindow(
+                    view,
+                    SizeUtils.dp2px(275f),
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                )
+            popupWindow?.apply {
+                isFocusable = true
+                isOutsideTouchable = true
+                isTouchable = true
+                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 必要时可以替换为其他Drawable
+            }
+            binding.dialogTipSuccessBtn.setOnClickListener {
+                NavigationManager.build(RouterConfig.IR_SETTING)
+                    .withBoolean(ExtraKeyConfig.IS_TC007, isTC007)
+                    .navigation(context)
+                dismiss()
+            }
+        }
+        // 设置PopupWindow的其他属性和监听器...
+        return popupWindow!!
     }
 
     fun show(anchorView: View) {

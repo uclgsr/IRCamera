@@ -22,6 +22,8 @@ except ImportError:
     from ..utils.simple_logger import logger
 
 from ..core.config import config
+from ..core.gsr_receiver import GSRReceiver
+from ..sync import EnhancedTimeSyncService
 from .discovery import NetworkDiscoveryService
 from .messaging import MessageCallback, MessagePriority, ReliableMessageService
 from .protocol import (
@@ -64,6 +66,13 @@ class MessageType(Enum):
     # File transfer
     FILE_TRANSFER_REQUEST = "file_transfer_request"
     FILE_TRANSFER_COMPLETE = "file_transfer_complete"
+
+    # GSR data streaming
+    GSR_STREAM_REGISTER = "stream_registration"
+    GSR_DATA = "gsr_data"
+    GSR_QUALITY_METRICS = "quality_metrics"
+    TIME_SYNC_REQUEST = "time_sync_request"
+    TIME_SYNC_RESPONSE = "time_sync_response"
 
     # Responses
     ACK = "ack"
@@ -119,6 +128,10 @@ class NetworkServer:
         self._security_manager = SecurityManager()
         self._discovery_service = NetworkDiscoveryService()
         self._messaging_service = ReliableMessageService()
+        self._enhanced_timesync = EnhancedTimeSyncService()
+
+        # GSR data receiver for hub-spoke communication
+        self._gsr_receiver = GSRReceiver(config.get("gsr_receiver", {}))
 
         # Protocol manager
         self._protocol = get_protocol_manager()
@@ -191,6 +204,12 @@ class NetworkServer:
             "time_sync_request": self._handle_time_sync_request,
             "gsr_data_batch": self._handle_gsr_data_batch,
             "gsr_leader_election": self._handle_gsr_leader_election,
+            # Enhanced GSR streaming handlers
+            "stream_registration": self._handle_gsr_stream_registration,
+            "gsr_data": self._handle_gsr_data_stream,
+            "quality_metrics": self._handle_gsr_quality_metrics,
+            "heartbeat": self._handle_gsr_heartbeat,
+            "stream_end": self._handle_gsr_stream_end,
             # Enhanced message types
             "device_auth": self._handle_device_auth,
             "message_ack": self._handle_message_ack,
@@ -221,6 +240,14 @@ class NetworkServer:
                 logger.warning(
                     "Discovery service failed to start - continuing without discovery"
                 )
+
+            # Start GSR receiver for hub-spoke communication
+            await self._gsr_receiver.start()
+            logger.info("GSR receiver started for hub-spoke communication")
+
+            # Start enhanced time synchronization service
+            await self._enhanced_timesync.start()
+            logger.info("Enhanced time synchronization service started")
 
             # Start plaintext server
             self._server = await asyncio.start_server(
@@ -253,7 +280,8 @@ class NetworkServer:
                 f"Network server started on {addr[0]}:{addr[1]} (plaintext) and {secure_addr[0]}:{secure_addr[1]} (TLS)"
             )
             logger.info(
-                "Enhanced networking features: TLS encryption, mDNS discovery, reliable messaging"
+                "Enhanced networking features: TLS encryption, mDNS discovery,
+                    reliable messaging"
             )
 
             return True
@@ -274,6 +302,14 @@ class NetworkServer:
         # Stop enhanced services
         await self._messaging_service.shutdown()
         await self._discovery_service.stop_discovery()
+
+        # Stop GSR receiver
+        await self._gsr_receiver.stop()
+        logger.info("GSR receiver stopped")
+
+        # Stop enhanced time sync service
+        await self._enhanced_timesync.stop()
+        logger.info("Enhanced time synchronization service stopped")
 
         # Cancel heartbeat monitoring
         if self._heartbeat_task:
@@ -532,18 +568,27 @@ class NetworkServer:
     async def _handle_time_sync_request(
         self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
-        """Handle time synchronization request using protocol format."""
-        message.get("device_id")
-        client_timestamp = message.get("client_timestamp")
-
-        server_timestamp = datetime.now(timezone.utc).isoformat()
-
-        return create_message(
-            "time_sync_response",
-            server_timestamp=server_timestamp,
-            client_timestamp=client_timestamp,
-            processing_delay_ms=1.0,
-        )  # Minimal processing delay
+        """Handle time synchronization request using enhanced NTP-like protocol."""
+        try:
+            device_id = message.get("device_id", "unknown")
+            
+            # Delegate to enhanced time sync service
+            response = await self._enhanced_timesync.handle_time_sync_request(message, device_id)
+            
+            # Add message ID for proper protocol compliance
+            message_id = message.get("message_id")
+            if message_id:
+                response["message_id"] = message_id
+                
+            return response
+            
+        except Exception as e:
+            logger.error(f"Error in time sync handler: {e}")
+            return create_message(
+                "error",
+                error_code="SYNC_ERROR", 
+                error_message=f"Time sync error: {e}"
+            )
 
     async def _handle_gsr_data_batch(
         self, message: Dict[str, Any], writer: asyncio.StreamWriter
@@ -791,7 +836,7 @@ class NetworkServer:
         return results
 
     async def start_recording_session(
-        self, session_id: str, session_name: str = None
+        self, session_id: str, session_name: Optional[str] = None
     ) -> Dict[str, bool]:
         """Start recording session on all devices using protocol format."""
         command = create_message(
@@ -852,7 +897,7 @@ class NetworkServer:
         self,
         writer: asyncio.StreamWriter,
         error_message: str,
-        message_id: str = None,
+        message_id: Optional[str] = None,
     ) -> None:
         """Send error response to client using protocol format."""
         error_response = create_message(
@@ -1219,5 +1264,200 @@ class NetworkServer:
             ]
 
         logger.debug(
-            f"Buffered {len(data_points)} GSR points from {device_id}, buffer size: {len(self._gsr_data_buffer[device_id])}"
+            f"Buffered {len(data_points)} GSR points from {device_id},
+                buffer size: {len(self._gsr_data_buffer[device_id])}"
         )
+
+    # Enhanced GSR Streaming Handlers for Hub-Spoke Communication
+
+    async def _handle_gsr_stream_registration(
+        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+    ) -> Dict[str, Any]:
+        """Handle GSR stream registration from Android device"""
+        try:
+            device_id = message.get("device_id")
+            session_id = message.get("session_id")
+            stream_type = message.get("stream_type")
+
+            if not all([device_id, session_id, stream_type]):
+                return {"message_type": "error", "error": "Missing required fields"}
+
+            # Register with GSR receiver
+            success = await self._gsr_receiver.register_device_session(
+                device_id, session_id
+            )
+
+            if success:
+                logger.info(f"Registered GSR stream: {device_id}/{session_id}")
+                return {
+                    "message_type": "ack",
+                    "status": "registered",
+                    "server_time": time.time(),
+                }
+            else:
+                return {"message_type": "error", "error": "Registration failed"}
+
+        except Exception as e:
+            logger.error(f"Error handling GSR stream registration: {e}")
+            return {"message_type": "error", "error": str(e)}
+
+    async def _handle_gsr_data_stream(
+        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+    ) -> Optional[Dict[str, Any]]:
+        """Handle real-time GSR data stream from Android device"""
+        try:
+            device_id = message.get("device_id")
+            session_id = message.get("session_id")
+            samples = message.get("samples", [])
+
+            if not device_id or not samples:
+                logger.warning("Invalid GSR data stream message")
+                return None
+
+            # Process GSR batch with receiver
+            success = await self._gsr_receiver.process_gsr_batch(
+                device_id, session_id, samples
+            )
+
+            if success:
+                logger.debug(
+                    f"Processed GSR batch: {len(samples)} samples from {device_id}"
+                )
+            else:
+                logger.warning(f"Failed to process GSR batch from {device_id}")
+
+            # No explicit response needed for streaming data
+            return None
+
+        except Exception as e:
+            logger.error(f"Error handling GSR data stream: {e}")
+            return None
+
+    async def _handle_gsr_quality_metrics(
+        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+    ) -> Optional[Dict[str, Any]]:
+        """Handle GSR quality metrics from Android device"""
+        try:
+            device_id = message.get("device_id")
+            session_id = message.get("session_id")
+
+            if not device_id:
+                return None
+
+            # Process quality metrics with receiver
+            success = await self._gsr_receiver.handle_quality_metrics(
+                device_id, session_id, message
+            )
+
+            if success:
+                logger.debug(f"Processed quality metrics from {device_id}")
+
+            return None
+
+        except Exception as e:
+            logger.error(f"Error handling GSR quality metrics: {e}")
+            return None
+
+    async def _handle_gsr_heartbeat(
+        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+    ) -> Optional[Dict[str, Any]]:
+        """Handle GSR heartbeat from Android device"""
+        try:
+            device_id = message.get("device_id")
+            session_id = message.get("session_id")
+
+            if not device_id:
+                return None
+
+            # Process heartbeat with receiver
+            success = await self._gsr_receiver.handle_heartbeat(
+                device_id, session_id, message
+            )
+
+            if success:
+                logger.debug(f"Processed GSR heartbeat from {device_id}")
+
+            return None
+
+        except Exception as e:
+            logger.error(f"Error handling GSR heartbeat: {e}")
+            return None
+
+    async def _handle_gsr_stream_end(
+        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+    ) -> Dict[str, Any]:
+        """Handle GSR stream end notification from Android device"""
+        try:
+            device_id = message.get("device_id")
+            session_id = message.get("session_id")
+
+            if not all([device_id, session_id]):
+                return {"message_type": "error", "error": "Missing required fields"}
+
+            # End session with GSR receiver
+            success = await self._gsr_receiver.end_session(device_id, session_id)
+
+            if success:
+                logger.info(f"Ended GSR stream: {device_id}/{session_id}")
+                return {
+                    "message_type": "ack",
+                    "status": "stream_ended",
+                    "server_time": time.time(),
+                }
+            else:
+                return {"message_type": "error", "error": "Failed to end stream"}
+
+        except Exception as e:
+            logger.error(f"Error handling GSR stream end: {e}")
+            return {"message_type": "error", "error": str(e)}
+
+    def get_gsr_session_stats(self) -> Dict[str, Any]:
+        """Get GSR session statistics for monitoring"""
+        try:
+            return self._gsr_receiver.get_all_session_stats()
+        except Exception as e:
+            logger.error(f"Error getting GSR session stats: {e}")
+            return {}
+
+    async def export_gsr_session_data(
+        self, device_id: str, session_id: str, format: str = "csv"
+    ) -> Optional[str]:
+        """Export GSR session data to file"""
+        try:
+            export_path = await self._gsr_receiver.export_session_data(
+                device_id, session_id, format
+            )
+            return str(export_path) if export_path else None
+        except Exception as e:
+            logger.error(f"Error exporting GSR session data: {e}")
+            return None
+
+    # Enhanced Time Synchronization Interface
+    
+    def get_time_sync_stats(self, device_id: str = None) -> Dict[str, Any]:
+        """Get time synchronization statistics."""
+        if device_id:
+            stats = self._enhanced_timesync.get_device_sync_stats(device_id)
+            return asdict(stats) if stats else {}
+        else:
+            return self._enhanced_timesync.get_sync_quality_summary()
+    
+    def get_all_time_sync_stats(self) -> Dict[str, Any]:
+        """Get time synchronization statistics for all devices."""
+        all_stats = self._enhanced_timesync.get_all_sync_stats()
+        return {
+            device_id: asdict(stats) 
+            for device_id, stats in all_stats.items()
+        }
+    
+    def is_device_time_synchronized(self, device_id: str) -> bool:
+        """Check if device is properly time synchronized."""
+        return self._enhanced_timesync.is_device_synchronized(device_id)
+    
+    async def register_time_sync_session(self, session_id: str, device_id: str) -> bool:
+        """Register a session for time synchronization tracking."""
+        return await self._enhanced_timesync.register_session(session_id, device_id)
+    
+    async def end_time_sync_session(self, session_id: str) -> bool:
+        """End a time synchronization session."""
+        return await self._enhanced_timesync.end_session(session_id)

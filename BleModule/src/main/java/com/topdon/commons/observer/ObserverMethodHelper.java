@@ -12,10 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * date: 2019/8/9 15:13
- * author: chuanfeng.bi
- */
+
 class ObserverMethodHelper {
     private static final Map<Class<?>, Map<String, Method>> METHOD_CACHE = new ConcurrentHashMap<>();
     private boolean isObserveAnnotationRequired;
@@ -28,9 +25,7 @@ class ObserverMethodHelper {
         METHOD_CACHE.clear();
     }
 
-    /**
-     * 生成任务
-     */
+
     Runnable generateRunnable(Observer observer, Method method, MethodInfo info) {
         MethodInfo.Parameter[] parameters = info.getParameters();
         if (parameters == null || parameters.length == 0) {
@@ -57,9 +52,7 @@ class ObserverMethodHelper {
         }
     }
 
-    /**
-     * 生成方法唯一识别字符串
-     */
+
     String generateKey(String tag, String name, Class<?>[] paramTypes) {
         StringBuilder sb = new StringBuilder();
         if (tag.isEmpty()) {
@@ -73,9 +66,7 @@ class ObserverMethodHelper {
         return sb.toString();
     }
 
-    /**
-     * 查找观察者监听的方法
-     */
+
     Map<String, Method> findObserverMethod(Observer observer) {
         Map<String, Method> map = METHOD_CACHE.get(observer.getClass());
         if (map != null) {

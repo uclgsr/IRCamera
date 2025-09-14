@@ -5,12 +5,7 @@ import com.github.mikephil.charting.data.PieEntry;
 
 import java.text.DecimalFormat;
 
-/**
- * This IValueFormatter is just for convenience and simply puts a "%" sign after
- * each value. (Recommeded for PieChart)
- *
- * @author Philipp Jahoda
- */
+
 public class PercentFormatter extends ValueFormatter
 {
 

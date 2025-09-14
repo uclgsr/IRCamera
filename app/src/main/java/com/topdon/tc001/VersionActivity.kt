@@ -1,5 +1,6 @@
 package com.topdon.tc001
 
+import android.os.Bundle
 import android.view.View
 import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
@@ -19,36 +20,40 @@ import java.util.*
 
 // Legacy ARouter route annotation - now using NavigationManager
 class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnClickListener {
+    override fun initContentLayoutId(): Int = R.layout.activity_version
 
-    override fun getViewBinding(): ActivityVersionBinding =
-    ActivityVersionBinding.inflate(layoutInflater)
-
-    override fun initView() {
-    // Set up views using binding
-    binding.versionCodeText.text = "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
-    val year = Calendar.getInstance().get(Calendar.YEAR)
-    binding.versionYearTxt.text = getString(R.string.version_year, "2023-$year")
-    binding.versionStatementPrivateTxt.setOnClickListener(this)
-    binding.versionStatementPolicyTxt.setOnClickListener(this)
-    binding.versionStatementCopyrightTxt.setOnClickListener(this)
-
-    binding.settingVersionImg.setOnClickListener {
-    if (BuildConfig.DEBUG && CheckDoubleClick.isFastDoubleClick()) {
-    LMS.getInstance().activityEnv()
-    }
-    }
-    binding.clNewVersion.setOnClickListener {
-    if (!CheckDoubleClick.isFastDoubleClick()) {
-    checkAppVersion(true)
-    }
-    }
-    binding.settingVersionTxt.text = CommUtils.getAppName()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+        initData()
     }
 
-    override fun initData() {
-    if (BaseApplication.instance.isDomestic()) {
-    checkAppVersion(false)
+    private fun initView() {
+        // Set up views using binding
+        binding.versionCodeText.text = "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
+        val year = Calendar.getInstance().get(Calendar.YEAR)
+        binding.versionYearTxt.text = getString(R.string.version_year, "2023-$year")
+        binding.versionStatementPrivateTxt.setOnClickListener(this)
+        binding.versionStatementPolicyTxt.setOnClickListener(this)
+        binding.versionStatementCopyrightTxt.setOnClickListener(this)
+
+        binding.settingVersionImg.setOnClickListener {
+            if (BuildConfig.DEBUG && CheckDoubleClick.isFastDoubleClick()) {
+                LMS.getInstance().activityEnv()
+            }
+        }
+        binding.includeNewVersion.clNewVersion.setOnClickListener {
+            if (!CheckDoubleClick.isFastDoubleClick()) {
+                checkAppVersion(true)
+            }
+        }
+        binding.settingVersionTxt.text = CommUtils.getAppName()
     }
+
+    private fun initData() {
+        if (BaseApplication.instance.isDomestic()) {
+            checkAppVersion(false)
+        }
     }
 
     override fun onResume() {
@@ -79,21 +84,21 @@ class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnCl
     private var appVersionUtil: AppVersionUtil? = null
 
     private fun checkAppVersion(isShow: Boolean) {
-    if (appVersionUtil == null) {
-    appVersionUtil =
-    AppVersionUtil(
-    this,
-    object : AppVersionUtil.DotIsShowListener {
-    override fun isShow(show: Boolean) {
-    binding.clNewVersion.visibility = View.VISIBLE
-    }
+        if (appVersionUtil == null) {
+            appVersionUtil =
+                AppVersionUtil(
+                    this,
+                    object : AppVersionUtil.DotIsShowListener {
+                        override fun isShow(show: Boolean) {
+                            binding.includeNewVersion.clNewVersion.visibility = View.VISIBLE
+                        }
 
-    override fun version(version: String) {
-    binding.tvNewVersion.text = "$version"
-    }
-    },
-    )
-    }
-    appVersionUtil?.checkVersion(isShow)
+                        override fun version(version: String) {
+                            binding.includeNewVersion.tvNewVersion.text = "$version"
+                        }
+                    },
+                )
+        }
+        appVersionUtil?.checkVersion(isShow)
     }
 }

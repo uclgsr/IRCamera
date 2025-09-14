@@ -2,12 +2,7 @@ package com.shimmerresearch.driver
 
 import kotlin.math.pow
 
-/**
-    * GSR calibration utilities for Shimmer devices
-    * Based on official Shimmer Android API calibration methods
-    *
-    * Provides conversion between raw ADC values and calibrated GSR measurements
-    */
+
 object CalibrationUtilities {
     // GSR calibration constants for different ranges
     private val GSR_UNCALIBRATED_TO_KOHMS =
@@ -26,9 +21,7 @@ object CalibrationUtilities {
     3012.3, // Range 3 offset
     )
 
-    /**
-    * Convert uncalibrated GSR ADC value to resistance in kΩ
-    */
+
     fun calibrateGSRToResistance(
     uncalibratedData: Int,
     gsrRange: Int,
@@ -43,23 +36,17 @@ object CalibrationUtilities {
     return if (denominator > 0) multiplier / denominator else 0.0
     }
 
-    /**
-    * Convert resistance in kΩ to conductance in µS
-    */
+
     fun resistanceToConductance(resistanceKohms: Double): Double {
     return if (resistanceKohms > 0) 1000.0 / resistanceKohms else 0.0
     }
 
-    /**
-    * Convert conductance in µS to resistance in kΩ
-    */
+
     fun conductanceToResistance(conductanceUS: Double): Double {
     return if (conductanceUS > 0) 1000.0 / conductanceUS else 0.0
     }
 
-    /**
-    * Apply auto-range selection for GSR based on current resistance
-    */
+
     fun selectOptimalGSRRange(resistanceKohms: Double): Int {
     return when {
     resistanceKohms <= 56 -> Configuration.GSR_RANGE_10KOHM_56KOHM
@@ -70,9 +57,7 @@ object CalibrationUtilities {
     }
     }
 
-    /**
-    * Generate realistic simulated ADC value for given resistance and range
-    */
+
     fun generateSimulatedADC(
     targetResistanceKohms: Double,
     gsrRange: Int,
@@ -91,9 +76,7 @@ object CalibrationUtilities {
     return (calculatedADC + noise).toInt().coerceIn(0, 4095) // 12-bit ADC
     }
 
-    /**
-    * Validate GSR measurement ranges
-    */
+
     fun isValidGSRReading(
     resistanceKohms: Double,
     conductanceUS: Double,
@@ -109,9 +92,7 @@ object CalibrationUtilities {
     return validResistance && validConductance && consistency
     }
 
-    /**
-    * Apply smoothing filter to GSR data to remove artifacts
-    */
+
     fun applySmoothingFilter(
     values: DoubleArray,
     windowSize: Int = 5,
@@ -139,9 +120,7 @@ object CalibrationUtilities {
     return smoothed
     }
 
-    /**
-    * Calculate GSR statistics for quality assessment
-    */
+
     data class GSRStatistics(
     val mean: Double,
     val standardDeviation: Double,

@@ -6,11 +6,11 @@ import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityClauseBinding
 import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.base.BaseBindingActivity
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.dialog.TipProgressDialog
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.utils.CommUtils
 import com.topdon.lms.sdk.utils.NetworkUtil
@@ -24,14 +24,12 @@ import kotlinx.coroutines.launch
 import java.util.*
 import com.topdon.lib.core.R as LibCoreR
 
-/**
-    * 条款
-    */
+
 // Legacy ARouter route annotation - now using NavigationManager
 class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
     private lateinit var dialog: TipProgressDialog
 
-    override fun getLayoutId() = R.layout.activity_clause
+    override fun initContentLayoutId() = R.layout.activity_clause
 
     override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -48,59 +46,59 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
     val year = Calendar.getInstance().get(Calendar.YEAR)
     binding.clauseYearTxt.text = getString(R.string.version_year, "2023-$year")
 
-    binding.clauseAgreeBtn.setOnClickListener {
-    confirmInitApp()
-    }
-    binding.clauseDisagreeBtn.setOnClickListener {
-    // 再次弹框确认是否退出
-    TipDialog.Builder(this)
-    .setMessage(getString(R.string.privacy_tips))
-    .setPositiveListener(R.string.privacy_confirm) {
-    confirmInitApp()
-    }
-    .setCancelListener(R.string.privacy_cancel) {
-    this.finish()
-    }
-    .setCanceled(true)
-    .create().show()
-    }
-    val keyUseType = if (BaseApplication.instance.isDomestic()) 1 else 0
-    binding.clauseItem.setOnClickListener {
-    if (!NetworkUtil.isConnected(this)) {
-    TToast.shortToast(this, R.string.lms_setting_http_error)
-    } else {
-    // 服务条款
-    NavigationManager.getInstance()
-    .build(RouterConfig.POLICY)
-    .withInt(PolicyActivity.KEY_THEME_TYPE, 1)
-    .withInt(PolicyActivity.KEY_USE_TYPE, keyUseType)
-    .navigation(this)
-    }
-    }
-    clauseItem2.setOnClickListener {
-    if (!NetworkUtil.isConnected(this)) {
-    TToast.shortToast(this, R.string.lms_setting_http_error)
-    } else {
-    // 隐私条款
-    NavigationManager.getInstance()
-    .build(RouterConfig.POLICY)
-    .withInt(PolicyActivity.KEY_THEME_TYPE, 2)
-    .withInt(PolicyActivity.KEY_USE_TYPE, keyUseType)
-    .navigation(this)
-    }
-    }
-    binding.clauseItem3.setOnClickListener {
-    // 第三方
-    if (!NetworkUtil.isConnected(this)) {
-    TToast.shortToast(this, R.string.lms_setting_http_error)
-    } else {
-    NavigationManager.getInstance()
-    .build(RouterConfig.POLICY)
-    .withInt(PolicyActivity.KEY_THEME_TYPE, 3)
-    .withInt(PolicyActivity.KEY_USE_TYPE, keyUseType)
-    .navigation(this)
-    }
-    }
+        binding.clauseAgreeBtn.setOnClickListener {
+            confirmInitApp()
+        }
+        binding.clauseDisagreeBtn.setOnClickListener {
+            // 再次弹框Confirm是否Exit
+            TipDialog.Builder(this)
+                .setMessage(getString(R.string.privacy_tips))
+                .setPositiveListener(R.string.privacy_confirm) {
+                    confirmInitApp()
+                }
+                .setCancelListener(R.string.privacy_cancel) {
+                    this.finish()
+                }
+                .setCanceled(true)
+                .create().show()
+        }
+        val keyUseType = if (BaseApplication.instance.isDomestic()) 1 else 0
+        binding.clauseItem.setOnClickListener {
+            if (!NetworkUtil.isConnected(this)) {
+                TToast.shortToast(this, R.string.lms_setting_http_error)
+            } else {
+                // 服务条款
+                NavigationManager.getInstance()
+                    .build(RouterConfig.POLICY)
+                    .withInt(PolicyActivity.KEY_THEME_TYPE, 1)
+                    .withInt(PolicyActivity.KEY_USE_TYPE, keyUseType)
+                    .navigation(this)
+            }
+        }
+        binding.clauseItem2.setOnClickListener {
+            if (!NetworkUtil.isConnected(this)) {
+                TToast.shortToast(this, R.string.lms_setting_http_error)
+            } else {
+                // 隐私条款
+                NavigationManager.getInstance()
+                    .build(RouterConfig.POLICY)
+                    .withInt(PolicyActivity.KEY_THEME_TYPE, 2)
+                    .withInt(PolicyActivity.KEY_USE_TYPE, keyUseType)
+                    .navigation(this)
+            }
+        }
+        binding.clauseItem3.setOnClickListener {
+            // 第三方
+            if (!NetworkUtil.isConnected(this)) {
+                TToast.shortToast(this, R.string.lms_setting_http_error)
+            } else {
+                NavigationManager.getInstance()
+                    .build(RouterConfig.POLICY)
+                    .withInt(PolicyActivity.KEY_THEME_TYPE, 3)
+                    .withInt(PolicyActivity.KEY_USE_TYPE, keyUseType)
+                    .navigation(this)
+            }
+        }
 
     if (BaseApplication.instance.isDomestic()) {
     binding.tvPrivacy.text = "    ${getString(R.string.privacy_agreement_tips_new, CommUtils.getAppName())}"

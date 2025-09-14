@@ -19,10 +19,7 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import java.lang.ref.WeakReference
 
-/**
-    *
-    * Created by LCG on 2024/2/19.
-    */
+
 class SpanBuilder : SpannableStringBuilder {
     constructor() : super()
 

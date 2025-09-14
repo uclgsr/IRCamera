@@ -21,12 +21,12 @@
 //    override fun initContentView() = R.layout.activity_chart
 //
 //    override fun initView() {
-//        setTitleText("图表")
-//        //初始数据
+//setTitleText("图表")
+////初始data
 //        aa_chart_view.aa_drawChartWithChartOptions(
 //            configureSpecialStyleMarkerOfSingleDataElementChart().aa_toAAOptions()
 //        )
-//        //动态更新
+////动态update
 //        lifecycleScope.launch {
 //            flow {
 //                repeat(40) {
@@ -65,14 +65,14 @@
 //    private fun configureSpecialStyleMarkerOfSingleDataElementChart(): AAChartModel {
 //        return AAChartModel()
 //            .chartType(AAChartType.Spline)
-//            .title("监测记录")
+//.title("监测记录")
 //            .subtitle("2021-10-20")
 //            .titleStyle(AAStyle.Companion.style("#FFFFFF"))
 //            .subtitleStyle(AAStyle.Companion.style(color = "#FFFFFF", fontSize = 12f))
 //            .backgroundColor("#3598E8")
 //            .yAxisTitle("")
 //            .axesTextColor("#FFFFFF")
-//            .dataLabelsEnabled(false)//坐标点是否显示值
+//.dataLabelsEnabled(false)//坐标点是否display值
 //            .tooltipEnabled(true)
 //            .markerRadius(0f)
 //            .scrollablePlotArea(AAScrollablePlotArea().minWidth(10).minHeight(10))

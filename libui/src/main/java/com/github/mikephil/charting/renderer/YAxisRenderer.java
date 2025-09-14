@@ -41,9 +41,7 @@ public class YAxisRenderer extends AxisRenderer {
         }
     }
 
-    /**
-     * draws the y-axis labels to the screen
-     */
+
     @Override
     public void renderAxisLabels(Canvas c) {
 
@@ -106,12 +104,7 @@ public class YAxisRenderer extends AxisRenderer {
         }
     }
 
-    /**
-     * draws the y-labels on the specified x-position
-     *
-     * @param fixedPosition
-     * @param positions
-     */
+
     protected void drawYLabels(Canvas c, float fixedPosition, float[] positions, float offset) {
 
         final int from = mYAxis.isDrawBottomYLabelEntryEnabled() ? 0 : 1;
@@ -173,14 +166,7 @@ public class YAxisRenderer extends AxisRenderer {
         return mGridClippingRect;
     }
 
-    /**
-     * Calculates the path for a grid line.
-     *
-     * @param p
-     * @param i
-     * @param positions
-     * @return
-     */
+
     protected Path linePath(Path p, int i, float[] positions) {
 
         p.moveTo(mViewPortHandler.offsetLeft(), positions[i + 1]);
@@ -190,12 +176,7 @@ public class YAxisRenderer extends AxisRenderer {
     }
 
     protected float[] mGetTransformedPositionsBuffer = new float[2];
-    /**
-     * Transforms the values contained in the axis entries to screen pixels and returns them in form of a float array
-     * of x- and y-coordinates.
-     *
-     * @return
-     */
+
     protected float[] getTransformedPositions() {
 
         if(mGetTransformedPositionsBuffer.length != mYAxis.mEntryCount * 2){
@@ -215,9 +196,7 @@ public class YAxisRenderer extends AxisRenderer {
     protected Path mDrawZeroLinePath = new Path();
     protected RectF mZeroLineClippingRect = new RectF();
 
-    /**
-     * Draws the zero line.
-     */
+
     protected void drawZeroLine(Canvas c) {
 
         int clipRestoreCount = c.save();
@@ -246,11 +225,7 @@ public class YAxisRenderer extends AxisRenderer {
     protected Path mRenderLimitLines = new Path();
     protected float[] mRenderLimitLinesBuffer = new float[2];
     protected RectF mLimitLineClippingRect = new RectF();
-    /**
-     * Draws the LimitLines associated with this axis to the screen.
-     *
-     * @param c
-     */
+
     @Override
     public void renderLimitLines(Canvas c) {
 

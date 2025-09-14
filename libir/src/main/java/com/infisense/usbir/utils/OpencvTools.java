@@ -101,11 +101,7 @@ public class OpencvTools {
     }
 
 
-    /**
-     * 效果更好的超分，但是此函数耗时过长，应用于拍照
-     * @param inBitmap
-     * @return
-     */
+
     public static Bitmap supImageFour(Bitmap inBitmap){
         long startTime = System.currentTimeMillis();
         ByteBuffer rawData = ByteBuffer.wrap(SupRUtils.INSTANCE.bitmapToByteArray(inBitmap));
@@ -113,7 +109,7 @@ public class OpencvTools {
         dataIn.put(rawData);
         ByteBuffer dataOut = ByteBuffer.allocateDirect(rawData.array().length * 4);
         SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance,dataIn,dataOut);
-        // 创建一个普通的 byte[] 数组来存储数据
+        // 创建一个普通的 byte[] array来存储数据
         byte[] byteArray = new byte[dataOut.capacity()];
         // 将 ByteBuffer 的内容复制到 byteArray 中
         dataOut.get(byteArray);
@@ -130,7 +126,7 @@ public class OpencvTools {
         // 调用 imgUpScalerFour 方法
         SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);
         Log.e("AI_UPSCALE 4倍超分模型2：", String.valueOf((System.currentTimeMillis() - startTime)));
-        // 创建一个普通的 byte[] 数组来存储输出数据
+        // 创建一个普通的 byte[] array来存储输出数据
         byte[] outputData = new byte[dataOut.capacity()];
         dataOut.get(outputData);
         Log.e("4倍超分模型：", String.valueOf((System.currentTimeMillis() - startTime)));
@@ -151,7 +147,7 @@ public class OpencvTools {
         SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);
         Log.e("AI_UPSCALE 4倍超分模型2：", String.valueOf((System.currentTimeMillis() - startTime)) + "////" + dstArgbBytes.length);
 
-        // 创建一个普通的 byte[] 数组来存储输出数据
+        // 创建一个普通的 byte[] array来存储输出数据
         byte[] outputData = new byte[dataOut.capacity()];
         dataOut.get(outputData);
 
@@ -182,7 +178,7 @@ public class OpencvTools {
 
     public static Bitmap supImageFourExToBitmap(Bitmap inBitmap) {
         long startTime = System.currentTimeMillis();
-        // 将 Bitmap 转换为字节数组
+        // 将 Bitmap 转换为字节array
         byte[] rawData = SupRUtils.INSTANCE.bitmapToByteArray(inBitmap);
         // 创建 ByteBuffer 并填充数据
         ByteBuffer dataIn = ByteBuffer.allocateDirect(rawData.length);
@@ -192,7 +188,7 @@ public class OpencvTools {
         // 调用 imgUpScalerFour 方法
         SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);
         Log.e("AI_UPSCALE 4倍超分模型2：", String.valueOf((System.currentTimeMillis() - startTime))+"////"+rawData.length);
-        // 创建一个普通的 byte[] 数组来存储输出数据
+        // 创建一个普通的 byte[] array来存储输出数据
         byte[] outputData = new byte[dataOut.capacity()];
         dataOut.get(outputData);
         // 将输出数据转换为 Bitmap
@@ -238,19 +234,19 @@ public class OpencvTools {
 
     public static byte[] convertSingleByteToDoubleByte(byte[] singleByteImage) {
         if (singleByteImage == null) {
-            throw new IllegalArgumentException("输入的byte数组不能为null");
+            throw new IllegalArgumentException("输入的bytearray不能为null");
         }
         int singleLength = singleByteImage.length;
-        // 新数组是原来长度的两倍
+        // 新array是原来长度的两倍
         int doubleLength = singleLength * 2;
         byte[] doubleByteImage = new byte[doubleLength];
 
         for (int i = 0; i < singleLength; i++) {
             // 这里假定我们只将原本一个字节的数据复制到新的两个字节中的第一个
-            // 这种情况下第二个字节可能是保留为0，用于表示较大的颜色空间或者进行格式对齐。
+            // 这种情况下第二个字节可能是保留为0，用于表示较大的color空间或者进行格式对齐。
             // 您可能需要根据具体的图片数据格式来调整这部分代码
             doubleByteImage[2 * i] = singleByteImage[i];
-            // 如果需要其它处理 (例如设置第二个字节的值) 在这里操作
+            // 如果需要其它处理 (例如settings第二个字节的值) 在这里操作
             // doubleByteImage[2 * i + 1] = <some value>;
         }
         return doubleByteImage;
@@ -258,17 +254,13 @@ public class OpencvTools {
 
 
 
-    /**
-     * 温度转成开尔文
-     * @param temp
-     * @return
-     */
+
     public static byte[] convertCelsiusToOriginalBytes(float[] temp) {
         if (temp == null) {
             return new byte[0];
         }
         float maxValue = 0f;
-        // 初始化temperature数组的长度为temp数组的两倍。
+        // initializetemperaturearray的长度为temparray的两倍。
         byte[] temperature = new byte[temp.length * 2];
         for (int i = 0, j = 0; i < temp.length; i++, j += 2) {
             if (maxValue < temp[i]){
@@ -282,7 +274,7 @@ public class OpencvTools {
             // 分离整数的低8位和高8位
             byte low = (byte) (intValue & 0xFF);
             byte high = (byte) ((intValue >> 8) & 0xFF);
-            // 将分离出的字节存回temperature数组
+            // 将分离出的字节存回temperaturearray
             temperature[j] = low;
             temperature[j + 1] = high;
         }
@@ -301,7 +293,7 @@ public class OpencvTools {
             float ratio = (i - customMinTemp) / tempValue;
             int colorNumber = colorList.length - 1;
             float avg = 1.f / colorNumber;
-            int colorIndex = colorNumber;//当前上色的属于哪个渐变区域
+            int colorIndex = colorNumber;//current上色的属于哪个渐变区域
             for (int index = 1; index <= colorNumber;index++){
                 if (ratio == 0){
                     colorIndex = 0;
@@ -368,14 +360,7 @@ public class OpencvTools {
         return im;
     }
 
-    /**
-     * 自定义伪彩
-     * @param image       RGBA 32bit图像数据
-     * @param temperature 温度数据
-     * @param cols        宽
-     * @param rows        高
-     * @param lut         伪彩图,高度必须是256
-     */
+
     private static Mat draw_high_temp_edge_argb_pse(byte[] image, byte[] temperature, Bitmap lut, int cols, int rows, double high_t, int color_h, int type) throws IOException {
         double[] temp = new double[cols * rows];
         int t = 0;
@@ -545,12 +530,7 @@ public class OpencvTools {
         return dst;
     }
 
-    /**
-     * @param image       RGBA 32bit图像数据
-     * @param temperature 温度数据
-     * @param cols        宽
-     * @param rows        高
-     */
+
     private static Mat draw_high_temp_edge_argb(byte[] image, byte[] temperature, int cols, int rows, double high_t, int color_h, int type) throws IOException {
         double[] temp = new double[cols * rows];
         int t = 0;
@@ -619,12 +599,7 @@ public class OpencvTools {
         return im;
     }
 
-    /**
-     * @param image       yuv 16bit图像数据
-     * @param temperature 温度数据
-     * @param cols        宽
-     * @param rows        高
-     */
+
     private static Mat draw_high_temp_edge(byte[] image, byte[] temperature, int cols, int rows, double high_t, int color_h, int type) throws IOException {
         double[] temp = new double[cols * rows];
         int t = 0;
@@ -766,11 +741,7 @@ public class OpencvTools {
     }
 
 
-    /**
-     * @param image   原图像YUV格式
-     * @param image_w 图像宽度
-     * @param image_h 图像高度
-     */
+
     public static Bitmap draw_edge_from_temp_reigon_bitmap(byte[] image, byte[] temperature, int image_h, int image_w, double high_t, double low_t, int color_h, int color_l, int type) throws IOException {
         Mat src = draw_high_temp_edge(image, temperature, image_h, image_w, high_t, color_h, type);
         Mat mat = draw_temp_edge(src, temperature, low_t, color_l, type);
@@ -780,11 +751,7 @@ public class OpencvTools {
         return dstBitmap;
     }
 
-    /**
-     * @param image   图像ARGB格式
-     * @param image_w 图像宽度
-     * @param image_h 图像高度
-     */
+
     public static Bitmap draw_edge_from_temp_reigon_bitmap_argb(byte[] image, byte[] temperature, int image_h, int image_w, double high_t, double low_t, int color_h, int color_l, int type) throws IOException {
         Mat src = draw_high_temp_edge_argb(image, temperature, image_h, image_w, high_t, color_h, type);
         Mat mat = draw_temp_edge(src, temperature, low_t, color_l, type);
@@ -793,12 +760,7 @@ public class OpencvTools {
         Utils.matToBitmap(mat, dstBitmap);
         return dstBitmap;
     }
-    /**
-     * @param image   图像ARGB格式
-     * @param lut     伪彩图,高度必须是256
-     * @param image_w 图像宽度
-     * @param image_h 图像高度
-     */
+
     public static Bitmap draw_edge_from_temp_reigon_bitmap_argb_psd(byte[] image, byte[] temperature, Bitmap lut, int image_h, int image_w, double high_t, double low_t, int color_h, int color_l, int type) throws IOException {
         Mat src = draw_high_temp_edge_argb_pse(image, temperature, image_h, image_w, high_t, color_h, type);
         Mat mat = draw_temp_edge(src, temperature, low_t, color_l, type);
@@ -807,11 +769,7 @@ public class OpencvTools {
         Utils.matToBitmap(mat, dstBitmap);
         return dstBitmap;
     }
-    /**
-     * @param image   图像ARGB格式
-     * @param image_w 图像宽度
-     * @param image_h 图像高度
-     */
+
     public static Bitmap draw_edge_from_temp_reigon_bitmap_argb_psd(byte[] image, byte[] temperature,
                                                                     int image_h, int image_w, float high_t,
                                                                     float low_t, int color_h, int color_l, int type) throws IOException {
@@ -956,16 +914,7 @@ public class OpencvTools {
     }
 
 
-    /**
-     * 支持多颜色的伪彩条
-     * @param colorList : 颜色条
-     * @param maxTemp : 实际温度最大值
-     * @param minTemp ： 实际温度最小值
-     * @param customMaxTemp : 用户设置的最大值
-     * @param customMinTemp : 用户设置的最小值
-     * @param isGrayUse : 是否是灰度渐变
-     * @return
-     */
+
     public static Mat generateColorBar(int[] colorList, float maxTemp,float minTemp,float customMaxTemp,
                                        float customMinTemp, boolean isGrayUse) {
         if (colorList == null){
@@ -1016,8 +965,8 @@ public class OpencvTools {
                 colors[2] = b;
                 Log.w("测试","大于于最大值");
             }else if (maxTemp >= customMaxTemp && minTemp <= customMinTemp){
-                Log.w("测试","实际温度大于并且小于自定义的最高低温");
-                //实际温度大于并且小于自定义的最高低温
+                Log.w("测试","实际温度大于并且小于自定义的最high/low temperature");
+                //实际温度大于并且小于自定义的最high/low temperature
                colors = capColor(colorList,maxTemp,minTemp,customMaxTemp,customMinTemp,isGrayUse,ratio);
             }else if (customMinTemp > maxTemp){
                 if (isGrayUse){
@@ -1037,12 +986,12 @@ public class OpencvTools {
                 colors[2] = grey;
             }else if (maxTemp < customMaxTemp && minTemp < customMinTemp){
                 //实际最大温度小于自定义最高温，最低温小于自定义最低温度
-                //重新算出最高低温的颜色
+                //重新算出最high/low temperature的color
                 colors = capColor(getStartColor(colorList,customMaxTemp,customMinTemp,maxTemp),
                         maxTemp,minTemp,maxTemp,customMinTemp,isGrayUse,ratio);
             }else if (maxTemp > customMaxTemp && minTemp > customMinTemp){
                 //实际最高温度大于自定义最高温度，实际最低温度大于自定义最低温度
-                //重新算出最高低温的颜色
+                //重新算出最high/low temperature的color
                 colors = capColor(getEndColor(colorList,customMaxTemp,customMinTemp,minTemp),
                         maxTemp,minTemp,customMaxTemp,minTemp,isGrayUse,ratio);
             }else if (maxTemp < customMaxTemp && minTemp > customMinTemp){
@@ -1056,18 +1005,12 @@ public class OpencvTools {
         return colorBar;
     }
 
-    /**
-     * 获取某个温度的梯度颜色值
-     * @param colorList
-     * @param customMaxTemp
-     * @param customMinTemp
-     * @return
-     */
+
     static int[] getStartColor(int[] colorList, float customMaxTemp,float customMinTemp,float nowTemp){
         double ratio = (nowTemp - customMinTemp) / (customMaxTemp - customMinTemp);
         int colorNumber = colorList.length - 1;
         float avg = 1.f / colorNumber;
-        int colorIndex = colorNumber;//当前上色的属于哪个渐变区域
+        int colorIndex = colorNumber;//current上色的属于哪个渐变区域
         int r = 0;
         int g = 0;
         int b = 0;
@@ -1090,18 +1033,12 @@ public class OpencvTools {
 //        nowColorList[colorIndex] = nowColor;
        return nowColorList;
     }
-    /**
-     * 获取某个温度的梯度颜色值
-     * @param colorList
-     * @param customMaxTemp
-     * @param customMinTemp
-     * @return
-     */
+
     static int[] getEndColor(int[] colorList, float customMaxTemp,float customMinTemp,float nowTemp){
         double ratio = (nowTemp - customMinTemp) / (customMaxTemp - customMinTemp);
         int colorNumber = colorList.length - 1;
         float avg = 1.f / colorNumber;
-        int colorIndex = colorNumber;//当前上色的属于哪个渐变区域
+        int colorIndex = colorNumber;//current上色的属于哪个渐变区域
         int r = 0;
         int g = 0;
         int b = 0;
@@ -1136,7 +1073,7 @@ public class OpencvTools {
         double minRatio = (nowMinTemp - customMinTemp) / (customMaxTemp - customMinTemp);
         int colorNumber = colorList.length - 1;
         float avg = 1.f / colorNumber;
-        int maxColorIndex = colorNumber;//当前上色的属于哪个渐变区域
+        int maxColorIndex = colorNumber;//current上色的属于哪个渐变区域
         int r = 0;
         int g = 0;
         int b = 0;
@@ -1156,7 +1093,7 @@ public class OpencvTools {
         b = interpolateB(colorList[maxColorIndex-1], colorList[maxColorIndex], maxRatio);
         int nowMaxColor = convertTo16Bit(r,g,b);
 
-        int minColorIndex = colorNumber;//当前上色的属于哪个渐变区域
+        int minColorIndex = colorNumber;//current上色的属于哪个渐变区域
         for (int index = 1; index <= colorNumber;index++){
             if (minRatio == 0){
                 minColorIndex = 0;
@@ -1231,7 +1168,7 @@ public class OpencvTools {
             }
             int colorNumber = colorList.length - 1;
             float avg = 1.f / colorNumber;
-            int colorIndex = colorNumber;//当前上色的属于哪个渐变区域
+            int colorIndex = colorNumber;//current上色的属于哪个渐变区域
             for (int index = 1; index <= colorNumber;index++){
                 if (ratio == 0){
                     colorIndex = 0;
@@ -1250,12 +1187,7 @@ public class OpencvTools {
         return new int[]{r,g,b};
     }
 
-    /**
-     * 上一个颜色值
-     * @param colorList
-     * @param index
-     * @return
-     */
+
     public static int lastColor(int[] colorList,int index){
         if (index == 0){
             return colorList[0];
@@ -1263,13 +1195,7 @@ public class OpencvTools {
         return colorList[index-1];
     }
 
-    /**
-     * 伪彩梯度条,固定三个渐变颜色
-     * @param customMinColor
-     * @param customMiddleColor
-     * @param customMaxColor
-     * @return
-     */
+
     public static Mat generateColorBarThree(int customMinColor, int customMiddleColor, int customMaxColor,
                                        float maxTemp,float minTemp,float customMaxTemp,float customMinTemp,
                                        boolean isGrayUse) {
@@ -1335,7 +1261,7 @@ public class OpencvTools {
         float ratio = (nowTemp - customMinTemp) / tempValue;
         int colorNumber = colorList.length - 1;
         float avg = 1.f / colorNumber;
-        int colorIndex = colorNumber;//当前上色的属于哪个渐变区域
+        int colorIndex = colorNumber;//current上色的属于哪个渐变区域
         if (Math.abs(nowTemp -customMaxTemp)==0.1f) {
             int lastColor = colorList[colorNumber];
             result[0] = (lastColor >> 16) & 0xFF;
@@ -1387,9 +1313,7 @@ public class OpencvTools {
         return interpolatedB;
     }
 
-    /**
-     * 统一自定义伪彩入口
-     */
+
     public static int[] getOneColorByTempUnif(float customMaxTemp, float customMinTemp, float nowTemp,
                                               int[] colorList, float[] positionList){
        if (positionList!=null){
@@ -1454,7 +1378,7 @@ public class OpencvTools {
         if (Math.abs((positionList[lowerColorIndex+1] - positionList[lowerColorIndex])) > 0){
             regionRatio = (ratio - positionList[lowerColorIndex]) / Math.abs((positionList[lowerColorIndex] - positionList[lowerColorIndex+1]));
         }
-        // 找到对应的颜色
+        // 找到对应的color
         int startColor = colorList[lowerColorIndex];
         int endColor = colorList[lowerColorIndex + 1];
 

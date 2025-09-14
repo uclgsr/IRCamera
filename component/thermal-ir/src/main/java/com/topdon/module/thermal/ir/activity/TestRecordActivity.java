@@ -36,10 +36,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @author: CaiSongL
- * @date: 2023/5/18 14:44
- */
+
 public class TestRecordActivity extends Activity{
 
     private final static String CLASS_LABEL = "RecordActivity";
@@ -109,7 +106,6 @@ public class TestRecordActivity extends Activity{
         initLayout();
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -152,7 +148,6 @@ public class TestRecordActivity extends Activity{
             mWakeLock = null;
         }
     }
-
 
     private void initLayout() {
 
@@ -342,7 +337,6 @@ public class TestRecordActivity extends Activity{
 
         return super.onKeyDown(keyCode, event);
     }
-
 
     //---------------------------------------------
     // audio thread, gets and encodes audio data

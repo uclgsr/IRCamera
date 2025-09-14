@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present 贵州纳雍穿青人李裕江<1032694760@qq.com>
+ * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
  *
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -13,21 +13,10 @@
 
 package com.github.gzuliyujiang.wheelpicker.contract;
 
-/**
- * 联动选择接口
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/6/17 18:23
- */
+
 public interface OnLinkageSelectedListener {
 
-    /**
-     * 联动选择回调
-     *
-     * @param first  选中项的第一级条目内容
-     * @param second 选中项的第二级条目内容
-     * @param third  选中项的第三级条目内容
-     */
+
     void onLinkageSelected(Object first, Object second, Object third);
 
 }

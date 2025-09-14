@@ -1,9 +1,6 @@
 package com.topdon.gsr.model
 
-/**
-    * Session Information Model
-    * Contains metadata and state for recording sessions
-    */
+
 data class SessionInfo(
     val sessionId: String,
     val startTime: Long,
@@ -18,23 +15,16 @@ data class SessionInfo(
     var hasRGBData: Boolean = false,
     var hasThermalData: Boolean = false,
 ) {
-    /**
-    * Check if session is currently active (not ended)
-    */
+
     fun isActive(): Boolean = endTime == null
 
-    /**
-    * Get session duration in milliseconds
-    * Returns current duration if active, total duration if completed
-    */
+
     fun getDurationMs(): Long {
     val end = endTime ?: System.currentTimeMillis()
     return end - startTime
     }
 
-    /**
-    * Get formatted duration string
-    */
+
     fun getDurationFormatted(): String {
     val durationMs = getDurationMs()
     val seconds = durationMs / 1000
@@ -48,16 +38,12 @@ data class SessionInfo(
     }
     }
 
-    /**
-    * Add synchronization mark
-    */
+
     fun addSyncMark(mark: SyncMark) {
     syncMarks.add(mark)
     }
 
-    /**
-    * Get summary of available data types
-    */
+
     fun getDataTypeSummary(): String {
     val types = mutableListOf<String>()
     if (hasGSRData) types.add("GSR")

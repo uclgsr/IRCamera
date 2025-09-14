@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.EventBus
 import com.topdon.lib.core.R as LibR
 
 // Legacy ARouter route annotation - now using NavigationManager
+
 class ThermalActivity : BaseActivity() {
     private val menuAdapter by lazy { MenuTabAdapter(this) }
 
@@ -31,30 +32,30 @@ class ThermalActivity : BaseActivity() {
     BarUtils.setNavBarColor(window, blackColor)
     initRecycler()
 
-    val thermalTab = findViewById<MenuFirstTabView>(R.id.thermal_tab)
-    thermalTab.onTabClickListener = { view ->
-    // 一级菜单选择
-    showRecycler(view.selectPosition)
-    }
+        val thermalTab = findViewById<MenuFirstTabView>(R.id.thermal_tab)
+        thermalTab.onTabClickListener = { view ->
+//一级menu选择
+            showRecycler(view.selectPosition)
+        }
     }
 
     override fun initData() {
     }
 
     private fun initRecycler() {
-    val thermalRecycler = findViewById<RecyclerView>(R.id.thermal_recycler)
-    thermalRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-    thermalRecycler.adapter = menuAdapter
-    thermalRecycler.visibility = View.GONE
-    menuAdapter.initType(1)
-    menuAdapter.listener =
-    object : MenuTabAdapter.OnItemClickListener {
-    override fun onClick(index: Int) {
-    // 二级菜单选择
-    Log.w("123", "index: $index")
-    EventBus.getDefault().post(ThermalActionEvent(action = index))
-    }
-    }
+        val thermalRecycler = findViewById<RecyclerView>(R.id.thermal_recycler)
+        thermalRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        thermalRecycler.adapter = menuAdapter
+        thermalRecycler.visibility = View.GONE
+        menuAdapter.initType(1)
+        menuAdapter.listener =
+            object : MenuTabAdapter.OnItemClickListener {
+                override fun onClick(index: Int) {
+//二级menu选择
+                    Log.w("123", "index: $index")
+                    EventBus.getDefault().post(ThermalActionEvent(action = index))
+                }
+            }
     }
 
     fun showRecycler(select: Int) {

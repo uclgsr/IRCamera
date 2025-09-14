@@ -4,50 +4,25 @@ package com.github.mikephil.charting.data;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The DataSet class represents one group or type of entries (Entry) in the
- * Chart that belong together. It is designed to logically separate different
- * groups of values inside the Chart (e.g. the values for a specific line in the
- * LineChart, or the values of a specific group of bars in the BarChart).
- *
- * @author Philipp Jahoda
- */
+
 public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
 
-    /**
-     * the entries that this DataSet represents / holds together
-     */
+
     protected List<T> mValues = null;
 
-    /**
-     * maximum y-value in the value array
-     */
+
     protected float mYMax = -Float.MAX_VALUE;
 
-    /**
-     * minimum y-value in the value array
-     */
+
     protected float mYMin = Float.MAX_VALUE;
 
-    /**
-     * maximum x-value in the value array
-     */
+
     protected float mXMax = -Float.MAX_VALUE;
 
-    /**
-     * minimum x-value in the value array
-     */
+
     protected float mXMin = Float.MAX_VALUE;
 
 
-    /**
-     * Creates a new DataSet object with the given values (entries) it represents. Also, a
-     * label that describes the DataSet can be specified. The label can also be
-     * used to retrieve the DataSet from a ChartData object.
-     *
-     * @param values
-     * @param label
-     */
     public DataSet(List<T> values, String label) {
         super(label);
         this.mValues = values;
@@ -93,11 +68,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
         }
     }
 
-    /**
-     * Updates the min and max x and y value of this DataSet based on the given Entry.
-     *
-     * @param e
-     */
+
     protected void calcMinMax(T e) {
 
         if (e == null)
@@ -131,36 +102,21 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
         return mValues.size();
     }
 
-    /**
-     * Returns the array of entries that this DataSet represents.
-     *
-     * @return
-     */
+
     public List<T> getValues() {
         return mValues;
     }
 
-    /**
-     * Sets the array of entries that this DataSet represents, and calls notifyDataSetChanged()
-     *
-     * @return
-     */
+
     public void setValues(List<T> values) {
         mValues = values;
         notifyDataSetChanged();
     }
 
-    /**
-     * Provides an exact copy of the DataSet this method is used on.
-     *
-     * @return
-     */
+
     public abstract DataSet<T> copy();
 
-    /**
-     *
-     * @param dataSet
-     */
+
     protected void copy(DataSet dataSet) {
         super.copy(dataSet);
     }
@@ -175,12 +131,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
         return buffer.toString();
     }
 
-    /**
-     * Returns a simple string representation of the DataSet with the type and
-     * the number of Entries.
-     *
-     * @return
-     */
+
     public String toSimpleString() {
         StringBuffer buffer = new StringBuffer();
         buffer.append("DataSet, label: " + (getLabel() == null ? "" : getLabel()) + ", entries: " + mValues.size() +
@@ -420,11 +371,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
         return entries;
     }
 
-    /**
-     * Determines how to round DataSet index values for
-     * {@link DataSet#getEntryIndex(float, float, Rounding)} DataSet.getEntryIndex()}
-     * when an exact x-index is not found.
-     */
+
     public enum Rounding {
         UP,
         DOWN,

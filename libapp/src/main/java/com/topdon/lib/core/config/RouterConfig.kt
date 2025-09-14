@@ -11,7 +11,7 @@ object RouterConfig {
     private const val GROUP_CALIBRATE = "calibrate"
     private const val GROUP_GSR = "gsr"
 
-    // app
+    
     const val MAIN = "/$GROUP_APP/main"
     const val CLAUSE = "/$GROUP_APP/clause"
     const val POLICY = "/$GROUP_APP/policy"
@@ -27,7 +27,7 @@ object RouterConfig {
     const val IR_HIK_MONITOR_CAPTURE1 = "/$GROUP_HIK_IR/monitorCap1"
     const val IR_HIK_IMG_PICK = "/$GROUP_HIK_IR/ImagePick"
 
-    // ir
+    
     const val IR_MAIN = "/$GROUP_IR/irMain"
     const val IR_FRAME = "/$GROUP_IR/frame"
     const val IR_SETTING = "/$GROUP_IR/setting"
@@ -48,12 +48,12 @@ object RouterConfig {
 
     const val IR_GALLERY_3D = "/menu/Image3DActivity"
 
-    // TS004
+    
     const val IR_MONOCULAR = "/$GROUP_THERMAL04/IRMonocularActivity"
     const val IR_DEVICE_ADD = "/$GROUP_THERMAL04/DeviceAddActivity"
     const val IR_CONNECT_TIPS = "/$GROUP_THERMAL04/ConnectTipsActivity"
 
-    // TC007
+    
     const val IR_THERMAL_07 = "/$GROUP_THERMAL07/IRThermal07Activity"
     const val IR_MONITOR_CAPTURE_07 = "/$GROUP_THERMAL07/MonitorCapture1"
     const val IR_CORRECTION_07 = "/$GROUP_THERMAL07/IR07CorrectionThreeActivity"
@@ -69,9 +69,9 @@ object RouterConfig {
     const val REPORT_PICK_IMG = "/$GROUP_REPORT/pick/img"
     const val REPORT_PREVIEW = "/$GROUP_REPORT/preview"
 
-    // user
-    const val QUESTION = "/$GROUP_USER/question" // FAQ
-    const val QUESTION_DETAILS = "/$GROUP_USER/question/details" // FAQ
+    
+    const val QUESTION = "/$GROUP_USER/question" 
+    const val QUESTION_DETAILS = "/$GROUP_USER/question/details" 
     const val UNIT = "/$GROUP_USER/unit"
     const val TS004_MORE = "/$GROUP_USER/ts004More"
     const val TC_MORE = "/$GROUP_USER/tcMore"
@@ -85,7 +85,7 @@ object RouterConfig {
     const val MANUAL_START = "/$GROUP_CALIBRATE/manual/first"
     const val IR_FRAME_PLUSH = "/$GROUP_IR/frame/plush"
 
-    // lite
+    
     const val IR_TCLITE = "/lite/tcLite"
     const val IR_THERMAL_MONITOR_LITE = "/lite/monitor"
     const val IR_IMG_PICK_LITE = "/lite/ImagePickIRLiteActivity"

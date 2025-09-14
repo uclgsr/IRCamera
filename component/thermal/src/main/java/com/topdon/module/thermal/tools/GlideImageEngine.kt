@@ -13,6 +13,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.maning.imagebrowserlibrary.ImageEngine
 
+
 class GlideImageEngine : ImageEngine {
     override fun loadImage(
     context: Context,
@@ -31,6 +32,7 @@ class GlideImageEngine : ImageEngine {
     .listener(BitmapRequestListener())
     .into(imageView)
     }
+
 
     class DrawableRequestListener : RequestListener<Drawable> {
     override fun onLoadFailed(
@@ -52,6 +54,7 @@ class GlideImageEngine : ImageEngine {
     return false
     }
     }
+
 
     class BitmapRequestListener : RequestListener<Bitmap> {
     override fun onLoadFailed(

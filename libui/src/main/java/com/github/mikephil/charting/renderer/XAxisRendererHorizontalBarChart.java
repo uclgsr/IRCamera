@@ -207,12 +207,7 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
     }
 
     protected Path mRenderLimitLinesPathBuffer = new Path();
-    /**
-	 * Draws the LimitLines associated with this axis to the screen.
-	 * This is the standard YAxis renderer using the XAxis limit lines.
-	 *
-	 * @param c
-	 */
+
 	@Override
 	public void renderLimitLines(Canvas c) {
 

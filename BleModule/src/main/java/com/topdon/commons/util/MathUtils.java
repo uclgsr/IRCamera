@@ -8,26 +8,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-/**
- * date: 2019/8/7 21:01
- * author: zengfansheng
- */
+
 public class MathUtils {
-    /**
-     * 精确到几位小数，不进行4舍5入
-     *
-     * @param num   数字
-     * @param scale 取几位小数
-     */
+
     public static double setDoubleAccuracy(double num, int scale) {
         return ((int) (num * Math.pow(10, scale))) / Math.pow(10, scale);
     }
 
-    /**
-     * 计算各值占的比例，相加为100%
-     *
-     * @param scale 取几位小数。12.3%表示1位小数
-     */
+
     public static float[] getPercents(int scale, @NonNull float... values) {
         float total = 0;
         List<Integer> list = new ArrayList<>();
@@ -58,13 +46,7 @@ public class MathUtils {
         return fs;
     }
 
-    /**
-     * 将整数转字节数组
-     *
-     * @param bigEndian true表示高位在前，false表示低位在前
-     * @param value     整数，short、int、long
-     * @param len       结果取几个字节，如是高位在前，从数组后端向前计数；如是低位在前，从数组前端向后计数
-     */
+
     @NonNull
     public static byte[] numberToBytes(boolean bigEndian, long value, int len) {
         byte[] bytes = new byte[8];
@@ -79,13 +61,7 @@ public class MathUtils {
         }
     }
 
-    /**
-     * 将字节数组转数值
-     *
-     * @param bigEndian true表示高位在前，false表示低位在前
-     * @param cls       返回的数据类型
-     * @param src       待转字节数组
-     */
+
     @SuppressWarnings("unchecked")
     public static <T> T bytesToNumber(boolean bigEndian, Class<T> cls, @NonNull byte... src) {
         int len = Math.min(8, src.length);
@@ -114,9 +90,7 @@ public class MathUtils {
         throw new IllegalArgumentException("cls must be one of short, int and long");
     }
 
-    /**
-     * 翻转整个数组，每个bit。如10000110 00110001转换成10001100 01100001
-     */
+
     public static byte[] reverseBitAndByte(byte[] src) {
         if (src == null || src.length == 0) {
             return null;
@@ -136,13 +110,7 @@ public class MathUtils {
         return target;
     }
 
-    /**
-     * 分包
-     *
-     * @param src  源
-     * @param size 包大小，字节
-     * @return 分好的包的集合
-     */
+
     @NonNull
     public static List<byte[]> splitPackage(@NonNull byte[] src, int size) {
         List<byte[]> list = new ArrayList<>();
@@ -155,12 +123,7 @@ public class MathUtils {
         return list;
     }
 
-    /**
-     * 组包
-     *
-     * @param src 源
-     * @return 组好的字节数组
-     */
+
     @NonNull
     public static byte[] joinPackage(@NonNull byte[]... src) {
         byte[] bytes = new byte[0];
@@ -171,14 +134,7 @@ public class MathUtils {
         return bytes;
     }
 
-    /**
-     * Name:    CRC-8   x8+x2+x+1
-     * Poly:    0x07
-     * Init:    0x00
-     * Refin:   False
-     * Refout:  False
-     * Xorout:  0x00
-     */
+
     public static int calcCrc8(byte[] bytes) {
         int crc = 0;
         for (byte b : bytes) {
@@ -194,9 +150,7 @@ public class MathUtils {
         return crc & 0xff;
     }
 
-    /**
-     * CRC16校验，Modbus
-     */
+
     public static int calcCRC16_Modbus(byte[] data) {
         int crc = 0xffff;//16位
         for (byte b : data) {
@@ -217,9 +171,7 @@ public class MathUtils {
         return crc & 0xffff;
     }
 
-    /**
-     * CRC校验，CRC-CCITT (XModem)
-     */
+
     public static int calcCRC_CCITT_XModem(byte[] bytes) {
         int crc = 0;          // initial value
         int polynomial = 0x1021;
@@ -234,9 +186,7 @@ public class MathUtils {
         return crc & 0xffff;
     }
 
-    /**
-     * CRC校验，CRC-CCITT (XModem)
-     */
+
     public static int calcCRC_CCITT_XModem(byte[] bytes, int offset, int len) {
         int crc = 0;          // initial value
         int polynomial = 0x1021;
@@ -252,9 +202,7 @@ public class MathUtils {
         return crc & 0xffff;
     }
 
-    /**
-     * CRC校验，CRC-CCITT (0xFFFF)
-     */
+
     public static int calcCRC_CCITT_0xFFFF(byte[] bytes) {
         int crc = 0xffff; // initial value
         int polynomial = 0x1021; // poly value
@@ -269,9 +217,7 @@ public class MathUtils {
         return crc & 0xffff;
     }
 
-    /**
-     * CRC校验，CRC-CCITT (0xFFFF)
-     */
+
     public static int calcCRC_CCITT_0xFFFF(byte[] bytes, int offset, int len) {
         int crc = 0xffff; // initial value
         int polynomial = 0x1021; // poly value

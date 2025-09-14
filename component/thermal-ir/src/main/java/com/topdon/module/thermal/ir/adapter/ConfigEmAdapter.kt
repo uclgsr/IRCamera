@@ -15,29 +15,34 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.utils.IRConfigData
 
-/**
-    * 温度修正（环境温度、测温距离、发射率修改那个页面）常用发射率表 Adapter.
-    * Created by LCG on 2024/11/13.
-    */
+
+
 class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapter.ViewHolder>() {
     private val dataList: ArrayList<IRConfigData> = IRConfigData.irConfigData(context)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-    return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_ir_config_emissivity, parent, false))
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_ir_config_emissivity, parent, false))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-    holder.tvEmName.text = dataList[position].name
-    holder.tvEmNum.text = dataList[position].value
-    holder.tvEmName.background = EmBgDrawable(false, position == dataList.size - 1)
-    holder.tvEmNum.background = EmBgDrawable(true, position == dataList.size - 1)
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
+        holder.tvEmName.text = dataList[position].name
+        holder.tvEmNum.text = dataList[position].value
+        holder.tvEmName.background = EmBgDrawable(false, position == dataList.size - 1)
+        holder.tvEmNum.background = EmBgDrawable(true, position == dataList.size - 1)
     }
 
     override fun getItemCount(): Int = dataList.size
 
-    class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
-    val tvEmName: TextView = rootView.findViewById(R.id.tv_em_name)
-    val tvEmNum: TextView = rootView.findViewById(R.id.tv_em_num)
+
+class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
+        val tvEmName: TextView = rootView.findViewById(R.id.tv_em_name)
+        val tvEmNum: TextView = rootView.findViewById(R.id.tv_em_num)
     }
 
     private class EmBgDrawable(val drawRight: Boolean, val drawBottom: Boolean) : Drawable() {

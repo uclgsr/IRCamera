@@ -1,8 +1,6 @@
 package com.topdon.gsr.model
 
-/**
-    * Represents a single GSR data sample with timestamp information
-    */
+
 data class GSRSample(
     val timestamp: Long, // System timestamp in milliseconds
     val utcTimestamp: Long = timestamp, // UTC timestamp for synchronization (default to timestamp)
@@ -13,21 +11,19 @@ data class GSRSample(
     val sessionId: String, // Session identifier
 ) {
     companion object {
-    /**
-    * Create a simulated GSR sample for testing/demo purposes
-    */
-    fun createSimulated(
-    timestamp: Long,
-    utcTimestamp: Long,
-    sampleIndex: Long,
-    sessionId: String,
-    ): GSRSample {
-    // Simulate realistic GSR values with some variation
-    val baseConductance = 10.0 // Base conductance in microsiemens
-    val variation = Math.sin(sampleIndex * 0.1) * 2.0 + Math.random() * 1.0
-    val conductance = baseConductance + variation
-    val resistance = 1000.0 / conductance // Convert to kilohms
-    val rawValue = (2048 + variation * 100).toInt() // Simulated ADC value
+
+        fun createSimulated(
+            timestamp: Long,
+            utcTimestamp: Long,
+            sampleIndex: Long,
+            sessionId: String,
+        ): GSRSample {
+            // Simulate realistic GSR values with some variation
+            val baseConductance = 10.0 // Base conductance in microsiemens
+            val variation = Math.sin(sampleIndex * 0.1) * 2.0 + Math.random() * 1.0
+            val conductance = baseConductance + variation
+            val resistance = 1000.0 / conductance // Convert to kilohms
+            val rawValue = (2048 + variation * 100).toInt() // Simulated ADC value
 
     return GSRSample(
     timestamp = timestamp,
@@ -41,9 +37,7 @@ data class GSRSample(
     }
     }
 
-    /**
-    * Convert sample to CSV row format
-    */
+
     fun toCsvRow(): Array<String> {
     return arrayOf(
     timestamp.toString(),
@@ -57,9 +51,7 @@ data class GSRSample(
     }
 }
 
-/**
-    * Represents synchronization marks for cross-modal alignment
-    */
+
 data class SyncMark(
     val timestamp: Long,
     val utcTimestamp: Long,

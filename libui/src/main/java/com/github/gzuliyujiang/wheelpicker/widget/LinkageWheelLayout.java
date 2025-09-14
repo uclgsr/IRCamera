@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present 贵州纳雍穿青人李裕江<1032694760@qq.com>
+ * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
  *
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -33,12 +33,7 @@ import com.topdon.lib.ui.R;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * 二三级联动滚轮控件
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/6/15 11:55
- */
+
 @SuppressWarnings("unused")
 public class LinkageWheelLayout extends BaseWheelLayout {
     private WheelView firstWheelView, secondWheelView, thirdWheelView;

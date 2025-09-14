@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present 贵州纳雍穿青人李裕江<1032694760@qq.com>
+ * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
  *
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -13,12 +13,7 @@
 
 package com.github.gzuliyujiang.wheelpicker.impl;
 
-/**
- * 生日格式化
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/5/14 14:31
- */
+
 public class BirthdayFormatter extends SimpleDateFormatter {
 
     @Override

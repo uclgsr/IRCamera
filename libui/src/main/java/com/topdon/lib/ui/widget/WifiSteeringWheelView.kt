@@ -7,11 +7,10 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import com.topdon.lib.ui.databinding.UiWifiSteeringWheelViewBinding
-import com.topdon.lib.ui.R as UiR
 
-/**
-    * 校准方向
-    */
+
+
+
 class WifiSteeringWheelView : LinearLayout, OnClickListener {
     private val binding: UiWifiSteeringWheelViewBinding
 
@@ -27,19 +26,17 @@ class WifiSteeringWheelView : LinearLayout, OnClickListener {
     private val tvConfirm by lazy { binding.tvConfirm }
 
     var rotationIR = 270
-    set(value) {
-    field = value
-    if (value == 270 || value == 90)
-    {
-    tvConfirm?.rotation = 270f
-    rotation = 90f
-    } else
-    {
-    tvConfirm?.rotation = 0f
-    rotation = 0f
-    }
-    requestLayout()
-    }
+        set(value) {
+            field = value
+            if (value == 270 || value == 90) {
+                tvConfirm?.rotation = 270f
+                rotation = 90f
+            } else {
+                tvConfirm?.rotation = 0f
+                rotation = 0f
+            }
+            requestLayout()
+        }
 
     constructor(context: Context) : this(context, null)
 
@@ -57,22 +54,21 @@ class WifiSteeringWheelView : LinearLayout, OnClickListener {
     initView()
     }
 
+
     private fun initView() {
-    // Views are already inflated via binding in constructor
-    steeringWheelStartBtn.setOnClickListener(this)
-    steeringWheelCenterBtn.setOnClickListener(this)
-    steeringWheelEndBtn.setOnClickListener(this)
-    steeringWheelTopBtn.setOnClickListener(this)
-    steeringWheelBottomBtn.setOnClickListener(this)
-    if (rotationIR == 270 || rotationIR == 90)
-    {
-    tvConfirm.rotation = 270f
-    rotation = 90f
-    } else
-    {
-    tvConfirm.rotation = 0f
-    rotation = 0f
-    }
+        // Views are already inflated via binding in constructor
+        steeringWheelStartBtn.setOnClickListener(this)
+        steeringWheelCenterBtn.setOnClickListener(this)
+        steeringWheelEndBtn.setOnClickListener(this)
+        steeringWheelTopBtn.setOnClickListener(this)
+        steeringWheelBottomBtn.setOnClickListener(this)
+        if (rotationIR == 270 || rotationIR == 90) {
+            tvConfirm.rotation = 270f
+            rotation = 90f
+        } else {
+            tvConfirm.rotation = 0f
+            rotation = 0f
+        }
     }
 
     val moveI = 2

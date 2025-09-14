@@ -8,9 +8,7 @@ import com.energy.irutilslibrary.LibIRParse;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Created by fengjibo on 2023/8/16.
- */
+
 public class CommonUtil {
     public static final String TAG = "CommonUtil";
 
@@ -20,7 +18,7 @@ public class CommonUtil {
         AssetManager am = mContext.getAssets();
         InputStream is = null;
         try {
-            // 根据不同的高低增益加载不同的等效大气透过率表
+//根据不同的high/low gainload不同的等效大气透过率表
             is = am.open(assetTauName);
             int lenth = is.available();
             tau_data = new byte[lenth];
@@ -73,7 +71,7 @@ public class CommonUtil {
         return Math.round(value * factor) / factor;
     }
 
-    // 帧率展示
+//frame率展示
     public static int mCount = 0;
     private static long mTimeStart = 0;
     private static double mFps = 0;

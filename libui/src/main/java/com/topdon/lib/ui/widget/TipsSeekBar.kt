@@ -11,6 +11,8 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.R as UiR
 
+
+
 class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     private val tipsPercent: Float
     private val seekPercent: Float
@@ -31,9 +33,7 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     }
     }
 
-    /**
-    * 指示 View 当前显示的文字.
-    */
+
     var valueText: String
     get() {
     return tvTips.text.toString()
@@ -42,19 +42,13 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     tvTips.text = value
     }
 
-    /**
-    * seekBar 的 onProgressChange 事件监听.
-    */
+
     var onProgressChangeListener: ((progress: Int, fromUser: Boolean) -> Unit)? = null
 
-    /**
-    * seekBar 的 onStopTrackingTouch 事件监听.
-    */
+
     var onStopTrackingTouch: ((progress: Int) -> Unit)? = null
 
-    /**
-    * 根据进度格式化指示 View 文字.
-    */
+
     var valueFormatListener: ((progress: Int) -> CharSequence?)? = null
     set(value) {
     tvTips.text = value?.invoke(seekBar.progress)
@@ -73,16 +67,16 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     defStyleAttr,
     defStyleRes,
     ) {
-    // seekBar 的 maxHeight 在 29 以下只能通过 xml 设置实在太蛋疼了，这里只好给当前 View 设置 maxHeight,在 attr 中传递给 seekBar
-    val thumb = ContextCompat.getDrawable(context, UiR.drawable.ic_tips_seek_bar_thumb)
-    val thumbWidth = thumb?.intrinsicWidth ?: 0
-    seekBar = SeekBar(context, attrs)
-    seekBar.splitTrack = false
-    seekBar.thumb = thumb
-    seekBar.progressDrawable = ContextCompat.getDrawable(context, UiR.drawable.ui_progress_ir_camera_setting)
-    seekBar.setPadding(thumbWidth / 2, 0, thumbWidth / 2, 0)
-    seekBar.setOnSeekBarChangeListener(this)
-    addView(seekBar, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        // seekBar 的 maxHeight 在 29 以下只能通过 xml settings实在太蛋疼了，这里只好给current View settings maxHeight,在 attr 中传递给 seekBar
+        val thumb = ContextCompat.getDrawable(context, UiR.drawable.ic_tips_seek_bar_thumb)
+        val thumbWidth = thumb?.intrinsicWidth ?: 0
+        seekBar = SeekBar(context, attrs)
+        seekBar.splitTrack = false
+        seekBar.thumb = thumb
+        seekBar.progressDrawable = ContextCompat.getDrawable(context, UiR.drawable.ui_progress_ir_camera_setting)
+        seekBar.setPadding(thumbWidth / 2, 0, thumbWidth / 2, 0)
+        seekBar.setOnSeekBarChangeListener(this)
+        addView(seekBar, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
 
     tvTips = TextView(context)
     tvTips.text = seekBar.progress.toString()

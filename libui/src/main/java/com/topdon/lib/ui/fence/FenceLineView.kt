@@ -11,6 +11,8 @@ import android.view.MotionEvent
 import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
+
+
 class FenceLineView : View {
     var listener: CallBack? = null
 
@@ -55,36 +57,36 @@ class FenceLineView : View {
     var endPoint = intArrayOf(0, 0)
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-    mX = event.x
-    mY = event.y
-    when (event.action) {
-    MotionEvent.ACTION_DOWN -> {
-    rect.right += strokeWidth.toInt()
-    rect.bottom += strokeWidth.toInt()
-    invalidate()  // Invalidate entire view
-    rect.left = mX.toInt()
-    rect.top = mY.toInt()
-    rect.right = rect.left
-    rect.bottom = rect.top
-    startPoint[0] = mX.toInt()
-    startPoint[1] = mY.toInt()
-    endPoint[0] = mX.toInt()
-    endPoint[1] = mY.toInt()
-    }
-    MotionEvent.ACTION_UP -> {
-    var x = mX.toInt()
-    var y = mY.toInt()
-    val x1 = startPoint[0].toFloat()
-    val y1 = startPoint[1].toFloat()
-    val k: Float = (x - x1) / (y - y1)
-    if (x > right) {
-    x = right - 1
-    y = (y1 - k * (x1 - x)).toInt()
-    }
-    if (y > bottom) {
-    y = bottom - 1
-    x = (x1 - k * (y1 - y)).toInt()
-    }
+        mX = event.x
+        mY = event.y
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                rect.right += strokeWidth.toInt()
+                rect.bottom += strokeWidth.toInt()
+                invalidate() // Invalidate entire view
+                rect.left = mX.toInt()
+                rect.top = mY.toInt()
+                rect.right = rect.left
+                rect.bottom = rect.top
+                startPoint[0] = mX.toInt()
+                startPoint[1] = mY.toInt()
+                endPoint[0] = mX.toInt()
+                endPoint[1] = mY.toInt()
+            }
+            MotionEvent.ACTION_UP -> {
+                var x = mX.toInt()
+                var y = mY.toInt()
+                val x1 = startPoint[0].toFloat()
+                val y1 = startPoint[1].toFloat()
+                val k: Float = (x - x1) / (y - y1)
+                if (x > right) {
+                    x = right - 1
+                    y = (y1 - k * (x1 - x)).toInt()
+                }
+                if (y > bottom) {
+                    y = bottom - 1
+                    x = (x1 - k * (y1 - y)).toInt()
+                }
 
     if (x < left) {
     x = left + 1
@@ -97,36 +99,36 @@ class FenceLineView : View {
     endPoint[0] = x
     endPoint[1] = y
 
-    old =
-    Rect(
-    rect.left,
-    rect.top,
-    (rect.right + strokeWidth).toInt(),
-    (rect.bottom + strokeWidth).toInt(),
-    )
-    rect.right = x
-    rect.bottom = y
-    old.union(x, y)
-    invalidate()  // Invalidate entire view
-    result()
-    }
-    MotionEvent.ACTION_MOVE -> {
-    old =
-    Rect(
-    rect.left,
-    rect.top,
-    (rect.right + strokeWidth).toInt(),
-    (rect.bottom + strokeWidth).toInt(),
-    )
-    rect.right = mX.toInt()
-    rect.bottom = mY.toInt()
-    endPoint[0] = mX.toInt()
-    endPoint[1] = mY.toInt()
-    old.union(mX.toInt(), mY.toInt())
-    invalidate()  // Invalidate entire view
-    }
-    }
-    return true
+                old =
+                    Rect(
+                        rect.left,
+                        rect.top,
+                        (rect.right + strokeWidth).toInt(),
+                        (rect.bottom + strokeWidth).toInt(),
+                    )
+                rect.right = x
+                rect.bottom = y
+                old.union(x, y)
+                invalidate() // Invalidate entire view
+                result()
+            }
+            MotionEvent.ACTION_MOVE -> {
+                old =
+                    Rect(
+                        rect.left,
+                        rect.top,
+                        (rect.right + strokeWidth).toInt(),
+                        (rect.bottom + strokeWidth).toInt(),
+                    )
+                rect.right = mX.toInt()
+                rect.bottom = mY.toInt()
+                endPoint[0] = mX.toInt()
+                endPoint[1] = mY.toInt()
+                old.union(mX.toInt(), mY.toInt())
+                invalidate() // Invalidate entire view
+            }
+        }
+        return true
     }
 
     private fun result() {
@@ -145,15 +147,14 @@ class FenceLineView : View {
     invalidate()
     }
 
+
+
     interface CallBack {
-    /**
-    * startPoint: 左上角
-    * endPoint: 右下角
-    */
-    fun callback(
-    startPoint: IntArray,
-    endPoint: IntArray,
-    srcRect: IntArray,
-    )
+
+        fun callback(
+            startPoint: IntArray,
+            endPoint: IntArray,
+            srcRect: IntArray,
+        )
     }
 }

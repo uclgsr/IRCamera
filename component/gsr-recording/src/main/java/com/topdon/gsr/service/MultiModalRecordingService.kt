@@ -17,9 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/**
-    * Multi-modal recording service that coordinates GSR and thermal recording
-    */
+
 class MultiModalRecordingService : Service() {
     companion object {
     private const val TAG = "MultiModalService"

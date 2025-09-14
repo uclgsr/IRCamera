@@ -18,10 +18,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * @author: CaiSongL
- * @date: 2023/5/24 9:47
- */
+
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     private static final String TAG = "CrashHandler";
@@ -29,7 +26,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private static CrashHandler crashHandler = new CrashHandler();
 
     private Context mContext;
-    /** 错误日志文件 */
+    //
     private File logFile ;
 
     private CrashHandler() {
@@ -51,7 +48,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         mContext = context;
         logFile = new File(mContext.getCacheDir(),"crashLog.trace");
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-        //设置为线程默认的异常处理器
+        //settings为线程默认的异常处理器
         Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
@@ -125,17 +122,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         return true;
     }
 
-    /**
-     * 上传错误日志到服务器
-     */
+
     private void upLoadErrorFileToServer(File errorFile) {
 
     }
 
-    /**
-     * 收集手机信息
-     *
-     */
+
     private File collectInfoToSDCard(PrintWriter pw, Throwable ex)
             throws PackageManager.NameNotFoundException {
 
@@ -152,7 +144,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         pw.print("versionName : ");
         pw.println(pi.versionName);
         try {
-            /** 暴力反射获取数据 */
+            //
             Field[] Fields = Build.class.getDeclaredFields();
             for (Field field : Fields) {
                 field.setAccessible(true);

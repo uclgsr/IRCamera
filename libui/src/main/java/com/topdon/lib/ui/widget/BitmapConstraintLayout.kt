@@ -6,10 +6,8 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.drawToBitmap
 
-/**
-    * @author: CaiSongL
-    * @date: 2023/6/21 17:13
-    */
+
+
 open class BitmapConstraintLayout : ConstraintLayout {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -18,6 +16,7 @@ open class BitmapConstraintLayout : ConstraintLayout {
     @Volatile
     var viewBitmap: Bitmap? = null
 
+    
     fun updateBitmap() {
     if (!isShown) {
     return

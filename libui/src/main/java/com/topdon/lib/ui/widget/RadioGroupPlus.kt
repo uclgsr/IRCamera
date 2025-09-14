@@ -11,49 +11,12 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.annotation.IdRes
 
-/**
-    *
-    * This class is used to create a multiple-exclusion scope for a set of radio
-    * buttons. Checking one radio button that belongs to a radio group unchecks
-    * any previously checked radio button within the same group.
-    *
-    *
-    *
-    * Intially, all of the radio buttons are unchecked. While it is not possible
-    * to uncheck a particular radio button, the radio group can be cleared to
-    * remove the checked state.
-    *
-    *
-    *
-    * The selection is identified by the unique id of the radio button as defined
-    * in the XML layout file.
-    *
-    *
-    *
-    * **XML Attributes**
-    *
-    * See [RadioGroup Attributes][com.android.internal.R.styleable.RadioGroup],
-    * [LinearLayout Attributes][com.android.internal.R.styleable.LinearLayout],
-    * [ViewGroup Attributes][com.android.internal.R.styleable.ViewGroup],
-    * [View Attributes][com.android.internal.R.styleable.View]
-    *
-    * Also see
-    * [LinearLayout.LayoutParams][android.widget.LinearLayout.LayoutParams]
-    * for layout attributes.
-    *
-    * @see RadioButton
-    */
+
+
+
+
 class RadioGroupPlus : LinearLayout {
-    /**
-    *
-    * Returns the identifier of the selected radio button in this group.
-    * Upon empty selection, the returned value is -1.
-    *
-    * @return the unique id of the selected radio button in this group
-    * @attr ref android.R.styleable#RadioGroup_checkedButton
-    * @see .check
-    * @see .clearCheck
-    */
+
     // holds the checked id; the selection is empty by default
     @get:IdRes
     var checkedRadioButtonId = -1
@@ -67,17 +30,13 @@ class RadioGroupPlus : LinearLayout {
     private var mOnCheckedChangeListener: OnCheckedChangeListener? = null
     private var mPassThroughListener: PassThroughHierarchyChangeListener? = null
 
-    /**
-    * {@inheritDoc}
-    */
+
     constructor(context: Context?) : super(context) {
     orientation = VERTICAL
     init()
     }
 
-    /**
-    * {@inheritDoc}
-    */
+
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
 
     // Note: XML attributes are handled by the parent LinearLayout constructor.
@@ -88,23 +47,20 @@ class RadioGroupPlus : LinearLayout {
     init()
     }
 
+
     private fun init() {
     mChildOnCheckedChangeListener = CheckedStateTracker()
     mPassThroughListener = PassThroughHierarchyChangeListener()
     super.setOnHierarchyChangeListener(mPassThroughListener)
     }
 
-    /**
-    * {@inheritDoc}
-    */
+
     override fun setOnHierarchyChangeListener(listener: OnHierarchyChangeListener) {
     // the user listener is delegated to our pass-through listener
     mPassThroughListener!!.mOnHierarchyChangeListener = listener
     }
 
-    /**
-    * {@inheritDoc}
-    */
+
     override fun onFinishInflate() {
     super.onFinishInflate()
 
@@ -136,16 +92,7 @@ class RadioGroupPlus : LinearLayout {
     super.addView(child, index, params)
     }
 
-    /**
-    *
-    * Sets the selection to the radio button whose identifier is passed in
-    * parameter. Using -1 as the selection identifier clears the selection;
-    * such an operation is equivalent to invoking [.clearCheck].
-    *
-    * @param id the unique id of the radio button to select in this group
-    * @see .getCheckedRadioButtonId
-    * @see .clearCheck
-    */
+
     fun check(
     @IdRes id: Int,
     ) {
@@ -182,58 +129,38 @@ class RadioGroupPlus : LinearLayout {
     }
     }
 
-    /**
-    * Efficiently traverse children to find view by ID
-    */
+
     private fun findViewTraversal(id: Int): View? {
-    if (this.id == id) return this
+        if (this.id == id) return this
 
-    for (i in 0 until childCount) {
-    val child = getChildAt(i)
-    if (child.id == id) return child
+        for (i in 0 until childCount) {
+            val child = getChildAt(i)
+            if (child.id == id) return child
 
-    if (child is ViewGroup) {
-    val found = child.findViewById<View>(id)
-    if (found != null) return found
-    }
-    }
-    return null
+            if (child is ViewGroup) {
+                val found = child.findViewById<View>(id)
+                if (found != null) return found
+            }
+        }
+        return null
     }
 
-    /**
-    *
-    * Clears the selection. When the selection is cleared, no radio button
-    * in this group is selected and [.getCheckedRadioButtonId] returns
-    * null.
-    *
-    * @see .check
-    * @see .getCheckedRadioButtonId
-    */
+
     fun clearCheck() {
     check(-1)
     }
 
-    /**
-    *
-    * Register a callback to be invoked when the checked radio button
-    * changes in this group.
-    *
-    * @param listener the callback to call on checked state change
-    */
+
     fun setOnCheckedChangeListener(listener: OnCheckedChangeListener) {
     mOnCheckedChangeListener = listener
     }
 
-    /**
-    * {@inheritDoc}
-    */
+
     override fun generateLayoutParams(attrs: AttributeSet): LayoutParams {
     return LayoutParams(context, attrs)
     }
 
-    /**
-    * {@inheritDoc}
-    */
+
     override fun checkLayoutParams(p: ViewGroup.LayoutParams): Boolean {
     return p is RadioGroup.LayoutParams
     }
@@ -249,93 +176,57 @@ class RadioGroupPlus : LinearLayout {
     return RadioGroup::class.java.name
     }
 
-    /**
-    *
-    * This set of layout parameters defaults the width and the height of
-    * the children to [.WRAP_CONTENT] when they are not specified in the
-    * XML file. Otherwise, this class ussed the value read from the XML file.
-    *
-    *
-    *
-    * See
-    * [LinearLayout Attributes][com.android.internal.R.styleable.LinearLayout_Layout]
-    * for a list of all child view attributes that this class supports.
-    */
+
+    
+
+
     class LayoutParams : LinearLayout.LayoutParams {
-    /**
-    * {@inheritDoc}
-    */
-    constructor(c: Context?, attrs: AttributeSet?) : super(c, attrs) {}
 
-    /**
-    * {@inheritDoc}
-    */
-    constructor(w: Int, h: Int) : super(w, h) {}
+        constructor(c: Context?, attrs: AttributeSet?) : super(c, attrs) {}
 
-    /**
-    * {@inheritDoc}
-    */
-    constructor(w: Int, h: Int, initWeight: Float) : super(w, h, initWeight) {}
 
-    /**
-    * {@inheritDoc}
-    */
-    constructor(p: ViewGroup.LayoutParams?) : super(p) {}
+        constructor(w: Int, h: Int) : super(w, h) {}
 
-    /**
-    * {@inheritDoc}
-    */
-    constructor(source: MarginLayoutParams?) : super(source) {}
 
-    /**
-    *
-    * Fixes the child's width to
-    * [android.view.ViewGroup.LayoutParams.WRAP_CONTENT] and the child's
-    * height to  [android.view.ViewGroup.LayoutParams.WRAP_CONTENT]
-    * when not specified in the XML file.
-    *
-    * @param a          the styled attributes set
-    * @param widthAttr  the width attribute to fetch
-    * @param heightAttr the height attribute to fetch
-    */
-    override fun setBaseAttributes(
-    a: TypedArray,
-    widthAttr: Int,
-    heightAttr: Int,
-    ) {
-    width =
-    if (a.hasValue(widthAttr)) {
-    a.getLayoutDimension(widthAttr, "layout_width")
-    } else {
-    WRAP_CONTENT
-    }
-    height =
-    if (a.hasValue(heightAttr)) {
-    a.getLayoutDimension(heightAttr, "layout_height")
-    } else {
-    WRAP_CONTENT
-    }
-    }
+        constructor(w: Int, h: Int, initWeight: Float) : super(w, h, initWeight) {}
+
+
+        constructor(p: ViewGroup.LayoutParams?) : super(p) {}
+
+
+        constructor(source: MarginLayoutParams?) : super(source) {}
+
+
+        override fun setBaseAttributes(
+            a: TypedArray,
+            widthAttr: Int,
+            heightAttr: Int,
+        ) {
+            width =
+                if (a.hasValue(widthAttr)) {
+                    a.getLayoutDimension(widthAttr, "layout_width")
+                } else {
+                    WRAP_CONTENT
+                }
+            height =
+                if (a.hasValue(heightAttr)) {
+                    a.getLayoutDimension(heightAttr, "layout_height")
+                } else {
+                    WRAP_CONTENT
+                }
+        }
     }
 
-    /**
-    *
-    * Interface definition for a callback to be invoked when the checked
-    * radio button changed in this group.
-    */
+
+    
+
+
     interface OnCheckedChangeListener {
-    /**
-    *
-    * Called when the checked radio button has changed. When the
-    * selection is cleared, checkedId is -1.
-    *
-    * @param group     the group in which the checked radio button has changed
-    * @param checkedId the unique identifier of the newly checked radio button
-    */
-    fun onCheckedChanged(
-    group: RadioGroupPlus,
-    @IdRes checkedId: Int,
-    )
+
+        fun onCheckedChanged(
+            group: RadioGroupPlus,
+            @IdRes checkedId: Int,
+        )
     }
 
     private inner class CheckedStateTracker : CompoundButton.OnCheckedChangeListener {
@@ -357,73 +248,65 @@ class RadioGroupPlus : LinearLayout {
     }
     }
 
-    /**
-    *
-    * A pass-through listener acts upon the events and dispatches them
-    * to another listener. This allows the table layout to set its own internal
-    * hierarchy change listener without preventing the user to setup his.
-    */
+
     private inner class PassThroughHierarchyChangeListener :
     OnHierarchyChangeListener {
     var mOnHierarchyChangeListener: OnHierarchyChangeListener? = null
 
-    fun traverseTree(view: View) {
-    if (view is RadioButton) {
-    var id = view.getId()
-    // generates an id if it's missing
-    if (id == NO_ID) {
-    id = generateViewId()
-    view.setId(id)
-    }
-    view.setOnCheckedChangeListener(
-    mChildOnCheckedChangeListener,
-    )
-    }
-    if (view !is ViewGroup) {
-    return
-    }
-    val viewGroup = view
-    if (viewGroup.childCount == 0) {
-    return
-    }
-    for (i in 0 until viewGroup.childCount) {
-    traverseTree(viewGroup.getChildAt(i))
-    }
-    }
 
-    /**
-    * {@inheritDoc}
-    */
-    override fun onChildViewAdded(
-    parent: View,
-    child: View,
-    ) {
-    traverseTree(child)
-    if (parent === this@RadioGroupPlus && child is RadioButton) {
-    var id = child.getId()
-    // generates an id if it's missing
-    if (id == NO_ID) {
-    id = generateViewId()
-    child.setId(id)
-    }
-    child.setOnCheckedChangeListener(
-    mChildOnCheckedChangeListener,
-    )
-    }
-    mOnHierarchyChangeListener?.onChildViewAdded(parent, child)
-    }
+        fun traverseTree(view: View) {
+            if (view is RadioButton) {
+                var id = view.getId()
+                // generates an id if it's missing
+                if (id == NO_ID) {
+                    id = generateViewId()
+                    view.setId(id)
+                }
+                view.setOnCheckedChangeListener(
+                    mChildOnCheckedChangeListener,
+                )
+            }
+            if (view !is ViewGroup) {
+                return
+            }
+            val viewGroup = view
+            if (viewGroup.childCount == 0) {
+                return
+            }
+            for (i in 0 until viewGroup.childCount) {
+                traverseTree(viewGroup.getChildAt(i))
+            }
+        }
 
-    /**
-    * {@inheritDoc}
-    */
-    override fun onChildViewRemoved(
-    parent: View,
-    child: View,
-    ) {
-    if (parent === this@RadioGroupPlus && child is RadioButton) {
-    child.setOnCheckedChangeListener(null)
-    }
-    mOnHierarchyChangeListener?.onChildViewRemoved(parent, child)
-    }
+
+        override fun onChildViewAdded(
+            parent: View,
+            child: View,
+        ) {
+            traverseTree(child)
+            if (parent === this@RadioGroupPlus && child is RadioButton) {
+                var id = child.getId()
+                // generates an id if it's missing
+                if (id == NO_ID) {
+                    id = generateViewId()
+                    child.setId(id)
+                }
+                child.setOnCheckedChangeListener(
+                    mChildOnCheckedChangeListener,
+                )
+            }
+            mOnHierarchyChangeListener?.onChildViewAdded(parent, child)
+        }
+
+
+        override fun onChildViewRemoved(
+            parent: View,
+            child: View,
+        ) {
+            if (parent === this@RadioGroupPlus && child is RadioButton) {
+                child.setOnCheckedChangeListener(null)
+            }
+            mOnHierarchyChangeListener?.onChildViewRemoved(parent, child)
+        }
     }
 }

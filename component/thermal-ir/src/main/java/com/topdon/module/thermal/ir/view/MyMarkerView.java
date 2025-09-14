@@ -21,11 +21,6 @@ import com.topdon.module.thermal.ir.R;
 import java.util.Locale;
 
 
-/**
- * Custom implementation of the MarkerView.
- *
- * @author Philipp Jahoda
- */
 @SuppressLint("ViewConstructor")
 public class MyMarkerView extends MarkerView {
 

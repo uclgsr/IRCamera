@@ -16,8 +16,44 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import cv2
-import numpy as np
+try:
+    import cv2
+    import numpy as np
+
+    OPENCV_AVAILABLE = True
+except ImportError:
+    OPENCV_AVAILABLE = False
+
+    # Mock numpy and cv2 for environments without OpenCV
+    class MockOpenCV:
+        def findChessboardCorners(self, *args, **kwargs) -> Any:
+            return False, None
+
+        def calibrateCamera(self, *args, **kwargs) -> Any:
+            return 0, None, None, None, None
+
+        def undistort(self, *args, **kwargs) -> Any:
+            return None
+
+        TERM_CRITERIA_EPS = 1
+        TERM_CRITERIA_MAX_ITER = 2
+
+    cv2 = MockOpenCV()
+    try:
+        import numpy as np
+    except ImportError:
+
+        class MockNumPy:
+            def array(self, *args, **kwargs) -> Any:
+                return []
+
+            def zeros(self, *args, **kwargs) -> Any:
+                return []
+
+            float32 = float
+
+        np = MockNumPy()
+
 from loguru import logger
 
 
@@ -218,7 +254,7 @@ class CameraCalibrator:
         self.completed_calibrations: Dict[str, CalibrationResult] = {}
 
         logger.info(
-            f"Camera Calibrator initialized with " f"data directory: {self.data_dir}"
+            "Camera Calibrator initialized with " f"data directory: {self.data_dir}"
         )
         logger.info(f"Pattern: {self.pattern_size}, Square size: {self.square_size}mm")
 
@@ -580,7 +616,8 @@ class CameraCalibrator:
 
             # For stereo calibration, we need corresponding object and image points
             # In a real implementation, you'd collect synchronized stereo image pairs
-            # For now, we'll create a working calibration based on the individual results
+            # For now,
+                we'll create a working calibration based on the individual results
 
             # Get the image resolution from the calibration results
             image_size = left_result.image_resolution
@@ -692,7 +729,7 @@ class CameraCalibrator:
             left_result.stereo = stereo_calibration
             right_result.stereo = stereo_calibration
 
-            logger.info(f"Stereo calibration completed successfully")
+            logger.info("Stereo calibration completed successfully")
             logger.info(f"Baseline: {stereo_calibration.baseline:.2f}mm")
             logger.info(
                 f"Convergence angle: {stereo_calibration.convergence_angle:.2f}°"

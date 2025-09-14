@@ -23,16 +23,16 @@ except ImportError:
     except ImportError:
         # Fallback logger for testing
         class FallbackLogger:
-            def info(self, msg):
+            def info(self, msg) -> Any:
                 print(f"INFO: {msg}")
 
-            def debug(self, msg):
+            def debug(self, msg) -> Any:
                 print(f"DEBUG: {msg}")
 
-            def warning(self, msg):
+            def warning(self, msg) -> Any:
                 print(f"WARNING: {msg}")
 
-            def error(self, msg):
+            def error(self, msg) -> Any:
                 print(f"ERROR: {msg}")
 
         logger = FallbackLogger()
@@ -42,7 +42,7 @@ try:
 except ImportError:
     # Fallback config for testing
     class FallbackConfig:
-        def get(self, key, default=None):
+        def get(self, key, default=None) -> Any:
             config_map = {
                 "messaging.base_retry_delay": 1.0,
                 "messaging.max_retry_delay": 30.0,
@@ -132,20 +132,21 @@ class ReliableMessageService:
         self.default_timeout = config.get("messaging.default_timeout", 30.0)
         self.cleanup_interval = config.get("messaging.cleanup_interval", 60.0)
 
-    def set_transport(self, transport: Callable):
+    def set_transport(self, transport: None = Callable) -> None:
         """
         Set the message transport function.
 
         Args:
-            transport: Async function that takes (host, port, message_dict) and returns bool
+            transport: Async function that takes (host, port,
+                message_dict) and returns bool
         """
         self.transport = transport
 
     def register_message_handler(
         self,
-        message_type: str,
-        handler: Callable[[Dict[str, Any]], Optional[Dict[str, Any]]],
-    ):
+        message_type: Any = str,
+        handler: Any = Callable[[Dict[str, Any]], Optional[Dict[str, Any]]],
+    ) -> Any:
         """
         Register a handler for incoming messages of a specific type.
 
@@ -156,7 +157,7 @@ class ReliableMessageService:
         self.message_handlers[message_type] = handler
         logger.debug(f"Registered handler for message type: {message_type}")
 
-    def unregister_message_handler(self, message_type: str):
+    def unregister_message_handler(self, message_type: Any = str) -> Any:
         """Unregister a message handler."""
         if message_type in self.message_handlers:
             del self.message_handlers[message_type]
@@ -189,7 +190,7 @@ class ReliableMessageService:
             await self.shutdown()
             return False
 
-    async def shutdown(self):
+    async def shutdown(self) -> Any:
         """Shutdown the messaging service."""
         if not self.is_running:
             return
@@ -231,7 +232,7 @@ class ReliableMessageService:
         message_type: str,
         content: Dict[str, Any],
         priority: MessagePriority = MessagePriority.NORMAL,
-        timeout_seconds: float = None,
+        timeout_seconds: Optional[float] = None,
         max_retries: int = 3,
         callback: Optional[MessageCallback] = None,
     ) -> str:
@@ -292,8 +293,8 @@ class ReliableMessageService:
         return message_id
 
     async def handle_acknowledgment(
-        self, message_id: str, success: bool, error_message: str = None
-    ):
+        self, message_id: str, success: bool, error_message: Optional[str] = None
+    ) -> None:
         """
         Handle an acknowledgment for a sent message.
 
@@ -548,7 +549,7 @@ class ReliableMessageService:
         original_message: Dict[str, Any],
         success: bool,
         sender_info: Dict[str, Any] = None,
-        error_message: str = None,
+        error_message: Optional[str] = None,
     ):
         """Send acknowledgment for a received message."""
         if not self.transport or not sender_info:

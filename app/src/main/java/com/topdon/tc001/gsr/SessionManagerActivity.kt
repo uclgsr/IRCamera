@@ -11,11 +11,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.SearchView
-import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivitySessionManagerBinding
 import com.topdon.gsr.model.SessionInfo
@@ -31,10 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
-    * Production-Ready Session Management UI
-    * Browse, manage, and delete recording sessions with comprehensive file cleanup
-    */
+
 class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding>() {
     private lateinit var adapter: SessionAdapter
     private lateinit var sessionManager: SessionManager
@@ -55,21 +52,19 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
     override fun initContentLayoutId() = R.layout.activity_session_manager
 
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
 
-    initializeViews()
-    setupSessionManager()
-    setupRecyclerView()
-    setupSearchAndFilter()
-    loadSessions()
+        initializeViews()
+        setupSessionManager()
+        setupRecyclerView()
+        setupSearchAndFilter()
+        loadSessions()
     }
 
     private fun initializeViews() {
-
-    private fun initializeViews() {
-    // Setup toolbar
-    supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    supportActionBar?.title = "Session Manager"
+        // Setup toolbar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Session Manager"
     }
 
     private fun setupSessionManager() {
@@ -148,9 +143,9 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
     (activeSessions + historicalSessions).distinctBy { it.sessionId }
     }
 
-    sessions.clear()
-    sessions.addAll(loadedSessions.sortedByDescending { it.startTime })
-    filterSessions(searchView.query?.toString())
+                sessions.clear()
+                sessions.addAll(loadedSessions.sortedByDescending { it.startTime })
+                filterSessions(binding.searchView.query?.toString())
 
     Log.i(TAG, "Loaded ${sessions.size} sessions")
     } catch (e: Exception) {
@@ -248,8 +243,8 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
     updateEmptyView()
     }
 
-    private fun applyFilter(filterIndex: Int) {
-    val baseList = if (searchView.query.isNullOrEmpty()) sessions else filteredSessions.toList()
+    private fun filterSessionsByType(filterIndex: Int) {
+        val baseList = if (binding.searchView.query.isNullOrEmpty()) sessions else filteredSessions.toList()
 
     filteredSessions.clear()
 
@@ -372,9 +367,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
     }
 }
 
-/**
-    * RecyclerView Adapter for Session List
-    */
+
 class SessionAdapter(
     private val context: Context,
     private val sessions: List<SessionInfo>,

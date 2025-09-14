@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.module.thermal.R
 
+
 class MenuTabAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: OnItemClickListener? = null
@@ -28,14 +29,14 @@ class MenuTabAdapter(val context: Context) :
     notifyDataSetChanged()
     }
 
-    // 拍摄
+//拍摄
     private val firstMenus =
     arrayListOf<Int>(
     com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg,
     com.topdon.lib.ui.R.drawable.ic_menu_thermal7002_svg,
     )
 
-    // 选框
+//选框
     private val secondMenus =
     arrayListOf<Int>(
     com.topdon.lib.ui.R.drawable.ic_menu_thermal6001,
@@ -46,7 +47,7 @@ class MenuTabAdapter(val context: Context) :
     com.topdon.lib.ui.R.drawable.ic_menu_thermal7004,
     )
 
-    // 选框
+//选框
     private val secondMenusStr =
     arrayListOf(
     "点",
@@ -57,16 +58,16 @@ class MenuTabAdapter(val context: Context) :
     "删除",
     )
 
-    // 选框
+//选框
     private val fourthMenusStr =
-    arrayListOf(
-    "旋转",
-    "增强",
-    "画中画",
-    "色带",
-    )
+        arrayListOf(
+            "旋转",
+            "Enhance",
+            "画中画",
+            "色带",
+        )
 
-    // 色彩 - Using available resources as placeholders
+//色彩 - Using available resources as placeholders
     private val thirdMenus =
     arrayListOf<Int>(
     com.topdon.lib.ui.R.drawable.ic_menu_thermal5003,
@@ -81,7 +82,7 @@ class MenuTabAdapter(val context: Context) :
     com.topdon.lib.ui.R.drawable.ic_menu_thermal6003_svg,
     )
 
-    // 设置 - Using available resources as placeholders
+//set - Using available resources as placeholders
     private val fourthMenus =
     arrayListOf<Int>(
     com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg,
@@ -164,6 +165,7 @@ class MenuTabAdapter(val context: Context) :
     }
     }
 
+
     open class BaseItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
     lateinit var lay: View
     lateinit var img: ImageView
@@ -185,6 +187,7 @@ class MenuTabAdapter(val context: Context) :
     img = itemView.findViewById<ImageView>(R.id.item_menu_tab_more_img)
     }
     }
+
 
     interface OnItemClickListener {
     fun onClick(index: Int)

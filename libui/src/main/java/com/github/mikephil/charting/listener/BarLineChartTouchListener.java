@@ -20,33 +20,20 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
-/**
- * TouchListener for Bar-, Line-, Scatter- and CandleStickChart with handles all
- * touch interaction. Longpress == Zoom out. Double-Tap == Zoom in.
- *
- * @author Philipp Jahoda
- */
+
 public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBase<? extends BarLineScatterCandleBubbleData<?
         extends IBarLineScatterCandleBubbleDataSet<? extends Entry>>>> {
 
-    /**
-     * the original touch-matrix from the chart
-     */
+
     private Matrix mMatrix = new Matrix();
 
-    /**
-     * matrix for saving the original matrix state
-     */
+
     private Matrix mSavedMatrix = new Matrix();
 
-    /**
-     * point where the touch action started
-     */
+
     private MPPointF mTouchStartPoint = MPPointF.getInstance(0,0);
 
-    /**
-     * center between two pointers (fingers on the display)
-     */
+
     private MPPointF mTouchPointCenter = MPPointF.getInstance(0,0);
 
     private float mSavedXDist = 1f;
@@ -55,33 +42,20 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
     private IDataSet mClosestDataSetToTouch;
 
-    /**
-     * used for tracking velocity of dragging
-     */
+
     private VelocityTracker mVelocityTracker;
 
     private long mDecelerationLastTime = 0;
     private MPPointF mDecelerationCurrentPoint = MPPointF.getInstance(0,0);
     private MPPointF mDecelerationVelocity = MPPointF.getInstance(0,0);
 
-    /**
-     * the distance of movement that will be counted as a drag
-     */
+
     private float mDragTriggerDist;
 
-    /**
-     * the minimum distance between the pointers that will trigger a zoom gesture
-     */
+
     private float mMinScalePointerDistance;
 
-    /**
-     * Constructor with initialization parameters.
-     *
-     * @param chart               instance of the chart
-     * @param touchMatrix         the touch-matrix of the chart
-     * @param dragTriggerDistance the minimum movement distance that will be interpreted as a "drag" gesture in dp (3dp equals
-     *                            to about 9 pixels on a 5.5" FHD screen)
-     */
+
     public BarLineChartTouchListener(BarLineChartBase<? extends BarLineScatterCandleBubbleData<? extends
             IBarLineScatterCandleBubbleDataSet<? extends Entry>>> chart, Matrix touchMatrix, float dragTriggerDistance) {
         super(chart);
@@ -288,16 +262,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         return true; // indicate event was handled
     }
 
-    /**
-     * ################ ################ ################ ################
-     */
-    /** BELOW CODE PERFORMS THE ACTUAL TOUCH ACTIONS */
 
-    /**
-     * Saves the current Matrix state and the touch-start point.
-     *
-     * @param event
-     */
+    //
+
+
     private void saveTouchStart(MotionEvent event) {
 
         mSavedMatrix.set(mMatrix);
@@ -307,11 +275,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         mClosestDataSetToTouch = mChart.getDataSetByTouchPoint(event.getX(), event.getY());
     }
 
-    /**
-     * Performs all necessary operations needed for dragging.
-     *
-     * @param event
-     */
+
     private void performDrag(MotionEvent event, float distanceX, float distanceY) {
 
         mLastGesture = ChartGesture.DRAG;
@@ -337,11 +301,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
             l.onChartTranslate(event, distanceX, distanceY);
     }
 
-    /**
-     * Performs the all operations necessary for pinch and axis zoom.
-     *
-     * @param event
-     */
+
     private void performZoom(MotionEvent event) {
 
         if (event.getPointerCount() >= 2) { // two finger zoom
@@ -434,11 +394,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         }
     }
 
-    /**
-     * Highlights upon dragging, generates callbacks for the selection-listener.
-     *
-     * @param e
-     */
+
     private void performHighlightDrag(MotionEvent e) {
 
         Highlight h = mChart.getHighlightByTouchPoint(e.getX(), e.getY());
@@ -449,18 +405,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         }
     }
 
-    /**
-     * ################ ################ ################ ################
-     */
-    /** DOING THE MATH BELOW ;-) */
+
+    //
 
 
-    /**
-     * Determines the center point between two pointer touch points.
-     *
-     * @param point
-     * @param event
-     */
     private static void midPoint(MPPointF point, MotionEvent event) {
         float x = event.getX(0) + event.getX(1);
         float y = event.getY(0) + event.getY(1);
@@ -468,51 +416,26 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         point.y = (y / 2f);
     }
 
-    /**
-     * returns the distance between two pointer touch points
-     *
-     * @param event
-     * @return
-     */
+
     private static float spacing(MotionEvent event) {
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);
         return (float) Math.sqrt(x * x + y * y);
     }
 
-    /**
-     * calculates the distance on the x-axis between two pointers (fingers on
-     * the display)
-     *
-     * @param e
-     * @return
-     */
+
     private static float getXDist(MotionEvent e) {
         float x = Math.abs(e.getX(0) - e.getX(1));
         return x;
     }
 
-    /**
-     * calculates the distance on the y-axis between two pointers (fingers on
-     * the display)
-     *
-     * @param e
-     * @return
-     */
+
     private static float getYDist(MotionEvent e) {
         float y = Math.abs(e.getY(0) - e.getY(1));
         return y;
     }
 
-    /**
-     * Returns a recyclable MPPointF instance.
-     * returns the correct translation depending on the provided x and y touch
-     * points
-     *
-     * @param x
-     * @param y
-     * @return
-     */
+
     public MPPointF getTrans(float x, float y) {
 
         ViewPortHandler vph = mChart.getViewPortHandler();
@@ -530,36 +453,21 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         return MPPointF.getInstance(xTrans, yTrans);
     }
 
-    /**
-     * Returns true if the current touch situation should be interpreted as inverted, false if not.
-     *
-     * @return
-     */
+
     private boolean inverted() {
         return (mClosestDataSetToTouch == null && mChart.isAnyAxisInverted()) || (mClosestDataSetToTouch != null
                 && mChart.isInverted(mClosestDataSetToTouch.getAxisDependency()));
     }
 
-    /**
-     * ################ ################ ################ ################
-     */
-    /** GETTERS AND GESTURE RECOGNITION BELOW */
 
-    /**
-     * returns the matrix object the listener holds
-     *
-     * @return
-     */
+    //
+
+
     public Matrix getMatrix() {
         return mMatrix;
     }
 
-    /**
-     * Sets the minimum distance that will be interpreted as a "drag" by the chart in dp.
-     * Default: 3dp
-     *
-     * @param dragTriggerDistance
-     */
+
     public void setDragTriggerDist(float dragTriggerDistance) {
         this.mDragTriggerDist = Utils.convertDpToPixel(dragTriggerDistance);
     }

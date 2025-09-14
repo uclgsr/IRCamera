@@ -47,7 +47,7 @@ class GSRPlotWidget(pg.PlotWidget):
         # Data storage
         self.gsr_data: Dict[str, deque] = (
             {}
-        )  # device_id -> deque of (timestamp, gsr_value)
+        )  # device_id: deque of (timestamp, gsr_value)
         self.plot_items: Dict[str, pg.PlotDataItem] = {}
         self.sync_markers: List[pg.InfiniteLine] = []
 
@@ -75,7 +75,7 @@ class GSRPlotWidget(pg.PlotWidget):
         # Add legend
         self.addLegend()
 
-    def add_device(self, device_id: str, color: str = None) -> None:
+    def add_device(self, device_id: str, color: Optional[str] = None) -> None:
         """
         Add a new GSR device for plotting.
 
@@ -370,7 +370,7 @@ class MultiModalDashboard(QWidget):
         self.video_row = 0
         self.video_col = 2
 
-    def add_gsr_device(self, device_id: str, color: str = None) -> None:
+    def add_gsr_device(self, device_id: str, color: Optional[str] = None) -> None:
         """Add GSR device to the plot."""
         if self.gsr_plot:
             self.gsr_plot.add_device(device_id, color)

@@ -87,8 +87,8 @@ class DataAggregationEngine:
         self.buffer_size_bytes = buffer_size_mb * 1024 * 1024
 
         # Data streams management
-        self.streams: Dict[str, DataStream] = {}  # stream_id -> DataStream
-        self.sync_events: List[SyncEvent] = []
+        self.streams: Dict[str, DataStream] = {}  # stream_id: DataStream
+        self.sync_events = List[SyncEvent] = []
 
         # Threading and async management
         self.data_queue = Queue()
@@ -241,7 +241,7 @@ class DataAggregationEngine:
         event_type: str,
         source_device: str,
         timestamp_ns: Optional[int] = None,
-        metadata: Dict = None,
+        metadata: Optional[Dict] = None,
     ) -> None:
         """
         Add synchronization event.

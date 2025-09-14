@@ -16,61 +16,63 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.tools.DeviceTools
 
-/**
-    * 设备类型选择.
-    *
-    * Created by LCG on 2024/4/22.
-    */
+
 class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
-    /**
-    * 当前点击的设备类型.
-    */
+
     private var clientType: IRDeviceType? = null
 
-    override fun initView() {
-    binding.recyclerView.layoutManager = LinearLayoutManager(this)
-    binding.recyclerView.adapter =
-    MyAdapter(this).apply {
-    onItemClickListener = {
-    clientType = it
-    when (it) {
-    IRDeviceType.TS004 -> {
-    NavigationManager.getInstance()
-    .build(RouterConfig.IR_DEVICE_ADD)
-    .withBoolean("isTS004", true)
-    .navigation(this@DeviceTypeActivity)
-    }
-    IRDeviceType.TC007 -> {
-    NavigationManager.getInstance()
-    .build(RouterConfig.IR_DEVICE_ADD)
-    .withBoolean("isTS004", false)
-    .navigation(this@DeviceTypeActivity)
-    }
-    IRDeviceType.SHIMMER3_GSR -> {
-    NavigationManager.getInstance()
-    .build(RouterConfig.GSR_MULTI_MODAL)
-    .navigation(this@DeviceTypeActivity)
-    finish()
-    }
-    IRDeviceType.PC_CONTROLLER -> {
-    // Launch device pairing activity
-    com.topdon.tc001.network.DevicePairingActivity.start(this@DeviceTypeActivity)
-    }
-    else -> {
-    NavigationManager.getInstance()
-    .build(RouterConfig.IR_MAIN)
-    .withBoolean(ExtraKeyConfig.IS_TC007, false)
-    .navigation(this@DeviceTypeActivity)
-    if (DeviceTools.isConnect()) {
-    finish()
-    }
-    }
-    }
-    }
-    }
+    override fun initContentLayoutId() = R.layout.activity_device_type
+
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+        initData()
     }
 
-    override fun initData() {
+    private fun initView() {
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter =
+            MyAdapter(this).apply {
+                onItemClickListener = {
+                    clientType = it
+                    when (it) {
+                        IRDeviceType.TS004 -> {
+                            NavigationManager.getInstance()
+                                .build(RouterConfig.IR_DEVICE_ADD)
+                                .withBoolean("isTS004", true)
+                                .navigation(this@DeviceTypeActivity)
+                        }
+                        IRDeviceType.TC007 -> {
+                            NavigationManager.getInstance()
+                                .build(RouterConfig.IR_DEVICE_ADD)
+                                .withBoolean("isTS004", false)
+                                .navigation(this@DeviceTypeActivity)
+                        }
+                        IRDeviceType.SHIMMER3_GSR -> {
+                            NavigationManager.getInstance()
+                                .build(RouterConfig.GSR_MULTI_MODAL)
+                                .navigation(this@DeviceTypeActivity)
+                            finish()
+                        }
+                        IRDeviceType.PC_CONTROLLER -> {
+                            // Launch device pairing activity
+                            com.topdon.tc001.network.DevicePairingActivity.start(this@DeviceTypeActivity)
+                        }
+                        else -> {
+                            NavigationManager.getInstance()
+                                .build(RouterConfig.IR_MAIN)
+                                .withBoolean(ExtraKeyConfig.IS_TC007, false)
+                                .navigation(this@DeviceTypeActivity)
+                            if (DeviceTools.isConnect()) {
+                                finish()
+                            }
+                        }
+                    }
+                }
+            }
+    }
+
+    private fun initData() {
     }
 
     override fun connected() {
@@ -232,9 +234,7 @@ class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
     }
     }
 
-    /**
-    * 支持的设备类型 (热成像设备和GSR传感器).
-    */
+
     enum class IRDeviceType {
     TC001 {
     override fun isLine(): Boolean = true

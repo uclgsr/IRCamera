@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present 贵州纳雍穿青人李裕江<1032694760@qq.com>
+ * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
  *
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -26,12 +26,7 @@ import com.github.gzuliyujiang.wheelpicker.widget.NumberWheelLayout;
 import com.github.gzuliyujiang.wheelview.contract.WheelFormatter;
 import com.github.gzuliyujiang.wheelview.widget.WheelView;
 
-/**
- * 数字选择器
- *
- * @author 李玉江[QQ:1032694760]
- * @since 2015/10/24
- */
+
 @SuppressWarnings("unused")
 public class NumberPicker extends ModalDialog {
     protected NumberWheelLayout wheelLayout;

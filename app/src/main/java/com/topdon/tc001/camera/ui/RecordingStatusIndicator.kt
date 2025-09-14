@@ -10,10 +10,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.csl.irCamera.R
 
-/**
-    * Real-time status indicator for parallel multi-modal recording
-    * Shows active sensors, recording duration, and session information
-    */
+
 class RecordingStatusIndicator
     @JvmOverloads
     constructor(
@@ -36,131 +33,187 @@ class RecordingStatusIndicator
     setPadding(16, 8, 16, 8)
     gravity = Gravity.CENTER
 
-    // Recording status icon
-    statusIcon =
-    ImageView(context).apply {
-    layoutParams =
-    LayoutParams(32, 32).apply {
-    gravity = Gravity.CENTER
-    bottomMargin = 4
-    }
-    // Would normally use a drawable, but creating programmatically
-    setBackgroundColor(Color.LTGRAY)
-    }
-    addView(statusIcon)
+            // Recording status icon
+            statusIcon =
+                ImageView(context).apply {
+                    layoutParams =
+                        LayoutParams(32, 32).apply {
+                            gravity = Gravity.CENTER
+                            bottomMargin = 4
+                        }
+                    // Would normally use a drawable, but creating programmatically
+                    setBackgroundColor(Color.LTGRAY)
+                }
+            addView(statusIcon)
 
-    // Status text (Recording/Stopped)
-    statusText =
-    TextView(context).apply {
-    textSize = 12f
-    setTextColor(ContextCompat.getColor(context, android.R.color.black))
-    gravity = Gravity.CENTER
-    }
-    addView(statusText)
+            // Status text (Recording/Stopped)
+            statusText =
+                TextView(context).apply {
+                    textSize = 12f
+                    setTextColor(ContextCompat.getColor(context, android.R.color.black))
+                    gravity = Gravity.CENTER
+                }
+            addView(statusText)
 
-    // Duration counter
-    durationText =
-    TextView(context).apply {
-    textSize = 11f
-    setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
-    gravity = Gravity.CENTER
-    }
-    addView(durationText)
+            // Duration counter
+            durationText =
+                TextView(context).apply {
+                    textSize = 11f
+                    setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
+                    gravity = Gravity.CENTER
+                }
+            addView(durationText)
 
-    // Active sensors list
-    sensorsText =
-    TextView(context).apply {
-    textSize = 10f
-    setTextColor(ContextCompat.getColor(context, android.R.color.tertiary_text_dark))
-    gravity = Gravity.CENTER
-    }
-    addView(sensorsText)
+            // Active sensors list
+            sensorsText =
+                TextView(context).apply {
+                    textSize = 10f
+                    setTextColor(ContextCompat.getColor(context, android.R.color.tertiary_text_dark))
+                    gravity = Gravity.CENTER
+                }
+            addView(sensorsText)
 
-    updateDisplay()
-    }
+            updateDisplay()
+        }
 
-    /**
-    * Start recording indicator
-    */
-    fun startRecording(
-    sessionId: String,
-    sensors: Set<SensorSelectionDialog.SensorType>,
-    ) {
-    this.sessionId = sessionId
-    this.activeSensors = sensors
-    this.startTime = System.currentTimeMillis()
-    this.isRecording = true
+        
+        fun startRecording(
+            sessionId: String,
+            sensors: Set<SensorSelectionDialog.SensorType>,
+        ) {
+            this.sessionId = sessionId
+            this.activeSensors = sensors
+            this.startTime = System.currentTimeMillis()
+            this.isRecording = true
 
-    updateDisplay()
+            updateDisplay()
 
-    // Start duration counter
-    startDurationCounter()
-    }
+            // Start duration counter
+            startDurationCounter()
+        }
 
-    /**
-    * Stop recording indicator
-    */
-    fun stopRecording() {
-    this.isRecording = false
-    updateDisplay()
-    }
+        
+        fun stopRecording() {
+            this.isRecording = false
+            updateDisplay()
+        }
 
-    /**
-    * Update sensor status
-    */
-    fun updateSensorStatus(
-    sensor: SensorSelectionDialog.SensorType,
-    status: String,
-    ) {
-    // For detailed status updates, we could show individual sensor states
-    updateDisplay()
-    }
+        
+        fun updateSensorStatus(
+            sensor: SensorSelectionDialog.SensorType,
+            status: String,
+        ) {
+            // For detailed status updates, we could show individual sensor states
+            updateDisplay()
+        }
 
-    private fun updateDisplay() {
-    if (isRecording) {
-    statusIcon.setBackgroundColor(Color.RED)
-    statusText.text = "🔴 RECORDING"
-    statusText.setTextColor(Color.RED)
+        
+        fun updateWithSensorSummary(summary: com.topdon.tc001.controller.SensorStatusSummary) {
+            // Update based on comprehensive sensor status
+            if (summary.isSessionActive) {
+                statusIcon.setBackgroundColor(Color.RED)
+                statusText.text = "🔴 RECORDING"
+                statusText.setTextColor(Color.RED)
 
-    sensorsText.text =
-    activeSensors.joinToString(" • ") {
-    when (it) {
-    SensorSelectionDialog.SensorType.THERMAL -> "🌡️"
-    SensorSelectionDialog.SensorType.RGB -> "📸"
-    SensorSelectionDialog.SensorType.GSR -> "📊"
-    }
-    }
+                // Show detailed sensor status
+                val sensorDisplay = mutableListOf<String>()
+                summary.sensors.forEach { sensorStatus ->
+                    val icon =
+                        when {
+                            sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "📸"
+                            sensorStatus.sensorType.contains("Thermal", ignoreCase = true) -> "🌡️"
+                            sensorStatus.sensorType.contains("GSR", ignoreCase = true) -> "📊"
+                            else -> "🔘"
+                        }
 
-    visibility = VISIBLE
-    } else {
-    statusIcon.setBackgroundColor(Color.GRAY)
-    statusText.text = "⏹️ STOPPED"
-    statusText.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
-    durationText.text = ""
-    sensorsText.text = ""
+                    val statusIcon =
+                        when {
+                            sensorStatus.isRecording -> "✅"
+                            sensorStatus.isInitialized -> "⏸️"
+                            else -> "❌"
+                        }
 
-    // Hide when not recording to save screen space
-    visibility = GONE
-    }
-    }
+                    sensorDisplay.add("$icon$statusIcon")
+                }
 
-    private fun startDurationCounter() {
-    if (!isRecording) return
+                sensorsText.text = sensorDisplay.joinToString(" ")
+                visibility = VISIBLE
+            } else {
+                statusIcon.setBackgroundColor(Color.GRAY)
+                statusText.text =
+                    when {
+                        summary.totalSensorsInitialized == 0 -> "❌ NO SENSORS"
+                        summary.totalSensorsInitialized < summary.totalSensorsConfigured -> "⚠️ PARTIAL SETUP"
+                        else -> "⏹️ READY"
+                    }
+                statusText.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
+                durationText.text = ""
 
-    val elapsed = (System.currentTimeMillis() - startTime) / 1000
-    val minutes = elapsed / 60
-    val seconds = elapsed % 60
+                // Show sensor availability even when not recording
+                if (summary.totalSensorsInitialized > 0) {
+                    val sensorDisplay = mutableListOf<String>()
+                    summary.sensors.forEach { sensorStatus ->
+                        val icon =
+                            when {
+                                sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "📸"
+                                sensorStatus.sensorType.contains("Thermal", ignoreCase = true) -> "🌡️"
+                                sensorStatus.sensorType.contains("GSR", ignoreCase = true) -> "📊"
+                                else -> "🔘"
+                            }
+                        sensorDisplay.add("$icon✅")
+                    }
+                    sensorsText.text = sensorDisplay.joinToString(" ") + " ready"
+                } else {
+                    sensorsText.text = "Check sensor connections"
+                }
 
-    durationText.text = String.format("%02d:%02d", minutes, seconds)
+                visibility = VISIBLE // Show status even when not recording
+            }
+        }
 
-    // Update every second
-    postDelayed({ startDurationCounter() }, 1000)
-    }
+        private fun updateDisplay() {
+            if (isRecording) {
+                statusIcon.setBackgroundColor(Color.RED)
+                statusText.text = "🔴 RECORDING"
+                statusText.setTextColor(Color.RED)
 
-    /**
-    * Show/hide the indicator
-    */
-    fun setVisible(visible: Boolean) {
-    visibility = if (visible) VISIBLE else GONE
-    }
+                sensorsText.text =
+                    activeSensors.joinToString(" • ") {
+                        when (it) {
+                            SensorSelectionDialog.SensorType.THERMAL -> "🌡️"
+                            SensorSelectionDialog.SensorType.RGB -> "📸"
+                            SensorSelectionDialog.SensorType.GSR -> "📊"
+                        }
+                    }
+
+                visibility = VISIBLE
+            } else {
+                statusIcon.setBackgroundColor(Color.GRAY)
+                statusText.text = "⏹️ STOPPED"
+                statusText.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
+                durationText.text = ""
+                sensorsText.text = ""
+
+                // Hide when not recording to save screen space
+                visibility = GONE
+            }
+        }
+
+        private fun startDurationCounter() {
+            if (!isRecording) return
+
+            val elapsed = (System.currentTimeMillis() - startTime) / 1000
+            val minutes = elapsed / 60
+            val seconds = elapsed % 60
+
+            durationText.text = String.format("%02d:%02d", minutes, seconds)
+
+            // Update every second
+            postDelayed({ startDurationCounter() }, 1000)
+        }
+
+        
+        fun setVisible(visible: Boolean) {
+            visibility = if (visible) VISIBLE else GONE
+        }
     }

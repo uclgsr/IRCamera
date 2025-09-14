@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi
 import com.guide.zm04c.matrix.Logger.d
 import com.guide.zm04c.matrix.utils.FileUtils.Companion.saveFile
 import com.guide.zm04c.matrix.utils.HexDump
-import com.topdon.lib.core.BaseApplication
 import java.io.BufferedInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -18,16 +17,15 @@ import java.nio.charset.StandardCharsets
 import kotlin.experimental.and
 
 class GuideInterface {
-
     private val TAG = "guidecore"
     private val IR_WIDTH = 256
     private val IR_HEIGHT = 192
     private val HEAD_SIZE = 64
-    private val IR_SIZE = IR_WIDTH * IR_HEIGHT //49152
-    private val YUV_SIZE = IR_SIZE * 2 //98304 2byte = 1像素点
+    private val IR_SIZE = IR_WIDTH * IR_HEIGHT // 49152
+    private val YUV_SIZE = IR_SIZE * 2 // 98304 2byte = 1像素点
     private val PARAM_SIZE = 512
-    private val TEMP_MATRIX_SIZE = IR_SIZE * 4 //196608 4byte = 1温度点
-    private val FRAME_SIZE = HEAD_SIZE + YUV_SIZE + PARAM_SIZE + TEMP_MATRIX_SIZE //295488
+    private val TEMP_MATRIX_SIZE = IR_SIZE * 4 // 196608 4byte = 1温度点
+    private val FRAME_SIZE = HEAD_SIZE + YUV_SIZE + PARAM_SIZE + TEMP_MATRIX_SIZE // 295488
     private val MAX_BULK_TRANSFER_SIZE = 16384
     private var mGuideUsbManager: GuideUsbManager? = null
     private var mUsbBuffer: UsbBuffer? = null
@@ -35,13 +33,13 @@ class GuideInterface {
     private val mUsbReadbuffer = ByteArray(MAX_BULK_TRANSFER_SIZE)
     private val mFrame = ByteArray(FRAME_SIZE)
 
-    //图像数据：YUV422(UYVY)
+    // 图像数据：YUV422(UYVY)
     private val mYuv = ByteArray(YUV_SIZE)
 
-    //参数行数据
+    // 参数行数据
     private val mParam = ByteArray(PARAM_SIZE)
 
-    //温度矩阵数据：
+    // 温度矩阵数据：
     private val mTempMatrixByte = ByteArray(TEMP_MATRIX_SIZE)
     private val mTempMatrixFloat = FloatArray(IR_SIZE)
     private var mIrDataCallback: IrDataCallback? = null
@@ -56,64 +54,65 @@ class GuideInterface {
     private val mLock = Any()
 
     interface IrDataCallback {
-    fun processIrData(yuv: ByteArray, temp: FloatArray)
+        fun processIrData(
+            yuv: ByteArray,
+            temp: FloatArray,
+        )
     }
 
-    /**
-    * 读取数据
-    */
+
     private fun startUsbBufferWriteThread() {
-    mWriteThreadFlag = true
-    mUsbBufferWriteThread = Thread {
-    d(TAG, "write thread start")
-    while (mWriteThreadFlag) {
-    val length: Int = mGuideUsbManager!!.read(mUsbReadbuffer) //读取红外设备传回的图像信息
-    if (length > 0) {
-    mUsbBuffer!!.write(mUsbReadbuffer, 0, length)
-    } else {
+        mWriteThreadFlag = true
+        mUsbBufferWriteThread =
+            Thread {
+                d(TAG, "write thread start")
+                while (mWriteThreadFlag) {
+                    val length: Int = mGuideUsbManager!!.read(mUsbReadbuffer) // 读取红外设备传回的图像信息
+                    if (length > 0) {
+                        mUsbBuffer!!.write(mUsbReadbuffer, 0, length)
+                    } else {
 //                        Logger.d(TAG, "length < 0");
-    try {
-    Thread.sleep(10)
-    } catch (e: InterruptedException) {
-    e.printStackTrace()
-    }
-    }
-    }
-    d(TAG, "write thread exit")
-    }
-    mUsbBufferWriteThread!!.start()
+                        try {
+                            Thread.sleep(10)
+                        } catch (e: InterruptedException) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+                d(TAG, "write thread exit")
+            }
+        mUsbBufferWriteThread!!.start()
     }
 
     var startTime = 0L
 
-    /**
-    * 分析数据,并回调响应
-    */
+
     private fun startUsbBufferReadThread() {
-    mReadThreadFlag = true
-    mUsbBufferReadThread = Thread {
-    d(TAG, "read thread start")
-    while (mReadThreadFlag) {
-    val ret = mUsbBuffer!!.readFrame(mFrame) //mFrame len: 295488
-    if (ret) {
-    System.arraycopy(mFrame, HEAD_SIZE, mYuv, 0, mYuv.size)
-    synchronized(mLock) {
-    System.arraycopy(
-    mFrame,
-    HEAD_SIZE + YUV_SIZE,
-    mParam,
-    0,
-    mParam.size
-    )
-    System.arraycopy(
-    mFrame,
-    HEAD_SIZE + YUV_SIZE + PARAM_SIZE,
-    mTempMatrixByte,
-    0,
-    mTempMatrixByte.size
-    )
-    }
-    mNativeGuideCore!!.toFloatTempMatrix(mTempMatrixFloat, mTempMatrixByte) //温度解析
+        mReadThreadFlag = true
+        mUsbBufferReadThread =
+            Thread {
+                d(TAG, "read thread start")
+                while (mReadThreadFlag) {
+                    val ret = mUsbBuffer!!.readFrame(mFrame) // mFrame len: 295488
+                    if (ret) {
+                        System.arraycopy(mFrame, HEAD_SIZE, mYuv, 0, mYuv.size)
+                        synchronized(mLock) {
+                            System.arraycopy(
+                                mFrame,
+                                HEAD_SIZE + YUV_SIZE,
+                                mParam,
+                                0,
+                                mParam.size,
+                            )
+                            System.arraycopy(
+                                mFrame,
+                                HEAD_SIZE + YUV_SIZE + PARAM_SIZE,
+                                mTempMatrixByte,
+                                0,
+                                mTempMatrixByte.size,
+                            )
+                        }
+                        mNativeGuideCore!!.toFloatTempMatrix(mTempMatrixFloat, mTempMatrixByte) // 温度解析
 //                    if (startTime == 0L) {
 //                        startTime = System.currentTimeMillis()
 //                    }
@@ -126,16 +125,16 @@ class GuideInterface {
 //                            paramBytes = mParam,
 //                        )
 //                    }
-    if (mIrDataCallback != null) {
-    mIrDataCallback!!.processIrData(mYuv, mTempMatrixFloat) //回调图片信息和温度矩阵
-    }
-    } else {
+                        if (mIrDataCallback != null) {
+                            mIrDataCallback!!.processIrData(mYuv, mTempMatrixFloat) // 回调图片信息和温度矩阵
+                        }
+                    } else {
 //                        Logger.d(TAG, "read Frame failed");
-    }
-    }
-    d(TAG, "read thread exit")
-    }
-    mUsbBufferReadThread!!.start()
+                    }
+                }
+                d(TAG, "read thread exit")
+            }
+        mUsbBufferReadThread!!.start()
     }
 
     private fun stopUsbBufferWriteThread() {
@@ -162,33 +161,43 @@ class GuideInterface {
     }
     }
 
-    private fun getParam(offset: Int, len: Int, index: Int): Byte {
-    val param = ByteArray(len)
-    synchronized(mLock) { System.arraycopy(mParam, offset, param, 0, len) }
-    return param[index]
+    private fun getParam(
+        offset: Int,
+        len: Int,
+        index: Int,
+    ): Byte {
+        val param = ByteArray(len)
+        synchronized(mLock) { System.arraycopy(mParam, offset, param, 0, len) }
+        return param[index]
     }
 
-    private fun getParam(offset: Int, len: Int): ByteArray {
-    val param = ByteArray(len)
-    synchronized(mLock) { System.arraycopy(mParam, offset, param, 0, len) }
-    return param
+    private fun getParam(
+        offset: Int,
+        len: Int,
+    ): ByteArray {
+        val param = ByteArray(len)
+        synchronized(mLock) { System.arraycopy(mParam, offset, param, 0, len) }
+        return param
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    fun init(context: Context?, irDataCallback: IrDataCallback?): Int {
-    mNativeGuideCore = NativeGuideCore()
-    mGuideUsbManager = GuideUsbManager(context, mNativeGuideCore)
-    mIrDataCallback = irDataCallback
-    val ret: Int = mGuideUsbManager!!.connectUsbDevice()
-    if (ret != 5) {
-    return ret
-    }
-    d(TAG, "connectUsbDevice ret = $ret")
-    mUsbBuffer = UsbBuffer(FRAME_SIZE, HEAD_SIZE, 8)
-    mUsbBuffer!!.setFrameMark(0xBB66)
-    startUsbBufferReadThread()
-    startUsbBufferWriteThread()
-    return ret
+    fun init(
+        context: Context?,
+        irDataCallback: IrDataCallback?,
+    ): Int {
+        mNativeGuideCore = NativeGuideCore()
+        mGuideUsbManager = GuideUsbManager(context, mNativeGuideCore)
+        mIrDataCallback = irDataCallback
+        val ret: Int = mGuideUsbManager!!.connectUsbDevice()
+        if (ret != 5) {
+            return ret
+        }
+        d(TAG, "connectUsbDevice ret = $ret")
+        mUsbBuffer = UsbBuffer(FRAME_SIZE, HEAD_SIZE, 8)
+        mUsbBuffer!!.setFrameMark(0xBB66)
+        startUsbBufferReadThread()
+        startUsbBufferWriteThread()
+        return ret
     }
 
     fun exit() {
@@ -243,9 +252,7 @@ class GuideInterface {
     return getParam(PARAM_INDEX_DISTANCE * 2, 1, 0) * 1.0f / 10
     }
 
-    /**
-    * 设置亮度
-    */
+
     fun setBright(bright: Int) {
     if (mGuideUsbManager == null) {
     return
@@ -264,9 +271,7 @@ class GuideInterface {
     return getParam(PARAM_INDEX_BRIGHT * 2, 1, 0).toInt()
     }
 
-    /**
-    * 设置对比度
-    */
+
     fun setContrast(contrast: Int) {
     if (mGuideUsbManager == null) {
     return
@@ -285,13 +290,15 @@ class GuideInterface {
     return getParam(PARAM_INDEX_CONTRAST * 2, 2, 1).toInt()
     }
 
-
     //    int count = 0;
-    fun yuv2Bitmap(bitmap: Bitmap?, yuv: ByteArray?) {
-    if (mNativeGuideCore == null) {
-    return
-    }
-    mNativeGuideCore!!.yuv2Bitmap(bitmap!!, yuv!!)
+    fun yuv2Bitmap(
+        bitmap: Bitmap?,
+        yuv: ByteArray?,
+    ) {
+        if (mNativeGuideCore == null) {
+            return
+        }
+        mNativeGuideCore!!.yuv2Bitmap(bitmap!!, yuv!!)
 /*
     long time = System.currentTimeMillis();
     count++;
@@ -304,12 +311,13 @@ class GuideInterface {
     }
 
     fun saveTempMatrix(path: String?) {
-    synchronized(mLock) {
-    saveFile(
-    mTempMatrixByte,
-    path!!, false
-    )
-    }
+        synchronized(mLock) {
+            saveFile(
+                mTempMatrixByte,
+                path!!,
+                false,
+            )
+        }
     }
 
     fun setRange(range: Int) {
@@ -318,7 +326,6 @@ class GuideInterface {
     }
     mGuideUsbManager!!.setRange(range)
     }
-
 
     fun setEmiss(emiss: Int) {
     if (mGuideUsbManager == null) {

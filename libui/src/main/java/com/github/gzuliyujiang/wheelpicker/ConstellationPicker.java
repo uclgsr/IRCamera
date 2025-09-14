@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present 贵州纳雍穿青人李裕江<1032694760@qq.com>
+ * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
  *
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -31,16 +31,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * 星座选择器
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/5/17 13:10
- */
+
 @SuppressWarnings("WeakerAccess")
 public class ConstellationPicker extends OptionPicker {
     public static String JSON = "[{\"id\":0,\"name\":\"不限\",\"startDate\":\"\",\"endDate\":\"\",\"english\":\"Unlimited\"},\n" +
-            "{\"id\":1,\"name\":\"白羊座\",\"startDate\":\"3-21\",\"endDate\":\"4-19\",\"english\":\"Aries\"},\n" +
+            "{\"id\":1,\"name\":\"白sheep座\",\"startDate\":\"3-21\",\"endDate\":\"4-19\",\"english\":\"Aries\"},\n" +
             "{\"id\":2,\"name\":\"金牛座\",\"startDate\":\"4-20\",\"endDate\":\"5-20\",\"english\":\"Taurus\"},\n" +
             "{\"id\":3,\"name\":\"双子座\",\"startDate\":\"5-21\",\"endDate\":\"6-21\",\"english\":\"Gemini\"},\n" +
             "{\"id\":4,\"name\":\"巨蟹座\",\"startDate\":\"6-22\",\"endDate\":\"7-22\",\"english\":\"Cancer\"},\n" +
@@ -108,10 +103,10 @@ public class ConstellationPicker extends OptionPicker {
                 name = day < 20 ? "水瓶座" : "双鱼座";
                 break;
             case 3:
-                name = day < 21 ? "双鱼座" : "白羊座";
+                name = day < 21 ? "双鱼座" : "白sheep座";
                 break;
             case 4:
-                name = day < 21 ? "白羊座" : "金牛座";
+                name = day < 21 ? "白sheep座" : "金牛座";
                 break;
             case 5:
                 name = day < 22 ? "金牛座" : "双子座";

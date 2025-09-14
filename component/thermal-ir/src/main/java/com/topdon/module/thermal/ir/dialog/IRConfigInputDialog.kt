@@ -15,31 +15,23 @@ import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
 import java.lang.NumberFormatException
 
-/**
-    * 温度修正 环境温度、测温距离、发射率 修改值时输入弹框.
-    *
-    * Created by LCG on 2024/10/24.
-    */
-class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean) : Dialog(context, R.style.TextInputDialog) {
 
+
+class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean) : Dialog(context, R.style.TextInputDialog) {
     private var value: Float? = null
     private var onConfirmListener: ((value: Float) -> Unit)? = null
 
-    /**
-    * 设置输入框默认值
-    */
+
     fun setInput(value: Float?): IRConfigInputDialog {
     this.value = value
     return this
     }
-    /**
-    * 设置确认点击事件监听.
-    */
+
+
     fun setConfirmListener(l: (value: Float) -> Unit): IRConfigInputDialog {
     this.onConfirmListener = l
     return this
     }
-
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,25 +69,26 @@ class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean
     etInput.setSelection(0, etInput.length())
     etInput.requestFocus()
 
-    tvCancel.setOnClickListener { dismiss() }
-    tvConfirm.setOnClickListener {
-    try {
-    val input: Float = etInput.text.toString().toFloat()
-    val isRight = when (type) {
-    Type.TEMP -> input in UnitTools.showUnitValue(-10f) .. UnitTools.showUnitValue(if (isTC007) 50f else 55f)
-    Type.DIS -> input in 0.2f .. if (isTC007) 4f else 5f
-    Type.EM -> input in (if (isTC007) 0.1f else 0.01f) .. 1f
-    }
-    if (isRight) {
-    dismiss()
-    onConfirmListener?.invoke(input)
-    } else {
-    TToast.shortToast(context, R.string.tip_input_format)
-    }
-    } catch (e: NumberFormatException) {
-    TToast.shortToast(context, R.string.tip_input_format)
-    }
-    }
+        tvCancel.setOnClickListener { dismiss() }
+        tvConfirm.setOnClickListener {
+            try {
+                val input: Float = etInput.text.toString().toFloat()
+                val isRight =
+                    when (type) {
+                        Type.TEMP -> input in UnitTools.showUnitValue(-10f)..UnitTools.showUnitValue(if (isTC007) 50f else 55f)
+                        Type.DIS -> input in 0.2f..if (isTC007) 4f else 5f
+                        Type.EM -> input in (if (isTC007) 0.1f else 0.01f)..1f
+                    }
+                if (isRight) {
+                    dismiss()
+                    onConfirmListener?.invoke(input)
+                } else {
+                    TToast.shortToast(context, R.string.tip_input_format)
+                }
+            } catch (e: NumberFormatException) {
+                TToast.shortToast(context, R.string.tip_input_format)
+            }
+        }
 
     window?.let {
     val isPortrait = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -107,19 +100,13 @@ class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean
     }
 
     enum class Type {
-    /**
-    * 环境温度
-    */
-    TEMP,
 
-    /**
-    * 测温距离
-    */
-    DIS,
+        TEMP,
 
-    /**
-    * 发射率
-    */
-    EM,
+
+        DIS,
+
+
+        EM,
     }
 }

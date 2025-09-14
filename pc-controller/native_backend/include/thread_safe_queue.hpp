@@ -1,9 +1,4 @@
-/**
- * Thread-safe queue for high-performance sensor data streaming
- * 
- * Provides lock-free, thread-safe queue implementation for real-time
- * sensor data communication between C++ threads and Python.
- */
+
 
 #pragma once
 
@@ -26,48 +21,26 @@ public:
     ThreadSafeQueue(ThreadSafeQueue&&) = default;
     ThreadSafeQueue& operator=(ThreadSafeQueue&&) = default;
 
-    /**
-     * Push an item to the queue (non-blocking)
-     * @param item The item to push
-     * @return true if successful, false if queue is full
-     */
+
     bool push(const T& item);
     bool push(T&& item);
 
-    /**
-     * Pop an item from the queue (non-blocking)
-     * @param item Reference to store the popped item
-     * @return true if successful, false if queue is empty
-     */
+
     bool pop(T& item);
 
-    /**
-     * Get current queue size
-     * @return Number of items in queue
-     */
+
     size_t size() const;
 
-    /**
-     * Check if queue is empty
-     * @return true if empty
-     */
+
     bool empty() const;
 
-    /**
-     * Check if queue is full
-     * @return true if full
-     */
+
     bool full() const;
 
-    /**
-     * Clear all items from queue
-     */
+
     void clear();
 
-    /**
-     * Get queue capacity
-     * @return Maximum number of items
-     */
+
     size_t capacity() const { return capacity_; }
 
 private:

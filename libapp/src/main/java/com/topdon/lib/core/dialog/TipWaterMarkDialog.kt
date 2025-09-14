@@ -29,9 +29,7 @@ import com.topdon.lib.core.utils.CommUtils
 import com.topdon.lib.core.utils.ScreenUtil
 import java.util.*
 
-/**
-    * 2D-编辑 水印
-    */
+
 class TipWaterMarkDialog : Dialog {
     constructor(context: Context) : super(context)
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
@@ -164,162 +162,146 @@ class TipWaterMarkDialog : Dialog {
     }
     }
 
-    private fun initLocationPermission() {
-    // 定位
-    XXPermissions.with(context)
-    .permission(
-    Manifest.permission.ACCESS_FINE_LOCATION,
-    Manifest.permission.ACCESS_COARSE_LOCATION,
-    ).request(
-    object : OnPermissionCallback {
-    override fun onGranted(
-    permissions: MutableList<String>,
-    all: Boolean,
-    ) {
-    if (all)
-    {
-    var addressText: String? = getLocation()
-    if (addressText == null)
-    {
-    ToastUtils.showShort(R.string.get_Location_failed)
-    } else
-    {
-    mEtAddress.setText(addressText)
-    }
-    } else
-    {
-    ToastUtils.showShort(R.string.scan_ble_tip_authorize)
-    }
-    }
+        private fun initLocationPermission() {
+            // 定位
+            XXPermissions.with(context)
+                .permission(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                ).request(
+                    object : OnPermissionCallback {
+                        override fun onGranted(
+                            permissions: MutableList<String>,
+                            all: Boolean,
+                        ) {
+                            if (all) {
+                                var addressText: String? = getLocation()
+                                if (addressText == null) {
+                                    ToastUtils.showShort(R.string.get_Location_failed)
+                                } else {
+                                    mEtAddress.setText(addressText)
+                                }
+                            } else {
+                                ToastUtils.showShort(R.string.scan_ble_tip_authorize)
+                            }
+                        }
 
-    override fun onDenied(
-    permissions: MutableList<String>,
-    never: Boolean,
-    ) {
-    if (never) {
-    // 如果是被永久拒绝就跳转到应用权限系统设置页面
-    if (BaseApplication.instance.isDomestic())
-    {
-    ToastUtils.showShort(R.string.app_location_content)
-    return
-    }
-    TipDialog.Builder(context)
-    .setTitleMessage(context!!.getString(R.string.app_tip))
-    .setMessage(context!!.getString(R.string.app_location_content))
-    .setPositiveListener(R.string.app_open) {
-    XXPermissions.startPermissionActivity(context, permissions)
-    }
-    .setCancelListener(R.string.app_cancel) {
-    }
-    .setCanceled(true)
-    .create()
-    .show()
-    } else {
-    ToastUtils.showShort(R.string.scan_ble_tip_authorize)
-    }
-    }
-    },
-    )
-    }
+                        override fun onDenied(
+                            permissions: MutableList<String>,
+                            never: Boolean,
+                        ) {
+                            if (never) {
+                                // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                                if (BaseApplication.instance.isDomestic()) {
+                                    ToastUtils.showShort(R.string.app_location_content)
+                                    return
+                                }
+                                TipDialog.Builder(context)
+                                    .setTitleMessage(context!!.getString(R.string.app_tip))
+                                    .setMessage(context!!.getString(R.string.app_location_content))
+                                    .setPositiveListener(R.string.app_open) {
+                                        XXPermissions.startPermissionActivity(context, permissions)
+                                    }
+                                    .setCancelListener(R.string.app_cancel) {
+                                    }
+                                    .setCanceled(true)
+                                    .create()
+                                    .show()
+                            } else {
+                                ToastUtils.showShort(R.string.scan_ble_tip_authorize)
+                            }
+                        }
+                    },
+                )
+        }
 
-    private fun updateWaterMark(isCheck: Boolean)  {
-    if (isCheck)
-    {
-    llWatermarkContent.alpha = 1f
-    llWatermarkContent.isEnabled = true
-    switchDateTime.isEnabled = true
-    mEtTitle.isEnabled = true
-    mEtAddress.isEnabled = true
-    imgLocation.isEnabled = true
-    } else
-    {
-    llWatermarkContent.alpha = 0.5f
-    llWatermarkContent.isEnabled = false
-    switchDateTime.isEnabled = false
-    mEtTitle.isEnabled = false
-    mEtAddress.isEnabled = false
-    imgLocation.isEnabled = false
-    }
-    }
+        private fun updateWaterMark(isCheck: Boolean) {
+            if (isCheck) {
+                llWatermarkContent.alpha = 1f
+                llWatermarkContent.isEnabled = true
+                switchDateTime.isEnabled = true
+                mEtTitle.isEnabled = true
+                mEtAddress.isEnabled = true
+                imgLocation.isEnabled = true
+            } else {
+                llWatermarkContent.alpha = 0.5f
+                llWatermarkContent.isEnabled = false
+                switchDateTime.isEnabled = false
+                mEtTitle.isEnabled = false
+                mEtAddress.isEnabled = false
+                imgLocation.isEnabled = false
+            }
+        }
 
     @SuppressLint("MissingPermission")
     private fun getLocation(): String? {
     // 1.获取位置管理器
     locationManager = context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-    // 2.获取位置提供器，GPS或是NetWork
-    val providers = locationManager?.getProviders(true)
-    locationProvider =
-    if (providers!!.contains(LocationManager.GPS_PROVIDER)) {
-    // 如果是GPS
-    LocationManager.GPS_PROVIDER
-    } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
-    // 如果是Network
-    LocationManager.NETWORK_PROVIDER
-    } else {
-    return null
-    }
-    var location = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-    if (location == null)
-    {
-    location = locationManager?.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-    }
-    return if (location == null)
-    {
-    null
-    } else
-    {
-    getAddress(location)
-    }
-    }
+            // 2.获取位置提供器，GPS或是NetWork
+            val providers = locationManager?.getProviders(true)
+            locationProvider =
+                if (providers!!.contains(LocationManager.GPS_PROVIDER)) {
+                    // 如果是GPS
+                    LocationManager.GPS_PROVIDER
+                } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+                    // 如果是Network
+                    LocationManager.NETWORK_PROVIDER
+                } else {
+                    return null
+                }
+            var location = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (location == null) {
+                location = locationManager?.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            }
+            return if (location == null) {
+                null
+            } else {
+                getAddress(location)
+            }
+        }
 
-    // 获取地址信息:城市、街道等信息
-    private fun getAddress(location: Location?): String {
-    var result: List<Address?>? = null
-    try {
-    if (location != null) {
-    val gc = Geocoder(context!!, Locale.getDefault())
-    @Suppress("DEPRECATION")
-    result =
-    gc.getFromLocation(
-    location.latitude,
-    location.longitude, 1,
-    )
-    Log.v("TAG", "获取地址信息：$result")
-    }
-    } catch (e: Exception) {
-    e.printStackTrace()
-    }
-    var str = ""
-    if (result != null && result.isNotEmpty())
-    {
-    result?.get(0)?.let {
-    str += getNullString(it.adminArea)
-    if (TextUtils.isEmpty(it.subLocality) && !str.contains(getNullString(it.subAdminArea)))
-    {
-    str += getNullString(it.subAdminArea)
-    }
-    if (!str.contains(getNullString(it.locality)))
-    {
-    str += getNullString(it.locality)
-    }
-    if (!str.contains(getNullString(it.subLocality)))
-    {
-    str += getNullString(it.subLocality)
-    }
-    }
-    }
-    return str
-    }
+        // 获取地址信息:城市、街道等信息
+        private fun getAddress(location: Location?): String {
+            var result: List<Address?>? = null
+            try {
+                if (location != null) {
+                    val gc = Geocoder(context!!, Locale.getDefault())
+                    @Suppress("DEPRECATION")
+                    result =
+                        gc.getFromLocation(
+                            location.latitude,
+                            location.longitude, 1,
+                        )
+                    Log.v("TAG", "获取地址信息：$result")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            var str = ""
+            if (result != null && result.isNotEmpty()) {
+                result?.get(0)?.let {
+                    str += getNullString(it.adminArea)
+                    if (TextUtils.isEmpty(it.subLocality) && !str.contains(getNullString(it.subAdminArea))) {
+                        str += getNullString(it.subAdminArea)
+                    }
+                    if (!str.contains(getNullString(it.locality))) {
+                        str += getNullString(it.locality)
+                    }
+                    if (!str.contains(getNullString(it.subLocality))) {
+                        str += getNullString(it.subLocality)
+                    }
+                }
+            }
+            return str
+        }
 
-    private fun getNullString(str: String?): String  {
-    return if (str.isNullOrEmpty())
-    {
-    ""
-    } else
-    {
-    str
-    }
-    }
+        private fun getNullString(str: String?): String {
+            return if (str.isNullOrEmpty()) {
+                ""
+            } else {
+                str
+            }
+        }
     }
 }

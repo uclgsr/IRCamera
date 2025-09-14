@@ -9,12 +9,7 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.ActivityCompat
 
-/**
-    * Bluetooth management utilities for Shimmer devices
-    * Based on official Shimmer Android API Bluetooth handling
-    *
-    * Provides device discovery, pairing, and connection management
-    */
+
 class BluetoothManager(private val context: Context) {
     companion object {
     private const val TAG = "ShimmerBluetoothManager"
@@ -64,17 +59,13 @@ class BluetoothManager(private val context: Context) {
     listeners.remove(listener)
     }
 
-    /**
-    * Check if Bluetooth is available and enabled
-    */
+
     fun isBluetoothAvailable(): Boolean {
     val adapter = bluetoothAdapter
     return adapter != null && adapter.isEnabled
     }
 
-    /**
-    * Check if required Bluetooth permissions are granted
-    */
+
     fun hasRequiredPermissions(): Boolean {
     // Check for Android 12+ (API 31) specific permissions
     val connectPermission =
@@ -95,9 +86,7 @@ class BluetoothManager(private val context: Context) {
     return connectPermission && locationPermission
     }
 
-    /**
-    * Get list of bonded (paired) Shimmer devices
-    */
+
     fun getBondedShimmerDevices(): List<BluetoothDevice> {
     if (!isBluetoothAvailable() || !hasRequiredPermissions()) {
     Log.w(TAG, "Bluetooth not available or permissions missing")
@@ -114,9 +103,7 @@ class BluetoothManager(private val context: Context) {
     }
     }
 
-    /**
-    * Check if a device is a Shimmer device based on name patterns
-    */
+
     fun isShimmerDevice(device: BluetoothDevice): Boolean {
     val deviceName =
     try {
@@ -137,16 +124,12 @@ class BluetoothManager(private val context: Context) {
     } ?: false
     }
 
-    /**
-    * Find the first available Shimmer device
-    */
+
     fun findFirstShimmerDevice(): BluetoothDevice? {
     return getBondedShimmerDevices().firstOrNull()
     }
 
-    /**
-    * Find Shimmer device by MAC address
-    */
+
     fun findShimmerDeviceByAddress(address: String): BluetoothDevice? {
     return try {
     bluetoothAdapter?.getRemoteDevice(address)?.takeIf { device ->
@@ -158,9 +141,7 @@ class BluetoothManager(private val context: Context) {
     }
     }
 
-    /**
-    * Get device information string
-    */
+
     fun getDeviceInfo(device: BluetoothDevice): String {
     return try {
     if (hasRequiredPermissions()) {
@@ -173,9 +154,7 @@ class BluetoothManager(private val context: Context) {
     }
     }
 
-    /**
-    * Check device connection state
-    */
+
     fun getConnectionState(device: BluetoothDevice): Int {
     return try {
     // Check permissions before accessing device properties
@@ -197,9 +176,7 @@ class BluetoothManager(private val context: Context) {
     }
     }
 
-    /**
-    * Validate device for GSR recording
-    */
+
     fun validateShimmerDevice(device: BluetoothDevice): ValidationResult {
     val issues = mutableListOf<String>()
 
@@ -235,18 +212,14 @@ class BluetoothManager(private val context: Context) {
     return ValidationResult(isValid, message, issues)
     }
 
-    /**
-    * Device validation result
-    */
+
     data class ValidationResult(
     val isValid: Boolean,
     val message: String,
     val issues: List<String>,
     )
 
-    /**
-    * Get Bluetooth adapter information
-    */
+
     fun getBluetoothAdapterInfo(): BluetoothAdapterInfo {
     return BluetoothAdapterInfo(
     isAvailable = bluetoothAdapter != null,
@@ -281,9 +254,7 @@ class BluetoothManager(private val context: Context) {
     val name: String,
     )
 
-    /**
-    * Clean up resources
-    */
+
     fun cleanup() {
     listeners.clear()
     discoveredDevices.clear()

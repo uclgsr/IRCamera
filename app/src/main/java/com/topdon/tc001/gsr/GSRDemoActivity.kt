@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 // Removed ARouter import - using NavigationManager instead
@@ -18,10 +17,7 @@ import com.topdon.gsr.service.GSRRecorder
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 
-/**
-    * Simple GSR demonstration activity showing basic functionality
-    * Navigation: Use NavigationManager.getInstance().build(RouterConfig.GSR_DEMO).navigation(context)
-    */
+
 class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
     companion object {
     private const val TAG = "GSRDemoActivity"
@@ -31,6 +27,8 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
     context.startActivity(intent)
     }
     }
+
+    override fun initContentLayoutId() = R.layout.activity_gsr_demo
 
     private lateinit var gsrRecorder: GSRRecorder
 
@@ -47,20 +45,20 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
     }
     }
 
-    override fun onRecordingStopped(sessionInfo: SessionInfo) {
-    runOnUiThread {
-    isRecording = false
-    updateButtonStates()
-    statusText.text = "Recording stopped. ${sessionInfo.sampleCount} samples recorded."
+            override fun onRecordingStopped(sessionInfo: SessionInfo) {
+                runOnUiThread {
+                    isRecording = false
+                    updateButtonStates()
+                    binding.statusText.text = "Recording stopped. ${sessionInfo.sampleCount} samples recorded."
 
-    val sessionDir = gsrRecorder.getSessionDirectory()?.absolutePath
-    dataText.text = "Session saved to:\n$sessionDir\n\n" +
-    "Files created:\n" +
-    "- signals.csv (GSR data)\n" +
-    "- sync_marks.csv (sync events)\n" +
-    "- session_metadata.json (metadata)"
-    }
-    }
+                    val sessionDir = gsrRecorder.getSessionDirectory()?.absolutePath
+                    binding.dataText.text = "Session saved to:\n$sessionDir\n\n" +
+                        "Files created:\n" +
+                        "- signals.csv (GSR data)\n" +
+                        "- sync_marks.csv (sync events)\n" +
+                        "- session_metadata.json (metadata)"
+                }
+            }
 
     override fun onSampleRecorded(sample: GSRSample) {
     lastSample = sample
@@ -105,11 +103,16 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
     }
     }
 
-    override fun initView() {
-    // Setup click listeners
-    binding.startButton.setOnClickListener { startRecording() }
-    binding.stopButton.setOnClickListener { stopRecording() }
-    binding.syncButton.setOnClickListener { triggerSyncEvent() }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {
+        // Setup click listeners
+        binding.startButton.setOnClickListener { startRecording() }
+        binding.stopButton.setOnClickListener { stopRecording() }
+        binding.syncButton.setOnClickListener { triggerSyncEvent() }
 
     gsrRecorder = GSRRecorder(this)
     gsrRecorder.addListener(gsrListener)

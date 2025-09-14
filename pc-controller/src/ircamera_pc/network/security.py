@@ -12,7 +12,7 @@ import ssl
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
@@ -27,16 +27,16 @@ except ImportError:
     except ImportError:
         # Fallback logger for testing
         class FallbackLogger:
-            def info(self, msg):
+            def info(self, msg) -> Any:
                 print(f"INFO: {msg}")
 
-            def debug(self, msg):
+            def debug(self, msg) -> Any:
                 print(f"DEBUG: {msg}")
 
-            def warning(self, msg):
+            def warning(self, msg) -> Any:
                 print(f"WARNING: {msg}")
 
-            def error(self, msg):
+            def error(self, msg) -> Any:
                 print(f"ERROR: {msg}")
 
         logger = FallbackLogger()
@@ -46,7 +46,7 @@ try:
 except ImportError:
     # Fallback config for testing
     class FallbackConfig:
-        def get(self, key, default=None):
+        def get(self, key, default=None) -> Any:
             config_map = {
                 "security.cert_directory": "certificates",
             }
@@ -257,7 +257,7 @@ class SecurityManager:
             logger.error(f"Token validation failed: {e}")
             return False, None
 
-    def cleanup_expired_tokens(self):
+    def cleanup_expired_tokens(self) -> Any:
         """Remove expired authentication tokens."""
         current_time = time.time()
         expired_tokens = [

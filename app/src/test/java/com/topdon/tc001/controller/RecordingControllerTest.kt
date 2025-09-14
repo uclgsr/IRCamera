@@ -2,324 +2,316 @@ package com.topdon.tc001.controller
 
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
-import com.topdon.tc001.sensors.SensorRecorder
-import com.topdon.tc001.sensors.rgb.RgbCameraRecorder
-import com.topdon.tc001.sensors.thermal.ThermalCameraRecorder
-import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
-import io.mockk.*
-import io.mockk.impl.annotations.MockK
+import com.topdon.tc001.sensors.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.junit.Assert.*
-import java.io.File
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.*
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
-/**
-    * Comprehensive unit tests for RecordingController
-    * Tests core functionality, error handling, and state management
-    */
-@OptIn(ExperimentalCoroutinesApi::class)
+
+@RunWith(RobolectricTestRunner::class)
 class RecordingControllerTest {
+    @Mock
+    private lateinit var mockLifecycleOwner: LifecycleOwner
 
-    @MockK
+    @Mock
+    private lateinit var mockRgbSensor: SensorRecorder
+
+    @Mock
+    private lateinit var mockThermalSensor: SensorRecorder
+
+    @Mock
+    private lateinit var mockGsrSensor: SensorRecorder
+
     private lateinit var context: Context
-
-    @MockK
-    private lateinit var lifecycleOwner: LifecycleOwner
-
-    @MockK
-    private lateinit var mockRgbRecorder: RgbCameraRecorder
-
-    @MockK
-    private lateinit var mockThermalRecorder: ThermalCameraRecorder
-
-    @MockK
-    private lateinit var mockGsrRecorder: GSRSensorRecorder
-
     private lateinit var recordingController: RecordingController
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private lateinit var testScope: TestScope
 
     @Before
-    fun setup() {
-    MockKAnnotations.init(this)
-    Dispatchers.setMain(testDispatcher)
+    fun setUp() {
+        MockitoAnnotations.openMocks(this)
+        context = RuntimeEnvironment.getApplication()
+        testScope = TestScope()
 
-    // Mock context and file operations
-    every { context.cacheDir } returns File("/tmp/test")
-    every { context.getExternalFilesDir(any()) } returns File("/tmp/test")
+        // Configure mock sensors
+        whenever(mockRgbSensor.sensorId).thenReturn("rgb_camera_1")
+        whenever(mockRgbSensor.sensorType).thenReturn("RGB Camera")
+        whenever(mockRgbSensor.samplingRate).thenReturn(30.0)
+        whenever(mockRgbSensor.isRecording).thenReturn(false)
+        whenever(mockRgbSensor.getErrorFlow()).thenReturn(emptyFlow())
+        whenever(mockRgbSensor.getRecordingStats()).thenReturn(createMockStats("rgb_camera_1", "RGB Camera"))
 
-    recordingController = RecordingController(context, lifecycleOwner)
+        whenever(mockThermalSensor.sensorId).thenReturn("thermal_camera_1")
+        whenever(mockThermalSensor.sensorType).thenReturn("Thermal Camera")
+        whenever(mockThermalSensor.samplingRate).thenReturn(9.0)
+        whenever(mockThermalSensor.isRecording).thenReturn(false)
+        whenever(mockThermalSensor.getErrorFlow()).thenReturn(emptyFlow())
+        whenever(mockThermalSensor.getRecordingStats()).thenReturn(createMockStats("thermal_camera_1", "Thermal Camera"))
 
-    // Setup mock recorders
-    setupMockRecorders()
+        whenever(mockGsrSensor.sensorId).thenReturn("gsr_shimmer_1")
+        whenever(mockGsrSensor.sensorType).thenReturn("GSR Sensor")
+        whenever(mockGsrSensor.samplingRate).thenReturn(128.0)
+        whenever(mockGsrSensor.isRecording).thenReturn(false)
+        whenever(mockGsrSensor.getErrorFlow()).thenReturn(emptyFlow())
+        whenever(mockGsrSensor.getRecordingStats()).thenReturn(createMockStats("gsr_shimmer_1", "GSR Sensor"))
+
+        recordingController = RecordingController(context, mockLifecycleOwner)
     }
 
     @After
     fun tearDown() {
-    Dispatchers.resetMain()
-    unmockkAll()
+        testScope.cancel()
     }
 
-    private fun setupMockRecorders() {
-    every { mockRgbRecorder.initialize() } returns true
-    every { mockThermalRecorder.initialize() } returns true
-    every { mockGsrRecorder.initialize() } returns true
-
-    every { mockRgbRecorder.startRecording(any(), any()) } returns true
-    every { mockThermalRecorder.startRecording(any(), any()) } returns true
-    every { mockGsrRecorder.startRecording(any(), any()) } returns true
-
-    every { mockRgbRecorder.stopRecording() } returns mockk()
-    every { mockThermalRecorder.stopRecording() } returns mockk()
-    every { mockGsrRecorder.stopRecording() } returns mockk()
-
-    every { mockRgbRecorder.cleanup() } just Runs
-    every { mockThermalRecorder.cleanup() } just Runs
-    every { mockGsrRecorder.cleanup() } just Runs
-
-    every { mockRgbRecorder.isRecording() } returns false
-    every { mockThermalRecorder.isRecording() } returns false
-    every { mockGsrRecorder.isRecording() } returns false
-
-    every { mockRgbRecorder.addSyncMarker(any(), any()) } returns true
-    every { mockThermalRecorder.addSyncMarker(any(), any()) } returns true
-    every { mockGsrRecorder.addSyncMarker(any(), any()) } returns true
+    private fun createMockStats(
+        sensorId: String,
+        sensorType: String,
+    ): RecordingStats {
+        return RecordingStats(
+            sensorId = sensorId,
+            sensorType = sensorType,
+            sessionDurationMs = 1000L,
+            totalSamplesRecorded = 100L,
+            averageDataRate = 10.0,
+            droppedSamples = 0L,
+            storageUsedMB = 1.0,
+            syncMarkersCount = 1,
+            lastSampleTimestampNs = System.nanoTime(),
+        )
     }
 
     @Test
-    fun testInitialization() {
-    assertFalse("Controller should not be recording initially", recordingController.isRecording)
-    assertNotNull("Controller should be initialized", recordingController)
-    }
+    fun `test all sensors start successfully`() =
+        testScope.runTest {
+            // Arrange - all sensors initialize and start successfully
+            whenever(mockRgbSensor.initialize()).thenReturn(true)
+            whenever(mockThermalSensor.initialize()).thenReturn(true)
+            whenever(mockGsrSensor.initialize()).thenReturn(true)
+
+            whenever(mockRgbSensor.startRecording(any())).thenReturn(true)
+            whenever(mockThermalSensor.startRecording(any())).thenReturn(true)
+            whenever(mockGsrSensor.startRecording(any())).thenReturn(true)
+
+            // Manually add sensors to simulate successful initialization
+            val field = RecordingController::class.java.getDeclaredField("sensorRecorders")
+            field.isAccessible = true
+            val sensorMap = field.get(recordingController) as MutableMap<String, SensorRecorder>
+            sensorMap["rgb_camera_1"] = mockRgbSensor
+            sensorMap["thermal_camera_1"] = mockThermalSensor
+            sensorMap["gsr_shimmer_1"] = mockGsrSensor
+
+            // Act
+            val result = recordingController.startRecording("/tmp/session1")
+
+            // Assert
+            assertTrue(result, "All sensors should start successfully")
+            assertTrue(recordingController.isRecording, "Recording should be active")
+
+            val summary = recordingController.getSensorStatusSummary()
+            assertEquals(3, summary.totalSensorsInitialized)
+            assertEquals(3, summary.totalSensorsRecording)
+            assertEquals("All sensors recording", summary.statusMessage)
+        }
 
     @Test
-    fun testSensorRegistration() = runTest {
-    // Register sensors
-    val rgbResult = recordingController.registerSensor("rgb", mockRgbRecorder)
-    val thermalResult = recordingController.registerSensor("thermal", mockThermalRecorder)
-    val gsrResult = recordingController.registerSensor("gsr", mockGsrRecorder)
+    fun `test partial sensor start - RGB and Thermal succeed, GSR fails`() =
+        testScope.runTest {
+            // Arrange - GSR fails to start, others succeed
+            whenever(mockRgbSensor.initialize()).thenReturn(true)
+            whenever(mockThermalSensor.initialize()).thenReturn(true)
+            whenever(mockGsrSensor.initialize()).thenReturn(true)
 
-    assertTrue("RGB sensor should register successfully", rgbResult)
-    assertTrue("Thermal sensor should register successfully", thermalResult)
-    assertTrue("GSR sensor should register successfully", gsrResult)
+            whenever(mockRgbSensor.startRecording(any())).thenReturn(true)
+            whenever(mockThermalSensor.startRecording(any())).thenReturn(true)
+            whenever(mockGsrSensor.startRecording(any())).thenReturn(false) // GSR fails
 
-    // Verify initialization was called
-    verify { mockRgbRecorder.initialize() }
-    verify { mockThermalRecorder.initialize() }
-    verify { mockGsrRecorder.initialize() }
-    }
+            whenever(mockRgbSensor.isRecording).thenReturn(true)
+            whenever(mockThermalSensor.isRecording).thenReturn(true)
+            whenever(mockGsrSensor.isRecording).thenReturn(false)
 
-    @Test
-    fun testDuplicateSensorRegistration() = runTest {
-    // Register sensor twice
-    val firstResult = recordingController.registerSensor("rgb", mockRgbRecorder)
-    val secondResult = recordingController.registerSensor("rgb", mockRgbRecorder)
+            // Manually add sensors to simulate successful initialization
+            val field = RecordingController::class.java.getDeclaredField("sensorRecorders")
+            field.isAccessible = true
+            val sensorMap = field.get(recordingController) as MutableMap<String, SensorRecorder>
+            sensorMap["rgb_camera_1"] = mockRgbSensor
+            sensorMap["thermal_camera_1"] = mockThermalSensor
+            sensorMap["gsr_shimmer_1"] = mockGsrSensor
 
-    assertTrue("First registration should succeed", firstResult)
-    assertFalse("Duplicate registration should fail", secondResult)
-    }
+            // Act
+            val result = recordingController.startRecording("/tmp/session2")
 
-    @Test
-    fun testSensorInitializationFailure() = runTest {
-    // Mock initialization failure
-    every { mockRgbRecorder.initialize() } returns false
+            // Assert
+            assertTrue(result, "Recording should succeed with partial sensors")
+            assertTrue(recordingController.isRecording, "Recording should be active")
 
-    val result = recordingController.registerSensor("rgb", mockRgbRecorder)
-
-    assertFalse("Registration should fail when initialization fails", result)
-    }
-
-    @Test
-    fun testStartRecording() = runTest {
-    // Setup sensors
-    registerAllSensors()
-
-    // Start recording
-    val sessionName = "TestSession"
-    val result = recordingController.startRecording(sessionName)
-
-    assertTrue("Recording should start successfully", result)
-    assertTrue("Controller should be in recording state", recordingController.isRecording)
-
-    // Verify all sensors were started
-    verify { mockRgbRecorder.startRecording(any(), any()) }
-    verify { mockThermalRecorder.startRecording(any(), any()) }
-    verify { mockGsrRecorder.startRecording(any(), any()) }
-    }
+            val summary = recordingController.getSensorStatusSummary()
+            assertEquals(3, summary.totalSensorsInitialized)
+            assertEquals(2, summary.totalSensorsRecording) // Only RGB and Thermal
+            assertTrue(summary.hasPartialRecording)
+            assertEquals("Partial recording: 2/3 sensors active", summary.statusMessage)
+        }
 
     @Test
-    fun testStartRecordingWithoutSensors() = runTest {
-    val result = recordingController.startRecording("TestSession")
+    fun `test sensor start with exception - should not crash session`() =
+        testScope.runTest {
+            // Arrange - GSR throws exception, others succeed
+            whenever(mockRgbSensor.initialize()).thenReturn(true)
+            whenever(mockThermalSensor.initialize()).thenReturn(true)
+            whenever(mockGsrSensor.initialize()).thenReturn(true)
 
-    assertFalse("Recording should fail without sensors", result)
-    assertFalse("Controller should not be recording", recordingController.isRecording)
-    }
+            whenever(mockRgbSensor.startRecording(any())).thenReturn(true)
+            whenever(mockThermalSensor.startRecording(any())).thenReturn(true)
+            whenever(mockGsrSensor.startRecording(any())).thenThrow(RuntimeException("GSR connection failed"))
 
-    @Test
-    fun testStartRecordingWhenAlreadyRecording() = runTest {
-    registerAllSensors()
+            whenever(mockRgbSensor.isRecording).thenReturn(true)
+            whenever(mockThermalSensor.isRecording).thenReturn(true)
+            whenever(mockGsrSensor.isRecording).thenReturn(false)
 
-    // Start recording first time
-    val firstResult = recordingController.startRecording("Session1")
-    assertTrue("First start should succeed", firstResult)
+            // Manually add sensors to simulate successful initialization
+            val field = RecordingController::class.java.getDeclaredField("sensorRecorders")
+            field.isAccessible = true
+            val sensorMap = field.get(recordingController) as MutableMap<String, SensorRecorder>
+            sensorMap["rgb_camera_1"] = mockRgbSensor
+            sensorMap["thermal_camera_1"] = mockThermalSensor
+            sensorMap["gsr_shimmer_1"] = mockGsrSensor
 
-    // Try to start again
-    val secondResult = recordingController.startRecording("Session2")
-    assertFalse("Second start should fail", secondResult)
-    }
+            // Act
+            val result = recordingController.startRecording("/tmp/session3")
 
-    @Test
-    fun testStopRecording() = runTest {
-    registerAllSensors()
+            // Assert
+            assertTrue(result, "Recording should succeed despite GSR exception")
+            assertTrue(recordingController.isRecording, "Recording should be active")
 
-    // Start and then stop recording
-    recordingController.startRecording("TestSession")
-    val result = recordingController.stopRecording()
-
-    assertNotNull("Stop recording should return session data", result)
-    assertFalse("Controller should not be recording", recordingController.isRecording)
-
-    // Verify all sensors were stopped
-    verify { mockRgbRecorder.stopRecording() }
-    verify { mockThermalRecorder.stopRecording() }
-    verify { mockGsrRecorder.stopRecording() }
-    }
+            val summary = recordingController.getSensorStatusSummary()
+            assertEquals(3, summary.totalSensorsInitialized)
+            assertEquals(2, summary.totalSensorsRecording) // Only RGB and Thermal
+        }
 
     @Test
-    fun testStopRecordingWhenNotRecording() = runTest {
-    val result = recordingController.stopRecording()
+    fun `test all sensors fail - session should not start`() =
+        testScope.runTest {
+            // Arrange - all sensors fail to start
+            whenever(mockRgbSensor.initialize()).thenReturn(true)
+            whenever(mockThermalSensor.initialize()).thenReturn(true)
+            whenever(mockGsrSensor.initialize()).thenReturn(true)
 
-    assertNull("Stop recording should return null when not recording", result)
-    }
+            whenever(mockRgbSensor.startRecording(any())).thenReturn(false)
+            whenever(mockThermalSensor.startRecording(any())).thenReturn(false)
+            whenever(mockGsrSensor.startRecording(any())).thenReturn(false)
 
-    @Test
-    fun testSyncMarkerDistribution() = runTest {
-    registerAllSensors()
-    recordingController.startRecording("TestSession")
+            // Manually add sensors to simulate successful initialization
+            val field = RecordingController::class.java.getDeclaredField("sensorRecorders")
+            field.isAccessible = true
+            val sensorMap = field.get(recordingController) as MutableMap<String, SensorRecorder>
+            sensorMap["rgb_camera_1"] = mockRgbSensor
+            sensorMap["thermal_camera_1"] = mockThermalSensor
+            sensorMap["gsr_shimmer_1"] = mockGsrSensor
 
-    // Add sync marker
-    val syncId = "TEST_SYNC"
-    val metadata = mapOf("test" to "value")
-    val result = recordingController.addSyncMarker(syncId, metadata)
+            // Act
+            val result = recordingController.startRecording("/tmp/session4")
 
-    assertTrue("Sync marker should be added successfully", result)
+            // Assert
+            assertFalse(result, "Recording should fail when all sensors fail")
+            assertFalse(recordingController.isRecording, "Recording should not be active")
 
-    // Verify sync marker was distributed to all sensors
-    verify { mockRgbRecorder.addSyncMarker(syncId, metadata) }
-    verify { mockThermalRecorder.addSyncMarker(syncId, metadata) }
-    verify { mockGsrRecorder.addSyncMarker(syncId, metadata) }
-    }
-
-    @Test
-    fun testSyncMarkerWhenNotRecording() = runTest {
-    registerAllSensors()
-
-    val result = recordingController.addSyncMarker("TEST_SYNC", emptyMap())
-
-    assertFalse("Sync marker should fail when not recording", result)
-    }
+            val summary = recordingController.getSensorStatusSummary()
+            assertEquals(3, summary.totalSensorsInitialized)
+            assertEquals(0, summary.totalSensorsRecording)
+        }
 
     @Test
-    fun testErrorRecovery() = runTest {
-    registerAllSensors()
+    fun `test sensor status summary reflects reality`() =
+        testScope.runTest {
+            // Arrange - only RGB initializes successfully
+            val field = RecordingController::class.java.getDeclaredField("sensorRecorders")
+            field.isAccessible = true
+            val sensorMap = field.get(recordingController) as MutableMap<String, SensorRecorder>
+            sensorMap["rgb_camera_1"] = mockRgbSensor
+            // Thermal and GSR not added to simulate initialization failure
 
-    // Mock sensor start failure
-    every { mockRgbRecorder.startRecording(any(), any()) } returns false
+            // Act
+            val summary = recordingController.getSensorStatusSummary()
 
-    val result = recordingController.startRecording("TestSession")
-
-    assertFalse("Recording should fail when sensor fails to start", result)
-    assertFalse("Controller should not be recording", recordingController.isRecording)
-    }
-
-    @Test
-    fun testRecordingStats() = runTest {
-    registerAllSensors()
-
-    // Start recording and wait a bit
-    recordingController.startRecording("TestSession")
-    delay(100)
-
-    val stats = recordingController.getRecordingStats()
-
-    assertNotNull("Stats should be available when recording", stats)
-    stats?.let {
-    assertTrue("Session should be active", it.isActive)
-    assertTrue("Duration should be positive", it.duration > 0)
-    assertTrue("Session ID should contain timestamp", it.sessionId.contains("TestSession"))
-    }
-    }
+            // Assert
+            assertEquals(3, summary.totalSensorsConfigured) // Total expected
+            assertEquals(1, summary.totalSensorsInitialized) // Only RGB
+            assertEquals(0, summary.totalSensorsRecording) // None recording yet
+            assertTrue(summary.hasFailedSensors) // 2 out of 3 failed to initialize
+            assertEquals("Sensors ready but not recording", summary.statusMessage)
+        }
 
     @Test
-    fun testRecordingStatsWhenNotRecording() = runTest {
-    val stats = recordingController.getRecordingStats()
+    fun `test sensor restart during active session`() =
+        testScope.runTest {
+            // Arrange - Set up an active recording session with one failed sensor
+            whenever(mockRgbSensor.initialize()).thenReturn(true)
+            whenever(mockThermalSensor.initialize()).thenReturn(true)
+            whenever(mockGsrSensor.initialize()).thenReturn(true)
 
-    assertNull("Stats should be null when not recording", stats)
-    }
+            whenever(mockRgbSensor.startRecording(any())).thenReturn(true)
+            whenever(mockThermalSensor.startRecording(any())).thenReturn(true)
+            whenever(mockGsrSensor.startRecording(any())).thenReturn(false) // Initially fails
+
+            whenever(mockRgbSensor.isRecording).thenReturn(true)
+            whenever(mockThermalSensor.isRecording).thenReturn(true)
+            whenever(mockGsrSensor.isRecording).thenReturn(false) // Not recording initially
+
+            // Set up active session
+            val field = RecordingController::class.java.getDeclaredField("sensorRecorders")
+            field.isAccessible = true
+            val sensorMap = field.get(recordingController) as MutableMap<String, SensorRecorder>
+            sensorMap["rgb_camera_1"] = mockRgbSensor
+            sensorMap["thermal_camera_1"] = mockThermalSensor
+            sensorMap["gsr_shimmer_1"] = mockGsrSensor
+
+            // Start recording session
+            val sessionStarted = recordingController.startRecording("/tmp/session_restart")
+            assertTrue(sessionStarted, "Session should start with 2/3 sensors")
+
+            // Now simulate GSR sensor recovery - it can now start successfully
+            whenever(mockGsrSensor.startRecording(any())).thenReturn(true)
+            whenever(mockGsrSensor.isRecording).thenReturn(true)
+
+            // Act - attempt to restart the failed GSR sensor
+            val restartSuccess = recordingController.attemptSensorRestart("gsr_shimmer_1")
+
+            // Assert
+            assertTrue(restartSuccess, "GSR sensor should restart successfully")
+            verify(mockGsrSensor).initialize() // Should reinitialize
+            verify(mockGsrSensor, times(2)).startRecording(any()) // Should attempt start twice (initial + restart)
+        }
 
     @Test
-    fun testCleanup() = runTest {
-    registerAllSensors()
-    recordingController.startRecording("TestSession")
+    fun `test status report generation`() =
+        testScope.runTest {
+            // Arrange - mixed sensor states
+            whenever(mockRgbSensor.isRecording).thenReturn(true)
+            whenever(mockThermalSensor.isRecording).thenReturn(false)
 
-    recordingController.cleanup()
+            val field = RecordingController::class.java.getDeclaredField("sensorRecorders")
+            field.isAccessible = true
+            val sensorMap = field.get(recordingController) as MutableMap<String, SensorRecorder>
+            sensorMap["rgb_camera_1"] = mockRgbSensor
+            sensorMap["thermal_camera_1"] = mockThermalSensor
 
-    assertFalse("Controller should not be recording after cleanup", recordingController.isRecording)
+            // Act
+            val statusReport = recordingController.getStatusReport()
 
-    // Verify cleanup was called on all sensors
-    verify { mockRgbRecorder.cleanup() }
-    verify { mockThermalRecorder.cleanup() }
-    verify { mockGsrRecorder.cleanup() }
-    }
-
-    @Test
-    fun testSensorStatusMonitoring() = runTest {
-    registerAllSensors()
-
-    // Mock one sensor as not recording
-    every { mockRgbRecorder.isRecording() } returns true
-    every { mockThermalRecorder.isRecording() } returns true
-    every { mockGsrRecorder.isRecording() } returns false
-
-    recordingController.startRecording("TestSession")
-
-    // Allow some time for status monitoring
-    delay(1100) // STATUS_UPDATE_INTERVAL_MS + buffer
-
-    // Should detect inconsistent state and attempt recovery
-    assertTrue("Controller should still be recording", recordingController.isRecording)
-    }
-
-    @Test
-    fun testConcurrentOperations() = runTest {
-    registerAllSensors()
-
-    // Start multiple operations concurrently
-    val operations = (1..10).map { index ->
-    async {
-    if (index % 2 == 0) {
-    recordingController.startRecording("Session$index")
-    } else {
-    recordingController.addSyncMarker("SYNC_$index", emptyMap())
-    }
-    }
-    }
-
-    // Wait for all operations to complete
-    operations.awaitAll()
-
-    // Only one should have succeeded in starting recording
-    val recordingStarted = operations.filterIndexed { index, _ -> index % 2 == 0 }
-    .count { it.getCompleted() == true }
-
-    assertEquals("Only one recording should have started", 1, recordingStarted)
-    }
-
-    private suspend fun registerAllSensors() {
-    recordingController.registerSensor("rgb", mockRgbRecorder)
-    recordingController.registerSensor("thermal", mockThermalRecorder)
-    recordingController.registerSensor("gsr", mockGsrRecorder)
-    }
+            // Assert
+            assertTrue(statusReport.contains("Recording Controller Status"))
+            assertTrue(statusReport.contains("RGB Camera"))
+            assertTrue(statusReport.contains("Thermal Camera"))
+            assertTrue(statusReport.contains("Individual Sensors:"))
+        }
 }

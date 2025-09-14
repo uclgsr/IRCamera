@@ -41,9 +41,7 @@ public class DefRangeSeekBar extends View {
     public float stepsPaddingLeft;
     public float stepsPaddingRight;
 
-    /**
-     * @hide
-     */
+
     @IntDef({SEEKBAR_MODE_SINGLE, SEEKBAR_MODE_RANGE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface SeekBarModeDef {
@@ -54,9 +52,7 @@ public class DefRangeSeekBar extends View {
     //other equally arranged
     public final static int TRICK_MARK_MODE_OTHER = 1;
 
-    /**
-     * @hide
-     */
+
     @IntDef({TRICK_MARK_MODE_NUMBER, TRICK_MARK_MODE_OTHER})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TickMarkModeDef {
@@ -67,25 +63,19 @@ public class DefRangeSeekBar extends View {
     public final static int TICK_MARK_GRAVITY_CENTER = 1;
     public final static int TICK_MARK_GRAVITY_RIGHT = 2;
 
-    /**
-     * @hide
-     */
+
     @IntDef({TICK_MARK_GRAVITY_LEFT, TICK_MARK_GRAVITY_CENTER, TICK_MARK_GRAVITY_RIGHT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TickMarkGravityDef {
     }
 
-    /**
-     * @hide
-     */
+
     @IntDef({Gravity.TOP, Gravity.BOTTOM})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TickMarkLayoutGravityDef {
     }
 
-    /**
-     * @hide
-     */
+
     @IntDef({Gravity.TOP, Gravity.CENTER, Gravity.BOTTOM})
     @Retention(RetentionPolicy.SOURCE)
     public @interface GravityDef {
@@ -155,7 +145,7 @@ public class DefRangeSeekBar extends View {
     private int stepsDrawableId;
     //True values set by the user
     private float minProgress, maxProgress;
-    //****************** the above is attr value  ******************//
+    ////
 
     private boolean isEnable = true;
     float touchDownX,touchDownY;
@@ -259,9 +249,7 @@ public class DefRangeSeekBar extends View {
     }
 
 
-    /**
-     * measure progress bar position
-     */
+
     protected void onMeasureProgress(int w, int h) {
         int viewHeight = h - getPaddingBottom() - getPaddingTop();
         if (h <= 0) return;
@@ -551,9 +539,7 @@ public class DefRangeSeekBar extends View {
         return event.getY();
     }
 
-    /**
-     * scale the touch seekBar thumb
-     */
+
     private void scaleCurrentSeekBarThumb() {
         if (currTouchSB != null && currTouchSB.getThumbScaleRatio() > 1f && !isScaleThumb) {
             isScaleThumb = true;
@@ -561,9 +547,7 @@ public class DefRangeSeekBar extends View {
         }
     }
 
-    /**
-     * reset the touch seekBar thumb
-     */
+
     private void resetCurrentSeekBarThumb() {
         if (currTouchSB != null && currTouchSB.getThumbScaleRatio() > 1f && isScaleThumb) {
             isScaleThumb = false;
@@ -761,7 +745,7 @@ public class DefRangeSeekBar extends View {
 
     }
 
-    //******************* Attributes getter and setter *******************//
+    ////
 
     public void setOnRangeChangedListener(OnRangeChangedListener listener) {
         callback = listener;
@@ -802,23 +786,12 @@ public class DefRangeSeekBar extends View {
     }
 
 
-    /**
-     * 设置范围
-     *
-     * @param min 最小值
-     * @param max 最大值
-     */
+
     public void setRange(float min, float max) {
         setRange(min, max, minInterval);
     }
 
-    /**
-     * 设置范围
-     *
-     * @param min         最小值
-     * @param max         最大值
-     * @param minInterval 最小间隔
-     */
+
     public void setRange(float min, float max, float minInterval) {
         if (max <= min) {
             throw new IllegalArgumentException("setRange() max must be greater than min ! #max:" + max + " #min:" + min);
@@ -846,9 +819,7 @@ public class DefRangeSeekBar extends View {
         invalidate();
     }
 
-    /**
-     * @return the two seekBar state , see {@link com.jaygoo.widget.SeekBarState}
-     */
+
     public SeekBarState[] getRangeSeekBarState() {
         SeekBarState leftSeekBarState = new SeekBarState();
         leftSeekBarState.value = leftSB.getProgress();
@@ -888,11 +859,7 @@ public class DefRangeSeekBar extends View {
         }
     }
 
-    /**
-     * format number indicator text
-     *
-     * @param formatPattern format rules
-     */
+
     public void setIndicatorTextDecimalFormat(String formatPattern) {
         leftSB.setIndicatorTextDecimalFormat(formatPattern);
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
@@ -900,11 +867,7 @@ public class DefRangeSeekBar extends View {
         }
     }
 
-    /**
-     * format string indicator text
-     *
-     * @param formatPattern format rules
-     */
+
     public void setIndicatorTextStringFormat(String formatPattern) {
         leftSB.setIndicatorTextStringFormat(formatPattern);
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
@@ -912,11 +875,7 @@ public class DefRangeSeekBar extends View {
         }
     }
 
-    /**
-     * if is single mode, please use it to get the SeekBar
-     *
-     * @return left seek bar
-     */
+
     public SeekBar getLeftSeekBar() {
         return leftSB;
     }
@@ -987,11 +946,7 @@ public class DefRangeSeekBar extends View {
         return seekBarMode;
     }
 
-    /**
-     * {@link #SEEKBAR_MODE_SINGLE} is single SeekBar
-     * {@link #SEEKBAR_MODE_RANGE} is range SeekBar
-     * @param seekBarMode
-     */
+
     public void setSeekBarMode(@SeekBarModeDef int seekBarMode) {
         this.seekBarMode = seekBarMode;
         rightSB.setVisible(seekBarMode != SEEKBAR_MODE_SINGLE);
@@ -1001,11 +956,7 @@ public class DefRangeSeekBar extends View {
         return tickMarkMode;
     }
 
-    /**
-     * {@link #TICK_MARK_GRAVITY_LEFT} is number tick mark, it will locate the position according to the value.
-     * {@link #TICK_MARK_GRAVITY_RIGHT} is text tick mark, it will be equally positioned.
-     * @param tickMarkMode
-     */
+
     public void setTickMarkMode(@TickMarkModeDef int tickMarkMode) {
         this.tickMarkMode = tickMarkMode;
     }
@@ -1030,13 +981,7 @@ public class DefRangeSeekBar extends View {
         return tickMarkGravity;
     }
 
-    /**
-     * the tick mark text gravity
-     * {@link #TICK_MARK_GRAVITY_LEFT}
-     * {@link #TICK_MARK_GRAVITY_RIGHT}
-     * {@link #TICK_MARK_GRAVITY_CENTER}
-     * @param tickMarkGravity
-     */
+
     public void setTickMarkGravity(@TickMarkGravityDef int tickMarkGravity) {
         this.tickMarkGravity = tickMarkGravity;
     }
@@ -1178,11 +1123,7 @@ public class DefRangeSeekBar extends View {
         return tickMarkLayoutGravity;
     }
 
-    /**
-     * the tick mark layout gravity
-     * Gravity.TOP and Gravity.BOTTOM
-     * @param tickMarkLayoutGravity
-     */
+
     public void setTickMarkLayoutGravity(@TickMarkLayoutGravityDef int tickMarkLayoutGravity) {
         this.tickMarkLayoutGravity = tickMarkLayoutGravity;
     }
@@ -1191,11 +1132,7 @@ public class DefRangeSeekBar extends View {
         return gravity;
     }
 
-    /**
-     * the RangeSeekBar gravity
-     * Gravity.TOP and Gravity.BOTTOM
-     * @param gravity
-     */
+
     public void setGravity(@GravityDef int gravity) {
         this.gravity = gravity;
     }

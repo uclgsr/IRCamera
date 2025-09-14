@@ -10,6 +10,7 @@ from loguru import logger
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from ..core.config import config
+from typing import Any
 
 
 class LogHandler(QObject):
@@ -21,7 +22,7 @@ class LogHandler(QObject):
         """Initialize log handler."""
         super().__init__()
 
-    def write(self, record):
+    def write(self, record) -> Any:
         """Write log record."""
         # Extract relevant information from loguru record
         level = record["level"].name
@@ -76,20 +77,50 @@ def setup_logging() -> LogHandler:
     # Create and configure GUI log handler
     gui_handler = LogHandler()
 
-    # Add custom sink for GUI integration
-    def gui_sink(record):
-        level = record["level"].name
-        message = record["message"]
-        timestamp = record["time"].strftime("%H:%M:%S")
-        gui_handler.log_message.emit(level, message, timestamp)
+    # Add custom sink for GUI integration only if GUI is available
+    def gui_sink(record) -> Any:
+        try:
+            # Handle both dict and Record object formats
+            if hasattr(record, "level"):
+                # New loguru Record object format
+                level = record.level.name
+                message = record.message
+                timestamp = record.time.strftime("%H:%M:%S")
+            elif hasattr(record, "get"):
+                # Dictionary format for backwards compatibility
+                level = record.get("level", {}).get("name", "INFO")
+                message = record.get("message", "")
+                timestamp = (
+                    record.get("time", "").strftime("%H:%M:%S")
+                    if record.get("time")
+                    else ""
+                )
+            else:
+                # Fallback for unknown formats
+                level = "INFO"
+                message = str(record)
+                timestamp = ""
+            gui_handler.log_message.emit(level, message, timestamp)
+        except Exception:
+            # Fallback for any formatting issues - handle both modes
+            try:
+                gui_handler.log_message.emit("INFO", str(record), "")
+            except Exception:
+                # Silently ignore GUI logging errors in headless mode
+                pass
 
-    logger.add(gui_sink, level=log_level)
+    # Only add GUI sink if GUI components are available
+    try:
+        logger.add(gui_sink, level=log_level)
+    except Exception:
+        # GUI not available, skip GUI logging
+        pass
 
     logger.info("Logging system initialized")
     return gui_handler
 
 
-def get_app_icon():
+def get_app_icon() -> Any:
     """
     Get application icon.
 
@@ -100,7 +131,7 @@ def get_app_icon():
     return None
 
 
-def apply_theme(app, theme_name: str = "default"):
+def apply_theme(app: Any, theme_name: str = "default") -> Any:
     """
     Apply theme to the Qt application.
 

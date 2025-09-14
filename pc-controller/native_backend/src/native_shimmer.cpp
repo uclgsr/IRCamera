@@ -18,10 +18,7 @@
 
 namespace ircamera {
 
-/**
- * Private implementation for NativeShimmer
- * Uses PIMPL pattern to hide platform-specific details
- */
+
 class NativeShimmer::Impl {
 public:
     explicit Impl(const std::string& port_name)

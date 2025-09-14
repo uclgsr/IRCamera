@@ -13,6 +13,7 @@ import com.topdon.module.thermal.fragment.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
+
 class MonitorActivity : BaseActivity(), View.OnClickListener {
     companion object {
     const val STATS_START = 101
@@ -96,7 +97,7 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
     motionBtn.visibility = View.GONE
     }
 
-    // 秒
+//秒
     fun updateTime(time: Long) {
     val ss = time % 60
     val mm = time / 60 % 60

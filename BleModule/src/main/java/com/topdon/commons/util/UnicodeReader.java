@@ -6,10 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PushbackInputStream;
 import java.io.Reader;
 
-/**
- * Generic unicode textreader, which will use BOM mark to identify the encoding
- * to be used. If BOM is not found then use a given default or system encoding.
- */
+
 public class UnicodeReader extends Reader {
     PushbackInputStream internalIn;
     InputStreamReader internalIn2 = null;
@@ -17,11 +14,7 @@ public class UnicodeReader extends Reader {
 
     private static final int BOM_SIZE = 4;
 
-    /**
-     * @param in         inputstream to be read
-     * @param defaultEnc default encoding if stream does not have BOM marker. Give NULL
-     *                   to use system-level default.
-     */
+    
     UnicodeReader(InputStream in, String defaultEnc) {
         internalIn = new PushbackInputStream(in, BOM_SIZE);
         this.defaultEnc = defaultEnc;
@@ -31,20 +24,14 @@ public class UnicodeReader extends Reader {
         return defaultEnc;
     }
 
-    /**
-     * Get stream encoding or NULL if stream is uninitialized. Call init() or
-     * read() method to initialize it.
-     */
+    
     public String getEncoding() {
         if (internalIn2 == null)
             return null;
         return internalIn2.getEncoding();
     }
 
-    /**
-     * Read-ahead four bytes and check for BOM marks. Extra bytes are unread
-     * back to the stream, only BOM bytes are skipped.
-     */
+    
     protected void init() throws IOException {
         if (internalIn2 != null)
             return;

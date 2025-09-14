@@ -127,7 +127,7 @@ huawei-agconnect = {id = "com.huawei.agconnect", version.ref = "huaweiAgcp"}
 [versions]
 # Android Configuration
 compileSdk = "35"
-minSdk = "24"
+minSdk = "26"
 targetSdk = "34"
 versionCode = "1100"
 versionName = "1.10.000"
@@ -152,20 +152,21 @@ kotlin = "2.1.0"
 agp = "8.11.0"
 androidxCore = "1.12.0"
 androidxAppcompat = "1.6.1"
-fragmentKtx = "1.6.2"
+fragmentKtx = "1.8.9"
 androidxPreference = "1.2.1"
-material = "1.11.0"
+material = "1.13.0"
 multidex = "2.0.1"
 # Lifecycle
 lifecycle = "2.7.0"
 # Room
 room = "2.5.2"
 # Work Manager
-work = "2.9.0"
+work = "2.10.4"
+
 # Coroutines
 coroutines = "1.7.3"
 # Networking
-fastjson = "1.2.78"
+fastjson2 = "2.0.58"
 jsbridge = "1.0.4"
 retrofit = "2.10.0"
 okhttp = "4.11.0"
@@ -175,11 +176,11 @@ rxandroid = "2.1.1"
 # Navigation - ARouter used by thermal component
 arouter = "1.5.2"
 # RxLifecycle
-rxpermissions = "0.10.2"
+rxpermissions = "2.x.v0.9.3"
 rxlifecycle2 = "2.2.2"
 rxlifecycle3 = "3.1.0"
 # UI Libraries
-ucrop = "2.2.8"
+ucrop = "2.2.11-native"
 playAppUpdate = "2.1.0"
 immersionbar = "3.2.2"
 xpopup = "2.10.0"
@@ -193,7 +194,11 @@ nifty = "2.4.0"
 # Image Loading
 glide = "4.15.1"
 mnImageBrowser = "V3.1.2X"
-gsyVideoPlayer = "v8.6.0-release-jitpack"
+gsyVideoPlayer = "v11.1.0"
+
+# Shimmer GSR Sensor SDK
+shimmerAndroidApi = "1.0.0"
+
 # OpenGL
 opengl = "2.0.0"
 # Utils
@@ -210,7 +215,8 @@ javacv = "1.5.7"
 lmsInternational = "3.90.009.0"
 lmsChina = "3.90.076"
 # FFmpeg
-ffmpeg = "5.0-1.5.7"
+ffmpeg = "7.1.1-1.5.12"
+
 # Third-party services
 wechatSdk = "6.8.0"
 umengApm = "1.9.0"
@@ -222,9 +228,170 @@ umengAnalytics = "9.8.8"
 # Testing
 junit = "4.13.2"
 testExtJunit = "1.1.5"
-testEspressoCore = "3.5.1"
+testEspressoCore = "3.7.0"
+
+# Google Services
+
+
 huaweiAgcp = "1.6.0.300"
 # Build Tools
 androidGradlePlugin = "8.11.0"
 kotlinGradlePlugin = "2.1.0"
 desugarJdkLibs = "2.1.5"
+
+[libraries]
+# AndroidX Core
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
+fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
+androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "androidxPreference" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
+
+# Lifecycle
+lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
+
+# Room
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+
+# Work Manager
+work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
+
+# Kotlin
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+
+# Networking
+fastjson2 = { group = "com.alibaba.fastjson2", name = "fastjson2", version.ref = "fastjson2" }
+jsbridge = { group = "com.github.lzyzsd", name = "jsbridge", version.ref = "jsbridge" }
+retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+adapter-rxjava2 = { group = "com.squareup.retrofit2", name = "adapter-rxjava2", version.ref = "retrofit" }
+logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+
+# RxJava
+rxjava2 = { group = "io.reactivex.rxjava2", name = "rxjava", version.ref = "rxjava" }
+rxandroid = { group = "io.reactivex.rxjava2", name = "rxandroid", version.ref = "rxandroid" }
+
+# Navigation - ARouter used by thermal component
+arouter-api = { group = "com.alibaba", name = "arouter-api", version.ref = "arouter" }
+arouter-compiler = { group = "com.alibaba", name = "arouter-compiler", version.ref = "arouter" }
+
+# RxLifecycle
+rxpermissions = { group = "com.github.tbruyelle", name = "rxpermissions", version.ref = "rxpermissions" }
+rxlifecycle = { group = "com.trello.rxlifecycle2", name = "rxlifecycle", version.ref = "rxlifecycle2" }
+rxlifecycle-android = { group = "com.trello.rxlifecycle2", name = "rxlifecycle-android", version.ref = "rxlifecycle2" }
+rxlifecycle-components = { group = "com.trello.rxlifecycle2", name = "rxlifecycle-components", version.ref = "rxlifecycle2" }
+rxlifecycle-ktx = { group = "com.trello.rxlifecycle3", name = "rxlifecycle-kotlin", version.ref = "rxlifecycle3" }
+rxlifecycle-android-lifecycle-ktx = { group = "com.trello.rxlifecycle3", name = "rxlifecycle-android-lifecycle-kotlin", version.ref = "rxlifecycle3" }
+
+# UI Libraries
+ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "ucrop" }
+play-app-update = { group = "com.google.android.play", name = "app-update", version.ref = "playAppUpdate" }
+immersionbar = { group = "com.geyifeng.immersionbar", name = "immersionbar", version.ref = "immersionbar" }
+xpopup = { group = "com.github.li-xiaojun", name = "XPopup", version.ref = "xpopup" }
+smart-refresh-layout = { group = "com.scwang.smartrefresh", name = "SmartRefreshLayout", version.ref = "smartRefreshLayout" }
+smart-refresh-header = { group = "com.scwang.smartrefresh", name = "SmartRefreshHeader", version.ref = "smartRefreshLayout" }
+refresh-layout-kernel = { group = "com.scwang.smart", name = "refresh-layout-kernel", version.ref = "smartRefreshLayoutV2" }
+refresh-header-classics = { group = "com.scwang.smart", name = "refresh-header-classics", version.ref = "smartRefreshHeaderV2" }
+refresh-header-material = { group = "com.scwang.smart", name = "refresh-header-material", version.ref = "smartRefreshHeaderV2" }
+brvah = { group = "com.github.CymChad", name = "BaseRecyclerViewAdapterHelper", version.ref = "brvah" }
+colorpickerview = { group = "com.github.skydoves", name = "colorpickerview", version.ref = "colorpickerview" }
+photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
+nifty = { group = "com.nineoldandroids", name = "library", version.ref = "nifty" }
+
+# Image Loading
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+mn-image-browser = { group = "com.github.maning0303", name = "MNImageBrowser", version.ref = "mnImageBrowser" }
+gsy-video-player = { group = "com.github.CarGuo.GSYVideoPlayer", name = "gsyVideoPlayer-java", version.ref = "gsyVideoPlayer" }
+
+# Shimmer GSR sensor integration
+# shimmer-android-api = { group = "com.shimmerresearch", name = "shimmer-android-api", version.ref = "shimmerAndroidApi" }
+
+# OpenGL
+opengl-android = { group = "org.khronos", name = "opengl-api", version.ref = "opengl" }
+
+# Utils
+utilcode = { group = "com.blankj", name = "utilcodex", version.ref = "utilcode" }
+xxpermissions = { group = "com.github.getActivity", name = "XXPermissions", version.ref = "xxpermissions" }
+xlog = { group = "com.elvishew", name = "xlog", version.ref = "xlog" }
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
+eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbus" }
+
+# Compass and sensor libraries
+andromeda-core = { group = "com.kylecorry.andromeda", name = "core", version.ref = "andromeda" }
+andromeda-sense = { group = "com.kylecorry.andromeda", name = "sense", version.ref = "andromeda" }
+andromeda-views = { group = "com.kylecorry.andromeda", name = "views", version.ref = "andromeda" }
+
+# JavaCV
+javacv = { group = "org.bytedeco", name = "javacv", version.ref = "javacv" }
+javacpp = { group = "org.bytedeco", name = "javacpp", version.ref = "javacv" }
+
+# IR-specific libraries
+ir-layout = { group = "com.github.CoderCaiSL", name = "jitpackMvn", version = "+" }
+
+# LMS SDK
+lms2-user = { group = "com.topdon.lms.sdk3", name = "lms_international", version.ref = "lmsInternational" }
+lms3-user = { group = "com.topdon.lms.sdk3", name = "lms_china", version.ref = "lmsChina" }
+
+# FFmpeg native libraries for IR processing
+ffmpeg-android-arm64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
+ffmpeg-android-arm = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
+ffmpeg-android-x86-64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
+ffmpeg-android-x86 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
+
+# Third-party services
+wechat-sdk = { group = "com.tencent.mm.opensdk", name = "wechat-sdk-android", version.ref = "wechatSdk" }
+umeng-apm = { group = "com.umeng.umsdk", name = "apm", version.ref = "umengApm" }
+zoho-salesiq = { group = "com.zoho.salesiq", name = "mobilisten", version.ref = "zohoSalesiq" }
+
+
+
+# UMeng
+umeng-common = { group = "com.umeng.umsdk", name = "common", version.ref = "umengCommon" }
+umeng-asms = { group = "com.umeng.umsdk", name = "asms", version.ref = "umengAsms" }
+umeng-analytics = { group = "com.umeng.umsdk", name = "analytics", version.ref = "umengAnalytics" }
+
+# Testing
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "testExtJunit" }
+test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "testEspressoCore" }
+
+# Build Tools (for buildscript classpath)
+android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdkLibs" }
+
+
+huawei-agconnect = { group = "com.huawei.agconnect", name = "agcp", version.ref = "huaweiAgcp" }
+
+[bundles]
+androidx-lifecycle = ["lifecycle-runtime-ktx", "lifecycle-viewmodel-ktx", "lifecycle-livedata-ktx"]
+rx-lifecycle = ["rxlifecycle", "rxlifecycle-android", "rxlifecycle-components"]
+rx-lifecycle-ktx = ["rxlifecycle-ktx", "rxlifecycle-android-lifecycle-ktx"]
+retrofit = ["retrofit2", "converter-gson", "adapter-rxjava2", "logging-interceptor"]
+smart-refresh = ["smart-refresh-layout", "smart-refresh-header"]
+smart-refresh-v2 = ["refresh-layout-kernel", "refresh-header-classics", "refresh-header-material"]
+
+# Common UI dependencies bundle to reduce duplication across modules
+ui-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide"]
+# Thermal camera common dependencies 
+thermal-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide", "xxpermissions", "eventbus"]
+
+umeng = ["umeng-common", "umeng-asms", "umeng-analytics"]
+andromeda = ["andromeda-core", "andromeda-sense", "andromeda-views"]
+javacv-core = ["javacv", "javacpp"]
+ffmpeg-android = ["ffmpeg-android-arm64", "ffmpeg-android-arm", "ffmpeg-android-x86-64", "ffmpeg-android-x86"]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+
+huawei-agconnect = { id = "com.huawei.agconnect", version.ref = "huaweiAgcp" }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present 贵州纳雍穿青人李裕江<1032694760@qq.com>
+ * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
  *
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -30,13 +30,7 @@ import com.topdon.lib.ui.R;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * 单项选择器
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @see com.github.gzuliyujiang.wheelview.contract.TextProvider
- * @since 2019/5/8 10:04
- */
+
 @SuppressWarnings({"unused"})
 public class OptionPicker extends ModalDialog {
     protected OptionWheelLayout wheelLayout;
@@ -58,10 +52,10 @@ public class OptionPicker extends ModalDialog {
     @Override
     protected View createBodyView() {
         wheelLayout = new OptionWheelLayout(activity);
-        wheelLayout.setCurtainEnabled(true);//选中栏是否有背景颜色
-        wheelLayout.setCurtainColor(ContextCompat.getColor(getContext(), R.color.wheel_select_bg));       //选中栏背景颜色
-        wheelLayout.setSelectedTextColor(ContextCompat.getColor(getContext(), R.color.wheel_select_text));//选中文字颜色
-        wheelLayout.setTextColor(ContextCompat.getColor(getContext(), R.color.wheel_unselect_text));      //未选中文字颜色
+        wheelLayout.setCurtainEnabled(true);//selected栏是否有背景color
+        wheelLayout.setCurtainColor(ContextCompat.getColor(getContext(), R.color.wheel_select_bg));       //selected栏背景color
+        wheelLayout.setSelectedTextColor(ContextCompat.getColor(getContext(), R.color.wheel_select_text));//selected文字color
+        wheelLayout.setTextColor(ContextCompat.getColor(getContext(), R.color.wheel_unselect_text));      //未selected文字color
         return wheelLayout;
     }
 

@@ -15,9 +15,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
-/**
- *
- */
+
 public class IniUtil {
     private static String NAME = "Link";
     private static final String LINK = "link";
@@ -49,12 +47,7 @@ public class IniUtil {
         }
     }
 
-    /**
-     * 获取车型名字
-     *
-     * @param path 车型路径
-     * @return String
-     */
+
     public static String getVehicleName(String path) {
         File file = new File(path + "/Diag.ini");
         if (!file.exists()) {
@@ -65,11 +58,7 @@ public class IniUtil {
     }
 
 
-    /**
-     * 读取文件
-     *
-     * @param path 路径
-     */
+
     private static String readFileInfo(String path) {
         String name = "";
         File file = new File(path);
@@ -148,13 +137,7 @@ public class IniUtil {
     }
 
 
-    /**
-     * 获取保养类型
-     *
-     * @param path
-     * @param name
-     * @return
-     */
+
     public static HashMap<String, String> getMaintenance(String path, String name) {
         HashMap<String, String> hashMap = new HashMap<>();
         File file = new File(path + "/Diag.ini");
@@ -308,13 +291,7 @@ public class IniUtil {
     }
 
 
-    /**
-     * 获取保养类型
-     *
-     * @param path
-     * @param name
-     * @return
-     */
+
     public static HashMap<String, String> getIniSysTem(String path, String name) {
         HashMap<String, String> hashMap = new HashMap<>();
         File file = new File(path + "/Diag.ini");

@@ -13,9 +13,7 @@ import com.example.thermal_lite.camera.task.StopPreviewTask;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by fengjibo on 2024/5/17.
- */
+
 public class DeviceControlManager implements IDeviceConnectListener {
 
     private static final String TAG = "DualDeviceControlManager";
@@ -37,9 +35,7 @@ public class DeviceControlManager implements IDeviceConnectListener {
         return mInstance;
     }
 
-    /**
-     * 初始化
-     */
+
     public void init() {
         mDeviceControlWorker = new DeviceControlWorker();
         mDeviceControlWorker.setDeviceControlCallback(this);
@@ -47,30 +43,21 @@ public class DeviceControlManager implements IDeviceConnectListener {
         mIDeviceConnectListeners = new HashMap<>();
     }
 
-    /**
-     * 注册设备状态回调，可在activity或fragment中注册，用于UI的改变
-     * @param key 唯一标识
-     * @param iDeviceConnectListener
-     */
+
     public void addDeviceConnectListener(String key, IDeviceConnectListener iDeviceConnectListener) {
         if (mIDeviceConnectListeners != null) {
             mIDeviceConnectListeners.put(key, iDeviceConnectListener);
         }
     }
 
-    /**
-     * 取消注册设备状态回调
-     * @param key
-     */
+
     public void removeDeviceConnectListener(String key) {
         if (mIDeviceConnectListeners != null) {
             mIDeviceConnectListeners.remove(key);
         }
     }
 
-    /**
-     * 回收资源
-     */
+
     public void release() {
         if (mDeviceControlWorker != null) {
             mDeviceControlWorker.release();
@@ -82,10 +69,7 @@ public class DeviceControlManager implements IDeviceConnectListener {
         }
     }
 
-    /**
-     * 双光数据流出图
-     * @param ctrlBlock
-     */
+
     public void handleStartPreview(USBMonitor.UsbControlBlock ctrlBlock) {
         if (mDeviceControlWorker != null) {
             Log.d(TAG, "handleStartPreview");
@@ -93,9 +77,7 @@ public class DeviceControlManager implements IDeviceConnectListener {
         }
     }
 
-    /**
-     * 双光数据流停图
-     */
+
     public void handleStopPreview() {
         if (mDeviceControlWorker != null) {
             Log.d(TAG, "handleStopPreview");
@@ -103,9 +85,7 @@ public class DeviceControlManager implements IDeviceConnectListener {
         }
     }
 
-    /**
-     * 双光数据流暂停
-     */
+
     public void handlePauseDualPreview() {
         if (mDeviceControlWorker != null) {
             Log.d(TAG, "handlePausePreview");
@@ -113,9 +93,7 @@ public class DeviceControlManager implements IDeviceConnectListener {
         }
     }
 
-    /**
-     * 双光数据流恢复
-     */
+
     public void handleResumeDualPreview() {
         if (mDeviceControlWorker != null) {
             Log.d(TAG, "handleResumePreview");
@@ -125,7 +103,7 @@ public class DeviceControlManager implements IDeviceConnectListener {
 
     @Override
     public void onPrepareConnect() {
-        //StartPreview前回调
+//StartPreview前回调
         for (Map.Entry<String, IDeviceConnectListener> entry: mIDeviceConnectListeners.entrySet()) {
             entry.getValue().onPrepareConnect();
         }
@@ -133,7 +111,7 @@ public class DeviceControlManager implements IDeviceConnectListener {
 
     @Override
     public void onConnected() {
-        //StartPreview成功前后回调，注意是子线程
+//StartPreviewsuccessful前后回调，注意是子线程
         for (Map.Entry<String, IDeviceConnectListener> entry: mIDeviceConnectListeners.entrySet()) {
             entry.getValue().onConnected();
         }
@@ -141,7 +119,7 @@ public class DeviceControlManager implements IDeviceConnectListener {
 
     @Override
     public void onDisconnected() {
-        //StopPreview成功前后回调，注意是子线程
+//StopPreviewsuccessful前后回调，注意是子线程
         for (Map.Entry<String, IDeviceConnectListener> entry: mIDeviceConnectListeners.entrySet()) {
             entry.getValue().onDisconnected();
         }
@@ -149,7 +127,7 @@ public class DeviceControlManager implements IDeviceConnectListener {
 
     @Override
     public void onPaused() {
-        //todo 自行定义Paused Task来实现
+//todo 自行定义Paused Task来实现
         for (Map.Entry<String, IDeviceConnectListener> entry: mIDeviceConnectListeners.entrySet()) {
             entry.getValue().onPaused();
         }
@@ -157,7 +135,7 @@ public class DeviceControlManager implements IDeviceConnectListener {
 
     @Override
     public void onResumed() {
-        //todo 自行定义Resumed Task来实现
+//todo 自行定义Resumed Task来实现
         for (Map.Entry<String, IDeviceConnectListener> entry: mIDeviceConnectListeners.entrySet()) {
             entry.getValue().onResumed();
         }

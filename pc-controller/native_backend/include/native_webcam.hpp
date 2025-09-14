@@ -1,9 +1,4 @@
-/**
- * High-performance webcam interface for C++ backend
- * 
- * Implements OpenCV-based webcam capture with zero-copy memory sharing
- * to Python for real-time video processing and display.
- */
+
 
 #pragma once
 
@@ -37,66 +32,34 @@ public:
     NativeWebcam(const NativeWebcam&) = delete;
     NativeWebcam& operator=(const NativeWebcam&) = delete;
 
-    /**
-     * Open webcam device
-     * @param device_id Camera device ID (0 for default camera)
-     * @param width Desired frame width (default: 1920)
-     * @param height Desired frame height (default: 1080)
-     * @param fps Desired frame rate (default: 30)
-     * @return true if camera opened successfully
-     */
+
     bool open(int device_id = 0, int width = 1920, int height = 1080, double fps = 30.0);
 
-    /**
-     * Close webcam device
-     */
+
     void close();
 
-    /**
-     * Start frame capture
-     * @return true if capture started successfully
-     */
+
     bool start_capture();
 
-    /**
-     * Stop frame capture
-     * @return true if capture stopped successfully
-     */
+
     bool stop_capture();
 
-    /**
-     * Check if camera is open
-     * @return true if open
-     */
+
     bool is_open() const { return opened_.load(); }
 
-    /**
-     * Check if capture is active
-     * @return true if capturing
-     */
+
     bool is_capturing() const { return capturing_.load(); }
 
-    /**
-     * Get frame from queue (non-blocking)
-     * @param frame Reference to store the frame
-     * @return true if frame was available
-     */
+
     bool get_frame(WebcamFrame& frame);
 
-    /**
-     * Get current queue size
-     * @return Number of frames in queue
-     */
+
     size_t get_queue_size() const;
 
-    /**
-     * Clear frame queue
-     */
+
     void clear_queue();
 
-    /**
-     * Get camera properties
-     */
+
     struct CameraProperties {
         int width;
         int height;
@@ -112,24 +75,13 @@ public:
     
     CameraProperties get_properties() const;
 
-    /**
-     * Set camera property
-     * @param property OpenCV property ID (cv::CAP_PROP_*)
-     * @param value Property value
-     * @return true if property was set successfully
-     */
+
     bool set_property(int property, double value);
 
-    /**
-     * Get camera property
-     * @param property OpenCV property ID (cv::CAP_PROP_*)
-     * @return Property value
-     */
+
     double get_property(int property) const;
 
-    /**
-     * Get capture statistics
-     */
+
     struct Statistics {
         uint64_t total_frames;
         uint64_t dropped_frames;
@@ -140,31 +92,16 @@ public:
     
     Statistics get_statistics() const;
 
-    /**
-     * Get last error message
-     * @return Error message string
-     */
+
     std::string get_last_error() const { return last_error_; }
 
-    /**
-     * Enable/disable auto-exposure
-     * @param enable true to enable auto-exposure
-     * @return true if successful
-     */
+
     bool set_auto_exposure(bool enable);
 
-    /**
-     * Enable/disable auto-white-balance
-     * @param enable true to enable auto-white-balance
-     * @return true if successful
-     */
+
     bool set_auto_white_balance(bool enable);
 
-    /**
-     * Take a snapshot (single frame capture)
-     * @param frame Reference to store the snapshot
-     * @return true if snapshot was successful
-     */
+
     bool take_snapshot(WebcamFrame& frame);
 
 private:

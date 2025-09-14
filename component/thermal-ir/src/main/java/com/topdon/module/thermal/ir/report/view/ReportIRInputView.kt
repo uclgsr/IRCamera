@@ -13,16 +13,16 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.isVisible
 import com.topdon.lib.core.tools.UnitTools
 import com.topdon.module.thermal.ir.R
-import com.topdon.lib.core.R as LibR
 import com.topdon.module.thermal.ir.report.bean.ImageTempBean
+import com.topdon.lib.core.R as LibR
 
-class ReportIRInputView: LinearLayout {
 
+class ReportIRInputView : LinearLayout {
     companion object {
-    private const val TYPE_FULL = 0 //全图
-    private const val TYPE_POINT = 1//点
-    private const val TYPE_LINE = 2 //线
-    private const val TYPE_RECT = 3 //面
+        private const val TYPE_FULL = 0 // 全图
+        private const val TYPE_POINT = 1 // 点
+        private const val TYPE_LINE = 2 // 线
+        private const val TYPE_RECT = 3 // 面
     }
 
     // View references - migrated from synthetic views
@@ -83,11 +83,14 @@ class ReportIRInputView: LinearLayout {
     clExplain = findViewById(R.id.cl_explain)
     }
 
-    private fun setupTypeSpecificViews(type: Int, index: Int) {
-    val tvMaxName = clMax.findViewById<TextView>(R.id.tv_item_name)
-    val tvMinName = clMin.findViewById<TextView>(R.id.tv_item_name)
-    val tvAverageName = clAverage.findViewById<TextView>(R.id.tv_item_name)
-    val tvExplainName = clExplain.findViewById<TextView>(R.id.tv_item_name)
+    private fun setupTypeSpecificViews(
+        type: Int,
+        index: Int,
+    ) {
+        val tvMaxName = clMax.findViewById<TextView>(R.id.tv_item_name)
+        val tvMinName = clMin.findViewById<TextView>(R.id.tv_item_name)
+        val tvAverageName = clAverage.findViewById<TextView>(R.id.tv_item_name)
+        val tvExplainName = clExplain.findViewById<TextView>(R.id.tv_item_name)
 
     when (type) {
     TYPE_FULL -> {
@@ -167,26 +170,29 @@ class ReportIRInputView: LinearLayout {
     }
 
     fun refreshData(tempBean: ImageTempBean.TempBean?) {
-    val etMax = clMax.findViewById<EditText>(R.id.et_item)
-    val etMin = clMin.findViewById<EditText>(R.id.et_item)
-    val etAverage = clAverage.findViewById<EditText>(R.id.et_item)
-    val etExplain = clExplain.findViewById<EditText>(R.id.et_item)
+        val etMax = clMax.findViewById<EditText>(R.id.et_item)
+        val etMin = clMin.findViewById<EditText>(R.id.et_item)
+        val etAverage = clAverage.findViewById<EditText>(R.id.et_item)
+        val etExplain = clExplain.findViewById<EditText>(R.id.et_item)
 
-    tempBean?.max?.let {
-    etMax.setText(UnitTools.showUnitValue(it.toFloat())?.toString())
-    }
-    tempBean?.min?.let {
-    etMin.setText(UnitTools.showUnitValue(it.toFloat())?.toString())
-    }
-    tempBean?.average?.let {
-    etAverage.setText(UnitTools.showUnitValue(it.toFloat())?.toString())
-    }
-    etExplain.setText("")
+        tempBean?.max?.let {
+            etMax.setText(UnitTools.showUnitValue(it.toFloat())?.toString())
+        }
+        tempBean?.min?.let {
+            etMin.setText(UnitTools.showUnitValue(it.toFloat())?.toString())
+        }
+        tempBean?.average?.let {
+            etAverage.setText(UnitTools.showUnitValue(it.toFloat())?.toString())
+        }
+        etExplain.setText("")
     }
 
-    private fun setSwitchListener(switchCompat: SwitchCompat, editText: EditText) {
-    switchCompat.setOnCheckedChangeListener { _, isChecked ->
-    editText.isVisible = isChecked
-    }
+    private fun setSwitchListener(
+        switchCompat: SwitchCompat,
+        editText: EditText,
+    ) {
+        switchCompat.setOnCheckedChangeListener { _, isChecked ->
+            editText.isVisible = isChecked
+        }
     }
 }

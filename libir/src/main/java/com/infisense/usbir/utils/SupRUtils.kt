@@ -7,19 +7,12 @@ import java.io.ByteArrayOutputStream
 
 object SupRUtils {
 
-
-    /**
-    * 是否能开启超分
-    */
-    fun canOpenSupR() :Boolean{
-    return true
+    fun canOpenSupR(): Boolean  {
+        return true
     }
 
-    /**
-    * 由此统一弹
-    */
-    fun showOpenSupRTipsDialog(activity : Activity){
 
+    fun showOpenSupRTipsDialog(activity: Activity)  {
     }
 
 
@@ -29,9 +22,8 @@ object SupRUtils {
     return byteArrayOutputStream.toByteArray()
     }
 
+
     fun byteArrayToBitmap(byteArray: ByteArray): Bitmap {
     return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
     }
-
-
 }

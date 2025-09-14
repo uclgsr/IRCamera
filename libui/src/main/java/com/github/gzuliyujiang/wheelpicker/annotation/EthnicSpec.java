@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present 贵州纳雍穿青人李裕江<1032694760@qq.com>
+ * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
  *
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -13,10 +13,7 @@
 
 package com.github.gzuliyujiang.wheelpicker.annotation;
 
-/**
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/12 14:22
- */
+
 public @interface EthnicSpec {
     int DEFAULT = 1;
     int GB3304_91 = 2;

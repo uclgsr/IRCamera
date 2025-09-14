@@ -11,10 +11,7 @@
 
 namespace ircamera {
 
-/**
- * GSR data structure for 12-bit ADC resolution
- * Critical requirement: Must use 12-bit range (0-4095) not 16-bit
- */
+
 struct GSRData {
     uint64_t timestamp_ns;      // Nanosecond timestamp
     uint16_t raw_gsr_value;     // Raw 12-bit ADC value (0-4095)
@@ -24,15 +21,7 @@ struct GSRData {
     uint8_t packet_sequence;    // Packet sequence number for sync
 };
 
-/**
- * NativeShimmer class for high-performance GSR sensor communication
- * 
- * Implements official Shimmer3 GSR+ communication protocol with:
- * - Serial/Bluetooth connection management
- * - 12-bit ADC resolution (mandatory requirement)
- * - Thread-safe lock-free data queue
- * - High-frequency data acquisition (128Hz+)
- */
+
 class NativeShimmer {
 public:
     using DataCallback = std::function<void(const GSRData&)>;

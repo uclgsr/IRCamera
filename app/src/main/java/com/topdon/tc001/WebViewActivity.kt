@@ -1,6 +1,7 @@
 package com.topdon.tc001
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
@@ -12,27 +13,24 @@ import com.github.lzyzsd.jsbridge.BridgeWebViewClient
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 
-/**
-    * 使用 WebView 加载网页的 Activity.
-    *
-    * 需要传递参数：
-    * - [ExtraKeyConfig.URL] 要加载网页地址
-    *
-    * Created by LCG on 2024/12/18.
-    */
+
 // Legacy ARouter route annotation - now using NavigationManager
 class WebViewActivity : BaseBindingActivity<ActivityWebViewBinding>() {
+    override fun initContentLayoutId(): Int = R.layout.activity_web_view
 
-    override fun getViewBinding(): ActivityWebViewBinding =
-    ActivityWebViewBinding.inflate(layoutInflater)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+        initData()
+    }
 
-    override fun initView() {
-    // Views are now accessible via binding
+    private fun initView() {
+        // Views are now accessible via binding
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    override fun initData() {
-    showLoadingDialog()
+    private fun initData() {
+        showLoadingDialog()
 
     val url: String = intent.extras?.getString(ExtraKeyConfig.URL) ?: ""
 

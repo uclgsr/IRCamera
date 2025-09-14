@@ -2,31 +2,32 @@ package com.topdon.tc001.test
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import com.csl.irCamera.databinding.ActivityRawCaptureTestBinding
-import com.topdon.lib.core.ktbase.BaseBindingActivity
 
-/**
-    * Test Activity to demonstrate RAW Image Capture UI
-    * Shows the enhanced multi-modal recording interface with RAW capture options
-    */
-class RAWCaptureTestActivity : BaseBindingActivity<ActivityRawCaptureTestBinding>() {
+
+class RAWCaptureTestActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityRawCaptureTestBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    // Initialize UI components through view binding
-    setupSpinner()
-    setupSwitchListeners()
+        super.onCreate(savedInstanceState)
+        binding = ActivityRawCaptureTestBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        // Initialize UI components through view binding
+        setupSpinner()
+        setupSwitchListeners()
     }
 
     private fun setupSpinner() {
-    binding.rawFrameRateSpinner.adapter = ArrayAdapter(
-    this,
-    android.R.layout.simple_spinner_item,
-    listOf("30 fps", "15 fps", "10 fps", "5 fps")
-    ).apply {
-    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-    }
-    binding.rawFrameRateSpinner.setSelection(0) // Default to 30fps
+        binding.rawFrameRateSpinner.adapter =
+            ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_item,
+                listOf("30 fps", "15 fps", "10 fps", "5 fps"),
+            ).apply {
+                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            }
+        binding.rawFrameRateSpinner.setSelection(0) // Default to 30fps
     }
 
     private fun setupSwitchListeners() {

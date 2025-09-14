@@ -36,23 +36,15 @@ public class PieChartRenderer extends DataRenderer {
 
     protected PieChart mChart;
 
-    /**
-     * paint for the hole in the center of the pie chart and the transparent
-     * circle
-     */
+    
     protected Paint mHolePaint;
     protected Paint mTransparentCirclePaint;
     protected Paint mValueLinePaint;
 
-    /**
-     * paint object for the text that can be displayed in the center of the
-     * chart
-     */
+    
     private TextPaint mCenterTextPaint;
 
-    /**
-     * paint object used for drwing the slice-text
-     */
+    
     private Paint mEntryLabelsPaint;
 
     private StaticLayout mCenterTextLayout;
@@ -60,9 +52,7 @@ public class PieChartRenderer extends DataRenderer {
     private RectF mCenterTextLastBounds = new RectF();
     private RectF[] mRectBuffer = {new RectF(), new RectF(), new RectF()};
 
-    /**
-     * Bitmap for drawing the center hole
-     */
+    
     protected WeakReference<Bitmap> mDrawBitmap;
 
     protected Canvas mBitmapCanvas;
@@ -193,12 +183,7 @@ public class PieChartRenderer extends DataRenderer {
         return spacedRadius;
     }
 
-    /**
-     * Calculates the sliceSpace to use based on visible values and their size compared to the set sliceSpace.
-     *
-     * @param dataSet
-     * @return
-     */
+    
     protected float getSliceSpace(IPieDataSet dataSet) {
 
         if (!dataSet.isAutomaticallyDisableSliceSpacingEnabled())
@@ -651,14 +636,7 @@ public class PieChartRenderer extends DataRenderer {
         c.drawText(valueText, x, y, mValuePaint);
     }
 
-    /**
-     * Draws an entry label at the specified position.
-     *
-     * @param c
-     * @param label
-     * @param x
-     * @param y
-     */
+    
     protected void drawEntryLabel(Canvas c, String label, float x, float y) {
         c.drawText(label, x, y, mEntryLabelsPaint);
     }
@@ -672,10 +650,7 @@ public class PieChartRenderer extends DataRenderer {
 
     private Path mHoleCirclePath = new Path();
 
-    /**
-     * draws the hole in the center of the chart and the transparent circle /
-     * hole
-     */
+    
     protected void drawHole(Canvas c) {
 
         if (mChart.isDrawHoleEnabled() && mBitmapCanvas != null) {
@@ -714,10 +689,7 @@ public class PieChartRenderer extends DataRenderer {
     }
 
     protected Path mDrawCenterTextPathBuffer = new Path();
-    /**
-     * draws the description text in the center of the pie chart makes most
-     * sense when center-hole is enabled
-     */
+    
     protected void drawCenterText(Canvas c) {
 
         CharSequence centerText = mChart.getCenterText();
@@ -988,11 +960,7 @@ public class PieChartRenderer extends DataRenderer {
         MPPointF.recycleInstance(center);
     }
 
-    /**
-     * This gives all pie-slices a rounded edge.
-     *
-     * @param c
-     */
+    
     protected void drawRoundedSlices(Canvas c) {
 
         if (!mChart.isDrawRoundedSlicesEnabled())
@@ -1040,9 +1008,7 @@ public class PieChartRenderer extends DataRenderer {
         MPPointF.recycleInstance(center);
     }
 
-    /**
-     * Releases the drawing bitmap. This should be called when {@link LineChart#onDetachedFromWindow()}.
-     */
+    
     public void releaseBitmap() {
         if (mBitmapCanvas != null) {
             mBitmapCanvas.setBitmap(null);

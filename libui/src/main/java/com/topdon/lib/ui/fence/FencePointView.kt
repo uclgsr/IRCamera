@@ -14,6 +14,8 @@ import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.ui.R as UiR
 
+
+
 class FencePointView : View {
     var listener: CallBack? = null
     private val iconSize = SizeUtils.dp2px(32f)
@@ -121,29 +123,31 @@ class FencePointView : View {
     return true
     }
 
+
     private fun result() {
-    val point1 = intArrayOf(startPoint[0], startPoint[1])
-    if (startPoint[0] - destW / 2 < 0) {
-    // left
-    point1[0] = destW / 2
+        val point1 = intArrayOf(startPoint[0], startPoint[1])
+        if (startPoint[0] - destW / 2 < 0) {
+            
+            point1[0] = destW / 2
+        }
+        if (startPoint[0] + destW / 2 > width) {
+            
+            point1[0] = width - destW / 2
+        }
+        if (startPoint[1] - destW / 2 < 0) {
+            
+            point1[1] = destH / 2
+        }
+        if (startPoint[1] + destW / 2 > height) {
+            
+            point1[1] = height - destH / 2
+        }
+        Log.w("123", "坐标 point:${point1.contentToString()}")
+        if (listener != null) {
+            listener!!.callback(point1, intArrayOf(width, height))
+        }
     }
-    if (startPoint[0] + destW / 2 > width) {
-    // right
-    point1[0] = width - destW / 2
-    }
-    if (startPoint[1] - destW / 2 < 0) {
-    // top
-    point1[1] = destH / 2
-    }
-    if (startPoint[1] + destW / 2 > height) {
-    // bottom
-    point1[1] = height - destH / 2
-    }
-    Log.w("123", "坐标 point:${point1.contentToString()}")
-    if (listener != null) {
-    listener!!.callback(point1, intArrayOf(width, height))
-    }
-    }
+
 
     fun clear() {
     startPoint = intArrayOf(0, 0)
@@ -151,14 +155,14 @@ class FencePointView : View {
     invalidate()
     }
 
+    
+
+
     interface CallBack {
-    /**
-    * startPoint: 左上角
-    * endPoint: 右下角
-    */
-    fun callback(
-    startPoint: IntArray,
-    srcRect: IntArray,
-    )
+
+        fun callback(
+            startPoint: IntArray,
+            srcRect: IntArray,
+        )
     }
 }

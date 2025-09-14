@@ -8,13 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-/**
- * HexUtil
- * HEX转字符串工具类
- *
- * @author chuanfeng.bi
- * @date 2021/8/27 10:33
- */
+
 public class HexUtil {
     private static FileInputStream in;
 
@@ -45,11 +39,7 @@ public class HexUtil {
         return sb.toString();
     }
 
-    /**
-     * 进16进制字符串转换成字节数组
-     *
-     * @param hexStr 16进制的字符串
-     */
+
     public static byte[] toByteArray(String hexStr) {
         String s = hexStr.replaceAll("", "");
         if (s.length() % 2 != 0) {
@@ -107,12 +97,7 @@ public class HexUtil {
         return ret;
     }
 
-    /**
-     * hex转byte数组
-     *
-     * @param hex
-     * @return
-     */
+
     public static byte[] hexToByte(String hex) {
         int m = 0, n = 0;
         int byteLen = hex.length() / 2; // 每两个字符描述一个字节

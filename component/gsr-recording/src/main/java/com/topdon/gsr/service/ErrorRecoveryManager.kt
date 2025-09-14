@@ -5,10 +5,7 @@ import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
-    * Enhanced Error Recovery System
-    * Production-grade error handling and recovery mechanisms for sensor disconnections and recording failures
-    */
+
 class ErrorRecoveryManager private constructor() {
     companion object {
     private const val TAG = "ErrorRecoveryManager"

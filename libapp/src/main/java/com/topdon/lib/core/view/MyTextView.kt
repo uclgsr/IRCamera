@@ -7,44 +7,24 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
 import com.topdon.lib.core.R
 
-/**
-    * 魔改 TextView.
-    *
-    * 原生 TextView 附加的 drawable 尺寸不可设置，这个 TextView 可以设置高度，宽度等比缩放.
-    *
-    * 其中 wrap_content 使用原生逻辑，不设置则使用 textSize（默认），指定值>0则使用指定值.
-    *
-    * Created by chenggeng.lin on 2023/11/21.
-    */
+
 class MyTextView : AppCompatTextView {
-    /**
-    * drawableTop 高度，单位 **px**
-    */
+
     private var topHeight = 0
 
-    /**
-    * drawableBottom 高度，单位 **px**
-    */
+
     private var bottomHeight = 0
 
-    /**
-    * drawableStart 高度，单位 **px**
-    */
+
     private var startHeight = 0
 
-    /**
-    * drawableEnd 高度，单位 **px**
-    */
+
     private var endHeight = 0
 
-    /**
-    * drawableLeft 高度，单位 **px**
-    */
+
     private var leftHeight = 0
 
-    /**
-    * drawableRight 高度，单位 **px**
-    */
+
     private var rightHeight = 0
 
     constructor(context: Context) : this(context, null)
@@ -123,9 +103,7 @@ class MyTextView : AppCompatTextView {
     setCompoundDrawablesRelative(start, top, end, bottom)
     }
 
-    /**
-    * 统一设置该 TextView 所有 compound drawable 高度，单位**px**.
-    */
+
     fun setDrawableHeightPx(pxHeight: Int) {
     topHeight = pxHeight
     bottomHeight = pxHeight
@@ -136,26 +114,19 @@ class MyTextView : AppCompatTextView {
     invalidate()
     }
 
-    /**
-    * 设置 drawableStart 并将其他 drawableXX 置为 null.
-    */
+
     fun setOnlyDrawableStart(drawable: Drawable?) {
     setCompoundDrawablesRelative(drawable, null, null, null)
     }
 
-    /**
-    * 设置 drawableStart 并将其他 drawableXX 置为 null.
-    */
+
     fun setOnlyDrawableStart(
     @DrawableRes start: Int,
     ) {
     setCompoundDrawablesRelativeWithIntrinsicBounds(start, 0, 0, 0)
     }
 
-    /**
-    * 判断是否有设置任意 drawable.
-    * true-至少有一个 drawable false-一个都没有
-    */
+
     fun hasAnyDrawable(): Boolean {
     for (drawable in compoundDrawables) {
     if (drawable != null) {
@@ -170,9 +141,7 @@ class MyTextView : AppCompatTextView {
     return false
     }
 
-    /**
-    * 为指定 drawable 设置指定高度，宽度等比缩放 bounds.
-    */
+
     private fun setDrawableBounds(
     drawable: Drawable?,
     height: Int,

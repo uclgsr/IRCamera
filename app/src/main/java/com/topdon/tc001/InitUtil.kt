@@ -25,9 +25,7 @@ import com.topdon.lms.sdk.utils.ConstantUtil
 import com.topdon.lms.sdk.utils.LanguageUtil
 import java.util.Date
 
-/**
-    * 国内权限申请后才能初始化
-    */
+
 object InitUtil {
     fun initLog() {
     val fileName = "logs_${TimeUtils.date2String(Date(), "yyyy-MM-dd")}.log"

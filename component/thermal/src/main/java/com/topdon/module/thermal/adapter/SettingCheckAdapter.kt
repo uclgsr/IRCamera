@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.module.thermal.R
 
+
 class SettingCheckAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var datas = arrayOf("1s", "5s", "10s", "30s", "1min", "5min")
@@ -59,6 +60,7 @@ class SettingCheckAdapter(val context: Context) :
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val btn: Button = itemView.findViewById(R.id.item_setting_check_btn)
     }
+
 
     interface OnItemClickListener {
     fun onClick(

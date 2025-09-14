@@ -2,13 +2,7 @@ package com.topdon.commons.base.entity;
 
 import java.io.Serializable;
 
-/**
- * @Desc 单位转换
- * @ClassName UnitDBBean
- * @Email 616862466@qq.com
- * @Author 子墨
- * @Date 2022/12/21 15:38
- */
+
 public class UnitDBBean implements Serializable {
 //    {
 //        "转换关系": "公转英",

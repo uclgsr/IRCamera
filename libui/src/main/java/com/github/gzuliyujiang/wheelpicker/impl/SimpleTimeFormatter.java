@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present 贵州纳雍穿青人李裕江<1032694760@qq.com>
+ * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
  *
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -16,12 +16,7 @@ package com.github.gzuliyujiang.wheelpicker.impl;
 import com.github.gzuliyujiang.wheelpicker.contract.TimeFormatter;
 import com.github.gzuliyujiang.wheelpicker.widget.TimeWheelLayout;
 
-/**
- * 简单的时间格式化
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/5/15 18:13
- */
+
 public class SimpleTimeFormatter implements TimeFormatter {
     private final TimeWheelLayout wheelLayout;
 

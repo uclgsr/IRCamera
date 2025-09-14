@@ -27,9 +27,13 @@ import org.greenrobot.eventbus.EventBus
 
 class WebSocketProxy {
     companion object {
-    // TLS-enabled URLs (wss://) for secure communication
-    private const val TS004_URL = "wss://192.168.40.1:888"
-    private const val TC007_URL = "wss://192.168.40.1:63206/v1/thermal/temp/template/data"
+        // TLS-enabled URLs (wss://) for secure communication
+        private const val TS004_URL = "wss://192.168.40.1:888"
+        private const val TC007_URL = "wss://192.168.40.1:63206/v1/thermal/temp/template/data"
+
+        // Fallback to plaintext for compatibility (can be disabled in production)
+        private const val TS004_URL_FALLBACK = "ws://192.168.40.1:888"
+        private const val TC007_URL_FALLBACK = "ws://192.168.40.1:63206/v1/thermal/temp/template/data"
 
     // Fallback to plaintext for compatibility (can be disabled in production)
     private const val TS004_URL_FALLBACK = "ws://192.168.40.1:888"
@@ -70,61 +74,59 @@ class WebSocketProxy {
     }
 
     private fun getOKHttpClient(): OkHttpClient {
-    val builder =
-    OkHttpClient.Builder()
-    // .pingInterval(3, TimeUnit.SECONDS)
-    .addInterceptor(
-    Interceptor { chain ->
-    val originalRequest = chain.request()
-    val requestBuilder: Request.Builder = originalRequest.newBuilder()
+        val builder =
+            OkHttpClient.Builder()
+                // .pingInterval(3, TimeUnit.SECONDS)
+                .addInterceptor(
+                    Interceptor { chain ->
+                        val originalRequest = chain.request()
+                        val requestBuilder: Request.Builder = originalRequest.newBuilder()
 
-    // Add authentication header if certificate manager is available
-    certificateManager?.let { certManager ->
-    val authToken = certManager.generateAuthToken()
-    requestBuilder.addHeader("Authorization", "Bearer $authToken")
+                        // Add authentication header if certificate manager is available
+                        certificateManager?.let { certManager ->
+                            val authToken = certManager.generateAuthToken()
+                            requestBuilder.addHeader("Authorization", "Bearer $authToken")
+                        }
+
+                        val compressedRequest: Request = requestBuilder.build()
+                        XLog.tag("WebSocket").d("request:$compressedRequest")
+                        chain.proceed(compressedRequest)
+                    },
+                )
+                .retryOnConnectionFailure(true)
+
+        // Configure TLS/SSL if certificate manager is available and secure connection is enabled
+        if (useSecureConnection && certificateManager != null) {
+            try {
+                val sslSocketFactory = certificateManager?.createSSLSocketFactory()
+                val trustManager = certificateManager?.getTrustManager()
+                val hostnameVerifier = certificateManager?.createHostnameVerifier()
+
+                if (sslSocketFactory != null && trustManager != null && hostnameVerifier != null) {
+                    builder.sslSocketFactory(sslSocketFactory, trustManager)
+                    builder.hostnameVerifier(hostnameVerifier)
+                    XLog.tag("WebSocket").d("Configured secure WebSocket connection")
+                } else {
+                    XLog.tag("WebSocket").w("SSL configuration incomplete, falling back to insecure connection")
+                    useSecureConnection = false
+                }
+            } catch (e: Exception) {
+                XLog.tag("WebSocket").e("Failed to configure SSL, falling back to insecure connection", e)
+                useSecureConnection = false
+            }
+        }
+
+        // Apply network-specific socket factory if available
+        network?.socketFactory?.let {
+            if (!useSecureConnection) { // Only apply if not using SSL
+                builder.socketFactory(it)
+            }
+        }
+
+        return builder.build()
     }
 
-    val compressedRequest: Request = requestBuilder.build()
-    XLog.tag("WebSocket").d("request:$compressedRequest")
-    chain.proceed(compressedRequest)
-    },
-    )
-    .retryOnConnectionFailure(true)
 
-    // Configure TLS/SSL if certificate manager is available and secure connection is enabled
-    if (useSecureConnection && certificateManager != null) {
-    try {
-    val sslSocketFactory = certificateManager?.createSSLSocketFactory()
-    val trustManager = certificateManager?.getTrustManager()
-    val hostnameVerifier = certificateManager?.createHostnameVerifier()
-
-    if (sslSocketFactory != null && trustManager != null && hostnameVerifier != null) {
-    builder.sslSocketFactory(sslSocketFactory, trustManager)
-    builder.hostnameVerifier(hostnameVerifier)
-    XLog.tag("WebSocket").d("Configured secure WebSocket connection")
-    } else {
-    XLog.tag("WebSocket").w("SSL configuration incomplete, falling back to insecure connection")
-    useSecureConnection = false
-    }
-    } catch (e: Exception) {
-    XLog.tag("WebSocket").e("Failed to configure SSL, falling back to insecure connection", e)
-    useSecureConnection = false
-    }
-    }
-
-    // Apply network-specific socket factory if available
-    network?.socketFactory?.let {
-    if (!useSecureConnection) { // Only apply if not using SSL
-    builder.socketFactory(it)
-    }
-    }
-
-    return builder.build()
-    }
-
-    /**
-    * TC007 Socket 一帧数据回调，由于没有同时监听多个回调的需求，这里只搞一个就行了。
-    */
     private var onFrameListener: ((frame: SocketFrameBean) -> Unit)? = null
 
     fun setOnFrameListener(
@@ -184,9 +186,7 @@ class WebSocketProxy {
     mWsManager?.startConnect()
     }
 
-    /**
-    * 断开 Socket 连接.
-    */
+
     fun stopWebSocket() {
     XLog.tag("WebSocket").d("stopWebSocket()")
     webSocketListener?.isNeedReconnect = false
@@ -210,20 +210,18 @@ class WebSocketProxy {
     mWsManager?.sendMessage(cmd)
     }
 
-    /**
-    * Determine appropriate WebSocket URL based on device type and security settings
-    */
-    private fun getWebSocketUrl(ssid: String): String {
-    val isTS004 = ssid.startsWith(DeviceConfig.TS004_NAME_START)
 
-    return if (useSecureConnection) {
-    // Use secure WebSocket (wss://)
-    if (isTS004) TS004_URL else TC007_URL
-    } else {
-    // Fall back to plaintext WebSocket (ws://)
-    XLog.tag("WebSocket").w("Using insecure WebSocket connection for $ssid")
-    if (isTS004) TS004_URL_FALLBACK else TC007_URL_FALLBACK
-    }
+    private fun getWebSocketUrl(ssid: String): String {
+        val isTS004 = ssid.startsWith(DeviceConfig.TS004_NAME_START)
+
+        return if (useSecureConnection) {
+            // Use secure WebSocket (wss://)
+            if (isTS004) TS004_URL else TC007_URL
+        } else {
+            // Fall back to plaintext WebSocket (ws://)
+            XLog.tag("WebSocket").w("Using insecure WebSocket connection for $ssid")
+            if (isTS004) TS004_URL_FALLBACK else TC007_URL_FALLBACK
+        }
     }
 
     private class MyWebSocketListener(
@@ -232,13 +230,8 @@ class WebSocketProxy {
     val onMessageListener: ((text: String) -> Unit)?,
     val onFrameListener: (frame: SocketFrameBean) -> Unit,
     ) : WsManager.IWebSocketListener() {
-    /**
-    * onFailure 时是否需要重连。
-    * 使用该变量是因为，恢复出厂、格式化存储等操作后，由于需要重启会主动断开与设备的连接。
-    * 而主动断开操作触发 onFailure 又触发重连从而导致逻辑存在问题。
-    * 使用该变量进行区分，当主动断开连接触发 onFailure 时，需不需要执行重连。
-    */
-    var isNeedReconnect = true
+
+        var isNeedReconnect = true
 
     override fun onOpen(
     webSocket: WebSocket,
@@ -262,10 +255,8 @@ class WebSocketProxy {
     onMessageListener?.invoke(text)
     }
 
-    /**
-    * TC007 温度帧一秒两帧，每帧都输出太过频繁，用该变量控制
-    */
-    private var needPrint = false
+
+        private var needPrint = false
 
     override fun onMessage(
     webSocket: WebSocket,
@@ -335,34 +326,28 @@ class WebSocketProxy {
     handler.handleFail(ssid)
     }
 
-    /**
-    * 判断当前是否需要重连
-    */
-    private fun checkNeedReconnect(): Boolean {
-    if (!isNeedReconnect) {
-    return false
-    }
-    if (!XXPermissions.isGranted(Utils.getApp(), Manifest.permission.ACCESS_FINE_LOCATION)) {
-    return true
-    }
-    val wifiName: String = WifiUtil.getCurrentWifiSSID(Utils.getApp()) ?: return true
-    XLog.tag("WebSocket").i("执行重连前，当前连接 WIFI：$wifiName")
-    return wifiName == ssid
-    }
+
+        private fun checkNeedReconnect(): Boolean {
+            if (!isNeedReconnect) {
+                return false
+            }
+            if (!XXPermissions.isGranted(Utils.getApp(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+                return true
+            }
+            val wifiName: String = WifiUtil.getCurrentWifiSSID(Utils.getApp()) ?: return true
+            XLog.tag("WebSocket").i("执行重连前，当前连接 WIFI：$wifiName")
+            return wifiName == ssid
+        }
     }
 
     private class ReconnectHandler : Handler(Looper.getMainLooper()) {
-    companion object {
-    /**
-    * 最大重连次数.
-    */
-    private const val MAX_RECONNECT_COUNT = 3
+        companion object {
 
-    /**
-    * 每次重连间隔，单位毫秒.
-    */
-    private const val RECONNECT_MILLIS = 3000L
-    }
+            private const val MAX_RECONNECT_COUNT = 3
+
+
+            private const val RECONNECT_MILLIS = 3000L
+        }
 
     var currentSSID: String = ""
     set(value) {

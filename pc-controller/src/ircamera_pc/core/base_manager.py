@@ -52,10 +52,10 @@ try:
 except ImportError:
     PYQT_AVAILABLE = False
 
-    def pyqtSignal(*args, **kwargs):
+    def pyqtSignal(*args, **kwargs) -> Any:
         """Mock pyqtSignal decorator"""
 
-        def decorator(func):
+        def decorator(func) -> Any:
             return func
 
         return decorator

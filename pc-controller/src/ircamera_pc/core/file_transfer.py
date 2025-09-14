@@ -146,7 +146,9 @@ class FileTransferManager:
             f"Chunk size: {self.chunk_size} bytes, Maxconcurrent: {self.max_concurrent}"
         )
 
-    def add_progress_callback(self, callback: Callable[[str, float, float], None]):
+    def add_progress_callback(
+        self, callback: None = Callable[[str, float, float], None]
+    ) -> None:
         """
         Add callback for transfer progress updates
 
@@ -195,7 +197,8 @@ class FileTransferManager:
                 resume_offset=0,
                 retry_count=0,
                 error_message=None,
-                device_connection=device_conn,  # Store device connection for real file transfer
+                device_connection=device_conn,
+                     # Store device connection for real file transfer
             )
 
             # Check for partial file to resume
@@ -421,28 +424,57 @@ class FileTransferManager:
             Chunk data as bytes
         """
         try:
-            # Real network communication to read file chunk from Android device
+            # Phase 3: Enhanced chunk reading with WebSocket support
             device_conn = job.device_connection
+
             if hasattr(device_conn, "read_file_chunk"):
-                # Use device connection's file reading method
+                # Direct device connection method
                 return await device_conn.read_file_chunk(
-                    job.manifest.remote_path, offset, size
+                    job.manifest.file_path, offset, size
                 )
-            else:
-                # Fallback: use TCP socket communication with Android device
+            elif hasattr(device_conn, "websocket"):
+                # WebSocket-based chunk reading (Phase 3)
                 request_data = {
-                    "type": "read_file_chunk",
-                    "file_path": job.manifest.remote_path,
+                    "type": "file_chunk_request",
+                    "job_id": job.job_id,
+                    "file_path": job.manifest.file_path,
                     "offset": offset,
                     "size": size,
                     "session_id": job.manifest.session_id,
                 }
 
-                # Send request to Android device
+                # Send WebSocket request and wait for response
+                response = await device_conn.send_and_wait(request_data, timeout=30.0)
+
+                if response and response.get("type") == "file_chunk_response":
+                    if response.get("status") == "success":
+                        # Decode base64 chunk data
+                        chunk_data = response.get("chunk_data", "")
+                        if isinstance(chunk_data, str):
+                            import base64
+
+                            return base64.b64decode(chunk_data)
+                        return chunk_data
+                    else:
+                        raise Exception(
+                            f"Chunk read failed: {response.get('error',
+                                'Unknown error')}"
+                        )
+                else:
+                    raise Exception("Invalid or timeout response from device")
+            else:
+                # Legacy TCP socket communication
+                request_data = {
+                    "type": "read_file_chunk",
+                    "file_path": job.manifest.file_path,
+                    "offset": offset,
+                    "size": size,
+                    "session_id": job.manifest.session_id,
+                }
+
                 response = await self._send_device_request(device_conn, request_data)
 
                 if response and response.get("status") == "success":
-                    # Decode base64 data or get binary data
                     chunk_data = response.get("data", b"")
                     if isinstance(chunk_data, str):
                         import base64
@@ -607,7 +639,7 @@ class FileTransferManager:
             "data_directory": str(self.data_dir),
         }
 
-    async def save_job_state(self):
+    async def save_job_state(self) -> Any:
         """Save transfer job states to disk for recovery"""
         try:
             state_file = self.data_dir / "transfer_state.json"
@@ -630,7 +662,7 @@ class FileTransferManager:
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Failed to save transfer state: {e}")
 
-    async def load_job_state(self):
+    async def load_job_state(self) -> Any:
         """Load transfer job states from disk for recovery"""
         try:
             state_file = self.data_dir / "transfer_state.json"

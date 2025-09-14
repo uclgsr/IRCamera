@@ -12,7 +12,6 @@ Tests all the enhanced networking components:
 import asyncio
 import sys
 import tempfile
-import time
 import uuid
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -165,7 +164,8 @@ class EnhancedNetworkingTests:
             logger.info(f"✓ Local IP detection: {local_ip}")
 
             # Test discovery listener management
-            test_callback = lambda event, device: None
+            def test_callback(event, device):
+                return None
             discovery_service.add_discovery_listener(test_callback)
             assert (
                 test_callback in discovery_service.discovery_listeners

@@ -5,9 +5,9 @@ import android.util.AttributeSet
 import android.widget.LinearLayout
 import com.topdon.lib.ui.R as UiR
 
-/**
-    * 自定义FooterView
-    */
+
+
+
 class LoadingView : LinearLayout {
     constructor(context: Context) : this(context, null)
 

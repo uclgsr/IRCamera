@@ -206,13 +206,7 @@ class GSRRecorder @Inject constructor(
     private val _recordingState = MutableLiveData<RecordingState>()
     val recordingState: LiveData<RecordingState> = _recordingState
 
-    /**
-     * Start GSR data recording with specified configuration.
-     *
-     * @param session Session configuration including participant info
-     * @param syncTimeOffset Time synchronization offset in nanoseconds
-     * @return Result indicating success or failure with error details
-     */
+    
     override suspend fun startRecording(
         session: Session,
         syncTimeOffset: Long
@@ -735,41 +729,8 @@ class TestSessionDataExporter:
 ### Documentation Standards
 
 #### Code Documentation
+```kotlin
 
-````kotlin
-/**
- * Manages GSR data recording from Shimmer3 devices with real-time processing.
- *
- * This class handles the complete lifecycle of GSR data collection including:
- * - Bluetooth connection management
- * - Real-time data streaming at 128Hz
- * - Signal quality assessment
- * - Local file storage with timestamps
- * - Integration with multi-modal recording sessions
- *
- * Example usage:
- * ```kotlin
- * val gsrRecorder = GSRRecorder(shimmerManager, fileManager, timeManager)
- *
- * // Initialize connection
- * val initResult = gsrRecorder.initialize()
- * if (initResult.isSuccess) {
- *     // Start recording
- *     val session = Session(id = "test_001", participantId = "P001")
- *     gsrRecorder.startRecording(session, syncOffset = 0L)
- * }
- * ```
- *
- * @property shimmerManager Manages Bluetooth connections to Shimmer3 devices
- * @property fileManager Handles local file storage operations
- * @property timeManager Provides synchronized timestamps
- *
- * @see SensorRecorder for the common sensor interface
- * @see ShimmerManager for Bluetooth device management
- *
- * @author MPDC4GSR Development Team
- * @since 1.0.0
- */
 class GSRRecorder @Inject constructor(
     private val shimmerManager: ShimmerManager,
     private val fileManager: FileManager,

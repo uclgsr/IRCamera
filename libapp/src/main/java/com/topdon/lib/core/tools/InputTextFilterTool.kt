@@ -7,11 +7,7 @@ import android.widget.EditText
 import java.util.regex.Pattern
 
 class InputTextFilterTool {
-    /**
-    * 设置editText过滤器
-    *
-    * @param editText
-    */
+
     fun setEditTextFilter(editText: EditText) {
     val oldFilters = editText.filters
     val oldFiltersLength = oldFilters.size

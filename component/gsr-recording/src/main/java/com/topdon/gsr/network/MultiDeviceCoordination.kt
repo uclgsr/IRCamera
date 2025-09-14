@@ -7,15 +7,11 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicLong
 
-/**
-    * Multi-device coordination service for synchronized recording across multiple Android nodes
-    * Implements distributed session management and cross-device synchronization protocols
-    */
+
 class MultiDeviceCoordination(
     private val context: Context,
-    private val networkClient: NetworkClient
+    private val networkClient: NetworkClient,
 ) {
     companion object {
     private const val TAG = "MultiDeviceCoordination"
@@ -32,185 +28,176 @@ class MultiDeviceCoordination(
     private val syncEvents = ConcurrentHashMap<String, SyncEvent>()
     private val isCoordinating = AtomicBoolean(false)
 
-    private var deviceId: String = android.provider.Settings.Secure.getString(
-    context.contentResolver,
-    android.provider.Settings.Secure.ANDROID_ID
-    )
+    private var deviceId: String =
+        android.provider.Settings.Secure.getString(
+            context.contentResolver,
+            android.provider.Settings.Secure.ANDROID_ID,
+        )
     private var isLeader = AtomicBoolean(false)
     private var currentSessionId: String? = null
     private var syncJob: Job? = null
 
     data class DeviceInfo(
-    val deviceId: String,
-    val deviceName: String,
-    val capabilities: List<String>,
-    val lastHeartbeat: Long,
-    val clockOffset: Long = 0L,
-    val batteryLevel: Int = 100,
-    val isRecording: Boolean = false
+        val deviceId: String,
+        val deviceName: String,
+        val capabilities: List<String>,
+        val lastHeartbeat: Long,
+        val clockOffset: Long = 0L,
+        val batteryLevel: Int = 100,
+        val isRecording: Boolean = false,
     )
 
     data class SyncEvent(
-    val eventId: String,
-    val eventType: String,
-    val scheduledTime: Long,
-    val deviceResponses: MutableMap<String, Boolean> = mutableMapOf(),
-    val isCompleted: Boolean = false
+        val eventId: String,
+        val eventType: String,
+        val scheduledTime: Long,
+        val deviceResponses: MutableMap<String, Boolean> = mutableMapOf(),
+        val isCompleted: Boolean = false,
     )
 
     enum class CoordinationEvent(val eventType: String) {
-    SESSION_START("session_start"),
-    SESSION_STOP("session_stop"),
-    RECORDING_START("recording_start"),
-    RECORDING_STOP("recording_stop"),
-    SYNC_FLASH("sync_flash"),
-    CALIBRATION("calibration"),
-    TIME_SYNC("time_sync")
+        SESSION_START("session_start"),
+        SESSION_STOP("session_stop"),
+        RECORDING_START("recording_start"),
+        RECORDING_STOP("recording_stop"),
+        SYNC_FLASH("sync_flash"),
+        CALIBRATION("calibration"),
+        TIME_SYNC("time_sync"),
     }
 
-    /**
-    * Initialize multi-device coordination
-    */
-    suspend fun initializeCoordination(sessionId: String) = withContext(Dispatchers.IO) {
-    currentSessionId = sessionId
-    isCoordinating.set(true)
 
-    // Start device discovery and registration
-    startDeviceDiscovery()
+    suspend fun initializeCoordination(sessionId: String) =
+        withContext(Dispatchers.IO) {
+            currentSessionId = sessionId
+            isCoordinating.set(true)
 
-    // Begin leader election process
-    initiateLeaderElection()
+            // Start device discovery and registration
+            startDeviceDiscovery()
 
-    // Start synchronization heartbeat
-    startSynchronizationLoop()
+            // Begin leader election process
+            initiateLeaderElection()
 
-    Log.d(TAG, "Multi-device coordination initialized for session: $sessionId")
-    }
+            // Start synchronization heartbeat
+            startSynchronizationLoop()
 
-    /**
-    * Start discovering other Android sensor nodes
-    */
+            Log.d(TAG, "Multi-device coordination initialized for session: $sessionId")
+        }
+
+
     private suspend fun startDeviceDiscovery() {
-    val discoveryMessage = JSONObject().apply {
-    put("type", "device_discovery")
-    put("device_id", deviceId)
-    put("device_name", android.os.Build.MODEL)
-    put("capabilities", JSONArray(listOf("gsr", "thermal", "rgb_camera")))
-    put("session_id", currentSessionId)
-    put("timestamp", System.currentTimeMillis())
+        val discoveryMessage =
+            JSONObject().apply {
+                put("type", "device_discovery")
+                put("device_id", deviceId)
+                put("device_name", android.os.Build.MODEL)
+                put("capabilities", JSONArray(listOf("gsr", "thermal", "rgb_camera")))
+                put("session_id", currentSessionId)
+                put("timestamp", System.currentTimeMillis())
+            }
+
+        // Broadcast discovery message
+        networkClient.broadcastMessage(discoveryMessage)
+
+        // Set up discovery response handler
+        networkClient.setMessageHandler("device_discovery_response") { message ->
+            handleDeviceDiscoveryResponse(message)
+        }
+
+        networkClient.setMessageHandler("device_discovery") { message ->
+            handleDeviceDiscoveryRequest(message)
+        }
     }
 
-    // Broadcast discovery message
-    networkClient.broadcastMessage(discoveryMessage)
 
-    // Set up discovery response handler
-    networkClient.setMessageHandler("device_discovery_response") { message ->
-    handleDeviceDiscoveryResponse(message)
-    }
-
-    networkClient.setMessageHandler("device_discovery") { message ->
-    handleDeviceDiscoveryRequest(message)
-    }
-    }
-
-    /**
-    * Handle device discovery response from other nodes
-    */
     private fun handleDeviceDiscoveryResponse(message: JSONObject) {
-    val remoteDeviceId = message.optString("device_id")
-    if (remoteDeviceId.isEmpty() || remoteDeviceId == deviceId) return
+        val remoteDeviceId = message.optString("device_id")
+        if (remoteDeviceId.isEmpty() || remoteDeviceId == deviceId) return
 
-    val deviceInfo = DeviceInfo(
-    deviceId = remoteDeviceId,
-    deviceName = message.optString("device_name", "Unknown"),
-    capabilities = jsonArrayToList(message.optJSONArray("capabilities")),
-    lastHeartbeat = System.currentTimeMillis(),
-    clockOffset = message.optLong("clock_offset", 0L),
-    batteryLevel = message.optInt("battery_level", 100)
-    )
+        val deviceInfo =
+            DeviceInfo(
+                deviceId = remoteDeviceId,
+                deviceName = message.optString("device_name", "Unknown"),
+                capabilities = jsonArrayToList(message.optJSONArray("capabilities")),
+                lastHeartbeat = System.currentTimeMillis(),
+                clockOffset = message.optLong("clock_offset", 0L),
+                batteryLevel = message.optInt("battery_level", 100),
+            )
 
-    connectedDevices[remoteDeviceId] = deviceInfo
-    Log.d(TAG, "Discovered device: $remoteDeviceId (${deviceInfo.deviceName})")
+        connectedDevices[remoteDeviceId] = deviceInfo
+        Log.d(TAG, "Discovered device: $remoteDeviceId (${deviceInfo.deviceName})")
     }
 
-    /**
-    * Handle device discovery request from other nodes
-    */
+
     private fun handleDeviceDiscoveryRequest(message: JSONObject) {
-    val response = JSONObject().apply {
-    put("type", "device_discovery_response")
-    put("device_id", deviceId)
-    put("device_name", android.os.Build.MODEL)
-    put("capabilities", JSONArray(listOf("gsr", "thermal", "rgb_camera")))
-    put("session_id", currentSessionId)
-    put("clock_offset", networkClient.getClockOffset())
-    put("battery_level", getBatteryLevel())
-    put("timestamp", System.currentTimeMillis())
+        val response =
+            JSONObject().apply {
+                put("type", "device_discovery_response")
+                put("device_id", deviceId)
+                put("device_name", android.os.Build.MODEL)
+                put("capabilities", JSONArray(listOf("gsr", "thermal", "rgb_camera")))
+                put("session_id", currentSessionId)
+                put("clock_offset", networkClient.getClockOffset())
+                put("battery_level", getBatteryLevel())
+                put("timestamp", System.currentTimeMillis())
+            }
+
+        coordinationScope.launch {
+            networkClient.sendMessage(response)
+        }
     }
 
-    coordinationScope.launch {
-    networkClient.sendMessage(response)
-    }
-    }
 
-    /**
-    * Initiate leader election process for coordination
-    */
     private suspend fun initiateLeaderElection() {
-    val electionMessage = JSONObject().apply {
-    put("type", "leader_election")
-    put("device_id", deviceId)
-    put("priority", calculateLeadershipPriority())
-    put("timestamp", System.currentTimeMillis())
+        val electionMessage =
+            JSONObject().apply {
+                put("type", "leader_election")
+                put("device_id", deviceId)
+                put("priority", calculateLeadershipPriority())
+                put("timestamp", System.currentTimeMillis())
+            }
+
+        networkClient.broadcastMessage(electionMessage)
+
+        // Wait for responses and determine leader
+        delay(LEADER_ELECTION_TIMEOUT)
+        determineLeader()
+
+        networkClient.setMessageHandler("leader_election") { message ->
+            handleLeaderElection(message)
+        }
     }
 
-    networkClient.broadcastMessage(electionMessage)
 
-    // Wait for responses and determine leader
-    delay(LEADER_ELECTION_TIMEOUT)
-    determineLeader()
-
-    networkClient.setMessageHandler("leader_election") { message ->
-    handleLeaderElection(message)
-    }
-    }
-
-    /**
-    * Calculate leadership priority based on device capabilities and status
-    */
     private fun calculateLeadershipPriority(): Int {
-    var priority = 100
+        var priority = 100
 
-    // Higher priority for devices with better battery
-    priority += getBatteryLevel()
+        // Higher priority for devices with better battery
+        priority += getBatteryLevel()
 
-    // Higher priority for devices with more capabilities
-    priority += 50 // Base for having all sensor capabilities
+        // Higher priority for devices with more capabilities
+        priority += 50 // Base for having all sensor capabilities
 
-    // Higher priority for devices with stable network connection
-    if (networkClient.isConnected()) priority += 25
+        // Higher priority for devices with stable network connection
+        if (networkClient.isConnected()) priority += 25
 
-    return priority
+        return priority
     }
 
-    /**
-    * Handle leader election messages from other devices
-    */
+
     private fun handleLeaderElection(message: JSONObject) {
-    val remoteDeviceId = message.optString("device_id")
-    val remotePriority = message.optInt("priority", 0)
-    val myPriority = calculateLeadershipPriority()
+        val remoteDeviceId = message.optString("device_id")
+        val remotePriority = message.optInt("priority", 0)
+        val myPriority = calculateLeadershipPriority()
 
-    if (remotePriority > myPriority ||
-    (remotePriority == myPriority && remoteDeviceId < deviceId)) {
-    // Remote device has higher priority or tiebreaker
-    isLeader.set(false)
-    }
+        if (remotePriority > myPriority ||
+            (remotePriority == myPriority && remoteDeviceId < deviceId)
+        ) {
+            // Remote device has higher priority or tiebreaker
+            isLeader.set(false)
+        }
     }
 
-    /**
-    * Determine the final leader after election timeout
-    */
+
     private fun determineLeader() {
     if (isLeader.get()) {
     Log.d(TAG, "This device is the coordination leader")
@@ -221,219 +208,204 @@ class MultiDeviceCoordination(
     }
     }
 
-    /**
-    * Start leadership responsibilities for coordination
-    */
+
     private fun startLeadershipDuties() {
-    coordinationScope.launch {
-    while (isCoordinating.get() && isLeader.get()) {
-    // Send periodic synchronization signals
-    broadcastSyncSignal()
+        coordinationScope.launch {
+            while (isCoordinating.get() && isLeader.get()) {
+                // Send periodic synchronization signals
+                broadcastSyncSignal()
 
-    // Monitor device health
-    checkDeviceHealth()
+                // Monitor device health
+                checkDeviceHealth()
 
-    // Coordinate session events
-    processScheduledEvents()
+                // Coordinate session events
+                processScheduledEvents()
 
-    delay(SYNC_INTERVAL_MS)
+                delay(SYNC_INTERVAL_MS)
+            }
+        }
     }
-    }
-    }
 
-    /**
-    * Start follower mode for coordination
-    */
+
     private fun startFollowerMode() {
-    networkClient.setMessageHandler("sync_signal") { message ->
-    handleSyncSignal(message)
+        networkClient.setMessageHandler("sync_signal") { message ->
+            handleSyncSignal(message)
+        }
+
+        networkClient.setMessageHandler("coordination_event") { message ->
+            handleCoordinationEvent(message)
+        }
     }
 
-    networkClient.setMessageHandler("coordination_event") { message ->
-    handleCoordinationEvent(message)
-    }
-    }
 
-    /**
-    * Broadcast synchronization signal to all devices
-    */
     private suspend fun broadcastSyncSignal() {
-    val syncMessage = JSONObject().apply {
-    put("type", "sync_signal")
-    put("leader_id", deviceId)
-    put("session_id", currentSessionId)
-    put("sync_timestamp", System.currentTimeMillis())
-    put("device_count", connectedDevices.size + 1)
+        val syncMessage =
+            JSONObject().apply {
+                put("type", "sync_signal")
+                put("leader_id", deviceId)
+                put("session_id", currentSessionId)
+                put("sync_timestamp", System.currentTimeMillis())
+                put("device_count", connectedDevices.size + 1)
+            }
+
+        networkClient.broadcastMessage(syncMessage)
     }
 
-    networkClient.broadcastMessage(syncMessage)
-    }
 
-    /**
-    * Handle synchronization signal from leader
-    */
     private fun handleSyncSignal(message: JSONObject) {
-    val leaderTimestamp = message.optLong("sync_timestamp")
-    val currentTime = System.currentTimeMillis()
-    val drift = Math.abs(currentTime - leaderTimestamp)
+        val leaderTimestamp = message.optLong("sync_timestamp")
+        val currentTime = System.currentTimeMillis()
+        val drift = Math.abs(currentTime - leaderTimestamp)
 
-    if (drift > MAX_SYNC_DRIFT_MS) {
-    Log.w(TAG, "Time drift detected: ${drift}ms")
-    // Trigger time resynchronization
-    coordinationScope.launch {
-    requestTimeResync()
-    }
+        if (drift > MAX_SYNC_DRIFT_MS) {
+            Log.w(TAG, "Time drift detected: ${drift}ms")
+            // Trigger time resynchronization
+            coordinationScope.launch {
+                requestTimeResync()
+            }
+        }
+
+        // Send heartbeat response
+        sendHeartbeat()
     }
 
-    // Send heartbeat response
-    sendHeartbeat()
-    }
 
-    /**
-    * Send heartbeat to confirm device is alive
-    */
     private fun sendHeartbeat() {
-    val heartbeatMessage = JSONObject().apply {
-    put("type", "device_heartbeat")
-    put("device_id", deviceId)
-    put("timestamp", System.currentTimeMillis())
-    put("battery_level", getBatteryLevel())
-    put("is_recording", isDeviceRecording())
+        val heartbeatMessage =
+            JSONObject().apply {
+                put("type", "device_heartbeat")
+                put("device_id", deviceId)
+                put("timestamp", System.currentTimeMillis())
+                put("battery_level", getBatteryLevel())
+                put("is_recording", isDeviceRecording())
+            }
+
+        coordinationScope.launch {
+            networkClient.sendMessage(heartbeatMessage)
+        }
     }
 
-    coordinationScope.launch {
-    networkClient.sendMessage(heartbeatMessage)
-    }
-    }
 
-    /**
-    * Schedule coordinated event across all devices
-    */
     suspend fun scheduleCoordinatedEvent(
-    eventType: CoordinationEvent,
-    delayMs: Long = 1000L
-    ): String = withContext(Dispatchers.IO) {
-    val eventId = generateEventId(eventType.eventType)
-    val scheduledTime = System.currentTimeMillis() + delayMs
+        eventType: CoordinationEvent,
+        delayMs: Long = 1000L,
+    ): String =
+        withContext(Dispatchers.IO) {
+            val eventId = generateEventId(eventType.eventType)
+            val scheduledTime = System.currentTimeMillis() + delayMs
 
-    val syncEvent = SyncEvent(
-    eventId = eventId,
-    eventType = eventType.eventType,
-    scheduledTime = scheduledTime
-    )
+            val syncEvent =
+                SyncEvent(
+                    eventId = eventId,
+                    eventType = eventType.eventType,
+                    scheduledTime = scheduledTime,
+                )
 
-    syncEvents[eventId] = syncEvent
+            syncEvents[eventId] = syncEvent
 
-    // Broadcast event to all devices
-    val eventMessage = JSONObject().apply {
-    put("type", "coordination_event")
-    put("event_id", eventId)
-    put("event_type", eventType.eventType)
-    put("scheduled_time", scheduledTime)
-    put("session_id", currentSessionId)
-    }
+            // Broadcast event to all devices
+            val eventMessage =
+                JSONObject().apply {
+                    put("type", "coordination_event")
+                    put("event_id", eventId)
+                    put("event_type", eventType.eventType)
+                    put("scheduled_time", scheduledTime)
+                    put("session_id", currentSessionId)
+                }
 
-    networkClient.broadcastMessage(eventMessage)
+            networkClient.broadcastMessage(eventMessage)
 
-    Log.d(TAG, "Scheduled coordinated event: ${eventType.eventType} at $scheduledTime")
-    eventId
-    }
+            Log.d(TAG, "Scheduled coordinated event: ${eventType.eventType} at $scheduledTime")
+            eventId
+        }
 
-    /**
-    * Handle coordinated event from leader
-    */
+
     private fun handleCoordinationEvent(message: JSONObject) {
-    val eventId = message.optString("event_id")
-    val eventType = message.optString("event_type")
-    val scheduledTime = message.optLong("scheduled_time")
+        val eventId = message.optString("event_id")
+        val eventType = message.optString("event_type")
+        val scheduledTime = message.optLong("scheduled_time")
 
-    // Schedule local execution of the event
-    coordinationScope.launch {
-    val delay = scheduledTime - System.currentTimeMillis()
-    if (delay > 0) {
-    delay(delay)
+        // Schedule local execution of the event
+        coordinationScope.launch {
+            val delay = scheduledTime - System.currentTimeMillis()
+            if (delay > 0) {
+                delay(delay)
+            }
+
+            executeCoordinatedEvent(eventType, eventId)
+            sendEventConfirmation(eventId)
+        }
     }
 
-    executeCoordinatedEvent(eventType, eventId)
-    sendEventConfirmation(eventId)
-    }
+
+    private suspend fun executeCoordinatedEvent(
+        eventType: String,
+        eventId: String,
+    ) {
+        Log.d(TAG, "Executing coordinated event: $eventType")
+
+        when (eventType) {
+            "session_start" -> handleSessionStart()
+            "session_stop" -> handleSessionStop()
+            "recording_start" -> handleRecordingStart()
+            "recording_stop" -> handleRecordingStop()
+            "sync_flash" -> handleSyncFlash()
+            "calibration" -> handleCalibration()
+            "time_sync" -> handleTimeSync()
+        }
     }
 
-    /**
-    * Execute a coordinated event locally
-    */
-    private suspend fun executeCoordinatedEvent(eventType: String, eventId: String) {
-    Log.d(TAG, "Executing coordinated event: $eventType")
 
-    when (eventType) {
-    "session_start" -> handleSessionStart()
-    "session_stop" -> handleSessionStop()
-    "recording_start" -> handleRecordingStart()
-    "recording_stop" -> handleRecordingStop()
-    "sync_flash" -> handleSyncFlash()
-    "calibration" -> handleCalibration()
-    "time_sync" -> handleTimeSync()
-    }
-    }
-
-    /**
-    * Send confirmation that event was executed
-    */
     private suspend fun sendEventConfirmation(eventId: String) {
-    val confirmationMessage = JSONObject().apply {
-    put("type", "event_confirmation")
-    put("event_id", eventId)
-    put("device_id", deviceId)
-    put("execution_timestamp", System.currentTimeMillis())
+        val confirmationMessage =
+            JSONObject().apply {
+                put("type", "event_confirmation")
+                put("event_id", eventId)
+                put("device_id", deviceId)
+                put("execution_timestamp", System.currentTimeMillis())
+            }
+
+        networkClient.sendMessage(confirmationMessage)
     }
 
-    networkClient.sendMessage(confirmationMessage)
-    }
 
-    /**
-    * Trigger synchronized flash across all devices for timestamp verification
-    */
     suspend fun triggerSyncFlash() {
     if (isLeader.get()) {
     scheduleCoordinatedEvent(CoordinationEvent.SYNC_FLASH, 500L)
     }
     }
 
-    /**
-    * Handle synchronized flash event
-    */
-    private suspend fun handleSyncFlash() {
-    // Trigger screen flash for video synchronization verification
-    // This would be implemented by the UI layer
-    Log.d(TAG, "Executing sync flash at ${System.currentTimeMillis()}")
 
-    // Send notification to UI
-    val flashIntent = android.content.Intent("com.topdon.gsr.SYNC_FLASH")
-    flashIntent.putExtra("timestamp", System.currentTimeMillis())
-    context.sendBroadcast(flashIntent)
+    private suspend fun handleSyncFlash() {
+        // Trigger screen flash for video synchronization verification
+        // This would be implemented by the UI layer
+        Log.d(TAG, "Executing sync flash at ${System.currentTimeMillis()}")
+
+        // Send notification to UI
+        val flashIntent = android.content.Intent("com.topdon.gsr.SYNC_FLASH")
+        flashIntent.putExtra("timestamp", System.currentTimeMillis())
+        context.sendBroadcast(flashIntent)
     }
 
-    /**
-    * Get current device coordination status
-    */
+
     fun getCoordinationStatus(): CoordinationStatus {
-    return CoordinationStatus(
-    isCoordinating = isCoordinating.get(),
-    isLeader = isLeader.get(),
-    connectedDevicesCount = connectedDevices.size,
-    connectedDevices = connectedDevices.values.toList(),
-    activeEvents = syncEvents.size,
-    currentSessionId = currentSessionId
-    )
+        return CoordinationStatus(
+            isCoordinating = isCoordinating.get(),
+            isLeader = isLeader.get(),
+            connectedDevicesCount = connectedDevices.size,
+            connectedDevices = connectedDevices.values.toList(),
+            activeEvents = syncEvents.size,
+            currentSessionId = currentSessionId,
+        )
     }
 
     data class CoordinationStatus(
-    val isCoordinating: Boolean,
-    val isLeader: Boolean,
-    val connectedDevicesCount: Int,
-    val connectedDevices: List<DeviceInfo>,
-    val activeEvents: Int,
-    val currentSessionId: String?
+        val isCoordinating: Boolean,
+        val isLeader: Boolean,
+        val connectedDevicesCount: Int,
+        val connectedDevices: List<DeviceInfo>,
+        val activeEvents: Int,
+        val currentSessionId: String?,
     )
 
     // Helper methods
@@ -509,27 +481,26 @@ class MultiDeviceCoordination(
     }
 
     private fun startSynchronizationLoop() {
-    syncJob = coordinationScope.launch {
-    while (isCoordinating.get()) {
-    if (isLeader.get()) {
-    broadcastSyncSignal()
-    }
-    delay(SYNC_INTERVAL_MS)
-    }
-    }
+        syncJob =
+            coordinationScope.launch {
+                while (isCoordinating.get()) {
+                    if (isLeader.get()) {
+                        broadcastSyncSignal()
+                    }
+                    delay(SYNC_INTERVAL_MS)
+                }
+            }
     }
 
-    /**
-    * Stop coordination and cleanup resources
-    */
+
     fun stopCoordination() {
-    isCoordinating.set(false)
-    isLeader.set(false)
-    syncJob?.cancel()
-    connectedDevices.clear()
-    syncEvents.clear()
-    coordinationJob.cancel()
+        isCoordinating.set(false)
+        isLeader.set(false)
+        syncJob?.cancel()
+        connectedDevices.clear()
+        syncEvents.clear()
+        coordinationJob.cancel()
 
-    Log.d(TAG, "Multi-device coordination stopped")
+        Log.d(TAG, "Multi-device coordination stopped")
     }
 }

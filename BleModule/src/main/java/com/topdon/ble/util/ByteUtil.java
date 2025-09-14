@@ -2,13 +2,7 @@ package com.topdon.ble.util;
 
 import android.util.Log;
 
-/**
- * ByteUtil
- * 数组操作工具
- *
- * @author chuanfeng.bi
- * @date 2021/12/8 10:49
- */
+
 public class ByteUtil {
     public static byte[] byteMerger(byte[] byte1, int byte2, int byte3, int byte4) {
         return byteMerger(byte1, intToByteArray(byte2), intToByteArray(byte3), intToByteArray2(byte4));
@@ -61,12 +55,7 @@ public class ByteUtil {
         return result;
     }
 
-    /**
-     * int到byte[] 由高位到低位
-     *
-     * @param i 需要转换为byte数组的整行值。
-     * @return byte数组
-     */
+
     public static byte[] intToByteArray(int i) {
         byte[] result = new byte[1];
         result[0] = (byte) (i & 0xFF);
@@ -82,7 +71,6 @@ public class ByteUtil {
         return result;
     }
 
-
     public static byte[] LongToBytes(long values) {
         byte[] buffer = new byte[4];
         for (int i = 0; i < 4; i++) {
@@ -92,8 +80,6 @@ public class ByteUtil {
         }
         return buffer;
     }
-
-
 
     public static float bytesToFloat(byte[] bytes) {
         float value = Integer.valueOf(HexUtil.bytesToHexString(bytes), 16);
@@ -124,11 +110,7 @@ public class ByteUtil {
         return b;
     }
 
-    /**
-     * byte[]转int
-     * @param bytes 需要转换成int的数组
-     * @return int值
-     */
+
     public static int byteArrayToInt(byte[] bytes) {
         int value=0;
         for(int i = 0; i < 4; i++) {

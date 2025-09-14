@@ -5,9 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.databinding.ItemGsrDataRowBinding
 
-/**
-    * Adapter for displaying GSR data rows in detailed view
-    */
+
 class GSRDataRowAdapter(
     private val dataRows: List<GSRDataViewActivity.GSRDataRow>,
 ) : RecyclerView.Adapter<GSRDataRowAdapter.ViewHolder>() {
@@ -23,12 +21,13 @@ class GSRDataRowAdapter(
     parent: ViewGroup,
     viewType: Int,
     ): ViewHolder {
-    val binding = ItemGsrDataRowBinding.inflate(
-    LayoutInflater.from(parent.context),
-    parent,
-    false
-    )
-    return ViewHolder(binding)
+        val binding =
+            ItemGsrDataRowBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(

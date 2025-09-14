@@ -1,9 +1,4 @@
-/**
- * PyBind11 module definition for IRCamera native backend
- * 
- * Exposes C++ sensor interfaces to Python for high-performance
- * data acquisition and processing.
- */
+
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>

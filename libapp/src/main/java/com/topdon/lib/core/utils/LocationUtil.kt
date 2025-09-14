@@ -17,15 +17,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
-/**
-    *
-    * Created by LCG on 2024/6/27.
-    */
+
 object LocationUtil {
-    /**
-    * 获取最后一个位置信息，并反向地理信息编码为 省市区.
-    * @return 省-市-区，若获取失败或无可知位置信息则为 null
-    */
+
     @RequiresPermission(Permission.ACCESS_FINE_LOCATION)
     suspend fun getLastLocationStr(context: Context): String? =
     withContext(Dispatchers.IO) {
@@ -51,9 +45,7 @@ object LocationUtil {
     }
     }
 
-    /**
-    * 在给定 activity 生命周期内添加 位置信息 开关状态监听.
-    */
+
     fun addBtStateListener(
     activity: ComponentActivity,
     listener: ((isEnable: Boolean) -> Unit),

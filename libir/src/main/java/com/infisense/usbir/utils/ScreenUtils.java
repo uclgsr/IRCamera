@@ -25,12 +25,7 @@ public class ScreenUtils {
         throw new UnsupportedOperationException("cannot be instantiated");
     }
 
-    /**
-     * 获得屏幕高度
-     *
-     * @param context
-     * @return
-     */
+
     public static int getScreenWidth(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
@@ -39,12 +34,7 @@ public class ScreenUtils {
         return outMetrics.widthPixels;
     }
 
-    /**
-     * 获得屏幕宽度
-     *
-     * @param context
-     * @return
-     */
+
     public static int getScreenHeight(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
@@ -53,12 +43,7 @@ public class ScreenUtils {
         return outMetrics.heightPixels;
     }
 
-    /**
-     * 获得状态栏的高度
-     *
-     * @param context
-     * @return
-     */
+
     public static int getStatusHeight(Context context) {
 
         int statusHeight = -1;
@@ -74,12 +59,7 @@ public class ScreenUtils {
         return statusHeight;
     }
 
-    /**
-     * 获取当前屏幕截图，包含状态栏
-     *
-     * @param activity
-     * @return
-     */
+
     public static Bitmap snapShotWithStatusBar(Activity activity) {
         View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
@@ -94,19 +74,12 @@ public class ScreenUtils {
 
     }
 
-    /**
-     * 得到设备的dpi
-     */
+
     public static int getScreenDensityDpi(Context context) {
         return context.getResources().getDisplayMetrics().densityDpi;
     }
 
-    /**
-     * 获取当前屏幕截图，不包含状态栏
-     *
-     * @param activity
-     * @return
-     */
+
     public static Bitmap snapShotWithoutStatusBar(Activity activity) {
         View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
@@ -126,12 +99,7 @@ public class ScreenUtils {
 
     }
 
-    /**
-     * 获取 虚拟按键的高度
-     *
-     * @param context
-     * @return
-     */
+
     public static int getBottomStatusHeight(Context context) {
         int totalHeight = getDpi(context);
 
@@ -160,30 +128,18 @@ public class ScreenUtils {
         return dpi;
     }
 
-    /**
-     * dp转px
-     * 16dp - 48px
-     * 17dp - 51px
-     */
+
     public static int dip2px(Context context, float dpValue) {
         float scale = getScreenDendity(context);
         return (int) ((dpValue * scale) + 0.5f);
     }
 
-    /**
-     * 屏幕密度比例
-     */
+
     public static float getScreenDendity(Context context) {
         return context.getResources().getDisplayMetrics().density;//3
     }
 
-    /**
-     * @param info
-     * @setIcon 设置对话框图标
-     * @setTitle 设置对话框标题
-     * @setMessage 设置对话框消息提示
-     * setXXX方法返回Dialog对象，因此可以链式设置属性
-     */
+
     public static Dialog showNormalDialog(Context context, String info, PopupWindow.OnDismissListener dismissListener) {
         final AlertDialog.Builder normalDialog =
                 new AlertDialog.Builder(context);
@@ -202,11 +158,7 @@ public class ScreenUtils {
         return normalDialog.show();
     }
 
-    /**
-     * 获取出图的帧率
-     *
-     * @return
-     */
+
     public static int getPreviewFPSByDataFlowMode(CommonParams.DataFlowMode defaultDataFlowMode) {
         if (defaultDataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
             return 25;

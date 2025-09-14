@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present 贵州纳雍穿青人李裕江<1032694760@qq.com>
+ * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
  *
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -38,12 +38,7 @@ import com.topdon.lib.ui.R;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * 时间滚轮控件
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/5 16:20
- */
+
 @SuppressWarnings("unused")
 public class TimeWheelLayout extends BaseWheelLayout {
     private NumberWheelView hourWheelView;
@@ -110,7 +105,7 @@ public class TimeWheelLayout extends BaseWheelLayout {
         meridiemWheelView = findViewById(R.id.wheel_picker_time_meridiem_wheel);
         spaceEndView = findViewById(R.id.wheel_picker_time_end_view);
 
-        //设置高度
+        //settings高度
         post(new Runnable() {
             @Override
             public void run() {
@@ -267,16 +262,12 @@ public class TimeWheelLayout extends BaseWheelLayout {
                 || timeMode == TimeMode.HOUR_12_HAS_SECOND;
     }
 
-    /**
-     * 设置日期时间范围
-     */
+
     public void setRange(TimeEntity startValue, TimeEntity endValue) {
         setRange(startValue, endValue, null);
     }
 
-    /**
-     * 设置日期时间范围
-     */
+
     public void setRange(TimeEntity startValue, TimeEntity endValue, TimeEntity defaultValue) {
         if (startValue == null) {
             startValue = TimeEntity.target(isHour12Mode() ? 1 : 0, 0, 0);

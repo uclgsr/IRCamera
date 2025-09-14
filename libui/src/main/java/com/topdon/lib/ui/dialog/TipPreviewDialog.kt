@@ -19,12 +19,14 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.topdon.lib.core.R
+import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.ui.databinding.DialogTipPreviewBinding
 import com.topdon.lib.ui.widget.IndicateView
 import io.reactivex.disposables.Disposable
 import java.util.Timer
 import kotlin.collections.ArrayList
-import com.topdon.lib.ui.R as UiR
+
+
 
 class TipPreviewDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
@@ -65,12 +67,43 @@ class TipPreviewDialog : DialogFragment() {
     view: View,
     savedInstanceState: Bundle?,
     ) {
-    super.onViewCreated(view, savedInstanceState)
-    titleList =
-    arrayListOf(
-    getString(R.string.preview_step_1),
-    getString(R.string.preview_step_2),
-    )
+        super.onViewCreated(view, savedInstanceState)
+        titleList =
+            arrayListOf(
+                getString(R.string.preview_step_1),
+                getString(R.string.preview_step_2),
+            )
+
+        // Initialize views using binding
+        checkBox = binding.dialogTipCheck
+        imgClose = binding.imgClose
+        viewPager = binding.viewPager
+        tvContent = binding.tvContent
+        indicateView = binding.indicateView
+
+        val adapter = PageAdapter(childFragmentManager)
+        indicateView.itemCount = adapter.count
+        viewPager.adapter = adapter
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            hasCheck = isChecked
+        }
+        imgClose.setOnClickListener {
+            closeEvent?.invoke(hasCheck)
+            dismiss()
+        }
+        binding.tvIKnow.setOnClickListener {
+            closeEvent?.invoke(hasCheck)
+            dismiss()
+        }
+        updateIndex(0)
+        viewPager.addOnPageChangeListener(
+            object : ViewPager.OnPageChangeListener {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int,
+                ) {
+                }
 
     // Initialize views using binding
     checkBox = binding.dialogTipCheck
@@ -113,15 +146,15 @@ class TipPreviewDialog : DialogFragment() {
     )
     }
 
-    fun updateIndex(position: Int)  {
-    if (index == position)
-    {
-    return
-    }
-    indicateView.currentIndex = position
-    viewPager.setCurrentItem(position, true)
-    tvContent.text = titleList[position]
-    index = position
+
+    fun updateIndex(position: Int) {
+        if (index == position) {
+            return
+        }
+        indicateView.currentIndex = position
+        viewPager.setCurrentItem(position, true)
+        tvContent.text = titleList[position]
+        index = position
     }
 
     override fun onDestroy() {
@@ -159,9 +192,10 @@ class TipPreviewDialog : DialogFragment() {
     }
 
     companion object {
-    fun newInstance(): TipPreviewDialog {
-    return TipPreviewDialog()
-    }
+
+        fun newInstance(): TipPreviewDialog {
+            return TipPreviewDialog()
+        }
     }
 
     @Suppress("DEPRECATION")

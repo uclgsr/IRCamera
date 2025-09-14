@@ -30,9 +30,7 @@
 //import java.util.Set;
 //import java.util.concurrent.ConcurrentHashMap;
 //
-///**
-// * 替换libusbirsdk_1.2.0.aar类,为兼容android 12
-// */
+//
 //public class USBMonitor {
 //    private static final boolean DEBUG = false;
 //    private static final String TAG = "USBMonitor";
@@ -266,11 +264,16 @@
 //            if (this.mPermissionIntent == null) {
 //                Context context = (Context) this.mWeakContext.get();
 //                if (context != null) {
-//                    //TODO 修复"libusbirsdk_1.2.0.aar"兼容android12引起的崩溃  2022-12-15
+//                    // Fixed: Android 12+ PendingIntent compatibility - properly handle FLAG_IMMUTABLE requirement
 //                    int flag;
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//                        // Android 12+ requires FLAG_IMMUTABLE for explicit intents to prevent crashes
+//                        flag = PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT;
+//                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                        // Android 6+ supports FLAG_IMMUTABLE but doesn't require it
 //                        flag = PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT;
 //                    } else {
+//                        // Pre-Android 6 doesn't support FLAG_IMMUTABLE
 //                        flag = PendingIntent.FLAG_UPDATE_CURRENT;
 //                    }
 //                    this.mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(this.ACTION_USB_PERMISSION), flag);

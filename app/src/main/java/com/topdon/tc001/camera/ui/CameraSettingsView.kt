@@ -8,10 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.csl.irCamera.R
 import com.topdon.tc001.camera.RGBCameraRecorder
 
-/**
-    * Samsung-style camera settings UI component
-    * Provides resolution selection, camera switching, and recording options
-    */
+
 class CameraSettingsView
     @JvmOverloads
     constructor(

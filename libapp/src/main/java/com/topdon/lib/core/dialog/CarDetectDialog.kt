@@ -21,9 +21,8 @@ import com.topdon.lib.core.databinding.DialogCarDetectBinding
 import com.topdon.lib.core.databinding.ItemCarDetectChildLayoutBinding
 import com.topdon.lib.core.databinding.ItemCarDetectLayoutBinding
 
-/**
-    * 汽车检测类型拾取弹框.
-    */
+
+
 class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean) -> Unit)) :
     Dialog(context, R.style.DefaultDialog) {
     private lateinit var binding: DialogCarDetectBinding
@@ -293,6 +292,7 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
     val rcyDetectChild: RecyclerView = binding.rcyDetectChild
     }
     }
+
 
     class CarDetectChildAdapter(
     val context: Context,

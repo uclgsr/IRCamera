@@ -1,9 +1,7 @@
 
 package com.github.mikephil.charting.matrix;
 
-/**
- * Simple 3D vector class. Handles basic vector math for 3D vectors.
- */
+
 public final class Vector3 {
     public float x;
     public float y;

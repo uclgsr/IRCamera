@@ -8,9 +8,9 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.topdon.lib.ui.databinding.UiFooterViewBinding
 
-/**
-    * 自定义FooterView - Modernized with view binding
-    */
+
+
+
 class LoadingFooter : LinearLayout {
     private val binding: UiFooterViewBinding
 

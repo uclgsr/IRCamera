@@ -1,5 +1,7 @@
 # AI Agent Guidelines for the Multi-Modal Physiological Sensing Platform
 
+Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch these issues early
+
 ## 1. Project Context and Documentation
 
 This document contains the primary set of instructions for you, the AI coding agent. All guidelines

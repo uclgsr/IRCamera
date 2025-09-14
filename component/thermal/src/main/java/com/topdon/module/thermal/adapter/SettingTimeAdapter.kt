@@ -9,9 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.module.thermal.R
 
-/**
-    * 设置时间
-    */
+
+
 class SettingTimeAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var datas = arrayOf("秒", "分", "时", "天")
@@ -61,6 +60,7 @@ class SettingTimeAdapter(val context: Context) :
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val btn: Button = itemView.findViewById(R.id.item_setting_time_btn)
     }
+
 
     interface OnItemClickListener {
     fun onClick(

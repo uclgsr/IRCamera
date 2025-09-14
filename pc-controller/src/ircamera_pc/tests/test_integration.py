@@ -27,7 +27,7 @@ from ircamera_pc.network.server import NetworkServer
 class TestEndToEndIntegration(unittest.TestCase):
     """End-to-end integration tests for complete Hub-and-Spoke system"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up integration test environment"""
         self.temp_dir = tempfile.mkdtemp()
 
@@ -58,13 +58,13 @@ class TestEndToEndIntegration(unittest.TestCase):
             },
         ]
 
-    def tearDown(self):
+    def tearDown(self) -> Any:
         """Clean up integration test environment"""
         if self.network_server.is_running():
             self.network_server.stop()
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
-    def test_complete_system_startup_shutdown(self):
+    def test_complete_system_startup_shutdown(self) -> Any:
         """Test complete system startup and shutdown sequence"""
         # Step 1: Start network server
         server_started = self.network_server.start()
@@ -91,7 +91,7 @@ class TestEndToEndIntegration(unittest.TestCase):
         self.assertFalse(self.network_server.is_running())
         self.assertFalse(self.session_manager.is_active())
 
-    def test_multi_device_discovery_and_registration(self):
+    def test_multi_device_discovery_and_registration(self) -> Any:
         """Test discovery and registration of multiple Android devices"""
         self.network_server.start()
 
@@ -121,7 +121,7 @@ class TestEndToEndIntegration(unittest.TestCase):
             device_info = self.network_server.get_device_info(device_id)
             self.assertIsNotNone(device_info)
 
-    def test_coordinated_multi_modal_session(self):
+    def test_coordinated_multi_modal_session(self) -> Any:
         """Test coordinated multi-modal recording session across devices"""
         self.network_server.start()
         self.data_aggregator.initialize()
@@ -257,7 +257,7 @@ class TestEndToEndIntegration(unittest.TestCase):
                 time_diff, 0, "Sync markers should be temporally ordered"
             )
 
-    def test_file_transfer_coordination(self):
+    def test_file_transfer_coordination(self) -> Any:
         """Test coordinated file transfer from multiple devices"""
         self.network_server.start()
         self.data_aggregator.initialize()
@@ -360,7 +360,7 @@ class TestEndToEndIntegration(unittest.TestCase):
         aggregated_files = self.data_aggregator.get_session_files(session_id)
         self.assertEqual(len(aggregated_files), expected_file_count)
 
-    def test_real_time_monitoring_and_quality_assurance(self):
+    def test_real_time_monitoring_and_quality_assurance(self) -> Any:
         """Test real-time monitoring and quality assurance during recording"""
         self.network_server.start()
         self.data_aggregator.initialize()
@@ -440,7 +440,7 @@ class TestEndToEndIntegration(unittest.TestCase):
             "Data completeness should be >99%",
         )
 
-    def test_error_recovery_and_resilience(self):
+    def test_error_recovery_and_resilience(self) -> Any:
         """Test system error recovery and resilience mechanisms"""
         self.network_server.start()
         self.data_aggregator.initialize()
@@ -528,7 +528,7 @@ class TestEndToEndIntegration(unittest.TestCase):
                     f"Recovery should succeed for {scenario['name']}",
                 )
 
-    def test_performance_under_load(self):
+    def test_performance_under_load(self) -> Any:
         """Test system performance under various load conditions"""
         self.network_server.start()
         self.data_aggregator.initialize()
@@ -609,7 +609,7 @@ class TestEndToEndIntegration(unittest.TestCase):
                 )
 
                 # Use threading to simulate concurrent device messages
-                def send_device_messages(device_id):
+                def send_device_messages(device_id) -> Any:
                     nonlocal message_count
                     for i in range(scenario["sync_rate"] * scenario["duration_sec"]):
                         message = {

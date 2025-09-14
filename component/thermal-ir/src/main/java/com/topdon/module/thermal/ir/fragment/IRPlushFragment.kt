@@ -9,22 +9,21 @@ import com.infisense.usbir.view.TemperatureView
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.BaseIRPlushFragment
 
-/**
-    * des:
-    * author: CaiSongL
-    * date: 2024/9/3 11:43
-    **/
-class IRPlushFragment : BaseIRPlushFragment() {
 
+
+class IRPlushFragment : BaseIRPlushFragment() {
     // findViewById declarations using proper view reference in onViewCreated
     private lateinit var dualTextureViewNativeCamera: SurfaceView
     private lateinit var temperatureView: TemperatureView
 
-    override fun onViewCreated(view: android.view.View, savedInstanceState: android.os.Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    // Initialize findViewById in onViewCreated
-    dualTextureViewNativeCamera = view.findViewById(R.id.dualTextureViewNativeCamera)
-    temperatureView = view.findViewById(R.id.temperature_view)
+    override fun onViewCreated(
+        view: android.view.View,
+        savedInstanceState: android.os.Bundle?,
+    ) {
+        super.onViewCreated(view, savedInstanceState)
+        // Initialize findViewById in onViewCreated
+        dualTextureViewNativeCamera = view.findViewById(R.id.dualTextureViewNativeCamera)
+        temperatureView = view.findViewById(R.id.temperature_view)
     }
 
     override fun getSurfaceView(): SurfaceView {
@@ -36,7 +35,6 @@ class IRPlushFragment : BaseIRPlushFragment() {
     }
 
     override suspend fun onDualViewCreate(dualView: DualViewWithExternalCameraCommonApi?) {
-
     }
 
     override fun isDualIR(): Boolean {
@@ -66,7 +64,7 @@ class IRPlushFragment : BaseIRPlushFragment() {
     super.onDestroy()
     }
 
-    fun getBitmap() : Bitmap?{
-    return dualView?.scaledBitmap
+    fun getBitmap(): Bitmap?  {
+        return dualView?.scaledBitmap
     }
 }

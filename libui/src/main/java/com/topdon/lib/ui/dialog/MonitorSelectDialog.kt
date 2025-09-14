@@ -7,23 +7,19 @@ import android.view.View
 import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.databinding.DialogMonitorSelectBinding
-import com.topdon.lib.ui.R as UiR
 
-/**
-    * 提示窗
-    * create by fylder on 2018/6/15
-    **/
+
+
+
 class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
-    class Builder(private val context: Context) {
-    /**
-    * 是否处于第 1 步.
-    */
-    private var isFirstStep = true
 
-    /**
-    * 当前选中的监控类型 1-点 2-线 3-面.
-    */
-    private var monitorType = 0
+
+    class Builder(private val context: Context) {
+
+        private var isFirstStep = true
+
+
+        private var monitorType = 0
 
     private var positiveClickListener: ((select: Int) -> Unit)? = null
 
@@ -39,9 +35,9 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
     val binding = DialogMonitorSelectBinding.inflate(LayoutInflater.from(context))
     dialog.setContentView(binding.root)
 
-    val lp = dialog.window!!.attributes
-    lp.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() // 设置宽度
-    dialog.window!!.attributes = lp
+            val lp = dialog.window!!.attributes
+            lp.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() // settings宽度
+            dialog.window!!.attributes = lp
 
     binding.btnConfirmOrBack.setOnClickListener {
     if (isFirstStep) { // 步骤1->步骤2 逻辑为“确认”

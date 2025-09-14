@@ -16,31 +16,24 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
-import com.topdon.lib.core.tools.UnitTools
-import com.topdon.libcom.AlarmHelp
-import com.topdon.libcom.R
 import com.topdon.lib.core.bean.AlarmBean
-import com.topdon.lib.core.common.SaveSettingUtil
 import com.topdon.lib.core.tools.ToastTools
+import com.topdon.lib.core.tools.UnitTools
+import com.topdon.libcom.R
 
 class TempAlarmSetDialog(
     context: Context,
     private val isEdit: Boolean,
 ) : Dialog(context, R.style.app_compat_dialog), CompoundButton.OnCheckedChangeListener {
-
     var alarmBean = AlarmBean()
     set(value) {
     field = value.copy()
     }
 
-    /**
-    * 保存点击事件监听.
-    */
+
     var onSaveListener: ((alarmBean: AlarmBean) -> Unit)? = null
 
-    /**
-    * 用于播放报警铃声.
-    */
+
     private var mediaPlayer: MediaPlayer? = null
 
     public var hideAlarmMark = false
@@ -72,7 +65,6 @@ class TempAlarmSetDialog(
     private lateinit var clRingtoneSelect: ConstraintLayout
     private lateinit var tvAlarmRingtone: TextView
     private lateinit var tvAlarmMark: TextView
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -178,78 +170,80 @@ class TempAlarmSetDialog(
     Glide.with(context).load(ColorDrawable(alarmBean.highColor)).into(imgCAlarmHigh)
     Glide.with(context).load(ColorDrawable(alarmBean.lowColor)).into(imgCAlarmLow)
 
-    etAlarmHigh.isEnabled = switchAlarmHigh.isChecked
-    etAlarmLow.isEnabled = switchAlarmLow.isChecked
-    clAlarmMark.isVisible = isEdit || switchAlarmMark.isChecked
-    clRingtoneSelect.isVisible = !isEdit && switchAlarmRingtone.isChecked
-    tvAlarmRingtone.isVisible = !isEdit
-    switchAlarmRingtone.isVisible = !isEdit
-    if (hideAlarmMark){
-    tvAlarmMark.visibility = View.GONE
-    switchAlarmMark.visibility = View.GONE
-    clAlarmMark.visibility = View.GONE
-    }
-    switchAlarmMark.isVisible = !isEdit
-    if (alarmBean.highTemp == Float.MAX_VALUE) {
-    etAlarmHigh.setText("")
-    } else {
-    etAlarmHigh.setText(UnitTools.showUnitValue(alarmBean.highTemp).toString())
-    }
-    if (alarmBean.lowTemp == Float.MIN_VALUE) {
-    etAlarmLow.setText("")
-    } else {
-    etAlarmLow.setText(UnitTools.showUnitValue(alarmBean.lowTemp).toString())
-    }
-    ivRingtone1.isSelected = false
-    ivRingtone2.isSelected = false
-    ivRingtone3.isSelected = false
-    ivRingtone4.isSelected = false
-    ivRingtone5.isSelected = false
-    when (alarmBean.ringtoneType) {
-    0 -> ivRingtone1.isSelected = true
-    1 -> ivRingtone2.isSelected = true
-    2 -> ivRingtone3.isSelected = true
-    3 -> ivRingtone4.isSelected = true
-    4 -> ivRingtone5.isSelected = true
-    }
+        etAlarmHigh.isEnabled = switchAlarmHigh.isChecked
+        etAlarmLow.isEnabled = switchAlarmLow.isChecked
+        clAlarmMark.isVisible = isEdit || switchAlarmMark.isChecked
+        clRingtoneSelect.isVisible = !isEdit && switchAlarmRingtone.isChecked
+        tvAlarmRingtone.isVisible = !isEdit
+        switchAlarmRingtone.isVisible = !isEdit
+        if (hideAlarmMark)
+            {
+                tvAlarmMark.visibility = View.GONE
+                switchAlarmMark.visibility = View.GONE
+                clAlarmMark.visibility = View.GONE
+            }
+        switchAlarmMark.isVisible = !isEdit
+        if (alarmBean.highTemp == Float.MAX_VALUE) {
+            etAlarmHigh.setText("")
+        } else {
+            etAlarmHigh.setText(UnitTools.showUnitValue(alarmBean.highTemp).toString())
+        }
+        if (alarmBean.lowTemp == Float.MIN_VALUE) {
+            etAlarmLow.setText("")
+        } else {
+            etAlarmLow.setText(UnitTools.showUnitValue(alarmBean.lowTemp).toString())
+        }
+        ivRingtone1.isSelected = false
+        ivRingtone2.isSelected = false
+        ivRingtone3.isSelected = false
+        ivRingtone4.isSelected = false
+        ivRingtone5.isSelected = false
+        when (alarmBean.ringtoneType) {
+            0 -> ivRingtone1.isSelected = true
+            1 -> ivRingtone2.isSelected = true
+            2 -> ivRingtone3.isSelected = true
+            3 -> ivRingtone4.isSelected = true
+            4 -> ivRingtone5.isSelected = true
+        }
     }
 
     private fun save() {
-    try {
-    val inputHigh = if (switchAlarmHigh.isChecked) {
-    if (etAlarmHigh.text.isNotEmpty()) UnitTools.showToCValue(etAlarmHigh.text.toString().toFloat()) else null
-    } else {
-    null
-    }
-    val inputLow = if (switchAlarmLow.isChecked) {
-    if (etAlarmLow.text.isNotEmpty()) UnitTools.showToCValue(etAlarmLow.text.toString().toFloat()) else null
-    } else {
-    null
-    }
-    if (inputHigh != null && inputLow != null && inputLow > inputHigh) {
-    ToastTools.showShort(com.topdon.lib.ui.R.string.tip_input_format)
-    return
-    }
-    } catch (e: Exception) {
-    ToastTools.showShort(com.topdon.lib.ui.R.string.tip_input_format)
-    return
-    }
+        try {
+            val inputHigh =
+                if (switchAlarmHigh.isChecked) {
+                    if (etAlarmHigh.text.isNotEmpty()) UnitTools.showToCValue(etAlarmHigh.text.toString().toFloat()) else null
+                } else {
+                    null
+                }
+            val inputLow =
+                if (switchAlarmLow.isChecked) {
+                    if (etAlarmLow.text.isNotEmpty()) UnitTools.showToCValue(etAlarmLow.text.toString().toFloat()) else null
+                } else {
+                    null
+                }
+            if (inputHigh != null && inputLow != null && inputLow > inputHigh) {
+                ToastTools.showShort(com.topdon.lib.ui.R.string.tip_input_format)
+                return
+            }
+        } catch (e: Exception) {
+            ToastTools.showShort(com.topdon.lib.ui.R.string.tip_input_format)
+            return
+        }
 
-    val inputHigh = if (etAlarmHigh.text.isNotEmpty()) etAlarmHigh.text.toString() else ""
-    val inputLow = if (etAlarmLow.text.isNotEmpty()) etAlarmLow.text.toString() else ""
-    var highValue: Float? = null
-    var lowValue: Float? = null
-    try {
-    highValue = if (inputHigh.isNotEmpty()) UnitTools.showToCValue(inputHigh.toFloat()) else null
-    lowValue = if (inputLow.isNotEmpty()) UnitTools.showToCValue(inputLow.toFloat()) else null
-    } catch (_: Exception) {
-
-    }
-    alarmBean.highTemp = highValue ?: Float.MAX_VALUE
-    alarmBean.lowTemp = lowValue ?: Float.MIN_VALUE
-    alarmBean.isHighOpen = switchAlarmHigh.isChecked
-    alarmBean.isLowOpen = switchAlarmLow.isChecked
-    alarmBean.isRingtoneOpen = switchAlarmRingtone.isChecked
+        val inputHigh = if (etAlarmHigh.text.isNotEmpty()) etAlarmHigh.text.toString() else ""
+        val inputLow = if (etAlarmLow.text.isNotEmpty()) etAlarmLow.text.toString() else ""
+        var highValue: Float? = null
+        var lowValue: Float? = null
+        try {
+            highValue = if (inputHigh.isNotEmpty()) UnitTools.showToCValue(inputHigh.toFloat()) else null
+            lowValue = if (inputLow.isNotEmpty()) UnitTools.showToCValue(inputLow.toFloat()) else null
+        } catch (_: Exception) {
+        }
+        alarmBean.highTemp = highValue ?: Float.MAX_VALUE
+        alarmBean.lowTemp = lowValue ?: Float.MIN_VALUE
+        alarmBean.isHighOpen = switchAlarmHigh.isChecked
+        alarmBean.isLowOpen = switchAlarmLow.isChecked
+        alarmBean.isRingtoneOpen = switchAlarmRingtone.isChecked
 
     onSaveListener?.invoke(alarmBean)
 
@@ -257,64 +251,63 @@ class TempAlarmSetDialog(
     }
 
     private fun showColorDialog(isHigh: Boolean) {
-    val colorPickDialog = ColorPickDialog(context, if (isHigh) alarmBean.highColor else alarmBean.lowColor,-1)
-    colorPickDialog.onPickListener = { it: Int, i1: Int ->
-    if (isHigh) {
-    alarmBean.highColor = it
-    Glide.with(context).load(ColorDrawable(it)).into(imgCAlarmHigh)
-    } else {
-    alarmBean.lowColor = it
-    Glide.with(context).load(ColorDrawable(it)).into(imgCAlarmLow)
-    }
-    }
-    colorPickDialog.show()
+        val colorPickDialog = ColorPickDialog(context, if (isHigh) alarmBean.highColor else alarmBean.lowColor, -1)
+        colorPickDialog.onPickListener = { it: Int, i1: Int ->
+            if (isHigh) {
+                alarmBean.highColor = it
+                Glide.with(context).load(ColorDrawable(it)).into(imgCAlarmHigh)
+            } else {
+                alarmBean.lowColor = it
+                Glide.with(context).load(ColorDrawable(it)).into(imgCAlarmLow)
+            }
+        }
+        colorPickDialog.show()
     }
 
     override fun dismiss() {
-    super.dismiss()
-    try {
-    if (mediaPlayer?.isPlaying == true) {
-    mediaPlayer?.stop()
-    }
-    mediaPlayer?.release()
-    mediaPlayer = null
-    } catch (_: Exception) {
-
-    }
-
+        super.dismiss()
+        try {
+            if (mediaPlayer?.isPlaying == true) {
+                mediaPlayer?.stop()
+            }
+            mediaPlayer?.release()
+            mediaPlayer = null
+        } catch (_: Exception) {
+        }
     }
 
-    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-    when (buttonView?.id) {
-    R.id.switch_alarm_high -> {//高温报警
-    etAlarmHigh.isEnabled = isChecked
-    alarmBean.isHighOpen = isChecked
+    override fun onCheckedChanged(
+        buttonView: CompoundButton?,
+        isChecked: Boolean,
+    ) {
+        when (buttonView?.id) {
+            R.id.switch_alarm_high -> { // 高温报警
+                etAlarmHigh.isEnabled = isChecked
+                alarmBean.isHighOpen = isChecked
+            }
+
+            R.id.switch_alarm_low -> { // 低温报警
+                etAlarmLow.isEnabled = isChecked
+                alarmBean.isLowOpen = isChecked
+            }
+
+            R.id.switch_alarm_mark -> { // 区域标记
+                clAlarmMark.isVisible = isChecked
+                alarmBean.isMarkOpen = isChecked
+            }
+
+            R.id.switch_alarm_ringtone -> { // 报警铃声
+                clRingtoneSelect.isVisible = isChecked
+                if (isChecked) {
+                    selectRingtone(alarmBean.ringtoneType)
+                } else {
+                    selectRingtone(null)
+                }
+            }
+        }
     }
 
-    R.id.switch_alarm_low -> {//低温报警
-    etAlarmLow.isEnabled = isChecked
-    alarmBean.isLowOpen = isChecked
-    }
 
-    R.id.switch_alarm_mark -> {//区域标记
-    clAlarmMark.isVisible = isChecked
-    alarmBean.isMarkOpen = isChecked
-    }
-
-    R.id.switch_alarm_ringtone -> {//报警铃声
-    clRingtoneSelect.isVisible = isChecked
-    if (isChecked) {
-    selectRingtone(alarmBean.ringtoneType)
-    } else {
-    selectRingtone(null)
-    }
-    }
-    }
-    }
-
-    /**
-    * 设置当前选中的铃声，null 表示关闭.
-    */
     private fun selectRingtone(position: Int?) {
     try {
     if (mediaPlayer != null) {

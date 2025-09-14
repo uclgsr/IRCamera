@@ -2,28 +2,17 @@ package com.github.mikephil.charting.formatter;
 
 import java.text.DecimalFormat;
 
-/**
- * Created by philipp on 02/06/16.
- */
+
 public class DefaultAxisValueFormatter extends ValueFormatter
 {
 
-    /**
-     * decimalformat for formatting
-     */
+
     protected DecimalFormat mFormat;
 
-    /**
-     * the number of decimal digits this formatter uses
-     */
+
     protected int digits;
 
-    /**
-     * Constructor that specifies to how many digits the value should be
-     * formatted.
-     *
-     * @param digits
-     */
+
     public DefaultAxisValueFormatter(int digits) {
         this.digits = digits;
 
@@ -43,11 +32,7 @@ public class DefaultAxisValueFormatter extends ValueFormatter
         return mFormat.format(value);
     }
 
-    /**
-     * Returns the number of decimal digits this formatter uses or -1, if unspecified.
-     *
-     * @return
-     */
+
     public int getDecimalDigits() {
         return digits;
     }

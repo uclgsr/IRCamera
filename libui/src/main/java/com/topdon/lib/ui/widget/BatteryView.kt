@@ -7,24 +7,18 @@ import android.graphics.Path
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 
-/**
-    * TC007 电池电量图标.
-    *
-    * Created by LCG on 2024/5/22.
-    */
+
+
+
 class BatteryView : AppCompatImageView {
-    /**
-    * 当前电量
-    */
+    
     var battery = -1
     set(value) {
     field = value
     invalidate()
     }
 
-    /**
-    * 当前是否充电中
-    */
+    
     var isCharging = false
     set(value) {
     field = value
@@ -121,57 +115,57 @@ class BatteryView : AppCompatImageView {
     private var drawHeight: Int = 0
 
     override fun onDraw(canvas: Canvas) {
-    super.onDraw(canvas)
-    // 绘制电池外壳
-    val lineSize = drawWidth * 2 / 58f
-    val roundSize = drawWidth * 6 / 58f
-    val batteryWidth = drawWidth * 50 / 58f
-    paint.style = Paint.Style.STROKE
-    paint.strokeCap = Paint.Cap.BUTT
-    paint.color = 0xff83808c.toInt()
-    canvas.drawRoundRect(
-    lineSize / 2,
-    lineSize / 2,
-    lineSize / 2 + batteryWidth,
-    drawHeight.toFloat() - lineSize / 2,
-    roundSize,
-    roundSize,
-    paint,
-    )
+        super.onDraw(canvas)
+        
+        val lineSize = drawWidth * 2 / 58f
+        val roundSize = drawWidth * 6 / 58f
+        val batteryWidth = drawWidth * 50 / 58f
+        paint.style = Paint.Style.STROKE
+        paint.strokeCap = Paint.Cap.BUTT
+        paint.color = 0xff83808c.toInt()
+        canvas.drawRoundRect(
+            lineSize / 2,
+            lineSize / 2,
+            lineSize / 2 + batteryWidth,
+            drawHeight.toFloat() - lineSize / 2,
+            roundSize,
+            roundSize,
+            paint,
+        )
 
-    // 绘制电池正极
-    val anodeWidth = drawWidth * 3 / 58f
-    val anodeHeight = drawHeight * 8 / 30f - lineSize
-    val anodeX = drawWidth - anodeWidth / 2
-    val anodeStartY = (drawHeight - anodeHeight) / 2
-    paint.style = Paint.Style.FILL
-    paint.strokeCap = Paint.Cap.ROUND
-    paint.strokeWidth = anodeWidth
-    canvas.drawLine(anodeX, anodeStartY, anodeX, anodeStartY + anodeHeight, paint)
+        
+        val anodeWidth = drawWidth * 3 / 58f
+        val anodeHeight = drawHeight * 8 / 30f - lineSize
+        val anodeX = drawWidth - anodeWidth / 2
+        val anodeStartY = (drawHeight - anodeHeight) / 2
+        paint.style = Paint.Style.FILL
+        paint.strokeCap = Paint.Cap.ROUND
+        paint.strokeWidth = anodeWidth
+        canvas.drawLine(anodeX, anodeStartY, anodeX, anodeStartY + anodeHeight, paint)
 
-    // 绘制电量
-    if (battery <= 0) {
-    return
-    }
-    val progressWidth = drawWidth * 42 / 58f * battery / 100
-    paint.strokeCap = Paint.Cap.BUTT
-    paint.color =
-    (
-    if (isCharging) {
-    0xff6dc80e
-    } else if (battery <= 10) {
-    0xffeb433e
-    } else {
-    0xffffffff
-    }
-    ).toInt()
-    canvas.clipPath(path)
-    canvas.drawRect(
-    lineSize + anodeWidth,
-    lineSize + anodeWidth,
-    lineSize + anodeWidth + progressWidth,
-    drawHeight - lineSize - anodeWidth,
-    paint,
-    )
+        
+        if (battery <= 0) {
+            return
+        }
+        val progressWidth = drawWidth * 42 / 58f * battery / 100
+        paint.strokeCap = Paint.Cap.BUTT
+        paint.color =
+            (
+                if (isCharging) {
+                    0xff6dc80e
+                } else if (battery <= 10) {
+                    0xffeb433e
+                } else {
+                    0xffffffff
+                }
+            ).toInt()
+        canvas.clipPath(path)
+        canvas.drawRect(
+            lineSize + anodeWidth,
+            lineSize + anodeWidth,
+            lineSize + anodeWidth + progressWidth,
+            drawHeight - lineSize - anodeWidth,
+            paint,
+        )
     }
 }

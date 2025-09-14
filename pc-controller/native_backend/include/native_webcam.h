@@ -12,9 +12,7 @@
 
 namespace ircamera {
 
-/**
- * Video frame data structure for zero-copy memory sharing
- */
+
 struct FrameData {
     uint64_t timestamp_ns;      // Nanosecond timestamp
     int width;                  // Frame width
@@ -25,9 +23,7 @@ struct FrameData {
     int frame_number;           // Sequential frame number
 };
 
-/**
- * Camera configuration structure
- */
+
 struct CameraConfig {
     int device_id = 0;          // Camera device ID (0 for default)
     int width = 1920;           // Capture width
@@ -39,16 +35,7 @@ struct CameraConfig {
     double gain = -1;           // Manual gain value (-1 for auto)
 };
 
-/**
- * NativeWebcam class for high-performance local webcam capture
- * 
- * Features:
- * - OpenCV-based video capture with zero-copy frame sharing
- * - Dedicated C++ thread for continuous capture
- * - Thread-safe lock-free frame queue
- * - Multiple format support (MJPEG, YUYV, etc.)
- * - Configurable resolution and frame rate
- */
+
 class NativeWebcam {
 public:
     using FrameCallback = std::function<void(const FrameData&)>;

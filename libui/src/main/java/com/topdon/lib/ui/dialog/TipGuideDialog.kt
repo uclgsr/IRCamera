@@ -17,10 +17,12 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.topdon.lib.core.R
+import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.ui.databinding.DialogTipGuideBinding
 import com.topdon.lib.ui.widget.IndicateView
 import kotlin.collections.ArrayList
-import com.topdon.lib.ui.R as UiR
+
+
 
 class TipGuideDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
@@ -51,21 +53,46 @@ class TipGuideDialog : DialogFragment() {
     view: View,
     savedInstanceState: Bundle?,
     ) {
-    super.onViewCreated(view, savedInstanceState)
-    titleList =
-    arrayListOf(
-    getString(R.string.target_tips_step_1),
-    getString(R.string.target_tips_step_2),
-    getString(R.string.target_tips_step_3),
-    getString(R.string.target_tips_step_4),
-    )
-    imgList =
-    arrayListOf(
-    UiR.drawable.target_guide_pic_1,
-    UiR.drawable.target_guide_pic_2,
-    UiR.drawable.target_guide_pic_3,
-    UiR.drawable.target_guide_pic_4,
-    )
+        super.onViewCreated(view, savedInstanceState)
+        titleList =
+            arrayListOf(
+                getString(R.string.target_tips_step_1),
+                getString(R.string.target_tips_step_2),
+                getString(R.string.target_tips_step_3),
+                getString(R.string.target_tips_step_4),
+            )
+        imgList =
+            arrayListOf(
+                UiR.drawable.target_guide_pic_1,
+                UiR.drawable.target_guide_pic_2,
+                UiR.drawable.target_guide_pic_3,
+                UiR.drawable.target_guide_pic_4,
+            )
+
+        // Initialize views using binding
+        viewPager = binding.viewPager
+        tvContent1 = binding.tvContent1
+        tvContent2 = binding.tvContent2
+        tvContent3 = binding.tvContent3
+        indicateView = binding.indicateView
+        ivTarget = binding.ivTarget
+
+        val adapter = PageAdapter(childFragmentManager, imgList)
+        indicateView.itemCount = adapter.count
+        viewPager.adapter = adapter
+        binding.tvIKnow.setOnClickListener {
+            closeEvent?.invoke(true)
+            dismiss()
+        }
+        updateIndex(0)
+        viewPager.addOnPageChangeListener(
+            object : ViewPager.OnPageChangeListener {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int,
+                ) {
+                }
 
     // Initialize views using binding
     viewPager = binding.viewPager
@@ -102,33 +129,10 @@ class TipGuideDialog : DialogFragment() {
     )
     }
 
+
     fun updateIndex(position: Int) {
     if (index == position) {
     return
-    }
-    indicateView.currentIndex = position
-    viewPager.setCurrentItem(position, true)
-    when (position) {
-    0 -> {
-    tvContent1.visibility = View.VISIBLE
-    tvContent3.visibility = View.VISIBLE
-    ivTarget.visibility = View.GONE
-    }
-
-    2 -> {
-    tvContent1.visibility = View.GONE
-    tvContent3.visibility = View.GONE
-    ivTarget.visibility = View.VISIBLE
-    }
-
-    else -> {
-    tvContent1.visibility = View.GONE
-    tvContent3.visibility = View.GONE
-    ivTarget.visibility = View.GONE
-    }
-    }
-    tvContent2.text = titleList[position]
-    index = position
     }
 
     override fun onDestroyView() {
@@ -157,9 +161,10 @@ class TipGuideDialog : DialogFragment() {
     }
 
     companion object {
-    fun newInstance(): TipGuideDialog {
-    return TipGuideDialog()
-    }
+
+        fun newInstance(): TipGuideDialog {
+            return TipGuideDialog()
+        }
     }
 
     @Suppress("DEPRECATION")

@@ -2,9 +2,7 @@ package com.topdon.lib.core.common
 
 import android.text.TextUtils
 
-/**
-    * create by fylder on 2018/6/14
-    **/
+
 
 class UserInfoManager {
     companion object {
@@ -23,10 +21,7 @@ class UserInfoManager {
     }
     }
 
-    /**
-    * 是否登录（判断token是否有值来处理登录情况）
-    * token在-1的情况下为游客访问，不算登录
-    */
+
     fun isLogin(): Boolean {
     val token = SharedManager.getToken()
     return if (TextUtils.equals("-1", token)) {
@@ -37,9 +32,7 @@ class UserInfoManager {
     }
     }
 
-    /**
-    * 登录保存用户信息
-    */
+
     fun login(
     token: String,
     userId: String,
@@ -55,9 +48,7 @@ class UserInfoManager {
     SharedManager.setToken(token)
     }
 
-    /**
-    * 退出注销用户信息
-    */
+
     fun logout() {
     SharedManager.setToken("")
     SharedManager.setUserId("0")

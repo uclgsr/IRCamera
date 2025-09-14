@@ -113,7 +113,6 @@ public class HomoFilter {
         Core.idft(image_padd_2c,image_padd_2c,DFT_SCALE);
         System.out.println(image_padd_2c.channels());
 
-
         Core.exp(image_padd_2c,image_padd_2c);
         Core.subtract(image_padd_2c,new Scalar(1),image_padd_2c);
         List<Mat> image_padd_s = new ArrayList<Mat>();

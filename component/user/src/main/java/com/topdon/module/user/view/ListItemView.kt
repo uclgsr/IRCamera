@@ -24,38 +24,42 @@ class ListItemView : LinearLayout {
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-    val ta: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.ListItemView)
-    for (i in 0 until ta.indexCount) {
-    when (ta.getIndex(i)) {
-    R.styleable.ListItemView_list_item_left_icon ->leftIconRes =
-    ta.getResourceId(R.styleable.ListItemView_list_item_left_icon, 0)
-    R.styleable.ListItemView_list_item_left_text -> leftContent =
-    ta.getString(R.styleable.ListItemView_list_item_left_text).toString()
-    R.styleable.ListItemView_list_item_right_text -> rightContent =
-    ta.getString(R.styleable.ListItemView_list_item_right_text).toString()
-    R.styleable.ListItemView_list_item_line-> lineShow =
-    ta.getBoolean(R.styleable.ListItemView_list_item_line, false)
-    }
-    }
-    ta.recycle()
-    initView()
+        val ta: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.ListItemView)
+        for (i in 0 until ta.indexCount) {
+            when (ta.getIndex(i)) {
+                R.styleable.ListItemView_list_item_left_icon ->
+                    leftIconRes =
+                        ta.getResourceId(R.styleable.ListItemView_list_item_left_icon, 0)
+                R.styleable.ListItemView_list_item_left_text ->
+                    leftContent =
+                        ta.getString(R.styleable.ListItemView_list_item_left_text).toString()
+                R.styleable.ListItemView_list_item_right_text ->
+                    rightContent =
+                        ta.getString(R.styleable.ListItemView_list_item_right_text).toString()
+                R.styleable.ListItemView_list_item_line ->
+                    lineShow =
+                        ta.getBoolean(R.styleable.ListItemView_list_item_line, false)
+            }
+        }
+        ta.recycle()
+        initView()
     }
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
-    context,
-    attrs,
-    defStyleAttr
+        context,
+        attrs,
+        defStyleAttr,
     )
 
     private fun initView() {
-    inflate(context, R.layout.ui_list_item_view, this)
-    mIvLeftIcon = findViewById(R.id.iv_left_icon)
-    mIvLeftContent = findViewById(R.id.iv_left_content)
-    mIvRightContent = findViewById(R.id.iv_right_content)
-    mLineView = findViewById(R.id.view_line)
-    mIvLeftIcon.setImageResource(leftIconRes)
-    mIvLeftContent.text = leftContent
-    mIvRightContent.text = rightContent
-    mLineView.visibility = if(lineShow) View.VISIBLE else View.GONE
+        inflate(context, R.layout.ui_list_item_view, this)
+        mIvLeftIcon = findViewById(R.id.iv_left_icon)
+        mIvLeftContent = findViewById(R.id.iv_left_content)
+        mIvRightContent = findViewById(R.id.iv_right_content)
+        mLineView = findViewById(R.id.view_line)
+        mIvLeftIcon.setImageResource(leftIconRes)
+        mIvLeftContent.text = leftContent
+        mIvRightContent.text = rightContent
+        mLineView.visibility = if (lineShow) View.VISIBLE else View.GONE
     }
 
     fun setLeftText(text: CharSequence?) {
@@ -64,9 +68,9 @@ class ListItemView : LinearLayout {
     mIvLeftContent.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    fun getLeftText(): String{
-    if (mIvLeftContent == null) return ""
-    return mIvLeftContent.text.toString()
+    fun getLeftText(): String  {
+        if (mIvLeftContent == null) return ""
+        return mIvLeftContent.text.toString()
     }
 
     fun setRightText(text: CharSequence?) {
@@ -75,8 +79,8 @@ class ListItemView : LinearLayout {
     mIvRightContent.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    fun getRightText(): String{
-    if (mIvRightContent == null) return ""
-    return mIvRightContent.text.toString()
+    fun getRightText(): String  {
+        if (mIvRightContent == null) return ""
+        return mIvRightContent.text.toString()
     }
 }

@@ -221,7 +221,7 @@ async def main():
         logger.error("❌ ReliableMessageService tests failed")
 
     # Report results
-    logger.info(f"\n=== Test Results ===")
+    logger.info("\n=== Test Results ===")
     logger.info(f"Passed: {tests_passed}/{total_tests}")
 
     if tests_passed == total_tests:

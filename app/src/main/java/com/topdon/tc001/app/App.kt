@@ -47,16 +47,14 @@ class App : BaseApplication() {
     companion object {
     lateinit var instance: App
 
-    /**
-    * 延时初始化
-    */
-    fun delayInit() {
-    initReceiver()
-    initLog()
-    initLms()
-    initUM()
-    initJPush()
-    }
+
+        fun delayInit() {
+            initReceiver()
+            initLog()
+            initLms()
+            initUM()
+            initJPush()
+        }
     }
 
     override fun getSoftWareCode(): String = BuildConfig.SOFT_CODE
@@ -129,9 +127,7 @@ class App : BaseApplication() {
     // initZoho() // Commented out - Zoho dependency not available
     }
 
-    /**
-    * 初始化客服ZOHO - commented out as dependency not available
-    */
+
     private fun initZoho() {
     // ZohoSalesIQ initialization commented out - dependency not available in build
     /*

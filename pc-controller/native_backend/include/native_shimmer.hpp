@@ -1,9 +1,4 @@
-/**
- * High-performance Shimmer sensor interface for C++ backend
- * 
- * Implements direct serial communication with docked Shimmer sensors
- * for minimal latency GSR data acquisition.
- */
+
 
 #pragma once
 
@@ -37,83 +32,43 @@ public:
     NativeShimmer(const NativeShimmer&) = delete;
     NativeShimmer& operator=(const NativeShimmer&) = delete;
 
-    /**
-     * Connect to Shimmer sensor via serial port
-     * @param port_name Serial port name (e.g., "COM3", "/dev/ttyUSB0")
-     * @param baud_rate Communication baud rate (default: 115200)
-     * @return true if connection successful
-     */
+
     bool connect(const std::string& port_name, int baud_rate = 115200);
 
-    /**
-     * Disconnect from sensor
-     */
+
     void disconnect();
 
-    /**
-     * Start data streaming
-     * @param sample_rate Desired sample rate in Hz (default: 512Hz)
-     * @return true if streaming started successfully
-     */
+
     bool start_streaming(int sample_rate = 512);
 
-    /**
-     * Stop data streaming
-     * @return true if streaming stopped successfully
-     */
+
     bool stop_streaming();
 
-    /**
-     * Check if sensor is connected
-     * @return true if connected
-     */
+
     bool is_connected() const { return connected_.load(); }
 
-    /**
-     * Check if streaming is active
-     * @return true if streaming
-     */
+
     bool is_streaming() const { return streaming_.load(); }
 
-    /**
-     * Get data from queue (non-blocking)
-     * @param data Reference to store the data
-     * @return true if data was available
-     */
+
     bool get_data(ShimmerData& data);
 
-    /**
-     * Get current queue size
-     * @return Number of samples in queue
-     */
+
     size_t get_queue_size() const;
 
-    /**
-     * Clear data queue
-     */
+
     void clear_queue();
 
-    /**
-     * Get sensor information
-     * @return Sensor info string
-     */
+
     std::string get_sensor_info() const;
 
-    /**
-     * Set GSR range for calibration
-     * @param range GSR range (0-4, see Shimmer documentation)
-     */
+
     void set_gsr_range(int range);
 
-    /**
-     * Get last error message
-     * @return Error message string
-     */
+
     std::string get_last_error() const { return last_error_; }
 
-    /**
-     * Get statistics
-     */
+
     struct Statistics {
         uint64_t total_samples;
         uint64_t dropped_samples;

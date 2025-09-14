@@ -40,10 +40,7 @@ import androidx.annotation.Nullable;
 
 import static com.blankj.utilcode.util.ImageUtils.save;
 
-/**
- * @author: CaiSongL
- * @date: 2023/5/11 15:58
- */
+
 public class ExcelUtil {
 
     @NonNull
@@ -113,10 +110,7 @@ public class ExcelUtil {
         void onOneCell(int current, int total);
     }
 
-    /**
-     * @param listData
-     * @return
-     */
+
     public static String exportExcel(ArrayList<ThermalEntity> listData,boolean isPoint) {
         boolean isShowC = SharedManager.INSTANCE.getTemperature() == 1;
         try {

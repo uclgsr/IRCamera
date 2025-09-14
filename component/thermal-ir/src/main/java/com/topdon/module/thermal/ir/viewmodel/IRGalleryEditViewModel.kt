@@ -11,7 +11,6 @@ import java.io.File
 
 
 class IRGalleryEditViewModel : BaseViewModel() {
-
     val resultLiveData = SingleLiveEvent<FrameBean>()
 
     fun initData(path: String) {
@@ -35,16 +34,11 @@ class IRGalleryEditViewModel : BaseViewModel() {
     }
     }
 
-    /**
-    * 获取尾部信息
-    */
 
-    fun getTailData(bytes: ByteArray){
 
+    fun getTailData(bytes: ByteArray)  {
     }
 
 
-
-    data class FrameBean(val capital: ByteArray, val frame: ByteArray)
-
+data class FrameBean(val capital: ByteArray, val frame: ByteArray)
 }

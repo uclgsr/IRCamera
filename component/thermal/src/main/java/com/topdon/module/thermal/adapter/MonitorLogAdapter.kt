@@ -10,6 +10,7 @@ import com.topdon.lib.core.db.entity.ThermalEntity
 import com.topdon.lib.core.tools.TimeTool
 import com.topdon.module.thermal.R
 
+
 class MonitorLogAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: OnItemClickListener? = null
@@ -58,6 +59,7 @@ class MonitorLogAdapter(val context: Context) :
     val indexText = itemView.findViewById<TextView>(R.id.item_log_index_text)
     val timeText = itemView.findViewById<TextView>(R.id.item_log_time_text)
     }
+
 
     interface OnItemClickListener {
     fun onClick(

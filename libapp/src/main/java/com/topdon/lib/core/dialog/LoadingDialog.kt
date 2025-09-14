@@ -11,11 +11,7 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogLoadingBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-/**
-    * 新版 UI 的那个 LMS 的加载中弹框，由于 LMS 的弹框没有文字，只好自己再搞一个了。
-    *
-    * Created by LCG on 2024/4/12.
-    */
+
 class LoadingDialog(context: Context) : Dialog(context, R.style.TransparentDialog) {
     private val binding: DialogLoadingBinding = DialogLoadingBinding.inflate(LayoutInflater.from(context))
 

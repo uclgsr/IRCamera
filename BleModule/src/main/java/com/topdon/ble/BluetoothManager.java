@@ -1,6 +1,5 @@
 package com.topdon.ble;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -12,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.topdon.ble.callback.MtuChangeCallback;
 import com.topdon.ble.callback.NotificationChangeCallback;
 import com.topdon.ble.callback.ReadCharacteristicCallback;
+import com.topdon.ble.util.BluetoothPermissionUtils;
 import com.topdon.commons.UUIDManager;
 import com.topdon.commons.observer.Observable;
 import com.topdon.commons.observer.Observe;
@@ -28,15 +28,10 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * BluetoothManager
- * 蓝牙管理工具
- *
- * @author chuanfeng.bi
- * @date 2021/11/19 11:10
- */
-@SuppressLint("MissingPermission")
+
 public class BluetoothManager implements EventObserver {
+    private static final String TAG = "BluetoothManager";
+    
     public static boolean iSReset = false;//是否复位
     public static boolean isSending = false;//是否正在发送蓝牙数据
     public static boolean isClickStopCharging = false;//是否点击了停止充电
@@ -151,9 +146,7 @@ public class BluetoothManager implements EventObserver {
         return mDevice.isConnected();
     }
 
-    /**
-     * 使用{@link Observe}确定要接收消息，{@link RunOn}指定在主线程执行方法，设置{@link Tag}防混淆后找不到方法
-     */
+
     @Tag("onConnectionStateChanged")
     @Observe
     @RunOn(ThreadMode.MAIN)
@@ -198,9 +191,7 @@ public class BluetoothManager implements EventObserver {
         Log.e("bcf_ble", "连接超时");
     }
 
-    /**
-     * 使用{@link Observe}确定要接收消息，方法在{@link EasyBLEBuilder#setMethodDefaultThreadMode(ThreadMode)}指定的线程执行
-     */
+
     @Observe
     @Override
     public void onNotificationChanged(@NonNull Request request, boolean isEnabled) {
@@ -214,22 +205,30 @@ public class BluetoothManager implements EventObserver {
         Log.d("bcf_ble", "onNotificationChanged ：" + typeTag + "：" + (isEnabled ? "开启" : "关闭"));
     }
 
-    /**
-     * 向蓝牙写入数据
-     *
-     * @param data
-     */
+
     public boolean writeBuletoothData(byte[] data) {
         if (mDevice == null || !mDevice.isConnected()) {
             return false;
         }
-        writeCharact = connection.getCharacteristic(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.WRITE_UUID));
-        connection.getGatt().setCharacteristicNotification(writeCharact, true); // 设置监听
-        // 当数据传递到蓝牙之后 会回调BluetoothGattCallback里面的write方法
-        writeCharact.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-        writeCharact.setValue(data);
-//        LLog.d("ble_bcf_data", "发送到蓝牙的数据为：" + StringUtils.toHex(data));
-        return connection.getGatt().writeCharacteristic(writeCharact);
+        
+        // Check BLUETOOTH_CONNECT permission before GATT operations
+        if (!com.topdon.ble.util.BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+            Log.w(TAG, "Missing BLUETOOTH_CONNECT permission for GATT operations");
+            return false;
+        }
+        
+        try {
+            writeCharact = connection.getCharacteristic(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.WRITE_UUID));
+            connection.getGatt().setCharacteristicNotification(writeCharact, true); // 设置监听
+            // 当数据传递到蓝牙之后 会回调BluetoothGattCallback里面的write方法
+            writeCharact.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
+            writeCharact.setValue(data);
+//            LLog.d("ble_bcf_data", "发送到蓝牙的数据为：" + StringUtils.toHex(data));
+            return connection.getGatt().writeCharacteristic(writeCharact);
+        } catch (SecurityException e) {
+            Log.e(TAG, "SecurityException during GATT write operation: " + e.getMessage());
+            return false;
+        }
     }
 
     @Observe
@@ -240,14 +239,7 @@ public class BluetoothManager implements EventObserver {
 //        Log.d("ble_bcf_data", "onCharacteristicRead: " + data);
     }
 
-    /**
-     * 接收蓝牙设备返回的数据
-     *
-     * @param device         设备
-     * @param service        服务UUID
-     * @param characteristic 特征UUID
-     * @param value          数据
-     */
+
     @Observe
     @Override
     public void onCharacteristicChanged(Device device, UUID service, UUID characteristic, byte[] value) {

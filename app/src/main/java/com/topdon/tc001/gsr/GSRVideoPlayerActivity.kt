@@ -12,13 +12,10 @@ import android.widget.MediaController
 import androidx.core.content.FileProvider
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrVideoPlayerBinding
-import com.topdon.lib.core.base.BaseBindingActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import java.io.File
 
-/**
-    * GSR Video Player Activity
-    * Video playback for recorded videos from multi-modal sessions
-    */
+
 class GSRVideoPlayerActivity : BaseBindingActivity<ActivityGsrVideoPlayerBinding>() {
     companion object {
     private const val TAG = "GSRVideoPlayerActivity"
@@ -38,7 +35,7 @@ class GSRVideoPlayerActivity : BaseBindingActivity<ActivityGsrVideoPlayerBinding
 
     private lateinit var videoPath: String
 
-    override fun getLayoutId() = R.layout.activity_gsr_video_player
+    override fun initContentLayoutId() = R.layout.activity_gsr_video_player
 
     override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -73,19 +70,19 @@ class GSRVideoPlayerActivity : BaseBindingActivity<ActivityGsrVideoPlayerBinding
 
     Log.w(TAG, "Video URI: $uri")
 
-    binding.videoView.setVideoURI(uri)
-    binding.videoView.setMediaController(MediaController(this))
-    binding.videoView.setOnPreparedListener { mediaPlayer ->
-    Log.i(TAG, "Video prepared, starting playback")
-    // Video is ready to play
-    mediaPlayer.setVideoScalingMode(android.media.MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
-    }
-    videoView.setOnErrorListener { _, what, extra ->
-    Log.e(TAG, "Video playback error: what=$what, extra=$extra")
-    false
-    }
-    videoView.start()
-    videoView.requestFocus()
+        binding.videoView.setVideoURI(uri)
+        binding.videoView.setMediaController(MediaController(this))
+        binding.videoView.setOnPreparedListener { mediaPlayer ->
+            Log.i(TAG, "Video prepared, starting playback")
+            // Video is ready to play
+            mediaPlayer.setVideoScalingMode(android.media.MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
+        }
+        binding.videoView.setOnErrorListener { _, what: Int, extra: Int ->
+            Log.e(TAG, "Video playback error: what=$what, extra=$extra")
+            false
+        }
+        binding.videoView.start()
+        binding.videoView.requestFocus()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

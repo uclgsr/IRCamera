@@ -16,52 +16,31 @@ import com.github.mikephil.charting.renderer.XAxisRendererRadarChart;
 import com.github.mikephil.charting.renderer.YAxisRendererRadarChart;
 import com.github.mikephil.charting.utils.Utils;
 
-/**
- * Implementation of the RadarChart, a "spidernet"-like chart. It works best
- * when displaying 5-10 entries per DataSet.
- *
- * @author Philipp Jahoda
- */
+
 public class RadarChart extends PieRadarChartBase<RadarData> {
 
-    /**
-     * width of the main web lines
-     */
+
     private float mWebLineWidth = 2.5f;
 
-    /**
-     * width of the inner web lines
-     */
+
     private float mInnerWebLineWidth = 1.5f;
 
-    /**
-     * color for the main web lines
-     */
+
     private int mWebColor = Color.rgb(122, 122, 122);
 
-    /**
-     * color for the inner web
-     */
+
     private int mWebColorInner = Color.rgb(122, 122, 122);
 
-    /**
-     * transparency the grid is drawn with (0-255)
-     */
+
     private int mWebAlpha = 150;
 
-    /**
-     * flag indicating if the web lines should be drawn or not
-     */
+
     private boolean mDrawWeb = true;
 
-    /**
-     * modulus that determines how many labels and web-lines are skipped before the next is drawn
-     */
+
     private int mSkipWebLineCount = 0;
 
-    /**
-     * the object reprsenting the y-axis labels
-     */
+
     private YAxis mYAxis;
 
     protected YAxisRendererRadarChart mYAxisRenderer;
@@ -159,21 +138,13 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         drawMarkers(canvas);
     }
 
-    /**
-     * Returns the factor that is needed to transform values into pixels.
-     *
-     * @return
-     */
+
     public float getFactor() {
         RectF content = mViewPortHandler.getContentRect();
         return Math.min(content.width() / 2f, content.height() / 2f) / mYAxis.mAxisRange;
     }
 
-    /**
-     * Returns the angle that each slice in the radar chart occupies.
-     *
-     * @return
-     */
+
     public float getSliceAngle() {
         return 360f / (float) mData.getMaxEntryCountSet().getEntryCount();
     }
@@ -203,20 +174,12 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         return index;
     }
 
-    /**
-     * Returns the object that represents all y-labels of the RadarChart.
-     *
-     * @return
-     */
+
     public YAxis getYAxis() {
         return mYAxis;
     }
 
-    /**
-     * Sets the width of the web lines that come from the center.
-     *
-     * @param width
-     */
+
     public void setWebLineWidth(float width) {
         mWebLineWidth = Utils.convertDpToPixel(width);
     }
@@ -225,12 +188,7 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         return mWebLineWidth;
     }
 
-    /**
-     * Sets the width of the web lines that are in between the lines coming from
-     * the center.
-     *
-     * @param width
-     */
+
     public void setWebLineWidthInner(float width) {
         mInnerWebLineWidth = Utils.convertDpToPixel(width);
     }
@@ -239,32 +197,17 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         return mInnerWebLineWidth;
     }
 
-    /**
-     * Sets the transparency (alpha) value for all web lines, default: 150, 255
-     * = 100% opaque, 0 = 100% transparent
-     *
-     * @param alpha
-     */
+
     public void setWebAlpha(int alpha) {
         mWebAlpha = alpha;
     }
 
-    /**
-     * Returns the alpha value for all web lines.
-     *
-     * @return
-     */
+
     public int getWebAlpha() {
         return mWebAlpha;
     }
 
-    /**
-     * Sets the color for the web lines that come from the center. Don't forget
-     * to use getResources().getColor(...) when loading a color from the
-     * resources. Default: Color.rgb(122, 122, 122)
-     *
-     * @param color
-     */
+
     public void setWebColor(int color) {
         mWebColor = color;
     }
@@ -273,13 +216,7 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         return mWebColor;
     }
 
-    /**
-     * Sets the color for the web lines in between the lines that come from the
-     * center. Don't forget to use getResources().getColor(...) when loading a
-     * color from the resources. Default: Color.rgb(122, 122, 122)
-     *
-     * @param color
-     */
+
     public void setWebColorInner(int color) {
         mWebColorInner = color;
     }
@@ -288,32 +225,18 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         return mWebColorInner;
     }
 
-    /**
-     * If set to true, drawing the web is enabled, if set to false, drawing the
-     * whole web is disabled. Default: true
-     *
-     * @param enabled
-     */
+
     public void setDrawWeb(boolean enabled) {
         mDrawWeb = enabled;
     }
 
-    /**
-     * Sets the number of web-lines that should be skipped on chart web before the
-     * next one is drawn. This targets the lines that come from the center of the RadarChart.
-     *
-     * @param count if count = 1 -> 1 line is skipped in between
-     */
+
     public void setSkipWebLineCount(int count) {
 
         mSkipWebLineCount = Math.max(0, count);
     }
 
-    /**
-     * Returns the modulus that is used for skipping web-lines.
-     *
-     * @return
-     */
+
     public int getSkipWebLineCount() {
         return mSkipWebLineCount;
     }
@@ -336,25 +259,17 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         return Math.min(content.width() / 2f, content.height() / 2f);
     }
 
-    /**
-     * Returns the maximum value this chart can display on it's y-axis.
-     */
+
     public float getYChartMax() {
         return mYAxis.mAxisMaximum;
     }
 
-    /**
-     * Returns the minimum value this chart can display on it's y-axis.
-     */
+
     public float getYChartMin() {
         return mYAxis.mAxisMinimum;
     }
 
-    /**
-     * Returns the range of y-values this chart can display.
-     *
-     * @return
-     */
+
     public float getYRange() {
         return mYAxis.mAxisRange;
     }

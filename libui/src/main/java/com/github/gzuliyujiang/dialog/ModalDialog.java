@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present 贵州纳雍穿青人李裕江<1032694760@qq.com>
+ * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
  *
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -34,10 +34,7 @@ import androidx.annotation.StyleRes;
 
 import com.topdon.lib.ui.R;
 
-/**
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/3 15:23
- */
+
 @SuppressWarnings("unused")
 public abstract class ModalDialog extends BottomDialog implements View.OnClickListener {
     protected View headerView;

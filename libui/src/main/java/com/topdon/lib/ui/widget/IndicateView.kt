@@ -9,11 +9,9 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.R as UiR
 
-/**
-    * ViewPager 指示 View.
-    *
-    * Created by chenggeng.lin on 2023/11/13.
-    */
+
+
+
 class IndicateView : View {
     var itemCount: Int = 0
     set(value) {

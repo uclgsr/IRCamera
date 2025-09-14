@@ -10,23 +10,16 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
 
-/**
-    * Enhanced thermal recorder that automatically integrates GSR recording
-    * Provides drop-in replacement for existing thermal recording functionality
-    * Uses Samsung S22 device as unified NTP-style ground truth timing reference
-    */
+
 class EnhancedThermalRecorder private constructor(
     private val context: Context,
 ) {
     companion object {
     private const val TAG = "EnhancedThermalRecorder"
 
-    /**
-    * Create Enhanced Thermal Recorder with Samsung S22 device validation
-    * Supports both Exynos 2200 and Snapdragon 8 Gen 1 variants
-    */
-    fun create(context: Context): EnhancedThermalRecorder {
-    val recorder = EnhancedThermalRecorder(context)
+
+        fun create(context: Context): EnhancedThermalRecorder {
+            val recorder = EnhancedThermalRecorder(context)
 
     // Initialize timing system to detect processor variant
     TimeUtil.initializeGroundTruthTiming()
@@ -101,9 +94,7 @@ class EnhancedThermalRecorder private constructor(
     Log.d(TAG, "Timing validation: ${TimeUtil.validateTimingSystem()}")
     }
 
-    /**
-    * Start recording session with automatic GSR integration and Samsung S22 ground truth timing
-    */
+
     suspend fun startRecording(
     sessionName: String,
     participantId: String? = null,
@@ -167,9 +158,7 @@ class EnhancedThermalRecorder private constructor(
     }
     }
 
-    /**
-    * Stop recording session
-    */
+
     fun stopRecording(): SessionInfo? {
     if (!isRecordingState) {
     Log.w(TAG, "No recording in progress")
@@ -188,9 +177,7 @@ class EnhancedThermalRecorder private constructor(
     return session
     }
 
-    /**
-    * Trigger synchronization event with high-precision Samsung S22 timing
-    */
+
     fun triggerSyncEvent(
     eventType: String = "THERMAL_CAPTURE",
     metadata: Map<String, String> = emptyMap(),
@@ -247,9 +234,7 @@ class EnhancedThermalRecorder private constructor(
     }
     }
 
-    /**
-    * Trigger thermal capture with automatic sync marking using Samsung S22 high-precision timing
-    */
+
     fun captureFrame(frameMetadata: Map<String, String> = emptyMap()): Boolean {
     val synchronizedTimestamp = TimeUtil.getHighPrecisionTimestamp()
     val metadata =
@@ -265,34 +250,24 @@ class EnhancedThermalRecorder private constructor(
     return triggerSyncEvent("THERMAL_FRAME_CAPTURE", metadata)
     }
 
-    /**
-    * Check if currently recording
-    */
+
     fun isRecording(): Boolean = isRecordingState
 
-    /**
-    * Get current session information
-    */
+
     fun getCurrentSession(): SessionInfo? = currentSession
 
-    /**
-    * Get session directory for file storage
-    */
+
     fun getSessionDirectory(): File? {
     return gsrRecorder.getSessionDirectory()
     }
 
-    /**
-    * Set PC time offset for synchronization
-    */
+
     fun setPcTimeOffset(offsetMs: Long) {
     TimeUtil.setPcTimeOffset(offsetMs)
     Log.d(TAG, "PC time offset set: ${offsetMs}ms")
     }
 
-    /**
-    * Add custom metadata to current session
-    */
+
     fun addSessionMetadata(
     key: String,
     value: String,
@@ -303,9 +278,7 @@ class EnhancedThermalRecorder private constructor(
     } ?: false
     }
 
-    /**
-    * Get recording statistics
-    */
+
     fun getRecordingStats(): RecordingStats? {
     return currentSession?.let { session ->
     RecordingStats(
@@ -326,9 +299,7 @@ class EnhancedThermalRecorder private constructor(
     val isActive: Boolean,
     )
 
-    /**
-    * Clean up resources
-    */
+
     fun cleanup() {
     gsrRecorder.removeListener(gsrListener)
     if (isRecordingState) {

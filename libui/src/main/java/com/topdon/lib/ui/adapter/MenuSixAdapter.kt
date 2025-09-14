@@ -14,12 +14,13 @@ import com.topdon.lib.ui.listener.SingleClickListener
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
-@Deprecated("看起来是旧版 2D 编辑的菜单，根本没使用了")
+
+@Deprecated("看起来是旧版 2D 编辑的menu，根本没使用了")
 class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
     private var selected = -1
-    private var colorEnable = false // 伪彩条
+    private var colorEnable = false // pseudo color条
     private var contrastEnable = false // 对比度
     private var ddeEnable = false // 细节
 
@@ -62,36 +63,39 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
     holder: RecyclerView.ViewHolder,
     position: Int,
     ) {
-    if (holder is ItemView) {
-    val bean = fourBean[position]
-    holder.name.text = bean.name
-    holder.img.setImageResource(bean.res)
-    holder.lay.setOnClickListener(
-    object : SingleClickListener() {
-    override fun onSingleClick() {
-    listener?.invoke(position, bean.code)
-    selected(bean.code)
-    }
-    },
-    )
-    when (bean.code) {
-    1 -> {
-    iconUI(colorEnable, holder.img, holder.name)
-    }
-    2 -> {
-    iconUI(contrastEnable, holder.img, holder.name)
-    }
-    3 -> {
-    iconUI(ddeEnable, holder.img, holder.name)
-    }
-    else -> {
-    iconUI(bean.code == selected, holder.img, holder.name)
-    }
-    }
-    }
+        if (holder is ItemView) {
+            val bean = fourBean[position]
+            holder.name.text = bean.name
+            holder.img.setImageResource(bean.res)
+            holder.lay.setOnClickListener(
+                object : SingleClickListener() {
+                    override fun onSingleClick() {
+                        val adapterPosition = holder.adapterPosition
+                        if (adapterPosition != RecyclerView.NO_POSITION) {
+                            listener?.invoke(adapterPosition, bean.code)
+                            selected(bean.code)
+                        }
+                    }
+                },
+            )
+            when (bean.code) {
+                1 -> {
+                    iconUI(colorEnable, holder.img, holder.name)
+                }
+                2 -> {
+                    iconUI(contrastEnable, holder.img, holder.name)
+                }
+                3 -> {
+                    iconUI(ddeEnable, holder.img, holder.name)
+                }
+                else -> {
+                    iconUI(bean.code == selected, holder.img, holder.name)
+                }
+            }
+        }
     }
 
-    // 状态变化
+    // state变化
     private fun iconUI(
     isActive: Boolean,
     img: ImageView,

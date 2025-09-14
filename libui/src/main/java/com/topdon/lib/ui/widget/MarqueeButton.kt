@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatButton
 
+
+
 class MarqueeButton : AppCompatButton {
     constructor (context: Context) : super(context)
 

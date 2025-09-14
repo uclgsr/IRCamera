@@ -4,18 +4,21 @@ import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 
-/**
-    * @author: CaiSongL
-    * @date: 2023/4/1 14:44
-    */
+
+
+
+
 class RecyclerViewProxy(val layoutManager: RecyclerView.LayoutManager) {
+
     fun attachView(view: View?) {
     layoutManager.attachView(view!!)
     }
 
+
     fun detachView(view: View?) {
     layoutManager.detachView(view!!)
     }
+
 
     fun detachAndScrapView(
     view: View?,
@@ -24,9 +27,11 @@ class RecyclerViewProxy(val layoutManager: RecyclerView.LayoutManager) {
     layoutManager.detachAndScrapView(view!!, recycler!!)
     }
 
+
     fun detachAndScrapAttachedViews(recycler: RecyclerView.Recycler?) {
     layoutManager.detachAndScrapAttachedViews(recycler!!)
     }
+
 
     fun recycleView(
     view: View?,
@@ -34,6 +39,7 @@ class RecyclerViewProxy(val layoutManager: RecyclerView.LayoutManager) {
     ) {
     recycler.recycleView(view!!)
     }
+
 
     fun removeAndRecycleAllViews(recycler: RecyclerView.Recycler?) {
     layoutManager.removeAndRecycleAllViews(recycler!!)
@@ -53,6 +59,7 @@ class RecyclerViewProxy(val layoutManager: RecyclerView.LayoutManager) {
     layoutManager.measureChildWithMargins(view, 0, 0)
     return view
     }
+
 
     fun layoutDecoratedWithMargins(
     v: View?,
@@ -87,21 +94,26 @@ class RecyclerViewProxy(val layoutManager: RecyclerView.LayoutManager) {
     val height: Int
     get() = layoutManager.height
 
+
     fun offsetChildrenHorizontal(amount: Int) {
     layoutManager.offsetChildrenHorizontal(amount)
     }
+
 
     fun offsetChildrenVertical(amount: Int) {
     layoutManager.offsetChildrenVertical(amount)
     }
 
+
     fun requestLayout() {
     layoutManager.requestLayout()
     }
 
+
     fun startSmoothScroll(smoothScroller: RecyclerView.SmoothScroller?) {
     layoutManager.startSmoothScroll(smoothScroller)
     }
+
 
     fun removeAllViews() {
     layoutManager.removeAllViews()

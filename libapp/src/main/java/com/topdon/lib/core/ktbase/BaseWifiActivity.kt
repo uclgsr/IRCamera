@@ -2,32 +2,27 @@ package com.topdon.lib.core.ktbase
 
 import android.os.Build
 import android.os.Bundle
-import androidx.preference.PreferenceManager
 import android.view.WindowManager
+import androidx.preference.PreferenceManager
 import com.hjq.permissions.Permission
 import com.topdon.lib.core.utils.NetWorkUtils
 
-/**
-    * des:
-    * author: CaiSongL
-    * date: 2024/4/28 17:08
-    **/
+
 abstract class BaseWifiActivity : BaseActivity() {
     protected val permissionList by lazy {
-    if (this.applicationInfo.targetSdkVersion >= 34)
-    {
-    listOf(
-    Permission.WRITE_EXTERNAL_STORAGE,
-    )
-    } else if (this.applicationInfo.targetSdkVersion == 33) {
-    mutableListOf(
-    Permission.READ_MEDIA_VIDEO,
-    Permission.READ_MEDIA_IMAGES,
-    Permission.WRITE_EXTERNAL_STORAGE,
-    )
-    } else {
-    mutableListOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
-    }
+        if (this.applicationInfo.targetSdkVersion >= 34) {
+            listOf(
+                Permission.WRITE_EXTERNAL_STORAGE,
+            )
+        } else if (this.applicationInfo.targetSdkVersion == 33) {
+            mutableListOf(
+                Permission.READ_MEDIA_VIDEO,
+                Permission.READ_MEDIA_IMAGES,
+                Permission.WRITE_EXTERNAL_STORAGE,
+            )
+        } else {
+            mutableListOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
