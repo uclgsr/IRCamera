@@ -140,7 +140,7 @@ class EnhancedTimeSyncService:
     def __init__(self):
         """Initialize enhanced time synchronization service."""
         self._device_stats: Dict[str, DeviceTimeSyncStats] = {}
-        self._active_sessions: Dict[str, str] = {}  # session_id -> device_id
+        self._active_sessions: Dict[str, Set[str]] = defaultdict(set)  # session_id -> set of device_ids
         self._is_running = False
         
         # Sync quality thresholds
