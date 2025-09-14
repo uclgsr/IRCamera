@@ -25,14 +25,8 @@ import java.io.File
 abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
     protected lateinit var binding: ActivityImagePickIrPlushBinding
 
-    /**
-     * String 类型 - 拾取的图片在本地的绝对路径.
-     */
     val RESULT_IMAGE_PATH = "RESULT_IMAGE_PATH"
 
-    /**
-     * 当前是否已拍了一张照等待完成.
-     */
     private var hasTakePhoto = false
 
     override fun initContentView(): Int {
@@ -50,7 +44,6 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         binding = ActivityImagePickIrPlushBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 默认选中画圆
         binding.ivEditCircle.isSelected = true
         binding.imageEditView.type = ImageEditView.Type.CIRCLE
         binding.viewColor.setBackgroundColor(binding.imageEditView.color)
@@ -72,7 +65,11 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         binding.titleView.setRightClickListener {
             if (hasTakePhoto) {
                 val absolutePath: String = intent.getStringExtra(RESULT_IMAGE_PATH)!!
-                ImageUtils.save(binding.imageEditView.buildResultBitmap(), File(absolutePath), Bitmap.CompressFormat.PNG)
+                ImageUtils.save(
+                    binding.imageEditView.buildResultBitmap(),
+                    File(absolutePath),
+                    Bitmap.CompressFormat.PNG
+                )
                 val intent = Intent()
                 intent.putExtra(RESULT_IMAGE_PATH, absolutePath)
                 setResult(RESULT_OK, intent)
@@ -136,6 +133,7 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
             }
+
             binding.ivEditColor -> {
                 val colorPickDialog = ColorSelectDialog(this, binding.imageEditView.color)
                 colorPickDialog.onPickListener = {
@@ -144,24 +142,28 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
                 }
                 colorPickDialog.show()
             }
+
             binding.ivEditCircle -> {
                 binding.ivEditCircle.isSelected = true
                 binding.ivEditRect.isSelected = false
                 binding.ivEditArrow.isSelected = false
                 binding.imageEditView.type = ImageEditView.Type.CIRCLE
             }
+
             binding.ivEditRect -> {
                 binding.ivEditCircle.isSelected = false
                 binding.ivEditRect.isSelected = true
                 binding.ivEditArrow.isSelected = false
                 binding.imageEditView.type = ImageEditView.Type.RECT
             }
+
             binding.ivEditArrow -> {
                 binding.ivEditCircle.isSelected = false
                 binding.ivEditRect.isSelected = false
                 binding.ivEditArrow.isSelected = true
                 binding.imageEditView.type = ImageEditView.Type.ARROW
             }
+
             binding.ivEditClear -> binding.imageEditView.clear()
         }
     }
@@ -176,9 +178,6 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    /**
-     * 切换 已拍照模式/未拍照模式.
-     */
     private fun switchPhotoState(hasTakePhoto: Boolean) {
         this.hasTakePhoto = hasTakePhoto
         binding.imageEditView.isVisible = hasTakePhoto
@@ -188,10 +187,6 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         binding.titleView.setRightDrawable(if (hasTakePhoto) R.drawable.app_save else 0)
     }
 
-    /**
-     * 显示退出不保存提示弹框
-     * @param listener 点击弹框上退出事件监听
-     */
     private fun showExitTipsDialog(listener: (() -> Unit)) {
         TipDialog.Builder(this)
             .setMessage(R.string.diy_tip_save)

@@ -26,12 +26,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/**
- * 温度修正操作指引.
- *
- * Created by LCG on 2024/11/13.
- */
-class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: DataBean) : Dialog(context, R.style.TransparentDialog) {
+class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: DataBean) :
+    Dialog(context, R.style.TransparentDialog) {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,11 +35,19 @@ class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: Da
         setCanceledOnTouchOutside(false)
         setContentView(LayoutInflater.from(context).inflate(R.layout.dialog_config_guide, null))
 
-        tv_default_temp_title.text = "${context.getString(R.string.thermal_config_environment)} ${UnitTools.showConfigC(-10, if (isTC007) 50 else 55)}"
-        tv_default_dis_title.text = "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)"
-        tv_space_em_title.text = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
+        tv_default_temp_title.text = "${context.getString(R.string.thermal_config_environment)} ${
+            UnitTools.showConfigC(
+                -10,
+                if (isTC007) 50 else 55
+            )
+        }"
+        tv_default_dis_title.text =
+            "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)"
+        tv_space_em_title.text =
+            "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
 
-        tv_default_em_title.text = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
+        tv_default_em_title.text =
+            "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
         tv_default_em_value.text = NumberTools.to02(dataBean.radiation)
 
         val itemDecoration = MyItemDecoration(context)
@@ -72,8 +76,10 @@ class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: Da
     fun blurBg(rootView: View) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val sourceBitmap = Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
-                val outputBitmap = Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
+                val sourceBitmap =
+                    Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
+                val outputBitmap =
+                    Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
                 val canvas = Canvas(sourceBitmap)
                 rootView.draw(canvas)
 
@@ -81,7 +87,8 @@ class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: Da
                 val inputAllocation = Allocation.createFromBitmap(renderScript, sourceBitmap)
                 val outputAllocation = Allocation.createTyped(renderScript, inputAllocation.type)
 
-                val blurScript = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
+                val blurScript =
+                    ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
                 blurScript.setRadius(20f)
                 blurScript.setInput(inputAllocation)
                 blurScript.forEach(outputAllocation)

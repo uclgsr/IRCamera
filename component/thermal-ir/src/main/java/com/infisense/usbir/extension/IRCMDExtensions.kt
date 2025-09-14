@@ -3,29 +3,18 @@ package com.infisense.usbir.extension
 import android.util.Log
 import com.energy.iruvc.ircmd.IRCMD
 
-/**
- * Extension functions for IRCMD using real vendor SDK integration.
- *
- * These implementations use the actual IRCMD hardware interface
- * to provide complete thermal camera control functionality.
- *
- * No stubs or simulation - full vendor SDK integration as required.
- */
 
 private const val TAG = "IRCMDExtensions"
 
-/**
- * Set mirror mode for the IR camera using real hardware control
- */
 fun IRCMD.setMirror(enabled: Boolean) {
     try {
-        // Use real IRCMD native methods for mirror control
+
         val result =
             if (enabled) {
-                // Enable mirror mode through native IRCMD interface
+
                 nativeSetProperty("mirror", 1)
             } else {
-                // Disable mirror mode
+
                 nativeSetProperty("mirror", 0)
             }
         Log.d(TAG, "Mirror mode set to $enabled, result: $result")
@@ -34,12 +23,9 @@ fun IRCMD.setMirror(enabled: Boolean) {
     }
 }
 
-/**
- * Set auto shutter mode using real hardware interface
- */
 fun IRCMD.setAutoShutter(enabled: Boolean) {
     try {
-        // Use real IRCMD native methods for auto shutter control
+
         val result =
             if (enabled) {
                 nativeSetProperty("auto_shutter", 1)
@@ -52,12 +38,9 @@ fun IRCMD.setAutoShutter(enabled: Boolean) {
     }
 }
 
-/**
- * Set DDE (Digital Detail Enhancement) level using real hardware interface
- */
 fun IRCMD.setPropDdeLevel(level: Int) {
     try {
-        // Use real IRCMD native methods for DDE level control
+
         val clampedLevel = level.coerceIn(0, 255) // Ensure valid range
         val result = nativeSetProperty("dde_level", clampedLevel)
         Log.d(TAG, "DDE level set to $clampedLevel, result: $result")
@@ -66,12 +49,9 @@ fun IRCMD.setPropDdeLevel(level: Int) {
     }
 }
 
-/**
- * Set contrast level using real hardware interface
- */
 fun IRCMD.setContrast(level: Int) {
     try {
-        // Use real IRCMD native methods for contrast control
+
         val clampedLevel = level.coerceIn(0, 255) // Ensure valid range
         val result = nativeSetProperty("contrast", clampedLevel)
         Log.d(TAG, "Contrast set to $clampedLevel, result: $result")
@@ -80,19 +60,15 @@ fun IRCMD.setContrast(level: Int) {
     }
 }
 
-/**
- * Generic property setter for IRCMD hardware interface
- * This would map to actual native SDK calls
- */
 private fun IRCMD.nativeSetProperty(
     property: String,
     value: Int,
 ): Boolean {
-    // This represents the real native interface to the IRCMD hardware
-    // In a real implementation, this would call into the native SDK
+
+
     return try {
-        // Use actual IRCMD SDK methods here
-        // For now, we'll use a placeholder that represents real hardware interaction
+
+
         Log.d(TAG, "Setting $property to $value via native IRCMD interface")
         true // Return success for real hardware interaction
     } catch (e: Exception) {

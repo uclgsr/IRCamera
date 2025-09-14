@@ -31,10 +31,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/ic_arrow_right_white"
+            android:drawablePadding="8dp"
             android:paddingHorizontal="8dp"
             android:paddingVertical="5dp"
             android:textColor="@color/white"
-            android:drawablePadding="8dp"
             android:textSize="13sp"
             tools:text="Temperature 90℃-100℃ " />
 

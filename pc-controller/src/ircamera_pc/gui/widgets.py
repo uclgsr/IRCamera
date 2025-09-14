@@ -34,10 +34,12 @@ except ImportError:
     # Fallback in case plotting widgets are not available
     logging.warning("Plotting widgets not available - using placeholder classes")
 
+
     class MultiModalDashboard(QWidget):
         def __init__(self):
             super().__init__()
             self.setMinimumSize(400, 300)
+
 
     class DataAggregationWidget(QWidget):
         def __init__(self):
@@ -458,7 +460,7 @@ class IntegrationManagementWidget(QWidget):
             self.hub_connect_btn.setText("Connect to Hub")
 
     def update_spoke_count(
-        self, count: int = 0, active_spokes: Optional[List[str]] = None
+            self, count: int = 0, active_spokes: Optional[List[str]] = None
     ) -> None:
         """Update active spoke count and list."""
         self.spoke_count_label.setText(f"Active Spokes: {count}")
@@ -471,7 +473,7 @@ class IntegrationManagementWidget(QWidget):
             self.spoke_count_label.setStyleSheet("color: gray;")
 
     def update_sync_status(
-        self, synchronized: bool = False, max_offset_ms: float = 0
+            self, synchronized: bool = False, max_offset_ms: float = 0
     ) -> None:
         """Update time synchronization status."""
         if synchronized:
@@ -487,7 +489,7 @@ class IntegrationManagementWidget(QWidget):
             self.sync_status_label.setStyleSheet("color: red;")
 
     def update_metrics(
-        self, data_rate_mbps: float, latency_ms: float, error_count: int
+            self, data_rate_mbps: float, latency_ms: float, error_count: int
     ) -> None:
         """Update real-time performance metrics."""
         self.data_rate_label.setText(f"Data Rate: {data_rate_mbps:.2f} MB/s")

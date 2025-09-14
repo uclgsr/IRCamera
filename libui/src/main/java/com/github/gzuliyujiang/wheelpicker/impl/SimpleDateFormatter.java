@@ -15,12 +15,6 @@ package com.github.gzuliyujiang.wheelpicker.impl;
 
 import com.github.gzuliyujiang.wheelpicker.contract.DateFormatter;
 
-/**
- * 简单的日期格式化
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/5/15 18:11
- */
 public class SimpleDateFormatter implements DateFormatter {
 
     @Override

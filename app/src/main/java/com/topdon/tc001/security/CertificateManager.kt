@@ -3,9 +3,17 @@ package com.topdon.tc001.security
 import android.content.Context
 import android.util.Log
 import com.topdon.tc001.logging.StructuredLogger
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
-import java.security.*
+import java.security.KeyFactory
+import java.security.KeyPair
+import java.security.KeyPairGenerator
+import java.security.PrivateKey
+import java.security.PublicKey
+import java.security.SecureRandom
+import java.security.Signature
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.security.spec.PKCS8EncodedKeySpec
@@ -13,11 +21,6 @@ import java.security.spec.X509EncodedKeySpec
 import java.util.concurrent.ConcurrentHashMap
 import javax.crypto.Cipher
 
-/**
- * Certificate Manager for Phase 4 Security Enhancement
- *
- * Handles device certificate generation, validation, and rotation for secure authentication
- */
 class CertificateManager(
     private val context: Context,
     private val logger: StructuredLogger,
@@ -25,53 +28,41 @@ class CertificateManager(
     companion object {
         private const val TAG = "CertificateManager"
 
-        // Certificate configuration
         private const val KEY_SIZE = 2048
         private const val CERTIFICATE_VALIDITY_DAYS = 365
         private const val ROTATION_THRESHOLD_DAYS = 30
 
-        // Algorithm specifications
         private const val KEY_ALGORITHM = "RSA"
         private const val SIGNATURE_ALGORITHM = "SHA256withRSA"
         private const val CIPHER_TRANSFORMATION = "RSA/ECB/PKCS1Padding"
 
-        // File paths
         private const val CERT_DIR = "certificates"
         private const val DEVICE_CERT_FILE = "device_cert.pem"
         private const val DEVICE_KEY_FILE = "device_key.pem"
         private const val TRUSTED_CERTS_FILE = "trusted_certs.pem"
     }
 
-    // Certificate storage
     private val deviceCertificates = ConcurrentHashMap<String, X509Certificate>()
     private val trustedCertificates = ConcurrentHashMap<String, X509Certificate>()
     private val deviceKeyPairs = ConcurrentHashMap<String, KeyPair>()
 
-    // Certificate directory
     private val certDirectory: File by lazy {
         File(context.filesDir, CERT_DIR).apply { mkdirs() }
     }
 
-    // Current device certificate and key
     private var deviceCertificate: X509Certificate? = null
     private var deviceKeyPair: KeyPair? = null
 
-    /**
-     * Initialize certificate manager
-     */
     fun initialize(): Boolean {
         return try {
             Log.i(TAG, "Initializing certificate manager")
 
-            // Load or generate device certificate
             if (!loadDeviceCertificate()) {
                 generateDeviceCertificate()
             }
 
-            // Load trusted certificates
             loadTrustedCertificates()
 
-            // Start certificate rotation monitoring
             startCertificateRotationMonitoring()
 
             logger.log(
@@ -100,9 +91,6 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Validate device certificate and signature
-     */
     fun validateCertificate(
         deviceId: String,
         certificate: ByteArray,
@@ -110,26 +98,22 @@ class CertificateManager(
         challenge: String,
     ): AdvancedAuthenticationManager.AuthenticationResult {
         return try {
-            // Parse certificate
+
             val certFactory = CertificateFactory.getInstance("X.509")
             val cert = certFactory.generateCertificate(certificate.inputStream()) as X509Certificate
 
-            // Check certificate validity
             cert.checkValidity()
 
-            // Verify certificate chain (if we have a trusted CA)
             if (!verifyCertificateChain(cert)) {
                 Log.w(TAG, "Certificate chain verification failed for device $deviceId")
                 return AdvancedAuthenticationManager.AuthenticationResult.CERTIFICATE_INVALID
             }
 
-            // Verify digital signature
             if (!verifySignature(cert.publicKey, challenge.toByteArray(), signature)) {
                 Log.w(TAG, "Signature verification failed for device $deviceId")
                 return AdvancedAuthenticationManager.AuthenticationResult.CERTIFICATE_INVALID
             }
 
-            // Store certificate for this device
             deviceCertificates[deviceId] = cert
 
             logger.log(
@@ -159,27 +143,20 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Generate device certificate and key pair
-     */
     private fun generateDeviceCertificate() {
         try {
             Log.i(TAG, "Generating new device certificate")
 
-            // Generate key pair
             val keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM)
             keyPairGenerator.initialize(KEY_SIZE, SecureRandom())
             val keyPair = keyPairGenerator.generateKeyPair()
 
-            // For simplicity, create a self-signed certificate
-            // In production, this would be signed by a proper CA
+
             val certificate = createSelfSignedCertificate(keyPair)
 
-            // Store certificate and key
             deviceCertificate = certificate
             deviceKeyPair = keyPair
 
-            // Save to files
             saveDeviceCertificate(certificate, keyPair)
 
             logger.log(
@@ -198,26 +175,15 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Create self-signed certificate (simplified for demo)
-     */
     private fun createSelfSignedCertificate(keyPair: KeyPair): X509Certificate {
-        // This is a simplified implementation
-        // In a real implementation, you would use BouncyCastle or similar library
-        // to create proper X.509 certificates with all required fields
 
-        // For now, we'll create a dummy certificate representation
-        // The actual X.509 certificate generation requires more complex setup
 
         throw UnsupportedOperationException(
             "Self-signed certificate generation requires BouncyCastle library. " +
-                "This is a placeholder for the actual implementation.",
+                    "This is a placeholder for the actual implementation.",
         )
     }
 
-    /**
-     * Load device certificate from storage
-     */
     private fun loadDeviceCertificate(): Boolean {
         return try {
             val certFile = File(certDirectory, DEVICE_CERT_FILE)
@@ -227,17 +193,14 @@ class CertificateManager(
                 return false
             }
 
-            // Load certificate
             val certFactory = CertificateFactory.getInstance("X.509")
             val cert = certFactory.generateCertificate(certFile.inputStream()) as X509Certificate
 
-            // Load private key
             val keyBytes = keyFile.readBytes()
             val keySpec = PKCS8EncodedKeySpec(keyBytes)
             val keyFactory = KeyFactory.getInstance(KEY_ALGORITHM)
             val privateKey = keyFactory.generatePrivate(keySpec)
 
-            // Create key pair (we don't store public key separately)
             val publicKeySpec = X509EncodedKeySpec(cert.publicKey.encoded)
             val publicKey = keyFactory.generatePublic(publicKeySpec)
             val keyPair = KeyPair(publicKey, privateKey)
@@ -253,9 +216,6 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Save device certificate to storage
-     */
     private fun saveDeviceCertificate(
         certificate: X509Certificate,
         keyPair: KeyPair,
@@ -264,10 +224,8 @@ class CertificateManager(
             val certFile = File(certDirectory, DEVICE_CERT_FILE)
             val keyFile = File(certDirectory, DEVICE_KEY_FILE)
 
-            // Save certificate
             certFile.writeBytes(certificate.encoded)
 
-            // Save private key
             keyFile.writeBytes(keyPair.private.encoded)
 
             Log.i(TAG, "Device certificate saved to storage")
@@ -277,9 +235,6 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Load trusted certificates
-     */
     private fun loadTrustedCertificates() {
         try {
             val trustedFile = File(certDirectory, TRUSTED_CERTS_FILE)
@@ -288,26 +243,19 @@ class CertificateManager(
                 return
             }
 
-            // Load trusted certificates (simplified implementation)
-            // In a real implementation, this would parse PEM format certificates
+
             Log.i(TAG, "Trusted certificates loaded")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to load trusted certificates", e)
         }
     }
 
-    /**
-     * Verify certificate chain
-     */
     private fun verifyCertificateChain(certificate: X509Certificate): Boolean {
-        // Simplified verification - in production, this would verify the full chain
-        // For now, accept all certificates for development
+
+
         return true
     }
 
-    /**
-     * Verify digital signature
-     */
     private fun verifySignature(
         publicKey: PublicKey,
         data: ByteArray,
@@ -324,9 +272,6 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Start certificate rotation monitoring
-     */
     private fun startCertificateRotationMonitoring() {
         GlobalScope.launch {
             while (true) {
@@ -339,7 +284,10 @@ class CertificateManager(
                         val daysUntilExpiry = (expiryTime - currentTime) / (24 * 60 * 60 * 1000L)
 
                         if (daysUntilExpiry <= ROTATION_THRESHOLD_DAYS) {
-                            Log.i(TAG, "Certificate rotation needed - expires in $daysUntilExpiry days")
+                            Log.i(
+                                TAG,
+                                "Certificate rotation needed - expires in $daysUntilExpiry days"
+                            )
                             rotateCertificate()
                         }
                     }
@@ -350,20 +298,16 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Rotate device certificate
-     */
     private fun rotateCertificate() {
         try {
             Log.i(TAG, "Rotating device certificate")
 
-            // Backup old certificate
             deviceCertificate?.let { oldCert ->
-                val backupFile = File(certDirectory, "device_cert_backup_${System.currentTimeMillis()}.pem")
+                val backupFile =
+                    File(certDirectory, "device_cert_backup_${System.currentTimeMillis()}.pem")
                 backupFile.writeBytes(oldCert.encoded)
             }
 
-            // Generate new certificate
             generateDeviceCertificate()
 
             logger.log(
@@ -388,19 +332,10 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Get device certificate for authentication
-     */
     fun getDeviceCertificate(): X509Certificate? = deviceCertificate
 
-    /**
-     * Get device private key for signing
-     */
     fun getDevicePrivateKey(): PrivateKey? = deviceKeyPair?.private
 
-    /**
-     * Sign data with device private key
-     */
     fun signData(data: ByteArray): ByteArray? {
         return try {
             val privateKey = deviceKeyPair?.private ?: return null
@@ -415,9 +350,6 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Encrypt data with certificate public key
-     */
     fun encryptData(
         data: ByteArray,
         certificate: X509Certificate,
@@ -432,9 +364,6 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Decrypt data with device private key
-     */
     fun decryptData(encryptedData: ByteArray): ByteArray? {
         return try {
             val privateKey = deviceKeyPair?.private ?: return null
@@ -448,9 +377,6 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Get certificate diagnostics
-     */
     fun getDiagnostics(): Map<String, Any> {
         return mapOf(
             "device_cert_available" to (deviceCertificate != null),

@@ -5,32 +5,20 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.SystemClock
 import android.util.Log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.abs
 
-/**
- * High-precision time management for multi-modal sensor synchronization.
- *
- * This manager handles temporal synchronization between the Android Sensor Node (Spoke)
- * and the PC Controller (Hub) to achieve sub-5ms accuracy as required.
- *
- * Features:
- * - NTP-like clock synchronization with PC Controller
- * - High-precision monotonic clock baseline
- * - Clock drift detection and compensation
- * - Network latency measurement and compensation
- * - Synchronized timestamp generation for all sensors
- *
- * Technical Approach:
- * - Uses SystemClock.elapsedRealtimeNanos() for monotonic baseline
- * - Implements custom NTP-like protocol for PC sync
- * - Calculates and applies clock offset corrections
- * - Monitors sync quality and drift over time
- *
- * @author IRCamera Android Sensor Node (Spoke)
- */
 class TimeManager(
     private val context: Context,
 ) {
@@ -59,43 +47,33 @@ class TimeManager(
     private var isTimeSynced = false
 
     // Network connectivity
-    private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     // Monitoring
     private val syncScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var driftMonitoringJob: Job? = null
 
-    /**
-     * Get the current synchronized timestamp in nanoseconds.
-     * This is the primary method for generating timestamps for sensor data.
-     */
     fun getCurrentTimestampNs(): Long {
         val monotonicTime = SystemClock.elapsedRealtimeNanos()
         val offset = clockOffsetNs.get()
         return monotonicTime + offset
     }
 
-    /**
-     * Get the current synchronized timestamp in milliseconds.
-     */
     fun getCurrentTimestampMs(): Long {
         return getCurrentTimestampNs() / 1_000_000
     }
 
-    /**
-     * Synchronize clock with PC Controller using NTP-like protocol.
-     *
-     * @param pcControllerAddress IP address of PC Controller
-     * @param port Time sync port on PC Controller
-     * @return true if synchronization successful, false otherwise
-     */
     suspend fun synchronizeWithPC(
         pcControllerAddress: String,
         port: Int = 8082,
     ): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                Log.i(TAG, "Starting time synchronization with PC Controller: $pcControllerAddress:$port")
+                Log.i(
+                    TAG,
+                    "Starting time synchronization with PC Controller: $pcControllerAddress:$port"
+                )
 
                 if (!isNetworkAvailable()) {
                     Log.w(TAG, "Network not available for time synchronization")
@@ -142,10 +120,16 @@ class TimeManager(
                     // Start drift monitoring
                     startDriftMonitoring()
 
-                    Log.i(TAG, "Time synchronization successful: offset=${bestOffset}ns, quality=${bestRtt / 1_000_000}ms")
+                    Log.i(
+                        TAG,
+                        "Time synchronization successful: offset=${bestOffset}ns, quality=${bestRtt / 1_000_000}ms"
+                    )
                     return@withContext true
                 } else {
-                    Log.e(TAG, "Time synchronization failed: $successCount/$SYNC_RETRY_COUNT rounds succeeded")
+                    Log.e(
+                        TAG,
+                        "Time synchronization failed: $successCount/$SYNC_RETRY_COUNT rounds succeeded"
+                    )
                     return@withContext false
                 }
             } catch (e: Exception) {
@@ -255,10 +239,13 @@ class TimeManager(
             for (line in lines) {
                 when {
                     line.contains("pc_receive_time") -> {
-                        pcReceiveTime = line.substringAfter(":").trim().removeSuffix("}").toLongOrNull()
+                        pcReceiveTime =
+                            line.substringAfter(":").trim().removeSuffix("}").toLongOrNull()
                     }
+
                     line.contains("pc_send_time") -> {
-                        pcSendTime = line.substringAfter(":").trim().removeSuffix("}").toLongOrNull()
+                        pcSendTime =
+                            line.substringAfter(":").trim().removeSuffix("}").toLongOrNull()
                     }
                 }
             }
@@ -287,10 +274,14 @@ class TimeManager(
 
                     try {
                         // Check if resync is needed based on time since last sync
-                        val timeSinceSync = (getCurrentTimestampNs() - lastSyncTimestamp.get()) / 1_000_000
+                        val timeSinceSync =
+                            (getCurrentTimestampNs() - lastSyncTimestamp.get()) / 1_000_000
 
                         if (timeSinceSync > 300_000) { // 5 minutes
-                            Log.i(TAG, "Clock drift monitoring: time since last sync = ${timeSinceSync}ms")
+                            Log.i(
+                                TAG,
+                                "Clock drift monitoring: time since last sync = ${timeSinceSync}ms"
+                            )
                             // Could trigger automatic resync here if needed
                         }
                     } catch (e: Exception) {
@@ -310,9 +301,6 @@ class TimeManager(
         }
     }
 
-    /**
-     * Get synchronization quality information
-     */
     fun getSyncQuality(): SyncQuality {
         val qualityMs = syncQualityMs.get()
         val timeSinceSync =
@@ -340,9 +328,6 @@ class TimeManager(
         )
     }
 
-    /**
-     * Create a timestamp with sync marker for external synchronization
-     */
     fun createSyncMarker(markerType: String): SyncMarker {
         val timestamp = getCurrentTimestampNs()
         return SyncMarker(
@@ -353,9 +338,6 @@ class TimeManager(
         )
     }
 
-    /**
-     * Calculate time difference between two timestamps accounting for sync
-     */
     fun calculateTimeDifferenceNs(
         timestamp1: Long,
         timestamp2: Long,
@@ -363,9 +345,6 @@ class TimeManager(
         return abs(timestamp2 - timestamp1)
     }
 
-    /**
-     * Check if two timestamps are synchronized within tolerance
-     */
     fun areTimestampsSynchronized(
         timestamp1: Long,
         timestamp2: Long,
@@ -375,9 +354,6 @@ class TimeManager(
         return differenceMs <= toleranceMs
     }
 
-    /**
-     * Clean up time manager resources
-     */
     fun cleanup() {
         driftMonitoringJob?.cancel()
         syncScope.cancel()
@@ -386,26 +362,17 @@ class TimeManager(
     }
 }
 
-/**
- * Result of a single time synchronization round
- */
 private data class TimeSyncResult(
     val clockOffsetNs: Long,
     val roundTripTimeNs: Long,
     val networkDelayNs: Long,
 )
 
-/**
- * Response from PC Controller time sync request
- */
 private data class TimeSyncResponse(
     val pcReceiveTime: Long,
     val pcSendTime: Long,
 )
 
-/**
- * Synchronization quality levels
- */
 enum class SyncQualityLevel {
     NOT_SYNCED,
     EXCELLENT, // < 5ms
@@ -414,9 +381,6 @@ enum class SyncQualityLevel {
     POOR, // > 20ms
 }
 
-/**
- * Synchronization quality information
- */
 data class SyncQuality(
     val level: SyncQualityLevel,
     val offsetNs: Long,
@@ -425,9 +389,6 @@ data class SyncQuality(
     val isSynced: Boolean,
 )
 
-/**
- * Synchronization marker with timing information
- */
 data class SyncMarker(
     val markerType: String,
     val timestampNs: Long,

@@ -95,7 +95,7 @@ class IRVideoGSYActivity : BaseActivity() {
         GSYVideoOptionBuilder()
             .setUrl(url)
             .build(gsy_play)
-        // 界面设置
+
         gsy_play.isNeedShowWifiTip = false // 不显示消耗流量弹框
         gsy_play.titleTextView.visibility = View.GONE
         gsy_play.backButton.visibility = View.GONE
@@ -112,8 +112,14 @@ class IRVideoGSYActivity : BaseActivity() {
         lifecycleScope.launch {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             showCameraLoading()
-            val isSuccess = TS004Repository.download(data.path, File(FileConfig.ts004GalleryDir, data.name))
-            MediaScannerConnection.scanFile(this@IRVideoGSYActivity, arrayOf(FileConfig.ts004GalleryDir), null, null)
+            val isSuccess =
+                TS004Repository.download(data.path, File(FileConfig.ts004GalleryDir, data.name))
+            MediaScannerConnection.scanFile(
+                this@IRVideoGSYActivity,
+                arrayOf(FileConfig.ts004GalleryDir),
+                null,
+                null
+            )
             dismissCameraLoading()
             if (isSuccess) {
                 ToastTools.showShort(R.string.tip_save_success)
@@ -136,7 +142,7 @@ class IRVideoGSYActivity : BaseActivity() {
         str.append(getString(R.string.detail_date)).append("\n")
         str.append(TimeTool.showDateType(data.timeMillis)).append("\n\n")
         str.append(getString(R.string.detail_info)).append("\n")
-//        str.append("尺寸: ").append(whStr).append("\n")
+
         str.append("${getString(R.string.detail_len)}: ").append(sizeStr).append("\n")
         str.append("${getString(R.string.detail_path)}: ").append(data.path).append("\n")
         TipDialog.Builder(this)
@@ -174,7 +180,12 @@ class IRVideoGSYActivity : BaseActivity() {
                 if (isSuccess) {
                     if (isDelLocal) {
                         File(FileConfig.ts004GalleryDir, data.name).delete()
-                        MediaScannerConnection.scanFile(this@IRVideoGSYActivity, arrayOf(FileConfig.ts004GalleryDir), null, null)
+                        MediaScannerConnection.scanFile(
+                            this@IRVideoGSYActivity,
+                            arrayOf(FileConfig.ts004GalleryDir),
+                            null,
+                            null
+                        )
                     }
                     dismissCameraLoading()
                     ToastTools.showShort(R.string.test_results_delete_success)

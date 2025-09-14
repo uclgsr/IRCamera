@@ -120,11 +120,11 @@ class ThermalInputDialog : Dialog {
             min: Float,
         ): Builder {
             if (SharedManager.getTemperature() == 1) {
-                // 摄氏度
+
                 this.max = max
                 this.min = min
             } else {
-                // 转成华氏度
+
                 this.max = UnitTools.toF(max)
                 this.min = UnitTools.toF(min)
             }
@@ -215,18 +215,16 @@ class ThermalInputDialog : Dialog {
             recycler = view.color_picker_recycler
             view.color_picker_view_lay.visibility = View.GONE
             view.dialog_input_lay.visibility = View.VISIBLE
-            // Hide颜色
-            if (isIconEdit)
-                {
-                    view.dialog_up_color.visibility = View.GONE
-                    view.dialog_down_color.visibility = View.GONE
-                } else
-                {
-                    view.dialog_up_color.visibility = View.VISIBLE
-                    view.dialog_down_color.visibility = View.VISIBLE
-                }
+
+            if (isIconEdit) {
+                view.dialog_up_color.visibility = View.GONE
+                view.dialog_down_color.visibility = View.GONE
+            } else {
+                view.dialog_up_color.visibility = View.VISIBLE
+                view.dialog_down_color.visibility = View.VISIBLE
+            }
             messageText.text = message
-            // 初始化颜色
+
             if (maxColor != 0) upColor = maxColor
             if (minColor != 0) downColor = minColor
             upUnit.text = UnitTools.showUnit()
@@ -249,10 +247,10 @@ class ThermalInputDialog : Dialog {
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    // 竖屏
+
                     0.85
                 } else {
-                    // 横屏
+
                     0.35
                 }
             lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
@@ -261,7 +259,7 @@ class ThermalInputDialog : Dialog {
             dialog!!.setCanceledOnTouchOutside(canceled)
             successBtn.setOnClickListener {
                 if (view.color_picker_view_lay.isVisible) {
-                    // 选取颜色,Return上一步
+
                     view.color_picker_view_lay.visibility = View.GONE
                     view.dialog_input_lay.visibility = View.VISIBLE
                     messageText.text = message
@@ -280,71 +278,66 @@ class ThermalInputDialog : Dialog {
                     dialog!!.action = 100
                     return@setOnClickListener
                 }
-                if (upEdit.text.isNullOrEmpty() || downEdit.text.isNullOrEmpty())
-                    {
-                        ToastTools.showShort(com.topdon.lib.core.R.string.ui_fill_in_the_complete)
-                        return@setOnClickListener
-                    }
+                if (upEdit.text.isNullOrEmpty() || downEdit.text.isNullOrEmpty()) {
+                    ToastTools.showShort(com.topdon.lib.core.R.string.ui_fill_in_the_complete)
+                    return@setOnClickListener
+                }
 
                 val upValue = upEdit.text.trim().toString()
                 val downValue = downEdit.text.trim().toString()
                 try {
-                    if (upValue.toFloat() < downValue.toFloat())
-                        {
-                            ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
-                            return@setOnClickListener
-                        }
+                    if (upValue.toFloat() < downValue.toFloat()) {
+                        ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
+                        return@setOnClickListener
+                    }
                 } catch (e: Exception) {
                     ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
                     return@setOnClickListener
                 }
-                if (sub(upValue, downValue) < 0.1f)
-                    {
-                        ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
-                        return@setOnClickListener
-                    }
-//                if (upValue.isBlank() && downValue.isBlank()) {
-//                    ToastTools.showShort(R.string.ui_fill_in_the_complete)
-//                    return@setOnClickListener
-//                }
+                if (sub(upValue, downValue) < 0.1f) {
+                    ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
+                    return@setOnClickListener
+                }
+
+
+
+
                 if ((upValue.isNotBlank() && downValue.isNotBlank()) && upValue.toFloat() < downValue.toFloat()) {
                     ToastTools.showShort(R.string.tip_input_format)
                     return@setOnClickListener
                 }
 
                 dismiss()
-                if (isIconEdit)
-                    {
+                if (isIconEdit) {
+                    positiveEvent?.invoke(
+                        if (upValue.isBlank()) -273f else upValue.toFloat(),
+                        if (downValue.isBlank()) -273f else downValue.toFloat(),
+                        upColor,
+                        downColor,
+                    )
+                } else {
+                    if (SharedManager.getTemperature() == 1) {
+
                         positiveEvent?.invoke(
                             if (upValue.isBlank()) -273f else upValue.toFloat(),
                             if (downValue.isBlank()) -273f else downValue.toFloat(),
                             upColor,
                             downColor,
                         )
-                    } else
-                    {
-                        if (SharedManager.getTemperature() == 1) {
-                            // 摄氏度不用转
-                            positiveEvent?.invoke(
-                                if (upValue.isBlank()) -273f else upValue.toFloat(),
-                                if (downValue.isBlank()) -273f else downValue.toFloat(),
-                                upColor,
-                                downColor,
-                            )
-                        } else {
-                            // 华氏度
-                            positiveEvent?.invoke(
-                                if (upValue.isBlank()) -273f else UnitTools.toC(upValue.toFloat()),
-                                if (downValue.isBlank()) -273f else UnitTools.toC(downValue.toFloat()),
-                                upColor,
-                                downColor,
-                            )
-                        }
+                    } else {
+
+                        positiveEvent?.invoke(
+                            if (upValue.isBlank()) -273f else UnitTools.toC(upValue.toFloat()),
+                            if (downValue.isBlank()) -273f else UnitTools.toC(downValue.toFloat()),
+                            upColor,
+                            downColor,
+                        )
                     }
+                }
             }
             cancelBtn.setOnClickListener {
                 if (view.color_picker_view_lay.isVisible) {
-                    // Return上一步
+
                     view.color_picker_view_lay.visibility = View.GONE
                     view.dialog_input_lay.visibility = View.VISIBLE
                     messageText.text = message
@@ -375,15 +368,15 @@ class ThermalInputDialog : Dialog {
                         fromUser: Boolean,
                     ) {
                         if ("#${envelope.hexCode}" != "#FFFFFFFF") {
-                            // 非预设颜色,复位预设参数
+
                             adapter.selected(-1)
                             selectColor = 0
                         }
                         if (dialog!!.action == 201) {
-                            // 第一个颜色
+
                             upColor = Color.parseColor("#${envelope.hexCode}")
                         } else if (dialog!!.action == 301) {
-                            // 第二个颜色
+
                             downColor = Color.parseColor("#${envelope.hexCode}")
                         }
                     }
@@ -399,10 +392,10 @@ class ThermalInputDialog : Dialog {
             } else {
                 downEdit.setText(NumberTools.scale(min, 1).toString())
             }
-//            if (max != 0f && min != 0f) {
-//                upEdit.setText(max.toString())
-//                downEdit.setText(min.toString())
-//            }
+
+
+
+
             if (positiveStr != null) {
                 successBtn.text = positiveStr
             }
@@ -413,7 +406,7 @@ class ThermalInputDialog : Dialog {
                 cancelBtn.visibility = View.GONE
                 cancelBtn.text = ""
             }
-            // msg
+
             if (message != null) {
                 messageText.visibility = View.VISIBLE
                 messageText.setText(message, TextView.BufferType.NORMAL)

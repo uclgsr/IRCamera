@@ -1,22 +1,21 @@
 package com.topdon.module.thermal.base
 
 import android.graphics.Bitmap
-import android.widget.*
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.topdon.lib.core.ktbase.BaseFragment
 import kotlinx.coroutines.Job
 
-/**
- * Base thermal fragment for thermal imaging components.
- * Handles specific UI sections and user interactions.
- */
 open class BaseThermalFragment : BaseFragment() {
     var mIrBitmap: Bitmap? = null
     val REQUEST_CODE_FROM_UPGRADE = 1001
     val SRC_WIDTH = 192
     val SRC_HEIGHT = 256
 
-    // 0-9
     var paletteIndex = 0
     var irSurfaceViewLayoutParams: ConstraintLayout.LayoutParams? = null
     var displayViewLayoutParams: FrameLayout.LayoutParams? = null

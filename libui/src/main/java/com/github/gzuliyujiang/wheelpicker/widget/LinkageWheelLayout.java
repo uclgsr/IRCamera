@@ -33,12 +33,6 @@ import com.topdon.lib.ui.R;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * 二三级联动滚轮控件
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/6/15 11:55
- */
 @SuppressWarnings("unused")
 public class LinkageWheelLayout extends BaseWheelLayout {
     private WheelView firstWheelView, secondWheelView, thirdWheelView;

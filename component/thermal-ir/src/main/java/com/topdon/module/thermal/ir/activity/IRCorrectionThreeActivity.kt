@@ -9,15 +9,12 @@ import com.topdon.module.thermal.ir.fragment.IRCorrectionFragment
 
 /**
  *
-// 锅盖矫正
+
  * @author: CaiSongL
  * @date: 2023/8/4 9:06
  */
-// Legacy ARouter route annotation - now using NavigationManager
-/**
- * I r correction three activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
+
 class IRCorrectionThreeActivity : BaseActivity() {
     override fun initContentView(): Int = R.layout.activity_ir_correction_three
 

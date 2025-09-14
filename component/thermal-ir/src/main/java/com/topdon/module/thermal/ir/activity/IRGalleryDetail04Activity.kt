@@ -40,29 +40,16 @@ import java.io.File
 import com.topdon.lib.core.R as LibR
 import com.topdon.lib.ui.R as UiR
 
-/**
-// TS004 图片详情
- */
-// Legacy ARouter route annotation - now using NavigationManager
-/**
- * I r gallery detail04 activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
 class IRGalleryDetail04Activity : BaseActivity() {
     /**
-// 是否查看远端data.
-// true-远端data false-手机本地data
+
+
      */
     private var isRemote = false
 
-    /**
-// 当前展示图片在列表中的 position
-     */
     private var position = 0
 
-    /**
-// 从上一interface传递过来的，当前展示的图片列表.
-     */
     private lateinit var dataList: ArrayList<GalleryBean>
 
     override fun initContentView() = R.layout.activity_ir_gallery_detail_04
@@ -117,7 +104,8 @@ class IRGalleryDetail04Activity : BaseActivity() {
                     super.onPageSelected(position)
                     this@IRGalleryDetail04Activity.position = position
                     findViewById<com.topdon.lib.core.view.TitleView>(R.id.title_view).setTitleText("${position + 1}/${dataList.size}")
-                    findViewById<ImageView>(R.id.iv_download).isSelected = dataList[position].hasDownload
+                    findViewById<ImageView>(R.id.iv_download).isSelected =
+                        dataList[position].hasDownload
                 }
             },
         )
@@ -178,7 +166,12 @@ class IRGalleryDetail04Activity : BaseActivity() {
                 if (isSuccess) {
                     if (isDelLocal) {
                         File(FileConfig.ts004GalleryDir, data.name).delete()
-                        MediaScannerConnection.scanFile(this@IRGalleryDetail04Activity, arrayOf(FileConfig.ts004GalleryDir), null, null)
+                        MediaScannerConnection.scanFile(
+                            this@IRGalleryDetail04Activity,
+                            arrayOf(FileConfig.ts004GalleryDir),
+                            null,
+                            null
+                        )
                     }
 
                     dismissCameraLoading()
@@ -195,7 +188,10 @@ class IRGalleryDetail04Activity : BaseActivity() {
                     }
                 } else {
                     dismissCameraLoading()
-                    TToast.shortToast(this@IRGalleryDetail04Activity, LibR.string.test_results_delete_failed)
+                    TToast.shortToast(
+                        this@IRGalleryDetail04Activity,
+                        LibR.string.test_results_delete_failed
+                    )
                 }
             }
         } else {
@@ -248,10 +244,16 @@ class IRGalleryDetail04Activity : BaseActivity() {
                     EventBus.getDefault().post(GalleryDownloadEvent(data.name))
                     dismissCameraLoading()
                     FileUtils.copy(resource, File(FileConfig.ts004GalleryDir, data.name))
-                    MediaScannerConnection.scanFile(this@IRGalleryDetail04Activity, arrayOf(FileConfig.ts004GalleryDir), null, null)
+                    MediaScannerConnection.scanFile(
+                        this@IRGalleryDetail04Activity,
+                        arrayOf(FileConfig.ts004GalleryDir),
+                        null,
+                        null
+                    )
                     ToastTools.showShort(LibR.string.tip_save_success)
                     data.hasDownload = true
-                    findViewById<ImageView>(R.id.iv_download).isSelected = dataList[position].hasDownload
+                    findViewById<ImageView>(R.id.iv_download).isSelected =
+                        dataList[position].hasDownload
                     if (isToShare) {
                         actionShare()
                     }

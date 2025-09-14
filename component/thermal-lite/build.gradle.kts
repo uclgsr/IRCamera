@@ -1,17 +1,16 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    // Temporarily disable KAPT to fix compilation issues
-    // kotlin("kapt")
+
+
     kotlin("plugin.parcelize")
 }
 
-// kapt {
-//     arguments {
-//         arg("AROUTER_MODULE_NAME", project.name)
-//     }
-//     correctErrorTypes = true
-// }
+
+
+
+
+
 
 android {
     namespace = "com.example.thermal_lite"
@@ -19,7 +18,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        // targetSdk removed for library modules - only set in main app module per AGP 8.0+
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -35,10 +34,9 @@ android {
         }
     }
 
-    // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
-            // Only enable release variant for single-developer maintenance
+
             variant.enable = variant.buildType == "release"
         }
     }
@@ -72,39 +70,34 @@ android {
 }
 
 dependencies {
-    // Core library desugaring support
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
     implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
     implementation(project(":libmenu"))
-    // Add CommonComponent dependency - contains RotateDegree class needed by thermal-lite
+
     implementation(project(":component:CommonComponent"))
     implementation(project(":component:pseudo"))
-    // Re-add thermal-ir dependency - needed for thermal-lite functionality
-    implementation(project(":component:thermal-ir"))
-    // Removed commonlibrary dependency - module removed as unused
 
-    // Enhanced BLE harmonization - Thermal-lite cross-modal coordination
+    implementation(project(":component:thermal-ir"))
+
+
     implementation(project(":BleModule"))
 
-    // AAR dependencies as compileOnly for compilation but not packaging
     compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar")) // AC020 SDK for thermal-lite functionality
     compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar")) // IR utilities for thermal-lite
     compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) // Required for iruvc classes
     compileOnly(files("../../shared/libs/lms_international-3.90.009.0.aar")) // LMS SDK for thermal-lite classes
-    // Add libcommon dependency for SurfaceNativeWindow class
-    // Changed to compileOnly since library modules cannot include AAR dependencies directly
+
+
     compileOnly(files("../../app/libs/libcommon_1.2.0_24052117.aar"))
 
-    // Temporarily disable ARouter compiler until KAPT issues are resolved
 
-    // Use shared UI bundle for common dependencies
     implementation(libs.bundles.ui.common)
     implementation(libs.utilcode)
 
-    // Test dependencies - using Robolectric for context-based testing
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

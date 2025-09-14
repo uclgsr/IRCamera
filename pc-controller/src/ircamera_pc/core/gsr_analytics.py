@@ -7,17 +7,16 @@ for the Multi-Modal Physiological Sensing Platform
 import asyncio
 import json
 import logging
+import numpy as np
+import pandas as pd
 import warnings
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
-
-import numpy as np
-import pandas as pd
 from scipy import signal, stats
 from scipy.ndimage import uniform_filter1d
+from typing import Any, Dict, List, Optional, Tuple
 
 # Suppress scipy warnings for cleaner output
 warnings.filterwarnings("ignore", category=RuntimeWarning)
@@ -111,10 +110,10 @@ class GSRAnalytics:
     """Advanced GSR analytics and signal processing"""
 
     def __init__(
-        self,
-        window_size_seconds: int = 60,
-        overlap_seconds: int = 30,
-        sampling_rate: float = 128.0,
+            self,
+            window_size_seconds: int = 60,
+            overlap_seconds: int = 30,
+            sampling_rate: float = 128.0,
     ):
         """
         Initialize GSR analytics engine
@@ -147,11 +146,11 @@ class GSRAnalytics:
         )
 
     def add_gsr_samples(
-        self,
-        device_id: None = str,
-        session_id: None = str,
-        gsr_values: None = List[float],
-        timestamps: None = List[float],
+            self,
+            device_id: None = str,
+            session_id: None = str,
+            gsr_values: None = List[float],
+            timestamps: None = List[float],
     ) -> None:
         """
         Add GSR samples for real-time analysis
@@ -188,16 +187,16 @@ class GSRAnalytics:
             excess = len(self.device_buffers[device_key]) - max_samples
             self.device_buffers[device_key] = self.device_buffers[device_key][excess:]
             self.device_timestamps[device_key] = self.device_timestamps[device_key][
-                excess:
-            ]
+                                                 excess:
+                                                 ]
 
         # Check if we should perform analysis
         current_time = timestamps[-1] if timestamps else 0
         time_since_last = current_time - self.last_analysis[device_key]
 
         if (
-            time_since_last >= (self.window_size_seconds - self.overlap_seconds)
-            and len(self.device_buffers[device_key]) >= self.window_size_samples
+                time_since_last >= (self.window_size_seconds - self.overlap_seconds)
+                and len(self.device_buffers[device_key]) >= self.window_size_samples
         ):
 
             # Schedule analysis - handle both async and sync environments
@@ -211,7 +210,7 @@ class GSRAnalytics:
                 self._analyze_window_sync(device_id, session_id, current_time)
 
     async def _analyze_window_async(
-        self, device_id: str, session_id: str, current_time: float
+            self, device_id: str, session_id: str, current_time: float
     ):
         """Perform window analysis asynchronously"""
         try:
@@ -228,7 +227,7 @@ class GSRAnalytics:
             logger.error(f"Error in async GSR analysis for {device_id}: {e}")
 
     def _analyze_window_sync(
-        self, device_id: str, session_id: str, current_time: float
+            self, device_id: str, session_id: str, current_time: float
     ):
         """Perform window analysis synchronously"""
         device_key = f"{device_id}_{session_id}"
@@ -242,8 +241,8 @@ class GSRAnalytics:
                 return
 
             # Extract window
-            window_data = buffer[-self.window_size_samples :]
-            window_timestamps = timestamps[-self.window_size_samples :]
+            window_data = buffer[-self.window_size_samples:]
+            window_timestamps = timestamps[-self.window_size_samples:]
 
             # Run analysis
             features = self._extract_features(
@@ -257,8 +256,8 @@ class GSRAnalytics:
                 # Keep only last 100 feature windows
                 if len(self.feature_history[device_key]) > 100:
                     self.feature_history[device_key] = self.feature_history[device_key][
-                        -100:
-                    ]
+                                                       -100:
+                                                       ]
 
                 self.last_analysis[device_key] = current_time
 
@@ -270,11 +269,11 @@ class GSRAnalytics:
             logger.error(f"Error in sync GSR analysis for {device_id}: {e}")
 
     def _extract_features(
-        self,
-        device_id: str,
-        session_id: str,
-        gsr_data: np.ndarray,
-        timestamps: np.ndarray,
+            self,
+            device_id: str,
+            session_id: str,
+            gsr_data: np.ndarray,
+            timestamps: np.ndarray,
     ) -> Optional[GSRFeatures]:
         """
         Extract comprehensive GSR features from a data window
@@ -312,7 +311,7 @@ class GSRAnalytics:
             peak_amplitude_mean = float(np.mean(peak_amplitudes))
             peak_amplitude_std = float(np.std(peak_amplitudes))
             peak_frequency = (
-                (peak_count / len(gsr_clean)) * self.sampling_rate * 60
+                    (peak_count / len(gsr_clean)) * self.sampling_rate * 60
             )  # per minute
 
             # Arousal indicators
@@ -493,14 +492,14 @@ class GSRAnalytics:
             return {"low": 0.0, "mid": 0.0, "high": 0.0, "entropy": 0.0}
 
     def _assess_stress(
-        self,
-        gsr_data: np.ndarray,
-        mean_gsr: float,
-        std_gsr: float,
-        range_gsr: float,
-        peak_frequency: float,
-        rising_time: float,
-        rapid_changes: int,
+            self,
+            gsr_data: np.ndarray,
+            mean_gsr: float,
+            std_gsr: float,
+            range_gsr: float,
+            peak_frequency: float,
+            rising_time: float,
+            rapid_changes: int,
     ) -> Tuple[float, StressLevel, float]:
         """
         Assess stress level based on GSR features
@@ -561,7 +560,7 @@ class GSRAnalytics:
             return 0.0, StressLevel.VERY_LOW, 0.0
 
     def get_real_time_features(
-        self, device_id: str, session_id: str
+            self, device_id: str, session_id: str
     ) -> Optional[GSRFeatures]:
         """Get the most recent features for a device/session"""
         device_key = f"{device_id}_{session_id}"
@@ -572,14 +571,14 @@ class GSRAnalytics:
         return None
 
     def generate_session_report(
-        self, device_id: str, session_id: str
+            self, device_id: str, session_id: str
     ) -> Optional[GSRAnalysisReport]:
         """Generate comprehensive analysis report for a session"""
         device_key = f"{device_id}_{session_id}"
 
         if (
-            device_key not in self.feature_history
-            or not self.feature_history[device_key]
+                device_key not in self.feature_history
+                or not self.feature_history[device_key]
         ):
             logger.warning(f"No feature history found for {device_key}")
             return None
@@ -652,11 +651,11 @@ class GSRAnalytics:
             return None
 
     def _generate_recommendations(
-        self,
-        average_stress: float,
-        peak_stress: float,
-        stress_trend: str,
-        stress_distribution: Dict[str, float],
+            self,
+            average_stress: float,
+            peak_stress: float,
+            stress_trend: str,
+            stress_distribution: Dict[str, float],
     ) -> List[str]:
         """Generate personalized recommendations based on stress analysis"""
         recommendations = []
@@ -705,14 +704,14 @@ class GSRAnalytics:
         return recommendations
 
     def export_features_csv(
-        self, device_id: str, session_id: str, filename: str
+            self, device_id: str, session_id: str, filename: str
     ) -> bool:
         """Export features to CSV file"""
         device_key = f"{device_id}_{session_id}"
 
         if (
-            device_key not in self.feature_history
-            or not self.feature_history[device_key]
+                device_key not in self.feature_history
+                or not self.feature_history[device_key]
         ):
             return False
 
@@ -760,7 +759,7 @@ class GSRAnalytics:
             return False
 
     def cleanup_device_session(
-        self, device_id: Any = str, session_id: Any = str
+            self, device_id: Any = str, session_id: Any = str
     ) -> Any:
         """Clean up buffers and history for a completed session"""
         device_key = f"{device_id}_{session_id}"

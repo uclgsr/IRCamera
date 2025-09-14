@@ -16,13 +16,10 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.utils.IRConfigData
 
 /**
-// temperature correction（ambient temperature、temperature measurement距离、emissivity修改那个页面）常用emissivity表 Adapter.
+
  * Created by LCG on 2024/11/13.
  */
-/**
- * Custom Config em view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapter.ViewHolder>() {
     private val dataList: ArrayList<IRConfigData> = IRConfigData.irConfigData(context)
 
@@ -30,7 +27,9 @@ class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapt
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_ir_config_emissivity, parent, false))
+        return ViewHolder(
+            LayoutInflater.from(context).inflate(R.layout.item_ir_config_emissivity, parent, false)
+        )
     }
 
     override fun onBindViewHolder(
@@ -45,11 +44,7 @@ class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapt
 
     override fun getItemCount(): Int = dataList.size
 
-/**
- * Custom View holder view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
+    class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
         val tvEmName: TextView = rootView.findViewById(R.id.tv_em_name)
         val tvEmNum: TextView = rootView.findViewById(R.id.tv_em_num)
     }
@@ -66,10 +61,22 @@ class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
             canvas.drawLine(0f, 0f, 0f, bounds.bottom.toFloat(), paint)
             canvas.drawLine(0f, 0f, bounds.right.toFloat(), 0f, paint)
             if (drawRight) {
-                canvas.drawLine(bounds.right.toFloat(), 0f, bounds.right.toFloat(), bounds.bottom.toFloat(), paint)
+                canvas.drawLine(
+                    bounds.right.toFloat(),
+                    0f,
+                    bounds.right.toFloat(),
+                    bounds.bottom.toFloat(),
+                    paint
+                )
             }
             if (drawBottom) {
-                canvas.drawLine(0f, bounds.bottom.toFloat(), bounds.right.toFloat(), bounds.bottom.toFloat(), paint)
+                canvas.drawLine(
+                    0f,
+                    bounds.bottom.toFloat(),
+                    bounds.right.toFloat(),
+                    bounds.bottom.toFloat(),
+                    paint
+                )
             }
         }
 

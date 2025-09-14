@@ -1,5 +1,6 @@
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 plugins {
     id("com.android.application")
@@ -58,8 +59,8 @@ android {
             keyAlias = "Artibox"
             storePassword = "artibox2017"
             keyPassword = "artibox2017"
-            // Removed deprecated isV1SigningEnabled and isV2SigningEnabled
-            // Modern signing uses enableV1Signing and enableV2Signing
+
+
             enableV1Signing = true
             enableV2Signing = true
         }
@@ -75,29 +76,28 @@ android {
             )
         }
     }
-    
+
     lintOptions {
         isAbortOnError = false
         isCheckReleaseBuilds = false
         disable += listOf(
-            "StringFormatInvalid", 
-            "StringFormatMatches", 
+            "StringFormatInvalid",
+            "StringFormatMatches",
             "StringFormatCount",
             "MissingTranslation",
             "ResourceType"
         )
     }
-    
+
     androidResources {
-        // Ignore resource validation errors to allow build to complete
+
         ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
         additionalParameters += listOf("--allow-reserved-package-id", "--auto-add-overlay")
     }
 
-    // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
-            // Only enable release variant for single-developer maintenance
+
             variant.enable = variant.buildType == "release"
         }
     }
@@ -151,16 +151,16 @@ android {
                     "META-INF/NOTICE.txt",
                     "META-INF/notice.txt",
                     "META-INF/ASL2.0",
-                    // Exclude problematic baseline profiles to avoid INSTALL_BASELINE_PROFILE_FAILED
+
                     "META-INF/com.android.art/baseline.prof",
                     "META-INF/com.android.art/baseline.profm",
-                    // Exclude duplicate Shimmer Bluetooth classes to avoid conflicts
+
                     "**/it/gerdavax/easybluetooth/**",
-                    // Exclude duplicate Bluetooth classes from AndroidBluetoothLibrary
+
                     "**/android/bluetooth/IBluetoothDeviceCallback*",
-                    // Exclude duplicate AndroidPlot classes
+
                     "**/com/androidplot/**",
-                    // Exclude duplicate Shimmer Biophysical Processing classes
+
                     "**/com/shimmerresearch/biophysicalprocessing/**",
                     "**/com/shimmerresearch/utilityfunctions/**",
                 )
@@ -199,12 +199,12 @@ android {
                     "lib/x86_64/libijkplayer.so",
                     "lib/x86_64/libijksdl.so",
                 )
-            // Enhanced native library stripping configuration
+
             keepDebugSymbols +=
                 listOf(
                     "**/*.so", // Keep all debug symbols to prevent stripping issues
                 )
-            // Exclude libraries that can't be stripped due to corrupt headers
+
             excludes +=
                 listOf(
                     "**/libSRImage.so", // Primary culprit for stripping errors
@@ -218,40 +218,34 @@ android {
         viewBinding = true
     }
 
-    // D8 compilation is automatically optimized by AGP 8.0+
-    // Removed obsolete dexOptions configuration
+
 }
 
-// Dependency resolution strategy to fix Guava conflicts and handle Shimmer SDK conflicts
 configurations.all {
     resolutionStrategy {
         force("com.google.guava:guava:31.1-android")
 
-        // Handle Shimmer SDK conflicts with existing Bluetooth libraries
         eachDependency {
             if (requested.group == "it.gerdavax.easybluetooth") {
-                // Prefer existing project Bluetooth implementation over Shimmer's bundled version
+
                 useTarget("${project.group}:${project.name}:${project.version}")
             }
-            // Resolve AndroidPlot conflicts by preferring newer version
+
             if (requested.name == "androidplot-core") {
                 useVersion("0.5.0-release")
             }
         }
     }
 
-    // Exclude duplicate classes at configuration level
     exclude(group = "android.bluetooth", module = "IBluetoothDeviceCallback")
 }
 
 dependencies {
-    // Core library desugaring support
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    // Guava for CameraX ListenableFuture support
     implementation("com.google.guava:guava:31.1-android")
 
-    // Core consolidated modules
     implementation(project(":component:thermal")) // Consolidated thermal functionality
     implementation(project(":component:thermal-ir")) // Thermal IR resources needed by app
     implementation(project(":component:thermal-lite")) // Thermal Lite functionality
@@ -264,31 +258,32 @@ dependencies {
     implementation(project(":libui"))
     implementation(project(":libmenu")) // Menu resources needed by app
 
-    // Enhanced BLE Module with Nordic BLE backend for systematic harmonization
     implementation(project(":BleModule"))
 
-    // ARouter configuration
     implementation(libs.arouter.api)
     kapt(libs.arouter.compiler)
 
-    // LocalRepo AAR files moved to app/libs
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))
     implementation(files("libs/libcommon_1.2.0_24052117.aar"))
 
-    // libapp AAR dependencies - now handled at app level due to AGP 8.0+ restrictions
     implementation(files("libs/lms_international-3.90.009.0.aar")) // LMS SDK for libapp
     implementation(files("libs/abtest-1.0.1.aar"))
     implementation(files("libs/auth-number-2.13.2.1.aar"))
     implementation(files("libs/logger-2.2.1-release.aar"))
     implementation(files("libs/main-2.2.1-release.aar"))
 
-    // Additional AAR dependencies from libir module - all libir AAR files now handled at app level
-    // Removed edit3d AAR dependency - module removed as unused
-    // implementation(fileTree(mapOf("include" to listOf("opengl_1.3.2_standard.aar"), "dir" to "component/edit3d/libs")))
-    implementation(fileTree(mapOf("include" to listOf("*.aar"), "dir" to "libir/libs"))) // All libir AAR files
 
-    // Explicit AAR dependencies for app module compilation (ensuring classpath resolution)
+
+    implementation(
+        fileTree(
+            mapOf(
+                "include" to listOf("*.aar"),
+                "dir" to "libir/libs"
+            )
+        )
+    ) // All libir AAR files
+
     implementation(files("../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) // Required for iruvc classes in app module
 
     implementation(libs.jsbridge)
@@ -297,89 +292,71 @@ dependencies {
     implementation(libs.play.app.update)
     implementation(libs.immersionbar)
     implementation(libs.xpopup)
-    // implementation(libs.bundles.smart.refresh) // Temporarily commented out due to jitpack.io issues
+
     implementation(libs.wechat.sdk)
     implementation(libs.umeng.apm)
-    // implementation(libs.zoho.salesiq) // Commented out - not essential for MPDC4GSR
 
-    // UMeng - Simplified single implementation
+
     implementation(libs.umeng.common)
 
-    // Enhanced charting and data visualization (provided by libui module)
     implementation("com.opencsv:opencsv:5.12.0")
     implementation("com.google.code.gson:gson:2.13.2")
 
-    // Enhanced networking and serialization for Hub-Spoke
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
-    // Nordic BLE Library for robust Bluetooth communication
     implementation("no.nordicsemi.android:ble:2.11.0")
     implementation("no.nordicsemi.android:ble-ktx:2.11.0")
 
-    // Official Shimmer Android SDK integration - Enhanced for production use
-    // Using existing AAR files for proven compatibility and reliability
+
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))
     implementation(files("libs/shimmerdriverpc-0.11.5_beta.jar"))
     implementation(files("libs/shimmerbluetoothmanager-0.11.5_beta.jar"))
 
-    // Shimmer biophysical processing library for advanced GSR analysis
-    // Excluded - already provided by main Shimmer SDK AAR to avoid duplicate classes
-    // implementation(files("../component/gsr-recording/libs/ShimmerBiophysicalProcessingLibrary_Rev_0_11.jar"))
 
-    // CameraX for RGB camera dual-stream capture
+
+
     implementation("androidx.camera:camera-camera2:1.5.0")
     implementation("androidx.camera:camera-lifecycle:1.5.0")
     implementation("androidx.camera:camera-video:1.5.0")
     implementation("androidx.camera:camera-view:1.5.0")
     implementation("androidx.camera:camera-extensions:1.5.0")
 
-    // Comprehensive Testing Dependencies
-    // Unit testing framework
+
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
     testImplementation("org.hamcrest:hamcrest:2.2")
 
-    // Mocking framework
     testImplementation("io.mockk:mockk:1.14.5")
     testImplementation("io.mockk:mockk-android:1.14.5")
 
-    // Kotlin coroutines testing
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
-    // Android instrumented testing
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
     androidTestImplementation("androidx.test:runner:1.5.2")
     androidTestImplementation("androidx.test:rules:1.5.0")
 
-    // AndroidX Test - Instrumented testing
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.7.0")
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.7.0")
     androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
 
-    // Robolectric for unit tests that need Android framework
     testImplementation("org.robolectric:robolectric:4.10.3")
 
-    // Network testing
     testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
 
-    // Performance testing and benchmarking
     androidTestImplementation("androidx.benchmark:benchmark-junit4:1.2.2")
 
-    // Truth assertions for better test readability
     testImplementation("com.google.truth:truth:1.1.4")
     androidTestImplementation("com.google.truth:truth:1.1.4")
 
-    // Test data generation
     testImplementation("com.github.javafaker:javafaker:1.0.2")
 }
 
-// Utility functions for APK naming (converted from original Groovy)
 fun getYearStr(): String {
     return SimpleDateFormat("yy", Locale.getDefault()).format(Date())
 }

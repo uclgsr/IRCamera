@@ -4,13 +4,10 @@ import android.content.Context
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.concurrent.ConcurrentHashMap
 
-/**
- * mDNS/Zeroconf service discovery for PC Controllers
- * Provides automatic discovery and registration using Android NSD API
- */
 class ZeroconfDiscoveryService(private val context: Context) {
     companion object {
         private const val TAG = "ZeroconfDiscovery"
@@ -48,9 +45,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
         serviceListener = listener
     }
 
-    /**
-     * Start discovering PC Controllers using mDNS
-     */
     suspend fun startDiscovery(): Boolean =
         withContext(Dispatchers.Main) {
             if (isDiscovering) {
@@ -60,7 +54,11 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
             try {
                 discoveryListener = createDiscoveryListener()
-                nsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, discoveryListener)
+                nsdManager.discoverServices(
+                    SERVICE_TYPE,
+                    NsdManager.PROTOCOL_DNS_SD,
+                    discoveryListener
+                )
                 isDiscovering = true
                 Log.i(TAG, "Started mDNS service discovery for type: $SERVICE_TYPE")
                 true
@@ -71,9 +69,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
             }
         }
 
-    /**
-     * Stop service discovery
-     */
     fun stopDiscovery() {
         if (!isDiscovering) return
 
@@ -87,9 +82,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
         }
     }
 
-    /**
-     * Register this device as a service for PC Controller discovery
-     */
     suspend fun registerService(
         deviceId: String,
         port: Int,
@@ -111,7 +103,11 @@ class ZeroconfDiscoveryService(private val context: Context) {
                     }
 
                 registrationListener = createRegistrationListener()
-                nsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, registrationListener)
+                nsdManager.registerService(
+                    serviceInfo,
+                    NsdManager.PROTOCOL_DNS_SD,
+                    registrationListener
+                )
                 Log.i(TAG, "Registering service: ${serviceInfo.serviceName}")
                 true
             } catch (e: Exception) {
@@ -120,9 +116,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
             }
         }
 
-    /**
-     * Unregister the service
-     */
     fun unregisterService() {
         if (!isRegistered) return
 
@@ -135,9 +128,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
         }
     }
 
-    /**
-     * Get list of discovered PC Controllers
-     */
     fun getDiscoveredControllers(): List<NetworkClient.ControllerInfo> {
         return discoveredServices.values.mapNotNull { serviceInfo ->
             try {
@@ -217,7 +207,10 @@ class ZeroconfDiscoveryService(private val context: Context) {
             }
 
             override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
-                Log.i(TAG, "Service resolved: ${serviceInfo.serviceName} at ${serviceInfo.host}:${serviceInfo.port}")
+                Log.i(
+                    TAG,
+                    "Service resolved: ${serviceInfo.serviceName} at ${serviceInfo.host}:${serviceInfo.port}"
+                )
 
                 discoveredServices[serviceInfo.serviceName] = serviceInfo
 
@@ -226,7 +219,8 @@ class ZeroconfDiscoveryService(private val context: Context) {
                     val host = serviceInfo.host?.hostAddress ?: return
                     val port = serviceInfo.port
                     val deviceName = serviceInfo.serviceName
-                    val capabilities = emptyList<String>() // Capabilities not available in basic NSD
+                    val capabilities =
+                        emptyList<String>() // Capabilities not available in basic NSD
 
                     val controllerInfo =
                         NetworkClient.ControllerInfo(
@@ -256,7 +250,10 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 serviceInfo: NsdServiceInfo,
                 errorCode: Int,
             ) {
-                Log.e(TAG, "Service registration failed: ${serviceInfo.serviceName}, error: $errorCode")
+                Log.e(
+                    TAG,
+                    "Service registration failed: ${serviceInfo.serviceName}, error: $errorCode"
+                )
                 isRegistered = false
                 serviceListener?.onDiscoveryError(errorCode, "Registration failed")
             }
@@ -270,15 +267,15 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 serviceInfo: NsdServiceInfo,
                 errorCode: Int,
             ) {
-                Log.e(TAG, "Service unregistration failed: ${serviceInfo.serviceName}, error: $errorCode")
+                Log.e(
+                    TAG,
+                    "Service unregistration failed: ${serviceInfo.serviceName}, error: $errorCode"
+                )
                 serviceListener?.onDiscoveryError(errorCode, "Unregistration failed")
             }
         }
     }
 
-    /**
-     * Clean up resources
-     */
     fun cleanup() {
         stopDiscovery()
         unregisterService()

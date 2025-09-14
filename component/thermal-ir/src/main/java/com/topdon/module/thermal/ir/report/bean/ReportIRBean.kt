@@ -3,13 +3,6 @@ package com.topdon.module.thermal.ir.report.bean
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-/**
-// 一张图片对应的data信息.
- */
-/**
- * Report i r data model for thermal imaging information.
- * Encapsulates thermal measurement and configuration data.
- */
 @Parcelize
 data class ReportIRBean(
     var picture_id: String, // 上传服务器后接口返回的图片Id

@@ -14,19 +14,9 @@ import com.topdon.lib.ui.bean.ColorBean
 import kotlinx.android.synthetic.main.ui_item_menu_second_view.view.*
 
 @Deprecated("旧的高低温源菜单，已重构过了")
-/**
- * MenuAIAdapter class for thermal imaging functionality.
- */
+
 class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    /**
-     * 当前选中的选项 code.
-     *
-     * Due to legacy constraints (saved in SharedPreferences), the code values are:
-     * - Nothing selected: -1
-     * - Dynamic recognition: 0
-     * - High temperature source: 1
-     * - Low temperature source: 2
-     */
+
     var selectCode: Int = -1
         set(value) {
             if (field != value) {
@@ -35,9 +25,6 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
             }
         }
 
-    /**
-     * Observation mode - Menu 2 - High/Low temperature source click event listener，单选。
-     */
     var onTempSourceListener: ((code: Int) -> Unit)? = null
 
     private val secondBean =
@@ -63,7 +50,8 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.ui_item_menu_second_view, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.ui_item_menu_second_view, parent, false)
         return ItemView(view)
     }
 
@@ -95,16 +83,8 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        init {
-//            val canSeeCount = itemCount.toFloat() //一屏Visible的 item 数量，目前都是全都Show/Display完
-//            val with = (ScreenUtils.getScreenWidth() / canSeeCount).toInt()
-//            itemView.layoutParams = ViewGroup.LayoutParams(with, ViewGroup.LayoutParams.WRAP_CONTENT)
-//            val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()
-//            val layoutParams = itemView.item_menu_tab_img.layoutParams
-//            layoutParams.width = imageSize
-//            layoutParams.height = imageSize
-//            itemView.item_menu_tab_img.layoutParams = layoutParams
-//        }
+
+
         val lay: View = itemView.item_menu_tab_lay
         val img: ImageView = itemView.item_menu_tab_img
         val name: TextView = itemView.item_menu_tab_text

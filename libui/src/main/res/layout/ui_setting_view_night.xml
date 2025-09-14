@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,32 +10,33 @@
         android:id="@+id/item_setting_image"
         android:layout_width="22dp"
         android:layout_height="22dp"
-        app:srcCompat="@drawable/ic_temp_night"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:srcCompat="@drawable/ic_temp_night" />
 
     <ImageView
         android:id="@+id/item_setting_end_image"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:padding="8dp"
-        app:srcCompat="@drawable/ic_more_night"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:srcCompat="@drawable/ic_more_night" />
+
     <TextView
         android:id="@+id/tv_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/main_item_font"
         android:textColor="#99E8E8EB"
+        android:textSize="@dimen/main_item_font"
         android:visibility="gone"
-        tools:visibility="gone"
-        tools:text="未连接"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        tools:text="未连接"
+        tools:visibility="gone" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier_end"
@@ -53,10 +53,10 @@
         android:layout_marginEnd="8dp"
         android:textColor="#E8E8EB"
         android:textSize="@dimen/main_item_font"
-        app:layout_constraintStart_toEndOf="@id/item_setting_image"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/barrier_end"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/item_setting_image"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/item_setting_line"

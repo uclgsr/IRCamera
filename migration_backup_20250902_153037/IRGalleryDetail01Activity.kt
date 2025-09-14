@@ -43,25 +43,13 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 
-/**
- * 插件式设备、TC007 图片详情
- */
 @Route(path = RouterConfig.IR_GALLERY_DETAIL_01)
 class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
-    /**
-     * 从上一界面传递过来的，当前是否为 TC007 设备类型.
-     * true-TC007 false-其他插件式设备
-     */
+
     private var isTC007 = false
 
-    /**
-     * 当前展示图片在列表中的 position
-     */
     private var position = 0
 
-    /**
-     * 从上一界面传递过来的，当前展示的图片列表.
-     */
     private lateinit var dataList: ArrayList<GalleryBean>
 
     private var irPath: String? = null
@@ -115,7 +103,12 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                     shareIntent.action = Intent.ACTION_SEND
                     shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
                     shareIntent.type = "application/xlsx"
-                    startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
+                    startActivity(
+                        Intent.createChooser(
+                            shareIntent,
+                            getString(R.string.battery_share)
+                        )
+                    )
                 }
             }
         }
@@ -134,7 +127,9 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                     this@IRGalleryDetail01Activity.position = position
                     title_view.setTitleText("${position + 1}/${dataList.size}")
 
-                    irPath = "${FileConfig.lineIrGalleryDir}/${dataList[position].name.substringBeforeLast(".")}.ir"
+                    irPath = "${FileConfig.lineIrGalleryDir}/${
+                        dataList[position].name.substringBeforeLast(".")
+                    }.ir"
                     val hasIrData = File(irPath!!).exists()
                     ll_ir_edit_3D?.isVisible = hasIrData
                     ll_ir_report?.isVisible = hasIrData
@@ -201,9 +196,6 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
             .show()
     }
 
-    /**
-     * 导出为 excel 时的进度条弹窗.
-     */
     private var progressDialog: ProgressDialog? = null
     private var excelName: String = ""
 
@@ -226,12 +218,12 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             ll_ir_edit_2D -> {
-                // 2d编辑
+
                 actionEditOrReport(false)
             }
 
             ll_ir_edit_3D -> {
-                // 跳转到3D
+
                 val data = dataList[position]
                 val fileName = data.name.substringBeforeLast(".")
                 val irPath = "${FileConfig.lineIrGalleryDir}/$fileName.ir"
@@ -242,7 +234,7 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                 var tempHigh = 0f
                 var tempLow = 0f
                 lifecycleScope.launch {
-//                    showLoading()
+
                     withContext(Dispatchers.IO) {
                         val file = File(irPath)
                         if (!file.exists()) {
@@ -262,22 +254,25 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                         tempHigh = frameTool.getSrcTemp().maxTemperature
                         tempLow = frameTool.getSrcTemp().minTemperature
                     }
-//                    dismissLoading()
-                    ARouter.getInstance().build(RouterConfig.IR_GALLERY_3D).withString(ExtraKeyConfig.IR_PATH, irPath)
-                        .withFloat(ExtraKeyConfig.TEMP_HIGH, tempHigh).withFloat(ExtraKeyConfig.TEMP_LOW, tempLow)
+
+                    ARouter.getInstance().build(RouterConfig.IR_GALLERY_3D)
+                        .withString(ExtraKeyConfig.IR_PATH, irPath)
+                        .withFloat(ExtraKeyConfig.TEMP_HIGH, tempHigh)
+                        .withFloat(ExtraKeyConfig.TEMP_LOW, tempLow)
                         .navigation(this@IRGalleryDetail01Activity)
                 }
             }
 
             ll_ir_report -> {
-                // 报告
+
                 actionEditOrReport(true)
             }
 
             ll_ir_ex -> {
-                TipDialog.Builder(this).setMessage(R.string.tip_album_temp_exportfile).setPositiveListener(R.string.app_confirm) {
-                    actionExcel()
-                }.setCancelListener(R.string.app_cancel) {}.setCanceled(true).create().show()
+                TipDialog.Builder(this).setMessage(R.string.tip_album_temp_exportfile)
+                    .setPositiveListener(R.string.app_confirm) {
+                        actionExcel()
+                    }.setCancelListener(R.string.app_cancel) {}.setCanceled(true).create().show()
             }
         }
     }

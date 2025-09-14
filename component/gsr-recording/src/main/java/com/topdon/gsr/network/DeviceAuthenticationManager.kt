@@ -4,17 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Base64
 import android.util.Log
-import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.security.SecureRandom
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
-/**
- * Device authentication and pairing manager
- * Implements secure device pairing with token-based authentication
- * while maintaining trust-all TLS for development environment
- */
 class DeviceAuthenticationManager(private val context: Context) {
     companion object {
         private const val TAG = "DeviceAuth"
@@ -28,12 +22,13 @@ class DeviceAuthenticationManager(private val context: Context) {
         private const val PAIRING_PIN_LENGTH = 6
     }
 
-    private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private var deviceToken: String? = null
     private var deviceId: String? = null
 
     init {
-        // Initialize device authentication
+
         initializeDeviceAuth()
     }
 
@@ -82,15 +77,11 @@ class DeviceAuthenticationManager(private val context: Context) {
         authEventListener = listener
     }
 
-    /**
-     * Initialize device authentication system
-     */
     private fun initializeDeviceAuth() {
         try {
-            // Generate or retrieve device ID
+
             deviceId = getOrCreateDeviceId()
 
-            // Generate or retrieve device token
             deviceToken = getOrCreateDeviceToken()
 
             Log.d(TAG, "Device authentication initialized - ID: $deviceId")
@@ -99,9 +90,6 @@ class DeviceAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Get or create unique device ID
-     */
     private fun getOrCreateDeviceId(): String {
         var id = prefs.getString(PREF_DEVICE_ID, null)
         if (id == null) {
@@ -111,9 +99,6 @@ class DeviceAuthenticationManager(private val context: Context) {
         return id
     }
 
-    /**
-     * Get or create device authentication token
-     */
     private fun getOrCreateDeviceToken(): String {
         var token = prefs.getString(PREF_DEVICE_TOKEN, null)
         if (token == null || isTokenExpired(token)) {
@@ -123,9 +108,6 @@ class DeviceAuthenticationManager(private val context: Context) {
         return token
     }
 
-    /**
-     * Generate new device authentication token
-     */
     private fun generateDeviceToken(): String {
         val random = SecureRandom()
         val tokenBytes = ByteArray(32)
@@ -133,27 +115,16 @@ class DeviceAuthenticationManager(private val context: Context) {
         return Base64.encodeToString(tokenBytes, Base64.URL_SAFE or Base64.NO_WRAP)
     }
 
-    /**
-     * Check if token is expired
-     */
     private fun isTokenExpired(token: String): Boolean {
         try {
-            // Simple token format: base64(timestamp + random)
-            // For production, use proper JWT tokens
+
+
             return false // For development, tokens don't expire
         } catch (e: Exception) {
             return true
         }
     }
 
-    /**
-     * Generate pairing PIN for device discovery
-     *
-     * Creates a secure 6-digit PIN that will be used to authenticate
-     * this device with a PC Controller during the initial pairing process.
-     *
-     * @return A 6-digit PIN string for device pairing
-     */
     fun generatePairingPin(): String {
         val random = SecureRandom()
         val pin = StringBuilder()
@@ -165,27 +136,10 @@ class DeviceAuthenticationManager(private val context: Context) {
         return pairingPin
     }
 
-    /**
-     * Get current pairing PIN
-     *
-     * Retrieves the currently stored pairing PIN for this device.
-     * Returns null if no PIN has been generated yet.
-     *
-     * @return The current pairing PIN string, or null if not available
-     */
     fun getCurrentPairingPin(): String? {
         return prefs.getString(PREF_PAIRING_PIN, null)
     }
 
-    /**
-     * Create pairing request for PC Controller
-     *
-     * Constructs a complete pairing request containing device information,
-     * capabilities, and authentication PIN to be sent to PC Controller
-     * during the discovery and pairing process.
-     *
-     * @return A PairingRequest object with device details and credentials
-     */
     fun createPairingRequest(): PairingRequest {
         val pin = getCurrentPairingPin() ?: generatePairingPin()
         return PairingRequest(
@@ -198,29 +152,17 @@ class DeviceAuthenticationManager(private val context: Context) {
         )
     }
 
-    /**
-     * Process pairing response from PC Controller
-     *
-     * Handles the response from PC Controller after sending a pairing request.
-     * Stores authentication credentials and paired controller information
-     * if pairing was successful.
-     *
-     * @param response JSON response from PC Controller containing pairing result
-     * @return true if pairing was successful and credentials stored, false otherwise
-     * @throws JSONException if response format is invalid
-     */
     fun processPairingResponse(response: JSONObject): Boolean {
         try {
             val success = response.getBoolean("success")
             val controllerId = response.getString("controller_id")
 
             if (success) {
-                // Store paired controller
+
                 val pairedControllers = getPairedControllers().toMutableSet()
                 pairedControllers.add(controllerId)
                 storePairedControllers(pairedControllers)
 
-                // Process authentication token if provided
                 if (response.has("auth_token")) {
                     val tokenData = response.getJSONObject("auth_token")
                     val authToken =
@@ -255,9 +197,6 @@ class DeviceAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Get authentication token for controller
-     */
     fun getAuthToken(controllerId: String): AuthToken? {
         try {
             val tokenJson = prefs.getString("auth_token_$controllerId", null) ?: return null
@@ -276,7 +215,6 @@ class DeviceAuthenticationManager(private val context: Context) {
                         },
                 )
 
-            // Check if token is expired
             if (Instant.now().epochSecond > authToken.expiresAt) {
                 removeAuthToken(controllerId)
                 authEventListener?.onAuthTokenExpired(controllerId)
@@ -290,9 +228,6 @@ class DeviceAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Store authentication token for controller
-     */
     private fun storeAuthToken(
         controllerId: String,
         authToken: AuthToken,
@@ -314,16 +249,10 @@ class DeviceAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Remove authentication token for controller
-     */
     fun removeAuthToken(controllerId: String) {
         prefs.edit().remove("auth_token_$controllerId").apply()
     }
 
-    /**
-     * Create authenticated message for PC Controller
-     */
     fun createAuthenticatedMessage(
         messageType: String,
         data: JSONObject,
@@ -343,16 +272,12 @@ class DeviceAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Validate incoming message authentication
-     */
     fun validateMessageAuthentication(
         message: JSONObject,
         controllerId: String,
     ): Boolean {
         try {
-            // For development with trust-all TLS, we don't enforce strict auth
-            // In production, this would validate the auth_token field
+
 
             val messageDeviceId = message.optString("device_id", "")
             if (messageDeviceId.isNotEmpty() && messageDeviceId != deviceId) {
@@ -360,7 +285,6 @@ class DeviceAuthenticationManager(private val context: Context) {
                 return false
             }
 
-            // Check if controller is paired
             val pairedControllers = getPairedControllers()
             if (controllerId !in pairedControllers) {
                 Log.w(TAG, "Message from non-paired controller: $controllerId")
@@ -374,9 +298,6 @@ class DeviceAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Get list of paired controllers
-     */
     fun getPairedControllers(): Set<String> {
         val pairedJson = prefs.getString(PREF_PAIRED_CONTROLLERS, "[]")
         return try {
@@ -387,18 +308,12 @@ class DeviceAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Store list of paired controllers
-     */
     private fun storePairedControllers(controllers: Set<String>) {
         val array = org.json.JSONArray()
         controllers.forEach { array.put(it) }
         prefs.edit().putString(PREF_PAIRED_CONTROLLERS, array.toString()).apply()
     }
 
-    /**
-     * Remove paired controller
-     */
     fun unpairController(controllerId: String) {
         val pairedControllers = getPairedControllers().toMutableSet()
         pairedControllers.remove(controllerId)
@@ -407,9 +322,6 @@ class DeviceAuthenticationManager(private val context: Context) {
         Log.d(TAG, "Unpaired controller: $controllerId")
     }
 
-    /**
-     * Clear all pairing data
-     */
     fun clearAllPairings() {
         val pairedControllers = getPairedControllers()
         pairedControllers.forEach { removeAuthToken(it) }
@@ -418,30 +330,15 @@ class DeviceAuthenticationManager(private val context: Context) {
         Log.d(TAG, "Cleared all pairing data")
     }
 
-    /**
-     * Get device name for pairing
-     */
     private fun getDeviceName(): String {
         return android.os.Build.MODEL + " (" + android.os.Build.DEVICE + ")"
     }
 
-    /**
-     * Get current device ID
-     */
     fun getDeviceId(): String? = deviceId
 
-    /**
-     * Get current device token
-     */
     fun getDeviceToken(): String? = deviceToken
 
-    /**
-     * Check if device is paired with any controller
-     */
     fun isPaired(): Boolean = getPairedControllers().isNotEmpty()
 
-    /**
-     * Check if device is paired with specific controller
-     */
     fun isPairedWith(controllerId: String): Boolean = controllerId in getPairedControllers()
 }

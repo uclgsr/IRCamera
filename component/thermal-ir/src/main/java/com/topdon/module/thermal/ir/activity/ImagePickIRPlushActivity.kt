@@ -6,15 +6,12 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.fragment.IRPlushFragment
 
 /**
-// des:双光的infrared拍照
+
  * author: CaiSongL
  * date: 2024/8/24 18:10
  **/
-// Legacy ARouter route annotation - now using NavigationManager
-/**
- * Image pick i r plush activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
+
 class ImagePickIRPlushActivity : BasePickImgActivity() {
     var irFragment: IRPlushFragment? = null
 

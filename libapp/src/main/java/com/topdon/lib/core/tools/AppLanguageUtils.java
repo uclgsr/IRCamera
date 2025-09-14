@@ -10,18 +10,9 @@ import android.util.DisplayMetrics;
 
 import java.util.Locale;
 
-/**
- * @author YanLu
- * @since 17/5/12
- * 
- * English-only language utilities
- */
 
 public class AppLanguageUtils {
 
-    /**
-     * Get system default language - always return English
-     */
     public static String getSystemLanguage() {
         return ConstantLanguages.ENGLISH;
     }
@@ -31,10 +22,9 @@ public class AppLanguageUtils {
         Resources resources = context.getResources();
         Configuration configuration = resources.getConfiguration();
 
-        // app locale - always English
         Locale locale = Locale.ENGLISH;
         configuration.setLocale(locale);
-        // updateConfiguration
+
         DisplayMetrics dm = resources.getDisplayMetrics();
         resources.updateConfiguration(configuration, dm);
     }
@@ -43,12 +33,6 @@ public class AppLanguageUtils {
         return ConstantLanguages.ENGLISH;
     }
 
-    /**
-     * Get locale for specified language - always return English
-     *
-     * @param language language
-     * @return English locale
-     */
     public static Locale getLocaleByLanguage(String language) {
         return Locale.ENGLISH;
     }

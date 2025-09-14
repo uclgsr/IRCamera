@@ -15,19 +15,15 @@ import com.topdon.lib.core.view.TitleView
 import com.topdon.module.user.R
 import com.topdon.lib.core.R as RCore
 
-/**
-// 电子说明书 或 FAQ device类型选择页面
- */
-// Legacy ARouter route annotation - now using NavigationManager
 class ElectronicManualActivity : BaseActivity() {
-    // View references - migrated from synthetic views
+
     private lateinit var titleView: TitleView
     private lateinit var electronicManualRecycler: RecyclerView
 
     override fun initContentView() = R.layout.activity_electronic_manual
 
     override fun initView() {
-        // Initialize views - migrated from synthetic views
+
         titleView = findViewById(R.id.title_view)
         electronicManualRecycler = findViewById(R.id.electronic_manual_recycler)
 
@@ -39,18 +35,21 @@ class ElectronicManualActivity : BaseActivity() {
         adapter.onPickListener = { isTS001 ->
             if (isTS001) {
                 if (productType == Constants.SETTING_BOOK) {
-                    // Electronic manual - TS001
+
                 } else {
-                    // FAQ-TS001
-                    NavigationManager.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", true).navigation(this)
+
+                    NavigationManager.getInstance().build(RouterConfig.QUESTION)
+                        .withBoolean("isTS001", true).navigation(this)
                 }
             } else {
                 if (productType == Constants.SETTING_BOOK) {
-                    // Electronic manual - TS004
-                    NavigationManager.getInstance().build(RouterConfig.PDF).withBoolean("isTS001", false).navigation(this)
+
+                    NavigationManager.getInstance().build(RouterConfig.PDF)
+                        .withBoolean("isTS001", false).navigation(this)
                 } else {
-                    // FAQ-TS004
-                    NavigationManager.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", false).navigation(this)
+
+                    NavigationManager.getInstance().build(RouterConfig.QUESTION)
+                        .withBoolean("isTS001", false).navigation(this)
                 }
             }
         }
@@ -62,13 +61,14 @@ class ElectronicManualActivity : BaseActivity() {
     override fun initData() {
     }
 
-    private class MyAdapter(private val isFAQ: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private class MyAdapter(private val isFAQ: Boolean) :
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var onPickListener: ((isTS001: Boolean) -> Unit)? = null
 
         private val optionList: ArrayList<String> = ArrayList(2)
 
         init {
-            // Due to TC001 manual being old version style, 2024-4-9 product decided to hide it first, only put TS004 manual
+
             if (isFAQ) {
                 optionList.add("TS001")
             }
@@ -79,7 +79,10 @@ class ElectronicManualActivity : BaseActivity() {
             parent: ViewGroup,
             viewType: Int,
         ): RecyclerView.ViewHolder {
-            return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_electronic_manual, parent, false))
+            return ItemViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_electronic_manual, parent, false)
+            )
         }
 
         override fun onBindViewHolder(

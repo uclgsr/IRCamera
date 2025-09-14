@@ -10,9 +10,6 @@ import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.R
 import kotlinx.android.synthetic.main.dialog_progress.view.*
 
-/**
- * 带进度条的提示弹框.
- */
 class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
     var max: Int = 100
         set(value) {
@@ -40,7 +37,8 @@ class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
 
         window?.let {
             val layoutParams = it.attributes
-            layoutParams.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.8 else 0.45).toInt()
+            layoutParams.width =
+                (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.8 else 0.45).toInt()
             layoutParams.height = LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }

@@ -9,7 +9,11 @@ import android.os.Environment
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNotSame
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,9 +23,6 @@ import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowApplication
 import org.robolectric.shadows.ShadowEnvironment
 
-/**
- * Context-based tests for ShimmerGSRRecorder using Robolectric
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -35,7 +36,6 @@ class ShimmerGSRRecorderTest {
         context = ApplicationProvider.getApplicationContext()
         shadowApplication = Shadows.shadowOf(context as android.app.Application)
 
-        // Grant Bluetooth permissions
         shadowApplication.grantPermissions(
             Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_ADMIN,
@@ -44,7 +44,6 @@ class ShimmerGSRRecorderTest {
             Manifest.permission.BLUETOOTH_SCAN,
         )
 
-        // Setup external storage state
         ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED)
 
         recorder = ShimmerGSRRecorder(context, samplingRateHz = 128)
@@ -57,14 +56,16 @@ class ShimmerGSRRecorderTest {
 
     @Test
     fun testBluetoothPermissionCheck() {
-        // Test that recorder properly checks for Bluetooth permissions
-        val hasPermission = context.checkSelfPermission(Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED
+
+        val hasPermission =
+            context.checkSelfPermission(Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED
         assertTrue("Bluetooth permission should be granted in test", hasPermission)
     }
 
     @Test
     fun testBluetoothAdapterAccess() {
-        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?
+        val bluetoothManager =
+            context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?
         assertNotNull("BluetoothManager should be available", bluetoothManager)
 
         val bluetoothAdapter = bluetoothManager?.adapter
@@ -76,50 +77,50 @@ class ShimmerGSRRecorderTest {
         runTest {
             val sessionId = "recording_state_test"
 
-            // Initially not recording
             assertFalse("Should not be recording initially", recorder.isRecording())
 
-            // Start recording - may fail without real device, but shouldn't crash
             try {
                 val started = recorder.startRecording(sessionId)
-                // Recording may or may not start without real device
-                // The important thing is no exception is thrown
+
+
             } catch (e: Exception) {
-                // Expected without real hardware
+
             }
 
-            // Stop recording should work regardless
             try {
                 recorder.stopRecording()
             } catch (e: Exception) {
-                // May fail but shouldn't crash the test
+
             }
         }
 
     @Test
     fun testSensorConfiguration() {
-        // Test that the recorder accepts configuration parameters
+
         val customRecorder = ShimmerGSRRecorder(context, samplingRateHz = 256)
         assertNotNull("Custom recorder should be created", customRecorder)
 
-        // Test default configuration
         assertNotNull("Default recorder should have context", recorder)
     }
 
     @Test
     fun testContextUsage() {
-        // Verify recorder uses context for system services
-        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+
+        val bluetoothManager =
+            context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         assertNotNull("Bluetooth manager should be accessible through context", bluetoothManager)
 
-        // Verify external storage access
         val externalStorageState = Environment.getExternalStorageState()
-        assertEquals("External storage should be mounted in test", Environment.MEDIA_MOUNTED, externalStorageState)
+        assertEquals(
+            "External storage should be mounted in test",
+            Environment.MEDIA_MOUNTED,
+            externalStorageState
+        )
     }
 
     @Test
     fun testFileSystemAccess() {
-        // Test that recorder can access file system through context
+
         val filesDir = context.filesDir
         assertNotNull("Files directory should be accessible", filesDir)
         assertTrue("Files directory should exist", filesDir.exists())
@@ -131,13 +132,13 @@ class ShimmerGSRRecorderTest {
     @Test
     fun testErrorHandling() =
         runTest {
-            // Test starting recording without proper setup
+
             try {
                 val result = recorder.startRecording("error_test")
-                // May succeed or fail, but shouldn't crash
+
                 assertTrue("Error handling test completed", true)
             } catch (e: Exception) {
-                // Expected behavior without real hardware
+
                 assertTrue("Exception handled gracefully", true)
             }
         }
@@ -147,35 +148,32 @@ class ShimmerGSRRecorderTest {
         runTest {
             val sessionId = "cleanup_test"
 
-            // Test various cleanup scenarios
             try {
-                // Test starting recording
+
                 recorder.startRecording(sessionId)
             } catch (e: Exception) {
-                // Expected without real hardware
+
             }
 
             try {
-                // Test stopping recording
+
                 recorder.stopRecording()
             } catch (e: Exception) {
-                // Expected without real hardware
+
             }
 
-            // Test should complete without crashing
             assertTrue("Cleanup handling test completed", true)
         }
 
     @Test
     fun testMultipleInstances() {
-        // Test creating multiple recorder instances
+
         val recorder2 = ShimmerGSRRecorder(context, samplingRateHz = 64)
         val recorder3 = ShimmerGSRRecorder(context, samplingRateHz = 512)
 
         assertNotNull("Second recorder should be created", recorder2)
         assertNotNull("Third recorder should be created", recorder3)
 
-        // All should be independent instances
         assertNotSame("Recorders should be different instances", recorder, recorder2)
         assertNotSame("Recorders should be different instances", recorder2, recorder3)
     }

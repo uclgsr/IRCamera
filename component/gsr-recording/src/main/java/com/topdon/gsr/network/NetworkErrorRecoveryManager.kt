@@ -2,14 +2,17 @@ package com.topdon.gsr.network
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-/**
- * Network error recovery and reconnection management
- * Handles automatic reconnection, connection health monitoring, and error recovery strategies
- */
 class NetworkErrorRecoveryManager(
     private val context: Context,
     private val networkClient: NetworkClient,
@@ -58,9 +61,6 @@ class NetworkErrorRecoveryManager(
         eventListener = listener
     }
 
-    /**
-     * Start monitoring connection health and enable automatic recovery
-     */
     fun enableAutoRecovery() {
         if (isRecoveryActive.get()) {
             Log.w(TAG, "Auto recovery already enabled")
@@ -72,9 +72,6 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Network error recovery enabled")
     }
 
-    /**
-     * Stop automatic recovery and health monitoring
-     */
     fun disableAutoRecovery() {
         if (!isRecoveryActive.get()) {
             Log.w(TAG, "Auto recovery not active")
@@ -86,9 +83,6 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Network error recovery disabled")
     }
 
-    /**
-     * Manually trigger connection recovery
-     */
     suspend fun triggerRecovery(reason: String): Boolean {
         if (isRecoveryActive.get() && reconnectionAttempts.get() > 0) {
             Log.w(TAG, "Recovery already in progress")
@@ -98,9 +92,6 @@ class NetworkErrorRecoveryManager(
         return performRecovery(reason)
     }
 
-    /**
-     * Record a successful connection for future recovery attempts
-     */
     fun recordSuccessfulConnection(controller: NetworkClient.ControllerInfo) {
         lastKnownGoodController = controller
         reconnectionAttempts.set(0)
@@ -108,9 +99,6 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Recorded successful connection: ${controller.deviceName}")
     }
 
-    /**
-     * Handle network error and potentially trigger recovery
-     */
     fun handleNetworkError(
         operation: String,
         error: String,
@@ -244,7 +232,10 @@ class NetworkErrorRecoveryManager(
 
     private suspend fun attemptReconnection(controller: NetworkClient.ControllerInfo): Boolean {
         return try {
-            Log.d(TAG, "Attempting reconnection to ${controller.deviceName} at ${controller.ipAddress}")
+            Log.d(
+                TAG,
+                "Attempting reconnection to ${controller.deviceName} at ${controller.ipAddress}"
+            )
 
             // Disconnect first to clean up any existing connection
             networkClient.disconnect()
@@ -292,16 +283,6 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Calculate retry delay with exponential backoff and jitter
-     *
-     * Implements exponential backoff algorithm with random jitter to avoid
-     * synchronized retry attempts across multiple clients. Caps the maximum
-     * delay to prevent excessively long wait times.
-     *
-     * @param attempt Retry attempt number (1-based)
-     * @return Delay in milliseconds before next retry attempt
-     */
     private fun calculateRetryDelay(attempt: Int): Long {
         // Exponential backoff with jitter
         val baseDelay = INITIAL_RETRY_DELAY_MS * (1L shl (attempt - 1))
@@ -310,14 +291,6 @@ class NetworkErrorRecoveryManager(
         return cappedDelay + jitter
     }
 
-    /**
-     * Check if current failure is part of rapid failure pattern
-     *
-     * Detects rapid consecutive failures within a time window that may
-     * indicate a persistent network issue requiring circuit breaker activation.
-     *
-     * @return true if rapid failure threshold is exceeded, false otherwise
-     */
     private fun isRapidFailure(): Boolean {
         val currentTime = System.currentTimeMillis()
 
@@ -332,9 +305,6 @@ class NetworkErrorRecoveryManager(
         return rapidFailureCount.get() >= RAPID_FAILURE_THRESHOLD
     }
 
-    /**
-     * Reset recovery state (useful after manual intervention)
-     */
     fun resetRecoveryState() {
         reconnectionAttempts.set(0)
         rapidFailureCount.set(0)
@@ -342,9 +312,6 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Recovery state reset")
     }
 
-    /**
-     * Get current recovery statistics
-     */
     fun getRecoveryStats(): Map<String, Any> {
         return mapOf(
             "recovery_active" to isRecoveryActive.get(),
@@ -355,9 +322,6 @@ class NetworkErrorRecoveryManager(
         )
     }
 
-    /**
-     * Clean up resources
-     */
     fun cleanup() {
         disableAutoRecovery()
         recoveryJob.cancel()

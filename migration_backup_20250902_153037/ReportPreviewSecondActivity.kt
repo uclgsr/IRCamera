@@ -35,29 +35,14 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
-/**
- * 生成报告第2步的预览界面.
- *
- * 需要传递
- * - 是否 TC007: [ExtraKeyConfig.IS_TC007]
- * - 一份报告所有信息 [ExtraKeyConfig.REPORT_BEAN]
- */
 @Route(path = RouterConfig.REPORT_PREVIEW_SECOND)
-class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), View.OnClickListener {
-    /**
-     * 从上一界面传递过来的，当前是否为 TC007 设备类型.
-     * true-TC007 false-其他插件式设备
-     */
+class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(),
+    View.OnClickListener {
+
     private var isTC007 = false
 
-    /**
-     * 从上一界面传递过来的，报告所有信息.
-     */
     private var reportBean: ReportBean? = null
 
-    /**
-     * 当前预览页面已生成的 PDF 文件绝对路径
-     */
     private var pdfFilePath: String? = null
 
     override fun initContentView() = R.layout.activity_report_preview_second
@@ -100,10 +85,17 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), 
                 val reportShowView = ReportIRShowView(this)
                 reportShowView.refreshData(i == 0, i == irList.size - 1, irList[i])
                 lifecycleScope.launch {
-                    val drawable = GlideLoader.getDrawable(this@ReportPreviewSecondActivity, irList[i].picture_url)
+                    val drawable = GlideLoader.getDrawable(
+                        this@ReportPreviewSecondActivity,
+                        irList[i].picture_url
+                    )
                     reportShowView.setImageDrawable(drawable)
                 }
-                ll_content.addView(reportShowView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                ll_content.addView(
+                    reportShowView,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
             }
         }
 
@@ -112,7 +104,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), 
         lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-                    // 要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
                     }
@@ -145,6 +137,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), 
             tv_to_pdf -> { // 生成PDF
                 saveWithPDF()
             }
+
             tv_complete -> { // 完成
 
                 if (LMS.getInstance().isLogin) {
@@ -202,10 +195,6 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), 
         startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
     }
 
-    /**
-     * 获取需要转为 PDF 的所有 View 列表.
-     * 注意：水印 View 不在列表内，需要自行处理.
-     */
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
         result.add(report_info_view)

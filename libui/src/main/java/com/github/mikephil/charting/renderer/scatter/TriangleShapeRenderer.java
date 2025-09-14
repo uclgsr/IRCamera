@@ -9,12 +9,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
-/**
- * Created by wajdic on 15/06/2016.
- * Created at Time 09:08
- */
-public class TriangleShapeRenderer implements IShapeRenderer
-{
+public class TriangleShapeRenderer implements IShapeRenderer {
 
     protected Path mTrianglePathBuffer = new Path();
 
@@ -32,7 +27,6 @@ public class TriangleShapeRenderer implements IShapeRenderer
 
         renderPaint.setStyle(Paint.Style.FILL);
 
-        // create a triangle path
         Path tri = mTrianglePathBuffer;
         tri.reset();
 

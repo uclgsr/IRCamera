@@ -12,18 +12,19 @@
         android:layout_height="0dp"
         android:contentDescription="@null"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <include
-        layout="@layout/layout_home_guide_1" />
+    <include layout="@layout/layout_home_guide_1" />
+
     <include
         layout="@layout/layout_home_guide_2"
         tools:visibility="gone" />
+
     <include
         layout="@layout/layout_home_guide_3"
-        tools:visibility="gone"/>
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

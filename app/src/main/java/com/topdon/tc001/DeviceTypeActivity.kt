@@ -16,15 +16,8 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.tools.DeviceTools
 
-/**
- * 设备类型选择.
- *
- * Created by LCG on 2024/4/22.
- */
 class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
-    /**
-     * 当前点击的设备类型.
-     */
+
     private var clientType: IRDeviceType? = null
 
     override fun initContentLayoutId() = R.layout.activity_device_type
@@ -48,22 +41,26 @@ class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
                                 .withBoolean("isTS004", true)
                                 .navigation(this@DeviceTypeActivity)
                         }
+
                         IRDeviceType.TC007 -> {
                             NavigationManager.getInstance()
                                 .build(RouterConfig.IR_DEVICE_ADD)
                                 .withBoolean("isTS004", false)
                                 .navigation(this@DeviceTypeActivity)
                         }
+
                         IRDeviceType.SHIMMER3_GSR -> {
                             NavigationManager.getInstance()
                                 .build(RouterConfig.GSR_MULTI_MODAL)
                                 .navigation(this@DeviceTypeActivity)
                             finish()
                         }
+
                         IRDeviceType.PC_CONTROLLER -> {
-                            // Launch device pairing activity
+
                             com.topdon.tc001.network.DevicePairingActivity.start(this@DeviceTypeActivity)
                         }
+
                         else -> {
                             NavigationManager.getInstance()
                                 .build(RouterConfig.IR_MAIN)
@@ -102,14 +99,18 @@ class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
     private class MyAdapter(val context: Context) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
         var onItemClickListener: ((type: IRDeviceType) -> Unit)? = null
 
-        private data class ItemInfo(val isTitle: Boolean, val firstType: IRDeviceType, val secondType: IRDeviceType?)
+        private data class ItemInfo(
+            val isTitle: Boolean,
+            val firstType: IRDeviceType,
+            val secondType: IRDeviceType?
+        )
 
         private val dataList: ArrayList<ItemInfo> =
             arrayListOf(
                 ItemInfo(true, IRDeviceType.TS001, IRDeviceType.TC001),
                 ItemInfo(false, IRDeviceType.TC001_PLUS, IRDeviceType.TC002C_DUO),
-//            暂时先屏蔽TC007
-//            ItemInfo(true, IRDeviceType.TS004, IRDeviceType.TC007),
+
+
                 ItemInfo(true, IRDeviceType.TS004, null),
                 ItemInfo(true, IRDeviceType.SHIMMER3_GSR, null),
                 ItemInfo(true, IRDeviceType.PC_CONTROLLER, null),
@@ -119,7 +120,10 @@ class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
             parent: ViewGroup,
             viewType: Int,
         ): ViewHolder {
-            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_device_type, parent, false))
+            return ViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_device_type, parent, false)
+            )
         }
 
         override fun onBindViewHolder(
@@ -142,35 +146,42 @@ class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
             val tvItem1 = holder.itemView.findViewById<TextView>(R.id.tv_item1)
             tvItem1.text = firstType.getDeviceName()
             when (firstType) {
-                // Note: TC002 Duo icon can be customized with specific drawable resource
+
                 IRDeviceType.TC001 ->
                     holder.itemView.findViewById<android.widget.ImageView>(
                         R.id.iv_item1,
                     ).setImageResource(R.drawable.ic_device_type_tc001)
+
                 IRDeviceType.TC001_PLUS ->
                     holder.itemView.findViewById<android.widget.ImageView>(
                         R.id.iv_item1,
                     ).setImageResource(R.drawable.ic_device_type_tc001_plus)
+
                 IRDeviceType.TC002C_DUO ->
                     holder.itemView.findViewById<android.widget.ImageView>(
                         R.id.iv_item1,
                     ).setImageResource(R.drawable.ic_device_type_tc001_plus)
+
                 IRDeviceType.TC007 ->
                     holder.itemView.findViewById<android.widget.ImageView>(
                         R.id.iv_item1,
                     ).setImageResource(R.drawable.ic_device_type_tc007)
+
                 IRDeviceType.TS001 ->
                     holder.itemView.findViewById<android.widget.ImageView>(
                         R.id.iv_item1,
                     ).setImageResource(R.drawable.ic_device_type_ts001)
+
                 IRDeviceType.TS004 ->
                     holder.itemView.findViewById<android.widget.ImageView>(
                         R.id.iv_item1,
                     ).setImageResource(R.drawable.ic_device_type_ts004)
+
                 IRDeviceType.SHIMMER3_GSR ->
                     holder.itemView.findViewById<android.widget.ImageView>(
                         R.id.iv_item1,
                     ).setImageResource(R.drawable.ic_device_type_shimmer_gsr)
+
                 IRDeviceType.PC_CONTROLLER ->
                     holder.itemView.findViewById<android.widget.ImageView>(
                         R.id.iv_item1,
@@ -182,35 +193,42 @@ class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
                 val tvItem2 = holder.itemView.findViewById<TextView>(R.id.tv_item2)
                 tvItem2.text = secondType.getDeviceName()
                 when (secondType) {
-                    // Note: TC002 Duo icon can be customized with specific drawable resource
+
                     IRDeviceType.TC001 ->
                         holder.itemView.findViewById<android.widget.ImageView>(
                             R.id.iv_item2,
                         ).setImageResource(R.drawable.ic_device_type_tc001)
+
                     IRDeviceType.TC001_PLUS ->
                         holder.itemView.findViewById<android.widget.ImageView>(
                             R.id.iv_item2,
                         ).setImageResource(R.drawable.ic_device_type_tc001_plus)
+
                     IRDeviceType.TC002C_DUO ->
                         holder.itemView.findViewById<android.widget.ImageView>(
                             R.id.iv_item2,
                         ).setImageResource(R.drawable.ic_device_type_tc001_plus)
+
                     IRDeviceType.TC007 ->
                         holder.itemView.findViewById<android.widget.ImageView>(
                             R.id.iv_item2,
                         ).setImageResource(R.drawable.ic_device_type_tc007)
+
                     IRDeviceType.TS001 ->
                         holder.itemView.findViewById<android.widget.ImageView>(
                             R.id.iv_item2,
                         ).setImageResource(R.drawable.ic_device_type_ts001)
+
                     IRDeviceType.TS004 ->
                         holder.itemView.findViewById<android.widget.ImageView>(
                             R.id.iv_item2,
                         ).setImageResource(R.drawable.ic_device_type_ts004)
+
                     IRDeviceType.SHIMMER3_GSR ->
                         holder.itemView.findViewById<android.widget.ImageView>(
                             R.id.iv_item2,
                         ).setImageResource(R.drawable.ic_device_type_shimmer_gsr)
+
                     IRDeviceType.PC_CONTROLLER ->
                         holder.itemView.findViewById<android.widget.ImageView>(
                             R.id.iv_item2,
@@ -232,7 +250,8 @@ class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
                 rootView.findViewById<View>(R.id.view_bg_item2).setOnClickListener {
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
-                        val irDeviceType: IRDeviceType = dataList[position].secondType ?: return@setOnClickListener
+                        val irDeviceType: IRDeviceType =
+                            dataList[position].secondType ?: return@setOnClickListener
                         onItemClickListener?.invoke(irDeviceType)
                     }
                 }
@@ -240,9 +259,6 @@ class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
         }
     }
 
-    /**
-     * 支持的设备类型 (热成像设备和GSR传感器).
-     */
     enum class IRDeviceType {
         TC001 {
             override fun isLine(): Boolean = true

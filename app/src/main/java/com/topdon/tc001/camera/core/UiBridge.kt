@@ -5,10 +5,6 @@ import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 
-/**
- * UiBridge - pushes preview Surface and exposes errors/progress
- * Clean interface between camera core and UI components
- */
 class UiBridge(private val textureView: TextureView) {
     companion object {
         private const val TAG = "UiBridge"
@@ -17,7 +13,6 @@ class UiBridge(private val textureView: TextureView) {
     private var previewSurface: Surface? = null
     private var isTextureAvailable = false
 
-    // Callbacks to UI
     var onError: ((String) -> Unit)? = null
     var onProgress: ((String) -> Unit)? = null
     var onModeChanged: ((String) -> Unit)? = null
@@ -26,43 +21,25 @@ class UiBridge(private val textureView: TextureView) {
         setupTextureView()
     }
 
-    /**
-     * Get preview surface for camera session
-     */
     fun getPreviewSurface(): Surface? = previewSurface
 
-    /**
-     * Check if texture is ready
-     */
     fun isTextureReady(): Boolean = isTextureAvailable
 
-    /**
-     * Update UI with mode change
-     */
     fun updateMode(mode: String) {
         Log.i(TAG, "Mode updated: $mode")
         onModeChanged?.invoke(mode)
     }
 
-    /**
-     * Report error to UI
-     */
     fun reportError(error: String) {
         Log.e(TAG, "Error: $error")
         onError?.invoke(error)
     }
 
-    /**
-     * Report progress to UI
-     */
     fun reportProgress(message: String) {
         Log.i(TAG, "Progress: $message")
         onProgress?.invoke(message)
     }
 
-    /**
-     * Update preview size
-     */
     fun updatePreviewSize(
         width: Int,
         height: Int,
@@ -71,9 +48,6 @@ class UiBridge(private val textureView: TextureView) {
         Log.d(TAG, "Preview size updated: ${width}x$height")
     }
 
-    /**
-     * Release resources
-     */
     fun release() {
         previewSurface?.release()
         previewSurface = null
@@ -115,7 +89,7 @@ class UiBridge(private val textureView: TextureView) {
                 }
 
                 override fun onSurfaceTextureUpdated(texture: SurfaceTexture) {
-                    // Frame updated - high frequency, no logging
+
                 }
             }
     }

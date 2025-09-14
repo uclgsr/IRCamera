@@ -1,7 +1,5 @@
-// stdafx.h : include file for standard system include files,
-// or project specific include files that are used frequently, but
-// are changed infrequently
-//
+
+
 
 #pragma once
 
@@ -9,7 +7,7 @@
 #include <stdio.h>
 #include <android/log.h>
 #include <unistd.h>
-//#include <libyuv/convert_argb.h>
+
 #include <android/bitmap.h>
 #include <string>
 
@@ -31,4 +29,3 @@ const int IR_HEIGHT = 192;
 #define LOGE(...)
 #define LOGF(...)
 #endif
-

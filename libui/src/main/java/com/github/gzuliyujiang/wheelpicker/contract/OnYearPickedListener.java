@@ -13,19 +13,8 @@
 
 package com.github.gzuliyujiang.wheelpicker.contract;
 
-/**
- * 日期选择接口
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/5/14 19:57
- */
 public interface OnYearPickedListener {
 
-    /**
-     * 已选择的日期
-     *
-     * @param year  年
-     */
     void onYearPicked(int year);
 
 }

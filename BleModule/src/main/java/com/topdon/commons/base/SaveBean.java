@@ -6,7 +6,7 @@ public class SaveBean {
     public String mac;
     public String name;
 
-    public SaveBean(String type, String mac,String name) {
+    public SaveBean(String type, String mac, String name) {
         this.type = type;
         this.mac = mac;
         this.name = name;

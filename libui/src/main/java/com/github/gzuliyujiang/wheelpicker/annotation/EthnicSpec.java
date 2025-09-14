@@ -13,10 +13,6 @@
 
 package com.github.gzuliyujiang.wheelpicker.annotation;
 
-/**
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/12 14:22
- */
 public @interface EthnicSpec {
     int DEFAULT = 1;
     int GB3304_91 = 2;

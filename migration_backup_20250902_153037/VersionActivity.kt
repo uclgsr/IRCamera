@@ -19,14 +19,13 @@ import kotlinx.android.synthetic.main.item_new_version.tv_new_version
 import java.util.*
 
 @Route(path = RouterConfig.VERSION)
-/**
- * VersionActivity class for thermal imaging functionality.
- */
+
 class VersionActivity : BaseActivity(), View.OnClickListener {
     override fun initContentView() = R.layout.activity_version
 
     override fun initView() {
-        version_code_text.text = "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
+        version_code_text.text =
+            "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
         val year = Calendar.getInstance().get(Calendar.YEAR)
         version_year_txt.text = getString(R.string.version_year, "2023-$year")
         version_statement_private_txt.setOnClickListener(this)
@@ -64,11 +63,13 @@ class VersionActivity : BaseActivity(), View.OnClickListener {
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 1)
                     .navigation(this)
             }
+
             version_statement_policy_txt -> {
                 ARouter.getInstance().build(RouterConfig.POLICY)
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 2)
                     .navigation(this)
             }
+
             version_statement_copyright_txt -> {
                 ARouter.getInstance().build(RouterConfig.POLICY)
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 3)

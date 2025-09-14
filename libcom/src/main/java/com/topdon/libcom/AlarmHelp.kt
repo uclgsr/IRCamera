@@ -6,11 +6,6 @@ import com.topdon.lib.core.bean.AlarmBean
 import com.topdon.libcom.util.SingletonHolder
 import com.topdon.libcom.view.TempLayout
 
-/**
- * 预警逻辑统一处理
- * @author: CaiSongL
- * @date: 2023/5/5 15:13
- */
 class AlarmHelp private constructor(val context: Context) {
     companion object : SingletonHolder<AlarmHelp, Context>(::AlarmHelp)
 
@@ -92,14 +87,14 @@ class AlarmHelp private constructor(val context: Context) {
         }
     }
 
-    
+
     fun alarmData(
         realMax: Float,
         realMin: Float,
         tempLayout: TempLayout?,
     ) {
         if (isOpenHighTemp && isOpenLowTemp) {
-            // 高低温预警
+
             if (realMax > maxTemp && realMin < minTemp) {
                 tempLayout?.startAnimation(TempLayout.TYPE_A)
                 startMediaPlayer()
@@ -114,7 +109,7 @@ class AlarmHelp private constructor(val context: Context) {
                 stopPlayer()
             }
         } else if (isOpenHighTemp) {
-            // 高温预警
+
             if (realMax > maxTemp) {
                 tempLayout?.startAnimation(TempLayout.TYPE_HOT)
                 startMediaPlayer()
@@ -123,7 +118,7 @@ class AlarmHelp private constructor(val context: Context) {
                 stopPlayer()
             }
         } else if (isOpenLowTemp) {
-            // 低温预警
+
             if (realMin < minTemp) {
                 tempLayout?.startAnimation(TempLayout.TYPE_LT)
                 startMediaPlayer()

@@ -11,13 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
-/**
- * FenceView class
- */
-/**
- * Custom Fence view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class FenceView : View {
     var listener: CallBack? = null
 
@@ -45,12 +39,12 @@ class FenceView : View {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-//        //settings无锯齿
-//        canvas.drawARGB(50, 255, 227, 0)
-//        mPaint.color = Color.GREEN
-//        // 绘制绿色实心矩形
-//        canvas.drawRect(100f, 200f, 400f, 200f + 400, mPaint)
-//        mPaint.color = Color.RED
+
+
+
+
+
+
         canvas.drawRect(rect, mPaint)
     }
 
@@ -75,6 +69,7 @@ class FenceView : View {
                 startPoint[0] = mX.toInt()
                 startPoint[1] = mY.toInt()
             }
+
             MotionEvent.ACTION_UP -> {
                 var x = mX.toInt()
                 var y = mY.toInt()
@@ -107,6 +102,7 @@ class FenceView : View {
                 invalidate() // Invalidate entire view
                 result()
             }
+
             MotionEvent.ACTION_MOVE -> {
                 old =
                     Rect(
@@ -127,7 +123,7 @@ class FenceView : View {
     private fun result() {
         val point1 = intArrayOf(startPoint[0], startPoint[1])
         val point2 = intArrayOf(endPoint[0], endPoint[1])
-        // 调整位置
+
         for (i in 0..1) {
             if (startPoint[i] > endPoint[i]) {
                 point1[i] = endPoint[i]
@@ -155,18 +151,9 @@ class FenceView : View {
         invalidate()
     }
 
-    /**
-     * CallBack class
-     */
-/**
- * Custom Call back view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
     interface CallBack {
-        /**
-         * startPoint: 左上角
-         * endPoint: 右下角
-         */
+
         fun callback(
             startPoint: IntArray,
             endPoint: IntArray,

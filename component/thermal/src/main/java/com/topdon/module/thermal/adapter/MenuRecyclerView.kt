@@ -7,10 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 
-/**
- * Custom Menu recycler view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 class MenuRecyclerView : RecyclerView {
     constructor(context: Context) : this(context, null)
 

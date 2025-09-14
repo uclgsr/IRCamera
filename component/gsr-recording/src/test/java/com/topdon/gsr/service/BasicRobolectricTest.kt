@@ -5,17 +5,17 @@ import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Basic Robolectric tests to verify context-based testing works
- * Replaces Mockito usage with real Android context
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -36,7 +36,7 @@ class BasicRobolectricTest {
 
     @Test
     fun testSystemServiceAccess() {
-        // Test various system services that GSR recording might use
+
         val notificationService = context.getSystemService(Context.NOTIFICATION_SERVICE)
         assertNotNull("Notification service should be available", notificationService)
 
@@ -63,7 +63,6 @@ class BasicRobolectricTest {
         val prefs = context.getSharedPreferences("test_prefs", Context.MODE_PRIVATE)
         assertNotNull("SharedPreferences should be available", prefs)
 
-        // Test read/write
         val editor = prefs.edit()
         editor.putString("test_key", "test_value")
         editor.apply()
@@ -92,14 +91,14 @@ class BasicRobolectricTest {
             assertNotNull("Package info should be available", packageInfo)
             assertEquals("Package name should match", context.packageName, packageInfo.packageName)
         } catch (e: Exception) {
-            // May not be available in test environment, that's OK
+
         }
     }
 
     @Test
     fun testAsyncOperations() =
         runTest {
-            // Test that coroutines work with Robolectric context
+
             val result =
                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
                     context.packageName
@@ -113,14 +112,13 @@ class BasicRobolectricTest {
         val context1 = ApplicationProvider.getApplicationContext<Context>()
         val context2 = ApplicationProvider.getApplicationContext<Context>()
 
-        // Should be the same application context
         assertSame("Application contexts should be the same instance", context1, context2)
         assertEquals("Package names should match", context1.packageName, context2.packageName)
     }
 
     @Test
     fun testContextBasedClassInstantiation() {
-        // Test creating classes that require context
+
         try {
             val sessionManager = SessionManager.getInstance(context)
             assertNotNull("SessionManager should be created with context", sessionManager)
@@ -128,7 +126,7 @@ class BasicRobolectricTest {
             val shimmerRecorder = ShimmerGSRRecorder(context, 128)
             assertNotNull("ShimmerGSRRecorder should be created with context", shimmerRecorder)
         } catch (e: Exception) {
-            // If classes have issues, that's a separate concern from context availability
+
             assertTrue("Context-based class instantiation attempted", true)
         }
     }

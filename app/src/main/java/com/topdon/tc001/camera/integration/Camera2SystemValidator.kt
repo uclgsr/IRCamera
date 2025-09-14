@@ -3,25 +3,12 @@ package com.topdon.tc001.camera.integration
 import android.content.Context
 import android.util.Log
 import com.topdon.tc001.camera.core.ModeManager
-import kotlinx.coroutines.*
 
-/**
- * End-to-end validation for the Clean Camera2-only Architecture
- *
- * Validates that the implementation meets all technical requirements from the comment:
- * - One camera client only (no CameraX+Camera2 conflicts)
- * - Two exclusive modes: RAW mode (50MP DNG stream) OR Video mode (4K60/4K30)
- * - Fast switching without closing CameraDevice
- * - Deterministic state machine. No races. No silent failures
- */
 class Camera2SystemValidator(private val context: Context) {
     companion object {
         private const val TAG = "Camera2SystemValidator"
     }
 
-    /**
-     * Run comprehensive validation of the Camera2 system
-     */
     suspend fun validateSystem(): ValidationResult {
         val results = mutableListOf<String>()
         var allPassed = true
@@ -29,7 +16,6 @@ class Camera2SystemValidator(private val context: Context) {
         try {
             Log.i(TAG, "Starting Camera2 system validation...")
 
-            // Test 1: Architecture Components
             if (validateArchitectureComponents()) {
                 results.add("✅ Architecture components validated")
             } else {
@@ -37,7 +23,6 @@ class Camera2SystemValidator(private val context: Context) {
                 allPassed = false
             }
 
-            // Test 2: Mode Switching Logic
             if (validateModeSwitching()) {
                 results.add("✅ Mode switching logic validated")
             } else {
@@ -45,7 +30,6 @@ class Camera2SystemValidator(private val context: Context) {
                 allPassed = false
             }
 
-            // Test 3: Fast Session Switching
             if (validateFastSessionSwitching()) {
                 results.add("✅ Fast session switching validated")
             } else {
@@ -53,7 +37,6 @@ class Camera2SystemValidator(private val context: Context) {
                 allPassed = false
             }
 
-            // Test 4: Samsung S22 Compatibility
             if (validateSamsungCompatibility()) {
                 results.add("✅ Samsung S22 compatibility validated")
             } else {
@@ -72,9 +55,9 @@ class Camera2SystemValidator(private val context: Context) {
     }
 
     private fun validateArchitectureComponents(): Boolean {
-        // Verify all core components are accessible
+
         return try {
-            // This validates that all classes compile and are accessible
+
             Class.forName("com.topdon.tc001.camera.Camera2System")
             Class.forName("com.topdon.tc001.camera.core.CameraController")
             Class.forName("com.topdon.tc001.camera.core.VideoEngine")
@@ -93,10 +76,10 @@ class Camera2SystemValidator(private val context: Context) {
         return try {
             val modeManager = ModeManager()
 
-            // Test state transitions
             val canSwitchToRaw = modeManager.requestModeSwitch(ModeManager.CameraMode.RAW_50MP)
             val canSwitchToVideo = modeManager.requestModeSwitch(ModeManager.CameraMode.VIDEO_4K)
-            val canSwitchToPreview = modeManager.requestModeSwitch(ModeManager.CameraMode.PREVIEW_ONLY)
+            val canSwitchToPreview =
+                modeManager.requestModeSwitch(ModeManager.CameraMode.PREVIEW_ONLY)
 
             canSwitchToRaw && canSwitchToVideo && canSwitchToPreview
         } catch (e: Exception) {
@@ -105,13 +88,11 @@ class Camera2SystemValidator(private val context: Context) {
         }
     }
 
-    /**
-     * Validate fast session switching capability
-     */
     private fun validateFastSessionSwitching(): Boolean {
         return try {
-            // Validate that the session switching logic preserves camera device
-            val cameraControllerClass = Class.forName("com.topdon.tc001.camera.core.CameraController")
+
+            val cameraControllerClass =
+                Class.forName("com.topdon.tc001.camera.core.CameraController")
             val createSessionMethod =
                 cameraControllerClass.getDeclaredMethod(
                     "createCaptureSession",
@@ -119,7 +100,6 @@ class Camera2SystemValidator(private val context: Context) {
                     Class.forName("android.hardware.camera2.CameraCaptureSession\$StateCallback"),
                 )
 
-            // Method exists and is accessible
             createSessionMethod != null
         } catch (e: Exception) {
             Log.e(TAG, "Fast session switching validation failed", e)
@@ -127,9 +107,6 @@ class Camera2SystemValidator(private val context: Context) {
         }
     }
 
-    /**
-     * Validate Samsung S22 specific optimizations
-     */
     private fun validateSamsungCompatibility(): Boolean {
         return try {
             val deviceCapsClass = Class.forName("com.topdon.tc001.camera.core.DeviceCaps")
@@ -147,9 +124,6 @@ class Camera2SystemValidator(private val context: Context) {
         }
     }
 
-    /**
-     * Result of system validation
-     */
     data class ValidationResult(
         val allTestsPassed: Boolean,
         val results: List<String>,

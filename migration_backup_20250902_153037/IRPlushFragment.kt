@@ -54,7 +54,7 @@ class IRPlushFragment : BaseIRPlushFragment() {
         super.onDestroy()
     }
 
-    fun getBitmap(): Bitmap?  {
+    fun getBitmap(): Bitmap? {
         return dualView?.scaledBitmap
     }
 }

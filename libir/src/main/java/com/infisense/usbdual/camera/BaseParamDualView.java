@@ -1,8 +1,5 @@
 package com.infisense.usbdual.camera;
 
-/**
- * Created by fengjibo on 2024/1/10.
- */
 public class BaseParamDualView {
     protected int mIrWidth;
     protected int mIrHeight;

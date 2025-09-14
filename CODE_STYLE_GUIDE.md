@@ -3,30 +3,22 @@
 ## Kotlin/Java Style Guidelines
 
 ### 1. Naming Conventions
+
 ```kotlin
-// Classes: PascalCase
+
 class ThermalImageProcessor
 
-// Functions: camelCase
 fun processThermalData()
 
-// Constants: SCREAMING_SNAKE_CASE
 const val MAX_TEMPERATURE = 100.0
 
-// Variables: camelCase
 val thermalSensor = ThermalSensor()
 ```
 
 ### 2. Documentation Standards
+
 ```kotlin
-/**
- * Processes thermal imaging data with advanced analytics.
- * 
- * @param thermalData Raw thermal sensor data
- * @param analysisMode Type of analysis to perform
- * @return Processed thermal analysis result
- * @throws ThermalProcessingException If processing fails
- */
+
 fun processThermalData(
     thermalData: ByteArray,
     analysisMode: AnalysisMode
@@ -34,30 +26,28 @@ fun processThermalData(
 ```
 
 ### 3. Code Organization
+
 ```kotlin
 class ThermalImageProcessor {
-    // Constants first
+
     companion object {
         private const val DEFAULT_THRESHOLD = 25.0
     }
-    
-    // Properties
+
     private val sensorManager: SensorManager
-    
-    // Constructor
+
     constructor(context: Context) {
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
-    
-    // Public methods
+
     fun startProcessing() { }
-    
-    // Private methods
+
     private fun processInternal() { }
 }
 ```
 
 ### 4. Error Handling
+
 ```kotlin
 try {
     val result = processThermalData(data)
@@ -71,6 +61,7 @@ try {
 ## Python Style Guidelines
 
 ### 1. Type Hints
+
 ```python
 def process_thermal_data(
     thermal_data: bytes,
@@ -81,6 +72,7 @@ def process_thermal_data(
 ```
 
 ### 2. Docstring Format
+
 ```python
 def process_thermal_data(thermal_data: bytes) -> dict:
     '''
@@ -101,6 +93,7 @@ def process_thermal_data(thermal_data: bytes) -> dict:
 ## XML Style Guidelines
 
 ### 1. Layout Structure
+
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
@@ -121,6 +114,7 @@ def process_thermal_data(thermal_data: bytes) -> dict:
 ```
 
 ### 2. Resource Naming
+
 ```xml
 <!-- Colors -->
 <color name="thermal_primary">#FF5722</color>
@@ -138,6 +132,7 @@ def process_thermal_data(thermal_data: bytes) -> dict:
 ## Build Configuration
 
 ### 1. Gradle Best Practices
+
 ```kotlin
 android {
     compileSdk = 34
@@ -169,6 +164,7 @@ android {
 ## Quality Assurance
 
 ### 1. Code Review Checklist
+
 - [ ] All public APIs have documentation
 - [ ] Error handling is comprehensive
 - [ ] Resource management follows best practices
@@ -177,9 +173,11 @@ android {
 - [ ] Testing coverage adequate
 
 ### 2. Automated Quality Tools
+
 - **ktlint**: Kotlin style checking
 - **detekt**: Static code analysis
 - **jacoco**: Code coverage
 - **gradle-versions-plugin**: Dependency updates
 
-This guide ensures consistent, maintainable, and high-quality code across the IRCamera thermal imaging platform.
+This guide ensures consistent, maintainable, and high-quality code across the IRCamera thermal
+imaging platform.

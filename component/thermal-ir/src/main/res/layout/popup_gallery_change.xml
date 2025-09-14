@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="280dp"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_corners05_solid_3b3e44"
     android:orientation="vertical"
     android:paddingTop="6dp"
-    android:paddingBottom="6dp"
-    android:background="@drawable/bg_corners05_solid_3b3e44">
+    android:paddingBottom="6dp">
 
     <TextView
         android:id="@+id/tv_line"
@@ -15,12 +14,12 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:paddingStart="14dp"
-        android:paddingEnd="14dp"
         android:paddingTop="8dp"
+        android:paddingEnd="14dp"
         android:paddingBottom="8dp"
         android:text="@string/tc_has_line_device"
-        android:textSize="14sp"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tv_ts004"
@@ -28,12 +27,12 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:paddingStart="14dp"
-        android:paddingEnd="14dp"
         android:paddingTop="8dp"
+        android:paddingEnd="14dp"
         android:paddingBottom="8dp"
         android:text="TS004"
-        android:textSize="14sp"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tv_tc007"
@@ -41,12 +40,12 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:paddingStart="14dp"
-        android:paddingEnd="14dp"
         android:paddingTop="8dp"
+        android:paddingEnd="14dp"
         android:paddingBottom="8dp"
         android:text="TC007"
-        android:textSize="14sp"
         android:textColor="@color/white"
+        android:textSize="14sp"
         android:visibility="gone"
         tools:visibility="visible" />
 

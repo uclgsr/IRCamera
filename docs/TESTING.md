@@ -2,7 +2,10 @@
 
 ## 🧪 Enterprise Testing Overview
 
-The IRCamera platform implements **enterprise-grade comprehensive testing strategies** across all components to ensure maximum reliability, performance, security, compliance, and scalability. This document provides detailed testing procedures, frameworks, validation protocols, and enterprise testing infrastructure for production deployments.
+The IRCamera platform implements **enterprise-grade comprehensive testing strategies** across all
+components to ensure maximum reliability, performance, security, compliance, and scalability. This
+document provides detailed testing procedures, frameworks, validation protocols, and enterprise
+testing infrastructure for production deployments.
 
 ## 🏗️ Enterprise Testing Architecture
 
@@ -80,6 +83,7 @@ graph TB
 ### Unit Testing with JUnit and Mockk
 
 #### Thermal Processing Tests
+
 ```kotlin
 @RunWith(JUnit4::class)
 class ThermalProcessorTest {
@@ -100,26 +104,23 @@ class ThermalProcessorTest {
     
     @Test
     fun `processFrame should convert raw data to temperature correctly`() {
-        // Arrange
+
         val rawData = byteArrayOf(0x10, 0x20, 0x30, 0x40)
         val expectedTemp = 25.5f
         
         every { mockThermalCamera.calibrateTemperature(any()) } returns expectedTemp
-        
-        // Act
+
         val result = thermalProcessor.processFrame(rawData)
-        
-        // Assert
+
         assertEquals(expectedTemp, result.temperature, 0.1f)
         verify { mockThermalCamera.calibrateTemperature(any()) }
     }
     
     @Test
     fun `processFrame should handle invalid data gracefully`() {
-        // Arrange
+
         val invalidData = byteArrayOf()
-        
-        // Act & Assert
+
         assertThrows<InvalidDataException> {
             thermalProcessor.processFrame(invalidData)
         }
@@ -127,23 +128,22 @@ class ThermalProcessorTest {
     
     @Test
     fun `processFrame should store data when recording is active`() {
-        // Arrange
+
         val rawData = byteArrayOf(0x10, 0x20, 0x30, 0x40)
         thermalProcessor.startRecording()
         
         every { mockThermalCamera.calibrateTemperature(any()) } returns 25.5f
         every { mockDataStorage.store(any()) } just Runs
-        
-        // Act
+
         thermalProcessor.processFrame(rawData)
-        
-        // Assert
+
         verify { mockDataStorage.store(any()) }
     }
 }
 ```
 
 #### GSR Sensor Tests
+
 ```kotlin
 @RunWith(JUnit4::class)
 class GSRSensorTest {
@@ -164,41 +164,35 @@ class GSRSensorTest {
     
     @Test
     fun `connectToShimmer should establish BLE connection successfully`() = runTest {
-        // Arrange
+
         val deviceAddress = "00:11:22:33:44:55"
         every { mockBluetoothManager.connect(deviceAddress) } returns flowOf(ConnectionState.CONNECTED)
-        
-        // Act
+
         val connectionResult = gsrSensor.connectToShimmer(deviceAddress).first()
-        
-        // Assert
+
         assertEquals(ConnectionState.CONNECTED, connectionResult)
     }
     
     @Test
     fun `startRecording should send correct start command`() = runTest {
-        // Arrange
+
         val startCommand = byteArrayOf(0x07)
         every { mockShimmerDevice.sendCommand(startCommand) } returns true
-        
-        // Act
+
         val result = gsrSensor.startRecording()
-        
-        // Assert
+
         assertTrue(result)
         verify { mockShimmerDevice.sendCommand(startCommand) }
     }
     
     @Test
     fun `parseGSRData should convert raw ADC to microsiemens correctly`() {
-        // Arrange
+
         val rawADC = 2048 // 12-bit ADC midpoint
         val expectedGSR = 10.5f // Expected microsiemens value
-        
-        // Act
+
         val gsrValue = gsrSensor.parseGSRData(rawADC)
-        
-        // Assert
+
         assertEquals(expectedGSR, gsrValue, 0.1f)
     }
 }
@@ -207,6 +201,7 @@ class GSRSensorTest {
 ### UI Testing with Espresso
 
 #### Main Activity Tests
+
 ```kotlin
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -217,18 +212,17 @@ class MainActivityTest {
     
     @Before
     fun setUp() {
-        // Grant necessary permissions
+
         PermissionGranter.allowPermissionsIfNeeded(Manifest.permission.CAMERA)
         PermissionGranter.allowPermissionsIfNeeded(Manifest.permission.BLUETOOTH)
     }
     
     @Test
     fun testThermalViewDisplaysCorrectly() {
-        // Check if thermal view is displayed
+
         onView(withId(R.id.thermal_view))
             .check(matches(isDisplayed()))
-        
-        // Verify thermal controls are present
+
         onView(withId(R.id.btn_start_recording))
             .check(matches(isDisplayed()))
             .check(matches(isEnabled()))
@@ -236,37 +230,31 @@ class MainActivityTest {
     
     @Test
     fun testRecordingWorkflow() {
-        // Start recording
+
         onView(withId(R.id.btn_start_recording))
             .perform(click())
-        
-        // Verify recording indicator appears
+
         onView(withId(R.id.recording_indicator))
             .check(matches(isDisplayed()))
-        
-        // Wait for recording to process
+
         Thread.sleep(2000)
-        
-        // Stop recording
+
         onView(withId(R.id.btn_stop_recording))
             .perform(click())
-        
-        // Verify recording stopped
+
         onView(withId(R.id.recording_indicator))
             .check(matches(not(isDisplayed())))
     }
     
     @Test
     fun testGSRConnectionFlow() {
-        // Open GSR connection dialog
+
         onView(withId(R.id.btn_connect_gsr))
             .perform(click())
-        
-        // Select device from list
+
         onView(withText("Shimmer-ABCD"))
             .perform(click())
-        
-        // Verify connection status updates
+
         onView(withId(R.id.gsr_status))
             .check(matches(withText("Connected")))
     }
@@ -276,6 +264,7 @@ class MainActivityTest {
 ### Instrumented Tests
 
 #### Camera Integration Tests
+
 ```kotlin
 @RunWith(AndroidJUnit4::class)
 class CameraIntegrationTest {
@@ -290,12 +279,10 @@ class CameraIntegrationTest {
     @Test
     fun testThermalCameraInitialization() {
         val thermalCamera = ThermalCamera(context)
-        
-        // Test camera initialization
+
         val initResult = thermalCamera.initialize()
         assertTrue("Camera should initialize successfully", initResult)
-        
-        // Test camera capabilities
+
         val capabilities = thermalCamera.getCapabilities()
         assertNotNull("Capabilities should not be null", capabilities)
         assertTrue("Should support thermal imaging", capabilities.supportsThermalImaging)
@@ -334,6 +321,7 @@ class CameraIntegrationTest {
 ### Unit Testing with pytest
 
 #### Network Controller Tests
+
 ```python
 import pytest
 import asyncio
@@ -420,6 +408,7 @@ class TestNetworkController:
 ```
 
 #### GSR Data Processing Tests
+
 ```python
 import pytest
 import numpy as np
@@ -505,6 +494,7 @@ class TestGSRProcessor:
 ### Integration Tests
 
 #### System Integration Tests
+
 ```python
 import pytest
 import asyncio
@@ -916,14 +906,14 @@ jobs:
 
 ### Coverage Requirements
 
-| Component | Unit Test Coverage | Integration Test Coverage |
-|-----------|-------------------|---------------------------|
-| **Thermal Processing** | ≥ 90% | ≥ 80% |
-| **GSR Processing** | ≥ 90% | ≥ 80% |
-| **Network Communication** | ≥ 85% | ≥ 90% |
-| **Data Storage** | ≥ 80% | ≥ 75% |
-| **Security Features** | ≥ 95% | ≥ 90% |
-| **UI Components** | ≥ 70% | ≥ 60% |
+| Component                 | Unit Test Coverage | Integration Test Coverage |
+|---------------------------|--------------------|---------------------------|
+| **Thermal Processing**    | ≥ 90%              | ≥ 80%                     |
+| **GSR Processing**        | ≥ 90%              | ≥ 80%                     |
+| **Network Communication** | ≥ 85%              | ≥ 90%                     |
+| **Data Storage**          | ≥ 80%              | ≥ 75%                     |
+| **Security Features**     | ≥ 95%              | ≥ 90%                     |
+| **UI Components**         | ≥ 70%              | ≥ 60%                     |
 
 ### Test Metrics Dashboard
 
@@ -959,6 +949,7 @@ class TestMetrics:
 ## 🎯 Testing Best Practices
 
 ### Test Development Guidelines
+
 1. **Test Pyramid**: Focus on unit tests (70%), integration tests (20%), E2E tests (10%)
 2. **Test Isolation**: Each test should be independent and repeatable
 3. **Meaningful Assertions**: Test behavior, not implementation details
@@ -967,6 +958,7 @@ class TestMetrics:
 6. **Continuous Testing**: Run tests automatically on code changes
 
 ### Quality Assurance Checklist
+
 - [ ] Unit tests cover all critical functions
 - [ ] Integration tests verify component interactions
 - [ ] Performance tests validate speed requirements
@@ -978,4 +970,5 @@ class TestMetrics:
 - [ ] Performance benchmarks are within acceptable ranges
 - [ ] Security scans show no critical vulnerabilities
 
-This comprehensive testing documentation ensures the IRCamera platform maintains high quality, reliability, and performance standards across all components and deployment scenarios.
+This comprehensive testing documentation ensures the IRCamera platform maintains high quality,
+reliability, and performance standards across all components and deployment scenarios.

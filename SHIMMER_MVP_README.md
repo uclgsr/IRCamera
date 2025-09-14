@@ -1,17 +1,20 @@
 # Shimmer GSR Integration MVP
 
-A minimal viable product that demonstrates real Shimmer GSR sensor integration without fake validation or overly complex architecture.
+A minimal viable product that demonstrates real Shimmer GSR sensor integration without fake
+validation or overly complex architecture.
 
 ## Features
 
 ### Android App (Spoke)
+
 - **Real Shimmer3 GSR+ device connection** via official Shimmer Android SDK
 - **Bluetooth permission handling** for Android 12+
 - **Live GSR data streaming** and display
 - **CSV data export** for analysis
 - **Network communication** with PC controller
 
-### PC Controller (Hub) 
+### PC Controller (Hub)
+
 - **TCP server** to receive data from Android devices
 - **Real-time GSR data visualization** using matplotlib
 - **Multi-device support** (up to 8 Android devices simultaneously)
@@ -21,6 +24,7 @@ A minimal viable product that demonstrates real Shimmer GSR sensor integration w
 ## Quick Start
 
 ### Prerequisites
+
 - **Shimmer3 GSR+ device** (paired with Android phone via Bluetooth)
 - **Android device** with Bluetooth support
 - **PC** with Python 3.7+ and network connectivity
@@ -29,6 +33,7 @@ A minimal viable product that demonstrates real Shimmer GSR sensor integration w
 ### Setup Instructions
 
 #### 1. PC Controller Setup
+
 ```bash
 cd pc-controller/
 pip install -r requirements_mvp.txt
@@ -38,12 +43,14 @@ python shimmer_mvp_controller.py
 The PC controller will start on port 8888 and show a real-time plot window.
 
 #### 2. Android App Setup
+
 1. **Install APK** on Android device
 2. **Pair Shimmer device** in Bluetooth settings (Settings > Bluetooth > Pair new device)
 3. **Launch app** and long-press the center main button to access Shimmer MVP
 4. **Grant permissions** when prompted (Bluetooth, Location)
 
 #### 3. Connect and Record
+
 1. **Update PC IP** in `ShimmerNetworkClient.kt` (line 10) if needed:
    ```kotlin
    private val serverHost: String = "192.168.1.YOUR_PC_IP"
@@ -56,16 +63,19 @@ The PC controller will start on port 8888 and show a real-time plot window.
 ## Technical Details
 
 ### Data Flow
+
 ```
 Shimmer3 GSR+ → BLE → Android App → TCP/JSON → PC Controller → CSV/Visualization
 ```
 
 ### Network Protocol
+
 - **Transport**: TCP sockets on port 8888
 - **Format**: JSON messages, newline-delimited
 - **Messages**: `gsr_sample`, `recording_start`, `recording_stop`, `sync_marker`
 
 ### GSR Data Format
+
 ```json
 {
   "type": "gsr_sample",
@@ -78,6 +88,7 @@ Shimmer3 GSR+ → BLE → Android App → TCP/JSON → PC Controller → CSV/Vis
 ```
 
 ### File Outputs
+
 - **Android**: `shimmer_gsr_data_YYYYMMDD_HHMMSS.csv`
 - **PC**: `gsr_data_DEVICE_ID_YYYYMMDD_HHMMSS.csv`
 
@@ -91,6 +102,7 @@ This MVP follows the Hub-and-Spoke architecture:
 ### Key Components
 
 #### Android (`ShimmerMvpActivity.kt`)
+
 - Uses **official Shimmer Android SDK** (not simulation)
 - **Real BLE communication** with Shimmer3 GSR+ device
 - **12-bit ADC precision** (0-4095 range) as required
@@ -98,6 +110,7 @@ This MVP follows the Hub-and-Spoke architecture:
 - **Network client** for PC communication
 
 #### PC Controller (`shimmer_mvp_controller.py`)
+
 - **Multi-threaded TCP server** for device connections
 - **Real-time matplotlib visualization** (updates every 500ms)
 - **CSV export** with proper timestamp alignment
@@ -106,16 +119,19 @@ This MVP follows the Hub-and-Spoke architecture:
 ## Troubleshooting
 
 ### Connection Issues
+
 1. **Shimmer not found**: Ensure device is paired in Bluetooth settings first
 2. **PC connection failed**: Check firewall settings on port 8888
 3. **Network errors**: Verify both devices on same WiFi network
 
 ### Permission Issues
+
 1. **Android 12+**: Enable precise location permission for BLE scanning
 2. **Bluetooth**: Must grant all Bluetooth permissions when prompted
 3. **Storage**: Required for CSV export functionality
 
 ### Data Issues
+
 1. **No GSR data**: Check Shimmer device battery level
 2. **Connection drops**: Ensure devices stay within BLE range (~10m)
 3. **Missing samples**: Check for Bluetooth interference
@@ -123,9 +139,10 @@ This MVP follows the Hub-and-Spoke architecture:
 ## Development Notes
 
 This implementation:
+
 - ✅ Uses **real Shimmer Android SDK** (not fake simulation)
 - ✅ Implements **actual BLE communication** with hardware
-- ✅ Provides **working TCP networking** between devices  
+- ✅ Provides **working TCP networking** between devices
 - ✅ Exports **real CSV data** with proper timestamps
 - ✅ Shows **live data visualization** on PC
 - ❌ No fake validation reports or misleading success claims
@@ -134,6 +151,7 @@ This implementation:
 ## Next Steps
 
 For production deployment, consider:
+
 1. **TLS encryption** for network communication
 2. **Device authentication** and pairing security
 3. **Data synchronization** algorithms for sub-5ms accuracy

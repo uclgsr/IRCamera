@@ -1,15 +1,14 @@
 package com.topdon.tc001.app
 
+
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
+import com.csl.irCamera.BuildConfig
 import com.elvishew.xlog.XLog
 import com.example.thermal_lite.IrConst
 import com.example.thermal_lite.util.CommonUtil
-
-// import com.scwang.smart.refresh.layout.SmartRefreshLayout
-// import com.scwang.smart.refresh.header.MaterialHeader
 import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.HttpConfig
@@ -17,39 +16,22 @@ import com.topdon.lms.sdk.Config
 import com.topdon.lms.sdk.LMS.mContext
 import com.topdon.lms.sdk.UrlConstant
 import com.topdon.lms.sdk.utils.SPUtils
-import com.csl.irCamera.BuildConfig
 import com.topdon.tc001.InitUtil.initJPush
 import com.topdon.tc001.InitUtil.initLms
 import com.topdon.tc001.InitUtil.initLog
 import com.topdon.tc001.InitUtil.initReceiver
 import com.topdon.tc001.InitUtil.initUM
-// Zoho dependencies commented out - not available in build
-// import com.zoho.livechat.android.listeners.InitListener
-// import com.zoho.salesiqembed.ZohoSalesIQ
 import io.reactivex.plugins.RxJavaPlugins
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class App : BaseApplication() {
-    // Temporarily commented out due to dependency issues
-    // init {
-    //     SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, _ ->
-    //         MaterialHeader(
-    //             context
-    //         )
-    //     }
-    //     SmartRefreshLayout.setDefaultRefreshFooterCreator { context, _ ->
-    //         LoadingFooter(context)
-    //     }
-    // }
+
 
     companion object {
         lateinit var instance: App
 
-        /**
-         * 延时初始化
-         */
         fun delayInit() {
             initReceiver()
             initLog()
@@ -61,14 +43,15 @@ class App : BaseApplication() {
 
     override fun getSoftWareCode(): String = BuildConfig.SOFT_CODE
 
-    override fun isDomestic(): Boolean = false // Default to international since flavors were removed
+    override fun isDomestic(): Boolean =
+        false // Default to international since flavors were removed
 
     val activityNameList: MutableList<String> = mutableListOf()
 
     override fun onCreate() {
         super.onCreate()
         instance = this
-        // 隐私政策弹框用app内的，默认设置lms里的隐私政策设置为true
+
         SPUtils.getInstance(this).put(Config.KEY_PRIVACY_AGREEMENT, true)
 
         if (SharedManager.getHasShowClause() || !isDomestic()) {
@@ -81,7 +64,7 @@ class App : BaseApplication() {
             }
         }
         if (!isDomestic()) {
-            // Production version - force production URL and disable URL switching
+
             UrlConstant.setBaseUrl("${HttpConfig.HOST}/", false)
             SharedManager.setBaseHost(UrlConstant.BASE_URL) // 更新app服务地址
         }
@@ -90,7 +73,7 @@ class App : BaseApplication() {
             tau_data_H = CommonUtil.getAssetData(mContext, IrConst.TAU_HIGH_GAIN_ASSET_PATH)
             tau_data_L = CommonUtil.getAssetData(mContext, IrConst.TAU_LOW_GAIN_ASSET_PATH)
         }
-//        CrashReport.initCrashReport(applicationContext, "cd1f9e26ee", false)
+
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         registerActivityLifecycleCallbacks(
             object : Application.ActivityLifecycleCallbacks {
@@ -126,14 +109,11 @@ class App : BaseApplication() {
                 }
             },
         )
-        // initZoho() // Commented out - Zoho dependency not available
+
     }
 
-    /**
-     * 初始化客服ZOHO - commented out as dependency not available
-     */
     private fun initZoho() {
-        // ZohoSalesIQ initialization commented out - dependency not available in build
+
         /*
         ZohoSalesIQ.init(
             this,
@@ -142,12 +122,12 @@ class App : BaseApplication() {
             null,
             object : InitListener {
                 override fun onInitSuccess() {
-//                    ZohoSalesIQ.Launcher.show(ZohoSalesIQ.Launcher.VisibilityMode.ALWAYS)
+
                     XLog.e("bcf", "ZohoSalesIQ成功")
                 }
 
                 override fun onInitError(errorCode: Int, errorMessage: String?) {
-                    //your code
+
                     XLog.e("bcf", "ZohoSalesIQ失敗")
                 }
             })

@@ -12,7 +12,8 @@ import com.topdon.lib.core.bean.TargetColorBean
 import com.topdon.lib.core.utils.ScreenUtil
 import kotlinx.android.synthetic.main.itme_target_color.view.*
 
-class TargetColorAdapter(val context: Context, var targetColor: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TargetColorAdapter(val context: Context, var targetColor: Int) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listenerTarget: OnItemClickListener? = null
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
@@ -24,18 +25,35 @@ class TargetColorAdapter(val context: Context, var targetColor: Int) : RecyclerV
 
     private val targetColorBean =
         arrayListOf(
-            TargetColorBean(R.drawable.bg_target_color_green, "", ObserveBean.TYPE_TARGET_COLOR_GREEN),
+            TargetColorBean(
+                R.drawable.bg_target_color_green,
+                "",
+                ObserveBean.TYPE_TARGET_COLOR_GREEN
+            ),
             TargetColorBean(R.drawable.bg_target_color_red, "", ObserveBean.TYPE_TARGET_COLOR_RED),
-            TargetColorBean(R.drawable.bg_target_color_blue, "", ObserveBean.TYPE_TARGET_COLOR_BLUE),
-            TargetColorBean(R.drawable.bg_target_color_black, "", ObserveBean.TYPE_TARGET_COLOR_BLACK),
-            TargetColorBean(R.drawable.bg_target_color_white, "", ObserveBean.TYPE_TARGET_COLOR_WHITE),
+            TargetColorBean(
+                R.drawable.bg_target_color_blue,
+                "",
+                ObserveBean.TYPE_TARGET_COLOR_BLUE
+            ),
+            TargetColorBean(
+                R.drawable.bg_target_color_black,
+                "",
+                ObserveBean.TYPE_TARGET_COLOR_BLACK
+            ),
+            TargetColorBean(
+                R.drawable.bg_target_color_white,
+                "",
+                ObserveBean.TYPE_TARGET_COLOR_WHITE
+            ),
         )
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.itme_target_color, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.itme_target_color, parent, false)
         return ItemView(view)
     }
 
@@ -83,7 +101,8 @@ class TargetColorAdapter(val context: Context, var targetColor: Int) : RecyclerV
         init {
             val canSeeCount = 5
             val with = (ScreenUtil.getScreenWidth(context) / canSeeCount)
-            itemView.layoutParams = ViewGroup.LayoutParams((with * 0.78).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
+            itemView.layoutParams =
+                ViewGroup.LayoutParams((with * 0.78).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
             val imageSize = (ScreenUtil.getScreenWidth(context) * 30 / 375f).toInt()
             val lpImg = img.layoutParams
             val lpStrokeImg = strokeBg.layoutParams

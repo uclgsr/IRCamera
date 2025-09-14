@@ -136,7 +136,6 @@
   })
 #endif  // (__mips_isa_rev >= 6)
 
-// TODO(fbarchard): Consider removing __VAR_ARGS versions.
 #define LD_B(RTYPE, psrc) *((RTYPE*)(psrc)) /* NOLINT */
 #define LD_UB(...) LD_B(const v16u8, __VA_ARGS__)
 
@@ -199,7 +198,6 @@
   }
 #define ST_UH2(...) ST_H2(v8u16, __VA_ARGS__)
 
-// TODO(fbarchard): Consider using __msa_vshf_b and __msa_ilvr_b directly.
 /* Description : Shuffle byte vector elements as per mask vector
    Arguments   : Inputs  - in0, in1, in2, in3, mask0, mask1
                  Outputs - out0, out1

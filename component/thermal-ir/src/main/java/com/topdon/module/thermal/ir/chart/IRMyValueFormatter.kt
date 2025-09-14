@@ -4,15 +4,9 @@ import android.annotation.SuppressLint
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.topdon.module.thermal.ir.utils.ChartTools
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.TimeZone
 
-/**
-// X轴文本格式
- */
-/**
- * I r my value formatter utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
 class IRMyValueFormatter(private val startTime: Long, private val type: Int = 1) :
     IndexAxisValueFormatter() {
     companion object {
@@ -23,7 +17,7 @@ class IRMyValueFormatter(private val startTime: Long, private val type: Int = 1)
     }
 
     override fun getFormattedValue(value: Float): String {
-        // Note: Handle potential precision issues where input 1000 may return as 999, ensure data stability 2022-03-24
+
         val time =
             if (value.toLong() % 1000 == 999L) {
                 value.toLong() + 1L
@@ -37,7 +31,7 @@ class IRMyValueFormatter(private val startTime: Long, private val type: Int = 1)
     @SuppressLint("SimpleDateFormat")
     fun showDateSecond(time: Long): String {
         val date = Date(time)
-        // yyyy-MM-dd HH:mm:ss
+
         val pattern =
             when (type) {
                 TYPE_TIME_SECOND -> "HH:mm:ss"
@@ -47,7 +41,8 @@ class IRMyValueFormatter(private val startTime: Long, private val type: Int = 1)
                 else -> "HH:mm:ss"
             }
         val dateFormat = SimpleDateFormat(pattern)
-        val timeZone = TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
+        val timeZone =
+            TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
         dateFormat.timeZone = timeZone
         return dateFormat.format(date)
     }

@@ -1,17 +1,6 @@
 package com.topdon.menu.constant
 
-/**
- * Due to differences in menus across different devices (single light, dual light, Lite, TC007, 2D editing), this enum distinguishes them.
- *
- * Created by LCG on 2024/11/18.
- */
 
-/**
- * Type definition for menu classification.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
 enum class MenuType {
     SINGLE_LIGHT,
 

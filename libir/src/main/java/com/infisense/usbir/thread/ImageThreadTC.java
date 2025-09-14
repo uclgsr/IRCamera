@@ -41,7 +41,9 @@ public class ImageThreadTC extends Thread {
     public static final int TYPE_AI_D = 0;//动态检测
     public static final int TYPE_AI_H = 1;//high temperature source检测
     public static final int TYPE_AI_L = 2;//low temperature source检测
-
+    public static final int MULTIPLE = 2;
+    private final byte[] amplifyRotateArray;
+    public byte[] imageTemp;//艾睿需要的测试数据，处理完可以删除
     private byte[] imgTmp;
     private String TAG = "ImageThread";
     private Context mContext;
@@ -52,38 +54,43 @@ public class ImageThreadTC extends Thread {
     private byte[] imageSrc;
     private byte[] temperatureSrc;
     private boolean rotate; // 屏幕旋转
-    //
     private CommonParams.DataFlowMode dataFlowMode = CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT;
     private byte[] imageYUV422;
     private byte[] imageARGB;
     private byte[] imageDst;
-    public byte[] imageTemp;//艾睿需要的测试数据，处理完可以删除
-
     private byte[] imageY8;
     private float max = Float.MAX_VALUE;
     private float min = Float.MIN_VALUE;
     private int maxColor;
     private int minColor;
     private int rotateInt;
-
     private int pseudocolorMode = 3;
     private AlarmBean alarmBean;
-
-
     private byte[] firstFrame = null;
     private byte[] firstTemp = null;
     private int typeAi = TYPE_AI_C;
     private IRImageHelp irImageHelp;
-
     private volatile boolean isOpenAmplify = false;
-    private final byte[] amplifyRotateArray;
-    public static final int MULTIPLE = 2;
 
+
+    public ImageThreadTC(Context context, int imageWidth, int imageHeight) {
+        Log.i(TAG, "ImageThread create->imageWidth = " + imageWidth + " imageHeight = " + imageHeight);
+        this.mContext = context;
+        this.imageWidth = imageWidth;
+        this.imageHeight = imageHeight;
+        imageYUV422 = new byte[imageWidth * imageHeight * 2];
+        imageARGB = new byte[imageWidth * imageHeight * 4];
+        imageDst = new byte[imageWidth * imageHeight * 4];
+        imgTmp = new byte[imageWidth * imageHeight * 4];
+        imageTemp = new byte[imageDst.length];
+        imageY8 = new byte[imageWidth * imageHeight];
+        irImageHelp = new IRImageHelp();
+        amplifyRotateArray = new byte[imageWidth * MULTIPLE * imageHeight * MULTIPLE * 4];
+    }
 
     public void setOpenAmplify(boolean openAmplify) {
         isOpenAmplify = openAmplify;
     }
-
 
     public int getTypeAi() {
         return typeAi;
@@ -100,10 +107,6 @@ public class ImageThreadTC extends Thread {
     public void setAlarmBean(AlarmBean alarmBean) {
         this.alarmBean = alarmBean;
     }
-
-
-
-
 
     public void setSyncImage(SynchronizedBitmap syncimage) {
         this.syncimage = syncimage;
@@ -131,21 +134,6 @@ public class ImageThreadTC extends Thread {
 
     public void setRotate(int rotateInt) {
         this.rotateInt = rotateInt;
-    }
-
-    public ImageThreadTC(Context context, int imageWidth, int imageHeight) {
-        Log.i(TAG, "ImageThread create->imageWidth = " + imageWidth + " imageHeight = " + imageHeight);
-        this.mContext = context;
-        this.imageWidth = imageWidth;
-        this.imageHeight = imageHeight;
-        imageYUV422 = new byte[imageWidth * imageHeight * 2];
-        imageARGB = new byte[imageWidth * imageHeight * 4];
-        imageDst = new byte[imageWidth * imageHeight * 4];
-        imgTmp = new byte[imageWidth * imageHeight * 4];
-        imageTemp = new byte[imageDst.length];
-        imageY8 = new byte[imageWidth * imageHeight];
-        irImageHelp = new IRImageHelp();
-        amplifyRotateArray = new byte[imageWidth * MULTIPLE * imageHeight * MULTIPLE * 4];
     }
 
     public void setLimit(float max, float min) {
@@ -203,39 +191,39 @@ public class ImageThreadTC extends Thread {
                     } else {
                         imageDst = imageARGB;
                     }
-                    irImageHelp.customPseudoColor(imageDst,temperatureSrc,imageWidth,imageHeight);
+                    irImageHelp.customPseudoColor(imageDst, temperatureSrc, imageWidth, imageHeight);
                     /*
                      * 等温尺处理,展示pseudo color的温度range内信息
                      */
-                    irImageHelp.setPseudoColorMaxMin(imageDst,temperatureSrc,max,min,imageWidth,imageHeight);
+                    irImageHelp.setPseudoColorMaxMin(imageDst, temperatureSrc, max, min, imageWidth, imageHeight);
                 }
                 imageDst = irImageHelp.contourDetection(alarmBean,
                         imageDst, temperatureSrc,
                         (rotateInt == 270 || rotateInt == 90) ? imageWidth : imageHeight,
                         (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth);
-                if (typeAi == TYPE_AI_H){
-                    byte[] dataArray = JNITool.INSTANCE.maxTempL(imageDst,temperatureSrc,
+                if (typeAi == TYPE_AI_H) {
+                    byte[] dataArray = JNITool.INSTANCE.maxTempL(imageDst, temperatureSrc,
                             (rotateInt == 270 || rotateInt == 90) ? imageWidth : imageHeight,
-                            (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth,-1);
+                            (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth, -1);
                     Mat diffMat = new Mat(192, 256, CvType.CV_8UC3);
                     diffMat.put(0, 0, dataArray);
                     Imgproc.cvtColor(diffMat, diffMat, Imgproc.COLOR_BGR2RGBA);
-                    byte [] grayData = new byte[diffMat.cols()*diffMat.rows()*4];
-                    diffMat.get(0,0,grayData);
+                    byte[] grayData = new byte[diffMat.cols() * diffMat.rows() * 4];
+                    diffMat.get(0, 0, grayData);
                     imageDst = grayData;
-                }else if (typeAi == TYPE_AI_L){
-                    byte[] dataArray = JNITool.INSTANCE.lowTemTrack(imageDst,temperatureSrc,
+                } else if (typeAi == TYPE_AI_L) {
+                    byte[] dataArray = JNITool.INSTANCE.lowTemTrack(imageDst, temperatureSrc,
                             (rotateInt == 270 || rotateInt == 90) ? imageWidth : imageHeight,
-                            (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth,-1);
+                            (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth, -1);
                     Mat diffMat = new Mat(192, 256, CvType.CV_8UC3);
                     diffMat.put(0, 0, dataArray);
                     Imgproc.cvtColor(diffMat, diffMat, Imgproc.COLOR_BGR2RGBA);
-                    byte [] grayData = new byte[diffMat.cols()*diffMat.rows()*4];
-                    diffMat.get(0,0,grayData);
+                    byte[] grayData = new byte[diffMat.cols() * diffMat.rows() * 4];
+                    diffMat.get(0, 0, grayData);
                     imageDst = grayData;
-                }else if (typeAi == TYPE_AI_D) {
+                } else if (typeAi == TYPE_AI_D) {
                     int firstTime = 0;
-                    //静态闯入算法
+
                     if (firstFrame == null || firstTemp == null) {
                         firstFrame = new byte[imageDst.length];
                         firstTemp = new byte[temperatureSrc.length];
@@ -259,26 +247,26 @@ public class ImageThreadTC extends Thread {
                                 Log.e("静态闯入异常：", e.getMessage());
                             }
                         } else {
-                            //相似度不同，则代表手机抖动
+
                             System.arraycopy(imageDst, 0, firstFrame, 0, imageDst.length);
                             System.arraycopy(temperatureSrc, 0, firstTemp, 0, temperatureSrc.length);
                         }
                     }
                 }
-                if (isOpenAmplify && SupHelp.getInstance().an4K != null){
+                if (isOpenAmplify && SupHelp.getInstance().an4K != null) {
                     OpencvTools.supImage(imageDst,
-                            (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth ,
-                            (rotateInt == 270 || rotateInt == 90) ? imageWidth  : imageHeight ,
+                            (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth,
+                            (rotateInt == 270 || rotateInt == 90) ? imageWidth : imageHeight,
                             amplifyRotateArray);
                 }
-//                    Log.e("图像总处理耗时：", String.valueOf(System.currentTimeMillis() - startImageTime));
+
             }
 
             synchronized (syncimage.viewLock) {
                 if (!syncimage.valid) {
                     try {
                         if (isOpenAmplify) {
-                            if (amplifyRotateArray!=null){
+                            if (amplifyRotateArray != null) {
                                 bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(amplifyRotateArray));
                             }
                         } else {
@@ -286,7 +274,7 @@ public class ImageThreadTC extends Thread {
                                 bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst));
                             }
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     syncimage.valid = true;
@@ -302,17 +290,16 @@ public class ImageThreadTC extends Thread {
         Log.i(TAG, "ImageThread exit");
     }
 
-    public Bitmap getBaseBitmap(int rotateInt){
+    public Bitmap getBaseBitmap(int rotateInt) {
         Bitmap baseBitmap = null;
         if (rotateInt == 0 || rotateInt == 180) {
             baseBitmap = Bitmap.createBitmap(256, 192, Bitmap.Config.ARGB_8888);
-        }else {
+        } else {
             baseBitmap = Bitmap.createBitmap(192, 256, Bitmap.Config.ARGB_8888);
         }
         baseBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst));
         return baseBitmap;
     }
-
 
 
     private ColorRGB getColorRGBByMap(LinkedHashMap<Integer, ColorRGB> map, Integer key) {
@@ -321,6 +308,6 @@ public class ImageThreadTC extends Thread {
 
     public void setColorList(@Nullable int[] colorList, @Nullable float[] places, boolean isUseGray,
                              float customMaxTemp, float customMinTemp) {
-        irImageHelp.setColorList(colorList, places, isUseGray,customMaxTemp,customMinTemp);
+        irImageHelp.setColorList(colorList, places, isUseGray, customMaxTemp, customMinTemp);
     }
 }

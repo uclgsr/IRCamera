@@ -9,26 +9,13 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.lib.ui.R as UiR
 import kotlin.math.roundToInt
+import com.topdon.lib.ui.R as UiR
 
-/**
- * 支持竖向的 SeekBar。
- * 暂不支持 thumbOffset.
- */
-/**
- * Comm3DSeekBar class
- */
-/**
- * Comm3 d seek bar utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
+
 class Comm3DSeekBar : AppCompatSeekBar {
     private lateinit var mPaint: TextPaint
 
-    /**
-     * 0-横向 1-竖向
-     */
     private val orientation: Int
 
     private var mMaxWidth = 48
@@ -37,13 +24,10 @@ class Comm3DSeekBar : AppCompatSeekBar {
     private var mMinHeight = 24
     var level = 0
 
-    // 进度文字位置信息
     private val mProgressTextRect: Rect = Rect()
 
-    // 滑块button宽度
     private val mThumbWidth: Int = SizeUtils.dp2px(50f)
 
-    // 进度指示器宽度
     private val mIndicatorWidth: Int = SizeUtils.dp2px(50f)
     private var onSeekBarChangeListener: OnSeekBarChangeListener? = null
 
@@ -51,13 +35,26 @@ class Comm3DSeekBar : AppCompatSeekBar {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        val typedArray = context.obtainStyledAttributes(attrs, UiR.styleable.CommSeekBar, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        val typedArray =
+            context.obtainStyledAttributes(attrs, UiR.styleable.CommSeekBar, defStyleAttr, 0)
         orientation = typedArray.getInt(UiR.styleable.CommSeekBar_android_orientation, 0)
-        mMaxWidth = typedArray.getDimensionPixelSize(UiR.styleable.CommSeekBar_android_maxWidth, mMaxWidth)
-        mMaxHeight = typedArray.getDimensionPixelSize(UiR.styleable.CommSeekBar_android_maxHeight, mMaxHeight)
-        mMinWidth = typedArray.getDimensionPixelSize(UiR.styleable.CommSeekBar_android_minWidth, mMinWidth)
-        mMinHeight = typedArray.getDimensionPixelSize(UiR.styleable.CommSeekBar_android_minHeight, mMinHeight)
+        mMaxWidth =
+            typedArray.getDimensionPixelSize(UiR.styleable.CommSeekBar_android_maxWidth, mMaxWidth)
+        mMaxHeight = typedArray.getDimensionPixelSize(
+            UiR.styleable.CommSeekBar_android_maxHeight,
+            mMaxHeight
+        )
+        mMinWidth =
+            typedArray.getDimensionPixelSize(UiR.styleable.CommSeekBar_android_minWidth, mMinWidth)
+        mMinHeight = typedArray.getDimensionPixelSize(
+            UiR.styleable.CommSeekBar_android_minHeight,
+            mMinHeight
+        )
         mPaint = TextPaint()
         mPaint.setAntiAlias(true)
         mPaint.setColor(Color.parseColor("#00574B"))
@@ -168,23 +165,20 @@ class Comm3DSeekBar : AppCompatSeekBar {
             val reviseLeft =
                 left.coerceAtLeast(thumbHeight / 2 + 0.5f)
                     .coerceAtMost(paddingHeight - thumbHeight / 2 - 0.5f).toInt()
-            thumb.setBounds(reviseLeft, thumbTopOffset, reviseLeft + thumbHeight, thumbTopOffset + thumbWidth)
+            thumb.setBounds(
+                reviseLeft,
+                thumbTopOffset,
+                reviseLeft + thumbHeight,
+                thumbTopOffset + thumbWidth
+            )
         }
     }
 
     override fun onDraw(canvas: Canvas) {
         if (orientation == 0) {
             super.onDraw(canvas)
-//            val progressText = "$progress%"
-//            mPaint.getTextBounds(progressText, 0, progressText.length, mProgressTextRect)
-//            // 进度百分比
-//            val progressRatio = progress.toFloat() / max
-//            // thumb偏移量
-//            val thumbOffset: Float =
-//                (mThumbWidth - mProgressTextRect.width()) / 2 - mThumbWidth * progressRatio
-//            val thumbX = width * progressRatio + thumbOffset
-//            val thumbY: Float = height / 2f + mProgressTextRect.height() / 2f
-//            canvas!!.drawText(progressText, thumbX, thumbY, mPaint)
+
+
         } else {
             canvas?.let {
                 it.rotate(90f)
@@ -208,15 +202,18 @@ class Comm3DSeekBar : AppCompatSeekBar {
                 trackTouchEvent(event)
                 onSeekBarChangeListener?.onStartTrackingTouch(this)
             }
+
             MotionEvent.ACTION_MOVE -> {
                 trackTouchEvent(event)
             }
+
             MotionEvent.ACTION_UP -> {
                 isPressed = false
                 trackTouchEvent(event)
                 invalidate()
                 onSeekBarChangeListener?.onStopTrackingTouch(this)
             }
+
             MotionEvent.ACTION_CANCEL -> {
                 isPressed = false
                 invalidate()
@@ -227,9 +224,6 @@ class Comm3DSeekBar : AppCompatSeekBar {
         return true
     }
 
-    /**
-     * 通过级别分层进行粘性处理
-     */
     fun stopTrackTouchLevel() {
         if (level > 0) {
             val newLevel = (progress.toFloat() / 100 * 4).roundToInt()

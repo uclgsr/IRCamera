@@ -16,18 +16,13 @@ import com.topdon.lib.core.tools.ToastTools
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.IRMonitorActivity
 
-/**
- * I r monitor capture fragment for thermal imaging components.
- * Handles specific UI sections and user interactions.
- */
 class IRMonitorCaptureFragment : BaseFragment() {
     /**
-// 从上一interface传递过来的，当前是否为 TC007 device类型.
-// true-TC007 false-其他插件式device
+
+
      */
     private var isTC007 = false
 
-    // View properties
     private lateinit var animationView: LottieAnimationView
     private lateinit var viewStart: View
     private lateinit var ivIcon: ImageView
@@ -48,41 +43,43 @@ class IRMonitorCaptureFragment : BaseFragment() {
         viewStart.setOnClickListener {
             if (isTC007) {
                 if (WebSocketProxy.getInstance().isTC007Connect()) {
-                    NavigationManager.getInstance().build(RouterConfig.IR_MONITOR_CAPTURE_07).navigation(requireContext())
+                    NavigationManager.getInstance().build(RouterConfig.IR_MONITOR_CAPTURE_07)
+                        .navigation(requireContext())
                 } else {
                     ToastTools.showShort(R.string.device_connect_tip)
                 }
             } else {
                 if (DeviceTools.isConnect()) {
-                    if (DeviceTools.isTC001LiteConnect())
-                        {
-                            NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_MONITOR_LITE).navigation(requireContext())
-                        } else if (DeviceTools.isHikConnect()) {
-                        NavigationManager.getInstance().build(RouterConfig.IR_HIK_MONITOR_CAPTURE1).navigation(requireContext())
-                    } else
-                        {
-                            startActivity(Intent(requireContext(), IRMonitorActivity::class.java))
-                        }
+                    if (DeviceTools.isTC001LiteConnect()) {
+                        NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_MONITOR_LITE)
+                            .navigation(requireContext())
+                    } else if (DeviceTools.isHikConnect()) {
+                        NavigationManager.getInstance().build(RouterConfig.IR_HIK_MONITOR_CAPTURE1)
+                            .navigation(requireContext())
+                    } else {
+                        startActivity(Intent(requireContext(), IRMonitorActivity::class.java))
+                    }
                 } else {
                     ToastTools.showShort(R.string.device_connect_tip)
                 }
             }
         }
 
-        refreshUI(if (isTC007) WebSocketProxy.getInstance().isTC007Connect() else DeviceTools.isConnect())
+        refreshUI(
+            if (isTC007) WebSocketProxy.getInstance().isTC007Connect() else DeviceTools.isConnect()
+        )
     }
 
     override fun onResume() {
         super.onResume()
-        refreshUI(if (isTC007) WebSocketProxy.getInstance().isTC007Connect() else DeviceTools.isConnect())
+        refreshUI(
+            if (isTC007) WebSocketProxy.getInstance().isTC007Connect() else DeviceTools.isConnect()
+        )
     }
 
     override fun initData() {
     }
 
-    /**
-// 刷新连接状态
-     */
     private fun refreshUI(isConnect: Boolean) {
         animationView.isVisible = !isConnect
         ivIcon.isVisible = isConnect

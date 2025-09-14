@@ -6,21 +6,21 @@ import android.view.TextureView
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.tc001.camera.ui.SensorSelectionDialog
 import com.topdon.tc001.gsr.EnhancedThermalRecorder
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * Advanced Multi-Modal Recorder with True Parallel Recording
- *
- * Features:
- * - Truly parallel recording starts for all selected sensors
- * - Flexible sensor combination selection (any combination of Thermal/RGB/GSR)
- * - Samsung S22 ground truth timing with sub-millisecond precision
- * - Comprehensive error handling and sensor availability detection
- * - Research-grade synchronization with unified timestamps
- */
 class ParallelMultiModalRecorder(
     private val context: Context,
     private val thermalRecorder: EnhancedThermalRecorder,
@@ -30,17 +30,14 @@ class ParallelMultiModalRecorder(
         private const val TAG = "ParallelRecorder"
     }
 
-    // Recording components
     private var rgbCameraRecorder: RGBCameraRecorder? = null
     private val recordingScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
-    // Recording state
     private var currentSessionId: String? = null
     private val isRecording = AtomicBoolean(false)
     private val synchronizedStartTime = AtomicLong(0)
     private var selectedSensors: Set<SensorSelectionDialog.SensorType> = emptySet()
 
-    // Recording results
     data class ParallelRecordingSession(
         val sessionId: String,
         val selectedSensors: Set<SensorSelectionDialog.SensorType>,
@@ -55,15 +52,11 @@ class ParallelMultiModalRecorder(
         val sensorStatus: Map<SensorSelectionDialog.SensorType, String> = emptyMap(),
     )
 
-    // Event callbacks
     var onRecordingStarted: ((ParallelRecordingSession) -> Unit)? = null
     var onRecordingStopped: ((ParallelRecordingSession) -> Unit)? = null
     var onError: ((String) -> Unit)? = null
     var onSensorStatusChanged: ((SensorSelectionDialog.SensorType, String) -> Unit)? = null
 
-    /**
-     * Initialize all recording components
-     */
     fun initialize() {
         rgbCameraRecorder =
             RGBCameraRecorder(context, rgbTextureView).apply {
@@ -80,7 +73,10 @@ class ParallelMultiModalRecorder(
                 }
 
                 onError = { error ->
-                    onSensorStatusChanged?.invoke(SensorSelectionDialog.SensorType.RGB, "Error: $error")
+                    onSensorStatusChanged?.invoke(
+                        SensorSelectionDialog.SensorType.RGB,
+                        "Error: $error"
+                    )
                     Log.e(TAG, "RGB camera error in parallel session: $error")
                 }
             }
@@ -88,9 +84,6 @@ class ParallelMultiModalRecorder(
         Log.i(TAG, "Parallel multi-modal recorder initialized")
     }
 
-    /**
-     * Start parallel multi-modal recording with selected sensors
-     */
     fun startParallelRecording(
         selectedSensors: Set<SensorSelectionDialog.SensorType>,
         sessionId: String? = null,
@@ -108,7 +101,7 @@ class ParallelMultiModalRecorder(
         }
 
         try {
-            // Generate unified session with Samsung S22 ground truth timing
+
             val unifiedSessionId = sessionId ?: TimeUtil.generateSessionId("Parallel")
             val synchronizedTimestamp = TimeUtil.getSynchronizedTimestamp()
 
@@ -117,28 +110,32 @@ class ParallelMultiModalRecorder(
             synchronizedStartTime.set(synchronizedTimestamp)
 
             Log.i(TAG, "Starting parallel recording with sensors: $selectedSensors")
-            Log.i(TAG, "Unified session ID: $unifiedSessionId, Ground truth timestamp: $synchronizedTimestamp")
+            Log.i(
+                TAG,
+                "Unified session ID: $unifiedSessionId, Ground truth timestamp: $synchronizedTimestamp"
+            )
 
-            // Start parallel recording using coroutines for true simultaneity
             recordingScope.launch {
-                val startJobs = mutableListOf<Deferred<Pair<SensorSelectionDialog.SensorType, Boolean>>>()
+                val startJobs =
+                    mutableListOf<Deferred<Pair<SensorSelectionDialog.SensorType, Boolean>>>()
 
-                // Launch all selected sensors in parallel
                 selectedSensors.forEach { sensor ->
                     val job =
                         async {
                             when (sensor) {
                                 SensorSelectionDialog.SensorType.THERMAL -> {
-                                    // Thermal recording via GSR recorder (includes thermal support)
-                                    val success = thermalRecorder.startRecording(unifiedSessionId, null, true)
+
+                                    val success =
+                                        thermalRecorder.startRecording(unifiedSessionId, null, true)
                                     if (success) {
-                                        // Add initial sync marker with precise timing
+
                                         delay(50) // Small delay to ensure recording is active
                                         thermalRecorder.triggerSyncEvent(
                                             "PARALLEL_THERMAL_START",
                                             mapOf(
                                                 "sync_timestamp" to synchronizedTimestamp.toString(),
-                                                "selected_sensors" to selectedSensors.map { it.displayName }.joinToString(","),
+                                                "selected_sensors" to selectedSensors.map { it.displayName }
+                                                    .joinToString(","),
                                                 "recording_mode" to "parallel_multimodal",
                                             ),
                                         )
@@ -147,45 +144,51 @@ class ParallelMultiModalRecorder(
                                 }
 
                                 SensorSelectionDialog.SensorType.RGB -> {
-                                    // RGB camera recording
+
                                     rgbCameraRecorder?.updateSettings(rgbSettings)
-                                    val success = rgbCameraRecorder?.startRecording(unifiedSessionId) ?: false
+                                    val success =
+                                        rgbCameraRecorder?.startRecording(unifiedSessionId) ?: false
                                     Pair(sensor, success)
                                 }
 
                                 SensorSelectionDialog.SensorType.GSR -> {
-                                    // GSR recording (handled by thermal recorder)
-                                    // This is already covered by THERMAL sensor
-                                    Pair(sensor, selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL))
+
+
+                                    Pair(
+                                        sensor,
+                                        selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)
+                                    )
                                 }
                             }
                         }
                     startJobs.add(job)
                 }
 
-                // Wait for all sensors to start and collect results
                 val results = startJobs.awaitAll()
                 val failedSensors = results.filter { !it.second }.map { it.first }
                 val successfulSensors = results.filter { it.second }.map { it.first }.toSet()
 
                 withContext(Dispatchers.Main) {
                     if (successfulSensors.isEmpty()) {
-                        // All sensors failed to start
+
                         Log.e(TAG, "All sensors failed to start: $failedSensors")
-                        onError?.invoke("Failed to start any sensors: ${failedSensors.map { it.displayName }.joinToString(", ")}")
+                        onError?.invoke(
+                            "Failed to start any sensors: ${
+                                failedSensors.map { it.displayName }.joinToString(", ")
+                            }"
+                        )
                         cleanup()
                         return@withContext
                     }
 
                     if (failedSensors.isNotEmpty()) {
-                        // Some sensors failed, but continue with successful ones
+
                         Log.w(TAG, "Some sensors failed to start: $failedSensors")
                         Log.i(TAG, "Continuing with successful sensors: $successfulSensors")
                     }
 
                     isRecording.set(true)
 
-                    // Update sensor status
                     successfulSensors.forEach { sensor ->
                         onSensorStatusChanged?.invoke(sensor, "Recording")
                     }
@@ -193,22 +196,23 @@ class ParallelMultiModalRecorder(
                         onSensorStatusChanged?.invoke(sensor, "Failed")
                     }
 
-                    // Add comprehensive sync event marking parallel start completion
                     if (selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
                         thermalRecorder.triggerSyncEvent(
                             "PARALLEL_RECORDING_STARTED",
                             mapOf(
                                 "sync_timestamp" to synchronizedTimestamp.toString(),
-                                "selected_sensors" to selectedSensors.map { it.displayName }.joinToString(","),
-                                "successful_sensors" to successfulSensors.map { it.displayName }.joinToString(","),
-                                "failed_sensors" to failedSensors.map { it.displayName }.joinToString(","),
+                                "selected_sensors" to selectedSensors.map { it.displayName }
+                                    .joinToString(","),
+                                "successful_sensors" to successfulSensors.map { it.displayName }
+                                    .joinToString(","),
+                                "failed_sensors" to failedSensors.map { it.displayName }
+                                    .joinToString(","),
                                 "unified_time_base" to "samsung_s22_ground_truth",
                                 "recording_mode" to "parallel_multimodal",
                             ),
                         )
                     }
 
-                    // Create session data
                     val session =
                         ParallelRecordingSession(
                             sessionId = unifiedSessionId,
@@ -222,13 +226,18 @@ class ParallelMultiModalRecorder(
                                 },
                             sensorStatus =
                                 successfulSensors.associateWith { "Recording" } +
-                                    failedSensors.associateWith { "Failed" },
+                                        failedSensors.associateWith { "Failed" },
                         )
 
                     onRecordingStarted?.invoke(session)
 
                     Log.i(TAG, "Parallel multi-modal recording started successfully")
-                    Log.i(TAG, "Active sensors: ${successfulSensors.map { it.displayName }.joinToString(", ")}")
+                    Log.i(
+                        TAG,
+                        "Active sensors: ${
+                            successfulSensors.map { it.displayName }.joinToString(", ")
+                        }"
+                    )
                 }
             }
 
@@ -241,9 +250,6 @@ class ParallelMultiModalRecorder(
         }
     }
 
-    /**
-     * Stop parallel multi-modal recording
-     */
     fun stopParallelRecording(): ParallelRecordingSession? {
         if (!isRecording.get() || currentSessionId == null) {
             Log.w(TAG, "Not currently recording")
@@ -259,7 +265,6 @@ class ParallelMultiModalRecorder(
             Log.i(TAG, "Stopping parallel multi-modal recording")
             Log.i(TAG, "Recording duration: ${recordingDuration}ms")
 
-            // Add sync event before stopping
             if (selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
                 thermalRecorder.triggerSyncEvent(
                     "PARALLEL_RECORDING_STOPPING",
@@ -271,7 +276,6 @@ class ParallelMultiModalRecorder(
                 )
             }
 
-            // Stop all active recording components in parallel
             recordingScope.launch {
                 val stopJobs = mutableListOf<Deferred<Unit>>()
 
@@ -281,14 +285,14 @@ class ParallelMultiModalRecorder(
                             when (sensor) {
                                 SensorSelectionDialog.SensorType.THERMAL,
                                 SensorSelectionDialog.SensorType.GSR,
-                                -> {
-                                    // Stop thermal/GSR recording
+                                    -> {
+
                                     thermalRecorder.stopRecording()
                                     Unit
                                 }
 
                                 SensorSelectionDialog.SensorType.RGB -> {
-                                    // Stop RGB recording
+
                                     rgbCameraRecorder?.stopRecording()
                                     Unit
                                 }
@@ -297,13 +301,11 @@ class ParallelMultiModalRecorder(
                     stopJobs.add(job)
                 }
 
-                // Wait for all to stop
                 stopJobs.awaitAll()
 
                 withContext(Dispatchers.Main) {
                     isRecording.set(false)
 
-                    // Create final session with all output files
                     val sessionDir = thermalRecorder.getSessionDirectory()
                     val finalSession =
                         ParallelRecordingSession(
@@ -314,7 +316,7 @@ class ParallelMultiModalRecorder(
                             recordingDuration = recordingDuration,
                             thermalVideoFile =
                                 if (selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
-                                    // The thermal video file would be created by the existing thermal recording system
+
                                     null // Will be set by the thermal recording system
                                 } else {
                                     null
@@ -346,7 +348,6 @@ class ParallelMultiModalRecorder(
                 }
             }
 
-            // Return preliminary session info (final session will be provided via callback)
             return ParallelRecordingSession(
                 sessionId = sessionId,
                 selectedSensors = selectedSensors,
@@ -362,9 +363,6 @@ class ParallelMultiModalRecorder(
         }
     }
 
-    /**
-     * Add synchronized event marker across all active recording streams
-     */
     fun addParallelSyncEvent(
         eventName: String,
         metadata: Map<String, String> = emptyMap(),
@@ -381,7 +379,6 @@ class ParallelMultiModalRecorder(
                 put("timing_source", "samsung_s22_ground_truth")
             }
 
-        // Add sync event to GSR/thermal recorder if active
         if (selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
             thermalRecorder.triggerSyncEvent("PARALLEL_CROSS_MODAL_$eventName", eventData)
         }
@@ -389,9 +386,6 @@ class ParallelMultiModalRecorder(
         Log.d(TAG, "Added parallel synchronized event: $eventName at timestamp $timestamp")
     }
 
-    /**
-     * Switch RGB camera (front/back) during recording
-     */
     fun switchRGBCamera(): RGBCameraRecorder.CameraFacing? {
         if (!selectedSensors.contains(SensorSelectionDialog.SensorType.RGB)) {
             Log.w(TAG, "RGB sensor not active, cannot switch camera")
@@ -406,7 +400,6 @@ class ParallelMultiModalRecorder(
                 RGBCameraRecorder.CameraFacing.BACK
             }
 
-        // Switch to the new facing
         val success = runBlocking { rgbCameraRecorder?.switchCamera(newFacing) ?: false }
         val resultFacing = if (success) newFacing else currentFacing
 
@@ -422,9 +415,6 @@ class ParallelMultiModalRecorder(
         return resultFacing
     }
 
-    /**
-     * Update RGB recording settings during recording
-     */
     fun updateRGBSettings(settings: RGBCameraRecorder.RecordingSettings) {
         if (!selectedSensors.contains(SensorSelectionDialog.SensorType.RGB)) {
             Log.w(TAG, "RGB sensor not active, cannot update settings")
@@ -445,9 +435,6 @@ class ParallelMultiModalRecorder(
         }
     }
 
-    /**
-     * Get current recording state
-     */
     fun isRecording() = isRecording.get()
 
     fun getCurrentSessionId() = currentSessionId
@@ -456,9 +443,6 @@ class ParallelMultiModalRecorder(
 
     fun getSessionDirectory(): File? = thermalRecorder.getSessionDirectory()
 
-    /**
-     * Get RGB camera information (only available if RGB sensor is selected)
-     */
     fun getCurrentRGBSettings() =
         if (selectedSensors.contains(SensorSelectionDialog.SensorType.RGB)) {
             rgbCameraRecorder?.getCurrentSettings()
@@ -477,9 +461,6 @@ class ParallelMultiModalRecorder(
 
     fun getSupportedRGBResolutions() = rgbCameraRecorder?.getSupportedResolutions() ?: emptyList()
 
-    /**
-     * Cleanup all resources
-     */
     fun cleanup() {
         if (isRecording.get()) {
             stopParallelRecording()

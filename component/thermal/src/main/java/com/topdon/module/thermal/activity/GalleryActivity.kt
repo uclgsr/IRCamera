@@ -13,13 +13,9 @@ import com.topdon.module.thermal.R
 import com.topdon.module.thermal.fragment.GalleryPictureFragment
 import com.topdon.module.thermal.fragment.GalleryVideoFragment
 
-// Legacy ARouter route annotation - now using NavigationManager
-/**
- * Gallery activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
 class GalleryActivity : BaseActivity() {
-    //    override fun providerVMClass() = GalleryViewModel::class.java
+
 
     private val permissionList by lazy {
         if (this.applicationInfo.targetSdkVersion >= 34) {
@@ -45,16 +41,15 @@ class GalleryActivity : BaseActivity() {
     override fun initContentView() = R.layout.activity_gallery
 
     override fun initView() {
-        // Use findViewById instead of synthetic views for Kotlin 2.1.0 compatibility
+
         val galleryViewPager = findViewById<ViewPager>(R.id.gallery_viewpager)
         val galleryTab = findViewById<TabLayout>(R.id.gallery_tab)
 
         galleryViewPager.adapter = ViewAdapter(this, supportFragmentManager)
         galleryTab.setupWithViewPager(galleryViewPager)
 
-        // Request media permissions using modern PermissionTool
         PermissionTool.requestFile(this) {
-            // Permission granted, gallery can now access media files
+
         }
     }
 

@@ -9,13 +9,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
-/**
- * GSR Data Fragment
- * Displays CSV data files from GSR recordings with metadata
- */
 class GSRDataFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: View
@@ -83,7 +81,6 @@ class GSRDataFragment : Fragment() {
     private fun findGSRDataFiles(): List<GSRDataFile> {
         val files = mutableListOf<GSRDataFile>()
 
-        // Look for GSR data files in standard recording directories
         val recordingDir = File(context?.getExternalFilesDir(null), "GSR_Recordings")
         if (recordingDir.exists()) {
             recordingDir.listFiles { file ->
@@ -93,7 +90,7 @@ class GSRDataFragment : Fragment() {
                     val metadata = parseGSRFileMetadata(file)
                     files.add(metadata)
                 } catch (e: Exception) {
-                    // Skip invalid files
+
                 }
             }
         }
@@ -102,14 +99,13 @@ class GSRDataFragment : Fragment() {
     }
 
     private fun parseGSRFileMetadata(file: File): GSRDataFile {
-        // Parse filename and CSV header to extract metadata
+
         val filename = file.nameWithoutExtension
         val parts = filename.split("_")
 
         val sessionId = parts.getOrNull(2) ?: "Unknown"
         val participantId = parts.getOrNull(3) ?: "Unknown"
 
-        // Count CSV lines for sample count
         val sampleCount =
             try {
                 file.readLines().size - 1L // Subtract header
@@ -117,7 +113,6 @@ class GSRDataFragment : Fragment() {
                 0L
             }
 
-        // Estimate duration from sample count (128 Hz sampling)
         val duration = sampleCount / 128 // seconds
 
         val createdDate =
@@ -137,15 +132,11 @@ class GSRDataFragment : Fragment() {
     }
 
     private fun openDataFile(dataFile: GSRDataFile) {
-        // Open detailed data view activity
+
         GSRDataViewActivity.startActivity(requireContext(), dataFile.file.absolutePath)
     }
 }
 
-/**
- * GSR Video Fragment
- * Displays recorded video files from multi-modal sessions
- */
 class GSRVideoFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: View
@@ -204,7 +195,6 @@ class GSRVideoFragment : Fragment() {
     private fun findVideoFiles(): List<File> {
         val files = mutableListOf<File>()
 
-        // Look for video files in recording directories
         val recordingDir = File(context?.getExternalFilesDir(null), "GSR_Recordings")
         if (recordingDir.exists()) {
             recordingDir.listFiles { file ->
@@ -216,15 +206,11 @@ class GSRVideoFragment : Fragment() {
     }
 
     private fun openVideoFile(videoFile: File) {
-        // Open video player activity
+
         GSRVideoPlayerActivity.startActivity(requireContext(), videoFile.absolutePath)
     }
 }
 
-/**
- * GSR RAW Image Fragment
- * Displays captured RAW DNG images from parallel recording
- */
 class GSRRawImageFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: View
@@ -283,7 +269,6 @@ class GSRRawImageFragment : Fragment() {
     private fun findRawImageFiles(): List<File> {
         val files = mutableListOf<File>()
 
-        // Look for DNG files in recording directories
         val recordingDir = File(context?.getExternalFilesDir(null), "GSR_Recordings")
         if (recordingDir.exists()) {
             recordingDir.listFiles { file ->
@@ -295,15 +280,11 @@ class GSRRawImageFragment : Fragment() {
     }
 
     private fun openRawImageFile(rawImageFile: File) {
-        // Open RAW image viewer activity
+
         GSRRawImageViewActivity.startActivity(requireContext(), rawImageFile.absolutePath)
     }
 }
 
-/**
- * GSR Session Fragment
- * Displays complete recording sessions with all associated files
- */
 class GSRSessionFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: View
@@ -381,7 +362,7 @@ class GSRSessionFragment : Fragment() {
                     val sessionInfo = parseSessionDirectory(sessionDir)
                     sessions.add(sessionInfo)
                 } catch (e: Exception) {
-                    // Skip invalid session directories
+
                 }
             }
         }
@@ -392,12 +373,14 @@ class GSRSessionFragment : Fragment() {
     private fun parseSessionDirectory(sessionDir: File): GSRSessionInfo {
         val sessionId = sessionDir.name
 
-        // Find session files
-        val gsrDataFile = sessionDir.listFiles { file -> file.extension == "csv" && file.name.contains("gsr_data") }?.firstOrNull()
-        val videoFile = sessionDir.listFiles { file -> file.extension == "mp4" || file.extension == "mov" }?.firstOrNull()
+        val gsrDataFile =
+            sessionDir.listFiles { file -> file.extension == "csv" && file.name.contains("gsr_data") }
+                ?.firstOrNull()
+        val videoFile =
+            sessionDir.listFiles { file -> file.extension == "mp4" || file.extension == "mov" }
+                ?.firstOrNull()
         val rawImageCount = sessionDir.listFiles { file -> file.extension == "dng" }?.size ?: 0
 
-        // Parse session metadata from files or directory name
         val parts = sessionId.split("_")
         val participantId = parts.getOrNull(1) ?: "Unknown"
         val studyName = parts.getOrNull(2) ?: "MultiModal Study"
@@ -408,7 +391,6 @@ class GSRSessionFragment : Fragment() {
                 java.util.Locale.getDefault(),
             ).format(java.util.Date(sessionDir.lastModified()))
 
-        // Estimate duration from GSR data if available
         val duration =
             gsrDataFile?.let { file: File ->
                 try {

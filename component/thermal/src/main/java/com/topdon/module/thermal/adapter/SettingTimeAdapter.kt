@@ -9,13 +9,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.module.thermal.R
 
-/**
-// set时间
- */
-/**
- * Custom Setting time view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 class SettingTimeAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var datas = arrayOf("秒", "分", "时", "天")
@@ -46,10 +39,20 @@ class SettingTimeAdapter(val context: Context) :
             holder.btn.text = datas[position]
             if (position == select) {
                 holder.btn.setBackgroundResource(R.drawable.ui_btn_round_theme)
-                holder.btn.setTextColor(ContextCompat.getColor(context, com.topdon.lib.core.R.color.white))
+                holder.btn.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        com.topdon.lib.core.R.color.white
+                    )
+                )
             } else {
                 holder.btn.background = null
-                holder.btn.setTextColor(ContextCompat.getColor(context, com.topdon.lib.core.R.color.font_third_color))
+                holder.btn.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        com.topdon.lib.core.R.color.font_third_color
+                    )
+                )
             }
             holder.btn.setOnClickListener {
                 listener?.onClick(position, dataTimes[position])
@@ -66,10 +69,6 @@ class SettingTimeAdapter(val context: Context) :
         val btn: Button = itemView.findViewById(R.id.item_setting_time_btn)
     }
 
-/**
- * Custom On item click listener view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
     interface OnItemClickListener {
         fun onClick(
             index: Int,

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_card"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingBottom="35dp"
-    android:background="@drawable/bg_card">
+    android:paddingBottom="35dp">
 
     <!-- Title -->
     <TextView
@@ -16,18 +15,18 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="@string/tip_export_data"
-        android:textSize="16sp"
-        android:textColor="#ffffff" />
+        android:textColor="#ffffff"
+        android:textSize="16sp" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="40dp"
         android:progressDrawable="@drawable/progress_theme_night"
-        style="?android:attr/progressBarStyleHorizontal"
         tools:progress="50" />
 
 </LinearLayout>

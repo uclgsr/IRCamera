@@ -13,10 +13,6 @@ import com.topdon.lib.ui.bean.ColorBean
 import com.topdon.module.thermal.ir.R
 import com.topdon.lib.ui.R as UiR
 
-/**
- * Custom Target item view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
@@ -42,7 +38,8 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.itme_target_mode, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.itme_target_mode, parent, false)
         return ItemView(view)
     }
 
@@ -78,15 +75,7 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         val lay: View = itemView.findViewById(R.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(R.id.item_menu_tab_img)
         val name: TextView = itemView.findViewById(R.id.item_menu_tab_text)
-//        init {
-// val canSeeCount = itemCount.toFloat() //一屏可见的 item 数量，目前都是全都display完
-//            val with = (ScreenUtils.getScreenWidth() / canSeeCount).toInt()
-//            itemView.layoutParams = ViewGroup.LayoutParams((with * 0.95).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
-//            val imageSize = (ScreenUtils.getScreenWidth() * 29 / 375f).toInt()
-//            val layoutParams = itemView.item_menu_tab_img.layoutParams
-//            layoutParams.width = imageSize
-//            layoutParams.height = imageSize
-//            itemView.item_menu_tab_img.layoutParams = layoutParams
-//        }
+
+
     }
 }

@@ -34,14 +34,6 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import java.util.Collections
 
-/**
- * 房屋检测 - 项目编辑.
- *
- * 需要传递：
- * - [ExtraKeyConfig.DIR_ID] - 执行检测的房屋检测目录 Id
- *
- * Created by LCG on 2024/8/26.
- */
 @SuppressLint("NotifyDataSetChanged")
 class ItemEditActivity : BaseActivity(), View.OnClickListener {
     private val adapter = MyAdapter(this)
@@ -82,7 +74,10 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
             view_del.isEnabled = it > 0
             iv_select_all.isSelected = adapter.isSelectAll
             tv_select_all.setText(if (adapter.isSelectAll) R.string.app_cancel_select_all else R.string.report_select_all)
-            tv_title.text = if (it > 0) getString(R.string.chosen_item, it) else getString(R.string.not_selected)
+            tv_title.text = if (it > 0) getString(
+                R.string.chosen_item,
+                it
+            ) else getString(R.string.not_selected)
         }
         adapter.onStateChangeListener = { oldState, newState ->
             val dirDetect: DirDetect? = viewModel.dirLD.value
@@ -149,6 +144,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
             }
+
             cl_dir -> { // 展开收起切换
                 adapter.isExpand = !adapter.isExpand
                 if (adapter.isExpand) { // 切换到展开
@@ -159,13 +155,16 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                     cl_dir.setBackgroundResource(R.drawable.bg_corners10_solid_23202e)
                 }
             }
+
             view_select_all -> { // 全选、取消全选
                 adapter.isSelectAll = !adapter.isSelectAll
             }
+
             view_copy -> { // 复制
                 adapter.copySelect()
                 TToast.shortToast(this@ItemEditActivity, R.string.ts004_copy_success)
             }
+
             view_del -> { // 删除
                 TipDialog.Builder(this)
                     .setTitleMessage(getString(R.string.tips_del_item_title))
@@ -177,16 +176,16 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                         cl_bottom.isVisible = !adapter.isSelectAll
                         cl_dir.isVisible = !adapter.isSelectAll
                         adapter.delSelect()
-                        TToast.shortToast(this@ItemEditActivity, R.string.test_results_delete_success)
+                        TToast.shortToast(
+                            this@ItemEditActivity,
+                            R.string.test_results_delete_success
+                        )
                     }
                     .create().show()
             }
         }
     }
 
-    /**
-     * 显示退出不保存提示弹框
-     */
     private fun showExitTipsDialog() {
         TipDialog.Builder(this)
             .setMessage(R.string.diy_tip_save)
@@ -219,7 +218,6 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
             val fromPosition = viewHolder.bindingAdapterPosition
             val toPosition = target.bindingAdapterPosition
 
-            // 刷新 lastItem
             if (fromPosition == dataList.size - 1 || toPosition == dataList.size - 1) {
                 if (viewHolder is MyAdapter.ViewHolder) {
                     viewHolder.refreshIsLast(toPosition == dataList.size - 1)
@@ -260,14 +258,8 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                 }
             }
 
-        /**
-         * 当前已选中的数量.
-         */
         private var selectCount = 0
 
-        /**
-         * 当前是否已全选 true-已全选 false-未全选
-         */
         var isSelectAll: Boolean
             get() = selectCount == dataList.size && dataList.size > 0
             set(value) {
@@ -286,14 +278,8 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                 notifyItemRangeChanged(0, itemCount)
             }
 
-        /**
-         * 一个 item 选中或取消选中事件监听.
-         */
         var onSelectChangeListener: ((selectSize: Int) -> Unit)? = null
 
-        /**
-         * 一个 item 状态变更事件监听.
-         */
         var onStateChangeListener: ((oldState: Int, newState: Int) -> Unit)? = null
 
         fun refresh(newList: ArrayList<ItemDetect>) {
@@ -301,9 +287,6 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
             notifyDataSetChanged()
         }
 
-        /**
-         * 删除选中的目录.
-         */
         fun delSelect() {
             selectCount = 0
             if (isSelectAll) {
@@ -325,9 +308,6 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
             onSelectChangeListener?.invoke(0)
         }
 
-        /**
-         * 复制选中的目录.
-         */
         fun copySelect() {
             selectCount *= 2
             val selectIndexList: ArrayList<Int> = ArrayList()
@@ -356,7 +336,9 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
             parent: ViewGroup,
             viewType: Int,
         ): ViewHolder {
-            return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_edit_item, parent, false))
+            return ViewHolder(
+                LayoutInflater.from(context).inflate(R.layout.item_edit_item, parent, false)
+            )
         }
 
         override fun onBindViewHolder(

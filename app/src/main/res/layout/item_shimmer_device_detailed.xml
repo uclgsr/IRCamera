@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="?android:attr/selectableItemBackground"
-    android:padding="12dp"
     android:layout_margin="4dp"
-    android:elevation="2dp">
+    android:background="?android:attr/selectableItemBackground"
+    android:elevation="2dp"
+    android:orientation="vertical"
+    android:padding="12dp">
 
     <!-- Device Name and MAC -->
     <LinearLayout
@@ -21,22 +21,22 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Shimmer3-GSR"
+            android:textColor="#1976D2"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#1976D2" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/priorityText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Priority: 150"
-            android:textSize="10sp"
-            android:textColor="#9E9E9E"
             android:background="#E0E0E0"
             android:paddingStart="6dp"
-            android:paddingEnd="6dp"
             android:paddingTop="2dp"
-            android:paddingBottom="2dp" />
+            android:paddingEnd="6dp"
+            android:paddingBottom="2dp"
+            android:text="Priority: 150"
+            android:textColor="#9E9E9E"
+            android:textSize="10sp" />
 
     </LinearLayout>
 
@@ -45,11 +45,11 @@
         android:id="@+id/deviceMacText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="00:06:66:XX:XX:XX"
-        android:textSize="12sp"
-        android:textColor="#757575"
         android:fontFamily="monospace"
-        android:paddingBottom="4dp" />
+        android:paddingBottom="4dp"
+        android:text="00:06:66:XX:XX:XX"
+        android:textColor="#757575"
+        android:textSize="12sp" />
 
     <!-- Device Type and Signal Strength -->
     <LinearLayout
@@ -63,17 +63,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Shimmer3 GSR+"
-            android:textSize="12sp"
-            android:textColor="#424242" />
+            android:textColor="#424242"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/signalStrengthText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-60 dBm (Good)"
+            android:textColor="#4CAF50"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:textColor="#4CAF50" />
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -82,9 +82,9 @@
         android:id="@+id/connectionStatusText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="4dp"
         android:text="Available (Good, -60dBm)"
-        android:textSize="11sp"
         android:textColor="#616161"
-        android:paddingTop="4dp" />
+        android:textSize="11sp" />
 
 </LinearLayout>

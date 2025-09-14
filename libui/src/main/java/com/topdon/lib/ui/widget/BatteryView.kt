@@ -7,34 +7,15 @@ import android.graphics.Path
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 
-/**
- * TC007 电池电量图标.
- *
- * Created by LCG on 2024/5/22.
- */
-/**
- * Custom Battery view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * BatteryView implements custom user interface component functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class BatteryView : AppCompatImageView {
-    /**
-     * current电量
-     */
+
     var battery = -1
         set(value) {
             field = value
             invalidate()
         }
 
-    /**
-     * current是否充电中
-     */
     var isCharging = false
         set(value) {
             field = value
@@ -48,7 +29,11 @@ class BatteryView : AppCompatImageView {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         paint.isAntiAlias = true
     }
 
@@ -65,20 +50,32 @@ class BatteryView : AppCompatImageView {
                 val wantWidth = (heightSize * 58 / 30f).toInt()
                 when (widthMode) {
                     MeasureSpec.EXACTLY -> setMeasuredDimension(widthSize, heightSize)
-                    MeasureSpec.AT_MOST -> setMeasuredDimension(wantWidth.coerceAtMost(widthSize), heightSize)
+                    MeasureSpec.AT_MOST -> setMeasuredDimension(
+                        wantWidth.coerceAtMost(widthSize),
+                        heightSize
+                    )
+
                     else -> setMeasuredDimension(wantWidth, heightSize)
                 }
             }
+
             MeasureSpec.AT_MOST -> {
                 when (widthMode) {
-                    MeasureSpec.EXACTLY -> setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt().coerceAtMost(heightSize))
+                    MeasureSpec.EXACTLY -> setMeasuredDimension(
+                        widthSize,
+                        (widthSize * 30 / 58f).toInt().coerceAtMost(heightSize)
+                    )
+
                     MeasureSpec.AT_MOST -> {
                         if (widthSize < 58) {
                             if (heightSize < 30) { // 宽✘ 高✘
                                 if ((widthSize * 30 / 58f).toInt() <= heightSize) {
                                     setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
                                 } else {
-                                    setMeasuredDimension((heightSize * 58 / 30f).toInt(), heightSize)
+                                    setMeasuredDimension(
+                                        (heightSize * 58 / 30f).toInt(),
+                                        heightSize
+                                    )
                                 }
                             } else { // 宽✘ 高✔
                                 setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
@@ -91,20 +88,35 @@ class BatteryView : AppCompatImageView {
                             }
                         }
                     }
-                    else -> setMeasuredDimension((widthSize * 30.coerceAtMost(heightSize) / 58f).toInt(), 30.coerceAtMost(heightSize))
+
+                    else -> setMeasuredDimension(
+                        (widthSize * 30.coerceAtMost(heightSize) / 58f).toInt(),
+                        30.coerceAtMost(heightSize)
+                    )
                 }
             }
+
             else -> {
                 when (widthMode) {
-                    MeasureSpec.EXACTLY -> setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
-                    MeasureSpec.AT_MOST -> setMeasuredDimension(58.coerceAtMost(widthSize), (58.coerceAtMost(widthSize) * 30 / 58f).toInt())
+                    MeasureSpec.EXACTLY -> setMeasuredDimension(
+                        widthSize,
+                        (widthSize * 30 / 58f).toInt()
+                    )
+
+                    MeasureSpec.AT_MOST -> setMeasuredDimension(
+                        58.coerceAtMost(widthSize),
+                        (58.coerceAtMost(widthSize) * 30 / 58f).toInt()
+                    )
+
                     else -> setMeasuredDimension(58, 30)
                 }
             }
         }
 
-        drawWidth = if ((measuredWidth * 30 / 58f).toInt() <= measuredHeight) measuredWidth else (measuredHeight * 58 / 30f).toInt()
-        drawHeight = if ((measuredWidth * 30 / 58f).toInt() <= measuredHeight) (measuredWidth * 30 / 58f).toInt() else measuredHeight
+        drawWidth =
+            if ((measuredWidth * 30 / 58f).toInt() <= measuredHeight) measuredWidth else (measuredHeight * 58 / 30f).toInt()
+        drawHeight =
+            if ((measuredWidth * 30 / 58f).toInt() <= measuredHeight) (measuredWidth * 30 / 58f).toInt() else measuredHeight
 
         paint.strokeWidth = drawWidth * 2 / 58f
 
@@ -132,7 +144,7 @@ class BatteryView : AppCompatImageView {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        
+
         val lineSize = drawWidth * 2 / 58f
         val roundSize = drawWidth * 6 / 58f
         val batteryWidth = drawWidth * 50 / 58f
@@ -149,7 +161,7 @@ class BatteryView : AppCompatImageView {
             paint,
         )
 
-        
+
         val anodeWidth = drawWidth * 3 / 58f
         val anodeHeight = drawHeight * 8 / 30f - lineSize
         val anodeX = drawWidth - anodeWidth / 2
@@ -159,7 +171,7 @@ class BatteryView : AppCompatImageView {
         paint.strokeWidth = anodeWidth
         canvas.drawLine(anodeX, anodeStartY, anodeX, anodeStartY + anodeHeight, paint)
 
-        
+
         if (battery <= 0) {
             return
         }
@@ -167,14 +179,14 @@ class BatteryView : AppCompatImageView {
         paint.strokeCap = Paint.Cap.BUTT
         paint.color =
             (
-                if (isCharging) {
-                    0xff6dc80e
-                } else if (battery <= 10) {
-                    0xffeb433e
-                } else {
-                    0xffffffff
-                }
-            ).toInt()
+                    if (isCharging) {
+                        0xff6dc80e
+                    } else if (battery <= 10) {
+                        0xffeb433e
+                    } else {
+                        0xffffffff
+                    }
+                    ).toInt()
         canvas.clipPath(path)
         canvas.drawRect(
             lineSize + anodeWidth,

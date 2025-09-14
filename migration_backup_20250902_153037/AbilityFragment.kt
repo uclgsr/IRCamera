@@ -21,12 +21,6 @@ import com.topdon.module.thermal.ir.activity.MonitoryHomeActivity
 import kotlinx.android.synthetic.main.fragment_ability.*
 import org.greenrobot.eventbus.EventBus
 
-/**
- * 功能 Tab 页
- *
- * 需要传递参数：
- * - [ExtraKeyConfig.IS_TC007] - 当前设备是否为 TC007（不使用，透传）
- */
 class AbilityFragment : BaseFragment(), View.OnClickListener {
     private var mIsTC007 = false
 
@@ -51,7 +45,7 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
                 val url =
                     if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
                         "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
-                            "languageId=${LanguageUtil.getLanguageId(requireContext())}"
+                                "languageId=${LanguageUtil.getLanguageId(requireContext())}"
                     } else {
                         "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
                     }
@@ -59,6 +53,7 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
                     .withString(ExtraKeyConfig.URL, url)
                     .navigation(requireContext())
             }
+
             view_monitory -> { // 温度监控
                 val intent = Intent(requireContext(), MonitoryHomeActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)

@@ -4,17 +4,17 @@ import android.content.Context
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Demonstration of Robolectric-based testing vs Mockito approach
- * Shows how real Android context eliminates need for mocking
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -26,28 +26,21 @@ class MockitoVsRobolectricTest {
         context = ApplicationProvider.getApplicationContext()
     }
 
-    /**
-     * OLD APPROACH (Mockito): Would require mocking Context, SharedPreferences, Editor
-     * NEW APPROACH (Robolectric): Uses real Android context and components
-     */
     @Test
     fun testSharedPreferencesWithRealContext() {
-        // Instead of mocking Context and SharedPreferences, we use real ones
+
         val prefs = context.getSharedPreferences("test_session_prefs", Context.MODE_PRIVATE)
 
-        // Test actual SharedPreferences behavior
         val editor = prefs.edit()
         editor.putString("session_id", "test_session_123")
         editor.putLong("start_time", System.currentTimeMillis())
         editor.putBoolean("is_active", true)
         editor.apply()
 
-        // Verify actual persistence behavior
         assertEquals("test_session_123", prefs.getString("session_id", null))
         assertTrue("start_time should be stored", prefs.getLong("start_time", 0) > 0)
         assertTrue("is_active should be true", prefs.getBoolean("is_active", false))
 
-        // Test clearing data
         editor.clear()
         editor.apply()
 
@@ -56,72 +49,57 @@ class MockitoVsRobolectricTest {
         assertFalse("is_active should be false", prefs.getBoolean("is_active", false))
     }
 
-    /**
-     * OLD APPROACH: Would mock File operations
-     * NEW APPROACH: Uses real file system (in test environment)
-     */
     @Test
     fun testFileOperationsWithRealFileSystem() {
-        // Use real file operations instead of mocking File, FileWriter, etc.
+
         val filesDir = context.filesDir
         val testFile = java.io.File(filesDir, "test_gsr_data.csv")
 
-        // Test actual file writing
         testFile.writeText("timestamp,conductance,resistance\n1234567890,12.5,80.0\n")
 
         assertTrue("File should exist", testFile.exists())
         assertTrue("File should have content", testFile.length() > 0)
 
-        // Test actual file reading
         val content = testFile.readText()
-        assertTrue("Content should contain header", content.contains("timestamp,conductance,resistance"))
+        assertTrue(
+            "Content should contain header",
+            content.contains("timestamp,conductance,resistance")
+        )
         assertTrue("Content should contain data", content.contains("1234567890,12.5,80.0"))
 
-        // Cleanup
         testFile.delete()
         assertFalse("File should be deleted", testFile.exists())
     }
 
-    /**
-     * OLD APPROACH: Would mock System services
-     * NEW APPROACH: Uses real Android system services (shadowed by Robolectric)
-     */
     @Test
     fun testSystemServiceAccess() {
-        // No mocking needed - Robolectric provides real service implementations
+
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE)
-                as android.app.NotificationManager
+                    as android.app.NotificationManager
         assertNotNull("NotificationManager should be available", notificationManager)
 
         val bluetoothManager =
             context.getSystemService(Context.BLUETOOTH_SERVICE)
-                as android.bluetooth.BluetoothManager?
+                    as android.bluetooth.BluetoothManager?
         assertNotNull("BluetoothManager should be available", bluetoothManager)
 
-        // Test actual service behavior (not mocked responses)
         val bluetoothAdapter = bluetoothManager?.adapter
         assertNotNull("BluetoothAdapter should be available", bluetoothAdapter)
     }
 
-    /**
-     * Demonstrates how real context enables integration testing
-     * vs unit testing with mocks
-     */
     @Test
     fun testIntegrationWithMultipleServices() {
-        // Real integration between multiple Android components
+
         val prefs = context.getSharedPreferences("integration_test", Context.MODE_PRIVATE)
         val filesDir = context.filesDir
 
-        // Store configuration in SharedPreferences
         prefs.edit()
             .putString("data_directory", filesDir.absolutePath)
             .putInt("sampling_rate", 128)
             .putBoolean("bluetooth_enabled", true)
             .apply()
 
-        // Use configuration to create file
         val dataDir = prefs.getString("data_directory", "")
         val samplingRate = prefs.getInt("sampling_rate", 0)
         val bluetoothEnabled = prefs.getBoolean("bluetooth_enabled", false)
@@ -130,7 +108,6 @@ class MockitoVsRobolectricTest {
         assertEquals(128, samplingRate)
         assertTrue(bluetoothEnabled)
 
-        // Create actual file based on configuration
         val configFile = java.io.File(dataDir, "config.json")
         configFile.writeText(
             """
@@ -150,23 +127,17 @@ class MockitoVsRobolectricTest {
         configFile.delete()
     }
 
-    /**
-     * Shows how Robolectric enables testing of Android-specific behavior
-     * that would be difficult to mock properly
-     */
     @Test
     fun testAndroidSpecificBehavior() {
-        // Test Android version-specific behavior
+
         assertTrue(
             "Should be running on Android O or higher",
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.O,
         )
 
-        // Test package information
         assertNotNull("Package name should be available", context.packageName)
         assertFalse("Package name should not be empty", context.packageName.isEmpty())
 
-        // Test resource access
         val resources = context.resources
         assertNotNull("Resources should be available", resources)
 

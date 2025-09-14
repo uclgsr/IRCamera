@@ -49,8 +49,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
-            android:includeFontPadding="false"
             android:layout_weight="1"
+            android:includeFontPadding="false"
             android:text="@string/app_watemarking"
             android:textColor="@color/white"
             android:textSize="12sp" />
@@ -80,14 +80,14 @@
             android:id="@+id/ll_watermark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="13dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="13dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/watemark_title"
                 android:layout_gravity="center"
+                android:text="@string/watemark_title"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
 
@@ -95,8 +95,8 @@
                 android:id="@+id/ed_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="right"
                 android:background="@null"
+                android:gravity="right"
                 android:maxLength="30"
                 android:textColor="@color/white"
                 android:textSize="@dimen/app_font"
@@ -108,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="12dp"
-            android:background="#22ffffff"/>
+            android:background="#22ffffff" />
 
         <LinearLayout
             android:id="@+id/ll_location"
@@ -119,9 +119,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/report_head_address"
-                android:padding="13dp"
                 android:layout_gravity="center"
+                android:padding="13dp"
+                android:text="@string/report_head_address"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
 
@@ -130,9 +130,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:background="@null"
                 android:gravity="right|center"
-                android:layout_weight="1"
                 android:hint="@string/get_address"
                 android:maxLength="80"
                 android:textColor="@color/white"
@@ -145,10 +145,10 @@
                 android:id="@+id/img_location"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingRight="12dp"
-                android:paddingLeft="5dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_location_svg"/>
+                android:paddingLeft="5dp"
+                android:paddingRight="12dp"
+                android:src="@drawable/ic_location_svg" />
 
         </LinearLayout>
 
@@ -156,20 +156,20 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="12dp"
-            android:background="#22ffffff"/>
+            android:background="#22ffffff" />
 
         <LinearLayout
             android:id="@+id/ll_date_time"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="13dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="13dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/date_time"
                 android:layout_gravity="center"
+                android:text="@string/date_time"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
 
@@ -178,8 +178,8 @@
                 style="@style/cameraSetSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:layout_weight="1" />
 
         </LinearLayout>
 

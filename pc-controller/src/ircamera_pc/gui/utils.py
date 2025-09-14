@@ -22,17 +22,23 @@ except ImportError:
     class MockConfig:
         def __getattr__(self, name):
             return "default"
+
+
     config = MockConfig()
 
 try:
     from PyQt6.QtCore import QObject, pyqtSignal
+
     GUI_AVAILABLE = True
 except ImportError:
     GUI_AVAILABLE = False
+
+
     # Mock classes for headless mode
     class QObject:
         pass
-    
+
+
     def pyqtSignal(*args, **kwargs):
         return None
 
@@ -92,7 +98,7 @@ def setup_logging() -> LogHandler:
         "logs/ircamera_pc.log",
         level=log_level,
         format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8}"
-        "| {name}:{function}:{line} - {message}",
+               "| {name}:{function}:{line} - {message}",
         rotation=file_rotation,
         retention=retention,
         compression="zip",

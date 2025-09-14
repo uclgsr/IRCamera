@@ -5,14 +5,12 @@ import com.topdon.lib.core.utils.CommUtils
 
 data class WatermarkBean(
     var isOpen: Boolean = false,
-    var title: String = CommUtils.getAppName(), 
-    var address: String = "", 
+    var title: String = CommUtils.getAppName(),
+    var address: String = "",
     var isAddTime: Boolean = false,
 ) {
     companion object {
-    /**
-     * Loads fromarray from the data source.
-     */
+
         fun loadFromArray(data: ByteArray): WatermarkBean {
             val titleLen = ByteUtils.bigBytesToInt(data[1], data[2], data[3], data[4])
             val titleBytes = ByteArray(titleLen)
@@ -31,9 +29,6 @@ data class WatermarkBean(
         }
     }
 
-    /**
-     * Executes tobytearray functionality.
-     */
     fun toByteArray(): ByteArray {
         val result = ByteArray(450)
 

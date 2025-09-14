@@ -26,12 +26,6 @@ import com.github.gzuliyujiang.wheelpicker.widget.NumberWheelLayout;
 import com.github.gzuliyujiang.wheelview.contract.WheelFormatter;
 import com.github.gzuliyujiang.wheelview.widget.WheelView;
 
-/**
- * 数字选择器
- *
- * @author 李玉江[QQ:1032694760]
- * @since 2015/10/24
- */
 @SuppressWarnings("unused")
 public class NumberPicker extends ModalDialog {
     protected NumberWheelLayout wheelLayout;
@@ -103,4 +97,3 @@ public class NumberPicker extends ModalDialog {
     }
 
 }
-

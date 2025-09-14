@@ -11,13 +11,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.R as UiR
 
-/**
- * TipsSeekBar class
- */
-/**
- * Custom Tips seek bar view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     private val tipsPercent: Float
     private val seekPercent: Float
@@ -38,9 +32,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
             }
         }
 
-    /**
-     * 指示 View current显示的文字.
-     */
     var valueText: String
         get() {
             return tvTips.text.toString()
@@ -49,19 +40,10 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
             tvTips.text = value
         }
 
-    /**
-     * seekBar 的 onProgressChange event listener.
-     */
     var onProgressChangeListener: ((progress: Int, fromUser: Boolean) -> Unit)? = null
 
-    /**
-     * seekBar 的 onStopTrackingTouch event listener.
-     */
     var onStopTrackingTouch: ((progress: Int) -> Unit)? = null
 
-    /**
-     * 根据进度格式化指示 View 文字.
-     */
     var valueFormatListener: ((progress: Int) -> CharSequence?)? = null
         set(value) {
             tvTips.text = value?.invoke(seekBar.progress)
@@ -72,21 +54,32 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
         defStyleRes,
     ) {
-        // seekBar 的 maxHeight 在 29 以下只能通过 xml settings实在太蛋疼了，这里只好给current View settings maxHeight,在 attr 中传递给 seekBar
+
         val thumb = ContextCompat.getDrawable(context, UiR.drawable.ic_tips_seek_bar_thumb)
         val thumbWidth = thumb?.intrinsicWidth ?: 0
         seekBar = SeekBar(context, attrs)
         seekBar.splitTrack = false
         seekBar.thumb = thumb
-        seekBar.progressDrawable = ContextCompat.getDrawable(context, UiR.drawable.ui_progress_ir_camera_setting)
+        seekBar.progressDrawable =
+            ContextCompat.getDrawable(context, UiR.drawable.ui_progress_ir_camera_setting)
         seekBar.setPadding(thumbWidth / 2, 0, thumbWidth / 2, 0)
         seekBar.setOnSeekBarChangeListener(this)
         addView(seekBar, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
@@ -100,7 +93,8 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         tvTips.setBackgroundResource(UiR.drawable.ic_tips_seek_bar_tips_bg)
         addView(tvTips)
 
-        val typedArray = context.obtainStyledAttributes(attrs, UiR.styleable.TipsSeekBar, defStyleAttr, 0)
+        val typedArray =
+            context.obtainStyledAttributes(attrs, UiR.styleable.TipsSeekBar, defStyleAttr, 0)
         val minText = typedArray.getText(UiR.styleable.TipsSeekBar_minText)
         val maxText = typedArray.getText(UiR.styleable.TipsSeekBar_maxText)
         tipsPercent = typedArray.getFraction(UiR.styleable.TipsSeekBar_tipsPercent, 1, 1, 0f)
@@ -128,29 +122,41 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
-        val width = if (widthMode == MeasureSpec.UNSPECIFIED) ScreenUtil.getScreenWidth(context) else widthSize
+        val width =
+            if (widthMode == MeasureSpec.UNSPECIFIED) ScreenUtil.getScreenWidth(context) else widthSize
 
         for (i in 0 until childCount) {
             when (val child = getChildAt(i)) {
                 seekBar -> {
-                    val childWidthSpec = MeasureSpec.makeMeasureSpec((width * seekPercent).toInt(), MeasureSpec.EXACTLY)
-                    val childHeightSpc = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.AT_MOST)
-                    child.measure(childWidthSpec, if (heightMode == MeasureSpec.EXACTLY) childHeightSpc else heightMeasureSpec)
+                    val childWidthSpec = MeasureSpec.makeMeasureSpec(
+                        (width * seekPercent).toInt(),
+                        MeasureSpec.EXACTLY
+                    )
+                    val childHeightSpc =
+                        MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.AT_MOST)
+                    child.measure(
+                        childWidthSpec,
+                        if (heightMode == MeasureSpec.EXACTLY) childHeightSpc else heightMeasureSpec
+                    )
                 }
+
                 tvTips -> {
                     val tipsWidth = (width * tipsPercent).toInt()
                     val tipsHeight = (tipsWidth * 44 / 56f).toInt()
                     val childWidthSpec = MeasureSpec.makeMeasureSpec(tipsWidth, MeasureSpec.EXACTLY)
-                    val childHeightSpc = MeasureSpec.makeMeasureSpec(tipsHeight, MeasureSpec.EXACTLY)
+                    val childHeightSpc =
+                        MeasureSpec.makeMeasureSpec(tipsHeight, MeasureSpec.EXACTLY)
                     child.measure(childWidthSpec, childHeightSpc)
                 }
+
                 else -> {
                     measureChild(child, widthMeasureSpec, heightMeasureSpec)
                 }
             }
         }
 
-        val height = tvTips.measuredHeight + SizeUtils.dp2px(5f) + (seekBar.thumb?.intrinsicHeight ?: seekBar.measuredHeight)
+        val height = tvTips.measuredHeight + SizeUtils.dp2px(5f) + (seekBar.thumb?.intrinsicHeight
+            ?: seekBar.measuredHeight)
         setMeasuredDimension(width, if (heightMode == MeasureSpec.EXACTLY) heightSize else height)
     }
 
@@ -171,18 +177,23 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
                     val left = (measuredWidth - childWidth) / 2
                     child.layout(left, top, left + childWidth, top + childHeight)
                 }
+
                 tvTips -> {
-                    val seekBarSeeWidth = seekBar.measuredWidth - seekBar.paddingLeft - seekBar.paddingRight
+                    val seekBarSeeWidth =
+                        seekBar.measuredWidth - seekBar.paddingLeft - seekBar.paddingRight
                     val baseLeft = (measuredWidth - seekBarSeeWidth) / 2
-                    val progressLeft = (seekBarSeeWidth * seekBar.progress / seekBar.max.toFloat()).toInt()
+                    val progressLeft =
+                        (seekBarSeeWidth * seekBar.progress / seekBar.max.toFloat()).toInt()
                     val left = baseLeft + progressLeft - childWidth / 2
                     child.layout(left, paddingTop, left + childWidth, paddingTop + childHeight)
                 }
+
                 tvMin -> {
                     val baseTop = paddingTop + tvTips.measuredHeight + SizeUtils.dp2px(5f)
                     val top = baseTop + (seekBar.measuredHeight - childHeight) / 2
                     child.layout(paddingStart, top, paddingStart + childWidth, top + childHeight)
                 }
+
                 tvMax -> {
                     val baseTop = paddingTop + tvTips.measuredHeight + SizeUtils.dp2px(5f)
                     val top = baseTop + (seekBar.measuredHeight - childHeight) / 2
@@ -198,7 +209,10 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         progress: Int,
         fromUser: Boolean,
     ) {
-        tvTips.text = if (valueFormatListener == null) progress.toString() else valueFormatListener?.invoke(progress)
+        tvTips.text =
+            if (valueFormatListener == null) progress.toString() else valueFormatListener?.invoke(
+                progress
+            )
         requestLayout()
         onProgressChangeListener?.invoke(progress, fromUser)
     }

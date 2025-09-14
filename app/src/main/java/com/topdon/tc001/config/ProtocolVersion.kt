@@ -3,18 +3,12 @@ package com.topdon.tc001.config
 import android.util.Log
 import org.json.JSONObject
 
-/**
- * Protocol versioning system for PC-to-phone communication
- * Phase 0 implementation - Freeze minimal protocol version v1
- */
 object ProtocolVersion {
     private const val TAG = "ProtocolVersion"
 
-    // Protocol version constants
     const val CURRENT_VERSION = "v1"
     const val MIN_SUPPORTED_VERSION = "v1"
 
-    // Protocol capabilities for v1
     private val V1_CAPABILITIES =
         setOf(
             "session_start",
@@ -27,9 +21,6 @@ object ProtocolVersion {
             "basic_auth",
         )
 
-    /**
-     * Check if a protocol version is supported
-     */
     fun isVersionSupported(version: String): Boolean {
         return when (version) {
             "v1" -> true
@@ -37,9 +28,6 @@ object ProtocolVersion {
         }
     }
 
-    /**
-     * Get capabilities for a specific protocol version
-     */
     fun getCapabilities(version: String): Set<String> {
         return when (version) {
             "v1" -> V1_CAPABILITIES
@@ -47,9 +35,6 @@ object ProtocolVersion {
         }
     }
 
-    /**
-     * Create protocol handshake message
-     */
     fun createHandshakeMessage(deviceId: String): JSONObject {
         return JSONObject().apply {
             put("message_type", "protocol_handshake")
@@ -62,14 +47,12 @@ object ProtocolVersion {
         }
     }
 
-    /**
-     * Validate incoming handshake response
-     */
     fun validateHandshakeResponse(response: JSONObject): HandshakeResult {
         try {
             val remoteVersion = response.optString("protocol_version")
             val remoteMinVersion = response.optString("min_supported_version", remoteVersion)
-            val remoteCapabilities = response.optString("capabilities", "").split(",").filter { it.isNotEmpty() }.toSet()
+            val remoteCapabilities =
+                response.optString("capabilities", "").split(",").filter { it.isNotEmpty() }.toSet()
 
             if (!isVersionSupported(remoteVersion)) {
                 return HandshakeResult(
@@ -78,7 +61,6 @@ object ProtocolVersion {
                 )
             }
 
-            // Check version compatibility
             val isCompatible =
                 when {
                     remoteVersion == CURRENT_VERSION -> true
@@ -93,11 +75,13 @@ object ProtocolVersion {
                 )
             }
 
-            // Find common capabilities
             val localCapabilities = getCapabilities(CURRENT_VERSION)
             val commonCapabilities = localCapabilities.intersect(remoteCapabilities)
 
-            Log.i(TAG, "Protocol handshake successful: version=$remoteVersion, capabilities=${commonCapabilities.size}")
+            Log.i(
+                TAG,
+                "Protocol handshake successful: version=$remoteVersion, capabilities=${commonCapabilities.size}"
+            )
 
             return HandshakeResult(
                 success = true,
@@ -113,9 +97,6 @@ object ProtocolVersion {
         }
     }
 
-    /**
-     * Create protocol message with version header
-     */
     fun createProtocolMessage(
         messageType: String,
         content: JSONObject = JSONObject(),
@@ -125,16 +106,12 @@ object ProtocolVersion {
             put("message_type", messageType)
             put("timestamp", System.currentTimeMillis())
 
-            // Merge content
             content.keys().forEach { key ->
                 put(key, content.get(key))
             }
         }
     }
 
-    /**
-     * Validate incoming message protocol version
-     */
     fun validateMessageVersion(message: JSONObject): Boolean {
         val version = message.optString("protocol_version", CURRENT_VERSION)
         val isValid = isVersionSupported(version)
@@ -146,9 +123,6 @@ object ProtocolVersion {
         return isValid
     }
 
-    /**
-     * Get protocol information for debugging
-     */
     fun getProtocolInfo(): Map<String, Any> {
         return mapOf(
             "current_version" to CURRENT_VERSION,
@@ -158,9 +132,6 @@ object ProtocolVersion {
         )
     }
 
-    /**
-     * Result of protocol handshake negotiation
-     */
     data class HandshakeResult(
         val success: Boolean,
         val negotiatedVersion: String? = null,

@@ -2,10 +2,6 @@ package com.topdon.module.thermal.tools
 
 import android.util.Log
 
-/**
- * Fence utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
 class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateType: Int = 0) {
     var scale = 0f
 
@@ -15,6 +11,7 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
                 w = 192
                 h = 256
             }
+
             else -> {
                 w = 256
                 h = 192
@@ -24,9 +21,6 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
         Log.w("123", "scale: $scale")
     }
 
-    /**
-// get线坐标
-     */
     fun getSinglePoint(start: IntArray): ArrayList<IntArray> {
         val startPoint: IntArray = start
         val startX: Int = (startPoint[0] * scale).toInt()
@@ -38,17 +32,11 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
         return lineList
     }
 
-    /**
-// get点坐标序号
-     */
     fun getPointIndex(start: IntArray): ArrayList<Int> {
         val lineList = getSinglePoint(start)
         return pointToIndex(lineList)
     }
 
-    /**
-// get线坐标
-     */
     fun getLinePoint(
         start: IntArray,
         end: IntArray,
@@ -81,9 +69,6 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
         return lineList
     }
 
-    /**
-// get线坐标序号
-     */
     fun getLineIndex(
         start: IntArray,
         end: IntArray,
@@ -92,9 +77,6 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
         return pointToIndex(lineList)
     }
 
-    /**
-// get面积坐标点
-     */
     fun getAreaPoint(
         start: IntArray,
         end: IntArray,
@@ -112,9 +94,6 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
         return lineList
     }
 
-    /**
-// get面积坐标序号
-     */
     fun getAreaIndex(
         start: IntArray,
         end: IntArray,

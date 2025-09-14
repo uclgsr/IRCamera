@@ -13,10 +13,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.maning.imagebrowserlibrary.ImageEngine
 
-/**
- * Custom Glide image engine view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 class GlideImageEngine : ImageEngine {
     override fun loadImage(
         context: Context,
@@ -36,10 +32,6 @@ class GlideImageEngine : ImageEngine {
             .into(imageView)
     }
 
-/**
- * Custom Drawable request listener view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
     class DrawableRequestListener : RequestListener<Drawable> {
         override fun onLoadFailed(
             e: GlideException?,
@@ -61,10 +53,6 @@ class GlideImageEngine : ImageEngine {
         }
     }
 
-/**
- * Custom Bitmap request listener view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
     class BitmapRequestListener : RequestListener<Bitmap> {
         override fun onLoadFailed(
             e: GlideException?,

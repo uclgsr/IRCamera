@@ -21,20 +21,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/**
- * 首页操作指引弹框.
- *
- * Created by LCG on 2024/4/8.
- */
-class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(context, R.style.TransparentDialog) {
-    /**
-     * 下一步点击事件监听，step：当前处于第`[1,3]`，在该步骤点击的下一步
-     */
+class HomeGuideDialog(context: Context, private val currentStep: Int) :
+    Dialog(context, R.style.TransparentDialog) {
+
     var onNextClickListener: ((step: Int) -> Unit)? = null
 
-    /**
-     * 跳过点击事件监听.
-     */
     var onSkinClickListener: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,11 +40,13 @@ class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(c
                 cl_guide_2.isVisible = false
                 cl_guide_3.isVisible = false
             }
+
             2 -> {
                 cl_guide_1.isVisible = false
                 cl_guide_2.isVisible = true
                 cl_guide_3.isVisible = false
             }
+
             3 -> {
                 cl_guide_1.isVisible = false
                 cl_guide_2.isVisible = false
@@ -94,8 +87,10 @@ class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(c
     fun blurBg(rootView: View) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val sourceBitmap = Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
-                val outputBitmap = Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
+                val sourceBitmap =
+                    Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
+                val outputBitmap =
+                    Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
                 val canvas = Canvas(sourceBitmap)
                 rootView.draw(canvas)
 
@@ -103,7 +98,8 @@ class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(c
                 val inputAllocation = Allocation.createFromBitmap(renderScript, sourceBitmap)
                 val outputAllocation = Allocation.createTyped(renderScript, inputAllocation.type)
 
-                val blurScript = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
+                val blurScript =
+                    ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
                 blurScript.setRadius(20f)
                 blurScript.setInput(inputAllocation)
                 blurScript.forEach(outputAllocation)

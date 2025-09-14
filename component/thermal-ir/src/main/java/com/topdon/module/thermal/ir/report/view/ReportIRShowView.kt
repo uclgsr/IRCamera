@@ -14,10 +14,6 @@ import com.topdon.module.thermal.ir.report.bean.ReportIRBean
 import com.topdon.module.thermal.ir.report.bean.ReportTempBean
 import com.topdon.lib.core.R as LibR
 
-/**
- * Custom Report i r show view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 class ReportIRShowView : LinearLayout {
     companion object {
         private const val TYPE_FULL = 0 // Full image
@@ -26,7 +22,6 @@ class ReportIRShowView : LinearLayout {
         private const val TYPE_RECT = 3 // 面
     }
 
-    // View references - migrated from synthetic views
     private lateinit var clImage: View
     private lateinit var clFull: View
     private lateinit var clPoint1: View
@@ -49,7 +44,11 @@ class ReportIRShowView : LinearLayout {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         inflate(context, R.layout.view_report_ir_show, this)
         initViews()
         initTitleTexts()
@@ -129,9 +128,6 @@ class ReportIRShowView : LinearLayout {
             }
     }
 
-    /**
-// get需要转为 PDF 的所有 View 列表.
-     */
     fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
         result.add(clImage)
@@ -183,7 +179,8 @@ class ReportIRShowView : LinearLayout {
         val ivImage = findViewById<View>(R.id.iv_image)
         val isLand = (drawable?.intrinsicWidth ?: 0) > (drawable?.intrinsicHeight ?: 0)
         val width = (ScreenUtil.getScreenWidth(context) * (if (isLand) 234 else 175) / 375f).toInt()
-        val height = (width * (drawable?.intrinsicHeight ?: 0).toFloat() / (drawable?.intrinsicWidth ?: 1)).toInt()
+        val height = (width * (drawable?.intrinsicHeight ?: 0).toFloat() / (drawable?.intrinsicWidth
+            ?: 1)).toInt()
         val layoutParams = ivImage.layoutParams
         layoutParams.width = width
         layoutParams.height = height
@@ -218,7 +215,6 @@ class ReportIRShowView : LinearLayout {
             }
         }
 
-        // Update title visibility with findViewById
         val tvTitlePoint2 = clPoint2.findViewById<TextView>(R.id.tv_title)
         val tvTitlePoint3 = clPoint3.findViewById<TextView>(R.id.tv_title)
         val tvTitlePoint4 = clPoint4.findViewById<TextView>(R.id.tv_title)
@@ -227,7 +223,8 @@ class ReportIRShowView : LinearLayout {
         tvTitlePoint2.isVisible = !clPoint1.isVisible
         tvTitlePoint3.isVisible = !clPoint1.isVisible && !clPoint2.isVisible
         tvTitlePoint4.isVisible = !clPoint1.isVisible && !clPoint2.isVisible && !clPoint3.isVisible
-        tvTitlePoint5.isVisible = !clPoint1.isVisible && !clPoint2.isVisible && !clPoint3.isVisible && !clPoint4.isVisible
+        tvTitlePoint5.isVisible =
+            !clPoint1.isVisible && !clPoint2.isVisible && !clPoint3.isVisible && !clPoint4.isVisible
 
         val lineList = reportIRBean.line_data
         for (i in lineList.indices) {
@@ -240,7 +237,6 @@ class ReportIRShowView : LinearLayout {
             }
         }
 
-        // Update line title visibility with findViewById
         val tvTitleLine2 = clLine2.findViewById<TextView>(R.id.tv_title)
         val tvTitleLine3 = clLine3.findViewById<TextView>(R.id.tv_title)
         val tvTitleLine4 = clLine4.findViewById<TextView>(R.id.tv_title)
@@ -249,7 +245,8 @@ class ReportIRShowView : LinearLayout {
         tvTitleLine2.isVisible = !clLine1.isVisible
         tvTitleLine3.isVisible = !clLine1.isVisible && !clLine2.isVisible
         tvTitleLine4.isVisible = !clLine1.isVisible && !clLine2.isVisible && !clLine3.isVisible
-        tvTitleLine5.isVisible = !clLine1.isVisible && !clLine2.isVisible && !clLine3.isVisible && !clLine4.isVisible
+        tvTitleLine5.isVisible =
+            !clLine1.isVisible && !clLine2.isVisible && !clLine3.isVisible && !clLine4.isVisible
 
         val rectList = reportIRBean.surface_data
         for (i in rectList.indices) {
@@ -262,7 +259,6 @@ class ReportIRShowView : LinearLayout {
             }
         }
 
-        // Update rect title visibility with findViewById
         val tvTitleRect2 = clRect2.findViewById<TextView>(R.id.tv_title)
         val tvTitleRect3 = clRect3.findViewById<TextView>(R.id.tv_title)
         val tvTitleRect4 = clRect4.findViewById<TextView>(R.id.tv_title)
@@ -271,9 +267,9 @@ class ReportIRShowView : LinearLayout {
         tvTitleRect2.isVisible = !clRect1.isVisible
         tvTitleRect3.isVisible = !clRect1.isVisible && !clRect2.isVisible
         tvTitleRect4.isVisible = !clRect1.isVisible && !clRect2.isVisible && !clRect3.isVisible
-        tvTitleRect5.isVisible = !clRect1.isVisible && !clRect2.isVisible && !clRect3.isVisible && !clRect4.isVisible
+        tvTitleRect5.isVisible =
+            !clRect1.isVisible && !clRect2.isVisible && !clRect3.isVisible && !clRect4.isVisible
 
-// 把最后一条分割线藏起来
         if (rectList.isNotEmpty()) {
             when (rectList.size) {
                 1 -> hideLastLine(isLast, clRect1, rectList[0], TYPE_RECT)
@@ -316,12 +312,11 @@ class ReportIRShowView : LinearLayout {
         if (tempBean == null) {
             return
         }
-        // Find the appropriate line view to hide based on what's visible
+
         val viewLineExplain = itemRoot.findViewById<View>(R.id.view_line_explain)
         val viewLineAverage = itemRoot.findViewById<View>(R.id.view_line_average)
         val viewLineRange = itemRoot.findViewById<View>(R.id.view_line_range)
 
-        // Hide the last visible line divider
         if (tempBean.isExplainOpen()) {
             viewLineExplain.isVisible = !isLast
         } else if ((type == TYPE_LINE || type == TYPE_RECT) && tempBean.isAverageOpen()) {
@@ -363,13 +358,15 @@ class ReportIRShowView : LinearLayout {
                         else -> ""
                     }
                 prefix +
-                    if (tempBean.isMinOpen() && tempBean.isMaxOpen()) {
-                        context.getString(LibR.string.chart_temperature_low) + "-" + context.getString(LibR.string.chart_temperature_high)
-                    } else if (tempBean.isMinOpen()) {
-                        context.getString(LibR.string.chart_temperature_low)
-                    } else {
-                        context.getString(LibR.string.chart_temperature_high)
-                    }
+                        if (tempBean.isMinOpen() && tempBean.isMaxOpen()) {
+                            context.getString(LibR.string.chart_temperature_low) + "-" + context.getString(
+                                LibR.string.chart_temperature_high
+                            )
+                        } else if (tempBean.isMinOpen()) {
+                            context.getString(LibR.string.chart_temperature_low)
+                        } else {
+                            context.getString(LibR.string.chart_temperature_high)
+                        }
             }
         val rangeValue =
             if (type == TYPE_POINT) {
@@ -392,9 +389,12 @@ class ReportIRShowView : LinearLayout {
         val tvAverageValue = itemRoot.findViewById<TextView>(R.id.tv_average_value)
         val tvExplainValue = itemRoot.findViewById<TextView>(R.id.tv_explain_value)
 
-        tvRangeTitle.isVisible = if (type == TYPE_POINT) tempBean.isTempOpen() else tempBean.isMinOpen() || tempBean.isMaxOpen()
-        tvRangeValue.isVisible = if (type == TYPE_POINT) tempBean.isTempOpen() else tempBean.isMinOpen() || tempBean.isMaxOpen()
-        viewLineRange.isVisible = if (type == TYPE_POINT) tempBean.isTempOpen() else tempBean.isMinOpen() || tempBean.isMaxOpen()
+        tvRangeTitle.isVisible =
+            if (type == TYPE_POINT) tempBean.isTempOpen() else tempBean.isMinOpen() || tempBean.isMaxOpen()
+        tvRangeValue.isVisible =
+            if (type == TYPE_POINT) tempBean.isTempOpen() else tempBean.isMinOpen() || tempBean.isMaxOpen()
+        viewLineRange.isVisible =
+            if (type == TYPE_POINT) tempBean.isTempOpen() else tempBean.isMinOpen() || tempBean.isMaxOpen()
         clAverage.isVisible = (type == TYPE_LINE || type == TYPE_RECT) && tempBean.isAverageOpen()
         clExplain.isVisible = tempBean.isExplainOpen()
         tvRangeTitle.text = rangeTitle

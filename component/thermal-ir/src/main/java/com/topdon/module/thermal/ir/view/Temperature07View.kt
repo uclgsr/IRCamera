@@ -7,22 +7,29 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 
 /**
-// TC007 使用，不带temperature，仅用来操作点线面的 View.
+
  *
  * Created by LCG on 2024/5/7.
  */
-/**
- * Custom Temperature07 view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class Temperature07View : TemperatureBaseView {
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
@@ -38,18 +45,15 @@ class Temperature07View : TemperatureBaseView {
             Mode.LINE -> operateLine?.let { drawLine(canvas, it) }
             Mode.RECT -> operateRect?.let { drawRect(canvas, it) }
             Mode.TREND -> {
-// 趋势图需求是在 TC007 项目暂停后加的，故而 TC007 没做
+
             }
+
             else -> {
             }
         }
     }
 
-    // **************************************** Touch ****************************************
 
-    /**
-// 当前是否处于触摸状态，TC007 触摸时才进行drawing.
-     */
     private var isTouching = false
 
     @SuppressLint("ClickableViewAccessibility")

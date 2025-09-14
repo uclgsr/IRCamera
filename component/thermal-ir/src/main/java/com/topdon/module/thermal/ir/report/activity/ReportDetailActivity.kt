@@ -26,38 +26,29 @@ import com.topdon.lib.core.R as LibCoreR
 import com.topdon.lib.ui.R as UiR
 
 /**
-// 报告详情interface.
+
  *
-// 需要传递
-// - 一份报告所有信息 [ExtraKeyConfig.REPORT_BEAN]
+
+
  */
-// Legacy ARouter route annotation - now using NavigationManager
-/**
- * Report detail activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
+
 class ReportDetailActivity : BaseActivity() {
-    // View declarations
+
     private lateinit var titleView: TitleView
     private lateinit var scrollView: ScrollView
     private lateinit var reportInfoView: ReportInfoView
     private lateinit var llContent: LinearLayout
     private lateinit var watermarkView: WatermarkView
 
-    /**
-// 从上一interface传递过来的，报告所有信息.
-     */
     private var reportBean: ReportBean? = null
 
-    /**
-// 当前预览页面已生成的 PDF 文件绝对路径
-     */
     private var pdfFilePath: String? = null
 
     override fun initContentView() = R.layout.activity_report_detail
 
     override fun initView() {
-        // Initialize views
+
         titleView = findViewById(R.id.title_view)
         scrollView = findViewById(R.id.scroll_view)
         reportInfoView = findViewById(R.id.report_info_view)
@@ -89,10 +80,15 @@ class ReportDetailActivity : BaseActivity() {
                 val reportShowView = ReportIRShowView(this)
                 reportShowView.refreshData(i == 0, i == irList.size - 1, irList[i])
                 lifecycleScope.launch {
-                    val drawable = GlideLoader.getDrawable(this@ReportDetailActivity, irList[i].picture_url)
+                    val drawable =
+                        GlideLoader.getDrawable(this@ReportDetailActivity, irList[i].picture_url)
                     reportShowView.setImageDrawable(drawable)
                 }
-                llContent.addView(reportShowView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                llContent.addView(
+                    reportShowView,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
             }
         }
     }
@@ -141,8 +137,8 @@ class ReportDetailActivity : BaseActivity() {
     }
 
     /**
-// get需要转为 PDF 的所有 View 列表.
-// 注意：watermark View 不在列表内，需要自行processing.
+
+
      */
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()

@@ -10,10 +10,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
-/**
- * Synchronized Multi-Modal Recorder
- * Coordinates thermal, RGB, and GSR recording with unified Samsung S22 ground truth timing
- */
 class SynchronizedMultiModalRecorder(
     private val context: Context,
     private val thermalRecorder: EnhancedThermalRecorder,
@@ -23,12 +19,10 @@ class SynchronizedMultiModalRecorder(
         private const val TAG = "SynchronizedRecorder"
     }
 
-    // Recording components
     private var rgbCameraRecorder: RGBCameraRecorder? = null
     private var currentSessionId: String? = null
     private var isRecording = false
 
-    // Synchronized file outputs
     data class RecordingSession(
         val sessionId: String,
         val startTimestamp: Long,
@@ -40,14 +34,10 @@ class SynchronizedMultiModalRecorder(
         val sessionMetadata: File? = null,
     )
 
-    // Callbacks for recording events
     var onRecordingStarted: ((RecordingSession) -> Unit)? = null
     var onRecordingStopped: ((RecordingSession) -> Unit)? = null
     var onError: ((String) -> Unit)? = null
 
-    /**
-     * Initialize all recording components
-     */
     fun initialize() {
         rgbCameraRecorder =
             RGBCameraRecorder(context, rgbTextureView).apply {
@@ -68,9 +58,6 @@ class SynchronizedMultiModalRecorder(
             }
     }
 
-    /**
-     * Start synchronized multi-modal recording
-     */
     fun startSynchronizedRecording(
         sessionId: String? = null,
         rgbSettings: RGBCameraRecorder.RecordingSettings = RGBCameraRecorder.RecordingSettings(),
@@ -81,14 +68,16 @@ class SynchronizedMultiModalRecorder(
         }
 
         try {
-            // Generate unified session ID with Samsung S22 ground truth timing
+
             val unifiedSessionId = sessionId ?: TimeUtil.generateSessionId("MultiModal")
             val synchronizedTimestamp = TimeUtil.getSynchronizedTimestamp()
             currentSessionId = unifiedSessionId
 
-            Log.i(TAG, "Starting synchronized multi-modal recording with unified timestamp: $synchronizedTimestamp")
+            Log.i(
+                TAG,
+                "Starting synchronized multi-modal recording with unified timestamp: $synchronizedTimestamp"
+            )
 
-            // 1. Start GSR recording first (fastest to initialize) - using coroutine for async call
             var gsrStarted = false
             GlobalScope.launch {
                 gsrStarted = thermalRecorder.startRecording(unifiedSessionId, null, true)
@@ -97,9 +86,9 @@ class SynchronizedMultiModalRecorder(
                 }
             }
 
-            // 2. Start RGB camera recording with same session ID
             rgbCameraRecorder?.updateSettings(rgbSettings)
-            val rgbStarted = runBlocking { rgbCameraRecorder?.startRecording(unifiedSessionId) } ?: false
+            val rgbStarted =
+                runBlocking { rgbCameraRecorder?.startRecording(unifiedSessionId) } ?: false
             if (!rgbStarted) {
                 Log.w(TAG, "RGB recording failed to start")
                 if (gsrStarted) {
@@ -108,7 +97,6 @@ class SynchronizedMultiModalRecorder(
                 return false
             }
 
-            // 3. Add synchronized start marker with exact timestamp coordination
             thermalRecorder.triggerSyncEvent(
                 "MULTIMODAL_START",
                 mapOf(
@@ -124,7 +112,6 @@ class SynchronizedMultiModalRecorder(
 
             isRecording = true
 
-            // Create session data
             val session =
                 RecordingSession(
                     sessionId = unifiedSessionId,
@@ -140,15 +127,11 @@ class SynchronizedMultiModalRecorder(
             Log.e(TAG, "Failed to start synchronized recording", e)
             onError?.invoke("Failed to start synchronized recording: ${e.message}")
 
-            // Cleanup on failure
             cleanup()
             return false
         }
     }
 
-    /**
-     * Stop synchronized multi-modal recording
-     */
     fun stopSynchronizedRecording(): RecordingSession? {
         if (!isRecording || currentSessionId == null) {
             Log.w(TAG, "Not currently recording")
@@ -161,7 +144,6 @@ class SynchronizedMultiModalRecorder(
 
             Log.i(TAG, "Stopping synchronized multi-modal recording at timestamp: $stopTimestamp")
 
-            // Add synchronized stop marker
             thermalRecorder.triggerSyncEvent(
                 "MULTIMODAL_STOP",
                 mapOf(
@@ -172,29 +154,45 @@ class SynchronizedMultiModalRecorder(
                 ),
             )
 
-            // Stop all recording components simultaneously
             val gsrSession = thermalRecorder.stopRecording()
             val rgbVideoFile = runBlocking { rgbCameraRecorder?.stopRecording() }
 
             isRecording = false
 
-            // Create final session with all output files
             val finalSession =
                 RecordingSession(
                     sessionId = sessionId,
                     startTimestamp = gsrSession?.startTime ?: System.currentTimeMillis(),
                     endTimestamp = stopTimestamp,
                     rgbVideoFile = null, // Boolean return type doesn't match File expected
-                    gsrDataFile = gsrSession?.let { File(thermalRecorder.getSessionDirectory(), "signals.csv") },
-                    syncMarksFile = gsrSession?.let { File(thermalRecorder.getSessionDirectory(), "sync_marks.csv") },
-                    sessionMetadata = gsrSession?.let { File(thermalRecorder.getSessionDirectory(), "session_metadata.json") },
+                    gsrDataFile = gsrSession?.let {
+                        File(
+                            thermalRecorder.getSessionDirectory(),
+                            "signals.csv"
+                        )
+                    },
+                    syncMarksFile = gsrSession?.let {
+                        File(
+                            thermalRecorder.getSessionDirectory(),
+                            "sync_marks.csv"
+                        )
+                    },
+                    sessionMetadata = gsrSession?.let {
+                        File(
+                            thermalRecorder.getSessionDirectory(),
+                            "session_metadata.json"
+                        )
+                    },
                 )
 
             currentSessionId = null
             onRecordingStopped?.invoke(finalSession)
 
             Log.i(TAG, "Synchronized multi-modal recording completed: $sessionId")
-            Log.i(TAG, "Session files: RGB=${if (rgbVideoFile == true) "completed" else "failed"}, GSR=${gsrSession?.sampleCount} samples")
+            Log.i(
+                TAG,
+                "Session files: RGB=${if (rgbVideoFile == true) "completed" else "failed"}, GSR=${gsrSession?.sampleCount} samples"
+            )
 
             return finalSession
         } catch (e: Exception) {
@@ -205,9 +203,6 @@ class SynchronizedMultiModalRecorder(
         }
     }
 
-    /**
-     * Add synchronized event marker across all recording streams
-     */
     fun addSyncEvent(
         eventName: String,
         metadata: Map<String, String> = emptyMap(),
@@ -228,9 +223,6 @@ class SynchronizedMultiModalRecorder(
         Log.d(TAG, "Added synchronized event: $eventName at timestamp $timestamp")
     }
 
-    /**
-     * Switch RGB camera (front/back)
-     */
     fun switchRGBCamera(): RGBCameraRecorder.CameraFacing? {
         val currentFacing = rgbCameraRecorder?.getCurrentCameraFacing()
         val newFacing =
@@ -240,18 +232,13 @@ class SynchronizedMultiModalRecorder(
                 RGBCameraRecorder.CameraFacing.BACK
             }
 
-        // Switch to the new facing
         val success = runBlocking { rgbCameraRecorder?.switchCamera(newFacing) ?: false }
         return if (success) newFacing else currentFacing
     }
 
-    /**
-     * Update RGB recording settings
-     */
     fun updateRGBSettings(settings: RGBCameraRecorder.RecordingSettings) {
         rgbCameraRecorder?.updateSettings(settings)
 
-        // Add sync event to mark settings change
         if (isRecording) {
             addSyncEvent(
                 "RGB_SETTINGS_CHANGED",
@@ -264,9 +251,6 @@ class SynchronizedMultiModalRecorder(
         }
     }
 
-    /**
-     * Enable/disable RGB flash
-     */
     fun setRGBFlash(enabled: Boolean) {
         runBlocking { rgbCameraRecorder?.setFlashEnabled(enabled) }
 
@@ -280,9 +264,6 @@ class SynchronizedMultiModalRecorder(
         }
     }
 
-    /**
-     * Pause/resume RGB recording (Android N+)
-     */
     fun pauseRGBRecording() {
         runBlocking { rgbCameraRecorder?.pauseRecording() }
 
@@ -299,9 +280,6 @@ class SynchronizedMultiModalRecorder(
         }
     }
 
-    /**
-     * Get current recording state
-     */
     fun isRecording() = isRecording
 
     fun getCurrentSessionId() = currentSessionId
@@ -314,16 +292,10 @@ class SynchronizedMultiModalRecorder(
 
     fun getSupportedRGBResolutions() = rgbCameraRecorder?.getSupportedResolutions() ?: emptyList()
 
-    /**
-     * Get session directory with all synchronized files
-     */
     fun getSessionDirectory(): File? {
         return thermalRecorder.getSessionDirectory()
     }
 
-    /**
-     * Cleanup all resources
-     */
     fun cleanup() {
         if (isRecording) {
             stopSynchronizedRecording()
@@ -336,10 +308,6 @@ class SynchronizedMultiModalRecorder(
         isRecording = false
     }
 
-    /**
-     * Create a new session combining thermal video recording with RGB+GSR
-     * This integrates with the existing thermal recording workflow
-     */
     fun createThermalRGBSession(thermalVideoFile: File): RecordingSession? {
         val sessionId = currentSessionId ?: return null
         val sessionDir = getSessionDirectory() ?: return null
@@ -355,9 +323,6 @@ class SynchronizedMultiModalRecorder(
         )
     }
 
-    /**
-     * Generate comprehensive session metadata including Samsung S22 processor information
-     */
     fun generateSessionMetadata(): Map<String, Any> {
         return mapOf(
             "session_id" to (currentSessionId ?: "unknown"),
@@ -366,21 +331,24 @@ class SynchronizedMultiModalRecorder(
             "timing_precision" to "sub_millisecond",
             "unified_time_base" to "samsung_s22_ground_truth",
             "recording_components" to
-                mapOf(
-                    "thermal" to "thermal_camera_video",
-                    "rgb" to
-                        mapOf(
-                            "resolution" to (rgbCameraRecorder?.getCurrentSettings()?.resolution?.displayName ?: "unknown"),
-                            "frame_rate" to (rgbCameraRecorder?.getCurrentSettings()?.frameRate ?: 0),
-                            "camera_facing" to (rgbCameraRecorder?.getCurrentCameraFacing()?.displayName ?: "unknown"),
-                        ),
-                    "gsr" to
-                        mapOf(
-                            "sampling_rate" to "128Hz",
-                            "device_type" to "shimmer3_gsr",
-                            "data_format" to "conductance_resistance_csv",
-                        ),
-                ),
+                    mapOf(
+                        "thermal" to "thermal_camera_video",
+                        "rgb" to
+                                mapOf(
+                                    "resolution" to (rgbCameraRecorder?.getCurrentSettings()?.resolution?.displayName
+                                        ?: "unknown"),
+                                    "frame_rate" to (rgbCameraRecorder?.getCurrentSettings()?.frameRate
+                                        ?: 0),
+                                    "camera_facing" to (rgbCameraRecorder?.getCurrentCameraFacing()?.displayName
+                                        ?: "unknown"),
+                                ),
+                        "gsr" to
+                                mapOf(
+                                    "sampling_rate" to "128Hz",
+                                    "device_type" to "shimmer3_gsr",
+                                    "data_format" to "conductance_resistance_csv",
+                                ),
+                    ),
             "synchronization_accuracy" to "samsung_s22_hardware_timer",
             "android_version" to android.os.Build.VERSION.RELEASE,
             "api_level" to android.os.Build.VERSION.SDK_INT,

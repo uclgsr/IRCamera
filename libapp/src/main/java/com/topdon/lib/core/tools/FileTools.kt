@@ -7,7 +7,6 @@ import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import com.blankj.utilcode.util.Utils
 import java.io.File
-import java.lang.Exception
 
 object FileTools {
     fun getFileSize(path: String): String {

@@ -84,16 +84,7 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
         notifyDataSetChanged()
     }
 
-    /**
-     * 不知道干嘛的
-     * 参数 [Constants.IR_TEMPERATURE_MODE] = 1 测温模式   伪彩条、对比度、锐度、警示、旋转、字体、镜像
-     * 参数 [Constants.IR_TCPLUS_MODE] = 5 双光设备        伪彩条、对比度、锐度、警示、旋转、字体、
-     * 参数 [Constants.IR_TEMPERATURE_LITE] = 7 Lite设备  伪彩条、对比度、警示、旋转、字体、镜像
-     * 参数 [Constants.IR_TC007_MODE] = 6 TC007          伪彩条、对比度、锐度、警示、字体、镜像
-     * else - 2D编辑菜单                                  警示、字体、水印
-     * 参数 [Constants.IR_OBSERVE_MODE] = 2 观测模式  指南针、旋转、镜像、对比度
-     */
-    fun setShowMenuFour(modeType: Int)  {
+    fun setShowMenuFour(modeType: Int) {
         fourBean.clear()
         when (modeType) {
             IR_TEMPERATURE_MODE -> {
@@ -119,10 +110,18 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     ),
                 )
                 fourBean.add(
-                    ColorBean(R.drawable.selector_menu2_setting_6, context.getString(R.string.temp_alarm_alarm), CameraHelp.TYPE_SET_ALARM),
+                    ColorBean(
+                        R.drawable.selector_menu2_setting_6,
+                        context.getString(R.string.temp_alarm_alarm),
+                        CameraHelp.TYPE_SET_ALARM
+                    ),
                 )
                 fourBean.add(
-                    ColorBean(R.drawable.selector_menu2_setting_4, context.getString(R.string.thermal_rotate), CameraHelp.TYPE_SET_ROTATE),
+                    ColorBean(
+                        R.drawable.selector_menu2_setting_4,
+                        context.getString(R.string.thermal_rotate),
+                        CameraHelp.TYPE_SET_ROTATE
+                    ),
                 )
                 fourBean.add(
                     ColorBean(
@@ -131,8 +130,15 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                         CameraHelp.TYPE_SET_COLOR,
                     ),
                 )
-                fourBean.add(ColorBean(R.drawable.selector_menu2_setting_5, context.getString(R.string.mirror), CameraHelp.TYPE_SET_MIRROR))
+                fourBean.add(
+                    ColorBean(
+                        R.drawable.selector_menu2_setting_5,
+                        context.getString(R.string.mirror),
+                        CameraHelp.TYPE_SET_MIRROR
+                    )
+                )
             }
+
             IR_TCPLUS_MODE -> {
                 fourBean.add(
                     ColorBean(
@@ -156,10 +162,18 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     ),
                 )
                 fourBean.add(
-                    ColorBean(R.drawable.selector_menu2_setting_6, context.getString(R.string.temp_alarm_alarm), CameraHelp.TYPE_SET_ALARM),
+                    ColorBean(
+                        R.drawable.selector_menu2_setting_6,
+                        context.getString(R.string.temp_alarm_alarm),
+                        CameraHelp.TYPE_SET_ALARM
+                    ),
                 )
                 fourBean.add(
-                    ColorBean(R.drawable.selector_menu2_setting_4, context.getString(R.string.thermal_rotate), CameraHelp.TYPE_SET_ROTATE),
+                    ColorBean(
+                        R.drawable.selector_menu2_setting_4,
+                        context.getString(R.string.thermal_rotate),
+                        CameraHelp.TYPE_SET_ROTATE
+                    ),
                 )
                 fourBean.add(
                     ColorBean(
@@ -169,6 +183,7 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     ),
                 )
             }
+
             IR_TEMPERATURE_LITE -> {
                 fourBean.add(
                     ColorBean(
@@ -185,10 +200,18 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     ),
                 )
                 fourBean.add(
-                    ColorBean(R.drawable.selector_menu2_setting_6, context.getString(R.string.temp_alarm_alarm), CameraHelp.TYPE_SET_ALARM),
+                    ColorBean(
+                        R.drawable.selector_menu2_setting_6,
+                        context.getString(R.string.temp_alarm_alarm),
+                        CameraHelp.TYPE_SET_ALARM
+                    ),
                 )
                 fourBean.add(
-                    ColorBean(R.drawable.selector_menu2_setting_4, context.getString(R.string.thermal_rotate), CameraHelp.TYPE_SET_ROTATE),
+                    ColorBean(
+                        R.drawable.selector_menu2_setting_4,
+                        context.getString(R.string.thermal_rotate),
+                        CameraHelp.TYPE_SET_ROTATE
+                    ),
                 )
                 fourBean.add(
                     ColorBean(
@@ -197,8 +220,15 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                         CameraHelp.TYPE_SET_COLOR,
                     ),
                 )
-                fourBean.add(ColorBean(R.drawable.selector_menu2_setting_5, context.getString(R.string.mirror), CameraHelp.TYPE_SET_MIRROR))
+                fourBean.add(
+                    ColorBean(
+                        R.drawable.selector_menu2_setting_5,
+                        context.getString(R.string.mirror),
+                        CameraHelp.TYPE_SET_MIRROR
+                    )
+                )
             }
+
             IR_TC007_MODE -> {
                 fourBean.add(
                     ColorBean(
@@ -222,7 +252,11 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     ),
                 )
                 fourBean.add(
-                    ColorBean(R.drawable.selector_menu2_setting_6, context.getString(R.string.temp_alarm_alarm), CameraHelp.TYPE_SET_ALARM),
+                    ColorBean(
+                        R.drawable.selector_menu2_setting_6,
+                        context.getString(R.string.temp_alarm_alarm),
+                        CameraHelp.TYPE_SET_ALARM
+                    ),
                 )
                 fourBean.add(
                     ColorBean(
@@ -231,8 +265,15 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                         CameraHelp.TYPE_SET_COLOR,
                     ),
                 )
-                fourBean.add(ColorBean(R.drawable.selector_menu2_setting_5, context.getString(R.string.mirror), CameraHelp.TYPE_SET_MIRROR))
+                fourBean.add(
+                    ColorBean(
+                        R.drawable.selector_menu2_setting_5,
+                        context.getString(R.string.mirror),
+                        CameraHelp.TYPE_SET_MIRROR
+                    )
+                )
             }
+
             IR_OBSERVE_MODE -> {
                 fourBean.add(
                     ColorBean(
@@ -242,9 +283,19 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     ),
                 )
                 fourBean.add(
-                    ColorBean(R.drawable.selector_menu2_setting_4, context.getString(R.string.thermal_rotate), CameraHelp.TYPE_SET_ROTATE),
+                    ColorBean(
+                        R.drawable.selector_menu2_setting_4,
+                        context.getString(R.string.thermal_rotate),
+                        CameraHelp.TYPE_SET_ROTATE
+                    ),
                 )
-                fourBean.add(ColorBean(R.drawable.selector_menu2_setting_5, context.getString(R.string.mirror), CameraHelp.TYPE_SET_MIRROR))
+                fourBean.add(
+                    ColorBean(
+                        R.drawable.selector_menu2_setting_5,
+                        context.getString(R.string.mirror),
+                        CameraHelp.TYPE_SET_MIRROR
+                    )
+                )
                 fourBean.add(
                     ColorBean(
                         R.drawable.selector_menu2_setting_2,
@@ -253,9 +304,14 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     ),
                 )
             }
+
             else -> {
                 fourBean.add(
-                    ColorBean(R.drawable.selector_menu2_setting_6, context.getString(R.string.temp_alarm_alarm), CameraHelp.TYPE_SET_ALARM),
+                    ColorBean(
+                        R.drawable.selector_menu2_setting_6,
+                        context.getString(R.string.temp_alarm_alarm),
+                        CameraHelp.TYPE_SET_ALARM
+                    ),
                 )
                 fourBean.add(
                     ColorBean(
@@ -278,24 +334,49 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
 
     private val fourBean =
         arrayListOf(
-            ColorBean(R.drawable.selector_menu2_setting_1, context.getString(R.string.thermal_pseudo), CameraHelp.TYPE_SET_PSEUDOCOLOR),
+            ColorBean(
+                R.drawable.selector_menu2_setting_1,
+                context.getString(R.string.thermal_pseudo),
+                CameraHelp.TYPE_SET_PSEUDOCOLOR
+            ),
             ColorBean(
                 R.drawable.selector_menu2_setting_2,
                 context.getString(R.string.thermal_contrast),
                 CameraHelp.TYPE_SET_ParamLevelContrast,
             ),
-            ColorBean(R.drawable.selector_menu2_setting_3, context.getString(R.string.thermal_sharpen), CameraHelp.TYPE_SET_ParamLevelDde),
-            ColorBean(R.drawable.selector_menu2_setting_6, context.getString(R.string.temp_alarm_alarm), CameraHelp.TYPE_SET_ALARM),
-            ColorBean(R.drawable.selector_menu2_setting_4, context.getString(R.string.thermal_rotate), CameraHelp.TYPE_SET_ROTATE),
-            ColorBean(R.drawable.selector_menu2_setting_7, context.getString(R.string.menu_thermal_font), CameraHelp.TYPE_SET_COLOR),
-            ColorBean(R.drawable.selector_menu2_setting_5, context.getString(R.string.mirror), CameraHelp.TYPE_SET_MIRROR),
+            ColorBean(
+                R.drawable.selector_menu2_setting_3,
+                context.getString(R.string.thermal_sharpen),
+                CameraHelp.TYPE_SET_ParamLevelDde
+            ),
+            ColorBean(
+                R.drawable.selector_menu2_setting_6,
+                context.getString(R.string.temp_alarm_alarm),
+                CameraHelp.TYPE_SET_ALARM
+            ),
+            ColorBean(
+                R.drawable.selector_menu2_setting_4,
+                context.getString(R.string.thermal_rotate),
+                CameraHelp.TYPE_SET_ROTATE
+            ),
+            ColorBean(
+                R.drawable.selector_menu2_setting_7,
+                context.getString(R.string.menu_thermal_font),
+                CameraHelp.TYPE_SET_COLOR
+            ),
+            ColorBean(
+                R.drawable.selector_menu2_setting_5,
+                context.getString(R.string.mirror),
+                CameraHelp.TYPE_SET_MIRROR
+            ),
         )
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.ui_item_menu_second_view, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.ui_item_menu_second_view, parent, false)
         compassEnable = SaveSettingUtil.isOpenCompass
         return ItemView(view)
     }
@@ -305,30 +386,31 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
         @SuppressLint("RecyclerView") position: Int,
     ) {
         if (holder is ItemView) {
-            // 更新切换Tab的item宽度
+
             updateViewWidth(holder.itemView, holder.img)
             val bean = fourBean[position]
             holder.name.text = bean.name
-            if (bean.code == CameraHelp.TYPE_SET_ROTATE)
-                {
-                    when (rotateAngle) {
-                        0 -> {
-                            holder.img.setImageResource(R.drawable.svg_menu2_setting_4_rotate270)
-                        }
-                        90 -> {
-                            holder.img.setImageResource(R.drawable.svg_menu2_setting_4_rotate180)
-                        }
-                        180 -> {
-                            holder.img.setImageResource(R.drawable.svg_menu2_setting_4_rotate90)
-                        }
-                        270 -> {
-                            holder.img.setImageResource(R.drawable.svg_menu2_setting_4_rotate0)
-                        }
+            if (bean.code == CameraHelp.TYPE_SET_ROTATE) {
+                when (rotateAngle) {
+                    0 -> {
+                        holder.img.setImageResource(R.drawable.svg_menu2_setting_4_rotate270)
                     }
-                } else
-                {
-                    holder.img.setImageResource(bean.res)
+
+                    90 -> {
+                        holder.img.setImageResource(R.drawable.svg_menu2_setting_4_rotate180)
+                    }
+
+                    180 -> {
+                        holder.img.setImageResource(R.drawable.svg_menu2_setting_4_rotate90)
+                    }
+
+                    270 -> {
+                        holder.img.setImageResource(R.drawable.svg_menu2_setting_4_rotate0)
+                    }
                 }
+            } else {
+                holder.img.setImageResource(bean.res)
+            }
             holder.lay.setOnClickListener(
                 object : SingleClickListener() {
                     override fun onSingleClick() {
@@ -342,38 +424,54 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                         0 -> {
                             holder.name.setTextColor(ContextCompat.getColor(context, R.color.white))
                         }
+
                         90 -> {
                             holder.name.setTextColor(ContextCompat.getColor(context, R.color.white))
                         }
+
                         180 -> {
                             holder.name.setTextColor(ContextCompat.getColor(context, R.color.white))
                         }
+
                         270 -> {
-                            holder.name.setTextColor(ContextCompat.getColor(context, R.color.font_third_color))
+                            holder.name.setTextColor(
+                                ContextCompat.getColor(
+                                    context,
+                                    R.color.font_third_color
+                                )
+                            )
                         }
                     }
                 }
+
                 CameraHelp.TYPE_SET_ParamLevelDde -> {
                     iconUI(ddeEnable, holder.img, holder.name)
                 }
+
                 CameraHelp.TYPE_SET_ParamLevelContrast -> {
                     iconUI(contrastEnable, holder.img, holder.name)
                 }
+
                 CameraHelp.TYPE_SET_PSEUDOCOLOR -> {
                     iconUI(colorEnable, holder.img, holder.name)
                 }
+
                 CameraHelp.TYPE_SET_ALARM -> {
                     iconUI(alarmEnable, holder.img, holder.name)
                 }
+
                 CameraHelp.TYPE_SET_COLOR -> {
                     iconUI(textColorEnable, holder.img, holder.name)
                 }
+
                 CameraHelp.TYPE_SET_MIRROR -> {
                     iconUI(mirrorEnable, holder.img, holder.name)
                 }
+
                 CameraHelp.TYPE_SET_COMPASS -> {
                     iconUI(compassEnable, holder.img, holder.name)
                 }
+
                 CameraHelp.TYPE_SET_WATERMARK -> {
                     iconUI(waterMarkEnable, holder.img, holder.name)
                 }
@@ -381,7 +479,6 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
         }
     }
 
-    // 状态变化
     private fun iconUI(
         isActive: Boolean,
         img: ImageView,
@@ -402,37 +499,22 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
     private fun updateViewWidth(
         itemView: View,
         itemMenu: ImageView,
-    )  {
-        if (fourBean.size <= 4)
-            {
-                itemView.layoutParams =
-                    ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            } else
-            {
-                itemView.layoutParams =
-                    ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            }
-//        if (fourBean.size <= 4) {  //item少于4个，每个占1/4
-//            val canSeeCount = fourBean.size //一屏占4个
-//            val with = (ScreenUtils.getScreenWidth() / canSeeCount)
-//            itemView.layoutParams =
-//                ViewGroup.LayoutParams(with, ViewGroup.LayoutParams.WRAP_CONTENT)
-//            val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()
-//            val layoutParams = itemMenu.layoutParams
-//            layoutParams.width = imageSize
-//            layoutParams.height = imageSize
-//            itemMenu.layoutParams = layoutParams
-//        } else {    //item大于4个，每屏4.5个item
-//            val canSeeCount = 4.5 //一屏占4个
-//            val with = (ScreenUtils.getScreenWidth() / canSeeCount).toInt()
-//            itemView.layoutParams =
-//                ConstraintLayout.LayoutParams(with, ConstraintLayout.LayoutParams.WRAP_CONTENT)
-//            val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()
-//            val layoutParams = itemMenu.layoutParams
-//            layoutParams.width = imageSize
-//            layoutParams.height = imageSize
-//            itemMenu.layoutParams = layoutParams
-//        }
+    ) {
+        if (fourBean.size <= 4) {
+            itemView.layoutParams =
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+        } else {
+            itemView.layoutParams =
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+        }
+
+
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {

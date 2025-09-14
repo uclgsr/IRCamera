@@ -30,12 +30,15 @@ class ListItemView : LinearLayout {
                 R.styleable.ListItemView_list_item_left_icon ->
                     leftIconRes =
                         ta.getResourceId(R.styleable.ListItemView_list_item_left_icon, 0)
+
                 R.styleable.ListItemView_list_item_left_text ->
                     leftContent =
                         ta.getString(R.styleable.ListItemView_list_item_left_text).toString()
+
                 R.styleable.ListItemView_list_item_right_text ->
                     rightContent =
                         ta.getString(R.styleable.ListItemView_list_item_right_text).toString()
+
                 R.styleable.ListItemView_list_item_line ->
                     lineShow =
                         ta.getBoolean(R.styleable.ListItemView_list_item_line, false)
@@ -44,6 +47,7 @@ class ListItemView : LinearLayout {
         ta.recycle()
         initView()
     }
+
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -68,7 +72,7 @@ class ListItemView : LinearLayout {
         mIvLeftContent.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    fun getLeftText(): String  {
+    fun getLeftText(): String {
         if (mIvLeftContent == null) return ""
         return mIvLeftContent.text.toString()
     }
@@ -79,7 +83,7 @@ class ListItemView : LinearLayout {
         mIvRightContent.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    fun getRightText(): String  {
+    fun getRightText(): String {
         if (mIvRightContent == null) return ""
         return mIvRightContent.text.toString()
     }

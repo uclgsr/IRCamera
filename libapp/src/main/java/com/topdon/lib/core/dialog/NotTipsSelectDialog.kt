@@ -9,17 +9,13 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogNotTipsSelectBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-/**
- * 与 TipDialog 类似，不过多了个 “不再提示” 选中效果的提示弹窗.
- *
- * Created by LCG on 2024/10/26.
- */
 class NotTipsSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
     @StringRes
     private var tipsResId: Int = 0
     private var onConfirmListener: ((isSelect: Boolean) -> Unit)? = null
 
-    private val binding: DialogNotTipsSelectBinding = DialogNotTipsSelectBinding.inflate(layoutInflater)
+    private val binding: DialogNotTipsSelectBinding =
+        DialogNotTipsSelectBinding.inflate(layoutInflater)
 
     fun setTipsResId(
         @StringRes tipsResId: Int,
@@ -28,9 +24,6 @@ class NotTipsSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         return this
     }
 
-    /**
-     * 点击 “我知道了” 事件监听.
-     */
     fun setOnConfirmListener(l: ((isSelect: Boolean) -> Unit)?): NotTipsSelectDialog {
         onConfirmListener = l
         return this

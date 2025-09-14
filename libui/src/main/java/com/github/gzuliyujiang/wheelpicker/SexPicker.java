@@ -28,12 +28,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 性别选择器
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/6/23 11:48
- */
 @SuppressWarnings("WeakerAccess")
 public class SexPicker extends OptionPicker {
     public static String JSON = "[{\"id\":0,\"name\":\"保密\",\"english\":\"Secrecy\"},\n" +

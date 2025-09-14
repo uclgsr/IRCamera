@@ -17,15 +17,13 @@ import kotlinx.android.synthetic.main.item_question.view.item_question_info
 import kotlinx.android.synthetic.main.item_question.view.item_question_lay
 import java.util.ArrayList
 
-/**
- * FAQ
- */
 @Route(path = RouterConfig.QUESTION)
 class QuestionActivity : BaseActivity() {
     override fun initContentView() = R.layout.activity_question
 
     override fun initView() {
-        val adapter = MyAdapter(FaqRepository.getQuestionList(intent.getBooleanExtra("isTS001", false)))
+        val adapter =
+            MyAdapter(FaqRepository.getQuestionList(intent.getBooleanExtra("isTS001", false)))
         adapter.onItemClickListener = {
             ARouter.getInstance()
                 .build(RouterConfig.QUESTION_DETAILS)
@@ -41,14 +39,17 @@ class QuestionActivity : BaseActivity() {
     override fun initData() {
     }
 
-    private class MyAdapter(private val questionList: ArrayList<QuestionData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private class MyAdapter(private val questionList: ArrayList<QuestionData>) :
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var onItemClickListener: ((data: QuestionData) -> Unit)? = null
 
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
         ): RecyclerView.ViewHolder {
-            return ItemHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_question, parent, false))
+            return ItemHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.item_question, parent, false)
+            )
         }
 
         override fun getItemCount(): Int = questionList.size

@@ -11,22 +11,6 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * GSR Network Streamer for Hub-Spoke Communication
- *
- * Handles real-time streaming of GSR data from Android Sensor Node (Spoke)
- * to PC Controller (Hub) in the Multi-Modal Physiological Sensing Platform.
- *
- * Features:
- * - Real-time GSR data streaming with buffering
- * - Time synchronization with PC hub
- * - Reliable message delivery with acknowledgments
- * - Network error recovery and reconnection
- * - Data compression for efficient transmission
- * - Quality metrics tracking
- *
- * @author IRCamera Android Sensor Node (Spoke) - Hub-Spoke Integration
- */
 class GSRNetworkStreamer(
     private val context: Context,
     private val sessionId: String,
@@ -51,21 +35,16 @@ class GSRNetworkStreamer(
     private var heartbeatJob: Job? = null
     private var qualityReportingJob: Job? = null
 
-    // Statistics and quality tracking
     private val samplesSent = AtomicLong(0)
     private val samplesAcknowledged = AtomicLong(0)
     private val bytesTransmitted = AtomicLong(0)
     private val networkErrors = AtomicLong(0)
     private var startTime: Long = 0
 
-    // Time synchronization
     private var clockOffset: Long = 0 // Nanoseconds
     private var lastSyncTime: Long = 0
     private val syncInterval = 30000L // 30 seconds
 
-    /**
-     * Initialize network connection to PC hub
-     */
     suspend fun initialize(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -73,23 +52,20 @@ class GSRNetworkStreamer(
 
                 networkClient =
                     EnhancedNetworkClient(context).apply {
-                        // Set connection parameters for GSR streaming
+
                         setConnectionTimeout(10000)
                         setHeartbeatInterval(HEARTBEAT_INTERVAL_MS)
                         setCompressionEnabled(true)
                     }
 
-                // Connect to PC hub
                 val connected = networkClient?.connect() ?: false
                 if (!connected) {
                     Log.e(TAG, "Failed to connect to PC hub")
                     return@withContext false
                 }
 
-                // Perform initial time synchronization
                 performTimeSync()
 
-                // Register GSR stream with hub
                 registerGSRStream()
 
                 Log.i(TAG, "GSR network streamer initialized successfully")
@@ -101,9 +77,6 @@ class GSRNetworkStreamer(
         }
     }
 
-    /**
-     * Start streaming GSR data to PC hub
-     */
     suspend fun startStreaming(): Boolean {
         if (_isStreaming.get()) {
             Log.w(TAG, "GSR streaming already active")
@@ -114,19 +87,16 @@ class GSRNetworkStreamer(
             _isStreaming.set(true)
             startTime = System.currentTimeMillis()
 
-            // Start streaming job
             streamingJob =
                 streamingScope.launch {
                     streamGSRData()
                 }
 
-            // Start heartbeat job
             heartbeatJob =
                 streamingScope.launch {
                     sendHeartbeats()
                 }
 
-            // Start quality reporting job
             qualityReportingJob =
                 streamingScope.launch {
                     reportQualityMetrics()
@@ -141,9 +111,6 @@ class GSRNetworkStreamer(
         }
     }
 
-    /**
-     * Stop streaming GSR data
-     */
     suspend fun stopStreaming(): Boolean {
         if (!_isStreaming.get()) {
             return true
@@ -152,15 +119,12 @@ class GSRNetworkStreamer(
         return try {
             _isStreaming.set(false)
 
-            // Cancel all streaming jobs
             streamingJob?.cancel()
             heartbeatJob?.cancel()
             qualityReportingJob?.cancel()
 
-            // Send final batch of buffered data
             flushBuffer()
 
-            // Send stream end notification
             sendStreamEndNotification()
 
             Log.i(TAG, "GSR streaming stopped for session: $sessionId")
@@ -171,16 +135,13 @@ class GSRNetworkStreamer(
         }
     }
 
-    /**
-     * Add GSR sample to streaming buffer
-     */
     fun addSample(sample: GSRSample) {
         if (!_isStreaming.get()) {
             return
         }
 
         try {
-            // Apply time synchronization offset
+
             val syncedSample =
                 sample.copy(
                     timestamp = sample.timestamp + clockOffset,
@@ -188,7 +149,6 @@ class GSRNetworkStreamer(
 
             sampleBuffer.offer(syncedSample)
 
-            // Prevent buffer overflow
             if (sampleBuffer.size > BUFFER_SIZE) {
                 sampleBuffer.poll() // Remove oldest sample
                 Log.w(TAG, "GSR sample buffer overflow, dropping oldest sample")
@@ -198,9 +158,6 @@ class GSRNetworkStreamer(
         }
     }
 
-    /**
-     * Main streaming coroutine
-     */
     private suspend fun streamGSRData() {
         while (_isStreaming.get()) {
             try {
@@ -208,7 +165,6 @@ class GSRNetworkStreamer(
                     sendBatch()
                 }
 
-                // Periodic time synchronization
                 if (System.currentTimeMillis() - lastSyncTime > syncInterval) {
                     performTimeSync()
                 }
@@ -222,13 +178,9 @@ class GSRNetworkStreamer(
         }
     }
 
-    /**
-     * Send batch of GSR samples to PC hub
-     */
     private suspend fun sendBatch() {
         val batch = mutableListOf<GSRSample>()
 
-        // Collect batch of samples
         repeat(BATCH_SIZE) {
             sampleBuffer.poll()?.let { sample ->
                 batch.add(sample)
@@ -249,7 +201,6 @@ class GSRNetworkStreamer(
                 Log.w(TAG, "Failed to send GSR batch")
                 networkErrors.incrementAndGet()
 
-                // Re-queue samples for retry
                 batch.forEach { sample ->
                     sampleBuffer.offer(sample)
                 }
@@ -260,9 +211,6 @@ class GSRNetworkStreamer(
         }
     }
 
-    /**
-     * Create JSON message for GSR batch
-     */
     private fun createBatchMessage(batch: List<GSRSample>): JSONObject {
         return JSONObject().apply {
             put("type", GSR_STREAM_TYPE)
@@ -288,9 +236,6 @@ class GSRNetworkStreamer(
         }
     }
 
-    /**
-     * Perform time synchronization with PC hub
-     */
     private suspend fun performTimeSync() {
         try {
             val syncRequest =
@@ -306,7 +251,6 @@ class GSRNetworkStreamer(
                 val serverTime = resp.getLong("server_timestamp")
                 val clientReceived = System.nanoTime()
 
-                // Calculate round-trip time and offset
                 val roundTripTime = clientReceived - clientSent
                 clockOffset = serverTime - (clientSent + roundTripTime / 2)
                 lastSyncTime = System.currentTimeMillis()
@@ -318,9 +262,6 @@ class GSRNetworkStreamer(
         }
     }
 
-    /**
-     * Send heartbeat messages to maintain connection
-     */
     private suspend fun sendHeartbeats() {
         while (_isStreaming.get()) {
             try {
@@ -341,9 +282,6 @@ class GSRNetworkStreamer(
         }
     }
 
-    /**
-     * Report quality metrics to PC hub
-     */
     private suspend fun reportQualityMetrics() {
         while (_isStreaming.get()) {
             try {
@@ -369,9 +307,6 @@ class GSRNetworkStreamer(
         }
     }
 
-    /**
-     * Register GSR stream with PC hub
-     */
     private suspend fun registerGSRStream() {
         try {
             val registration =
@@ -397,9 +332,6 @@ class GSRNetworkStreamer(
         }
     }
 
-    /**
-     * Send stream end notification
-     */
     private suspend fun sendStreamEndNotification() {
         try {
             val endNotification =
@@ -419,26 +351,17 @@ class GSRNetworkStreamer(
         }
     }
 
-    /**
-     * Flush remaining buffer contents
-     */
     private suspend fun flushBuffer() {
         while (sampleBuffer.isNotEmpty()) {
             sendBatch()
         }
     }
 
-    /**
-     * Check if buffer should be flushed based on time
-     */
     private fun shouldFlushBuffer(): Boolean {
         return sampleBuffer.isNotEmpty() &&
-            (System.currentTimeMillis() % (STREAM_INTERVAL_MS * 5) == 0L)
+                (System.currentTimeMillis() % (STREAM_INTERVAL_MS * 5) == 0L)
     }
 
-    /**
-     * Get streaming statistics
-     */
     fun getStreamingStats(): Map<String, Any> {
         return mapOf(
             "samples_sent" to samplesSent.get(),
@@ -451,9 +374,6 @@ class GSRNetworkStreamer(
         )
     }
 
-    /**
-     * Cleanup resources
-     */
     suspend fun cleanup() {
         stopStreaming()
         streamingScope.cancel()

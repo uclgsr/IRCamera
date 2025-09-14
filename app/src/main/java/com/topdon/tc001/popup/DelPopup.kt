@@ -12,11 +12,6 @@ import com.blankj.utilcode.util.SizeUtils
 import com.csl.irCamera.R
 import com.kylecorry.andromeda.core.ui.setCompoundDrawables
 
-/**
- * 首页-设备列表-删除设备确认 PopupWindow.
- *
- * Created by LCG on 2024/4/24.
- */
 class DelPopup(val context: Context) : PopupWindow() {
     var onDelListener: (() -> Unit)? = null
 
@@ -28,7 +23,10 @@ class DelPopup(val context: Context) : PopupWindow() {
         textView.textSize = 14f
         textView.setTextColor(0xffffffff.toInt())
         textView.compoundDrawablePadding = SizeUtils.dp2px(8f)
-        textView.setCompoundDrawables(size = SizeUtils.sp2px(16f), left = R.drawable.svg_main_device_del)
+        textView.setCompoundDrawables(
+            size = SizeUtils.sp2px(16f),
+            left = R.drawable.svg_main_device_del
+        )
         textView.minWidth = (widthPixels * 128f / 375).toInt()
         textView.setOnClickListener {
             dismiss()

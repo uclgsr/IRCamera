@@ -10,27 +10,28 @@
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:titleText="@string/main_thermal_motion"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleText="@string/main_thermal_motion" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/motion_action_lay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.15"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintHeight_percent="0.15"
+        app:layout_constraintStart_toStartOf="parent">
+
         <Button
             android:id="@+id/motion_btn"
             android:layout_width="0dp"
             android:layout_height="@dimen/app_btn_big_height"
-            android:text="@string/monitor_create_chart"
-            android:textSize="@dimen/app_small_font"
-            android:textColor="#55272F"
             android:background="@drawable/bg_corners05_solid_theme"
+            android:text="@string/monitor_create_chart"
+            android:textColor="#55272F"
+            android:textSize="@dimen/app_small_font"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,11 +42,11 @@
             android:id="@+id/motion_start_btn"
             android:layout_width="0dp"
             android:layout_height="@dimen/app_btn_big_height"
+            android:background="@drawable/bg_corners05_solid_theme"
             android:text="@string/monitor_start"
+            android:textColor="#55272F"
             android:textSize="@dimen/app_small_font"
             android:visibility="gone"
-            android:textColor="#55272F"
-            android:background="@drawable/bg_corners05_solid_theme"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,9 +59,9 @@
         android:name="com.topdon.module.thermal.ir.fragment.IRMonitorThermalFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/motion_action_lay"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_view"
-        app:layout_constraintBottom_toTopOf="@id/motion_action_lay" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

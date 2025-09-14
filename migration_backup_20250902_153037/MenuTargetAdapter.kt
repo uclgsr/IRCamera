@@ -19,9 +19,6 @@ import kotlinx.android.synthetic.main.ui_item_menu_second_view.view.*
 class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((code: Int) -> Unit)? = null
 
-    /**
-     * 设置指定选项的选中状态
-     */
     fun setSelected(
         targetType: TargetType,
         isSelected: Boolean,
@@ -48,13 +45,17 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                 context.getString(R.string.main_tab_first_target),
                 CameraHelp.TYPE_SET_TARGET_MODE,
             ),
-//      ColorBean(R.drawable.ic_menu_second_zoom, context.getString(R.string.main_tab_second_zoom), CameraHelp.TYPE_SET_TARGET_ZOOM),
+
             ColorBean(
                 R.drawable.selector_menu2_target_3_color,
                 context.getString(R.string.main_tab_second_target_color),
                 CameraHelp.TYPE_SET_TARGET_COLOR,
             ),
-            ColorBean(R.drawable.selector_menu2_del, context.getString(R.string.thermal_delete), CameraHelp.TYPE_SET_TARGET_DELETE),
+            ColorBean(
+                R.drawable.selector_menu2_del,
+                context.getString(R.string.thermal_delete),
+                CameraHelp.TYPE_SET_TARGET_DELETE
+            ),
             ColorBean(
                 R.drawable.selector_menu2_target_4_help,
                 context.getString(R.string.main_tab_second_target_help),
@@ -62,10 +63,7 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             ),
         )
 
-    /**
-     * 刷新测量模式图标
-     */
-    fun upCurrentMeasureMode(measureMode: Int)  {
+    fun upCurrentMeasureMode(measureMode: Int) {
         secondBean.clear()
         when (measureMode) {
             ObserveBean.TYPE_MEASURE_PERSON -> {
@@ -77,6 +75,7 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                     ),
                 )
             }
+
             ObserveBean.TYPE_MEASURE_SHEEP -> {
                 secondBean.add(
                     ColorBean(
@@ -86,6 +85,7 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                     ),
                 )
             }
+
             ObserveBean.TYPE_MEASURE_DOG -> {
                 secondBean.add(
                     ColorBean(
@@ -95,6 +95,7 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                     ),
                 )
             }
+
             ObserveBean.TYPE_MEASURE_BIRD -> {
                 secondBean.add(
                     ColorBean(
@@ -120,7 +121,11 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             ),
         )
         secondBean.add(
-            ColorBean(R.drawable.selector_menu2_del, context.getString(R.string.thermal_delete), CameraHelp.TYPE_SET_TARGET_DELETE),
+            ColorBean(
+                R.drawable.selector_menu2_del,
+                context.getString(R.string.thermal_delete),
+                CameraHelp.TYPE_SET_TARGET_DELETE
+            ),
         )
         secondBean.add(
             ColorBean(
@@ -136,7 +141,8 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.ui_item_menu_second_view, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.ui_item_menu_second_view, parent, false)
         return ItemView(view)
     }
 
@@ -173,14 +179,14 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         val name: TextView = itemView.item_menu_tab_text
 
         init {
-//            val canSeeCount = 4.5 //一屏占4个
-//            val with = (ScreenUtils.getScreenWidth() / canSeeCount).toInt()
-            itemView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-//            val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()
-//            val layoutParams = itemView.item_menu_tab_img.layoutParams
-//            layoutParams.width = imageSize
-//            layoutParams.height = imageSize
-//            itemView.item_menu_tab_img.layoutParams = layoutParams
+
+
+            itemView.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+
+
         }
     }
 }

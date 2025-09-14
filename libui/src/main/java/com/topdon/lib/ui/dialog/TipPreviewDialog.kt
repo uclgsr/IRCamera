@@ -19,23 +19,13 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.topdon.lib.core.R
-import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.ui.databinding.DialogTipPreviewBinding
 import com.topdon.lib.ui.widget.IndicateView
 import io.reactivex.disposables.Disposable
 import java.util.Timer
-import kotlin.collections.ArrayList
+import com.topdon.lib.ui.R as UiR
 
-/**
- * Tip preview fragment for thermal imaging components.
- * Handles specific UI sections and user interactions.
- */
-/**
- * TipPreviewDialog displays modal dialog interface for user interaction.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class TipPreviewDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
     private var dis: Disposable? = null
@@ -82,7 +72,6 @@ class TipPreviewDialog : DialogFragment() {
                 getString(R.string.preview_step_2),
             )
 
-        // Initialize views using binding
         checkBox = binding.dialogTipCheck
         imgClose = binding.imgClose
         viewPager = binding.viewPager
@@ -123,9 +112,6 @@ class TipPreviewDialog : DialogFragment() {
         )
     }
 
-    /**
-     * Updates the index with new data.
-     */
     fun updateIndex(position: Int) {
         if (index == position) {
             return
@@ -171,9 +157,7 @@ class TipPreviewDialog : DialogFragment() {
     }
 
     companion object {
-    /**
-     * Executes newinstance functionality.
-     */
+
         fun newInstance(): TipPreviewDialog {
             return TipPreviewDialog()
         }
@@ -191,9 +175,11 @@ class TipPreviewDialog : DialogFragment() {
                 0 -> {
                     PageFragment.newInstance(UiR.drawable.preview_step_1)
                 }
+
                 1 -> {
                     PageFragment.newInstance(UiR.drawable.preview_step_2)
                 }
+
                 else -> {
                     PageFragment.newInstance(UiR.drawable.preview_step_3)
                 }

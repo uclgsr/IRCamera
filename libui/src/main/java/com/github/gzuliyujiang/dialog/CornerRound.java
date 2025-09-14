@@ -13,10 +13,6 @@
 
 package com.github.gzuliyujiang.dialog;
 
-/**
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/9/17 9:58
- */
 public @interface CornerRound {
     int No = 0;
     int Top = 1;

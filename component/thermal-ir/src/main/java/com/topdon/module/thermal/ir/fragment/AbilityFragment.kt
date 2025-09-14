@@ -1,35 +1,28 @@
 package com.topdon.module.thermal.ir.fragment
 
+
 import android.content.Intent
 import android.view.View
 import android.widget.ImageView
-import com.topdon.lib.core.navigation.NavigationManager
-// Removed house module import - module removed as unused
-// import com.topdon.house.activity.HouseHomeActivity
 import com.topdon.lib.core.bean.event.WinterClickEvent
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseFragment
+import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.socket.WebSocketProxy
 import com.topdon.lib.core.tools.DeviceTools
 import com.topdon.lms.sdk.UrlConstant
-// LanguageUtil removed - English only app
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.IRThermalNightActivity
 import com.topdon.module.thermal.ir.activity.IRThermalPlusActivity
 import com.topdon.module.thermal.ir.activity.MonitoryHomeActivity
 import org.greenrobot.eventbus.EventBus
 
-/**
- * Ability fragment for thermal imaging components.
- * Handles specific UI sections and user interactions.
- */
 class AbilityFragment : BaseFragment(), View.OnClickListener {
     private var mIsTC007 = false
 
-    // View references
     private lateinit var ivWinter: ImageView
     private lateinit var viewMonitory: View
     private lateinit var viewHouse: View
@@ -40,7 +33,6 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
     override fun initView() {
         mIsTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
 
-        // Initialize views with findViewById
         ivWinter = requireView().findViewById(R.id.iv_winter)
         viewMonitory = requireView().findViewById(R.id.view_monitory)
         viewHouse = requireView().findViewById(R.id.view_house)
@@ -63,7 +55,7 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
                 val url =
                     if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
                         "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
-                            "languageId=1" // Fixed to English (languageId=1)
+                                "languageId=1" // Fixed to English (languageId=1)
                     } else {
                         "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
                     }
@@ -71,6 +63,7 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
                     .withString(ExtraKeyConfig.URL, url)
                     .navigation(requireContext())
             }
+
             viewMonitory -> { // 温度监控
                 val intent = Intent(requireContext(), MonitoryHomeActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
@@ -78,10 +71,8 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
             }
 
             viewHouse -> { // 房屋检测
-                // Disabled - HouseHomeActivity from removed house module
-                // val intent = Intent(requireContext(), HouseHomeActivity::class.java)
-                // intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
-                // startActivity(intent)
+
+
             }
 
             viewCar -> { // 汽车检测

@@ -9,14 +9,10 @@ import androidx.annotation.NonNull;
 import com.topdon.ble.callback.ScanListener;
 import com.topdon.ble.util.BluetoothPermissionUtils;
 
-/**
- * date: 2020/5/9 16:20
- * author: bichuanfeng
- */
 class ClassicScanner extends AbstractScanner {
     private static final String TAG = "ClassicScanner";
     private boolean stopQuietly = false;
-    
+
     ClassicScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {
         super(easyBle, bluetoothAdapter);
     }
@@ -31,17 +27,17 @@ class ClassicScanner extends AbstractScanner {
         Context context = EasyBLE.getInstance().getContext();
         if (!BluetoothPermissionUtils.hasBluetoothScanPermission(context)) {
             Log.w(TAG, "Missing BLUETOOTH_SCAN permission for startDiscovery()");
-            handleScanCallback(false, null, false, ScanListener.ERROR_LACK_BLUETOOTH_PERMISSION, 
-                "Missing Bluetooth scan permission");
+            handleScanCallback(false, null, false, ScanListener.ERROR_LACK_BLUETOOTH_PERMISSION,
+                    "Missing Bluetooth scan permission");
             return;
         }
-        
+
         try {
             bluetoothAdapter.startDiscovery();
         } catch (SecurityException e) {
             Log.e(TAG, "SecurityException in startDiscovery(): " + e.getMessage());
-            handleScanCallback(false, null, false, ScanListener.ERROR_LACK_BLUETOOTH_PERMISSION, 
-                "Bluetooth permission denied: " + e.getMessage());
+            handleScanCallback(false, null, false, ScanListener.ERROR_LACK_BLUETOOTH_PERMISSION,
+                    "Bluetooth permission denied: " + e.getMessage());
         }
     }
 
@@ -52,7 +48,7 @@ class ClassicScanner extends AbstractScanner {
             Log.w(TAG, "Missing BLUETOOTH_SCAN permission for cancelDiscovery()");
             return;
         }
-        
+
         try {
             bluetoothAdapter.cancelDiscovery();
         } catch (SecurityException e) {

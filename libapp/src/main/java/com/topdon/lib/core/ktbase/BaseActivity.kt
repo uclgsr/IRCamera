@@ -1,8 +1,9 @@
 package com.topdon.lib.core.ktbase
 
-import android.content.*
+import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.os.*
+import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContract
@@ -21,7 +22,8 @@ import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.common.UserInfoManager
 import com.topdon.lib.core.dialog.LoadingDialog
 import com.topdon.lib.core.dialog.TipCameraProgressDialog
-import com.topdon.lib.core.tools.*
+import com.topdon.lib.core.tools.AppLanguageUtils
+import com.topdon.lib.core.tools.ConstantLanguages
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.bean.CommonBean
 import org.greenrobot.eventbus.EventBus
@@ -29,9 +31,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 
-/**
- * Created by admin on 2018/6/4.
- */
 abstract class BaseActivity : AppCompatActivity() {
     val TAG = this.javaClass.simpleName
 
@@ -65,7 +64,12 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(AppLanguageUtils.attachBaseContext(newBase, ConstantLanguages.ENGLISH))
+        super.attachBaseContext(
+            AppLanguageUtils.attachBaseContext(
+                newBase,
+                ConstantLanguages.ENGLISH
+            )
+        )
     }
 
     override fun onStart() {
@@ -92,9 +96,6 @@ abstract class BaseActivity : AppCompatActivity() {
         BaseApplication.instance.activitys.remove(this)
     }
 
-    /**
-     * 监听 USB 连接状态
-     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun getConnectState(event: DeviceConnectEvent) {
         if (event.isConnect) {
@@ -126,14 +127,8 @@ abstract class BaseActivity : AppCompatActivity() {
     protected open fun onSocketDisConnected(isTS004: Boolean) {
     }
 
-    /**
-     * 新版 LMS 风格的加载中弹框.
-     */
     private var loadingDialog: LoadingDialog? = null
 
-    /**
-     * 真是醉了，一个加载中的弹框现在就有 3 种，不管了，继续加，理论上后续都要改成这个.
-     */
     fun showLoadingDialog(
         @StringRes resId: Int = R.string.tip_loading,
     ) {
@@ -148,9 +143,6 @@ abstract class BaseActivity : AppCompatActivity() {
         loadingDialog?.show()
     }
 
-    /**
-     * 真是醉了，一个加载中的弹框现在就有 3 种，不管了，继续加，理论上后续都要改成这个.
-     */
     fun dismissLoadingDialog() {
         loadingDialog?.dismiss()
     }
@@ -172,7 +164,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 cameraDialog?.show()
             }
         } catch (e: Exception) {
-            // 临时捕获方案，后面需求完成后再追踪优化
+
             Log.e("临时处理方案", e.message.toString())
         }
     }
@@ -183,7 +175,6 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    // 同步登录信息
     private fun synLogin() {
         if (this::class.java.simpleName == "MainActivity") {
             LMS.getInstance().syncUserInfo()
@@ -206,7 +197,7 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         } else {
             if (UserInfoManager.getInstance().isLogin()) {
-                // 账号已退出,本地登录状态,需退出操作
+
                 UserInfoManager.getInstance().logout()
             }
         }
@@ -220,7 +211,8 @@ abstract class BaseActivity : AppCompatActivity() {
             input: File,
         ): Intent {
             file = input
-            val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+            val uri =
+                FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
             return Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
         }
 

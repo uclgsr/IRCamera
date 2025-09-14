@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="20dp"
     android:orientation="horizontal"
+    android:paddingHorizontal="20dp"
     tools:background="#16131e">
 
     <TextView
@@ -12,10 +12,10 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:padding="8dp"
         android:gravity="center"
-        android:textSize="11sp"
+        android:padding="8dp"
         android:textColor="#99ffffff"
+        android:textSize="11sp"
         tools:text="湿土" />
 
     <TextView
@@ -23,10 +23,10 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:padding="8dp"
         android:gravity="center"
-        android:textSize="11sp"
+        android:padding="8dp"
         android:textColor="#99ffffff"
+        android:textSize="11sp"
         tools:text="0.95" />
 
 </LinearLayout>

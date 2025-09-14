@@ -18,10 +18,6 @@ import com.csl.irCamera.databinding.ActivityGsrRawImageViewBinding
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import java.io.File
 
-/**
- * GSR RAW Image View Activity
- * Viewer for captured RAW DNG images with metadata display
- */
 class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBinding>() {
     companion object {
         private const val EXTRA_IMAGE_PATH = "image_path"
@@ -66,15 +62,14 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
 
     private fun loadImage() {
         try {
-            // For DNG files, we'll try to load a basic preview
-            // Note: Full DNG processing requires specialized libraries like Adobe DNG SDK
+
+
             val options =
                 BitmapFactory.Options().apply {
                     inJustDecodeBounds = true
                 }
             BitmapFactory.decodeFile(imagePath, options)
 
-            // Calculate sample size to fit screen
             val screenWidth = resources.displayMetrics.widthPixels
             val screenHeight = resources.displayMetrics.heightPixels
             val sampleSize = calculateInSampleSize(options, screenWidth, screenHeight)
@@ -86,7 +81,7 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
             if (bitmap != null) {
                 binding.rawImageView.setImageBitmap(bitmap)
             } else {
-                // If DNG can't be decoded directly, show a placeholder
+
                 binding.rawImageView.setImageResource(R.drawable.ic_camera_alt)
                 showDNGMessage()
             }
@@ -140,7 +135,6 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
                 java.util.Locale.getDefault(),
             ).format(java.util.Date(imageFile.lastModified()))
 
-        // Parse filename for capture info
         val filename = imageFile.nameWithoutExtension
         val captureNumber = filename.substringAfterLast("_", "Unknown")
 
@@ -185,18 +179,22 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
                 onBackPressedDispatcher.onBackPressed()
                 true
             }
+
             R.id.action_share -> {
                 shareImage()
                 true
             }
+
             R.id.action_export -> {
                 exportImage()
                 true
             }
+
             R.id.action_info -> {
                 showDetailedInfo()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -220,19 +218,23 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
     }
 
     private fun exportImage() {
-        // Implement RAW image export functionality
+
         try {
             val sourceFile = imageFile
             if (sourceFile.exists()) {
-                val exportDir = File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "GSR_Export")
+                val exportDir =
+                    File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "GSR_Export")
                 exportDir.mkdirs()
 
                 val exportFile = File(exportDir, "exported_${sourceFile.name}")
                 sourceFile.copyTo(exportFile, overwrite = true)
 
-                Toast.makeText(this, "RAW image exported to: ${exportFile.absolutePath}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "RAW image exported to: ${exportFile.absolutePath}",
+                    Toast.LENGTH_LONG
+                ).show()
 
-                // Also share the file
                 val uri = FileProvider.getUriForFile(this, "$packageName.fileprovider", exportFile)
                 val shareIntent =
                     Intent(Intent.ACTION_SEND).apply {
@@ -248,7 +250,7 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
             Log.e("GSRRawImageView", "Error exporting RAW image", e)
             Toast.makeText(this, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
         }
-        // Could offer options to export as JPEG, TIFF, or keep as DNG
+
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Export RAW Image")
             .setMessage("RAW image export functionality will be implemented in a future update.")
@@ -257,13 +259,12 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
     }
 
     private fun showDetailedInfo() {
-        // Extract EXIF data from DNG file using ExifInterface
+
         val exifData =
             try {
                 val exifInterface = ExifInterface(imageFile.absolutePath)
                 val info = StringBuilder()
 
-                // Core EXIF data
                 exifInterface.getAttribute(ExifInterface.TAG_MAKE)?.let {
                     info.append("Camera: $it\n")
                 }
@@ -274,7 +275,6 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
                     info.append("Date: $it\n")
                 }
 
-                // Technical details
                 exifInterface.getAttribute(ExifInterface.TAG_EXPOSURE_TIME)?.let {
                     info.append("Exposure: $it\n")
                 }
@@ -285,9 +285,10 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
                     info.append("ISO: $it\n")
                 }
 
-                // Image dimensions - use getAttribute and convert to int
-                val width = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)?.toIntOrNull() ?: 0
-                val height = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH)?.toIntOrNull() ?: 0
+                val width =
+                    exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)?.toIntOrNull() ?: 0
+                val height =
+                    exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH)?.toIntOrNull() ?: 0
                 if (width > 0 && height > 0) {
                     info.append("Dimensions: ${width}x${height}\n")
                 }

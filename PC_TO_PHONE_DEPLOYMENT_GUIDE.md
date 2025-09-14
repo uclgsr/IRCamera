@@ -2,13 +2,15 @@
 
 ## 🎯 System Overview
 
-The PC-to-phone control system provides comprehensive remote control capabilities between a PC Controller (hub) and Android devices (spokes). This guide covers complete setup and deployment.
+The PC-to-phone control system provides comprehensive remote control capabilities between a PC
+Controller (hub) and Android devices (spokes). This guide covers complete setup and deployment.
 
 ## ✅ System Status
 
 ### **Implemented Components**
 
 **Android Side (Phone):**
+
 - ✅ NetworkClient with mDNS discovery and secure TLS connections
 - ✅ MainActivity integration with real-time network status indicators
 - ✅ RecordingService for background operation and remote control
@@ -20,6 +22,7 @@ The PC-to-phone control system provides comprehensive remote control capabilitie
 - ✅ Health monitoring with 30-second heartbeat intervals
 
 **PC Side (Controller):**
+
 - ✅ Complete PC controller with Python-based GUI application
 - ✅ NetworkServer with TLS/SSL security and certificate management
 - ✅ mDNS/Zeroconf device discovery service
@@ -28,6 +31,7 @@ The PC-to-phone control system provides comprehensive remote control capabilitie
 - ✅ Integration with existing PC controller infrastructure
 
 ### **Advanced Features**
+
 - ✅ Enterprise-grade connection management and error recovery
 - ✅ Interactive diagnostics with performance metrics
 - ✅ Sync flash implementation for temporal alignment
@@ -74,12 +78,14 @@ python3 src/main.py
 If automatic discovery fails, use manual connection:
 
 ### **Android Side:**
+
 1. Tap the network status bar in the app
-2. Select "Manual Connection" 
+2. Select "Manual Connection"
 3. Enter PC IP address (e.g., 192.168.1.100)
 4. Tap "Connect"
 
 ### **Find PC IP Address:**
+
 ```bash
 # Windows
 ipconfig | findstr "IPv4"
@@ -110,8 +116,9 @@ python3 end_to_end_validation.py
 ```
 
 This validates:
+
 - Network protocol compatibility
-- PC server capability  
+- PC server capability
 - Android connection simulation
 - Time synchronization accuracy
 - Remote recording commands
@@ -122,6 +129,7 @@ This validates:
 ## 📋 Protocol Specification
 
 ### **Message Format**
+
 All communication uses JSON over TCP on port 8080:
 
 ```json
@@ -140,13 +148,15 @@ All communication uses JSON over TCP on port 8080:
 ### **Supported Commands**
 
 **PC → Android:**
+
 - `session_start` - Start recording session
-- `session_stop` - Stop recording session  
+- `session_stop` - Stop recording session
 - `sync_flash` - Trigger synchronization flash
 - `time_sync` - Time synchronization request
 - `heartbeat` - Connection health check
 
 **Android → PC:**
+
 - `device_connect` - Device registration
 - `session_started` - Recording started confirmation
 - `session_stopped` - Recording stopped confirmation
@@ -164,12 +174,14 @@ All communication uses JSON over TCP on port 8080:
 ## 🎛️ Connection Management
 
 ### **Auto-Reconnection Strategy**
+
 - Initial retry: 5 seconds
 - Exponential backoff: 5s → 10s → 20s → 40s → 60s (max)
 - Maximum attempts: 10 before requiring manual intervention
 - Health monitoring: 30-second heartbeat intervals
 
 ### **Fallback Strategies**
+
 1. **Secure TLS connection** (primary)
 2. **Non-secure connection** (development)
 3. **Network discovery scan** (subnet-wide search)
@@ -178,11 +190,13 @@ All communication uses JSON over TCP on port 8080:
 ## 📊 Monitoring and Diagnostics
 
 ### **Network Status Indicators**
+
 - **Gray**: Disconnected/Searching
 - **Yellow**: Connecting/Attempting
 - **Green**: Connected and operational
 
 ### **Performance Metrics**
+
 - Connection latency
 - Message throughput
 - CPU and memory usage
@@ -190,7 +204,9 @@ All communication uses JSON over TCP on port 8080:
 - Connection uptime/downtime
 
 ### **Status Reports**
+
 Access comprehensive system diagnostics:
+
 1. Tap network status bar
 2. Select "Status Report"
 3. View detailed system information
@@ -202,6 +218,7 @@ Access comprehensive system diagnostics:
 
 **Problem**: Android app shows "Disconnected" status
 **Solutions**:
+
 1. Verify both devices on same WiFi network
 2. Check firewall settings (allow port 8080)
 3. Try manual IP connection
@@ -209,6 +226,7 @@ Access comprehensive system diagnostics:
 
 **Problem**: "Connection Refused" error
 **Solutions**:
+
 1. Ensure PC controller is running first
 2. Check PC firewall settings
 3. Verify correct IP address
@@ -218,6 +236,7 @@ Access comprehensive system diagnostics:
 
 **Problem**: High latency or slow response
 **Solutions**:
+
 1. Check WiFi signal strength
 2. Reduce network traffic from other devices
 3. Use 5GHz WiFi band instead of 2.4GHz
@@ -227,6 +246,7 @@ Access comprehensive system diagnostics:
 
 **Problem**: Remote recording doesn't start
 **Solutions**:
+
 1. Check Android app permissions (camera, microphone, storage)
 2. Verify recording service is bound
 3. Check device storage space
@@ -235,6 +255,7 @@ Access comprehensive system diagnostics:
 ## 📱 Device Requirements
 
 ### **Android Device:**
+
 - Android 8.0+ (API level 26+)
 - 4GB RAM recommended
 - WiFi connectivity
@@ -242,6 +263,7 @@ Access comprehensive system diagnostics:
 - Storage: 2GB+ available space
 
 ### **PC Controller:**
+
 - Python 3.8+
 - PyQt6 for GUI
 - 2GB RAM minimum
@@ -251,6 +273,7 @@ Access comprehensive system diagnostics:
 ## 🔄 Update Process
 
 ### **Android App Updates:**
+
 ```bash
 # Build new version
 ./gradlew :app:assembleRelease
@@ -260,6 +283,7 @@ adb install -r app/build/outputs/apk/release/app-release.apk
 ```
 
 ### **PC Controller Updates:**
+
 ```bash
 # Update dependencies
 pip install -r requirements.txt --upgrade
@@ -273,23 +297,27 @@ python3 src/main.py
 ### **Enable Debug Logging**
 
 **Android:**
+
 1. Go to app settings
 2. Enable "Developer Mode"
 3. Set logging level to "Debug"
 
 **PC Controller:**
+
 ```bash
 # Run with debug logging
 PYTHONPATH=src python3 -m ircamera_pc.main --debug
 ```
 
 ### **Export Debug Information**
+
 1. Tap network status bar
 2. Select "Status Report"
 3. Tap "Copy to Clipboard"
 4. Share with support team
 
 ### **Log File Locations**
+
 - **Android**: `/Android/data/com.csl.irCamera/files/logs/`
 - **PC**: `./pc-controller/logs/`
 
@@ -310,7 +338,7 @@ The PC-to-phone control system is successfully deployed when:
 
 - ✅ Android app connects to PC controller automatically
 - ✅ Remote recording sessions can be started and stopped
-- ✅ Sync flash works for temporal alignment  
+- ✅ Sync flash works for temporal alignment
 - ✅ Connection recovery works after network interruptions
 - ✅ Performance metrics show <50ms latency
 - ✅ System operates reliably for extended periods (30+ minutes)

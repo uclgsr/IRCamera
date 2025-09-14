@@ -3,26 +3,16 @@ package com.topdon.tc001.sync
 import android.content.Context
 import android.util.Log
 import com.topdon.tc001.logging.StructuredLogger
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.math.*
 
-/**
- * Enhanced Time Synchronization Service - Phase 2 Implementation
- *
- * Provides sub-millisecond precision time synchronization between PC and Android devices
- * with statistical analysis, clock drift compensation, and continuous synchronization.
- *
- * Features:
- * - Multi-round synchronization with statistical accuracy (target: ±0.5ms)
- * - Network latency measurement and compensation
- * - Clock drift detection and correction
- * - Continuous background synchronization
- * - Quality metrics and validation
- */
 class EnhancedTimeSyncService(
     private val context: Context,
     private val logger: StructuredLogger,
@@ -83,9 +73,6 @@ class EnhancedTimeSyncService(
         UNKNOWN,
     }
 
-    /**
-     * Start continuous time synchronization service
-     */
     fun start(onSyncCompleted: (SyncResult) -> Unit) {
         if (isRunning.get()) {
             Log.w(TAG, "Time sync service already running")
@@ -97,7 +84,12 @@ class EnhancedTimeSyncService(
 
         syncJob.set(
             GlobalScope.launch {
-                logger.log(StructuredLogger.LogLevel.INFO, "EnhancedTimeSyncService", "service_started", emptyMap())
+                logger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "EnhancedTimeSyncService",
+                    "service_started",
+                    emptyMap()
+                )
 
                 try {
                     // Initial synchronization with more rounds for accuracy
@@ -129,9 +121,6 @@ class EnhancedTimeSyncService(
         Log.i(TAG, "Enhanced time synchronization service started")
     }
 
-    /**
-     * Get current synchronized time in nanoseconds
-     */
     fun getSynchronizedTime(): Long {
         val localTime = System.nanoTime()
         val offset = currentOffset.get()
@@ -140,9 +129,6 @@ class EnhancedTimeSyncService(
         return localTime + offset + drift
     }
 
-    /**
-     * Get diagnostic information
-     */
     fun getDiagnostics(): JSONObject {
         return JSONObject().apply {
             put("is_running", isRunning.get())
@@ -159,7 +145,8 @@ class EnhancedTimeSyncService(
     private suspend fun performSynchronization(
         rounds: Int,
         isInitial: Boolean,
-    ) { /* ... */ }
+    ) { /* ... */
+    }
 
     private fun calculateCurrentDrift(): Long = 0L
 }

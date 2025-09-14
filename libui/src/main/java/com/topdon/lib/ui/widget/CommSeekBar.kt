@@ -8,24 +8,9 @@ import androidx.appcompat.widget.AppCompatSeekBar
 import kotlin.math.roundToInt
 import com.topdon.lib.ui.R as UiR
 
-/**
- * 支持竖向的 SeekBar。
- * 暂不支持 thumbOffset.
- */
-/**
- * Comm seek bar utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
-/**
- * CommSeekBar manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class CommSeekBar : AppCompatSeekBar {
-    /**
-     * 0-横向 1-竖向
-     */
+
     private val orientation: Int
 
     private var mMaxWidth = 48
@@ -40,13 +25,26 @@ class CommSeekBar : AppCompatSeekBar {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        val typedArray = context.obtainStyledAttributes(attrs, UiR.styleable.CommSeekBar, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        val typedArray =
+            context.obtainStyledAttributes(attrs, UiR.styleable.CommSeekBar, defStyleAttr, 0)
         orientation = typedArray.getInt(UiR.styleable.CommSeekBar_android_orientation, 0)
-        mMaxWidth = typedArray.getDimensionPixelSize(UiR.styleable.CommSeekBar_android_maxWidth, mMaxWidth)
-        mMaxHeight = typedArray.getDimensionPixelSize(UiR.styleable.CommSeekBar_android_maxHeight, mMaxHeight)
-        mMinWidth = typedArray.getDimensionPixelSize(UiR.styleable.CommSeekBar_android_minWidth, mMinWidth)
-        mMinHeight = typedArray.getDimensionPixelSize(UiR.styleable.CommSeekBar_android_minHeight, mMinHeight)
+        mMaxWidth =
+            typedArray.getDimensionPixelSize(UiR.styleable.CommSeekBar_android_maxWidth, mMaxWidth)
+        mMaxHeight = typedArray.getDimensionPixelSize(
+            UiR.styleable.CommSeekBar_android_maxHeight,
+            mMaxHeight
+        )
+        mMinWidth =
+            typedArray.getDimensionPixelSize(UiR.styleable.CommSeekBar_android_minWidth, mMinWidth)
+        mMinHeight = typedArray.getDimensionPixelSize(
+            UiR.styleable.CommSeekBar_android_minHeight,
+            mMinHeight
+        )
 
         typedArray.recycle()
     }
@@ -122,9 +120,6 @@ class CommSeekBar : AppCompatSeekBar {
         }
     }
 
-    /**
-     * Calculates drawable based on input parameters.
-     */
     private fun calculateDrawable(
         w: Int,
         h: Int,
@@ -157,7 +152,12 @@ class CommSeekBar : AppCompatSeekBar {
             val reviseLeft =
                 left.coerceAtLeast(thumbHeight / 2 + 0.5f)
                     .coerceAtMost(paddingHeight - thumbHeight / 2 - 0.5f).toInt()
-            thumb.setBounds(reviseLeft, thumbTopOffset, reviseLeft + thumbHeight, thumbTopOffset + thumbWidth)
+            thumb.setBounds(
+                reviseLeft,
+                thumbTopOffset,
+                reviseLeft + thumbHeight,
+                thumbTopOffset + thumbWidth
+            )
         }
     }
 
@@ -187,15 +187,18 @@ class CommSeekBar : AppCompatSeekBar {
                 trackTouchEvent(event)
                 onSeekBarChangeListener?.onStartTrackingTouch(this)
             }
+
             MotionEvent.ACTION_MOVE -> {
                 trackTouchEvent(event)
             }
+
             MotionEvent.ACTION_UP -> {
                 isPressed = false
                 trackTouchEvent(event)
                 invalidate()
                 onSeekBarChangeListener?.onStopTrackingTouch(this)
             }
+
             MotionEvent.ACTION_CANCEL -> {
                 isPressed = false
                 invalidate()
@@ -206,9 +209,6 @@ class CommSeekBar : AppCompatSeekBar {
         return true
     }
 
-    /**
-     * 通过级别分层进行粘性处理
-     */
     fun stopTrackTouchLevel() {
         if (level > 0) {
             val newLevel = (progress.toFloat() / 100 * 4).roundToInt()
@@ -216,9 +216,6 @@ class CommSeekBar : AppCompatSeekBar {
         }
     }
 
-    /**
-     * Handles touch gesture events.
-     */
     private fun trackTouchEvent(event: MotionEvent) {
         val y = event.y.roundToInt()
         progress =

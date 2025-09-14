@@ -54,18 +54,8 @@ abstract class BaseApplication : Application() {
     var activitys = arrayListOf<Activity>()
     var hasOtgShow = false // otg提示只出现一次
 
-    /**
-     * 获取软件encoding.
-     */
     abstract fun getSoftWareCode(): String
 
-    /**
-     * 是否国内渠道。
-     *
-     * 国内渠道一些逻辑不同，如国内渠道可以应用内升级，权限申请前有提示弹窗等。
-     * 根据 2024/8/27 邮件结论，“热视界和电小搭其实没有形成销售，可以不用维护。”
-     * @return true-国内渠道 false-非国内渠道
-     */
     abstract fun isDomestic(): Boolean
 
     override fun onCreate() {
@@ -83,7 +73,7 @@ abstract class BaseApplication : Application() {
 
     open fun initWebSocket() {
         connectWebSocket()
-        // 注册网络变更广播 - using modern network callback for Android 10+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkRequest =
@@ -105,7 +95,7 @@ abstract class BaseApplication : Application() {
                 },
             )
         } else {
-            // Fallback for older Android versions - use modern Intent filter approach
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 registerReceiver(
                     NetworkChangedReceiver(),
@@ -116,7 +106,10 @@ abstract class BaseApplication : Application() {
                 )
             } else {
                 @Suppress("DEPRECATION")
-                registerReceiver(NetworkChangedReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+                registerReceiver(
+                    NetworkChangedReceiver(),
+                    IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+                )
             }
         }
     }
@@ -140,10 +133,6 @@ abstract class BaseApplication : Application() {
         WebSocketProxy.getInstance().stopWebSocket()
     }
 
-    /**
-     * 解析socket消息
-     * @param msgJson
-     */
     private fun parserSocketMessage(msgJson: String) {
         if (TextUtils.isEmpty(msgJson)) return
         EventBus.getDefault().post(SocketMsgEvent(msgJson))
@@ -176,7 +165,12 @@ abstract class BaseApplication : Application() {
                 val url = "http://192.168.40.1:8080/DCIM/${fileBean.name}"
                 val file = File(FileConfig.ts004GalleryDir, fileBean.name)
                 TS004Repository.download(url, file)
-                MediaScannerConnection.scanFile(this@BaseApplication, arrayOf(FileConfig.ts004GalleryDir), null, null)
+                MediaScannerConnection.scanFile(
+                    this@BaseApplication,
+                    arrayOf(FileConfig.ts004GalleryDir),
+                    null,
+                    null
+                )
             }
         }
     }
@@ -187,9 +181,9 @@ abstract class BaseApplication : Application() {
             intent: Intent?,
         ) {
             if (intent?.action == "android.net.conn.CONNECTIVITY_CHANGE") {
-                val manager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val manager =
+                    context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-                // Use modern API for Android M+ (API 23+)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     val activeNetwork = manager.activeNetwork
                     val capabilities = manager.getNetworkCapabilities(activeNetwork)
@@ -200,7 +194,7 @@ abstract class BaseApplication : Application() {
                         Log.i("WebSocket", "WiFi network connected: $activeNetwork")
                     }
                 } else {
-                    // Fallback for API < 23 (Android 6.0)
+
                     @Suppress("DEPRECATION")
                     val activeNetwork = manager.activeNetworkInfo
                     @Suppress("DEPRECATION")
@@ -213,9 +207,6 @@ abstract class BaseApplication : Application() {
         }
     }
 
-    /**
-     * settingswebview的android9以上系统的多进程兼容性处理
-     */
     @RequiresApi(api = 28)
     open fun webviewSetPath(context: Context?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -237,7 +228,6 @@ abstract class BaseApplication : Application() {
         return null
     }
 
-    // clear无用数据
     fun clearDb() {
         GlobalScope.launch(Dispatchers.Default) {
             try {
@@ -249,7 +239,7 @@ abstract class BaseApplication : Application() {
     }
 
     open fun onLanguageChange() {
-        // Always set and use English
+
         val locale = AppLanguageUtils.getLocaleByLanguage(ConstantLanguages.ENGLISH)
         LanguageUtils.applyLanguage(locale)
         SharedManager.setLanguage(baseContext, ConstantLanguages.ENGLISH)
@@ -260,9 +250,6 @@ abstract class BaseApplication : Application() {
         return ConstantLanguages.ENGLISH
     }
 
-    /**
-     * 退出所有
-     */
     fun exitAll() {
         hasOtgShow = false
         activitys.forEach {

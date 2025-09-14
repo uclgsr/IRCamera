@@ -3,13 +3,21 @@ package com.topdon.lib.core.socket
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import okhttp3.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import okio.ByteString
 import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.locks.ReentrantLock
 
-class WsManager(private val wsUrl: String, private val okHttpClient: OkHttpClient, private val statusListener: IWebSocketListener) {
+class WsManager(
+    private val wsUrl: String,
+    private val okHttpClient: OkHttpClient,
+    private val statusListener: IWebSocketListener
+) {
     companion object {
         private const val NORMAL_CLOSE_CODE = 1000
         private const val ABNORMAL_CLOSE_CODE = 1001
@@ -32,7 +40,6 @@ class WsManager(private val wsUrl: String, private val okHttpClient: OkHttpClien
                 mWebSocket = webSocket
                 status = State.CONNECTED
 
-                // 开始定时发送心跳
                 heartBeatTimer?.cancel()
                 heartBeatTimer = HeartBeatTimer(this@WsManager)
                 heartBeatTimer?.timeoutListener = {
@@ -117,7 +124,10 @@ class WsManager(private val wsUrl: String, private val okHttpClient: OkHttpClien
     @Synchronized
     fun startConnect() {
         if (status == State.CONNECTING || status == State.CONNECTED) { // 连接中或已连接
-            Log.w("WebSocket", "${if (status == State.CONNECTING) "连接中" else "已连接"} startConnect() 重复调用")
+            Log.w(
+                "WebSocket",
+                "${if (status == State.CONNECTING) "连接中" else "已连接"} startConnect() 重复调用"
+            )
             return
         }
         status = State.CONNECTING
@@ -220,7 +230,10 @@ class WsManager(private val wsUrl: String, private val okHttpClient: OkHttpClien
                                 lastHeartBeatTime = currentTime
                             } else {
                                 val isSuccess = wsManager.sendMessage(heartBeatMsg)
-                                Log.v("WebSocket", "--> 发送心跳消息 ${if (isSuccess) "成功" else "失败"}")
+                                Log.v(
+                                    "WebSocket",
+                                    "--> 发送心跳消息 ${if (isSuccess) "成功" else "失败"}"
+                                )
                             }
                         }
                     }
@@ -232,14 +245,9 @@ class WsManager(private val wsUrl: String, private val okHttpClient: OkHttpClien
     }
 
     abstract class IWebSocketListener : WebSocketListener() {
-        /**
-         * 返回要发送的心跳消息，null 则不发送.
-         */
+
         abstract fun onHeartBeat(): String?
 
-        /**
-         * 心跳超时处理.
-         */
         abstract fun onHeartBeatTimeout()
     }
 

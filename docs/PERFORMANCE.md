@@ -2,50 +2,54 @@
 
 ## 🚀 Enterprise Performance Overview
 
-The IRCamera platform is engineered for **enterprise-grade high-performance thermal imaging** with real-time processing capabilities, cloud integration, ML/AI inference, and massive scalability. This guide provides comprehensive optimization strategies, advanced benchmarking information, and production deployment performance guidelines.
+The IRCamera platform is engineered for **enterprise-grade high-performance thermal imaging** with
+real-time processing capabilities, cloud integration, ML/AI inference, and massive scalability. This
+guide provides comprehensive optimization strategies, advanced benchmarking information, and
+production deployment performance guidelines.
 
 ## 📊 Enterprise System Performance Benchmarks
 
 ### 🔥 Advanced Thermal Processing Performance
 
-| Component | Processing Time | Throughput | Memory Usage | GPU Acceleration | Enterprise Features |
-|-----------|----------------|------------|--------------|------------------|-------------------|
-| **🔥 thermal-ir** | 8ms/frame | 120 FPS | 25MB | ✅ CUDA Support | Multi-camera sync |
-| **⚡ thermal-lite** | 4ms/frame | 250 FPS | 12MB | ✅ OpenCL | Edge optimization |
-| **🔬 libir Core** | 2ms/frame | 500 FPS | 8MB | ✅ GPU Compute | SIMD optimization |
-| **🏢 HIKVision Enterprise** | 6ms/frame | 160 FPS | 18MB | ✅ Professional GPU | Enterprise calibration |
-| **☁️ Cloud Processing** | 50ms/frame | 20 FPS | 5MB | ✅ Cloud GPU | Distributed processing |
-| **🤖 ML Inference** | 12ms/frame | 80 FPS | 35MB | ✅ TensorRT | Real-time AI |
+| Component                   | Processing Time | Throughput | Memory Usage | GPU Acceleration   | Enterprise Features    |
+|-----------------------------|-----------------|------------|--------------|--------------------|------------------------|
+| **🔥 thermal-ir**           | 8ms/frame       | 120 FPS    | 25MB         | ✅ CUDA Support     | Multi-camera sync      |
+| **⚡ thermal-lite**          | 4ms/frame       | 250 FPS    | 12MB         | ✅ OpenCL           | Edge optimization      |
+| **🔬 libir Core**           | 2ms/frame       | 500 FPS    | 8MB          | ✅ GPU Compute      | SIMD optimization      |
+| **🏢 HIKVision Enterprise** | 6ms/frame       | 160 FPS    | 18MB         | ✅ Professional GPU | Enterprise calibration |
+| **☁️ Cloud Processing**     | 50ms/frame      | 20 FPS     | 5MB          | ✅ Cloud GPU        | Distributed processing |
+| **🤖 ML Inference**         | 12ms/frame      | 80 FPS     | 35MB         | ✅ TensorRT         | Real-time AI           |
 
 ### 🧬 Advanced GSR Processing Performance
 
-| Metric | Shimmer3 BLE | PC Serial | Enterprise Cloud | Optimization Strategy |
-|--------|-------------|-----------|------------------|----------------------|
-| **⚡ Latency** | 5ms | 2ms | 25ms | Ultra-low latency mode |
-| **📊 Throughput** | 1024 Hz | 2048 Hz | 512 Hz | Hardware + cloud optimization |
-| **🔋 Battery Life** | 48 hours | N/A | N/A | Advanced power management |
-| **📡 Data Rate** | 8KB/s | 32KB/s | 4KB/s | Intelligent compression |
-| **🤖 ML Processing** | 128 Hz | 512 Hz | 256 Hz | Edge + cloud ML |
-| **☁️ Cloud Sync** | Real-time | Real-time | Native | Enterprise synchronization |
+| Metric               | Shimmer3 BLE | PC Serial | Enterprise Cloud | Optimization Strategy         |
+|----------------------|--------------|-----------|------------------|-------------------------------|
+| **⚡ Latency**        | 5ms          | 2ms       | 25ms             | Ultra-low latency mode        |
+| **📊 Throughput**    | 1024 Hz      | 2048 Hz   | 512 Hz           | Hardware + cloud optimization |
+| **🔋 Battery Life**  | 48 hours     | N/A       | N/A              | Advanced power management     |
+| **📡 Data Rate**     | 8KB/s        | 32KB/s    | 4KB/s            | Intelligent compression       |
+| **🤖 ML Processing** | 128 Hz       | 512 Hz    | 256 Hz           | Edge + cloud ML               |
+| **☁️ Cloud Sync**    | Real-time    | Real-time | Native           | Enterprise synchronization    |
 
 ### 🏢 Enterprise Scalability Benchmarks
 
-| Scale Metric | Single Device | Multi-Device | Enterprise Cluster | Cloud Deployment |
-|--------------|---------------|--------------|-------------------|------------------|
-| **📱 Concurrent Users** | 1 | 16 | 1000+ | Unlimited |
-| **🔥 Thermal Streams** | 1 | 8 | 500+ | Auto-scaling |
-| **🧬 GSR Sensors** | 1 | 32 | 2000+ | IoT integration |
-| **💾 Data Throughput** | 10MB/s | 80MB/s | 10GB/s | Enterprise storage |
-| **⚡ Processing Latency** | 10ms | 25ms | 50ms | Distributed processing |
-| **☁️ Cloud Bandwidth** | 5Mbps | 40Mbps | 10Gbps | Enterprise networking |
+| Scale Metric             | Single Device | Multi-Device | Enterprise Cluster | Cloud Deployment       |
+|--------------------------|---------------|--------------|--------------------|------------------------|
+| **📱 Concurrent Users**  | 1             | 16           | 1000+              | Unlimited              |
+| **🔥 Thermal Streams**   | 1             | 8            | 500+               | Auto-scaling           |
+| **🧬 GSR Sensors**       | 1             | 32           | 2000+              | IoT integration        |
+| **💾 Data Throughput**   | 10MB/s        | 80MB/s       | 10GB/s             | Enterprise storage     |
+| **⚡ Processing Latency** | 10ms          | 25ms         | 50ms               | Distributed processing |
+| **☁️ Cloud Bandwidth**   | 5Mbps         | 40Mbps       | 10Gbps             | Enterprise networking  |
 
 ## 🔧 Enterprise Optimization Strategies
 
 ### 📱 Android Enterprise Thermal Processing
 
 #### Real-Time Optimization
+
 ```kotlin
-// Optimize thermal processing for real-time performance
+
 class OptimizedThermalProcessor {
     private val threadPool = ThreadPoolExecutor(
         Runtime.getRuntime().availableProcessors(),
@@ -56,7 +60,7 @@ class OptimizedThermalProcessor {
     
     suspend fun processFrame(thermalData: ByteArray): ThermalFrame {
         return withContext(Dispatchers.Default) {
-            // Parallel processing for thermal analysis
+
             val deferred = async { processTemperatureMatrix(thermalData) }
             val colorMap = async { generateColorMap(thermalData) }
             
@@ -71,8 +75,9 @@ class OptimizedThermalProcessor {
 ```
 
 #### Memory Optimization
+
 ```kotlin
-// Memory-efficient thermal data handling
+
 class MemoryOptimizedThermalBuffer {
     private val bufferPool = LinkedBlockingQueue<ByteArray>()
     private val maxPoolSize = 10
@@ -92,6 +97,7 @@ class MemoryOptimizedThermalBuffer {
 ### PC Controller Optimization
 
 #### Multi-Threading Performance
+
 ```python
 import concurrent.futures
 import asyncio
@@ -132,14 +138,14 @@ class OptimizedDataProcessor:
 ### Android Performance Profiling
 
 #### GPU Profiling
+
 ```kotlin
-// GPU performance monitoring for thermal rendering
+
 class GPUProfiler {
     fun profileThermalRendering(context: Context) {
         val glProfiler = GLProfiler.create()
         glProfiler.startProfiling()
-        
-        // Render thermal frames
+
         renderThermalFrames()
         
         val stats = glProfiler.stopProfiling()
@@ -150,15 +156,15 @@ class GPUProfiler {
 ```
 
 #### CPU Profiling
+
 ```kotlin
-// CPU performance analysis
+
 class CPUProfiler {
     fun profileThermalProcessing() {
         val startTime = System.nanoTime()
         val startMemory = Runtime.getRuntime().totalMemory() - 
                          Runtime.getRuntime().freeMemory()
-        
-        // Process thermal data
+
         processThermalData()
         
         val endTime = System.nanoTime()
@@ -174,6 +180,7 @@ class CPUProfiler {
 ### PC Controller Benchmarking
 
 #### Throughput Testing
+
 ```python
 import time
 import psutil
@@ -230,13 +237,14 @@ class PerformanceBenchmark:
 ### 1. Thermal Data Processing
 
 #### Fast Thermal Calibration
+
 ```kotlin
-// Optimized thermal calibration algorithm
+
 class FastThermalCalibrator {
     private val calibrationLUT = FloatArray(65536) // Pre-computed lookup table
     
     fun initializeCalibration() {
-        // Pre-compute calibration values for all possible raw values
+
         for (i in 0 until 65536) {
             calibrationLUT[i] = computeTemperature(i.toShort())
         }
@@ -249,8 +257,9 @@ class FastThermalCalibrator {
 ```
 
 #### Parallel Thermal Analysis
+
 ```kotlin
-// Multi-threaded thermal analysis
+
 class ParallelThermalAnalyzer {
     fun analyzeFrame(thermalData: ByteArray): ThermalAnalysis {
         val width = 384
@@ -276,6 +285,7 @@ class ParallelThermalAnalyzer {
 ### 2. GSR Signal Processing
 
 #### Real-Time Filtering
+
 ```python
 from scipy import signal
 import numpy as np
@@ -306,6 +316,7 @@ class OptimizedGSRProcessor:
 ### 3. Network Optimization
 
 #### Efficient Data Compression
+
 ```python
 import zstd
 import pickle
@@ -368,6 +379,7 @@ class PerformanceDashboard:
 ### Common Performance Issues
 
 #### High CPU Usage
+
 ```python
 def diagnose_cpu_usage():
     """Diagnose and resolve high CPU usage"""
@@ -389,20 +401,19 @@ def diagnose_cpu_usage():
 ```
 
 #### Memory Leaks
+
 ```kotlin
-// Memory leak detection and prevention
+
 class MemoryLeakDetector {
     private val heapMonitor = HeapMonitor()
     
     fun detectLeaks(): List<String> {
         val issues = mutableListOf<String>()
-        
-        // Check for thermal buffer leaks
+
         if (heapMonitor.getThermalBufferCount() > 100) {
             issues.add("Thermal buffer leak detected")
         }
-        
-        // Check for GSR data accumulation
+
         if (heapMonitor.getGSRDataSize() > 50 * 1024 * 1024) { // 50MB
             issues.add("GSR data not being processed/cleared")
         }
@@ -415,6 +426,7 @@ class MemoryLeakDetector {
 ## 📋 Performance Optimization Checklist
 
 ### Android Optimization
+
 - [ ] Enable GPU acceleration for thermal rendering
 - [ ] Implement buffer pooling for thermal data
 - [ ] Use background threads for processing
@@ -423,6 +435,7 @@ class MemoryLeakDetector {
 - [ ] Profile GPU and CPU usage regularly
 
 ### PC Controller Optimization
+
 - [ ] Implement asynchronous data processing
 - [ ] Use efficient data structures (NumPy arrays)
 - [ ] Enable multiprocessing for CPU-intensive tasks
@@ -431,6 +444,7 @@ class MemoryLeakDetector {
 - [ ] Monitor memory usage and garbage collection
 
 ### System-Wide Optimization
+
 - [ ] Minimize data transfer frequency
 - [ ] Implement smart caching strategies
 - [ ] Use connection pooling for network operations
@@ -441,6 +455,7 @@ class MemoryLeakDetector {
 ## 🚀 Advanced Performance Features
 
 ### Adaptive Quality Control
+
 ```python
 class AdaptiveQualityController:
     def __init__(self):
@@ -459,4 +474,6 @@ class AdaptiveQualityController:
         return self.current_quality
 ```
 
-This performance optimization guide provides comprehensive strategies for maximizing the efficiency and responsiveness of the IRCamera thermal imaging platform across all components and deployment scenarios.
+This performance optimization guide provides comprehensive strategies for maximizing the efficiency
+and responsiveness of the IRCamera thermal imaging platform across all components and deployment
+scenarios.

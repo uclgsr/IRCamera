@@ -21,15 +21,7 @@ import com.topdon.lib.core.databinding.DialogCarDetectBinding
 import com.topdon.lib.core.databinding.ItemCarDetectChildLayoutBinding
 import com.topdon.lib.core.databinding.ItemCarDetectLayoutBinding
 
-/**
- * 汽车检测类型拾取弹框.
- */
-/**
- * CarDetectDialog displays modal dialog interface for user interaction.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean) -> Unit)) :
     Dialog(context, R.style.DefaultDialog) {
     private lateinit var binding: DialogCarDetectBinding
@@ -246,7 +238,11 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
             parent: ViewGroup,
             viewType: Int,
         ): RecyclerView.ViewHolder {
-            val binding = ItemCarDetectLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val binding = ItemCarDetectLayoutBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
             return ItemView(binding)
         }
 
@@ -276,7 +272,7 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 var selectCarDetect = SharedManager.getCarDetectInfo()
                 carDetects.forEachIndexed { index, carDetectBean ->
                     carDetectBean.detectChildBeans.forEachIndexed { childIndex, carDetectChildBean ->
-                        // Intentionally check for null to provide default selection
+
                         if (selectCarDetect == null) {
                             carDetectChildBean.isSelected = (index == 0 && childIndex == 0)
                         } else {
@@ -294,18 +290,13 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
             return carDetects.size
         }
 
-        inner class ItemView(private val binding: ItemCarDetectLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+        inner class ItemView(private val binding: ItemCarDetectLayoutBinding) :
+            RecyclerView.ViewHolder(binding.root) {
             val tvTitle: TextView = binding.tvTitle
             val rcyDetectChild: RecyclerView = binding.rcyDetectChild
         }
     }
 
-/**
- * CarDetectChildAdapter provides data binding between data source and UI components.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
     class CarDetectChildAdapter(
         val context: Context,
         private var carChildDetects: List<CarDetectChildBean>,
@@ -317,7 +308,11 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
             parent: ViewGroup,
             viewType: Int,
         ): RecyclerView.ViewHolder {
-            val binding = ItemCarDetectChildLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val binding = ItemCarDetectChildLayoutBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
             return ItemView(binding)
         }
 
@@ -343,7 +338,8 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
             return carChildDetects.size
         }
 
-        inner class ItemView(private val binding: ItemCarDetectChildLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+        inner class ItemView(private val binding: ItemCarDetectChildLayoutBinding) :
+            RecyclerView.ViewHolder(binding.root) {
             val rlyParent: RelativeLayout = binding.rlyParent
             val tvTitle: TextView = binding.tvName
             val ivSelectState: ImageView = binding.ivSelectState

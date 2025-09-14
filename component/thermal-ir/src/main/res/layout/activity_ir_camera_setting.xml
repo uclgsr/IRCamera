@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/black">
+    android:background="@color/black"
+    android:orientation="vertical">
 
     <com.topdon.lib.core.view.TitleView
         android:id="@+id/title_view"
@@ -30,8 +30,8 @@
                 android:background="#16131e"
                 android:orientation="horizontal"
                 android:padding="20dp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
@@ -44,12 +44,12 @@
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switch_delay"
+                    style="@style/cameraSetSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/cameraSetSwitch"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent" />
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,13 +57,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
                 android:background="#16131e"
-                app:layout_constraintStart_toStartOf="parent"
+                android:paddingStart="15dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="15dp"
+                android:paddingBottom="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ly_auto"
                 tools:visibility="visible">
 
@@ -81,12 +81,12 @@
                     android:id="@+id/bar_pick_view_time"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:max="30"
                     android:paddingTop="20dp"
                     android:paddingBottom="20dp"
-                    android:max="30"
                     app:barMin="5"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_auto" />
 
                 <TextView
@@ -115,12 +115,12 @@
                     android:id="@+id/bar_pick_view_count"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:max="10"
                     android:paddingTop="20dp"
                     android:paddingBottom="20dp"
-                    android:max="10"
                     app:barMin="2"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_auto_number" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -128,15 +128,16 @@
                 android:id="@+id/ly_watermark"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginTop="10dp"
                 android:background="#16131e"
                 android:orientation="horizontal"
                 android:padding="20dp"
-                app:layout_goneMarginTop="0dp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_delay_more">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_delay_more"
+                app:layout_goneMarginTop="0dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -147,12 +148,12 @@
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switch_watermark"
+                    style="@style/cameraSetSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/cameraSetSwitch"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent" />
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -162,11 +163,11 @@
                 android:layout_marginTop="10dp"
                 android:background="#16131e"
                 android:paddingStart="15dp"
-                android:paddingEnd="15dp"
                 android:paddingTop="10dp"
+                android:paddingEnd="15dp"
                 android:paddingBottom="20dp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ly_watermark">
 
                 <TextView
@@ -190,8 +191,8 @@
                     android:paddingTop="8dp"
                     android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
-                    android:textColorHint="#80ffffff"
                     android:textColor="@color/white"
+                    android:textColorHint="#80ffffff"
                     android:textSize="@dimen/app_font"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -220,8 +221,8 @@
                     android:paddingTop="8dp"
                     android:paddingEnd="20dp"
                     android:paddingBottom="8dp"
-                    android:textColorHint="#80ffffff"
                     android:textColor="@color/white"
+                    android:textColorHint="#80ffffff"
                     android:textSize="@dimen/app_font"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -248,8 +249,8 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="15dp"
                 android:paddingBottom="10dp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_watermark_more">
 
                 <TextView

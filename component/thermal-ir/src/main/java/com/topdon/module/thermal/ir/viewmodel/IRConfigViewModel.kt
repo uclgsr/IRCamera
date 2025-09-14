@@ -10,25 +10,15 @@ import com.topdon.module.thermal.ir.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/**
- * Custom I r config view model view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 class IRConfigViewModel(application: Application) : AndroidViewModel(application) {
     val configLiveData = SingleLiveEvent<ModelBean>()
 
-    /**
-// 读取configurationdata
-     */
     fun getConfig(isTC007: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             configLiveData.postValue(ConfigRepository.read(isTC007))
         }
     }
 
-    /**
-// update默认parameter中的ambient temperature，单位摄氏度。
-     */
     fun updateDefaultEnvironment(
         isTC007: Boolean,
         environment: Float,
@@ -41,9 +31,6 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /**
-// update默认parameter中的距离，单位不详。
-     */
     fun updateDefaultDistance(
         isTC007: Boolean,
         distance: Float,
@@ -56,9 +43,6 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /**
-// update默认parameter中的emissivity。
-     */
     fun updateDefaultRadiation(
         isTC007: Boolean,
         radiation: Float,
@@ -71,9 +55,6 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /**
-// 增加一个自定义模式
-     */
     fun addConfig(isTC007: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             val modelBean = configLiveData.value ?: ConfigRepository.read(isTC007)
@@ -92,8 +73,8 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
-// 选择模式
-// @param id 0:默认模式   > 0 采用自定义模式
+
+
      */
     fun checkConfig(
         isTC007: Boolean,
@@ -111,8 +92,8 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
-// 删除自定义模式
-// @param id 自定义模式 id
+
+
      */
     fun deleteConfig(
         isTC007: Boolean,
@@ -133,7 +114,6 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
                 }
             }
 
-// BUG 28055 提的问题，删除后要把后面名称往前补，虽然实际使用非常怪，先按 BUG 改吧
             if (removeAt < modelBean.myselfModel.size) {
                 for (i in removeAt until modelBean.myselfModel.size) {
                     val dataBean = modelBean.myselfModel[i]
@@ -147,9 +127,6 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /**
-// update一项自定义parameter.
-     */
     fun updateCustom(
         isTC007: Boolean,
         dataBean: DataBean,

@@ -8,24 +8,24 @@ import com.energy.irutilslibrary.LibIRParse;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Created by fengjibo on 2023/8/16.
- */
 public class CommonUtil {
     public static final String TAG = "CommonUtil";
+    public static int mCount = 0;
+    private static long mTimeStart = 0;
+    private static double mFps = 0;
 
     public static byte[] getAssetData(Context mContext, String assetTauName) {
         byte[] tau_data = null;
-        //
+
         AssetManager am = mContext.getAssets();
         InputStream is = null;
         try {
-// 根据不同的high/low gainload不同的等效大气透过率表
+
             is = am.open(assetTauName);
             int lenth = is.available();
             tau_data = new byte[lenth];
             if (is.read((tau_data)) != lenth) {
-                // "read file fail "
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,10 +73,6 @@ public class CommonUtil {
         return Math.round(value * factor) / factor;
     }
 
-// frame率展示
-    public static int mCount = 0;
-    private static long mTimeStart = 0;
-    private static double mFps = 0;
     public static double showFps() {
         mCount++;
         if (mCount == 100) {

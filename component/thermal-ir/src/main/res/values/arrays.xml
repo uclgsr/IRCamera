@@ -5,7 +5,7 @@
         <item>Option 2</item>
         <item>Option 3</item>
     </string-array>
-    
+
     <string-array name="currency">
         <item>$</item>
         <item>€</item>

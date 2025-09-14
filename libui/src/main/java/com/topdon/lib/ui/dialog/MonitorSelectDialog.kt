@@ -12,30 +12,15 @@ import com.topdon.lib.ui.databinding.DialogMonitorSelectBinding
  * 提示窗
  * create by fylder on 2018/6/15
  **/
-/**
- * MonitorSelectDialog(context: class
- */
-/**
- * Monitor select dialog for thermal imaging user interaction.
- * Provides specialized input and configuration interfaces.
- */
+
+
 class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
-    /**
-     * Builder(private class
-     */
-/**
- * Builder dialog for thermal imaging user interaction.
- * Provides specialized input and configuration interfaces.
- */
+
+
     class Builder(private val context: Context) {
-        /**
-         * 是否处于第 1 步.
-         */
+
         private var isFirstStep = true
 
-        /**
-         * currentselected的监控类型 1-点 2-线 3-面.
-         */
         private var monitorType = 0
 
         private var positiveClickListener: ((select: Int) -> Unit)? = null
@@ -53,7 +38,8 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
             dialog.setContentView(binding.root)
 
             val lp = dialog.window!!.attributes
-            lp.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() // settings宽度
+            lp.width =
+                (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() // settings宽度
             dialog.window!!.attributes = lp
 
             binding.btnConfirmOrBack.setOnClickListener {
@@ -66,7 +52,8 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
                     binding.clFirstStep.visibility = View.INVISIBLE
                     binding.clSecondStep.visibility = View.VISIBLE
                     binding.tvTitle.text = context.getString(R.string.select_monitor_type_step2)
-                    binding.btnConfirmOrBack.text = context.getString(R.string.select_monitor_return)
+                    binding.btnConfirmOrBack.text =
+                        context.getString(R.string.select_monitor_return)
                 } else { // 步骤2->步骤1 逻辑为“返回”
                     isFirstStep = true
                     binding.btnCancel.visibility = View.GONE

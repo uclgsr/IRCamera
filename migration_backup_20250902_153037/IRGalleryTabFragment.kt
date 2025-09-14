@@ -16,30 +16,12 @@ import com.topdon.module.thermal.ir.viewmodel.IRGalleryTabViewModel
 import kotlinx.android.synthetic.main.fragment_gallery_tab.*
 import org.greenrobot.eventbus.EventBus
 
-/**
- * 图库 Tab 页，下分图片和视频.
- *
- * 需要传递参数：
- * - [ExtraKeyConfig.HAS_BACK_ICON] - 图库是否有返回箭头，默认 false
- * - [ExtraKeyConfig.CAN_SWITCH_DIR] - 图库是否可切换 有线设备、TS004、TC007 目录，默认 true
- * - [ExtraKeyConfig.DIR_TYPE] - 进入图库时初始的目录类型 具体取值由 [DirType] 定义
- *
- * Created by chenggeng.lin on 2023/11/14.
- */
 class IRGalleryTabFragment : BaseFragment() {
-    /**
-     * 从上一界面传递过来的，图库是否有返回箭头
-     */
+
     private var hasBackIcon = false
 
-    /**
-     * 从上一界面传递过来的，图库是否可切换 有线设备、TS004、TC007 目录
-     */
     private var canSwitchDir = true
 
-    /**
-     * 从上一界面传递过来的，进入图库时初始的目录类型
-     */
     private var currentDirType = DirType.LINE
 
     private val viewModel: IRGalleryTabViewModel by activityViewModels()
@@ -118,7 +100,12 @@ class IRGalleryTabFragment : BaseFragment() {
             tab_layout.isVisible = !isEditMode
             view_pager2.isUserInputEnabled = !isEditMode
             if (isEditMode) {
-                title_view.setTitleText(getString(R.string.chosen_item, viewModel.selectSizeLD.value))
+                title_view.setTitleText(
+                    getString(
+                        R.string.chosen_item,
+                        viewModel.selectSizeLD.value
+                    )
+                )
                 tv_title_dir.isVisible = false
             } else {
                 title_view.setTitleText(if (canSwitchDir) "" else getString(R.string.app_gallery))

@@ -18,87 +18,76 @@ namespace libyuv {
 extern "C" {
 #endif
 
-// Supported filtering.
 typedef enum FilterMode {
-  kFilterNone = 0,      // Point sample; Fastest.
-  kFilterLinear = 1,    // Filter horizontally only.
-  kFilterBilinear = 2,  // Faster than box, but lower quality scaling down.
-  kFilterBox = 3        // Highest quality.
+    kFilterNone = 0,      // Point sample; Fastest.
+    kFilterLinear = 1,    // Filter horizontally only.
+    kFilterBilinear = 2,  // Faster than box, but lower quality scaling down.
+    kFilterBox = 3        // Highest quality.
 } FilterModeEnum;
 
-// Scale a YUV plane.
 LIBYUV_API
-void ScalePlane(const uint8_t* src,
+void ScalePlane(const uint8_t *src,
                 int src_stride,
                 int src_width,
                 int src_height,
-                uint8_t* dst,
+                uint8_t *dst,
                 int dst_stride,
                 int dst_width,
                 int dst_height,
                 enum FilterMode filtering);
 
 LIBYUV_API
-void ScalePlane_16(const uint16_t* src,
+void ScalePlane_16(const uint16_t *src,
                    int src_stride,
                    int src_width,
                    int src_height,
-                   uint16_t* dst,
+                   uint16_t *dst,
                    int dst_stride,
                    int dst_width,
                    int dst_height,
                    enum FilterMode filtering);
 
-// Scales a YUV 4:2:0 image from the src width and height to the
-// dst width and height.
-// If filtering is kFilterNone, a simple nearest-neighbor algorithm is
-// used. This produces basic (blocky) quality at the fastest speed.
-// If filtering is kFilterBilinear, interpolation is used to produce a better
-// quality image, at the expense of speed.
-// If filtering is kFilterBox, averaging is used to produce ever better
-// quality image, at further expense of speed.
-// Returns 0 if successful.
 
 LIBYUV_API
-int I420Scale(const uint8_t* src_y,
+int I420Scale(const uint8_t *src_y,
               int src_stride_y,
-              const uint8_t* src_u,
+              const uint8_t *src_u,
               int src_stride_u,
-              const uint8_t* src_v,
+              const uint8_t *src_v,
               int src_stride_v,
               int src_width,
               int src_height,
-              uint8_t* dst_y,
+              uint8_t *dst_y,
               int dst_stride_y,
-              uint8_t* dst_u,
+              uint8_t *dst_u,
               int dst_stride_u,
-              uint8_t* dst_v,
+              uint8_t *dst_v,
               int dst_stride_v,
               int dst_width,
               int dst_height,
               enum FilterMode filtering);
 
 LIBYUV_API
-int I420Scale_16(const uint16_t* src_y,
+int I420Scale_16(const uint16_t *src_y,
                  int src_stride_y,
-                 const uint16_t* src_u,
+                 const uint16_t *src_u,
                  int src_stride_u,
-                 const uint16_t* src_v,
+                 const uint16_t *src_v,
                  int src_stride_v,
                  int src_width,
                  int src_height,
-                 uint16_t* dst_y,
+                 uint16_t *dst_y,
                  int dst_stride_y,
-                 uint16_t* dst_u,
+                 uint16_t *dst_u,
                  int dst_stride_u,
-                 uint16_t* dst_v,
+                 uint16_t *dst_v,
                  int dst_stride_v,
                  int dst_width,
                  int dst_height,
                  enum FilterMode filtering);
 
 #ifdef __cplusplus
-// Legacy API.  Deprecated.
+
 LIBYUV_API
 int Scale(const uint8_t* src_y,
           const uint8_t* src_u,
@@ -118,7 +107,6 @@ int Scale(const uint8_t* src_y,
           int dst_height,
           LIBYUV_BOOL interpolate);
 
-// For testing, allow disabling of specialized scalers.
 LIBYUV_API
 void SetUseReferenceImpl(LIBYUV_BOOL use);
 #endif  // __cplusplus

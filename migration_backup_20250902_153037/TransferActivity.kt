@@ -26,11 +26,6 @@ import java.util.Enumeration
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 
-/**
- * 相册迁移，由老 TC001 APP 调起，当前 APP 本身并不使用.
- *
- * Created by LCG on 2024/3/28.
- */
 class TransferActivity : BaseActivity() {
     private lateinit var transferDialog: TransferDialog
 
@@ -47,9 +42,6 @@ class TransferActivity : BaseActivity() {
     override fun initData() {
     }
 
-    /**
-     * 请求文件或图片读取权限.
-     */
     private fun requestPermission() {
         XXPermissions.with(this)
             .permission(if (applicationInfo.targetSdkVersion < 33) Permission.READ_EXTERNAL_STORAGE else Permission.READ_MEDIA_IMAGES)
@@ -87,9 +79,6 @@ class TransferActivity : BaseActivity() {
             )
     }
 
-    /**
-     * 开始执行迁移流程.
-     */
     private fun startTransfer() {
         val oldGalleryList: Array<File>? = File(FileConfig.oldTc001GalleryDir).listFiles()
 
@@ -101,7 +90,12 @@ class TransferActivity : BaseActivity() {
             window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             transferIrFiles()
             transferImgFile()
-            MediaScannerConnection.scanFile(this@TransferActivity, arrayOf(FileConfig.lineGalleryDir), null, null)
+            MediaScannerConnection.scanFile(
+                this@TransferActivity,
+                arrayOf(FileConfig.lineGalleryDir),
+                null,
+                null
+            )
             window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
             transferDialog.dismiss()
@@ -109,9 +103,6 @@ class TransferActivity : BaseActivity() {
         }
     }
 
-    /**
-     * 从 Intent 中获取 Uri 并解压缩迁移的 ir 文件.
-     */
     private suspend fun transferIrFiles() {
         withContext(Dispatchers.IO) {
             val irZipFile: File = UriUtils.uri2File(intent.data) ?: return@withContext
@@ -150,12 +141,10 @@ class TransferActivity : BaseActivity() {
         }
     }
 
-    /**
-     * 迁移旧图库图片到新图库.
-     */
     private suspend fun transferImgFile() {
         withContext(Dispatchers.IO) {
-            val oldGalleryList: Array<File> = File(FileConfig.oldTc001GalleryDir).listFiles() ?: return@withContext
+            val oldGalleryList: Array<File> =
+                File(FileConfig.oldTc001GalleryDir).listFiles() ?: return@withContext
             oldGalleryList.forEach {
                 val newFile = File(FileConfig.lineGalleryDir, it.name)
                 if (newFile.exists()) {

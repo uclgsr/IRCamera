@@ -6,15 +6,12 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.fragment.IRMonitorThermalFragment
 
 /**
-// des:单光infrared拍照
+
  * author: CaiSongL
  * date: 2024/8/24 18:10
  **/
-// Legacy ARouter route annotation - now using NavigationManager
-/**
- * Image pick i r activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
+
 class ImagePickIRActivity : BasePickImgActivity() {
     var irFragment: IRMonitorThermalFragment? = null
 

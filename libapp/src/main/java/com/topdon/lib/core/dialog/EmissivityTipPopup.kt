@@ -74,7 +74,8 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
 
     fun build(): PopupWindow {
         if (popupWindow == null) {
-            binding.tvEnvironmentTitle.text = context.getString(R.string.thermal_config_environment) + ":"
+            binding.tvEnvironmentTitle.text =
+                context.getString(R.string.thermal_config_environment) + ":"
             binding.tvDistanceTitle.text = context.getString(R.string.thermal_config_distance) + ":"
 
             binding.tvTitle.visibility = View.GONE
@@ -87,8 +88,10 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
             binding.dialogTipCancelBtn.visibility = View.GONE
             binding.dialogTipSuccessBtn.text = context.getString(R.string.tc_modify_params)
             binding.dialogTipCheck.visibility = View.GONE
-            binding.tvEmissivity.text = "${context?.getString(R.string.thermal_config_radiation)}: ${
-                NumberTools.to02(radiation)}"
+            binding.tvEmissivity.text =
+                "${context?.getString(R.string.thermal_config_radiation)}: ${
+                    NumberTools.to02(radiation)
+                }"
             binding.tvEnvironmentValue.text = UnitTools.showC(environment)
             binding.tvDistanceValue.text = "${NumberTools.to02(distance)}m"
             popupWindow =
@@ -110,7 +113,7 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
                 dismiss()
             }
         }
-        // 设置PopupWindow的其他属性和监听器...
+
         return popupWindow!!
     }
 

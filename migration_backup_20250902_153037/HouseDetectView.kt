@@ -24,29 +24,14 @@ import com.topdon.lms.sdk.weiget.TToast
 import kotlinx.android.synthetic.main.item_report_add_default.view.*
 import kotlinx.android.synthetic.main.item_report_add_head.view.*
 
-/**
- * 检测界面执行检测的列表自定义 View.
- *
- * Created by LCG on 2024/8/24.
- */
 @SuppressLint("NotifyDataSetChanged")
-/**
- * HouseDetectView class for thermal imaging functionality.
- */
+
 class HouseDetectView : FrameLayout {
-    /**
-     * 所有目录列表，仅用于全部收起及全部展开调用.
-     */
+
     private var dirList: ArrayList<DirDetect> = ArrayList()
 
-    /**
-     * 目录+项目拆开的列表.
-     */
     private val dataList: ArrayList<Any> = ArrayList()
 
-    /**
-     * 当前展示的标题在 [dataList] 中的 position
-     */
     private var currentPosition: Int = 0
 
     private val adapter = MyAdapter()
@@ -60,9 +45,19 @@ class HouseDetectView : FrameLayout {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
@@ -80,7 +75,13 @@ class HouseDetectView : FrameLayout {
         recyclerView.isVisible = true
 
         addView(recyclerView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        addView(titleView, titleView.layoutParams ?: LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
+        addView(
+            titleView,
+            titleView.layoutParams ?: LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT
+            )
+        )
 
         titleView.setOnClickListener {
             adapter.switchExpand(currentPosition)
@@ -95,49 +96,22 @@ class HouseDetectView : FrameLayout {
         }
     }
 
-    /**
-     * 指定 position 位置的目录复制事件监听.
-     */
     var onDirCopyListener: ((pair: Pair<Int, DirDetect>) -> Unit)? = null
 
-    /**
-     * 指定 position 位置的项目复制事件监听.
-     */
     var onItemCopyListener: ((pair: Pair<Int, ItemDetect>) -> Unit)? = null
 
-    /**
-     * 指定 position 位置的项目删除事件监听.
-     */
     var onItemDelListener: ((pair: Pair<Int, ItemDetect>) -> Unit)? = null
 
-    /**
-     * 某个 item 的添加图片按钮点击事件监听.
-     */
     var onImageAddListener: ((layoutIndex: Int, v: View, item: ItemDetect) -> Unit)? = null
 
-    /**
-     * 某个 item 的输入文字按钮点击事件监听.
-     */
     var onTextInputListener: ((pair: Pair<Int, ItemDetect>) -> Unit)? = null
 
-    /**
-     * 一个目录发生变更事件(3种状态数量变更)监听.
-     */
     var onDirChangeListener: ((dirDetect: DirDetect) -> Unit)? = null
 
-    /**
-     * 一个目录展开或收起变更事件监听.
-     */
     var onDirExpandListener: ((isExpand: Boolean) -> Unit)? = null
 
-    /**
-     * 一个项目发生变更(3种状态变更、图片删除)事件监听.
-     */
     var onItemChangeListener: ((itemDetect: ItemDetect) -> Unit)? = null
 
-    /**
-     * 使用指定的目录列表刷新界面，默认所有目录处于收起状态
-     */
     fun refresh(newList: ArrayList<DirDetect>) {
         this.dirList = newList
         titleView.isVisible = newList.isNotEmpty()
@@ -151,9 +125,6 @@ class HouseDetectView : FrameLayout {
         adapter.notifyDataSetChanged()
     }
 
-    /**
-     * notifyDirInsert function implementation.
-     */
     fun notifyDirInsert(
         position: Int,
         dirDetect: DirDetect,
@@ -161,16 +132,16 @@ class HouseDetectView : FrameLayout {
         if (dirDetect.isExpand) { // 在展开状态执行复制
             dataList.add(position + dirDetect.itemList.size + 1, dirDetect)
             dataList.addAll(position + dirDetect.itemList.size + 2, dirDetect.itemList)
-            adapter.notifyItemRangeInserted(position + dirDetect.itemList.size + 1, dirDetect.itemList.size + 1)
+            adapter.notifyItemRangeInserted(
+                position + dirDetect.itemList.size + 1,
+                dirDetect.itemList.size + 1
+            )
         } else {
             dataList.add(position + 1, dirDetect)
             adapter.notifyItemInserted(position + 1)
         }
     }
 
-    /**
-     * notifyItemInsert function implementation.
-     */
     fun notifyItemInsert(
         position: Int,
         itemDetect: ItemDetect,
@@ -190,9 +161,6 @@ class HouseDetectView : FrameLayout {
         }
     }
 
-    /**
-     * notifyItemRemove function implementation.
-     */
     fun notifyItemRemove(
         position: Int,
         itemDetect: ItemDetect,
@@ -220,16 +188,10 @@ class HouseDetectView : FrameLayout {
         }
     }
 
-    /**
-     * notifyItemChange function implementation.
-     */
     fun notifyItemChange(position: Int) {
         adapter.notifyItemChanged(position)
     }
 
-    /**
-     * 展开所有目录
-     */
     fun expandAllDir() {
         dataList.clear()
         for (dir in dirList) {
@@ -240,9 +202,6 @@ class HouseDetectView : FrameLayout {
         adapter.notifyDataSetChanged()
     }
 
-    /**
-     * 收起所有目录
-     */
     fun retractAllDir() {
         dataList.clear()
         for (dir in dirList) {
@@ -253,9 +212,7 @@ class HouseDetectView : FrameLayout {
     }
 
     private inner class MyAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        /**
-         * 切换 position 处目录的展开收起状态
-         */
+
         fun switchExpand(position: Int) {
             val dirDetect: DirDetect = dataList[position] as DirDetect
             dirDetect.isExpand = !dirDetect.isExpand
@@ -268,9 +225,6 @@ class HouseDetectView : FrameLayout {
             onDirExpandListener?.invoke(dirDetect.isExpand)
         }
 
-        /**
-         * refreshDir function implementation.
-         */
         fun refreshDir(
             dirView: View,
             dirDetect: DirDetect,
@@ -288,16 +242,23 @@ class HouseDetectView : FrameLayout {
             }
         }
 
-        override fun getItemViewType(position: Int): Int = if (dataList[position] is DirDetect) 0 else 1
+        override fun getItemViewType(position: Int): Int =
+            if (dataList[position] is DirDetect) 0 else 1
 
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
         ): RecyclerView.ViewHolder {
             return if (viewType == 0) {
-                HeadViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_report_add_head, parent, false))
+                HeadViewHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_report_add_head, parent, false)
+                )
             } else {
-                ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_report_add_default, parent, false))
+                ItemViewHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_report_add_default, parent, false)
+                )
             }
         }
 
@@ -327,7 +288,11 @@ class HouseDetectView : FrameLayout {
                 holder.itemView.iv_del_image3.isVisible = itemDetect.image3.isNotEmpty()
                 holder.itemView.iv_image4.isVisible = itemDetect.image4.isNotEmpty()
                 holder.itemView.iv_del_image4.isVisible = itemDetect.image4.isNotEmpty()
-                holder.itemView.tv_image_count_tips.text = SpanBuilder(itemDetect.getImageSize().toString()).appendColor("/4", 0x80ffffff.toInt())
+                holder.itemView.tv_image_count_tips.text =
+                    SpanBuilder(itemDetect.getImageSize().toString()).appendColor(
+                        "/4",
+                        0x80ffffff.toInt()
+                    )
                 if (itemDetect.image1.isNotEmpty()) {
                     Glide.with(context).load(itemDetect.image1).into(holder.itemView.iv_image1)
                 }
@@ -427,7 +392,12 @@ class HouseDetectView : FrameLayout {
                 rootView.tv_item_add_text.setOnClickListener { // 添加文字
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
-                        onTextInputListener?.invoke(Pair(position, dataList[position] as ItemDetect))
+                        onTextInputListener?.invoke(
+                            Pair(
+                                position,
+                                dataList[position] as ItemDetect
+                            )
+                        )
                     }
                 }
                 rootView.tv_item_copy.setOnClickListener {
@@ -495,10 +465,6 @@ class HouseDetectView : FrameLayout {
                 context.startActivity(intent)
             }
 
-            /**
-             * 执行一张图片删除处理
-             * @param imageNum 第几张图片，取值`[1,4]`
-             */
             private fun handleImageDel(imageNum: Int) {
                 val position = bindingAdapterPosition
                 if (position == RecyclerView.NO_POSITION) {
@@ -512,9 +478,6 @@ class HouseDetectView : FrameLayout {
         }
     }
 
-    /**
-     * 从指定 itemPosition 处，往上遍历查找该 item 对应的 Dir position.
-     */
     private fun findDirPosition(itemPosition: Int): Int {
         for (i in itemPosition downTo 0) {
             if (dataList[i] is DirDetect) {
@@ -540,8 +503,11 @@ class HouseDetectView : FrameLayout {
             if (seeFirstPosition == RecyclerView.NO_POSITION || seeFirstPosition >= dataList.size) {
                 return
             }
-            // notify 后旧 currentPosition 已不准确，需要刷新
-            currentPosition = if (dataList[seeFirstPosition] is DirDetect) seeFirstPosition else findDirPosition(seeFirstPosition)
+
+            currentPosition =
+                if (dataList[seeFirstPosition] is DirDetect) seeFirstPosition else findDirPosition(
+                    seeFirstPosition
+                )
             titleView.translationY = 0f
             adapter.refreshDir(titleView, dataList[currentPosition] as DirDetect)
             onScrollListener.onScrolled(recyclerView, 0, 0)
@@ -565,7 +531,6 @@ class HouseDetectView : FrameLayout {
                 return
             }
 
-            // 刷新 currentPosition
             if (currentPosition != seeFirstPosition) {
                 if (dataList[seeFirstPosition] is DirDetect) {
                     currentPosition = seeFirstPosition
@@ -580,7 +545,6 @@ class HouseDetectView : FrameLayout {
                 }
             }
 
-            // 刷新 titleView 背景
             /*if ((dataList[currentPosition] as DirDetect).isExpand) {
                 if (dataList[seeFirstPosition] is ItemDetect && dataList[seeFirstPosition + 1] is DirDetect) {
                     titleView.view_bg_dir.setBackgroundResource(R.drawable.bg_corners10_solid_23202e)
@@ -594,7 +558,6 @@ class HouseDetectView : FrameLayout {
                 titleView.view_bg_dir.setBackgroundResource(R.drawable.bg_corners10_solid_23202e)
             }
 
-            // 刷新 titleView 位置
             if (dataList[seeFirstPosition + 1] is DirDetect) { // 第1个可见的item为尾部
                 val nextView: View? = layoutManager.findViewByPosition(seeFirstPosition + 1)
                 if (nextView != null) {

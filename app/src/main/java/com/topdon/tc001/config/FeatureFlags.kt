@@ -4,22 +4,16 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 
-/**
- * Feature flags configuration for PC-to-phone communication system
- * Phase 0 implementation - Baseline & guardrails
- */
 object FeatureFlags {
     private const val TAG = "FeatureFlags"
     private const val PREFS_NAME = "pc_to_phone_features"
 
-    // Feature flag keys
     private const val KEY_COMM_USE_WSS = "COMM_USE_WSS"
     private const val KEY_TLS_ENABLE = "TLS_ENABLE"
     private const val KEY_MDNS_ENABLE = "MDNS_ENABLE"
     private const val KEY_FILE_UPLOAD_PROTOCOL = "FILE_UPLOAD_PROTOCOL"
     private const val KEY_TIME_SYNC_MODE = "TIME_SYNC_MODE"
 
-    // Default values - Phase 1: Enable WSS by default
     private const val DEFAULT_COMM_USE_WSS = true // Phase 1: Enable WebSocket Secure by default
     private const val DEFAULT_TLS_ENABLE = true
     private const val DEFAULT_MDNS_ENABLE = true
@@ -28,51 +22,29 @@ object FeatureFlags {
 
     private var prefs: SharedPreferences? = null
 
-    /**
-     * Initialize feature flags system
-     */
     fun initialize(context: Context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         Log.i(TAG, "Feature flags initialized with defaults")
         logCurrentConfiguration()
     }
 
-    /**
-     * WebSocket Secure communication flag
-     * Phase 0: false (TCP), Phase 1: true (WSS)
-     */
     val COMM_USE_WSS: Boolean
         get() = prefs?.getBoolean(KEY_COMM_USE_WSS, DEFAULT_COMM_USE_WSS) ?: DEFAULT_COMM_USE_WSS
 
-    /**
-     * TLS encryption enable flag
-     */
     val TLS_ENABLE: Boolean
         get() = prefs?.getBoolean(KEY_TLS_ENABLE, DEFAULT_TLS_ENABLE) ?: DEFAULT_TLS_ENABLE
 
-    /**
-     * mDNS/Zeroconf discovery enable flag
-     */
     val MDNS_ENABLE: Boolean
         get() = prefs?.getBoolean(KEY_MDNS_ENABLE, DEFAULT_MDNS_ENABLE) ?: DEFAULT_MDNS_ENABLE
 
-    /**
-     * File upload protocol selection
-     * Options: "tcp", "http", "websocket"
-     */
     val FILE_UPLOAD_PROTOCOL: String
-        get() = prefs?.getString(KEY_FILE_UPLOAD_PROTOCOL, DEFAULT_FILE_UPLOAD_PROTOCOL) ?: DEFAULT_FILE_UPLOAD_PROTOCOL
+        get() = prefs?.getString(KEY_FILE_UPLOAD_PROTOCOL, DEFAULT_FILE_UPLOAD_PROTOCOL)
+            ?: DEFAULT_FILE_UPLOAD_PROTOCOL
 
-    /**
-     * Time synchronization mode
-     * Options: "ntp", "manual", "disabled"
-     */
     val TIME_SYNC_MODE: String
-        get() = prefs?.getString(KEY_TIME_SYNC_MODE, DEFAULT_TIME_SYNC_MODE) ?: DEFAULT_TIME_SYNC_MODE
+        get() = prefs?.getString(KEY_TIME_SYNC_MODE, DEFAULT_TIME_SYNC_MODE)
+            ?: DEFAULT_TIME_SYNC_MODE
 
-    /**
-     * Set feature flag values (for testing and dynamic configuration)
-     */
     fun setCommUseWSS(enabled: Boolean) {
         prefs?.edit()?.putBoolean(KEY_COMM_USE_WSS, enabled)?.apply()
         Log.i(TAG, "COMM_USE_WSS set to $enabled")
@@ -98,9 +70,6 @@ object FeatureFlags {
         Log.i(TAG, "TIME_SYNC_MODE set to $mode")
     }
 
-    /**
-     * Get all feature flags as a map
-     */
     fun getAllFlags(): Map<String, Any> {
         return mapOf(
             KEY_COMM_USE_WSS to COMM_USE_WSS,
@@ -111,18 +80,12 @@ object FeatureFlags {
         )
     }
 
-    /**
-     * Reset all flags to defaults
-     */
     fun resetToDefaults() {
         prefs?.edit()?.clear()?.apply()
         Log.i(TAG, "Feature flags reset to defaults")
         logCurrentConfiguration()
     }
 
-    /**
-     * Log current configuration for debugging
-     */
     private fun logCurrentConfiguration() {
         val flags = getAllFlags()
         Log.i(TAG, "Current feature flag configuration:")
@@ -131,23 +94,17 @@ object FeatureFlags {
         }
     }
 
-    /**
-     * Validate configuration consistency
-     */
     fun validateConfiguration(): List<String> {
         val warnings = mutableListOf<String>()
 
-        // WSS requires TLS
         if (COMM_USE_WSS && !TLS_ENABLE) {
             warnings.add("COMM_USE_WSS=true but TLS_ENABLE=false - WebSocket Secure requires TLS")
         }
 
-        // Validate protocol options
         if (FILE_UPLOAD_PROTOCOL !in listOf("tcp", "http", "websocket")) {
             warnings.add("Invalid FILE_UPLOAD_PROTOCOL: $FILE_UPLOAD_PROTOCOL")
         }
 
-        // Validate time sync options
         if (TIME_SYNC_MODE !in listOf("ntp", "manual", "disabled")) {
             warnings.add("Invalid TIME_SYNC_MODE: $TIME_SYNC_MODE")
         }

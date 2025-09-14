@@ -24,6 +24,7 @@ try:
 except ImportError:
     OPENCV_AVAILABLE = False
 
+
     # Mock numpy and cv2 for environments without OpenCV
     class MockOpenCV:
         def findChessboardCorners(self, *args, **kwargs) -> Any:
@@ -37,6 +38,7 @@ except ImportError:
 
         TERM_CRITERIA_EPS = 1
         TERM_CRITERIA_MAX_ITER = 2
+
 
     cv2 = MockOpenCV()
     try:
@@ -52,6 +54,7 @@ except ImportError:
 
             float32 = float
             ndarray = type([])
+
 
         np = MockNumPy()
 
@@ -154,7 +157,7 @@ class ChessboardDetector:
     """Chessboard pattern detector for calibration"""
 
     def __init__(
-        self, pattern_size: Tuple[int, int] = (9, 6), square_size: float = 25.0
+            self, pattern_size: Tuple[int, int] = (9, 6), square_size: float = 25.0
     ):
         """
         Initialize chessboard detector
@@ -171,8 +174,8 @@ class ChessboardDetector:
             (pattern_size[0] * pattern_size[1], 3), np.float32
         )
         self.object_points_3d[:, :2] = np.mgrid[
-            0 : pattern_size[0], 0 : pattern_size[1]
-        ].T.reshape(-1, 2)
+                                       0: pattern_size[0], 0: pattern_size[1]
+                                       ].T.reshape(-1, 2)
         self.object_points_3d *= square_size
 
     def detect_corners(self, image: np.ndarray) -> Tuple[bool, Optional[np.ndarray]]:
@@ -260,7 +263,7 @@ class CameraCalibrator:
         logger.info(f"Pattern: {self.pattern_size}, Square size: {self.square_size}mm")
 
     async def start_calibration(
-        self, device_id: str, session_id: str, camera_type: CameraType
+            self, device_id: str, session_id: str, camera_type: CameraType
     ) -> bool:
         """
         Start camera calibration for a device
@@ -301,11 +304,11 @@ class CameraCalibrator:
             return False
 
     async def process_calibration_image(
-        self,
-        device_id: str,
-        session_id: str,
-        camera_type: CameraType,
-        image_data: bytes,
+            self,
+            device_id: str,
+            session_id: str,
+            camera_type: CameraType,
+            image_data: bytes,
     ) -> Dict[str, Any]:
         """
         Process a calibration image from device
@@ -370,7 +373,7 @@ class CameraCalibrator:
                     "images_collected": session_data["images_collected"],
                     "min_images_needed": self.min_images,
                     "ready_to_calibrate": session_data["images_collected"]
-                    >= self.min_images,
+                                          >= self.min_images,
                 }
             else:
                 logger.debug(
@@ -389,7 +392,7 @@ class CameraCalibrator:
             return {"success": False, "error": str(e)}
 
     async def finalize_calibration(
-        self, device_id: str, session_id: str, camera_type: CameraType
+            self, device_id: str, session_id: str, camera_type: CameraType
     ) -> Optional[CalibrationResult]:
         """
         Finalize calibration and compute camera parameters
@@ -483,7 +486,7 @@ class CameraCalibrator:
             return None
 
     def get_calibration_status(
-        self, device_id: str, session_id: str, camera_type: Union[CameraType, str]
+            self, device_id: str, session_id: str, camera_type: Union[CameraType, str]
     ) -> Dict[str, Any]:
         """
         Get calibration session status
@@ -525,7 +528,7 @@ class CameraCalibrator:
         }
 
     def cancel_calibration(
-        self, device_id: str, session_id: str, camera_type: Union[CameraType, str]
+            self, device_id: str, session_id: str, camera_type: Union[CameraType, str]
     ) -> bool:
         """
         Cancel an active calibration session
@@ -563,11 +566,11 @@ class CameraCalibrator:
         return list(self.active_sessions.keys())
 
     async def calibrate_stereo_pair(
-        self,
-        device_id: str,
-        session_id: str,
-        left_result: CalibrationResult,
-        right_result: CalibrationResult,
+            self,
+            device_id: str,
+            session_id: str,
+            left_result: CalibrationResult,
+            right_result: CalibrationResult,
     ) -> Optional[StereoCalibration]:
         """
         Calibrate stereo camera pair
@@ -635,8 +638,8 @@ class CameraCalibrator:
             # Create 3D object points for chessboard
             objp = np.zeros((pattern_size[0] * pattern_size[1], 3), np.float32)
             objp[:, :2] = (
-                np.mgrid[0 : pattern_size[0], 0 : pattern_size[1]].T.reshape(-1, 2)
-                * square_size
+                    np.mgrid[0: pattern_size[0], 0: pattern_size[1]].T.reshape(-1, 2)
+                    * square_size
             )
 
             # Simulate stereo correspondences (would be real detections in production)
@@ -666,11 +669,11 @@ class CameraCalibrator:
 
             # Stereo calibration flags
             flags = (
-                cv2.CALIB_FIX_INTRINSIC
-                + cv2.CALIB_RATIONAL_MODEL
-                + cv2.CALIB_FIX_ASPECT_RATIO
-                + cv2.CALIB_ZERO_TANGENT_DIST
-                + cv2.CALIB_SAME_FOCAL_LENGTH
+                    cv2.CALIB_FIX_INTRINSIC
+                    + cv2.CALIB_RATIONAL_MODEL
+                    + cv2.CALIB_FIX_ASPECT_RATIO
+                    + cv2.CALIB_ZERO_TANGENT_DIST
+                    + cv2.CALIB_SAME_FOCAL_LENGTH
             )
 
             # Run stereo calibration
@@ -721,8 +724,8 @@ class CameraCalibrator:
                 roi_right=roi_right,
                 baseline=float(np.linalg.norm(T)),
                 convergence_angle=float(np.arccos(np.clip(np.trace(R) - 1) / 2, -1, 1))
-                * 180
-                / np.pi,
+                                  * 180
+                                  / np.pi,
             )
 
             # Update calibration results with stereo information
@@ -742,7 +745,7 @@ class CameraCalibrator:
             return None
 
     def _generate_realistic_corners(
-        self, pattern_size: tuple, image_size: tuple, seed: int
+            self, pattern_size: tuple, image_size: tuple, seed: int
     ) -> np.ndarray:
         """Generate realistic chessboard corner points with noise."""
         np.random.seed(seed)
@@ -771,7 +774,7 @@ class CameraCalibrator:
         return np.array(corners, dtype=np.float32)
 
     def _generate_stereo_corners(
-        self, left_corners: np.ndarray, baseline_offset: float
+            self, left_corners: np.ndarray, baseline_offset: float
     ) -> np.ndarray:
         """Generate corresponding right camera corners with stereo disparity."""
         right_corners = left_corners.copy()

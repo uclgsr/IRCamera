@@ -35,19 +35,19 @@ import com.topdon.lib.core.R as LibR
 import com.topdon.lib.ui.R as UiR
 
 /**
-// 生成报告图片拾取.
+
  *
-// 需要传递parameter：
-// - 是否 TC007: [ExtraKeyConfig.IS_TC007] 进入目录不同
-// - [ExtraKeyConfig.REPORT_INFO] - 报告信息
-// - [ExtraKeyConfig.REPORT_CONDITION] - 检测条件
-// - [ExtraKeyConfig.REPORT_IR_LIST] - 当前已添加的图片对应data列表
+
+
+
+
+
  */
-// Legacy ARouter route annotation - now using NavigationManager
+
 class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
     /**
-// 从上一interface传递过来的，当前是否为 TC007 device类型.
-// true-TC007 false-其他插件式device
+
+
      */
     private var isTC007 = false
 
@@ -55,7 +55,6 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
 
     private val adapter = GalleryAdapter()
 
-    // View declarations
     private lateinit var titleView: com.topdon.lib.core.view.TitleView
     private lateinit var clShare: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clDelete: androidx.constraintlayout.widget.ConstraintLayout
@@ -65,7 +64,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
     override fun initContentView() = R.layout.activity_report_pick_img
 
     override fun initView() {
-        // Initialize views
+
         titleView = findViewById(R.id.title_view)
         clShare = findViewById(R.id.cl_share)
         clDelete = findViewById(R.id.cl_delete)
@@ -101,7 +100,10 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
                 )
                 viewModel.queryAllReportImg(if (isTC007) DirType.TC007 else DirType.LINE)
             } else {
-                TToast.shortToast(this@ReportPickImgActivity, LibR.string.test_results_delete_failed)
+                TToast.shortToast(
+                    this@ReportPickImgActivity,
+                    LibR.string.test_results_delete_failed
+                )
             }
         }
         viewModel.queryAllReportImg(if (isTC007) DirType.TC007 else DirType.LINE)
@@ -127,7 +129,9 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
         adapter.isEditMode = isEditMode
         groupBottom.isVisible = isEditMode
         titleView.setTitleText(
-            if (isEditMode) getString(R.string.chosen_item, adapter.selectList.size) else getString(R.string.app_gallery),
+            if (isEditMode) getString(R.string.chosen_item, adapter.selectList.size) else getString(
+                R.string.app_gallery
+            ),
         )
         titleView.setLeftDrawable(if (isEditMode) 0 else 0) // Note: Add appropriate drawables for edit mode states
         titleView.setLeftClickListener {
@@ -153,6 +157,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
             clShare -> {
                 shareImage()
             }
+
             clDelete -> {
                 deleteImage()
             }
@@ -162,7 +167,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
     private fun initRecycler() {
         val spanCount = 3
         val gridLayoutManager = GridLayoutManager(this, spanCount)
-// 动态setspan
+
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
@@ -173,7 +178,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
         irGalleryRecycler.layoutManager = gridLayoutManager
 
         adapter.onLongEditListener = {
-// adapter 里面的切换编辑太乱了，先这么顶着
+
             groupBottom.isVisible = true
             titleView.setTitleText(getString(R.string.chosen_item, adapter.selectList.size))
             titleView.setLeftDrawable(0) // Note: Add appropriate drawable for cancel/back action
@@ -205,12 +210,14 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
                 intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)?.let {
                     navigation.withParcelable(ExtraKeyConfig.REPORT_INFO, it)
                 }
-                intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)?.let {
-                    navigation.withParcelable(ExtraKeyConfig.REPORT_CONDITION, it)
-                }
-                intent.getParcelableArrayListExtra<ReportIRBean>(ExtraKeyConfig.REPORT_IR_LIST)?.let {
-                    navigation.withParcelableArrayList(ExtraKeyConfig.REPORT_IR_LIST, it)
-                }
+                intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
+                    ?.let {
+                        navigation.withParcelable(ExtraKeyConfig.REPORT_CONDITION, it)
+                    }
+                intent.getParcelableArrayListExtra<ReportIRBean>(ExtraKeyConfig.REPORT_IR_LIST)
+                    ?.let {
+                        navigation.withParcelableArrayList(ExtraKeyConfig.REPORT_IR_LIST, it)
+                    }
 
                 navigation.navigation(this)
             } else {

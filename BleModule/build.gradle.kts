@@ -21,10 +21,9 @@ android {
         }
     }
 
-    // Disable all debug variants to match release-only configuration
     androidComponents {
         beforeVariants { variant ->
-            // Only enable release variants
+
             variant.enable = variant.buildType == "release"
         }
     }
@@ -41,10 +40,9 @@ android {
 }
 
 dependencies {
-    // Core library desugaring support
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    // Compile-time access to LMS SDK for BleModule classes that directly import LMS classes
     compileOnly(files("../shared/libs/lms_international-3.90.009.0.aar"))
 
     api("androidx.appcompat:appcompat:1.2.0")
@@ -53,13 +51,11 @@ dependencies {
     api("com.google.code.gson:gson:2.13.2")
     api("com.elvishew:xlog:1.10.1")
 
-    // Nordic BLE Library integration for enhanced reliability
     api("no.nordicsemi.android:ble:2.11.0")
     api("no.nordicsemi.android:ble-ktx:2.11.0")
 
-    // UMeng Analytics - now available via version catalog
-    // api(libs.umeng.analytics)
-    // FastJSON - testing dependency availability
-    // api("com.alibaba:fastjson:1.2.83")
+
+
+
     implementation(files("libs/ini4j-0.5.5.jar"))
 }

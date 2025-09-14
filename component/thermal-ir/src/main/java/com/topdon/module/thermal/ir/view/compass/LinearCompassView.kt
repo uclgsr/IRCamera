@@ -20,13 +20,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlin.coroutines.EmptyCoroutineContext
 
-/**
-// 横向的指南针View
- */
-/**
- * Custom Linear compass view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 class LinearCompassView : View {
     private val paint = Paint()
     private val textPaint = Paint()
@@ -153,34 +146,36 @@ class LinearCompassView : View {
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
         this.canvas = canvas
-//        drawBackGround()
+
         drawAzimuthArrow()
         drawCompassLine()
     }
 
-// drawing背景
     private fun drawBackGround() {
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
     }
 
-// drawing角度
     private fun drawAzimuthArrow() {
         if (!showAzimuthArrow) {
             return
         }
         val endWidth = width / 2f
         val endHeight = (3 / 10f) * height
-        canvas.drawText(text, realX(text, endWidth, textPaint), realY(text, endHeight, textPaint), textPaint)
+        canvas.drawText(
+            text,
+            realX(text, endWidth, textPaint),
+            realY(text, endHeight, textPaint),
+            textPaint
+        )
     }
 
-// drawing标记线
     private fun drawCompassLine() {
-// calculation指南针的线有几等份
-//        val values = getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map { it.toInt() }
+
+
         drawCompass()
         val bottomHeight = height * 7 / 10f
         canvas.drawLine(0f, (bottomHeight - 1), width.toFloat(), bottomHeight, shortLinePaint)
-// 在中间位置drawing标志线
+
         canvas.drawLine(
             width / 2f + markerSize / 2,
             height * (3 / 10f),
@@ -209,29 +204,31 @@ class LinearCompassView : View {
         getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map {
             it.toInt()
         }.toMutableList().forEach {
-// calculation实际X的坐标
+
             val x = toPixel(it.toFloat())
 
-// 最短：15度 最长：90度 起始点x坐标
             val lineHeight =
                 when {
                     it % 90 == 0 -> (3 / 10f) * height
                     it % 15 == 0 -> (4 / 10f) * height
                     else -> (5 / 10f) * height
                 }
-// 起始点y
+
             val bottomHeight = height * 7 / 10f
 
-// drawing标记线
             when {
                 it % 90 == 0 -> canvas.drawLine(x, lineHeight, x, bottomHeight, longLinePaint)
                 else -> canvas.drawLine(x, lineHeight, x, bottomHeight, shortLinePaint)
             }
 
-// drawing底部方位文本
             if (it % 45 == 0) {
                 val coord = getPositionText(it)
-                canvas.drawText(coord, realX(coord, x, positionPaint), realY(coord, height - 2f, positionPaint), positionPaint)
+                canvas.drawText(
+                    coord,
+                    realX(coord, x, positionPaint),
+                    realY(coord, height - 2f, positionPaint),
+                    positionPaint
+                )
             }
         }
     }

@@ -1,6 +1,7 @@
 # Contributing to MPDC4GSR
 
-We welcome contributions to the Multi-Modal Physiological Sensing Platform! This guide will help you get started.
+We welcome contributions to the Multi-Modal Physiological Sensing Platform! This guide will help you
+get started.
 
 ## 🎯 How to Contribute
 
@@ -10,7 +11,7 @@ We welcome several types of contributions:
 
 - **🐛 Bug Reports**: Help us identify and fix issues
 - **✨ Feature Requests**: Suggest new capabilities
-- **📝 Documentation**: Improve guides and API docs  
+- **📝 Documentation**: Improve guides and API docs
 - **🧪 Testing**: Add tests and improve coverage
 - **🔧 Code**: Fix bugs and implement features
 - **🎨 UI/UX**: Improve user interfaces
@@ -21,6 +22,7 @@ We welcome several types of contributions:
 ### Development Environment
 
 #### Prerequisites
+
 ```bash
 # Required tools
 - Git
@@ -40,6 +42,7 @@ We welcome several types of contributions:
 ```
 
 #### Repository Setup
+
 ```bash
 # Fork and clone
 git clone https://github.com/YOUR_USERNAME/IRCamera.git
@@ -59,6 +62,7 @@ pre-commit install
 ### First-Time Setup
 
 #### Android Development
+
 ```bash
 # Build all modules
 ./gradlew clean build
@@ -71,6 +75,7 @@ pre-commit install
 ```
 
 #### PC Controller Development
+
 ```bash
 cd pc-controller
 
@@ -135,6 +140,7 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 #### Types
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -144,6 +150,7 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `chore`: Maintenance tasks
 
 #### Examples
+
 ```bash
 feat(gsr): add battery level monitoring for Shimmer3 devices
 
@@ -182,8 +189,9 @@ test(network): add integration tests for device discovery
 ### Kotlin (Android)
 
 #### Style Guide
+
 ```kotlin
-// Follow official Kotlin style guide
+
 class GSRRecorder @Inject constructor(
     private val shimmerManager: ShimmerManager,
     private val fileManager: FileManager,
@@ -198,13 +206,6 @@ class GSRRecorder @Inject constructor(
     private val _recordingState = MutableLiveData<RecordingState>()
     val recordingState: LiveData<RecordingState> = _recordingState
 
-    /**
-     * Start GSR data recording with specified configuration.
-     * 
-     * @param session Session configuration including participant info
-     * @param syncTimeOffset Time synchronization offset in nanoseconds
-     * @return Result indicating success or failure with error details
-     */
     override suspend fun startRecording(
         session: Session, 
         syncTimeOffset: Long
@@ -217,14 +218,12 @@ class GSRRecorder @Inject constructor(
                     GSRException("No Shimmer3 device connected")
                 )
 
-            // Configure recording parameters
             shimmerDevice.configure {
                 sampleRate = session.config.gsrSampleRate
                 filters = session.config.gsrFilters
                 calibration = session.config.gsrCalibration
             }
 
-            // Start data collection
             shimmerDevice.startStreaming { sample ->
                 processSample(sample, syncTimeOffset)
             }
@@ -247,17 +246,16 @@ class GSRRecorder @Inject constructor(
             sampleIndex = sample.index,
             qualityScore = assessSignalQuality(sample)
         )
-        
-        // Write to file asynchronously
+
         fileManager.writeSample(gsrSample)
-        
-        // Emit for real-time processing
+
         sampleFlow.tryEmit(gsrSample)
     }
 }
 ```
 
 #### Testing Standards
+
 ```kotlin
 @RunWith(AndroidJUnit4::class)
 class GSRRecorderTest {
@@ -284,15 +282,13 @@ class GSRRecorderTest {
 
     @Test
     fun `startRecording should succeed with valid configuration`() = runTest {
-        // Given
+
         val session = createTestSession()
         val mockDevice = mock<ShimmerDevice>()
         whenever(mockShimmerManager.getConnectedDevice()).thenReturn(mockDevice)
 
-        // When
         val result = gsrRecorder.startRecording(session, 0L)
 
-        // Then
         assertTrue(result.isSuccess)
         verify(mockDevice).startStreaming(any())
         assertEquals(RecordingState.RECORDING, gsrRecorder.recordingState.value)
@@ -300,14 +296,12 @@ class GSRRecorderTest {
 
     @Test
     fun `startRecording should fail when no device connected`() = runTest {
-        // Given
+
         val session = createTestSession()
         whenever(mockShimmerManager.getConnectedDevice()).thenReturn(null)
 
-        // When
         val result = gsrRecorder.startRecording(session, 0L)
 
-        // Then
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is GSRException)
     }
@@ -326,6 +320,7 @@ class GSRRecorderTest {
 ### Python (PC Controller)
 
 #### Style Guide
+
 ```python
 """GSR data processing module for real-time analysis."""
 
@@ -530,6 +525,7 @@ class ExportError(Exception):
 ```
 
 #### Testing Standards
+
 ```python
 """Tests for GSR processing module."""
 
@@ -724,50 +720,20 @@ class TestSessionDataExporter:
 ### Documentation Standards
 
 #### Code Documentation
+
 ```kotlin
-/**
- * Manages GSR data recording from Shimmer3 devices with real-time processing.
- * 
- * This class handles the complete lifecycle of GSR data collection including:
- * - Bluetooth connection management
- * - Real-time data streaming at 128Hz
- * - Signal quality assessment
- * - Local file storage with timestamps
- * - Integration with multi-modal recording sessions
- * 
- * Example usage:
- * ```kotlin
- * val gsrRecorder = GSRRecorder(shimmerManager, fileManager, timeManager)
- * 
- * // Initialize connection
- * val initResult = gsrRecorder.initialize()
- * if (initResult.isSuccess) {
- *     // Start recording
- *     val session = Session(id = "test_001", participantId = "P001")
- *     gsrRecorder.startRecording(session, syncOffset = 0L)
- * }
- * ```
- * 
- * @property shimmerManager Manages Bluetooth connections to Shimmer3 devices
- * @property fileManager Handles local file storage operations
- * @property timeManager Provides synchronized timestamps
- * 
- * @see SensorRecorder for the common sensor interface
- * @see ShimmerManager for Bluetooth device management
- * 
- * @author MPDC4GSR Development Team
- * @since 1.0.0
- */
+
 class GSRRecorder @Inject constructor(
     private val shimmerManager: ShimmerManager,
     private val fileManager: FileManager,
     private val timeManager: TimeManager
 ) : SensorRecorder {
-    // Implementation...
+
 }
 ```
 
 #### API Documentation
+
 Use clear, comprehensive documentation:
 
 ```python
@@ -820,18 +786,21 @@ async def start_session(self, config: SessionConfig) -> Session:
 ### Test Categories
 
 #### Unit Tests
+
 - **Coverage Target**: >80% line coverage
 - **Focus**: Individual functions and classes
 - **Mock Dependencies**: External services and hardware
 - **Fast Execution**: <10ms per test
 
-#### Integration Tests  
+#### Integration Tests
+
 - **Coverage**: Component interactions
 - **Real Dependencies**: Limited external services
 - **Data Validation**: End-to-end data flow
 - **Moderate Duration**: <1s per test
 
 #### System Tests
+
 - **Coverage**: Complete workflows
 - **Real Hardware**: When available
 - **Performance**: Timing and throughput validation
@@ -840,6 +809,7 @@ async def start_session(self, config: SessionConfig) -> Session:
 ### Test Data Management
 
 #### Mock Data Generation
+
 ```kotlin
 object TestDataFactory {
     fun createGSRSamples(
@@ -887,6 +857,7 @@ object TestDataFactory {
 ### Performance Testing
 
 #### Benchmarking
+
 ```python
 import time
 import statistics
@@ -961,6 +932,7 @@ class PerformanceBenchmark:
 ### Before Submitting
 
 #### Checklist
+
 - [ ] **Tests pass**: All existing tests continue to pass
 - [ ] **New tests added**: For new functionality or bug fixes
 - [ ] **Code style**: Follows project coding standards
@@ -970,6 +942,7 @@ class PerformanceBenchmark:
 - [ ] **Security**: No new security vulnerabilities
 
 #### Code Quality Checks
+
 ```bash
 # Android checks
 ./gradlew ktlintCheck
@@ -1033,6 +1006,7 @@ Related to #456
 ## 🏷️ Release Process
 
 ### Version Numbering
+
 We follow [Semantic Versioning](https://semver.org/):
 
 - **MAJOR**: Breaking changes
@@ -1040,6 +1014,7 @@ We follow [Semantic Versioning](https://semver.org/):
 - **PATCH**: Bug fixes, backwards compatible
 
 Examples:
+
 - `1.0.0` → `1.0.1` (bug fix)
 - `1.0.1` → `1.1.0` (new feature)
 - `1.1.0` → `2.0.0` (breaking change)
@@ -1047,6 +1022,7 @@ Examples:
 ### Release Checklist
 
 #### Pre-Release
+
 - [ ] All tests passing
 - [ ] Documentation updated
 - [ ] CHANGELOG.md updated
@@ -1054,6 +1030,7 @@ Examples:
 - [ ] Performance benchmarks validated
 
 #### Release
+
 - [ ] Create release tag
 - [ ] Build and test APK
 - [ ] Generate release notes
@@ -1061,6 +1038,7 @@ Examples:
 - [ ] Update documentation website
 
 #### Post-Release
+
 - [ ] Monitor for issues
 - [ ] Update project boards
 - [ ] Plan next release cycle
@@ -1070,18 +1048,21 @@ Examples:
 ### Design Guidelines
 
 #### Android Material Design
+
 - Follow Material Design 3 principles
 - Use consistent color schemes and typography
 - Implement proper accessibility features
 - Test on various screen sizes
 
 #### PC Controller Design
+
 - Follow platform conventions (Windows/macOS/Linux)
 - Maintain consistent PyQt6 styling
 - Ensure keyboard navigation support
 - Implement proper window management
 
 ### Accessibility Requirements
+
 - **Color Contrast**: WCAG AA compliance minimum
 - **Text Size**: Support system font scaling
 - **Keyboard Navigation**: Full keyboard access
@@ -1091,21 +1072,28 @@ Examples:
 ## 🤝 Community
 
 ### Communication Channels
+
 - **GitHub Issues**: Bug reports and feature requests
 - **GitHub Discussions**: Questions and general discussion
 - **Pull Requests**: Code contributions and reviews
 
 ### Code of Conduct
-We follow the [Contributor Covenant](https://www.contributor-covenant.org/) code of conduct. Please be respectful and inclusive in all interactions.
+
+We follow the [Contributor Covenant](https://www.contributor-covenant.org/) code of conduct. Please
+be respectful and inclusive in all interactions.
 
 ### Recognition
+
 Contributors are recognized in:
+
 - CONTRIBUTORS.md file
 - Release notes for significant contributions
 - GitHub contributor statistics
 
 ---
 
-**Thank you for contributing to MPDC4GSR!** Your contributions help make physiological sensing research more accessible and reliable. 🚀
+**Thank you for contributing to MPDC4GSR!** Your contributions help make physiological sensing
+research more accessible and reliable. 🚀
 
-*For questions about contributing, feel free to open a GitHub Discussion or comment on relevant issues.*
+*For questions about contributing, feel free to open a GitHub Discussion or comment on relevant
+issues.*

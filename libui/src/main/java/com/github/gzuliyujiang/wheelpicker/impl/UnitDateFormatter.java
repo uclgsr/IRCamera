@@ -15,12 +15,6 @@ package com.github.gzuliyujiang.wheelpicker.impl;
 
 import com.github.gzuliyujiang.wheelpicker.contract.DateFormatter;
 
-/**
- * 带单位的日期格式化
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/4 11:33
- */
 public class UnitDateFormatter implements DateFormatter {
 
     @Override

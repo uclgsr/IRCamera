@@ -1,8 +1,10 @@
 # TopInfrared Repository Overview (Mermaid Diagrams + Tables)
 
-This document provides an at‑a‑glance overview of the TopInfrared (IRCamera) repository modules, relationships, and core feature flows using Mermaid diagrams, charts, and summary tables.
+This document provides an at‑a‑glance overview of the TopInfrared (IRCamera) repository modules,
+relationships, and core feature flows using Mermaid diagrams, charts, and summary tables.
 
-Note: Diagrams reflect the modules declared in `settings.gradle.kts` and common architectural patterns in this codebase.
+Note: Diagrams reflect the modules declared in `settings.gradle.kts` and common architectural
+patterns in this codebase.
 
 ---
 
@@ -148,10 +150,12 @@ pie title Modules by Category
 ```
 
 Notes:
+
 - Application: :app
 - Device and IO: :BleModule, :libir, :libmatrix
 - Core Libraries: :libapp, :libcom, :libui, :libmenu, :libhik, :RangeSeekBar, :commonlibrary
-- Feature Components: :component:* (CommonComponent, edit3d, house, pseudo, thermal, thermal-ir, thermal-lite, transfer, user, gsr-recording)
+- Feature Components: :component:* (CommonComponent, edit3d, house, pseudo, thermal, thermal-ir,
+  thermal-lite, transfer, user, gsr-recording)
 
 ---
 
@@ -179,36 +183,40 @@ journey
 
 ## 7) Modules and Responsibilities — Summary Table
 
-| Module | Path | Type | Primary Responsibilities |
-|---|---|---|---|
-| App | `:app` | Application | Entry point, DI/wiring, activities/fragments, packaging. |
-| BleModule | `:BleModule` | Library | BLE communication and data streams for sensors (incl. GSR). |
-| CommonLibrary | `:commonlibrary` | Library | Shared utility/resources across modules. |
-| Core (libapp) | `:libapp` | Library | Core utilities, networking, Room, WorkManager, Glide/Lottie integration. |
-| libcom | `:libcom` | Library | Common components/utilities for business logic. |
-| libui | `:libui` | Library | UI widgets/styles/view utilities. |
-| libmenu | `:libmenu` | Library | Menu/navigation UI elements and helpers. |
-| libhik | `:libhik` | Library | Vendor-specific integrations (e.g., HIK). |
-| libir | `:libir` | Library | IR capture/processing glue (native/FFmpeg/JavaCV integration). |
-| libmatrix | `:libmatrix` | Library | Math/transform utilities for imaging/3D. |
-| RangeSeekBar | `:RangeSeekBar` | Library | Slider/seekbar UI component. |
-| component:CommonComponent | `:component:CommonComponent` | Feature | Shared feature scaffolding/common feature UIs. |
-| component:edit3d | `:component:edit3d` | Feature | 3D editing/annotation for images/models. |
-| component:house | `:component:house` | Feature | Domain feature (house inspection flows/UI). |
-| component:pseudo | `:component:pseudo` | Feature | Pseudo-coloring/visualization helpers. |
-| component:thermal | `:component:thermal` | Feature | Thermal feature set: palettes, measurement, overlays. |
-| component:thermal-ir | `:component:thermal-ir` | Feature | IR device integration and thermal pipeline orchestration. |
-| component:thermal-lite | `:component:thermal-lite` | Feature | Lightweight thermal feature subset for constrained devices. |
-| component:transfer | `:component:transfer` | Feature | Export/sharing pipelines (files/cloud). |
-| component:user | `:component:user` | Feature | User profile/settings/auth flows. |
-| component:gsr-recording | `:component:gsr-recording` | Feature | Synchronized GSR recording and session management. |
+| Module                    | Path                         | Type        | Primary Responsibilities                                                 |
+|---------------------------|------------------------------|-------------|--------------------------------------------------------------------------|
+| App                       | `:app`                       | Application | Entry point, DI/wiring, activities/fragments, packaging.                 |
+| BleModule                 | `:BleModule`                 | Library     | BLE communication and data streams for sensors (incl. GSR).              |
+| CommonLibrary             | `:commonlibrary`             | Library     | Shared utility/resources across modules.                                 |
+| Core (libapp)             | `:libapp`                    | Library     | Core utilities, networking, Room, WorkManager, Glide/Lottie integration. |
+| libcom                    | `:libcom`                    | Library     | Common components/utilities for business logic.                          |
+| libui                     | `:libui`                     | Library     | UI widgets/styles/view utilities.                                        |
+| libmenu                   | `:libmenu`                   | Library     | Menu/navigation UI elements and helpers.                                 |
+| libhik                    | `:libhik`                    | Library     | Vendor-specific integrations (e.g., HIK).                                |
+| libir                     | `:libir`                     | Library     | IR capture/processing glue (native/FFmpeg/JavaCV integration).           |
+| libmatrix                 | `:libmatrix`                 | Library     | Math/transform utilities for imaging/3D.                                 |
+| RangeSeekBar              | `:RangeSeekBar`              | Library     | Slider/seekbar UI component.                                             |
+| component:CommonComponent | `:component:CommonComponent` | Feature     | Shared feature scaffolding/common feature UIs.                           |
+| component:edit3d          | `:component:edit3d`          | Feature     | 3D editing/annotation for images/models.                                 |
+| component:house           | `:component:house`           | Feature     | Domain feature (house inspection flows/UI).                              |
+| component:pseudo          | `:component:pseudo`          | Feature     | Pseudo-coloring/visualization helpers.                                   |
+| component:thermal         | `:component:thermal`         | Feature     | Thermal feature set: palettes, measurement, overlays.                    |
+| component:thermal-ir      | `:component:thermal-ir`      | Feature     | IR device integration and thermal pipeline orchestration.                |
+| component:thermal-lite    | `:component:thermal-lite`    | Feature     | Lightweight thermal feature subset for constrained devices.              |
+| component:transfer        | `:component:transfer`        | Feature     | Export/sharing pipelines (files/cloud).                                  |
+| component:user            | `:component:user`            | Feature     | User profile/settings/auth flows.                                        |
+| component:gsr-recording   | `:component:gsr-recording`   | Feature     | Synchronized GSR recording and session management.                       |
 
 ---
 
 ## 8) Notes for Contributors
-- Module list mirrors `settings.gradle.kts` and may evolve; update this document when modules are added/removed.
-- For accurate dependency edges, review each module’s `build.gradle.kts` and reflect significant `implementation` relationships here.
-- Mermaid rendering works in many tools (GitHub, JetBrains IDEs with Mermaid plugins). If diagrams don’t render, use a Mermaid viewer.
+
+- Module list mirrors `settings.gradle.kts` and may evolve; update this document when modules are
+  added/removed.
+- For accurate dependency edges, review each module’s `build.gradle.kts` and reflect significant
+  `implementation` relationships here.
+- Mermaid rendering works in many tools (GitHub, JetBrains IDEs with Mermaid plugins). If diagrams
+  don’t render, use a Mermaid viewer.
 
 ---
 

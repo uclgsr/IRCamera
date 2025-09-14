@@ -7,9 +7,9 @@ plugins {
 
 kapt {
     arguments {
-        // arg("AROUTER_MODULE_NAME", project.name)  // Removed for NavigationManager migration
+
     }
-    // Enable Kotlin 2.1.0 compatibility
+
     correctErrorTypes = true
     useBuildCache = true
 }
@@ -20,7 +20,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        // targetSdk removed for library modules - only set in main app module per AGP 8.0+
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -36,10 +36,9 @@ android {
         }
     }
 
-    // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
-            // Only enable release variant for single-developer maintenance
+
             variant.enable = variant.buildType == "release"
         }
     }
@@ -67,7 +66,7 @@ android {
 }
 
 dependencies {
-    // Core library desugaring support
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
     implementation(project(":libcom"))
@@ -81,10 +80,8 @@ dependencies {
     implementation(libs.utilcode)
     implementation(libs.glide)
 
-    // Enhanced unified BLE system integration for cross-modal coordination
     implementation(project(":BleModule"))
 
-    // Test dependencies - using Robolectric for context-based testing
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

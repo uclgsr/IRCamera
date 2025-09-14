@@ -63,24 +63,55 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
             } else {
                 TLog.d("ts004", "║ response :$freeSpaceBean")
 
-                tv_progress_value.text = "${(freeSpaceBean.hasUseSize() * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1)}"
+                tv_progress_value.text = "${
+                    (freeSpaceBean.hasUseSize() * 100.0 / freeSpaceBean.total).toInt()
+                        .coerceAtLeast(1)
+                }"
 
                 tv_used_value.text = formatFileSize(freeSpaceBean.hasUseSize())
                 tv_used.text = getUnit(freeSpaceBean.hasUseSize())
                 tv_total_value.text = " / " + formatFileSize(freeSpaceBean.total)
                 tv_total.text = getUnit(freeSpaceBean.total)
 
-                list_storage_photo.setRightText(formatFileSize(freeSpaceBean.image_size) + getUnit(freeSpaceBean.image_size))
-                list_storage_video.setRightText(formatFileSize(freeSpaceBean.video_size) + getUnit(freeSpaceBean.video_size))
-                list_storage_system.setRightText(formatFileSize(freeSpaceBean.system) + getUnit(freeSpaceBean.system))
+                list_storage_photo.setRightText(
+                    formatFileSize(freeSpaceBean.image_size) + getUnit(
+                        freeSpaceBean.image_size
+                    )
+                )
+                list_storage_video.setRightText(
+                    formatFileSize(freeSpaceBean.video_size) + getUnit(
+                        freeSpaceBean.video_size
+                    )
+                )
+                list_storage_system.setRightText(
+                    formatFileSize(freeSpaceBean.system) + getUnit(
+                        freeSpaceBean.system
+                    )
+                )
 
-                val systemPercent = (freeSpaceBean.system * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1).coerceAtMost(98)
-                val imagePercent = (freeSpaceBean.image_size * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1).coerceAtMost(98)
-                val videoPercent = (freeSpaceBean.video_size * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1).coerceAtMost(98)
+                val systemPercent =
+                    (freeSpaceBean.system * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1)
+                        .coerceAtMost(98)
+                val imagePercent = (freeSpaceBean.image_size * 100.0 / freeSpaceBean.total).toInt()
+                    .coerceAtLeast(1).coerceAtMost(98)
+                val videoPercent = (freeSpaceBean.video_size * 100.0 / freeSpaceBean.total).toInt()
+                    .coerceAtLeast(1).coerceAtMost(98)
                 val colorList = arrayListOf<ColorsBean>()
                 colorList.add(ColorsBean(0, systemPercent, 0xff8d98a9.toInt()))
-                colorList.add(ColorsBean(systemPercent, systemPercent + imagePercent, 0xff019dff.toInt()))
-                colorList.add(ColorsBean(systemPercent + imagePercent, systemPercent + imagePercent + videoPercent, 0xff70e297.toInt()))
+                colorList.add(
+                    ColorsBean(
+                        systemPercent,
+                        systemPercent + imagePercent,
+                        0xff019dff.toInt()
+                    )
+                )
+                colorList.add(
+                    ColorsBean(
+                        systemPercent + imagePercent,
+                        systemPercent + imagePercent + videoPercent,
+                        0xff70e297.toInt()
+                    )
+                )
                 custom_view_progress.setSegmentPart(colorList)
             }
         }
@@ -100,12 +131,16 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
                             if (isSuccess) {
                                 XLog.d("TS004 格式化存储成功，即将断开连接")
                                 (application as BaseApplication).disconnectWebSocket()
-                                ARouter.getInstance().build(RouterConfig.MAIN).navigation(this@StorageSpaceActivity)
+                                ARouter.getInstance().build(RouterConfig.MAIN)
+                                    .navigation(this@StorageSpaceActivity)
                                 finish()
                             } else {
                                 delay(500)
                                 dismissLoadingDialog()
-                                TToast.shortToast(this@StorageSpaceActivity, R.string.operation_failed_tips)
+                                TToast.shortToast(
+                                    this@StorageSpaceActivity,
+                                    R.string.operation_failed_tips
+                                )
                             }
                         }
                     }

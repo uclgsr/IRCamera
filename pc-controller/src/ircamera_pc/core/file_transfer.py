@@ -12,10 +12,9 @@ import json
 import time
 from dataclasses import asdict, dataclass
 from enum import Enum
+from loguru import logger
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
-
-from loguru import logger
 
 
 class TransferStatus(Enum):
@@ -147,7 +146,7 @@ class FileTransferManager:
         )
 
     def add_progress_callback(
-        self, callback: None = Callable[[str, float, float], None]
+            self, callback: None = Callable[[str, float, float], None]
     ) -> None:
         """
         Add callback for transfer progress updates
@@ -198,7 +197,7 @@ class FileTransferManager:
                 retry_count=0,
                 error_message=None,
                 device_connection=device_conn,
-                     # Store device connection for real file transfer
+                # Store device connection for real file transfer
             )
 
             # Check for partial file to resume
@@ -339,7 +338,7 @@ class FileTransferManager:
             logger.info(
                 f"Size: {job.manifest.size_bytes} bytes, "
                 f"Duration: {duration:.2f}s, "
-                f"Rate: {rate/1024/1024:.2f} MB/s"
+                f"Rate: {rate / 1024 / 1024:.2f} MB/s"
             )
 
         except (OSError, ValueError, RuntimeError) as e:
@@ -410,7 +409,7 @@ class FileTransferManager:
             raise
 
     async def _read_chunk_from_device(
-        self, job: TransferJob, offset: int, size: int
+            self, job: TransferJob, offset: int, size: int
     ) -> bytes:
         """
         Read a chunk of data from the device using real network communication
@@ -458,7 +457,7 @@ class FileTransferManager:
                     else:
                         raise Exception(
                             f"Chunk read failed: {response.get('error',
-                                'Unknown error')}"
+                                                               'Unknown error')}"
                         )
                 else:
                     raise Exception("Invalid or timeout response from device")
@@ -567,7 +566,7 @@ class FileTransferManager:
             return False
 
     async def _verify_existing_file(
-        self, filepath: Path, manifest: FileManifest
+            self, filepath: Path, manifest: FileManifest
     ) -> bool:
         """Verify that an existing file matches the expected manifest"""
         try:

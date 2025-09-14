@@ -9,17 +9,6 @@ import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.ktbase.BaseActivity
 import kotlinx.android.synthetic.main.activity_text_input.*
 
-/**
- * 房屋检测 - 问题描述文字输入界面.
- *
- * 需要传递：
- * - [ExtraKeyConfig.ITEM_NAME] - String 类型 item 名称.
- * - [ExtraKeyConfig.RESULT_INPUT_TEXT] - String 类型 当前输入内容.
- *
- * 返回：[ExtraKeyConfig.RESULT_INPUT_TEXT] - String 类型 输入内容.
- *
- * Created by LCG on 2024/8/27.
- */
 @SuppressLint("SetTextI18n")
 class TextInputActivity : BaseActivity(), View.OnClickListener {
     override fun initContentView(): Int = R.layout.activity_text_input
@@ -51,18 +40,22 @@ class TextInputActivity : BaseActivity(), View.OnClickListener {
                 setResult(RESULT_OK, intent)
                 finish()
             }
+
             tv_quick_input1 -> {
                 et_input.setText(et_input.text.toString() + tv_quick_input1.text)
                 et_input.setSelection(et_input.text.length)
             }
+
             tv_quick_input2 -> {
                 et_input.setText(et_input.text.toString() + tv_quick_input2.text)
                 et_input.setSelection(et_input.text.length)
             }
+
             tv_quick_input3 -> {
                 et_input.setText(et_input.text.toString() + tv_quick_input3.text)
                 et_input.setSelection(et_input.text.length)
             }
+
             tv_quick_input4 -> {
                 et_input.setText(et_input.text.toString() + tv_quick_input4.text)
                 et_input.setSelection(et_input.text.length)

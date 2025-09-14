@@ -51,10 +51,10 @@ class TipCameraProgressDialog : Dialog {
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    // 竖屏
+
                     0.52
                 } else {
-                    // 横屏
+
                     0.35
                 }
             lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
@@ -66,9 +66,6 @@ class TipCameraProgressDialog : Dialog {
         }
     }
 
-    /**
-     * 提交回调
-     */
     interface OnClickListener {
         fun onClick(dialog: DialogInterface)
     }

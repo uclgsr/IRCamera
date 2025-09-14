@@ -118,7 +118,7 @@ class GSRPlotWidget(pg.PlotWidget):
         logger.info(f"Removed GSR device {device_id}")
 
     def add_gsr_data(
-        self, device_id: str, timestamp_ns: int, gsr_microsiemens: float
+            self, device_id: str, timestamp_ns: int, gsr_microsiemens: float
     ) -> None:
         """
         Add new GSR data point.
@@ -141,7 +141,7 @@ class GSRPlotWidget(pg.PlotWidget):
         self.data_updated.emit(relative_time, gsr_microsiemens)
 
     def add_sync_marker(
-        self, timestamp_ns: int, label: str = "Sync", color: str = "white"
+            self, timestamp_ns: int, label: str = "Sync", color: str = "white"
     ) -> None:
         """
         Add synchronization marker to the plot.
@@ -376,14 +376,14 @@ class MultiModalDashboard(QWidget):
             self.gsr_plot.add_device(device_id, color)
 
     def add_gsr_data(
-        self, device_id: str, timestamp_ns: int, gsr_microsiemens: float
+            self, device_id: str, timestamp_ns: int, gsr_microsiemens: float
     ) -> None:
         """Add GSR data point."""
         if self.gsr_plot:
             self.gsr_plot.add_gsr_data(device_id, timestamp_ns, gsr_microsiemens)
 
     def add_video_device(
-        self, device_id: str, device_type: str = "RGB"
+            self, device_id: str, device_type: str = "RGB"
     ) -> VideoPreviewWidget:
         """
         Add video preview widget for a device.

@@ -2,14 +2,17 @@ package com.topdon.tc001.network
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-/**
- * Network error recovery and reconnection management
- * Handles automatic reconnection, connection health monitoring, and error recovery strategies
- */
 class NetworkErrorRecoveryManager(
     private val context: Context,
     private val networkClient: NetworkClient,
@@ -35,7 +38,6 @@ class NetworkErrorRecoveryManager(
     private var lastKnownGoodController: NetworkClient.ControllerInfo? = null
     private var healthCheckJob: Job? = null
 
-    // Real network performance tracking
     private val latencyMeasurements = mutableListOf<Long>()
     private val throughputMeasurements = mutableListOf<Double>()
     private var lastPingTime = 0L
@@ -43,7 +45,6 @@ class NetworkErrorRecoveryManager(
     private var bytesTransferred = 0L
     private val maxMeasurements = 50 // Keep last 50 measurements
 
-    // Connection health and success tracking
     private var isHealthy = false
     private val successfulConnections = AtomicInteger(0)
 
@@ -70,9 +71,6 @@ class NetworkErrorRecoveryManager(
         eventListener = listener
     }
 
-    /**
-     * Start monitoring connection health and enable automatic recovery
-     */
     fun enableAutoRecovery() {
         if (isRecoveryActive.get()) {
             Log.w(TAG, "Auto recovery already enabled")
@@ -84,9 +82,6 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Network error recovery enabled")
     }
 
-    /**
-     * Stop automatic recovery and health monitoring
-     */
     fun disableAutoRecovery() {
         if (!isRecoveryActive.get()) {
             Log.w(TAG, "Auto recovery not active")
@@ -98,9 +93,6 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Network error recovery disabled")
     }
 
-    /**
-     * Manually trigger connection recovery
-     */
     suspend fun triggerRecovery(reason: String): Boolean {
         if (isRecoveryActive.get() && reconnectionAttempts.get() > 0) {
             Log.w(TAG, "Recovery already in progress")
@@ -110,9 +102,6 @@ class NetworkErrorRecoveryManager(
         return performRecovery(reason)
     }
 
-    /**
-     * Record a successful connection for future recovery attempts
-     */
     fun recordSuccessfulConnection(controller: NetworkClient.ControllerInfo) {
         lastKnownGoodController = controller
         reconnectionAttempts.set(0)
@@ -122,9 +111,6 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Recorded successful connection: ${controller.deviceName}")
     }
 
-    /**
-     * Handle network error and potentially trigger recovery
-     */
     fun handleNetworkError(
         operation: String,
         error: String,
@@ -133,7 +119,7 @@ class NetworkErrorRecoveryManager(
 
         if (isRapidFailure()) {
             eventListener?.onRapidFailureDetected(rapidFailureCount.get())
-            // Delay recovery for rapid failures to avoid overwhelming the network
+
             recoveryScope.launch {
                 delay(5000)
                 if (isRecoveryActive.get()) {
@@ -182,14 +168,13 @@ class NetworkErrorRecoveryManager(
         }
 
         return try {
-            // Send a simple ping message to test connectivity
+
             val pingMessage =
                 org.json.JSONObject().apply {
                     put("message_type", "ping")
                     put("timestamp", System.currentTimeMillis())
                 }
 
-            // Use a shorter timeout for health checks
             withTimeout(5000) {
                 networkClient.sendMeasurementData("health_check", pingMessage)
             }
@@ -220,12 +205,12 @@ class NetworkErrorRecoveryManager(
             eventListener?.onRecoveryAttempt(attempt, maxAttempts)
 
             try {
-                // Try to reconnect to last known good controller
+
                 val controller = lastKnownGoodController
                 if (controller != null) {
                     success = attemptReconnection(controller)
                 } else {
-                    // Fallback: try to discover new controllers
+
                     success = attemptDiscoveryAndConnect()
                 }
 
@@ -259,9 +244,11 @@ class NetworkErrorRecoveryManager(
 
     private suspend fun attemptReconnection(controller: NetworkClient.ControllerInfo): Boolean {
         return try {
-            Log.d(TAG, "Attempting reconnection to ${controller.deviceName} at ${controller.ipAddress}")
+            Log.d(
+                TAG,
+                "Attempting reconnection to ${controller.deviceName} at ${controller.ipAddress}"
+            )
 
-            // Disconnect first to clean up any existing connection
             networkClient.disconnect()
             delay(1000) // Brief delay before reconnecting
 
@@ -308,7 +295,7 @@ class NetworkErrorRecoveryManager(
     }
 
     private fun calculateRetryDelay(attempt: Int): Long {
-        // Exponential backoff with jitter
+
         val baseDelay = INITIAL_RETRY_DELAY_MS * (1L shl (attempt - 1))
         val cappedDelay = minOf(baseDelay, MAX_RETRY_DELAY_MS)
         val jitter = (Math.random() * 0.1 * cappedDelay).toLong()
@@ -319,7 +306,7 @@ class NetworkErrorRecoveryManager(
         val currentTime = System.currentTimeMillis()
 
         if (currentTime - lastFailureTime > RAPID_FAILURE_WINDOW_MS) {
-            // Reset rapid failure count if outside the window
+
             rapidFailureCount.set(1)
         } else {
             rapidFailureCount.incrementAndGet()
@@ -329,9 +316,6 @@ class NetworkErrorRecoveryManager(
         return rapidFailureCount.get() >= RAPID_FAILURE_THRESHOLD
     }
 
-    /**
-     * Reset recovery state (useful after manual intervention)
-     */
     fun resetRecoveryState() {
         reconnectionAttempts.set(0)
         rapidFailureCount.set(0)
@@ -339,9 +323,6 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Recovery state reset")
     }
 
-    /**
-     * Get current recovery statistics
-     */
     fun getRecoveryStats(): Map<String, Any> {
         return mapOf(
             "recovery_active" to isRecoveryActive.get(),
@@ -352,9 +333,6 @@ class NetworkErrorRecoveryManager(
         )
     }
 
-    /**
-     * Record a network latency measurement for performance tracking
-     */
     fun recordLatency(latencyMs: Long) {
         synchronized(latencyMeasurements) {
             latencyMeasurements.add(latencyMs)
@@ -364,9 +342,6 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Record data transfer for throughput calculation
-     */
     fun recordDataTransfer(bytes: Long) {
         val currentTime = System.currentTimeMillis()
         if (lastDataTransferTime > 0) {
@@ -390,15 +365,12 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Get average network latency in milliseconds based on actual measurements
-     */
     fun getAverageLatency(): Long {
         synchronized(latencyMeasurements) {
             return if (latencyMeasurements.isNotEmpty()) {
                 latencyMeasurements.average().toLong()
             } else if (isHealthy) {
-                // Fallback for healthy connection when no measurements available
+
                 when (successfulConnections.get()) {
                     0 -> 0L
                     in 1..5 -> 50L
@@ -410,15 +382,12 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Get current throughput in KB/s based on actual measurements
-     */
     fun getThroughputKBps(): Double {
         synchronized(throughputMeasurements) {
             return if (throughputMeasurements.isNotEmpty()) {
                 throughputMeasurements.average()
             } else if (isHealthy) {
-                // Fallback for healthy connection when no measurements available
+
                 when (successfulConnections.get()) {
                     0 -> 0.0
                     in 1..5 -> 50.0
@@ -430,9 +399,6 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Clean up resources
-     */
     fun cleanup() {
         disableAutoRecovery()
         recoveryJob.cancel()

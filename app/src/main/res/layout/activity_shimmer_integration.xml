@@ -2,46 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#FFFFFF">
+    android:padding="16dp">
 
     <!-- Header -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Shimmer3 GSR+ Integration"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#1976D2"
         android:gravity="center"
-        android:paddingBottom="16dp" />
+        android:paddingBottom="16dp"
+        android:text="Shimmer3 GSR+ Integration"
+        android:textColor="#1976D2"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <!-- Status Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginBottom="16dp"
         android:background="#F5F5F5"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp">
+        android:orientation="vertical"
+        android:padding="12dp">
 
         <TextView
             android:id="@+id/statusText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
             android:text="Initializing Shimmer components..."
-            android:textSize="14sp"
             android:textColor="#424242"
-            android:paddingBottom="4dp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/connectionQualityText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Quality: Unknown"
-            android:textSize="12sp"
-            android:textColor="#757575" />
+            android:textColor="#757575"
+            android:textSize="12sp" />
 
     </LinearLayout>
 
@@ -49,10 +49,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
         android:background="#E8F5E8"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp">
+        android:orientation="horizontal"
+        android:padding="12dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -65,17 +65,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="GSR: -- µS"
+                android:textColor="#2E7D32"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#2E7D32" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/qualityScoreText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Quality: --%"
-                android:textSize="12sp"
-                android:textColor="#558B2F" />
+                android:textColor="#558B2F"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -83,10 +83,10 @@
             android:id="@+id/sampleCountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:text="Samples: 0"
-            android:textSize="14sp"
             android:textColor="#388E3C"
-            android:layout_gravity="center_vertical" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 
@@ -94,53 +94,53 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/scanButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Scan Devices"
-            android:textSize="12sp"
             android:layout_marginEnd="4dp"
-            android:backgroundTint="#2196F3" />
+            android:layout_weight="1"
+            android:backgroundTint="#2196F3"
+            android:text="Scan Devices"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/connectButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Connect"
-            android:textSize="12sp"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
+            android:layout_weight="1"
             android:backgroundTint="#4CAF50"
-            android:enabled="false" />
+            android:enabled="false"
+            android:text="Connect"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/startRecordingButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Start Rec"
-            android:textSize="12sp"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
+            android:layout_weight="1"
             android:backgroundTint="#FF9800"
-            android:enabled="false" />
+            android:enabled="false"
+            android:text="Start Rec"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/stopRecordingButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Stop Rec"
-            android:textSize="12sp"
             android:layout_marginStart="4dp"
+            android:layout_weight="1"
             android:backgroundTint="#F44336"
-            android:enabled="false" />
+            android:enabled="false"
+            android:text="Stop Rec"
+            android:textSize="12sp" />
 
     </LinearLayout>
 
@@ -156,11 +156,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
         android:text="Discovered Shimmer Devices"
-        android:textSize="16sp"
-        android:textStyle="bold"
         android:textColor="#424242"
-        android:paddingBottom="8dp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <!-- Device List -->
     <androidx.recyclerview.widget.RecyclerView

@@ -21,10 +21,6 @@ import org.json.JSONObject
 import java.io.File
 import java.util.concurrent.CountDownLatch
 
-/**
- * Custom Up report view model view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 class UpReportViewModel : BaseViewModel() {
     val commonBeanLD = SingleLiveEvent<CommonBean>()
 
@@ -77,7 +73,10 @@ class UpReportViewModel : BaseViewModel() {
             val url = UrlConstant.BASE_URL + "api/v1/outProduce/testReport/addTestReport"
             val params = RequestParams()
             params.addBodyParameter("reportType", 2)
-            params.addBodyParameter("modelId", if (isTC007) 1783 else 950) // TC001-950, TC002-951, TC003-952 TC007-1783
+            params.addBodyParameter(
+                "modelId",
+                if (isTC007) 1783 else 950
+            ) // TC001-950, TC002-951, TC003-952 TC007-1783
             params.addBodyParameter("testTime", TimeUtils.getNowString())
             params.addBodyParameter("testInfo", GsonUtils.toJson(reportBean))
             params.addBodyParameter("sn", "")

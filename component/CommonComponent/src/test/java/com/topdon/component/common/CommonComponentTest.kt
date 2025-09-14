@@ -5,17 +5,16 @@ import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Comprehensive unit tests for CommonComponent using Robolectric
- * Tests shared functionality and common utilities
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O], manifest = Config.NONE)
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -35,13 +34,13 @@ class CommonComponentTest {
 
     @Test
     fun testRotateDegreeCreation() {
-        // Test RotateDegree enum if it exists
+
         try {
             val rotateDegreeClass = Class.forName("com.topdon.component.common.RotateDegree")
             assertNotNull("RotateDegree class should be accessible", rotateDegreeClass)
             assertTrue("RotateDegree should be an enum", rotateDegreeClass.isEnum)
         } catch (e: ClassNotFoundException) {
-            // Class may not exist or be accessible in test environment
+
             assertTrue("RotateDegree accessibility test attempted", true)
         }
     }
@@ -83,7 +82,10 @@ class CommonComponentTest {
 
                 // Test angle normalization
                 val normalizedAngle = angle % 360.0
-                assertTrue("Normalized angle should be 0-360", normalizedAngle >= 0.0 && normalizedAngle < 360.0)
+                assertTrue(
+                    "Normalized angle should be 0-360",
+                    normalizedAngle >= 0.0 && normalizedAngle < 360.0
+                )
             }
         }
 
@@ -107,7 +109,10 @@ class CommonComponentTest {
 
                 // Test angle calculation
                 val angle = kotlin.math.atan2(y, x)
-                assertTrue("Angle should be in valid range", angle >= -kotlin.math.PI && angle <= kotlin.math.PI)
+                assertTrue(
+                    "Angle should be in valid range",
+                    angle >= -kotlin.math.PI && angle <= kotlin.math.PI
+                )
 
                 // Test coordinate rotation (90 degrees)
                 val rotatedX = -y
@@ -133,7 +138,10 @@ class CommonComponentTest {
 
             invalidStrings.forEach { str ->
                 if (str != null) {
-                    assertTrue("Invalid string should be empty or blank", str.isEmpty() || str.isBlank())
+                    assertTrue(
+                        "Invalid string should be empty or blank",
+                        str.isEmpty() || str.isBlank()
+                    )
                 }
             }
         }
@@ -247,6 +255,10 @@ class CommonComponentTest {
                     context.packageName
                 }
 
-            assertEquals("Async common operation should return correct value", context.packageName, result)
+            assertEquals(
+                "Async common operation should return correct value",
+                context.packageName,
+                result
+            )
         }
 }

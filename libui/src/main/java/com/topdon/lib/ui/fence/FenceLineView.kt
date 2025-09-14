@@ -11,13 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
-/**
- * FenceLineView class
- */
-/**
- * Custom Fence line view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class FenceLineView : View {
     var listener: CallBack? = null
 
@@ -45,7 +39,7 @@ class FenceLineView : View {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-//        canvas.drawRect(rect, mPaint)
+
         canvas.drawLine(
             startPoint[0].toFloat(),
             startPoint[1].toFloat(),
@@ -78,6 +72,7 @@ class FenceLineView : View {
                 endPoint[0] = mX.toInt()
                 endPoint[1] = mY.toInt()
             }
+
             MotionEvent.ACTION_UP -> {
                 var x = mX.toInt()
                 var y = mY.toInt()
@@ -117,6 +112,7 @@ class FenceLineView : View {
                 invalidate() // Invalidate entire view
                 result()
             }
+
             MotionEvent.ACTION_MOVE -> {
                 old =
                     Rect(
@@ -152,18 +148,9 @@ class FenceLineView : View {
         invalidate()
     }
 
-    /**
-     * CallBack class
-     */
-/**
- * Custom Call back view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
     interface CallBack {
-        /**
-         * startPoint: 左上角
-         * endPoint: 右下角
-         */
+
         fun callback(
             startPoint: IntArray,
             endPoint: IntArray,

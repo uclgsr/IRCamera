@@ -16,17 +16,17 @@
             android:id="@+id/title_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="32dp"
             android:text="GSR Recording Demo"
-            android:textSize="24sp"
-            android:paddingBottom="32dp" />
+            android:textSize="24sp" />
 
         <!-- Description -->
         <TextView
             android:id="@+id/description_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Demonstrates 128 Hz GSR data recording with CSV export and sync events."
-            android:paddingBottom="24dp" />
+            android:paddingBottom="24dp"
+            android:text="Demonstrates 128 Hz GSR data recording with CSV export and sync events." />
 
         <!-- Control Buttons -->
         <LinearLayout
@@ -38,26 +38,26 @@
                 android:id="@+id/start_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:text="Start Recording"
-                android:layout_marginEnd="8dp" />
+                android:text="Start Recording" />
 
             <Button
                 android:id="@+id/stop_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:text="Stop Recording"
                 android:enabled="false"
-                android:layout_marginEnd="8dp" />
+                android:text="Stop Recording" />
 
             <Button
                 android:id="@+id/sync_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Sync Event"
-                android:enabled="false" />
+                android:enabled="false"
+                android:text="Sync Event" />
         </LinearLayout>
 
         <!-- Status Text -->
@@ -65,10 +65,10 @@
             android:id="@+id/status_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ready to record"
-            android:textSize="16sp"
             android:paddingTop="32dp"
-            android:paddingBottom="16dp" />
+            android:paddingBottom="16dp"
+            android:text="Ready to record"
+            android:textSize="16sp" />
 
         <!-- Data Display -->
         <TextView
@@ -76,9 +76,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="No data yet. Press 'Start Recording' to begin."
             android:background="@android:drawable/editbox_background"
             android:padding="16dp"
+            android:text="No data yet. Press 'Start Recording' to begin."
             android:typeface="monospace" />
 
     </LinearLayout>

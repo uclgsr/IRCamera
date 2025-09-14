@@ -7,10 +7,6 @@ import androidx.annotation.Dimension
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
-/**
- * @author : litao
- * @date : 2023/2/21 16:41
- */
 object ColorUtils {
     fun setColorAlpha(
         @ColorInt color: Int,
@@ -22,7 +18,7 @@ object ColorUtils {
 
     fun toHexColorString(
         @ColorInt color: Int,
-    ): String  {
+    ): String {
         return "#%06X".format(0xFFFFFF and color)
     }
 
@@ -30,7 +26,11 @@ object ColorUtils {
         @Dimension(unit = Dimension.DP) dp: Int,
     ): Int {
         val r = Resources.getSystem()
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), r.displayMetrics).roundToInt()
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            r.displayMetrics
+        ).roundToInt()
     }
 
     fun dpToPxF(
@@ -40,7 +40,7 @@ object ColorUtils {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.displayMetrics)
     }
 
-    fun formatVideoTime(milliseconds: Long): String  {
+    fun formatVideoTime(milliseconds: Long): String {
         val totalSeconds = floor(milliseconds.toDouble() / 1000)
         val secondsLeft = totalSeconds % 3600
         val minutes = floor(secondsLeft / 60).toInt()
@@ -48,17 +48,15 @@ object ColorUtils {
         val m =
             if (minutes < 10) {
                 "0$minutes"
-            } else
-                {
-                    minutes.toString()
-                }
+            } else {
+                minutes.toString()
+            }
         val s =
             if (seconds < 10) {
                 "0$seconds"
-            } else
-                {
-                    seconds.toString()
-                }
+            } else {
+                seconds.toString()
+            }
         return "$m:$s"
     }
 }

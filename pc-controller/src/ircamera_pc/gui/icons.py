@@ -120,7 +120,6 @@ The icons are rendered as simple PyQt6 QPainter graphics for cross-platform
 compatibility, based on the visual design of the Android SVG resources.
 """
 
-
 if __name__ == "__main__":
     # Print icon registry for debugging
     print("IRCamera Icon Registry")

@@ -19,7 +19,7 @@ object ImageTools {
             return
         }
         val selectBean = getTempIndex(tempBytes, max, min)
-//        Log.w("123", "max size: ${selectBean.maxIndex.size}, min size: ${selectBean.minIndex.size}")
+
         bitmapFromRgbaGrey(bytes = imageBytes, bean = selectBean) // 灰度
     }
 
@@ -43,7 +43,6 @@ object ImageTools {
         ) // 换color
     }
 
-    // 选取区域转color
     private fun bitmapFromRgba(
         bytes: ByteArray,
         bean: SelectIndexBean,
@@ -88,7 +87,6 @@ object ImageTools {
         }
     }
 
-    // 选取区域转灰度
     private fun bitmapFromRgbaGrey(
         bytes: ByteArray,
         bean: SelectIndexBean,
@@ -109,7 +107,7 @@ object ImageTools {
                 r = bytes[i * 4].toInt() and 0xff
                 g = bytes[i * 4 + 1].toInt() and 0xff
                 b = bytes[i * 4 + 2].toInt() and 0xff
-                // 灰度
+
                 grey = (r * 0.3f).toInt() + (g * 0.59f).toInt() + (b * 0.11f).toInt()
                 bytes[i * 4] = grey.toByte()
                 bytes[i * 4 + 1] = grey.toByte()
@@ -119,11 +117,6 @@ object ImageTools {
         }
     }
 
-    /**
-     * 温度选取点
-     *
-     * @param bytes 温度数据
-     */
     private fun getTempIndex(
         bytes: ByteArray,
         max: Float,
@@ -154,49 +147,7 @@ object ImageTools {
         return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
     }
 
-//    // RGBA 转 bitmap
-//    fun bitmapFromRgba(bytes: ByteArray, width: Int, height: Int): Bitmap {
-//        val len = bytes.size / 4
-//        val pixels = IntArray(len)
-//        for (i in pixels.indices) {
-//            if (i > len / 4 * 3 && i < len) {
-//                //指定区域color
-//                val r = 255
-//                val g = 215
-//                val b = 0
-//                val a = 255
-//                val pixel = (a shl 24) or (r shl 16) or (g shl 8) or b
-//                pixels[i] = pixel
-//            } else if (i > 0 && i < len / 2) {
-//                val r: Int = (bytes[i * 4] and 0xff.toByte()).toUByte().toInt()
-//                val g: Int = (bytes[i * 4 + 1] and 0xff.toByte()).toUByte().toInt()
-//                val b: Int = (bytes[i * 4 + 2] and 0xff.toByte()).toUByte().toInt()
-//                val a: Int = (bytes[i * 4 + 3] and 0xff.toByte()).toUByte().toInt()
-//
-//                //灰度
-//                val grey = (r * 0.3f).toInt() + (g * 0.59f).toInt() + (b * 0.11f).toInt()
-//                val pixel = (a shl 24) or (grey shl 16) or (grey shl 8) or grey
-//                pixels[i] = pixel
-//            } else {
-//                val r: Int = (bytes[i * 4] and 0xff.toByte()).toUByte().toInt()
-//                val g: Int = (bytes[i * 4 + 1] and 0xff.toByte()).toUByte().toInt()
-//                val b: Int = (bytes[i * 4 + 2] and 0xff.toByte()).toUByte().toInt()
-//                val a: Int = (bytes[i * 4 + 3] and 0xff.toByte()).toUByte().toInt()
-//                val pixel = (a shl 24) or (r shl 16) or (g shl 8) or b
-//                pixels[i] = pixel
-//            }
-//        }
-//        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-//        bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
-//        return bitmap
-//    }
 
-    /**
-     * @param imageBytes    图像数据
-     * @param tempBytes     温度数据
-     * @param max           温度上限阈值
-     * @param min           温度下限阈值
-     */
     fun dualReadFrame(
         imageBytes: ByteArray,
         tempBytes: ByteArray,
@@ -211,9 +162,6 @@ object ImageTools {
         dualReplaceColor(imageBytes, tempBytes, max, min, maxColor, minColor)
     }
 
-    /**
-     * 替换color
-     */
     @JvmStatic
     private fun dualReplaceColor(
         imageBytes: ByteArray,
@@ -236,11 +184,11 @@ object ImageTools {
                     data = tempBytes.copyOfRange(i * 2, i * 2 + 2)
                     value = readTempValue(data)
                     if (value > max || value < min) {
-                        // max color
+
                         r = imageBytes[i * 4].toInt() and 0xff
                         g = imageBytes[i * 4 + 1].toInt() and 0xff
                         b = imageBytes[i * 4 + 2].toInt() and 0xff
-                        // 灰度
+
                         grey = (r * 0.3f).toInt() + (g * 0.59f).toInt() + (b * 0.11f).toInt()
                         imageBytes[i * 4] = grey.toByte()
                         imageBytes[i * 4 + 1] = grey.toByte()
@@ -263,14 +211,14 @@ object ImageTools {
                     data = tempBytes.copyOfRange(i * 2, i * 2 + 2)
                     value = readTempValue(data)
                     if (value > max) {
-                        // max color
+
                         imageBytes[i * 4] = maxR // r
                         imageBytes[i * 4 + 1] = maxG // g
                         imageBytes[i * 4 + 2] = maxB // b
                         imageBytes[i * 4 + 3] = maxA // a
                     }
                     if (value < min) {
-                        // min color
+
                         imageBytes[i * 4] = minR
                         imageBytes[i * 4 + 1] = minG
                         imageBytes[i * 4 + 2] = minB

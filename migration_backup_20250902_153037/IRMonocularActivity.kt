@@ -68,7 +68,7 @@ class IRMonocularActivity : BaseWifiActivity() {
     }
 
     override fun initView() {
-        // 开启软编
+
         PreferenceManager.getDefaultSharedPreferences(this@IRMonocularActivity)
             .edit()
             .putBoolean("use-sw-codec", true)
@@ -220,7 +220,7 @@ class IRMonocularActivity : BaseWifiActivity() {
     }
 
     override fun connected() {
-        // 由于 BlankDevActivity 监听 USB 设备插拔的逻辑，该弹框会一闪而过，最终决定先不弹这个弹框
+
         /*TipDialog.Builder(this)
             .setMessage(getString(R.string.tc_has_line_device) + " " + getString(R.string.device_switch_tips))
             .setPositiveListener(R.string.app_yes) {
@@ -242,7 +242,7 @@ class IRMonocularActivity : BaseWifiActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 开启软编
+
         PreferenceManager.getDefaultSharedPreferences(this@IRMonocularActivity)
             .edit()
             .putBoolean("use-sw-codec", true)
@@ -265,19 +265,15 @@ class IRMonocularActivity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * 显示和隐藏状态栏
-     * @param show
-     */
     private fun setStatusBarVisible(show: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             if (show) {
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
             } else {
                 window.decorView.systemUiVisibility = (
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_FULLSCREEN
-                )
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                        )
             }
         }
     }
@@ -285,32 +281,32 @@ class IRMonocularActivity : BaseWifiActivity() {
     private fun setSetting(code: Int) {
         when (code) {
             MonocularHelp.TYPE_SET_BLACK -> {
-                // 伪彩样式
+
                 setPseudoColor()
             }
 
             MonocularHelp.TYPE_SET_RANGE -> {
-                // 测距
+
                 setRangeFind()
             }
 
             MonocularHelp.TYPE_SET_LIGHT -> {
-                // 亮度
+
                 setBrightness()
             }
 
             MonocularHelp.TYPE_SET_PIP -> {
-                // 画中画
+
                 setPip()
             }
 
             MonocularHelp.TYPE_SET_GAIN -> {
-                // 放大倍数
+
                 setZoom()
             }
 
             MonocularHelp.TYPE_SET_MORE -> {
-                // 更多
+
                 ARouter.getInstance().build(RouterConfig.TS004_MORE).navigation(this)
             }
         }
@@ -371,7 +367,7 @@ class IRMonocularActivity : BaseWifiActivity() {
 
     private fun updateZoomUI() {
         sixAdapter.enGain(mDefaultGain)
-        // 放大倍数
+
         when (mDefaultGain) {
             MenuBean.TYPE_GAIN_X1 -> {
                 mDefaultGain = MenuBean.TYPE_GAIN_X2
@@ -459,7 +455,6 @@ class IRMonocularActivity : BaseWifiActivity() {
         super.finish()
     }
 
-    // 底部拍照中间按钮
     @SuppressLint("CheckResult")
     private fun centerCamera() {
         XXPermissions.with(this)
@@ -474,7 +469,7 @@ class IRMonocularActivity : BaseWifiActivity() {
                     ) {
                         if (allGranted) {
                             if (isVideo) {
-                                // 录制视频
+
                                 isVideoRecording =
                                     if (isVideoRecording) {
                                         camera_img.setImageResource(R.drawable.ic_menu_bottom_video_svg)
@@ -488,7 +483,10 @@ class IRMonocularActivity : BaseWifiActivity() {
                                 camera()
                             }
                         } else {
-                            TToast.shortToast(this@IRMonocularActivity, R.string.scan_ble_tip_authorize)
+                            TToast.shortToast(
+                                this@IRMonocularActivity,
+                                R.string.scan_ble_tip_authorize
+                            )
                         }
                     }
 
@@ -497,7 +495,7 @@ class IRMonocularActivity : BaseWifiActivity() {
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-                            // 拒绝授权并且不再提醒
+
                             TipDialog.Builder(this@IRMonocularActivity)
                                 .setTitleMessage(getString(R.string.app_tip))
                                 .setMessage(R.string.app_storage_content)
@@ -543,10 +541,6 @@ class IRMonocularActivity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * 更新最新图库照片或视频
-     * @param fileType 0-图片 1-录像 2-所有
-     */
     private fun refreshImg(fileType: Int) {
         lifecycleScope.launch {
             val fileList: List<FileBean>? = TS004Repository.getNewestFile(fileType)

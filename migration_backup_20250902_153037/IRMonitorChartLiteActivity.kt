@@ -42,14 +42,9 @@ import org.greenrobot.eventbus.ThreadMode
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-/**
- * 温度实时监控
- */
 @Route(path = RouterConfig.IR_MONITOR_CHART_LITE)
 class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
-    /**
-     * 从上一界面传递过来的，当前选中的 点/线/面 信息.
-     */
+
     private var selectBean: SelectPositionBean = SelectPositionBean()
 
     private val bean = ThermalBean()
@@ -64,21 +59,22 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
         selectBean = intent.getParcelableExtra("select")!!
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                if (BaseApplication.instance.tau_data_H == null)
-                    {
-                        BaseApplication.instance.tau_data_H = CommonUtil.getAssetData(mContext, IrConst.TAU_HIGH_GAIN_ASSET_PATH)
-                    }
-                if (BaseApplication.instance.tau_data_L == null)
-                    {
-                        BaseApplication.instance.tau_data_L = CommonUtil.getAssetData(mContext, IrConst.TAU_LOW_GAIN_ASSET_PATH)
-                    }
+                if (BaseApplication.instance.tau_data_H == null) {
+                    BaseApplication.instance.tau_data_H =
+                        CommonUtil.getAssetData(mContext, IrConst.TAU_HIGH_GAIN_ASSET_PATH)
+                }
+                if (BaseApplication.instance.tau_data_L == null) {
+                    BaseApplication.instance.tau_data_L =
+                        CommonUtil.getAssetData(mContext, IrConst.TAU_LOW_GAIN_ASSET_PATH)
+                }
             }
             delay(1000)
             irMonitorLiteFragment = IRMonitorLiteFragment()
             val args = Bundle()
             args.putParcelable("select", selectBean)
             irMonitorLiteFragment?.arguments = args
-            supportFragmentManager.beginTransaction().add(R.id.thermal_lay, irMonitorLiteFragment!!).commit()
+            supportFragmentManager.beginTransaction().add(R.id.thermal_lay, irMonitorLiteFragment!!)
+                .commit()
             delay(1000)
             recordThermal() // 开始记录
         }
@@ -93,7 +89,8 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
             }
         }
 
-        monitor_current_vol.text = getString(if (selectBean.type == 1) R.string.chart_temperature else R.string.chart_temperature_high)
+        monitor_current_vol.text =
+            getString(if (selectBean.type == 1) R.string.chart_temperature else R.string.chart_temperature_high)
         monitor_real_vol.visibility = if (selectBean.type == 1) View.GONE else View.VISIBLE
         monitor_real_img.visibility = if (selectBean.type == 1) View.GONE else View.VISIBLE
     }
@@ -116,40 +113,51 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                 var errorReadCount = 0
                 while (true) {
                     delay(1000)
-                    if (irMonitorLiteFragment != null)
-                        {
-                            val result: LibIRTemp.TemperatureSampleResult =
-                                when (selectBean.type) {
-                                    1 -> irMonitorLiteFragment!!.getTemperatureView().getPointTemp(selectBean.startPosition)
-                                    2 -> irMonitorLiteFragment!!.getTemperatureView().getLineTemp(Line(selectBean.startPosition, selectBean.endPosition))
-                                    else -> irMonitorLiteFragment!!.getTemperatureView().getRectTemp(selectBean.getRect())
-                                } ?: continue
-                            if (isFirstRead) {
-                                if (result.maxTemperature > 200f || result.minTemperature < -200f) {
-                                    errorReadCount++
-                                    XLog.w("第 $errorReadCount 次读取到异常数据，max = ${result.maxTemperature} min = ${result.minTemperature}")
-                                    if (errorReadCount > 10) {
-                                        XLog.i("连续10次获取到异常数据，认为温度区域稳定")
-                                        isFirstRead = false
-                                    }
-                                    continue
-                                } else {
+                    if (irMonitorLiteFragment != null) {
+                        val result: LibIRTemp.TemperatureSampleResult =
+                            when (selectBean.type) {
+                                1 -> irMonitorLiteFragment!!.getTemperatureView()
+                                    .getPointTemp(selectBean.startPosition)
+
+                                2 -> irMonitorLiteFragment!!.getTemperatureView().getLineTemp(
+                                    Line(
+                                        selectBean.startPosition,
+                                        selectBean.endPosition
+                                    )
+                                )
+
+                                else -> irMonitorLiteFragment!!.getTemperatureView()
+                                    .getRectTemp(selectBean.getRect())
+                            } ?: continue
+                        if (isFirstRead) {
+                            if (result.maxTemperature > 200f || result.minTemperature < -200f) {
+                                errorReadCount++
+                                XLog.w("第 $errorReadCount 次读取到异常数据，max = ${result.maxTemperature} min = ${result.minTemperature}")
+                                if (errorReadCount > 10) {
+                                    XLog.i("连续10次获取到异常数据，认为温度区域稳定")
                                     isFirstRead = false
-                                    lifecycleScope.launch(Dispatchers.Main) {
-                                        ll_time.isVisible = true
-                                    }
+                                }
+                                continue
+                            } else {
+                                isFirstRead = false
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    ll_time.isVisible = true
                                 }
                             }
-                            if (result.maxTemperature >= -270f) {
-                                val maxBigDecimal = BigDecimal.valueOf(tempCorrectByTs(result.maxTemperature).toDouble())
-                                val minBigDecimal = BigDecimal.valueOf(tempCorrectByTs(result.minTemperature).toDouble())
-                                bean.centerTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
-                                bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
-                                bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
-                                bean.createTime = System.currentTimeMillis()
-                                canUpdate = true // 可以开始更新记录
-                            }
                         }
+                        if (result.maxTemperature >= -270f) {
+                            val maxBigDecimal =
+                                BigDecimal.valueOf(tempCorrectByTs(result.maxTemperature).toDouble())
+                            val minBigDecimal =
+                                BigDecimal.valueOf(tempCorrectByTs(result.minTemperature).toDouble())
+                            bean.centerTemp =
+                                maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
+                            bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
+                            bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
+                            bean.createTime = System.currentTimeMillis()
+                            canUpdate = true // 可以开始更新记录
+                        }
+                    }
                 }
             }
     }
@@ -185,9 +193,6 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
 
     private var recordJob: Job? = null
 
-    /**
-     * 开始每隔1秒记录一个温度数据到数据库.
-     */
     private fun recordThermal() {
         recordJob =
             lifecycleScope.launch(Dispatchers.IO) {
@@ -215,14 +220,18 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                         AppDatabase.getInstance().thermalDao().insert(entity)
                         time++
                         launch(Dispatchers.Main) {
-                            mp_chart_view.addPointToChart(bean = entity, selectType = selectBean.type)
+                            mp_chart_view.addPointToChart(
+                                bean = entity,
+                                selectType = selectBean.type
+                            )
                         }
                         delay(timeMillis)
                     } else {
                         delay(100)
                     }
                     lifecycleScope.launch(Dispatchers.Main) {
-                        tv_time.text = TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
+                        tv_time.text =
+                            TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
                     }
                 }
                 XLog.w("停止记录, 数据量:$time")
@@ -233,11 +242,12 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
     fun cameraEvent(event: DeviceCameraEvent) {
         when (event.action) {
             100 -> {
-                // 准备图像
+
                 showCameraLoading()
             }
+
             101 -> {
-                // 显示图像
+
                 dismissCameraLoading()
             }
         }
@@ -250,31 +260,27 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
     override fun tempCorrectByTs(temp: Float?): Float {
         var tempNew = temp
         try {
-            if (config == null)
-                {
-                    config = ConfigRepository.readConfig(false)
-                }
+            if (config == null) {
+                config = ConfigRepository.readConfig(false)
+            }
             val defModel = DataBean()
             if (config!!.radiation == defModel.radiation &&
                 defModel.environment == config!!.environment &&
                 defModel.distance == config!!.distance
-            )
-                {
-                    return temp!!
-                }
+            ) {
+                return temp!!
+            }
 
-            // 获取增益状态 PASS
-            if (System.currentTimeMillis() - basicGainGetTime > 5000L)
-                {
-                    try {
-                        val basicGainGet: IrcmdError? =
-                            DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
-                                ?.basicGainGet(basicGainGetValue)
-                    } catch (e: Exception) {
-                        XLog.e("增益获取失败")
-                    }
-                    basicGainGetTime = System.currentTimeMillis()
+            if (System.currentTimeMillis() - basicGainGetTime > 5000L) {
+                try {
+                    val basicGainGet: IrcmdError? =
+                        DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
+                            ?.basicGainGet(basicGainGetValue)
+                } catch (e: Exception) {
+                    XLog.e("增益获取失败")
                 }
+                basicGainGetTime = System.currentTimeMillis()
+            }
             val params_array =
                 floatArrayOf(
                     temp!!,
@@ -300,8 +306,8 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
             Log.i(
                 TAG,
                 "temp correct,${basicGainGetValue[0]} oldTemp = " + params_array[0] + "newtemp = " + tempNew +
-                    " ems = " + params_array[1] + " ta = " + params_array[2] + " " +
-                    "distance = " + params_array[4] + " hum = " + params_array[5],
+                        " ems = " + params_array[1] + " ta = " + params_array[2] + " " +
+                        "distance = " + params_array[4] + " hum = " + params_array[5],
             )
         } catch (e: Exception) {
             XLog.e("$TAG--温度修正异常：${e.message}")

@@ -12,34 +12,26 @@ import com.topdon.module.thermal.ir.databinding.ViewTrendBinding
 import kotlin.math.min
 
 /**
-// 趋势图折线图及对应箭头等的封装.
+
  *
  * Created by LCG on 2024/12/31.
  */
-/**
- * Custom Trend view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class TrendView : FrameLayout {
-    /**
-// 展开趋势图
-     */
+
     fun expand() {
         binding.clOpen.isVisible = true
         binding.llClose.isVisible = false
     }
 
-    /**
-// 收起趋势图
-     */
     fun close() {
         binding.clOpen.isVisible = false
         binding.llClose.isVisible = true
     }
 
     /**
-// 根据指定的data刷新折线图data
-// @param tempList temperature值列表，单位摄氏度
+
+
      */
     fun refreshChart(tempList: List<Float>) {
         if (isVisible && binding.clOpen.isVisible) {
@@ -47,9 +39,6 @@ class TrendView : FrameLayout {
         }
     }
 
-    /**
-// 将折线图清空
-     */
     fun setToEmpty() {
         binding.viewChartTrend.setToEmpty()
     }
@@ -60,9 +49,19 @@ class TrendView : FrameLayout {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
@@ -99,7 +98,6 @@ class TrendView : FrameLayout {
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
 
-// 宽度为 UNSPECIFIED 的情况目前不存在，不考虑
         val wantHeight: Int = SizeUtils.dp2px(34f) + (widthSize * 158 / 264f).toInt()
         val height =
             when (heightMode) {

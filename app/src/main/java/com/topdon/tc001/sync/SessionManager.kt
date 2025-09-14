@@ -9,19 +9,6 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 
-/**
- * Advanced Session Management - Phase 2 Implementation
- *
- * Manages persistent session state across network interruptions and provides
- * multi-device coordination for synchronized recording operations.
- *
- * Features:
- * - Persistent session state across reconnections
- * - Multi-device coordination for synchronized operations
- * - Session recovery and state restoration
- * - Cross-device session synchronization
- * - Advanced session monitoring
- */
 class SessionManager(
     private val context: Context,
     private val logger: StructuredLogger,
@@ -93,9 +80,6 @@ class SessionManager(
         UNSTABLE, // Connection issues
     }
 
-    /**
-     * Start session management service
-     */
     fun start(
         onSessionStateChanged: (SessionState) -> Unit,
         onDeviceJoined: (DeviceInfo) -> Unit,
@@ -116,7 +100,12 @@ class SessionManager(
 
         sessionJob.set(
             GlobalScope.launch {
-                logger.log(StructuredLogger.LogLevel.INFO, "SessionManager", "service_started", emptyMap())
+                logger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "SessionManager",
+                    "service_started",
+                    emptyMap()
+                )
 
                 try {
                     // Session monitoring loop
@@ -146,9 +135,6 @@ class SessionManager(
         Log.i(TAG, "Session management service started")
     }
 
-    /**
-     * Stop session management service
-     */
     fun stop() {
         if (!isRunning.get()) return
 
@@ -166,9 +152,6 @@ class SessionManager(
         Log.i(TAG, "Session management service stopped")
     }
 
-    /**
-     * Create new session
-     */
     fun createSession(metadata: Map<String, Any> = emptyMap()): String {
         val id = generateSessionId()
         val startTime = System.currentTimeMillis()
@@ -202,9 +185,6 @@ class SessionManager(
         return id
     }
 
-    /**
-     * Join device to current session
-     */
     fun joinDevice(
         deviceId: String,
         deviceType: String,
@@ -251,9 +231,6 @@ class SessionManager(
         return true
     }
 
-    /**
-     * Remove device from session
-     */
     fun removeDevice(
         deviceId: String,
         reason: String = "Unknown",
@@ -276,9 +253,6 @@ class SessionManager(
         }
     }
 
-    /**
-     * Start synchronized recording across all devices
-     */
     fun startSyncRecording(): Boolean {
         val session = currentSession.get() ?: return false
         val devices = connectedDevices.values.toList()
@@ -327,9 +301,6 @@ class SessionManager(
         return true
     }
 
-    /**
-     * Stop synchronized recording
-     */
     fun stopSyncRecording() {
         val session = currentSession.get() ?: return
 
@@ -353,9 +324,6 @@ class SessionManager(
         )
     }
 
-    /**
-     * End current session
-     */
     fun endSession(
         sessionId: String,
         reason: String = "User requested",
@@ -400,9 +368,6 @@ class SessionManager(
         )
     }
 
-    /**
-     * Update device heartbeat
-     */
     fun updateDeviceHeartbeat(
         deviceId: String,
         syncOffset: Long,
@@ -419,24 +384,12 @@ class SessionManager(
         }
     }
 
-    /**
-     * Get current session information
-     */
     fun getCurrentSession(): SessionInfo? = currentSession.get()
 
-    /**
-     * Get connected devices
-     */
     fun getConnectedDevices(): List<DeviceInfo> = connectedDevices.values.toList()
 
-    /**
-     * Get session history
-     */
     fun getSessionHistory(): List<SessionInfo> = sessionHistory.values.toList()
 
-    /**
-     * Get session diagnostics
-     */
     fun getDiagnostics(): JSONObject {
         val session = currentSession.get()
         return JSONObject().apply {
@@ -444,7 +397,10 @@ class SessionManager(
             put("current_session_id", session?.id ?: "none")
             put("session_state", session?.state?.name ?: "IDLE")
             put("connected_devices", connectedDevices.size)
-            put("session_duration_ms", if (session != null) System.currentTimeMillis() - session.startTime else 0)
+            put(
+                "session_duration_ms",
+                if (session != null) System.currentTimeMillis() - session.startTime else 0
+            )
             put("total_sessions", sessionHistory.size)
             put("recording_active", session?.recordingActive ?: false)
         }
@@ -524,8 +480,8 @@ class SessionManager(
         val needsSync =
             devices.any { device ->
                 device.connectionQuality == ConnectionQuality.POOR ||
-                    device.connectionQuality == ConnectionQuality.UNSTABLE ||
-                    kotlin.math.abs(device.syncOffset) > 5_000_000L // 5ms threshold
+                        device.connectionQuality == ConnectionQuality.UNSTABLE ||
+                        kotlin.math.abs(device.syncOffset) > 5_000_000L // 5ms threshold
             }
 
         if (needsSync && session.state == SessionState.ACTIVE) {

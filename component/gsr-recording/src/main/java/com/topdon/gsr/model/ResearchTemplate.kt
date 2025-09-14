@@ -1,9 +1,5 @@
 package com.topdon.gsr.model
 
-/**
- * Research Template Configuration
- * Predefined recording profiles for common research scenarios
- */
 data class ResearchTemplate(
     val id: String,
     val name: String,
@@ -41,12 +37,10 @@ data class ResearchTemplate(
     }
 
     companion object {
-        /**
-         * Predefined research templates for common scenarios
-         */
+
         val PREDEFINED_TEMPLATES =
             listOf(
-                // Stress Response Studies
+
                 ResearchTemplate(
                     id = "stress_response_basic",
                     name = "Stress Response - Basic",
@@ -69,7 +63,11 @@ data class ResearchTemplate(
                     name = "Stress Response - Comprehensive",
                     description = "Complete stress analysis with all sensors for comprehensive physiological and behavioral assessment",
                     category = TemplateCategory.STRESS_RESPONSE,
-                    sensors = setOf(SensorType.GSR, SensorType.THERMAL_CAMERA, SensorType.RGB_CAMERA),
+                    sensors = setOf(
+                        SensorType.GSR,
+                        SensorType.THERMAL_CAMERA,
+                        SensorType.RGB_CAMERA
+                    ),
                     duration = 20 * 60 * 1000L, // 20 minutes
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.FULL_HD,
@@ -84,7 +82,7 @@ data class ResearchTemplate(
                     instructions = "Multi-modal stress response study:\n1. Attach GSR sensors\n2. Position thermal and RGB cameras\n3. Record 5min baseline → 10min stress task → 5min recovery",
                     icon = "🔬",
                 ),
-                // Cognitive Load Studies
+
                 ResearchTemplate(
                     id = "cognitive_load_mental_tasks",
                     name = "Cognitive Load - Mental Tasks",
@@ -108,7 +106,11 @@ data class ResearchTemplate(
                     name = "Cognitive Load - Learning Assessment",
                     description = "Learning effectiveness measurement with comprehensive physiological monitoring",
                     category = TemplateCategory.COGNITIVE_LOAD,
-                    sensors = setOf(SensorType.GSR, SensorType.THERMAL_CAMERA, SensorType.RGB_CAMERA),
+                    sensors = setOf(
+                        SensorType.GSR,
+                        SensorType.THERMAL_CAMERA,
+                        SensorType.RGB_CAMERA
+                    ),
                     duration = 30 * 60 * 1000L, // 30 minutes
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.FULL_HD,
@@ -120,7 +122,7 @@ data class ResearchTemplate(
                     instructions = "Learning session with physiological monitoring:\n1. 10min instruction phase\n2. 15min practice phase\n3. 5min assessment phase\nMonitor engagement and cognitive load throughout.",
                     icon = "📚",
                 ),
-                // Emotion Recognition Studies
+
                 ResearchTemplate(
                     id = "emotion_recognition_basic",
                     name = "Emotion Recognition - Basic",
@@ -145,7 +147,11 @@ data class ResearchTemplate(
                     name = "Emotion Recognition - Multi-Modal",
                     description = "Advanced emotion analysis combining facial expressions, thermal patterns, and GSR",
                     category = TemplateCategory.EMOTION_RECOGNITION,
-                    sensors = setOf(SensorType.GSR, SensorType.THERMAL_CAMERA, SensorType.RGB_CAMERA),
+                    sensors = setOf(
+                        SensorType.GSR,
+                        SensorType.THERMAL_CAMERA,
+                        SensorType.RGB_CAMERA
+                    ),
                     duration = 25 * 60 * 1000L, // 25 minutes
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.FULL_HD,
@@ -159,7 +165,7 @@ data class ResearchTemplate(
                     instructions = "Comprehensive emotion recognition study:\n- RGB: facial expressions\n- Thermal: arousal patterns\n- GSR: autonomic responses\nPresent varied emotional stimuli and record multi-modal responses.",
                     icon = "🎭",
                 ),
-                // Physiological Monitoring
+
                 ResearchTemplate(
                     id = "physio_monitoring_baseline",
                     name = "Physiological Monitoring - Baseline",
@@ -178,13 +184,17 @@ data class ResearchTemplate(
                     instructions = "Long-term physiological baseline recording. Participant should remain in comfortable resting position. Monitor for consistent GSR patterns and thermal stability.",
                     icon = "📈",
                 ),
-                // Behavioral Analysis
+
                 ResearchTemplate(
                     id = "behavioral_analysis_social",
                     name = "Behavioral Analysis - Social Interaction",
                     description = "Social behavior analysis with physiological arousal monitoring",
                     category = TemplateCategory.BEHAVIORAL_ANALYSIS,
-                    sensors = setOf(SensorType.GSR, SensorType.THERMAL_CAMERA, SensorType.RGB_CAMERA),
+                    sensors = setOf(
+                        SensorType.GSR,
+                        SensorType.THERMAL_CAMERA,
+                        SensorType.RGB_CAMERA
+                    ),
                     duration = null, // unlimited
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.FULL_HD,
@@ -198,13 +208,17 @@ data class ResearchTemplate(
                     instructions = "Social interaction study with multi-modal monitoring:\n- RGB: behavioral coding\n- Thermal: arousal detection\n- GSR: stress/engagement\nRecord natural conversation or structured interaction tasks.",
                     icon = "👥",
                 ),
-                // Custom Template
+
                 ResearchTemplate(
                     id = "custom_template",
                     name = "Custom Research Template",
                     description = "Customizable template for specific research requirements",
                     category = TemplateCategory.CUSTOM,
-                    sensors = setOf(SensorType.GSR, SensorType.THERMAL_CAMERA, SensorType.RGB_CAMERA),
+                    sensors = setOf(
+                        SensorType.GSR,
+                        SensorType.THERMAL_CAMERA,
+                        SensorType.RGB_CAMERA
+                    ),
                     duration = null,
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.FULL_HD,

@@ -15,9 +15,7 @@ class DeviceBroadcastReceiver : BroadcastReceiver() {
     private val TAG = this.javaClass.simpleName
 
     companion object {
-        /**
-         * 在 [DeviceTools] 中申请 Usb 权限附带的广播.
-         */
+
         const val ACTION_USB_PERMISSION = "com.topdon.topInfrared.USB_PERMISSION"
     }
 

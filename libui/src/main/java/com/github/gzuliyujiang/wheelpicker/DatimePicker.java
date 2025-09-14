@@ -27,12 +27,6 @@ import com.github.gzuliyujiang.wheelpicker.contract.OnDatimePickedListener;
 import com.github.gzuliyujiang.wheelpicker.widget.DatimeWheelLayout;
 import com.topdon.lib.ui.R;
 
-/**
- * 日期时间选择器
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/5 18:21
- */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class DatimePicker extends ModalDialog {
     protected DatimeWheelLayout wheelLayout;

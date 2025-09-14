@@ -4,9 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings
-import android.webkit.WebViewClient
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityPolicyBinding
@@ -17,15 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * Terms and Conditions Activity
- * 
- * Displays different types of terms:
- * 1: User terms  2: Privacy terms  3: Third-party terms
- *
- * When service returns an error, loads default terms
- */
-// Legacy ARouter route annotation - now using NavigationManager
 class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     private val mHandler = Handler(Looper.getMainLooper())
 
@@ -61,13 +49,11 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
                 else -> getString(R.string.user_services_agreement)
             }
 
-        // Initialize views using view binding
         binding.titleView.apply {
-            // Note: Title text setting is handled by the parent view implementation
-            // title_view.setTitleText(themeStr)
+
+
         }
 
-        // Create a simple ViewModel-like observer pattern since we're using BaseBindingActivity
         observeHtmlData()
 
         if (keyUseType != 0) {
@@ -77,8 +63,8 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     }
 
     private fun observeHtmlData() {
-        // Since we're not using ViewModel anymore, we'll directly load the data
-        // This is a simplified version - in a real scenario you'd want proper MVVM
+
+
     }
 
     override fun onDestroy() {
@@ -86,9 +72,6 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
         mHandler.removeCallbacksAndMessages(null)
     }
 
-    /**
-     * 为解决闪缩白屏问题，延时打开webView
-     */
     private fun delayShowWebView() {
         lifecycleScope.launch(Dispatchers.IO) {
             delay(200)
@@ -101,13 +84,13 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     private fun initData() {
         if (keyUseType == 0) {
             showLoadingDialog()
-            // Load data directly since we removed ViewModel
+
             loadDefaultContent()
         }
     }
 
     private fun loadDefaultContent() {
-        // Load the appropriate content based on theme type
+
         loadHttp(binding.policyWeb)
         delayShowWebView()
     }
@@ -166,14 +149,6 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
         binding.policyWeb.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)
     }
 
-    /**
-     * 处理富文本
-     *
-     * @param bodyHTML body
-     * @param fontColor 需要改变的字体颜色
-     * @param backgroundColor 修改字体颜色
-     * @return String
-     */
     fun getHtmlData(
         htmlBody: String,
         fontColor: String,
@@ -181,8 +156,8 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     ): String {
         val head =
             "<head>" +
-                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"> " +
-                "<style>img{max-width: 100%; width:100%; height:auto;}video{max-width: 100%; width:100%; height:auto;}*{margin:0px;}body{font-size:16px;color: $fontColor; background-color: $backgroundColor;}</style>" + "</head>"
+                    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"> " +
+                    "<style>img{max-width: 100%; width:100%; height:auto;}video{max-width: 100%; width:100%; height:auto;}*{margin:0px;}body{font-size:16px;color: $fontColor; background-color: $backgroundColor;}</style>" + "</head>"
         return "<html>$head<body>$htmlBody</body></html>"
     }
 
@@ -199,29 +174,26 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
         reloadCount--
         when (themeType) {
             1 -> {
-                // 用户服务协议
+
                 view.loadUrl(
                     "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?softCode=${BaseApplication.instance.getSoftWareCode()}&language=1&type=21",
                 )
             }
 
             2 -> {
-                // 隐私政策
+
                 view.loadUrl(
                     "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?softCode=${BaseApplication.instance.getSoftWareCode()}&language=1&type=22",
                 )
             }
 
             3 -> {
-                // 第三方组件
+
                 view.loadUrl("file:///android_asset/web/third_statement.html")
             }
         }
     }
 
-    /**
-     * 加载默认协议网址(英文版)
-     */
     fun loadHttp(view: android.webkit.WebView) {
         reloadCount--
         when (themeType) {
@@ -229,7 +201,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
                 if (BaseApplication.instance.isDomestic()) {
                     view.loadUrl("file:///android_asset/web/services_agreement_default_inside_china.html")
                 } else {
-                    // 用户服务协议
+
                     view.loadUrl("file:///android_asset/web/services_agreement_default.html")
                 }
             }
@@ -238,13 +210,13 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
                 if (BaseApplication.instance.isDomestic()) {
                     view.loadUrl("file:///android_asset/web/privacy_default_inside_china.html")
                 } else {
-                    // 隐私政策
+
                     view.loadUrl("file:///android_asset/web/privacy_default.html")
                 }
             }
 
             3 -> {
-                // 第三方组件
+
                 view.loadUrl("file:///android_asset/web/third_statement.html")
             }
         }

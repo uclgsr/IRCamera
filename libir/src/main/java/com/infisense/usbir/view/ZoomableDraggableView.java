@@ -27,7 +27,6 @@ public class ZoomableDraggableView extends View {
     private float focusX, focusY;
     private float lastX, lastY;
 
-    //原始图片
     private Bitmap originalBitmap;
     private int imageWidth;
     private int imageHeight;
@@ -70,8 +69,8 @@ public class ZoomableDraggableView extends View {
     public void setImageSize(int imageWidth, int imageHeight) {
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
-        viewWidth = ((ViewGroup)getParent()).getMeasuredWidth();
-        viewHeight = ((ViewGroup)getParent()).getMeasuredHeight();
+        viewWidth = ((ViewGroup) getParent()).getMeasuredWidth();
+        viewHeight = ((ViewGroup) getParent()).getMeasuredHeight();
         if (viewWidth != 0) {
             xscale = (float) viewWidth / (float) imageWidth;
         }
@@ -80,17 +79,17 @@ public class ZoomableDraggableView extends View {
         }
         showBitmapHeight = pxBitmapHeight / yscale;
         showBitmapHeightWidth = pxBitmapHeight * originalBitmapWidth / originalBitmapHeight * xscale;
-        showBitmap = BitmapUtils.scaleWithWH(originalBitmap,showBitmapHeightWidth,showBitmapHeight);
+        showBitmap = BitmapUtils.scaleWithWH(originalBitmap, showBitmapHeightWidth, showBitmapHeight);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.save();
         canvas.concat(matrix);
-        if (showBitmap!=null){
-            canvas.drawBitmap(showBitmap,matrix,paint);
+        if (showBitmap != null) {
+            canvas.drawBitmap(showBitmap, matrix, paint);
         }
-        // 在此处绘制你的内容
+
         super.onDraw(canvas);
         canvas.restore();
     }
@@ -135,7 +134,6 @@ public class ZoomableDraggableView extends View {
             lastX = e2.getX();
             lastY = e2.getY();
 
-            // 将滚动距离根据Scale因子进行Adjust
             deltaX /= scaleFactor;
             deltaY /= scaleFactor;
 

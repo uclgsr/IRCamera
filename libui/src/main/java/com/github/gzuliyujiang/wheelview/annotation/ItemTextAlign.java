@@ -16,12 +16,6 @@ package com.github.gzuliyujiang.wheelview.annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * 滚轮条目文本对齐方式
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/6/19 12:04
- */
 @Retention(RetentionPolicy.SOURCE)
 public @interface ItemTextAlign {
     int CENTER = 0;

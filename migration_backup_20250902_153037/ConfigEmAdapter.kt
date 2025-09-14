@@ -15,10 +15,6 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.utils.IRConfigData
 import kotlinx.android.synthetic.main.item_ir_config_emissivity.view.*
 
-/**
- * 温度修正（环境温度、测温距离、发射率修改那个页面）常用发射率表 Adapter.
- * Created by LCG on 2024/11/13.
- */
 class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapter.ViewHolder>() {
     private val dataList: ArrayList<IRConfigData> = IRConfigData.irConfigData(context)
 
@@ -26,7 +22,9 @@ class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapt
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_ir_config_emissivity, parent, false))
+        return ViewHolder(
+            LayoutInflater.from(context).inflate(R.layout.item_ir_config_emissivity, parent, false)
+        )
     }
 
     override fun onBindViewHolder(
@@ -55,10 +53,22 @@ class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapt
             canvas.drawLine(0f, 0f, 0f, bounds.bottom.toFloat(), paint)
             canvas.drawLine(0f, 0f, bounds.right.toFloat(), 0f, paint)
             if (drawRight) {
-                canvas.drawLine(bounds.right.toFloat(), 0f, bounds.right.toFloat(), bounds.bottom.toFloat(), paint)
+                canvas.drawLine(
+                    bounds.right.toFloat(),
+                    0f,
+                    bounds.right.toFloat(),
+                    bounds.bottom.toFloat(),
+                    paint
+                )
             }
             if (drawBottom) {
-                canvas.drawLine(0f, bounds.bottom.toFloat(), bounds.right.toFloat(), bounds.bottom.toFloat(), paint)
+                canvas.drawLine(
+                    0f,
+                    bounds.bottom.toFloat(),
+                    bounds.right.toFloat(),
+                    bounds.bottom.toFloat(),
+                    paint
+                )
             }
         }
 

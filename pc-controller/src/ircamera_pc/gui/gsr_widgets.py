@@ -159,7 +159,7 @@ class GSRDeviceStatusWidget(QWidget):
         return group
 
     def update_device_info(
-        self, device_id: None = str, device_info: None = Dict
+            self, device_id: None = str, device_info: None = Dict
     ) -> None:
         """Update device information display"""
         if device_id not in self.devices:
@@ -252,7 +252,7 @@ class GSRPlotWidget(QWidget):
         self.setLayout(layout)
 
     def add_device_data(
-        self, device_id: None = str, timestamp: None = float, gsr_value: None = float
+            self, device_id: None = str, timestamp: None = float, gsr_value: None = float
     ) -> None:
         """Add data point for a device"""
         if device_id not in self.data_buffers:
@@ -587,7 +587,7 @@ class GSRMainWidget(QWidget):
         self.update_gsr_data()
 
     def export_gsr_data(
-        self, device_ids: Any = List[str], format_str: Any = str, export_dir: Any = str
+            self, device_ids: Any = List[str], format_str: Any = str, export_dir: Any = str
     ) -> Any:
         """Export GSR data for selected devices"""
         if not self.network_server:
@@ -888,11 +888,11 @@ class GSRAnalyticsWidget(QWidget):
             # Keep last 100 points (about 3 minutes at 2-second intervals)
             if len(self.stress_history[device_id]["times"]) > 100:
                 self.stress_history[device_id]["times"] = self.stress_history[
-                    device_id
-                ]["times"][-100:]
+                                                              device_id
+                                                          ]["times"][-100:]
                 self.stress_history[device_id]["scores"] = self.stress_history[
-                    device_id
-                ]["scores"][-100:]
+                                                               device_id
+                                                           ]["scores"][-100:]
 
             # Update plot
             if device_id in self.stress_curves:

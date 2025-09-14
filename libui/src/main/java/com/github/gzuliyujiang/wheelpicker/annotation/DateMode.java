@@ -16,32 +16,16 @@ package com.github.gzuliyujiang.wheelpicker.annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * 日期模式
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/5/14 17:10
- */
 @Retention(RetentionPolicy.SOURCE)
 public @interface DateMode {
-    /**
-     * 不Show/Display
-     */
+
     int NONE = -1;
-    /**
-     * 年月日
-     */
+
     int YEAR_MONTH_DAY = 0;
-    /**
-     * 年月
-     */
+
     int YEAR_MONTH = 1;
-    /**
-     * 月日
-     */
+
     int MONTH_DAY = 2;
-    /**
-     * 年
-     */
+
     int YEAR = 3;
 }

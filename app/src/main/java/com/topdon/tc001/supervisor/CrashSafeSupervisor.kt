@@ -3,15 +3,21 @@ package com.topdon.tc001.supervisor
 import android.content.Context
 import android.util.Log
 import com.topdon.tc001.logging.StructuredLogger
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-/**
- * Crash-safe supervisor system for PC-to-phone communication
- * Phase 0 implementation - Android Service + CoroutineScope with stop tokens
- */
 class CrashSafeSupervisor private constructor(private val context: Context) {
     companion object {
         private const val TAG = "CrashSafeSupervisor"
@@ -26,33 +32,27 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         }
     }
 
-    // Supervisor state
     private val isRunning = AtomicBoolean(false)
     private val supervisorScope =
         CoroutineScope(
             SupervisorJob() +
-                Dispatchers.Default +
-                CoroutineName("CrashSafeSupervisor") +
-                CoroutineExceptionHandler { _, exception ->
-                    handleSupervisorException(exception)
-                },
+                    Dispatchers.Default +
+                    CoroutineName("CrashSafeSupervisor") +
+                    CoroutineExceptionHandler { _, exception ->
+                        handleSupervisorException(exception)
+                    },
         )
 
-    // Managed components
     private val managedJobs = ConcurrentHashMap<String, ManagedJob>()
     private val healthChecks = ConcurrentHashMap<String, HealthCheck>()
     private val restartCounts = ConcurrentHashMap<String, AtomicInteger>()
 
-    // Configuration
     private val maxRestartAttempts = 3
     private val restartDelayMs = 5000L
     private val healthCheckIntervalMs = 30000L
 
     private val logger = StructuredLogger.getInstance(context)
 
-    /**
-     * Represents a managed job with recovery capabilities
-     */
     data class ManagedJob(
         val id: String,
         val name: String,
@@ -63,25 +63,16 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         val startTime: Long = System.currentTimeMillis(),
     )
 
-    /**
-     * Health check interface for monitored components
-     */
     interface HealthCheck {
         suspend fun checkHealth(): HealthStatus
     }
 
-    /**
-     * Health status result
-     */
     data class HealthStatus(
         val isHealthy: Boolean,
         val message: String,
         val details: Map<String, Any> = emptyMap(),
     )
 
-    /**
-     * Stop token for graceful shutdown
-     */
     class StopToken {
         private val stopped = AtomicBoolean(false)
 
@@ -96,9 +87,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Initialize the supervisor system
-     */
     fun initialize() {
         if (isRunning.getAndSet(true)) {
             Log.i(TAG, "Crash-safe supervisor already running")
@@ -112,15 +100,11 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             mapOf("max_restart_attempts" to maxRestartAttempts),
         )
 
-        // Start health monitoring
         startHealthMonitoring()
 
         Log.i(TAG, "Crash-safe supervisor initialized")
     }
 
-    /**
-     * Register a managed job with automatic restart capabilities
-     */
     fun registerJob(
         id: String,
         name: String,
@@ -185,9 +169,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         return job
     }
 
-    /**
-     * Unregister a managed job
-     */
     fun unregisterJob(id: String) {
         val managedJob = managedJobs.remove(id)
         healthChecks.remove(id)
@@ -208,9 +189,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Request graceful stop for a specific job
-     */
     fun stopJob(id: String) {
         val managedJob = managedJobs[id]
         if (managedJob != null) {
@@ -225,9 +203,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Get status of all managed jobs
-     */
     fun getJobStatuses(): Map<String, JobStatus> {
         return managedJobs.mapValues { (_, managedJob) ->
             JobStatus(
@@ -287,8 +262,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
 
         Log.e(TAG, "Critical job failure: $name ($id)", exception)
 
-        // For critical jobs, we might want to trigger a service restart
-        // or notify the user of a critical system failure
+
     }
 
     private fun scheduleJobRestart(
@@ -345,7 +319,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                         jobFactory(newStopToken)
                     }
 
-                // Update the managed job reference
                 managedJobs[id]?.let { oldManagedJob ->
                     val updatedJob =
                         oldManagedJob.copy(
@@ -440,14 +413,10 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                 ),
             )
 
-            // Cancel the unhealthy job and trigger a restart
             managedJob.job.cancel("Health check failed: ${status.message}")
         }
     }
 
-    /**
-     * Graceful shutdown of the supervisor
-     */
     fun shutdown() {
         if (!isRunning.getAndSet(false)) {
             return
@@ -460,15 +429,12 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             mapOf("managed_jobs" to managedJobs.size),
         )
 
-        // Request stop for all managed jobs
         managedJobs.values.forEach { managedJob ->
             managedJob.stopToken.requestStop()
         }
 
-        // Cancel supervisor scope
         supervisorScope.cancel()
 
-        // Wait a bit for graceful shutdown
         try {
             runBlocking {
                 withTimeout(10000) { // 10 second timeout

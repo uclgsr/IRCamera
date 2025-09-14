@@ -133,24 +133,14 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
-/**
- * TC007 出图页面.
- *
- * Created by LCG on 2024/4/28.
- */
 @Route(path = RouterConfig.IR_THERMAL_07)
 class IRThermal07Activity : BaseWifiActivity() {
-    /**
-     * 保存设置开关影响的相关配置项.
-     */
+
     private val saveSetBean = SaveSettingBean(true)
 
     private var isTouchSeekBar: Boolean = false
     private var pseudoColorMode = WifiSaveSettingUtil.pseudoColorMode
 
-    /**
-     * 双光-融合度、设置-对比度、设置-锐度 PopupWindow，用于在点击其他操作时关掉.
-     */
     private var popupWindow: PopupWindow? = null
 
     private var textColor: Int = WifiSaveSettingUtil.tempTextColor
@@ -180,19 +170,10 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * IR文件
-     */
     private var irFile: File? = null
 
-    /**
-     * DC文件
-     */
     private var dcFile: File? = null
 
-    /**
-     * 解析后国网数据
-     */
     private var gwData: GWData? = null
 
     private var batteryInfo: BatteryInfo? = null
@@ -245,7 +226,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                 thermal_steering_view.visibility = View.GONE
                 thermal_recycler_night.setTwoLightSelected(TwoLightType.CORRECT, false)
             } else {
-                // 配准
+
                 var moveX = thermal_steering_view.moveX
                 var moveY = thermal_steering_view.moveY
                 lifecycleScope.launch {
@@ -279,7 +260,7 @@ class IRThermal07Activity : BaseWifiActivity() {
             }
         }
         lifecycleScope.launch {
-            // 获取初始参数
+
             val tmpR = TC007Repository.getRegistration(false)?.Data
             tmpR?.let {
                 thermal_steering_view.moveX = it.X!!
@@ -287,11 +268,11 @@ class IRThermal07Activity : BaseWifiActivity() {
             }
         }
         WebSocketProxy.getInstance().setOnFrameListener(this) {
-            // TODO: 处理帧数据
+
             realLeftValue = UnitTools.showUnitValue(it.minValue / 10f, isShowC)
             realRightValue = UnitTools.showUnitValue(it.maxValue / 10f, isShowC)
             if (!customPseudoBean.isUseCustomPseudo) {
-                // 动态渲染模式
+
                 try {
                     temperature_seekbar.setRangeAndPro(
                         if (editMinValue != Float.MIN_VALUE) {
@@ -363,8 +344,8 @@ class IRThermal07Activity : BaseWifiActivity() {
                     tempMode: Int,
                 ) {
                     if (isTouchSeekBar) {
-//                    editMinValue = UnitTools.showToCValue(leftValue,isShowC)
-//                    editMaxValue = UnitTools.showToCValue(rightValue,isShowC)
+
+
                         editMinValue =
                             if (tempMode == RangeSeekBar.TEMP_MODE_MIN || tempMode == RangeSeekBar.TEMP_MODE_INTERVAL) {
                                 UnitTools.showToCValue(leftValue)
@@ -378,11 +359,8 @@ class IRThermal07Activity : BaseWifiActivity() {
                                 Float.MAX_VALUE
                             }
                         mode = tempMode
-//                    imageThread?.setLimit(
-//                        editMaxValue,
-//                        editMinValue,
-//                        upColor, downColor
-//                    ) //自定义颜色
+
+
                     }
                 }
 
@@ -423,14 +401,13 @@ class IRThermal07Activity : BaseWifiActivity() {
         val config = ConfigRepository.readConfig(false)
         var text = ""
         for (tmp in IRConfigData.irConfigData(this)) {
-            if (config.radiation.toString() == tmp.value)
-                {
-                    if (text.isEmpty())
-                        {
-                            text = "${resources.getString(com.topdon.module.thermal.ir.R.string.tc_temp_test_materials)} : "
-                        }
-                    text += "${tmp.name}/"
+            if (config.radiation.toString() == tmp.value) {
+                if (text.isEmpty()) {
+                    text =
+                        "${resources.getString(com.topdon.module.thermal.ir.R.string.tc_temp_test_materials)} : "
                 }
+                text += "${tmp.name}/"
+            }
         }
         if (text.isNotEmpty()) {
             text = text.substring(0, text.length - 1)
@@ -461,13 +438,14 @@ class IRThermal07Activity : BaseWifiActivity() {
     override fun initView() {
         AlarmHelp.getInstance(this).updateData(alarmBean)
 
-        // Initialize Enhanced Thermal Recorder early for synchronized GSR integration
         if (enhancedThermalRecorder == null) {
             enhancedThermalRecorder = EnhancedThermalRecorder.create(this)
-            Log.d("ThermalSync", "Enhanced Thermal Recorder initialized during initView for synchronized recording")
+            Log.d(
+                "ThermalSync",
+                "Enhanced Thermal Recorder initialized during initView for synchronized recording"
+            )
         }
 
-        // Initialize Parallel Multi-Modal Recording System (consolidated RGB integration)
         initializeParallelRecording()
 
         view_menu_first.onTabClickListener = {
@@ -480,14 +458,13 @@ class IRThermal07Activity : BaseWifiActivity() {
             val config = ConfigRepository.readConfig(true)
             var text = ""
             for (tmp in IRConfigData.irConfigData(this)) {
-                if (config.radiation.toString() == tmp.value)
-                    {
-                        if (text.isEmpty())
-                            {
-                                text = "${resources.getString(com.topdon.module.thermal.ir.R.string.tc_temp_test_materials)} : "
-                            }
-                        text += "${tmp.name}/"
+                if (config.radiation.toString() == tmp.value) {
+                    if (text.isEmpty()) {
+                        text =
+                            "${resources.getString(com.topdon.module.thermal.ir.R.string.tc_temp_test_materials)} : "
                     }
+                    text += "${tmp.name}/"
+                }
             }
             if (text.isNotEmpty()) {
                 text = text.substring(0, text.length - 1)
@@ -498,14 +475,18 @@ class IRThermal07Activity : BaseWifiActivity() {
                 .showAsDropDown(title_view, 0, 0, Gravity.END)
         }
 
-        // GSR Multi-modal Recording Access (long press on thermal title for research features)
         title_view.setOnLongClickListener {
             showGSROptions()
             true
         }
-        view_car_detect.findViewById<LinearLayout>(com.topdon.module.thermal.ir.R.id.ll_car_detect_info).setOnClickListener {
-            LongTextDialog(this, SharedManager.getCarDetectInfo()?.item, SharedManager.getCarDetectInfo()?.description).show()
-        }
+        view_car_detect.findViewById<LinearLayout>(com.topdon.module.thermal.ir.R.id.ll_car_detect_info)
+            .setOnClickListener {
+                LongTextDialog(
+                    this,
+                    SharedManager.getCarDetectInfo()?.item,
+                    SharedManager.getCarDetectInfo()?.description
+                ).show()
+            }
         thermal_recycler_night.isVideoMode = WifiSaveSettingUtil.isVideoMode // 恢复拍照/录像状态
         thermal_recycler_night.onCameraClickListener = {
             setCamera(it)
@@ -525,7 +506,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                         setDefLimit()
                         updateImageAndSeekbarColorList(customPseudoBean)
                     }.setCancelListener(com.topdon.module.thermal.ir.R.string.app_no) {
-//                        thermal_recycler_night.setPseudoColor(pseudoColorMode)
+
                     }
                     .create().show()
             } else {
@@ -539,8 +520,8 @@ class IRThermal07Activity : BaseWifiActivity() {
                         index == 0 ||
                         index == size
                     ) {
-                        // 由于艾睿的黑热和白热不支持等温尺，所以用户在白热、黑热模式下修改等温尺后，接口调用失败，
-                        // 所以在此时的等温尺参数TC007设备还无法生效，所以切换其他伪彩的时候如果要等温尺生效，则需要重发一次等温尺参数
+
+
                         setPColor(index, it, true) {
                             val max = ((editMaxValue + 273.15f) * 10).toInt()
                             val min = ((editMinValue + 273.15f) * 10).toInt()
@@ -566,7 +547,7 @@ class IRThermal07Activity : BaseWifiActivity() {
             temperatureMode = it
             setConfigForIr(IrParam.ParamTemperature, temperatureMode, true)
             if (it == CameraItemBean.TYPE_TMP_H && SharedManager.isTipHighTemp) {
-                // 切换到高温档
+
                 val message =
                     SpanBuilder(getString(com.topdon.module.thermal.ir.R.string.tc_high_temp_test_tips1))
                         .appendDrawable(
@@ -628,13 +609,10 @@ class IRThermal07Activity : BaseWifiActivity() {
         thermal_recycler_night.updateCameraModel()
     }
 
-    /**
-     * Initialize Parallel Multi-Modal Recording System with RGB Camera Integration
-     */
     private fun initializeParallelRecording() {
         try {
             enhancedThermalRecorder?.let { thermalRecorder ->
-                // Create RGB camera settings view for manual control when needed
+
                 rgbCameraSettingsView =
                     CameraSettingsView(this).apply {
                         visibility = View.GONE // Initially hidden
@@ -647,22 +625,27 @@ class IRThermal07Activity : BaseWifiActivity() {
                         }
 
                         onRecordingToggle = { startRecording ->
-                            // For parallel recording, this is handled by the sensor selection dialog
-                            Log.d(TAG, "RGB recording toggle from camera settings (handled by parallel system)")
+
+                            Log.d(
+                                TAG,
+                                "RGB recording toggle from camera settings (handled by parallel system)"
+                            )
                         }
 
                         onSettingsChanged = { newSettings ->
                             parallelRecorder?.updateRGBSettings(newSettings)
-                            Log.i(TAG, "RGB settings updated: ${newSettings.resolution.displayName}")
+                            Log.i(
+                                TAG,
+                                "RGB settings updated: ${newSettings.resolution.displayName}"
+                            )
                         }
 
                         onFlashToggle = { enabled ->
-                            // Flash control would be handled by the RGB camera recorder
+
                             Log.i(TAG, "RGB flash ${if (enabled) "enabled" else "disabled"}")
                         }
                     }
 
-                // Create recording status indicator
                 recordingStatusIndicator =
                     RecordingStatusIndicator(this).apply {
                         layoutParams =
@@ -678,7 +661,6 @@ class IRThermal07Activity : BaseWifiActivity() {
                         setVisible(false) // Initially hidden
                     }
 
-                // Create a TextureView for RGB camera preview
                 val rgbTextureView = TextureView(this)
                 rgbTextureView.layoutParams =
                     RelativeLayout.LayoutParams(256, 192).apply {
@@ -688,7 +670,6 @@ class IRThermal07Activity : BaseWifiActivity() {
                         marginEnd = 20
                     }
 
-                // Initialize parallel recorder
                 parallelRecorder =
                     ParallelMultiModalRecorder(
                         context = this,
@@ -698,32 +679,41 @@ class IRThermal07Activity : BaseWifiActivity() {
                         initialize()
 
                         onRecordingStarted = { session ->
-                            // Update recording status indicator
-                            recordingStatusIndicator?.startRecording(session.sessionId, session.selectedSensors)
 
-                            // Update RGB camera settings view if RGB is active
+                            recordingStatusIndicator?.startRecording(
+                                session.sessionId,
+                                session.selectedSensors
+                            )
+
                             if (session.selectedSensors.contains(SensorSelectionDialog.SensorType.RGB)) {
                                 rgbCameraSettingsView?.setRecordingState(true)
                                 rgbCameraSettingsView?.updateRecordingStatus("RGB Recording Active")
 
-                                // Show RGB camera controls if RGB is selected
                                 rgbCameraSettingsView?.visibility = View.VISIBLE
                             }
 
                             Log.i(TAG, "Parallel recording started: ${session.sessionId}")
-                            Log.i(TAG, "Active sensors: ${session.selectedSensors.map { it.displayName }.joinToString(", ")}")
+                            Log.i(
+                                TAG,
+                                "Active sensors: ${
+                                    session.selectedSensors.map { it.displayName }
+                                        .joinToString(", ")
+                                }"
+                            )
 
                             lifecycleScope.launch(Dispatchers.Main) {
-                                val message = "🚀 Recording started:\n${session.selectedSensors.map { "• ${it.displayName}" }.joinToString("\n")}"
+                                val message = "🚀 Recording started:\n${
+                                    session.selectedSensors.map { "• ${it.displayName}" }
+                                        .joinToString("\n")
+                                }"
                                 TToast.shortToast(this@IRThermal07Activity, message)
                             }
                         }
 
                         onRecordingStopped = { session ->
-                            // Update recording status indicator
+
                             recordingStatusIndicator?.stopRecording()
 
-                            // Update RGB camera settings view
                             rgbCameraSettingsView?.setRecordingState(false)
                             rgbCameraSettingsView?.updateRecordingStatus("Recording Completed")
                             rgbCameraSettingsView?.visibility = View.GONE
@@ -741,7 +731,6 @@ class IRThermal07Activity : BaseWifiActivity() {
                                     }
                                 TToast.shortToast(this@IRThermal07Activity, message.trim())
 
-                                // Refresh gallery if thermal was recorded
                                 if (session.selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
                                     delay(500)
                                     thermal_recycler_night.refreshImg(GalleryRepository.DirType.TC007)
@@ -750,7 +739,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                         }
 
                         onError = { error ->
-                            // Update recording status indicator
+
                             recordingStatusIndicator?.stopRecording()
 
                             rgbCameraSettingsView?.setRecordingState(false)
@@ -763,45 +752,37 @@ class IRThermal07Activity : BaseWifiActivity() {
                         onSensorStatusChanged = { sensor, status ->
                             Log.d(TAG, "Sensor ${sensor.displayName} status: $status")
 
-                            // Update recording status indicator
                             recordingStatusIndicator?.updateSensorStatus(sensor, status)
 
-                            // Update RGB camera settings view status
                             if (sensor == SensorSelectionDialog.SensorType.RGB) {
                                 rgbCameraSettingsView?.updateRecordingStatus("RGB: $status")
                             }
                         }
                     }
 
-                // Add RGB preview to layout (small preview in corner when RGB recording)
                 temp_bg.addView(rgbTextureView)
 
-                // Add recording status indicator to layout
                 temp_bg.addView(recordingStatusIndicator)
 
-                // Set available camera options for RGB camera
                 val availableCameras = parallelRecorder?.getAvailableRGBCameras() ?: emptyList()
                 rgbCameraSettingsView?.setAvailableCameraFacing(availableCameras)
 
-                Log.i(TAG, "Parallel multi-modal recording system initialized with ${availableCameras.size} RGB cameras available")
+                Log.i(
+                    TAG,
+                    "Parallel multi-modal recording system initialized with ${availableCameras.size} RGB cameras available"
+                )
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize parallel recording system", e)
         }
     }
 
-    /**
-     * Start RGB video recording (Legacy - Use Parallel Recording Dialog)
-     * @deprecated Use long-press on title to access modern parallel recording system
-     */
     @Deprecated("Use parallel recording system via long-press on title")
     private fun startRGBRecording() {
         Log.w(TAG, "Legacy RGB recording called - recommend using parallel recording system")
 
-        // Show hint to user about new parallel recording system
         TToast.shortToast(this, "Long-press on app title for advanced multi-modal recording")
 
-        // For backward compatibility, start RGB-only recording via parallel system
         parallelRecorder?.let { recorder ->
             if (!recorder.isRecording()) {
                 val rgbOnlySensors = setOf(SensorSelectionDialog.SensorType.RGB)
@@ -809,7 +790,8 @@ class IRThermal07Activity : BaseWifiActivity() {
                     recorder.startParallelRecording(
                         selectedSensors = rgbOnlySensors,
                         sessionId = TimeUtil.generateSessionId("RGB_Legacy"),
-                        rgbSettings = rgbCameraSettingsView?.getCurrentSettings() ?: RGBCameraRecorder.RecordingSettings(),
+                        rgbSettings = rgbCameraSettingsView?.getCurrentSettings()
+                            ?: RGBCameraRecorder.RecordingSettings(),
                     )
 
                 if (!started) {
@@ -823,10 +805,6 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * Stop RGB video recording (Legacy - Use Parallel Recording Dialog)
-     * @deprecated Use long-press on title to access modern parallel recording system
-     */
     @Deprecated("Use parallel recording system via long-press on title")
     private fun stopRGBRecording() {
         Log.w(TAG, "Legacy RGB stop called - recommend using parallel recording system")
@@ -838,21 +816,18 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * Start synchronized thermal + RGB recording (Legacy)
-     * @deprecated Use long-press on title to access modern parallel recording system
-     */
     @Deprecated("Use parallel recording system via long-press on title")
     private fun startSynchronizedThermalRGBRecording(
         sessionId: String,
         rgbSettings: RGBCameraRecorder.RecordingSettings,
     ) {
-        Log.w(TAG, "Legacy synchronized recording called - recommend using parallel recording system")
+        Log.w(
+            TAG,
+            "Legacy synchronized recording called - recommend using parallel recording system"
+        )
 
-        // Show hint about modern system
         TToast.shortToast(this, "Long-press on app title for synchronized recording")
 
-        // For backward compatibility, use parallel recorder if available
         parallelRecorder?.let { recorder ->
             if (!recorder.isRecording()) {
                 val thermalRgbSensors =
@@ -865,9 +840,6 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * Check if required camera permissions are granted
-     */
     private fun hasRequiredCameraPermissions(): Boolean {
         return XXPermissions.isGranted(
             this,
@@ -878,9 +850,6 @@ class IRThermal07Activity : BaseWifiActivity() {
         )
     }
 
-    /**
-     * Request camera permissions
-     */
     private fun requestCameraPermissions() {
         XXPermissions.with(this)
             .permission(
@@ -894,7 +863,10 @@ class IRThermal07Activity : BaseWifiActivity() {
                         allGranted: Boolean,
                     ) {
                         if (allGranted) {
-                            TToast.shortToast(this@IRThermal07Activity, "Camera permissions granted")
+                            TToast.shortToast(
+                                this@IRThermal07Activity,
+                                "Camera permissions granted"
+                            )
                         }
                     }
 
@@ -902,7 +874,10 @@ class IRThermal07Activity : BaseWifiActivity() {
                         permissions: MutableList<String>,
                         doNotAskAgain: Boolean,
                     ) {
-                        TToast.shortToast(this@IRThermal07Activity, "Camera permissions required for RGB recording")
+                        TToast.shortToast(
+                            this@IRThermal07Activity,
+                            "Camera permissions required for RGB recording"
+                        )
                     }
                 },
             )
@@ -924,11 +899,12 @@ class IRThermal07Activity : BaseWifiActivity() {
             }
         }
 
-    // 更新自定义伪彩的颜色的属性值
     private fun updateImageAndSeekbarColorList(customPseudoBean: CustomPseudoBean?) {
         lifecycleScope.launch {
             customPseudoBean?.let {
-                temperature_seekbar.setColorList(customPseudoBean.getColorList(true)?.reversedArray())
+                temperature_seekbar.setColorList(
+                    customPseudoBean.getColorList(true)?.reversedArray()
+                )
                 temperature_seekbar.setPlaces(customPseudoBean.getPlaceList())
                 if (it.isUseCustomPseudo) {
                     temperature_iv_lock.visibility = View.INVISIBLE
@@ -966,13 +942,6 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * 修改自定义伪彩属性，抽出方法，方便双光界面进行重写
-     * @param colorList IntArray?
-     * @param isUseGray Boolean
-     * @param customMaxTemp Float
-     * @param customMinTemp Float
-     */
     private suspend fun setCustomPseudoColorList(
         colorList: IntArray?,
         places: FloatArray?,
@@ -980,7 +949,7 @@ class IRThermal07Activity : BaseWifiActivity() {
         customMaxTemp: Float,
         customMinTemp: Float,
     ) {
-        // TODO: 使用 places
+
         colorList?.let {
             val highColor =
                 CustomColor(
@@ -1020,14 +989,11 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * 最高最低温复原
-     */
     private fun setDefLimit() {
         editMaxValue = Float.MAX_VALUE
         editMinValue = Float.MIN_VALUE
         temperature_seekbar.tempMode = RangeSeekBar.TEMP_MODE_CLOSE
-//        imageThread?.setLimit(editMaxValue, editMinValue, upColor, downColor) //自定义颜色
+
         temperature_seekbar.setRangeAndPro(
             editMinValue,
             editMaxValue,
@@ -1048,16 +1014,16 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * 初始化相关配置
-     */
     private fun initConfig() {
-        thermal_recycler_night.setSettingSelected(SettingType.ALARM, alarmBean.isHighOpen || alarmBean.isLowOpen)
+        thermal_recycler_night.setSettingSelected(
+            SettingType.ALARM,
+            alarmBean.isHighOpen || alarmBean.isLowOpen
+        )
         lifecycleScope.launch {
             showCameraLoading()
-            // 融合和配准属性初始化
+
             TC007Repository.setRatio(wifiAttributeBean)
-            // 字体设置
+
             val red = Color.red(textColor)
             val green = Color.green(textColor)
             val blue = Color.blue(textColor)
@@ -1069,27 +1035,33 @@ class IRThermal07Activity : BaseWifiActivity() {
                 SettingType.FONT,
                 textColor != 0xffffffff.toInt() || textSize != 14,
             )
-            // 镜像
+
             param.flipMode = if (saveSetBean.isOpenMirror) 1 else 0
             if (TC007Repository.setParam(param)?.isSuccess() == true) {
-                thermal_recycler_night.setSettingSelected(SettingType.MIRROR, saveSetBean.isOpenMirror)
+                thermal_recycler_night.setSettingSelected(
+                    SettingType.MIRROR,
+                    saveSetBean.isOpenMirror
+                )
             }
-            // 伪彩条
+
             cl_seek_bar.isVisible = saveSetBean.isOpenPseudoBar
-            thermal_recycler_night.setSettingSelected(SettingType.PSEUDO_BAR, saveSetBean.isOpenPseudoBar)
-            // 电池信息获取
+            thermal_recycler_night.setSettingSelected(
+                SettingType.PSEUDO_BAR,
+                saveSetBean.isOpenPseudoBar
+            )
+
             batteryInfo = TC007Repository.getBatteryInfo()
-            // 读取配置设置 环境温度、测温距离、发射率
+
             val config = ConfigRepository.readConfig(true)
             TC007Repository.setIRConfig(config.environment, config.distance, config.radiation)
-            // 设置温度单位
-            // 清除点、线、面
+
+
             TC007Repository.clearAllTemp()
             val tempFrame = TC007Repository.getTempFrame()
             if (tempFrame) {
                 TC007Repository.setTempFrame(true)
             }
-            // 高低增益设置
+
             thermal_recycler_night.isUnitF = SharedManager.getTemperature() == 0 // 温度档位单位
             val data =
                 TC007Repository.setEnvAttr(
@@ -1099,7 +1071,7 @@ class IRThermal07Activity : BaseWifiActivity() {
             if (data) {
                 thermal_recycler_night.setTempLevel(temperatureMode)
             }
-            // 图像模式数据更新
+
             when (WifiSaveSettingUtil.fusionType) {
                 SaveSettingUtil.FusionTypeLPYFusion -> { // 双光1
                     TC007Repository.setMode(4)
@@ -1107,12 +1079,14 @@ class IRThermal07Activity : BaseWifiActivity() {
                     temperature_iv_lock.visibility = View.INVISIBLE
                     thermal_recycler_night.twoLightType = TwoLightType.TWO_LIGHT_1
                 }
+
                 SaveSettingUtil.FusionTypeMeanFusion -> { // 双光2
                     TC007Repository.setMode(3)
                     temperature_iv_input.visibility = View.INVISIBLE
                     temperature_iv_lock.visibility = View.INVISIBLE
                     thermal_recycler_night.twoLightType = TwoLightType.TWO_LIGHT_2
                 }
+
                 SaveSettingUtil.FusionTypeIROnly -> { // 单红外
                     TC007Repository.setMode(0)
                     temperature_iv_input.visibility = View.VISIBLE
@@ -1136,12 +1110,14 @@ class IRThermal07Activity : BaseWifiActivity() {
                     }
                     thermal_recycler_night.twoLightType = TwoLightType.IR
                 }
+
                 SaveSettingUtil.FusionTypeVLOnly -> { // 可见光
                     TC007Repository.setMode(1)
                     temperature_iv_input.visibility = View.INVISIBLE
                     temperature_iv_lock.visibility = View.INVISIBLE
                     thermal_recycler_night.twoLightType = TwoLightType.LIGHT
                 }
+
                 SaveSettingUtil.FusionTypeTC007Fusion -> { // 画中画
                     TC007Repository.setMode(2)
                     temperature_iv_input.visibility = View.INVISIBLE
@@ -1149,7 +1125,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                     thermal_recycler_night.twoLightType = TwoLightType.P_IN_P
                 }
             }
-            // 对比度和锐度
+
             param.flipMode = if (saveSetBean.isOpenMirror) 1 else 0
             TC007Repository.setParam(param)
             dismissCameraLoading()
@@ -1191,12 +1167,10 @@ class IRThermal07Activity : BaseWifiActivity() {
                 }, cancelListener = {
                 })
             }
+
             TwoLightType.TWO_LIGHT_2 -> { // 双光2
-                // 双光2
-//                mCurrentFusionType = DualCameraParams.FusionType.MeanFusion
-//                thermal_recycler_night.dualFusionType = WifiSaveSettingUtil.FusionTypeMeanFusion
-//                WifiSaveSettingUtil.fusionType = WifiSaveSettingUtil.FusionTypeMeanFusion
-//                setFusion(mCurrentFusionType)
+
+
                 showCustomPseudoDialogOrNo(positiveListener = {
                     lifecycleScope.launch {
                         val data = TC007Repository.setMode(3)
@@ -1211,6 +1185,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                     thermal_recycler_night.setTwoLightSelected(TwoLightType.BLEND_EXTENT, false)
                 })
             }
+
             TwoLightType.IR -> { // 单红外
                 lifecycleScope.launch {
                     val data = TC007Repository.setMode(0)
@@ -1224,6 +1199,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                 thermal_steering_view.visibility = View.GONE
                 thermal_recycler_night.setTwoLightSelected(TwoLightType.CORRECT, false)
             }
+
             TwoLightType.LIGHT -> { // 单可见光
                 showCustomPseudoDialogOrNo(positiveListener = {
                     lifecycleScope.launch {
@@ -1241,9 +1217,10 @@ class IRThermal07Activity : BaseWifiActivity() {
                     thermal_recycler_night.setTwoLightSelected(TwoLightType.BLEND_EXTENT, false)
                 })
             }
+
             TwoLightType.CORRECT -> { // 配准
                 if (isSelected) {
-                    // 配准
+
                     if (thermal_recycler_night.twoLightType != TwoLightType.TWO_LIGHT_1 &&
                         thermal_recycler_night.twoLightType != TwoLightType.TWO_LIGHT_2
                     ) {
@@ -1251,7 +1228,8 @@ class IRThermal07Activity : BaseWifiActivity() {
                             lifecycleScope.launch {
                                 val data = TC007Repository.setMode(3)
                                 thermal_recycler_night.twoLightType = TwoLightType.TWO_LIGHT_2
-                                WifiSaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeMeanFusion
+                                WifiSaveSettingUtil.fusionType =
+                                    SaveSettingUtil.FusionTypeMeanFusion
                                 XLog.i("设备：${data?.Message}")
                                 temperature_iv_input.visibility = View.INVISIBLE
                                 temperature_iv_lock.visibility = View.INVISIBLE
@@ -1269,6 +1247,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                     thermal_steering_view.visibility = View.GONE
                 }
             }
+
             TwoLightType.P_IN_P -> { // 画中画
                 showCustomPseudoDialogOrNo(positiveListener = {
                     lifecycleScope.launch {
@@ -1285,6 +1264,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                 }, cancelListener = {
                 })
             }
+
             TwoLightType.BLEND_EXTENT -> { // 融合度
                 if (isSelected) {
                     showCustomPseudoDialogOrNo(positiveListener = {
@@ -1295,7 +1275,8 @@ class IRThermal07Activity : BaseWifiActivity() {
                                 temperature_iv_input.visibility = View.INVISIBLE
                                 temperature_iv_lock.visibility = View.INVISIBLE
                                 thermal_recycler_night.twoLightType = TwoLightType.TWO_LIGHT_2
-                                WifiSaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeMeanFusion
+                                WifiSaveSettingUtil.fusionType =
+                                    SaveSettingUtil.FusionTypeMeanFusion
                                 showBlendExtentPopup()
                             }
                         }
@@ -1316,24 +1297,32 @@ class IRThermal07Activity : BaseWifiActivity() {
             SettingType.PSEUDO_BAR -> { // 伪彩条
                 saveSetBean.isOpenPseudoBar = !saveSetBean.isOpenPseudoBar
                 cl_seek_bar.isVisible = saveSetBean.isOpenPseudoBar
-                thermal_recycler_night.setSettingSelected(SettingType.PSEUDO_BAR, saveSetBean.isOpenPseudoBar)
+                thermal_recycler_night.setSettingSelected(
+                    SettingType.PSEUDO_BAR,
+                    saveSetBean.isOpenPseudoBar
+                )
             }
+
             SettingType.CONTRAST -> { // 对比度
                 if (!isSelected) {
                     showContrastPopup()
                 }
             }
+
             SettingType.DETAIL -> { // 细节
                 if (!isSelected) {
                     showSharpnessPopup()
                 }
             }
+
             SettingType.ALARM -> { // 预警
                 showTempAlarmSetDialog()
             }
+
             SettingType.ROTATE -> {
-                // TC007 目前不支持旋转
+
             }
+
             SettingType.FONT -> { // 字体颜色
                 val colorPickDialog = ColorPickDialog(this, textColor, textSize, true)
                 colorPickDialog.onPickListener = { it: Int, textSize: Int ->
@@ -1341,30 +1330,33 @@ class IRThermal07Activity : BaseWifiActivity() {
                 }
                 colorPickDialog.show()
             }
+
             SettingType.MIRROR -> { // 镜像
                 saveSetBean.isOpenMirror = !saveSetBean.isOpenMirror
                 lifecycleScope.launch {
                     param.flipMode = if (saveSetBean.isOpenMirror) 1 else 0
                     val result = TC007Repository.setParam(param)
                     if (result?.isSuccess() == true) {
-                        thermal_recycler_night.setSettingSelected(SettingType.MIRROR, saveSetBean.isOpenMirror)
+                        thermal_recycler_night.setSettingSelected(
+                            SettingType.MIRROR,
+                            saveSetBean.isOpenMirror
+                        )
                     } else {
                         TToast.shortToast(this@IRThermal07Activity, R.string.operation_failed_tips)
                     }
                 }
             }
+
             SettingType.COMPASS -> { // 指南针
-                // TC007 没有观测模式自然没有指南针
+
             }
+
             SettingType.WATERMARK -> {
-                // 水印菜单只有 2D 编辑才有
+
             }
         }
     }
 
-    /**
-     * 统一由此进行双光切换的伪彩处理
-     */
     private fun showCustomPseudoDialogOrNo(
         positiveListener: (() -> Unit),
         cancelListener: (() -> Unit),
@@ -1438,9 +1430,6 @@ class IRThermal07Activity : BaseWifiActivity() {
         return PRODUCT_NAME_TC007
     }
 
-    /**
-     * 统一在此处处理设备端的参数设置
-     */
     private fun setConfigForIr(
         type: IrParam,
         data: Any?,
@@ -1449,7 +1438,7 @@ class IRThermal07Activity : BaseWifiActivity() {
     ) {
         when (type) {
             IrParam.ParamTemperature -> {
-                // 高低增益切换
+
                 WifiSaveSettingUtil.temperatureMode = temperatureMode
                 lifecycleScope.launch {
                     showCameraLoading()
@@ -1464,15 +1453,20 @@ class IRThermal07Activity : BaseWifiActivity() {
             }
 
             IrParam.ParamPColor -> {
-                // 伪彩样式切换
+
                 lifecycleScope.launch {
-                    TC007Repository.setPallete(PalleteBean(0, stander = Stander(data as Int, arrayListOf(200, 100, 80))))
+                    TC007Repository.setPallete(
+                        PalleteBean(
+                            0,
+                            stander = Stander(data as Int, arrayListOf(200, 100, 80))
+                        )
+                    )
                     netListener?.invoke()
                 }
             }
 
             IrParam.ParamTempFont -> {
-                // 字体大小和颜色
+
                 lifecycleScope.launch {
                     val red = Color.red((data as TempFont).textColor)
                     val green = Color.green(data.textColor)
@@ -1493,13 +1487,17 @@ class IRThermal07Activity : BaseWifiActivity() {
                         )
                     } else {
                         if (isShowError) {
-                            TToast.shortToast(this@IRThermal07Activity, R.string.operation_failed_tips)
+                            TToast.shortToast(
+                                this@IRThermal07Activity,
+                                R.string.operation_failed_tips
+                            )
                         }
                     }
                 }
             }
+
             IrParam.ParamAlarm -> {
-                // 预警
+
                 alarmBean.isMarkOpen = false // TC007统一关闭预警轮廓
                 WifiSaveSettingUtil.alarmBean = alarmBean
                 AlarmHelp.getInstance(this@IRThermal07Activity).updateData(
@@ -1514,14 +1512,14 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * 显示温度报警设置弹框.
-     */
     private fun showTempAlarmSetDialog() {
         if (tempAlarmSetDialog == null) {
             tempAlarmSetDialog = TempAlarmSetDialog(this, false)
             tempAlarmSetDialog?.onSaveListener = {
-                thermal_recycler_night.setSettingSelected(SettingType.ALARM, it.isHighOpen || it.isLowOpen)
+                thermal_recycler_night.setSettingSelected(
+                    SettingType.ALARM,
+                    it.isHighOpen || it.isLowOpen
+                )
                 alarmBean = it
                 setConfigForIr(IrParam.ParamAlarm, alarmBean, true)
             }
@@ -1531,9 +1529,6 @@ class IRThermal07Activity : BaseWifiActivity() {
         tempAlarmSetDialog?.show()
     }
 
-    /**
-     * 显示对比度设置 PopupWindow
-     */
     private fun showContrastPopup() {
         thermal_recycler_night.setSettingSelected(SettingType.CONTRAST, true)
 
@@ -1555,9 +1550,6 @@ class IRThermal07Activity : BaseWifiActivity() {
         popupWindow = seekBarPopup
     }
 
-    /**
-     * 显示细节(锐度) 设置 PopupWindow
-     */
     private fun showSharpnessPopup() {
         thermal_recycler_night.setSettingSelected(SettingType.DETAIL, true)
 
@@ -1581,9 +1573,6 @@ class IRThermal07Activity : BaseWifiActivity() {
         popupWindow = seekBarPopup
     }
 
-    /**
-     * 关系对应查看thirdBean和tc007接口的对应规则：0-白热；1-铁红；2-彩虹；3-极光；4-丛林；5-红热；6-微光；7-医疗；8-辉金；9-黑热（默认伪彩为铁红）
-     */
     private fun pseudoColorModeToIndex(code: Int): Int {
         return if (code >= 3) {
             code - 2
@@ -1598,15 +1587,12 @@ class IRThermal07Activity : BaseWifiActivity() {
         isShowError: Boolean = false,
         netListener: (() -> Unit)? = null,
     ) {
-        // 伪彩颜色修改
+
         pseudoColorMode = code
         setConfigForIr(IrParam.ParamPColor, index, isShowError, netListener)
         thermal_recycler_night.setPseudoColor(-1)
         temperature_seekbar.setPseudocode(pseudoColorMode)
-        /**
-         * 设置伪彩【set pseudocolor】
-         * 固件机芯实现(部分伪彩为预留,设置后可能无效果)
-         */
+
         WifiSaveSettingUtil.pseudoColorMode = pseudoColorMode
         thermal_recycler_night.setPseudoColor(code)
     }
@@ -1651,18 +1637,21 @@ class IRThermal07Activity : BaseWifiActivity() {
                     TC007Repository.setTempFrame(false)
                 }
             }
+
             FenceType.LINE -> { // 线
                 geometry_view.mode = TemperatureBaseView.Mode.LINE
                 lifecycleScope.launch {
                     TC007Repository.setTempFrame(false)
                 }
             }
+
             FenceType.RECT -> { // 面
                 geometry_view.mode = TemperatureBaseView.Mode.RECT
                 lifecycleScope.launch {
                     TC007Repository.setTempFrame(false)
                 }
             }
+
             FenceType.FULL -> { // 全图
                 geometry_view.isShowFull = isSelected
                 geometry_view.mode = TemperatureBaseView.Mode.FULL
@@ -1670,9 +1659,11 @@ class IRThermal07Activity : BaseWifiActivity() {
                     TC007Repository.setTempFrame(true)
                 }
             }
+
             FenceType.TREND -> { // 趋势图
-                // TODO: 实现趋势图逻辑
+
             }
+
             FenceType.DEL -> { // 删除
                 geometry_view.mode = TemperatureBaseView.Mode.CLEAR
                 lifecycleScope.launch {
@@ -1683,27 +1674,27 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * 第 1 个菜单-拍照录像 各个操作的点击事件监听.
-     * @param actionCode: 0-拍照/录像  1-图库  2-更多菜单  3-切换到拍照  4-切换到录像
-     */
     private fun setCamera(actionCode: Int) {
         when (actionCode) {
             0 -> { // 拍照/录像
                 checkStoragePermission()
             }
+
             1 -> { // 图库
                 ARouter.getInstance()
                     .build(RouterConfig.IR_GALLERY_HOME)
                     .withInt(ExtraKeyConfig.DIR_TYPE, GalleryRepository.DirType.TC007.ordinal)
                     .navigation()
             }
+
             2 -> { // 更多菜单
                 settingCamera()
             }
+
             3 -> { // 切换到拍照
                 WifiSaveSettingUtil.isVideoMode = false
             }
+
             4 -> { // 切换到录像
                 WifiSaveSettingUtil.isVideoMode = true
             }
@@ -1724,27 +1715,16 @@ class IRThermal07Activity : BaseWifiActivity() {
                 isSel = WifiSaveSettingUtil.isAutoShutter,
             ),
             CameraItemBean("手动快门", CameraItemBean.TYPE_SDKM),
-//            CameraItemBean(
-//                "声音", CameraItemBean.TYPE_AUDIO,
-//                isSel = WifiSaveSettingUtil.isRecordAudio &&
-//                        ActivityCompat.checkSelfPermission(
-//                            this,
-//                            Manifest.permission.RECORD_AUDIO
-//                        )
-//                        == PackageManager.PERMISSION_GRANTED
-//            ),
+
+
             CameraItemBean("设置", CameraItemBean.TYPE_SETTING),
         )
     }
 
-    /**
-     * 延时拍照延时秒数，0表示关闭.
-     */
     private var cameraDelaySecond: Int = WifiSaveSettingUtil.delayCaptureSecond
     private var cameraItemAdapter: CameraItemAdapter? = null
     private var isAutoShutter: Boolean = WifiSaveSettingUtil.isAutoShutter
 
-    // 拍照右边按钮
     private fun settingCamera() {
         showCameraSetting = !showCameraSetting
         if (showCameraSetting) {
@@ -1810,14 +1790,14 @@ class IRThermal07Activity : BaseWifiActivity() {
                                     cameraItemAdapter!!.data[position].isSel = false
                                     cameraItemAdapter!!.notifyItemChanged(position)
                                 }
-                                // 手动快门
+
 
                                 ToastUtils.showShort(com.topdon.module.thermal.ir.R.string.app_Manual_Shutter)
                                 return@listener
                             }
 
                             CameraItemBean.TYPE_ZDKM -> {
-                                // 自动快门
+
                                 isAutoShutter = !isAutoShutter
                                 WifiSaveSettingUtil.isAutoShutter = isAutoShutter
                                 cameraItemAdapter!!.data[position].isSel =
@@ -1838,7 +1818,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                                 } else {
                                     stopCorrection()
                                 }
-//                                ircmd?.setAutoShutter(isAutoShutter)
+
                                 return@listener
                             }
                         }
@@ -1890,7 +1870,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                     ) {
                         if (allGranted) {
                             if (isVideo) {
-                                // 正在录制视频
+
                                 stopIfVideoing()
                                 return
                             }
@@ -1913,7 +1893,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                                                 if (!thermal_recycler_night.isVideoMode) {
                                                     camera()
                                                 } else {
-                                                    // 录制视频
+
                                                     video()
                                                 }
                                             }
@@ -1932,7 +1912,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-                            // 拒绝授权并且不再提醒
+
                             if (BaseApplication.instance.isDomestic()) {
                                 ToastUtils.showShort(getString(R.string.app_storage_content))
                                 return
@@ -1969,15 +1949,11 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * 拍照 - Enhanced with synchronized GSR timing
-     */
     private fun camera() {
         lifecycleScope.launch {
-            // Get unified Samsung S22 ground truth timestamp for synchronization
+
             val synchronizedTimestamp = TimeUtil.getSynchronizedTimestamp()
 
-            // Trigger synchronized GSR sync event for thermal frame capture
             enhancedThermalRecorder?.let { recorder ->
                 recorder.triggerSyncEvent(
                     "THERMAL_PHOTO_CAPTURE",
@@ -1989,7 +1965,10 @@ class IRThermal07Activity : BaseWifiActivity() {
                         "timing_precision" to "samsung_s22_device_clock",
                     ),
                 )
-                Log.d("ThermalSync", "Synchronized GSR sync event triggered for thermal photo capture at timestamp: $synchronizedTimestamp")
+                Log.d(
+                    "ThermalSync",
+                    "Synchronized GSR sync event triggered for thermal photo capture at timestamp: $synchronizedTimestamp"
+                )
             }
 
             thermal_recycler_night.setToCamera()
@@ -2014,7 +1993,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                         false,
                     )
                 }
-                // 获取展示图像信息的图层数据
+
                 var cameraViewBitmap: Bitmap? =
                     Bitmap.createScaledBitmap(
                         bitmap,
@@ -2022,7 +2001,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                         thermal_lay.measuredHeight,
                         true,
                     )
-                // 合并伪彩条
+
                 val isShowPseudoBar = cl_seek_bar.visibility == View.VISIBLE
                 if (isShowPseudoBar) {
                     val seekBarBitmap = cl_seek_bar.drawToBitmap()
@@ -2035,7 +2014,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                         )
                     seekBarBitmap.recycle()
                 }
-                // 添加水印
+
                 val watermarkBean = SharedManager.wifiWatermarkBean
                 if (watermarkBean.isOpen) {
                     cameraViewBitmap =
@@ -2044,13 +2023,11 @@ class IRThermal07Activity : BaseWifiActivity() {
                             watermarkBean.title,
                             watermarkBean.address,
                             if (watermarkBean.isAddTime) TimeTool.getNowTime() else "",
-                            if (temperature_seekbar.isVisible)
-                                {
-                                    temperature_seekbar.measuredWidth
-                                } else
-                                {
-                                    0
-                                },
+                            if (temperature_seekbar.isVisible) {
+                                temperature_seekbar.measuredWidth
+                            } else {
+                                0
+                            },
                         )
                 }
                 var name = ""
@@ -2059,7 +2036,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                 }
                 irFile?.let {
                     gwData = IXUtil.parserInfFile(it, dcFile!!)
-                    // Convert byte[] to 2D array
+
                     val irData = OpencvTools.convertSingleByteToDoubleByte(gwData!!.irData)
                     val tempData = OpencvTools.convertCelsiusToOriginalBytes(gwData!!.temp)
                     System.arraycopy(irData, 0, imageEditBytes, 0, irData.size)
@@ -2100,18 +2077,15 @@ class IRThermal07Activity : BaseWifiActivity() {
 
     private var videoRecord: VideoRecordFFmpeg? = null
 
-    // Enhanced GSR integration for synchronized multi-modal recording
     private var enhancedThermalRecorder: EnhancedThermalRecorder? = null
     private var currentSessionId: String? = null
 
-    // NEW: Parallel Multi-Modal Recording System
-    // Multi-Modal Recording Components (Primary)
+
     private var parallelRecorder: ParallelMultiModalRecorder? = null
     private var rgbCameraSettingsView: CameraSettingsView? = null
     private var recordingStatusIndicator: RecordingStatusIndicator? = null
     private var selectedSensors: Set<SensorSelectionDialog.SensorType> = emptySet()
 
-    // Legacy Recording Mode Support
     private var isRGBRecordingEnabled = false
     private var rgbRecordingMode = RecordingMode.THERMAL_ONLY
 
@@ -2122,9 +2096,6 @@ class IRThermal07Activity : BaseWifiActivity() {
         THERMAL_RGB_GSR("Thermal + RGB + GSR"),
     }
 
-    /**
-     * 初始化视频采集组件
-     */
     private fun initVideoRecordFFmpeg() {
         playFragment?.let {
             videoRecord =
@@ -2144,28 +2115,30 @@ class IRThermal07Activity : BaseWifiActivity() {
 
     private fun video() {
         if (!isVideo) {
-            // 开始录制
+
             initVideoRecordFFmpeg()
             if (!videoRecord!!.canStartVideoRecord(null)) {
                 return
             }
 
-            // SYNCHRONIZED START: Create unified Samsung S22 ground truth timestamp
             val synchronizedTimestamp = TimeUtil.getSynchronizedTimestamp()
             val sessionId = TimeUtil.generateSessionId("Thermal_Video")
             currentSessionId = sessionId
 
-            Log.d("ThermalSync", "Starting synchronized thermal+GSR recording at unified timestamp: $synchronizedTimestamp")
+            Log.d(
+                "ThermalSync",
+                "Starting synchronized thermal+GSR recording at unified timestamp: $synchronizedTimestamp"
+            )
 
-            // Start GSR recording first with unified timestamp
             enhancedThermalRecorder?.let { recorder ->
                 if (recorder.startRecording(sessionId, null, true)) {
                     Log.d("ThermalSync", "GSR recording started with unified timing: $sessionId")
 
-                    // Show user feedback for synchronized recording
-                    TToast.shortToast(this@IRThermal07Activity, "Synchronized thermal + GSR recording started")
+                    TToast.shortToast(
+                        this@IRThermal07Activity,
+                        "Synchronized thermal + GSR recording started"
+                    )
 
-                    // Add initial sync mark with exact timestamp
                     recorder.triggerSyncEvent(
                         "THERMAL_VIDEO_START",
                         mapOf(
@@ -2177,8 +2150,14 @@ class IRThermal07Activity : BaseWifiActivity() {
                         ),
                     )
                 } else {
-                    Log.w("ThermalSync", "Failed to start synchronized GSR recording, continuing with thermal only")
-                    TToast.shortToast(this@IRThermal07Activity, "Thermal recording only (GSR unavailable)")
+                    Log.w(
+                        "ThermalSync",
+                        "Failed to start synchronized GSR recording, continuing with thermal only"
+                    )
+                    TToast.shortToast(
+                        this@IRThermal07Activity,
+                        "Thermal recording only (GSR unavailable)"
+                    )
                 }
             }
 
@@ -2195,7 +2174,6 @@ class IRThermal07Activity : BaseWifiActivity() {
                         }
                     }
 
-                    // Stop synchronized recording with unified timestamp
                     val stopTimestamp = TimeUtil.getSynchronizedTimestamp()
                     enhancedThermalRecorder?.let { recorder ->
                         recorder.triggerSyncEvent(
@@ -2208,10 +2186,15 @@ class IRThermal07Activity : BaseWifiActivity() {
                         )
                         val session = recorder.stopRecording()
                         session?.let {
-                            Log.d("ThermalSync", "Synchronized recording completed: ${it.sessionId}, duration: ${it.getDurationMs()}ms")
-                            Log.d("ThermalSync", "Session files saved to: ${recorder.getSessionDirectory()?.absolutePath}")
+                            Log.d(
+                                "ThermalSync",
+                                "Synchronized recording completed: ${it.sessionId}, duration: ${it.getDurationMs()}ms"
+                            )
+                            Log.d(
+                                "ThermalSync",
+                                "Session files saved to: ${recorder.getSessionDirectory()?.absolutePath}"
+                            )
 
-                            // Show completion feedback with file location
                             TToast.shortToast(
                                 this@IRThermal07Activity,
                                 "Synchronized recording completed: ${it.sampleCount} GSR samples",
@@ -2231,13 +2214,14 @@ class IRThermal07Activity : BaseWifiActivity() {
                 }
             }
 
-            // Start thermal video recording with synchronized timestamp
-            // This should use the same timestamp as GSR for true synchronization
-            Log.d("ThermalSync", "Starting thermal video recording with synchronized timestamp: $synchronizedTimestamp")
+
+            Log.d(
+                "ThermalSync",
+                "Starting thermal video recording with synchronized timestamp: $synchronizedTimestamp"
+            )
             videoRecord?.updateAudioState(false)
             videoRecord?.startRecord(FileConfig.tc007GalleryDir)
 
-            // Add a sync mark right after both recordings start to mark exact coordination
             enhancedThermalRecorder?.let { recorder ->
                 recorder.triggerSyncEvent(
                     "SYNCHRONIZED_RECORDING_START",
@@ -2260,14 +2244,10 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * 如果正在进行录像，则停止录像.
-     */
     private fun stopIfVideoing() {
         if (isVideo) {
             isVideo = false
 
-            // Stop synchronized GSR recording
             enhancedThermalRecorder?.let { recorder ->
                 recorder.triggerSyncEvent(
                     "THERMAL_VIDEO_STOP",
@@ -2279,7 +2259,10 @@ class IRThermal07Activity : BaseWifiActivity() {
                 )
                 val session = recorder.stopRecording()
                 session?.let {
-                    Log.d("ThermalSync", "Synchronized recording stopped: ${it.sessionId}, samples: ${it.sampleCount}")
+                    Log.d(
+                        "ThermalSync",
+                        "Synchronized recording stopped: ${it.sessionId}, samples: ${it.sampleCount}"
+                    )
                 }
             }
 
@@ -2311,7 +2294,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                         pop_time_text.text = TimeTool.showVideoTime(it * 1000L)
                     }
                     if (it == time - 1) {
-                        // 停止
+
                         video()
                     }
                 }
@@ -2327,7 +2310,7 @@ class IRThermal07Activity : BaseWifiActivity() {
 
     @SuppressLint("CheckResult")
     private fun centerCamera() {
-//        storageRequestType = 0
+
         checkStoragePermission()
     }
 
@@ -2350,15 +2333,9 @@ class IRThermal07Activity : BaseWifiActivity() {
         AlarmHelp.getInstance(this).pause()
     }
 
-    /**
-     * Show enhanced multi-modal recording options with RGB camera support
-     */
 
-    /**
-     * Show sensor selection dialog for parallel multi-modal recording
-     */
     private fun showGSROptions() {
-        // Show enhanced menu with all production features
+
         val options =
             arrayOf(
                 "🚀 Start Multi-Modal Recording",
@@ -2382,7 +2359,7 @@ class IRThermal07Activity : BaseWifiActivity() {
     }
 
     private fun showSensorSelectionDialog() {
-        // Show sensor selection dialog with automatic sensor detection
+
         SensorSelectionDialog.show(this) { selectedSensors ->
             this.selectedSensors = selectedSensors
             startParallelRecording(selectedSensors)
@@ -2408,7 +2385,7 @@ class IRThermal07Activity : BaseWifiActivity() {
     }
 
     private fun openRecordingSettings() {
-        // Show recording configuration options
+
         val settings =
             arrayOf(
                 "Samsung S22 Timing Configuration",
@@ -2537,18 +2514,19 @@ class IRThermal07Activity : BaseWifiActivity() {
             .show()
     }
 
-    /**
-     * Start parallel recording with selected sensors
-     */
     private fun startParallelRecording(sensors: Set<SensorSelectionDialog.SensorType>) {
-        Log.i(TAG, "Starting parallel recording with sensors: ${sensors.map { it.displayName }.joinToString(", ")}")
+        Log.i(
+            TAG,
+            "Starting parallel recording with sensors: ${
+                sensors.map { it.displayName }.joinToString(", ")
+            }"
+        )
 
         if (sensors.isEmpty()) {
             TToast.shortToast(this, "No sensors selected for recording")
             return
         }
 
-        // Check permissions before starting
         if (!hasRequiredPermissions()) {
             requestRequiredPermissions {
                 if (it) {
@@ -2563,18 +2541,14 @@ class IRThermal07Activity : BaseWifiActivity() {
         startParallelRecordingInternal(sensors)
     }
 
-    /**
-     * Internal method to start parallel recording after permissions are granted
-     */
     private fun startParallelRecordingInternal(sensors: Set<SensorSelectionDialog.SensorType>) {
         parallelRecorder?.let { recorder ->
             if (recorder.isRecording()) {
-                // Stop current recording
+
                 recorder.stopParallelRecording()
                 return
             }
 
-            // Create RGB settings if RGB sensor is selected
             val rgbSettings =
                 if (sensors.contains(SensorSelectionDialog.SensorType.RGB)) {
                     RGBCameraRecorder.RecordingSettings(
@@ -2586,7 +2560,6 @@ class IRThermal07Activity : BaseWifiActivity() {
                     RGBCameraRecorder.RecordingSettings() // Default settings
                 }
 
-            // Initialize thermal recording if thermal sensor is selected
             if (sensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
                 initVideoRecordFFmpeg()
                 if (!videoRecord!!.canStartVideoRecord(null)) {
@@ -2595,7 +2568,6 @@ class IRThermal07Activity : BaseWifiActivity() {
                 }
             }
 
-            // Start parallel recording
             val started =
                 recorder.startParallelRecording(
                     selectedSensors = sensors,
@@ -2604,7 +2576,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                 )
 
             if (started) {
-                // Start thermal recording component if thermal sensor is selected
+
                 if (sensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
                     startThermalRecordingComponent()
                 }
@@ -2619,15 +2591,11 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * Start the thermal recording component (traditional thermal video recording)
-     */
     private fun startThermalRecordingComponent() {
         if (!isVideo) {
             isVideo = true
             videoRecord?.startRecord()
 
-            // Setup stop listener for thermal recording
             videoRecord?.stopVideoRecordListener = { isShowVideoRecordTips ->
                 this@IRThermal07Activity.runOnUiThread {
                     if (isShowVideoRecordTips) {
@@ -2640,7 +2608,6 @@ class IRThermal07Activity : BaseWifiActivity() {
                         }
                     }
 
-                    // Stop parallel recording when thermal recording stops
                     parallelRecorder?.stopParallelRecording()
                     isVideo = false
                     videoTimeClose()
@@ -2657,9 +2624,6 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * Check if required permissions are granted
-     */
     private fun hasRequiredPermissions(): Boolean {
         val requiredPermissions =
             mutableListOf(
@@ -2667,13 +2631,11 @@ class IRThermal07Activity : BaseWifiActivity() {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
             )
 
-        // Add camera permission if RGB recording is selected
         if (selectedSensors.contains(SensorSelectionDialog.SensorType.RGB)) {
             requiredPermissions.add(Manifest.permission.CAMERA)
             requiredPermissions.add(Manifest.permission.RECORD_AUDIO)
         }
 
-        // Add Bluetooth permissions for GSR if Android 12+
         if (selectedSensors.contains(SensorSelectionDialog.SensorType.GSR) &&
             android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S
         ) {
@@ -2686,9 +2648,6 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    /**
-     * Request required permissions for selected sensors
-     */
     private fun requestRequiredPermissions(callback: (Boolean) -> Unit) {
         val requiredPermissions =
             mutableListOf(
@@ -2729,14 +2688,10 @@ class IRThermal07Activity : BaseWifiActivity() {
             )
     }
 
-    /**
-     * Show RGB camera controls in the thermal interface
-     */
     private fun showRGBCameraControls() {
         rgbCameraSettingsView?.visibility = View.VISIBLE
         isRGBRecordingEnabled = true
 
-        // Add RGB settings view to the layout if not already added
         if (rgbCameraSettingsView?.parent == null) {
             val layoutParams =
                 RelativeLayout.LayoutParams(
@@ -2753,22 +2708,12 @@ class IRThermal07Activity : BaseWifiActivity() {
         Log.i(TAG, "RGB camera controls enabled for mode: ${rgbRecordingMode.displayName}")
     }
 
-    /**
-     * Hide RGB camera controls
-     */
     private fun hideRGBCameraControls() {
         rgbCameraSettingsView?.visibility = View.GONE
         isRGBRecordingEnabled = false
     }
 
-    /**
-     * Show RGB camera settings dialog
-     */
 
-    /**
-     * Show RGB camera settings dialog (Legacy - Use Parallel Recording Dialog)
-     * @deprecated Use long-press on title to access modern parallel recording system
-     */
     @Deprecated("Use parallel recording system via long-press on title")
     private fun showRGBSettingsDialog() {
         val availableResolutions = parallelRecorder?.getSupportedRGBResolutions() ?: emptyList()
@@ -2777,7 +2722,6 @@ class IRThermal07Activity : BaseWifiActivity() {
         val resolutionNames = availableResolutions.map { it.displayName }.toTypedArray()
         val cameraNames = availableCameras.map { it.displayName }.toTypedArray()
 
-        // Create a simple settings dialog
         val dialog =
             android.app.AlertDialog.Builder(this)
                 .setTitle("RGB Camera Settings (Legacy)")
@@ -2809,13 +2753,11 @@ class IRThermal07Activity : BaseWifiActivity() {
         temp_bg.stopAnimation()
         time_down_view.cancel()
 
-        // Cleanup Multi-Modal Recording Resources
         parallelRecorder?.cleanup()
         parallelRecorder = null
         enhancedThermalRecorder?.cleanup()
         enhancedThermalRecorder = null
 
-        // 退出时把点线面清掉
         CoroutineScope(Dispatchers.IO).launch {
             TC007Repository.clearAllTemp()
         }
@@ -2829,7 +2771,6 @@ class IRThermal07Activity : BaseWifiActivity() {
             videoRecord?.stopRecord()
             videoTimeClose()
 
-            // Stop parallel multi-modal recording
             parallelRecorder?.stopParallelRecording()
             enhancedThermalRecorder?.stopRecording()
             currentSessionId = null
@@ -2846,23 +2787,33 @@ class IRThermal07Activity : BaseWifiActivity() {
         }
     }
 
-    private fun setCarDetectPrompt()  {
+    private fun setCarDetectPrompt() {
         var carDetectInfo = SharedManager.getCarDetectInfo()
         var tvDetectPrompt = view_car_detect.findViewById<TextView>(R.id.tv_detect_prompt)
-        if (carDetectInfo == null)
-            {
-                tvDetectPrompt.text = getString(R.string.abnormal_item1) + TemperatureUtil.getTempStr(40, 70)
-            } else
-            {
-                var temperature = carDetectInfo.temperature.split("~")
-                tvDetectPrompt.text = carDetectInfo.item + TemperatureUtil.getTempStr(temperature[0].toInt(), temperature[1].toInt())
-            }
-        lay_car_detect_prompt.visibility = if (intent.getBooleanExtra(ExtraKeyConfig.IS_CAR_DETECT_ENTER, false)) View.VISIBLE else View.GONE
-        view_car_detect.findViewById<RelativeLayout>(com.topdon.module.thermal.ir.R.id.rl_content).setOnClickListener {
-            CarDetectDialog(this) {
-                var temperature = it.temperature.split("~")
-                tvDetectPrompt.text = it.item + TemperatureUtil.getTempStr(temperature[0].toInt(), temperature[1].toInt())
-            }.show()
+        if (carDetectInfo == null) {
+            tvDetectPrompt.text =
+                getString(R.string.abnormal_item1) + TemperatureUtil.getTempStr(40, 70)
+        } else {
+            var temperature = carDetectInfo.temperature.split("~")
+            tvDetectPrompt.text = carDetectInfo.item + TemperatureUtil.getTempStr(
+                temperature[0].toInt(),
+                temperature[1].toInt()
+            )
         }
+        lay_car_detect_prompt.visibility = if (intent.getBooleanExtra(
+                ExtraKeyConfig.IS_CAR_DETECT_ENTER,
+                false
+            )
+        ) View.VISIBLE else View.GONE
+        view_car_detect.findViewById<RelativeLayout>(com.topdon.module.thermal.ir.R.id.rl_content)
+            .setOnClickListener {
+                CarDetectDialog(this) {
+                    var temperature = it.temperature.split("~")
+                    tvDetectPrompt.text = it.item + TemperatureUtil.getTempStr(
+                        temperature[0].toInt(),
+                        temperature[1].toInt()
+                    )
+                }.show()
+            }
     }
 }

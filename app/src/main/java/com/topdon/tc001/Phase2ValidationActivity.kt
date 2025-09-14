@@ -20,25 +20,6 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Phase 2 Validation Activity for Samsung S22 Hardware Testing
- * 
- * This activity provides a comprehensive interface for validating the Multi-Modal
- * Physiological Sensing Platform on Samsung S22 (Android 12+) devices.
- * 
- * Features:
- * - Complete hardware validation workflow
- * - Real-time validation progress monitoring
- * - Detailed validation report generation and export
- * - Permission management with user-friendly explanations
- * - Error handling and recovery suggestions
- * - Hardware capability detection and reporting
- * 
- * This activity serves as the primary testing interface during Phase 2
- * implementation and can be used for ongoing hardware validation.
- * 
- * @author IRCamera Phase 2 Implementation
- */
 class Phase2ValidationActivity : AppCompatActivity() {
 
     companion object {
@@ -46,7 +27,6 @@ class Phase2ValidationActivity : AppCompatActivity() {
         private const val VALIDATION_REPORT_FILENAME = "irCamera_validation_report"
     }
 
-    // UI Components
     private lateinit var startValidationButton: Button
     private lateinit var validationProgressBar: ProgressBar
     private lateinit var validationStatusText: TextView
@@ -56,22 +36,19 @@ class Phase2ValidationActivity : AppCompatActivity() {
     private lateinit var exportReportButton: Button
     private lateinit var openSettingsButton: Button
 
-    // Controllers
     private lateinit var permissionController: PermissionController
     private lateinit var recordingController: RecordingController
     private lateinit var hardwareValidationController: HardwareValidationController
 
-    // State
     private var currentValidationReport: ValidationReport? = null
     private var isValidationRunning = false
 
-    // Permission result launcher
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         val allGranted = permissions.values.all { it }
         updatePermissionStatus()
-        
+
         if (allGranted) {
             showToast("All permissions granted! Ready for validation.")
             startValidationButton.isEnabled = true
@@ -84,7 +61,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_phase2_validation)
-        
+
         initializeComponents()
         setupUI()
         updatePermissionStatus()
@@ -92,18 +69,16 @@ class Phase2ValidationActivity : AppCompatActivity() {
 
     private fun initializeComponents() {
         Log.i(TAG, "Initializing Phase 2 validation components...")
-        
-        // Initialize controllers
+
         permissionController = PermissionController(this)
         permissionController.initialize()
-        
+
         recordingController = RecordingController(this, this)
-        
+
         hardwareValidationController = HardwareValidationController(
             this, this, permissionController, recordingController
         )
 
-        // Initialize UI components
         startValidationButton = findViewById(R.id.btn_start_validation)
         validationProgressBar = findViewById(R.id.progress_validation)
         validationStatusText = findViewById(R.id.text_validation_status)
@@ -117,7 +92,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        // Set up click listeners
+
         startValidationButton.setOnClickListener {
             if (!isValidationRunning) {
                 startHardwareValidation()
@@ -132,17 +107,16 @@ class Phase2ValidationActivity : AppCompatActivity() {
             openAppSettings()
         }
 
-        // Initialize UI state
         validationProgressBar.visibility = View.GONE
         validationResultsScrollView.visibility = View.GONE
         exportReportButton.isEnabled = false
-        
+
         updateValidationButtonState()
     }
 
     private fun updatePermissionStatus() {
         permissionStatusLayout.removeAllViews()
-        
+
         val permissionCategories = mapOf(
             "Camera" to permissionController.hasCameraPermission(),
             "Audio" to permissionController.hasAudioPermission(),
@@ -186,8 +160,9 @@ class Phase2ValidationActivity : AppCompatActivity() {
     private fun updateValidationButtonState() {
         val allPermissionsGranted = permissionController.hasAllRequiredPermissions()
         startValidationButton.isEnabled = allPermissionsGranted && !isValidationRunning
-        startValidationButton.text = if (isValidationRunning) "Validation Running..." else "Start Hardware Validation"
-        
+        startValidationButton.text =
+            if (isValidationRunning) "Validation Running..." else "Start Hardware Validation"
+
         if (!allPermissionsGranted) {
             startValidationButton.setOnClickListener {
                 requestMissingPermissions()
@@ -216,7 +191,8 @@ class Phase2ValidationActivity : AppCompatActivity() {
             "android.permission.POST_NOTIFICATIONS" to "Notification permission is required for recording status updates"
         )
 
-        val message = StringBuilder("The following permissions are required for hardware validation:\n\n")
+        val message =
+            StringBuilder("The following permissions are required for hardware validation:\n\n")
         deniedPermissions.forEach { permission ->
             val explanation = explanations[permission] ?: "Required for sensor functionality"
             message.append("• $explanation\n")
@@ -253,19 +229,16 @@ class Phase2ValidationActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 Log.i(TAG, "Starting hardware validation on Samsung S22")
-                
-                // Update status during validation
+
                 updateValidationStatus("Validating permissions system...")
-                
-                // Run comprehensive validation
+
                 val report = hardwareValidationController.validateAllSensors()
-                
-                // Store report and update UI
+
                 currentValidationReport = report
                 displayValidationResults(report)
-                
+
                 Log.i(TAG, "Hardware validation completed successfully")
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Hardware validation failed", e)
                 validationStatusText.text = "Validation failed: ${e.message}"
@@ -289,27 +262,24 @@ class Phase2ValidationActivity : AppCompatActivity() {
         validationResultsScrollView.visibility = View.VISIBLE
         exportReportButton.isEnabled = true
 
-        // Update status with summary
         val summary = report.summary
         val statusMessage = if (summary.overallSuccess) {
             "✓ All validations passed (${summary.passedTests}/${summary.totalTests})"
         } else {
             "⚠ ${summary.failedTests} validations failed (${summary.passedTests}/${summary.totalTests} passed)"
         }
-        
+
         validationStatusText.text = statusMessage
     }
 
     private fun generateValidationResultsText(report: ValidationReport): String {
         val sb = StringBuilder()
-        
-        // Header
+
         sb.append("=== HARDWARE VALIDATION REPORT ===\n")
         sb.append("Timestamp: ${formatTimestamp(report.timestamp)}\n")
         sb.append("Device: ${report.deviceInfo.manufacturer} ${report.deviceInfo.model}\n")
         sb.append("Android: ${report.deviceInfo.androidVersion} (API ${report.deviceInfo.sdkInt})\n\n")
-        
-        // Summary
+
         with(report.summary) {
             sb.append("SUMMARY:\n")
             sb.append("- Total Tests: $totalTests\n")
@@ -318,8 +288,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
             sb.append("- Duration: ${totalDurationMs}ms\n")
             sb.append("- Overall: ${if (overallSuccess) "SUCCESS" else "FAILURE"}\n\n")
         }
-        
-        // Validation Results
+
         sb.append("DETAILED RESULTS:\n")
         for ((category, result) in report.validationResults) {
             val status = if (result.success) "✓" else "✗"
@@ -331,8 +300,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
             }
             sb.append("\n")
         }
-        
-        // Sensor Capabilities
+
         if (report.sensorCapabilities.isNotEmpty()) {
             sb.append("SENSOR CAPABILITIES:\n")
             for ((sensor, capability) in report.sensorCapabilities) {
@@ -344,8 +312,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
                 sb.append("\n")
             }
         }
-        
-        // Performance Metrics
+
         if (report.performanceMetrics.isNotEmpty()) {
             sb.append("PERFORMANCE METRICS:\n")
             for ((metric, value) in report.performanceMetrics) {
@@ -353,15 +320,14 @@ class Phase2ValidationActivity : AppCompatActivity() {
             }
             sb.append("\n")
         }
-        
-        // Error Logs
+
         if (report.errorLogs.isNotEmpty()) {
             sb.append("ERROR LOGS:\n")
             for (error in report.errorLogs) {
                 sb.append("! $error\n")
             }
         }
-        
+
         return sb.toString()
     }
 
@@ -369,13 +335,13 @@ class Phase2ValidationActivity : AppCompatActivity() {
         currentValidationReport?.let { report ->
             try {
                 val jsonReport = convertReportToJson(report)
-                val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+                val timestamp =
+                    SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
                 val filename = "${VALIDATION_REPORT_FILENAME}_$timestamp.json"
-                
-                // In a real implementation, this would save to external storage
-                // For now, just show the JSON content in a dialog
+
+
                 showReportExportDialog(jsonReport, filename)
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to export validation report", e)
                 showToast("Failed to export report: ${e.message}")
@@ -393,8 +359,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
             put("sdk_int", report.deviceInfo.sdkInt)
             put("app_version", report.deviceInfo.appVersion)
         })
-        
-        // Add validation results
+
         val resultsJson = JSONObject()
         for ((key, result) in report.validationResults) {
             resultsJson.put(key, JSONObject().apply {
@@ -404,8 +369,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
             })
         }
         json.put("validation_results", resultsJson)
-        
-        // Add summary
+
         json.put("summary", JSONObject().apply {
             put("total_tests", report.summary.totalTests)
             put("passed_tests", report.summary.passedTests)
@@ -413,7 +377,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
             put("total_duration_ms", report.summary.totalDurationMs)
             put("overall_success", report.summary.overallSuccess)
         })
-        
+
         return json.toString(2) // Pretty print with 2-space indentation
     }
 
@@ -434,11 +398,11 @@ class Phase2ValidationActivity : AppCompatActivity() {
             setPadding(32, 32, 32, 32)
             setTextIsSelectable(true)
         }
-        
+
         val scrollView = ScrollView(this).apply {
             addView(textView)
         }
-        
+
         AlertDialog.Builder(this)
             .setTitle("Validation Report JSON")
             .setView(scrollView)
@@ -462,15 +426,12 @@ class Phase2ValidationActivity : AppCompatActivity() {
     }
 }
 
-/**
- * Extension functions for PermissionController to support Phase2ValidationActivity
- */
 private fun PermissionController.hasAudioPermission(): Boolean {
-    // Implementation would check RECORD_AUDIO permission
+
     return true // Placeholder
 }
 
 private fun PermissionController.hasLocationPermission(): Boolean {
-    // Implementation would check ACCESS_FINE_LOCATION permission
+
     return true // Placeholder
 }

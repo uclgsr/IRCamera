@@ -2,21 +2,7 @@ package com.topdon.tc001.sensors.unified.model
 
 import org.json.JSONObject
 
-/**
- * **Session Data Models**
- * 
- * Comprehensive data models for unified session management in the IRCamera extension.
- * 
- * These models support the complete session lifecycle from configuration to completion,
- * with integration for multi-modal sensor recording, PC controller communication,
- * and comprehensive logging and quality monitoring.
- * 
- * @author IRCamera Unified Sensor Integration
- */
 
-/**
- * Session configuration for creating new recording sessions
- */
 data class SessionConfig(
     val sessionName: String,
     val studyName: String,
@@ -35,13 +21,13 @@ data class SessionConfig(
                     enabledSensors.add(sensorsArray.getString(i))
                 }
             }
-            
+
             val metadata = mutableMapOf<String, Any>()
             val metadataObj = json.optJSONObject("metadata")
             metadataObj?.keys()?.forEach { key ->
                 metadata[key] = metadataObj.get(key)
             }
-            
+
             return SessionConfig(
                 sessionName = json.getString("session_name"),
                 studyName = json.optString("study_name", ""),
@@ -55,9 +41,6 @@ data class SessionConfig(
     }
 }
 
-/**
- * Complete session information including state and metadata
- */
 data class SessionInfo(
     val sessionId: String,
     val sessionName: String,
@@ -71,25 +54,17 @@ data class SessionInfo(
     val completedAt: Long? = null,
     val metadata: Map<String, Any> = emptyMap()
 ) {
-    /**
-     * Session duration if completed, or current duration if active
-     */
+
     val duration: Long
         get() = when {
             completedAt != null && startedAt != null -> completedAt - startedAt
             startedAt != null -> System.currentTimeMillis() - startedAt
             else -> 0L
         }
-    
-    /**
-     * Check if session is currently active
-     */
+
     val isActive: Boolean
         get() = startedAt != null && completedAt == null
-    
-    /**
-     * Convert to JSON for network transmission
-     */
+
     fun toJson(): JSONObject {
         return JSONObject().apply {
             put("session_id", sessionId)
@@ -109,97 +84,45 @@ data class SessionInfo(
     }
 }
 
-/**
- * Session type classification
- */
 enum class SessionType {
-    /**
-     * Local device-controlled recording with local storage only
-     */
+
     LOCAL,
-    
-    /**
-     * PC-controlled recording with real-time streaming to PC
-     */
+
     REMOTE,
-    
-    /**
-     * Combined local storage with PC coordination and monitoring
-     */
+
     HYBRID,
-    
-    /**
-     * Research session with enhanced logging and quality controls
-     */
+
     RESEARCH
 }
 
-/**
- * Session status enumeration
- */
 enum class SessionStatus(val displayName: String) {
-    /**
-     * No session is active
-     */
+
     IDLE("Idle"),
-    
-    /**
-     * Session created but not started
-     */
+
     CREATED("Created"),
-    
-    /**
-     * Session is starting up
-     */
+
     STARTING("Starting"),
-    
-    /**
-     * Session is actively recording
-     */
+
     RECORDING("Recording"),
-    
-    /**
-     * Session is paused (if supported)
-     */
+
     PAUSED("Paused"),
-    
-    /**
-     * Session is stopping
-     */
+
     STOPPING("Stopping"),
-    
-    /**
-     * Session completed successfully
-     */
+
     COMPLETED("Completed"),
-    
-    /**
-     * Session encountered an error
-     */
+
     ERROR("Error");
-    
-    /**
-     * Check if session is in an active state
-     */
+
     val isActive: Boolean
         get() = this == RECORDING || this == PAUSED
-    
-    /**
-     * Check if session is transitioning
-     */
+
     val isTransitioning: Boolean
         get() = this == STARTING || this == STOPPING
-    
-    /**
-     * Check if session is completed (successfully or with error)
-     */
+
     val isCompleted: Boolean
         get() = this == COMPLETED || this == ERROR
 }
 
-/**
- * Session quality metrics
- */
 data class SessionQuality(
     val overallQuality: Double = 0.0,
     val networkQuality: Double = 0.0,
@@ -213,9 +136,7 @@ data class SessionQuality(
     val errorCount: Long = 0L,
     val lastUpdated: Long = System.currentTimeMillis()
 ) {
-    /**
-     * Quality classification
-     */
+
     val qualityLevel: QualityLevel
         get() = when {
             overallQuality >= 0.9 -> QualityLevel.EXCELLENT
@@ -224,22 +145,13 @@ data class SessionQuality(
             overallQuality >= 0.3 -> QualityLevel.POOR
             else -> QualityLevel.CRITICAL
         }
-    
-    /**
-     * Total sample/frame count across all sensors
-     */
+
     val totalSamples: Long
         get() = gsrSampleCount + thermalFrameCount + rgbFrameCount
-    
-    /**
-     * Check if session has acceptable quality
-     */
+
     val isAcceptableQuality: Boolean
         get() = overallQuality >= 0.6 && errorCount < 10
-    
-    /**
-     * Convert to map for JSON serialization
-     */
+
     fun toMap(): Map<String, Any> {
         return mapOf(
             "overall_quality" to overallQuality,
@@ -258,7 +170,7 @@ data class SessionQuality(
             "last_updated" to lastUpdated
         )
     }
-    
+
     enum class QualityLevel {
         CRITICAL,
         POOR,
@@ -268,9 +180,6 @@ data class SessionQuality(
     }
 }
 
-/**
- * Session statistics for monitoring and reporting
- */
 data class SessionStatistics(
     val sessionId: String?,
     val isActive: Boolean,
@@ -285,23 +194,15 @@ data class SessionStatistics(
     val syncMarkers: Long,
     val errors: Long
 ) {
-    /**
-     * Total data points collected
-     */
+
     val totalDataPoints: Long
         get() = gsrSamples + thermalFrames + rgbFrames + syncMarkers
-    
-    /**
-     * Average sampling rate across all sensors (samples per second)
-     */
+
     val averageSamplingRate: Double
         get() = if (duration > 0) {
             (totalDataPoints * 1000.0) / duration
         } else 0.0
-    
-    /**
-     * Data quality status
-     */
+
     val qualityStatus: String
         get() = when {
             dataQuality >= 0.9 -> "Excellent"
@@ -310,10 +211,7 @@ data class SessionStatistics(
             dataQuality >= 0.3 -> "Poor"
             else -> "Critical"
         }
-    
-    /**
-     * Convert to map for display/export
-     */
+
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "session_id" to sessionId,
@@ -334,12 +232,12 @@ data class SessionStatistics(
             "quality_status" to qualityStatus
         )
     }
-    
+
     private fun formatDuration(durationMs: Long): String {
         val seconds = durationMs / 1000
         val minutes = seconds / 60
         val hours = minutes / 60
-        
+
         return when {
             hours > 0 -> "${hours}h ${minutes % 60}m ${seconds % 60}s"
             minutes > 0 -> "${minutes}m ${seconds % 60}s"
@@ -348,9 +246,6 @@ data class SessionStatistics(
     }
 }
 
-/**
- * Session summary generated at completion
- */
 data class SessionSummary(
     val sessionId: String,
     val duration: Long,
@@ -361,23 +256,15 @@ data class SessionSummary(
     val dataSize: Long,
     val metadata: Map<String, Any> = emptyMap()
 ) {
-    /**
-     * Data size in human-readable format
-     */
+
     val dataSizeFormatted: String
         get() = formatBytes(dataSize)
-    
-    /**
-     * Success rate percentage
-     */
+
     val successRate: Double
         get() = if (totalSamples > 0) {
             ((totalSamples - errorCount).toDouble() / totalSamples.toDouble()) * 100.0
         } else 0.0
-    
-    /**
-     * Convert to map for export
-     */
+
     fun toMap(): Map<String, Any> {
         return mapOf(
             "session_id" to sessionId,
@@ -392,12 +279,12 @@ data class SessionSummary(
             "metadata" to metadata
         )
     }
-    
+
     private fun formatBytes(bytes: Long): String {
         val kb = bytes / 1024.0
         val mb = kb / 1024.0
         val gb = mb / 1024.0
-        
+
         return when {
             gb >= 1.0 -> String.format("%.2f GB", gb)
             mb >= 1.0 -> String.format("%.2f MB", mb)
@@ -407,30 +294,19 @@ data class SessionSummary(
     }
 }
 
-/**
- * Sensor configuration for individual sensors in a session
- */
 data class SensorConfig(
     val sensorType: String,
     val enabled: Boolean,
     val samplingRate: Double? = null,
     val configuration: Map<String, Any> = emptyMap()
 ) {
-    /**
-     * Check if sensor is GSR
-     */
+
     val isGSR: Boolean
         get() = sensorType.equals("gsr", ignoreCase = true)
-    
-    /**
-     * Check if sensor is thermal camera
-     */
+
     val isThermal: Boolean
         get() = sensorType.equals("thermal", ignoreCase = true)
-    
-    /**
-     * Check if sensor is RGB camera
-     */
+
     val isRGB: Boolean
         get() = sensorType.equals("rgb", ignoreCase = true)
 }

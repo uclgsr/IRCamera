@@ -9,10 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-/**
- * Custom I r gallery edit view model view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 class IRGalleryEditViewModel : BaseViewModel() {
     val resultLiveData = SingleLiveEvent<FrameBean>()
 
@@ -37,16 +33,9 @@ class IRGalleryEditViewModel : BaseViewModel() {
         }
     }
 
-    /**
-// get尾部信息
-     */
 
-    fun getTailData(bytes: ByteArray)  {
+    fun getTailData(bytes: ByteArray) {
     }
 
-/**
- * Frame data model for thermal imaging information.
- * Encapsulates thermal measurement and configuration data.
- */
-data class FrameBean(val capital: ByteArray, val frame: ByteArray)
+    data class FrameBean(val capital: ByteArray, val frame: ByteArray)
 }

@@ -1,26 +1,5 @@
 package com.topdon.tc001.sensors.unified.model
 
-/**
- * **GSR Sample Data Model**
- * 
- * Represents a single GSR (Galvanic Skin Response) measurement from Shimmer3 GSR+ sensor.
- * 
- * This data structure follows research-grade standards with:
- * - High-precision timestamps (nanosecond resolution)
- * - 12-bit ADC validation (0-4095 range)
- * - Quality scoring for data integrity
- * - Multi-modal correlation support (PPG, connection metrics)
- * 
- * @param timestamp Nanosecond precision timestamp (System.nanoTime())
- * @param timestampIso Human-readable ISO timestamp
- * @param gsrMicrosiemens Calibrated GSR value in microsiemens (μS)
- * @param gsrRaw Raw 12-bit ADC value (0-4095 range)
- * @param ppgRaw Raw PPG value if available from ExG sensors
- * @param qualityScore Data quality score (0.0-1.0)
- * @param connectionRssi BLE connection signal strength (dBm)
- * 
- * @author IRCamera Unified Sensor Integration
- */
 data class GSRSample(
     val timestamp: Long,
     val timestampIso: String,
@@ -30,24 +9,15 @@ data class GSRSample(
     val qualityScore: Double,
     val connectionRssi: Int
 ) {
-    
-    /**
-     * Validate if this sample meets research-grade quality standards
-     */
+
     val isValid: Boolean
-        get() = gsrRaw in 0..4095 && 
-                gsrMicrosiemens > 0.0 && 
+        get() = gsrRaw in 0..4095 &&
+                gsrMicrosiemens > 0.0 &&
                 qualityScore >= 0.5
-    
-    /**
-     * Calculate the resistance value in ohms from GSR microsiemens
-     */
+
     val resistanceOhms: Double
         get() = if (gsrMicrosiemens > 0) 1_000_000.0 / gsrMicrosiemens else Double.MAX_VALUE
-    
-    /**
-     * Get quality classification
-     */
+
     val qualityLevel: QualityLevel
         get() = when {
             qualityScore >= 0.9 -> QualityLevel.EXCELLENT
@@ -55,17 +25,11 @@ data class GSRSample(
             qualityScore >= 0.5 -> QualityLevel.FAIR
             else -> QualityLevel.POOR
         }
-    
-    /**
-     * Convert to CSV row format
-     */
+
     fun toCsvRow(): String {
         return "$timestamp,$timestampIso,$gsrMicrosiemens,$gsrRaw,$ppgRaw,$qualityScore,$connectionRssi"
     }
-    
-    /**
-     * Convert to JSON-compatible map
-     */
+
     fun toMap(): Map<String, Any> {
         return mapOf(
             "timestamp" to timestamp,
@@ -80,27 +44,19 @@ data class GSRSample(
             "quality_level" to qualityLevel.name
         )
     }
-    
-    /**
-     * Data quality classification
-     */
+
     enum class QualityLevel {
         EXCELLENT,  // > 0.9
         GOOD,       // 0.7 - 0.9
         FAIR,       // 0.5 - 0.7
         POOR        // < 0.5
     }
-    
+
     companion object {
-        
-        /**
-         * CSV header for data export
-         */
-        const val CSV_HEADER = "timestamp_ns,timestamp_iso,gsr_microsiemens,gsr_raw,ppg_raw,quality_score,connection_rssi"
-        
-        /**
-         * Create GSR sample from raw Shimmer data
-         */
+
+        const val CSV_HEADER =
+            "timestamp_ns,timestamp_iso,gsr_microsiemens,gsr_raw,ppg_raw,quality_score,connection_rssi"
+
         fun fromRawData(
             timestamp: Long,
             timestampIso: String,
@@ -109,15 +65,14 @@ data class GSRSample(
             ppgRawValue: Int = 0,
             connectionRssi: Int = -50
         ): GSRSample {
-            
-            // Calculate quality score based on data validity
+
             val qualityScore = when {
                 gsrRawValue < 0 || gsrRawValue > 4095 -> 0.0  // Out of ADC range
                 gsrCalibratedValue <= 0 -> 0.3  // Calibration issue
                 gsrRawValue < 50 || gsrRawValue > 4000 -> 0.6  // Near ADC limits
                 else -> 0.9  // Good data
             }
-            
+
             return GSRSample(
                 timestamp = timestamp,
                 timestampIso = timestampIso,
@@ -128,10 +83,7 @@ data class GSRSample(
                 connectionRssi = connectionRssi
             )
         }
-        
-        /**
-         * Parse GSR sample from CSV row
-         */
+
         fun fromCsvRow(csvRow: String): GSRSample? {
             return try {
                 val parts = csvRow.split(",")

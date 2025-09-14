@@ -28,12 +28,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 民族选择器
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/12 13:50
- */
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class EthnicPicker extends OptionPicker {
     public static String JSON = "[{\"code\":\"01\",\"name\":\"汉族\",\"spelling\":\"Han\"}," +

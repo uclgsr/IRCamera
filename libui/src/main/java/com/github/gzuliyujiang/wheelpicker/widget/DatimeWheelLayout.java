@@ -40,12 +40,6 @@ import com.topdon.lib.ui.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 日期时间滚轮控件
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/5/14 15:26
- */
 @SuppressWarnings("unused")
 public class DatimeWheelLayout extends BaseWheelLayout {
     private DateWheelLayout dateWheelLayout;
@@ -93,7 +87,6 @@ public class DatimeWheelLayout extends BaseWheelLayout {
         dateWheelLayout = findViewById(R.id.wheel_picker_date_wheel);
         timeWheelLayout = findViewById(R.id.wheel_picker_time_wheel);
 
-        //初始color
         setCurtainEnabled(true);
         getMonthLabelView().setTextColor(0xffffffff);
         getYearLabelView().setTextColor(0xffffffff);
@@ -203,16 +196,10 @@ public class DatimeWheelLayout extends BaseWheelLayout {
         timeWheelLayout.setTimeMode(timeMode);
     }
 
-    /**
-     * settings日期时间range
-     */
     public void setRange(DatimeEntity startValue, DatimeEntity endValue) {
         setRange(startValue, endValue, null);
     }
 
-    /**
-     * settings日期时间range
-     */
     public void setRange(DatimeEntity startValue, DatimeEntity endValue, DatimeEntity defaultValue) {
         if (startValue == null) {
             startValue = DatimeEntity.now();

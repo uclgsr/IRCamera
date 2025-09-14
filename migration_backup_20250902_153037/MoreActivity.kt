@@ -33,9 +33,6 @@ import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.text.DecimalFormat
 
-/**
- * TS004 的 “更多” 页面.
- */
 @Route(path = RouterConfig.TS004_MORE)
 class MoreActivity : BaseActivity(), View.OnClickListener {
     private val firmwareViewModel: FirmwareViewModel by viewModels()
@@ -54,7 +51,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         /*if (Build.VERSION.SDK_INT < 29) {//低于 Android10
             setting_version.isVisible = false
         }*/
-        // 2024-5-30 09:16 TS004项目APP沟通群决定，3.30版本先把固件升级隐藏
+
         setting_version.isVisible = false
     }
 
@@ -72,7 +69,10 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         }
         firmwareViewModel.failLD.observe(this) {
             dismissCameraLoading()
-            TToast.shortToast(this, if (it) R.string.upgrade_bind_error else R.string.http_code_z5000)
+            TToast.shortToast(
+                this,
+                if (it) R.string.upgrade_bind_error else R.string.http_code_z5000
+            )
             tv_upgrade_point.isVisible = false
         }
     }
@@ -85,18 +85,23 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
                     .withBoolean(ExtraKeyConfig.IS_TC007, false)
                     .navigation(this@MoreActivity)
             }
+
             setting_tisr -> { // 设置超分
                 ARouter.getInstance().build(RouterConfig.TISR).navigation(this@MoreActivity)
             }
+
             setting_auto_save -> { // 自动保存到手机
                 ARouter.getInstance().build(RouterConfig.AUTO_SAVE).navigation(this@MoreActivity)
             }
+
             setting_storage_space -> { // TS004储存空间
-                ARouter.getInstance().build(RouterConfig.STORAGE_SPACE).navigation(this@MoreActivity)
+                ARouter.getInstance().build(RouterConfig.STORAGE_SPACE)
+                    .navigation(this@MoreActivity)
             }
+
             setting_version -> { // 固件版本
-                // 由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释强制登录逻辑
-//                if (LMS.getInstance().isLogin) {
+
+
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
@@ -105,13 +110,14 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
                     showCameraLoading()
                     firmwareViewModel.queryFirmware(true)
                 }
-//                } else {
-//                    LMS.getInstance().activityLogin()
-//                }
+
+
             }
+
             setting_reset -> { // 恢复出厂设置
                 restoreFactory()
             }
+
             setting_disconnect -> { // 断开连接
                 ARouter.getInstance().build(RouterConfig.IR_MORE_HELP)
                     .withInt(Constants.SETTING_CONNECTION_TYPE, Constants.SETTING_DISCONNECTION)
@@ -120,9 +126,6 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    /**
-     * 显示固件升级提示弹框.
-     */
     private fun showFirmwareUpDialog(firmwareData: FirmwareViewModel.FirmwareData) {
         val dialog = FirmwareUpDialog(this)
         dialog.titleStr = "${getString(R.string.update_new_version)} ${firmwareData.version}"
@@ -130,8 +133,8 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         dialog.contentStr = firmwareData.updateStr
         dialog.isShowRestartTips = true
         dialog.onConfirmClickListener = {
-            // 由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释下载逻辑
-            // downloadFirmware(firmwareData)
+
+
             installFirmware(FileConfig.getFirmwareFile(firmwareData.downUrl))
         }
         dialog.show()
@@ -148,9 +151,6 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
             DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024 / 1024) + "GB"
         }
 
-    /**
-     * 下载指定固件升级包
-     */
     private fun downloadFirmware(firmwareData: FirmwareViewModel.FirmwareData) {
         lifecycleScope.launch {
             XLog.d("TS004 固件升级 - 开始下载固件升级包")
@@ -221,7 +221,8 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         lifecycleScope.launch {
             val versionBean = TS004Repository.getVersion()
             if (versionBean?.isSuccess() == true) {
-                item_setting_bottom_text.text = getString(R.string.setting_firmware_update_version) + "V" + versionBean.data?.firmware
+                item_setting_bottom_text.text =
+                    getString(R.string.setting_firmware_update_version) + "V" + versionBean.data?.firmware
             } else {
                 TToast.shortToast(this@MoreActivity, R.string.operation_failed_tips)
             }

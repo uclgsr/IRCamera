@@ -28,12 +28,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 手机号前缀选择器
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/5/10 16:44
- */
 @SuppressWarnings("unused")
 public class PhoneCodePicker extends OptionPicker {
     public static String JSON = "[{\"prefix\":\"1\",\"en\":\"USA\",\"cn\":\"美国\"},\n" +

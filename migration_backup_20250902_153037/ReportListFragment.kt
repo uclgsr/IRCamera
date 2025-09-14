@@ -34,14 +34,6 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-/**
- * 报告列表.
- *
- * 需要传递参数：
- * - [ExtraKeyConfig.IS_TC007] - 当前设备是否为 TC007（不使用，透传）
- *
- * Created by LCG on 2024/8/20.
- */
 internal class ReportListFragment : BaseFragment(), View.OnClickListener {
     private lateinit var adapter: HouseAdapter
 
@@ -67,24 +59,38 @@ internal class ReportListFragment : BaseFragment(), View.OnClickListener {
             lifecycleScope.launch {
                 showLoadingDialog()
                 PDFUtil.delAllPDF(requireContext())
-                val pdfUri: Uri? = PDFUtil.savePDF(requireContext(), adapter.dataList[it] as HouseReport)
+                val pdfUri: Uri? =
+                    PDFUtil.savePDF(requireContext(), adapter.dataList[it] as HouseReport)
                 dismissLoadingDialog()
                 if (pdfUri != null) {
                     val shareIntent = Intent()
                     shareIntent.action = Intent.ACTION_SEND
                     shareIntent.putExtra(Intent.EXTRA_STREAM, pdfUri)
                     shareIntent.type = "application/pdf"
-                    startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
+                    startActivity(
+                        Intent.createChooser(
+                            shareIntent,
+                            getString(R.string.battery_share)
+                        )
+                    )
                 }
             }
         }
         adapter.onMoreClickListener = { position, v ->
-            ThreePickPopup(requireContext(), arrayListOf(R.string.app_rename, R.string.report_delete)) {
+            ThreePickPopup(
+                requireContext(),
+                arrayListOf(R.string.app_rename, R.string.report_delete)
+            ) {
                 if (it == 0) { // 重命名
                     val houseReport: HouseReport = adapter.dataList[position] as HouseReport
                     InputTextDialog(requireContext(), houseReport.name) { newName ->
                         if (houseReport.name != newName) {
-                            FileUtils.delete(File(FileConfig.documentsDir, houseReport.getPdfFileName()))
+                            FileUtils.delete(
+                                File(
+                                    FileConfig.documentsDir,
+                                    houseReport.getPdfFileName()
+                                )
+                            )
                             houseReport.name = newName
                             viewModel.update(houseReport)
                             adapter.notifyItemChanged(position)
@@ -97,7 +103,8 @@ internal class ReportListFragment : BaseFragment(), View.OnClickListener {
                         .setCancelListener(R.string.app_cancel)
                         .setPositiveListener(R.string.thermal_delete) {
                             lifecycleScope.launch(Dispatchers.IO) {
-                                val houseReport: HouseReport = adapter.dataList[position] as HouseReport
+                                val houseReport: HouseReport =
+                                    adapter.dataList[position] as HouseReport
                                 AppDatabase.getInstance().houseReportDao().deleteReport(houseReport)
                                 PDFUtil.delPDF(requireContext(), houseReport)
                                 withContext(Dispatchers.Main) {
@@ -106,7 +113,10 @@ internal class ReportListFragment : BaseFragment(), View.OnClickListener {
                                     if (adapter.dataList.isEmpty()) {
                                         viewModel.queryAll()
                                     }
-                                    TToast.shortToast(requireContext(), R.string.test_results_delete_success)
+                                    TToast.shortToast(
+                                        requireContext(),
+                                        R.string.test_results_delete_success
+                                    )
                                 }
                             }
                         }
@@ -142,9 +152,7 @@ internal class ReportListFragment : BaseFragment(), View.OnClickListener {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    /**
-     * onDetectCreate function implementation.
-     */
+
     fun onDetectCreate(event: HouseReportAddEvent) {
         viewModel.queryAll()
     }
@@ -156,9 +164,13 @@ internal class ReportListFragment : BaseFragment(), View.OnClickListener {
         when (v) {
             tv_add -> { // 添加
                 val intent = Intent(requireContext(), DetectAddActivity::class.java)
-                intent.putExtra(ExtraKeyConfig.IS_TC007, arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false)
+                intent.putExtra(
+                    ExtraKeyConfig.IS_TC007,
+                    arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
+                )
                 startActivity(intent)
             }
+
             cl_del -> { // 批量删除
                 if (adapter.selectIndexList.isNotEmpty()) {
                     TipDialog.Builder(requireContext())
@@ -172,7 +184,10 @@ internal class ReportListFragment : BaseFragment(), View.OnClickListener {
                                 }
                             viewModel.deleteMore(*resultArray)
                             tabViewModel.isEditModeLD.value = false
-                            TToast.shortToast(requireContext(), R.string.test_results_delete_success)
+                            TToast.shortToast(
+                                requireContext(),
+                                R.string.test_results_delete_success
+                            )
                         }
                         .create().show()
                 }

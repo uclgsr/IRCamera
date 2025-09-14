@@ -1,48 +1,24 @@
 package com.infisense.usbdual.camera;
 
-import com.infisense.usbdual.Const;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.infisense.usbdual.Const;
+
 public class IFrameData {
-    /**
-     * fusion图像数据长度，ARGB，故值为：
-     * fusion图像输出宽度 x fusion图像输出高度 x 4.
-     */
+
     public static int FUSION_LEN = Const.DUAL_WIDTH * Const.DUAL_HEIGHT * 4;
-    /**
-     * 原始infrared数据长度、原始温度数据长度，YUV-Y16，故值为：
-     * 原始infrared宽度 x 原始infrared高度 x 2.
-     */
+
     public static int ORIGINAL_LEN = Const.IR_WIDTH * Const.IR_HEIGHT * 2;
-    /**
-     * 缩放温度数据长度，YUV-422，故值为：
-     * fusion图像输出宽度 x fusion图像输出高度 x 2.
-     */
+
     public static int REMAP_TEMP_LEN = Const.DUAL_WIDTH * Const.DUAL_HEIGHT * 2;
-    /**
-     * 原始visible light数据长度，RGB24，故值为：
-     * 原始visible light宽度 x 原始visible light高度 x 3.
-     */
+
     public static int LIGHT_LEN = Const.VL_WIDTH * Const.VL_HEIGHT * 3;
-    /**
-     * 缩放visible light数据长度，ARGB，故值为：
-     * 原始visible light宽度 x 原始visible light高度 x 4.
-     */
+
     public static int P_IN_P_LEN = Const.DUAL_WIDTH * Const.DUAL_HEIGHT * 4;
-    /**
-     * 一帧除picture-in-picture缩放缩放visible light数据之外的所有数据长度，
-     * 包含 fusion图像、原始infrared、原始温度、缩放温度、原始visible light、picture-in-picture缩放visible light 数据.
-     * 值为上述数据长度之和.
-     */
+
     public static int FRAME_LEN = FUSION_LEN + ORIGINAL_LEN + ORIGINAL_LEN + REMAP_TEMP_LEN + LIGHT_LEN + P_IN_P_LEN;
 
-
-
-    /**
-     * 将指定帧数据中 ARGB <b>fusion图像数据</b> 复制到指定array中.
-     */
     public static byte[] readFusionData(@NonNull byte[] frame, @Nullable byte[] fusionData) {
         if (fusionData == null) {
             fusionData = new byte[FUSION_LEN];
@@ -51,9 +27,6 @@ public class IFrameData {
         return fusionData;
     }
 
-    /**
-     * 将指定帧数据中 YUV-16 <b>原始infrared数据</b> 复制到指定array中.
-     */
     public static byte[] readNorIRData(@NonNull byte[] frame, @Nullable byte[] irData) {
         if (irData == null) {
             irData = new byte[ORIGINAL_LEN];
@@ -62,9 +35,6 @@ public class IFrameData {
         return irData;
     }
 
-    /**
-     * 将指定帧数据中 YUV-16 <b>原始温度数据</b> 复制到指定array中.
-     */
     public static byte[] readNorTempData(@NonNull byte[] frame, @Nullable byte[] norTempData) {
         if (norTempData == null) {
             norTempData = new byte[ORIGINAL_LEN];
@@ -73,9 +43,6 @@ public class IFrameData {
         return norTempData;
     }
 
-    /**
-     * 将指定帧数据中 YUV-422 <b>缩放温度数据</b> 复制到指定array中.
-     */
     public static byte[] readRemapTempData(@NonNull byte[] frame, @Nullable byte[] remapTempData) {
         if (remapTempData == null) {
             remapTempData = new byte[REMAP_TEMP_LEN];

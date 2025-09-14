@@ -7,22 +7,9 @@ import android.view.View
 import android.widget.FrameLayout
 import com.topdon.menu.databinding.ViewMenuEditBinding
 
-/**
- * 2D编辑页面所用底部menu栏.
- *
- * point/line/area、pseudo color、settings、pseudo color条
- */
-/**
- * MenuEditView class
- */
-/**
- * Custom Menu edit view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class MenuEditView : FrameLayout, View.OnClickListener {
-    /**
-     * pseudo color条图标current是否处于selectedstate
-     */
+
     var isBarSelect: Boolean
         get() = binding.ivMenu4.isSelected
         set(value) {
@@ -30,14 +17,8 @@ class MenuEditView : FrameLayout, View.OnClickListener {
             binding.tvMenu4.isSelected = value
         }
 
-    /**
-     * 0-point/line/area、1-pseudo colorcolor、2-settings menuclickevent listener.
-     */
     var onTabClickListener: ((selectPosition: Int) -> Unit)? = null
 
-    /**
-     * pseudo color条图标clickevent listener.
-     */
     var onBarClickListener: ((isBarSelect: Boolean) -> Unit)? = null
 
     private lateinit var binding: ViewMenuEditBinding
@@ -46,9 +27,19 @@ class MenuEditView : FrameLayout, View.OnClickListener {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
@@ -65,9 +56,6 @@ class MenuEditView : FrameLayout, View.OnClickListener {
         }
     }
 
-    /**
-     * currentselected那个 tab，取值 `[0,2]`
-     */
     private var selectPosition = -1
         set(value) {
             if (field != value) {

@@ -9,19 +9,11 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogLongTextBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-/**
- * 展示很长文字的弹框.
- *
- * Created by LCG on 2024/2/2.
- */
-/**
- * LongTextDialog displays modal dialog interface for user interaction.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
-class LongTextDialog(context: Context, val title: String?, val content: String?) : Dialog(context, R.style.InfoDialog) {
-    private val binding: DialogLongTextBinding = DialogLongTextBinding.inflate(LayoutInflater.from(context))
+
+class LongTextDialog(context: Context, val title: String?, val content: String?) :
+    Dialog(context, R.style.InfoDialog) {
+    private val binding: DialogLongTextBinding =
+        DialogLongTextBinding.inflate(LayoutInflater.from(context))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

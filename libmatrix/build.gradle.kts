@@ -7,9 +7,9 @@ plugins {
 
 kapt {
     arguments {
-        // arg("AROUTER_MODULE_NAME", project.name)  // Removed for NavigationManager migration
+
     }
-    // Enable Kotlin 2.1.0 compatibility
+
     correctErrorTypes = true
     useBuildCache = true
 }
@@ -20,7 +20,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        // targetSdk = libs.versions.targetSdk.get().toInt()  // Deprecated in library modules
+
         ndkVersion = libs.versions.ndkVersion.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -34,14 +34,16 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
-    // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
-            // Only enable release variant for single-developer maintenance
+
             variant.enable = variant.buildType == "release"
         }
     }
@@ -54,7 +56,6 @@ android {
         jvmTarget = "17"
     }
 
-    // Temporarily disable CMake build for configuration optimization
     /*
     externalNativeBuild {
         cmake {
@@ -70,18 +71,16 @@ android {
         abortOnError = false
     }
 
-    // Optimize configuration cache for CMake builds
     buildFeatures {
         buildConfig = true
     }
 }
 
 dependencies {
-    // Core library desugaring support
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
 
-    // Test dependencies for Robolectric testing
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")

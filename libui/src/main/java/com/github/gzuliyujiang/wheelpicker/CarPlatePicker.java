@@ -24,12 +24,6 @@ import com.github.gzuliyujiang.wheelpicker.contract.OnCarPlatePickedListener;
 import com.github.gzuliyujiang.wheelpicker.contract.OnLinkagePickedListener;
 import com.github.gzuliyujiang.wheelpicker.widget.CarPlateWheelLayout;
 
-/**
- * 中国大陆车牌号滚轮选择
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2016/12/18 10:47
- */
 @SuppressWarnings({"unused"})
 public class CarPlatePicker extends LinkagePicker {
     private OnCarPlatePickedListener onCarPlatePickedListener;

@@ -14,7 +14,8 @@ class LanguageAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.
     var listener: ItemOnClickListener? = null
 
     private var selectIndex = 0
-    private var languages: Array<out CharSequence> = context.resources.getTextArray(R.array.setting_language_list)
+    private var languages: Array<out CharSequence> =
+        context.resources.getTextArray(R.array.setting_language_list)
 
     fun setSelect(index: Int) {
         selectIndex = index
@@ -25,7 +26,9 @@ class LanguageAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder {
-        return ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.item_language, parent, false))
+        return ItemViewHolder(
+            LayoutInflater.from(context).inflate(R.layout.item_language, parent, false)
+        )
     }
 
     override fun onBindViewHolder(

@@ -7,13 +7,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import com.topdon.lib.ui.R as UiR
 
-/**
- * RoundImageView class
- */
-/**
- * Custom Round image view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class RoundImageView : AppCompatImageView {
     companion object {
         /** 圆角位置 - 左上.  */
@@ -51,11 +45,19 @@ class RoundImageView : AppCompatImageView {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         density = context.resources.displayMetrics.density
 
-        val typedArray = context.obtainStyledAttributes(attrs, UiR.styleable.RoundImageView, defStyleAttr, 0)
-        radius = typedArray.getDimensionPixelSize(UiR.styleable.RoundImageView_round_radius, dp2px(DEFAULT_RADIUS))
+        val typedArray =
+            context.obtainStyledAttributes(attrs, UiR.styleable.RoundImageView, defStyleAttr, 0)
+        radius = typedArray.getDimensionPixelSize(
+            UiR.styleable.RoundImageView_round_radius,
+            dp2px(DEFAULT_RADIUS)
+        )
         position = typedArray.getInt(UiR.styleable.RoundImageView_round_position, DEFAULT_POSITION)
         typedArray.recycle()
     }
@@ -76,7 +78,12 @@ class RoundImageView : AppCompatImageView {
 
         if (position and RIGHT_BOTTOM == RIGHT_BOTTOM) {
             path.lineTo(width.toFloat(), (height - radius).toFloat())
-            path.quadTo(width.toFloat(), height.toFloat(), (width - radius).toFloat(), height.toFloat())
+            path.quadTo(
+                width.toFloat(),
+                height.toFloat(),
+                (width - radius).toFloat(),
+                height.toFloat()
+            )
         } else {
             path.lineTo(width.toFloat(), height.toFloat())
         }
@@ -99,9 +106,6 @@ class RoundImageView : AppCompatImageView {
         super.onDraw(canvas)
     }
 
-    /**
-     * settings圆角半径，单位**dp**.
-     */
     fun setRadius(radius: Float) {
         if (this.radius != dp2px(radius)) {
             this.radius = dp2px(radius)

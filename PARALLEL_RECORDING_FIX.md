@@ -2,10 +2,11 @@
 
 ## Problem Solved
 
-The original RecordingController would fail the entire multi-sensor recording session if **any** individual sensor failed to start. This meant that common issues like:
+The original RecordingController would fail the entire multi-sensor recording session if **any**
+individual sensor failed to start. This meant that common issues like:
 
 - GSR Shimmer sensor not connected
-- Thermal camera permission denied  
+- Thermal camera permission denied
 - Individual sensor hardware failures
 
 ...would prevent **all** sensors from recording, even if some were working perfectly.
@@ -25,8 +26,9 @@ The enhanced RecordingController now implements **graceful degradation**:
 ### 1. RecordingController.startRecording() Enhancement
 
 **Before:**
+
 ```kotlin
-// Old approach - single point of failure
+
 val startJobs = sensorRecorders.values.map { sensor ->
     async {
         val success = sensor.startRecording(sessionDirectory)
@@ -37,8 +39,9 @@ val startResults = startJobs.awaitAll()  // Fails if ANY sensor throws
 ```
 
 **After:**
+
 ```kotlin
-// New approach - individual error handling
+
 val startJobs = sensorRecorders.values.map { sensor ->
     async {
         try {
@@ -84,7 +87,7 @@ data class SensorStatusSummary(
 The `RecordingStatusIndicator` now shows detailed sensor states:
 
 - 📸✅ RGB Camera working
-- 🌡️⏸️ Thermal Camera ready but not recording  
+- 🌡️⏸️ Thermal Camera ready but not recording
 - 📊❌ GSR Sensor failed to connect
 
 ## Usage Examples
@@ -94,14 +97,12 @@ The `RecordingStatusIndicator` now shows detailed sensor states:
 ```kotlin
 val recordingController = RecordingController(context, lifecycleOwner)
 
-// Initialize sensors (some may fail, that's OK)
 val initSuccess = recordingController.initializeSensors()
 if (initSuccess) {
-    // At least one sensor available
+
     val summary = recordingController.getSensorStatusSummary()
     println("${summary.totalSensorsInitialized}/3 sensors available")
-    
-    // Start recording with available sensors
+
     val recordingSuccess = recordingController.startRecording("/path/to/session")
     if (recordingSuccess) {
         val updated = recordingController.getSensorStatusSummary()
@@ -113,7 +114,7 @@ if (initSuccess) {
 ### Testing Individual Sensors
 
 ```kotlin
-// Test sensor connections without starting recording
+
 val testResults = recordingController.testSensorConnections()
 testResults.forEach { (sensorId, isResponsive) ->
     println("$sensorId: ${if (isResponsive) "✅ OK" else "❌ FAILED"}")
@@ -123,15 +124,14 @@ testResults.forEach { (sensorId, isResponsive) ->
 ### UI Integration
 
 ```kotlin
-// Update status indicator with comprehensive sensor info
+
 val summary = recordingController.getSensorStatusSummary()
 statusIndicator.updateWithSensorSummary(summary)
 
-// Status indicator automatically shows:
-// - Which sensors are active (✅)
-// - Which sensors are ready but not recording (⏸️)  
-// - Which sensors failed (❌)
-// - Clear status messages for users
+
+
+
+
 ```
 
 ## Testing
@@ -164,25 +164,29 @@ Use `ParallelRecordingTestActivity` to manually test:
 
 - ✅ All sensors work
 - ✅ Partial sensor failures (GSR fails, RGB+Thermal work)
-- ✅ Exception handling (GSR throws, others continue)  
+- ✅ Exception handling (GSR throws, others continue)
 - ✅ All sensors fail (session correctly aborts)
 - ✅ Status reporting accuracy
 
 ## Common Scenarios
 
 ### Scenario 1: GSR Not Connected (Most Common)
+
 **Before:** Entire session fails - no recording  
 **After:** RGB + Thermal record successfully, user gets 2/3 sensors
 
 ### Scenario 2: Thermal Permission Denied
+
 **Before:** Entire session fails - no recording
 **After:** RGB + GSR record successfully, user gets 2/3 sensors
 
 ### Scenario 3: All Sensors Work
+
 **Before:** ✅ Full recording
 **After:** ✅ Full recording (no change)
 
-### Scenario 4: All Sensors Fail  
+### Scenario 4: All Sensors Fail
+
 **Before:** ❌ Session fails
 **After:** ❌ Session fails (correct behavior)
 
@@ -199,15 +203,14 @@ Use `ParallelRecordingTestActivity` to manually test:
 Existing code using RecordingController continues to work with these improvements:
 
 ```kotlin
-// This code works the same as before, but now more reliable:
+
 if (recordingController.startRecording(sessionDir)) {
-    // Recording started - but now this succeeds more often!
+
 }
 
-// New optional features:
 val summary = recordingController.getSensorStatusSummary()
 if (summary.hasPartialRecording) {
-    // Handle partial recording scenario
+
     showPartialRecordingWarning(summary.statusMessage)
 }
 ```
@@ -220,4 +223,5 @@ if (summary.hasPartialRecording) {
 - Performance impact is minimal (no additional sensor calls)
 - Error logging is enhanced for debugging
 
-This fix transforms the parallel recording from an **all-or-nothing** system to a **graceful degradation** system, significantly improving the user experience and data collection reliability.
+This fix transforms the parallel recording from an **all-or-nothing** system to a **graceful
+degradation** system, significantly improving the user experience and data collection reliability.

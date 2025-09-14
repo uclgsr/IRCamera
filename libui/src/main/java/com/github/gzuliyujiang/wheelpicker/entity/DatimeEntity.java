@@ -18,28 +18,6 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 import java.util.Calendar;
 
-/**
- * 日期时间数据实体。
- * <pre>
- *     时间单位换算：
- *         // 1分 = 60秒
- *         // 1刻 = 15分
- *         // 1时 = 60分
- *         // 1日 = 12辰
- *         // 1日 = 24时
- *         // 1周 = 7日
- *         // 1月 = 30日
- *         // 1季 = 3月
- *         // 1年 = 12月
- *         // 1世 = 30年
- *         // 1运 = 12世 = 360年
- *         // 1会 = 30运 = 10800年
- *         // 1元 = 12会 = 129600年
- * </pre>
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/5/14 17:30
- */
 @SuppressWarnings({"unused"})
 public class DatimeEntity implements Serializable {
     private DateEntity date;

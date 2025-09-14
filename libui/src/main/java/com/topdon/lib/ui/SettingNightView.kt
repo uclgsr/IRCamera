@@ -8,19 +8,10 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
-import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.ui.databinding.UiSettingViewNightBinding
+import com.topdon.lib.ui.R as UiR
 
-/**
- * Custom Setting night view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * SettingNightView implements custom user interface component functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class SettingNightView : LinearLayout {
     private lateinit var binding: UiSettingViewNightBinding
 
@@ -59,15 +50,19 @@ class SettingNightView : LinearLayout {
                             UiR.styleable.SettingNightView_setting_icon_night,
                             UiR.drawable.ic_setting_default_svg,
                         )
+
                 UiR.styleable.SettingNightView_setting_text_night ->
                     contentStr =
                         ta.getString(UiR.styleable.SettingNightView_setting_text_night).toString()
+
                 UiR.styleable.SettingNightView_setting_more_night ->
                     moreShow =
                         ta.getBoolean(UiR.styleable.SettingNightView_setting_more_night, true)
+
                 UiR.styleable.SettingNightView_setting_line_night ->
                     lineShow =
                         ta.getBoolean(UiR.styleable.SettingNightView_setting_line_night, false)
+
                 UiR.styleable.SettingNightView_setting_icon_show_night ->
                     iconShow =
                         ta.getBoolean(UiR.styleable.SettingNightView_setting_icon_show_night, false)
@@ -83,11 +78,8 @@ class SettingNightView : LinearLayout {
         defStyleAttr,
     )
 
-    /**
-     * Initializes the component with default configuration.
-     */
     private fun initView() {
-        // Views are already inflated in constructor via binding
+
         binding.itemSettingImage.setImageResource(iconRes)
         if (iconShow) {
             binding.itemSettingImage.visibility = View.VISIBLE

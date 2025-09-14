@@ -13,10 +13,6 @@
 
 package com.github.gzuliyujiang.wheelpicker.contract;
 
-/**
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/5 15:17
- */
 public interface OnNumberSelectedListener {
 
     void onNumberSelected(int position, Number item);

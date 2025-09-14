@@ -2,7 +2,9 @@
 
 ## Overview
 
-The `gsr-recording` module provides comprehensive Galvanic Skin Response (GSR) data collection capabilities using Shimmer3 sensors. It handles Bluetooth Low Energy (BLE) communication, real-time data processing, and synchronization with thermal imaging data.
+The `gsr-recording` module provides comprehensive Galvanic Skin Response (GSR) data collection
+capabilities using Shimmer3 sensors. It handles Bluetooth Low Energy (BLE) communication, real-time
+data processing, and synchronization with thermal imaging data.
 
 ## Architecture
 
@@ -59,8 +61,10 @@ graph TB
 ## Key Components
 
 ### GSRActivity
+
 **Purpose**: User interface for GSR sensor management and monitoring
 **Responsibilities**:
+
 - Device discovery and pairing interface
 - Real-time GSR data visualization
 - Recording session controls
@@ -93,41 +97,50 @@ class GSRActivity : AppCompatActivity() {
 ```
 
 ### GSRViewModel
+
 **Purpose**: Business logic coordinator for GSR data management
 **Responsibilities**:
+
 - GSR device state management
 - Data collection orchestration
 - Real-time data streaming
 - Recording session coordination
 
 **Key Features**:
+
 - LiveData streams for real-time GSR values
 - Coroutine-based BLE operations
 - Data validation and filtering
 - Session metadata management
 
 ### BLEController
+
 **Purpose**: Bluetooth Low Energy communication manager
 **Responsibilities**:
+
 - BLE device discovery and connection
 - Shimmer3 protocol implementation
 - Data packet parsing and validation
 - Connection stability management
 
 **Supported Protocols**:
+
 - **Shimmer3 GSR+**: Primary GSR sensor with advanced features
 - **Custom GSR**: Support for custom GSR sensor implementations
 - **Multi-device**: Simultaneous connection to multiple GSR sensors
 
 ### DataProcessor
+
 **Purpose**: Real-time GSR data processing and analysis
 **Responsibilities**:
+
 - Raw GSR data conversion
 - Signal filtering and noise reduction
 - Physiological metric calculation
 - Data quality assessment
 
 **Processing Pipeline**:
+
 1. Raw ADC value reception from Shimmer3
 2. Resistance calculation using device-specific calibration
 3. Conductance conversion (microsiemens)
@@ -135,8 +148,10 @@ class GSRActivity : AppCompatActivity() {
 5. Physiological feature extraction
 
 ### SyncManager
+
 **Purpose**: Data synchronization with thermal imaging and PC controller
 **Responsibilities**:
+
 - Timestamp synchronization
 - Data alignment across sensors
 - PC controller communication
@@ -145,6 +160,7 @@ class GSRActivity : AppCompatActivity() {
 ## Configuration
 
 ### GSR Sensor Settings
+
 ```kotlin
 data class GSRSensorConfig(
     val deviceAddress: String,
@@ -162,6 +178,7 @@ enum class GSRGain {
 ```
 
 ### Processing Parameters
+
 ```kotlin
 data class GSRProcessingConfig(
     val filterCutoffFrequency: Double = 0.5, // Hz
@@ -182,50 +199,45 @@ enum class GSRUnit {
 ### Core Methods
 
 #### Device Management
+
 ```kotlin
-// Discover available GSR devices
+
 suspend fun discoverGSRDevices(): List<GSRDevice>
 
-// Connect to specific GSR device
 suspend fun connectToDevice(deviceAddress: String): Result<Unit>
 
-// Disconnect from GSR device
 suspend fun disconnectDevice(): Result<Unit>
 
-// Get connection status
 fun getConnectionStatus(): ConnectionStatus
 ```
 
 #### Data Collection
+
 ```kotlin
-// Start GSR data collection
+
 suspend fun startGSRRecording(config: GSRSensorConfig): Result<Unit>
 
-// Stop GSR data collection
 suspend fun stopGSRRecording(): Result<Unit>
 
-// Get real-time GSR data stream
 fun getGSRDataStream(): Flow<GSRDataPoint>
 
-// Configure sampling parameters
 suspend fun configureSensor(config: GSRSensorConfig): Result<Unit>
 ```
 
 #### Data Processing
+
 ```kotlin
-// Process raw GSR data
+
 fun processGSRData(
     rawData: ByteArray,
     config: GSRProcessingConfig
 ): ProcessedGSRData
 
-// Calculate physiological metrics
 fun calculatePhysiologicalMetrics(
     gsrData: List<GSRDataPoint>,
     timeWindow: Duration
 ): PhysiologicalMetrics
 
-// Detect GSR events/responses
 fun detectGSREvents(
     gsrData: List<GSRDataPoint>,
     threshold: Double
@@ -233,14 +245,13 @@ fun detectGSREvents(
 ```
 
 #### Synchronization
+
 ```kotlin
-// Synchronize with thermal capture
+
 suspend fun synchronizeWithThermal(thermalSession: ThermalSession): Result<Unit>
 
-// Send data to PC controller
 suspend fun sendToPCController(data: GSRDataBatch): Result<Unit>
 
-// Align timestamps across sensors
 fun alignTimestamps(
     gsrData: List<GSRDataPoint>,
     referenceTimestamp: Long
@@ -250,6 +261,7 @@ fun alignTimestamps(
 ## Data Structures
 
 ### GSRDataPoint
+
 ```kotlin
 data class GSRDataPoint(
     val timestamp: Long, // Nanosecond precision
@@ -266,6 +278,7 @@ enum class DataQuality {
 ```
 
 ### ProcessedGSRData
+
 ```kotlin
 data class ProcessedGSRData(
     val originalData: GSRDataPoint,
@@ -277,6 +290,7 @@ data class ProcessedGSRData(
 ```
 
 ### PhysiologicalMetrics
+
 ```kotlin
 data class PhysiologicalMetrics(
     val meanGSR: Double,
@@ -290,6 +304,7 @@ data class PhysiologicalMetrics(
 ```
 
 ### GSREvent
+
 ```kotlin
 data class GSREvent(
     val timestamp: Long,
@@ -308,12 +323,14 @@ enum class GSREventType {
 ## Performance Characteristics
 
 ### Data Collection Performance
+
 - **Sampling Rate**: Up to 128 Hz continuous sampling
 - **Data Transmission**: BLE with 20ms interval
 - **Processing Latency**: < 10ms per data point
 - **Memory Usage**: ~5MB per hour of continuous recording
 
 ### BLE Connection Characteristics
+
 - **Connection Range**: Up to 10 meters typical
 - **Connection Stability**: Auto-reconnection on signal loss
 - **Battery Life**: 8+ hours continuous operation
@@ -322,12 +339,13 @@ enum class GSREventType {
 ## Integration Examples
 
 ### Basic GSR Recording
+
 ```kotlin
 class GSRRecordingExample {
     private val gsrController = GSRController()
     
     suspend fun startBasicRecording() {
-        // Configure GSR sensor
+
         val config = GSRSensorConfig(
             deviceAddress = "00:11:22:33:44:55",
             samplingRate = 64, // Hz
@@ -336,26 +354,21 @@ class GSRRecordingExample {
             filterEnabled = true,
             autoConnect = true
         )
-        
-        // Connect to device
+
         val connectResult = gsrController.connectToDevice(config.deviceAddress)
         if (connectResult.isFailure) {
             handleConnectionError(connectResult.exceptionOrNull())
             return
         }
-        
-        // Start recording
+
         gsrController.startGSRRecording(config)
-        
-        // Collect real-time data
+
         gsrController.getGSRDataStream().collect { dataPoint ->
-            // Process GSR data point
+
             val processedData = processGSRData(dataPoint)
-            
-            // Update UI with real-time GSR value
+
             updateGSRDisplay(processedData.filteredConductance)
-            
-            // Check for significant GSR responses
+
             if (isSignificantResponse(processedData)) {
                 logGSREvent(dataPoint.timestamp, processedData.filteredConductance)
             }
@@ -369,20 +382,18 @@ class GSRRecordingExample {
 ```
 
 ### Advanced Physiological Analysis
+
 ```kotlin
 class AdvancedGSRAnalysis {
     fun performPhysiologicalAnalysis(gsrData: List<GSRDataPoint>) {
-        // Calculate physiological metrics over 60-second windows
+
         val timeWindow = Duration.ofSeconds(60)
         val metrics = calculatePhysiologicalMetrics(gsrData, timeWindow)
-        
-        // Detect GSR events (skin conductance responses)
+
         val events = detectGSREvents(gsrData, threshold = 0.05) // 0.05 μS threshold
-        
-        // Analyze response patterns
+
         val responseAnalysis = analyzeResponsePatterns(events)
-        
-        // Generate physiological report
+
         val report = PhysiologicalReport(
             sessionId = getCurrentSessionId(),
             participantId = getCurrentParticipantId(),
@@ -391,8 +402,7 @@ class AdvancedGSRAnalysis {
             analysis = responseAnalysis,
             timestamp = System.currentTimeMillis()
         )
-        
-        // Export analysis results
+
         exportPhysiologicalReport(report)
     }
     
@@ -411,6 +421,7 @@ class AdvancedGSRAnalysis {
 ```
 
 ### Synchronized Multi-Modal Recording
+
 ```kotlin
 class SynchronizedRecording {
     private val gsrController = GSRController()
@@ -418,10 +429,9 @@ class SynchronizedRecording {
     private val syncManager = SynchronizationManager()
     
     suspend fun startSynchronizedRecording() {
-        // Initialize synchronization
+
         syncManager.initializeSession()
-        
-        // Start GSR recording
+
         val gsrConfig = GSRSensorConfig(
             deviceAddress = "00:11:22:33:44:55",
             samplingRate = 64,
@@ -431,8 +441,7 @@ class SynchronizedRecording {
             autoConnect = true
         )
         gsrController.startGSRRecording(gsrConfig)
-        
-        // Start thermal recording
+
         val thermalConfig = ThermalCameraConfig(
             deviceType = ThermalDeviceType.TC001,
             resolution = Resolution(320, 240),
@@ -442,8 +451,7 @@ class SynchronizedRecording {
             pseudoColorPalette = ColorPalette.IRON
         )
         thermalController.startCapture(thermalConfig)
-        
-        // Collect synchronized data
+
         combine(
             gsrController.getGSRDataStream(),
             thermalController.thermalFrames
@@ -454,10 +462,9 @@ class SynchronizedRecording {
                 synchronizedTimestamp = syncManager.synchronizeTimestamp()
             )
         }.collect { synchronizedData ->
-            // Process synchronized multi-modal data
+
             processSynchronizedData(synchronizedData)
-            
-            // Send to PC controller for advanced analysis
+
             sendToPCController(synchronizedData)
         }
     }
@@ -467,6 +474,7 @@ class SynchronizedRecording {
 ## Error Handling
 
 ### Common Error Types
+
 ```kotlin
 sealed class GSRError : Exception() {
     object DeviceNotFound : GSRError()
@@ -480,32 +488,33 @@ sealed class GSRError : Exception() {
 ```
 
 ### Error Recovery Strategies
+
 ```kotlin
 class GSRErrorHandler {
     suspend fun handleGSRError(error: GSRError): ErrorRecoveryAction {
         return when (error) {
             is GSRError.DeviceNotFound -> {
-                // Restart device discovery
+
                 restartDeviceDiscovery()
                 ErrorRecoveryAction.RETRY_DISCOVERY
             }
             is GSRError.ConnectionFailed -> {
-                // Attempt reconnection with exponential backoff
+
                 attemptReconnection()
                 ErrorRecoveryAction.RETRY_CONNECTION
             }
             is GSRError.DataTransmissionError -> {
-                // Check BLE connection quality and retry
+
                 checkBLEConnectionQuality()
                 ErrorRecoveryAction.RETRY_TRANSMISSION
             }
             is GSRError.CalibrationError -> {
-                // Perform sensor recalibration
+
                 recalibrateSensor()
                 ErrorRecoveryAction.RECALIBRATE
             }
             is GSRError.SensorMalfunction -> {
-                // Request sensor check/replacement
+
                 notifySensorMalfunction()
                 ErrorRecoveryAction.REQUIRES_INTERVENTION
             }
@@ -518,6 +527,7 @@ class GSRErrorHandler {
 ## Data Quality Assessment
 
 ### Quality Metrics
+
 ```kotlin
 data class DataQualityMetrics(
     val signalToNoiseRatio: Double,
@@ -551,6 +561,7 @@ class DataQualityAssessor {
 ## Testing
 
 ### Unit Tests
+
 ```kotlin
 class GSRProcessorTest {
     @Test
@@ -590,25 +601,22 @@ class GSRProcessorTest {
 ```
 
 ### Integration Tests
+
 ```kotlin
 class GSRIntegrationTest {
     @Test
     fun `end to end GSR recording workflow`() = runTest {
         val gsrController = GSRController()
-        
-        // Device discovery
+
         val devices = gsrController.discoverGSRDevices()
         assert(devices.isNotEmpty())
-        
-        // Connection
+
         val connectResult = gsrController.connectToDevice(devices.first().address)
         assert(connectResult.isSuccess)
-        
-        // Start recording
+
         val recordingResult = gsrController.startGSRRecording(defaultConfig)
         assert(recordingResult.isSuccess)
-        
-        // Collect data
+
         val gsrData = mutableListOf<GSRDataPoint>()
         val job = launch {
             gsrController.getGSRDataStream().take(100).collect { dataPoint ->
@@ -618,11 +626,9 @@ class GSRIntegrationTest {
         
         job.join()
         assert(gsrData.size == 100)
-        
-        // Stop recording
+
         gsrController.stopGSRRecording()
-        
-        // Verify data quality
+
         val qualityMetrics = dataQualityAssessor.assessDataQuality(gsrData)
         assert(dataQualityAssessor.isDataQualityAcceptable(qualityMetrics))
     }
@@ -634,38 +640,44 @@ class GSRIntegrationTest {
 ### Common Issues
 
 #### BLE Connection Problems
+
 **Symptoms**: Device not found, connection drops, data transmission errors
 **Causes**:
+
 - Bluetooth disabled or interference
 - Device out of range
 - Low battery on sensor
 - Android BLE stack issues
-**Solutions**:
+  **Solutions**:
 - Check Bluetooth permissions and enable Bluetooth
 - Move device closer to sensor
 - Check sensor battery level
 - Restart Bluetooth stack or reboot device
 
 #### Poor Data Quality
+
 **Symptoms**: Noisy GSR signals, inconsistent readings, frequent artifacts
 **Causes**:
+
 - Poor skin contact
 - Electrode drying out
 - Motion artifacts
 - Electrical interference
-**Solutions**:
+  **Solutions**:
 - Ensure proper electrode placement and contact
 - Use appropriate electrode gel
 - Minimize movement during recording
 - Check for electrical interference sources
 
 #### Synchronization Issues
+
 **Symptoms**: GSR data not aligned with thermal data, timestamp drift
 **Causes**:
+
 - Clock synchronization problems
 - Network latency
 - Processing delays
-**Solutions**:
+  **Solutions**:
 - Verify time synchronization with PC controller
 - Check network connection quality
 - Adjust buffer sizes for real-time processing
@@ -673,6 +685,7 @@ class GSRIntegrationTest {
 ### Debug Information
 
 Enable comprehensive debugging:
+
 ```kotlin
 GSRLogger.setLogLevel(LogLevel.VERBOSE)
 GSRLogger.enableBLELogging(true)
@@ -683,12 +696,14 @@ GSRLogger.enablePerformanceMetrics(true)
 ## Dependencies
 
 ### Required Libraries
+
 - `libcom` - Communication and networking protocols
 - `libapp` - Application framework and utilities
 - `BleModule` - Bluetooth Low Energy communication
 - `SharedPreferences` - Configuration persistence
 
 ### Gradle Configuration
+
 ```kotlin
 dependencies {
     implementation project(':libcom')
@@ -703,6 +718,7 @@ dependencies {
 ## Future Enhancements
 
 ### Planned Features
+
 - **Multi-sensor fusion**: Combine multiple GSR sensors for improved accuracy
 - **Machine learning**: AI-powered artifact detection and signal enhancement
 - **Advanced filtering**: Adaptive filtering algorithms for better signal quality
@@ -710,6 +726,7 @@ dependencies {
 - **Wearable support**: Integration with smartwatch GSR sensors
 
 ### Performance Improvements
+
 - **Optimized BLE protocol**: Enhanced data transmission efficiency
 - **Real-time processing**: Hardware-accelerated signal processing
 - **Battery optimization**: Improved power management for longer recording sessions
@@ -717,4 +734,5 @@ dependencies {
 
 ---
 
-For more detailed information, see the [BLE Integration Guide](../BLE_INTEGRATION.md) and [Physiological Data Analysis](../PHYSIOLOGICAL_ANALYSIS.md).
+For more detailed information, see the [BLE Integration Guide](../BLE_INTEGRATION.md)
+and [Physiological Data Analysis](../PHYSIOLOGICAL_ANALYSIS.md).

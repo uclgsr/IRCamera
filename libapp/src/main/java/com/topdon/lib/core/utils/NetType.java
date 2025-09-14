@@ -6,5 +6,5 @@ package com.topdon.lib.core.utils;
  * date: 2024/3/4 15:12
  **/
 public enum NetType {
-    WIFI,CELLULAR
+    WIFI, CELLULAR
 }

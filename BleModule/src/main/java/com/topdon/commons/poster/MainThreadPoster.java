@@ -3,25 +3,22 @@ package com.topdon.commons.poster;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+
 import androidx.annotation.NonNull;
 
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * date: 2019/8/7 10:45
- * author: chuanfeng.bi
- */
 final class MainThreadPoster extends Handler implements Poster {
     private final Queue<Runnable> queue;
     private boolean handlerActive;
-    
+
     MainThreadPoster() {
         super(Looper.getMainLooper());
         queue = new ConcurrentLinkedQueue<>();
     }
-    
+
     @Override
     public void enqueue(@NonNull Runnable runnable) {
         Objects.requireNonNull(runnable, "runnable is null, cannot be enqueued");

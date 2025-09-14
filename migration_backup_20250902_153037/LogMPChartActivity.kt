@@ -39,7 +39,6 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
 
     private val adapter: SettingTimeAdapter by lazy { SettingTimeAdapter(this) }
 
-    //    private var dataList: ArrayList<ThermalEntity> = arrayListOf()
     private lateinit var chart: LineChart
     private var selectType = 1
 
@@ -56,7 +55,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                     index: Int,
                     time: Int,
                 ) {
-                    // 切换类型
+
                     chart.highlightValue(null) // 关闭高亮点Marker
                     selectType = index + 1
                     queryLog()
@@ -90,7 +89,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
 
     private fun queryLog() {
         showLoading()
-//        viewModel.queryLogByType(selectType)
+
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.queryLogVolsByStartTime(
                 type = SharedManager.getSelectFenceType(),
@@ -146,7 +145,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         leftAxis.setLabelCount(6, false) // 固定x刻度
         val rightAxis = chart.axisRight
         rightAxis.isEnabled = false
-//        chart.zoom(10f, 1f, chart.xChartMax, 0f)
+
     }
 
     private val bgChartColors =
@@ -163,28 +162,25 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         )
     private val textColor by lazy { ContextCompat.getColor(this, R.color.chart_text) }
 
-    /**
-     * 曲线样式
-     */
     private fun createSet(
         index: Int,
         label: String,
     ): LineDataSet {
         val set = LineDataSet(null, label)
-//        set.mode = LineDataSet.Mode.CUBIC_BEZIER
+
         set.mode = LineDataSet.Mode.LINEAR
         set.setDrawFilled(false)
         set.fillDrawable = ContextCompat.getDrawable(this, bgChartColors[index]) // 设置填充颜色渐变
         set.axisDependency = YAxis.AxisDependency.LEFT
         set.color = ContextCompat.getColor(this, lineChartColors[index]) // 曲线颜色
         set.setCircleColor(ContextCompat.getColor(this, R.color.white)) // 坐标颜色
-//        set.fillColor = ContextCompat.getColor(this, R.color.purple_500)
-//        set.highLightColor = ContextCompat.getColor(this, R.color.white)
+
+
         set.valueTextColor = Color.WHITE
         set.lineWidth = 2f
         set.circleRadius = 1f // 不显示坐标点
         set.setCircleColor(ContextCompat.getColor(this, lineChartColors[index])) // 坐标颜色(隐藏处理)
-//        set.setCircleColor(ContextCompat.getColor(this, R.color.white))//坐标颜色(隐藏处理)
+
         set.fillAlpha = 200
         set.valueTextSize = 10f
         set.setDrawValues(false) // 设置是否显示坐标值文本
@@ -226,6 +222,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                             }
                             XLog.w("DataSet:${set.entryCount}")
                         }
+
                         "line" -> {
                             var maxDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
                             if (maxDataSet == null) {
@@ -241,25 +238,26 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                             Log.w("123", "两条曲线")
                             data.forEach {
                                 val x = (it.createTime - startTime).toFloat()
-                                // max
+
                                 val entity = Entry(x, it.thermalMax)
                                 entity.data = it
                                 maxDataSet.addEntry(entity)
-                                // min
+
                                 val entityMin = Entry(x, it.thermalMin)
                                 entityMin.data = it
                                 minDataSet.addEntry(entityMin)
                             }
                             XLog.w("DataSet:${maxDataSet.entryCount}")
                         }
+
                         else -> {
-                            // max
+
                             var maxTempDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
                             if (maxTempDataSet == null) {
                                 maxTempDataSet = createSet(0, "fence maxTemp")
                                 lineData.addDataSet(maxTempDataSet)
                             }
-                            // center
+
                             var centerTempDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
                             if (centerTempDataSet == null) {
                                 centerTempDataSet = createSet(1, "fence minTemp")
@@ -267,11 +265,11 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                             }
                             data.forEach {
                                 val x = (it.createTime - startTime).toFloat()
-                                // max
+
                                 val entityMax = Entry(x, it.thermalMax)
                                 entityMax.data = it
                                 maxTempDataSet.addEntry(entityMax)
-                                // min
+
                                 val entity = Entry(x, it.thermalMin)
                                 entity.data = it
                                 centerTempDataSet.addEntry(entity)
@@ -301,9 +299,6 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     override fun onNothingSelected() {
     }
 
-    /**
-     * x轴显示多少个刻度
-     */
     private fun getLabCount(count: Int): Int {
         return when (count) {
             in 0..2 -> 1
@@ -314,7 +309,6 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         }
     }
 
-    // 获取显示最小区间
     private fun getMinimum(): Float {
         val min =
             when (selectType) {
@@ -327,7 +321,6 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         return min
     }
 
-    // 获取显示最大区间，以最小区间的50倍
     private fun getMaximum(): Float {
         return getMinimum() * 50f
     }

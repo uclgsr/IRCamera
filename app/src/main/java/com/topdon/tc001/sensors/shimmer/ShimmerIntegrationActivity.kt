@@ -1,12 +1,14 @@
 package com.topdon.tc001.sensors.shimmer
 
-import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,100 +16,41 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
-import com.topdon.tc001.sensors.shimmer.model.ShimmerDeviceInfo
-import com.topdon.tc001.sensors.shimmer.model.ConnectionQuality
 import com.topdon.tc001.sensors.shimmer.model.GSRSample
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import com.topdon.tc001.sensors.shimmer.model.ShimmerDeviceInfo
+import kotlinx.coroutines.launch
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
 
-/**
- * **Shimmer Integration Activity - Comprehensive Implementation**
- * 
- * Complete demonstration of the Shimmer3 GSR+ sensor integration following the detailed plan:
- * 
- * ## Integration Plan Implementation Status:
- * 
- * ### ✅ Step 1: Shimmer SDK Dependencies
- * - ShimmerAndroidAPI (shimmerandroidinstrumentdriver-3.2.4_beta.aar) integrated
- * - ShimmerJavaAPI with sensor data parsing and calibration
- * - Proper Gradle configuration with conflict resolution
- * 
- * ### ✅ Step 2: Bluetooth Low Energy Permissions  
- * - Android 12+ BLE permissions (BLUETOOTH_SCAN, BLUETOOTH_CONNECT)
- * - Legacy Bluetooth compatibility (BLUETOOTH, BLUETOOTH_ADMIN)
- * - Location permissions for BLE scanning
- * - Runtime permission handling with user guidance
- * 
- * ### ✅ Step 3: Enhanced Device Discovery and Selection
- * - MAC address filtering for Shimmer devices (00:06:66, d0:39:72 prefixes)
- * - Device prioritization with comprehensive scoring algorithm
- * - Real-time device list with RSSI monitoring
- * - User-friendly device selection interface
- * 
- * ### ✅ Step 4: GSR Sensor Configuration
- * - **12-bit ADC precision** (0-4095 range) validation
- * - **128Hz sampling rate** for research-grade data
- * - GSR autorange configuration for optimal sensitivity
- * - Real-time microsiemens conversion with feedback resistor
- * 
- * ### ✅ Step 5: Research-Grade Data Processing
- * - Quality validation with comprehensive scoring
- * - Signal stability monitoring and connection assessment
- * - Temporal alignment with nanosecond precision
- * - Advanced calibration using Shimmer specifications
- * 
- * ### ✅ Step 6: Research-Grade CSV Export
- * - Comprehensive CSV export with metadata
- * - Synchronized timestamps for multi-sensor alignment
- * - Session management with research compliance
- * - Quality metrics for data validation
- * 
- * ## UI Features:
- * - Device discovery with real-time updates
- * - Connection quality monitoring
- * - Real-time GSR data visualization
- * - Recording session management
- * - Comprehensive status monitoring
- * 
- * @author IRCamera Shimmer Integration Team
- */
 class ShimmerIntegrationActivity : AppCompatActivity() {
-    
+
     companion object {
         private const val TAG = "ShimmerIntegration"
         private const val OUTPUT_DIRECTORY = "shimmer_recordings"
     }
-    
-    // UI Components
+
     private lateinit var statusText: TextView
     private lateinit var connectionQualityText: TextView
     private lateinit var gsrValueText: TextView
     private lateinit var sampleCountText: TextView
     private lateinit var qualityScoreText: TextView
-    
+
     private lateinit var scanButton: Button
-    private lateinit var connectButton: Button  
+    private lateinit var connectButton: Button
     private lateinit var startRecordingButton: Button
     private lateinit var stopRecordingButton: Button
-    
+
     private lateinit var deviceRecyclerView: RecyclerView
     private lateinit var deviceAdapter: ShimmerDeviceAdapter
-    
+
     private lateinit var progressBar: ProgressBar
-    
-    // Shimmer components
+
     private lateinit var deviceManager: ShimmerDeviceManager
     private lateinit var gsrRecorder: Shimmer3GSRRecorder
-    
-    // State management
+
     private var selectedDevice: ShimmerDeviceInfo? = null
     private var isRecording = false
     private var recordingStartTime = 0L
-    
-    // Permission handling
+
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -119,121 +62,100 @@ class ShimmerIntegrationActivity : AppCompatActivity() {
             showPermissionDeniedDialog()
         }
     }
-    
-    // Bluetooth enable launcher
+
     private val bluetoothLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            initializeShimmerComponents() 
+            initializeShimmerComponents()
             updateUI()
         } else {
             showBluetoothRequiredDialog()
         }
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shimmer_integration)
-        
+
         initializeUI()
         checkPermissionsAndInitialize()
     }
-    
-    /**
-     * Initialize UI components and listeners
-     */
+
     private fun initializeUI() {
-        // Status displays
+
         statusText = findViewById(R.id.statusText)
         connectionQualityText = findViewById(R.id.connectionQualityText)
         gsrValueText = findViewById(R.id.gsrValueText)
         sampleCountText = findViewById(R.id.sampleCountText)
         qualityScoreText = findViewById(R.id.qualityScoreText)
-        
-        // Control buttons
+
         scanButton = findViewById(R.id.scanButton)
         connectButton = findViewById(R.id.connectButton)
         startRecordingButton = findViewById(R.id.startRecordingButton)
         stopRecordingButton = findViewById(R.id.stopRecordingButton)
-        
-        // Device list
+
         deviceRecyclerView = findViewById(R.id.deviceRecyclerView)
         deviceAdapter = ShimmerDeviceAdapter { device -> onDeviceSelected(device) }
         deviceRecyclerView.layoutManager = LinearLayoutManager(this)
         deviceRecyclerView.adapter = deviceAdapter
-        
+
         progressBar = findViewById(R.id.progressBar)
-        
-        // Button listeners
+
         scanButton.setOnClickListener { startDeviceScanning() }
         connectButton.setOnClickListener { connectToSelectedDevice() }
         startRecordingButton.setOnClickListener { startGSRRecording() }
         stopRecordingButton.setOnClickListener { stopGSRRecording() }
-        
-        // Initial UI state
+
         updateUI()
     }
-    
-    /**
-     * Check permissions and initialize Shimmer components
-     */
+
     private fun checkPermissionsAndInitialize() {
         val requiredPermissions = ShimmerDeviceManager.getRequiredPermissions()
-        
+
         if (ShimmerDeviceManager.hasDiscoveryPermissions(this)) {
             initializeShimmerComponents()
             updateUI()
         } else {
-            // Request permissions
+
             permissionLauncher.launch(requiredPermissions)
         }
     }
-    
-    /**
-     * Initialize Shimmer components after permissions are granted
-     */
+
     private fun initializeShimmerComponents() {
         try {
-            // Initialize device manager
+
             deviceManager = ShimmerDeviceManager(this, this)
-            
-            // Initialize GSR recorder
+
             gsrRecorder = Shimmer3GSRRecorder(this, this, samplingRateHz = 128)
-            
-            // Observe state changes
+
             observeShimmerState()
-            
+
             statusText.text = "Shimmer components initialized"
             Log.d(TAG, "Shimmer components initialized successfully")
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize Shimmer components", e)
             statusText.text = "Initialization failed: ${e.message}"
         }
     }
-    
-    /**
-     * Observe Shimmer state changes and update UI
-     */
+
     private fun observeShimmerState() {
-        // Device discovery updates
+
         lifecycleScope.launch {
             deviceManager.discoveredDeviceList.collect { devices ->
                 deviceAdapter.updateDevices(devices)
                 statusText.text = "Found ${devices.size} Shimmer devices"
             }
         }
-        
-        // Scanning status
+
         lifecycleScope.launch {
             deviceManager.isScanning.collect { scanning ->
                 progressBar.visibility = if (scanning) View.VISIBLE else View.GONE
                 scanButton.isEnabled = !scanning
             }
         }
-        
-        // Connection quality monitoring
+
         lifecycleScope.launch {
             gsrRecorder.connectionQuality.collect { quality ->
                 connectionQualityText.text = "Quality: ${quality.displayName}"
@@ -242,22 +164,19 @@ class ShimmerIntegrationActivity : AppCompatActivity() {
                 )
             }
         }
-        
-        // GSR data monitoring
+
         lifecycleScope.launch {
             gsrRecorder.getGSRDataFlow().collect { gsrSample ->
                 updateGSRDisplay(gsrSample)
             }
         }
-        
-        // Sample count monitoring
+
         lifecycleScope.launch {
             gsrRecorder.samplesCollected.collect { count ->
                 sampleCountText.text = "Samples: $count"
             }
         }
-        
-        // Device status monitoring
+
         lifecycleScope.launch {
             gsrRecorder.deviceStatus.collect { status ->
                 if (selectedDevice != null) {
@@ -266,50 +185,41 @@ class ShimmerIntegrationActivity : AppCompatActivity() {
             }
         }
     }
-    
-    /**
-     * Start device scanning process
-     */
+
     private fun startDeviceScanning() {
         lifecycleScope.launch {
             try {
                 statusText.text = "Scanning for Shimmer devices..."
                 deviceAdapter.clearDevices()
-                
+
                 deviceManager.startDeviceDiscovery(durationMs = 10000L).collect { devices ->
                     Log.d(TAG, "Discovered ${devices.size} Shimmer devices")
                 }
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error during device scanning", e)
                 statusText.text = "Scan error: ${e.message}"
             }
         }
     }
-    
-    /**
-     * Handle device selection from the list
-     */
+
     private fun onDeviceSelected(device: ShimmerDeviceInfo) {
         selectedDevice = device
         connectButton.isEnabled = device.isReadyForConnection()
-        
+
         statusText.text = "Selected: ${device.name}"
         Log.d(TAG, "Device selected: ${device}")
     }
-    
-    /**
-     * Connect to the selected Shimmer device
-     */
+
     private fun connectToSelectedDevice() {
         selectedDevice?.let { device ->
             lifecycleScope.launch {
                 try {
                     statusText.text = "Connecting to ${device.name}..."
                     connectButton.isEnabled = false
-                    
+
                     val success = gsrRecorder.connectToDevice(device)
-                    
+
                     if (success) {
                         statusText.text = "Connected to ${device.name}"
                         startRecordingButton.isEnabled = true
@@ -317,7 +227,7 @@ class ShimmerIntegrationActivity : AppCompatActivity() {
                         statusText.text = "Connection failed"
                         connectButton.isEnabled = true
                     }
-                    
+
                 } catch (e: Exception) {
                     Log.e(TAG, "Error connecting to device", e)
                     statusText.text = "Connection error: ${e.message}"
@@ -328,99 +238,89 @@ class ShimmerIntegrationActivity : AppCompatActivity() {
             Toast.makeText(this, "Please select a device first", Toast.LENGTH_SHORT).show()
         }
     }
-    
-    /**
-     * Start GSR recording
-     */
+
     private fun startGSRRecording() {
         lifecycleScope.launch {
             try {
                 val outputDir = File(getExternalFilesDir(null), OUTPUT_DIRECTORY)
                 outputDir.mkdirs()
-                
+
                 val success = gsrRecorder.startRecording(outputDir)
-                
+
                 if (success) {
                     isRecording = true
                     recordingStartTime = System.currentTimeMillis()
                     statusText.text = "Recording GSR data..."
-                    
+
                     startRecordingButton.isEnabled = false
                     stopRecordingButton.isEnabled = true
                 } else {
                     statusText.text = "Failed to start recording"
                 }
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error starting recording", e)
                 statusText.text = "Recording error: ${e.message}"
             }
         }
     }
-    
-    /**
-     * Stop GSR recording
-     */
+
     private fun stopGSRRecording() {
         lifecycleScope.launch {
             try {
                 val success = gsrRecorder.stopRecording()
-                
+
                 if (success) {
                     isRecording = false
                     val duration = (System.currentTimeMillis() - recordingStartTime) / 1000.0
                     statusText.text = "Recording stopped (${String.format("%.1f", duration)}s)"
-                    
+
                     startRecordingButton.isEnabled = true
                     stopRecordingButton.isEnabled = false
                 } else {
                     statusText.text = "Failed to stop recording"
                 }
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error stopping recording", e)
                 statusText.text = "Stop recording error: ${e.message}"
             }
         }
     }
-    
-    /**
-     * Update GSR data display
-     */
+
     private fun updateGSRDisplay(gsrSample: GSRSample) {
         runOnUiThread {
             gsrValueText.text = String.format("GSR: %.2f µS", gsrSample.gsrMicrosiemens)
-            qualityScoreText.text = String.format("Quality: %.1f%% (%s)", 
-                gsrSample.qualityScore * 100, gsrSample.getQualityLevel())
+            qualityScoreText.text = String.format(
+                "Quality: %.1f%% (%s)",
+                gsrSample.qualityScore * 100, gsrSample.getQualityLevel()
+            )
         }
     }
-    
-    /**
-     * Update UI state based on current status
-     */
+
     private fun updateUI() {
         val hasPermissions = ShimmerDeviceManager.hasDiscoveryPermissions(this)
-        
+
         scanButton.isEnabled = hasPermissions && !isRecording
-        connectButton.isEnabled = hasPermissions && selectedDevice?.isReadyForConnection() == true && !isRecording
+        connectButton.isEnabled =
+            hasPermissions && selectedDevice?.isReadyForConnection() == true && !isRecording
         startRecordingButton.isEnabled = selectedDevice != null && !isRecording
         stopRecordingButton.isEnabled = isRecording
-        
+
         if (!hasPermissions) {
             statusText.text = "Permissions required for Shimmer integration"
         }
     }
-    
-    /**
-     * Show permission denied dialog with guidance
-     */
+
     private fun showPermissionDeniedDialog() {
         AlertDialog.Builder(this)
             .setTitle("Permissions Required")
-            .setMessage("Shimmer GSR integration requires Bluetooth and location permissions. " +
-                       "Please grant these permissions to use Shimmer devices.")
+            .setMessage(
+                "Shimmer GSR integration requires Bluetooth and location permissions. " +
+                        "Please grant these permissions to use Shimmer devices."
+            )
             .setPositiveButton("Grant Permissions") { _, _ ->
-                // Open app settings
+
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 intent.data = android.net.Uri.fromParts("package", packageName, null)
                 startActivity(intent)
@@ -430,15 +330,14 @@ class ShimmerIntegrationActivity : AppCompatActivity() {
             }
             .show()
     }
-    
-    /**
-     * Show Bluetooth required dialog
-     */
+
     private fun showBluetoothRequiredDialog() {
         AlertDialog.Builder(this)
             .setTitle("Bluetooth Required")
-            .setMessage("Shimmer GSR sensors require Bluetooth connectivity. " +
-                       "Please enable Bluetooth to continue.")
+            .setMessage(
+                "Shimmer GSR sensors require Bluetooth connectivity. " +
+                        "Please enable Bluetooth to continue."
+            )
             .setPositiveButton("Enable Bluetooth") { _, _ ->
                 val intent = Intent(Settings.ACTION_BLUETOOTH_SETTINGS)
                 startActivity(intent)
@@ -448,19 +347,18 @@ class ShimmerIntegrationActivity : AppCompatActivity() {
             }
             .show()
     }
-    
+
     override fun onDestroy() {
         super.onDestroy()
-        
-        // Clean up Shimmer components
+
         if (::gsrRecorder.isInitialized) {
             gsrRecorder.cleanup()
         }
-        
+
         if (::deviceManager.isInitialized) {
             deviceManager.cleanup()
         }
-        
+
         Log.d(TAG, "Shimmer Integration Activity destroyed")
     }
 }

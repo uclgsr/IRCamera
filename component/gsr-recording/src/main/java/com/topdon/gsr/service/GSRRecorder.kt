@@ -22,10 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.coroutines.coroutineContext
 
-/**
- * Core GSR recorder with Shimmer3 device integration
- * Uses official Shimmer Android API with fallback to simulated data
- */
 class GSRRecorder(
     private val context: Context,
     private val samplingRateHz: Int = 128,
@@ -73,9 +69,6 @@ class GSRRecorder(
 
     private val listeners = mutableListOf<GSRRecordingListener>()
 
-    /**
-     * Interface for listening to GSR recording events
-     */
     interface GSRRecordingListener {
         fun onRecordingStarted(sessionInfo: SessionInfo)
 
@@ -96,9 +89,6 @@ class GSRRecorder(
         listeners.remove(listener)
     }
 
-    /**
-     * Initialize GSR recording system with Shimmer3 device detection
-     */
     suspend fun initialize(): Boolean {
         return if (useShimmerDevice) {
             Log.i(TAG, "Attempting to initialize Shimmer3 GSR device...")
@@ -151,9 +141,6 @@ class GSRRecorder(
         )
     }
 
-    /**
-     * Start GSR recording session with Shimmer3 device or simulated data
-     */
     suspend fun startRecording(
         sessionId: String,
         participantId: String? = null,
@@ -215,7 +202,10 @@ class GSRRecorder(
                 listeners.forEach { it.onRecordingStarted(session) }
             }
 
-            Log.i(TAG, "Simulated GSR recording started: sessionId=$sessionId, samplingRate=${samplingRateHz}Hz")
+            Log.i(
+                TAG,
+                "Simulated GSR recording started: sessionId=$sessionId, samplingRate=${samplingRateHz}Hz"
+            )
             return true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start simulated recording", e)
@@ -247,10 +237,10 @@ class GSRRecorder(
                     // Simulate realistic GSR patterns (10-50 µS typical range)
                     val conductance =
                         20.0 +
-                            Math.sin(baseFreq) * 10.0 + // Slow drift
-                            Math.sin(breathingFreq) * 3.0 + // Breathing pattern
-                            Math.sin(noiseFreq) * 1.0 + // Fine noise
-                            Math.random() * 2.0 // Random variation
+                                Math.sin(baseFreq) * 10.0 + // Slow drift
+                                Math.sin(breathingFreq) * 3.0 + // Breathing pattern
+                                Math.sin(noiseFreq) * 1.0 + // Fine noise
+                                Math.random() * 2.0 // Random variation
 
                     // Ensure reasonable range and calculate resistance
                     val finalConductance = Math.max(5.0, Math.min(50.0, conductance))
@@ -286,9 +276,6 @@ class GSRRecorder(
         }
     }
 
-    /**
-     * Stop GSR recording session
-     */
     fun stopRecording(): SessionInfo? {
         if (!isRecording.get()) {
             Log.w(TAG, "No recording in progress")
@@ -316,7 +303,10 @@ class GSRRecorder(
             saveSessionMetadata(session)
 
             listeners.forEach { it.onRecordingStopped(session) }
-            Log.i(TAG, "Simulated GSR recording stopped: sessionId=${session.sessionId}, samples=${session.sampleCount}")
+            Log.i(
+                TAG,
+                "Simulated GSR recording stopped: sessionId=${session.sessionId}, samples=${session.sampleCount}"
+            )
         }
 
         cleanup()
@@ -325,9 +315,6 @@ class GSRRecorder(
         return completedSession
     }
 
-    /**
-     * Trigger a synchronization event
-     */
     fun triggerSyncEvent(
         eventType: String,
         metadata: String = "",
@@ -453,9 +440,6 @@ class GSRRecorder(
         listeners.forEach { it.onError(error) }
     }
 
-    /**
-     * Disconnect from Shimmer3 device and clean up resources
-     */
     fun disconnect() {
         if (useShimmerDevice) {
             shimmerRecorder.disconnect()
@@ -465,9 +449,6 @@ class GSRRecorder(
         }
     }
 
-    /**
-     * Check if Shimmer3 device is connected
-     */
     fun isDeviceConnected(): Boolean {
         return if (useShimmerDevice) {
             shimmerRecorder.isDeviceConnected()
@@ -476,30 +457,18 @@ class GSRRecorder(
         }
     }
 
-    /**
-     * Check if GSR recording is currently active
-     */
     fun isRecording(): Boolean {
         return isRecording.get()
     }
 
-    /**
-     * Get the current recording session information
-     */
     fun getCurrentSession(): SessionInfo? {
         return currentSession
     }
 
-    /**
-     * Get the current session directory where data is being stored
-     */
     fun getSessionDirectory(): File? {
         return sessionDirectory
     }
 
-    /**
-     * Add a synchronization mark for cross-modal data alignment
-     */
     suspend fun addSyncMark(
         eventType: String,
         metadata: String = "",

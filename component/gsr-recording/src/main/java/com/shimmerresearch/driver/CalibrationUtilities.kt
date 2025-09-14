@@ -2,14 +2,8 @@ package com.shimmerresearch.driver
 
 import kotlin.math.pow
 
-/**
- * GSR calibration utilities for Shimmer devices
- * Based on official Shimmer Android API calibration methods
- *
- * Provides conversion between raw ADC values and calibrated GSR measurements
- */
 object CalibrationUtilities {
-    // GSR calibration constants for different ranges
+
     private val GSR_UNCALIBRATED_TO_KOHMS =
         doubleArrayOf(
             6.8129, // Range 0: 10kΩ - 56kΩ
@@ -26,9 +20,6 @@ object CalibrationUtilities {
             3012.3, // Range 3 offset
         )
 
-    /**
-     * Convert uncalibrated GSR ADC value to resistance in kΩ
-     */
     fun calibrateGSRToResistance(
         uncalibratedData: Int,
         gsrRange: Int,
@@ -38,28 +29,18 @@ object CalibrationUtilities {
         val offset = GSR_OFFSET[gsrRange]
         val multiplier = GSR_UNCALIBRATED_TO_KOHMS[gsrRange]
 
-        // Apply calibration formula: R = multiplier / (ADC - offset)
         val denominator = uncalibratedData - offset
         return if (denominator > 0) multiplier / denominator else 0.0
     }
 
-    /**
-     * Convert resistance in kΩ to conductance in µS
-     */
     fun resistanceToConductance(resistanceKohms: Double): Double {
         return if (resistanceKohms > 0) 1000.0 / resistanceKohms else 0.0
     }
 
-    /**
-     * Convert conductance in µS to resistance in kΩ
-     */
     fun conductanceToResistance(conductanceUS: Double): Double {
         return if (conductanceUS > 0) 1000.0 / conductanceUS else 0.0
     }
 
-    /**
-     * Apply auto-range selection for GSR based on current resistance
-     */
     fun selectOptimalGSRRange(resistanceKohms: Double): Int {
         return when {
             resistanceKohms <= 56 -> Configuration.GSR_RANGE_10KOHM_56KOHM
@@ -70,9 +51,6 @@ object CalibrationUtilities {
         }
     }
 
-    /**
-     * Generate realistic simulated ADC value for given resistance and range
-     */
     fun generateSimulatedADC(
         targetResistanceKohms: Double,
         gsrRange: Int,
@@ -82,36 +60,28 @@ object CalibrationUtilities {
         val offset = GSR_OFFSET[gsrRange]
         val multiplier = GSR_UNCALIBRATED_TO_KOHMS[gsrRange]
 
-        // Reverse calibration: ADC = (multiplier / R) + offset
         val calculatedADC = (multiplier / targetResistanceKohms) + offset
 
-        // Add some realistic noise (±5%)
         val noise = (Math.random() - 0.5) * 0.1 * calculatedADC
 
         return (calculatedADC + noise).toInt().coerceIn(0, 4095) // 12-bit ADC
     }
 
-    /**
-     * Validate GSR measurement ranges
-     */
     fun isValidGSRReading(
         resistanceKohms: Double,
         conductanceUS: Double,
     ): Boolean {
-        // Physiologically reasonable ranges
+
         val validResistance = resistanceKohms >= 1.0 && resistanceKohms <= 10000.0
         val validConductance = conductanceUS >= 0.1 && conductanceUS <= 1000.0
 
-        // Check consistency between resistance and conductance
         val calculatedConductance = resistanceToConductance(resistanceKohms)
-        val consistency = kotlin.math.abs(calculatedConductance - conductanceUS) / conductanceUS < 0.1
+        val consistency =
+            kotlin.math.abs(calculatedConductance - conductanceUS) / conductanceUS < 0.1
 
         return validResistance && validConductance && consistency
     }
 
-    /**
-     * Apply smoothing filter to GSR data to remove artifacts
-     */
     fun applySmoothingFilter(
         values: DoubleArray,
         windowSize: Int = 5,
@@ -139,9 +109,6 @@ object CalibrationUtilities {
         return smoothed
     }
 
-    /**
-     * Calculate GSR statistics for quality assessment
-     */
     data class GSRStatistics(
         val mean: Double,
         val standardDeviation: Double,
@@ -161,12 +128,10 @@ object CalibrationUtilities {
         val stdDev = kotlin.math.sqrt(variance)
         val range = conductanceValues.maxOrNull()!! - conductanceValues.minOrNull()!!
 
-        // Estimate tonic and phasic components
         val smoothed = applySmoothingFilter(conductanceValues, 10)
         val tonic = smoothed.average()
         val phasic = stdDev * 2.0 // Approximate phasic activity
 
-        // Signal quality assessment
         val isValid = mean >= 1.0 && mean <= 100.0 && stdDev < mean * 0.5 && range < mean * 2.0
 
         return GSRStatistics(mean, stdDev, range, tonic, phasic, isValid)

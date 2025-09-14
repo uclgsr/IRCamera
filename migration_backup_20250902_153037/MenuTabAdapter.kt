@@ -30,11 +30,9 @@ class MenuTabAdapter(val context: Context) :
         notifyDataSetChanged()
     }
 
-    // 拍摄
     private val firstMenus =
         arrayListOf(R.drawable.ic_menu_thermal1001_svg, R.drawable.ic_menu_thermal1002_svg)
 
-    // 选框
     private val secondMenus =
         arrayListOf(
             R.drawable.ic_menu_thermal2002,
@@ -45,7 +43,6 @@ class MenuTabAdapter(val context: Context) :
             R.drawable.ic_menu_thermal2006,
         )
 
-    // 选框
     private val secondMenusStr =
         arrayListOf(
             "点",
@@ -56,7 +53,6 @@ class MenuTabAdapter(val context: Context) :
             "删除",
         )
 
-    // 选框
     private val fourthMenusStr =
         arrayListOf(
             "旋转",
@@ -65,7 +61,6 @@ class MenuTabAdapter(val context: Context) :
             "色带",
         )
 
-    // 色彩
     private val thirdMenus =
         arrayListOf(
             R.drawable.ic_menu_thermal3001,
@@ -80,7 +75,6 @@ class MenuTabAdapter(val context: Context) :
             R.drawable.ic_menu_thermal3010,
         )
 
-    // 设置
     private val fourthMenus =
         arrayListOf(
             R.drawable.ic_menu_thermal4001_svg,

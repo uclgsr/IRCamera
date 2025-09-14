@@ -4,7 +4,9 @@ import android.content.Context
 import android.net.nsd.NsdManager
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,9 +15,6 @@ import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowNsdManager
 
-/**
- * Context-based tests for ZeroconfDiscoveryService using Robolectric
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
 class ZeroconfDiscoveryServiceTest {
@@ -74,18 +73,16 @@ class ZeroconfDiscoveryServiceTest {
 
         discoveryService.setServiceListener(listener)
 
-        // Listener should be set (can't directly verify private field, but no exception should occur)
-        // Test passes if no exception is thrown
+
         assertTrue("Setting service listener should succeed", true)
 
-        // Test removing listener
         discoveryService.setServiceListener(null)
         assertTrue("Removing service listener should succeed", true)
     }
 
     @Test
     fun testGetDiscoveredServices() {
-        // Initially should have empty services
+
         val initialServices = discoveryService.getDiscoveredControllers()
         assertNotNull("Discovered services should not be null", initialServices)
         assertTrue("Discovered services should be a list", initialServices is List<*>)
@@ -94,12 +91,11 @@ class ZeroconfDiscoveryServiceTest {
 
     @Test
     fun testServiceNameGeneration() {
-        // Test that service names are generated properly
+
         val deviceName1 = "Device One"
         val deviceName2 = "Device Two"
 
-        // This test mainly ensures the service can handle different device names
-        // without throwing exceptions
+
         assertTrue(
             "Different device names should be handled",
             deviceName1 != deviceName2,
@@ -108,41 +104,39 @@ class ZeroconfDiscoveryServiceTest {
 
     @Test
     fun testCleanupResources() {
-        // Cleanup all resources - this is synchronous and safe
+
         discoveryService.cleanup()
 
-        // After cleanup test passes if no exceptions thrown
         assertTrue("Cleanup should complete without errors", true)
     }
 
     @Test
     fun testServiceListenerInterface() {
-        // Test that we can create a listener implementation
+
         val listener =
             object : ZeroconfDiscoveryService.ServiceDiscoveryListener {
                 override fun onServiceDiscovered(serviceInfo: NetworkClient.ControllerInfo) {
-                    // Mock implementation
+
                 }
 
                 override fun onServiceLost(serviceName: String) {
-                    // Mock implementation
+
                 }
 
                 override fun onServiceRegistered(serviceName: String) {
-                    // Mock implementation
+
                 }
 
                 override fun onDiscoveryError(
                     errorCode: Int,
                     message: String,
                 ) {
-                    // Mock implementation
+
                 }
             }
 
         assertNotNull("Service listener should be created", listener)
 
-        // Test setting and unsetting
         discoveryService.setServiceListener(listener)
         discoveryService.setServiceListener(null)
 
@@ -151,13 +145,12 @@ class ZeroconfDiscoveryServiceTest {
 
     @Test
     fun testContextDependency() {
-        // Test that the service properly uses the context
+
         val testContext = ApplicationProvider.getApplicationContext<Context>()
         val testService = ZeroconfDiscoveryService(testContext)
 
         assertNotNull("Service with context should be created", testService)
 
-        // Test that we can get discovered controllers (which should be empty initially)
         val controllers = testService.getDiscoveredControllers()
         assertNotNull("Controllers list should not be null", controllers)
         assertTrue("Controllers list should be empty initially", controllers.isEmpty())
@@ -165,7 +158,7 @@ class ZeroconfDiscoveryServiceTest {
 
     @Test
     fun testNetworkClientControllerInfo() {
-        // Test the data class used in the service
+
         val controllerInfo =
             NetworkClient.ControllerInfo(
                 ipAddress = "192.168.1.100",

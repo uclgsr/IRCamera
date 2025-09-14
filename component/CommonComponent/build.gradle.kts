@@ -24,10 +24,9 @@ android {
         }
     }
 
-    // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
-            // Only enable release variant for single-developer maintenance
+
             variant.enable = variant.buildType == "release"
         }
     }
@@ -52,13 +51,11 @@ android {
 }
 
 dependencies {
-    // Core library desugaring support
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    // Required for Const class
     implementation(libs.utilcode)
 
-    // Testing dependencies - using Robolectric for context-based testing
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

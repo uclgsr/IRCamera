@@ -39,23 +39,11 @@ import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.text.DecimalFormat
 
-/**
- * 插件式 “更多” 页面
- *
- * 需要传递参数：
- * - [ExtraKeyConfig.IS_TC007] - 当前设备是否为 TC007
- */
 @Route(path = RouterConfig.TC_MORE)
 class MoreFragment : BaseFragment(), View.OnClickListener {
-    /**
-     * 从上一界面传递过来的，当前是否为 TC007 设备类型.
-     * true-TC007 false-其他插件式设备
-     */
+
     private var isTC007 = false
 
-    /**
-     * TC007 固件升级 ViewModel.
-     */
     private val firmwareViewModel: FirmwareViewModel by viewModels()
 
     override fun initContentView() = R.layout.fragment_more
@@ -71,7 +59,6 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         setting_device_information.setOnClickListener(this) // TC007设备信息
         setting_reset.setOnClickListener(this) // TC007恢复出厂设置
 
-        // 根据 2024/5/23 评审会结论，TC007没有多少需要恢复出厂的配置，产品决定砍掉
         setting_reset.isVisible = false
 
         setting_version.isVisible = isTC007 && Build.VERSION.SDK_INT >= 29
@@ -82,7 +69,8 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
             refresh07Connect(WebSocketProxy.getInstance().isTC007Connect())
         }
 
-        setting_item_auto_show.isChecked = if (isTC007) SharedManager.isConnect07AutoOpen else SharedManager.isConnectAutoOpen
+        setting_item_auto_show.isChecked =
+            if (isTC007) SharedManager.isConnect07AutoOpen else SharedManager.isConnectAutoOpen
         setting_item_auto_show.setOnCheckedChangeListener { _, isChecked ->
             if (isTC007) {
                 SharedManager.isConnect07AutoOpen = isChecked
@@ -91,19 +79,18 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
             }
         }
 
-        setting_item_config_select.isChecked = if (isTC007) WifiSaveSettingUtil.isSaveSetting else SaveSettingUtil.isSaveSetting
+        setting_item_config_select.isChecked =
+            if (isTC007) WifiSaveSettingUtil.isSaveSetting else SaveSettingUtil.isSaveSetting
         setting_item_config_select.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 TipDialog.Builder(requireContext())
                     .setMessage(R.string.save_setting_tips)
                     .setPositiveListener(R.string.app_ok) {
-                        if (isTC007)
-                            {
-                                WifiSaveSettingUtil.isSaveSetting = true
-                            } else
-                            {
-                                SaveSettingUtil.isSaveSetting = true
-                            }
+                        if (isTC007) {
+                            WifiSaveSettingUtil.isSaveSetting = true
+                        } else {
+                            SaveSettingUtil.isSaveSetting = true
+                        }
                     }
                     .setCancelListener(R.string.app_cancel) {
                         setting_item_config_select.isChecked = false
@@ -111,15 +98,13 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                     .setCanceled(false)
                     .create().show()
             } else {
-                if (isTC007)
-                    {
-                        WifiSaveSettingUtil.reset()
-                        WifiSaveSettingUtil.isSaveSetting = false
-                    } else
-                    {
-                        SaveSettingUtil.reset()
-                        SaveSettingUtil.isSaveSetting = false
-                    }
+                if (isTC007) {
+                    WifiSaveSettingUtil.reset()
+                    WifiSaveSettingUtil.isSaveSetting = false
+                } else {
+                    SaveSettingUtil.reset()
+                    SaveSettingUtil.isSaveSetting = false
+                }
             }
         }
 
@@ -134,7 +119,10 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         }
         firmwareViewModel.failLD.observe(this) {
             dismissLoadingDialog()
-            TToast.shortToast(requireContext(), if (it) R.string.upgrade_bind_error else R.string.http_code_z5000)
+            TToast.shortToast(
+                requireContext(),
+                if (it) R.string.upgrade_bind_error else R.string.http_code_z5000
+            )
             tv_upgrade_point.isVisible = false
         }
     }
@@ -169,20 +157,24 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                     RouterConfig.IR_SETTING,
                 ).withBoolean(ExtraKeyConfig.IS_TC007, isTC007).navigation(requireContext())
             }
+
             setting_item_dual -> {
                 ARouter.getInstance().build(RouterConfig.MANUAL_START).navigation(requireContext())
             }
+
             setting_item_unit -> { // 温度单位
                 ARouter.getInstance().build(RouterConfig.UNIT).navigation(requireContext())
             }
+
             setting_item_correction -> { // 锅盖校正
                 ARouter.getInstance().build(
                     RouterConfig.IR_CORRECTION,
                 ).withBoolean(ExtraKeyConfig.IS_TC007, isTC007).navigation(requireContext())
             }
+
             setting_version -> { // TC007固件升级
-                // 由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释强制登录逻辑
-//               if (LMS.getInstance().isLogin) {
+
+
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
@@ -191,10 +183,10 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                     showLoadingDialog()
                     firmwareViewModel.queryFirmware(false)
                 }
-//               } else {
-//                   LMS.getInstance().activityLogin()
-//               }
+
+
             }
+
             setting_device_information -> { // TC007设备信息
                 if (WebSocketProxy.getInstance().isTC007Connect()) {
                     ARouter.getInstance()
@@ -203,6 +195,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                         .navigation(requireContext())
                 }
             }
+
             setting_reset -> { // TC007恢复出厂设置
                 if (WebSocketProxy.getInstance().isTC007Connect()) {
                     restoreFactory()
@@ -211,9 +204,6 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    /**
-     * 仅 TC007 页面时，刷新连接或未连接状态.
-     */
     private fun refresh07Connect(isConnect: Boolean) {
         setting_device_information.isRightArrowVisible = isConnect
         setting_device_information.setRightTextId(if (isConnect) 0 else R.string.app_no_connect)
@@ -227,7 +217,8 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                 if (productBean == null) {
                     TToast.shortToast(requireContext(), R.string.operation_failed_tips)
                 } else {
-                    item_setting_bottom_text.text = getString(R.string.setting_firmware_update_version) + "V" + productBean.getVersionStr()
+                    item_setting_bottom_text.text =
+                        getString(R.string.setting_firmware_update_version) + "V" + productBean.getVersionStr()
                 }
             }
         } else {
@@ -235,9 +226,6 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    /**
-     * 显示固件升级提示弹框.
-     */
     private fun showFirmwareUpDialog(firmwareData: FirmwareViewModel.FirmwareData) {
         val dialog = FirmwareUpDialog(requireContext())
         dialog.titleStr = "${getString(R.string.update_new_version)} ${firmwareData.version}"
@@ -245,8 +233,8 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         dialog.contentStr = firmwareData.updateStr
         dialog.isShowRestartTips = true
         dialog.onConfirmClickListener = {
-            // 由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释下载逻辑
-            // downloadFirmware(firmwareData)
+
+
             installFirmware(FileConfig.getFirmwareFile(firmwareData.downUrl))
         }
         dialog.show()
@@ -263,15 +251,15 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
             DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024 / 1024) + "GB"
         }
 
-    /**
-     * 下载指定固件升级包
-     */
     private fun downloadFirmware(firmwareData: FirmwareViewModel.FirmwareData) {
         lifecycleScope.launch {
             val progressDialog = DownloadProDialog(requireContext())
             progressDialog.show()
 
-            val file = File(requireContext().getExternalFilesDir("firmware"), "TC007${firmwareData.version}.zip")
+            val file = File(
+                requireContext().getExternalFilesDir("firmware"),
+                "TC007${firmwareData.version}.zip"
+            )
             val isSuccess =
                 DownloadTool.download(firmwareData.downUrl, file) { current, total ->
                     progressDialog.refreshProgress(current, total)

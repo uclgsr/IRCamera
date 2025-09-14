@@ -4,15 +4,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.View;
 
-/**
- * ================================================
- * 作    者：JayGoo
- * 版    本：
- * 创建日期：2018/5/8
- * 描    述:
- * ================================================
- */
 public class SavedState extends View.BaseSavedState {
+    public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+        public SavedState createFromParcel(Parcel in) {
+            return new SavedState(in);
+        }
+
+        public SavedState[] newArray(int size) {
+            return new SavedState[size];
+        }
+    };
     public float minValue;
     public float maxValue;
     public float rangeInterval;
@@ -44,14 +45,4 @@ public class SavedState extends View.BaseSavedState {
         out.writeFloat(currSelectedMin);
         out.writeFloat(currSelectedMax);
     }
-
-    public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
-        public SavedState createFromParcel(Parcel in) {
-            return new SavedState(in);
-        }
-
-        public SavedState[] newArray(int size) {
-            return new SavedState[size];
-        }
-    };
 }

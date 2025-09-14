@@ -29,11 +29,13 @@ try:
 
     PYQT_AVAILABLE = True
 
+
     class BaseThread(QThread):
         pass
 
 except ImportError:
     PYQT_AVAILABLE = False
+
 
     # Fallback signal implementation for when PyQt is not available
     class pyqtSignal:
@@ -47,11 +49,13 @@ except ImportError:
         def connect(self, callback) -> Any:
             self._callbacks.append(callback)
 
+
     def pyqtSlot(*args, **kwargs) -> Any:
         def decorator(func) -> Any:
             return func
 
         return decorator
+
 
     class BaseThread:
         def __init__(self):
@@ -63,7 +67,6 @@ except ImportError:
 
         def run(self) -> Any:
             pass
-
 
 try:
     import psutil
@@ -574,7 +577,7 @@ class WiFiManager(BaseManager):
         self.error_occurred.emit("scan", error)
 
     async def connect_to_network(
-        self, ssid: str, password: Optional[str] = None
+            self, ssid: str, password: Optional[str] = None
     ) -> bool:
         """
         Connect to a WiFi network.
@@ -632,10 +635,10 @@ class WiFiManager(BaseManager):
             self.error_occurred.emit("disconnect", str(e))
 
     async def start_hotspot(
-        self,
-        ssid: Optional[str] = None,
-        password: Optional[str] = None,
-        channel: Optional[int] = None,
+            self,
+            ssid: Optional[str] = None,
+            password: Optional[str] = None,
+            channel: Optional[int] = None,
     ) -> bool:
         """
         Start mobile hotspot for IRCamera device connections.
@@ -793,7 +796,7 @@ class WiFiManager(BaseManager):
             logger.error(f"Status update failed: {e}")
 
     async def _platform_connect(
-        self, ssid: str, password: str, security: NetworkSecurityType
+            self, ssid: str, password: str, security: NetworkSecurityType
     ) -> bool:
         """Platform-specific WiFi connection implementation."""
         system = platform.system()
@@ -808,7 +811,7 @@ class WiFiManager(BaseManager):
             raise RuntimeError(f"Unsupported platform: {system}")
 
     async def _connect_windows(
-        self, ssid: str, password: str, security: NetworkSecurityType
+            self, ssid: str, password: str, security: NetworkSecurityType
     ) -> bool:
         """Connect to WiFi on Windows using netsh and Windows WiFi API."""
         try:
@@ -827,7 +830,7 @@ class WiFiManager(BaseManager):
                 import tempfile
 
                 with tempfile.NamedTemporaryFile(
-                    mode="w", suffix=".xml", delete=False
+                        mode="w", suffix=".xml", delete=False
                 ) as f:
                     f.write(profile_xml)
                     profile_path = f.name
@@ -886,7 +889,7 @@ class WiFiManager(BaseManager):
             return False
 
     async def _connect_linux(
-        self, ssid: str, password: str, security: NetworkSecurityType
+            self, ssid: str, password: str, security: NetworkSecurityType
     ) -> bool:
         """Connect to WiFi on Linux using NetworkManager (nmcli)."""
         try:
@@ -930,7 +933,7 @@ class WiFiManager(BaseManager):
             return False
 
     async def _connect_macos(
-        self, ssid: str, password: str, security: NetworkSecurityType
+            self, ssid: str, password: str, security: NetworkSecurityType
     ) -> bool:
         """Connect to WiFi on macOS using networksetup and security framework."""
         try:
@@ -1078,7 +1081,7 @@ class WiFiManager(BaseManager):
         return None
 
     def _create_wifi_profile_xml(
-        self, ssid: str, password: str, security: NetworkSecurityType
+            self, ssid: str, password: str, security: NetworkSecurityType
     ) -> str:
         """Create Windows WiFi profile XML."""
         auth_type = "WPA2PSK" if security == NetworkSecurityType.WPA2 else "WPAPSK"
@@ -1131,8 +1134,8 @@ class WiFiManager(BaseManager):
             if result.returncode == 0:
                 output = stdout.decode()
                 return (
-                    f"SSID                   : {ssid}" in output
-                    and "State                  : connected" in output
+                        f"SSID                   : {ssid}" in output
+                        and "State                  : connected" in output
                 )
 
         except Exception as e:
@@ -1141,7 +1144,7 @@ class WiFiManager(BaseManager):
         return False
 
     async def _connect_linux_with_profile(
-        self, ssid: str, password: str, security: NetworkSecurityType
+            self, ssid: str, password: str, security: NetworkSecurityType
     ) -> bool:
         """Connect to WiFi on Linux using connection profile."""
         try:

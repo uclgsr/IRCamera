@@ -5,10 +5,6 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.csl.irCamera.databinding.ActivityRawCaptureTestBinding
 
-/**
- * Test Activity to demonstrate RAW Image Capture UI
- * Shows the enhanced multi-modal recording interface with RAW capture options
- */
 class RAWCaptureTestActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRawCaptureTestBinding
 

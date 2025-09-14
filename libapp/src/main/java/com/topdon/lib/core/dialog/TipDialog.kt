@@ -107,8 +107,12 @@ class TipDialog : Dialog {
             }
 
             val binding = DialogTipBinding.inflate(LayoutInflater.from(context))
-            dialog!!.addContentView(binding.root, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
-            val isPortrait = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+            dialog!!.addContentView(
+                binding.root,
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            )
+            val isPortrait =
+                context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
             val widthPixels = context.resources.displayMetrics.widthPixels
             val lp = dialog!!.window!!.attributes
             lp.width = (widthPixels * if (isPortrait) 0.85 else 0.35).toInt() // 设置宽度
@@ -136,7 +140,7 @@ class TipDialog : Dialog {
                 binding.dialogTipCancelBtn.visibility = View.GONE
                 binding.dialogTipCancelBtn.text = ""
             }
-            // msg
+
             if (message != null) {
                 binding.dialogTipMsgText.visibility = View.VISIBLE
                 binding.dialogTipMsgText.setText(message, TextView.BufferType.NORMAL)
@@ -144,7 +148,6 @@ class TipDialog : Dialog {
                 binding.dialogTipMsgText.visibility = View.GONE
             }
 
-            // msg
             if (titleMessage != null) {
                 binding.dialogTipTitleMsgText.visibility = View.VISIBLE
                 binding.dialogTipTitleMsgText.setText(titleMessage, TextView.BufferType.NORMAL)

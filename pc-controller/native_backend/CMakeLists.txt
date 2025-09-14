@@ -11,12 +11,12 @@ find_package(OpenCV REQUIRED)
 
 # Add pybind11 - handle both system installation and bundled version
 find_package(pybind11 QUIET)
-if(NOT pybind11_FOUND)
+if (NOT pybind11_FOUND)
     # Download pybind11 if not found
     include(FetchContent)
     FetchContent_Declare(pybind11 GIT_REPOSITORY https://github.com/pybind/pybind11 GIT_TAG v2.10.4)
     FetchContent_MakeAvailable(pybind11)
-endif()
+endif ()
 
 # Include directories
 include_directories(include)
@@ -24,9 +24,9 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 # Source files
 set(SOURCES
-    src/native_shimmer.cpp
-    src/native_webcam.cpp
-    src/pybind_module.cpp
+        src/native_shimmer.cpp
+        src/native_webcam.cpp
+        src/pybind_module.cpp
 )
 
 # Create the pybind11 module
@@ -37,8 +37,8 @@ target_link_libraries(native_backend PRIVATE ${OpenCV_LIBS})
 
 # Set properties
 set_target_properties(native_backend PROPERTIES
-    CXX_VISIBILITY_PRESET "hidden"
-    INTERPROCEDURAL_OPTIMIZATION TRUE
+        CXX_VISIBILITY_PRESET "hidden"
+        INTERPROCEDURAL_OPTIMIZATION TRUE
 )
 
 # Compiler-specific options

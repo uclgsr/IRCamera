@@ -22,19 +22,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.easydarwin.video.Client
 
-/**
- * TC007 温度监控捕获 - 第1步 - 选取类型及区域.
- * Created by LCG on 2024/5/6.
- */
 @Route(path = RouterConfig.IR_MONITOR_CAPTURE_07)
 class IR07MonitorCapture1Activity : BaseActivity(), View.OnClickListener {
     companion object {
         private const val RTSP_URL = "rtsp://192.168.40.1/stream0"
     }
 
-    /**
-     * 当前选中的 点/线/面 数据封装，需要传递给下一界面.
-     */
     private var selectInfo: SelectInfoBean? = null
 
     override fun initContentView(): Int = R.layout.activity_ir_07_monitor_capture1
@@ -42,7 +35,8 @@ class IR07MonitorCapture1Activity : BaseActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            val playFragment = PlayFragment.newInstance(RTSP_URL, Client.TRANSTYPE_TCP, 1, null, true)
+            val playFragment =
+                PlayFragment.newInstance(RTSP_URL, Client.TRANSTYPE_TCP, 1, null, true)
             supportFragmentManager.beginTransaction().add(R.id.fl_rtsp, playFragment).commit()
         }
     }
@@ -81,17 +75,14 @@ class IR07MonitorCapture1Activity : BaseActivity(), View.OnClickListener {
         initConfig()
     }
 
-    /**
-     * 初始化相关配置
-     */
     private fun initConfig() {
         lifecycleScope.launch(Dispatchers.IO) {
-            // 读取配置设置 环境温度、测温距离、发射率
+
             val config = ConfigRepository.readConfig(true)
             TC007Repository.setIRConfig(config.environment, config.distance, config.radiation)
-            // 设置温度单位
+
             TC007Repository.setEnvAttr(SharedManager.getTemperature() == 1, 0)
-            // 清除点、线、面、全图
+
             TC007Repository.clearAllTemp()
             TC007Repository.setTempFrame(false)
         }
@@ -121,12 +112,13 @@ class IR07MonitorCapture1Activity : BaseActivity(), View.OnClickListener {
             motion_btn -> { // 生成监控图
                 showMonitorSelectDialog()
             }
+
             motion_start_btn -> { // 开始记录
                 if (selectInfo == null) {
                     showMonitorSelectDialog()
                     return
                 }
-                // 开始温度监听
+
                 val intent = Intent(this, IR07MonitorCapture2Activity::class.java)
                 intent.putExtra("select", selectInfo)
                 startActivity(intent)

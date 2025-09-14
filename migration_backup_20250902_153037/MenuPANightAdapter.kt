@@ -22,31 +22,31 @@ class MenuPANightAdapter(
         holder: BaseViewHolder,
         item: ColorBean,
     ) {
-        if (!isDual)
-            {
-                val with = (ScreenUtils.getScreenWidth() / 2)
-                holder.itemView.layoutParams = ViewGroup.LayoutParams(with, ViewGroup.LayoutParams.WRAP_CONTENT)
-                val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()
-                val layoutParams = holder.itemView.item_menu_tab_img.layoutParams
-                layoutParams.width = imageSize
-                layoutParams.height = imageSize
-                holder.itemView.item_menu_tab_img.layoutParams = layoutParams
-            } else
-            {
-                holder.itemView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()
-                val layoutParams = holder.itemView.item_menu_tab_img.layoutParams
-                layoutParams.width = imageSize
-                layoutParams.height = imageSize
-                holder.itemView.item_menu_tab_img.layoutParams = layoutParams
-            }
-        if (item.isSelect)
-            {
-                holder.setImageResource(R.id.item_menu_tab_img, item.res)
-            } else
-            {
-                holder.setImageResource(R.id.item_menu_tab_img, item.n_res)
-            }
+        if (!isDual) {
+            val with = (ScreenUtils.getScreenWidth() / 2)
+            holder.itemView.layoutParams =
+                ViewGroup.LayoutParams(with, ViewGroup.LayoutParams.WRAP_CONTENT)
+            val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()
+            val layoutParams = holder.itemView.item_menu_tab_img.layoutParams
+            layoutParams.width = imageSize
+            layoutParams.height = imageSize
+            holder.itemView.item_menu_tab_img.layoutParams = layoutParams
+        } else {
+            holder.itemView.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()
+            val layoutParams = holder.itemView.item_menu_tab_img.layoutParams
+            layoutParams.width = imageSize
+            layoutParams.height = imageSize
+            holder.itemView.item_menu_tab_img.layoutParams = layoutParams
+        }
+        if (item.isSelect) {
+            holder.setImageResource(R.id.item_menu_tab_img, item.res)
+        } else {
+            holder.setImageResource(R.id.item_menu_tab_img, item.n_res)
+        }
         holder.setText(R.id.item_menu_tab_text, item.name)
         holder.itemView.setOnClickListener(
             object : SingleClickListener() {
@@ -56,9 +56,15 @@ class MenuPANightAdapter(
             },
         )
         if (item.isSelect) {
-            holder.setTextColor(R.id.item_menu_tab_text, ContextCompat.getColor(context, R.color.white))
+            holder.setTextColor(
+                R.id.item_menu_tab_text,
+                ContextCompat.getColor(context, R.color.white)
+            )
         } else {
-            holder.setTextColor(R.id.item_menu_tab_text, ContextCompat.getColor(context, R.color.font_third_color))
+            holder.setTextColor(
+                R.id.item_menu_tab_text,
+                ContextCompat.getColor(context, R.color.font_third_color)
+            )
         }
     }
 }

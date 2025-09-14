@@ -51,11 +51,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 
-/**
- * 首页 Fragment.
- *
- * Created by LCG on 2024/4/18.
- */
 @SuppressLint("NotifyDataSetChanged")
 class MainFragment : BaseFragment(), View.OnClickListener {
     private lateinit var adapter: MyAdapter
@@ -67,7 +62,6 @@ class MainFragment : BaseFragment(), View.OnClickListener {
         tv_connect_device.setOnClickListener(this)
         iv_add.setOnClickListener(this)
 
-        // GSR Multi-modal Recording Access (long press on titles for research features)
         tv_no_device_title?.setOnLongClickListener {
             showGSROptions()
             true
@@ -88,9 +82,11 @@ class MainFragment : BaseFragment(), View.OnClickListener {
                         .withBoolean(ExtraKeyConfig.IS_TC007, false)
                         .navigation(requireContext())
                 }
+
                 ConnectType.TS004 -> {
                     if (WebSocketProxy.getInstance().isTS004Connect()) {
-                        ARouter.getInstance().build(RouterConfig.IR_MONOCULAR).navigation(requireContext())
+                        ARouter.getInstance().build(RouterConfig.IR_MONOCULAR)
+                            .navigation(requireContext())
                     } else {
                         ARouter.getInstance()
                             .build(RouterConfig.IR_DEVICE_ADD)
@@ -98,6 +94,7 @@ class MainFragment : BaseFragment(), View.OnClickListener {
                             .navigation(requireContext())
                     }
                 }
+
                 ConnectType.TC007 -> {
                     ARouter.getInstance()
                         .build(RouterConfig.IR_MAIN)
@@ -145,7 +142,7 @@ class MainFragment : BaseFragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-                    // 要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(true)
                     }
@@ -164,7 +161,8 @@ class MainFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun refresh() {
-        val hasAnyDevice = SharedManager.hasTcLine || SharedManager.hasTS004 || SharedManager.hasTC007
+        val hasAnyDevice =
+            SharedManager.hasTcLine || SharedManager.hasTS004 || SharedManager.hasTC007
         cl_has_device.isVisible = hasAnyDevice
         cl_no_device.isVisible = !hasAnyDevice
         adapter.hasConnectLine = DeviceTools.isConnect(isAutoRequest = false)
@@ -211,9 +209,8 @@ class MainFragment : BaseFragment(), View.OnClickListener {
         when (v) {
             tv_connect_device, iv_add -> { // 添加设备
                 startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
-//                ARouter.getInstance().build(RoutePath.UsbIrModule.PAGE_IR_MAIN_ACTIVITY)
-//                    .navigation()
-//                startActivity(Intent(requireContext(), IRThermalLiteActivity::class.java))
+
+
             }
         }
     }
@@ -226,43 +223,33 @@ class MainFragment : BaseFragment(), View.OnClickListener {
             }
             try {
                 val battery: JSONObject = JSONObject(event.text).getJSONObject("battery")
-                adapter.tc007Battery = BatteryInfo(battery.getString("status"), battery.getString("remaining"))
+                adapter.tc007Battery =
+                    BatteryInfo(battery.getString("status"), battery.getString("remaining"))
             } catch (_: Exception) {
             }
         }
     }
 
     private class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
-        /**
-         * 有线设备当前是否已连接.
-         */
+
         var hasConnectLine: Boolean = false
             set(value) {
                 field = value
                 notifyItemRangeChanged(0, 3)
             }
 
-        /**
-         * TS004 当前是否已连接.
-         */
         var hasConnectTS004: Boolean = false
             set(value) {
                 field = value
                 notifyItemRangeChanged(0, itemCount)
             }
 
-        /**
-         * TC007 当前是否已连接.
-         */
         var hasConnectTC007: Boolean = false
             set(value) {
                 field = value
                 notifyItemRangeChanged(0, itemCount)
             }
 
-        /**
-         * TC007 设备电池信息.
-         */
         var tc007Battery: BatteryInfo? = null
             set(value) {
                 if (field != value) {
@@ -278,7 +265,10 @@ class MainFragment : BaseFragment(), View.OnClickListener {
             parent: ViewGroup,
             viewType: Int,
         ): ViewHolder {
-            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_device_connect, parent, false))
+            return ViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_device_connect, parent, false)
+            )
         }
 
         @SuppressLint("SetTextI18n")
@@ -312,8 +302,10 @@ class MainFragment : BaseFragment(), View.OnClickListener {
             holder.itemView.view_device_state.isSelected = hasConnect
             holder.itemView.tv_device_state.isSelected = hasConnect
             holder.itemView.tv_device_state.text = if (hasConnect) "online" else "offline"
-            holder.itemView.tv_battery.isVisible = type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
-            holder.itemView.battery_view.isVisible = type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
+            holder.itemView.tv_battery.isVisible =
+                type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
+            holder.itemView.battery_view.isVisible =
+                type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
 
             when (type) {
                 ConnectType.LINE -> {
@@ -330,6 +322,7 @@ class MainFragment : BaseFragment(), View.OnClickListener {
                         holder.itemView.iv_image.setImageResource(R.drawable.ic_main_device_line_disconnect)
                     }
                 }
+
                 ConnectType.TS004 -> {
                     holder.itemView.tv_device_name.text = "TS004"
                     if (hasConnect) {
@@ -338,6 +331,7 @@ class MainFragment : BaseFragment(), View.OnClickListener {
                         holder.itemView.iv_image.setImageResource(R.drawable.ic_main_device_ts004_disconnect)
                     }
                 }
+
                 ConnectType.TC007 -> {
                     holder.itemView.tv_device_name.text = "TC007"
                     if (hasConnect) {
@@ -377,7 +371,7 @@ class MainFragment : BaseFragment(), View.OnClickListener {
                 rootView.iv_bg.setOnLongClickListener {
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
-                        // 只有离线设备才能长按删除
+
                         val deviceType = getConnectType(position)
                         when (deviceType) {
                             ConnectType.LINE -> {
@@ -385,11 +379,13 @@ class MainFragment : BaseFragment(), View.OnClickListener {
                                     return@setOnLongClickListener true
                                 }
                             }
+
                             ConnectType.TS004 -> {
                                 if (WebSocketProxy.getInstance().isTS004Connect()) {
                                     return@setOnLongClickListener true
                                 }
                             }
+
                             ConnectType.TC007 -> {
                                 if (WebSocketProxy.getInstance().isTC007Connect()) {
                                     return@setOnLongClickListener true
@@ -412,33 +408,31 @@ class MainFragment : BaseFragment(), View.OnClickListener {
                         } else {
                             ConnectType.TC007
                         }
+
                     1 ->
                         if (SharedManager.hasTcLine) {
                             if (SharedManager.hasTS004) ConnectType.TS004 else ConnectType.TC007
                         } else {
                             ConnectType.TC007
                         }
+
                     else -> ConnectType.TC007
                 }
         }
     }
 
-    /**
-     * Show GSR Multi-modal Recording options for research purposes
-     * Accessed via long-press on app title
-     */
     private fun showGSROptions() {
         TipDialog.Builder(requireContext())
             .setTitleMessage("GSR Multi-modal Recording")
             .setMessage("Choose GSR recording option:")
             .setPositiveListener("Full Recording") {
-                // Launch full multi-modal recording interface
+
                 ARouter.getInstance()
                     .build(RouterConfig.GSR_MULTI_MODAL)
                     .navigation(requireContext())
             }
             .setCancelListener("GSR Demo") {
-                // Launch simple GSR demo
+
                 ARouter.getInstance()
                     .build(RouterConfig.GSR_DEMO)
                     .navigation(requireContext())

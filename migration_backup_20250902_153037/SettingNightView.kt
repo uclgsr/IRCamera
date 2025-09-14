@@ -50,15 +50,19 @@ class SettingNightView : LinearLayout {
                             R.styleable.SettingNightView_setting_icon_night,
                             R.drawable.ic_setting_default_svg,
                         )
+
                 R.styleable.SettingNightView_setting_text_night ->
                     contentStr =
                         ta.getString(R.styleable.SettingNightView_setting_text_night).toString()
+
                 R.styleable.SettingNightView_setting_more_night ->
                     moreShow =
                         ta.getBoolean(R.styleable.SettingNightView_setting_more_night, true)
+
                 R.styleable.SettingNightView_setting_line_night ->
                     lineShow =
                         ta.getBoolean(R.styleable.SettingNightView_setting_line_night, false)
+
                 R.styleable.SettingNightView_setting_icon_show_night ->
                     iconShow =
                         ta.getBoolean(R.styleable.SettingNightView_setting_icon_show_night, false)

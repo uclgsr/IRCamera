@@ -9,85 +9,67 @@ import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.topdon.tc001.sensors.unified.model.PCControllerInfo
 
-/**
- * **PC Controller Adapter**
- * 
- * RecyclerView adapter for displaying discovered PC controllers with capability indicators.
- * 
- * Features:
- * - Display controller name, address, and supported features
- * - Visual indicators for GSR, thermal, and RGB support
- * - Connection priority sorting
- * - Single selection support with click handling
- * 
- * @author IRCamera Unified Sensor Integration
- */
 class PCControllerAdapter(
     private val onControllerClick: (PCControllerInfo) -> Unit
 ) : RecyclerView.Adapter<PCControllerAdapter.ControllerViewHolder>() {
-    
+
     private val controllers = mutableListOf<PCControllerInfo>()
     private var selectedPosition = RecyclerView.NO_POSITION
-    
-    /**
-     * Update the controller list
-     */
+
     fun updateControllers(newControllers: List<PCControllerInfo>) {
         controllers.clear()
         controllers.addAll(PCControllerInfo.sortByPriority(newControllers))
         selectedPosition = RecyclerView.NO_POSITION
         notifyDataSetChanged()
     }
-    
-    /**
-     * Get the currently selected controller
-     */
+
     fun getSelectedController(): PCControllerInfo? {
         return if (selectedPosition != RecyclerView.NO_POSITION) {
             controllers[selectedPosition]
         } else null
     }
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ControllerViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_pc_controller, parent, false)
         return ControllerViewHolder(view)
     }
-    
+
     override fun onBindViewHolder(holder: ControllerViewHolder, position: Int) {
         holder.bind(controllers[position], position == selectedPosition)
     }
-    
+
     override fun getItemCount(): Int = controllers.size
-    
+
     inner class ControllerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val controllerNameText: TextView = itemView.findViewById(R.id.controllerNameText)
-        private val controllerAddressText: TextView = itemView.findViewById(R.id.controllerAddressText)
-        private val controllerStatusText: TextView = itemView.findViewById(R.id.controllerStatusText)
+        private val controllerAddressText: TextView =
+            itemView.findViewById(R.id.controllerAddressText)
+        private val controllerStatusText: TextView =
+            itemView.findViewById(R.id.controllerStatusText)
         private val capabilitiesText: TextView = itemView.findViewById(R.id.capabilitiesText)
         private val priorityIndicator: View = itemView.findViewById(R.id.priorityIndicator)
-        
+
         init {
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val previousPosition = selectedPosition
                     selectedPosition = position
-                    
+
                     notifyItemChanged(previousPosition)
                     notifyItemChanged(selectedPosition)
-                    
+
                     onControllerClick(controllers[position])
                 }
             }
         }
-        
+
         fun bind(controller: PCControllerInfo, isSelected: Boolean) {
             controllerNameText.text = controller.displayName
             controllerAddressText.text = controller.address
             controllerStatusText.text = controller.statusSummary
-            
-            // Build capabilities text
+
             val capabilities = buildString {
                 if (controller.supportsGSR) append("GSR ")
                 if (controller.supportsThermal) append("Thermal ")
@@ -95,13 +77,11 @@ class PCControllerAdapter(
                 if (controller.supportsSecure) append("TLS ")
             }
             capabilitiesText.text = capabilities.trim()
-            
-            // Set background color based on selection
+
             itemView.setBackgroundColor(
                 if (isSelected) Color.LTGRAY else Color.TRANSPARENT
             )
-            
-            // Set priority indicator color
+
             val priorityColor = when {
                 controller.connectionPriority >= 120 -> Color.GREEN  // High priority
                 controller.connectionPriority >= 100 -> Color.BLUE   // Medium priority
@@ -109,24 +89,21 @@ class PCControllerAdapter(
                 else -> Color.GRAY  // Very low priority
             }
             priorityIndicator.setBackgroundColor(priorityColor)
-            
-            // Highlight GSR-capable controllers
+
             if (controller.supportsGSR) {
                 controllerNameText.setTextColor(Color.BLUE)
                 controllerNameText.text = "${controller.displayName} ★"
             } else {
                 controllerNameText.setTextColor(Color.BLACK)
             }
-            
-            // Show recent activity indicator
+
             if (controller.isRecentlyActive) {
                 controllerStatusText.text = "${controller.statusSummary} • Active"
                 controllerStatusText.setTextColor(Color.GREEN)
             } else {
                 controllerStatusText.setTextColor(Color.GRAY)
             }
-            
-            // Show security indicator
+
             if (controller.supportsSecure) {
                 capabilitiesText.text = "${capabilities.trim()} 🔒"
             }

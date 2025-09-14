@@ -23,12 +23,6 @@ import com.github.gzuliyujiang.dialog.ModalDialog;
 import com.github.gzuliyujiang.wheelpicker.contract.OnDatePickedListener;
 import com.github.gzuliyujiang.wheelpicker.widget.DateWheelLayout;
 
-/**
- * 日期选择器
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/5 18:17
- */
 @SuppressWarnings("unused")
 public class DatePicker extends ModalDialog {
     protected DateWheelLayout wheelLayout;

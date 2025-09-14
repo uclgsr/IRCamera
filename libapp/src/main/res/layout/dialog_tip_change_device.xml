@@ -53,10 +53,10 @@
             android:id="@+id/setting_item_left"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:gravity="center"
-            android:orientation="horizontal"
             android:layout_marginRight="5dp"
             android:background="@drawable/ic_setting_ts001_svg"
+            android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guideline_1"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,15 +67,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginTop="13dp"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:text="@string/tc_has_line_device"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:maxLines="2"
-                android:ellipsize="end"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
@@ -84,22 +84,22 @@
                 android:layout_height="8dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginRight="4dp"
+                android:background="@drawable/bg_connect_green_point"
                 app:layout_constraintLeft_toLeftOf="@+id/tv_left_device_name"
-                app:layout_constraintTop_toBottomOf="@+id/tv_left_device_name"
-                android:background="@drawable/bg_connect_green_point"/>
+                app:layout_constraintTop_toBottomOf="@+id/tv_left_device_name" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_left_connect_device_tip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="16dp"
                 android:text="@string/app_connect"
                 android:textColor="@color/white"
                 android:textSize="12sp"
-                app:layout_constraintTop_toBottomOf="@+id/tv_left_device_name"
-                app:layout_constraintLeft_toRightOf="@+id/tv_left_point"/>
+                app:layout_constraintLeft_toRightOf="@+id/tv_left_point"
+                app:layout_constraintTop_toBottomOf="@+id/tv_left_device_name" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -107,10 +107,10 @@
             android:id="@+id/setting_item_right"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal"
             android:layout_marginLeft="5dp"
             android:background="@drawable/ic_setting_ts004_active_svg"
+            android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@id/setting_item_left"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/guideline_1"
@@ -121,16 +121,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginTop="13dp"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:text="TS004"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:maxLines="2"
-                android:ellipsize="end"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/tv_right_point"
@@ -138,22 +138,22 @@
                 android:layout_height="8dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginRight="4dp"
+                android:background="@drawable/bg_connect_green_point"
                 app:layout_constraintLeft_toLeftOf="@+id/tv_right_device_name"
-                app:layout_constraintTop_toBottomOf="@+id/tv_right_device_name"
-                android:background="@drawable/bg_connect_green_point"/>
+                app:layout_constraintTop_toBottomOf="@+id/tv_right_device_name" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_right_connect_device_tip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="16dp"
                 android:text="@string/app_connect"
                 android:textColor="@color/white"
                 android:textSize="12sp"
-                app:layout_constraintTop_toBottomOf="@+id/tv_right_device_name"
-                app:layout_constraintLeft_toRightOf="@+id/tv_right_point"/>
+                app:layout_constraintLeft_toRightOf="@+id/tv_right_point"
+                app:layout_constraintTop_toBottomOf="@+id/tv_right_device_name" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

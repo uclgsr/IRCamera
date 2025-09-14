@@ -15,9 +15,6 @@ import kotlinx.android.synthetic.main.activity_electronic_manual.*
 import kotlinx.android.synthetic.main.item_electronic_manual.view.item_lay
 import kotlinx.android.synthetic.main.item_electronic_manual.view.item_text
 
-/**
- * 电子说明书 或 FAQ 设备类型选择页面
- */
 @Route(path = RouterConfig.ELECTRONIC_MANUAL)
 class ElectronicManualActivity : BaseActivity() {
     override fun initContentView() = R.layout.activity_electronic_manual
@@ -31,18 +28,21 @@ class ElectronicManualActivity : BaseActivity() {
         adapter.onPickListener = { isTS001 ->
             if (isTS001) {
                 if (productType == Constants.SETTING_BOOK) {
-                    // 电子说明书-TS001
+
                 } else {
-                    // FAQ-TS001
-                    ARouter.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", true).navigation(this)
+
+                    ARouter.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", true)
+                        .navigation(this)
                 }
             } else {
                 if (productType == Constants.SETTING_BOOK) {
-                    // 电子说明书-TS004
-                    ARouter.getInstance().build(RouterConfig.PDF).withBoolean("isTS001", false).navigation(this)
+
+                    ARouter.getInstance().build(RouterConfig.PDF).withBoolean("isTS001", false)
+                        .navigation(this)
                 } else {
-                    // FAQ-TS004
-                    ARouter.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", false).navigation(this)
+
+                    ARouter.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", false)
+                        .navigation(this)
                 }
             }
         }
@@ -54,13 +54,14 @@ class ElectronicManualActivity : BaseActivity() {
     override fun initData() {
     }
 
-    private class MyAdapter(private val isFAQ: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private class MyAdapter(private val isFAQ: Boolean) :
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var onPickListener: ((isTS001: Boolean) -> Unit)? = null
 
         private val optionList: ArrayList<String> = ArrayList(2)
 
         init {
-            // 由于 TC001 的说明书为旧版本 样式， 2024-4-9 产品决定先隐藏，只放 TS004 的说明书
+
             if (isFAQ) {
                 optionList.add("TS001")
             }
@@ -71,7 +72,10 @@ class ElectronicManualActivity : BaseActivity() {
             parent: ViewGroup,
             viewType: Int,
         ): RecyclerView.ViewHolder {
-            return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_electronic_manual, parent, false))
+            return ItemViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_electronic_manual, parent, false)
+            )
         }
 
         override fun onBindViewHolder(

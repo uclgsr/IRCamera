@@ -12,10 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-/**
- * Example demonstrating usage of the enhanced networking features.
- * This shows how to integrate TLS, discovery, time sync, and reliable messaging.
- */
 class EnhancedNetworkingExample(private val context: Context) {
     companion object {
         private const val TAG = "NetworkingExample"
@@ -27,63 +23,63 @@ class EnhancedNetworkingExample(private val context: Context) {
     private val webSocketProxy = WebSocketProxy.getInstance()
     private val exampleScope = CoroutineScope(Dispatchers.IO)
 
-    /**
-     * Demonstrates the complete networking enhancement workflow
-     */
     fun demonstrateEnhancedNetworking() {
         exampleScope.launch {
             try {
                 Log.i(TAG, "=== Enhanced Networking Demo Started ===")
 
-                // Step 1: Initialize security
                 Log.i(TAG, "1. Initializing security manager...")
                 certManager.initialize()
 
-                // Step 2: Initialize WebSocket with security
                 Log.i(TAG, "2. Initializing secure WebSocket...")
                 webSocketProxy.initializeSecurity(context)
 
-                // Step 3: Discover devices using mDNS/Zeroconf
                 Log.i(TAG, "3. Starting device discovery...")
                 discoveryService.startDiscovery()
 
-                // Wait a bit for discovery
                 kotlinx.coroutines.delay(5000)
 
                 val discoveredDevices = discoveryService.getDiscoveredDevices()
                 Log.i(TAG, "Found ${discoveredDevices.size} devices")
 
                 discoveredDevices.forEach { device ->
-                    Log.i(TAG, "  - Device: ${device.serviceName} at ${device.ipAddress}:${device.port} (${device.deviceType})")
+                    Log.i(
+                        TAG,
+                        "  - Device: ${device.serviceName} at ${device.ipAddress}:${device.port} (${device.deviceType})"
+                    )
                 }
 
-                // Step 4: Time synchronization with a discovered controller
                 if (discoveredDevices.isNotEmpty()) {
-                    val pcController = discoveredDevices.find { it.deviceType == NetworkDiscoveryService.DeviceType.PC_CONTROLLER }
+                    val pcController =
+                        discoveredDevices.find { it.deviceType == NetworkDiscoveryService.DeviceType.PC_CONTROLLER }
                     if (pcController != null) {
                         Log.i(TAG, "4. Synchronizing time with ${pcController.ipAddress}...")
 
-                        val syncResult = timeSyncService.synchronizeTime(pcController.ipAddress, pcController.port)
+                        val syncResult = timeSyncService.synchronizeTime(
+                            pcController.ipAddress,
+                            pcController.port
+                        )
                         if (syncResult.isSuccess) {
-                            Log.i(TAG, "✓ Time synchronized. Offset: ${syncResult.clockOffsetMs}ms, RTT: ${syncResult.roundTripDelayMs}ms")
+                            Log.i(
+                                TAG,
+                                "✓ Time synchronized. Offset: ${syncResult.clockOffsetMs}ms, RTT: ${syncResult.roundTripDelayMs}ms"
+                            )
 
-                            // Step 5: Demonstrate synchronized timestamps
-                            val syncTimestamp = timeSyncService.getSynchronizedTime(syncResult.clockOffsetMs)
+                            val syncTimestamp =
+                                timeSyncService.getSynchronizedTime(syncResult.clockOffsetMs)
                             Log.i(TAG, "5. Synchronized timestamp: $syncTimestamp")
                         } else {
                             Log.w(TAG, "Time synchronization failed: ${syncResult.errorMessage}")
                         }
 
-                        // Step 6: Send reliable messages
                         demonstrateReliableMessaging(pcController.ipAddress, pcController.port)
                     }
                 }
 
-                // Step 7: Connect thermal camera via secure WebSocket
                 val thermalCamera =
                     discoveredDevices.find {
                         it.deviceType == NetworkDiscoveryService.DeviceType.THERMAL_CAMERA_TS004 ||
-                            it.deviceType == NetworkDiscoveryService.DeviceType.THERMAL_CAMERA_TC007
+                                it.deviceType == NetworkDiscoveryService.DeviceType.THERMAL_CAMERA_TC007
                     }
                 if (thermalCamera != null) {
                     demonstrateSecureWebSocket(thermalCamera.serviceName)
@@ -93,15 +89,12 @@ class EnhancedNetworkingExample(private val context: Context) {
             } catch (e: Exception) {
                 Log.e(TAG, "Demo failed", e)
             } finally {
-                // Cleanup
+
                 discoveryService.stopDiscovery()
             }
         }
     }
 
-    /**
-     * Demonstrates reliable messaging with acknowledgments
-     */
     private suspend fun demonstrateReliableMessaging(
         targetHost: String,
         targetPort: Int,
@@ -116,8 +109,11 @@ class EnhancedNetworkingExample(private val context: Context) {
                     port: Int,
                     message: JSONObject,
                 ): Boolean {
-                    // This would use the actual network connection
-                    Log.d(TAG, "Sending message to $host:$port - ${message.optString("message_type")}")
+
+                    Log.d(
+                        TAG,
+                        "Sending message to $host:$port - ${message.optString("message_type")}"
+                    )
                     return true
                 }
             },
@@ -125,7 +121,6 @@ class EnhancedNetworkingExample(private val context: Context) {
 
         reliableMessaging.initialize()
 
-        // Register message handlers
         reliableMessaging.registerMessageHandler(
             "session_start",
             object : ReliableMessageService.MessageHandler {
@@ -139,7 +134,6 @@ class EnhancedNetworkingExample(private val context: Context) {
             },
         )
 
-        // Send a critical message with reliability
         val messageId =
             reliableMessaging.sendMessage(
                 targetHost = targetHost,
@@ -175,22 +169,16 @@ class EnhancedNetworkingExample(private val context: Context) {
 
         Log.i(TAG, "Sent reliable message with ID: $messageId")
 
-        // Wait a bit to see acknowledgments
         kotlinx.coroutines.delay(2000)
 
         reliableMessaging.shutdown()
     }
 
-    /**
-     * Demonstrates secure WebSocket connection to thermal camera
-     */
     private fun demonstrateSecureWebSocket(deviceName: String = "TS004_DEMO_DEVICE") {
         Log.i(TAG, "7. Demonstrating secure WebSocket connection...")
 
-        // Start secure WebSocket connection to thermal camera
         webSocketProxy.startWebSocket(deviceName)
 
-        // Send command to thermal camera
         val command =
             JSONObject().apply {
                 put("cmd", "get_temperature")
@@ -201,9 +189,6 @@ class EnhancedNetworkingExample(private val context: Context) {
         Log.i(TAG, "Sent command to thermal camera via secure WebSocket")
     }
 
-    /**
-     * Cleanup all resources
-     */
     fun cleanup() {
         discoveryService.stopDiscovery()
         webSocketProxy.stopWebSocket()

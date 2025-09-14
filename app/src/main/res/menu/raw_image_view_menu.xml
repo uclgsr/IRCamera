@@ -4,20 +4,20 @@
 
     <item
         android:id="@+id/action_share"
-        android:title="Share"
         android:icon="@drawable/ic_share"
+        android:title="Share"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_export"
-        android:title="Export"
         android:icon="@drawable/ic_file_download"
+        android:title="Export"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_info"
-        android:title="Technical Info"
         android:icon="@drawable/ic_info"
+        android:title="Technical Info"
         app:showAsAction="ifRoom" />
 
 </menu>

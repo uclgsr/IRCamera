@@ -10,14 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.core.R
 import com.topdon.lib.ui.R as UiR
 
-/**
- * @author: CaiSongL
- * @date: 2023/4/1 13:48
- */
-/**
- * Custom Camera item view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 @Deprecated("热成像-menu-capture已重构，不需要这个类了")
 class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapter.ViewHolder>() {
     val data: List<String> =
@@ -76,8 +69,13 @@ class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapt
         }
 
         fun hideText() {
-            textView.setTextColor(ContextCompat.getColor(textView.context, UiR.color.ui_main_custom_color))
-            //            textView.setColorFilter(ContextCompat.getColor(imageView.getContext(), UiR.color.Grey700));
+            textView.setTextColor(
+                ContextCompat.getColor(
+                    textView.context,
+                    UiR.color.ui_main_custom_color
+                )
+            )
+
             textView.animate().scaleX(1f).scaleY(1f)
                 .setDuration(100)
                 .start()

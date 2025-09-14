@@ -11,10 +11,9 @@ import struct
 import time
 from dataclasses import asdict, dataclass
 from enum import Enum
+from loguru import logger
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-
-from loguru import logger
 
 
 class GSRMode(Enum):
@@ -97,7 +96,7 @@ class GSRIngestor:
         logger.info(f"GSR Ingestor initialized with data directory: {self.data_dir}")
 
     async def start_session(
-        self, session_id: str, device_id: str, mode: GSRMode
+            self, session_id: str, device_id: str, mode: GSRMode
     ) -> bool:
         """
         Start GSR data collection for a session
@@ -296,7 +295,7 @@ class GSRIngestor:
             logger.error(f"Failed to save GSR dataset: {e}")
 
     async def load_dataset(
-        self, session_id: str, device_id: str
+            self, session_id: str, device_id: str
     ) -> Optional[GSRDataSet]:
         """Load GSR dataset from file"""
         try:

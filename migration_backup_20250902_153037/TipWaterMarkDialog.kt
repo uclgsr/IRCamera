@@ -30,9 +30,6 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import kotlinx.android.synthetic.main.dialog_tip_watermark.view.*
 import java.util.*
 
-/**
- * 2D-编辑 水印
- */
 class TipWaterMarkDialog : Dialog {
     constructor(context: Context) : super(context)
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
@@ -69,7 +66,8 @@ class TipWaterMarkDialog : Dialog {
             if (dialog == null) {
                 dialog = TipWaterMarkDialog(context!!, R.style.InfoDialog)
             }
-            val inflater = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater =
+                context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val view = inflater.inflate(R.layout.dialog_tip_watermark, null)
             imgClose = view.img_close
             llWatermarkContent = view.ll_watermark_content
@@ -110,10 +108,10 @@ class TipWaterMarkDialog : Dialog {
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    // 竖屏
+
                     0.85
                 } else {
-                    // 横屏
+
                     0.35
                 }
             lp.width = (ScreenUtil.getScreenWidth(context) * wRatio).toInt() // 设置宽度
@@ -122,14 +120,8 @@ class TipWaterMarkDialog : Dialog {
             dialog!!.setCanceledOnTouchOutside(canceled)
             imgClose.setOnClickListener {
                 dismiss()
-//              closeEvent?.invoke(
-//                    WatermarkBean(
-//                        view.switch_watermark.isChecked,
-//                        view.ed_title.text.toString(),
-//                        view.ed_address.text.toString(),
-//                        view.switch_date_time.isChecked,
-//                    )
-//                )
+
+
             }
             dialog!!.setContentView(view)
             return dialog as TipWaterMarkDialog
@@ -166,7 +158,7 @@ class TipWaterMarkDialog : Dialog {
         }
 
         private fun initLocationPermission() {
-            // 定位
+
             XXPermissions.with(context)
                 .permission(
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -177,20 +169,16 @@ class TipWaterMarkDialog : Dialog {
                             permissions: MutableList<String>,
                             all: Boolean,
                         ) {
-                            if (all)
-                                {
-                                    var addressText: String? = getLocation()
-                                    if (addressText == null)
-                                        {
-                                            ToastUtils.showShort(R.string.get_Location_failed)
-                                        } else
-                                        {
-                                            mEtAddress.setText(addressText)
-                                        }
-                                } else
-                                {
-                                    ToastUtils.showShort(R.string.scan_ble_tip_authorize)
+                            if (all) {
+                                var addressText: String? = getLocation()
+                                if (addressText == null) {
+                                    ToastUtils.showShort(R.string.get_Location_failed)
+                                } else {
+                                    mEtAddress.setText(addressText)
                                 }
+                            } else {
+                                ToastUtils.showShort(R.string.scan_ble_tip_authorize)
+                            }
                         }
 
                         override fun onDenied(
@@ -198,12 +186,11 @@ class TipWaterMarkDialog : Dialog {
                             never: Boolean,
                         ) {
                             if (never) {
-                                // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                                if (BaseApplication.instance.isDomestic())
-                                    {
-                                        ToastUtils.showShort(R.string.app_location_content)
-                                        return
-                                    }
+
+                                if (BaseApplication.instance.isDomestic()) {
+                                    ToastUtils.showShort(R.string.app_location_content)
+                                    return
+                                }
                                 TipDialog.Builder(context)
                                     .setTitleMessage(context!!.getString(R.string.app_tip))
                                     .setMessage(context!!.getString(R.string.app_location_content))
@@ -223,58 +210,52 @@ class TipWaterMarkDialog : Dialog {
                 )
         }
 
-        private fun updateWaterMark(isCheck: Boolean)  {
-            if (isCheck)
-                {
-                    llWatermarkContent.alpha = 1f
-                    llWatermarkContent.isEnabled = true
-                    switchDateTime.isEnabled = true
-                    mEtTitle.isEnabled = true
-                    mEtAddress.isEnabled = true
-                    imgLocation.isEnabled = true
-                } else
-                {
-                    llWatermarkContent.alpha = 0.5f
-                    llWatermarkContent.isEnabled = false
-                    switchDateTime.isEnabled = false
-                    mEtTitle.isEnabled = false
-                    mEtAddress.isEnabled = false
-                    imgLocation.isEnabled = false
-                }
+        private fun updateWaterMark(isCheck: Boolean) {
+            if (isCheck) {
+                llWatermarkContent.alpha = 1f
+                llWatermarkContent.isEnabled = true
+                switchDateTime.isEnabled = true
+                mEtTitle.isEnabled = true
+                mEtAddress.isEnabled = true
+                imgLocation.isEnabled = true
+            } else {
+                llWatermarkContent.alpha = 0.5f
+                llWatermarkContent.isEnabled = false
+                switchDateTime.isEnabled = false
+                mEtTitle.isEnabled = false
+                mEtAddress.isEnabled = false
+                imgLocation.isEnabled = false
+            }
         }
 
         @SuppressLint("MissingPermission")
         private fun getLocation(): String? {
-            // 1.获取位置管理器
-            locationManager = context!!.getSystemService(RxAppCompatActivity.LOCATION_SERVICE) as LocationManager
 
-            // 2.获取位置提供器，GPS或是NetWork
+            locationManager =
+                context!!.getSystemService(RxAppCompatActivity.LOCATION_SERVICE) as LocationManager
+
             val providers = locationManager?.getProviders(true)
             locationProvider =
                 if (providers!!.contains(LocationManager.GPS_PROVIDER)) {
-                    // 如果是GPS
+
                     LocationManager.GPS_PROVIDER
                 } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
-                    // 如果是Network
+
                     LocationManager.NETWORK_PROVIDER
                 } else {
                     return null
                 }
             var location = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            if (location == null)
-                {
-                    location = locationManager?.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                }
-            return if (location == null)
-                {
-                    null
-                } else
-                {
-                    getAddress(location)
-                }
+            if (location == null) {
+                location = locationManager?.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            }
+            return if (location == null) {
+                null
+            } else {
+                getAddress(location)
+            }
         }
 
-        // 获取地址信息:城市、街道等信息
         private fun getAddress(location: Location?): String {
             var result: List<Address?>? = null
             try {
@@ -291,35 +272,29 @@ class TipWaterMarkDialog : Dialog {
                 e.printStackTrace()
             }
             var str = ""
-            if (result != null && result.isNotEmpty())
-                {
-                    result?.get(0)?.let {
-                        str += getNullString(it.adminArea)
-                        if (TextUtils.isEmpty(it.subLocality) && !str.contains(getNullString(it.subAdminArea)))
-                            {
-                                str += getNullString(it.subAdminArea)
-                            }
-                        if (!str.contains(getNullString(it.locality)))
-                            {
-                                str += getNullString(it.locality)
-                            }
-                        if (!str.contains(getNullString(it.subLocality)))
-                            {
-                                str += getNullString(it.subLocality)
-                            }
+            if (result != null && result.isNotEmpty()) {
+                result?.get(0)?.let {
+                    str += getNullString(it.adminArea)
+                    if (TextUtils.isEmpty(it.subLocality) && !str.contains(getNullString(it.subAdminArea))) {
+                        str += getNullString(it.subAdminArea)
+                    }
+                    if (!str.contains(getNullString(it.locality))) {
+                        str += getNullString(it.locality)
+                    }
+                    if (!str.contains(getNullString(it.subLocality))) {
+                        str += getNullString(it.subLocality)
                     }
                 }
+            }
             return str
         }
 
-        private fun getNullString(str: String?): String  {
-            return if (str.isNullOrEmpty())
-                {
-                    ""
-                } else
-                {
-                    str
-                }
+        private fun getNullString(str: String?): String {
+            return if (str.isNullOrEmpty()) {
+                ""
+            } else {
+                str
+            }
         }
     }
 }

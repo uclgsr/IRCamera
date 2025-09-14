@@ -21,13 +21,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Calendar
 import com.topdon.lib.core.R as LibCoreR
 
-/**
- * 条款
- */
-// Legacy ARouter route annotation - now using NavigationManager
 class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
     private lateinit var dialog: TipProgressDialog
 
@@ -52,7 +48,7 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
             confirmInitApp()
         }
         binding.clauseDisagreeBtn.setOnClickListener {
-            // 再次弹框Confirm是否Exit
+
             TipDialog.Builder(this)
                 .setMessage(getString(R.string.privacy_tips))
                 .setPositiveListener(R.string.privacy_confirm) {
@@ -69,7 +65,7 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
             if (!NetworkUtil.isConnected(this)) {
                 TToast.shortToast(this, R.string.lms_setting_http_error)
             } else {
-                // 服务条款
+
                 NavigationManager.getInstance()
                     .build(RouterConfig.POLICY)
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 1)
@@ -81,7 +77,7 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
             if (!NetworkUtil.isConnected(this)) {
                 TToast.shortToast(this, R.string.lms_setting_http_error)
             } else {
-                // 隐私条款
+
                 NavigationManager.getInstance()
                     .build(RouterConfig.POLICY)
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 2)
@@ -90,7 +86,7 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
             }
         }
         binding.clauseItem3.setOnClickListener {
-            // 第三方
+
             if (!NetworkUtil.isConnected(this)) {
                 TToast.shortToast(this, R.string.lms_setting_http_error)
             } else {
@@ -103,22 +99,24 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
         }
 
         if (BaseApplication.instance.isDomestic()) {
-            binding.tvPrivacy.text = "    ${getString(R.string.privacy_agreement_tips_new, CommUtils.getAppName())}"
+            binding.tvPrivacy.text =
+                "    ${getString(R.string.privacy_agreement_tips_new, CommUtils.getAppName())}"
             binding.tvPrivacy.visibility = android.view.View.VISIBLE
             binding.tvPrivacy.movementMethod = ScrollingMovementMethod.getInstance()
         }
         binding.tvWelcome.text = getString(R.string.welcome_use_app, CommUtils.getAppName())
-        binding.tvVersion.text = "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
+        binding.tvVersion.text =
+            "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
         binding.clauseName.text = CommUtils.getAppName()
     }
 
     private fun confirmInitApp() {
         lifecycleScope.launch {
             showLoading()
-            // 初始化
+
             App.delayInit()
             async(Dispatchers.IO) {
-                // 等待1000ms 初始化结束
+
                 delay(1000)
                 return@async
             }.await().let {

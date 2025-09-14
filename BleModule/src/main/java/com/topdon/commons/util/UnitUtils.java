@@ -14,22 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * @Desc 单位工具类
- * @ClassName UnitUtils
- * @Email 616862466@qq.com
- * @Author 子墨
- * @Date 2022/12/21 15:53
- */
 
 public class UnitUtils {
 
-
-    /**
-     * 根据类型获取单位数据
-     *
-     * @param unitType 0公制  1 英制
-     */
     public static List<UnitDBBean> getUnitDBBeanList(int unitType) {
         try {
             String jsonStr;
@@ -51,21 +38,12 @@ public class UnitUtils {
         }
     }
 
-
-    /**
-     * 根据类型获取单位数据
-     */
     public static HashMap<String, UnitDBBean> getUnitDBBeanHashMap() {
         String unit = (String) SPUtils.getInstance(Topdon.getApp()).get("unit", "0");
         int unitType = "0".equals(unit) ? 0 : 1;
         return getUnitDBBeanHashMap(unitType);
     }
 
-    /**
-     * 根据类型获取单位数据
-     *
-     * @param unitType 0公制  1 英制
-     */
     public static HashMap<String, UnitDBBean> getUnitDBBeanHashMap(int unitType) {
         HashMap<String, UnitDBBean> hashMap = new HashMap<>();
         try {
@@ -79,29 +57,12 @@ public class UnitUtils {
         return hashMap;
     }
 
-
-    /**
-     * 计算结果
-     *
-     * @param preUnit        转换前单位
-     * @param numericalValue 需要转换得值
-     * @return String[] 第一个值 第二个单位
-     */
     public static String[] getCalcResult(HashMap<String, UnitDBBean> hashMap, String preUnit, String numericalValue) {
         String unit = (String) SPUtils.getInstance(Topdon.getApp()).get("unit", "0");
         int unitType = "0".equals(unit) ? 0 : 1;
         return getCalcResult(unitType, hashMap, preUnit, numericalValue);
     }
 
-
-    /**
-     * 计算结果
-     *
-     * @param unitType       当前是选中哪个单位   0 公制  1 英制
-     * @param preUnit        转换前单位
-     * @param numericalValue 需要转换得值
-     * @return String[] 第一个值 第二个单位
-     */
     public static String[] getCalcResult(int unitType, HashMap<String, UnitDBBean> hashMap, String preUnit, String numericalValue) {
         UnitDBBean unitDBBean = null;
         try {
@@ -164,26 +125,14 @@ public class UnitUtils {
 
     }
 
-    /**
-     * 保留两位小数
-     *
-     * @param dou dou
-     * @return double
-     */
     public static double getResult(double dou) {
         BigDecimal bigDecimal = new BigDecimal(dou).setScale(2, RoundingMode.HALF_UP);
         return bigDecimal.doubleValue();
 
     }
 
-    /**
-     * 不足两位补0
-     *
-     * @param score double
-     * @return String
-     */
     public static String getDecimalFormatByDouble(double score) {
-        //不足两位则补0
+
         DecimalFormat decimalFormat = new DecimalFormat("0.00#");
         return decimalFormat.format(score);
     }

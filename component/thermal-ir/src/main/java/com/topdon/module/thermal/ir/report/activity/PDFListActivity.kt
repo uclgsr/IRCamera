@@ -34,25 +34,22 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
-// 需要传递
-// - 是否 TC007: [ExtraKeyConfig.IS_TC007]
+
+
  * @author: CaiSongL
  * @date: 2023/5/12 11:34
  */
-// Legacy ARouter route annotation - now using NavigationManager
-/**
- * P d f list activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
+
 class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
-    // View references using findViewById
+
     private val titleView: TitleView by lazy { findViewById(R.id.title_view) }
     private val fragmentPdfRecyclerLay: SmartRefreshLayout by lazy { findViewById(R.id.fragment_pdf_recycler_lay) }
     private val fragmentPdfRecycler: RecyclerView by lazy { findViewById(R.id.fragment_pdf_recycler) }
 
     /**
-// 从上一interface传递过来的，当前是否为 TC007 device类型.
-// true-TC007 false-其他插件式device
+
+
      */
     private var isTC007 = false
 
@@ -71,10 +68,9 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
 
         viewModel.listData.observe(this) {
             dismissLoadingDialog()
-            if (!reportAdapter.hasEmptyView())
-                {
-                    reportAdapter.setEmptyView(R.layout.layout_empty)
-                }
+            if (!reportAdapter.hasEmptyView()) {
+                reportAdapter.setEmptyView(R.layout.layout_empty)
+            }
             if (it == null) {
                 if (page == 1) {
                     fragmentPdfRecyclerLay.finishRefresh(false)
@@ -84,40 +80,34 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
             }
             it?.let { data ->
                 if (page == 1) {
-// 刷新
-                    if (data.code == LMS.SUCCESS)
-                        {
-                            reportAdapter.loadMoreModule.isEnableLoadMore = !data.data?.records.isNullOrEmpty()
-                            fragmentPdfRecyclerLay.finishRefresh()
-                        } else
-                        {
-                            fragmentPdfRecyclerLay.finishRefresh(false)
-                        }
+
+                    if (data.code == LMS.SUCCESS) {
+                        reportAdapter.loadMoreModule.isEnableLoadMore =
+                            !data.data?.records.isNullOrEmpty()
+                        fragmentPdfRecyclerLay.finishRefresh()
+                    } else {
+                        fragmentPdfRecyclerLay.finishRefresh(false)
+                    }
                     reportAdapter.setNewInstance(data.data?.records)
                 } else {
                     data.data?.records?.let { it1 -> reportAdapter.addData(it1) }
-                    if (data.code == LMS.SUCCESS)
-                        {
-                            if (data.data?.records.isNullOrEmpty())
-                                {
-                                    reportAdapter.loadMoreModule.loadMoreEnd()
-                                } else
-                                {
-                                    reportAdapter.loadMoreModule.loadMoreComplete()
-                                }
-                        } else
-                        {
-                            reportAdapter.loadMoreModule.loadMoreFail()
+                    if (data.code == LMS.SUCCESS) {
+                        if (data.data?.records.isNullOrEmpty()) {
+                            reportAdapter.loadMoreModule.loadMoreEnd()
+                        } else {
+                            reportAdapter.loadMoreModule.loadMoreComplete()
                         }
+                    } else {
+                        reportAdapter.loadMoreModule.loadMoreFail()
+                    }
                 }
             }
         }
         if (WebSocketProxy.getInstance().isConnected()) {
             NetWorkUtils.switchNetwork(false)
-        } else
-            {
-                NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
-            }
+        } else {
+            NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
+        }
         initRecycler()
     }
 
@@ -127,7 +117,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
     private fun initRecycler() {
         fragmentPdfRecycler.layoutManager = LinearLayoutManager(this)
         fragmentPdfRecyclerLay.setOnRefreshListener {
-// 刷新
+
             page = 1
             viewModel.getReportData(isTC007, page)
         }
@@ -135,7 +125,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
         reportAdapter.loadMoreModule.loadMoreView = CommLoadMoreView()
         fragmentPdfRecyclerLay.autoRefresh()
         reportAdapter.loadMoreModule.setOnLoadMoreListener {
-// load更多
+
             viewModel.getReportData(isTC007, ++page)
         }
         reportAdapter.jumpDetailListener = { item, position ->
@@ -149,25 +139,39 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
         reportAdapter.delListener = { item, position ->
             val reportBean = item.reportContent
             TipDialog.Builder(this)
-                .setMessage(getString(R.string.tip_config_delete, reportBean?.report_info?.report_name ?: ""))
+                .setMessage(
+                    getString(
+                        R.string.tip_config_delete,
+                        reportBean?.report_info?.report_name ?: ""
+                    )
+                )
                 .setPositiveListener(R.string.app_confirm) {
                     lifecycleScope.launch {
                         showLoadingDialog()
                         withContext(Dispatchers.IO) {
-                            val url = UrlConstant.BASE_URL + "api/v1/outProduce/testReport/delTestReport"
+                            val url =
+                                UrlConstant.BASE_URL + "api/v1/outProduce/testReport/delTestReport"
                             val params = RequestParams()
-                            params.addBodyParameter("modelId", if (isTC007) 1783 else 950) // TC001-950, TC002-951, TC003-952 TC007-1783
+                            params.addBodyParameter(
+                                "modelId",
+                                if (isTC007) 1783 else 950
+                            ) // TC001-950, TC002-951, TC003-952 TC007-1783
                             params.addBodyParameter("testReportIds", arrayOf(item.testReportId))
                             params.addBodyParameter("status", 1)
-                            params.addBodyParameter("languageId", LanguageUtil.getLanguageId(Utils.getApp()))
+                            params.addBodyParameter(
+                                "languageId",
+                                LanguageUtil.getLanguageId(Utils.getApp())
+                            )
                             params.addBodyParameter("reportType", 2)
                             HttpProxy.instant.post(
                                 url, params,
                                 object :
                                     IResponseCallback {
                                     override fun onResponse(response: String?) {
-                                        val reportNumber = item.reportContent?.report_info?.report_number ?: ""
-                                        val file = File(FileConfig.getPdfDir() + "/$reportNumber.pdf")
+                                        val reportNumber =
+                                            item.reportContent?.report_info?.report_number ?: ""
+                                        val file =
+                                            File(FileConfig.getPdfDir() + "/$reportNumber.pdf")
                                         if (file.exists()) {
                                             file.delete()
                                         }
@@ -197,16 +201,14 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                             )
                         }
                         dismissLoadingDialog()
-                        if (item.isShowTitleTime)
-                            {
-                                reportAdapter.remove(item)
-                                reportAdapter.setNewInstance(reportAdapter.data)
-                                reportAdapter.notifyDataSetChanged()
-                            } else
-                            {
-                                reportAdapter.data.removeAt(position)
-                                reportAdapter.notifyItemRemoved(position)
-                            }
+                        if (item.isShowTitleTime) {
+                            reportAdapter.remove(item)
+                            reportAdapter.setNewInstance(reportAdapter.data)
+                            reportAdapter.notifyDataSetChanged()
+                        } else {
+                            reportAdapter.data.removeAt(position)
+                            reportAdapter.notifyItemRemoved(position)
+                        }
                     }
                 }
                 .setCancelListener(R.string.app_cancel) {
@@ -215,6 +217,6 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
         }
 
         fragmentPdfRecycler.adapter = reportAdapter
-//        viewModel.getReportData(1)
+
     }
 }

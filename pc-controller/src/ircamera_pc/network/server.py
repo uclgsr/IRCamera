@@ -24,7 +24,7 @@ except ImportError:
 from ..core.config import config
 from ..core.gsr_receiver import GSRReceiver
 from .discovery import NetworkDiscoveryService
-from .messaging import MessageCallback, MessagePriority, ReliableMessageService
+from .messaging import MessagePriority, ReliableMessageService
 from .protocol import (
     ValidationError,
     create_message,
@@ -248,7 +248,7 @@ class NetworkServer:
                 self._handle_client,
                 self._host,
                 self._port,
-                limit=2**16,  # 64KB buffer
+                limit=2 ** 16,  # 64KB buffer
             )
 
             # Start secure server with TLS
@@ -260,7 +260,7 @@ class NetworkServer:
                 self._host,
                 self._secure_port,
                 ssl=ssl_context,
-                limit=2**16,  # 64KB buffer
+                limit=2 ** 16,  # 64KB buffer
             )
 
             # Start heartbeat monitoring
@@ -336,10 +336,10 @@ class NetworkServer:
         logger.info("Network server stopped")
 
     async def _handle_client(
-        self,
-        reader: asyncio.StreamReader,
-        writer: asyncio.StreamWriter,
-        is_secure: bool = False,
+            self,
+            reader: asyncio.StreamReader,
+            writer: asyncio.StreamWriter,
+            is_secure: bool = False,
     ) -> None:
         """Handle new client connection."""
         addr = writer.get_extra_info("peername")
@@ -388,7 +388,7 @@ class NetworkServer:
             await writer.wait_closed()
 
     async def _process_message(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> None:
         """Process incoming message from device using protocol validation."""
         try:
@@ -424,7 +424,7 @@ class NetworkServer:
             await self._send_error(writer, str(e))
 
     async def _handle_device_register(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
         """Handle device registration."""
         try:
@@ -460,7 +460,7 @@ class NetworkServer:
 
             # Determine GSR leader
             if "gsr_sensor" in capabilities and not any(
-                d.is_gsr_leader for d in self._devices.values()
+                    d.is_gsr_leader for d in self._devices.values()
             ):
                 device_info.is_gsr_leader = True
                 device_info.gsr_mode = config.get("gsr.default_mode", "local")
@@ -490,7 +490,7 @@ class NetworkServer:
             )
 
     async def _handle_device_heartbeat(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
         """Handle device heartbeat using protocol format."""
         device_id = message.get("device_id")
@@ -514,7 +514,7 @@ class NetworkServer:
         )
 
     async def _handle_device_status(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
         """Handle device status update using protocol format."""
         device_id = message.get("device_id")
@@ -543,7 +543,7 @@ class NetworkServer:
         )
 
     async def _handle_file_transfer_complete(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
         """Handle file transfer completion notification"
         "using protocol format."""
@@ -556,7 +556,7 @@ class NetworkServer:
         return create_message("ack", ack_for="file_transfer_complete", status="success")
 
     async def _handle_time_sync_request(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
         """Handle time synchronization request using protocol format."""
         message.get("device_id")
@@ -572,7 +572,7 @@ class NetworkServer:
         )  # Minimal processing delay
 
     async def _handle_gsr_data_batch(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
         """Handle GSR data batch using protocol format."""
         device_id = message.get("device_id")
@@ -667,7 +667,7 @@ class NetworkServer:
         return create_message("ack", ack_for="gsr_data_batch", status="success")
 
     async def _handle_gsr_leader_election(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
         """Handle GSR leader election using protocol format."""
         device_id = message.get("device_id")
@@ -730,9 +730,9 @@ class NetworkServer:
         # Find new GSR leader
         for did, device in self._devices.items():
             if (
-                did != device_id
-                and device.state == DeviceState.CONNECTED.value
-                and "gsr_sensor" in device.capabilities
+                    did != device_id
+                    and device.state == DeviceState.CONNECTED.value
+                    and "gsr_sensor" in device.capabilities
             ):
 
                 device.is_gsr_leader = True
@@ -766,7 +766,7 @@ class NetworkServer:
                         device.last_heartbeat.replace("Z", "+00:00")
                     )
                     time_since_heartbeat = (
-                        current_time - last_heartbeat
+                            current_time - last_heartbeat
                     ).total_seconds()
 
                     if time_since_heartbeat > self._connection_timeout:
@@ -782,9 +782,9 @@ class NetworkServer:
                 await asyncio.sleep(self._heartbeat_interval)
 
     async def broadcast_command(
-        self,
-        command: Dict[str, Any],
-        target_devices: Optional[List[str]] = None,
+            self,
+            command: Dict[str, Any],
+            target_devices: Optional[List[str]] = None,
     ) -> Dict[str, bool]:
         """
         Broadcast command to devices.
@@ -817,7 +817,7 @@ class NetworkServer:
         return results
 
     async def start_recording_session(
-        self, session_id: str, session_name: Optional[str] = None
+            self, session_id: str, session_name: Optional[str] = None
     ) -> Dict[str, bool]:
         """Start recording session on all devices using protocol format."""
         command = create_message(
@@ -846,7 +846,7 @@ class NetworkServer:
         return await self.broadcast_command(command)
 
     async def send_sync_mark(
-        self, mark_type: str, metadata: Dict[str, Any] = None
+            self, mark_type: str, metadata: Dict[str, Any] = None
     ) -> Dict[str, bool]:
         """Send sync mark to all devices using protocol format."""
         command = create_message(
@@ -860,7 +860,7 @@ class NetworkServer:
         return await self.broadcast_command(command)
 
     async def _send_message(
-        self, writer: asyncio.StreamWriter, message: Dict[str, Any]
+            self, writer: asyncio.StreamWriter, message: Dict[str, Any]
     ) -> None:
         """Send JSON message to client."""
         try:
@@ -875,10 +875,10 @@ class NetworkServer:
             raise
 
     async def _send_error(
-        self,
-        writer: asyncio.StreamWriter,
-        error_message: str,
-        message_id: Optional[str] = None,
+            self,
+            writer: asyncio.StreamWriter,
+            error_message: str,
+            message_id: Optional[str] = None,
     ) -> None:
         """Send error response to client using protocol format."""
         error_response = create_message(
@@ -892,19 +892,19 @@ class NetworkServer:
 
     # Event callback setters
     def set_device_connected_callback(
-        self, callback: Callable[[DeviceInfo], None]
+            self, callback: Callable[[DeviceInfo], None]
     ) -> None:
         """Set callback for device connection events."""
         self._on_device_connected = callback
 
     def set_device_disconnected_callback(
-        self, callback: Callable[[DeviceInfo], None]
+            self, callback: Callable[[DeviceInfo], None]
     ) -> None:
         """Set callback for device disconnection events."""
         self._on_device_disconnected = callback
 
     def set_device_status_update_callback(
-        self, callback: Callable[[DeviceInfo], None]
+            self, callback: Callable[[DeviceInfo], None]
     ) -> None:
         """Set callback for device status updates."""
         self._on_device_status_update = callback
@@ -931,7 +931,7 @@ class NetworkServer:
 
     # Enhanced networking methods
     async def _handle_secure_client(
-        self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
+            self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
     ) -> None:
         """Handle secure client connections with TLS."""
         peer_addr = writer.get_extra_info("peername")
@@ -941,7 +941,7 @@ class NetworkServer:
         await self._handle_client(reader, writer, is_secure=True)
 
     async def _send_message_to_device(
-        self, host: str, port: int, message: Dict[str, Any]
+            self, host: str, port: int, message: Dict[str, Any]
     ) -> bool:
         """
         Send message to a specific device (transport for reliable messaging).
@@ -997,7 +997,7 @@ class NetworkServer:
             logger.error(f"Error handling device discovery event: {e}")
 
     async def _handle_device_auth(
-        self, message: Dict[str, Any], device_id: str
+            self, message: Dict[str, Any], device_id: str
     ) -> Dict[str, Any]:
         """Handle device authentication request."""
         try:
@@ -1058,7 +1058,7 @@ class NetworkServer:
             )
 
     async def _handle_message_ack(
-        self, message: Dict[str, Any], device_id: str
+            self, message: Dict[str, Any], device_id: str
     ) -> Optional[Dict[str, Any]]:
         """Handle message acknowledgment."""
         await self._messaging_service.handle_acknowledgment(
@@ -1067,7 +1067,7 @@ class NetworkServer:
         return None
 
     async def _handle_message_nack(
-        self, message: Dict[str, Any], device_id: str
+            self, message: Dict[str, Any], device_id: str
     ) -> Optional[Dict[str, Any]]:
         """Handle message negative acknowledgment."""
         await self._messaging_service.handle_acknowledgment(
@@ -1078,7 +1078,7 @@ class NetworkServer:
         return None
 
     async def _handle_reliable_session_start(
-        self, message: Dict[str, Any]
+            self, message: Dict[str, Any]
     ) -> Optional[Dict[str, Any]]:
         """Handle reliable session start message."""
         try:
@@ -1096,7 +1096,7 @@ class NetworkServer:
         return None
 
     async def _handle_reliable_session_stop(
-        self, message: Dict[str, Any]
+            self, message: Dict[str, Any]
     ) -> Optional[Dict[str, Any]]:
         """Handle reliable session stop message."""
         try:
@@ -1114,7 +1114,7 @@ class NetworkServer:
         return None
 
     async def _handle_reliable_sync_flash(
-        self, message: Dict[str, Any]
+            self, message: Dict[str, Any]
     ) -> Optional[Dict[str, Any]]:
         """Handle reliable sync flash message."""
         try:
@@ -1132,12 +1132,12 @@ class NetworkServer:
         return None
 
     async def send_reliable_message_to_device(
-        self,
-        device_id: str,
-        message_type: str,
-        content: Dict[str, Any],
-        priority: MessagePriority = MessagePriority.NORMAL,
-        timeout_seconds: float = 30.0,
+            self,
+            device_id: str,
+            message_type: str,
+            content: Dict[str, Any],
+            priority: MessagePriority = MessagePriority.NORMAL,
+            timeout_seconds: float = 30.0,
     ) -> str:
         """
         Send a reliable message to a specific device.
@@ -1179,8 +1179,8 @@ class NetworkServer:
             if device.last_heartbeat:
                 # Estimate round-trip time based on heartbeat response
                 latency_ms = (
-                    current_time - device.last_heartbeat
-                ).total_seconds() * 500  # Rough estimate
+                                     current_time - device.last_heartbeat
+                             ).total_seconds() * 500  # Rough estimate
                 return min(latency_ms, 1000.0)  # Cap at 1 second
         return 50.0  # Default estimate
 
@@ -1198,7 +1198,7 @@ class NetworkServer:
         return hashlib.md5(hash_data.encode()).hexdigest()[:8]
 
     def _update_realtime_gsr_visualization(
-        self, device_id: str, data_points: List[Dict[str, Any]]
+            self, device_id: str, data_points: List[Dict[str, Any]]
     ) -> None:
         """Update real-time GSR visualization if available."""
         try:
@@ -1219,7 +1219,7 @@ class NetworkServer:
             logger.debug(f"Real-time visualization update failed: {e}")
 
     def _buffer_gsr_data(
-        self, device_id: str, data_points: List[Dict[str, Any]]
+            self, device_id: str, data_points: List[Dict[str, Any]]
     ) -> None:
         """Fallback method to buffer GSR data when aggregator is unavailable."""
         if not hasattr(self, "_gsr_data_buffer"):
@@ -1241,8 +1241,8 @@ class NetworkServer:
         max_buffer_size = 10000  # Keep last 10k points per device
         if len(self._gsr_data_buffer[device_id]) > max_buffer_size:
             self._gsr_data_buffer[device_id] = self._gsr_data_buffer[device_id][
-                -max_buffer_size:
-            ]
+                                               -max_buffer_size:
+                                               ]
 
         logger.debug(
             f"Buffered {len(data_points)} GSR points from {device_id}, "
@@ -1252,7 +1252,7 @@ class NetworkServer:
     # Enhanced GSR Streaming Handlers for Hub-Spoke Communication
 
     async def _handle_gsr_stream_registration(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
         """Handle GSR stream registration from Android device"""
         try:
@@ -1283,7 +1283,7 @@ class NetworkServer:
             return {"message_type": "error", "error": str(e)}
 
     async def _handle_gsr_data_stream(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Optional[Dict[str, Any]]:
         """Handle real-time GSR data stream from Android device"""
         try:
@@ -1315,7 +1315,7 @@ class NetworkServer:
             return None
 
     async def _handle_gsr_quality_metrics(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Optional[Dict[str, Any]]:
         """Handle GSR quality metrics from Android device"""
         try:
@@ -1340,7 +1340,7 @@ class NetworkServer:
             return None
 
     async def _handle_gsr_heartbeat(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Optional[Dict[str, Any]]:
         """Handle GSR heartbeat from Android device"""
         try:
@@ -1365,7 +1365,7 @@ class NetworkServer:
             return None
 
     async def _handle_gsr_stream_end(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
         """Handle GSR stream end notification from Android device"""
         try:
@@ -1393,7 +1393,7 @@ class NetworkServer:
             return {"message_type": "error", "error": str(e)}
 
     async def _handle_time_sync_request(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
+            self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
         """Handle time synchronization request from Android device"""
         try:
@@ -1425,7 +1425,7 @@ class NetworkServer:
             return {}
 
     async def export_gsr_session_data(
-        self, device_id: str, session_id: str, format: str = "csv"
+            self, device_id: str, session_id: str, format: str = "csv"
     ) -> Optional[str]:
         """Export GSR session data to file"""
         try:

@@ -16,10 +16,6 @@ package com.github.gzuliyujiang.wheelview.annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/10/28 11:27
- */
 @Retention(RetentionPolicy.SOURCE)
 public @interface CurtainCorner {
     int NONE = 0;

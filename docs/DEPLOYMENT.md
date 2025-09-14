@@ -2,7 +2,10 @@
 
 ## 🚀 Enterprise Deployment Overview
 
-This **comprehensive enterprise deployment guide** covers production deployment of the IRCamera thermal imaging platform across various enterprise environments, from single-device setups to massive-scale industrial installations, cloud-native deployments, hybrid cloud architectures, and global distributed systems.
+This **comprehensive enterprise deployment guide** covers production deployment of the IRCamera
+thermal imaging platform across various enterprise environments, from single-device setups to
+massive-scale industrial installations, cloud-native deployments, hybrid cloud architectures, and
+global distributed systems.
 
 ## 🏗️ Enterprise Deployment Architecture
 
@@ -100,29 +103,32 @@ graph TB
 ### Hardware Requirements
 
 #### PC Controller (Hub)
-| Component | Minimum | Recommended | High-Performance |
-|-----------|---------|-------------|------------------|
-| **CPU** | Intel i5-8th gen / AMD Ryzen 5 | Intel i7-10th gen / AMD Ryzen 7 | Intel i9-12th gen / AMD Ryzen 9 |
-| **RAM** | 16 GB | 32 GB | 64 GB |
-| **Storage** | 1 TB SSD | 2 TB NVMe SSD | 4 TB NVMe SSD RAID |
-| **Network** | Gigabit Ethernet | 10 Gigabit Ethernet | 25 Gigabit Ethernet |
-| **GPU** | Integrated | NVIDIA GTX 1660 | NVIDIA RTX 3080+ |
-| **Ports** | 4x USB 3.0, 2x USB-C | 8x USB 3.0, 4x USB-C | 12x USB 3.0, 6x USB-C |
+
+| Component   | Minimum                        | Recommended                     | High-Performance                |
+|-------------|--------------------------------|---------------------------------|---------------------------------|
+| **CPU**     | Intel i5-8th gen / AMD Ryzen 5 | Intel i7-10th gen / AMD Ryzen 7 | Intel i9-12th gen / AMD Ryzen 9 |
+| **RAM**     | 16 GB                          | 32 GB                           | 64 GB                           |
+| **Storage** | 1 TB SSD                       | 2 TB NVMe SSD                   | 4 TB NVMe SSD RAID              |
+| **Network** | Gigabit Ethernet               | 10 Gigabit Ethernet             | 25 Gigabit Ethernet             |
+| **GPU**     | Integrated                     | NVIDIA GTX 1660                 | NVIDIA RTX 3080+                |
+| **Ports**   | 4x USB 3.0, 2x USB-C           | 8x USB 3.0, 4x USB-C            | 12x USB 3.0, 6x USB-C           |
 
 #### Android Tablets
-| Specification | Minimum | Recommended |
-|---------------|---------|-------------|
-| **OS Version** | Android 8.0 (API 26) | Android 12+ (API 31+) |
-| **RAM** | 4 GB | 8 GB |
-| **Storage** | 64 GB | 128 GB |
-| **Camera** | 8 MP rear camera | 12 MP+ rear camera |
+
+| Specification    | Minimum                      | Recommended                   |
+|------------------|------------------------------|-------------------------------|
+| **OS Version**   | Android 8.0 (API 26)         | Android 12+ (API 31+)         |
+| **RAM**          | 4 GB                         | 8 GB                          |
+| **Storage**      | 64 GB                        | 128 GB                        |
+| **Camera**       | 8 MP rear camera             | 12 MP+ rear camera            |
 | **Connectivity** | Wi-Fi 802.11n, Bluetooth 4.2 | Wi-Fi 802.11ac, Bluetooth 5.0 |
-| **Display** | 10" 1920x1200 | 11"+ 2560x1600 |
-| **Battery** | 6000 mAh | 8000+ mAh |
+| **Display**      | 10" 1920x1200                | 11"+ 2560x1600                |
+| **Battery**      | 6000 mAh                     | 8000+ mAh                     |
 
 ### Software Requirements
 
 #### PC Controller
+
 ```bash
 # Operating System
 Ubuntu 20.04+ / Windows 10+ / macOS 12+
@@ -140,16 +146,15 @@ SciPy 1.7+
 ```
 
 #### Android Tablets
+
 ```kotlin
-// Android Requirements
+
 compileSdk 34
 minSdk 26
 targetSdk 34
 
-// Kotlin Version
 kotlin_version = "1.9.10"
 
-// Gradle Plugin
 android_gradle_plugin = "8.1.2"
 ```
 
@@ -158,6 +163,7 @@ android_gradle_plugin = "8.1.2"
 ### PC Controller Setup
 
 #### Automated Installation Script
+
 ```bash
 #!/bin/bash
 # install_pc_controller.sh
@@ -293,6 +299,7 @@ main "$@"
 ```
 
 #### Manual Installation Steps
+
 ```bash
 # 1. Clone repository
 git clone https://github.com/buccancs/IRCamera.git
@@ -324,8 +331,9 @@ python main.py
 ### Android Application Deployment
 
 #### Build Configuration
+
 ```kotlin
-// build.gradle.kts (app module)
+
 android {
     compileSdk 34
     
@@ -335,8 +343,7 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0.0"
-        
-        // Production build configuration
+
         buildConfigField("String", "SERVER_URL", "\"https://your-server.com\"")
         buildConfigField("String", "API_VERSION", "\"v1\"")
         buildConfigField("boolean", "DEBUG_MODE", "false")
@@ -350,8 +357,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            
-            // Signing configuration
+
             signingConfig = signingConfigs.getByName("release")
         }
         
@@ -361,8 +367,7 @@ android {
             buildConfigField("boolean", "DEBUG_MODE", "true")
         }
     }
-    
-    // Multiple APK variants for different device types
+
     flavorDimensions += "device"
     productFlavors {
         create("tablet") {
@@ -381,6 +386,7 @@ android {
 ```
 
 #### Automated Build Script
+
 ```bash
 #!/bin/bash
 # build_android_release.sh
@@ -422,6 +428,7 @@ echo "Build complete!"
 ## 🗄️ Database & Storage Setup
 
 ### PostgreSQL Configuration (Production)
+
 ```sql
 -- Create IRCamera database and user
 CREATE DATABASE ircamera_prod;
@@ -496,6 +503,7 @@ FOR VALUES FROM ('2024-01-01') TO ('2025-01-01');
 ```
 
 ### File Storage Configuration
+
 ```python
 # storage_config.py
 import os
@@ -549,6 +557,7 @@ class StorageConfig:
 ## 🌐 Network Configuration
 
 ### Production Network Setup
+
 ```yaml
 # docker-compose.yml for production deployment
 version: '3.8'
@@ -608,6 +617,7 @@ volumes:
 ```
 
 ### NGINX Configuration
+
 ```nginx
 # nginx/nginx.conf
 upstream ircamera_backend {
@@ -672,6 +682,7 @@ server {
 ## 🔐 Security Configuration
 
 ### SSL/TLS Setup
+
 ```bash
 #!/bin/bash
 # setup_ssl.sh
@@ -691,6 +702,7 @@ sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 ```
 
 ### Firewall Configuration
+
 ```bash
 #!/bin/bash
 # setup_firewall.sh
@@ -729,6 +741,7 @@ echo "Firewall configured successfully"
 ## 📊 Monitoring & Logging
 
 ### Production Monitoring Setup
+
 ```python
 # monitoring_config.py
 import logging
@@ -790,6 +803,7 @@ class ProductionMonitoring:
 ```
 
 ### Log Aggregation with ELK Stack
+
 ```yaml
 # elk-stack.yml
 version: '3.8'
@@ -830,6 +844,7 @@ volumes:
 ## 🔄 Backup & Recovery
 
 ### Automated Backup Strategy
+
 ```python
 # backup_manager.py
 import schedule
@@ -931,6 +946,7 @@ if __name__ == "__main__":
 ## 🎯 Performance Optimization
 
 ### Production Performance Tuning
+
 ```python
 # performance_config.py
 import multiprocessing
@@ -975,6 +991,7 @@ class PerformanceConfig:
 ## 📋 Deployment Checklist
 
 ### Pre-Deployment Checklist
+
 - [ ] Hardware requirements verified
 - [ ] Network infrastructure configured
 - [ ] SSL certificates obtained and configured
@@ -987,6 +1004,7 @@ class PerformanceConfig:
 - [ ] DNS configuration completed
 
 ### Application Deployment Checklist
+
 - [ ] Production configuration files updated
 - [ ] Environment variables set correctly
 - [ ] Database migrations applied
@@ -999,6 +1017,7 @@ class PerformanceConfig:
 - [ ] Documentation updated
 
 ### Post-Deployment Checklist
+
 - [ ] Smoke tests passed
 - [ ] Performance benchmarks verified
 - [ ] Security scan completed
@@ -1015,6 +1034,7 @@ class PerformanceConfig:
 ### Common Deployment Problems
 
 #### Network Connectivity Issues
+
 ```bash
 # Test network connectivity
 ping google.com
@@ -1032,6 +1052,7 @@ sudo ufw status verbose
 ```
 
 #### Database Connection Problems
+
 ```python
 # Test database connectivity
 import psycopg2
@@ -1050,6 +1071,7 @@ except Exception as e:
 ```
 
 #### Application Performance Issues
+
 ```bash
 # Monitor system resources
 top
@@ -1066,4 +1088,5 @@ SELECT * FROM pg_stat_activity;
 SELECT * FROM pg_stat_user_tables;
 ```
 
-This comprehensive deployment guide ensures successful production deployment of the IRCamera platform with proper security, monitoring, and maintenance procedures.
+This comprehensive deployment guide ensures successful production deployment of the IRCamera
+platform with proper security, monitoring, and maintenance procedures.

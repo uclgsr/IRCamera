@@ -15,38 +15,42 @@ try:
 
     # Test PyQt6 imports
     from PyQt6.QtCore import Qt
-    
+
     # Import app components if GUI is available
     from .app import IRCameraApp, main
 except ImportError:
     GUI_AVAILABLE = False
-    
+
+
     # Create dummy main function for headless mode
     def main(args=None):
         import sys
         import logging
-        
+
         # Try loguru first, fallback to standard logging
         try:
             from loguru import logger
             logger.remove()
-            logger.add(sys.stderr, format="{time} | {level} | {name}:{function}:{line} - {message}", colorize=False)
+            logger.add(sys.stderr, format="{time} | {level} | {name}:{function}:{line} - {message}",
+                       colorize=False)
             logger.info("IRCamera Application initialized")
             logger.info("Running in headless mode - GUI not available")
         except ImportError:
             # Fallback to standard logging
-            logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
+            logging.basicConfig(level=logging.INFO,
+                                format="%(asctime)s | %(levelname)s | %(message)s")
             logger = logging.getLogger(__name__)
             logger.info("IRCamera Application initialized")
             logger.info("Running in headless mode - GUI not available")
-        
+
         return 0
-        
+
+
     # Create dummy app class
     class IRCameraApp:
         def __init__(self, *args, **kwargs):
             pass
-        
+
         def exec(self):
             return 0
 

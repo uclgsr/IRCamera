@@ -27,16 +27,6 @@ import com.github.gzuliyujiang.wheelpicker.contract.OnLinkagePickedListener;
 import com.github.gzuliyujiang.wheelpicker.widget.LinkageWheelLayout;
 import com.github.gzuliyujiang.wheelview.widget.WheelView;
 
-/**
- * 二三级联动选择器
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @see com.github.gzuliyujiang.wheelview.contract.TextProvider
- * @see LinkageProvider
- * @see LinkageWheelLayout
- * @see OnLinkagePickedListener
- * @since 2019/6/17 11:21
- */
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class LinkagePicker extends ModalDialog {
     protected LinkageWheelLayout wheelLayout;

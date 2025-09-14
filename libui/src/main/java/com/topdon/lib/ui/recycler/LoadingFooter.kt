@@ -8,19 +8,7 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.topdon.lib.ui.databinding.UiFooterViewBinding
 
-/**
- * 自定义FooterView - Modernized with view binding
- */
-/**
- * Custom Loading footer view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * LoadingFooter manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class LoadingFooter : LinearLayout {
     private val binding: UiFooterViewBinding
 

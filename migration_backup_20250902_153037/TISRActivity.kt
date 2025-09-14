@@ -33,27 +33,23 @@ class TISRActivity : BaseActivity() {
     override fun initData() {
         lifecycleScope.launch {
             val tisrBean = TS004Repository.getTISR()
-            if (tisrBean?.isSuccess()!!)
-                {
-                    val isTISR = tisrBean.data?.enable!! == 1
-                    setting_item_tisr_select.isChecked = isTISR
-                    SharedManager.is04TISR = isTISR
-                } else
-                {
-                    TToast.shortToast(this@TISRActivity, R.string.operation_failed_tips)
-                }
+            if (tisrBean?.isSuccess()!!) {
+                val isTISR = tisrBean.data?.enable!! == 1
+                setting_item_tisr_select.isChecked = isTISR
+                SharedManager.is04TISR = isTISR
+            } else {
+                TToast.shortToast(this@TISRActivity, R.string.operation_failed_tips)
+            }
         }
     }
 
     private fun updateTISR(state: Int) {
         lifecycleScope.launch {
             val isSuccess = TS004Repository.setTISR(state)
-            if (isSuccess)
-                {
-                } else
-                {
-                    TToast.shortToast(this@TISRActivity, R.string.operation_failed_tips)
-                }
+            if (isSuccess) {
+            } else {
+                TToast.shortToast(this@TISRActivity, R.string.operation_failed_tips)
+            }
         }
     }
 
@@ -63,14 +59,13 @@ class TISRActivity : BaseActivity() {
             WsCmdConstants.AR_COMMAND_TISR_GET -> { // 获取超分状态
                 try {
                     val webSocketIp = SocketCmdUtil.getIpResponse(event.text)
-                    if (webSocketIp == WsCmdConstants.AR_COMMAND_IP)
-                        {
-                            val data: JSONObject = JSONObject(event.text).getJSONObject("data")
-                            val state: Int = data.getInt("state")
-                            val isTISR = state == 1
-                            setting_item_tisr_select.isChecked = isTISR
-                            SharedManager.is04TISR = isTISR
-                        }
+                    if (webSocketIp == WsCmdConstants.AR_COMMAND_IP) {
+                        val data: JSONObject = JSONObject(event.text).getJSONObject("data")
+                        val state: Int = data.getInt("state")
+                        val isTISR = state == 1
+                        setting_item_tisr_select.isChecked = isTISR
+                        SharedManager.is04TISR = isTISR
+                    }
                 } catch (_: Exception) {
                 }
             }

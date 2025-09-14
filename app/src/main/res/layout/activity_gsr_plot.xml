@@ -34,12 +34,12 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
                         android:gravity="center"
                         android:text="GSR (Galvanic Skin Response)"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:layout_marginBottom="8dp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/gsr_chart"
@@ -68,12 +68,12 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
                         android:gravity="center"
                         android:text="PPG (Photoplethysmography)"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:layout_marginBottom="8dp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/ppg_chart"
@@ -102,22 +102,22 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
                         android:gravity="center"
                         android:text="📊 Data Analysis"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:layout_marginBottom="12dp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/stats_text_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="monospace"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"
                         android:lineSpacingMultiplier="1.2"
-                        android:text="Loading statistics..." />
+                        android:text="Loading statistics..."
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -127,9 +127,9 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardBackgroundColor="#E3F2FD"
                 app:cardCornerRadius="8dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="#E3F2FD">
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -140,19 +140,19 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
                         android:text="💡 Chart Interaction"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:layout_marginBottom="8dp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:lineSpacingMultiplier="1.3"
                         android:text="• Pinch to zoom in/out\n• Drag to pan across timeline\n• Raw data shows actual readings\n• Moving average smooths out noise\n• Events indicate significant changes"
-                        android:textSize="14sp"
                         android:textColor="@color/black"
-                        android:lineSpacingMultiplier="1.3" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 

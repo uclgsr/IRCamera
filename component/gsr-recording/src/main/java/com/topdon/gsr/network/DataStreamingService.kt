@@ -3,16 +3,19 @@ package com.topdon.gsr.network
 import android.content.Context
 import android.util.Log
 import com.topdon.gsr.model.GSRSample
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
- * Real-time data streaming service for sending sensor data to PC Controller
- * Handles buffering, batching, and reliable delivery of sensor measurements
- */
 class DataStreamingService(
     private val context: Context,
     private val networkClient: NetworkClient,
@@ -80,9 +83,6 @@ class DataStreamingService(
         eventListener = listener
     }
 
-    /**
-     * Start real-time data streaming for a session
-     */
     suspend fun startStreaming(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
             if (isStreaming.get()) {
@@ -100,13 +100,10 @@ class DataStreamingService(
                 isStreaming.set(true)
                 isConnected.set(true)
 
-                // Clear any existing queued data
                 clearQueues()
 
-                // Start the batching and sending process
                 startBatchingProcess()
 
-                // Notify PC Controller that streaming started
                 val success = networkClient.startDataStreaming()
                 if (success) {
                     eventListener?.onStreamingStarted(sessionId)
@@ -123,9 +120,6 @@ class DataStreamingService(
             }
         }
 
-    /**
-     * Stop real-time data streaming
-     */
     suspend fun stopStreaming(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isStreaming.get()) {
@@ -136,14 +130,11 @@ class DataStreamingService(
             try {
                 isStreaming.set(false)
 
-                // Stop batching process
                 batchingJob?.cancel()
                 batchingJob = null
 
-                // Send any remaining batched data
                 sendRemainingData()
 
-                // Notify PC Controller that streaming stopped
                 val success = networkClient.stopDataStreaming()
 
                 val sessionId = currentSessionId
@@ -161,14 +152,11 @@ class DataStreamingService(
             }
         }
 
-    /**
-     * Queue GSR sample for streaming
-     */
     fun queueGSRSample(sample: GSRSample) {
         if (!isStreaming.get()) return
 
         if (gsrQueue.size >= MAX_QUEUE_SIZE) {
-            // Drop oldest samples to prevent memory overflow
+
             val dropped = minOf(BATCH_SIZE, gsrQueue.size / 2)
             repeat(dropped) { gsrQueue.poll() }
             eventListener?.onQueueFull("GSR", dropped)
@@ -178,9 +166,6 @@ class DataStreamingService(
         gsrQueue.offer(sample)
     }
 
-    /**
-     * Queue thermal sample for streaming
-     */
     fun queueThermalSample(sample: ThermalSample) {
         if (!isStreaming.get()) return
 
@@ -194,9 +179,6 @@ class DataStreamingService(
         thermalQueue.offer(sample)
     }
 
-    /**
-     * Queue video metadata for streaming
-     */
     fun queueVideoMetadata(metadata: VideoMetadata) {
         if (!isStreaming.get()) return
 
@@ -215,17 +197,15 @@ class DataStreamingService(
             streamingScope.launch {
                 while (isStreaming.get() && isActive) {
                     try {
-                        // Process GSR batches
+
                         if (gsrQueue.size >= BATCH_SIZE) {
                             sendGSRBatch()
                         }
 
-                        // Process thermal batches
                         if (thermalQueue.size >= BATCH_SIZE) {
                             sendThermalBatch()
                         }
 
-                        // Process video metadata batches
                         if (videoMetadataQueue.size >= BATCH_SIZE) {
                             sendVideoMetadataBatch()
                         }
@@ -404,9 +384,6 @@ class DataStreamingService(
         videoMetadataQueue.clear()
     }
 
-    /**
-     * Get current queue sizes for monitoring
-     */
     fun getQueueSizes(): Map<String, Int> {
         return mapOf(
             "gsr" to gsrQueue.size,
@@ -415,14 +392,8 @@ class DataStreamingService(
         )
     }
 
-    /**
-     * Check if streaming is active
-     */
     fun isStreamingActive(): Boolean = isStreaming.get()
 
-    /**
-     * Clean up resources
-     */
     suspend fun cleanup() {
         // Stop streaming before cancelling jobs to ensure proper data flush
         stopStreaming()

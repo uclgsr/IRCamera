@@ -12,18 +12,11 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
 import kotlinx.android.synthetic.main.dialog_color_select.view.*
 
-/**
- * 仅拾取颜色的弹框.
- *
- * Created by LCG on 2024/2/2.
- */
 class ColorSelectDialog(
     context: Context,
     @ColorInt private var color: Int,
 ) : Dialog(context, R.style.InfoDialog) {
-    /**
-     * 颜色值拾取EventListener.
-     */
+
     var onPickListener: ((color: Int) -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +24,8 @@ class ColorSelectDialog(
         setCancelable(true)
         setCanceledOnTouchOutside(true)
 
-        val rootView: View = LayoutInflater.from(context).inflate(R.layout.dialog_color_select, null)
+        val rootView: View =
+            LayoutInflater.from(context).inflate(R.layout.dialog_color_select, null)
         setContentView(rootView)
         rootView.color_select_view.selectColor(color)
         rootView.color_select_view.onSelectListener = {

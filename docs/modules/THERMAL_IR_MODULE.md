@@ -2,7 +2,10 @@
 
 ## 🎯 Overview
 
-The **Enterprise Thermal-IR Module** is the flagship thermal imaging component of the IRCamera platform, providing comprehensive multi-device thermal camera integration, real-time ML-powered processing capabilities, cloud integration, advanced analytics, and enterprise-grade performance optimization.
+The **Enterprise Thermal-IR Module** is the flagship thermal imaging component of the IRCamera
+platform, providing comprehensive multi-device thermal camera integration, real-time ML-powered
+processing capabilities, cloud integration, advanced analytics, and enterprise-grade performance
+optimization.
 
 ## 🏗️ Enterprise Architecture
 
@@ -63,8 +66,10 @@ graph TB
 ## Key Components
 
 ### ThermalActivity
+
 **Purpose**: Main UI controller for thermal imaging interface
 **Responsibilities**:
+
 - User interface management
 - Touch input handling
 - Display thermal video stream
@@ -85,41 +90,50 @@ class ThermalActivity : AppCompatActivity() {
 ```
 
 ### ThermalViewModel
+
 **Purpose**: Business logic coordinator following MVVM pattern
 **Responsibilities**:
+
 - State management
 - Camera lifecycle coordination
 - Data flow orchestration
 - UI state synchronization
 
 **Key Features**:
+
 - LiveData integration for reactive UI updates
 - Coroutine-based async operations
 - Temperature data processing
 - Recording session management
 
 ### CameraController
+
 **Purpose**: Hardware abstraction and camera management
 **Responsibilities**:
+
 - Device detection and initialization
 - Frame capture and processing
 - Camera parameter configuration
 - Multiple device support
 
 **Supported Devices**:
+
 - **TC001**: Primary USB thermal camera
 - **TC007**: Wireless thermal camera
 - **External**: Network-connected thermal devices
 
 ### ImageProcessor
+
 **Purpose**: Real-time thermal image processing
 **Responsibilities**:
+
 - Frame-by-frame thermal processing
 - Temperature calibration
 - Pseudo-color mapping
 - Image enhancement algorithms
 
 **Processing Pipeline**:
+
 1. Raw thermal data acquisition
 2. Temperature calibration using device-specific parameters
 3. Noise reduction and filtering
@@ -127,8 +141,10 @@ class ThermalActivity : AppCompatActivity() {
 5. Output frame generation
 
 ### TemperatureAnalyzer
+
 **Purpose**: Advanced temperature analysis and measurement
 **Responsibilities**:
+
 - Region of interest (ROI) analysis
 - Temperature statistics calculation
 - Thermal pattern detection
@@ -137,6 +153,7 @@ class ThermalActivity : AppCompatActivity() {
 ## Configuration
 
 ### Camera Settings
+
 ```kotlin
 data class ThermalCameraConfig(
     val deviceType: ThermalDeviceType,
@@ -149,6 +166,7 @@ data class ThermalCameraConfig(
 ```
 
 ### Processing Parameters
+
 ```kotlin
 data class ThermalProcessingConfig(
     val noiseReductionLevel: Float,
@@ -165,35 +183,32 @@ data class ThermalProcessingConfig(
 ### Core Methods
 
 #### Camera Operations
+
 ```kotlin
-// Initialize thermal camera
+
 suspend fun initializeCamera(deviceType: ThermalDeviceType): Result<Unit>
 
-// Start thermal capture
 suspend fun startCapture(config: ThermalCameraConfig): Result<Unit>
 
-// Stop thermal capture
 suspend fun stopCapture(): Result<Unit>
 
-// Configure camera parameters
 suspend fun configureCamera(params: CameraParameters): Result<Unit>
 ```
 
 #### Image Processing
+
 ```kotlin
-// Process thermal frame
+
 fun processThermalFrame(
     rawFrame: ByteArray,
     config: ThermalProcessingConfig
 ): ProcessedThermalFrame
 
-// Apply pseudo-color mapping
 fun applyPseudoColor(
     thermalData: FloatArray,
     palette: ColorPalette
 ): Bitmap
 
-// Extract temperature data
 fun extractTemperatureData(
     frame: ThermalFrame,
     roi: Rectangle
@@ -201,20 +216,19 @@ fun extractTemperatureData(
 ```
 
 #### Temperature Analysis
+
 ```kotlin
-// Analyze temperature in region
+
 fun analyzeTemperatureRegion(
     frame: ThermalFrame,
     region: Region
 ): TemperatureAnalysis
 
-// Track temperature over time
 fun trackTemperature(
     point: Point,
     frameSequence: List<ThermalFrame>
 ): TemperatureTimeSeries
 
-// Calculate thermal statistics
 fun calculateThermalStatistics(
     frame: ThermalFrame
 ): ThermalStatistics
@@ -223,6 +237,7 @@ fun calculateThermalStatistics(
 ## Data Structures
 
 ### ThermalFrame
+
 ```kotlin
 data class ThermalFrame(
     val timestamp: Long,
@@ -236,6 +251,7 @@ data class ThermalFrame(
 ```
 
 ### TemperatureData
+
 ```kotlin
 data class TemperatureData(
     val minTemperature: Float,
@@ -248,6 +264,7 @@ data class TemperatureData(
 ```
 
 ### ProcessedThermalFrame
+
 ```kotlin
 data class ProcessedThermalFrame(
     val originalFrame: ThermalFrame,
@@ -260,12 +277,14 @@ data class ProcessedThermalFrame(
 ## Performance Characteristics
 
 ### Frame Rate Performance
+
 - **TC001**: Up to 9 Hz thermal capture
 - **TC007**: Up to 6 Hz wireless thermal capture
 - **Processing Latency**: < 50ms per frame
 - **Memory Usage**: ~15MB per 320x240 thermal frame
 
 ### Optimization Features
+
 - Hardware-accelerated image processing
 - Efficient memory management with object pooling
 - Background thread processing to maintain UI responsiveness
@@ -274,6 +293,7 @@ data class ProcessedThermalFrame(
 ## Integration Examples
 
 ### Basic Thermal Capture
+
 ```kotlin
 class ThermalCaptureExample {
     private val thermalController = ThermalController()
@@ -292,9 +312,9 @@ class ThermalCaptureExample {
         thermalController.startCapture(config)
         
         thermalController.thermalFrames.collect { frame ->
-            // Process thermal frame
+
             val processedFrame = processThermalFrame(frame)
-            // Update UI with processed thermal image
+
             updateThermalDisplay(processedFrame.processedImage)
         }
     }
@@ -302,30 +322,27 @@ class ThermalCaptureExample {
 ```
 
 ### Advanced Temperature Analysis
+
 ```kotlin
 class AdvancedAnalysisExample {
     fun performTemperatureAnalysis(frame: ThermalFrame) {
-        // Define region of interest
+
         val roi = Rectangle(100, 100, 50, 50)
-        
-        // Analyze temperature in region
+
         val analysis = analyzeTemperatureRegion(frame, roi)
-        
-        // Extract statistics
+
         val stats = ThermalStatistics(
             minTemp = analysis.minTemperature,
             maxTemp = analysis.maxTemperature,
             avgTemp = analysis.averageTemperature,
             standardDeviation = analysis.standardDeviation
         )
-        
-        // Detect thermal anomalies
+
         val anomalies = detectThermalAnomalies(frame, 
             threshold = 30f, // Temperature difference threshold
             minRegionSize = 100 // Minimum pixel count
         )
-        
-        // Generate analysis report
+
         val report = generateAnalysisReport(stats, anomalies)
     }
 }
@@ -334,6 +351,7 @@ class AdvancedAnalysisExample {
 ## Error Handling
 
 ### Common Error Types
+
 ```kotlin
 sealed class ThermalError : Exception() {
     object CameraNotFound : ThermalError()
@@ -346,22 +364,23 @@ sealed class ThermalError : Exception() {
 ```
 
 ### Error Recovery Strategies
+
 ```kotlin
 class ThermalErrorHandler {
     suspend fun handleThermalError(error: ThermalError): ErrorRecoveryAction {
         return when (error) {
             is ThermalError.CameraNotFound -> {
-                // Attempt device discovery
+
                 discoverThermalDevices()
                 ErrorRecoveryAction.RETRY
             }
             is ThermalError.CameraInitializationFailed -> {
-                // Reset camera and try again
+
                 resetCameraDevice()
                 ErrorRecoveryAction.RETRY
             }
             is ThermalError.CaptureSessionFailed -> {
-                // Restart capture session
+
                 restartCaptureSession()
                 ErrorRecoveryAction.RESTART_SESSION
             }
@@ -374,6 +393,7 @@ class ThermalErrorHandler {
 ## Testing
 
 ### Unit Tests
+
 ```kotlin
 class ThermalProcessorTest {
     @Test
@@ -400,21 +420,19 @@ class ThermalProcessorTest {
 ```
 
 ### Integration Tests
+
 ```kotlin
 class ThermalIntegrationTest {
     @Test
     fun `end to end thermal capture workflow`() = runTest {
         val thermalController = ThermalController()
-        
-        // Initialize camera
+
         val initResult = thermalController.initializeCamera(ThermalDeviceType.TC001)
         assert(initResult.isSuccess)
-        
-        // Start capture
+
         val captureResult = thermalController.startCapture(defaultConfig)
         assert(captureResult.isSuccess)
-        
-        // Verify frame reception
+
         val frames = mutableListOf<ThermalFrame>()
         val job = launch {
             thermalController.thermalFrames.take(5).collect { frame ->
@@ -424,8 +442,7 @@ class ThermalIntegrationTest {
         
         job.join()
         assert(frames.size == 5)
-        
-        // Stop capture
+
         thermalController.stopCapture()
     }
 }
@@ -436,34 +453,40 @@ class ThermalIntegrationTest {
 ### Common Issues
 
 #### Camera Not Detected
+
 **Symptoms**: Camera initialization fails, device not found error
-**Causes**: 
+**Causes**:
+
 - USB connection issues
 - Driver problems
 - Device permissions
-**Solutions**:
+  **Solutions**:
 - Check USB connection and cable
 - Verify device permissions are granted
 - Restart application and try device discovery again
 
 #### Poor Image Quality
+
 **Symptoms**: Noisy thermal images, incorrect temperature readings
 **Causes**:
+
 - Incorrect calibration parameters
 - Environmental interference
 - Device overheating
-**Solutions**:
+  **Solutions**:
 - Recalibrate thermal camera
 - Adjust processing parameters
 - Ensure proper device cooling
 
 #### Performance Issues
+
 **Symptoms**: Low frame rate, UI freezing, memory issues
 **Causes**:
+
 - Insufficient processing power
 - Memory leaks
 - Inefficient image processing
-**Solutions**:
+  **Solutions**:
 - Reduce frame rate or resolution
 - Enable performance optimizations
 - Check for memory leaks in processing pipeline
@@ -471,6 +494,7 @@ class ThermalIntegrationTest {
 ### Debug Information
 
 Enable debug logging to get detailed information:
+
 ```kotlin
 ThermalLogger.setLogLevel(LogLevel.DEBUG)
 ThermalLogger.enableFrameLogging(true)
@@ -480,12 +504,14 @@ ThermalLogger.enablePerformanceMetrics(true)
 ## Dependencies
 
 ### Required Libraries
+
 - `libir` - Core thermal processing algorithms
 - `libcom` - Communication and device management
 - `libui` - User interface components
 - `CameraX` - Android camera framework
 
 ### Gradle Configuration
+
 ```kotlin
 dependencies {
     implementation project(':libir')
@@ -500,6 +526,7 @@ dependencies {
 ## Future Enhancements
 
 ### Planned Features
+
 - **Multi-camera support**: Simultaneous capture from multiple thermal cameras
 - **AI-powered analysis**: Machine learning-based thermal pattern recognition
 - **Cloud integration**: Remote thermal data processing and storage
@@ -507,6 +534,7 @@ dependencies {
 - **Real-time streaming**: Live thermal video streaming to remote devices
 
 ### Performance Improvements
+
 - **GPU acceleration**: Leverage GPU for image processing
 - **Optimized algorithms**: Faster thermal processing algorithms
 - **Better memory management**: Reduced memory footprint
@@ -514,4 +542,5 @@ dependencies {
 
 ---
 
-For more detailed information, see the [API Reference](../API_REFERENCE.md) and [Developer Guide](../DEVELOPER_GUIDE.md).
+For more detailed information, see the [API Reference](../API_REFERENCE.md)
+and [Developer Guide](../DEVELOPER_GUIDE.md).

@@ -15,12 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
-/**
- *
- * 锅盖矫正
- * @author: CaiSongL
- * @date: 2023/8/4 9:06
- */
 @Route(path = RouterConfig.IR_CORRECTION_FOUR)
 class IRCorrectionFourActivity : BaseActivity() {
     val time = 60
@@ -55,41 +49,38 @@ class IRCorrectionFourActivity : BaseActivity() {
         }
 
         time_down_view.postDelayed({
-            // 开始矫正
-            if (time_down_view.downTimeWatcher == null)
-                {
-                    time_down_view.setOnTimeDownListener(
-                        object : TimeDownView.DownTimeWatcher {
-                            override fun onTime(num: Int) {
-                                if (num == 50)
-                                    {
-                                        lifecycleScope.launch(Dispatchers.IO) {
-                                            irFragment.autoStart()
-                                        }
-                                    }
-                            }
 
-                            override fun onLastTime(num: Int) {
-                            }
-
-                            override fun onLastTimeFinish(num: Int) {
-                                try {
-                                    if (!this@IRCorrectionFourActivity.isFinishing)
-                                        {
-                                            TipDialog.Builder(this@IRCorrectionFourActivity)
-                                                .setMessage(R.string.correction_complete)
-                                                .setPositiveListener(R.string.app_confirm) {
-                                                    EventBus.getDefault().post(CorrectionFinishEvent())
-                                                    finish()
-                                                }
-                                                .create().show()
-                                        }
-                                } catch (e: Exception) {
+            if (time_down_view.downTimeWatcher == null) {
+                time_down_view.setOnTimeDownListener(
+                    object : TimeDownView.DownTimeWatcher {
+                        override fun onTime(num: Int) {
+                            if (num == 50) {
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    irFragment.autoStart()
                                 }
                             }
-                        },
-                    )
-                }
+                        }
+
+                        override fun onLastTime(num: Int) {
+                        }
+
+                        override fun onLastTimeFinish(num: Int) {
+                            try {
+                                if (!this@IRCorrectionFourActivity.isFinishing) {
+                                    TipDialog.Builder(this@IRCorrectionFourActivity)
+                                        .setMessage(R.string.correction_complete)
+                                        .setPositiveListener(R.string.app_confirm) {
+                                            EventBus.getDefault().post(CorrectionFinishEvent())
+                                            finish()
+                                        }
+                                        .create().show()
+                                }
+                            } catch (e: Exception) {
+                            }
+                        }
+                    },
+                )
+            }
             time_down_view.downSecond(time, false)
         }, 2000)
     }

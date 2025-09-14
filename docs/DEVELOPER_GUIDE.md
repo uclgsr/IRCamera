@@ -5,6 +5,7 @@ Comprehensive development guide for the Multi-Modal Physiological Sensing Platfo
 ## 🏗️ Architecture Overview
 
 ### Hub-and-Spoke Model
+
 The MPDC4GSR platform implements a distributed client-server architecture:
 
 ```mermaid
@@ -23,6 +24,7 @@ graph TB
 ### Technology Stack
 
 #### Android Sensor Node (Spoke)
+
 - **Language**: Kotlin
 - **Architecture**: MVVM with Android Architecture Components
 - **Async**: Kotlin Coroutines for all background operations
@@ -31,6 +33,7 @@ graph TB
 - **Network**: TLS-secured TCP/IP communication
 
 #### PC Controller (Hub)
+
 - **Language**: Python 3.11+ with C++ backend
 - **GUI**: PyQt6 for cross-platform interface
 - **Performance**: PyBind11 C++ extensions for real-time processing
@@ -40,6 +43,7 @@ graph TB
 ## 🔧 Development Environment Setup
 
 ### Prerequisites
+
 ```bash
 # System requirements
 - Android SDK 34+
@@ -55,6 +59,7 @@ graph TB
 ```
 
 ### Repository Setup
+
 ```bash
 # Clone with submodules
 git clone --recursive https://github.com/buccancs/IRCamera.git
@@ -69,6 +74,7 @@ pre-commit install
 ```
 
 ### Android Development
+
 ```bash
 # Build all modules
 ./gradlew clean build
@@ -84,6 +90,7 @@ pre-commit install
 ```
 
 ### Python Development
+
 ```bash
 cd pc-controller
 
@@ -107,6 +114,7 @@ mypy src/
 ## 📱 Android Architecture
 
 ### Package Structure
+
 ```
 com/topdon/irCamera/
 ├── ui/                     # UI Layer (Activities, Fragments)
@@ -135,6 +143,7 @@ com/topdon/irCamera/
 ### Key Components
 
 #### Recording Controller
+
 ```kotlin
 class RecordingController @Inject constructor(
     private val rgbRecorder: RgbCameraRecorder,
@@ -146,8 +155,7 @@ class RecordingController @Inject constructor(
         return try {
             val session = createSession(sessionConfig)
             val syncTime = timeManager.getCurrentSyncTime()
-            
-            // Start all recorders simultaneously
+
             val rgbJob = async { rgbRecorder.startRecording(session, syncTime) }
             val thermalJob = async { thermalRecorder.startRecording(session, syncTime) }
             val gsrJob = async { gsrRecorder.startRecording(session, syncTime) }
@@ -162,6 +170,7 @@ class RecordingController @Inject constructor(
 ```
 
 #### Sensor Recorder Interface
+
 ```kotlin
 interface SensorRecorder {
     suspend fun initialize(): Boolean
@@ -174,6 +183,7 @@ interface SensorRecorder {
 ```
 
 ### Data Models
+
 ```kotlin
 @Entity(tableName = "sessions")
 data class Session(
@@ -204,6 +214,7 @@ data class SyncEvent(
 ## 🖥️ PC Controller Architecture
 
 ### Module Structure
+
 ```
 pc-controller/
 ├── src/
@@ -233,6 +244,7 @@ pc-controller/
 ### Key Components
 
 #### Network Controller
+
 ```python
 class NetworkController(QThread):
     device_discovered = pyqtSignal(Device)
@@ -263,6 +275,7 @@ class NetworkController(QThread):
 ```
 
 #### Session Manager
+
 ```python
 class SessionManager:
     def __init__(self, devices: List[Device]):
@@ -296,8 +309,9 @@ class SessionManager:
 ```
 
 ### C++ Native Backend
+
 ```cpp
-// native_backend/shimmer_native.cpp
+
 class NativeShimmer {
 public:
     NativeShimmer(const std::string& port) : port_(port) {
@@ -307,7 +321,7 @@ public:
     bool connect() {
         serial_ = std::make_unique<serial::Serial>(port_, 115200);
         if (serial_->isOpen()) {
-            // Start background thread for data acquisition
+
             acquisition_thread_ = std::thread(&NativeShimmer::acquisition_loop, this);
             return true;
         }
@@ -339,7 +353,6 @@ private:
     std::atomic<bool> running_{false};
 };
 
-// Python bindings
 PYBIND11_MODULE(native_backend, m) {
     py::class_<NativeShimmer>(m, "NativeShimmer")
         .def(py::init<const std::string&>())
@@ -351,6 +364,7 @@ PYBIND11_MODULE(native_backend, m) {
 ## 🔗 Communication Protocol
 
 ### Message Format
+
 All communication uses JSON over TLS-secured TCP:
 
 ```json
@@ -360,14 +374,15 @@ All communication uses JSON over TLS-secured TCP:
     "sender_id": "device-identifier",
     "message_type": "command|response|data|heartbeat",
     "payload": {
-        // Message-specific data
+
     }
 }
 ```
 
 ### Command Messages
+
 ```json
-// Start recording command
+
 {
     "message_type": "command",
     "payload": {
@@ -384,7 +399,6 @@ All communication uses JSON over TLS-secured TCP:
     }
 }
 
-// Sync flash command
 {
     "message_type": "command", 
     "payload": {
@@ -395,8 +409,9 @@ All communication uses JSON over TLS-secured TCP:
 ```
 
 ### Data Streaming
+
 ```json
-// Real-time GSR data
+
 {
     "message_type": "data",
     "payload": {
@@ -412,8 +427,9 @@ All communication uses JSON over TLS-secured TCP:
 ## 🧪 Testing Strategy
 
 ### Unit Tests
+
 ```kotlin
-// Android unit tests
+
 @Test
 fun `GSRRecorder should process samples at 128Hz`() = runTest {
     val recorder = GSRRecorder(mockContext)
@@ -424,8 +440,7 @@ fun `GSRRecorder should process samples at 128Hz`() = runTest {
     
     delay(1000) // Record for 1 second
     recorder.stopRecording()
-    
-    // Should have ~128 samples (±5% tolerance)
+
     assertThat(samples.size).isCloseTo(128, within(7))
 }
 ```
@@ -443,6 +458,7 @@ def test_time_synchronization():
 ```
 
 ### Integration Tests
+
 ```kotlin
 @Test
 fun `Full recording session should produce synchronized data`() = runTest {
@@ -455,13 +471,11 @@ fun `Full recording session should produce synchronized data`() = runTest {
     val session = controller.startRecording(testConfig)
     delay(5000) // 5 second recording
     val data = controller.stopRecording()
-    
-    // Verify all streams have data
+
     assertThat(data.rgbFrames).isNotEmpty()
     assertThat(data.gsrSamples).isNotEmpty()
     assertThat(data.thermalFrames).isNotEmpty()
-    
-    // Verify synchronization
+
     val firstRgbTime = data.rgbFrames.first().timestamp
     val firstGsrTime = data.gsrSamples.first().timestamp
     assertThat(abs(firstRgbTime - firstGsrTime)).isLessThan(5) // 5ms tolerance
@@ -469,6 +483,7 @@ fun `Full recording session should produce synchronized data`() = runTest {
 ```
 
 ### Performance Tests
+
 ```python
 def test_data_throughput():
     """Test system can handle expected data rates"""
@@ -493,8 +508,9 @@ def test_data_throughput():
 ## 🔧 Build System
 
 ### Gradle Configuration (Android)
+
 ```kotlin
-// app/build.gradle.kts
+
 android {
     compileSdk = 34
     
@@ -506,7 +522,7 @@ android {
     }
     
     buildTypes {
-        // Release-only configuration
+
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -516,8 +532,7 @@ android {
             )
         }
     }
-    
-    // Disable debug builds
+
     variantFilter {
         if (buildType.name == "debug") {
             ignore = true
@@ -526,24 +541,20 @@ android {
 }
 
 dependencies {
-    // Core Android
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-    
-    // Camera
+
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.video)
-    
-    // Shimmer SDK
+
     implementation(libs.shimmer.android.api)
-    
-    // Network
+
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
-    
-    // Testing
+
     testImplementation(libs.junit)
     testImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.kotlinx.coroutines.test)
@@ -551,6 +562,7 @@ dependencies {
 ```
 
 ### Python Setup (PC Controller)
+
 ```python
 # setup.py
 from setuptools import setup, find_packages
@@ -600,6 +612,7 @@ setup(
 ## 🚀 Deployment
 
 ### Android APK Distribution
+
 ```bash
 # Production build
 ./gradlew clean :app:assembleRelease
@@ -613,6 +626,7 @@ zipalign -v 4 app-release-unsigned.apk app-release.apk
 ```
 
 ### PC Controller Distribution
+
 ```bash
 # Create standalone executable with PyInstaller
 pip install pyinstaller
@@ -626,18 +640,21 @@ pip install dist/mpdc4gsr_pc_controller-1.0.0-py3-none-any.whl
 ## 📊 Performance Optimization
 
 ### Android Optimizations
+
 - Use CameraX for efficient camera management
-- Implement proper lifecycle management for background services  
+- Implement proper lifecycle management for background services
 - Use WorkManager for scheduled tasks
 - Optimize memory usage with proper resource management
 
 ### PC Controller Optimizations
+
 - Leverage C++ backend for performance-critical operations
 - Use asyncio for concurrent device management
 - Implement efficient data structures for real-time processing
 - Cache frequently accessed data
 
 ### Network Optimizations
+
 - Implement connection pooling for multiple devices
 - Use compression for large data transfers
 - Implement adaptive bitrate for real-time streaming
@@ -646,8 +663,9 @@ pip install dist/mpdc4gsr_pc_controller-1.0.0-py3-none-any.whl
 ## 🔍 Debugging and Monitoring
 
 ### Android Debugging
+
 ```kotlin
-// Enable comprehensive logging
+
 class DebugLogger {
     companion object {
         private const val TAG = "MPDC4GSR"
@@ -663,6 +681,7 @@ class DebugLogger {
 ```
 
 ### PC Controller Monitoring
+
 ```python
 import logging
 from pythonjsonlogger import jsonlogger
@@ -687,10 +706,11 @@ logger.info("Session started", extra={
 ## 📚 Additional Resources
 
 - **[API Reference](API_REFERENCE.md)** - Complete API documentation
-- **[User Manual](USER_MANUAL.md)** - End-user documentation  
+- **[User Manual](USER_MANUAL.md)** - End-user documentation
 - **[Troubleshooting](TROUBLESHOOTING.md)** - Common issues and solutions
 - **[Contributing](CONTRIBUTING.md)** - Contribution guidelines
 
 ---
 
-**Happy coding!** 🚀 For questions or issues, please open a GitHub issue or refer to our troubleshooting guide.
+**Happy coding!** 🚀 For questions or issues, please open a GitHub issue or refer to our
+troubleshooting guide.

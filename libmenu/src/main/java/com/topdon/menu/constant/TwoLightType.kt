@@ -1,17 +1,6 @@
 package com.topdon.menu.constant
 
-/**
- * Temperature measurement mode - Menu 3 - Dual light menu type.
- *
- * Created by LCG on 2024/11/20.
- */
 
-/**
- * Type definition for twolight classification.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
 enum class TwoLightType {
     /** Dual light 1 */
     TWO_LIGHT_1,

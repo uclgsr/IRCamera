@@ -105,7 +105,7 @@ class TimeSyncService:
         logger.info("Time sync service stopped")
 
     def handle_sync_request(
-        self, device_id: str, request_data: bytes, addr: Tuple[str, int]
+            self, device_id: str, request_data: bytes, addr: Tuple[str, int]
     ) -> bytes:
         """
         Handle time synchronization request from device.
@@ -149,7 +149,7 @@ class TimeSyncService:
             return b""
 
     def _update_device_stats(
-        self, device_id: str, client_time: float, server_time: float
+            self, device_id: str, client_time: float, server_time: float
     ) -> None:
         """Update synchronization statistics for device."""
         if device_id not in self._device_stats:
@@ -178,8 +178,8 @@ class TimeSyncService:
             # Median
             if n % 2 == 0:
                 stats.median_offset_ms = (
-                    sorted_offsets[n // 2 - 1] + sorted_offsets[n // 2]
-                ) / 2
+                                                 sorted_offsets[n // 2 - 1] + sorted_offsets[n // 2]
+                                         ) / 2
             else:
                 stats.median_offset_ms = sorted_offsets[n // 2]
 
@@ -237,8 +237,8 @@ class TimeSyncService:
 
         # Check accuracy
         return (
-            stats.median_offset_ms <= self._target_accuracy_ms
-            and stats.p95_offset_ms <= self._max_offset_ms
+                stats.median_offset_ms <= self._target_accuracy_ms
+                and stats.p95_offset_ms <= self._max_offset_ms
         )
 
     def get_synchronization_quality(self) -> Dict[str, any]:
@@ -278,8 +278,8 @@ class TimeSyncService:
             # Overall median
             if n % 2 == 0:
                 overall_median = (
-                    sorted_offsets[n // 2 - 1] + sorted_offsets[n // 2]
-                ) / 2
+                                         sorted_offsets[n // 2 - 1] + sorted_offsets[n // 2]
+                                 ) / 2
             else:
                 overall_median = sorted_offsets[n // 2]
 

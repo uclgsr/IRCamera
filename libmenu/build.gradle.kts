@@ -6,7 +6,7 @@ plugins {
 }
 
 kapt {
-    // Support for Kotlin 2.0+ in kapt
+
     correctErrorTypes = true
     useBuildCache = true
     includeCompileClasspath = false
@@ -23,14 +23,16 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
-    // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
-            // Only enable release variant for single-developer maintenance
+
             variant.enable = variant.buildType == "release"
         }
     }
@@ -49,7 +51,7 @@ android {
 }
 
 dependencies {
-    // Core library desugaring support
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.material) // Requires ConstraintLayout, ViewPager2
 
@@ -57,10 +59,8 @@ dependencies {
 
     implementation(project(":libapp")) // Requires string resources
 
-    // Add unified BLE module for comprehensive Shimmer Nordic and Topdon BLE support
     implementation(project(":BleModule"))
 
-    // Testing dependencies - using Robolectric for context-based testing
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

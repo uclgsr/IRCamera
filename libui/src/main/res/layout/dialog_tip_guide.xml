@@ -83,22 +83,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
+            android:layout_marginTop="13dp"
             android:src="@drawable/target"
             android:visibility="gone"
-            tools:visibility="visible"
-            android:layout_marginTop="13dp"
             app:layout_constraintStart_toStartOf="@id/view_pager"
-            app:layout_constraintTop_toTopOf="@id/view_pager" />
+            app:layout_constraintTop_toTopOf="@id/view_pager"
+            tools:visibility="visible" />
 
         <com.topdon.lib.ui.widget.IndicateView
             android:id="@+id/indicate_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            app:selectColor="#06AAFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_pager" />
+            app:layout_constraintTop_toBottomOf="@id/view_pager"
+            app:selectColor="#06AAFF" />
 
 
         <TextView

@@ -16,23 +16,11 @@ import com.topdon.menu.constant.TargetType
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
-/**
- * Custom Menu target view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 @Deprecated("旧的targetmenu，已重构过了")
-/**
- * MenuTargetAdapter provides data binding between data source and UI components.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((code: Int) -> Unit)? = null
 
-    /**
-     * settingsspecified option的selectedstate
-     */
     fun setSelected(
         targetType: TargetType,
         isSelected: Boolean,
@@ -59,13 +47,17 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                 context.getString(R.string.main_tab_first_target),
                 CameraHelp.TYPE_SET_TARGET_MODE,
             ),
-//      ColorBean(UiR.drawable.ic_menu_second_zoom, context.getString(R.string.main_tab_second_zoom), CameraHelp.TYPE_SET_TARGET_ZOOM),
+
             ColorBean(
                 MenuR.drawable.selector_menu2_target_3_color,
                 context.getString(R.string.main_tab_second_target_color),
                 CameraHelp.TYPE_SET_TARGET_COLOR,
             ),
-            ColorBean(MenuR.drawable.selector_menu2_del, context.getString(R.string.thermal_delete), CameraHelp.TYPE_SET_TARGET_DELETE),
+            ColorBean(
+                MenuR.drawable.selector_menu2_del,
+                context.getString(R.string.thermal_delete),
+                CameraHelp.TYPE_SET_TARGET_DELETE
+            ),
             ColorBean(
                 MenuR.drawable.selector_menu2_target_4_help,
                 context.getString(R.string.main_tab_second_target_help),
@@ -73,9 +65,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             ),
         )
 
-    /**
-     * refreshmeasurement mode图标
-     */
     fun upCurrentMeasureMode(measureMode: Int) {
         secondBean.clear()
         when (measureMode) {
@@ -88,6 +77,7 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                     ),
                 )
             }
+
             ObserveBean.TYPE_MEASURE_SHEEP -> {
                 secondBean.add(
                     ColorBean(
@@ -97,6 +87,7 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                     ),
                 )
             }
+
             ObserveBean.TYPE_MEASURE_DOG -> {
                 secondBean.add(
                     ColorBean(
@@ -106,6 +97,7 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                     ),
                 )
             }
+
             ObserveBean.TYPE_MEASURE_BIRD -> {
                 secondBean.add(
                     ColorBean(
@@ -131,7 +123,11 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             ),
         )
         secondBean.add(
-            ColorBean(MenuR.drawable.selector_menu2_del, context.getString(R.string.thermal_delete), CameraHelp.TYPE_SET_TARGET_DELETE),
+            ColorBean(
+                MenuR.drawable.selector_menu2_del,
+                context.getString(R.string.thermal_delete),
+                CameraHelp.TYPE_SET_TARGET_DELETE
+            ),
         )
         secondBean.add(
             ColorBean(
@@ -147,7 +143,8 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(UiR.layout.ui_item_menu_second_view, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(UiR.layout.ui_item_menu_second_view, parent, false)
         return ItemView(view)
     }
 
@@ -164,7 +161,12 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             if (bean.isSelect) {
                 holder.name.setTextColor(ContextCompat.getColor(context, UiR.color.white))
             } else {
-                holder.name.setTextColor(ContextCompat.getColor(context, UiR.color.font_third_color))
+                holder.name.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        UiR.color.font_third_color
+                    )
+                )
             }
 
             holder.lay.setOnClickListener {
@@ -184,14 +186,14 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         val name: TextView = itemView.findViewById(UiR.id.item_menu_tab_text)
 
         init {
-//            val canSeeCount = 4.5 
-//            val with = (ScreenUtils.getScreenWidth() / canSeeCount).toInt()
-            itemView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-//            val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()
-//            val layoutParams = itemView.item_menu_tab_img.layoutParams
-//            layoutParams.width = imageSize
-//            layoutParams.height = imageSize
-//            itemView.item_menu_tab_img.layoutParams = layoutParams
+
+
+            itemView.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+
+
         }
     }
 }

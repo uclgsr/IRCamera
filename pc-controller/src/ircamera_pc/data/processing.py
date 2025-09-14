@@ -8,13 +8,12 @@ multi-modal physiological sensing data including GSR, thermal, and RGB camera da
 
 import asyncio
 import json
+import numpy as np
 import time
 from dataclasses import asdict, dataclass
+from loguru import logger
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
-
-import numpy as np
-from loguru import logger
 
 try:
     import pandas as pd
@@ -86,7 +85,7 @@ class GSRIngestor:
         logger.info("GSRIngestor initialized")
 
     async def process_gsr_batch(
-        self, device_id: str, session_id: str, gsr_data: List[Dict[str, Any]]
+            self, device_id: str, session_id: str, gsr_data: List[Dict[str, Any]]
     ) -> bool:
         """
         Process a batch of GSR data from an Android device
@@ -131,7 +130,7 @@ class GSRIngestor:
 
             # Maintain buffer size limit
             if len(self.data_buffer) > self.buffer_size:
-                self.data_buffer = self.data_buffer[-self.buffer_size :]
+                self.data_buffer = self.data_buffer[-self.buffer_size:]
 
             # Queue for async processing
             await self.processing_queue.put(
@@ -236,13 +235,13 @@ class DataProcessor:
             return False
 
     async def process_gsr_data(
-        self, device_id: str, session_id: str, data: List[Dict]
+            self, device_id: str, session_id: str, data: List[Dict]
     ) -> bool:
         """Process GSR data through the ingestor"""
         return await self.gsr_ingestor.process_gsr_batch(device_id, session_id, data)
 
     async def process_thermal_data(
-        self, device_id: str, session_id: str, thermal_frame: Dict
+            self, device_id: str, session_id: str, thermal_frame: Dict
     ) -> bool:
         """Process thermal camera frame data"""
         try:
@@ -268,7 +267,7 @@ class DataProcessor:
             return False
 
     async def process_rgb_data(
-        self, device_id: str, session_id: str, rgb_frame: Dict
+            self, device_id: str, session_id: str, rgb_frame: Dict
     ) -> bool:
         """Process RGB camera frame data"""
         try:
@@ -293,7 +292,7 @@ class DataProcessor:
             return False
 
     async def export_session_data(
-        self, session_id: str, format: str = "json"
+            self, session_id: str, format: str = "json"
     ) -> Optional[str]:
         """Export session data to specified format"""
         try:
@@ -406,11 +405,11 @@ class DataProcessor:
             "latest_gsr": data_points["gsr"][-1] if data_points["gsr"] else None,
             "data_rate": {
                 "gsr": len(data_points["gsr"])
-                / max(1, time.time() - session_data["start_time"]),
+                       / max(1, time.time() - session_data["start_time"]),
                 "thermal": len(data_points["thermal"])
-                / max(1, time.time() - session_data["start_time"]),
+                           / max(1, time.time() - session_data["start_time"]),
                 "rgb": len(data_points["rgb"])
-                / max(1, time.time() - session_data["start_time"]),
+                       / max(1, time.time() - session_data["start_time"]),
             },
         }
 

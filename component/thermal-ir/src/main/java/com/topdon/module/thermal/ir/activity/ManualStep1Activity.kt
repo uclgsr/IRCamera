@@ -9,22 +9,19 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
-// 双光校正 - 第1步.
+
  * Created by LCG on 2023/12/29.
  */
-// Legacy ARouter route annotation - now using NavigationManager
-/**
- * Manual step1 activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
+
 class ManualStep1Activity : BaseActivity() {
-    // View declarations
+
     private lateinit var tvManual: TextView
 
     override fun initContentView(): Int = R.layout.activity_manual_step1
 
     override fun initView() {
-        // Initialize views
+
         tvManual = findViewById(R.id.tv_manual)
 
         tvManual.setOnClickListener {

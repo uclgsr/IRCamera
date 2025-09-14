@@ -7,12 +7,12 @@ plugins {
 
 kapt {
     arguments {
-        // Removed AROUTER_MODULE_NAME - migrating to NavigationManager
+
         arg("room.schemaLocation", "$projectDir/schemas")
         arg("room.incremental", "true")
         arg("room.expandProjection", "true")
     }
-    // Enable Kotlin 2.1.0 compatibility
+
     correctErrorTypes = true
     useBuildCache = true
 }
@@ -23,7 +23,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        // targetSdk = libs.versions.targetSdk.get().toInt()  // Deprecated in library modules
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -35,14 +35,16 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
-    // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
-            // Only enable release variant for single-developer maintenance
+
             variant.enable = variant.buildType == "release"
         }
     }
@@ -63,28 +65,24 @@ android {
     }
 
     lint {
-        // Ignore errors in embedded third-party libraries
+
         disable += listOf("WrongThread")
-        // Set error threshold to warnings only to prevent build failures on third-party library issues
+
         abortOnError = false
         warningsAsErrors = false
     }
 }
 
 dependencies {
-    // Core library desugaring support
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    // Project dependencies
     implementation(project(":libapp"))
     implementation(project(":libmenu")) // Required for menu references in widget files
 
-    // Add unified BLE module for comprehensive Shimmer Nordic and Topdon BLE support
     implementation(project(":BleModule"))
 
-    // Use shared UI bundle instead of individual dependencies
     implementation(libs.bundles.ui.common)
 
-    // Smart Refresh Layout for LoadingFooter - temporarily commented out due to jitpack.io issues
-    // implementation(libs.bundles.smart.refresh)
+
 }

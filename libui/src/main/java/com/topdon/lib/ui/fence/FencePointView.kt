@@ -14,16 +14,7 @@ import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.ui.R as UiR
 
-/**
- * Custom Fence point view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * FencePointView implements custom user interface component functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class FencePointView : View {
     var listener: CallBack? = null
     private val iconSize = SizeUtils.dp2px(32f)
@@ -116,12 +107,14 @@ class FencePointView : View {
                 startPoint[1] = mY.toInt()
                 invalidate()
             }
+
             MotionEvent.ACTION_UP -> {
-//                Log.i("123", "onTouchEvent: ACTION_UP")
+
                 startPoint[0] = mX.toInt()
                 startPoint[1] = mY.toInt()
                 result()
             }
+
             MotionEvent.ACTION_MOVE -> {
                 startPoint[0] = mX.toInt()
                 startPoint[1] = mY.toInt()
@@ -131,25 +124,22 @@ class FencePointView : View {
         return true
     }
 
-    /**
-     * Executes result functionality.
-     */
     private fun result() {
         val point1 = intArrayOf(startPoint[0], startPoint[1])
         if (startPoint[0] - destW / 2 < 0) {
-            
+
             point1[0] = destW / 2
         }
         if (startPoint[0] + destW / 2 > width) {
-            
+
             point1[0] = width - destW / 2
         }
         if (startPoint[1] - destW / 2 < 0) {
-            
+
             point1[1] = destH / 2
         }
         if (startPoint[1] + destW / 2 > height) {
-            
+
             point1[1] = height - destH / 2
         }
         Log.w("123", "坐标 point:${point1.contentToString()}")
@@ -158,31 +148,15 @@ class FencePointView : View {
         }
     }
 
-    /**
-     * Clears data and resets internal state.
-     */
     fun clear() {
         startPoint = intArrayOf(0, 0)
         result()
         invalidate()
     }
 
-    
-/**
- * Custom Call back view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * CallBack manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
     interface CallBack {
-        /**
-         * startPoint: 左上角
-         * endPoint: 右下角
-         */
+
         fun callback(
             startPoint: IntArray,
             srcRect: IntArray,

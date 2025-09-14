@@ -16,28 +16,19 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.utils.ScreenUtil
 import kotlinx.android.synthetic.main.item_menu_3d.view.*
 
-/**
- * 二级菜单 RecyclerView 所用 Adapter.
- */
-class MenuAdapter(val context: Context, val type: Type) : RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
-    /**
-     * 当前选中 item index，用于实现选中效果.
-     */
+class MenuAdapter(val context: Context, val type: Type) :
+    RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
+
     private var selectIndex = 0
 
-    /**
-     * item 点击事件监听.
-     */
     var onItemClickListener: ((position: Int) -> Unit)? = null
 
     init {
-        if (type == Type.VISUAL)
-            {
-//            selectIndex = 1
-            } else if (type == Type.MARK)
-            {
-                selectIndex = -1
-            } else if (type == Type.MODE) {
+        if (type == Type.VISUAL) {
+
+        } else if (type == Type.MARK) {
+            selectIndex = -1
+        } else if (type == Type.MODE) {
             selectIndex = 2
         }
     }
@@ -54,9 +45,12 @@ class MenuAdapter(val context: Context, val type: Type) : RecyclerView.Adapter<M
         private val MARK_ARRAY =
             arrayOf(
                 ItemData(R.string.pseudo_custom_title, R.drawable.selector_menu2_mark_custom),
-                ItemData(R.string.thermal_high_temperature, R.drawable.selector_menu2_mark_max_temp),
+                ItemData(
+                    R.string.thermal_high_temperature,
+                    R.drawable.selector_menu2_mark_max_temp
+                ),
                 ItemData(R.string.app_Low_temperature, R.drawable.selector_menu2_mark_min_temp),
-//            ItemData(R.string.menu_3d_range_temp, R.drawable.selector_menu2_mark_range_temp),
+
                 ItemData(R.string.report_delete, R.drawable.selector_menu2_mark_del),
             )
         private val PSEUDO_ARRAY =
@@ -79,22 +73,22 @@ class MenuAdapter(val context: Context, val type: Type) : RecyclerView.Adapter<M
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_menu_3d, parent, false))
+        return ViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_menu_3d, parent, false)
+        )
     }
 
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
     ) {
-        if (type == Type.PSEUDO)
-            {
-                holder.itemView.tv_menu.visibility = View.GONE
-                holder.itemView.iv_pseudo.visibility = View.VISIBLE
-            } else if (type == Type.MODE)
-            {
-                holder.itemView.tv_menu.visibility = View.VISIBLE
-                holder.itemView.iv_pseudo.visibility = View.GONE
-            }
+        if (type == Type.PSEUDO) {
+            holder.itemView.tv_menu.visibility = View.GONE
+            holder.itemView.iv_pseudo.visibility = View.VISIBLE
+        } else if (type == Type.MODE) {
+            holder.itemView.tv_menu.visibility = View.VISIBLE
+            holder.itemView.iv_pseudo.visibility = View.GONE
+        }
         val itemArray =
             when (type) {
                 Type.VISUAL -> VISUAL_ARRAY
@@ -110,17 +104,40 @@ class MenuAdapter(val context: Context, val type: Type) : RecyclerView.Adapter<M
         if (type == Type.PSEUDO) {
             val drawable =
                 when (position) {
-                    0 -> buildRectDrawable(selectIndex == 0, 0xff0000ff.toInt(), 0xffff0000.toInt(), 0xffffff00.toInt())
-                    1 -> buildRectDrawable(selectIndex == 1, 0xff000000.toInt(), 0xffffffff.toInt(), 0xffff0000.toInt())
-                    2 -> buildRectDrawable(selectIndex == 2, 0xff0000ff.toInt(), 0xff00ff00.toInt(), 0xffffff00.toInt(), 0xffff0000.toInt())
+                    0 -> buildRectDrawable(
+                        selectIndex == 0,
+                        0xff0000ff.toInt(),
+                        0xffff0000.toInt(),
+                        0xffffff00.toInt()
+                    )
+
+                    1 -> buildRectDrawable(
+                        selectIndex == 1,
+                        0xff000000.toInt(),
+                        0xffffffff.toInt(),
+                        0xffff0000.toInt()
+                    )
+
+                    2 -> buildRectDrawable(
+                        selectIndex == 2,
+                        0xff0000ff.toInt(),
+                        0xff00ff00.toInt(),
+                        0xffffff00.toInt(),
+                        0xffff0000.toInt()
+                    )
+
                     3 -> buildRectDrawable(selectIndex == 3, 0xff000000.toInt(), 0xffff0000.toInt())
-                    else -> buildRectDrawable(selectIndex == position, 0xff0000ff.toInt(), 0xffffff00.toInt())
+                    else -> buildRectDrawable(
+                        selectIndex == position,
+                        0xff0000ff.toInt(),
+                        0xffffff00.toInt()
+                    )
                 }
             holder.itemView.view_pseudo.background = drawable
-            holder.itemView.iv_pseudo.visibility = if (position == selectIndex) View.VISIBLE else View.GONE
+            holder.itemView.iv_pseudo.visibility =
+                if (position == selectIndex) View.VISIBLE else View.GONE
         }
 
-        // 单独设置删除文本颜色
         if (type == Type.MARK && position == MARK_ARRAY.size - 1) {
             holder.itemView.tv_menu.setTextColor(0x66ffffff)
         }
@@ -167,7 +184,8 @@ class MenuAdapter(val context: Context, val type: Type) : RecyclerView.Adapter<M
             val canSeeCount = itemCount.toFloat() // 一屏可见的 item 数量，目前都是全都显示完
             if (ScreenUtil.isPortrait(context)) {
                 val with = (ScreenUtil.getScreenWidth(context) / canSeeCount).toInt()
-                rootView.layoutParams = ViewGroup.LayoutParams(with, ViewGroup.LayoutParams.WRAP_CONTENT)
+                rootView.layoutParams =
+                    ViewGroup.LayoutParams(with, ViewGroup.LayoutParams.WRAP_CONTENT)
 
                 val imageSize = (ScreenUtil.getScreenWidth(context) * 62 / 375f).toInt()
                 val layoutParams = rootView.iv_menu.layoutParams
@@ -198,24 +216,13 @@ class MenuAdapter(val context: Context, val type: Type) : RecyclerView.Adapter<M
     )
 
     enum class Type {
-        /**
-         * 视觉.
-         */
+
         VISUAL,
 
-        /**
-         * 标定.
-         */
         MARK,
 
-        /**
-         * 伪彩.
-         */
         PSEUDO,
 
-        /**
-         * 模式.
-         */
         MODE,
     }
 }

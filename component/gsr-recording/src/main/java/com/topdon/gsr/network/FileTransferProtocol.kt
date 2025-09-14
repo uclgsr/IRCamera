@@ -2,17 +2,21 @@ package com.topdon.gsr.network
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 import org.json.JSONObject
-import java.io.*
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.security.MessageDigest
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * Advanced file transfer protocol for large video files and bulk data synchronization
- * Supports resumable transfers, integrity verification, and bandwidth optimization
- */
 class FileTransferProtocol(
     private val context: Context,
     private val networkClient: NetworkClient,
@@ -77,20 +81,6 @@ class FileTransferProtocol(
         CANCELLED,
     }
 
-    /**
-     * Queue a file for transfer to PC Controller
-     *
-     * Adds a file to the transfer queue with specified priority and metadata.
-     * Files are transferred asynchronously using chunked uploads with integrity verification.
-     *
-     * @param filePath Absolute path to the file to be transferred
-     * @param priority Transfer priority level affecting queue ordering
-     * @param sessionId Recording session ID for organizing transferred files
-     * @param metadata Additional key-value metadata to include with transfer
-     * @return Unique transfer ID for tracking the file transfer progress
-     * @throws FileNotFoundException if the specified file does not exist
-     * @throws SecurityException if file access is denied
-     */
     suspend fun queueFileTransfer(
         filePath: String,
         priority: TransferPriority = TransferPriority.NORMAL,
@@ -124,26 +114,12 @@ class FileTransferProtocol(
             transferId
         }
 
-    /**
-     * Process the transfer queue with priority-based scheduling
-     *
-     * Initiates processing of queued file transfers in priority order.
-     * Respects maximum concurrent transfer limits to avoid overwhelming
-     * the network connection.
-     */
     private fun processTransferQueue() {
         transferScope.launch {
             processTransferQueueAsync()
         }
     }
 
-    /**
-     * Async version to avoid recursion issues
-     *
-     * Processes pending transfer requests while respecting concurrency limits.
-     * Removes requests from queue and starts transfers until maximum
-     * concurrent transfers is reached.
-     */
     private suspend fun processTransferQueueAsync(): Unit =
         withContext(Dispatchers.IO) {
             while (transferQueue.isNotEmpty() && activeTransfers.size < MAX_CONCURRENT_TRANSFERS) {
@@ -157,15 +133,6 @@ class FileTransferProtocol(
             }
         }
 
-    /**
-     * Start individual file transfer with resumable support
-     *
-     * Initiates transfer of a single file using chunked uploads with
-     * integrity verification. Supports resuming interrupted transfers
-     * from the last completed chunk.
-     *
-     * @param request Transfer request containing file details and metadata
-     */
     private suspend fun startFileTransfer(request: TransferRequest): Unit =
         withContext(Dispatchers.IO) {
             val session =
@@ -177,17 +144,14 @@ class FileTransferProtocol(
             activeTransfers[request.transferId] = session
 
             try {
-                // Check if transfer can be resumed
+
                 val resumeOffset = checkResumeCapability(request.transferId)
                 session.resumeOffset = resumeOffset
 
-                // Initialize transfer with PC Controller
                 initializeTransfer(session)
 
-                // Start chunked transfer
                 transferFileInChunks(session)
 
-                // Verify transfer integrity
                 verifyTransferIntegrity(session)
 
                 Log.d(TAG, "Transfer completed: ${request.transferId}")
@@ -196,16 +160,13 @@ class FileTransferProtocol(
                 handleTransferError(session, e)
             } finally {
                 activeTransfers.remove(request.transferId)
-                // Process next queued transfer asynchronously to avoid recursion
+
                 transferScope.launch {
                     processTransferQueueAsync()
                 }
             }
         }
 
-    /**
-     * Initialize transfer session with PC Controller
-     */
     private suspend fun initializeTransfer(session: TransferSession) {
         val initMessage =
             JSONObject().apply {
@@ -228,9 +189,6 @@ class FileTransferProtocol(
         }
     }
 
-    /**
-     * Transfer file in optimized chunks with progress tracking
-     */
     private suspend fun transferFileInChunks(session: TransferSession): Unit =
         withContext(Dispatchers.IO) {
             val file = File(session.request.filePath)
@@ -283,9 +241,6 @@ class FileTransferProtocol(
             }
         }
 
-    /**
-     * Send individual file chunk to PC Controller
-     */
     private suspend fun sendFileChunk(
         session: TransferSession,
         chunkIndex: Int,
@@ -312,9 +267,6 @@ class FileTransferProtocol(
         }
     }
 
-    /**
-     * Verify complete transfer integrity using checksum
-     */
     private suspend fun verifyTransferIntegrity(session: TransferSession) {
         val calculatedChecksum = session.checksumAccumulator.digest()
         val checksumHex = calculatedChecksum.joinToString("") { "%02x".format(it) }
@@ -335,9 +287,6 @@ class FileTransferProtocol(
         }
     }
 
-    /**
-     * Check if transfer can be resumed from PC Controller
-     */
     private suspend fun checkResumeCapability(transferId: String): Long {
         val resumeQuery =
             JSONObject().apply {
@@ -356,17 +305,11 @@ class FileTransferProtocol(
         }
     }
 
-    /**
-     * Perform periodic partial integrity verification
-     */
     private suspend fun verifyPartialIntegrity(session: TransferSession) {
         // Implementation for periodic checksum verification
         Log.d(TAG, "Partial integrity check at ${session.bytesTransferred.get()} bytes")
     }
 
-    /**
-     * Handle transfer errors with retry logic
-     */
     private suspend fun handleTransferError(
         session: TransferSession,
         error: Exception,
@@ -382,9 +325,6 @@ class FileTransferProtocol(
         }
     }
 
-    /**
-     * Get current transfer progress for all active transfers
-     */
     fun getTransferProgress(): List<TransferProgress> {
         return activeTransfers.values.map { session ->
             val elapsed = System.currentTimeMillis() - session.startTime
@@ -413,9 +353,6 @@ class FileTransferProtocol(
         }
     }
 
-    /**
-     * Cancel active transfer
-     */
     suspend fun cancelTransfer(transferId: String): Boolean {
         val session = activeTransfers[transferId] ?: return false
 
@@ -432,9 +369,6 @@ class FileTransferProtocol(
         return true
     }
 
-    /**
-     * Generate unique transfer ID
-     */
     private fun generateTransferId(
         filePath: String,
         sessionId: String,
@@ -444,9 +378,6 @@ class FileTransferProtocol(
         return "${sessionId}_${fileName}_$timestamp"
     }
 
-    /**
-     * Get overall transfer statistics
-     */
     fun getTransferStatistics(): TransferStatistics {
         return TransferStatistics(
             totalBytesTransferred = totalBytesTransferred.get(),
@@ -463,9 +394,6 @@ class FileTransferProtocol(
         val queuedTransfers: Int,
     )
 
-    /**
-     * Cleanup resources
-     */
     fun cleanup() {
         transferJob.cancel()
         activeTransfers.clear()

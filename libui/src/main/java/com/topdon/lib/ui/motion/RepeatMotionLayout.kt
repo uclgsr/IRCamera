@@ -4,20 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.constraintlayout.motion.widget.MotionLayout
 
-/**
- * 闪烁效果
- */
 
-/**
- * Repeat motion layout utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
-/**
- * RepeatMotionLayout manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
 class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
     private var motionStartId = 0
     private var motionEndId = 0
@@ -36,11 +23,8 @@ class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
         defStyleAttr,
     )
 
-    /**
-     * 开始闪烁
-     */
     fun startTransition() {
-//        Log.w("123", "开始闪烁")
+
         if (!isAdd) {
             addTransitionListener(this)
             isAdd = true
@@ -48,9 +32,6 @@ class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
         transitionToEnd()
     }
 
-    /**
-     * Restore state
-     */
     fun cancelTransition() {
         removeTransitionListener(this)
         isAdd = false
@@ -78,7 +59,7 @@ class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
         motionLayout: MotionLayout?,
         currentId: Int,
     ) {
-//        Log.w("123", "onTransitionCompleted currentId:$currentId")
+
         if (currentId == motionEndId) {
             transitionToStart()
         } else {

@@ -11,11 +11,6 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogTipShutterBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-/**
- * 自动快门提示弹窗
- * @author: CaiSongL
- * @date: 2023/4/13 10:57
- */
 class TipShutterDialog : Dialog {
     constructor(context: Context) : super(context)
 
@@ -65,13 +60,18 @@ class TipShutterDialog : Dialog {
             if (dialog == null) {
                 dialog = TipShutterDialog(context, R.style.InfoDialog)
             }
-            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater =
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val binding = DialogTipShutterBinding.inflate(LayoutInflater.from(context!!))
-            dialog!!.addContentView(binding.root, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
+            dialog!!.addContentView(
+                binding.root,
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            )
             dialog!!.setCanceledOnTouchOutside(canceled)
 
             val lp = dialog!!.window!!.attributes
-            lp.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() // 设置宽度
+            lp.width =
+                (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() // 设置宽度
             dialog!!.window!!.attributes = lp
 
             binding.tvIKnow.setOnClickListener {

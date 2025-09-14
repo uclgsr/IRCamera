@@ -7,26 +7,20 @@ import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Comprehensive unit tests for libir module using Robolectric
- * Tests IR image processing, thermal analysis, and related utilities
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O], manifest = Config.NONE)
 @OptIn(ExperimentalCoroutinesApi::class)
-/**
- * LibIRModuleTest manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class LibIRModuleTest {
     private lateinit var context: Context
 
@@ -36,21 +30,17 @@ class LibIRModuleTest {
     }
 
     @Test
-    /**
-     * Executes testcontextaccess functionality.
-     */
+
     fun testContextAccess() {
         assertNotNull("Context should be available", context)
         assertNotNull("Package name should be available", context.packageName)
     }
 
     @Test
-    /**
-     * Executes testirimageprocessing functionality.
-     */
+
     fun testIRImageProcessing() =
         runTest {
-            // Test IR image processing with mock thermal data
+
             val width = 80
             val height = 60
             val mockThermalData =
@@ -60,11 +50,9 @@ class LibIRModuleTest {
                     }
                 }
 
-            // Test image dimensions
             assertEquals("Thermal data should have correct height", height, mockThermalData.size)
             assertEquals("Thermal data should have correct width", width, mockThermalData[0].size)
 
-            // Test temperature range analysis
             val flatData = mockThermalData.flatMap { it.toList() }
             val minTemp = flatData.minOrNull() ?: 0f
             val maxTemp = flatData.maxOrNull() ?: 0f
@@ -74,21 +62,19 @@ class LibIRModuleTest {
             assertTrue("Min temperature should be reasonable", minTemp >= 0f && minTemp < 100f)
             assertTrue("Max temperature should be reasonable", maxTemp >= 0f && maxTemp < 200f)
 
-            // Test thermal statistics
             val avgTemp = flatData.average().toFloat()
             assertTrue("Average temperature should be reasonable", avgTemp > 0 && avgTemp < 100)
 
-            val standardDeviation = kotlin.math.sqrt(flatData.map { (it - avgTemp) * (it - avgTemp) }.average())
+            val standardDeviation =
+                kotlin.math.sqrt(flatData.map { (it - avgTemp) * (it - avgTemp) }.average())
             assertTrue("Standard deviation should be reasonable", standardDeviation >= 0)
         }
 
     @Test
-    /**
-     * Executes testhotcoldspotdetection functionality.
-     */
+
     fun testHotColdSpotDetection() =
         runTest {
-            // Test hot and cold spot detection algorithms
+
             val width = 20
             val height = 15
             val mockThermalData =
@@ -98,7 +84,6 @@ class LibIRModuleTest {
                         val centerX = width / 2
                         val centerY = height / 2
 
-                        // Create hot spot in center
                         val distanceFromCenter =
                             kotlin.math.sqrt(
                                 ((col - centerX) * (col - centerX) + (row - centerY) * (row - centerY)).toDouble(),
@@ -108,7 +93,6 @@ class LibIRModuleTest {
                     }
                 }
 
-            // Find hot spot (should be near center)
             var maxTemp = Float.NEGATIVE_INFINITY
             var hotSpotX = 0
             var hotSpotY = 0
@@ -123,7 +107,6 @@ class LibIRModuleTest {
                 }
             }
 
-            // Hot spot should be near center
             val centerX = width / 2
             val centerY = height / 2
             val distanceFromCenter =
@@ -136,26 +119,22 @@ class LibIRModuleTest {
         }
 
     @Test
-    /**
-     * Executes testiractivitycreation functionality.
-     */
+
     fun testIRActivityCreation() {
-        // Test IR activity classes can be referenced
+
         try {
             val irActivityClass = Class.forName("com.topdon.libir.activity.IRActivity")
             assertNotNull("IRActivity should be accessible", irActivityClass)
         } catch (e: ClassNotFoundException) {
-            // Activities may not be testable without full Android framework
+
             assertTrue("IRActivity accessibility test attempted", true)
         }
     }
 
     @Test
-    /**
-     * Executes testirviewcreation functionality.
-     */
+
     fun testIRViewCreation() {
-        // Test IR view classes can be referenced
+
         try {
             val irViewClass = Class.forName("com.topdon.libir.view.IRView")
             assertNotNull("IRView should be accessible", irViewClass)
@@ -163,15 +142,13 @@ class LibIRModuleTest {
             val zoomBBClass = Class.forName("com.topdon.libir.view.ZoomBB")
             assertNotNull("ZoomBB should be accessible", zoomBBClass)
         } catch (e: ClassNotFoundException) {
-            // Views may not be testable without full Android framework
+
             assertTrue("IR View accessibility test attempted", true)
         }
     }
 
     @Test
-    /**
-     * Executes testthermalcalibration functionality.
-     */
+
     fun testThermalCalibration() =
         runTest {
             // Test thermal calibration functions
@@ -194,9 +171,7 @@ class LibIRModuleTest {
         }
 
     @Test
-    /**
-     * Executes testirimagefiltering functionality.
-     */
+
     fun testIRImageFiltering() =
         runTest {
             // Test IR image filtering algorithms
@@ -237,9 +212,7 @@ class LibIRModuleTest {
         }
 
     @Test
-    /**
-     * Executes testsystemserviceaccess functionality.
-     */
+
     fun testSystemServiceAccess() {
         // Test system services that IR processing might use
         val displayService = context.getSystemService(Context.DISPLAY_SERVICE)
@@ -253,9 +226,7 @@ class LibIRModuleTest {
     }
 
     @Test
-    /**
-     * Executes testresourceaccess functionality.
-     */
+
     fun testResourceAccess() {
         val resources = context.resources
         assertNotNull("Resources should be available", resources)
@@ -266,9 +237,7 @@ class LibIRModuleTest {
     }
 
     @Test
-    /**
-     * Executes testbitmapoperations functionality.
-     */
+
     fun testBitmapOperations() =
         runTest {
             // Test bitmap operations for IR image display
@@ -292,9 +261,7 @@ class LibIRModuleTest {
         }
 
     @Test
-    /**
-     * Executes testfilesystemaccess functionality.
-     */
+
     fun testFileSystemAccess() {
         // Test file system access for IR image storage
         val filesDir = context.filesDir
@@ -307,9 +274,7 @@ class LibIRModuleTest {
     }
 
     @Test
-    /**
-     * Executes testasyncoperations functionality.
-     */
+
     fun testAsyncOperations() =
         runTest {
             // Test that coroutines work with IR processing context
@@ -319,7 +284,11 @@ class LibIRModuleTest {
                     context.packageName
                 }
 
-            assertEquals("Async IR operation should return correct value", context.packageName, result)
+            assertEquals(
+                "Async IR operation should return correct value",
+                context.packageName,
+                result
+            )
         }
 
     // Helper function to calculate image variation

@@ -84,10 +84,10 @@ class MsgDialog : Dialog {
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    // 竖屏
+
                     0.9
                 } else {
-                    // 横屏
+
                     0.3
                 }
             lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
@@ -100,14 +100,14 @@ class MsgDialog : Dialog {
                     positiveClickListener!!.onClick(dialog!!)
                 }
             }
-            // img
+
             if (imgRes != 0) {
                 tipImg?.visibility = View.VISIBLE
                 tipImg?.setImageResource(imgRes)
             } else {
                 tipImg?.visibility = View.GONE
             }
-            // msg
+
             if (message != null) {
                 messageText?.visibility = View.VISIBLE
                 messageText?.setText(message, TextView.BufferType.NORMAL)
@@ -120,9 +120,6 @@ class MsgDialog : Dialog {
         }
     }
 
-    /**
-     * 提交回调
-     */
     interface OnClickListener {
         fun onClick(dialog: DialogInterface)
     }

@@ -13,23 +13,19 @@ import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.module.user.R
 import com.topdon.module.user.model.FaqRepository
 import com.topdon.module.user.model.QuestionData
-import java.util.ArrayList
 
-/**
- * FAQ
- */
-// Legacy ARouter route annotation - now using NavigationManager
 class QuestionActivity : BaseActivity() {
-    // View references - migrated from synthetic views
+
     private lateinit var questionRecycler: RecyclerView
 
     override fun initContentView() = R.layout.activity_question
 
     override fun initView() {
-        // Initialize views - migrated from synthetic views
+
         questionRecycler = findViewById(R.id.question_recycler)
 
-        val adapter = MyAdapter(FaqRepository.getQuestionList(intent.getBooleanExtra("isTS001", false)))
+        val adapter =
+            MyAdapter(FaqRepository.getQuestionList(intent.getBooleanExtra("isTS001", false)))
         adapter.onItemClickListener = {
             NavigationManager.getInstance()
                 .build(RouterConfig.QUESTION_DETAILS)
@@ -45,14 +41,17 @@ class QuestionActivity : BaseActivity() {
     override fun initData() {
     }
 
-    private class MyAdapter(private val questionList: ArrayList<QuestionData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private class MyAdapter(private val questionList: ArrayList<QuestionData>) :
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var onItemClickListener: ((data: QuestionData) -> Unit)? = null
 
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
         ): RecyclerView.ViewHolder {
-            return ItemHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_question, parent, false))
+            return ItemHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.item_question, parent, false)
+            )
         }
 
         override fun getItemCount(): Int = questionList.size
@@ -62,8 +61,10 @@ class QuestionActivity : BaseActivity() {
             position: Int,
         ) {
             if (holder is ItemHolder) {
-                val itemQuestionInfo: TextView = holder.rootView.findViewById(R.id.item_question_info)
-                val itemQuestionLay: ConstraintLayout = holder.rootView.findViewById(R.id.item_question_lay)
+                val itemQuestionInfo: TextView =
+                    holder.rootView.findViewById(R.id.item_question_info)
+                val itemQuestionLay: ConstraintLayout =
+                    holder.rootView.findViewById(R.id.item_question_lay)
 
                 itemQuestionInfo.text = questionList[position].question
                 itemQuestionLay.setOnClickListener {

@@ -2,7 +2,9 @@
 
 ## Overview
 
-The PC Controller is the central hub of the IRCamera platform, providing advanced data processing, session management, and device coordination capabilities. Built with Python, it serves as the master controller for synchronized multi-modal data collection.
+The PC Controller is the central hub of the IRCamera platform, providing advanced data processing,
+session management, and device coordination capabilities. Built with Python, it serves as the master
+controller for synchronized multi-modal data collection.
 
 ## Architecture
 
@@ -78,8 +80,10 @@ graph TB
 ## Core Components
 
 ### Main Application
+
 **Purpose**: Application entry point and lifecycle management
 **Responsibilities**:
+
 - Application initialization and shutdown
 - Global configuration management
 - Module coordination
@@ -109,52 +113,64 @@ class PCControllerApp:
 ```
 
 ### SessionManager
+
 **Purpose**: Recording session lifecycle management
 **Responsibilities**:
+
 - Session creation and configuration
 - Multi-device coordination
 - Data collection orchestration
 - Session metadata management
 
 **Key Features**:
+
 - Multi-modal data synchronization
 - Participant management
 - Session templates and presets
 - Real-time monitoring and control
 
 ### DeviceController
+
 **Purpose**: Hardware device integration and management
 **Responsibilities**:
+
 - Device discovery and connection
 - Hardware-specific communication
 - Device status monitoring
 - Command distribution
 
 **Supported Devices**:
+
 - **Shimmer3 GSR+**: Direct PC-connected GSR sensors
 - **Thermal Cameras**: USB and network thermal cameras
 - **Android Devices**: Mobile sensor nodes
 - **External Sensors**: Custom sensor integrations
 
 ### DataAggregator
+
 **Purpose**: Multi-source data collection and processing
 **Responsibilities**:
+
 - Real-time data ingestion
 - Data validation and quality control
 - Temporal synchronization
 - Preprocessing and formatting
 
 ### NetworkHub
+
 **Purpose**: Network communication coordination
 **Responsibilities**:
+
 - TCP server management
 - Device discovery protocols
 - Secure communication handling
 - Connection pool management
 
 ### UIManager
+
 **Purpose**: User interface management and presentation
 **Responsibilities**:
+
 - Main dashboard interface
 - Real-time data visualization
 - Session control interface
@@ -163,6 +179,7 @@ class PCControllerApp:
 ## Data Processing Pipeline
 
 ### GSR Data Processing
+
 ```python
 class GSRDataProcessor:
     def __init__(self):
@@ -192,6 +209,7 @@ class GSRDataProcessor:
 ```
 
 ### Thermal Data Processing
+
 ```python
 class ThermalDataProcessor:
     def __init__(self):
@@ -220,6 +238,7 @@ class ThermalDataProcessor:
 ```
 
 ### Synchronization Engine
+
 ```python
 class SynchronizationEngine:
     def __init__(self):
@@ -255,6 +274,7 @@ class SynchronizationEngine:
 ## API Reference
 
 ### Session Management
+
 ```python
 # Create new recording session
 async def create_session(config: SessionConfig) -> Session:
@@ -278,6 +298,7 @@ async def list_active_sessions() -> List[SessionInfo]:
 ```
 
 ### Device Management
+
 ```python
 # Discover available devices
 async def discover_devices() -> List[DeviceInfo]:
@@ -301,6 +322,7 @@ async def configure_device(device_id: str, config: DeviceConfig) -> ConfigResult
 ```
 
 ### Data Processing
+
 ```python
 # Process GSR data
 async def process_gsr_data(
@@ -332,6 +354,7 @@ async def export_data(
 ```
 
 ### Real-time Monitoring
+
 ```python
 # Get real-time GSR data
 async def get_realtime_gsr() -> AsyncIterator[GSRDataPoint]:
@@ -353,6 +376,7 @@ async def get_data_quality() -> DataQualityMetrics:
 ## Data Structures
 
 ### SessionConfig
+
 ```python
 @dataclass
 class SessionConfig:
@@ -368,6 +392,7 @@ class SessionConfig:
 ```
 
 ### DeviceConfig
+
 ```python
 @dataclass
 class DeviceConfig:
@@ -380,6 +405,7 @@ class DeviceConfig:
 ```
 
 ### ProcessedGSRData
+
 ```python
 @dataclass
 class ProcessedGSRData:
@@ -395,6 +421,7 @@ class ProcessedGSRData:
 ```
 
 ### ProcessedThermalData
+
 ```python
 @dataclass
 class ProcessedThermalData:
@@ -409,6 +436,7 @@ class ProcessedThermalData:
 ```
 
 ### SynchronizedDataPoint
+
 ```python
 @dataclass
 class SynchronizedDataPoint:
@@ -423,6 +451,7 @@ class SynchronizedDataPoint:
 ## Configuration Management
 
 ### Application Configuration
+
 ```python
 # config/app_config.yaml
 application:
@@ -453,6 +482,7 @@ storage:
 ```
 
 ### Device Configuration Templates
+
 ```python
 # config/device_templates.yaml
 shimmer_gsr:
@@ -487,6 +517,7 @@ android_device:
 ## Integration Examples
 
 ### Basic Session Management
+
 ```python
 class BasicSessionExample:
     def __init__(self):
@@ -552,6 +583,7 @@ class BasicSessionExample:
 ```
 
 ### Advanced Real-time Processing
+
 ```python
 class AdvancedProcessingExample:
     def __init__(self):
@@ -612,6 +644,7 @@ class AdvancedProcessingExample:
 ```
 
 ### Custom Device Integration
+
 ```python
 class CustomDeviceIntegration:
     def __init__(self):
@@ -675,6 +708,7 @@ class CustomDeviceIntegration:
 ## Testing Framework
 
 ### Unit Tests
+
 ```python
 class PCControllerTest(unittest.TestCase):
     def setUp(self):
@@ -732,6 +766,7 @@ class PCControllerTest(unittest.TestCase):
 ```
 
 ### Integration Tests
+
 ```python
 class PCControllerIntegrationTest(unittest.TestCase):
     async def test_end_to_end_session(self):
@@ -776,6 +811,7 @@ class PCControllerIntegrationTest(unittest.TestCase):
 ## Performance Monitoring
 
 ### System Metrics
+
 ```python
 class PerformanceMonitor:
     def __init__(self):
@@ -827,6 +863,7 @@ class PerformanceMonitor:
 ## Error Handling and Recovery
 
 ### Error Management
+
 ```python
 class PCControllerErrorHandler:
     def __init__(self):
@@ -883,6 +920,7 @@ class PCControllerErrorHandler:
 ## Dependencies
 
 ### Required Libraries
+
 ```python
 # requirements.txt
 asyncio>=3.4.3
@@ -902,6 +940,7 @@ pytest-asyncio>=0.18.0
 ```
 
 ### Optional Dependencies
+
 ```python
 # Optional: Enhanced processing
 opencv-python>=4.5.0
@@ -920,6 +959,7 @@ plotly>=5.5.0
 ## Future Enhancements
 
 ### Planned Features
+
 - **Cloud Integration**: Remote data processing and storage
 - **Machine Learning Pipeline**: Real-time ML inference
 - **Advanced Visualization**: 3D thermal visualization
@@ -927,6 +967,7 @@ plotly>=5.5.0
 - **Real-time Collaboration**: Multi-researcher support
 
 ### Performance Improvements
+
 - **GPU Acceleration**: CUDA-based processing
 - **Distributed Processing**: Multi-machine coordination
 - **Optimized Protocols**: Custom binary protocols
@@ -934,4 +975,5 @@ plotly>=5.5.0
 
 ---
 
-For more information, see the [PC Controller Setup Guide](../PC_CONTROLLER_SETUP.md) and [Advanced Configuration](../ADVANCED_CONFIGURATION.md).
+For more information, see the [PC Controller Setup Guide](../PC_CONTROLLER_SETUP.md)
+and [Advanced Configuration](../ADVANCED_CONFIGURATION.md).

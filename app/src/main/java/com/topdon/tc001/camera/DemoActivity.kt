@@ -8,12 +8,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.topdon.tc001.camera.core.ModeManager
-import kotlinx.coroutines.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-/**
- * Demo activity for testing the clean Camera2System
- * Shows how to use the new clean architecture
- */
 class DemoActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "DemoActivity"
@@ -29,20 +26,20 @@ class DemoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Create simple layout programmatically for demo
         textureView = TextureView(this)
         setContentView(textureView)
 
-        // Initialize clean Camera2 system
         camera2System = Camera2System(this, textureView)
         setupCallbacks()
 
-        // Initialize camera
         lifecycleScope.launch {
             if (camera2System.initialize()) {
                 Log.i(TAG, "Camera2System initialized successfully")
                 val caps = camera2System.getDeviceCaps()
-                Log.i(TAG, "Device capabilities: RAW=${caps?.supportsRaw}, 4K60=${caps?.supports4k60}")
+                Log.i(
+                    TAG,
+                    "Device capabilities: RAW=${caps?.supportsRaw}, 4K60=${caps?.supports4k60}"
+                )
             } else {
                 Log.e(TAG, "Failed to initialize Camera2System")
             }
@@ -83,15 +80,13 @@ class DemoActivity : AppCompatActivity() {
         }
     }
 
-    // Demo method to test mode switching
     private fun testModeSwitch() {
         lifecycleScope.launch {
-            // Test RAW mode
+
             if (camera2System.switchMode(ModeManager.CameraMode.RAW_50MP)) {
                 Log.i(TAG, "Switched to RAW mode")
                 delay(2000)
 
-                // Test recording
                 if (camera2System.startRecording("demo_session_raw")) {
                     delay(5000) // Record for 5 seconds
                     camera2System.stopRecording()
@@ -100,12 +95,10 @@ class DemoActivity : AppCompatActivity() {
 
             delay(1000)
 
-            // Test Video mode
             if (camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)) {
                 Log.i(TAG, "Switched to Video mode")
                 delay(2000)
 
-                // Test recording
                 if (camera2System.startRecording("demo_session_video")) {
                     delay(5000) // Record for 5 seconds
                     camera2System.stopRecording()
@@ -116,7 +109,7 @@ class DemoActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Start demo after a delay
+
         lifecycleScope.launch {
             delay(3000) // Wait for camera to initialize
             testModeSwitch()

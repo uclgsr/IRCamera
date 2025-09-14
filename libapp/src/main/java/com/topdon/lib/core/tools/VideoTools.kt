@@ -3,9 +3,11 @@ package com.topdon.lib.core.tools
 import android.media.MediaMetadataRetriever
 
 object VideoTools {
-    // 获取视频时长
+
     fun getLocalVideoDuration(videoPath: String): Long {
-        return if (videoPath.uppercase().endsWith(".MP4") || videoPath.uppercase().endsWith(".AVI")) {
+        return if (videoPath.uppercase().endsWith(".MP4") || videoPath.uppercase()
+                .endsWith(".AVI")
+        ) {
             try {
                 val mmr = MediaMetadataRetriever()
                 mmr.setDataSource(videoPath)

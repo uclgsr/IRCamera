@@ -5,13 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.databinding.ItemGsrDataRowBinding
 
-/**
- * Adapter for displaying GSR data rows in detailed view
- */
 class GSRDataRowAdapter(
     private val dataRows: List<GSRDataViewActivity.GSRDataRow>,
 ) : RecyclerView.Adapter<GSRDataRowAdapter.ViewHolder>() {
-    class ViewHolder(private val binding: ItemGsrDataRowBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemGsrDataRowBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         val rowNumber = binding.rowNumber
         val timestamp = binding.timestamp
         val gsrValue = binding.gsrValue
@@ -45,5 +43,6 @@ class GSRDataRowAdapter(
         holder.conductance.text = "%.6f S".format(dataRow.conductance)
     }
 
-    override fun getItemCount() = minOf(dataRows.size, 100) // Limit to first 100 rows for performance
+    override fun getItemCount() =
+        minOf(dataRows.size, 100) // Limit to first 100 rows for performance
 }

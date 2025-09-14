@@ -1,12 +1,15 @@
 # Phase 1: Permissions Handling Implementation
 
-This directory contains the comprehensive permissions handling system for the Multi-Modal Physiological Sensing Platform, specifically designed for Samsung S22 (Android 12+) multi-sensor recording.
+This directory contains the comprehensive permissions handling system for the Multi-Modal
+Physiological Sensing Platform, specifically designed for Samsung S22 (Android 12+) multi-sensor
+recording.
 
 ## Overview
 
 The permissions system ensures all necessary runtime permissions are obtained for:
+
 - **RGB Camera & Audio**: Video recording with sound
-- **Bluetooth & Location**: Shimmer3 GSR sensor BLE scanning 
+- **Bluetooth & Location**: Shimmer3 GSR sensor BLE scanning
 - **USB**: Topdon thermal camera hot-plug support
 - **Storage**: File management (legacy and Android 13+ scoped media)
 - **Foreground Services & Notifications**: Background recording operation
@@ -15,7 +18,9 @@ The permissions system ensures all necessary runtime permissions are obtained fo
 ## Key Components
 
 ### PermissionController.kt
+
 Centralized permission management class that handles:
+
 - Android version-aware permission requests
 - USB device permission handling
 - Battery optimization exemption
@@ -23,6 +28,7 @@ Centralized permission management class that handles:
 - Graceful handling of permission denials
 
 ### PermissionUtils.kt
+
 Utility functions for permission validation and checking.
 
 ## Usage Example
@@ -33,12 +39,10 @@ class MyActivity : FragmentActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        // Initialize permission controller
+
         permissionController = PermissionController(this)
         permissionController.initialize()
-        
-        // Check and request permissions when needed
+
         checkAndRequestPermissions()
     }
     
@@ -46,15 +50,15 @@ class MyActivity : FragmentActivity() {
         if (!permissionController.hasAllRequiredPermissions()) {
             permissionController.requestAllPermissions { allGranted, deniedPermissions ->
                 if (allGranted) {
-                    // All permissions granted - proceed with recording
+
                     startRecording()
                 } else {
-                    // Some permissions denied - show appropriate message
+
                     handleMissingPermissions(deniedPermissions)
                 }
             }
         } else {
-            // All permissions already available
+
             startRecording()
         }
     }
@@ -69,13 +73,13 @@ class MyActivity : FragmentActivity() {
     }
     
     private fun onUsbDeviceAttached(device: UsbDevice) {
-        // Handle USB thermal camera permission
+
         permissionController.requestUsbPermission(device) { granted, device ->
             if (granted) {
-                // USB permission granted - initialize thermal camera
+
                 initializeThermalCamera(device)
             } else {
-                // USB permission denied - show error
+
                 showUsbPermissionError()
             }
         }
@@ -86,50 +90,61 @@ class MyActivity : FragmentActivity() {
 ## Supported Permissions
 
 ### Camera & Audio
+
 - `CAMERA` - RGB video recording
 - `RECORD_AUDIO` - Video with sound
 
-### Bluetooth & Location  
+### Bluetooth & Location
+
 - `BLUETOOTH_SCAN` (Android 12+) - BLE device discovery
 - `BLUETOOTH_CONNECT` (Android 12+) - BLE device connections
 - `BLUETOOTH` + `BLUETOOTH_ADMIN` (Legacy) - Older Android BLE support
 - `ACCESS_FINE_LOCATION` / `ACCESS_COARSE_LOCATION` - Required for BLE scanning
 
 ### Storage
+
 - `WRITE_EXTERNAL_STORAGE` + `READ_EXTERNAL_STORAGE` (Legacy)
 - `READ_MEDIA_VIDEO` + `READ_MEDIA_IMAGES` + `READ_MEDIA_VISUAL_USER_SELECTED` (Android 13+)
 
 ### Foreground Services
+
 - `FOREGROUND_SERVICE` - Background operation
 - `FOREGROUND_SERVICE_CAMERA` - Camera background access
-- `FOREGROUND_SERVICE_MICROPHONE` - Microphone background access 
+- `FOREGROUND_SERVICE_MICROPHONE` - Microphone background access
 - `FOREGROUND_SERVICE_MEDIA_PROJECTION` - Media projection background access
 
 ### Notifications & Battery
+
 - `POST_NOTIFICATIONS` (Android 13+) - Recording status notifications
 - `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` - Battery optimization exemption
 
 ## Key Features
 
 ### Android Version Awareness
+
 The system automatically detects Android version and requests appropriate permissions:
+
 - Android 12+: Modern Bluetooth permissions (`BLUETOOTH_SCAN`, `BLUETOOTH_CONNECT`)
 - Android 13+: Scoped media permissions (`READ_MEDIA_*`)
 - Legacy: Older permission models for compatibility
 
 ### USB Hot-Plug Support
+
 Integrates with existing USB permission infrastructure to handle thermal camera connections:
+
 - Detects USB device attachment
 - Requests permission using `UsbManager.requestPermission()`
 - Uses existing `DeviceBroadcastReceiver` infrastructure
 
 ### User Experience
+
 - Clear explanations of why permissions are needed
 - Friendly permission names (e.g., "Camera (for RGB video recording)")
 - Graceful handling of denied permissions
 - Direct links to app settings for manual permission management
 
 ### Error Handling
+
 - Distinguishes between critical and optional permissions
 - Provides fallback options when possible
 - Clear error messages and recovery suggestions
@@ -145,10 +160,12 @@ Integrates with existing USB permission infrastructure to handle thermal camera 
 ## Integration Notes
 
 This permissions system is designed to integrate with:
+
 - `MultiModalRecordingActivity` - Main recording interface
-- `RecordingService` - Background recording service  
+- `RecordingService` - Background recording service
 - `ThermalCameraRecorder` - USB thermal camera handling
 - `GSRSensorRecorder` - Bluetooth GSR sensor handling
 - `RGBCameraRecorder` - Camera video recording
 
-The system follows Android best practices and is designed to be maintainable and extensible for future sensor additions.
+The system follows Android best practices and is designed to be maintainable and extensible for
+future sensor additions.

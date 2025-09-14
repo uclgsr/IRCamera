@@ -5,10 +5,9 @@ Handles loading and management of application configuration from YAML files.
 Provides centralized access to configuration settings across all modules.
 """
 
+import yaml
 from pathlib import Path
 from typing import Any, Dict, Optional
-
-import yaml
 
 try:
     from loguru import logger

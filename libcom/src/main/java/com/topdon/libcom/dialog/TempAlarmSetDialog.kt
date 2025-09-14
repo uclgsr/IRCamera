@@ -30,19 +30,12 @@ class TempAlarmSetDialog(
             field = value.copy()
         }
 
-    /**
-     * 保存点击事件监听.
-     */
     var onSaveListener: ((alarmBean: AlarmBean) -> Unit)? = null
 
-    /**
-     * 用于播放报警铃声.
-     */
     private var mediaPlayer: MediaPlayer? = null
 
     public var hideAlarmMark = false
 
-    // View references - replace synthetic imports
     private lateinit var clRoot: ConstraintLayout
     private lateinit var clClose: ConstraintLayout
     private lateinit var tvSave: TextView
@@ -91,7 +84,7 @@ class TempAlarmSetDialog(
     }
 
     private fun initView() {
-        // Initialize view references
+
         clRoot = findViewById(R.id.cl_root)
         clClose = findViewById(R.id.cl_close)
         tvSave = findViewById(R.id.tv_save)
@@ -180,12 +173,11 @@ class TempAlarmSetDialog(
         clRingtoneSelect.isVisible = !isEdit && switchAlarmRingtone.isChecked
         tvAlarmRingtone.isVisible = !isEdit
         switchAlarmRingtone.isVisible = !isEdit
-        if (hideAlarmMark)
-            {
-                tvAlarmMark.visibility = View.GONE
-                switchAlarmMark.visibility = View.GONE
-                clAlarmMark.visibility = View.GONE
-            }
+        if (hideAlarmMark) {
+            tvAlarmMark.visibility = View.GONE
+            switchAlarmMark.visibility = View.GONE
+            clAlarmMark.visibility = View.GONE
+        }
         switchAlarmMark.isVisible = !isEdit
         if (alarmBean.highTemp == Float.MAX_VALUE) {
             etAlarmHigh.setText("")
@@ -215,13 +207,17 @@ class TempAlarmSetDialog(
         try {
             val inputHigh =
                 if (switchAlarmHigh.isChecked) {
-                    if (etAlarmHigh.text.isNotEmpty()) UnitTools.showToCValue(etAlarmHigh.text.toString().toFloat()) else null
+                    if (etAlarmHigh.text.isNotEmpty()) UnitTools.showToCValue(
+                        etAlarmHigh.text.toString().toFloat()
+                    ) else null
                 } else {
                     null
                 }
             val inputLow =
                 if (switchAlarmLow.isChecked) {
-                    if (etAlarmLow.text.isNotEmpty()) UnitTools.showToCValue(etAlarmLow.text.toString().toFloat()) else null
+                    if (etAlarmLow.text.isNotEmpty()) UnitTools.showToCValue(
+                        etAlarmLow.text.toString().toFloat()
+                    ) else null
                 } else {
                     null
                 }
@@ -239,8 +235,10 @@ class TempAlarmSetDialog(
         var highValue: Float? = null
         var lowValue: Float? = null
         try {
-            highValue = if (inputHigh.isNotEmpty()) UnitTools.showToCValue(inputHigh.toFloat()) else null
-            lowValue = if (inputLow.isNotEmpty()) UnitTools.showToCValue(inputLow.toFloat()) else null
+            highValue =
+                if (inputHigh.isNotEmpty()) UnitTools.showToCValue(inputHigh.toFloat()) else null
+            lowValue =
+                if (inputLow.isNotEmpty()) UnitTools.showToCValue(inputLow.toFloat()) else null
         } catch (_: Exception) {
         }
         alarmBean.highTemp = highValue ?: Float.MAX_VALUE
@@ -255,7 +253,8 @@ class TempAlarmSetDialog(
     }
 
     private fun showColorDialog(isHigh: Boolean) {
-        val colorPickDialog = ColorPickDialog(context, if (isHigh) alarmBean.highColor else alarmBean.lowColor, -1)
+        val colorPickDialog =
+            ColorPickDialog(context, if (isHigh) alarmBean.highColor else alarmBean.lowColor, -1)
         colorPickDialog.onPickListener = { it: Int, i1: Int ->
             if (isHigh) {
                 alarmBean.highColor = it
@@ -311,9 +310,6 @@ class TempAlarmSetDialog(
         }
     }
 
-    /**
-     * 设置当前选中的铃声，null 表示关闭.
-     */
     private fun selectRingtone(position: Int?) {
         try {
             if (mediaPlayer != null) {

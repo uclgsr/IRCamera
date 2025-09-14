@@ -5,10 +5,6 @@ import android.util.Log
 import android.util.Size
 import java.io.File
 
-/**
- * VideoEngine wraps MediaRecorder for 4K video recording
- * Clean architecture component for Samsung S22 4K@60fps support
- */
 class VideoEngine {
     companion object {
         private const val TAG = "VideoEngine"
@@ -18,10 +14,6 @@ class VideoEngine {
     private var isRecording = false
     private var isPrepared = false
 
-    /**
-     * Prepare MediaRecorder for 4K recording
-     * Returns surface for camera session
-     */
     fun prepare(
         outputFile: File,
         videoSize: Size,
@@ -55,7 +47,10 @@ class VideoEngine {
                 }
 
             isPrepared = true
-            Log.i(TAG, "MediaRecorder prepared for ${videoSize.width}x${videoSize.height}@${frameRate}fps")
+            Log.i(
+                TAG,
+                "MediaRecorder prepared for ${videoSize.width}x${videoSize.height}@${frameRate}fps"
+            )
 
             return mediaRecorder?.surface
         } catch (e: Exception) {
@@ -65,9 +60,6 @@ class VideoEngine {
         }
     }
 
-    /**
-     * Start video recording
-     */
     fun start(): Boolean {
         return try {
             if (!isPrepared) {
@@ -85,9 +77,6 @@ class VideoEngine {
         }
     }
 
-    /**
-     * Stop video recording
-     */
     fun stop() {
         try {
             if (isRecording) {
@@ -100,9 +89,6 @@ class VideoEngine {
         }
     }
 
-    /**
-     * Release MediaRecorder resources
-     */
     fun release() {
         try {
             if (isRecording) {
@@ -118,13 +104,7 @@ class VideoEngine {
         }
     }
 
-    /**
-     * Check if currently recording
-     */
     fun isRecording(): Boolean = isRecording
 
-    /**
-     * Get recorder surface (must call prepare() first)
-     */
     fun getSurface(): android.view.Surface? = mediaRecorder?.surface
 }

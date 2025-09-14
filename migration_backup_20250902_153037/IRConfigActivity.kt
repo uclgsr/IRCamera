@@ -40,18 +40,9 @@ import kotlinx.android.synthetic.main.item_ir_config_foot.view.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * 温度修正（即设置环境温度、测温距离、发射率）
- *
- * 需要传递参数：
- * - [ExtraKeyConfig.IS_TC007] - 当前设备是否为 TC007
- */
 @Route(path = RouterConfig.IR_SETTING)
 class IRConfigActivity : BaseActivity(), View.OnClickListener {
-    /**
-     * 从上一界面传递过来的，当前是否为 TC007 设备类型.
-     * true-TC007 false-其他插件式设备
-     */
+
     private var isTC007 = false
 
     private val viewModel: IRConfigViewModel by viewModels()
@@ -64,9 +55,16 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
     override fun initView() {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
-        tv_default_temp_title.text = "${getString(R.string.thermal_config_environment)} ${UnitTools.showConfigC(-10, if (isTC007) 50 else 55)}"
-        tv_default_dis_title.text = "${getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)"
-        tv_default_em_title.text = "${getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
+        tv_default_temp_title.text = "${getString(R.string.thermal_config_environment)} ${
+            UnitTools.showConfigC(
+                -10,
+                if (isTC007) 50 else 55
+            )
+        }"
+        tv_default_dis_title.text =
+            "${getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)"
+        tv_default_em_title.text =
+            "${getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
         tv_default_temp_unit.text = UnitTools.showUnit()
 
         iv_default_selector.setOnClickListener(this)
@@ -80,7 +78,12 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
         }
         adapter.onDeleteListener = {
             TipDialog.Builder(this)
-                .setMessage(getString(R.string.tip_config_delete, "${getString(R.string.thermal_custom_mode)}${it.name}"))
+                .setMessage(
+                    getString(
+                        R.string.tip_config_delete,
+                        "${getString(R.string.thermal_custom_mode)}${it.name}"
+                    )
+                )
                 .setPositiveListener(R.string.app_confirm) {
                     viewModel.deleteConfig(isTC007, it.id)
                 }
@@ -109,8 +112,9 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
         recycler_view.adapter = ConcatAdapter(adapter, ConfigEmAdapter(this))
 
         viewModel.configLiveData.observe(this) {
-            // 先只刷新默认的配置，等操作指引显示完再刷新自定义配置
-            tv_default_temp_value.text = NumberTools.to02(UnitTools.showUnitValue(it.defaultModel.environment))
+
+            tv_default_temp_value.text =
+                NumberTools.to02(UnitTools.showUnitValue(it.defaultModel.environment))
             tv_default_dis_value.text = NumberTools.to02(it.defaultModel.distance)
             tv_default_em_value.text = NumberTools.to02(it.defaultModel.radiation)
             iv_default_selector.isSelected = true
@@ -120,7 +124,11 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
             if (isTC007 && WebSocketProxy.getInstance().isTC007Connect()) {
                 lifecycleScope.launch {
                     val config = ConfigRepository.readConfig(true)
-                    TC007Repository.setIRConfig(config.environment, config.distance, config.radiation)
+                    TC007Repository.setIRConfig(
+                        config.environment,
+                        config.distance,
+                        config.radiation
+                    )
                 }
             }
         }
@@ -130,9 +138,6 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
     override fun initData() {
     }
 
-    /**
-     * 显示操作指引弹框.
-     */
     private fun showGuideDialog(modelBean: ModelBean) {
         if (SharedManager.configGuideStep == 0) { // 已看过或不再提示
             iv_default_selector.isSelected = modelBean.defaultModel.use
@@ -150,10 +155,16 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
         guideDialog.show()
 
         if (Build.VERSION.SDK_INT >= 31) {
-            window?.decorView?.setRenderEffect(RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.MIRROR))
+            window?.decorView?.setRenderEffect(
+                RenderEffect.createBlurEffect(
+                    20f,
+                    20f,
+                    Shader.TileMode.MIRROR
+                )
+            )
         } else {
             lifecycleScope.launch {
-                // 界面刷新需要时间，所以需要等待100毫秒再去刷新背景
+
                 delay(100)
                 guideDialog.blurBg(ll_root)
             }
@@ -165,6 +176,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
             iv_default_selector -> { // 默认模式-选中
                 viewModel.checkConfig(isTC007, 0)
             }
+
             view_default_temp_bg -> { // 默认模式-环境温度
                 IRConfigInputDialog(this, IRConfigInputDialog.Type.TEMP, isTC007)
                     .setInput(UnitTools.showUnitValue(viewModel.configLiveData.value?.defaultModel?.environment!!))
@@ -173,6 +185,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
                     }
                     .show()
             }
+
             view_default_dis_bg -> { // 默认模式-测温距离
                 IRConfigInputDialog(this, IRConfigInputDialog.Type.DIS, isTC007)
                     .setInput(viewModel.configLiveData.value?.defaultModel?.distance)
@@ -181,6 +194,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
                     }
                     .show()
             }
+
             tv_default_em_value -> { // 默认模式-发射率
                 IRConfigInputDialog(this, IRConfigInputDialog.Type.EM, isTC007)
                     .setInput(viewModel.configLiveData.value?.defaultModel?.radiation)
@@ -192,27 +206,16 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    private class ConfigAdapter(val context: Context, val isTC007: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private class ConfigAdapter(val context: Context, val isTC007: Boolean) :
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private val dataList: ArrayList<DataBean> = ArrayList()
 
-        /**
-         * item（一项自定义配置）选中事件监听.
-         */
         var onSelectListener: ((id: Int) -> Unit)? = null
 
-        /**
-         * item（一项自定义配置）删除件监听.
-         */
         var onDeleteListener: ((bean: DataBean) -> Unit)? = null
 
-        /**
-         * item（一项自定义配置）变更事件监听.
-         */
         var onUpdateListener: ((bean: DataBean) -> Unit)? = null
 
-        /**
-         * 添加事件监听.
-         */
         var onAddListener: View.OnClickListener? = null
 
         @SuppressLint("NotifyDataSetChanged")
@@ -231,9 +234,15 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
             viewType: Int,
         ): RecyclerView.ViewHolder {
             return if (viewType == 0) {
-                ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.item_ir_config_config, parent, false))
+                ItemViewHolder(
+                    LayoutInflater.from(context)
+                        .inflate(R.layout.item_ir_config_config, parent, false)
+                )
             } else {
-                FootViewHolder(LayoutInflater.from(context).inflate(R.layout.item_ir_config_foot, parent, false))
+                FootViewHolder(
+                    LayoutInflater.from(context)
+                        .inflate(R.layout.item_ir_config_foot, parent, false)
+                )
             }
         }
 
@@ -244,15 +253,25 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
         ) {
             if (holder is ItemViewHolder) {
                 val dataBean = dataList[position]
-                holder.itemView.tv_name.text = "${context.getString(R.string.thermal_custom_mode)}${dataBean.name}"
+                holder.itemView.tv_name.text =
+                    "${context.getString(R.string.thermal_custom_mode)}${dataBean.name}"
                 holder.itemView.iv_selector.isSelected = dataBean.use
 
-                holder.itemView.tv_temp_title.text = "${context.getString(R.string.thermal_config_environment)} ${UnitTools.showConfigC(-10, if (isTC007) 50 else 55)}"
-                holder.itemView.tv_dis_title.text = "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)"
-                holder.itemView.tv_em_title.text = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
+                holder.itemView.tv_temp_title.text =
+                    "${context.getString(R.string.thermal_config_environment)} ${
+                        UnitTools.showConfigC(
+                            -10,
+                            if (isTC007) 50 else 55
+                        )
+                    }"
+                holder.itemView.tv_dis_title.text =
+                    "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)"
+                holder.itemView.tv_em_title.text =
+                    "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
                 holder.itemView.tv_temp_unit.text = UnitTools.showUnit()
 
-                holder.itemView.tv_temp_value.text = NumberTools.to02(UnitTools.showUnitValue(dataBean.environment))
+                holder.itemView.tv_temp_value.text =
+                    NumberTools.to02(UnitTools.showUnitValue(dataBean.environment))
                 holder.itemView.tv_dis_value.text = NumberTools.to02(dataBean.distance)
                 holder.itemView.tv_em_value.text = NumberTools.to02(dataBean.radiation)
             } else if (holder is FootViewHolder) {
@@ -282,7 +301,8 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
                         IRConfigInputDialog(context, IRConfigInputDialog.Type.TEMP, isTC007)
                             .setInput(UnitTools.showUnitValue(dataList[position].environment))
                             .setConfirmListener {
-                                itemView.tv_temp_value.text = NumberTools.to02(UnitTools.showToCValue(it))
+                                itemView.tv_temp_value.text =
+                                    NumberTools.to02(UnitTools.showToCValue(it))
                                 dataList[position].environment = UnitTools.showToCValue(it)
                                 onUpdateListener?.invoke(dataList[position])
                             }

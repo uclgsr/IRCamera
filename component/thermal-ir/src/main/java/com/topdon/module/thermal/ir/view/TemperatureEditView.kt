@@ -2,7 +2,9 @@ package com.topdon.module.thermal.ir.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Point
+import android.graphics.Rect
 import android.util.AttributeSet
 import com.energy.iruvc.sdkisp.LibIRTemp
 import com.energy.iruvc.utils.Line
@@ -10,13 +12,6 @@ import com.infisense.usbir.utils.TempDrawHelper.Companion.correct
 import com.infisense.usbir.view.ITsTempListener
 import java.lang.ref.WeakReference
 
-/**
-// 2D 编辑 点线面temperature图层 View.
- */
-/**
- * Custom Temperature edit view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 class TemperatureEditView : TemperatureBaseView {
     override var mode: Mode
         get() = super.mode
@@ -36,11 +31,7 @@ class TemperatureEditView : TemperatureBaseView {
             }
         }
 
-/**
- * Temperature list utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
-class TemperatureList {
+    class TemperatureList {
         var pointTemps = arrayListOf<LibIRTemp.TemperatureSampleResult>()
         var lineTemps = arrayListOf<LibIRTemp.TemperatureSampleResult>()
         var rectangleTemps = arrayListOf<LibIRTemp.TemperatureSampleResult>()
@@ -52,9 +43,6 @@ class TemperatureList {
     private var irTempData: ByteArray = byteArrayOf()
     var fullInfo: LibIRTemp.TemperatureSampleResult? = null
 
-    /**
-// 是否display点线面名字.
-     */
     var isShowName = false
         set(value) {
             field = value
@@ -67,15 +55,26 @@ class TemperatureList {
         iTsTempListenerWeakReference = WeakReference(listener)
     }
 
-    private fun getTSTemp(temp: Float): Float = iTsTempListenerWeakReference?.get()?.tempCorrectByTs(temp) ?: temp
+    private fun getTSTemp(temp: Float): Float =
+        iTsTempListenerWeakReference?.get()?.tempCorrectByTs(temp) ?: temp
 
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
@@ -109,21 +108,19 @@ class TemperatureList {
 
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
-// drawing点
+
         for (i in pointList.indices) {
             val result = drawOnePoint(canvas, pointList[i], i) ?: continue
             tempListData.pointTemps[i] = result
         }
         operatePoint?.let { drawOnePoint(canvas, it, pointList.size + 1) }
 
-// drawing线
         for (i in lineList.indices) {
             val result = drawOneLine(canvas, lineList[i], i) ?: continue
             tempListData.lineTemps[i] = result
         }
         operateLine?.let { drawOneLine(canvas, it, lineList.size + 1) }
 
-// drawing面
         for (i in rectList.indices) {
             val result = drawOneRect(canvas, rectList[i], i) ?: continue
             tempListData.rectangleTemps[i] = result
@@ -152,8 +149,8 @@ class TemperatureList {
     }
 
     /**
-// drawing一个十字架、实心圆、temperature文字、点名称.
-// @param point 以 View 尺寸为坐标系的点
+
+
      */
     private fun drawOnePoint(
         canvas: Canvas,
@@ -162,10 +159,15 @@ class TemperatureList {
     ): LibIRTemp.TemperatureSampleResult? {
         val result =
             try {
-                irtemp.getTemperatureOfPoint(Point((point.x / xScale).toInt(), (point.y / yScale).toInt()))
+                irtemp.getTemperatureOfPoint(
+                    Point(
+                        (point.x / xScale).toInt(),
+                        (point.y / yScale).toInt()
+                    )
+                )
             } catch (_: IllegalArgumentException) {
-// 当 View 尺寸变更就会导致 xScale、yScale 变更，而已drawing的点线面坐标还是未变更前的坐标
-// 以 旧坐标及新 scale 去calculationtemperature坐标的话，就有可能超出temperature坐标范围从而抛出异常，这里捕获
+
+
                 return null
             }
         drawPoint(canvas, point)
@@ -178,8 +180,8 @@ class TemperatureList {
     }
 
     /**
-// drawing一条线段、高low temperature实心圆、高low temperaturetemperature文字、线名称.
-// @param line 以 View 尺寸为坐标系的线
+
+
      */
     private fun drawOneLine(
         canvas: Canvas,
@@ -198,10 +200,15 @@ class TemperatureList {
 
         val result =
             try {
-                irtemp.getTemperatureOfLine(Line(Point(tempStartX, tempStartY), Point(tempStopX, tempStopY)))
+                irtemp.getTemperatureOfLine(
+                    Line(
+                        Point(tempStartX, tempStartY),
+                        Point(tempStopX, tempStopY)
+                    )
+                )
             } catch (_: IllegalArgumentException) {
-// 当 View 尺寸变更就会导致 xScale、yScale 变更，而已drawing的点线面坐标还是未变更前的坐标
-// 以 旧坐标及新 scale 去calculationtemperature坐标的话，就有可能超出temperature坐标范围从而抛出异常，这里捕获
+
+
                 return null
             }
         val maxX: Int = (result.maxTemperaturePixel.x * xScale).correct(width)
@@ -220,8 +227,8 @@ class TemperatureList {
     }
 
     /**
-// drawing一个矩形、高low temperature实心圆、高low temperaturetemperature文字、面名称.
-// @param rect 以 View 尺寸为坐标系的线
+
+
      */
     private fun drawOneRect(
         canvas: Canvas,
@@ -230,7 +237,6 @@ class TemperatureList {
     ): LibIRTemp.TemperatureSampleResult? {
         drawRect(canvas, rect)
 
-// rect 里的data在 touch 事件已processing过了，left < right, top < bottom
         val left = (rect.left / xScale).toInt()
         val top = (rect.top / yScale).toInt()
         val right = (rect.right / xScale).toInt()
@@ -242,8 +248,8 @@ class TemperatureList {
             try {
                 irtemp.getTemperatureOfRect(Rect(left, top, right, bottom))
             } catch (_: IllegalArgumentException) {
-// 当 View 尺寸变更就会导致 xScale、yScale 变更，而已drawing的点线面坐标还是未变更前的坐标
-// 以 旧坐标及新 scale 去calculationtemperature坐标的话，就有可能超出temperature坐标范围从而抛出异常，这里捕获
+
+
                 return null
             }
         val maxX: Int = (result.maxTemperaturePixel.x * xScale).correct(width)

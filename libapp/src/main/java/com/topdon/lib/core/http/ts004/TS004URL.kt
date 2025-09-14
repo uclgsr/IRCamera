@@ -21,15 +21,18 @@ object TS004URL {
     const val GET_RESET_ALL = "$BASE_URL/api/v1/system/resetAll" // restore出厂settings
     const val GET_DELETE_FILE = "$BASE_URL/api/v1/system/deleteFile" // 删除照片视频文件
     const val GET_UPGRADE_STATUS = "$BASE_URL/api/v1/system/getUpgradeStatus" // 获取固件升级state
-    const val SET_TEMPERATURE_STATE = "$BASE_URL/api/v1/system/setTemperatureState" // settingstemperature measurement开关
+    const val SET_TEMPERATURE_STATE =
+        "$BASE_URL/api/v1/system/setTemperatureState" // settingstemperature measurement开关
     const val GET_FILE_LIST = "$BASE_URL/api/v1/system/getFileList" // 获取文件list
     const val SET_DATE_TIME = "$BASE_URL/api/v1/system/setDateTime" // settings时钟
-    const val GET_SEND_UPGRADE_FILE_START = "$BASE_URL/api/v1/system/sendUpgradeFileStart" // 固件升级数据传输开始
+    const val GET_SEND_UPGRADE_FILE_START =
+        "$BASE_URL/api/v1/system/sendUpgradeFileStart" // 固件升级数据传输开始
     const val GET_SEND_UPGRADE_FILE_DATA = "$BASE_URL/api/v1/system/sendUpgradeFileData" // 固件升级数据传输
     const val GET_SEND_UPGRADE_FILE_END = "$BASE_URL/api/v1/system/sendUpgradeFileEnd" // 固件升级数据传输结束
     const val GET_REMOTE_UPGRADE = "$BASE_URL/api/v1/system/remoteUpgrade" // 固件升级
     const val SET_WIFI_AP_ON_OFF = "$BASE_URL/api/v1/system/setWifiAPOnOff" // settingswifi on/off
-    const val GET_WIFI_AP_CONFIG = "$BASE_URL/api/v1/system/getWifiAPConfig" // 获取wificonfiguration信息
+    const val GET_WIFI_AP_CONFIG =
+        "$BASE_URL/api/v1/system/getWifiAPConfig" // 获取wificonfiguration信息
     const val GET_FILE_COUNT = "$BASE_URL/api/v1/system/getFileCount" // 获取文件quantity
     const val SET_POWER_ACTION = "$BASE_URL/api/v1/system/setPowerAction" // settings电源state
     const val SET_DO_NUC = "$BASE_URL/api/v1/system/doNuc" // nuc

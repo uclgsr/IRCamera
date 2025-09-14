@@ -7,112 +7,79 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
-import com.topdon.tc001.sensors.shimmer.model.ShimmerDeviceInfo
 import com.topdon.tc001.sensors.shimmer.model.ConnectionQuality
+import com.topdon.tc001.sensors.shimmer.model.ShimmerDeviceInfo
 
-/**
- * **Shimmer Device RecyclerView Adapter**
- * 
- * Displays discovered Shimmer3 GSR+ devices with comprehensive information for selection.
- * 
- * ## Display Features:
- * - Device name and MAC address
- * - Signal strength with color coding
- * - Device type and pairing status
- * - Connection quality indicators
- * - Priority ranking for optimal selection
- * 
- * @param onDeviceSelected Callback when user selects a device
- * 
- * @author IRCamera Shimmer Integration Team
- */
 class ShimmerDeviceAdapter(
     private val onDeviceSelected: (ShimmerDeviceInfo) -> Unit
 ) : RecyclerView.Adapter<ShimmerDeviceAdapter.DeviceViewHolder>() {
-    
+
     private var devices = listOf<ShimmerDeviceInfo>()
     private var selectedDeviceMAC: String? = null
-    
-    /**
-     * ViewHolder for Shimmer device items
-     */
+
     inner class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        
+
         private val deviceNameText: TextView = itemView.findViewById(R.id.deviceNameText)
-        private val deviceMacText: TextView = itemView.findViewById(R.id.deviceMacText)  
+        private val deviceMacText: TextView = itemView.findViewById(R.id.deviceMacText)
         private val deviceTypeText: TextView = itemView.findViewById(R.id.deviceTypeText)
         private val signalStrengthText: TextView = itemView.findViewById(R.id.signalStrengthText)
-        private val connectionStatusText: TextView = itemView.findViewById(R.id.connectionStatusText)
+        private val connectionStatusText: TextView =
+            itemView.findViewById(R.id.connectionStatusText)
         private val priorityText: TextView = itemView.findViewById(R.id.priorityText)
-        
+
         fun bind(device: ShimmerDeviceInfo) {
-            // Device identification
+
             deviceNameText.text = device.name
             deviceMacText.text = device.macAddress
             deviceTypeText.text = device.deviceType
-            
-            // Signal strength with color coding
+
             val quality = ConnectionQuality.fromRSSI(device.rssi)
             signalStrengthText.text = "${device.rssi} dBm (${quality.displayName})"
             signalStrengthText.setTextColor(Color.parseColor(quality.color))
-            
-            // Connection status
+
             connectionStatusText.text = device.getDetailedStatus()
-            
-            // Priority indicator
+
             priorityText.text = "Priority: ${device.priority}"
-            
-            // Selection highlighting
+
             val isSelected = device.macAddress == selectedDeviceMAC
             itemView.setBackgroundColor(
                 if (isSelected) Color.parseColor("#E3F2FD") else Color.TRANSPARENT
             )
-            
-            // Click listener
+
             itemView.setOnClickListener {
                 selectedDeviceMAC = device.macAddress
                 notifyDataSetChanged()
                 onDeviceSelected(device)
             }
-            
-            // Enable/disable based on connection readiness
+
             itemView.alpha = if (device.isReadyForConnection()) 1.0f else 0.6f
             itemView.isClickable = device.isReadyForConnection()
         }
     }
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_shimmer_device_detailed, parent, false)
         return DeviceViewHolder(view)
     }
-    
+
     override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
         holder.bind(devices[position])
     }
-    
+
     override fun getItemCount(): Int = devices.size
-    
-    /**
-     * Update the device list
-     */
+
     fun updateDevices(newDevices: List<ShimmerDeviceInfo>) {
         devices = newDevices
         notifyDataSetChanged()
     }
-    
-    /**
-     * Clear all devices
-     */
+
     fun clearDevices() {
         devices = emptyList()
         selectedDeviceMAC = null
         notifyDataSetChanged()
     }
-    
-    /**
-     * Get selected device
-     */
+
     fun getSelectedDevice(): ShimmerDeviceInfo? {
         return devices.find { it.macAddress == selectedDeviceMAC }
     }

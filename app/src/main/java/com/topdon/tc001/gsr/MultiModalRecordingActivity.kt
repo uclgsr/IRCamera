@@ -1,22 +1,21 @@
 package com.topdon.tc001.gsr
 
-import android.Manifest
+// Enhanced unified BLE integration for comprehensive cross-modal coordination
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMultiModalRecordingBinding
+import com.topdon.ble.UnifiedBleManager
+import com.topdon.ble.UnifiedDevice
 import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.model.SyncMark
@@ -28,16 +27,8 @@ import com.topdon.tc001.camera.RGBCameraRecorder
 import com.topdon.tc001.permissions.PermissionController
 import kotlinx.coroutines.launch
 
-// Enhanced unified BLE integration for comprehensive cross-modal coordination
-import com.topdon.ble.UnifiedBleManager
-import com.topdon.ble.UnifiedDevice
-
 // Note: EnhancedRecordingService is referenced with full package name since it's in a different module
 
-/**
- * Full multi-modal recording interface with GSR and thermal coordination
- * Navigation: Use NavigationManager.getInstance().build(RouterConfig.GSR_MULTI_MODAL).navigation(context)
- */
 class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecordingBinding>() {
     companion object {
         private const val TAG = "MultiModalActivity"
@@ -81,7 +72,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     // Enhanced service integration
     private var enhancedRecordingService: com.topdon.gsr.service.EnhancedRecordingService? = null
     private var isServiceBound = false
-    private var discoveredDevices = mutableListOf<com.topdon.gsr.network.NetworkClient.ControllerInfo>()
+    private var discoveredDevices =
+        mutableListOf<com.topdon.gsr.network.NetworkClient.ControllerInfo>()
 
     // UI update timer
     private var uiUpdateJob: kotlinx.coroutines.Job? = null
@@ -95,7 +87,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 name: ComponentName?,
                 service: IBinder?,
             ) {
-                val binder = service as? com.topdon.gsr.service.EnhancedRecordingService.EnhancedRecordingBinder
+                val binder =
+                    service as? com.topdon.gsr.service.EnhancedRecordingService.EnhancedRecordingBinder
                 enhancedRecordingService = binder?.getService()
                 isServiceBound = true
                 Log.i(TAG, "Enhanced recording service connected")
@@ -130,7 +123,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                     isRecording = false
                     currentSession = null
                     updateUI()
-                    binding.statusText.text = "Recording completed. ${sessionInfo.sampleCount} samples recorded."
+                    binding.statusText.text =
+                        "Recording completed. ${sessionInfo.sampleCount} samples recorded."
                     binding.progressBar.visibility = View.GONE
 
                     Toast.makeText(
@@ -169,7 +163,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                         binding.dataText.text = "Samples: $sampleCount"
                         currentSession?.let { session ->
                             val duration = (System.currentTimeMillis() - session.startTime) / 1000
-                            binding.dataText.text = "${binding.dataText.text} | Duration: ${duration}s"
+                            binding.dataText.text =
+                                "${binding.dataText.text} | Duration: ${duration}s"
                         }
                     }
                 }
@@ -319,7 +314,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                                         alpha = 1.0f
                                     }
 
-                                val frameLayout = findViewById<android.widget.FrameLayout>(android.R.id.content)
+                                val frameLayout =
+                                    findViewById<android.widget.FrameLayout>(android.R.id.content)
                                 frameLayout.addView(
                                     overlay,
                                     android.widget.FrameLayout.LayoutParams(
@@ -351,7 +347,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                         // Additional methods for enhanced NetworkClient
                         override fun onTimeSynchronized(offsetNanoseconds: Long) {
                             runOnUiThread {
-                                binding.statusText.text = "Time synchronized with PC Controller (offset: ${offsetNanoseconds}ns)"
+                                binding.statusText.text =
+                                    "Time synchronized with PC Controller (offset: ${offsetNanoseconds}ns)"
                             }
                         }
 
@@ -385,8 +382,13 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             success: Boolean,
                         ) {
                             runOnUiThread {
-                                val message = if (success) "Device pairing successful" else "Device pairing failed"
-                                Toast.makeText(this@MultiModalRecordingActivity, message, Toast.LENGTH_SHORT).show()
+                                val message =
+                                    if (success) "Device pairing successful" else "Device pairing failed"
+                                Toast.makeText(
+                                    this@MultiModalRecordingActivity,
+                                    message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
 
@@ -420,12 +422,14 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         if (!permissionController.hasAllRequiredPermissions()) {
             permissionController.requestAllPermissions { allGranted, deniedPermissions ->
                 if (allGranted) {
-                    binding.statusText.text = "All permissions granted. Multi-sensor recording ready."
+                    binding.statusText.text =
+                        "All permissions granted. Multi-sensor recording ready."
                     Log.i(TAG, "All permissions granted successfully")
                 } else {
                     val permissionNames = permissionController.getPermissionNames(deniedPermissions)
-                    binding.statusText.text = "Some permissions denied. Limited functionality available."
-                    
+                    binding.statusText.text =
+                        "Some permissions denied. Limited functionality available."
+
                     Log.w(TAG, "Some permissions denied: ${deniedPermissions.joinToString(", ")}")
                     Toast.makeText(
                         this,
@@ -476,21 +480,29 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         // Request battery optimization exemption for reliable background recording
         permissionController.requestBatteryOptimizationExemption { exemptionGranted ->
             if (!exemptionGranted) {
-                Log.w(TAG, "Battery optimization exemption not granted - recording may be interrupted")
-                Toast.makeText(this, "Warning: Battery optimization not disabled. Recording may be interrupted.", Toast.LENGTH_LONG).show()
+                Log.w(
+                    TAG,
+                    "Battery optimization exemption not granted - recording may be interrupted"
+                )
+                Toast.makeText(
+                    this,
+                    "Warning: Battery optimization not disabled. Recording may be interrupted.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
-            
+
             // Continue with recording start
             proceedWithRecordingStart()
         }
     }
-    
+
     private fun proceedWithRecordingStart() {
         val sessionId =
             binding.participantIdInput.text.toString().trim().ifEmpty {
                 TimeUtil.generateSessionId("MultiModal")
             }
-        val participantId = binding.participantIdInput.text.toString().trim().takeIf { it.isNotEmpty() }
+        val participantId =
+            binding.participantIdInput.text.toString().trim().takeIf { it.isNotEmpty() }
 
         // Start RGB camera recording if enabled
         if (binding.enableVideoSwitch.isChecked) {
@@ -531,7 +543,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 binding.startButton.isEnabled = true
                 binding.startButton.text = "Start Recording"
                 binding.statusText.text = "Failed to start camera recording"
-                Toast.makeText(this, "Failed to start RGB camera recording", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Failed to start RGB camera recording", Toast.LENGTH_LONG)
+                    .show()
                 return
             }
         }
@@ -575,7 +588,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                         binding.startButton.isEnabled = true
                         binding.startButton.text = "Start Recording"
                         binding.statusText.text = "Failed to start GSR recording"
-                        Toast.makeText(this@MultiModalRecordingActivity, "Failed to start GSR recording", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this@MultiModalRecordingActivity,
+                            "Failed to start GSR recording",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             } catch (e: Exception) {
@@ -585,7 +602,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                     binding.startButton.isEnabled = true
                     binding.startButton.text = "Start Recording"
                     binding.statusText.text = "Error starting recording: ${e.message}"
-                    Toast.makeText(this@MultiModalRecordingActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@MultiModalRecordingActivity,
+                        "Error: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -653,7 +674,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
                     // Stop camera if GSR fails
                     rgbCameraRecorder?.stopRecording()
-                    Toast.makeText(this@MultiModalRecordingActivity, "Failed to start GSR recording", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@MultiModalRecordingActivity,
+                        "Failed to start GSR recording",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             } catch (e: Exception) {
                 // Reset guard flags on exception
@@ -667,7 +692,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
                 Log.e(TAG, "Error starting recording", e)
                 rgbCameraRecorder?.stopRecording()
-                Toast.makeText(this@MultiModalRecordingActivity, "Error starting recording: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this@MultiModalRecordingActivity,
+                    "Error starting recording: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -764,14 +793,17 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 openGallery()
                 true
             }
+
             R.id.action_settings -> {
                 openSettings()
                 true
             }
+
             R.id.action_session_manager -> {
                 openSessionManager()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -817,7 +849,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 val totalItems = queueSizes.values.sum()
                 val queueText =
                     if (queueSizes.isNotEmpty()) {
-                        val details = queueSizes.entries.joinToString(", ") { "${it.key}: ${it.value}" }
+                        val details =
+                            queueSizes.entries.joinToString(", ") { "${it.key}: ${it.value}" }
                         "Streaming Queue: $totalItems items ($details)"
                     } else {
                         "Streaming Queue: 0 items"
@@ -832,7 +865,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 if (client.isConnected()) {
                     val latency = client.getLatencyMs()
                     val throughput = client.getThroughputKBps()
-                    binding.networkMetricsText.text = "Latency: $latency ms | Throughput: $throughput KB/s"
+                    binding.networkMetricsText.text =
+                        "Latency: $latency ms | Throughput: $throughput KB/s"
                 } else {
                     binding.networkMetricsText.text = "Latency: -- ms | Throughput: -- KB/s"
                 }
@@ -862,8 +896,12 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     // Connect to selected device
     private fun connectToSelectedDevice() {
         if (discoveredDevices.isNotEmpty()) {
-            val selectedDevice = discoveredDevices.first() // For simplicity, connect to first device
-            networkClient?.connectToController(selectedDevice.ipAddress, selectedDevice.port) { success ->
+            val selectedDevice =
+                discoveredDevices.first() // For simplicity, connect to first device
+            networkClient?.connectToController(
+                selectedDevice.ipAddress,
+                selectedDevice.port
+            ) { success ->
                 runOnUiThread {
                     if (success) {
                         Toast.makeText(this, "Connection successful", Toast.LENGTH_SHORT).show()
@@ -883,7 +921,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to bind enhanced recording service", e)
-            Toast.makeText(this, "Enhanced recording service not available", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Enhanced recording service not available", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 

@@ -40,11 +40,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 
-/**
- * 首页 Fragment.
- *
- * Created by LCG on 2024/4/18.
- */
 @SuppressLint("NotifyDataSetChanged")
 class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickListener {
     private lateinit var adapter: MyAdapter
@@ -56,7 +51,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         binding.tvConnectDevice.setOnClickListener(this)
         binding.ivAdd.setOnClickListener(this)
 
-        // GSR Multi-modal Recording Access (long press on titles for research features)
         binding.tvNoDeviceTitle.setOnLongClickListener {
             showGSROptions()
             true
@@ -66,7 +60,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             true
         }
 
-        // Add prominent GSR access button for research features
         binding.fabGsrRecording.setOnClickListener {
             showGSROptions()
         }
@@ -82,9 +75,11 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         .withBoolean(ExtraKeyConfig.IS_TC007, false)
                         .navigation(requireContext())
                 }
+
                 ConnectType.TS004 -> {
                     if (WebSocketProxy.getInstance().isTS004Connect()) {
-                        NavigationManager.getInstance().build(RouterConfig.IR_MONOCULAR).navigation(requireContext())
+                        NavigationManager.getInstance().build(RouterConfig.IR_MONOCULAR)
+                            .navigation(requireContext())
                     } else {
                         NavigationManager.getInstance()
                             .build(RouterConfig.IR_DEVICE_ADD)
@@ -92,6 +87,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                             .navigation(requireContext())
                     }
                 }
+
                 ConnectType.TC007 -> {
                     NavigationManager.getInstance()
                         .build(RouterConfig.IR_MAIN)
@@ -139,7 +135,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-                    // 要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(true)
                     }
@@ -155,7 +151,8 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
     }
 
     private fun refresh() {
-        val hasAnyDevice = SharedManager.hasTcLine || SharedManager.hasTS004 || SharedManager.hasTC007
+        val hasAnyDevice =
+            SharedManager.hasTcLine || SharedManager.hasTS004 || SharedManager.hasTC007
         binding.clHasDevice.isVisible = hasAnyDevice
         binding.clNoDevice.isVisible = !hasAnyDevice
         adapter.hasConnectLine = DeviceTools.isConnect(isAutoRequest = false)
@@ -202,9 +199,8 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         when (v) {
             binding.tvConnectDevice, binding.ivAdd -> { // 添加设备
                 startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
-//                NavigationManager.getInstance().build(RoutePath.UsbIrModule.PAGE_IR_MAIN_ACTIVITY)
-//                    .navigation()
-//                startActivity(Intent(requireContext(), IRThermalLiteActivity::class.java))
+
+
             }
         }
     }
@@ -217,43 +213,33 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             }
             try {
                 val battery: JSONObject = JSONObject(event.text).getJSONObject("battery")
-                adapter.tc007Battery = BatteryInfo(battery.getString("status"), battery.getString("remaining"))
+                adapter.tc007Battery =
+                    BatteryInfo(battery.getString("status"), battery.getString("remaining"))
             } catch (_: Exception) {
             }
         }
     }
 
     private class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
-        /**
-         * 有线设备当前是否已连接.
-         */
+
         var hasConnectLine: Boolean = false
             set(value) {
                 field = value
                 notifyItemRangeChanged(0, 3)
             }
 
-        /**
-         * TS004 当前是否已连接.
-         */
         var hasConnectTS004: Boolean = false
             set(value) {
                 field = value
                 notifyItemRangeChanged(0, itemCount)
             }
 
-        /**
-         * TC007 当前是否已连接.
-         */
         var hasConnectTC007: Boolean = false
             set(value) {
                 field = value
                 notifyItemRangeChanged(0, itemCount)
             }
 
-        /**
-         * TC007 设备电池信息.
-         */
         var tc007Battery: BatteryInfo? = null
             set(value) {
                 if (field != value) {
@@ -269,7 +255,10 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             parent: ViewGroup,
             viewType: Int,
         ): ViewHolder {
-            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_device_connect, parent, false))
+            return ViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_device_connect, parent, false)
+            )
         }
 
         @SuppressLint("SetTextI18n")
@@ -309,14 +298,15 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         }
 
         inner class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
-            // View references
+
             private val ivBg: View = rootView.findViewById(R.id.iv_bg)
             private val tvTitle: TextView = rootView.findViewById(R.id.tv_title)
             private val tvDeviceName: TextView = rootView.findViewById(R.id.tv_device_name)
             private val tvDeviceState: TextView = rootView.findViewById(R.id.tv_device_state)
             private val tvBattery: TextView = rootView.findViewById(R.id.tv_battery)
             private val ivImage: ImageView = rootView.findViewById(R.id.iv_image)
-            private val batteryView: com.topdon.lib.ui.widget.BatteryView = rootView.findViewById(R.id.battery_view)
+            private val batteryView: com.topdon.lib.ui.widget.BatteryView =
+                rootView.findViewById(R.id.battery_view)
             private val viewDeviceState: View = rootView.findViewById(R.id.view_device_state)
 
             init {
@@ -329,7 +319,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 ivBg.setOnLongClickListener {
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
-                        // 只有离线设备才能长按删除
+
                         val deviceType = getConnectType(position)
                         when (deviceType) {
                             ConnectType.LINE -> {
@@ -337,11 +327,13 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                                     return@setOnLongClickListener true
                                 }
                             }
+
                             ConnectType.TS004 -> {
                                 if (WebSocketProxy.getInstance().isTS004Connect()) {
                                     return@setOnLongClickListener true
                                 }
                             }
+
                             ConnectType.TC007 -> {
                                 if (WebSocketProxy.getInstance().isTC007Connect()) {
                                     return@setOnLongClickListener true
@@ -373,8 +365,10 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 viewDeviceState.isSelected = hasConnect
                 tvDeviceState.isSelected = hasConnect
                 tvDeviceState.text = if (hasConnect) "online" else "offline"
-                tvBattery.isVisible = type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
-                batteryView.isVisible = type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
+                tvBattery.isVisible =
+                    type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
+                batteryView.isVisible =
+                    type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
 
                 when (type) {
                     ConnectType.LINE -> {
@@ -391,6 +385,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                             ivImage.setImageResource(R.drawable.ic_main_device_line_disconnect)
                         }
                     }
+
                     ConnectType.TS004 -> {
                         tvDeviceName.text = "TS004"
                         if (hasConnect) {
@@ -399,6 +394,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                             ivImage.setImageResource(R.drawable.ic_main_device_ts004_disconnect)
                         }
                     }
+
                     ConnectType.TC007 -> {
                         tvDeviceName.text = "TC007"
                         if (hasConnect) {
@@ -423,43 +419,44 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         } else {
                             ConnectType.TC007
                         }
+
                     1 ->
                         if (SharedManager.hasTcLine) {
                             if (SharedManager.hasTS004) ConnectType.TS004 else ConnectType.TC007
                         } else {
                             ConnectType.TC007
                         }
+
                     else -> ConnectType.TC007
                 }
         }
     }
 
-    /**
-     * Show GSR Multi-modal Recording options for research purposes
-     * Accessed via long-press on app title or GSR FAB
-     */
     private fun showGSROptions() {
         TipDialog.Builder(requireContext())
             .setTitleMessage("GSR Multi-modal Recording")
             .setMessage("Choose recording option:")
             .setPositiveListener("Dual-Mode Camera") {
-                // Launch dual-mode camera interface (RAW 50MP + 4K Video)
+
                 showDualModeCameraOptions()
             }
             .setCancelListener("Quick Recording") {
-                // Launch quick GSR recording interface with direct RecordingController access
+
                 try {
-                    val intent = Intent(requireContext(), Class.forName("com.topdon.tc001.gsr.GSRQuickRecordingActivity"))
+                    val intent = Intent(
+                        requireContext(),
+                        Class.forName("com.topdon.tc001.gsr.GSRQuickRecordingActivity")
+                    )
                     startActivity(intent)
                 } catch (e: ClassNotFoundException) {
-                    // Fallback to full setup
+
                     NavigationManager.getInstance()
                         .build(RouterConfig.GSR_MULTI_MODAL)
                         .navigation(requireContext())
                 }
             }
             .setNeutralListener("GSR Demo") {
-                // Launch simple GSR demo
+
                 NavigationManager.getInstance()
                     .build(RouterConfig.GSR_DEMO)
                     .navigation(requireContext())
@@ -467,58 +464,51 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             .create().show()
     }
 
-    /**
-     * Show dual-mode camera options (RAW 50MP vs 4K Video)
-     * Enhanced for Samsung S22 compatibility
-     */
     private fun showDualModeCameraOptions() {
         TipDialog.Builder(requireContext())
             .setTitleMessage("Dual-Mode Camera System")
             .setMessage("Samsung S22 optimized camera modes with fast switching:")
             .setPositiveListener("RAW 50MP Mode") {
-                // Launch in RAW capture mode
+
                 launchDualModeCamera("RAW_50MP")
             }
             .setCancelListener("4K Video Mode") {
-                // Launch in 4K video mode
+
                 launchDualModeCamera("VIDEO_4K")
             }
             .create().show()
     }
 
-    /**
-     * Launch the enhanced dual-mode camera system
-     */
     private fun launchDualModeCamera(initialMode: String) {
         try {
-            val intent = Intent(requireContext(), com.topdon.tc001.camera.integration.DualModeCameraActivity::class.java)
+            val intent = Intent(
+                requireContext(),
+                com.topdon.tc001.camera.integration.DualModeCameraActivity::class.java
+            )
             intent.putExtra("INITIAL_MODE", initialMode)
             intent.putExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)
             startActivity(intent)
         } catch (e: Exception) {
-            // Fallback to integration example
+
             TToast.show("Launching dual-mode camera integration example...")
-            // Show integration example in a demo activity
+
             showDualModeIntegrationExample()
         }
     }
 
-    /**
-     * Show dual-mode integration example for development/testing
-     */
     private fun showDualModeIntegrationExample() {
-        // This would normally launch the DualModeIntegrationExample
-        // For now, show a placeholder dialog with implementation details
+
+
         TipDialog.Builder(requireContext())
             .setTitleMessage("Dual-Mode Camera Integration")
             .setMessage(
                 "Enhanced RGBCameraRecorder with:\n\n" +
-                    "• RAW 50MP capture at ~15fps\n" +
-                    "• 4K video at 30/60fps\n" +
-                    "• Fast session switching (~200ms)\n" +
-                    "• Samsung S22 optimizations\n" +
-                    "• CameraModeSelector UI\n\n" +
-                    "Implementation ready for integration.",
+                        "• RAW 50MP capture at ~15fps\n" +
+                        "• 4K video at 30/60fps\n" +
+                        "• Fast session switching (~200ms)\n" +
+                        "• Samsung S22 optimizations\n" +
+                        "• CameraModeSelector UI\n\n" +
+                        "Implementation ready for integration.",
             )
             .setPositiveListener("Got it") { }
             .create().show()

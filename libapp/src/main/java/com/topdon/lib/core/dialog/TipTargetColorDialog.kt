@@ -5,7 +5,8 @@ import android.content.Context
 import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.ViewGroup.LayoutParams
-import android.widget.*
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.core.R
@@ -14,9 +15,6 @@ import com.topdon.lib.core.bean.ObserveBean
 import com.topdon.lib.core.databinding.DialogTipTargetColorBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-/**
- * 观测-标靶颜色
- */
 class TipTargetColorDialog : Dialog {
     constructor(context: Context) : super(context)
 
@@ -70,7 +68,8 @@ class TipTargetColorDialog : Dialog {
             titleText = binding.tvTitle
             imgClose = binding.imgClose
             recyclerView = binding.recyclerView
-            recyclerView.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
+            recyclerView.layoutManager =
+                LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
             val targetColorAdapter = TargetColorAdapter(context!!, targetColor)
             targetColorAdapter.listener = listener@{ _, item ->
                 targetColor = item
@@ -84,10 +83,10 @@ class TipTargetColorDialog : Dialog {
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    // 竖屏
+
                     0.90
                 } else {
-                    // 横屏
+
                     0.35
                 }
             lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
@@ -96,7 +95,7 @@ class TipTargetColorDialog : Dialog {
             dialog!!.setCanceledOnTouchOutside(canceled)
             imgClose.setOnClickListener {
                 dismiss()
-//              closeEvent?.invoke(targetColor)
+
             }
             dialog!!.setContentView(binding.root)
             return dialog as TipTargetColorDialog

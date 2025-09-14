@@ -40,7 +40,6 @@ class ThermalMinuteEntity {
     @ColumnInfo(name = "create_time")
     var createTime: Long = 0
 
-    // 单位ms
     @ColumnInfo(name = "update_time")
     var updateTime: Long = 0
 

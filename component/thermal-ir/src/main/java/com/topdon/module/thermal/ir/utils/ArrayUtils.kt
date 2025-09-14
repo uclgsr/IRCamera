@@ -1,13 +1,9 @@
 package com.topdon.module.thermal.ir.utils
 
-/**
- * Array utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
 object ArrayUtils {
     /**
-// getmatrixdata里的最大值的序列(在选取区域内)-rotationmatrix
-// @param rotateType 1:rotation90 2:rotation180  3:rotation270
+
+
      */
     fun getMaxIndex(
         data: FloatArray,
@@ -23,8 +19,8 @@ object ArrayUtils {
     }
 
     /**
-// getmatrixdata里的最小值的序列(在选取区域内)-rotationmatrix
-// @param rotateType 1:rotation90 2:rotation180  3:rotation270
+
+
      */
     fun getMinIndex(
         data: FloatArray,
@@ -40,8 +36,8 @@ object ArrayUtils {
     }
 
     /**
-// rotationmatrix
-// @param rotateType 1:rotation90 2:rotation180  3:rotation270
+
+
      */
     fun matrixRotate(
         srcData: FloatArray,
@@ -55,15 +51,12 @@ object ArrayUtils {
         }
     }
 
-    /**
-// getmatrixdata里的最大值的序列(在选取区域内)-原matrix
-     */
     private fun getMaxIndex(
         data: FloatArray,
         selectIndexList: ArrayList<Int> = arrayListOf(),
     ): Int {
         if (selectIndexList.size == 0) {
-// 无指定区域
+
             var maxIndex = 0
             for (i in 1 until data.size - 1) {
                 if (data[i] > data[maxIndex]) {
@@ -86,9 +79,6 @@ object ArrayUtils {
         }
     }
 
-    /**
-// getmatrixdata里的最小值的序列(在选取区域内)-原matrix
-     */
     private fun getMinIndex(
         data: FloatArray,
         selectIndexList: ArrayList<Int> = arrayListOf(),
@@ -123,8 +113,8 @@ object ArrayUtils {
     }
 
     /**
-// getmatrixdata里的最大值的序列(在选取区域内)-rotationmatrix
-// @param rotateType 1:rotation90 2:rotation180  3:rotation270
+
+
      */
     private fun getRotateMaxIndex(
         data: FloatArray,
@@ -157,8 +147,8 @@ object ArrayUtils {
     }
 
     /**
-// getmatrixdata里的最小值的序列(在选取区域内)-rotationmatrix
-// @param rotateType 1:rotation90 2:rotation180  3:rotation270
+
+
      */
     private fun getRotateMinIndex(
         data: FloatArray,
@@ -196,9 +186,6 @@ object ArrayUtils {
         }
     }
 
-    /**
-// matrix顺时针rotation90°
-     */
     private fun matrixRotate90(srcData: FloatArray): FloatArray {
         val row = 192
         val column = 256
@@ -223,9 +210,6 @@ object ArrayUtils {
         return data
     }
 
-    /**
-// matrix顺时针rotation180°
-     */
     private fun matrixRotate180(srcData: FloatArray): FloatArray {
         val row = 192
         val column = 256
@@ -251,8 +235,8 @@ object ArrayUtils {
     }
 
     /**
-// matrix顺时针rotation270°
-// getrotation后的arraydata
+
+
      */
     private fun matrixRotate270(srcData: FloatArray): FloatArray {
         val row = 192

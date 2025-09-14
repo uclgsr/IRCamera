@@ -32,12 +32,6 @@ import com.topdon.lib.ui.R;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * 单项滚轮控件
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/6 23:13
- */
 @SuppressWarnings("unused")
 public class OptionWheelLayout extends BaseWheelLayout {
     private WheelView wheelView;

@@ -19,11 +19,6 @@ import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * GSR Device Management Activity - UI parity with IR camera device management
- * Provides comprehensive device discovery, connection, and configuration interface
- * following the same patterns as thermal camera (Topdon TC001) management
- */
 class GSRDeviceManagementActivity :
     BaseBindingActivity<ActivityGsrDeviceManagementBinding>(),
     View.OnClickListener {
@@ -62,9 +57,6 @@ class GSRDeviceManagementActivity :
         loadSavedDevices()
     }
 
-    /**
-     * Initialize UI components and event listeners - matching IR camera pattern
-     */
     private fun initializeUI() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GSR Device Management"
@@ -85,9 +77,6 @@ class GSRDeviceManagementActivity :
         updateDeviceListState()
     }
 
-    /**
-     * Setup permission handling system
-     */
     private fun setupPermissionHandling() {
         permissionLauncher =
             registerForActivityResult(
@@ -108,9 +97,6 @@ class GSRDeviceManagementActivity :
             }
     }
 
-    /**
-     * Initialize GSR sensor recorder and components
-     */
     private fun initializeGSRComponents() {
         lifecycleScope.launch {
             try {
@@ -131,9 +117,6 @@ class GSRDeviceManagementActivity :
         }
     }
 
-    /**
-     * Setup device list RecyclerView - matching IR camera device list pattern
-     */
     private fun setupDeviceListRecycler() {
         deviceAdapter =
             GSRDeviceAdapter(discoveredDevices) { device ->
@@ -147,9 +130,6 @@ class GSRDeviceManagementActivity :
         }
     }
 
-    /**
-     * Load previously discovered and saved devices
-     */
     private fun loadSavedDevices() {
         try {
             val savedDevicesJson = prefs.getString("saved_devices", "[]")
@@ -169,9 +149,6 @@ class GSRDeviceManagementActivity :
         }
     }
 
-    /**
-     * Start device scanning - matches IR camera discovery pattern
-     */
     private fun startDeviceScan() {
         if (!BluetoothPermissionUtils.hasBleScanningPermissions(this)) {
             requestRequiredPermissions {
@@ -233,9 +210,6 @@ class GSRDeviceManagementActivity :
         }
     }
 
-    /**
-     * Stop device scanning if in progress
-     */
     private fun stopDeviceScan() {
         if (!isScanning) return
 
@@ -245,9 +219,6 @@ class GSRDeviceManagementActivity :
         showToast("Device scan stopped")
     }
 
-    /**
-     * Refresh device list and connection status
-     */
     private fun refreshDeviceList() {
         lifecycleScope.launch {
             try {
@@ -274,9 +245,6 @@ class GSRDeviceManagementActivity :
         }
     }
 
-    /**
-     * Connect to selected GSR device - matches IR camera connection pattern
-     */
     private fun connectToDevice(device: GSRDeviceInfo) {
         if (isConnecting) {
             Log.w(TAG, "Connection already in progress")
@@ -327,16 +295,10 @@ class GSRDeviceManagementActivity :
         }
     }
 
-    /**
-     * Open GSR settings activity
-     */
     private fun openGSRSettings() {
         GSRSettingsActivity.startActivity(this)
     }
 
-    /**
-     * Request required permissions with user explanation
-     */
     private fun requestRequiredPermissions(onGranted: (() -> Unit)? = null) {
         val missingPermissions = BluetoothPermissionUtils.getMissingPermissions(this)
 
@@ -350,9 +312,6 @@ class GSRDeviceManagementActivity :
         permissionLauncher.launch(missingPermissions.toTypedArray())
     }
 
-    /**
-     * Update scanning state UI indicators
-     */
     private fun updateScanningState(scanning: Boolean) {
         binding.scanningIndicator.visibility = if (scanning) View.VISIBLE else View.GONE
         binding.scanDevicesButton.isEnabled = !scanning
@@ -360,28 +319,31 @@ class GSRDeviceManagementActivity :
         binding.scanProgressText.text = if (scanning) "Scanning for devices..." else ""
     }
 
-    /**
-     * Update connection status display
-     */
     private fun updateConnectionStatus(status: String) {
         binding.connectionStatusText.text = status
 
         val color =
             when {
-                status.contains("Connected", ignoreCase = true) -> getColor(android.R.color.holo_green_dark)
-                status.contains("Connecting", ignoreCase = true) -> getColor(android.R.color.holo_orange_dark)
+                status.contains(
+                    "Connected",
+                    ignoreCase = true
+                ) -> getColor(android.R.color.holo_green_dark)
+
+                status.contains(
+                    "Connecting",
+                    ignoreCase = true
+                ) -> getColor(android.R.color.holo_orange_dark)
+
                 else -> getColor(android.R.color.holo_red_dark)
             }
         binding.connectionStatusText.setTextColor(color)
     }
 
-    /**
-     * Update device list empty state
-     */
     private fun updateDeviceListState() {
         if (discoveredDevices.isEmpty()) {
             binding.emptyStateText.visibility = View.VISIBLE
-            binding.emptyStateText.text = "No devices found. Tap 'Scan Devices' to discover GSR sensors."
+            binding.emptyStateText.text =
+                "No devices found. Tap 'Scan Devices' to discover GSR sensors."
         } else {
             binding.emptyStateText.visibility = View.GONE
         }
@@ -389,17 +351,11 @@ class GSRDeviceManagementActivity :
         binding.deviceCountText.text = "${discoveredDevices.size} device(s) found"
     }
 
-    /**
-     * Enable or disable device operation buttons based on permissions
-     */
     private fun enableDeviceOperations(enabled: Boolean) {
         binding.scanDevicesButton.isEnabled = enabled && !isScanning
         binding.refreshButton.isEnabled = enabled
     }
 
-    /**
-     * Show permission required dialog
-     */
     private fun showPermissionRequiredDialog() {
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Permissions Required")
@@ -411,9 +367,6 @@ class GSRDeviceManagementActivity :
             .show()
     }
 
-    /**
-     * Utility methods
-     */
     private fun extractMacAddress(deviceName: String): String {
         // Extract MAC address from device name (format: "DeviceName (XX:XX:XX:XX:XX:XX)")
         return if (deviceName.contains("(") && deviceName.contains(")")) {
@@ -459,9 +412,6 @@ class GSRDeviceManagementActivity :
     }
 }
 
-/**
- * GSR device information data class
- */
 data class GSRDeviceInfo(
     val name: String,
     val address: String,

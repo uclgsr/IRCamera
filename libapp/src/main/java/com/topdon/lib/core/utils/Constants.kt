@@ -17,9 +17,5 @@ object Constants {
     const val IR_TC007_MODE = 6 // TC007设备
     const val IR_TEMPERATURE_LITE = 7 // lite设备
 
-    /**
-     * 当为生成报告时，是否为生成报告第1张图.
-     * true-第1张图编辑 false-再次添加图片编辑
-     */
     const val IS_REPORT_FIRST = "IS_REPORT_FIRST"
 }

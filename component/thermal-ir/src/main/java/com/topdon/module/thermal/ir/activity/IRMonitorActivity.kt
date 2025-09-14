@@ -11,13 +11,6 @@ import com.topdon.module.thermal.ir.databinding.ActivityIrMonitorBinding
 import com.topdon.module.thermal.ir.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
 
-/**
-// 选取区域监听
- */
-/**
- * I r monitor activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
 class IRMonitorActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityIrMonitorBinding
     private var selectIndex: SelectPositionBean? = null // 选取点
@@ -48,6 +41,7 @@ class IRMonitorActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     .create().show()
             }
+
             binding.motionStartBtn -> {
                 if (selectIndex == null) {
                     MonitorSelectDialog.Builder(this)
@@ -56,13 +50,14 @@ class IRMonitorActivity : AppCompatActivity(), View.OnClickListener {
                             when (it) {
                                 1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
                                 2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
-                                else -> EventBus.getDefault().post(ThermalActionEvent(action = 2003))
+                                else -> EventBus.getDefault()
+                                    .post(ThermalActionEvent(action = 2003))
                             }
                         }
                         .create().show()
                     return
                 }
-// 开始temperature监听
+
                 NavigationManager.getInstance().build(RouterConfig.IR_MONITOR_CHART)
                     .withParcelable("select", selectIndex as android.os.Parcelable)
                     .navigation(this)

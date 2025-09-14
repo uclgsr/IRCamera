@@ -1,14 +1,7 @@
 package com.topdon.lib.core.common
 
-/**
- * Product type constants and product name definitions
- * Author: CaiSongL  
- * Date: 2024/4/25 10:45
- */
 object ProductType {
-    /**
-     * Product names
-     */
+
     const val PRODUCT_NAME_TC = "TC001"
     const val PRODUCT_NAME_TS = "TS001"
     const val PRODUCT_NAME_TCP = "TC_PLUS"

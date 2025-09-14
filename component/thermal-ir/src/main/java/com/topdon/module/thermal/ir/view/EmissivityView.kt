@@ -11,40 +11,23 @@ import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
 /**
-// 常用材料emissivity 页面所用，一行常用材料emissivity.
+
  *
  * Created by LCG on 2024/10/14.
  */
-/**
- * Custom Emissivity view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class EmissivityView : View {
     companion object {
-        /**
-// 默认outline尺寸，单位 dp.
-         */
+
         private const val DEFAULT_STROKE_WIDTH: Float = 0.5f
     }
 
-    /**
-// 是否顶部对齐
-     */
     var isAlignTop = false
 
-    /**
-// 是否需要drawing顶部横线
-     */
     var drawTopLine = false
 
-    /**
-// 要display的文字列表.
-     */
     private val textList: ArrayList<CharSequence> = ArrayList(3)
 
-    /**
-// 执行drawing的 Layout 列表.
-     */
     private val layoutList: ArrayList<StaticLayout> = ArrayList(3)
 
     private val strokeWidth = SizeUtils.dp2px(DEFAULT_STROKE_WIDTH).coerceAtLeast(1).toFloat()
@@ -55,9 +38,19 @@ class EmissivityView : View {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
@@ -87,7 +80,6 @@ class EmissivityView : View {
         val elseWidth: Int = (widthSize - firstWidth) / 2
         val contentWidth: Int = firstWidth + elseWidth * 2
 
-// initialize layoutList
         layoutList.clear()
         for (i in textList.indices) {
             val textWidth: Int =
@@ -97,13 +89,18 @@ class EmissivityView : View {
                     (if (i == 0) firstWidth else elseWidth) - SizeUtils.dp2px(24f) // 左右各 12dp padding
                 }
             layoutList.add(
-                StaticLayout.Builder.obtain(textList[i], 0, textList[i].length, textPaint, textWidth)
+                StaticLayout.Builder.obtain(
+                    textList[i],
+                    0,
+                    textList[i].length,
+                    textPaint,
+                    textWidth
+                )
                     .setAlignment(Layout.Alignment.ALIGN_CENTER)
                     .build(),
             )
         }
 
-// calculation最大高度
         var maxHeight = 0
         for (layout in layoutList) {
             maxHeight = maxHeight.coerceAtLeast(layout.height)
@@ -113,7 +110,6 @@ class EmissivityView : View {
         }
         maxHeight += SizeUtils.dp2px(12f) // 上下各 6dp padding
 
-// 宽度为 UNSPECIFIED 的情况目前不存在，不考虑
         setMeasuredDimension(contentWidth + paddingStart + paddingEnd, maxHeight)
     }
 
@@ -125,18 +121,33 @@ class EmissivityView : View {
         if (drawTopLine) {
             canvas.drawLine(0f, strokeWidth / 2, contentWidth, strokeWidth / 2, linePaint)
         }
-        canvas.drawLine(0f, height.toFloat() - strokeWidth / 2, contentWidth, height.toFloat() - strokeWidth / 2, linePaint)
+        canvas.drawLine(
+            0f,
+            height.toFloat() - strokeWidth / 2,
+            contentWidth,
+            height.toFloat() - strokeWidth / 2,
+            linePaint
+        )
         canvas.drawLine(strokeWidth / 2, 0f, strokeWidth / 2, height.toFloat(), linePaint)
 
         val padding = SizeUtils.dp2px(12f).toFloat()
         for (layout in layoutList) {
             canvas.save()
-            canvas.translate(padding, if (isAlignTop) SizeUtils.dp2px(6f).toFloat() else (height - layout.height) / 2f)
+            canvas.translate(
+                padding,
+                if (isAlignTop) SizeUtils.dp2px(6f).toFloat() else (height - layout.height) / 2f
+            )
             layout.draw(canvas)
             canvas.restore()
 
             val itemWidth = padding + layout.width.toFloat() + padding
-            canvas.drawLine(itemWidth - strokeWidth / 2, 0f, itemWidth - strokeWidth / 2, height.toFloat(), linePaint)
+            canvas.drawLine(
+                itemWidth - strokeWidth / 2,
+                0f,
+                itemWidth - strokeWidth / 2,
+                height.toFloat(),
+                linePaint
+            )
             canvas.translate(itemWidth, 0f)
         }
     }

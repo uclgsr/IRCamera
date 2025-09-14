@@ -19,28 +19,28 @@
             android:id="@+id/view_image_bg"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:background="@drawable/layer_report_ir_show_top_bg" />
 
         <TextView
             android:id="@+id/tv_head"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@drawable/bg_report_preview_title"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:gravity="center_vertical"
             android:text="@string/album_report_infrared"
-            android:textSize="15sp"
             android:textColor="#ffffff"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:background="@drawable/bg_report_preview_title"
+            android:textSize="15sp"
             app:layout_constraintDimensionRatio="335:49"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/view_image_bg" />
 
         <View
@@ -50,8 +50,8 @@
             android:background="#0ff5f5f5"
             android:visibility="gone"
             app:layout_constraintDimensionRatio="335:30"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/view_image_bg" />
 
         <androidx.constraintlayout.widget.Barrier
@@ -67,129 +67,129 @@
             android:layout_height="235dp"
             android:layout_marginTop="16dp"
             android:contentDescription="@null"
-            app:lottie_rawRes="@raw/ic_report_image_loading"
-            app:lottie_loop="true"
-            app:lottie_autoPlay="true"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/barrier_head" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/barrier_head"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/ic_report_image_loading" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- 全图 -->
     <include
         android:id="@+id/cl_full"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        tools:visibility="visible"
-        layout="@layout/item_report_ir_show" />
+        tools:visibility="visible" />
 
     <!-- 点1 -->
     <include
         android:id="@+id/cl_point1"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
     <!-- 点2 -->
     <include
         android:id="@+id/cl_point2"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
     <!-- 点3 -->
     <include
         android:id="@+id/cl_point3"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
     <!-- 点4 -->
     <include
         android:id="@+id/cl_point4"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
     <!-- 点5 -->
     <include
         android:id="@+id/cl_point5"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
 
     <!-- 线1 -->
     <include
         android:id="@+id/cl_line1"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
     <!-- 线2 -->
     <include
         android:id="@+id/cl_line2"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
     <!-- 线3 -->
     <include
         android:id="@+id/cl_line3"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
     <!-- 线4 -->
     <include
         android:id="@+id/cl_line4"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
     <!-- 线5 -->
     <include
         android:id="@+id/cl_line5"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
 
     <!-- 面1 -->
     <include
         android:id="@+id/cl_rect1"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
     <!-- 面2 -->
     <include
         android:id="@+id/cl_rect2"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
     <!-- 面3 -->
     <include
         android:id="@+id/cl_rect3"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
     <!-- 面4 -->
     <include
         android:id="@+id/cl_rect4"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
     <!-- 面5 -->
     <include
         android:id="@+id/cl_rect5"
+        layout="@layout/item_report_ir_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/item_report_ir_show" />
+        android:visibility="gone" />
 
 </LinearLayout>

@@ -19,9 +19,7 @@ import com.topdon.lib.core.config.DeviceConfig
 import com.topdon.lib.core.tools.PermissionTool
 
 object BluetoothUtil {
-    /**
-     * 在给定 activity 生命周期内添加 蓝牙 开关state监听.
-     */
+
     fun addBtStateListener(
         activity: ComponentActivity,
         listener: ((isEnable: Boolean) -> Unit),
@@ -29,7 +27,10 @@ object BluetoothUtil {
         activity.lifecycle.addObserver(BtStateObserver(activity, listener))
     }
 
-    private class BtStateObserver(val context: Context, val listener: ((isEnable: Boolean) -> Unit)) : DefaultLifecycleObserver {
+    private class BtStateObserver(
+        val context: Context,
+        val listener: ((isEnable: Boolean) -> Unit)
+    ) : DefaultLifecycleObserver {
         private val receiver = BtStateReceiver()
 
         override fun onCreate(owner: LifecycleOwner) {
@@ -46,7 +47,10 @@ object BluetoothUtil {
                 context: Context?,
                 intent: Intent?,
             ) {
-                when (intent?.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF)) {
+                when (intent?.getIntExtra(
+                    BluetoothAdapter.EXTRA_STATE,
+                    BluetoothAdapter.STATE_OFF
+                )) {
                     BluetoothAdapter.STATE_OFF -> listener.invoke(false)
                     BluetoothAdapter.STATE_ON -> listener.invoke(true)
                 }
@@ -56,9 +60,6 @@ object BluetoothUtil {
 
     private val scanCallback = MyScanCallback()
 
-    /**
-     * settings低功耗蓝牙搜索回调.
-     */
     fun setLeScanListener(
         isTS004: Boolean,
         listener: (name: String) -> Unit,
@@ -67,10 +68,6 @@ object BluetoothUtil {
         scanCallback.listener = listener
     }
 
-    /**
-     * 开启低功耗蓝牙搜索，调用前需确保拥有相应权限且开启蓝牙.
-     * @return true-调用成功 false-缺少权限或蓝牙未开启
-     */
     @SuppressLint("MissingPermission")
     fun startLeScan(context: Context): Boolean {
         XLog.i("startLeScan()")
@@ -80,7 +77,8 @@ object BluetoothUtil {
             return false
         }
 
-        val btAdapter: BluetoothAdapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
+        val btAdapter: BluetoothAdapter =
+            (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
         val btLeScanner: BluetoothLeScanner? = btAdapter.bluetoothLeScanner
         if (btLeScanner == null) {
             XLog.e("开始蓝牙扫描-蓝牙未开启")
@@ -97,10 +95,6 @@ object BluetoothUtil {
         return true
     }
 
-    /**
-     * 停止低功耗蓝牙搜索，调用前需确保拥有相应权限且开启蓝牙.
-     * @return true-调用成功 false-缺少权限或蓝牙未开启
-     */
     @SuppressLint("MissingPermission")
     fun stopLeScan(context: Context): Boolean {
         XLog.i("stopBtScan()")
@@ -110,7 +104,8 @@ object BluetoothUtil {
             return false
         }
 
-        val btAdapter: BluetoothAdapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
+        val btAdapter: BluetoothAdapter =
+            (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
         val btLeScanner: BluetoothLeScanner? = btAdapter.bluetoothLeScanner
         if (btLeScanner == null) {
             XLog.w("停止蓝牙扫描-蓝牙未开启")

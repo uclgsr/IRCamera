@@ -13,24 +13,8 @@
 
 package com.github.gzuliyujiang.wheelpicker.contract;
 
-/**
- * 日期时间选择接口
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/5 17:29
- */
 public interface OnDatimePickedListener {
 
-    /**
-     * 日期时间选择回调
-     *
-     * @param year   年
-     * @param month  月
-     * @param day    日
-     * @param hour   时
-     * @param minute 分
-     * @param second 秒
-     */
     void onDatimePicked(int year, int month, int day, int hour, int minute, int second);
 
 }

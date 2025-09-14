@@ -7,16 +7,11 @@ import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.ktbase.BaseViewModel
 import com.topdon.lib.core.utils.SingleLiveEvent
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.io.File
 
-/**
- * Custom Gallery view model view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 class GalleryViewModel : BaseViewModel() {
     val galleryLiveData = SingleLiveEvent<ArrayList<String>>()
 

@@ -15,13 +15,6 @@ import com.topdon.module.thermal.tools.GlideImageEngine
 import com.topdon.module.thermal.viewmodel.GalleryViewModel
 import java.io.File
 
-/**
-// 图片
- */
-/**
- * Gallery picture fragment for thermal imaging components.
- * Handles specific UI sections and user interactions.
- */
 class GalleryPictureFragment : BaseViewModelFragment<GalleryViewModel>() {
     private val adapter by lazy { GalleryAdapter(requireContext()) }
 
@@ -68,9 +61,6 @@ class GalleryPictureFragment : BaseViewModelFragment<GalleryViewModel>() {
         viewModel.getData()
     }
 
-    /**
-// 分享图片
-     */
     fun share(path: String) {
         val file = File(path)
         var intent = Intent()
@@ -90,7 +80,7 @@ class GalleryPictureFragment : BaseViewModelFragment<GalleryViewModel>() {
 
     fun previewPicture(path: String) {
         val imageEngine = GlideImageEngine()
-        // Note: MNImageBrowser API requires proper library configuration and integration
+
         /*
         MNImageBrowser.with(requireContext()) //当前位置
             .setCurrentPosition(0) //图片引擎

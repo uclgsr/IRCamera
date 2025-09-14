@@ -1,14 +1,15 @@
 package com.topdon.gsr.service
 
 import android.util.Log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
- * Enhanced Error Recovery System
- * Production-grade error handling and recovery mechanisms for sensor disconnections and recording failures
- */
 class ErrorRecoveryManager private constructor() {
     companion object {
         private const val TAG = "ErrorRecoveryManager"
@@ -125,7 +126,7 @@ class ErrorRecoveryManager private constructor() {
     )
 
     private fun setupDefaultRecoveryStrategies() {
-        // GSR Sensor Recovery
+
         recoveryStrategies[ErrorType.GSR_SENSOR_DISCONNECTION] =
             RecoveryStrategy(
                 name = "GSR Sensor Reconnection",
@@ -142,7 +143,6 @@ class ErrorRecoveryManager private constructor() {
                 recoveryAction = { error -> recoverGSRDataStream(error) },
             )
 
-        // Thermal Camera Recovery
         recoveryStrategies[ErrorType.THERMAL_CAMERA_CONNECTION_LOST] =
             RecoveryStrategy(
                 name = "Thermal Camera Reconnection",
@@ -159,7 +159,6 @@ class ErrorRecoveryManager private constructor() {
                 recoveryAction = { error -> recoverThermalRecording(error) },
             )
 
-        // RGB Camera Recovery
         recoveryStrategies[ErrorType.RGB_CAMERA_ACCESS_DENIED] =
             RecoveryStrategy(
                 name = "RGB Camera Permission Recovery",
@@ -176,7 +175,6 @@ class ErrorRecoveryManager private constructor() {
                 recoveryAction = { error -> recoverRGBRecording(error) },
             )
 
-        // Storage Recovery
         recoveryStrategies[ErrorType.STORAGE_FULL] =
             RecoveryStrategy(
                 name = "Storage Space Recovery",
@@ -193,7 +191,6 @@ class ErrorRecoveryManager private constructor() {
                 recoveryAction = { error -> recoverStorageAccess(error) },
             )
 
-        // Bluetooth Recovery
         recoveryStrategies[ErrorType.BLUETOOTH_CONNECTION_LOST] =
             RecoveryStrategy(
                 name = "Bluetooth Connection Recovery",
@@ -210,7 +207,6 @@ class ErrorRecoveryManager private constructor() {
                 recoveryAction = { error -> recoverShimmerDevice(error) },
             )
 
-        // Session Recovery
         recoveryStrategies[ErrorType.SESSION_CORRUPTION] =
             RecoveryStrategy(
                 name = "Session Data Recovery",
@@ -226,7 +222,6 @@ class ErrorRecoveryManager private constructor() {
                 recoveryAction = { error -> recoverSynchronization(error) },
             )
 
-        // System Recovery
         recoveryStrategies[ErrorType.BATTERY_CRITICAL] =
             RecoveryStrategy(
                 name = "Battery Critical Recovery",
@@ -272,13 +267,16 @@ class ErrorRecoveryManager private constructor() {
     }
 
     fun reportError(error: RecoverableError) {
-        Log.w(TAG, "Error reported: ${error.type} for service ${error.serviceId} - ${error.message}")
+        Log.w(
+            TAG,
+            "Error reported: ${error.type} for service ${error.serviceId} - ${error.message}"
+        )
 
         errorListeners.forEach { it.onErrorDetected(error) }
 
         if (error.severity == RecoverableError.Severity.FATAL) {
             Log.e(TAG, "Fatal error detected, stopping all operations")
-            // Handle fatal error - stop all services
+
             return
         }
 
@@ -312,20 +310,32 @@ class ErrorRecoveryManager private constructor() {
 
                     while (attempts < strategy.maxRetries) {
                         attempts++
-                        Log.d(TAG, "Recovery attempt $attempts/${strategy.maxRetries} for ${error.type}")
+                        Log.d(
+                            TAG,
+                            "Recovery attempt $attempts/${strategy.maxRetries} for ${error.type}"
+                        )
 
                         try {
                             lastResult = strategy.recoveryAction(error)
 
                             if (lastResult.success) {
-                                Log.i(TAG, "Recovery successful for ${error.type}: ${lastResult.message}")
+                                Log.i(
+                                    TAG,
+                                    "Recovery successful for ${error.type}: ${lastResult.message}"
+                                )
                                 errorListeners.forEach { it.onRecoverySuccess(error) }
                                 break
                             } else if (!lastResult.shouldRetry) {
-                                Log.w(TAG, "Recovery aborted for ${error.type}: ${lastResult.message}")
+                                Log.w(
+                                    TAG,
+                                    "Recovery aborted for ${error.type}: ${lastResult.message}"
+                                )
                                 break
                             } else {
-                                Log.w(TAG, "Recovery attempt failed for ${error.type}: ${lastResult.message}")
+                                Log.w(
+                                    TAG,
+                                    "Recovery attempt failed for ${error.type}: ${lastResult.message}"
+                                )
                             }
                         } catch (e: Exception) {
                             Log.e(TAG, "Recovery attempt failed with exception", e)
@@ -338,7 +348,8 @@ class ErrorRecoveryManager private constructor() {
                     }
 
                     if (lastResult?.success != true) {
-                        val finalMessage = lastResult?.message ?: "Recovery failed after $attempts attempts"
+                        val finalMessage =
+                            lastResult?.message ?: "Recovery failed after $attempts attempts"
                         Log.e(TAG, "Recovery failed for ${error.type}: $finalMessage")
                         errorListeners.forEach { it.onRecoveryFailed(error, finalMessage) }
                     }
@@ -361,7 +372,10 @@ class ErrorRecoveryManager private constructor() {
                             val wasHealthy = service.isHealthy
 
                             if (isHealthy != wasHealthy) {
-                                Log.i(TAG, "Service ${service.serviceId} health changed: $wasHealthy -> $isHealthy")
+                                Log.i(
+                                    TAG,
+                                    "Service ${service.serviceId} health changed: $wasHealthy -> $isHealthy"
+                                )
                                 errorListeners.forEach {
                                     it.onServiceHealthChanged(service.serviceId, isHealthy)
                                 }
@@ -376,7 +390,6 @@ class ErrorRecoveryManager private constructor() {
 
                             monitoredServices[service.serviceId] = updatedService
 
-                            // Auto-report errors for consecutive failures
                             if (!isHealthy && updatedService.consecutiveFailures >= 3) {
                                 reportError(
                                     RecoverableError(
@@ -400,14 +413,12 @@ class ErrorRecoveryManager private constructor() {
         }
     }
 
-    // Recovery Action Implementations
     private suspend fun recoverGSRSensorConnection(error: RecoverableError): RecoveryResult {
         return try {
             Log.w(TAG, "Recovering from GSR sensor error: ${error.message}")
-            // Attempt to reconnect GSR sensor
+
             delay(1000L) // Allow time for sensor to stabilize
 
-            // In real implementation, this would attempt to reconnect to Shimmer device
             Log.d(TAG, "Attempting GSR sensor reconnection")
 
             RecoveryResult(true, "GSR sensor reconnected successfully")
@@ -421,10 +432,13 @@ class ErrorRecoveryManager private constructor() {
             Log.w(TAG, "Recovering from GSR data stream error: ${error.message}")
             Log.d(TAG, "Attempting GSR data stream recovery")
 
-            // Reset data stream buffers and restart data collection
             RecoveryResult(true, "GSR data stream recovered")
         } catch (e: Exception) {
-            RecoveryResult(false, "GSR data stream recovery failed: ${e.message}", shouldRetry = true)
+            RecoveryResult(
+                false,
+                "GSR data stream recovery failed: ${e.message}",
+                shouldRetry = true
+            )
         }
     }
 
@@ -433,10 +447,13 @@ class ErrorRecoveryManager private constructor() {
             Log.w(TAG, "Recovering from thermal camera error: ${error.message}")
             Log.d(TAG, "Attempting thermal camera reconnection")
 
-            // Reinitialize thermal camera connection
             RecoveryResult(true, "Thermal camera reconnected")
         } catch (e: Exception) {
-            RecoveryResult(false, "Thermal camera reconnection failed: ${e.message}", shouldRetry = true)
+            RecoveryResult(
+                false,
+                "Thermal camera reconnection failed: ${e.message}",
+                shouldRetry = true
+            )
         }
     }
 
@@ -445,23 +462,29 @@ class ErrorRecoveryManager private constructor() {
             Log.w(TAG, "Recovering from thermal recording error: ${error.message}")
             Log.d(TAG, "Attempting thermal recording recovery")
 
-            // Restart thermal recording with current session
             RecoveryResult(true, "Thermal recording recovered")
         } catch (e: Exception) {
-            RecoveryResult(false, "Thermal recording recovery failed: ${e.message}", shouldRetry = true)
+            RecoveryResult(
+                false,
+                "Thermal recording recovery failed: ${e.message}",
+                shouldRetry = true
+            )
         }
     }
 
     private suspend fun recoverRGBCameraAccess(error: RecoverableError): RecoveryResult {
         Log.w(TAG, "RGB camera access error: ${error.message}")
-        return RecoveryResult(false, "RGB camera access requires user intervention - check permissions", shouldRetry = false)
+        return RecoveryResult(
+            false,
+            "RGB camera access requires user intervention - check permissions",
+            shouldRetry = false
+        )
     }
 
     private suspend fun recoverRGBRecording(error: RecoverableError): RecoveryResult {
         return try {
             Log.d(TAG, "Attempting RGB recording recovery for error: ${error.message}")
 
-            // Restart RGB recording
             RecoveryResult(true, "RGB recording recovered")
         } catch (e: Exception) {
             RecoveryResult(false, "RGB recording recovery failed: ${e.message}", shouldRetry = true)
@@ -469,17 +492,24 @@ class ErrorRecoveryManager private constructor() {
     }
 
     private suspend fun recoverStorageSpace(error: RecoverableError): RecoveryResult {
-        return RecoveryResult(false, "Storage full - user intervention required to free space for ${error.message}", shouldRetry = false)
+        return RecoveryResult(
+            false,
+            "Storage full - user intervention required to free space for ${error.message}",
+            shouldRetry = false
+        )
     }
 
     private suspend fun recoverStorageAccess(error: RecoverableError): RecoveryResult {
         return try {
             Log.d(TAG, "Attempting storage access recovery for error: ${error.message}")
 
-            // Check and request storage permissions
             RecoveryResult(true, "Storage access recovered")
         } catch (e: Exception) {
-            RecoveryResult(false, "Storage access recovery failed: ${e.message}", shouldRetry = true)
+            RecoveryResult(
+                false,
+                "Storage access recovery failed: ${e.message}",
+                shouldRetry = true
+            )
         }
     }
 
@@ -487,7 +517,6 @@ class ErrorRecoveryManager private constructor() {
         return try {
             Log.d(TAG, "Attempting Bluetooth connection recovery for error: ${error.type}")
 
-            // Reset Bluetooth connection and reconnect
             delay(2000L)
             RecoveryResult(true, "Bluetooth connection recovered")
         } catch (e: Exception) {
@@ -499,11 +528,14 @@ class ErrorRecoveryManager private constructor() {
         return try {
             Log.d(TAG, "Attempting Shimmer device recovery for error: ${error.type}")
 
-            // Reset Shimmer device connection
             delay(3000L)
             RecoveryResult(true, "Shimmer device recovered")
         } catch (e: Exception) {
-            RecoveryResult(false, "Shimmer device recovery failed: ${e.message}", shouldRetry = true)
+            RecoveryResult(
+                false,
+                "Shimmer device recovery failed: ${e.message}",
+                shouldRetry = true
+            )
         }
     }
 
@@ -511,7 +543,6 @@ class ErrorRecoveryManager private constructor() {
         return try {
             Log.d(TAG, "Attempting session data recovery for error: ${error.type}")
 
-            // Validate and repair session data
             RecoveryResult(true, "Session data recovered")
         } catch (e: Exception) {
             RecoveryResult(false, "Session data recovery failed: ${e.message}", shouldRetry = false)
@@ -522,23 +553,29 @@ class ErrorRecoveryManager private constructor() {
         return try {
             Log.d(TAG, "Attempting synchronization recovery for error: ${error.type}")
 
-            // Re-establish timing synchronization
             RecoveryResult(true, "Synchronization recovered")
         } catch (e: Exception) {
-            RecoveryResult(false, "Synchronization recovery failed: ${e.message}", shouldRetry = true)
+            RecoveryResult(
+                false,
+                "Synchronization recovery failed: ${e.message}",
+                shouldRetry = true
+            )
         }
     }
 
     private suspend fun handleCriticalBattery(error: RecoverableError): RecoveryResult {
         Log.w(TAG, "Critical battery detected: ${error.message}")
-        return RecoveryResult(false, "Critical battery level - immediate user action required", shouldRetry = false)
+        return RecoveryResult(
+            false,
+            "Critical battery level - immediate user action required",
+            shouldRetry = false
+        )
     }
 
     private suspend fun recoverFromMemoryExhaustion(error: RecoverableError): RecoveryResult {
         return try {
             Log.d(TAG, "Attempting memory recovery for error: ${error.type}")
 
-            // Force garbage collection and reduce memory usage
             System.gc()
             RecoveryResult(true, "Memory recovered")
         } catch (e: Exception) {

@@ -14,15 +14,12 @@ import org.greenrobot.eventbus.EventBus
 
 /**
  *
-// 锅盖矫正
+
  * @author: CaiSongL
  * @date: 2023/8/4 9:06
  */
-// Legacy ARouter route annotation - now using NavigationManager
-/**
- * I r correction four activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
+
 class IRCorrectionFourActivity : BaseActivity() {
     val time = 60
 
@@ -57,41 +54,38 @@ class IRCorrectionFourActivity : BaseActivity() {
 
         val timeDownView = findViewById<TimeDownView>(R.id.time_down_view)
         timeDownView.postDelayed({
-// 开始矫正
-            if (timeDownView.downTimeWatcher == null)
-                {
-                    timeDownView.setOnTimeDownListener(
-                        object : TimeDownView.DownTimeWatcher {
-                            override fun onTime(num: Int) {
-                                if (num == 50)
-                                    {
-                                        lifecycleScope.launch(Dispatchers.IO) {
-                                            irFragment.autoStart()
-                                        }
-                                    }
-                            }
 
-                            override fun onLastTime(num: Int) {
-                            }
-
-                            override fun onLastTimeFinish(num: Int) {
-                                try {
-                                    if (!this@IRCorrectionFourActivity.isFinishing)
-                                        {
-                                            TipDialog.Builder(this@IRCorrectionFourActivity)
-                                                .setMessage(com.topdon.lib.core.R.string.correction_complete)
-                                                .setPositiveListener(com.topdon.lib.core.R.string.app_confirm) {
-                                                    EventBus.getDefault().post(CorrectionFinishEvent())
-                                                    finish()
-                                                }
-                                                .create().show()
-                                        }
-                                } catch (e: Exception) {
+            if (timeDownView.downTimeWatcher == null) {
+                timeDownView.setOnTimeDownListener(
+                    object : TimeDownView.DownTimeWatcher {
+                        override fun onTime(num: Int) {
+                            if (num == 50) {
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    irFragment.autoStart()
                                 }
                             }
-                        },
-                    )
-                }
+                        }
+
+                        override fun onLastTime(num: Int) {
+                        }
+
+                        override fun onLastTimeFinish(num: Int) {
+                            try {
+                                if (!this@IRCorrectionFourActivity.isFinishing) {
+                                    TipDialog.Builder(this@IRCorrectionFourActivity)
+                                        .setMessage(com.topdon.lib.core.R.string.correction_complete)
+                                        .setPositiveListener(com.topdon.lib.core.R.string.app_confirm) {
+                                            EventBus.getDefault().post(CorrectionFinishEvent())
+                                            finish()
+                                        }
+                                        .create().show()
+                                }
+                            } catch (e: Exception) {
+                            }
+                        }
+                    },
+                )
+            }
             timeDownView.downSecond(time, false)
         }, 2000)
     }

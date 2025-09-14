@@ -39,25 +39,13 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
-/**
- * TS004 图片详情
- */
 @Route(path = RouterConfig.IR_GALLERY_DETAIL_04)
 class IRGalleryDetail04Activity : BaseActivity() {
-    /**
-     * 是否查看远端数据.
-     * true-远端数据 false-手机本地数据
-     */
+
     private var isRemote = false
 
-    /**
-     * 当前展示图片在列表中的 position
-     */
     private var position = 0
 
-    /**
-     * 从上一界面传递过来的，当前展示的图片列表.
-     */
     private lateinit var dataList: ArrayList<GalleryBean>
 
     override fun initContentView() = R.layout.activity_ir_gallery_detail_04
@@ -171,7 +159,12 @@ class IRGalleryDetail04Activity : BaseActivity() {
                 if (isSuccess) {
                     if (isDelLocal) {
                         File(FileConfig.ts004GalleryDir, data.name).delete()
-                        MediaScannerConnection.scanFile(this@IRGalleryDetail04Activity, arrayOf(FileConfig.ts004GalleryDir), null, null)
+                        MediaScannerConnection.scanFile(
+                            this@IRGalleryDetail04Activity,
+                            arrayOf(FileConfig.ts004GalleryDir),
+                            null,
+                            null
+                        )
                     }
 
                     dismissCameraLoading()
@@ -188,7 +181,10 @@ class IRGalleryDetail04Activity : BaseActivity() {
                     }
                 } else {
                     dismissCameraLoading()
-                    TToast.shortToast(this@IRGalleryDetail04Activity, R.string.test_results_delete_failed)
+                    TToast.shortToast(
+                        this@IRGalleryDetail04Activity,
+                        R.string.test_results_delete_failed
+                    )
                 }
             }
         } else {
@@ -241,7 +237,12 @@ class IRGalleryDetail04Activity : BaseActivity() {
                     EventBus.getDefault().post(GalleryDownloadEvent(data.name))
                     dismissCameraLoading()
                     FileUtils.copy(resource, File(FileConfig.ts004GalleryDir, data.name))
-                    MediaScannerConnection.scanFile(this@IRGalleryDetail04Activity, arrayOf(FileConfig.ts004GalleryDir), null, null)
+                    MediaScannerConnection.scanFile(
+                        this@IRGalleryDetail04Activity,
+                        arrayOf(FileConfig.ts004GalleryDir),
+                        null,
+                        null
+                    )
                     ToastTools.showShort(R.string.tip_save_success)
                     data.hasDownload = true
                     iv_download.isSelected = dataList[position].hasDownload

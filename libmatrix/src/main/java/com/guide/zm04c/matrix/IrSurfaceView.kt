@@ -50,20 +50,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         isLockImage = isLock
     }
 
-//    fun setMatrix(scale: Float, x: Float, y: Float) {
-//        mMatrix.reset()
-//        mMatrix.setScale(scale, scale)
-//        mMatrix.postTranslate(x, y)
-//        mMatrix.getValues(mBeforeRotateMatrixValues)
-//    }
 
-    /**
-     * @param rotate
-     * 0
-     * 90
-     * 180
-     * 270
-     */
     fun setMatrix(
         rotate: Float,
         w: Float,
@@ -77,19 +64,22 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
                 mMatrix.postTranslate(h, 0f)
                 mMatrix.postScale(sca, sca)
             }
+
             180f -> {
                 val sca = ScreenUtils.getScreenWidth() / w
                 mMatrix.setRotate(rotate, 0f, 0f)
                 mMatrix.postTranslate(w, h)
                 mMatrix.postScale(sca, sca)
             }
+
             270f -> {
-                // 矩阵转换
+
                 val sca = ScreenUtils.getScreenWidth() / h
                 mMatrix.setRotate(rotate, 0f, 0f)
                 mMatrix.postTranslate(0f, w)
                 mMatrix.postScale(sca, sca)
             }
+
             else -> {
                 val sca = ScreenUtils.getScreenWidth() / w
                 mMatrix.postScale(sca, sca)
@@ -97,9 +87,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-    /**
-     * 自定义画图方法
-     */
     fun doDraw(
         bitmap: Bitmap?,
         shutterFlag: Int,
@@ -113,7 +100,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
             try {
                 mCanvas?.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-//                mCanvas?.drawBitmap(bitmap, mMatrix, p)
+
                 if (openLut) {
                     mColorMatrixEnhance.setSaturation(saturation * 0.01f * 2.5f + 1f) // 对比度
                     p.colorFilter = ColorMatrixColorFilter(mColorMatrixEnhance) // 修改色彩矩阵
@@ -136,7 +123,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-    // 生成色彩矩阵
     private var mColorMatrix =
         ColorMatrix(
             floatArrayOf(
@@ -147,7 +133,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
             ),
         )
 
-    // 生成色彩矩阵
     private var mColorMatrixLut =
         ColorMatrix(
             floatArrayOf(
@@ -159,15 +144,10 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         )
     private val n = 1f
 
-    // 生成色彩矩阵
     private var mColorMatrixEnhance =
         ColorMatrix(
-//        floatArrayOf(
-//            n, 0f, 0f, 0f, 128 * (1 - n),
-//            0f, n, 0f, 0f, 128 * (1 - n),
-//            0f, 0f, n, 0f, 128 * (1 - n),
-//            0f, 0f, 0f, 1f, 0f
-//        )
+
+
             floatArrayOf(
                 1f, 0f, 0f, 0f, 0f,
                 0f, 1f, 0f, 0f, 0f,
@@ -179,14 +159,10 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
     private var saturation = 0 // 对比度 0~100
 
     fun setOpenLut() {
-//        openLut = !openLut
+
         openLut = true
     }
 
-    /**
-     * 设置对比度
-     * @param saturation 0 ~ 100
-     */
     fun setSaturationValue(saturation: Int) {
         this.saturation = saturation
     }
@@ -201,9 +177,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-    /**
-     * 当SurfaceView创建的时候，调用此函数
-     */
     override fun surfaceCreated(holder: SurfaceHolder) {
         isPrepare = true
         if (callback != null) {
@@ -212,9 +185,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         Logger.d(TAG, "holder onSurfaceCreated")
     }
 
-    /**
-     * 当SurfaceView的视图发生改变的时候，调用此函数
-     */
     override fun surfaceChanged(
         holder: SurfaceHolder,
         format: Int,
@@ -224,9 +194,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         Logger.d(TAG, "holder surfaceChanged")
     }
 
-    /**
-     * 当SurfaceView销毁的时候，调用此函数
-     */
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         synchronized(this) {
             isPrepare = false

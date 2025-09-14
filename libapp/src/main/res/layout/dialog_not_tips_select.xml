@@ -4,19 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="24dp"
+    android:background="@drawable/bg_corners10_solid_3b3e44"
     android:paddingHorizontal="20dp"
-    android:background="@drawable/bg_corners10_solid_3b3e44">
+    android:paddingVertical="24dp">
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_tip"
-        android:textSize="16sp"
         android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -24,23 +24,23 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:textSize="14sp"
         android:textColor="@color/white"
-        tools:text="在图像上绘制一根线段，查看线段内的温度变化趋势。"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:text="在图像上绘制一根线段，查看线段内的温度变化趋势。" />
 
     <com.topdon.lib.core.view.MyTextView
         android:id="@+id/tv_select"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawableStart="@drawable/selector_radio"
+        android:drawablePadding="6dp"
         android:paddingVertical="20dp"
         android:text="@string/tip_otg_no_show"
-        android:textSize="12sp"
         android:textColor="@color/white"
-        android:drawablePadding="6dp"
-        android:drawableStart="@drawable/selector_radio"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_message" />
 
@@ -49,14 +49,14 @@
         android:id="@+id/tv_i_know"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingVertical="11dp"
-        android:gravity="center_horizontal"
-        android:text="@string/app_got_it"
-        android:textSize="16sp"
-        android:textColor="#55272F"
         android:background="@drawable/bg_corners05_solid_theme"
-        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center_horizontal"
+        android:paddingVertical="11dp"
+        android:text="@string/app_got_it"
+        android:textColor="#55272F"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_select" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

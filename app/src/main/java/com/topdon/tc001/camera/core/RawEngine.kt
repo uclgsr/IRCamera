@@ -2,7 +2,8 @@ package com.topdon.tc001.camera.core
 
 import android.content.Context
 import android.graphics.ImageFormat
-import android.hardware.camera2.*
+import android.hardware.camera2.CaptureResult
+import android.hardware.camera2.TotalCaptureResult
 import android.media.Image
 import android.media.ImageReader
 import android.util.Log
@@ -11,12 +12,6 @@ import android.view.Surface
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 
-/**
- * RAW Engine for 50MP DNG capture (Camera2-only)
- *
- * Handles high-resolution RAW image capture with proper TotalCaptureResult pairing
- * and Samsung S22 optimizations for sustained performance.
- */
 class RawEngine(private val context: Context) {
     companion object {
         private const val TAG = "RawEngine"
@@ -30,13 +25,9 @@ class RawEngine(private val context: Context) {
     private var rawCaptureCount = 0
     private val pendingCaptureResults = ConcurrentHashMap<Long, TotalCaptureResult>()
 
-    // Callbacks
     var onRawImageSaved: ((File) -> Unit)? = null
     var onError: ((String) -> Unit)? = null
 
-    /**
-     * Setup RAW ImageReader for 50MP capture
-     */
     fun setup(
         rawSize: Size,
         outputDirectory: File,
@@ -47,7 +38,6 @@ class RawEngine(private val context: Context) {
             this.sessionId = sessionId
             this.rawCaptureCount = 0
 
-            // Create RAW ImageReader with conservative buffer count for Samsung
             rawImageReader =
                 ImageReader.newInstance(
                     rawSize.width,
@@ -65,37 +55,24 @@ class RawEngine(private val context: Context) {
         }
     }
 
-    /**
-     * Get RAW capture surface for session configuration
-     */
     fun getSurface(): Surface? = rawImageReader?.surface
 
-    /**
-     * Start continuous RAW capture at ~15fps
-     */
     fun startCapture() {
         isCapturing = true
         rawCaptureCount = 0
         Log.i(TAG, "RAW capture started")
     }
 
-    /**
-     * Stop RAW capture
-     */
     fun stopCapture() {
         isCapturing = false
         Log.i(TAG, "RAW capture stopped, captured $rawCaptureCount images")
     }
 
-    /**
-     * Store capture result for DNG creation
-     */
     fun storeCaptureResult(result: TotalCaptureResult) {
         if (isCapturing) {
             val timestamp = result.get(CaptureResult.SENSOR_TIMESTAMP) ?: System.nanoTime()
             pendingCaptureResults[timestamp] = result
 
-            // Clean up old results to prevent memory leaks
             if (pendingCaptureResults.size > 10) {
                 val oldestKey = pendingCaptureResults.keys.minOrNull()
                 oldestKey?.let { pendingCaptureResults.remove(it) }
@@ -103,19 +80,10 @@ class RawEngine(private val context: Context) {
         }
     }
 
-    /**
-     * Check if currently capturing
-     */
     fun isCapturing(): Boolean = isCapturing
 
-    /**
-     * Get capture count
-     */
     fun getCaptureCount(): Int = rawCaptureCount
 
-    /**
-     * Release resources
-     */
     fun release() {
         stopCapture()
         rawImageReader?.close()
@@ -124,7 +92,6 @@ class RawEngine(private val context: Context) {
         Log.i(TAG, "RAW engine released")
     }
 
-    // Private implementation
 
     private val rawImageAvailableListener =
         ImageReader.OnImageAvailableListener { reader ->
@@ -140,7 +107,7 @@ class RawEngine(private val context: Context) {
                     saveRawImageAsDng(image, captureResult)
                 } else {
                     Log.w(TAG, "No capture result found for timestamp $timestamp")
-                    // Save without DNG metadata as fallback
+
                     saveRawImageAsRaw(image)
                 }
             } catch (e: Exception) {
@@ -160,8 +127,8 @@ class RawEngine(private val context: Context) {
         val dngFile = File(outputDir, "${sessionId}_raw_$timestamp.dng")
 
         try {
-            // TODO: Implement DNG creation when DngCreator import is resolved
-            // For now, save as raw binary data
+
+
             saveRawImageAsRaw(image)
 
             rawCaptureCount++

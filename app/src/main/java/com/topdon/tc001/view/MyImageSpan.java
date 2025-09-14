@@ -10,6 +10,7 @@ public class MyImageSpan extends ImageSpan {
         super(drawable);
 
     }
+
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom,
                      Paint paint) {

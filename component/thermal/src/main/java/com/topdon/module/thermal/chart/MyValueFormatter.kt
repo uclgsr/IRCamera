@@ -4,12 +4,9 @@ import android.annotation.SuppressLint
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.TimeZone
 
-/**
- * My value formatter utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
 class MyValueFormatter(private val startTime: Long, private val type: Int = 1) :
     IndexAxisValueFormatter() {
     companion object {
@@ -31,7 +28,7 @@ class MyValueFormatter(private val startTime: Long, private val type: Int = 1) :
     @SuppressLint("SimpleDateFormat")
     fun showDateSecond(time: Long): String {
         val date = Date(time)
-        // yyyy-MM-dd HH:mm:ss
+
         val pattern =
             when (type) {
                 TYPE_TIME_SECOND -> "HH:mm:ss"

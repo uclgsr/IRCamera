@@ -15,10 +15,6 @@ import com.csl.irCamera.databinding.ActivityGsrVideoPlayerBinding
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import java.io.File
 
-/**
- * GSR Video Player Activity
- * Video playback for recorded videos from multi-modal sessions
- */
 class GSRVideoPlayerActivity : BaseBindingActivity<ActivityGsrVideoPlayerBinding>() {
     companion object {
         private const val TAG = "GSRVideoPlayerActivity"
@@ -77,7 +73,7 @@ class GSRVideoPlayerActivity : BaseBindingActivity<ActivityGsrVideoPlayerBinding
         binding.videoView.setMediaController(MediaController(this))
         binding.videoView.setOnPreparedListener { mediaPlayer ->
             Log.i(TAG, "Video prepared, starting playback")
-            // Video is ready to play
+
             mediaPlayer.setVideoScalingMode(android.media.MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
         }
         binding.videoView.setOnErrorListener { _, what: Int, extra: Int ->
@@ -99,14 +95,17 @@ class GSRVideoPlayerActivity : BaseBindingActivity<ActivityGsrVideoPlayerBinding
                 onBackPressed()
                 true
             }
+
             R.id.action_share -> {
                 shareVideo()
                 true
             }
+
             R.id.action_info -> {
                 showVideoInfo()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -171,7 +170,7 @@ class GSRVideoPlayerActivity : BaseBindingActivity<ActivityGsrVideoPlayerBinding
 
     override fun onResume() {
         super.onResume()
-        // Video will auto-resume if it was playing
+
     }
 
     override fun onDestroy() {

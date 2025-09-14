@@ -3,13 +3,6 @@ package com.topdon.module.thermal.ir.report.bean
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-/**
-// 一张图片的点线面full imagetemperature信息.
- */
-/**
- * Image temp data model for thermal imaging information.
- * Encapsulates thermal measurement and configuration data.
- */
 @Parcelize
 data class ImageTempBean(
     val full: TempBean?, // 全图
@@ -17,10 +10,7 @@ data class ImageTempBean(
     val lineList: ArrayList<TempBean>, // 线
     val rectList: ArrayList<TempBean>, // 面
 ) : Parcelable {
-/**
- * Temp data model for thermal imaging information.
- * Encapsulates thermal measurement and configuration data.
- */
+
     @Parcelize
     data class TempBean(
         val max: String, // 不带符号最高温，单位跟随用户配置

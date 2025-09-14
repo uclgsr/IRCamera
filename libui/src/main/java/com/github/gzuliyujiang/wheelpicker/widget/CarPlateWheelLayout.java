@@ -21,10 +21,6 @@ import androidx.annotation.NonNull;
 
 import com.github.gzuliyujiang.wheelpicker.impl.CarPlateProvider;
 
-/**
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/9 11:57
- */
 public class CarPlateWheelLayout extends LinkageWheelLayout {
     private CarPlateProvider provider;
 

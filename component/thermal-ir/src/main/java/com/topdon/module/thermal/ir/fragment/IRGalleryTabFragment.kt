@@ -22,36 +22,27 @@ import com.topdon.lib.core.R as LibCoreR
 import com.topdon.lib.ui.R as UiR
 
 /**
-// 图库 Tab 页，下分图片和视频.
+
  *
-// 需要传递parameter：
-// - [ExtraKeyConfig.HAS_BACK_ICON] - 图库是否有返回箭头，默认 false
-// - [ExtraKeyConfig.CAN_SWITCH_DIR] - 图库是否可切换 有线device、TS004、TC007 目录，默认 true
-// - [ExtraKeyConfig.DIR_TYPE] - 进入图库时初始的目录类型 具体取值由 [DirType] 定义
+
+
+
+
  *
  * Created by chenggeng.lin on 2023/11/14.
  */
 class IRGalleryTabFragment : BaseFragment() {
-    /**
-// 从上一interface传递过来的，图库是否有返回箭头
-     */
+
     private var hasBackIcon = false
 
-    /**
-// 从上一interface传递过来的，图库是否可切换 有线device、TS004、TC007 目录
-     */
     private var canSwitchDir = true
 
-    /**
-// 从上一interface传递过来的，进入图库时初始的目录类型
-     */
     private var currentDirType = DirType.LINE
 
     private val viewModel: IRGalleryTabViewModel by activityViewModels()
 
     private var viewPagerAdapter: ViewPagerAdapter? = null
 
-    // View references - initialized in initView
     private lateinit var titleView: TitleView
     private lateinit var tvTitleDir: MyTextView
     private lateinit var tabLayout: TabLayout
@@ -60,7 +51,7 @@ class IRGalleryTabFragment : BaseFragment() {
     override fun initContentView(): Int = R.layout.fragment_gallery_tab
 
     override fun initView() {
-        // Initialize views with findViewById
+
         titleView = requireView().findViewById(R.id.title_view)
         tvTitleDir = requireView().findViewById(R.id.tv_title_dir)
         tabLayout = requireView().findViewById(R.id.tab_layout)
@@ -135,7 +126,12 @@ class IRGalleryTabFragment : BaseFragment() {
             tabLayout.isVisible = !isEditMode
             viewPager2.isUserInputEnabled = !isEditMode
             if (isEditMode) {
-                titleView.setTitleText(getString(R.string.chosen_item, viewModel.selectSizeLD.value))
+                titleView.setTitleText(
+                    getString(
+                        R.string.chosen_item,
+                        viewModel.selectSizeLD.value
+                    )
+                )
                 tvTitleDir.isVisible = false
             } else {
                 titleView.setTitleText(if (canSwitchDir) "" else getString(R.string.app_gallery))

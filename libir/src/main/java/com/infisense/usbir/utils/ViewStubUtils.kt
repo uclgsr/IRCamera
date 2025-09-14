@@ -4,9 +4,7 @@ import android.view.View
 import android.view.ViewStub
 
 object ViewStubUtils {
-    /**
-     * Executes showviewstub functionality.
-     */
+
     fun showViewStub(
         viewStub: ViewStub?,
         isShow: Boolean,
@@ -19,11 +17,11 @@ object ViewStubUtils {
                     callback?.invoke(view)
                 } catch (e: Exception) {
                     viewStub.visibility = View.VISIBLE
-//                    viewStub.visibleAlphaAnimation(300L)
+
                 }
             } else {
                 viewStub.visibility = View.GONE
-//                viewStub.goneAlphaAnimation(300L)
+
             }
         }
     }

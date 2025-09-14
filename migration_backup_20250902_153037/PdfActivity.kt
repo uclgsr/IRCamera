@@ -18,8 +18,14 @@ class PdfActivity : BaseActivity() {
     override fun initContentView() = R.layout.activity_pdf
 
     override fun initView() {
-        // 本地说明书
-        pdf_view.fromAsset(if (intent.getBooleanExtra("isTS001", false)) "TC001.pdf" else "TS004.pdf")
+
+        pdf_view.fromAsset(
+            if (intent.getBooleanExtra(
+                    "isTS001",
+                    false
+                )
+            ) "TC001.pdf" else "TS004.pdf"
+        )
             .enableSwipe(true) // allows to block changing pages using swipe
             .swipeHorizontal(false)
             .enableDoubletap(true)
@@ -28,7 +34,7 @@ class PdfActivity : BaseActivity() {
             .password(null)
             .scrollHandle(null)
             .enableAntialiasing(true) // improve rendering a little bit on low-res screens
-            // spacing between pages in dp. To define spacing color, set view background
+
             .spacing(0)
             .load()
     }
@@ -55,7 +61,6 @@ class PdfActivity : BaseActivity() {
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    // 复制assets文件
     @Throws(IOException::class)
     private fun copyBigDataToSD(
         assetsName: String,

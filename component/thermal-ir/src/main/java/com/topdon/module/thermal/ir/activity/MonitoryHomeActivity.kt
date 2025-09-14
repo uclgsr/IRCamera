@@ -16,12 +16,12 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
-// temperature监控 Tab 页，包含
-// - 历史 [IRMonitorHistoryFragment]
-// - 实时 [IRMonitorCaptureFragment]
+
+
+
  *
-// 需要传递parameter：
-// - [ExtraKeyConfig.IS_TC007] - 当前device是否为 TC007
+
+
  *
  * Created by LCG on 2024/8/20.
  */
@@ -47,7 +47,8 @@ class MonitoryHomeActivity : BaseActivity() {
         findViewById<ViewPager2>(R.id.view_pager2).currentItem = 0
     }
 
-    private class ViewPagerAdapter(activity: MonitoryHomeActivity, val isTC007: Boolean) : FragmentStateAdapter(activity) {
+    private class ViewPagerAdapter(activity: MonitoryHomeActivity, val isTC007: Boolean) :
+        FragmentStateAdapter(activity) {
         override fun getItemCount() = 2
 
         override fun createFragment(position: Int): Fragment {
@@ -55,7 +56,8 @@ class MonitoryHomeActivity : BaseActivity() {
                 IRMonitorHistoryFragment()
             } else {
                 val fragment = IRMonitorCaptureFragment()
-                fragment.arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
+                fragment.arguments =
+                    Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
                 fragment
             }
         }

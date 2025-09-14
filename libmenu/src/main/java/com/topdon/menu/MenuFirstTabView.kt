@@ -7,24 +7,9 @@ import android.view.View
 import android.widget.FrameLayout
 import com.topdon.menu.databinding.ViewMenuFirstTabBinding
 
-/**
- * Bottom menu bar for thermal imaging interface.
- *
- * Two available modes:
- * - Temperature measurement mode: photo capture, point/line/area measurement, dual light, pseudo color, settings, high/low temperature range
- * - Observation mode: photo capture, high/low temperature source, pseudo color, target, high/low temperature points, settings
- */
 
-/**
- * MenuFirstTabView implements custom user interface component functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
 class MenuFirstTabView : FrameLayout, View.OnClickListener {
-    /**
-     * Currently selected tab, Range `[0,5]`
-     */
+
     var selectPosition = -1
         set(value) {
             if (field != value) {
@@ -38,9 +23,6 @@ class MenuFirstTabView : FrameLayout, View.OnClickListener {
             }
         }
 
-    /**
-     * Whether in observation mode, observation mode uses different icons.
-     */
     var isObserveMode = false
         set(value) {
             if (field != value) {
@@ -66,9 +48,19 @@ class MenuFirstTabView : FrameLayout, View.OnClickListener {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,

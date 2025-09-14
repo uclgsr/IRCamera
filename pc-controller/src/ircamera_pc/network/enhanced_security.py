@@ -13,15 +13,14 @@ import logging
 import secrets
 import ssl
 import time
+from cryptography import x509
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
-
-from cryptography import x509
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
 
 try:
     from loguru import logger
@@ -175,7 +174,7 @@ class EnhancedAuthenticationManager:
         logger.info("Enhanced authentication manager initialized")
 
     async def authenticate(
-        self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
+            self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> Tuple[bool, Optional[AuthenticationContext], str]:
         """
         Perform multi-tier authentication
@@ -233,12 +232,12 @@ class EnhancedAuthenticationManager:
         password = credentials.get("password", "")
 
         return (
-            username in self.enhanced_credentials
-            and self.enhanced_credentials[username] == password
+                username in self.enhanced_credentials
+                and self.enhanced_credentials[username] == password
         )
 
     async def _authenticate_certificate(
-        self, device_id: str, credentials: Dict[str, Any]
+            self, device_id: str, credentials: Dict[str, Any]
     ) -> bool:
         """Certificate-based authentication"""
         cert_data = credentials.get("certificate")
@@ -265,7 +264,7 @@ class EnhancedAuthenticationManager:
             return False
 
     async def _authenticate_token(
-        self, device_id: str, credentials: Dict[str, Any]
+            self, device_id: str, credentials: Dict[str, Any]
     ) -> bool:
         """Token-based authentication with HMAC"""
         token = credentials.get("token")
@@ -284,7 +283,7 @@ class EnhancedAuthenticationManager:
         return hmac.compare_digest(expected_hmac, hmac_signature)
 
     async def _authenticate_biometric(
-        self, device_id: str, credentials: Dict[str, Any]
+            self, device_id: str, credentials: Dict[str, Any]
     ) -> bool:
         """Biometric/hardware key authentication"""
         hardware_key = credentials.get("hardware_key")
@@ -298,7 +297,7 @@ class EnhancedAuthenticationManager:
         return True
 
     async def _create_auth_context(
-        self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
+            self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> AuthenticationContext:
         """Create authentication context for successful authentication"""
 
@@ -322,7 +321,7 @@ class EnhancedAuthenticationManager:
         )
 
     def _determine_role(
-        self, device_type: str, auth_level: AuthLevel, credentials: Dict[str, Any]
+            self, device_type: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> DeviceRole:
         """Determine device role based on context"""
 
@@ -373,7 +372,7 @@ class EnhancedAuthenticationManager:
         # Lock device if too many failures
         if len(self.failed_attempts[device_id]) >= MAX_FAILED_ATTEMPTS:
             self.locked_devices[device_id] = current_time + (
-                LOCKOUT_DURATION_MINUTES * 60
+                    LOCKOUT_DURATION_MINUTES * 60
             )
             logger.warning(
                 f"Device {device_id} locked due to {MAX_FAILED_ATTEMPTS} failed attempts"
@@ -549,7 +548,7 @@ class EnhancedSecurityMonitor:
         ]
 
     def report_connection_attempt(
-        self, device_id: str, successful: bool, details: Optional[Dict[str, Any]] = None
+            self, device_id: str, successful: bool, details: Optional[Dict[str, Any]] = None
     ) -> None:
         """Report connection attempt for monitoring"""
         current_time = time.time()
@@ -568,12 +567,12 @@ class EnhancedSecurityMonitor:
         )
 
     async def _generate_alert(
-        self,
-        alert_type: str,
-        severity: AlertSeverity,
-        device_id: str,
-        description: str,
-        details: Dict[str, Any],
+            self,
+            alert_type: str,
+            severity: AlertSeverity,
+            device_id: str,
+            description: str,
+            details: Dict[str, Any],
     ):
         """Generate security alert"""
         alert = SecurityAlert(
@@ -644,7 +643,7 @@ class EnhancedSecurityManager:
         logger.info("Enhanced security system shutdown complete")
 
     async def authenticate_device(
-        self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
+            self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> Tuple[bool, Optional[AuthenticationContext], str]:
         """Authenticate device with security monitoring"""
 

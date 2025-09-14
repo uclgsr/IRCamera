@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_menu_tab_lay"
     android:layout_width="@dimen/tab_second_img_height"
+    android:layout_height="wrap_content"
     android:paddingStart="8dp"
-    android:paddingEnd="8dp"
-    android:layout_height="wrap_content">
+    android:paddingEnd="8dp">
 
     <ImageView
         android:id="@+id/item_menu_tab_img"
@@ -23,10 +23,10 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:gravity="center_horizontal"
-        android:singleLine="true"
-        android:text="123"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
+        android:singleLine="true"
+        android:text="123"
         android:textColor="@color/font_third_color"
         android:textSize="@dimen/app_smaller_font"
         app:layout_constraintEnd_toEndOf="parent"

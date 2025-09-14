@@ -36,11 +36,8 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
         motion_log_btn.setOnClickListener(this)
         motion_btn.setOnClickListener(this)
         motion_start_btn.setOnClickListener(this)
-//        if (BaseApplication.instance.isConnected()) {
-//            mHandler.postDelayed({
-//                EventBus.getDefault().post(ThermalActionEvent(action = 2001))
-//            }, 300)
-//        }
+
+
     }
 
     override fun initData() {
@@ -51,6 +48,7 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
             motion_log_btn -> {
                 ARouter.getInstance().build(RouterConfig.THERMAL_LOG_MP_CHART).navigation(this)
             }
+
             motion_btn -> {
                 MonitorSelectDialog.Builder(this)
                     .setTitle("请选择监控类型")
@@ -59,8 +57,12 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
                             override fun onClick(select: Int) {
                                 updateUI()
                                 when (select) {
-                                    1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
-                                    2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
+                                    1 -> EventBus.getDefault()
+                                        .post(ThermalActionEvent(action = 2001))
+
+                                    2 -> EventBus.getDefault()
+                                        .post(ThermalActionEvent(action = 2002))
+
                                     else ->
                                         EventBus.getDefault()
                                             .post(ThermalActionEvent(action = 2003))
@@ -71,6 +73,7 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
                     .setCancelListener(R.string.app_cancel)
                     .create().show()
             }
+
             motion_start_btn -> {
                 ARouter.getInstance().build(RouterConfig.MONITOR_CHART)
                     .withInt("type", selectType)
@@ -97,7 +100,6 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
         motion_btn.visibility = View.GONE
     }
 
-    // 秒
     fun updateTime(time: Long) {
         val ss = time % 60
         val mm = time / 60 % 60

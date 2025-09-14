@@ -15,13 +15,18 @@ import com.topdon.ble.util.BluetoothPermissionUtils;
 
 import java.util.Objects;
 
-/**
- * BLE设备实体类
- * <p>
- * date: 2021/8/12 00:08
- * author: bichuanfeng
- */
 public class Device implements Comparable<Device>, Cloneable, Parcelable {
+    public static final Creator<Device> CREATOR = new Creator<Device>() {
+        @Override
+        public Device createFromParcel(Parcel source) {
+            return new Device(source);
+        }
+
+        @Override
+        public Device[] newArray(int size) {
+            return new Device[size];
+        }
+    };
     private final BluetoothDevice originDevice;
     ConnectionState connectionState = ConnectionState.DISCONNECTED;
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -40,6 +45,11 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
         this.address = BluetoothPermissionUtils.getDeviceAddress(context, originDevice);
     }
 
+    protected Device(Parcel in) {
+        this.originDevice = in.readParcelable(BluetoothDevice.class.getClassLoader());
+        readFromParcel(in);
+    }
+
     @NonNull
     public BluetoothDevice getOriginDevice() {
         return originDevice;
@@ -54,10 +64,6 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
     @Nullable
     public byte[] getScanRecord() {
         return scanRecord;
-    }
-
-    public void setRssi(int rssi) {
-        this.rssi = rssi;
     }
 
     @NonNull
@@ -78,6 +84,10 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
         return rssi;
     }
 
+    public void setRssi(int rssi) {
+        this.rssi = rssi;
+    }
+
     @NonNull
     public ConnectionState getConnectionState() {
         Connection connection = EasyBLE.getInstance().getConnection(this);
@@ -96,24 +106,15 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
         return null;
     }
 
-    /**
-     * 是否已连接并成功发现服务
-     */
     public boolean isConnected() {
         return getConnectionState() == ConnectionState.SERVICE_DISCOVERED;
     }
 
-    /**
-     * 是否已断开连接
-     */
     public boolean isDisconnected() {
         ConnectionState state = getConnectionState();
         return state == ConnectionState.DISCONNECTED || state == ConnectionState.RELEASED;
     }
 
-    /**
-     * 是否正在连接
-     */
     public boolean isConnecting() {
         ConnectionState state = getConnectionState();
         return state != ConnectionState.DISCONNECTED && state != ConnectionState.SERVICE_DISCOVERED &&
@@ -187,11 +188,6 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
         }
     }
 
-    protected Device(Parcel in) {
-        this.originDevice = in.readParcelable(BluetoothDevice.class.getClassLoader());
-        readFromParcel(in);
-    }
-
     public void readFromParcel(Parcel in) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.scanResult = in.readParcelable(ScanResult.class.getClassLoader());
@@ -207,16 +203,4 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
         this.rssi = in.readInt();
         this.connectionState = ConnectionState.valueOf(in.readString());
     }
-
-    public static final Creator<Device> CREATOR = new Creator<Device>() {
-        @Override
-        public Device createFromParcel(Parcel source) {
-            return new Device(source);
-        }
-
-        @Override
-        public Device[] newArray(int size) {
-            return new Device[size];
-        }
-    };
 }

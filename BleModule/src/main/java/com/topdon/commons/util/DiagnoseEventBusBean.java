@@ -1,12 +1,5 @@
 package com.topdon.commons.util;
 
-/**
- * @Desc 诊断语言实体类
- * @ClassName DiagnoseLanguageBean
- * @Email 616862466@qq.com
- * @Author 子墨
- * @Date 2022/9/13 15:40
- */
 
 public class DiagnoseEventBusBean {
     private int what;//1 语言  2 sn连接  3进入诊断或者百公里加速 4 诊断或者保养  5 Folder sn号路径   6 diagMenuMask

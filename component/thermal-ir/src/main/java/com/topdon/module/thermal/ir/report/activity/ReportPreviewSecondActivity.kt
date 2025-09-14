@@ -42,35 +42,26 @@ import com.topdon.lib.core.R as LibCoreR
 import com.topdon.lib.ui.R as UiR
 
 /**
-// 生成报告第2步的预览interface.
+
  *
-// 需要传递
-// - 是否 TC007: [ExtraKeyConfig.IS_TC007]
-// - 一份报告所有信息 [ExtraKeyConfig.REPORT_BEAN]
+
+
+
  */
-// Legacy ARouter route annotation - now using NavigationManager
-/**
- * Report preview second activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
-class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), View.OnClickListener {
+
+
+class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(),
+    View.OnClickListener {
     /**
-// 从上一interface传递过来的，当前是否为 TC007 device类型.
-// true-TC007 false-其他插件式device
+
+
      */
     private var isTC007 = false
 
-    /**
-// 从上一interface传递过来的，报告所有信息.
-     */
     private var reportBean: ReportBean? = null
 
-    /**
-// 当前预览页面已生成的 PDF 文件绝对路径
-     */
     private var pdfFilePath: String? = null
 
-    // View references - migrated from synthetic views
     private lateinit var titleView: TitleView
     private lateinit var reportInfoView: ReportInfoView
     private lateinit var llContent: LinearLayout
@@ -84,7 +75,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), 
     override fun providerVMClass() = UpReportViewModel::class.java
 
     override fun initView() {
-        // Initialize views - migrated from synthetic views
+
         titleView = findViewById(R.id.title_view)
         reportInfoView = findViewById(R.id.report_info_view)
         llContent = findViewById(R.id.ll_content)
@@ -128,10 +119,17 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), 
                 val reportShowView = ReportIRShowView(this)
                 reportShowView.refreshData(i == 0, i == irList.size - 1, irList[i])
                 lifecycleScope.launch {
-                    val drawable = GlideLoader.getDrawable(this@ReportPreviewSecondActivity, irList[i].picture_url)
+                    val drawable = GlideLoader.getDrawable(
+                        this@ReportPreviewSecondActivity,
+                        irList[i].picture_url
+                    )
                     reportShowView.setImageDrawable(drawable)
                 }
-                llContent.addView(reportShowView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                llContent.addView(
+                    reportShowView,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
             }
         }
 
@@ -140,7 +138,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), 
         lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-// 要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
                     }
@@ -173,6 +171,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), 
             tvToPdf -> { // 生成PDF
                 saveWithPDF()
             }
+
             tvComplete -> { // 完成
 
                 if (LMS.getInstance().isLogin) {
@@ -231,8 +230,8 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), 
     }
 
     /**
-// get需要转为 PDF 的所有 View 列表.
-// 注意：watermark View 不在列表内，需要自行processing.
+
+
      */
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()

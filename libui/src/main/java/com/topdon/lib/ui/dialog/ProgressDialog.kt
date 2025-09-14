@@ -9,24 +9,10 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.databinding.DialogProgressBinding
 
-/**
- * 带进度条的提示弹框.
- */
-/**
- * ProgressDialog(context: class
- */
-/**
- * Progress dialog for thermal imaging user interaction.
- * Provides specialized input and configuration interfaces.
- */
-/**
- * ProgressDialog displays modal dialog interface for user interaction.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
-    private val binding: DialogProgressBinding = DialogProgressBinding.inflate(LayoutInflater.from(context))
+    private val binding: DialogProgressBinding =
+        DialogProgressBinding.inflate(LayoutInflater.from(context))
 
     var max: Int = 100
         set(value) {
@@ -41,7 +27,7 @@ class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
         }
 
     init {
-        // Binding is initialized in constructor
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +38,8 @@ class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
 
         window?.let {
             val layoutParams = it.attributes
-            layoutParams.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.8 else 0.45).toInt()
+            layoutParams.width =
+                (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.8 else 0.45).toInt()
             layoutParams.height = LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }

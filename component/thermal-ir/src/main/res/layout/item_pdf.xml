@@ -29,26 +29,26 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginEnd="4dp"
-            android:src="@drawable/report_tag_shape"
             android:contentDescription="@null"
+            android:src="@drawable/report_tag_shape"
             android:visibility="gone"
-            tools:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="@color/white"
             android:visibility="gone"
-            tools:text="2023.4.15"
-            tools:visibility="visible"
             app:layout_constraintLeft_toRightOf="@id/item_message_read"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2023.4.15"
+            tools:visibility="visible" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
@@ -58,20 +58,20 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/report_gray_bg"
             android:paddingStart="20dp"
-            app:layout_constraintStart_toEndOf="@id/item_message_read"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_time"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintStart_toEndOf="@id/item_message_read"
+            app:layout_constraintTop_toBottomOf="@id/tv_time">
 
             <com.chhd.superlayout.SuperImageView
                 android:id="@+id/img_content"
                 android:layout_width="78dp"
                 android:layout_height="78dp"
                 android:scaleType="center"
-                app:round_corner="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:round_corner="8dp" />
 
             <TextView
                 android:id="@+id/item_pdf_title"
@@ -83,10 +83,10 @@
                 android:singleLine="true"
                 android:textColor="@color/white"
                 android:textSize="13sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/item_pdf_content"
                 app:layout_constraintEnd_toStartOf="@id/img_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/item_pdf_content" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/item_pdf_content"
@@ -98,10 +98,10 @@
                 android:singleLine="true"
                 android:textColor="#80ffffff"
                 android:textSize="13sp"
-                app:layout_constraintStart_toStartOf="@id/item_pdf_title"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/item_pdf_title"
-                app:layout_constraintTop_toBottomOf="@id/item_pdf_title"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintStart_toStartOf="@id/item_pdf_title"
+                app:layout_constraintTop_toBottomOf="@id/item_pdf_title" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

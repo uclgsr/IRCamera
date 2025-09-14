@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="32dp"
-        android:textSize="16sp"
-        android:text="Session Export Loading..." />
+        android:text="Session Export Loading..."
+        android:textSize="16sp" />
 
 </layout>

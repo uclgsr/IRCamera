@@ -4,10 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.view.View
 
-/**
- * Custom Yap video view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 @Suppress("DEPRECATION")
 object YapVideoUtils {
     fun convertViewToBitmap(view: View): Bitmap {

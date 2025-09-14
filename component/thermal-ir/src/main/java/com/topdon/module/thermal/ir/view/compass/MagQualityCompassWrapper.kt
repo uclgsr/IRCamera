@@ -7,10 +7,6 @@ import com.kylecorry.andromeda.sense.compass.ICompass
 import com.kylecorry.sol.units.Bearing
 import kotlin.math.min
 
-/**
- * Mag quality compass wrapper utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
 class MagQualityCompassWrapper(private val compass: ICompass, private val magnetometer: ISensor) :
     AbstractSensor(), ICompass {
     override val bearing: Bearing

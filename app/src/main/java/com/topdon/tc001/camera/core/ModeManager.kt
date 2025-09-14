@@ -2,10 +2,6 @@ package com.topdon.tc001.camera.core
 
 import android.util.Log
 
-/**
- * Deterministic state machine for camera mode management
- * Two exclusive modes: RAW mode (50MP DNG stream) OR Video mode (4K60 if exposed, else 4K30)
- */
 class ModeManager {
     companion object {
         private const val TAG = "ModeManager"
@@ -29,21 +25,14 @@ class ModeManager {
     private var currentState = State.IDLE
     private var deviceCaps: DeviceCaps? = null
 
-    // State change callbacks
     var onModeChanged: ((CameraMode, State) -> Unit)? = null
     var onError: ((String) -> Unit)? = null
 
-    /**
-     * Initialize with device capabilities
-     */
     fun initialize(caps: DeviceCaps) {
         deviceCaps = caps
         Log.i(TAG, "Mode manager initialized with device capabilities")
     }
 
-    /**
-     * Request mode switch with validation
-     */
     fun requestModeSwitch(targetMode: CameraMode): Boolean {
         if (currentState == State.SWITCHING) {
             Log.w(TAG, "Mode switch already in progress")
@@ -55,7 +44,6 @@ class ModeManager {
             return true
         }
 
-        // Validate mode is supported
         if (!isModeSupported(targetMode)) {
             val error = "Mode $targetMode not supported on this device"
             Log.e(TAG, error)
@@ -63,7 +51,6 @@ class ModeManager {
             return false
         }
 
-        // Start switching
         currentState = State.SWITCHING
         val previousMode = currentMode
         currentMode = targetMode
@@ -74,9 +61,6 @@ class ModeManager {
         return true
     }
 
-    /**
-     * Confirm mode switch completed successfully
-     */
     fun confirmModeSwitch() {
         if (currentState != State.SWITCHING) {
             Log.w(TAG, "No mode switch in progress to confirm")
@@ -94,9 +78,6 @@ class ModeManager {
         onModeChanged?.invoke(currentMode, currentState)
     }
 
-    /**
-     * Report mode switch failed
-     */
     fun reportModeSwitchFailed(error: String) {
         if (currentState != State.SWITCHING) {
             Log.w(TAG, "No mode switch in progress to fail")
@@ -105,24 +86,14 @@ class ModeManager {
 
         Log.e(TAG, "Mode switch failed: $error")
 
-        // Revert to previous state
         currentState = State.IDLE
         onError?.invoke("Mode switch failed: $error")
     }
 
-    /**
-     * Get current mode
-     */
     fun getCurrentMode(): CameraMode = currentMode
 
-    /**
-     * Get current state
-     */
     fun getCurrentState(): State = currentState
 
-    /**
-     * Check if mode is supported by device
-     */
     fun isModeSupported(mode: CameraMode): Boolean {
         val caps = deviceCaps ?: return false
 
@@ -133,9 +104,6 @@ class ModeManager {
         }
     }
 
-    /**
-     * Get available modes for this device
-     */
     fun getAvailableModes(): List<CameraMode> {
         val modes = mutableListOf(CameraMode.PREVIEW_ONLY, CameraMode.VIDEO_4K)
 
@@ -146,21 +114,12 @@ class ModeManager {
         return modes
     }
 
-    /**
-     * Check if currently switching modes
-     */
     fun isSwitching(): Boolean = currentState == State.SWITCHING
 
-    /**
-     * Check if a mode switch is allowed from current state
-     */
     fun canSwitchMode(): Boolean {
         return currentState != State.SWITCHING
     }
 
-    /**
-     * Get recommended frame rate for current mode
-     */
     fun getRecommendedFrameRate(): Int {
         val caps = deviceCaps ?: return 30
 

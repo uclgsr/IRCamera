@@ -11,10 +11,10 @@
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:titleText="@string/app_question"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleText="@string/app_question" />
 
     <TextView
         android:id="@+id/question_details_title"
@@ -24,24 +24,25 @@
         android:textColor="@color/color_font"
         android:textSize="@dimen/app_font"
         android:textStyle="bold"
-        tools:text="为什么TC001、TS001插到手机上后，没有任何反应？"
-        app:layout_constraintWidth_percent="0.9"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_view" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_view"
+        app:layout_constraintWidth_percent="0.9"
+        tools:text="为什么TC001、TS001插到手机上后，没有任何反应？" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:overScrollMode="never"
         android:paddingTop="32dp"
         android:paddingBottom="12dp"
         android:scrollbars="none"
-        android:overScrollMode="never"
-        app:layout_constraintWidth_percent="0.9"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/question_details_title"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintWidth_percent="0.9">
+
         <TextView
             android:id="@+id/question_details_content"
             android:layout_width="match_parent"

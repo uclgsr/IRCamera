@@ -10,10 +10,6 @@ import com.topdon.lib.core.db.entity.ThermalEntity
 import com.topdon.lib.core.tools.TimeTool
 import com.topdon.module.thermal.R
 
-/**
- * Custom Monitor log view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
 class MonitorLogAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: OnItemClickListener? = null
@@ -58,15 +54,12 @@ class MonitorLogAdapter(val context: Context) :
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val lay = itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_log_lay)
+        val lay =
+            itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_log_lay)
         val indexText = itemView.findViewById<TextView>(R.id.item_log_index_text)
         val timeText = itemView.findViewById<TextView>(R.id.item_log_time_text)
     }
 
-/**
- * Custom On item click listener view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
     interface OnItemClickListener {
         fun onClick(
             index: Int,

@@ -1,30 +1,28 @@
 package com.topdon.tc001.camera
 
 import android.content.Context
-import android.hardware.camera2.*
+import android.hardware.camera2.CameraCaptureSession
+import android.hardware.camera2.CameraDevice
+import android.hardware.camera2.CaptureRequest
+import android.hardware.camera2.TotalCaptureResult
 import android.util.Log
 import android.util.Size
 import android.view.TextureView
-import com.topdon.tc001.camera.core.*
-import kotlinx.coroutines.*
+import com.topdon.tc001.camera.core.CameraController
+import com.topdon.tc001.camera.core.DeviceCaps
+import com.topdon.tc001.camera.core.ModeManager
+import com.topdon.tc001.camera.core.RawEngine
+import com.topdon.tc001.camera.core.UiBridge
+import com.topdon.tc001.camera.core.VideoEngine
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import java.io.File
 
-/**
- * Clean Camera2-only system for Samsung S22 dual-mode camera
- *
- * Implements the architecture requested in the comment:
- * - CameraController: opens/closes CameraDevice, owns HandlerThread, constructs/swaps CameraCaptureSession
- * - VideoEngine: wraps MediaRecorder (prepare/start/stop/release)
- * - RawEngine: wraps RAW ImageReader, DngCreator, and file I/O
- * - ModeManager: state machine and switching
- * - UiBridge: pushes preview Surface, exposes errors and progress
- *
- * Goals:
- * - One camera client. No CameraX+Camera2 conflicts.
- * - Two exclusive modes: RAW mode (50 MP DNG stream) OR Video mode (4K60 if exposed, else 4K30)
- * - Fast switch without closing CameraDevice
- * - Deterministic state machine. No races. No silent failures.
- */
 class Camera2System(
     private val context: Context,
     private val textureView: TextureView,
@@ -34,19 +32,16 @@ class Camera2System(
         private const val DEFAULT_BITRATE = 20_000_000 // 20Mbps for 4K
     }
 
-    // Core components
     private val cameraController = CameraController(context)
     private val videoEngine = VideoEngine()
     private val rawEngine = RawEngine(context)
     private val modeManager = ModeManager()
     private val uiBridge = UiBridge(textureView)
 
-    // Current session state
     private var currentSessionId: String = ""
     private var isRecording = false
     private var outputDirectory: File? = null
 
-    // Callbacks
     var onError: ((String) -> Unit)? = null
     var onProgress: ((String) -> Unit)? = null
     var onModeChanged: ((ModeManager.CameraMode) -> Unit)? = null
@@ -57,23 +52,17 @@ class Camera2System(
         setupCallbacks()
     }
 
-    /**
-     * Initialize the camera system
-     */
     suspend fun initialize(cameraId: String = "0"): Boolean =
         withContext(Dispatchers.Main) {
             try {
                 Log.i(TAG, "Initializing Camera2System")
 
-                // Wait for texture to be ready
                 while (!uiBridge.isTextureReady()) {
                     delay(50)
                 }
 
-                // Open camera and detect capabilities
                 cameraController.openCamera(cameraId)
 
-                // Wait for camera to open (callback will handle initialization)
                 return@withContext true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to initialize camera system", e)
@@ -82,9 +71,6 @@ class Camera2System(
             }
         }
 
-    /**
-     * Switch camera mode (RAW_50MP, VIDEO_4K, PREVIEW_ONLY)
-     */
     suspend fun switchMode(mode: ModeManager.CameraMode): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -99,7 +85,6 @@ class Camera2System(
 
                 uiBridge.reportProgress("Switching to ${mode.name}...")
 
-                // Fast session reconfiguration without closing camera device
                 val success =
                     when (mode) {
                         ModeManager.CameraMode.RAW_50MP -> setupRawMode()
@@ -124,9 +109,6 @@ class Camera2System(
             }
         }
 
-    /**
-     * Start recording in current mode
-     */
     suspend fun startRecording(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording) {
@@ -163,9 +145,6 @@ class Camera2System(
             }
         }
 
-    /**
-     * Stop recording
-     */
     suspend fun stopRecording(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isRecording) {
@@ -177,7 +156,8 @@ class Camera2System(
                 when (modeManager.getCurrentMode()) {
                     ModeManager.CameraMode.RAW_50MP -> rawEngine.stopCapture()
                     ModeManager.CameraMode.VIDEO_4K -> videoEngine.stop()
-                    ModeManager.CameraMode.PREVIEW_ONLY -> { /* Nothing to stop */ }
+                    ModeManager.CameraMode.PREVIEW_ONLY -> { /* Nothing to stop */
+                    }
                 }
 
                 isRecording = false
@@ -193,29 +173,14 @@ class Camera2System(
             }
         }
 
-    /**
-     * Get current mode
-     */
     fun getCurrentMode(): ModeManager.CameraMode = modeManager.getCurrentMode()
 
-    /**
-     * Get available modes for this device
-     */
     fun getAvailableModes(): List<ModeManager.CameraMode> = modeManager.getAvailableModes()
 
-    /**
-     * Check if recording
-     */
     fun isRecording(): Boolean = isRecording
 
-    /**
-     * Get device capabilities
-     */
     fun getDeviceCaps(): DeviceCaps? = cameraController.getDeviceCaps()
 
-    /**
-     * Cleanup and release resources
-     */
     fun release() {
         if (isRecording) {
             runBlocking { stopRecording() }
@@ -229,15 +194,13 @@ class Camera2System(
         Log.i(TAG, "Camera2System released")
     }
 
-    // Private implementation methods
 
     private fun setupCallbacks() {
-        // Camera controller callbacks
+
         cameraController.onCameraOpened = { caps ->
             modeManager.initialize(caps)
             uiBridge.reportProgress("Camera opened, capabilities detected")
 
-            // Start in preview mode
             CoroutineScope(Dispatchers.IO).launch {
                 switchMode(ModeManager.CameraMode.PREVIEW_ONLY)
             }
@@ -248,13 +211,11 @@ class Camera2System(
             onError?.invoke(error)
         }
 
-        // Mode manager callbacks
         modeManager.onError = { error ->
             uiBridge.reportError(error)
             onError?.invoke(error)
         }
 
-        // UI bridge callbacks
         uiBridge.onError = { error -> onError?.invoke(error) }
         uiBridge.onProgress = { message -> onProgress?.invoke(message) }
     }
@@ -265,11 +226,13 @@ class Camera2System(
                 val caps = cameraController.getDeviceCaps() ?: return@withContext false
                 val previewSurface = uiBridge.getPreviewSurface() ?: return@withContext false
 
-                // Setup RAW engine
-                rawEngine.setup(caps.rawSize, outputDirectory ?: createTempDirectory(), currentSessionId)
+                rawEngine.setup(
+                    caps.rawSize,
+                    outputDirectory ?: createTempDirectory(),
+                    currentSessionId
+                )
                 val rawSurface = rawEngine.getSurface() ?: return@withContext false
 
-                // Create capture session with preview + RAW surfaces
                 val surfaces = listOf(previewSurface, rawSurface)
 
                 return@withContext suspendCancellableCoroutine { continuation ->
@@ -279,12 +242,16 @@ class Camera2System(
                             override fun onConfigured(session: CameraCaptureSession) {
                                 cameraController.setCaptureSession(session)
 
-                                // Start repeating preview request
-                                val requestBuilder = cameraController.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
+                                val requestBuilder =
+                                    cameraController.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
                                 requestBuilder?.addTarget(previewSurface)
 
                                 try {
-                                    session.setRepeatingRequest(requestBuilder!!.build(), null, null)
+                                    session.setRepeatingRequest(
+                                        requestBuilder!!.build(),
+                                        null,
+                                        null
+                                    )
                                     continuation.resume(true, null)
                                 } catch (e: Exception) {
                                     Log.e(TAG, "Failed to start preview request", e)
@@ -311,11 +278,9 @@ class Camera2System(
                 val caps = cameraController.getDeviceCaps() ?: return@withContext false
                 val previewSurface = uiBridge.getPreviewSurface() ?: return@withContext false
 
-                // Determine video parameters
                 val videoSize = Size(3840, 2160) // 4K
                 val frameRate = if (caps.supports4k60) 60 else 30
 
-                // Create capture session with preview surface only (MediaRecorder surface added when recording)
                 val surfaces = listOf(previewSurface)
 
                 return@withContext suspendCancellableCoroutine { continuation ->
@@ -325,12 +290,16 @@ class Camera2System(
                             override fun onConfigured(session: CameraCaptureSession) {
                                 cameraController.setCaptureSession(session)
 
-                                // Start repeating preview request
-                                val requestBuilder = cameraController.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
+                                val requestBuilder =
+                                    cameraController.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
                                 requestBuilder?.addTarget(previewSurface)
 
                                 try {
-                                    session.setRepeatingRequest(requestBuilder!!.build(), null, null)
+                                    session.setRepeatingRequest(
+                                        requestBuilder!!.build(),
+                                        null,
+                                        null
+                                    )
                                     continuation.resume(true, null)
                                 } catch (e: Exception) {
                                     Log.e(TAG, "Failed to start video preview request", e)
@@ -356,7 +325,6 @@ class Camera2System(
             try {
                 val previewSurface = uiBridge.getPreviewSurface() ?: return@withContext false
 
-                // Create capture session with preview surface only
                 val surfaces = listOf(previewSurface)
 
                 return@withContext suspendCancellableCoroutine { continuation ->
@@ -366,12 +334,16 @@ class Camera2System(
                             override fun onConfigured(session: CameraCaptureSession) {
                                 cameraController.setCaptureSession(session)
 
-                                // Start repeating preview request
-                                val requestBuilder = cameraController.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
+                                val requestBuilder =
+                                    cameraController.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
                                 requestBuilder?.addTarget(previewSurface)
 
                                 try {
-                                    session.setRepeatingRequest(requestBuilder!!.build(), null, null)
+                                    session.setRepeatingRequest(
+                                        requestBuilder!!.build(),
+                                        null,
+                                        null
+                                    )
                                     continuation.resume(true, null)
                                 } catch (e: Exception) {
                                     Log.e(TAG, "Failed to start preview request", e)
@@ -395,10 +367,9 @@ class Camera2System(
     private suspend fun startRawRecording(): Boolean =
         withContext(Dispatchers.IO) {
             try {
-                // RAW capture uses continuous still capture requests
+
                 rawEngine.startCapture()
 
-                // Start periodic RAW capture
                 startPeriodicRawCapture()
 
                 return@withContext true
@@ -416,12 +387,10 @@ class Camera2System(
                 val videoSize = Size(3840, 2160)
                 val frameRate = if (caps.supports4k60) 60 else 30
 
-                // Prepare MediaRecorder
                 val recorderSurface =
                     videoEngine.prepare(videoFile, videoSize, frameRate, DEFAULT_BITRATE, true)
                         ?: return@withContext false
 
-                // Reconfigure session to include recorder surface
                 val previewSurface = uiBridge.getPreviewSurface() ?: return@withContext false
                 val surfaces = listOf(previewSurface, recorderSurface)
 
@@ -432,15 +401,18 @@ class Camera2System(
                             override fun onConfigured(session: CameraCaptureSession) {
                                 cameraController.setCaptureSession(session)
 
-                                // Create recording request
-                                val requestBuilder = cameraController.createCaptureRequest(CameraDevice.TEMPLATE_RECORD)
+                                val requestBuilder =
+                                    cameraController.createCaptureRequest(CameraDevice.TEMPLATE_RECORD)
                                 requestBuilder?.addTarget(previewSurface)
                                 requestBuilder?.addTarget(recorderSurface)
 
                                 try {
-                                    session.setRepeatingRequest(requestBuilder!!.build(), null, null)
+                                    session.setRepeatingRequest(
+                                        requestBuilder!!.build(),
+                                        null,
+                                        null
+                                    )
 
-                                    // Start MediaRecorder
                                     if (videoEngine.start()) {
                                         continuation.resume(true, null)
                                     } else {
@@ -466,7 +438,7 @@ class Camera2System(
         }
 
     private fun startPeriodicRawCapture() {
-        // Start periodic RAW still captures at 15fps
+
         val captureInterval = 1000L / 15 // 15fps
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -482,7 +454,8 @@ class Camera2System(
             val rawSurface = rawEngine.getSurface() ?: return
             val session = cameraController.getCaptureSession() ?: return
 
-            val requestBuilder = cameraController.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
+            val requestBuilder =
+                cameraController.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
             requestBuilder?.addTarget(rawSurface)
 
             session.capture(
@@ -493,7 +466,7 @@ class Camera2System(
                         request: CaptureRequest,
                         result: TotalCaptureResult,
                     ) {
-                        // Store capture result for DNG pairing
+
                         rawEngine.storeCaptureResult(result)
                     }
                 },

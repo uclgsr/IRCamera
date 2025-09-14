@@ -24,12 +24,6 @@ import com.github.gzuliyujiang.wheelpicker.contract.OnTimeMeridiemPickedListener
 import com.github.gzuliyujiang.wheelpicker.contract.OnTimePickedListener;
 import com.github.gzuliyujiang.wheelpicker.widget.TimeWheelLayout;
 
-/**
- * 时间选择器
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/5 18:19
- */
 @SuppressWarnings("unused")
 public class TimePicker extends ModalDialog {
     protected TimeWheelLayout wheelLayout;

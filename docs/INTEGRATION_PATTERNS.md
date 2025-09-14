@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document provides comprehensive integration patterns, workflows, and best practices for implementing and extending the IRCamera thermal imaging platform across different environments and use cases.
+This document provides comprehensive integration patterns, workflows, and best practices for
+implementing and extending the IRCamera thermal imaging platform across different environments and
+use cases.
 
 ## Table of Contents
 
@@ -49,7 +51,7 @@ sequenceDiagram
 ### Component Lifecycle Integration Pattern
 
 ```kotlin
-// Android Integration Pattern for Component Lifecycle
+
 class ThermalIntegrationManager : ComponentLifecycleObserver {
     private val thermalProcessor = ThermalProcessingEngine()
     private val dataAggregator = DataAggregationService()
@@ -85,7 +87,7 @@ class ThermalIntegrationManager : ComponentLifecycleObserver {
 ### Thermal-IR and GSR Integration Pattern
 
 ```kotlin
-// Cross-module data correlation pattern
+
 class MultiModalDataCorrelator {
     private val thermalProcessor = ThermalIRProcessor()
     private val gsrProcessor = GSRDataProcessor()
@@ -94,24 +96,21 @@ class MultiModalDataCorrelator {
     fun startCorrelatedRecording(sessionConfig: SessionConfiguration) {
         val sessionId = generateSessionId()
         val timestamp = getCurrentTimestamp()
-        
-        // Start thermal recording
+
         thermalProcessor.startRecording(ThermalConfig(
             sessionId = sessionId,
             baseTimestamp = timestamp,
             resolution = sessionConfig.thermalResolution,
             frameRate = sessionConfig.frameRate
         ))
-        
-        // Start GSR recording  
+
         gsrProcessor.startRecording(GSRConfig(
             sessionId = sessionId,
             baseTimestamp = timestamp,
             samplingRate = sessionConfig.gsrSamplingRate,
             filterSettings = sessionConfig.gsrFilters
         ))
-        
-        // Start correlation
+
         correlationEngine.startCorrelation(sessionId, timestamp)
     }
     
@@ -131,7 +130,7 @@ class MultiModalDataCorrelator {
 ### LibIR and LibMatrix Integration
 
 ```kotlin
-// Advanced image processing integration pattern
+
 class AdvancedThermalProcessor {
     private val irLibrary = LibIRProcessor()
     private val matrixLibrary = LibMatrixProcessor()
@@ -140,10 +139,9 @@ class AdvancedThermalProcessor {
         rawThermalData: ByteArray,
         enhancementMode: EnhancementMode
     ): ProcessedThermalImage {
-        // Stage 1: Basic thermal processing
+
         val basicProcessed = irLibrary.processRawThermal(rawThermalData)
-        
-        // Stage 2: Matrix-based enhancement
+
         val thermalMatrix = matrixLibrary.createMatrix(basicProcessed.data)
         val enhancedMatrix = when (enhancementMode) {
             EnhancementMode.EDGE_DETECTION -> {
@@ -156,8 +154,7 @@ class AdvancedThermalProcessor {
                 matrixLibrary.applyHistogramEqualization(thermalMatrix)
             }
         }
-        
-        // Stage 3: Convert back to thermal image
+
         return irLibrary.matrixToThermalImage(enhancedMatrix)
     }
 }
@@ -199,7 +196,7 @@ flowchart TD
 ### GSR Sensor Integration Workflow
 
 ```kotlin
-// Comprehensive GSR integration pattern
+
 class GSRIntegrationWorkflow {
     private val bleManager = BLEConnectionManager()
     private val dataProcessor = GSRDataProcessor()
@@ -207,25 +204,21 @@ class GSRIntegrationWorkflow {
     
     suspend fun initializeGSRSensor(deviceAddress: String): GSRIntegrationResult {
         return try {
-            // Step 1: Establish BLE connection
+
             val connection = bleManager.connectToDevice(deviceAddress)
             if (!connection.isSuccessful) {
                 return GSRIntegrationResult.Failure("BLE connection failed")
             }
-            
-            // Step 2: Device capability discovery
+
             val capabilities = discoverDeviceCapabilities(connection.device)
-            
-            // Step 3: Calibration workflow
+
             val calibrationResult = calibrationManager.performCalibration(connection.device)
             if (!calibrationResult.isSuccessful) {
                 return GSRIntegrationResult.Failure("Calibration failed")
             }
-            
-            // Step 4: Configure data streaming
+
             configureDataStreaming(connection.device, capabilities)
-            
-            // Step 5: Start data collection
+
             startDataCollection(connection.device)
             
             GSRIntegrationResult.Success(connection.device, capabilities)
@@ -784,7 +777,7 @@ class GCPCloudIntegration:
 ### WebSocket Integration for Live Data
 
 ```kotlin
-// Android WebSocket integration for real-time data streaming
+
 class RealtimeDataStreamer {
     private lateinit var webSocketClient: WebSocketClient
     private val dataBuffer = ConcurrentLinkedQueue<DataPacket>()
@@ -953,7 +946,7 @@ class RealtimeAnalyticsEngine:
 ### Memory-Efficient Processing
 
 ```kotlin
-// Memory-efficient thermal data processing
+
 class MemoryEfficientThermalProcessor {
     private val processingQueue = ArrayBlockingQueue<ThermalFrame>(100)
     private val processedFramePool = ObjectPool<ProcessedThermalFrame> {
@@ -961,16 +954,15 @@ class MemoryEfficientThermalProcessor {
     }
     
     fun processFrameStreaming(frame: ThermalFrame): ProcessedThermalFrame {
-        // Get recycled frame object
+
         val processedFrame = processedFramePool.acquire()
         
         try {
-            // In-place processing to avoid memory allocation
+
             processedFrame.reset()
             processedFrame.deviceId = frame.deviceId
             processedFrame.timestamp = frame.timestamp
-            
-            // Process thermal data in chunks to reduce memory pressure
+
             val chunkSize = 1024
             for (i in frame.rawData.indices step chunkSize) {
                 val endIndex = minOf(i + chunkSize, frame.rawData.size)
@@ -983,14 +975,14 @@ class MemoryEfficientThermalProcessor {
             return processedFrame
             
         } catch (e: Exception) {
-            // Return frame to pool on error
+
             processedFramePool.release(processedFrame)
             throw e
         }
     }
     
     private fun processChunk(chunk: ByteArray): FloatArray {
-        // Efficient in-place thermal processing
+
         val result = FloatArray(chunk.size / 2)
         for (i in chunk.indices step 2) {
             val rawValue = (chunk[i].toInt() and 0xFF) or 
@@ -1002,4 +994,6 @@ class MemoryEfficientThermalProcessor {
 }
 ```
 
-This comprehensive integration patterns documentation provides detailed guidance for implementing and extending the IRCamera platform across various environments and use cases. Each pattern includes practical code examples and architectural guidance for successful integration.
+This comprehensive integration patterns documentation provides detailed guidance for implementing
+and extending the IRCamera platform across various environments and use cases. Each pattern includes
+practical code examples and architectural guidance for successful integration.
