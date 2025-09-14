@@ -193,24 +193,41 @@ class IRCameraHubApplication:
                     logger.error("Failed to start device manager")
                 return success
             
-            # Schedule async startup
+            # Schedule async startup with non-blocking approach
             future = asyncio.ensure_future(start_device_manager())
             
-            # Wait a bit to see if startup succeeds
-            import time
-            for _ in range(50):  # Wait up to 0.5 seconds
-                self._process_async_events()
-                time.sleep(0.01)
+            # Use callback instead of blocking loop
+            def handle_device_manager_result():
                 if future.done():
-                    break
+                    try:
+                        result = future.result()
+                        if not result:
+                            self.main_window.logging_console.add_log_message("Device manager startup failed", "ERROR")
+                            return False
+                    except Exception as e:
+                        logger.error(f"Device manager startup error: {e}")
+                        return False
+                
+                # Start other services after device manager is ready
+                self._start_additional_services()
+                return True
             
+            # Check if already complete, otherwise schedule callback
             if future.done():
-                result = future.result()
-                if not result:
-                    return False
+                return handle_device_manager_result()
             else:
-                logger.info("Device manager startup in progress...")
+                # Schedule check for next event loop iteration
+                QTimer.singleShot(100, handle_device_manager_result)
+                logger.info("Device manager startup scheduled...")
+                return True  # Return True to continue with UI, services will start async
             
+        except Exception as e:
+            logger.error(f"Failed to start services: {e}")
+            return False
+    
+    def _start_additional_services(self) -> None:
+        """Start additional services after device manager is ready."""
+        try:
             # Start WebSocket server
             async def start_websocket():
                 return await self._start_websocket_server()
@@ -223,36 +240,39 @@ class IRCameraHubApplication:
                 
             ts_future = asyncio.ensure_future(start_timesync())
             
-            # Wait briefly for servers to start
-            for _ in range(30):  # Wait up to 0.3 seconds
-                self._process_async_events()
-                time.sleep(0.01)
-                if ws_future.done() and ts_future.done():
-                    break
+            # Use callbacks instead of blocking
+            def handle_websocket_result():
+                if ws_future.done():
+                    try:
+                        ws_result = ws_future.result()
+                        if ws_result:
+                            logger.info("WebSocket server started successfully")
+                            self.main_window.logging_console.add_log_message("WebSocket server started")
+                        else:
+                            logger.warning("WebSocket server failed to start")
+                            self.main_window.logging_console.add_log_message("WebSocket server failed", "WARNING")
+                    except Exception as e:
+                        logger.error(f"WebSocket server error: {e}")
             
-            # Check results
-            if ws_future.done():
-                ws_result = ws_future.result()
-                if not ws_result:
-                    logger.warning("WebSocket server failed to start, continuing without it")
-                    self.main_window.logging_console.add_log_message("WebSocket server failed to start", "WARNING")
-            else:
-                logger.info("WebSocket server startup in progress...")
-                
-            if ts_future.done():
-                ts_result = ts_future.result()  
-                if not ts_result:
-                    logger.warning("Time sync server failed to start, continuing without it")
-                    self.main_window.logging_console.add_log_message("Time sync server failed to start", "WARNING")
-            else:
-                logger.info("Time sync server startup in progress...")
+            def handle_timesync_result():
+                if ts_future.done():
+                    try:
+                        ts_result = ts_future.result()
+                        if ts_result:
+                            logger.info("Time sync server started successfully")
+                            self.main_window.logging_console.add_log_message("Time sync server started")
+                        else:
+                            logger.warning("Time sync server failed to start")
+                            self.main_window.logging_console.add_log_message("Time sync server failed", "WARNING")
+                    except Exception as e:
+                        logger.error(f"Time sync server error: {e}")
             
-            logger.info("Core services startup initiated")
-            return True
+            # Schedule callbacks
+            QTimer.singleShot(200, handle_websocket_result)
+            QTimer.singleShot(300, handle_timesync_result)
             
         except Exception as e:
-            logger.error(f"Failed to start services: {e}")
-            return False
+            logger.error(f"Error starting additional services: {e}")
     
     async def _start_websocket_server(self) -> bool:
         """

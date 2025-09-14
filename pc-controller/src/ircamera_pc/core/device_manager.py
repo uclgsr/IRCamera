@@ -411,13 +411,15 @@ class DeviceManager:
     
     def _on_device_discovered(self, event_type: str, discovered_device: DiscoveredDevice) -> None:
         """Handle device discovery events."""
-        if event_type == "device_discovered":
+        if event_type == "discovered":  # Fix: Changed from "device_discovered" to "discovered"
             device_id = self.registry.register_device(discovered_device)
             logger.info(f"Device discovered and registered: {device_id}")
     
-    def _on_device_lost(self, event_type: str, service_name: str) -> None:
+    def _on_device_lost(self, event_type: str, lost_device: DiscoveredDevice) -> None:
         """Handle device loss events."""
-        if event_type == "device_lost":
+        if event_type == "lost":  # Fix: Changed from "device_lost" to "lost"
+            # Fix: Parameter is now DiscoveredDevice, not service_name string
+            service_name = lost_device.service_name
             # Find device by service name
             for device_id, device in self.registry.get_all_devices().items():
                 if device.device_name == service_name:
@@ -473,3 +475,32 @@ class DeviceManager:
     def remove_status_callback(self, callback: Callable[[str, DeviceInfo, str], None]) -> None:
         """Remove device status callback."""
         self.registry.remove_status_callback(callback)
+    
+    async def connect_to_device(self, device_id: str) -> bool:
+        """
+        Connect to a specific device.
+        
+        Args:
+            device_id: ID of the device to connect to
+            
+        Returns:
+            True if connection successful, False otherwise
+        """
+        try:
+            device_info = self.registry.get_device(device_id)
+            if not device_info:
+                logger.error(f"Device not found in registry: {device_id}")
+                return False
+            
+            # Update device state to connecting
+            self.registry.update_device_state(device_id, DeviceConnectionState.ONLINE)
+            
+            # TODO: Implement actual network connection logic
+            # For now, just mark as connected if device exists
+            logger.info(f"Connected to device: {device_id}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to connect to device {device_id}: {e}")
+            self.registry.update_device_state(device_id, DeviceConnectionState.ERROR)
+            return False

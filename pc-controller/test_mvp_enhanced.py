@@ -53,28 +53,31 @@ def test_manual_device_functionality():
     
     try:
         from ircamera_pc.core.device_manager import DeviceManager, DeviceInfo, DeviceType, DeviceConnectionState
+        from ircamera_pc.network.discovery import DiscoveredDevice
+        from datetime import datetime
         
         # Create device manager
         device_manager = DeviceManager()
         registry = device_manager.get_registry()
         
-        # Test manual device creation
-        device_info = DeviceInfo(
-            device_id="test_manual_device",
-            device_name="Test Manual Device",
-            device_type=DeviceType.ANDROID_SENSOR_NODE,  # Use correct enum
+        # Fix: Create DiscoveredDevice instead of DeviceInfo for register_device
+        discovered_device = DiscoveredDevice(
+            service_name="Test Manual Device",
+            service_type="_test._tcp.local.",
             ip_address="192.168.1.100",
             port=8080,
-            state=DeviceConnectionState.DISCOVERED,
-            capabilities=["manual_device"]
+            device_type=DeviceType.ANDROID_SENSOR_NODE,
+            attributes={},
+            discovered_at=datetime.now(),
+            last_seen=datetime.now()
         )
         
-        # Add to registry
-        registry.register_device("test_manual_device", device_info)
+        # Fix: Call register_device with single DiscoveredDevice parameter
+        device_id = registry.register_device(discovered_device)
         print("✓ Manual device registration successful")
         
         # Verify device was added
-        registered_info = registry.get_device_info("test_manual_device")
+        registered_info = registry.get_device(device_id)
         if registered_info:
             print("✓ Manual device retrieval successful")
         else:

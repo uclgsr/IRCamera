@@ -114,6 +114,10 @@ class EnhancedSessionManager:
     - Error handling and recovery
     """
     
+    # Constants
+    MIN_SUCCESS_RATE_FOR_START = 0.5  # Minimum success rate (50%) to consider start successful
+    MIN_SUCCESS_RATE_FOR_STOP = 0.5   # Minimum success rate (50%) to consider stop successful
+    
     def __init__(self, device_manager: DeviceManager, base_session_dir: Path):
         """
         Initialize session manager.
@@ -430,8 +434,8 @@ class EnhancedSessionManager:
         success_rate = success_count / len(devices) if devices else 0
         logger.info(f"Start command success rate: {success_count}/{len(devices)} ({success_rate:.1%})")
         
-        # Consider success if at least 50% of devices responded
-        return success_rate >= 0.5
+        # Consider success if at least minimum threshold of devices responded
+        return success_rate >= self.MIN_SUCCESS_RATE_FOR_START
     
     async def _send_stop_commands_to_devices(self) -> bool:
         """
@@ -480,8 +484,8 @@ class EnhancedSessionManager:
         success_rate = success_count / device_count if device_count else 0
         logger.info(f"Stop command success rate: {success_count}/{device_count} ({success_rate:.1%})")
         
-        # Consider success if at least 50% of devices responded
-        return success_rate >= 0.5
+        # Consider success if at least minimum threshold of devices responded
+        return success_rate >= self.MIN_SUCCESS_RATE_FOR_STOP
     
     def _update_session_state(self, new_state: SessionState) -> None:
         """Update session state and notify callbacks."""
@@ -505,10 +509,7 @@ class EnhancedSessionManager:
             "data": data
         }
         
-        if not hasattr(self.current_session, 'event_log'):
-            self.current_session.event_log = []
-        
-        # Add to sync_events for backward compatibility
+        # Fix: Use sync_events directly instead of dynamically adding event_log
         self.current_session.sync_events.append(event)
     
     def _save_session_metadata(self) -> None:
