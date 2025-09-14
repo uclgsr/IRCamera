@@ -161,7 +161,7 @@ class DeviceRegistry:
         if device_id in self.devices:
             # Update existing device
             existing = self.devices[device_id]
-            existing.ip_address = discovered_device.ipAddress
+            existing.ip_address = discovered_device.ip_address
             existing.port = discovered_device.port
             existing.discovered_at = datetime.now()
             existing.state = DeviceConnectionState.DISCOVERED
