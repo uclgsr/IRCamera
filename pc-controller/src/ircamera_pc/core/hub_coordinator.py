@@ -251,9 +251,11 @@ class HubCoordinator:
             
             self._active_sessions[session_id] = session
             
-            # Register time sync sessions for all devices
-            for device_id in participating_devices:
-                await self._network_server.register_time_sync_session(session_id, device_id)
+            # Register time sync sessions for all devices concurrently
+            await asyncio.gather(*(
+                self._network_server.register_time_sync_session(session_id, device_id)
+                for device_id in participating_devices
+            ))
             
             # Send session start command to devices
             session.state = SessionState.RECORDING
