@@ -8,7 +8,11 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.util.Log
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText  
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
