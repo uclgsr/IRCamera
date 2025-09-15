@@ -1690,66 +1690,67 @@ class RecordingService : LifecycleService() {
         data: JSONObject = JSONObject()
     ) {
         try {
-        val response = JSONObject().apply {
-            put("message_type", messageType)
-            put(
-                "device_id",
-                android.provider.Settings.Secure.getString(
-                    contentResolver,
-                    android.provider.Settings.Secure.ANDROID_ID
+            val response = JSONObject().apply {
+                put("message_type", messageType)
+                put(
+                    "device_id",
+                    android.provider.Settings.Secure.getString(
+                        contentResolver,
+                        android.provider.Settings.Secure.ANDROID_ID
+                    )
                 )
-            )
-            put("timestamp_ns", System.nanoTime())
+                put("timestamp_ns", System.nanoTime())
 
-            data.keys().forEach { key ->
-                put(key, data.get(key))
+                data.keys().forEach { key ->
+                    put(key, data.get(key))
+                }
             }
 
-        networkServer.sendMessage(response)
-        Log.d(TAG, "Sent response to PC: $messageType")
+            networkServer.sendMessage(response)
+            Log.d(TAG, "Sent response to PC: $messageType")
 
         } catch (e: Exception) {
-        Log.e(TAG, "Error sending response to PC", e)
+            Log.e(TAG, "Error sending response to PC", e)
         }
     }
 
     private suspend fun sendStatusToPC() {
         try {
-        val statusData = JSONObject().apply {
-            put("is_recording", recordingController.isRecording)
-            put("current_session", currentSessionDirectory ?: "")
-            put("recording_start_time", recordingStartTime)
-            put("service_initialized", isInitialized)
-            put("network_server_running", networkServer.isRunning())
-            put("pc_connected", isConnectedToPC)
-        }
+            val statusData = JSONObject().apply {
+                put("is_recording", recordingController.isRecording)
+                put("current_session", currentSessionDirectory ?: "")
+                put("recording_start_time", recordingStartTime)
+                put("service_initialized", isInitialized)
+                put("network_server_running", networkServer.isRunning())
+                put("pc_connected", isConnectedToPC)
+            }
 
-        sendResponseToPC("status_response", statusData)
-        Log.i(TAG, "Status sent to PC Controller")
+            sendResponseToPC("status_response", statusData)
+            Log.i(TAG, "Status sent to PC Controller")
 
         } catch (e: Exception) {
-        Log.e(TAG, "Error sending status to PC", e)
+            Log.e(TAG, "Error sending status to PC", e)
         }
     }
 
     private fun addSyncMarker(markerType: String, timestampNs: Long) {
         try {
-        // Add sync marker to all active recorders
-        recordingController.addSyncMarker(markerType, timestampNs)
-        Log.d(TAG, "Added sync marker: $markerType at $timestampNs")
+            // Add sync marker to all active recorders
+            recordingController.addSyncMarker(markerType, timestampNs)
+            Log.d(TAG, "Added sync marker: $markerType at $timestampNs")
         } catch (e: Exception) {
-        Log.e(TAG, "Error adding sync marker", e)
+            Log.e(TAG, "Error adding sync marker", e)
         }
     }
 
     private fun handleQueryStatusCommand(message: JSONObject) {
         try {
-        Log.d(TAG, "Handling query status command")
-        lifecycleScope.launch {
-            sendStatusToPC()
-        }
+            Log.d(TAG, "Handling query status command")
+            lifecycleScope.launch {
+                sendStatusToPC()
+            }
         } catch (e: Exception) {
-        Log.e(TAG, "Error handling query status command", e)
+            Log.e(TAG, "Error handling query status command", e)
         }
     }
 
@@ -1821,4 +1822,3 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Error handling stop recording command", e)
         }
     }
-}

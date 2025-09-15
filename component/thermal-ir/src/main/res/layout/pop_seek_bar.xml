@@ -14,8 +14,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="#80232323"
-            app:bgCorners="@{8}"
+            android:background="@drawable/shape_rounded_8dp_80232323"
             app:layout_constraintBottom_toBottomOf="@+id/seek_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

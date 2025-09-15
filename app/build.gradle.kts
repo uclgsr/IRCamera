@@ -5,6 +5,7 @@ import java.util.Locale
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt") // Keep kapt for ARouter compatibility
     id("com.google.devtools.ksp") // Use KSP plugin from classpath
 }
 
@@ -29,6 +30,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
+
+        // Configure ARouter annotation processor for kapt
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["AROUTER_MODULE_NAME"] = project.name
+            }
+        }
 
         ndk {
             abiFilters += listOf("arm64-v8a")
@@ -265,7 +273,7 @@ dependencies {
     implementation(project(":BleModule"))
 
     implementation(libs.arouter.api)
-    ksp(libs.arouter.compiler) // Migrated from kapt to KSP
+    kapt(libs.arouter.compiler) // Use kapt for ARouter compiler compatibility
 
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))
