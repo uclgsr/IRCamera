@@ -562,8 +562,12 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
     basicGainGetTime = System.currentTimeMillis()
     }
     val params_array = floatArrayOf(
-    temp!!, config!!.radiation, config!!.environment,
-    config!!.environment, config!!.distance, 0.8f
+        temp!!, 
+        config?.radiation ?: 0.95f, 
+        config?.environment ?: 30.0f,
+        config?.environment ?: 30.0f, 
+        config?.distance ?: 0.25f, 
+        0.8f
     )
     if (BaseApplication.instance.tau_data_H == null || BaseApplication.instance.tau_data_L == null) return temp
     tempNew = LibIRTempAC020.temperatureCorrection(

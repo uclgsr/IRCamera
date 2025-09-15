@@ -7,7 +7,6 @@ import com.kylecorry.andromeda.sense.compass.ICompass
 import com.kylecorry.sol.units.Bearing
 import kotlin.math.min
 
-
 class MagQualityCompassWrapper(private val compass: ICompass, private val magnetometer: ISensor) :
     AbstractSensor(), ICompass {
     override val bearing: Bearing

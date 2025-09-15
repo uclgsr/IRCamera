@@ -10,26 +10,30 @@ import android.widget.TextView
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.module.thermal.ir.R
 
-
-
+/**
+    * 图库目录切换 PopupWindow.
+    *
+    * Created by LCG on 2024/1/5.
+    */
 class GalleryChangePopup(private val context: Context) : PopupWindow() {
+
     // View references using findViewById
     private val tvLine: TextView by lazy { contentView.findViewById(R.id.tv_line) }
     private val tvTs004: TextView by lazy { contentView.findViewById(R.id.tv_ts004) }
     private val tvTc007: TextView by lazy { contentView.findViewById(R.id.tv_tc007) }
 
 
+    /**
+    * 一个选项被选中事件监听.
+    */
     var onPickListener: ((position: Int, str: String) -> Unit)? = null
 
+
     init {
-        val widthMeasureSpec =
-            MeasureSpec.makeMeasureSpec(
-                (context.resources.displayMetrics.widthPixels * 0.6).toInt(),
-                MeasureSpec.EXACTLY,
-            )
-        val heightMeasureSpec = MeasureSpec.makeMeasureSpec(context.resources.displayMetrics.heightPixels, MeasureSpec.AT_MOST)
-        contentView = LayoutInflater.from(context).inflate(R.layout.popup_gallery_change, null)
-        contentView.measure(widthMeasureSpec, heightMeasureSpec)
+    val widthMeasureSpec = MeasureSpec.makeMeasureSpec((context.resources.displayMetrics.widthPixels * 0.6).toInt(), MeasureSpec.EXACTLY)
+    val heightMeasureSpec = MeasureSpec.makeMeasureSpec(context.resources.displayMetrics.heightPixels, MeasureSpec.AT_MOST)
+    contentView = LayoutInflater.from(context).inflate(R.layout.popup_gallery_change, null)
+    contentView.measure(widthMeasureSpec, heightMeasureSpec)
 
     width = contentView.measuredWidth
     height = contentView.measuredHeight

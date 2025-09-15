@@ -14,22 +14,30 @@ import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.lib.core.tools.TimeTool
 import com.topdon.module.thermal.ir.R
 
-
-
+/**
+    * 照片或视频
+    */
 @SuppressLint("NotifyDataSetChanged")
 class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     companion object {
     private const val TYPE_HEAD = 0
     private const val TYPE_DATA = 1
     }
 
-
+    /**
+    * 当前显示的数据列表，包含有标题 item.
+    */
     val dataList: ArrayList<GalleryBean> = ArrayList()
 
-
+    /**
+    * 编辑模式下，当前选中的 position 列表.
+    */
     val selectList: ArrayList<Int> = ArrayList()
 
-
+    /**
+    * 是否为 TS004 远端模式，处于该模式会有下载图标.
+    */
     var isTS004Remote = false
     set(value) {
     if (field != value) {
@@ -38,7 +46,9 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
     }
 
-
+    /**
+    * 当前是否处于编辑模式.
+    */
     var isEditMode = false
     set(value) {
     if (field != value) {
@@ -52,13 +62,20 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
 
+    /**
+    * 非编辑模式下 item 长按进入编辑模式事件监听.
+    */
     var onLongEditListener: (() -> Unit)? = null
-
-
+    /**
+    * 选中数量变更回调.
+    * data 当前选中的 item position 列表
+    */
     var selectCallback: ((data: ArrayList<Int>) -> Unit)? = null
-
-
+    /**
+    * 非编辑模式时，item 点击事件监听.
+    */
     var itemClickCallback: ((position: Int) -> Unit)? = null
+
 
     fun refreshList(newList: List<GalleryBean>) {
     dataList.clear()
@@ -103,31 +120,25 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int,
-    ): RecyclerView.ViewHolder {
-        return if (viewType == TYPE_HEAD) {
-            ItemHeadView(LayoutInflater.from(parent.context).inflate(R.layout.item_gallery_head_lay, parent, false))
-        } else {
-            ItemView(LayoutInflater.from(parent.context).inflate(R.layout.item_gallery_lay, parent, false))
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    return if (viewType == TYPE_HEAD) {
+    ItemHeadView(LayoutInflater.from(parent.context).inflate(R.layout.item_gallery_head_lay, parent, false))
+    } else {
+    ItemView(LayoutInflater.from(parent.context).inflate(R.layout.item_gallery_lay, parent, false))
+    }
     }
 
-    override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
-        position: Int,
-    ) {
-        val data = dataList[position]
-        if (holder is ItemView) {
-            GlideLoader.load(holder.img, data.thumb)
-            if (data.name.uppercase().endsWith(".MP4")) {
-                holder.info.text = TimeTool.showVideoTime(data.duration)
-                holder.ivVideoTime.isVisible = true
-            } else {
-                holder.info.text = ""
-                holder.ivVideoTime.isVisible = false
-            }
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    val data = dataList[position]
+    if (holder is ItemView) {
+    GlideLoader.load(holder.img, data.thumb)
+    if (data.name.uppercase().endsWith(".MP4")) {
+    holder.info.text = TimeTool.showVideoTime(data.duration)
+    holder.ivVideoTime.isVisible = true
+    } else {
+    holder.info.text = ""
+    holder.ivVideoTime.isVisible = false
+    }
 
     holder.ivHasDownload.isVisible = isTS004Remote && data.hasDownload
 
@@ -180,4 +191,6 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val ivHasDownload: ImageView = itemView.findViewById(R.id.iv_has_download)
     val ivCheck: ImageView = itemView.findViewById(R.id.iv_check)
     }
+
+
 }

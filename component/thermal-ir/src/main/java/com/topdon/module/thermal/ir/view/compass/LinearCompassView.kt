@@ -20,9 +20,11 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlin.coroutines.EmptyCoroutineContext
 
-
-
+/**
+    * 横向的指南针View
+    */
 class LinearCompassView : View {
+
     private val paint = Paint()
     private val textPaint = Paint()
     private val markerPaint = Paint()
@@ -44,10 +46,10 @@ class LinearCompassView : View {
     private var markerSize = SizeUtils.sp2px(2f).toFloat()
     private var backgroundColor = Color.BLACK
 
-    private var lastDrawTime = 0L // 执行时间
-    private var step = 1000 / 10 // 一秒绘制的帧数
+    private var lastDrawTime = 0L //执行时间
+    private var step = 1000/10 //一秒绘制的帧数
     private val scope = CoroutineScope(EmptyCoroutineContext)
-    var curBitmap: Bitmap? = null // 当前view的bitmap
+    var curBitmap:Bitmap?= null //当前view的bitmap
 
     constructor(context: Context) : this(context, null) {
     initView()
@@ -58,46 +60,42 @@ class LinearCompassView : View {
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr,
+    context,
+    attrs,
+    defStyleAttr
     ) {
-        val attributes =
-            context.obtainStyledAttributes(attrs, R.styleable.LinearCompassView, 0, 0)
-        lineColor = attributes.getColor(R.styleable.LinearCompassView_lineColor, Color.WHITE)
-        textColor = attributes.getColor(R.styleable.LinearCompassView_textColor, Color.WHITE)
-        backgroundColor =
-            attributes.getColor(R.styleable.LinearCompassView_backgroundColor, Color.BLACK)
-        shortLineColor =
-            attributes.getColor(R.styleable.LinearCompassView_shortLineColor, Color.WHITE)
-        longLineColor =
-            attributes.getColor(R.styleable.LinearCompassView_longLineColor, Color.WHITE)
-        positionColor =
-            attributes.getColor(R.styleable.LinearCompassView_positionColor, Color.WHITE)
-        centerAzimuthColor =
-            attributes.getColor(R.styleable.LinearCompassView_compassMarkerColor, Color.WHITE)
-        shortLineSize =
-            attributes.getDimension(
-                R.styleable.LinearCompassView_shortLineSize,
-                SizeUtils.sp2px(0.5f).toFloat(),
-            )
-        longLineSize =
-            attributes.getDimension(
-                R.styleable.LinearCompassView_longLineSize,
-                SizeUtils.sp2px(0.5f).toFloat(),
-            )
-        positionSize =
-            attributes.getDimension(
-                R.styleable.LinearCompassView_positionSize,
-                SizeUtils.sp2px(11f).toFloat(),
-            )
-        markerSize =
-            attributes.getDimension(
-                R.styleable.LinearCompassView_markerSize,
-                SizeUtils.sp2px(2f).toFloat(),
-            )
-        attributes.recycle()
-        initView()
+    val attributes =
+    context.obtainStyledAttributes(attrs, R.styleable.LinearCompassView, 0, 0)
+    lineColor = attributes.getColor(R.styleable.LinearCompassView_lineColor, Color.WHITE)
+    textColor = attributes.getColor(R.styleable.LinearCompassView_textColor, Color.WHITE)
+    backgroundColor =
+    attributes.getColor(R.styleable.LinearCompassView_backgroundColor, Color.BLACK)
+    shortLineColor =
+    attributes.getColor(R.styleable.LinearCompassView_shortLineColor, Color.WHITE)
+    longLineColor =
+    attributes.getColor(R.styleable.LinearCompassView_longLineColor, Color.WHITE)
+    positionColor =
+    attributes.getColor(R.styleable.LinearCompassView_positionColor, Color.WHITE)
+    centerAzimuthColor =
+    attributes.getColor(R.styleable.LinearCompassView_compassMarkerColor, Color.WHITE)
+    shortLineSize = attributes.getDimension(
+    R.styleable.LinearCompassView_shortLineSize,
+    SizeUtils.sp2px(0.5f).toFloat()
+    )
+    longLineSize = attributes.getDimension(
+    R.styleable.LinearCompassView_longLineSize,
+    SizeUtils.sp2px(0.5f).toFloat()
+    )
+    positionSize = attributes.getDimension(
+    R.styleable.LinearCompassView_positionSize,
+    SizeUtils.sp2px(11f).toFloat()
+    )
+    markerSize = attributes.getDimension(
+    R.styleable.LinearCompassView_markerSize,
+    SizeUtils.sp2px(2f).toFloat()
+    )
+    attributes.recycle()
+    initView()
     }
 
     private fun initView() {
@@ -142,7 +140,6 @@ class LinearCompassView : View {
     private var text: String = ""
 
     private fun getRawMinimum() = azimuth - range / 2
-
     private fun getRawMaximum() = azimuth + range / 2
 
     override fun draw(canvas: Canvas) {
@@ -153,104 +150,102 @@ class LinearCompassView : View {
     drawCompassLine()
     }
 
-//drawing背景
+    //绘制背景
     private fun drawBackGround() {
     canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
     }
 
-//drawing角度
+    //绘制角度
     private fun drawAzimuthArrow() {
-        if (!showAzimuthArrow) {
-            return
-        }
-        val endWidth = width / 2f
-        val endHeight = (3 / 10f) * height
-        canvas.drawText(text, realX(text, endWidth, textPaint), realY(text, endHeight, textPaint), textPaint)
+    if (!showAzimuthArrow) {
+    return
+    }
+    val endWidth = width / 2f
+    val endHeight = (3 / 10f) * height
+    canvas.drawText(text, realX(text, endWidth,textPaint), realY(text, endHeight,textPaint), textPaint)
     }
 
-//drawing标记线
+    //绘制标记线
     private fun drawCompassLine() {
-//calculation指南针的线有几等份
+    //计算指南针的线有几等份
 //        val values = getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map { it.toInt() }
-        drawCompass()
-        val bottomHeight = height * 7 / 10f
-        canvas.drawLine(0f, (bottomHeight - 1), width.toFloat(), bottomHeight, shortLinePaint)
-//在中间位置drawing标志线
-        canvas.drawLine(
-            width / 2f + markerSize / 2,
-            height * (3 / 10f),
-            width / 2f + markerSize / 2,
-            height * (7 / 10f),
-            markerPaint,
-        )
+    drawCompass()
+    val bottomHeight = height * 7 / 10f
+    canvas.drawLine(0f, (bottomHeight - 1), width.toFloat(), bottomHeight, shortLinePaint)
+    //在中间位置绘制标志线
+    canvas.drawLine(
+    width / 2f + markerSize / 2,
+    height * (3 / 10f),
+    width / 2f + markerSize / 2,
+    height * (7 / 10f),
+    markerPaint
+    )
     }
 
     fun setCurAzimuth(azimuth: Int) {
-        scope.launch(Dispatchers.IO) {
-            this@LinearCompassView.azimuth = azimuth.toFloat()
-            this@LinearCompassView.text = azimuth.toString()
-            var curTime = System.currentTimeMillis()
-            if (curTime - lastDrawTime > step) {
-                lastDrawTime = curTime
-                launch(Dispatchers.Main) {
-                    curBitmap = this@LinearCompassView.drawToBitmap()
-                    invalidate()
-                }
-            }
-        }
+    scope.launch(Dispatchers.IO) {
+    this@LinearCompassView.azimuth = azimuth.toFloat()
+    this@LinearCompassView.text = azimuth.toString()
+    var curTime = System.currentTimeMillis()
+    if(curTime - lastDrawTime> step) {
+    lastDrawTime = curTime
+    launch(Dispatchers.Main) {
+    curBitmap = this@LinearCompassView.drawToBitmap()
+    invalidate()
+    }
+    }
+    }
     }
 
     private fun drawCompass() {
-        getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map {
-            it.toInt()
-        }.toMutableList().forEach {
-//calculation实际X的坐标
-            val x = toPixel(it.toFloat())
+    getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map {
+    it.toInt()
+    }.toMutableList().forEach {
+    //计算实际X的坐标
+    val x = toPixel(it.toFloat())
 
-//最短：15度 最长：90度 起始点x坐标
-            val lineHeight =
-                when {
-                    it % 90 == 0 -> (3 / 10f) * height
-                    it % 15 == 0 -> (4 / 10f) * height
-                    else -> (5 / 10f) * height
-                }
-//起始点y
-            val bottomHeight = height * 7 / 10f
+    // 最短：15度 最长：90度 起始点x坐标
+    val lineHeight = when {
+    it % 90 == 0 -> (3 / 10f) * height
+    it % 15 == 0 -> (4 / 10f) * height
+    else -> (5 / 10f) * height
+    }
+    //起始点y
+    val bottomHeight = height * 7 / 10f
 
-//drawing标记线
-            when {
-                it % 90 == 0 -> canvas.drawLine(x, lineHeight, x, bottomHeight, longLinePaint)
-                else -> canvas.drawLine(x, lineHeight, x, bottomHeight, shortLinePaint)
-            }
-
-//drawing底部方位文本
-            if (it % 45 == 0) {
-                val coord = getPositionText(it)
-                canvas.drawText(coord, realX(coord, x, positionPaint), realY(coord, height - 2f, positionPaint), positionPaint)
-            }
-        }
+    //绘制标记线
+    when {
+    it % 90 == 0 -> canvas.drawLine(x, lineHeight, x, bottomHeight, longLinePaint)
+    else -> canvas.drawLine(x, lineHeight, x, bottomHeight, shortLinePaint)
     }
 
-    private fun getPositionText(position: Int): String =
-        when (position) {
-            -90, 270 -> resources.getString(R.string.compass_west)
-            -45, 315 -> resources.getString(R.string.compass_northwest)
-            0, 360 -> resources.getString(R.string.compass_north)
-            45, 405 -> resources.getString(R.string.compass_northeast)
-            90, 450 -> resources.getString(R.string.compass_east)
-            135, 495 -> resources.getString(R.string.compass_southeast)
-            -180, 180 -> resources.getString(R.string.compass_south)
-            -135, 225 -> resources.getString(R.string.compass_southwest)
-            else -> ""
-        }
+    //绘制底部方位文本
+    if (it % 45 == 0) {
+    val coord = getPositionText(it)
+    canvas.drawText(coord, realX(coord, x,positionPaint), realY(coord, height - 2f,positionPaint), positionPaint)
+    }
+    }
+    }
+
+    private fun getPositionText(position: Int): String = when (position) {
+    -90, 270 -> resources.getString(R.string.compass_west)
+    -45, 315 -> resources.getString(R.string.compass_northwest)
+    0, 360 -> resources.getString(R.string.compass_north)
+    45, 405 -> resources.getString(R.string.compass_northeast)
+    90, 450 -> resources.getString(R.string.compass_east)
+    135, 495 -> resources.getString(R.string.compass_southeast)
+    -180, 180 -> resources.getString(R.string.compass_south)
+    -135, 225 -> resources.getString(R.string.compass_southwest)
+    else -> ""
+    }
 
     private fun toPixel(bearing: Float): Float {
-        return getPixelLinear(
-            bearing,
-            azimuth,
-            width.toFloat(),
-            range,
-        )
+    return getPixelLinear(
+    bearing,
+    azimuth,
+    width.toFloat(),
+    range
+    )
     }
 
     override fun onDetachedFromWindow() {

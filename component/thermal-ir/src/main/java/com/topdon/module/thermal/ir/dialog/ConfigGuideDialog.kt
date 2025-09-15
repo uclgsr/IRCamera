@@ -29,9 +29,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
-
+/**
+    * 温度修正操作指引.
+    *
+    * Created by LCG on 2024/11/13.
+    */
 class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: DataBean) : Dialog(context, R.style.TransparentDialog) {
+
     // Initialize views with findViewById
     private lateinit var tvDefaultTempTitle: TextView
     private lateinit var tvDefaultDisTitle: TextView
@@ -74,8 +78,9 @@ class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: Da
     tvDefaultEmTitle.text = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
     tvDefaultEmValue.text = NumberTools.to02(dataBean.radiation)
 
-        val itemDecoration = MyItemDecoration(context)
-        itemDecoration.wholeBottom = 20f
+
+    val itemDecoration = MyItemDecoration(context)
+    itemDecoration.wholeBottom = 20f
 
     recyclerView.addItemDecoration(itemDecoration)
     recyclerView.layoutManager = LinearLayoutManager(context)
@@ -116,12 +121,13 @@ class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: Da
     outputAllocation.copyTo(outputBitmap)
     renderScript.destroy()
 
-                launch(Dispatchers.Main) {
-                    ivBlurBg.isVisible = true
-                    ivBlurBg.setImageBitmap(outputBitmap)
-                }
-            } catch (_: Exception) {
-            }
-        }
+    launch(Dispatchers.Main) {
+    ivBlurBg.isVisible = true
+    ivBlurBg.setImageBitmap(outputBitmap)
+    }
+    } catch (_: Exception) {
+
+    }
+    }
     }
 }

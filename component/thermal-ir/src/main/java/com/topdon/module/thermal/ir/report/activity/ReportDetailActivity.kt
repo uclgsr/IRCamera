@@ -9,26 +9,32 @@ import android.widget.ScrollView
 import androidx.lifecycle.lifecycleScope
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.FileConfig
-import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.tools.FileTools
 import com.topdon.lib.core.tools.GlideLoader
+import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.view.TitleView
 import com.topdon.libcom.PDFHelp
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.report.bean.ReportBean
 import com.topdon.module.thermal.ir.report.view.ReportIRShowView
 import com.topdon.module.thermal.ir.report.view.ReportInfoView
 import com.topdon.module.thermal.ir.report.view.WatermarkView
+import com.topdon.module.thermal.ir.R
+import com.topdon.module.thermal.ir.report.bean.ReportBean
+import com.topdon.lib.core.R as LibCoreR
+import com.topdon.lib.ui.R as UiR
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
-import com.topdon.lib.core.R as LibCoreR
-import com.topdon.lib.ui.R as UiR
 
-
+/**
+    * 报告详情界面.
+    *
+    * 需要传递
+    * - 一份报告所有信息 [ExtraKeyConfig.REPORT_BEAN]
+    */
 // Legacy ARouter route annotation - now using NavigationManager
+class ReportDetailActivity: BaseActivity() {
 
-class ReportDetailActivity : BaseActivity() {
     // View declarations
     private lateinit var titleView: TitleView
     private lateinit var scrollView: ScrollView
@@ -36,11 +42,16 @@ class ReportDetailActivity : BaseActivity() {
     private lateinit var llContent: LinearLayout
     private lateinit var watermarkView: WatermarkView
 
-
+    /**
+    * 从上一界面传递过来的，报告所有信息.
+    */
     private var reportBean: ReportBean? = null
 
-
+    /**
+    * 当前预览页面已生成的 PDF 文件绝对路径
+    */
     private var pdfFilePath: String? = null
+
 
     override fun initContentView() = R.layout.activity_report_detail
 
@@ -89,34 +100,30 @@ class ReportDetailActivity : BaseActivity() {
     }
 
     private fun saveWithPDF() {
-        if (TextUtils.isEmpty(pdfFilePath)) {
-            showCameraLoading()
-            lifecycleScope.launch(Dispatchers.IO) {
-                val name = reportBean?.report_info?.report_number
-                if (name != null) {
-                    if (File(FileConfig.getPdfDir() + "/$name.pdf").exists() &&
-                        !TextUtils.isEmpty(pdfFilePath)
-                    ) {
-                        lifecycleScope.launch {
-                            dismissCameraLoading()
-                            actionShare()
-                        }
-                        return@launch
-                    }
-                }
-                pdfFilePath =
-                    PDFHelp.savePdfFileByListView(
-                        name ?: System.currentTimeMillis().toString(),
-                        scrollView, getPrintViewList(), watermarkView,
-                    )
-                lifecycleScope.launch {
-                    dismissCameraLoading()
-                    actionShare()
-                }
-            }
-        } else {
-            actionShare()
-        }
+    if (TextUtils.isEmpty(pdfFilePath)) {
+    showCameraLoading()
+    lifecycleScope.launch(Dispatchers.IO) {
+    val name = reportBean?.report_info?.report_number
+    if (name != null) {
+    if (File(FileConfig.getPdfDir() + "/$name.pdf").exists() &&
+    !TextUtils.isEmpty(pdfFilePath)) {
+    lifecycleScope.launch {
+    dismissCameraLoading()
+    actionShare()
+    }
+    return@launch
+    }
+    }
+    pdfFilePath = PDFHelp.savePdfFileByListView(name?:System.currentTimeMillis().toString(),
+    scrollView, getPrintViewList(),watermarkView)
+    lifecycleScope.launch {
+    dismissCameraLoading()
+    actionShare()
+    }
+    }
+    } else {
+    actionShare()
+    }
     }
 
     private fun actionShare() {
@@ -128,17 +135,20 @@ class ReportDetailActivity : BaseActivity() {
     startActivity(Intent.createChooser(shareIntent, getString(LibCoreR.string.battery_share)))
     }
 
-
+    /**
+    * 获取需要转为 PDF 的所有 View 列表.
+    * 注意：水印 View 不在列表内，需要自行处理.
+    */
     private fun getPrintViewList(): ArrayList<View> {
-        val result = ArrayList<View>()
-        result.add(reportInfoView)
-        val childCount = llContent.childCount
-        for (i in 0 until childCount) {
-            val childView = llContent.getChildAt(i)
-            if (childView is ReportIRShowView) {
-                result.addAll(childView.getPrintViewList())
-            }
-        }
-        return result
+    val result = ArrayList<View>()
+    result.add(reportInfoView)
+    val childCount = llContent.childCount
+    for (i in 0 until  childCount) {
+    val childView = llContent.getChildAt(i)
+    if (childView is ReportIRShowView) {
+    result.addAll(childView.getPrintViewList())
+    }
+    }
+    return result
     }
 }
