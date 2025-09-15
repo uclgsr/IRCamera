@@ -123,7 +123,7 @@ ffmpeg = "7.1.1-1.5.12"
 
 # Third-party services
 wechatSdk = "6.8.0"
-umengApm = "1.9.0"
+umengApm = "2.0.6"
 zohoSalesiq = "7.0.0"
 
 
