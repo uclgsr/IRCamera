@@ -51,8 +51,8 @@ jobs:
         chmod a+x ktlint && \
         sudo mv ktlint /usr/local/bin/
     
-    - name: Run code formatting check
-      run: ./dev.sh format
+    - name: Generate architecture diagram
+      run: ./dev.sh diagram
     
     - name: Run linting (ktlint, checkstyle, etc.)
       run: ./dev.sh lint
