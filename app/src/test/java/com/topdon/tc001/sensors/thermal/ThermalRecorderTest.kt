@@ -11,7 +11,7 @@ import org.robolectric.annotation.Config
 import java.io.File
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
-import kotlin.test.*
+import org.junit.Assert.*
 
 /**
  * Unit tests for ThermalRecorder functionality
@@ -38,13 +38,13 @@ class ThermalRecorderTest {
     fun testStartStopRecording() = runTest {
         // Test starting recording
         val started = thermalRecorder.startRecording(testSessionDir, saveImages = false)
-        assertTrue(started, "Recording should start successfully")
-        assertTrue(thermalRecorder.isRecording(), "Should be recording")
+        assertTrue("Recording should start successfully", started)
+        assertTrue("Should be recording", thermalRecorder.isRecording())
 
         // Test stopping recording
         val stopped = thermalRecorder.stopRecording()
-        assertTrue(stopped, "Recording should stop successfully")
-        assertFalse(thermalRecorder.isRecording(), "Should not be recording")
+        assertTrue("Recording should stop successfully", stopped)
+        assertFalse("Should not be recording", thermalRecorder.isRecording())
     }
 
     @Test
@@ -83,16 +83,16 @@ class ThermalRecorderTest {
         )
 
         // Wait for processing
-        assertTrue(latch.await(2, TimeUnit.SECONDS), "Should process frame")
+        assertTrue("Should process frame", latch.await(2, TimeUnit.SECONDS))
 
         // Verify results
-        assertNotNull(processedStats, "Should have processed stats")
+        assertNotNull("Should have processed stats", processedStats)
         processedStats?.let { stats ->
-            assertEquals(1L, stats.frameSequence, "Should be first frame")
-            assertTrue(stats.minTemp >= 20f, "Min temp should be in range")
-            assertTrue(stats.maxTemp <= 30f, "Max temp should be in range")
-            assertTrue(stats.avgTemp >= 20f && stats.avgTemp <= 30f, "Avg temp should be in range")
-            assertTrue(stats.pixelCount > 0, "Should have valid pixels")
+            assertEquals("Should be first frame", 1L, stats.frameSequence)
+            assertTrue("Min temp should be in range", stats.minTemp >= 20f)
+            assertTrue("Max temp should be in range", stats.maxTemp <= 30f)
+            assertTrue("Avg temp should be in range", stats.avgTemp >= 20f && stats.avgTemp <= 30f)
+            assertTrue("Should have valid pixels", stats.pixelCount > 0)
         }
     }
 
@@ -120,34 +120,34 @@ class ThermalRecorderTest {
         val csvFiles =
             sessionDir.listFiles { _, name -> name.startsWith("thermal_stats_") && name.endsWith(".csv") }
 
-        assertNotNull(csvFiles, "Should have CSV files")
-        assertTrue(csvFiles.isNotEmpty(), "Should have at least one CSV file")
+        assertNotNull("Should have CSV files", csvFiles)
+        assertTrue("Should have at least one CSV file", csvFiles.isNotEmpty())
 
         // Check CSV content
         val csvFile = csvFiles.first()
         val lines = csvFile.readLines()
 
-        assertTrue(lines.size >= 2, "Should have header + at least one data line")
+        assertTrue("Should have header + at least one data line", lines.size >= 2)
 
         val header = lines[0]
-        assertTrue(header.contains("timestamp_ns"), "Header should contain timestamp")
-        assertTrue(header.contains("min_temp_c"), "Header should contain min_temp")
-        assertTrue(header.contains("avg_temp_c"), "Header should contain avg_temp")
-        assertTrue(header.contains("max_temp_c"), "Header should contain max_temp")
+        assertTrue("Header should contain timestamp", header.contains("timestamp_ns"))
+        assertTrue("Header should contain min_temp", header.contains("min_temp_c"))
+        assertTrue("Header should contain avg_temp", header.contains("avg_temp_c"))
+        assertTrue("Header should contain max_temp", header.contains("max_temp_c"))
 
         val dataLine = lines[1]
         val parts = dataLine.split(",")
-        assertTrue(parts.size >= 5, "Data line should have required columns")
+        assertTrue("Data line should have required columns", parts.size >= 5)
 
         // Verify data format
         val timestamp = parts[0].toLongOrNull()
-        assertNotNull(timestamp, "Timestamp should be valid long")
+        assertNotNull("Timestamp should be valid long", timestamp)
 
         val frameSeq = parts[1].toLongOrNull()
-        assertEquals(1L, frameSeq, "Frame sequence should be 1")
+        assertEquals("Frame sequence should be 1", 1L, frameSeq)
 
         val minTemp = parts[2].toFloatOrNull()
-        assertNotNull(minTemp, "Min temp should be valid float")
+        assertNotNull("Min temp should be valid float", minTemp)
     }
 
     @Test
@@ -177,19 +177,19 @@ class ThermalRecorderTest {
             name.startsWith("thermal_frame_") && name.endsWith(".png")
         }
 
-        assertNotNull(imageFiles, "Should have image files")
-        assertTrue(imageFiles.isNotEmpty(), "Should have at least one image file")
+        assertNotNull("Should have image files", imageFiles)
+        assertTrue("Should have at least one image file", imageFiles.isNotEmpty())
 
         // Verify image file is not empty
         val imageFile = imageFiles.first()
-        assertTrue(imageFile.length() > 0, "Image file should not be empty")
+        assertTrue("Image file should not be empty", imageFile.length() > 0)
     }
 
     @Test
     fun testFrameCounter() = runTest {
         thermalRecorder.startRecording(testSessionDir, saveImages = false)
 
-        assertEquals(0L, thermalRecorder.getFrameCount(), "Initial frame count should be 0")
+        assertEquals("Initial frame count should be 0", 0L, thermalRecorder.getFrameCount())
 
         // Process multiple frames
         val frameData = ByteArray(100)
@@ -204,7 +204,7 @@ class ThermalRecorderTest {
         // Give time for processing
         Thread.sleep(100)
 
-        assertEquals(5L, thermalRecorder.getFrameCount(), "Frame count should be 5")
+        assertEquals("Frame count should be 5", 5L, thermalRecorder.getFrameCount())
 
         thermalRecorder.stopRecording()
     }
@@ -232,6 +232,6 @@ class ThermalRecorderTest {
 
         // Should not generate error for frame processing when not recording
         // (it just ignores the frame)
-        assertFalse(thermalRecorder.isRecording(), "Should not be recording")
+        assertFalse("Should not be recording", thermalRecorder.isRecording())
     }
 }
