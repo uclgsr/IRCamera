@@ -299,7 +299,7 @@ class DeviceRegistry:
         Returns:
             List of device IDs that have timed out
         """
-        current_time = datetime.now()
+        current_time = datetime.now(timezone.utc)
         timed_out_devices = []
         
         for device_id, device in self.devices.items():
