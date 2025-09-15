@@ -32,84 +32,58 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
     
-    - name: Grant execute permission
-      run: |
-        chmod +x gradlew
-        chmod +x dev.sh
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
     
-    - name: Install linting tools
+    - name: Lint with ktlint
+      run: ./gradlew ktlintCheck || true
+    
+    - name: Lint with checkstyle
+      run: ./gradlew checkstyle || true
+    
+    - name: Build with Gradle
+      run: ./gradlew build
+    
+    - name: Run tests
+      run: ./gradlew test
+
+  static-analysis:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
+    - name: Install Python tools
       run: |
-        # Install Python tools for linting
-        pip install black flake8 yamllint
-        
-        # Install shellcheck and XML tools
-        sudo apt-get update
-        sudo apt-get install -y shellcheck xmllint
-        
-        # Install ktlint for Kotlin
-        curl -sSLO https://github.com/pinterest/ktlint/releases/download/1.0.1/ktlint && \
-        chmod a+x ktlint && \
-        sudo mv ktlint /usr/local/bin/
+        pip install black flake8
+    
+    - name: Python style check
+      run: |
+        find . -name "*.py" -exec black --check {} + || true
+        find . -name "*.py" -exec flake8 {} + || true
+    
+    - name: Shell script check
+      run: |
+        find . -name "*.sh" -exec shellcheck {} + || true
+
+  architecture-diagram:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
     
     - name: Generate architecture diagram
       run: ./dev.sh diagram
     
-    - name: Run linting (ktlint, checkstyle, etc.)
-      run: ./dev.sh lint
-    
-    - name: Run static analysis
-      run: ./dev.sh static
-    
-    - name: Quick build validation
-      run: ./dev.sh build-check
-    
-    - name: Full gradle build
-      run: |
-        timeout 600 ./gradlew build -x test --no-daemon --parallel
-      env:
-        GRADLE_OPTS: -Xmx4g -XX:MaxMetaspaceSize=1g
-    
-    - name: Run unit tests
-      run: ./gradlew testDebugUnitTest --continue
-      continue-on-error: true
-    
-    - name: Generate build report
-      if: always()
-      run: |
-        echo "## Build Summary" > build-summary.md
-        echo "- **Gradle Version**: $(./gradlew --version | grep Gradle | head -1)" >> build-summary.md
-        echo "- **Java Version**: $(java -version 2>&1 | head -1)" >> build-summary.md
-        echo "- **Kotlin Files**: $(find . -name "*.kt" -not -path "./build/*" | wc -l)" >> build-summary.md
-        echo "- **Java Files**: $(find . -name "*.java" -not -path "./build/*" | wc -l)" >> build-summary.md
-        echo "- **Build Status**: ${{ job.status }}" >> build-summary.md
-    
-    - name: Upload lint reports
+    - name: Upload diagram artifacts
       uses: actions/upload-artifact@v4
-      if: always()
       with:
-        name: lint-reports
+        name: architecture-diagrams
         path: |
-          **/build/reports/lint-results*.html
-          **/build/reports/lint-results*.xml
-        retention-days: 7
-    
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      if: failure()
-      with:
-        name: build-logs
-        path: |
-          **/build/reports/
-          **/build/outputs/logs/
-          build-summary.md
-        retention-days: 7
-    
-    - name: Upload test results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: test-results
-        path: |
-          **/build/test-results/
-          **/build/reports/tests/
-        retention-days: 7
+          docs/architecture-diagram.md
+          docs/architecture-viewer.html

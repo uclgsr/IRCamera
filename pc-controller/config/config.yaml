@@ -1,0 +1,52 @@
+calibration:
+  max_reprojection_error: 0.5
+  min_images: 10
+  pattern_size:
+  - 9
+  - 6
+  pattern_type: checkerboard
+  square_size: 25.0
+gsr:
+  bridged_latency_p95_ms: 150
+  default_mode: local
+  reconciliation_window_s: 1800
+  sampling_rate: 128
+gui:
+  auto_save_layout: true
+  theme: default
+  update_interval_ms: 100
+  window_size:
+  - 1200
+  - 800
+logging:
+  console_output: true
+  file_rotation: 1 MB
+  level: INFO
+  retention: 30 days
+network:
+  connection_timeout: 30
+  heartbeat_interval: 5
+  max_connections: 8
+  server_host: 0.0.0.0
+  server_port: 8080
+security:
+  auth_token_required: true
+  device_whitelist_enabled: false
+  encryption_algorithm: AES256
+  require_tls: true
+session:
+  auto_backup: true
+  data_root: /tmp/tmpue9_xz51
+  max_session_duration: 7200
+  metadata_format: json
+test:
+  value: test_data
+time_sync:
+  max_offset_ms: 15
+  sync_interval: 30
+  target_accuracy_ms: 5
+transfer:
+  chunk_size: 1048576
+  compression_enabled: true
+  max_retries: 3
+  verify_checksums: true

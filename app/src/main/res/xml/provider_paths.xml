@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-  <external-path name="MPDC4GSR" path="."/>
-  <external-path name="Pictures" path="Pictures/MPDC4GSR"/>
-  <external-cache-path name="external_cache" path="."/>
-  <root-path name="MPDC4GSR_root" path=""/>
+    <external-path
+        name="MPDC4GSR"
+        path="." />
+    <external-path
+        name="Pictures"
+        path="Pictures/MPDC4GSR" />
+    <external-cache-path
+        name="external_cache"
+        path="." />
+    <root-path
+        name="MPDC4GSR_root"
+        path="" />
+
 </paths>

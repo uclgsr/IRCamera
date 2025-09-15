@@ -1,0 +1,223 @@
+# Automated Replacement Suggestions for kotlin-android-extensions
+
+## Common Patterns to Replace:
+
+### 1. Activity/Fragment Layout Inflation
+OLD: setContentView(R.layout.activity_main)
+NEW: binding = ActivityMainBinding.inflate(layoutInflater)
+     setContentView(binding.root)
+
+### 2. View Access
+OLD: textView.text = "Hello"
+NEW: binding.textView.text = "Hello"
+
+OLD: button.setOnClickListener { }
+NEW: binding.button.setOnClickListener { }
+
+### 3. Import Statements  
+OLD: import kotlinx.android.synthetic.main.activity_main.*
+NEW: import com.topdon.databinding.ActivityMainBinding
+
+### 4. Fragment View Binding
+OLD: override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+         textView.text = "Hello"
+     }
+     
+NEW: private var _binding: FragmentMainBinding? = null
+     private val binding get() = _binding!!
+     
+     override fun onCreateView(...): View {
+         _binding = FragmentMainBinding.inflate(inflater, container, false)
+         return binding.root
+     }
+     
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+         binding.textView.text = "Hello"
+     }
+     
+     override fun onDestroyView() {
+         super.onDestroyView()
+         _binding = null
+     }
+
+## Files Requiring Migration:
+./libui/src/main/java/com/topdon/lib/ui/dialog/MonitorSelectDialog.kt
+./libui/src/main/java/com/topdon/lib/ui/dialog/ThermalInputDialog.kt
+./libui/src/main/java/com/topdon/lib/ui/dialog/TipPreviewDialog.kt
+./libui/src/main/java/com/topdon/lib/ui/dialog/ProgressDialog.kt
+./libui/src/main/java/com/topdon/lib/ui/dialog/TipGuideDialog.kt
+./libui/src/main/java/com/topdon/lib/ui/SettingNightView.kt
+./libui/src/main/java/com/topdon/lib/ui/widget/SteeringWheelView.kt
+./libui/src/main/java/com/topdon/lib/ui/widget/WifiSteeringWheelView.kt
+./libui/src/main/java/com/topdon/lib/ui/camera/CameraPreView.kt
+./libui/src/main/java/com/topdon/lib/ui/adapter/MenuAIAdapter.kt
+./libui/src/main/java/com/topdon/lib/ui/adapter/MenuPANightAdapter.kt
+./libui/src/main/java/com/topdon/lib/ui/adapter/MenuTargetAdapter.kt
+./libui/src/main/java/com/topdon/lib/ui/adapter/MenuSecondNightAdapter.kt
+./libui/src/main/java/com/topdon/lib/ui/adapter/MenuFourNightAdapter.kt
+./libui/src/main/java/com/topdon/lib/ui/adapter/MenuFiveNightAdapter.kt
+./libui/src/main/java/com/topdon/lib/ui/adapter/MenuSixAdapter.kt
+./libui/src/main/java/com/topdon/lib/ui/adapter/ColorSelectAdapter.kt
+./libapp/src/main/java/com/topdon/lib/core/ktbase/BasePickImgActivity.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/EmissivityTipPopup.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/ConfirmSelectDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/TipOtgDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/NotTipsSelectDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/TipObserveDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/TipProgressDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/ColorSelectDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/TipShutterDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/TipWaterMarkDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/MsgDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/TipChangeDeviceDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/LongTextDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/TipTargetColorDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/TipDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/FirmwareUpDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/CarDetectDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/TipEmissivityDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/dialog/LoadingDialog.kt
+./libapp/src/main/java/com/topdon/lib/core/adapter/TargetColorAdapter.kt
+./libir-demo/src/main/java/com/infisense/usbir/view/PopuMenuISP.kt
+./libir-demo/src/main/java/com/infisense/usbir/view/PopuMenuTPD.kt
+./libir-demo/src/main/java/com/infisense/usbir/view/PopuMenuShut.kt
+./libir-demo/src/main/java/com/infisense/usbir/adapter/ImgAdapter.kt
+./app/src/main/java/com/topdon/tc001/PolicyActivity.kt
+./app/src/main/java/com/topdon/tc001/VersionActivity.kt
+./app/src/main/java/com/topdon/tc001/fragment/MainFragment.kt
+./app/src/main/java/com/topdon/tc001/IRGalleryEditActivity.kt
+./app/src/main/java/com/topdon/tc001/MainActivity.kt
+./app/src/main/java/com/topdon/tc001/DeviceTypeActivity.kt
+./app/src/main/java/com/topdon/tc001/ClauseActivity.kt
+./app/src/main/java/com/topdon/tc001/MoreHelpActivity.kt
+./app/src/main/java/com/topdon/tc001/PdfActivity.kt
+./app/src/main/java/com/topdon/tc001/SplashActivity.kt
+./libcom/src/main/java/com/topdon/libcom/adpter/DColorSelectAdapter.kt
+./libcom/src/main/java/com/topdon/libcom/dialog/ColorPickDialog.kt
+./libcom/src/main/java/com/topdon/libcom/dialog/TempAlarmSetDialog.kt
+./component/transfer/src/main/java/com/topdon/transfer/TransferDialog.kt
+./component/transfer/src/main/java/com/topdon/transfer/TransferActivity.kt
+./component/thermal04/src/main/java/com/topdon/tc004/activity/IRMonocularActivity.kt
+./component/thermal04/src/main/java/com/topdon/tc004/activity/DeviceAddActivity.kt
+./component/thermal04/src/main/java/com/topdon/tc004/activity/ConnectTipsActivity.kt
+./component/thermal04/src/main/java/com/topdon/tc004/adapter/MenuSixAdapter.kt
+./component/thermal-lite/src/main/java/com/example/thermal_lite/activity/IRCorrectionLiteThreeActivity.kt
+./component/thermal-lite/src/main/java/com/example/thermal_lite/activity/IRCorrectionLiteFourActivity.kt
+./component/thermal-lite/src/main/java/com/example/thermal_lite/activity/IRMonitorLiteActivity.kt
+./component/thermal-lite/src/main/java/com/example/thermal_lite/activity/IRThermalLiteActivity.kt
+./component/thermal-lite/src/main/java/com/example/thermal_lite/activity/IRMonitorChartLiteActivity.kt
+./component/thermal-lite/src/main/java/com/example/thermal_lite/fragment/IRMonitorLiteFragment.kt
+./component/user/src/main/java/com/topdon/module/user/activity/QuestionActivity.kt
+./component/user/src/main/java/com/topdon/module/user/activity/UnitActivity.kt
+./component/user/src/main/java/com/topdon/module/user/activity/StorageSpaceActivity.kt
+./component/user/src/main/java/com/topdon/module/user/activity/DeviceDetailsActivity.kt
+./component/user/src/main/java/com/topdon/module/user/activity/LanguageActivity.kt
+./component/user/src/main/java/com/topdon/module/user/activity/QuestionDetailsActivity.kt
+./component/user/src/main/java/com/topdon/module/user/activity/ElectronicManualActivity.kt
+./component/user/src/main/java/com/topdon/module/user/activity/TISRActivity.kt
+./component/user/src/main/java/com/topdon/module/user/activity/AutoSaveActivity.kt
+./component/user/src/main/java/com/topdon/module/user/activity/MoreActivity.kt
+./component/user/src/main/java/com/topdon/module/user/fragment/MoreFragment.kt
+./component/user/src/main/java/com/topdon/module/user/fragment/MineFragment.kt
+./component/user/src/main/java/com/topdon/module/user/dialog/DownloadProDialog.kt
+./component/user/src/main/java/com/topdon/module/user/adapter/LanguageAdapter.kt
+./component/house/src/main/java/com/topdon/house/activity/ItemEditActivity.kt
+./component/house/src/main/java/com/topdon/house/activity/SignInputActivity.kt
+./component/house/src/main/java/com/topdon/house/activity/DirEditActivity.kt
+./component/house/src/main/java/com/topdon/house/activity/HouseHomeActivity.kt
+./component/house/src/main/java/com/topdon/house/activity/TextInputActivity.kt
+./component/house/src/main/java/com/topdon/house/activity/ImagesDetailActivity.kt
+./component/house/src/main/java/com/topdon/house/activity/ReportAddActivity.kt
+./component/house/src/main/java/com/topdon/house/activity/DetectAddActivity.kt
+./component/house/src/main/java/com/topdon/house/popup/ThreePickPopup.kt
+./component/house/src/main/java/com/topdon/house/fragment/ReportListFragment.kt
+./component/house/src/main/java/com/topdon/house/fragment/DetectListFragment.kt
+./component/house/src/main/java/com/topdon/house/dialog/ImagePickFromDialog.kt
+./component/house/src/main/java/com/topdon/house/dialog/InputTextDialog.kt
+./component/house/src/main/java/com/topdon/house/view/HouseDetectView.kt
+./component/house/src/main/java/com/topdon/house/util/PDFUtil.kt
+./component/house/src/main/java/com/topdon/house/adapter/HouseAdapter.kt
+./component/edit3d/src/main/java/com/topdon/lib/menu/MenuAdapter.kt
+./component/edit3d/src/main/java/com/topdon/lib/menu/Menu3DView.kt
+./component/edit3d/src/main/java/com/topdon/lib/menu/Image3DActivity.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/activity/GalleryActivity.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/activity/MonitorActivity.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/activity/ConnectActivity.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/activity/VideoActivity.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/activity/MonitorChartActivity.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/activity/temp/MonitorLogActivity.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/activity/temp/LogSingleChartActivity.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/activity/temp/ChartActivity.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/activity/temp/LogChartActivity.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/activity/LogMPChartActivity.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/activity/ThermalActivity.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/fragment/ThermalFragment.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/fragment/MonitorThermalFragment.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/fragment/GalleryVideoFragment.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/fragment/GalleryPictureFragment.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/adapter/SettingTimeAdapter.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/adapter/GalleryAdapter.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/adapter/MenuTabAdapter.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/adapter/SettingCheckAdapter.kt
+./component/thermal/src/main/java/com/topdon/module/thermal/adapter/MonitorLogAdapter.kt
+./component/pseudo/src/main/java/com/topdon/pseudo/activity/PseudoSetActivity.kt
+./component/thermal07/src/main/java/com/topdon/thermal07/activity/IR07MonitorCapture2Activity.kt
+./component/thermal07/src/main/java/com/topdon/thermal07/activity/IR07MonitorCapture1Activity.kt
+./component/thermal07/src/main/java/com/topdon/thermal07/IRThermal07Activity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRMonitorActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRCameraSettingActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRGalleryDetail04Activity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRThermalNightActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/MonitoryHomeActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRCorrectionTwoActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRCorrectionThreeActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRMainActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRThermalActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRThermalPlusActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRVideoGSYActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/ManualStep1Activity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/BaseIRPlushFragment.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IREmissivityActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRGalleryDetail01Activity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRMonitorChartActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRCorrectionActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRLogMPChartActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/ManualStep2Activity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/BaseIRPlushActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRCorrectionFourActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/ReportPickImgActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/IRConfigActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/activity/ReportPreviewActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/popup/OptionPickPopup.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/popup/GalleryChangePopup.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/fragment/PDFListFragment.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/fragment/IRGalleryTabFragment.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/fragment/IRThermalFragment.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/fragment/IRMonitorCaptureFragment.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/fragment/IRPlushFragment.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/fragment/AbilityFragment.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/fragment/IRGalleryFragment.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/fragment/IRCorrectionFragment.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/fragment/GalleryFragment.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/fragment/IRMonitorHistoryFragment.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/fragment/IRMonitorThermalFragment.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/dialog/ConfigGuideDialog.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/dialog/IRConfigInputDialog.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/dialog/HomeGuideDialog.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/adapter/MeasureItemAdapter.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/adapter/GalleryEditMenuAdapter.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/adapter/ReportPreviewAdapter.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/adapter/GalleryAdapter.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/adapter/ReportPreviewAlbumAdapter.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/adapter/TargetItemAdapter.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/adapter/ConfigEmAdapter.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/adapter/ReportPreviewFloorAdapter.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/report/activity/ReportCreateFirstActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/report/activity/PDFListActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/report/activity/ReportCreateSecondActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/report/activity/ReportPreviewFirstActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/report/activity/ReportDetailActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/report/activity/ReportPreviewSecondActivity.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/report/view/ReportInfoView.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/report/view/ReportIRInputView.kt
+./component/thermal-ir/src/main/java/com/topdon/module/thermal/ir/report/view/ReportIRShowView.kt

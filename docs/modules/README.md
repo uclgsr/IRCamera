@@ -2,70 +2,54 @@
 
 ## Overview
 
-This directory contains comprehensive documentation for all components and modules of the IRCamera
-thermal imaging platform. Each document provides detailed technical specifications, API references,
-and implementation guidance.
+This directory contains comprehensive documentation for all components and modules of the IRCamera thermal imaging platform. Each document provides detailed technical specifications, API references, and implementation guidance.
 
 ## Feature Components
 
 ### Core Thermal Processing
-
-- **[Thermal-IR Module](THERMAL_IR_MODULE.md)** - Primary thermal imaging component with real-time
-  processing
-- **[Thermal-Lite Module](THERMAL_LITE_MODULE.md)** - Lightweight thermal processing for lower-end
-  devices _(Coming Soon)_
-- **[Pseudo Module](PSEUDO_MODULE.md)** - Advanced pseudo-color mapping and visualization _(Coming
-  Soon)_
+- **[Thermal-IR Module](THERMAL_IR_MODULE.md)** - Primary thermal imaging component with real-time processing
+- **[Thermal-Lite Module](THERMAL_LITE_MODULE.md)** - Lightweight thermal processing for lower-end devices *(Coming Soon)*
+- **[Pseudo Module](PSEUDO_MODULE.md)** - Advanced pseudo-color mapping and visualization *(Coming Soon)*
 
 ### Data Collection & Analysis
-
-- **[GSR Recording Module](GSR_RECORDING_MODULE.md)** - Shimmer3 GSR sensor integration and
-  physiological analysis
-- **[House Module](HOUSE_MODULE.md)** - Building thermal analysis and energy auditing _(Coming
-  Soon)_
-- **[Edit3D Module](EDIT3D_MODULE.md)** - 3D thermal reconstruction and editing _(Coming Soon)_
-- **[Transfer Module](TRANSFER_MODULE.md)** - Data management and synchronization _(Coming Soon)_
+- **[GSR Recording Module](GSR_RECORDING_MODULE.md)** - Shimmer3 GSR sensor integration and physiological analysis
+- **[House Module](HOUSE_MODULE.md)** - Building thermal analysis and energy auditing *(Coming Soon)*
+- **[Edit3D Module](EDIT3D_MODULE.md)** - 3D thermal reconstruction and editing *(Coming Soon)*
+- **[Transfer Module](TRANSFER_MODULE.md)** - Data management and synchronization *(Coming Soon)*
 
 ### User Interface & Controls
-
-- **[User Module](USER_MODULE.md)** - User management and settings _(Coming Soon)_
-- **[CommonComponent Module](COMMONCOMPONENT_MODULE.md)** - Shared UI components _(Coming Soon)_
+- **[User Module](USER_MODULE.md)** - User management and settings *(Coming Soon)*
+- **[CommonComponent Module](COMMONCOMPONENT_MODULE.md)** - Shared UI components *(Coming Soon)*
 
 ## Core Libraries
 
 ### Processing Libraries
-
 - **[LibIR Library](LIBIR_LIBRARY.md)** - Core thermal image processing algorithms and analysis
-- **[LibCom Library](LIBCOM_LIBRARY.md)** - Communication protocols and networking _(Coming Soon)_
-- **[LibMatrix Library](LIBMATRIX_LIBRARY.md)** - Matrix operations for image processing _(Coming
-  Soon)_
+- **[LibCom Library](LIBCOM_LIBRARY.md)** - Communication protocols and networking *(Coming Soon)*
+- **[LibMatrix Library](LIBMATRIX_LIBRARY.md)** - Matrix operations for image processing *(Coming Soon)*
 
 ### UI & Integration Libraries
-
-- **[LibUI Library](LIBUI_LIBRARY.md)** - User interface components and styling _(Coming Soon)_
-- **[LibHIK Library](LIBHIK_LIBRARY.md)** - HIKVision camera integration _(Coming Soon)_
-- **[LibApp Library](LIBAPP_LIBRARY.md)** - Application framework and utilities _(Coming Soon)_
-- **[LibMenu Library](LIBMENU_LIBRARY.md)** - Application menu system _(Coming Soon)_
+- **[LibUI Library](LIBUI_LIBRARY.md)** - User interface components and styling *(Coming Soon)*
+- **[LibHIK Library](LIBHIK_LIBRARY.md)** - HIKVision camera integration *(Coming Soon)*
+- **[LibApp Library](LIBAPP_LIBRARY.md)** - Application framework and utilities *(Coming Soon)*
+- **[LibMenu Library](LIBMENU_LIBRARY.md)** - Application menu system *(Coming Soon)*
 
 ## Platform Components
 
 ### Controller Systems
-
 - **[PC Controller](PC_CONTROLLER.md)** - Python-based central hub for advanced processing
-- **[Android Application](ANDROID_APPLICATION.md)** - Mobile sensor node implementation _(Coming
-  Soon)_
+- **[Android Application](ANDROID_APPLICATION.md)** - Mobile sensor node implementation *(Coming Soon)*
 
 ### Hardware Integration
-
-- **[BLE Module](BLE_MODULE.md)** - Bluetooth Low Energy integration _(Coming Soon)_
-- **[Range Seek Bar](RANGE_SEEK_BAR.md)** - Custom UI control component _(Coming Soon)_
+- **[BLE Module](BLE_MODULE.md)** - Bluetooth Low Energy integration *(Coming Soon)*
+- **[Range Seek Bar](RANGE_SEEK_BAR.md)** - Custom UI control component *(Coming Soon)*
 
 ## Documentation Structure
 
 Each module document follows a consistent structure:
 
 1. **Overview** - Component purpose and functionality
-2. **Architecture** - Internal structure and dependencies
+2. **Architecture** - Internal structure and dependencies  
 3. **Key Components** - Major classes and interfaces
 4. **API Reference** - Detailed method documentation
 5. **Data Structures** - Key data types and models
@@ -80,7 +64,6 @@ Each module document follows a consistent structure:
 ## Cross-References
 
 ### Related Documentation
-
 - **[Technical Specifications](../TECHNICAL_SPECIFICATIONS.md)** - Complete platform specifications
 - **[Advanced API Documentation](../ADVANCED_API_DOCUMENTATION.md)** - Comprehensive API examples
 - **[Architecture Guide](../ARCHITECTURE.md)** - System-wide architecture documentation
@@ -89,33 +72,22 @@ Each module document follows a consistent structure:
 ### Quick Navigation
 
 #### By Functionality
-
-- **Thermal Processing**: [Thermal-IR](THERMAL_IR_MODULE.md), [LibIR](LIBIR_LIBRARY.md),
-  [Pseudo](PSEUDO_MODULE.md)
+- **Thermal Processing**: [Thermal-IR](THERMAL_IR_MODULE.md), [LibIR](LIBIR_LIBRARY.md), [Pseudo](PSEUDO_MODULE.md)
 - **Data Collection**: [GSR Recording](GSR_RECORDING_MODULE.md), [Transfer](TRANSFER_MODULE.md)
 - **Analysis & Visualization**: [House](HOUSE_MODULE.md), [Edit3D](EDIT3D_MODULE.md)
 - **Communication**: [LibCom](LIBCOM_LIBRARY.md), [BLE Module](BLE_MODULE.md)
-- **User Interface**: [LibUI](LIBUI_LIBRARY.md), [User](USER_MODULE.md),
-  [CommonComponent](COMMONCOMPONENT_MODULE.md)
+- **User Interface**: [LibUI](LIBUI_LIBRARY.md), [User](USER_MODULE.md), [CommonComponent](COMMONCOMPONENT_MODULE.md)
 
 #### By Platform
-
-- **Android Components**: [Thermal-IR](THERMAL_IR_MODULE.md),
-  [GSR Recording](GSR_RECORDING_MODULE.md), [Android Application](ANDROID_APPLICATION.md)
+- **Android Components**: [Thermal-IR](THERMAL_IR_MODULE.md), [GSR Recording](GSR_RECORDING_MODULE.md), [Android Application](ANDROID_APPLICATION.md)
 - **PC Components**: [PC Controller](PC_CONTROLLER.md), [LibIR](LIBIR_LIBRARY.md)
 - **Cross-Platform**: [LibCom](LIBCOM_LIBRARY.md), [Transfer](TRANSFER_MODULE.md)
 
 #### By Development Priority
-
-- **Core Components** (Essential): [Thermal-IR](THERMAL_IR_MODULE.md),
-  [GSR Recording](GSR_RECORDING_MODULE.md), [LibIR](LIBIR_LIBRARY.md),
-  [PC Controller](PC_CONTROLLER.md)
-- **Support Components** (Important): [LibCom](LIBCOM_LIBRARY.md), [LibUI](LIBUI_LIBRARY.md),
-  [Transfer](TRANSFER_MODULE.md)
-- **Enhancement Components** (Optional): [House](HOUSE_MODULE.md), [Edit3D](EDIT3D_MODULE.md),
-  [Pseudo](PSEUDO_MODULE.md)
+- **Core Components** (Essential): [Thermal-IR](THERMAL_IR_MODULE.md), [GSR Recording](GSR_RECORDING_MODULE.md), [LibIR](LIBIR_LIBRARY.md), [PC Controller](PC_CONTROLLER.md)
+- **Support Components** (Important): [LibCom](LIBCOM_LIBRARY.md), [LibUI](LIBUI_LIBRARY.md), [Transfer](TRANSFER_MODULE.md)
+- **Enhancement Components** (Optional): [House](HOUSE_MODULE.md), [Edit3D](EDIT3D_MODULE.md), [Pseudo](PSEUDO_MODULE.md)
 
 ---
 
-For questions about specific modules or to report documentation issues, please refer to the main
-[Contributing Guide](../CONTRIBUTING.md).
+For questions about specific modules or to report documentation issues, please refer to the main [Contributing Guide](../CONTRIBUTING.md).

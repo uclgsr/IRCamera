@@ -1,18 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="8dp" app:cardCornerRadius="8dp" app:cardElevation="2dp" app:cardBackgroundColor="#2a2a2a">
-  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="16dp">
-    <!-- File Icon -->
-    <ImageView android:id="@+id/file_icon" android:layout_width="48dp" android:layout_height="48dp" android:layout_gravity="center_vertical" android:src="@drawable/ic_insert_chart" android:tint="@color/colorAccent"/>
-    <!-- File Info -->
-    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="16dp" android:orientation="vertical">
-      <TextView android:id="@+id/file_name" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="gsr_data_session001_participant001.csv" android:textColor="#ffffff" android:textSize="16sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
-      <TextView android:id="@+id/session_info" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Session: 001 | Participant: 001" android:textColor="#ccffffff" android:textSize="14sp" android:layout_marginTop="4dp"/>
-      <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
-        <TextView android:id="@+id/file_size" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2.5 MB" android:textColor="#888888" android:textSize="12sp" android:background="@drawable/badge_background" android:paddingHorizontal="8dp" android:paddingVertical="2dp" android:layout_marginEnd="8dp"/>
-        <TextView android:id="@+id/sample_count" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="15360 samples" android:textColor="#888888" android:textSize="12sp" android:background="@drawable/badge_background" android:paddingHorizontal="8dp" android:paddingVertical="2dp" android:layout_marginEnd="8dp"/>
-        <TextView android:id="@+id/duration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2:00" android:textColor="#888888" android:textSize="12sp" android:background="@drawable/badge_background" android:paddingHorizontal="8dp" android:paddingVertical="2dp"/>
-      </LinearLayout>
-      <TextView android:id="@+id/created_date" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="2024-01-15 14:30:25" android:textColor="#aaffffff" android:textSize="12sp" android:layout_marginTop="4dp"/>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+        app:cardBackgroundColor="#2a2a2a">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- File Icon -->
+        <ImageView
+            android:id="@+id/file_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_insert_chart"
+            android:tint="@color/colorAccent" />
+
+        <!-- File Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/file_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="gsr_data_session001_participant001.csv"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/session_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Session: 001 | Participant: 001"
+                android:textColor="#ccffffff"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/file_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2.5 MB"
+                    android:textColor="#888888"
+                    android:textSize="12sp"
+                    android:background="@drawable/badge_background"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/sample_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="15360 samples"
+                    android:textColor="#888888"
+                    android:textSize="12sp"
+                    android:background="@drawable/badge_background"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2:00"
+                    android:textColor="#888888"
+                    android:textSize="12sp"
+                    android:background="@drawable/badge_background"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/created_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2024-01-15 14:30:25"
+                android:textColor="#aaffffff"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
+
     </LinearLayout>
-  </LinearLayout>
+
 </androidx.cardview.widget.CardView>

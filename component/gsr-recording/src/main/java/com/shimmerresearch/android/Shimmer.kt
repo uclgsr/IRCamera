@@ -64,6 +64,15 @@ class Shimmer(private val handler: Handler, private val context: Context) {
     private var samplingRate = SAMPLING_RATE_128HZ
     private var configuration: Configuration = Configuration.getDefaultGSRConfiguration()
 
+    // Step 9: Enhanced error handling and reconnection logic
+    private var connectionRetryCount = 0
+    private val maxRetryAttempts = 3
+    private var reconnectionJob: Job? = null
+    private val connectionTimeoutMs = 10000L // 10 seconds
+    
+    // Class-level coroutine scope for proper lifecycle management
+    private var coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
     // Bluetooth management
     private val bluetoothManager = BluetoothManager(context)
 
@@ -79,18 +88,22 @@ class Shimmer(private val handler: Handler, private val context: Context) {
         address: String,
         name: String = "Shimmer3_GSR",
     ) {
-        Log.i(TAG, "Attempting to connect to Shimmer device: $address")
+        Log.i(TAG, "Attempting to connect to Shimmer device: $address (attempt ${connectionRetryCount + 1})")
         deviceAddress = address
         deviceName = name
 
         connectionState = STATE_CONNECTING
         sendMessage(MESSAGE_STATE_CHANGE, STATE_CONNECTING, -1, null)
 
+        // Cancel any existing reconnection attempts
+        reconnectionJob?.cancel()
+
         try {
             // Try to create real Shimmer device connection using official API
             val realShimmer = createRealShimmerConnection(address, name)
             if (realShimmer != null) {
                 realShimmerInstance = realShimmer
+                connectionRetryCount = 0 // Reset retry count on success
                 Log.i(TAG, "Successfully connected to real Shimmer device")
                 return
             }
@@ -98,14 +111,54 @@ class Shimmer(private val handler: Handler, private val context: Context) {
             Log.d(TAG, "Real Shimmer device not available, using simulation: ${e.message}")
         }
 
-        // Fallback to simulation
+        // Fallback to simulation with connection timeout
+        val connectionTimeout = handler.postDelayed({
+            if (connectionState == STATE_CONNECTING) {
+                Log.w(TAG, "Connection timeout after ${connectionTimeoutMs}ms")
+                handleConnectionFailure("Connection timeout")
+            }
+        }, connectionTimeoutMs)
+
+        // Simulate connection delay and success
         handler.postDelayed({
-            isConnected.set(true)
-            connectionState = STATE_CONNECTED
-            sendMessage(MESSAGE_STATE_CHANGE, STATE_CONNECTED, -1, null)
-            connectionCallback?.invoke("CONNECTED")
-            Log.i(TAG, "Simulated Shimmer connected successfully")
+            handler.removeCallbacks(connectionTimeout)
+            
+            if (connectionState == STATE_CONNECTING) {
+                isConnected.set(true)
+                connectionState = STATE_CONNECTED
+                connectionRetryCount = 0 // Reset on success
+                sendMessage(MESSAGE_STATE_CHANGE, STATE_CONNECTED, -1, null)
+                connectionCallback?.invoke("CONNECTED")
+                Log.i(TAG, "Simulated Shimmer connected successfully")
+            }
         }, 1000)
+    }
+
+    // Step 9: Enhanced connection failure handling with exponential backoff
+    private fun handleConnectionFailure(reason: String) {
+        connectionState = STATE_NONE
+        isConnected.set(false)
+        sendMessage(MESSAGE_STATE_CHANGE, STATE_NONE, -1, null)
+        connectionCallback?.invoke("DISCONNECTED")
+        
+        Log.w(TAG, "Connection failed: $reason (attempt ${connectionRetryCount + 1})")
+        
+        if (connectionRetryCount < maxRetryAttempts) {
+            connectionRetryCount++
+            val backoffDelayMs = (1000L * Math.pow(2.0, (connectionRetryCount - 1).toDouble())).toLong()
+            
+            Log.i(TAG, "Scheduling reconnection attempt ${connectionRetryCount} in ${backoffDelayMs}ms")
+            
+            reconnectionJob = coroutineScope.launch {
+                delay(backoffDelayMs)
+                if (deviceAddress.isNotEmpty()) {
+                    connect(deviceAddress, deviceName)
+                }
+            }
+        } else {
+            Log.e(TAG, "Maximum connection attempts ($maxRetryAttempts) reached. Connection failed permanently.")
+            connectionRetryCount = 0 // Reset for future connection attempts
+        }
     }
 
 
@@ -161,9 +214,26 @@ class Shimmer(private val handler: Handler, private val context: Context) {
 
 
     fun disconnect() {
+        // Step 9: Enhanced resource cleanup
+        Log.i(TAG, "Disconnecting Shimmer device...")
+        
+        // Cancel any ongoing reconnection attempts
+        reconnectionJob?.cancel()
+        reconnectionJob = null
+        
+        // Cancel all coroutines in the scope for proper cleanup
+        coroutineScope.cancel()
+        
+        // Recreate coroutine scope for future use (allows reconnection)
+        coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        
+        // Stop streaming first if active
         stopStreaming()
+        
+        // Reset connection state
         isConnected.set(false)
         connectionState = STATE_NONE
+        connectionRetryCount = 0
 
         try {
             realShimmerInstance?.let { device ->
@@ -178,7 +248,7 @@ class Shimmer(private val handler: Handler, private val context: Context) {
         realShimmerInstance = null
         sendMessage(MESSAGE_STATE_CHANGE, STATE_NONE, -1, null)
         connectionCallback?.invoke("DISCONNECTED")
-        Log.i(TAG, "Shimmer disconnected")
+        Log.i(TAG, "Shimmer disconnected and resources cleaned up")
     }
 
 
@@ -380,7 +450,7 @@ class Shimmer(private val handler: Handler, private val context: Context) {
 
     private fun startSimulationDataGeneration() {
         simulationJob =
-            CoroutineScope(Dispatchers.IO).launch {
+            coroutineScope.launch {
                 var sampleCount = 0L
 
                 while (isStreaming.get() && isActive) {

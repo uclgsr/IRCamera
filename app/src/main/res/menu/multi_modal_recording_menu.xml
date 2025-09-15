@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-  <item android:id="@+id/action_gallery" android:title="Gallery" android:icon="@drawable/ic_photo_library" app:showAsAction="ifRoom"/>
-  <item android:id="@+id/action_settings" android:title="Settings" android:icon="@drawable/ic_settings" app:showAsAction="ifRoom"/>
-  <item android:id="@+id/action_session_manager" android:title="Session Manager" android:icon="@drawable/ic_folder_open" app:showAsAction="never"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_gallery"
+        android:title="Gallery"
+        android:icon="@drawable/ic_photo_library"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="Settings"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_session_manager"
+        android:title="Session Manager"
+        android:icon="@drawable/ic_folder_open"
+        app:showAsAction="never" />
+
 </menu>

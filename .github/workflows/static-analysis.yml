@@ -1,295 +1,115 @@
-name: Static Analysis and Linting
+name: Static Analysis
 
 on:
   push:
     branches: [ main, develop, 'copilot/**' ]
   pull_request:
     branches: [ main, develop ]
-  workflow_dispatch:
 
 jobs:
   kotlin-analysis:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-      
-      - name: Install ktlint
-        run: |
-          curl -sSLO https://github.com/pinterest/ktlint/releases/download/1.0.1/ktlint
-          chmod a+x ktlint
-          sudo mv ktlint /usr/local/bin/
-      
-      - name: Run ktlint
-        run: |
-          echo "## Kotlin Linting Results" > ktlint-results.md
-          echo "" >> ktlint-results.md
-          
-          kotlin_files=$(find . -name "*.kt" -not -path "./build/*" -not -path "./.gradle/*" | wc -l)
-          echo "**Kotlin Files Analyzed**: $kotlin_files" >> ktlint-results.md
-          echo "" >> ktlint-results.md
-          
-          if ktlint --reporter=checkstyle,output=ktlint-report.xml . 2>&1 | tee ktlint-output.txt; then
-            echo "✅ **Status**: All Kotlin files pass ktlint checks" >> ktlint-results.md
-          else
-            echo "❌ **Status**: Kotlin linting issues found" >> ktlint-results.md
-            echo "" >> ktlint-results.md
-            echo "### Issues Found:" >> ktlint-results.md
-            echo '```' >> ktlint-results.md
-            cat ktlint-output.txt >> ktlint-results.md
-            echo '```' >> ktlint-results.md
-          fi
-      
-      - name: Upload ktlint results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ktlint-analysis
-          path: |
-            ktlint-*.xml
-            ktlint-*.md
-            ktlint-*.txt
-          retention-days: 7
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+    
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+    
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    
+    - name: Kotlin lint check
+      run: ./gradlew ktlintCheck
 
   java-analysis:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-      
-      - name: Install Checkstyle
-        run: |
-          wget -q https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.12.4/checkstyle-10.12.4-all.jar
-          sudo mv checkstyle-10.12.4-all.jar /usr/local/bin/checkstyle.jar
-          echo '#!/bin/bash' | sudo tee /usr/local/bin/checkstyle
-          echo 'java -jar /usr/local/bin/checkstyle.jar "$@"' | sudo tee -a /usr/local/bin/checkstyle
-          sudo chmod +x /usr/local/bin/checkstyle
-      
-      - name: Run Checkstyle
-        run: |
-          echo "## Java Checkstyle Results" > checkstyle-results.md
-          echo "" >> checkstyle-results.md
-          
-          java_files=$(find . -name "*.java" -not -path "./build/*" -not -path "./.gradle/*" | wc -l)
-          echo "**Java Files Analyzed**: $java_files" >> checkstyle-results.md
-          echo "" >> checkstyle-results.md
-          
-          if [ -f "checkstyle.xml" ]; then
-            if checkstyle -c checkstyle.xml -f xml -o checkstyle-report.xml $(find . -name "*.java" -not -path "./build/*" -not -path "./.gradle/*") 2>&1 | tee checkstyle-output.txt; then
-              echo "✅ **Status**: All Java files pass checkstyle checks" >> checkstyle-results.md
-            else
-              echo "❌ **Status**: Java checkstyle issues found" >> checkstyle-results.md
-              echo "" >> checkstyle-results.md
-              echo "### Issues Found:" >> checkstyle-results.md
-              echo '```' >> checkstyle-results.md
-              cat checkstyle-output.txt >> checkstyle-results.md
-              echo '```' >> checkstyle-results.md
-            fi
-          else
-            echo "⚠️ **Status**: checkstyle.xml not found, skipping Java analysis" >> checkstyle-results.md
-          fi
-      
-      - name: Upload checkstyle results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: checkstyle-analysis
-          path: |
-            checkstyle-*.xml
-            checkstyle-*.md
-            checkstyle-*.txt
-          retention-days: 7
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+    
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+    
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    
+    - name: Java checkstyle
+      run: ./gradlew checkstyle
 
   python-analysis:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-      
-      - name: Install Python linting tools
-        run: |
-          pip install black flake8 pylint bandit safety
-      
-      - name: Run Python analysis
-        run: |
-          echo "## Python Analysis Results" > python-results.md
-          echo "" >> python-results.md
-          
-          python_files=$(find . -name "*.py" | wc -l)
-          echo "**Python Files Analyzed**: $python_files" >> python-results.md
-          echo "" >> python-results.md
-          
-          if [ "$python_files" -gt 0 ]; then
-            # Black formatting check
-            echo "### Black Formatting Check" >> python-results.md
-            if black --check --diff . 2>&1 | tee black-output.txt; then
-              echo "✅ All Python files are properly formatted" >> python-results.md
-            else
-              echo "❌ Python formatting issues found" >> python-results.md
-            fi
-            echo "" >> python-results.md
-            
-            # Flake8 linting
-            echo "### Flake8 Linting" >> python-results.md
-            if flake8 . 2>&1 | tee flake8-output.txt; then
-              echo "✅ All Python files pass flake8 checks" >> python-results.md
-            else
-              echo "❌ Flake8 issues found" >> python-results.md
-            fi
-            echo "" >> python-results.md
-          else
-            echo "ℹ️ No Python files found for analysis" >> python-results.md
-          fi
-      
-      - name: Upload Python analysis results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: python-analysis
-          path: |
-            python-*.md
-            black-*.txt
-            flake8-*.txt
-          retention-days: 7
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
+    - name: Install Python linting tools
+      run: |
+        pip install black flake8
+    
+    - name: Python black formatting check
+      run: |
+        find . -name "*.py" -exec black --check --diff {} +
+    
+    - name: Python flake8 linting
+      run: |
+        find . -name "*.py" -exec flake8 {} +
 
   shell-analysis:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      - name: Install shellcheck
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y shellcheck
-      
-      - name: Run shellcheck
-        run: |
-          echo "## Shell Script Analysis Results" > shellcheck-results.md
-          echo "" >> shellcheck-results.md
-          
-          shell_files=$(find . -name "*.sh" | wc -l)
-          echo "**Shell Files Analyzed**: $shell_files" >> shellcheck-results.md
-          echo "" >> shellcheck-results.md
-          
-          if [ "$shell_files" -gt 0 ]; then
-            if find . -name "*.sh" -exec shellcheck {} + 2>&1 | tee shellcheck-output.txt; then
-              echo "✅ All shell scripts pass shellcheck" >> shellcheck-results.md
-            else
-              echo "❌ Shellcheck issues found" >> shellcheck-results.md
-              echo "" >> shellcheck-results.md
-              echo "### Issues Found:" >> shellcheck-results.md
-              echo '```' >> shellcheck-results.md
-              cat shellcheck-output.txt >> shellcheck-results.md
-              echo '```' >> shellcheck-results.md
-            fi
-          else
-            echo "ℹ️ No shell scripts found for analysis" >> shellcheck-results.md
-          fi
-      
-      - name: Upload shellcheck results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: shellcheck-analysis
-          path: |
-            shellcheck-*.md
-            shellcheck-*.txt
-          retention-days: 7
+    - uses: actions/checkout@v4
+    
+    - name: Install shellcheck
+      run: sudo apt-get update && sudo apt-get install -y shellcheck
+    
+    - name: Shell script analysis
+      run: |
+        find . -name "*.sh" -exec shellcheck {} +
 
-  analysis-summary:
+  multi-language-static:
     runs-on: ubuntu-latest
-    needs: [kotlin-analysis, java-analysis, python-analysis, shell-analysis]
-    if: always()
     
     steps:
-      - name: Download all analysis results
-        uses: actions/download-artifact@v4
-        with:
-          path: analysis-results/
-      
-      - name: Generate comprehensive summary
-        run: |
-          echo "# Static Analysis and Linting Summary" > analysis-summary.md
-          echo "" >> analysis-summary.md
-          echo "**Generated**: $(date)" >> analysis-summary.md
-          echo "**Commit**: ${{ github.sha }}" >> analysis-summary.md
-          echo "**Branch**: ${{ github.ref_name }}" >> analysis-summary.md
-          echo "" >> analysis-summary.md
-          
-          echo "## Analysis Components" >> analysis-summary.md
-          echo "" >> analysis-summary.md
-          
-          # List all analysis artifacts
-          for dir in analysis-results/*/; do
-            if [ -d "$dir" ]; then
-              artifact_name=$(basename "$dir")
-              echo "- **$artifact_name**: $(find "$dir" -type f | wc -l) files" >> analysis-summary.md
-            fi
-          done
-          
-          echo "" >> analysis-summary.md
-          echo "## Key Findings" >> analysis-summary.md
-          echo "" >> analysis-summary.md
-          
-          # Extract key status information from individual reports
-          if [ -f "analysis-results/ktlint-analysis/ktlint-results.md" ]; then
-            echo "### Kotlin (ktlint)" >> analysis-summary.md
-            grep "Status" analysis-results/ktlint-analysis/ktlint-results.md || echo "- Analysis completed" >> analysis-summary.md
-            echo "" >> analysis-summary.md
-          fi
-          
-          if [ -f "analysis-results/checkstyle-analysis/checkstyle-results.md" ]; then
-            echo "### Java (Checkstyle)" >> analysis-summary.md
-            grep "Status" analysis-results/checkstyle-analysis/checkstyle-results.md || echo "- Analysis completed" >> analysis-summary.md
-            echo "" >> analysis-summary.md
-          fi
-          
-          if [ -f "analysis-results/python-analysis/python-results.md" ]; then
-            echo "### Python" >> analysis-summary.md
-            grep "✅\|❌" analysis-results/python-analysis/python-results.md | head -3 >> analysis-summary.md || echo "- Analysis completed" >> analysis-summary.md
-            echo "" >> analysis-summary.md
-          fi
-          
-          if [ -f "analysis-results/shellcheck-analysis/shellcheck-results.md" ]; then
-            echo "### Shell Scripts" >> analysis-summary.md
-            grep "Status" analysis-results/shellcheck-analysis/shellcheck-results.md || echo "- Analysis completed" >> analysis-summary.md
-            echo "" >> analysis-summary.md
-          fi
-          
-          echo "## Recommendations" >> analysis-summary.md
-          echo "" >> analysis-summary.md
-          echo "1. Review individual analysis reports for detailed findings" >> analysis-summary.md
-          echo "2. Address any critical linting issues before merging" >> analysis-summary.md
-          echo "3. Run \`./dev.sh lint\` locally before pushing changes" >> analysis-summary.md
-          echo "4. Consider setting up pre-commit hooks for automated checking" >> analysis-summary.md
-      
-      - name: Upload comprehensive analysis summary
-        uses: actions/upload-artifact@v4
-        with:
-          name: analysis-summary-report
-          path: |
-            analysis-summary.md
-            analysis-results/
-          retention-days: 14
+    - uses: actions/checkout@v4
+    
+    - name: Run dev.sh static analysis
+      run: ./dev.sh static

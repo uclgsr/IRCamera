@@ -1,7 +1,6 @@
 # Contributing to MPDC4GSR
 
-We welcome contributions to the Multi-Modal Physiological Sensing Platform! This guide will help you
-get started.
+We welcome contributions to the Multi-Modal Physiological Sensing Platform! This guide will help you get started.
 
 ## 🎯 How to Contribute
 
@@ -11,7 +10,7 @@ We welcome several types of contributions:
 
 - **🐛 Bug Reports**: Help us identify and fix issues
 - **✨ Feature Requests**: Suggest new capabilities
-- **📝 Documentation**: Improve guides and API docs
+- **📝 Documentation**: Improve guides and API docs  
 - **🧪 Testing**: Add tests and improve coverage
 - **🔧 Code**: Fix bugs and implement features
 - **🎨 UI/UX**: Improve user interfaces
@@ -22,7 +21,6 @@ We welcome several types of contributions:
 ### Development Environment
 
 #### Prerequisites
-
 ```bash
 # Required tools
 - Git
@@ -35,14 +33,13 @@ We welcome several types of contributions:
 - NDK r25+
 - Java 17
 
-# PC Controller development
+# PC Controller development  
 - PyQt6
 - CMake 3.20+
 - C++17 compiler
 ```
 
 #### Repository Setup
-
 ```bash
 # Fork and clone
 git clone https://github.com/YOUR_USERNAME/IRCamera.git
@@ -62,7 +59,6 @@ pre-commit install
 ### First-Time Setup
 
 #### Android Development
-
 ```bash
 # Build all modules
 ./gradlew clean build
@@ -75,7 +71,6 @@ pre-commit install
 ```
 
 #### PC Controller Development
-
 ```bash
 cd pc-controller
 
@@ -114,7 +109,7 @@ mypy src/
 git checkout -b feature/shimmer-battery-monitoring
 git checkout -b feature/thermal-camera-integration
 
-# Bug fix branches
+# Bug fix branches  
 git checkout -b fix/gsr-connection-timeout
 git checkout -b fix/video-sync-drift
 
@@ -140,7 +135,6 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 #### Types
-
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -150,7 +144,6 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `chore`: Maintenance tasks
 
 #### Examples
-
 ```bash
 feat(gsr): add battery level monitoring for Shimmer3 devices
 
@@ -189,7 +182,6 @@ test(network): add integration tests for device discovery
 ### Kotlin (Android)
 
 #### Style Guide
-
 ```kotlin
 // Follow official Kotlin style guide
 class GSRRecorder @Inject constructor(
@@ -208,12 +200,12 @@ class GSRRecorder @Inject constructor(
 
     
     override suspend fun startRecording(
-        session: Session,
+        session: Session, 
         syncTimeOffset: Long
     ): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             Log.d(TAG, "Starting GSR recording for session ${session.id}")
-
+            
             val shimmerDevice = shimmerManager.getConnectedDevice()
                 ?: return@withContext Result.failure(
                     GSRException("No Shimmer3 device connected")
@@ -249,10 +241,10 @@ class GSRRecorder @Inject constructor(
             sampleIndex = sample.index,
             qualityScore = assessSignalQuality(sample)
         )
-
+        
         // Write to file asynchronously
         fileManager.writeSample(gsrSample)
-
+        
         // Emit for real-time processing
         sampleFlow.tryEmit(gsrSample)
     }
@@ -260,7 +252,6 @@ class GSRRecorder @Inject constructor(
 ```
 
 #### Testing Standards
-
 ```kotlin
 @RunWith(AndroidJUnit4::class)
 class GSRRecorderTest {
@@ -268,7 +259,7 @@ class GSRRecorderTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    @get:Rule
+    @get:Rule  
     val coroutineRule = MainCoroutineRule()
 
     @Mock
@@ -329,7 +320,6 @@ class GSRRecorderTest {
 ### Python (PC Controller)
 
 #### Style Guide
-
 ```python
 """GSR data processing module for real-time analysis."""
 
@@ -349,23 +339,23 @@ logger = logging.getLogger(__name__)
 @dataclass
 class GSRSample:
     """Represents a single GSR measurement sample."""
-
+    
     timestamp: int  # Nanoseconds since epoch
     conductance_us: float  # Microsiemens
-    resistance_kohms: float  # Kilohms
+    resistance_kohms: float  # Kilohms  
     sample_index: int
     quality_score: float
 
 
 class GSRProcessor(QThread):
     """Real-time GSR data processor with signal analysis capabilities."""
-
+    
     sample_processed = pyqtSignal(GSRSample)
     scr_detected = pyqtSignal(dict)  # Skin conductance response
-
+    
     def __init__(self, sample_rate: int = 128) -> None:
         """Initialize GSR processor.
-
+        
         Args:
             sample_rate: Expected sample rate in Hz
         """
@@ -373,49 +363,49 @@ class GSRProcessor(QThread):
         self.sample_rate = sample_rate
         self.samples_buffer: List[GSRSample] = []
         self.processing_enabled = False
-
+        
         # Signal processing parameters
         self.scr_threshold = 0.1  # Microsiemens
         self.scr_min_duration = 1.0  # Seconds
         self.baseline_window = 30.0  # Seconds
-
+        
     async def add_sample(self, sample: GSRSample) -> None:
         """Add new sample for processing.
-
+        
         Args:
             sample: GSR sample to process
         """
         self.samples_buffer.append(sample)
-
+        
         # Maintain rolling window
         max_samples = int(self.sample_rate * self.baseline_window)
         if len(self.samples_buffer) > max_samples:
             self.samples_buffer.pop(0)
-
+            
         # Process sample
         await self._process_sample(sample)
-
+        
         # Emit signal for UI updates
         self.sample_processed.emit(sample)
-
+        
     async def _process_sample(self, sample: GSRSample) -> None:
         """Process individual sample for SCR detection.
-
+        
         Args:
             sample: Sample to analyze
         """
         if len(self.samples_buffer) < self.sample_rate:
             return  # Need at least 1 second of data
-
+            
         try:
             # Extract recent data for analysis
             recent_samples = self.samples_buffer[-self.sample_rate:]
             conductance_values = [s.conductance_us for s in recent_samples]
-
+            
             # Calculate baseline
             baseline = np.mean(conductance_values[:-10])  # Exclude last 10 samples
             current_value = sample.conductance_us
-
+            
             # Detect SCR (skin conductance response)
             if current_value - baseline > self.scr_threshold:
                 scr_event = {
@@ -424,63 +414,63 @@ class GSRProcessor(QThread):
                     'baseline': baseline,
                     'peak_value': current_value
                 }
-
+                
                 logger.info(f"SCR detected: amplitude={scr_event['amplitude']:.3f}µS")
                 self.scr_detected.emit(scr_event)
-
+                
         except Exception as e:
             logger.error(f"Error processing GSR sample: {e}")
-
+            
     def get_signal_quality(self) -> float:
         """Calculate signal quality score.
-
+        
         Returns:
             Quality score between 0.0 and 1.0
         """
         if len(self.samples_buffer) < self.sample_rate:
             return 0.0
-
+            
         # Calculate metrics
         recent_samples = self.samples_buffer[-self.sample_rate:]
         conductance_values = [s.conductance_us for s in recent_samples]
-
+        
         # Check for signal stability
         std_dev = np.std(conductance_values)
         mean_value = np.mean(conductance_values)
-
+        
         # Quality based on coefficient of variation
         if mean_value > 0:
             cv = std_dev / mean_value
             quality = max(0.0, 1.0 - cv)
         else:
             quality = 0.0
-
+            
         return min(1.0, quality)
 
 
 class SessionDataExporter:
     """Export session data in various formats."""
-
+    
     def __init__(self, session_path: Path) -> None:
         """Initialize exporter with session path.
-
+        
         Args:
             session_path: Path to session data directory
         """
         self.session_path = session_path
-
+        
     async def export_to_hdf5(self, output_path: Path) -> None:
         """Export session data to HDF5 format.
-
+        
         Args:
             output_path: Output file path
-
+            
         Raises:
             ExportError: If export fails
         """
         try:
             import h5py
-
+            
             with h5py.File(output_path, 'w') as f:
                 # Load and write GSR data
                 gsr_data = await self._load_gsr_data()
@@ -491,23 +481,23 @@ class SessionDataExporter:
                     gsr_group.create_dataset('resistance', data=gsr_data['resistance'])
                     gsr_group.attrs['sample_rate'] = 128.0
                     gsr_group.attrs['units'] = 'microsiemens'
-
+                
                 # Load and write sync events
                 sync_data = await self._load_sync_events()
                 if sync_data is not None:
                     sync_group = f.create_group('sync_events')
                     sync_group.create_dataset('timestamps', data=sync_data['timestamps'])
                     sync_group.create_dataset('event_types', data=sync_data['types'])
-
+                
                 logger.info(f"Successfully exported session to {output_path}")
-
+                
         except Exception as e:
             logger.error(f"Failed to export session data: {e}")
             raise ExportError(f"HDF5 export failed: {e}") from e
-
+            
     async def _load_gsr_data(self) -> Optional[Dict[str, np.ndarray]]:
         """Load GSR data from CSV file.
-
+        
         Returns:
             Dictionary with GSR data arrays or None if not found
         """
@@ -515,7 +505,7 @@ class SessionDataExporter:
         if not gsr_file.exists():
             logger.warning(f"GSR data file not found: {gsr_file}")
             return None
-
+            
         try:
             df = pd.read_csv(gsr_file)
             return {
@@ -534,7 +524,6 @@ class ExportError(Exception):
 ```
 
 #### Testing Standards
-
 ```python
 """Tests for GSR processing module."""
 
@@ -549,12 +538,12 @@ from src.gsr_processor import GSRProcessor, GSRSample, SessionDataExporter
 
 class TestGSRProcessor:
     """Test suite for GSRProcessor class."""
-
+    
     @pytest.fixture
     def processor(self) -> GSRProcessor:
         """Create GSR processor for testing."""
         return GSRProcessor(sample_rate=128)
-
+        
     @pytest.fixture
     def sample_data(self) -> List[GSRSample]:
         """Create test sample data."""
@@ -563,7 +552,7 @@ class TestGSRProcessor:
             timestamp = i * 7_812_500  # ~7.8ms intervals
             conductance = 10.0 + np.sin(i * 0.1) * 2.0  # Simulated GSR with variation
             resistance = 1000.0 / conductance if conductance > 0 else 100.0
-
+            
             samples.append(GSRSample(
                 timestamp=timestamp,
                 conductance_us=conductance,
@@ -572,36 +561,36 @@ class TestGSRProcessor:
                 quality_score=0.9
             ))
         return samples
-
+    
     @pytest.mark.asyncio
     async def test_add_sample_updates_buffer(self, processor: GSRProcessor, sample_data: List[GSRSample]):
         """Test that adding samples updates internal buffer."""
         # Given
         sample = sample_data[0]
-
+        
         # When
         await processor.add_sample(sample)
-
+        
         # Then
         assert len(processor.samples_buffer) == 1
         assert processor.samples_buffer[0] == sample
-
+        
     @pytest.mark.asyncio
     async def test_scr_detection(self, processor: GSRProcessor):
         """Test skin conductance response detection."""
         # Given - baseline samples
         baseline_samples = [
-            GSRSample(i * 1000000, 10.0, 100.0, i, 0.9)
+            GSRSample(i * 1000000, 10.0, 100.0, i, 0.9) 
             for i in range(128)
         ]
-
+        
         for sample in baseline_samples:
             await processor.add_sample(sample)
-
+            
         # Mock the signal emission
         scr_mock = Mock()
         processor.scr_detected.connect(scr_mock)
-
+        
         # When - add sample with elevated conductance (SCR)
         scr_sample = GSRSample(
             timestamp=128_000_000,
@@ -610,29 +599,29 @@ class TestGSRProcessor:
             sample_index=128,
             quality_score=0.9
         )
-
+        
         await processor.add_sample(scr_sample)
-
+        
         # Then
         scr_mock.emit.assert_called_once()
         scr_event = scr_mock.emit.call_args[0][0]
         assert scr_event['amplitude'] > processor.scr_threshold
-
+        
     def test_signal_quality_calculation(self, processor: GSRProcessor):
         """Test signal quality score calculation."""
         # Given - stable signal samples
         stable_samples = [
-            GSRSample(i * 1000000, 10.0, 100.0, i, 0.9)
+            GSRSample(i * 1000000, 10.0, 100.0, i, 0.9) 
             for i in range(128)
         ]
         processor.samples_buffer = stable_samples
-
+        
         # When
         quality = processor.get_signal_quality()
-
+        
         # Then
         assert 0.8 <= quality <= 1.0  # High quality for stable signal
-
+        
     def test_signal_quality_with_noise(self, processor: GSRProcessor):
         """Test signal quality with noisy data."""
         # Given - noisy signal samples
@@ -641,54 +630,54 @@ class TestGSRProcessor:
             for i in range(128)
         ]
         processor.samples_buffer = noisy_samples
-
+        
         # When
         quality = processor.get_signal_quality()
-
+        
         # Then
         assert quality < 0.8  # Lower quality for noisy signal
 
 
 class TestSessionDataExporter:
     """Test suite for SessionDataExporter class."""
-
+    
     @pytest.fixture
     def temp_session_dir(self, tmp_path: Path) -> Path:
         """Create temporary session directory."""
         session_dir = tmp_path / "test_session"
         session_dir.mkdir()
-
+        
         # Create test GSR data file
         gsr_file = session_dir / "gsr_data.csv"
         gsr_data = [
             "timestamp_ms,conductance_us,resistance_kohms,sample_index",
             "1000000,10.5,95.2,1",
-            "1008000,10.3,97.1,2",
+            "1008000,10.3,97.1,2", 
             "1016000,10.7,93.5,3"
         ]
         gsr_file.write_text('\n'.join(gsr_data))
-
+        
         return session_dir
-
+        
     @pytest.fixture
     def exporter(self, temp_session_dir: Path) -> SessionDataExporter:
         """Create session data exporter."""
         return SessionDataExporter(temp_session_dir)
-
+        
     @pytest.mark.asyncio
     async def test_export_to_hdf5(self, exporter: SessionDataExporter, tmp_path: Path):
         """Test HDF5 export functionality."""
         pytest.importorskip("h5py")  # Skip if h5py not available
-
+        
         # Given
         output_path = tmp_path / "exported_session.h5"
-
+        
         # When
         await exporter.export_to_hdf5(output_path)
-
+        
         # Then
         assert output_path.exists()
-
+        
         # Verify HDF5 contents
         import h5py
         with h5py.File(output_path, 'r') as f:
@@ -697,20 +686,20 @@ class TestSessionDataExporter:
             assert 'conductance' in f['gsr']
             assert 'resistance' in f['gsr']
             assert f['gsr'].attrs['sample_rate'] == 128.0
-
+            
     @pytest.mark.asyncio
     async def test_load_gsr_data_success(self, exporter: SessionDataExporter):
         """Test successful GSR data loading."""
         # When
         gsr_data = await exporter._load_gsr_data()
-
+        
         # Then
         assert gsr_data is not None
         assert 'timestamps' in gsr_data
         assert 'conductance' in gsr_data
         assert 'resistance' in gsr_data
         assert len(gsr_data['timestamps']) == 3
-
+        
     @pytest.mark.asyncio
     async def test_load_gsr_data_file_not_found(self, tmp_path: Path):
         """Test GSR data loading when file doesn't exist."""
@@ -718,10 +707,10 @@ class TestSessionDataExporter:
         empty_session_dir = tmp_path / "empty_session"
         empty_session_dir.mkdir()
         exporter = SessionDataExporter(empty_session_dir)
-
+        
         # When
         gsr_data = await exporter._load_gsr_data()
-
+        
         # Then
         assert gsr_data is None
 ```
@@ -738,35 +727,34 @@ class GSRRecorder @Inject constructor(
 ) : SensorRecorder {
     // Implementation...
 }
-````
+```
 
 #### API Documentation
-
 Use clear, comprehensive documentation:
 
 ```python
 async def start_session(self, config: SessionConfig) -> Session:
     """Start a new synchronized recording session across all connected devices.
-
+    
     This method coordinates session initialization across multiple Android devices,
     performs time synchronization, and begins data collection. The session will
     continue until explicitly stopped or the configured duration expires.
-
+    
     Args:
         config: Session configuration including participant info, duration,
                and sensor settings. See SessionConfig for detailed options.
-
+               
     Returns:
         Session object containing session metadata and device assignments.
         The session will be in STARTING state initially, transitioning to
         RECORDING once all devices confirm readiness.
-
+        
     Raises:
         NoDevicesAvailableError: If no Android devices are connected
         SessionStartError: If session initialization fails on any device
         TimeoutError: If device responses exceed configured timeout
         ConfigurationError: If session config contains invalid parameters
-
+        
     Example:
         >>> config = SessionConfig(
         ...     participant_id="P001",
@@ -776,15 +764,15 @@ async def start_session(self, config: SessionConfig) -> Session:
         ... )
         >>> session = await session_manager.start_session(config)
         >>> print(f"Session {session.id} started with {len(session.devices)} devices")
-
+        
     Note:
         This is an async operation that may take 3-5 seconds to complete as it
         involves network communication and device initialization. Progress can
         be monitored via the session_status_changed signal.
-
+        
     See Also:
         stop_session(): End current recording session
-        get_session_status(): Check current session state
+        get_session_status(): Check current session state  
         SessionConfig: Complete configuration options
     """
 ```
@@ -794,21 +782,18 @@ async def start_session(self, config: SessionConfig) -> Session:
 ### Test Categories
 
 #### Unit Tests
-
 - **Coverage Target**: >80% line coverage
 - **Focus**: Individual functions and classes
 - **Mock Dependencies**: External services and hardware
 - **Fast Execution**: <10ms per test
 
-#### Integration Tests
-
+#### Integration Tests  
 - **Coverage**: Component interactions
 - **Real Dependencies**: Limited external services
 - **Data Validation**: End-to-end data flow
 - **Moderate Duration**: <1s per test
 
 #### System Tests
-
 - **Coverage**: Complete workflows
 - **Real Hardware**: When available
 - **Performance**: Timing and throughput validation
@@ -817,7 +802,6 @@ async def start_session(self, config: SessionConfig) -> Session:
 ### Test Data Management
 
 #### Mock Data Generation
-
 ```kotlin
 object TestDataFactory {
     fun createGSRSamples(
@@ -828,10 +812,10 @@ object TestDataFactory {
     ): List<GSRSample> {
         return (0 until count).map { i ->
             val timestamp = i * (1_000_000_000L / sampleRate)
-            val conductance = baselineConductance +
+            val conductance = baselineConductance + 
                              sin(i * 0.1) * 2.0 +  // Slow variation
                              Random.nextGaussian() * noiseLevel  // Noise
-
+            
             GSRSample(
                 timestamp = timestamp,
                 conductanceMicrosiemens = conductance,
@@ -841,10 +825,10 @@ object TestDataFactory {
             )
         }
     }
-
+    
     fun createTestSession(
         sessionId: String = "test_session_${System.currentTimeMillis()}",
-        participantId: String = "P_TEST",
+        participantId: String = "P_TEST", 
         durationMs: Long = 60000L
     ): Session {
         return Session(
@@ -865,7 +849,6 @@ object TestDataFactory {
 ### Performance Testing
 
 #### Benchmarking
-
 ```python
 import time
 import statistics
@@ -873,28 +856,28 @@ from typing import List
 
 class PerformanceBenchmark:
     """Performance testing utilities for MPDC4GSR components."""
-
+    
     @staticmethod
     def benchmark_gsr_processing(processor: GSRProcessor, sample_count: int = 1000) -> dict:
         """Benchmark GSR sample processing performance.
-
+        
         Args:
             processor: GSR processor to test
             sample_count: Number of samples to process
-
+            
         Returns:
             Performance metrics including latency and throughput
         """
         samples = TestDataFactory.create_gsr_samples(sample_count)
         processing_times = []
-
+        
         for sample in samples:
             start_time = time.perf_counter()
             asyncio.run(processor.add_sample(sample))
             end_time = time.perf_counter()
-
+            
             processing_times.append((end_time - start_time) * 1000)  # Convert to ms
-
+            
         return {
             'mean_latency_ms': statistics.mean(processing_times),
             'median_latency_ms': statistics.median(processing_times),
@@ -902,30 +885,30 @@ class PerformanceBenchmark:
             'throughput_samples_per_sec': sample_count / sum(processing_times) * 1000,
             'samples_processed': sample_count
         }
-
+        
     @staticmethod
     def validate_timing_accuracy(target_rate: int = 128, duration_sec: int = 10) -> dict:
         """Validate GSR sampling timing accuracy.
-
+        
         Args:
             target_rate: Expected sample rate in Hz
             duration_sec: Test duration in seconds
-
+            
         Returns:
             Timing accuracy metrics
         """
         expected_interval_ms = 1000.0 / target_rate
         timestamps = []
-
+        
         # Simulate sample collection
         start_time = time.time()
         while time.time() - start_time < duration_sec:
             timestamps.append(time.time() * 1000)  # Convert to ms
             time.sleep(expected_interval_ms / 1000.0)
-
+            
         # Calculate intervals
         intervals = [timestamps[i+1] - timestamps[i] for i in range(len(timestamps)-1)]
-
+        
         return {
             'expected_interval_ms': expected_interval_ms,
             'mean_interval_ms': statistics.mean(intervals),
@@ -940,7 +923,6 @@ class PerformanceBenchmark:
 ### Before Submitting
 
 #### Checklist
-
 - [ ] **Tests pass**: All existing tests continue to pass
 - [ ] **New tests added**: For new functionality or bug fixes
 - [ ] **Code style**: Follows project coding standards
@@ -950,7 +932,6 @@ class PerformanceBenchmark:
 - [ ] **Security**: No new security vulnerabilities
 
 #### Code Quality Checks
-
 ```bash
 # Android checks
 ./gradlew ktlintCheck
@@ -972,30 +953,24 @@ vale docs/
 
 ```markdown
 ## Description
-
 Brief description of changes and motivation.
 
 ## Type of Change
-
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as
-      expected)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] Documentation update
 
 ## Testing
-
 - [ ] Unit tests added/updated
-- [ ] Integration tests added/updated
+- [ ] Integration tests added/updated  
 - [ ] Manual testing completed
 - [ ] Performance testing completed (if applicable)
 
 ## Screenshots (if applicable)
-
 Include screenshots for UI changes.
 
 ## Checklist
-
 - [ ] My code follows the style guidelines of this project
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
@@ -1005,8 +980,8 @@ Include screenshots for UI changes.
 - [ ] New and existing unit tests pass locally with my changes
 
 ## Related Issues
-
-Closes #123 Related to #456
+Closes #123
+Related to #456
 ```
 
 ### Review Process
@@ -1020,7 +995,6 @@ Closes #123 Related to #456
 ## 🏷️ Release Process
 
 ### Version Numbering
-
 We follow [Semantic Versioning](https://semver.org/):
 
 - **MAJOR**: Breaking changes
@@ -1028,7 +1002,6 @@ We follow [Semantic Versioning](https://semver.org/):
 - **PATCH**: Bug fixes, backwards compatible
 
 Examples:
-
 - `1.0.0` → `1.0.1` (bug fix)
 - `1.0.1` → `1.1.0` (new feature)
 - `1.1.0` → `2.0.0` (breaking change)
@@ -1036,7 +1009,6 @@ Examples:
 ### Release Checklist
 
 #### Pre-Release
-
 - [ ] All tests passing
 - [ ] Documentation updated
 - [ ] CHANGELOG.md updated
@@ -1044,7 +1016,6 @@ Examples:
 - [ ] Performance benchmarks validated
 
 #### Release
-
 - [ ] Create release tag
 - [ ] Build and test APK
 - [ ] Generate release notes
@@ -1052,7 +1023,6 @@ Examples:
 - [ ] Update documentation website
 
 #### Post-Release
-
 - [ ] Monitor for issues
 - [ ] Update project boards
 - [ ] Plan next release cycle
@@ -1062,21 +1032,18 @@ Examples:
 ### Design Guidelines
 
 #### Android Material Design
-
 - Follow Material Design 3 principles
 - Use consistent color schemes and typography
 - Implement proper accessibility features
 - Test on various screen sizes
 
 #### PC Controller Design
-
 - Follow platform conventions (Windows/macOS/Linux)
 - Maintain consistent PyQt6 styling
 - Ensure keyboard navigation support
 - Implement proper window management
 
 ### Accessibility Requirements
-
 - **Color Contrast**: WCAG AA compliance minimum
 - **Text Size**: Support system font scaling
 - **Keyboard Navigation**: Full keyboard access
@@ -1086,28 +1053,21 @@ Examples:
 ## 🤝 Community
 
 ### Communication Channels
-
 - **GitHub Issues**: Bug reports and feature requests
 - **GitHub Discussions**: Questions and general discussion
 - **Pull Requests**: Code contributions and reviews
 
 ### Code of Conduct
-
-We follow the [Contributor Covenant](https://www.contributor-covenant.org/) code of conduct. Please
-be respectful and inclusive in all interactions.
+We follow the [Contributor Covenant](https://www.contributor-covenant.org/) code of conduct. Please be respectful and inclusive in all interactions.
 
 ### Recognition
-
 Contributors are recognized in:
-
 - CONTRIBUTORS.md file
 - Release notes for significant contributions
 - GitHub contributor statistics
 
 ---
 
-**Thank you for contributing to MPDC4GSR!** Your contributions help make physiological sensing
-research more accessible and reliable. 🚀
+**Thank you for contributing to MPDC4GSR!** Your contributions help make physiological sensing research more accessible and reliable. 🚀
 
-_For questions about contributing, feel free to open a GitHub Discussion or comment on relevant
-issues._
+*For questions about contributing, feel free to open a GitHub Discussion or comment on relevant issues.*

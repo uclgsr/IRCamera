@@ -31,6 +31,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ShimmerBleController {
     private static final String TAG = "ShimmerBleController";
     
+    // Shimmer device identification constants
+    private static final String SHIMMER_MAC_OUI = "00:06:66";
+    
     // Shimmer BLE UUIDs and constants
     private static final UUID SHIMMER_SERVICE_UUID = UUID.fromString("49535343-FE7D-4AE5-8FA9-9FAFD205E455");
     private static final UUID SHIMMER_DATA_CHAR_UUID = UUID.fromString("49535343-1E4D-4BD9-BA61-23C647249616");
@@ -238,8 +241,10 @@ public class ShimmerBleController {
             try {
                 BluetoothDevice device = result.getDevice();
                 String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
+                String deviceAddress = device.getAddress();
                 
-                if (deviceName != null && isShimmerDevice(deviceName)) {
+                // Enhanced Shimmer device identification: check both name and MAC OUI
+                if (isShimmerDevice(deviceName, deviceAddress)) {
                     UnifiedBleManager.DeviceType deviceType = determineShimmerDeviceType(deviceName, result.getScanRecord());
                     
                     if (currentScanListener != null) {
@@ -251,7 +256,7 @@ public class ShimmerBleController {
                         );
                     }
                     
-                    Log.d(TAG, "Found Shimmer device: " + deviceName + " (" + deviceType + ") RSSI: " + result.getRssi());
+                    Log.d(TAG, "Found Shimmer device: " + deviceName + " [" + deviceAddress + "] (" + deviceType + ") RSSI: " + result.getRssi());
                 }
                 
             } catch (Exception e) {
@@ -277,14 +282,25 @@ public class ShimmerBleController {
     };
     
 
-    private boolean isShimmerDevice(String deviceName) {
-        if (deviceName == null) return false;
+    private boolean isShimmerDevice(String deviceName, String deviceAddress) {
+        // Step 3: Enhanced device identification with MAC OUI filtering as specified
         
-        for (String pattern : SHIMMER_DEVICE_PATTERNS) {
-            if (deviceName.toLowerCase().contains(pattern.toLowerCase())) {
-                return true;
+        // Check MAC address OUI - Shimmer devices typically use specific OUI
+        if (deviceAddress != null && deviceAddress.toUpperCase().startsWith(SHIMMER_MAC_OUI)) {
+            Log.d(TAG, "Shimmer device detected by MAC OUI: " + deviceAddress);
+            return true;
+        }
+        
+        // Check device name patterns
+        if (deviceName != null) {
+            for (String pattern : SHIMMER_DEVICE_PATTERNS) {
+                if (deviceName.toLowerCase().contains(pattern.toLowerCase())) {
+                    Log.d(TAG, "Shimmer device detected by name pattern: " + deviceName);
+                    return true;
+                }
             }
         }
+        
         return false;
     }
     

@@ -147,9 +147,6 @@ android {
                     "**/libSRImage.so", // Primary culprit for stripping errors
                 )
         }
-        jniLibs {
-            pickFirsts += listOf("**/libc++_shared.so", "**/libomp.so")
-        }
     }
 
     buildFeatures {

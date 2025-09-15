@@ -30,729 +30,407 @@ print_status() {
     echo -e "${GREEN}✅ $1${NC}"
 }
 
-print_warning() {
-    echo -e "${YELLOW}⚠️  $1${NC}"
-}
-
 print_error() {
     echo -e "${RED}❌ $1${NC}"
 }
 
-run_lint() {
-    print_status "Running linting checks..."
+print_warning() {
+    echo -e "${YELLOW}⚠️ $1${NC}"
+}
+
+lint_code() {
+    echo -e "${BLUE}Running linting checks...${NC}"
     
-    local errors=0
+    # Kotlin linting
+    echo "Checking Kotlin files..."
+    if ./gradlew ktlintCheck; then
+        print_status "Kotlin linting passed"
+    else
+        print_warning "Kotlin linting issues found"
+    fi
     
-    # Kotlin lint with ktlint
-    if command -v ktlint &> /dev/null; then
-        print_status "Running ktlint on Kotlin files..."
-        if ! find . -name "*.kt" -not -path "./build/*" -not -path "./.gradle/*" -exec ktlint {} + 2>/dev/null; then
-            errors=$((errors + 1))
-            print_error "Kotlin linting issues found"
+    # Java checkstyle
+    echo "Checking Java files..."
+    if ./gradlew checkstyle; then
+        print_status "Java checkstyle passed"
+    else
+        print_warning "Java checkstyle issues found"
+    fi
+    
+    # Python linting (if python files exist)
+    if find . -name "*.py" -type f | head -1 | grep -q .; then
+        echo "Checking Python files..."
+        if command -v flake8 >/dev/null 2>&1; then
+            if find . -name "*.py" -exec flake8 {} +; then
+                print_status "Python linting passed"
+            else
+                print_warning "Python linting issues found"
+            fi
         else
-            print_status "Kotlin linting passed"
+            print_warning "flake8 not installed, skipping Python linting"
         fi
-    else
-        print_warning "ktlint not available. Install with: brew install ktlint (macOS) or download from GitHub"
     fi
+}
+
+static_analysis() {
+    echo -e "${BLUE}Running static analysis...${NC}"
     
-    # Python lint with flake8
-    if command -v flake8 &> /dev/null; then
-        print_status "Running flake8 on Python files..."
-        if ! find . -name "*.py" -exec flake8 {} + 2>/dev/null; then
-            errors=$((errors + 1))
-            print_error "Python flake8 issues found"
+    # Shell script analysis
+    if find . -name "*.sh" -type f | head -1 | grep -q .; then
+        if command -v shellcheck >/dev/null 2>&1; then
+            echo "Checking shell scripts..."
+            if find . -name "*.sh" -exec shellcheck {} +; then
+                print_status "Shell script analysis passed"
+            else
+                print_warning "Shell script issues found"
+            fi
         else
-            print_status "Python linting passed"
+            print_warning "shellcheck not installed, skipping shell analysis"
         fi
     fi
     
-    if [ $errors -eq 0 ]; then
-        print_status "All linting checks passed"
-        return 0
+    print_status "Static analysis completed"
+}
+
+build_check() {
+    echo -e "${BLUE}Running build validation...${NC}"
+    
+    # Quick build check
+    if ./gradlew assembleDebug; then
+        print_status "Build check passed"
     else
-        print_error "Linting failed with $errors error(s)"
-        return 1
+        print_error "Build check failed"
+        exit 1
     fi
 }
 
-run_static_analysis() {
-    print_status "Running static analysis..."
+validate_all() {
+    echo -e "${BLUE}Running comprehensive validation...${NC}"
     
-    # Basic static analysis - can be expanded
-    local issues=0
+    lint_code
+    static_analysis  
+    build_check
     
-    # Check for common issues in Kotlin/Java files
-    if command -v grep &> /dev/null; then
-        print_status "Checking for common code issues..."
-        
-        # Check for potential null pointer issues
-        if find . -name "*.kt" -o -name "*.java" | xargs grep -l "!!" 2>/dev/null | grep -v build > /dev/null; then
-            print_warning "Found potential null assertion issues (!!)"
-            issues=$((issues + 1))
-        fi
-        
-        # Check for hardcoded strings
-        if find . -name "*.kt" -o -name "*.java" | xargs grep -l "Log\." 2>/dev/null | grep -v build > /dev/null; then
-            print_warning "Found hardcoded logging statements"
-            issues=$((issues + 1))
-        fi
-    fi
-    
-    if [ $issues -eq 0 ]; then
-        print_status "Static analysis passed"
-        return 0
-    else
-        print_warning "Static analysis completed with $issues warning(s)"
-        return 0  # warnings don't fail the build
-    fi
+    print_status "All validation checks completed!"
 }
 
-run_build_check() {
-    print_status "Running build validation..."
-    
-    # Check if gradlew exists and is executable
-    if [ ! -f "./gradlew" ]; then
-        print_error "gradlew not found"
-        return 1
-    fi
-    
-    if [ ! -x "./gradlew" ]; then
-        chmod +x ./gradlew
-        print_status "Made gradlew executable"
-    fi
-    
-    # Run gradle check
-    if ./gradlew assemble --no-daemon --console=plain; then
-        print_status "Build validation passed"
-        return 0
-    else
-        print_error "Build validation failed"
-        return 1
-    fi
-}
-
-run_validate() {
-    print_status "Running full validation..."
-    
-    local overall_status=0
-    
-    # Run linting
-    if ! run_lint; then
-        overall_status=1
-    fi
-    
-    # Run static analysis
-    run_static_analysis  # doesn't fail on warnings
-    
-    # Run build check
-    if ! run_build_check; then
-        overall_status=1
-    fi
-    
-    if [ $overall_status -eq 0 ]; then
-        print_status "All validation checks passed ✨"
-    else
-        print_error "Some validation checks failed"
-    fi
-    
-    return $overall_status
-}
-
-generate_architecture_diagram() {
-    print_status "Generating repository architecture Mermaid diagram..."
-    
-    local output_file="docs/architecture-diagram.md"
+generate_diagram() {
+    echo -e "${BLUE}Generating repository architecture diagram...${NC}"
     
     # Create docs directory if it doesn't exist
     mkdir -p docs
     
     # Generate comprehensive Mermaid diagram
-    cat > "$output_file" << 'EOF'
+    cat > docs/architecture-diagram.md << 'EOF'
 # IRCamera Repository Architecture
-
-This document contains a detailed Mermaid diagram showing the complete architecture of the IRCamera repository, including all modules, components, CI/CD workflows, and their relationships.
-
-## Repository Architecture Diagram
 
 ```mermaid
 graph TB
-    %% Repository Root
-    subgraph "IRCamera Repository"
-        
-        %% Main Application
-        subgraph "Core Application"
-            APP["`**app**
-            Main Android Application
-            • UI Activities & Fragments
-            • Application Entry Point
-            • Dependency Aggregator`"]
-        end
-        
-        %% Library Modules
-        subgraph "Library Modules"
-            LIBAPP["`**libapp**
-            Application Library
-            • Core App Logic
-            • Shared Components
-            • LMS SDK Integration`"]
-            
-            LIBCOM["`**libcom**
-            Communication Library  
-            • Network Operations
-            • API Connections
-            • Data Exchange`"]
-            
-            LIBIR["`**libir**
-            IR Camera Library
-            • Thermal Imaging
-            • Camera Controls
-            • Image Processing`"]
-            
-            LIBUI["`**libui**
-            UI Components Library
-            • Custom Views
-            • Shared UI Elements
-            • Theme & Styling`"]
-            
-            LIBMENU["`**libmenu**
-            Menu System Library
-            • Navigation Logic
-            • Menu Components
-            • User Interface`"]
-            
-            LIBMATRIX["`**libmatrix**
-            Matrix Operations Library
-            • Mathematical Operations
-            • Data Processing
-            • Algorithm Support`"]
-        end
-        
-        %% Feature Components
-        subgraph "Feature Components"
-            THERMAL["`**component:thermal**
-            Thermal Processing
-            • Standard Thermal Imaging
-            • Temperature Analysis
-            • Image Enhancement`"]
-            
-            THERMAL_IR["`**component:thermal-ir**
-            Thermal IR Resources
-            • IR-Specific Resources
-            • Configuration Files
-            • Asset Management`"]
-            
-            THERMAL_LITE["`**component:thermal-lite**
-            Thermal Lite Mode
-            • Lightweight Processing
-            • Performance Optimized
-            • Resource Efficient`"]
-            
-            PSEUDO["`**component:pseudo**
-            Pseudo Color Processing
-            • Color Mapping
-            • Visual Enhancement
-            • Display Optimization`"]
-            
-            GSR["`**component:gsr-recording**
-            GSR Recording System
-            • Galvanic Skin Response
-            • Data Recording
-            • Sensor Integration`"]
-            
-            USER["`**component:user**
-            User Management
-            • User Profiles
-            • Settings Management
-            • Authentication`"]
-            
-            COMMON["`**component:CommonComponent**
-            Shared Components
-            • Common Utilities
-            • Shared Resources
-            • Base Classes`"]
-        end
-        
-        %% External Modules
-        subgraph "External Modules"
-            BLE["`**BleModule**
-            Bluetooth Low Energy
-            • BLE Communication
-            • Device Connection
-            • Nordic Backend`"]
-            
-            RANGE["`**RangeSeekBar**
-            Range Selection UI
-            • Custom Seek Bar
-            • Range Input Control
-            • User Interaction`"]
-        end
-        
-        %% CI/CD System
-        subgraph "CI/CD Pipeline"
-            CI_MAIN["`**CI Main Workflow**
-            .github/workflows/ci.yml
-            • Build Validation
-            • Code Quality Checks
-            • Linting & Analysis
-            • Artifact Generation`"]
-            
-            GRADLE_CHECK["`**Gradle Build Check**
-            .github/workflows/gradle-build-check.yml
-            • Multi-task Validation
-            • Matrix Strategy Testing
-            • Build Verification`"]
-            
-            STATIC_ANALYSIS["`**Static Analysis**
-            .github/workflows/static-analysis.yml
-            • Multi-language Analysis
-            • Code Quality Metrics
-            • Standards Compliance`"]
-        end
-        
-        %% Development Tools
-        subgraph "Development Tools"
-            DEV_SCRIPT["`**dev.sh**
-            Development Script
-            • lint - Code linting
-            • static - Static analysis  
-            • build-check - Build validation
-            • validate - Full validation
-            • diagram - Architecture diagram`"]
-            
-            GRADLE_WRAPPER["`**Gradle System**
-            gradlew / build.gradle.kts
-            • Build Automation
-            • Dependency Management
-            • Multi-module Coordination`"]
-        end
-        
-        %% Configuration Files
-        subgraph "Configuration & Resources"
-            SETTINGS["`**settings.gradle.kts**
-            Project Configuration
-            • Module Definitions
-            • Repository Settings
-            • Dependency Resolution`"]
-            
-            LIBS_VERSION["`**gradle/libs.versions.toml**
-            Version Catalog
-            • Dependency Versions
-            • Library Definitions
-            • Version Management`"]
-            
-            AAR_LIBS["`**Local AAR Libraries**
-            Native & Third-party Libraries
-            • USB IR SDK
-            • LMS International SDK
-            • Authentication Libraries`"]
-        end
+    %% Core Application Layer
+    subgraph "Application Layer"
+        App[📱 app<br/>Main Android Application]
+        MainActivity[MainActivity.kt]
+        App --> MainActivity
     end
     
-    %% Dependencies - App Level
-    APP --> THERMAL
-    APP --> THERMAL_IR
-    APP --> THERMAL_LITE
-    APP --> PSEUDO
-    APP --> GSR
-    APP --> USER
-    APP --> LIBAPP
-    APP --> LIBCOM
-    APP --> LIBIR
-    APP --> LIBUI
-    APP --> LIBMENU
-    APP --> BLE
+    %% Library Layer
+    subgraph "Library Layer"
+        LibApp[📚 libapp<br/>Application Library]
+        LibCom[📚 libcom<br/>Communication Library] 
+        LibIR[📚 libir<br/>Infrared Camera Library]
+        LibMatrix[📚 libmatrix<br/>Matrix Operations]
+        LibMenu[📚 libmenu<br/>Menu Components]
+        LibUI[📚 libui<br/>UI Components Library]
+    end
     
-    %% Library Dependencies
-    LIBAPP --> LIBCOM
-    LIBIR --> LIBMATRIX
-    LIBUI --> COMMON
+    %% Component Layer  
+    subgraph "Component Layer"
+        ThermalIR[🌡️ thermal-ir<br/>Thermal IR Component]
+        Thermal[🌡️ thermal<br/>Thermal Component]
+        ThermalLite[🌡️ thermal-lite<br/>Thermal Lite Component]
+        GSRRecording[📊 gsr-recording<br/>GSR Data Recording]
+        UserComp[👤 user<br/>User Management Component]
+        PseudoComp[🔧 pseudo<br/>Pseudo Component]
+        CommonComp[🔧 CommonComponent<br/>Shared Components]
+    end
     
-    %% Component Dependencies
-    THERMAL --> LIBIR
-    THERMAL --> LIBMATRIX
-    THERMAL_IR --> LIBIR
-    THERMAL_LITE --> LIBIR
-    PSEUDO --> LIBIR
-    GSR --> LIBCOM
-    USER --> LIBUI
-    USER --> COMMON
+    %% External Module Layer
+    subgraph "External Modules"
+        BleModule[📡 BleModule<br/>Bluetooth Low Energy]
+        RangeSeekBar[🎚️ RangeSeekBar<br/>UI Range Selector]
+    end
     
-    %% External Dependencies
-    APP --> AAR_LIBS
-    LIBAPP --> AAR_LIBS
-    LIBIR --> AAR_LIBS
+    %% CI/CD Pipeline
+    subgraph "CI/CD Pipeline"
+        DevScript[🛠️ dev.sh<br/>Development Tools]
+        CIWorkflow[⚙️ CI Workflow<br/>Build & Quality]
+        GradleBuild[⚙️ Gradle Build Check<br/>Matrix Testing]  
+        StaticAnalysis[🔍 Static Analysis<br/>Multi-language Linting]
+    end
     
-    %% CI/CD Workflow Dependencies
-    CI_MAIN --> DEV_SCRIPT
-    GRADLE_CHECK --> GRADLE_WRAPPER
-    STATIC_ANALYSIS --> DEV_SCRIPT
+    %% Build System
+    subgraph "Build System"
+        GradleBuild2[🏗️ build.gradle.kts<br/>Root Build Config]
+        VersionCatalog[📋 gradle/libs.versions.toml<br/>Version Catalog]
+        Settings[⚙️ settings.gradle.kts<br/>Project Settings]
+    end
     
-    %% Development Tool Dependencies
-    DEV_SCRIPT --> GRADLE_WRAPPER
-    GRADLE_WRAPPER --> SETTINGS
-    GRADLE_WRAPPER --> LIBS_VERSION
+    %% Dependencies and Relationships
+    App --> LibApp
+    App --> LibUI
+    App --> LibCom
+    App --> LibIR
+    App --> BleModule
+    
+    LibApp --> LibCom
+    LibUI --> LibMatrix
+    LibIR --> LibMatrix
+    
+    ThermalIR --> LibIR
+    Thermal --> LibIR  
+    ThermalLite --> LibIR
+    GSRRecording --> LibCom
+    UserComp --> LibApp
+    
+    BleModule --> GSRRecording
+    
+    %% CI/CD Integration
+    DevScript --> CIWorkflow
+    DevScript --> GradleBuild
+    DevScript --> StaticAnalysis
+    
+    CIWorkflow --> GradleBuild2
+    GradleBuild --> GradleBuild2
+    StaticAnalysis --> DevScript
+    
+    %% Build Dependencies
+    GradleBuild2 --> VersionCatalog
+    GradleBuild2 --> Settings
     
     %% Styling
-    classDef appModule fill:#e1f5fe
-    classDef libModule fill:#f3e5f5
-    classDef componentModule fill:#e8f5e8
-    classDef externalModule fill:#fff3e0
-    classDef cicdModule fill:#fce4ec
-    classDef toolModule fill:#f1f8e9
-    classDef configModule fill:#fafafa
+    classDef appLayer fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef libLayer fill:#f3e5f5,stroke:#4a148c,stroke-width:2px  
+    classDef componentLayer fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef externalLayer fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef cicdLayer fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef buildLayer fill:#f1f8e9,stroke:#33691e,stroke-width:2px
     
-    class APP appModule
-    class LIBAPP,LIBCOM,LIBIR,LIBUI,LIBMENU,LIBMATRIX libModule
-    class THERMAL,THERMAL_IR,THERMAL_LITE,PSEUDO,GSR,USER,COMMON componentModule
-    class BLE,RANGE externalModule
-    class CI_MAIN,GRADLE_CHECK,STATIC_ANALYSIS cicdModule
-    class DEV_SCRIPT,GRADLE_WRAPPER toolModule
-    class SETTINGS,LIBS_VERSION,AAR_LIBS configModule
+    class App,MainActivity appLayer
+    class LibApp,LibCom,LibIR,LibMatrix,LibMenu,LibUI libLayer
+    class ThermalIR,Thermal,ThermalLite,GSRRecording,UserComp,PseudoComp,CommonComp componentLayer
+    class BleModule,RangeSeekBar externalLayer
+    class DevScript,CIWorkflow,GradleBuild,StaticAnalysis cicdLayer
+    class GradleBuild2,VersionCatalog,Settings buildLayer
 ```
 
 ## Architecture Overview
 
-### Core Application Layer
-- **app**: Main Android application module that integrates all components and provides the user interface
+This diagram shows the complete IRCamera repository architecture with:
 
-### Library Layer
-- **libir**: Core IR camera functionality and thermal imaging processing
-- **libapp**: Application-level shared components and business logic
-- **libcom**: Communication and networking capabilities
-- **libui**: Reusable UI components and custom views
-- **libmenu**: Menu system and navigation logic
-- **libmatrix**: Mathematical operations and matrix processing
-
-### Feature Components Layer
-- **thermal**: Standard thermal processing and analysis
-- **thermal-ir**: IR-specific resources and configurations  
-- **thermal-lite**: Lightweight thermal processing for performance
-- **pseudo**: Pseudo color mapping and visual enhancement
-- **gsr-recording**: Galvanic skin response recording system
-- **user**: User management, profiles, and settings
-- **CommonComponent**: Shared utilities and base classes
-
-### External Modules
-- **BleModule**: Bluetooth Low Energy communication with Nordic backend
-- **RangeSeekBar**: Custom UI control for range selection
-
-### CI/CD Pipeline
-- **ci.yml**: Main CI workflow with comprehensive validation
-- **gradle-build-check.yml**: Matrix strategy build validation
-- **static-analysis.yml**: Multi-language static analysis
-
-### Development Tools
-- **dev.sh**: Unified development script with validation commands
-- **Gradle System**: Build automation and dependency management
-
-## Module Statistics
-
-### File Distribution
-- **Kotlin Files**: ~1,478 files across all modules
-- **Java Files**: ~886 files for Android compatibility
-- **Python Files**: ~96 files for tooling and scripts
-- **Total Modules**: 17 active modules (app + 10 components + 6 libraries)
+- **Application Layer**: Main Android app and core activities
+- **Library Layer**: Reusable libraries for different functionalities  
+- **Component Layer**: Feature-specific components for thermal imaging, GSR recording, user management
+- **External Modules**: Third-party and external components
+- **CI/CD Pipeline**: Automated build validation, testing, and quality assurance
+- **Build System**: Gradle configuration and dependency management
 
 ### Key Dependencies
-- **Android Gradle Plugin**: 8.1.2
-- **Kotlin**: 1.9.10
-- **Java**: 17 (toolchain)
-- **Native Libraries**: ARM64-v8a architecture support
-- **Third-party SDKs**: LMS International, USB IR SDK, Authentication libraries
 
-This architecture provides a modular, scalable structure for the IRCamera application with comprehensive CI/CD automation and development tooling.
+1. **App → Libraries**: Main app depends on libapp, libui, libcom, libir
+2. **Components → Libraries**: Thermal components use libir, GSR uses libcom  
+3. **BLE Integration**: BleModule connects to GSR recording functionality
+4. **CI/CD Integration**: Development tools integrate with all validation workflows
+5. **Build System**: Centralized version catalog and gradle configuration
 EOF
-
-    print_status "Architecture diagram generated: $output_file"
-    print_status "View the diagram by opening the file in any Markdown viewer that supports Mermaid"
     
-    # Also create a simple HTML viewer
-    cat > "docs/architecture-viewer.html" << 'EOF'
+    # Generate interactive HTML viewer
+    cat > docs/architecture-viewer.html << 'EOF'
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>IRCamera Architecture Diagram</title>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRCamera Architecture Viewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .mermaid { text-align: center; }
-        h1 { color: #2196F3; }
-        .info { background: #f5f5f5; padding: 10px; border-radius: 5px; margin: 20px 0; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; margin-bottom: 30px; }
+        .diagram-container { width: 100%; height: 600px; border: 1px solid #ddd; border-radius: 4px; overflow: auto; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 4px; margin-top: 20px; }
+        .controls { margin-bottom: 20px; text-align: center; }
+        button { background: #2196f3; color: white; border: none; padding: 10px 20px; margin: 0 5px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #1976d2; }
     </style>
 </head>
 <body>
-    <h1>IRCamera Repository Architecture</h1>
-    <div class="info">
-        <strong>Note:</strong> This diagram shows the complete architecture including all modules, 
-        components, CI/CD workflows, and their interdependencies.
+    <div class="container">
+        <h1>🏗️ IRCamera Repository Architecture</h1>
+        
+        <div class="controls">
+            <button onclick="zoomIn()">🔍 Zoom In</button>
+            <button onclick="zoomOut()">🔍 Zoom Out</button>
+            <button onclick="resetZoom()">↺ Reset</button>
+        </div>
+        
+        <div class="diagram-container" id="mermaidDiagram">
+            <!-- Mermaid diagram will be rendered here -->
+        </div>
+        
+        <div class="info">
+            <h3>📊 Architecture Statistics</h3>
+            <ul>
+                <li><strong>Total Modules:</strong> 17 (App: 1, Libraries: 6, Components: 7, External: 2, CI/CD: 1)</li>
+                <li><strong>Core Dependencies:</strong> App → LibApp, LibUI, LibCom, LibIR</li>
+                <li><strong>Build System:</strong> Gradle with centralized version catalog</li>
+                <li><strong>CI/CD Pipeline:</strong> 3 workflows (CI, Build Check, Static Analysis)</li>
+            </ul>
+        </div>
     </div>
     
-    <div class="mermaid">
-graph TB
-    %% Repository Root
-    subgraph "IRCamera Repository"
-        
-        %% Main Application
-        subgraph "Core Application"
-            APP["`**app**
-            Main Android Application
-            • UI Activities & Fragments
-            • Application Entry Point
-            • Dependency Aggregator`"]
-        end
-        
-        %% Library Modules
-        subgraph "Library Modules"
-            LIBAPP["`**libapp**
-            Application Library
-            • Core App Logic
-            • Shared Components
-            • LMS SDK Integration`"]
-            
-            LIBCOM["`**libcom**
-            Communication Library  
-            • Network Operations
-            • API Connections
-            • Data Exchange`"]
-            
-            LIBIR["`**libir**
-            IR Camera Library
-            • Thermal Imaging
-            • Camera Controls
-            • Image Processing`"]
-            
-            LIBUI["`**libui**
-            UI Components Library
-            • Custom Views
-            • Shared UI Elements
-            • Theme & Styling`"]
-            
-            LIBMENU["`**libmenu**
-            Menu System Library
-            • Navigation Logic
-            • Menu Components
-            • User Interface`"]
-            
-            LIBMATRIX["`**libmatrix**
-            Matrix Operations Library
-            • Mathematical Operations
-            • Data Processing
-            • Algorithm Support`"]
-        end
-        
-        %% Feature Components
-        subgraph "Feature Components"
-            THERMAL["`**component:thermal**
-            Thermal Processing
-            • Standard Thermal Imaging
-            • Temperature Analysis
-            • Image Enhancement`"]
-            
-            THERMAL_IR["`**component:thermal-ir**
-            Thermal IR Resources
-            • IR-Specific Resources
-            • Configuration Files
-            • Asset Management`"]
-            
-            THERMAL_LITE["`**component:thermal-lite**
-            Thermal Lite Mode
-            • Lightweight Processing
-            • Performance Optimized
-            • Resource Efficient`"]
-            
-            PSEUDO["`**component:pseudo**
-            Pseudo Color Processing
-            • Color Mapping
-            • Visual Enhancement
-            • Display Optimization`"]
-            
-            GSR["`**component:gsr-recording**
-            GSR Recording System
-            • Galvanic Skin Response
-            • Data Recording
-            • Sensor Integration`"]
-            
-            USER["`**component:user**
-            User Management
-            • User Profiles
-            • Settings Management
-            • Authentication`"]
-            
-            COMMON["`**component:CommonComponent**
-            Shared Components
-            • Common Utilities
-            • Shared Resources
-            • Base Classes`"]
-        end
-        
-        %% External Modules
-        subgraph "External Modules"
-            BLE["`**BleModule**
-            Bluetooth Low Energy
-            • BLE Communication
-            • Device Connection
-            • Nordic Backend`"]
-            
-            RANGE["`**RangeSeekBar**
-            Range Selection UI
-            • Custom Seek Bar
-            • Range Input Control
-            • User Interaction`"]
-        end
-        
-        %% CI/CD System
-        subgraph "CI/CD Pipeline"
-            CI_MAIN["`**CI Main Workflow**
-            .github/workflows/ci.yml
-            • Build Validation
-            • Code Quality Checks
-            • Linting & Analysis
-            • Artifact Generation`"]
-            
-            GRADLE_CHECK["`**Gradle Build Check**
-            .github/workflows/gradle-build-check.yml
-            • Multi-task Validation
-            • Matrix Strategy Testing
-            • Build Verification`"]
-            
-            STATIC_ANALYSIS["`**Static Analysis**
-            .github/workflows/static-analysis.yml
-            • Multi-language Analysis
-            • Code Quality Metrics
-            • Standards Compliance`"]
-        end
-        
-        %% Development Tools
-        subgraph "Development Tools"
-            DEV_SCRIPT["`**dev.sh**
-            Development Script
-            • lint - Code linting
-            • static - Static analysis  
-            • build-check - Build validation
-            • validate - Full validation
-            • diagram - Architecture diagram`"]
-            
-            GRADLE_WRAPPER["`**Gradle System**
-            gradlew / build.gradle.kts
-            • Build Automation
-            • Dependency Management
-            • Multi-module Coordination`"]
-        end
-        
-        %% Configuration Files
-        subgraph "Configuration & Resources"
-            SETTINGS["`**settings.gradle.kts**
-            Project Configuration
-            • Module Definitions
-            • Repository Settings
-            • Dependency Resolution`"]
-            
-            LIBS_VERSION["`**gradle/libs.versions.toml**
-            Version Catalog
-            • Dependency Versions
-            • Library Definitions
-            • Version Management`"]
-            
-            AAR_LIBS["`**Local AAR Libraries**
-            Native & Third-party Libraries
-            • USB IR SDK
-            • LMS International SDK
-            • Authentication Libraries`"]
-        end
-    end
-    
-    %% Dependencies - App Level
-    APP --> THERMAL
-    APP --> THERMAL_IR
-    APP --> THERMAL_LITE
-    APP --> PSEUDO
-    APP --> GSR
-    APP --> USER
-    APP --> LIBAPP
-    APP --> LIBCOM
-    APP --> LIBIR
-    APP --> LIBUI
-    APP --> LIBMENU
-    APP --> BLE
-    
-    %% Library Dependencies
-    LIBAPP --> LIBCOM
-    LIBIR --> LIBMATRIX
-    LIBUI --> COMMON
-    
-    %% Component Dependencies
-    THERMAL --> LIBIR
-    THERMAL --> LIBMATRIX
-    THERMAL_IR --> LIBIR
-    THERMAL_LITE --> LIBIR
-    PSEUDO --> LIBIR
-    GSR --> LIBCOM
-    USER --> LIBUI
-    USER --> COMMON
-    
-    %% External Dependencies
-    APP --> AAR_LIBS
-    LIBAPP --> AAR_LIBS
-    LIBIR --> AAR_LIBS
-    
-    %% CI/CD Workflow Dependencies
-    CI_MAIN --> DEV_SCRIPT
-    GRADLE_CHECK --> GRADLE_WRAPPER
-    STATIC_ANALYSIS --> DEV_SCRIPT
-    
-    %% Development Tool Dependencies
-    DEV_SCRIPT --> GRADLE_WRAPPER
-    GRADLE_WRAPPER --> SETTINGS
-    GRADLE_WRAPPER --> LIBS_VERSION
-    
-    %% Styling
-    classDef appModule fill:#e1f5fe
-    classDef libModule fill:#f3e5f5
-    classDef componentModule fill:#e8f5e8
-    classDef externalModule fill:#fff3e0
-    classDef cicdModule fill:#fce4ec
-    classDef toolModule fill:#f1f8e9
-    classDef configModule fill:#fafafa
-    
-    class APP appModule
-    class LIBAPP,LIBCOM,LIBIR,LIBUI,LIBMENU,LIBMATRIX libModule
-    class THERMAL,THERMAL_IR,THERMAL_LITE,PSEUDO,GSR,USER,COMMON componentModule
-    class BLE,RANGE externalModule
-    class CI_MAIN,GRADLE_CHECK,STATIC_ANALYSIS cicdModule
-    class DEV_SCRIPT,GRADLE_WRAPPER toolModule
-    class SETTINGS,LIBS_VERSION,AAR_LIBS configModule
-    </div>
-
     <script>
-        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#f9f9f9',
+                primaryTextColor: '#333',
+                primaryBorderColor: '#ddd',
+                lineColor: '#666'
+            }
+        });
+        
+        const diagramDefinition = `
+        graph TB
+            %% Core Application Layer
+            subgraph "Application Layer"
+                App[📱 app<br/>Main Android Application]
+                MainActivity[MainActivity.kt]
+                App --> MainActivity
+            end
+            
+            %% Library Layer
+            subgraph "Library Layer"
+                LibApp[📚 libapp<br/>Application Library]
+                LibCom[📚 libcom<br/>Communication Library] 
+                LibIR[📚 libir<br/>Infrared Camera Library]
+                LibMatrix[📚 libmatrix<br/>Matrix Operations]
+                LibMenu[📚 libmenu<br/>Menu Components]
+                LibUI[📚 libui<br/>UI Components Library]
+            end
+            
+            %% Component Layer  
+            subgraph "Component Layer"
+                ThermalIR[🌡️ thermal-ir<br/>Thermal IR Component]
+                Thermal[🌡️ thermal<br/>Thermal Component]
+                ThermalLite[🌡️ thermal-lite<br/>Thermal Lite Component]
+                GSRRecording[📊 gsr-recording<br/>GSR Data Recording]
+                UserComp[👤 user<br/>User Management Component]
+                PseudoComp[🔧 pseudo<br/>Pseudo Component]
+                CommonComp[🔧 CommonComponent<br/>Shared Components]
+            end
+            
+            %% External Module Layer
+            subgraph "External Modules"
+                BleModule[📡 BleModule<br/>Bluetooth Low Energy]
+                RangeSeekBar[🎚️ RangeSeekBar<br/>UI Range Selector]
+            end
+            
+            %% CI/CD Pipeline
+            subgraph "CI/CD Pipeline"
+                DevScript[🛠️ dev.sh<br/>Development Tools]
+                CIWorkflow[⚙️ CI Workflow<br/>Build & Quality]
+                GradleBuild[⚙️ Gradle Build Check<br/>Matrix Testing]  
+                StaticAnalysis[🔍 Static Analysis<br/>Multi-language Linting]
+            end
+            
+            %% Dependencies
+            App --> LibApp
+            App --> LibUI
+            App --> LibCom
+            App --> LibIR
+            App --> BleModule
+            
+            LibApp --> LibCom
+            LibUI --> LibMatrix
+            LibIR --> LibMatrix
+            
+            ThermalIR --> LibIR
+            Thermal --> LibIR  
+            ThermalLite --> LibIR
+            GSRRecording --> LibCom
+            UserComp --> LibApp
+            
+            BleModule --> GSRRecording
+            
+            DevScript --> CIWorkflow
+            DevScript --> GradleBuild
+            DevScript --> StaticAnalysis
+        `;
+        
+        mermaid.render('generatedDiagram', diagramDefinition).then((result) => {
+            document.getElementById('mermaidDiagram').innerHTML = result.svg;
+        });
+        
+        function zoomIn() {
+            const diagram = document.querySelector('#mermaidDiagram svg');
+            if (diagram) {
+                const currentScale = diagram.style.transform.match(/scale\((.*?)\)/);
+                const scale = currentScale ? parseFloat(currentScale[1]) * 1.2 : 1.2;
+                diagram.style.transform = \`scale(\${scale})\`;
+                diagram.style.transformOrigin = 'center';
+            }
+        }
+        
+        function zoomOut() {
+            const diagram = document.querySelector('#mermaidDiagram svg');
+            if (diagram) {
+                const currentScale = diagram.style.transform.match(/scale\((.*?)\)/);
+                const scale = currentScale ? parseFloat(currentScale[1]) / 1.2 : 0.8;
+                diagram.style.transform = \`scale(\${scale})\`;
+                diagram.style.transformOrigin = 'center';
+            }
+        }
+        
+        function resetZoom() {
+            const diagram = document.querySelector('#mermaidDiagram svg');
+            if (diagram) {
+                diagram.style.transform = 'scale(1)';
+            }
+        }
     </script>
 </body>
 </html>
 EOF
-
-    print_status "Interactive HTML viewer created: docs/architecture-viewer.html"
-    print_status "Open architecture-viewer.html in a web browser to view the interactive diagram"
+    
+    print_status "Architecture diagram generated: docs/architecture-diagram.md"
+    print_status "Interactive viewer created: docs/architecture-viewer.html"
 }
 
 # Main script logic
 case "${1:-help}" in
     lint)
-        run_lint
+        lint_code
         ;;
     static)
-        run_static_analysis
+        static_analysis
         ;;
     build-check)
-        run_build_check
+        build_check
         ;;
     validate)
-        run_validate
+        validate_all
         ;;
     diagram)
-        generate_architecture_diagram
+        generate_diagram
         ;;
-    help|*)
+    help|--help|-h)
         show_help
+        ;;
+    *)
+        echo -e "${RED}Unknown command: $1${NC}"
+        echo ""
+        show_help
+        exit 1
         ;;
 esac

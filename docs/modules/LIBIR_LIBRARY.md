@@ -2,9 +2,7 @@
 
 ## Overview
 
-The `libir` library is the core thermal image processing engine of the IRCamera platform. It
-provides comprehensive algorithms for thermal data processing, temperature analysis, pseudo-color
-mapping, and advanced thermal imaging features.
+The `libir` library is the core thermal image processing engine of the IRCamera platform. It provides comprehensive algorithms for thermal data processing, temperature analysis, pseudo-color mapping, and advanced thermal imaging features.
 
 ## Architecture
 
@@ -18,7 +16,7 @@ graph TB
         FilterEngine[Filter Engine]
         AlgorithmCore[Algorithm Core]
     end
-
+    
     subgraph "Processing Modules"
         RawDataProcessor[Raw Data Processor]
         ThermalAlgorithms[Thermal Algorithms]
@@ -26,21 +24,21 @@ graph TB
         Enhancement[Image Enhancement]
         Analysis[Analysis Tools]
     end
-
+    
     subgraph "Output Modules"
         BitmapGenerator[Bitmap Generator]
         DataExporter[Data Exporter]
         ReportGenerator[Report Generator]
         Visualizer[Thermal Visualizer]
     end
-
+    
     ImageProcessor --> RawDataProcessor
     TempAnalyzer --> ThermalAlgorithms
     ColorMapper --> BitmapGenerator
     CalibrationEngine --> RawDataProcessor
     FilterEngine --> NoiseReduction
     AlgorithmCore --> Analysis
-
+    
     RawDataProcessor --> Enhancement
     ThermalAlgorithms --> Analysis
     NoiseReduction --> Enhancement
@@ -53,9 +51,8 @@ graph TB
 ## Core Components
 
 ### ImageProcessor
-
-**Purpose**: Primary thermal image processing coordination **Responsibilities**:
-
+**Purpose**: Primary thermal image processing coordination
+**Responsibilities**:
 - Raw thermal data ingestion
 - Processing pipeline coordination
 - Output format management
@@ -70,7 +67,7 @@ class ImageProcessor {
         val calibratedData = calibrationEngine.calibrate(rawData, config.calibration)
         val filteredData = filterEngine.apply(calibratedData, config.filtering)
         val enhancedData = enhancement.enhance(filteredData, config.enhancement)
-
+        
         return ProcessedFrame(
             originalData = rawData,
             processedData = enhancedData,
@@ -81,50 +78,44 @@ class ImageProcessor {
 ```
 
 ### TemperatureAnalyzer
-
-**Purpose**: Advanced temperature measurement and analysis **Responsibilities**:
-
+**Purpose**: Advanced temperature measurement and analysis
+**Responsibilities**:
 - Temperature extraction from thermal data
 - Statistical analysis of thermal regions
 - Hot/cold spot detection
 - Temperature trend analysis
 
 **Key Features**:
-
 - Multi-point temperature measurement
 - Region-based analysis
 - Temperature distribution calculation
 - Thermal pattern recognition
 
 ### ColorMapper
-
-**Purpose**: Pseudo-color mapping and thermal visualization **Responsibilities**:
-
+**Purpose**: Pseudo-color mapping and thermal visualization
+**Responsibilities**:
 - False color palette application
 - Dynamic range adjustment
 - Histogram equalization
 - Custom color scheme support
 
 **Supported Palettes**:
-
 - **Iron**: Classic thermal imaging palette
 - **Rainbow**: Full spectrum color mapping
 - **Grayscale**: Monochrome thermal representation
 - **Custom**: User-defined color schemes
 
 ### CalibrationEngine
-
-**Purpose**: Device-specific thermal calibration **Responsibilities**:
-
+**Purpose**: Device-specific thermal calibration
+**Responsibilities**:
 - Factory calibration data application
 - Environmental compensation
 - Linearity correction
 - Temperature accuracy optimization
 
 ### FilterEngine
-
-**Purpose**: Signal processing and noise reduction **Responsibilities**:
-
+**Purpose**: Signal processing and noise reduction
+**Responsibilities**:
 - Temporal filtering for noise reduction
 - Spatial filtering for image enhancement
 - Adaptive filtering based on signal characteristics
@@ -135,7 +126,6 @@ class ImageProcessor {
 ### Core Processing Methods
 
 #### Frame Processing
-
 ```kotlin
 // Process single thermal frame
 suspend fun processFrame(
@@ -158,7 +148,6 @@ fun createRealtimeProcessor(
 ```
 
 #### Temperature Analysis
-
 ```kotlin
 // Extract temperature from raw thermal data
 fun extractTemperature(
@@ -187,7 +176,6 @@ fun detectFeatures(
 ```
 
 #### Color Mapping
-
 ```kotlin
 // Apply pseudo-color palette
 fun applyColorPalette(
@@ -216,7 +204,6 @@ fun adjustDynamicRange(
 ```
 
 #### Calibration
-
 ```kotlin
 // Apply factory calibration
 fun applyFactoryCalibration(
@@ -243,7 +230,6 @@ fun validateCalibration(
 ```
 
 #### Filtering and Enhancement
-
 ```kotlin
 // Apply temporal noise filter
 fun applyTemporalFilter(
@@ -274,7 +260,6 @@ fun removeArtifacts(
 ## Data Structures
 
 ### ProcessedFrame
-
 ```kotlin
 data class ProcessedFrame(
     val timestamp: Long,
@@ -290,7 +275,6 @@ data class ProcessedFrame(
 ```
 
 ### TemperatureStatistics
-
 ```kotlin
 data class TemperatureStatistics(
     val minTemperature: Float,
@@ -305,7 +289,6 @@ data class TemperatureStatistics(
 ```
 
 ### RegionAnalysis
-
 ```kotlin
 data class RegionAnalysis(
     val region: Rectangle,
@@ -319,7 +302,6 @@ data class RegionAnalysis(
 ```
 
 ### ProcessingConfig
-
 ```kotlin
 data class ProcessingConfig(
     val calibration: CalibrationConfig,
@@ -346,7 +328,6 @@ data class FilterConfig(
 ```
 
 ### ThermalFeature
-
 ```kotlin
 data class ThermalFeature(
     val type: FeatureType,
@@ -358,7 +339,7 @@ data class ThermalFeature(
 )
 
 enum class FeatureType {
-    HOT_SPOT, COLD_SPOT, THERMAL_BRIDGE,
+    HOT_SPOT, COLD_SPOT, THERMAL_BRIDGE, 
     TEMPERATURE_GRADIENT, UNIFORM_REGION,
     THERMAL_ANOMALY, REFLECTIVE_SURFACE
 }
@@ -367,7 +348,6 @@ enum class FeatureType {
 ## Algorithm Implementations
 
 ### Temperature Extraction Algorithm
-
 ```kotlin
 class TemperatureExtractor {
     fun extractTemperature(
@@ -377,34 +357,33 @@ class TemperatureExtractor {
     ): Float {
         // Step 1: Apply factory calibration
         val calibratedValue = applyFactoryCalibration(rawValue, calibration)
-
+        
         // Step 2: Environmental compensation
         val compensatedValue = applyEnvironmentalCompensation(
             calibratedValue, environment
         )
-
+        
         // Step 3: Linearity correction
         val linearCorrectedValue = applyLinearityCorrection(
             compensatedValue, calibration.linearityCoefficients
         )
-
+        
         // Step 4: Final temperature calculation
         return calculateTemperature(linearCorrectedValue, calibration.temperatureCoefficients)
     }
-
+    
     private fun calculateTemperature(
         value: Float,
         coefficients: TemperatureCoefficients
     ): Float {
-        return coefficients.a * value * value +
-               coefficients.b * value +
+        return coefficients.a * value * value + 
+               coefficients.b * value + 
                coefficients.c
     }
 }
 ```
 
 ### Adaptive Noise Filter
-
 ```kotlin
 class AdaptiveNoiseFilter {
     fun applyFilter(
@@ -413,17 +392,17 @@ class AdaptiveNoiseFilter {
         config: NoiseFilterConfig
     ): FloatArray {
         val filteredData = FloatArray(thermalData.size)
-
+        
         for (y in 1 until height - 1) {
             for (x in 1 until width - 1) {
                 val index = y * width + x
-
+                
                 // Calculate local variance
                 val localVariance = calculateLocalVariance(thermalData, x, y, width)
-
+                
                 // Adaptive filter strength based on local characteristics
                 val filterStrength = determineFilterStrength(localVariance, config)
-
+                
                 // Apply appropriate filter
                 filteredData[index] = when {
                     filterStrength > 0.8 -> applyStrongFilter(thermalData, x, y, width)
@@ -432,14 +411,13 @@ class AdaptiveNoiseFilter {
                 }
             }
         }
-
+        
         return filteredData
     }
 }
 ```
 
 ### Thermal Pattern Recognition
-
 ```kotlin
 class ThermalPatternRecognizer {
     fun recognizePatterns(
@@ -447,31 +425,31 @@ class ThermalPatternRecognizer {
         width: Int, height: Int
     ): List<ThermalPattern> {
         val patterns = mutableListOf<ThermalPattern>()
-
+        
         // Detect temperature gradients
         patterns.addAll(detectTemperatureGradients(thermalData, width, height))
-
+        
         // Detect uniform regions
         patterns.addAll(detectUniformRegions(thermalData, width, height))
-
+        
         // Detect thermal bridges
         patterns.addAll(detectThermalBridges(thermalData, width, height))
-
+        
         // Detect reflective surfaces
         patterns.addAll(detectReflectiveSurfaces(thermalData, width, height))
-
+        
         return patterns
     }
-
+    
     private fun detectTemperatureGradients(
         thermalData: FloatArray,
         width: Int, height: Int
     ): List<ThermalPattern> {
         val gradients = mutableListOf<ThermalPattern>()
-
+        
         // Apply Sobel operator for gradient detection
         val gradientMagnitude = applySobelOperator(thermalData, width, height)
-
+        
         // Find significant gradients
         for (y in 1 until height - 1) {
             for (x in 1 until width - 1) {
@@ -481,7 +459,7 @@ class ThermalPatternRecognizer {
                 }
             }
         }
-
+        
         return gradients
     }
 }
@@ -490,38 +468,36 @@ class ThermalPatternRecognizer {
 ## Performance Optimization
 
 ### Multi-threading Support
-
 ```kotlin
 class ParallelThermalProcessor {
     private val processingExecutor = Executors.newFixedThreadPool(
         Runtime.getRuntime().availableProcessors()
     )
-
+    
     suspend fun processFrameParallel(
         thermalData: FloatArray,
         width: Int, height: Int,
         config: ProcessingConfig
     ): ProcessedFrame = withContext(Dispatchers.Default) {
         val chunkSize = height / Runtime.getRuntime().availableProcessors()
-
+        
         val processedChunks = (0 until height step chunkSize).map { startY ->
             async {
                 val endY = minOf(startY + chunkSize, height)
                 processChunk(thermalData, width, startY, endY, config)
             }
         }.awaitAll()
-
+        
         combineProcessedChunks(processedChunks, width, height)
     }
 }
 ```
 
 ### Memory Optimization
-
 ```kotlin
 class MemoryEfficientProcessor {
     private val bufferPool = ArrayPool<FloatArray>()
-
+    
     fun processWithMemoryReuse(
         thermalData: FloatArray,
         config: ProcessingConfig
@@ -530,11 +506,11 @@ class MemoryEfficientProcessor {
         try {
             // Process using reusable buffer
             System.arraycopy(thermalData, 0, workBuffer, 0, thermalData.size)
-
+            
             // Apply processing steps in-place when possible
             applyFilteringInPlace(workBuffer, config.filtering)
             applyEnhancementInPlace(workBuffer, config.enhancement)
-
+            
             // Generate final result
             return createProcessedFrame(workBuffer, config)
         } finally {
@@ -547,11 +523,10 @@ class MemoryEfficientProcessor {
 ## Integration Examples
 
 ### Basic Thermal Processing
-
 ```kotlin
 class BasicThermalProcessing {
     private val imageProcessor = ImageProcessor()
-
+    
     suspend fun processBasicThermalFrame(rawData: ByteArray): Bitmap {
         val config = ProcessingConfig(
             calibration = CalibrationConfig.factory(),
@@ -561,9 +536,9 @@ class BasicThermalProcessing {
             analysis = AnalysisConfig.disabled(),
             performance = PerformanceConfig.balanced()
         )
-
+        
         val processedFrame = imageProcessor.processFrame(rawData, 320, 240, config)
-
+        
         return generateColorBitmap(
             processedFrame.temperatureData,
             320, 240,
@@ -574,36 +549,35 @@ class BasicThermalProcessing {
 ```
 
 ### Advanced Thermal Analysis
-
 ```kotlin
 class AdvancedThermalAnalysis {
     private val temperatureAnalyzer = TemperatureAnalyzer()
     private val patternRecognizer = ThermalPatternRecognizer()
-
+    
     fun performAdvancedAnalysis(
         thermalData: FloatArray,
         width: Int, height: Int
     ): ThermalAnalysisReport {
         // Calculate comprehensive statistics
         val statistics = temperatureAnalyzer.calculateStatistics(thermalData)
-
+        
         // Analyze multiple regions of interest
         val regions = listOf(
             Rectangle(50, 50, 100, 100),   // Center region
             Rectangle(0, 0, 100, 100),     // Top-left
             Rectangle(220, 140, 100, 100)  // Bottom-right
         )
-
+        
         val regionAnalyses = regions.map { region ->
             temperatureAnalyzer.analyzeRegion(thermalData, region, AnalysisType.COMPREHENSIVE)
         }
-
+        
         // Detect thermal patterns
         val patterns = patternRecognizer.recognizePatterns(thermalData, width, height)
-
+        
         // Detect thermal anomalies
         val anomalies = detectThermalAnomalies(thermalData, width, height)
-
+        
         return ThermalAnalysisReport(
             globalStatistics = statistics,
             regionAnalyses = regionAnalyses,
@@ -616,7 +590,6 @@ class AdvancedThermalAnalysis {
 ```
 
 ### Real-time Processing Pipeline
-
 ```kotlin
 class RealtimeThermalPipeline {
     private val realtimeProcessor = createRealtimeProcessor(
@@ -627,7 +600,7 @@ class RealtimeThermalPipeline {
             enablePredictiveFiltering = true
         )
     )
-
+    
     fun processRealtimeStream(thermalFrameStream: Flow<ByteArray>): Flow<ProcessedFrame> {
         return thermalFrameStream
             .buffer(capacity = 3) // Buffer for smooth processing
@@ -642,7 +615,6 @@ class RealtimeThermalPipeline {
 ## Testing Framework
 
 ### Unit Tests
-
 ```kotlin
 class LibIRTest {
     @Test
@@ -650,82 +622,81 @@ class LibIRTest {
         val calibration = createTestCalibration()
         val rawValue = 2048 // Mid-range 12-bit value
         val environment = StandardEnvironmentalConditions()
-
+        
         val temperature = temperatureExtractor.extractTemperature(
             rawValue, calibration, environment
         )
-
+        
         // Should be within expected range for room temperature
         assert(temperature in 18f..25f)
     }
-
+    
     @Test
     fun `color mapping should produce valid RGB values`() {
         val temperatureData = floatArrayOf(20f, 25f, 30f, 35f, 40f)
         val palette = ColorPalette.IRON
         val range = TemperatureRange(20f, 40f)
-
+        
         val colorData = colorMapper.applyColorPalette(temperatureData, palette, range)
-
+        
         // All color values should be valid ARGB
         colorData.forEach { color ->
             assert((color and 0xFF000000.toInt()) != 0) // Alpha channel
             assert((color and 0x00FFFFFF) != 0) // Color channels
         }
     }
-
+    
     @Test
     fun `noise filter should reduce signal noise`() {
         val noisyData = generateNoisyThermalData(100, 100)
         val filterConfig = NoiseFilterConfig.aggressive()
-
+        
         val filteredData = noiseFilter.applyFilter(noisyData, 100, 100, filterConfig)
-
+        
         val originalNoise = calculateNoiseLevel(noisyData)
         val filteredNoise = calculateNoiseLevel(filteredData)
-
+        
         assert(filteredNoise < originalNoise * 0.7) // At least 30% noise reduction
     }
 }
 ```
 
 ### Performance Tests
-
 ```kotlin
 class LibIRPerformanceTest {
     @Test
     fun `processing latency should meet real-time requirements`() = runTest {
         val rawData = generateTestThermalData(320, 240)
         val config = ProcessingConfig.realtime()
-
+        
         val startTime = System.nanoTime()
         val processedFrame = imageProcessor.processFrame(rawData, 320, 240, config)
         val endTime = System.nanoTime()
-
+        
         val latencyMs = (endTime - startTime) / 1_000_000
-
+        
         // Should process 320x240 frame in under 50ms for 9Hz target
         assert(latencyMs < 50)
     }
-
+    
     @Test
     fun `memory usage should remain stable during continuous processing`() = runTest {
         val initialMemory = getUsedMemory()
-
+        
         repeat(1000) { iteration ->
             val rawData = generateTestThermalData(320, 240)
             val processedFrame = imageProcessor.processFrame(rawData, 320, 240, ProcessingConfig.default())
-
+            
             // Force garbage collection every 100 iterations
             if (iteration % 100 == 0) {
                 System.gc()
                 delay(10)
             }
         }
-
+        
         val finalMemory = getUsedMemory()
         val memoryIncrease = finalMemory - initialMemory
-
+        
         // Memory increase should be minimal (less than 10MB)
         assert(memoryIncrease < 10 * 1024 * 1024)
     }
@@ -735,7 +706,6 @@ class LibIRPerformanceTest {
 ## Error Handling
 
 ### Processing Errors
-
 ```kotlin
 sealed class LibIRError : Exception() {
     object InvalidDataFormat : LibIRError()
@@ -774,7 +744,6 @@ class LibIRErrorHandler {
 ## Configuration and Tuning
 
 ### Performance Tuning
-
 ```kotlin
 data class PerformanceConfig(
     val processingThreads: Int = Runtime.getRuntime().availableProcessors(),
@@ -791,7 +760,6 @@ enum class QualitySpeedBalance {
 ```
 
 ### Algorithm Parameters
-
 ```kotlin
 data class AlgorithmConfig(
     val noiseFilterStrength: Float = 0.5f,
@@ -805,27 +773,24 @@ data class AlgorithmConfig(
 ## Dependencies
 
 ### Required Libraries
-
 - **Kotlin Standard Library**: Core language features
 - **Kotlinx Coroutines**: Asynchronous processing
 - **Android Bitmap**: Image generation (Android platform)
 
 ### Optional Dependencies
-
 - **OpenCV**: Advanced image processing algorithms
 - **CUDA**: GPU acceleration (where available)
 - **Intel IPP**: Optimized image processing primitives
 
 ### Gradle Configuration
-
 ```kotlin
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
-
+    
     // Optional: Advanced processing
     implementation 'org.opencv:opencv-android:4.5.0'
-
+    
     // Testing
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
@@ -835,7 +800,6 @@ dependencies {
 ## Future Enhancements
 
 ### Planned Features
-
 - **Machine Learning Integration**: AI-powered thermal analysis
 - **GPU Acceleration**: CUDA/OpenCL support for faster processing
 - **Advanced Algorithms**: Super-resolution and denoising
@@ -843,7 +807,6 @@ dependencies {
 - **3D Thermal Reconstruction**: Volumetric thermal analysis
 
 ### Performance Improvements
-
 - **SIMD Optimization**: Vectorized processing algorithms
 - **Hardware-specific Optimization**: Device-specific tuning
 - **Predictive Processing**: Frame prediction for smoother output
@@ -851,5 +814,4 @@ dependencies {
 
 ---
 
-For more information, see the [Thermal Processing Guide](../THERMAL_PROCESSING.md) and
-[Algorithm Reference](../ALGORITHM_REFERENCE.md).
+For more information, see the [Thermal Processing Guide](../THERMAL_PROCESSING.md) and [Algorithm Reference](../ALGORITHM_REFERENCE.md).

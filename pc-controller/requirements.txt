@@ -1,0 +1,100 @@
+# Core application framework
+PyQt6>=6.4.0
+
+# Logging
+loguru>=0.7.0
+
+# JSON schema validation for protocol
+jsonschema>=4.17.0
+
+# Time synchronization
+ntplib>=0.4.0
+
+# Network communication - Secure versions
+websockets>=12.0
+asyncio-mqtt>=0.13.0
+zeroconf
+
+# Network security dependencies - LATEST SECURE VERSIONS
+urllib3>=2.5.0
+requests>=2.32.3
+jinja2>=3.1.6
+certifi>=2025.1.1
+twisted>=24.7.0
+pyjwt>=2.10.1
+
+# Data handling and serialization - Compatible versions
+numpy>=1.24.0
+pandas>=2.0.0
+h5py
+
+# Computer vision for calibration
+opencv-python>=4.8.0
+
+# Real-time plotting and data visualization
+pyqtgraph>=0.13.0
+matplotlib
+
+# Configuration management
+pyyaml>=6.0
+
+# Bluetooth control (using modern bleak instead of problematic pybluez)
+bleak>=0.20.0
+
+# WiFi control and system monitoring
+psutil>=5.9.0
+
+# Alternative WiFi packages for different platforms
+pywifi>=1.1.12; sys_platform == "win32"
+
+# Windows system integration (optional - only install on Windows)
+pywin32>=306; sys_platform == "win32"
+comtypes>=1.1.14; sys_platform == "win32"
+
+# Administrator privileges and system control
+elevate>=0.1.3
+
+# Additional dependencies for enhanced functionality - SECURE VERSIONS
+aiofiles>=23.1.0
+cryptography>=45.0.7
+typing-extensions>=4.8.0
+
+# Comprehensive Testing Framework
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-qt>=4.2.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.1
+pytest-xdist>=3.3.1
+pytest-benchmark>=4.0.0
+
+# Testing utilities and assertions
+# unittest-mock>=1.0.1  # Not needed in Python 3.3+, unittest.mock is built-in
+hypothesis>=6.82.0
+faker>=19.6.2
+
+# Network and integration testing
+responses>=0.23.3
+httpretty>=1.1.4
+aioresponses>=0.7.4
+
+# Performance and load testing
+locust>=2.16.1
+memory-profiler>=0.61.0
+
+# Data validation and quality testing
+great-expectations>=0.17.15
+pydantic>=2.3.0
+
+# Test reporting and coverage
+coverage>=7.3.0
+pytest-html>=3.2.0
+allure-pytest>=2.13.2
+
+# Development & Code Quality Tools
+flake8>=6.0.0
+black>=23.0.0
+bandit>=1.7.0
+safety>=2.3.0
+autoflake>=2.0.0
+mypy>=1.5.0

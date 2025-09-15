@@ -2,9 +2,7 @@
 
 ## Overview
 
-This document provides comprehensive integration patterns, workflows, and best practices for
-implementing and extending the IRCamera thermal imaging platform across different environments and
-use cases.
+This document provides comprehensive integration patterns, workflows, and best practices for implementing and extending the IRCamera thermal imaging platform across different environments and use cases.
 
 ## Table of Contents
 
@@ -38,7 +36,7 @@ sequenceDiagram
     TC001-->>Android: Connection Established
     GSR-->>Android: BLE Connected
     Android->>PC: Device Status Update
-
+    
     Note over Android,Cloud: Synchronized Recording Session
     Android->>TC001: Start Recording
     Android->>GSR: Start Data Collection
@@ -56,19 +54,19 @@ class ThermalIntegrationManager : ComponentLifecycleObserver {
     private val thermalProcessor = ThermalProcessingEngine()
     private val dataAggregator = DataAggregationService()
     private val syncManager = CrossDeviceSyncManager()
-
+    
     override fun onComponentStart() {
         thermalProcessor.initialize()
         dataAggregator.startCollection()
         syncManager.establishConnections()
     }
-
+    
     override fun onComponentStop() {
         syncManager.disconnectAll()
         dataAggregator.stopCollection()
         thermalProcessor.cleanup()
     }
-
+    
     fun integrateWithPCController(pcEndpoint: String) {
         syncManager.connectToPC(pcEndpoint) { success ->
             if (success) {
@@ -92,11 +90,11 @@ class MultiModalDataCorrelator {
     private val thermalProcessor = ThermalIRProcessor()
     private val gsrProcessor = GSRDataProcessor()
     private val correlationEngine = DataCorrelationEngine()
-
+    
     fun startCorrelatedRecording(sessionConfig: SessionConfiguration) {
         val sessionId = generateSessionId()
         val timestamp = getCurrentTimestamp()
-
+        
         // Start thermal recording
         thermalProcessor.startRecording(ThermalConfig(
             sessionId = sessionId,
@@ -104,19 +102,19 @@ class MultiModalDataCorrelator {
             resolution = sessionConfig.thermalResolution,
             frameRate = sessionConfig.frameRate
         ))
-
-        // Start GSR recording
+        
+        // Start GSR recording  
         gsrProcessor.startRecording(GSRConfig(
             sessionId = sessionId,
             baseTimestamp = timestamp,
             samplingRate = sessionConfig.gsrSamplingRate,
             filterSettings = sessionConfig.gsrFilters
         ))
-
+        
         // Start correlation
         correlationEngine.startCorrelation(sessionId, timestamp)
     }
-
+    
     fun processCorrelatedFrame(
         thermalFrame: ThermalFrame,
         gsrData: GSRDataPoint
@@ -137,14 +135,14 @@ class MultiModalDataCorrelator {
 class AdvancedThermalProcessor {
     private val irLibrary = LibIRProcessor()
     private val matrixLibrary = LibMatrixProcessor()
-
+    
     fun processAdvancedThermalImage(
         rawThermalData: ByteArray,
         enhancementMode: EnhancementMode
     ): ProcessedThermalImage {
         // Stage 1: Basic thermal processing
         val basicProcessed = irLibrary.processRawThermal(rawThermalData)
-
+        
         // Stage 2: Matrix-based enhancement
         val thermalMatrix = matrixLibrary.createMatrix(basicProcessed.data)
         val enhancedMatrix = when (enhancementMode) {
@@ -158,7 +156,7 @@ class AdvancedThermalProcessor {
                 matrixLibrary.applyHistogramEqualization(thermalMatrix)
             }
         }
-
+        
         // Stage 3: Convert back to thermal image
         return irLibrary.matrixToThermalImage(enhancedMatrix)
     }
@@ -189,7 +187,7 @@ flowchart TD
     M --> O[Send to PC Controller]
     N --> O
     O --> P[Data Synchronization]
-
+    
     subgraph "Error Handling"
         Q[Connection Lost] --> R[Attempt Reconnection]
         R --> S{Reconnection Success?}
@@ -206,7 +204,7 @@ class GSRIntegrationWorkflow {
     private val bleManager = BLEConnectionManager()
     private val dataProcessor = GSRDataProcessor()
     private val calibrationManager = GSRCalibrationManager()
-
+    
     suspend fun initializeGSRSensor(deviceAddress: String): GSRIntegrationResult {
         return try {
             // Step 1: Establish BLE connection
@@ -214,28 +212,28 @@ class GSRIntegrationWorkflow {
             if (!connection.isSuccessful) {
                 return GSRIntegrationResult.Failure("BLE connection failed")
             }
-
+            
             // Step 2: Device capability discovery
             val capabilities = discoverDeviceCapabilities(connection.device)
-
+            
             // Step 3: Calibration workflow
             val calibrationResult = calibrationManager.performCalibration(connection.device)
             if (!calibrationResult.isSuccessful) {
                 return GSRIntegrationResult.Failure("Calibration failed")
             }
-
+            
             // Step 4: Configure data streaming
             configureDataStreaming(connection.device, capabilities)
-
+            
             // Step 5: Start data collection
             startDataCollection(connection.device)
-
+            
             GSRIntegrationResult.Success(connection.device, capabilities)
         } catch (e: Exception) {
             GSRIntegrationResult.Failure("Integration error: ${e.message}")
         }
     }
-
+    
     private suspend fun configureDataStreaming(
         device: GSRDevice,
         capabilities: DeviceCapabilities
@@ -246,7 +244,7 @@ class GSRIntegrationWorkflow {
             compressionEnabled = true,
             timestampSync = true
         )
-
+        
         device.configureStreaming(streamConfig)
     }
 }
@@ -266,7 +264,7 @@ class IRCameraDataPipeline:
         self.gsr_processor = GSRDataProcessor()
         self.data_aggregator = DataAggregator()
         self.storage_manager = StorageManager()
-
+        
     async def process_realtime_data(self, data_stream):
         """Process real-time data from Android devices"""
         async for data_packet in data_stream:
@@ -275,24 +273,24 @@ class IRCameraDataPipeline:
                     data_packet.payload
                 )
                 await self.data_aggregator.add_thermal_data(processed_thermal)
-
+                
             elif data_packet.type == DataType.GSR:
                 processed_gsr = await self.gsr_processor.process(
                     data_packet.payload
                 )
                 await self.data_aggregator.add_gsr_data(processed_gsr)
-
+                
             # Check if we have correlated data ready
             if self.data_aggregator.has_correlated_data():
                 correlated_batch = self.data_aggregator.get_correlated_batch()
                 await self.storage_manager.store_batch(correlated_batch)
-
+                
                 # Trigger real-time analysis
                 analysis_result = await self.analyze_correlated_data(
                     correlated_batch
                 )
                 await self.publish_analysis_result(analysis_result)
-
+    
     async def analyze_correlated_data(self, batch):
         """Perform real-time analysis on correlated data"""
         return AnalysisEngine().analyze(
@@ -309,11 +307,11 @@ class BatchProcessingPipeline:
     def __init__(self):
         self.job_queue = JobQueue()
         self.result_store = ResultStore()
-
+        
     async def submit_batch_job(self, session_data: SessionData) -> str:
         """Submit a batch processing job"""
         job_id = generate_job_id()
-
+        
         job_config = BatchJobConfiguration(
             job_id=job_id,
             thermal_files=session_data.thermal_files,
@@ -321,35 +319,35 @@ class BatchProcessingPipeline:
             processing_options=session_data.processing_options,
             output_format=session_data.output_format
         )
-
+        
         await self.job_queue.submit(job_config)
         return job_id
-
+    
     async def process_batch_job(self, job_config: BatchJobConfiguration):
         """Process a batch job"""
         try:
             # Load and validate data
             thermal_data = await self.load_thermal_data(job_config.thermal_files)
             gsr_data = await self.load_gsr_data(job_config.gsr_files)
-
+            
             # Synchronize timestamps
             synchronized_data = await self.synchronize_data(thermal_data, gsr_data)
-
+            
             # Apply processing pipeline
             processed_data = await self.apply_processing_pipeline(
-                synchronized_data,
+                synchronized_data, 
                 job_config.processing_options
             )
-
+            
             # Generate output
             output = await self.generate_output(
-                processed_data,
+                processed_data, 
                 job_config.output_format
             )
-
+            
             # Store results
             await self.result_store.store_result(job_config.job_id, output)
-
+            
         except Exception as e:
             await self.result_store.store_error(job_config.job_id, str(e))
 ```
@@ -367,17 +365,17 @@ class MATLABIntegrationService:
         import matlab.engine
         self.matlab_engine = matlab.engine.start_matlab()
         self.matlab_engine.addpath('matlab_scripts')
-
+    
     async def analyze_thermal_sequence(
-        self,
+        self, 
         thermal_sequence: List[ThermalFrame],
         analysis_type: str
     ) -> MATLABAnalysisResult:
         """Perform MATLAB-based thermal sequence analysis"""
-
+        
         # Convert thermal data to MATLAB format
         matlab_data = self.convert_to_matlab_format(thermal_sequence)
-
+        
         # Execute MATLAB analysis
         if analysis_type == "temporal_analysis":
             result = self.matlab_engine.thermal_temporal_analysis(
@@ -394,7 +392,7 @@ class MATLABIntegrationService:
                 matlab_data,
                 nargout=1
             )
-
+        
         return MATLABAnalysisResult(
             raw_result=result,
             analysis_type=analysis_type,
@@ -412,59 +410,59 @@ class ScientificAnalysisIntegration:
         import scipy.signal as signal
         from sklearn.decomposition import PCA
         from sklearn.cluster import KMeans
-
+        
         self.np = np
         self.signal = signal
         self.pca = PCA
         self.kmeans = KMeans
-
+    
     def analyze_gsr_signal(self, gsr_data: np.ndarray) -> GSRAnalysisResult:
         """Advanced GSR signal analysis using scientific Python stack"""
-
+        
         # Preprocessing
         filtered_signal = self.signal.butter_filter(
-            gsr_data,
-            lowcut=0.1,
+            gsr_data, 
+            lowcut=0.1, 
             highcut=5.0,
             fs=128  # 128 Hz sampling rate
         )
-
+        
         # Feature extraction
         features = self.extract_gsr_features(filtered_signal)
-
+        
         # Statistical analysis
         statistical_metrics = self.compute_statistical_metrics(filtered_signal)
-
+        
         # Clustering analysis
         clusters = self.perform_response_clustering(features)
-
+        
         return GSRAnalysisResult(
             filtered_signal=filtered_signal,
             features=features,
             statistics=statistical_metrics,
             clusters=clusters
         )
-
+    
     def analyze_thermal_patterns(
-        self,
+        self, 
         thermal_frames: List[np.ndarray]
     ) -> ThermalPatternAnalysis:
         """Pattern analysis of thermal image sequences"""
-
+        
         # Stack frames for temporal analysis
         thermal_stack = self.np.stack(thermal_frames, axis=0)
-
+        
         # Dimensionality reduction
         reshaped_data = thermal_stack.reshape(len(thermal_frames), -1)
         pca_model = self.pca(n_components=10)
         reduced_data = pca_model.fit_transform(reshaped_data)
-
+        
         # Temporal pattern detection
         temporal_patterns = self.detect_temporal_patterns(reduced_data)
-
+        
         # Spatial pattern analysis
         spatial_patterns = self.analyze_spatial_patterns(thermal_stack)
-
+        
         return ThermalPatternAnalysis(
             temporal_patterns=temporal_patterns,
             spatial_patterns=spatial_patterns,
@@ -506,27 +504,27 @@ async def analyze_thermal_data(request: ThermalAnalysisRequest) -> AnalysisResul
     try:
         # Decode thermal data
         thermal_frames = [
-            decode_thermal_frame(frame_data)
+            decode_thermal_frame(frame_data) 
             for frame_data in request.thermal_data
         ]
-
+        
         # Submit for processing
         analysis_id = await thermal_processor.submit_analysis(
             session_id=request.session_id,
             frames=thermal_frames,
             options=request.analysis_options
         )
-
+        
         # Start background processing
         await background_processor.start_analysis(analysis_id)
-
+        
         # If callback URL provided, setup notification
         if request.callback_url:
             await notification_service.setup_callback(
-                analysis_id,
+                analysis_id, 
                 request.callback_url
             )
-
+        
         return AnalysisResult(
             session_id=request.session_id,
             analysis_id=analysis_id,
@@ -534,7 +532,7 @@ async def analyze_thermal_data(request: ThermalAnalysisRequest) -> AnalysisResul
             status="processing",
             processing_time=0.0
         )
-
+        
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -544,7 +542,7 @@ async def get_analysis_result(analysis_id: str) -> AnalysisResult:
     result = await result_store.get_result(analysis_id)
     if not result:
         raise HTTPException(status_code=404, detail="Analysis not found")
-
+    
     return result
 ```
 
@@ -560,7 +558,7 @@ Base = declarative_base()
 
 class ThermalSession(Base):
     __tablename__ = 'thermal_sessions'
-
+    
     id = Column(Integer, primary_key=True)
     session_id = Column(String(50), unique=True, nullable=False)
     device_type = Column(String(20), nullable=False)
@@ -571,7 +569,7 @@ class ThermalSession(Base):
 
 class ThermalFrame(Base):
     __tablename__ = 'thermal_frames'
-
+    
     id = Column(Integer, primary_key=True)
     session_id = Column(String(50), nullable=False)
     frame_index = Column(Integer, nullable=False)
@@ -584,9 +582,9 @@ class DatabaseIntegrationService:
         self.engine = create_engine(database_url)
         self.SessionLocal = sessionmaker(bind=self.engine)
         Base.metadata.create_all(bind=self.engine)
-
+    
     async def store_thermal_session(
-        self,
+        self, 
         session_data: ThermalSessionData
     ) -> str:
         """Store thermal session data"""
@@ -604,21 +602,21 @@ class DatabaseIntegrationService:
             return session.session_id
         finally:
             db.close()
-
+    
     async def query_sessions_by_criteria(
-        self,
+        self, 
         criteria: SessionQueryCriteria
     ) -> List[ThermalSession]:
         """Query sessions based on criteria"""
         db = self.SessionLocal()
         try:
             query = db.query(ThermalSession)
-
+            
             if criteria.device_type:
                 query = query.filter(
                     ThermalSession.device_type == criteria.device_type
                 )
-
+            
             if criteria.date_range:
                 query = query.filter(
                     ThermalSession.start_time.between(
@@ -626,7 +624,7 @@ class DatabaseIntegrationService:
                         criteria.date_range.end
                     )
                 )
-
+            
             return query.all()
         finally:
             db.close()
@@ -653,9 +651,9 @@ class AWSCloudIntegration:
         )
         self.lambda_client = boto3.client('lambda', region_name=aws_config.region)
         self.bucket_name = aws_config.bucket_name
-
+    
     async def upload_thermal_session(
-        self,
+        self, 
         session_data: ThermalSessionData
     ) -> CloudUploadResult:
         """Upload thermal session data to AWS S3"""
@@ -664,7 +662,7 @@ class AWSCloudIntegration:
             frame_urls = []
             for i, frame in enumerate(session_data.thermal_frames):
                 key = f"sessions/{session_data.session_id}/frames/frame_{i:06d}.bin"
-
+                
                 self.s3_client.put_object(
                     Bucket=self.bucket_name,
                     Key=key,
@@ -675,9 +673,9 @@ class AWSCloudIntegration:
                         'device_type': session_data.device_type
                     }
                 )
-
+                
                 frame_urls.append(f"s3://{self.bucket_name}/{key}")
-
+            
             # Upload session metadata
             metadata_key = f"sessions/{session_data.session_id}/metadata.json"
             self.s3_client.put_object(
@@ -686,22 +684,22 @@ class AWSCloudIntegration:
                 Body=json.dumps(session_data.metadata),
                 ContentType='application/json'
             )
-
+            
             # Trigger cloud processing
             processing_result = await self.trigger_cloud_processing(
                 session_data.session_id
             )
-
+            
             return CloudUploadResult(
                 session_id=session_data.session_id,
                 frame_urls=frame_urls,
                 metadata_url=f"s3://{self.bucket_name}/{metadata_key}",
                 processing_job_id=processing_result.job_id
             )
-
+            
         except ClientError as e:
             return CloudUploadResult.failure(str(e))
-
+    
     async def trigger_cloud_processing(self, session_id: str) -> ProcessingJobResult:
         """Trigger AWS Lambda function for cloud processing"""
         payload = {
@@ -713,13 +711,13 @@ class AWSCloudIntegration:
                 'export_format': 'hdf5'
             }
         }
-
+        
         response = self.lambda_client.invoke(
             FunctionName='ircamera-thermal-processor',
             InvocationType='Event',  # Asynchronous
             Payload=json.dumps(payload)
         )
-
+        
         return ProcessingJobResult(
             job_id=response['ResponseMetadata']['RequestId'],
             status='submitted'
@@ -739,13 +737,13 @@ class GCPCloudIntegration:
         self.functions_client = functions_v1.CloudFunctionsServiceClient()
         self.bucket_name = gcp_config.bucket_name
         self.topic_path = self.publisher.topic_path(
-            gcp_config.project_id,
+            gcp_config.project_id, 
             gcp_config.topic_name
         )
-
+    
     async def stream_thermal_data(
-        self,
-        session_id: str,
+        self, 
+        session_id: str, 
         thermal_stream: AsyncIterator[ThermalFrame]
     ):
         """Stream thermal data to Google Cloud for real-time processing"""
@@ -754,12 +752,12 @@ class GCPCloudIntegration:
             blob_name = f"realtime/{session_id}/frame_{frame.index}.bin"
             bucket = self.storage_client.bucket(self.bucket_name)
             blob = bucket.blob(blob_name)
-
+            
             blob.upload_from_string(
                 frame.raw_data,
                 content_type='application/octet-stream'
             )
-
+            
             # Publish frame notification to Pub/Sub
             message_data = {
                 'session_id': session_id,
@@ -768,12 +766,12 @@ class GCPCloudIntegration:
                 'timestamp': frame.timestamp.isoformat(),
                 'processing_required': True
             }
-
+            
             future = self.publisher.publish(
                 self.topic_path,
                 json.dumps(message_data).encode('utf-8')
             )
-
+            
             # Optional: wait for publish confirmation
             message_id = future.result()
             print(f"Published frame {frame.index} with message ID: {message_id}")
@@ -791,33 +789,33 @@ class RealtimeDataStreamer {
     private lateinit var webSocketClient: WebSocketClient
     private val dataBuffer = ConcurrentLinkedQueue<DataPacket>()
     private val streamingScope = CoroutineScope(Dispatchers.IO)
-
+    
     fun initializeStream(serverEndpoint: String, sessionConfig: StreamingConfig) {
         val request = Request.Builder()
             .url(serverEndpoint)
             .addHeader("Session-ID", sessionConfig.sessionId)
             .addHeader("Device-Type", sessionConfig.deviceType)
             .build()
-
+        
         webSocketClient = WebSocketClient(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 startDataStreaming()
             }
-
+            
             override fun onMessage(webSocket: WebSocket, text: String) {
                 handleServerMessage(text)
             }
-
+            
             override fun onFailure(
-                webSocket: WebSocket,
-                t: Throwable,
+                webSocket: WebSocket, 
+                t: Throwable, 
                 response: Response?
             ) {
                 handleStreamingError(t)
             }
         })
     }
-
+    
     private fun startDataStreaming() {
         streamingScope.launch {
             while (webSocketClient.isConnected()) {
@@ -830,7 +828,7 @@ class RealtimeDataStreamer {
             }
         }
     }
-
+    
     fun streamThermalFrame(thermalFrame: ThermalFrame) {
         val packet = DataPacket(
             type = DataType.THERMAL,
@@ -842,10 +840,10 @@ class RealtimeDataStreamer {
                 "temperature_range" to thermalFrame.temperatureRange.toString()
             )
         )
-
+        
         dataBuffer.offer(packet)
     }
-
+    
     fun streamGSRData(gsrMeasurement: GSRMeasurement) {
         val packet = DataPacket(
             type = DataType.GSR,
@@ -857,7 +855,7 @@ class RealtimeDataStreamer {
                 "signal_quality" to gsrMeasurement.signalQuality.toString()
             )
         )
-
+        
         dataBuffer.offer(packet)
     }
 }
@@ -873,78 +871,78 @@ class RealtimeAnalyticsEngine:
         self.gsr_analyzer = GSRRealtimeAnalyzer()
         self.pattern_detector = PatternDetectionEngine()
         self.alert_system = AlertingSystem()
-
+        
     async def process_realtime_data(self, data_stream):
         """Process incoming real-time data stream"""
         temporal_window = TemporalWindow(size=5.0)  # 5-second window
-
+        
         async for data_packet in data_stream:
             # Add to temporal window
             temporal_window.add_packet(data_packet)
-
+            
             if data_packet.type == DataType.THERMAL:
                 # Real-time thermal analysis
                 thermal_metrics = await self.thermal_analyzer.analyze_frame(
                     data_packet.payload
                 )
-
+                
                 # Check for thermal anomalies
                 if thermal_metrics.max_temperature > 45.0:  # Celsius
                     await self.alert_system.trigger_thermal_alert(
                         thermal_metrics
                     )
-
+                
             elif data_packet.type == DataType.GSR:
                 # Real-time GSR analysis
                 gsr_metrics = await self.gsr_analyzer.analyze_signal(
                     data_packet.payload
                 )
-
+                
                 # Check for stress indicators
                 if gsr_metrics.stress_level > 0.8:
                     await self.alert_system.trigger_stress_alert(
                         gsr_metrics
                     )
-
+            
             # Pattern detection on temporal window
             if temporal_window.is_full():
                 patterns = await self.pattern_detector.detect_patterns(
                     temporal_window.get_data()
                 )
-
+                
                 if patterns.significant_patterns:
                     await self.alert_system.trigger_pattern_alert(patterns)
-
+                
                 # Slide the window
                 temporal_window.slide()
-
+    
     async def generate_realtime_insights(
-        self,
+        self, 
         current_data: MultiModalData
     ) -> RealtimeInsights:
         """Generate real-time insights from current data"""
-
+        
         insights = RealtimeInsights()
-
+        
         # Thermal insights
         thermal_insights = await self.thermal_analyzer.generate_insights(
             current_data.thermal_data
         )
         insights.thermal_insights = thermal_insights
-
+        
         # Physiological insights
         physio_insights = await self.gsr_analyzer.generate_insights(
             current_data.gsr_data
         )
         insights.physiological_insights = physio_insights
-
+        
         # Cross-modal correlations
         correlations = await self.pattern_detector.analyze_correlations(
             thermal_data=current_data.thermal_data,
             gsr_data=current_data.gsr_data
         )
         insights.correlations = correlations
-
+        
         return insights
 ```
 
@@ -961,41 +959,41 @@ class MemoryEfficientThermalProcessor {
     private val processedFramePool = ObjectPool<ProcessedThermalFrame> {
         ProcessedThermalFrame()
     }
-
+    
     fun processFrameStreaming(frame: ThermalFrame): ProcessedThermalFrame {
         // Get recycled frame object
         val processedFrame = processedFramePool.acquire()
-
+        
         try {
             // In-place processing to avoid memory allocation
             processedFrame.reset()
             processedFrame.deviceId = frame.deviceId
             processedFrame.timestamp = frame.timestamp
-
+            
             // Process thermal data in chunks to reduce memory pressure
             val chunkSize = 1024
             for (i in frame.rawData.indices step chunkSize) {
                 val endIndex = minOf(i + chunkSize, frame.rawData.size)
                 val chunk = frame.rawData.sliceArray(i until endIndex)
-
+                
                 val processedChunk = processChunk(chunk)
                 processedFrame.addProcessedChunk(processedChunk)
             }
-
+            
             return processedFrame
-
+            
         } catch (e: Exception) {
             // Return frame to pool on error
             processedFramePool.release(processedFrame)
             throw e
         }
     }
-
+    
     private fun processChunk(chunk: ByteArray): FloatArray {
         // Efficient in-place thermal processing
         val result = FloatArray(chunk.size / 2)
         for (i in chunk.indices step 2) {
-            val rawValue = (chunk[i].toInt() and 0xFF) or
+            val rawValue = (chunk[i].toInt() and 0xFF) or 
                           ((chunk[i + 1].toInt() and 0xFF) shl 8)
             result[i / 2] = convertToTemperature(rawValue)
         }
@@ -1004,6 +1002,4 @@ class MemoryEfficientThermalProcessor {
 }
 ```
 
-This comprehensive integration patterns documentation provides detailed guidance for implementing
-and extending the IRCamera platform across various environments and use cases. Each pattern includes
-practical code examples and architectural guidance for successful integration.
+This comprehensive integration patterns documentation provides detailed guidance for implementing and extending the IRCamera platform across various environments and use cases. Each pattern includes practical code examples and architectural guidance for successful integration.

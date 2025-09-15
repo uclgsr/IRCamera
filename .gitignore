@@ -166,43 +166,21 @@ docs/_build/
 .#*
 \#*#
 
-# Temporary system files
-*.log
-*.tmp
-*.temp
-system_backups/
-test_reports/
-migration_backup_*/
-production_artifacts/
+# Documentation that should be consolidated into main docs
+*README*.md       # Prevent scattered README files
+!README.md        # Allow main README
+!docs/README.md   # Allow docs index
+!docs/*/README.md # Allow specific module READMEs if needed
+
+# Analysis and status reports that become outdated
+*_ANALYSIS_*.md
+*_STATUS_*.md
+*_REPORT_*.md
+BUILD_*.md
+GRADLE_*.md
+*MIGRATION*.md
 
 # LaTeX backup files
 *.bak*
 docs/latex/*.bak*
-
-# CI/CD Artifacts (GitHub Actions)
-# -------------------------------------------------------------------
-dependency-check-report/
-dependency-check-*.zip
-dependency-report.txt
-dependency-updates.txt
-build-summary.md
-release-artifacts/
-build-outputs/
-pr-apk-size.txt
-**/build/reports/dependency-check/
-owasp-dependency-check/
-
-# Quality Analysis Artifacts
-# -------------------------------------------------------------------
-quality_backup_*/
-quality_reports/
-.quality_history.db
-.optimizer_config.json
-__pycache__/
-*.pyc
-enhanced_quality_report.*
-analysis_summary_*.json
-quality_improvement_report.md
-formatting_output.log
-analysis_output.log
 

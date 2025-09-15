@@ -1,11 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#16131e">
-  <!-- Sessions RecyclerView -->
-  <androidx.recyclerview.widget.RecyclerView android:id="@+id/gsr_session_recycler" android:layout_width="match_parent" android:layout_height="match_parent" android:padding="8dp" android:clipToPadding="false"/>
-  <!-- Empty View -->
-  <LinearLayout android:id="@+id/empty_view" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="32dp" android:visibility="gone">
-    <ImageView android:layout_width="64dp" android:layout_height="64dp" android:layout_marginBottom="16dp" android:src="@drawable/ic_folder_open" android:alpha="0.3"/>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="No Recording Sessions Found" android:textColor="#ccffffff" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Complete recording sessions will appear here with all associated files" android:textColor="#888888" android:textSize="14sp" android:gravity="center"/>
-  </LinearLayout>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#16131e">
+
+    <!-- Sessions RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gsr_session_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:clipToPadding="false" />
+
+    <!-- Empty View -->
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_folder_open"
+            android:alpha="0.3" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Recording Sessions Found"
+            android:textColor="#ccffffff"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Complete recording sessions will appear here with all associated files"
+            android:textColor="#888888"
+            android:textSize="14sp"
+            android:gravity="center" />
+
+    </LinearLayout>
+
 </FrameLayout>
