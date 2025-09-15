@@ -201,7 +201,7 @@ class EnhancedSessionManager:
             raise RuntimeError("Cannot create session: another session is active")
         
         # Generate session ID and setup configuration
-        session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
+        session_id = f"session_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
         
         if configuration is None:
             configuration = SessionConfiguration(session_name=session_name)
