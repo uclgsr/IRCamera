@@ -54,17 +54,17 @@ async def test_basic_discovery():
         
         # Test mock device creation
         mock_device = DiscoveredDevice(
-            serviceName="TestDevice",
-            serviceType="_ircamera._tcp.local.",
-            ipAddress="192.168.1.100",
+            service_name="TestDevice",
+            service_type="_ircamera._tcp.local.",
+            ip_address="192.168.1.100",
             port=8080,
             device_type=DeviceType.ANDROID_NODE,
             attributes={"capabilities": "rgb_camera,gsr_sensor"}
         )
         
-        print(f"✓ Mock device created: {mock_device.serviceName}")
+        print(f"✓ Mock device created: {mock_device.service_name}")
         print(f"  Type: {mock_device.device_type.name}")
-        print(f"  Address: {mock_device.ipAddress}:{mock_device.port}")
+        print(f"  Address: {mock_device.ip_address}:{mock_device.port}")
         
         return True
         
