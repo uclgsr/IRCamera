@@ -9,6 +9,7 @@ import com.shimmerresearch.driver.ObjectCluster
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -69,6 +70,15 @@ class Shimmer(private val handler: Handler, private val context: Context) {
     private var connectionCallback: ((String) -> Unit)? = null
 
     private var realShimmerInstance: Any? = null
+
+    // Connection management properties
+    private var connectionRetryCount: Int = 0
+    private var reconnectionJob: Job? = null
+    private var coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+    private val connectionTimeout = Runnable {
+        Log.w(TAG, "Connection timeout reached")
+        disconnect()
+    }
 
     fun connect(
         address: String,
@@ -167,7 +177,7 @@ class Shimmer(private val handler: Handler, private val context: Context) {
         reconnectionJob = null
         
         // Cancel all coroutines in the scope for proper cleanup
-        coroutineScope.cancel()
+        coroutineScope.coroutineContext[Job]?.cancel()
         
         // Recreate coroutine scope for future use (allows reconnection)
         coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)

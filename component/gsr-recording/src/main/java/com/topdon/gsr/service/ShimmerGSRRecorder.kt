@@ -81,7 +81,6 @@ class ShimmerGSRRecorder(
     private val isDeviceConnected = AtomicBoolean(false)
 
     private var shimmerDevice: Shimmer? = null
-    private var loggableDevice: LoggableDevice? = null
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var currentSession: SessionInfo? = null
     private var sessionDirectory: File? = null
@@ -130,11 +129,6 @@ class ShimmerGSRRecorder(
                 }
 
                 shimmerDevice = Shimmer(mainHandler, context)
-                
-                // Initialize the safe wrapper for logging functionality
-                shimmerDevice?.let { device ->
-                    loggableDevice = ShimmerDeviceWrapper(device)
-                }
 
                 Log.i(TAG, "Shimmer API Bridge: ${shimmerAPIBridge.getProcessingInfo()}")
                 Log.i(
@@ -550,19 +544,8 @@ class ShimmerGSRRecorder(
     // Step 6: Shimmer logging mode support methods
     private fun startShimmerLogging() {
         try {
-            // Use safe interface-based approach instead of reflection
-            loggableDevice?.let { device ->
-                if (device.isLoggingSupported()) {
-                    val success = device.startLogging()
-                    if (success) {
-                        Log.i(TAG, "Started Shimmer internal SD card logging")
-                    } else {
-                        Log.w(TAG, "Failed to start Shimmer logging - device reported failure")
-                    }
-                } else {
-                    Log.i(TAG, "Device does not support internal logging")
-                }
-            } ?: Log.w(TAG, "No loggable device available")
+            // Shimmer internal logging is not implemented in this wrapper
+            Log.i(TAG, "Shimmer internal logging not supported in this implementation")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to start Shimmer logging: ${e.message}")
         }
@@ -570,19 +553,8 @@ class ShimmerGSRRecorder(
 
     private fun stopShimmerLogging() {
         try {
-            // Use safe interface-based approach instead of reflection  
-            loggableDevice?.let { device ->
-                if (device.isLoggingSupported()) {
-                    val success = device.stopLogging()
-                    if (success) {
-                        Log.i(TAG, "Stopped Shimmer internal SD card logging")
-                    } else {
-                        Log.w(TAG, "Failed to stop Shimmer logging - device reported failure")
-                    }
-                } else {
-                    Log.i(TAG, "Device does not support internal logging")
-                }
-            } ?: Log.w(TAG, "No loggable device available")
+            // Shimmer internal logging is not implemented in this wrapper
+            Log.i(TAG, "Shimmer internal logging not supported in this implementation")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to stop Shimmer logging: ${e.message}")
         }
