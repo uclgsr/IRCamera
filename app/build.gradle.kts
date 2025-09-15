@@ -5,15 +5,11 @@ import java.util.Locale
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt") // Re-enabled with Kotlin 2.2.0 K2 compatibility fixes
+    id("com.google.devtools.ksp") // Use KSP plugin from classpath
 }
 
-kapt {
-    arguments {
-        arg("AROUTER_MODULE_NAME", project.name)
-    }
-    // Kotlin 2.2.0 K2 compiler compatibility
-    correctErrorTypes = true
+ksp {
+    arg("AROUTER_MODULE_NAME", project.name)
 }
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
@@ -269,7 +265,7 @@ dependencies {
     implementation(project(":BleModule"))
 
     implementation(libs.arouter.api)
-    // kapt(libs.arouter.compiler) // Disabled to resolve kapt conflicts, focus on Shimmer SDK integration
+    ksp(libs.arouter.compiler) // Migrated from kapt to KSP
 
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))

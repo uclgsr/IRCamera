@@ -25,10 +25,11 @@ appsecretTopinfrared10 = "2870276D969B45C1B4A312B336274079"
 appsecretTopinfraredCn = "9D33C48FD7CE4440B7D922FBF9B6DE2A"
 appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
 
-# Kotlin and Core - Downgraded to match Gradle's Kotlin version
-kotlin = "2.0.21" 
-agp = "8.5.2"
-androidxCore = "1.13.1"
+# Kotlin and Core - Updated to latest versions
+kotlin = "2.2.0" 
+agp = "8.13.0"
+# androidx.core - Updated to latest version compatible with AGP 8.13.0
+androidxCore = "1.16.0"
 androidxAppcompat = "1.7.0"
 fragmentKtx = "1.8.9"
 androidxPreference = "1.2.1"
@@ -38,17 +39,17 @@ multidex = "2.0.1"
 # Lifecycle - Updated versions
 lifecycle = "2.9.3"
 
-# Room - Compatible with Kotlin 2.0.x 
-room = "2.6.1"
+# Room - Compatible with Kotlin 2.2.0 and KSP
+room = "2.7.0"
 
 # Work Manager - Latest stable
 work = "2.10.4"
 
-# CameraX - Compatible with AGP 8.5.2
-camerax = "1.4.2"
+# CameraX - Compatible with AGP 8.13.0
+camerax = "1.5.1"
 
-# Coroutines - Compatible with Kotlin 2.0.x
-coroutines = "1.8.1"
+# Coroutines - Compatible with Kotlin 2.2.0
+coroutines = "1.9.0"
 
 # Serialization - Compatible with Kotlin 1.9.25
 kotlinxSerialization = "1.6.3"
@@ -92,8 +93,8 @@ gsyVideoPlayer = "v11.1.0"
 # Shimmer GSR Sensor SDK
 shimmerAndroidApi = "1.0.0"
 
-# BLE - Compatible with Kotlin 2.0.21
-nordicBle = "2.7.5"
+# BLE - Latest version compatible with Kotlin 2.2.0
+nordicBle = "2.11.0"
 
 # OpenGL
 opengl = "2.0.0"
@@ -141,8 +142,9 @@ testEspressoCore = "3.7.0"
 huaweiAgcp = "1.6.0.300"
 
 # Build Tools
-androidGradlePlugin = "8.5.2"
-kotlinGradlePlugin = "2.0.21"
+androidGradlePlugin = "8.13.0"
+kotlinGradlePlugin = "2.2.0"
+ksp = "2.1.0-1.0.29"
 desugarJdkLibs = "2.1.5"
 
 [libraries]
@@ -284,6 +286,7 @@ test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core",
 # Build Tools (for buildscript classpath)
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
+ksp-gradle-plugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdkLibs" }
 
 
@@ -314,5 +317,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 huawei-agconnect = { id = "com.huawei.agconnect", version.ref = "huaweiAgcp" }

@@ -2,14 +2,10 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-parcelize")
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp") // Use KSP plugin from classpath
 }
 
-kapt {
-    arguments {
-    }
-    correctErrorTypes = true
-    useBuildCache = true
+ksp {
 }
 
 android {

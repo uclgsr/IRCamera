@@ -2,20 +2,13 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-parcelize")
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp") // Use KSP plugin from classpath
 }
 
-kapt {
-    arguments {
-        arg("room.schemaLocation", "$projectDir/schemas")
-        arg("room.incremental", "true")
-        arg("room.expandProjection", "true")
-    }
-    correctErrorTypes = true
-    useBuildCache = true
-    includeCompileClasspath = false
-    // Disable K2 for kapt to avoid compatibility issues
-    useLightAnalysis = false
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
+    arg("room.expandProjection", "true")
 }
 
 android {
@@ -143,7 +136,7 @@ dependencies {
     api(libs.lifecycle.runtime.ktx)
     api(libs.lifecycle.viewmodel.ktx)
     api(libs.lifecycle.livedata.ktx)
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler) // Migrated from kapt to KSP
     api(libs.room.ktx)
     api(libs.work.runtime.ktx)
     api(libs.retrofit2)
@@ -151,7 +144,7 @@ dependencies {
     api(libs.adapter.rxjava2)
     api(libs.eventbus)
     api(libs.glide)
-    kapt(libs.glide.compiler)
+    ksp(libs.glide.compiler) // Migrated from kapt to KSP
     api(libs.rxjava2)
     api(libs.rxandroid)
     api(libs.utilcode)
