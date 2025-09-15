@@ -5,14 +5,16 @@ import java.util.Locale
 plugins {
     id("com.android.application")
     kotlin("android")
-    // kotlin("kapt") // Disabled to focus on Shimmer SDK core integration
+    kotlin("kapt") // Re-enabled with Kotlin 2.2.0 K2 compatibility fixes
 }
 
-// kapt {
-//     arguments {
-//         arg("AROUTER_MODULE_NAME", project.name)
-//     }
-// }
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.name)
+    }
+    // Kotlin 2.2.0 K2 compiler compatibility
+    correctErrorTypes = true
+}
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
 val buildTimeStr = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
@@ -305,8 +307,8 @@ dependencies {
     implementation("com.opencsv:opencsv:5.12.0")
     implementation("com.google.code.gson:gson:2.13.2")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
@@ -337,7 +339,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.14.5")
     testImplementation("io.mockk:mockk-android:1.14.5")
 
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+    testImplementation(libs.kotlinx.coroutines.test)
 
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")

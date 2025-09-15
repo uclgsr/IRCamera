@@ -36,12 +36,17 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-        freeCompilerArgs +=
-            listOf(
-                "-opt-in=kotlin.RequiresOptIn",
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
+            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
+            freeCompilerArgs.addAll(
+                listOf(
+                    "-opt-in=kotlin.RequiresOptIn",
+                )
             )
+        }
     }
 
     buildFeatures {

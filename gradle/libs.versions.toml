@@ -25,27 +25,30 @@ appsecretTopinfrared10 = "2870276D969B45C1B4A312B336274079"
 appsecretTopinfraredCn = "9D33C48FD7CE4440B7D922FBF9B6DE2A"
 appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
 
-# Kotlin and Core
-kotlin = "2.2.0"
+# Kotlin and Core - Updated for compatibility with Kotlin 2.2.0
+kotlin = "2.2.0" 
 agp = "8.11.0"
-androidxCore = "1.12.0"
-androidxAppcompat = "1.6.1"
+androidxCore = "1.16.0"
+androidxAppcompat = "1.7.0"
 fragmentKtx = "1.8.9"
 androidxPreference = "1.2.1"
 material = "1.13.0"
 multidex = "2.0.1"
 
-# Lifecycle
-lifecycle = "2.7.0"
+# Lifecycle - Updated versions
+lifecycle = "2.9.3"
 
-# Room
-room = "2.5.2"
+# Room - Compatible version
+room = "2.6.1"
 
-# Work Manager
+# Work Manager - Latest stable
 work = "2.10.4"
 
-# Coroutines
-coroutines = "1.9.0"
+# Coroutines - Updated for Kotlin 2.2.0
+coroutines = "1.10.2"
+
+# Serialization - For JSON handling
+kotlinxSerialization = "1.8.0"
 
 # Networking
 fastjson2 = "2.0.58"
@@ -161,6 +164,8 @@ work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 # Networking
 fastjson2 = { group = "com.alibaba.fastjson2", name = "fastjson2", version.ref = "fastjson2" }
