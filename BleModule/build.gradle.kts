@@ -51,7 +51,7 @@ dependencies {
 
     api("androidx.appcompat:appcompat:1.2.0")
     api("org.greenrobot:eventbus:3.2.0")
-    api("com.blankj:utilcodex:1.30.6") // Utility library
+    api("com.blankj:utilcodex:1.31.1") // Utility library
     api("com.google.code.gson:gson:2.13.2")
     api("com.elvishew:xlog:1.10.1")
 
