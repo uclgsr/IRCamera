@@ -247,7 +247,7 @@ class DeviceRegistry:
         if device_id not in self.devices:
             return False
         
-        self.devices[device_id].last_heartbeat = datetime.now()
+        self.devices[device_id].last_heartbeat = datetime.now(timezone.utc)
         return True
     
     def remove_device(self, device_id: str, reason: str = "manual") -> bool:
