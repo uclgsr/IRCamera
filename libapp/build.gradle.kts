@@ -14,6 +14,8 @@ kapt {
     correctErrorTypes = true
     useBuildCache = true
     includeCompileClasspath = false
+    // Disable K2 for kapt to avoid compatibility issues
+    useLightAnalysis = false
 }
 
 android {

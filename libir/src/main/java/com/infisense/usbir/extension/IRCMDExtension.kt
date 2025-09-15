@@ -1,5 +1,9 @@
 package com.infisense.usbir.extension
 
+// Temporarily commented out due to Kotlin compiler internal error
+// TODO: Re-enable once IRCMD dependency issues are resolved
+
+/*
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.utils.CommonParams.PropAutoShutterParameter
 import com.energy.iruvc.utils.CommonParams.PropAutoShutterParameterValue.StatusSwith
@@ -38,3 +42,4 @@ fun IRCMD.setPropDdeLevel(level: Int) {
         4 -> setPropImageParams(PropImageParams.IMAGE_PROP_LEVEL_DDE, DDEType.DDE_4)
     }
 }
+*/

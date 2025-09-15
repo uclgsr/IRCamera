@@ -28,7 +28,7 @@ appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
 # Kotlin and Core - Downgraded to match Gradle's Kotlin version
 kotlin = "2.0.21" 
 agp = "8.5.2"
-androidxCore = "1.16.0"
+androidxCore = "1.13.1"
 androidxAppcompat = "1.7.0"
 fragmentKtx = "1.8.9"
 androidxPreference = "1.2.1"
@@ -43,6 +43,9 @@ room = "2.6.1"
 
 # Work Manager - Latest stable
 work = "2.10.4"
+
+# CameraX - Compatible with AGP 8.5.2
+camerax = "1.4.2"
 
 # Coroutines - Compatible with Kotlin 2.0.x
 coroutines = "1.8.1"
@@ -88,6 +91,9 @@ gsyVideoPlayer = "v11.1.0"
 
 # Shimmer GSR Sensor SDK
 shimmerAndroidApi = "1.0.0"
+
+# BLE - Compatible with Kotlin 2.0.21
+nordicBle = "2.7.5"
 
 # OpenGL
 opengl = "2.0.0"
@@ -212,8 +218,19 @@ glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", versi
 mn-image-browser = { group = "com.github.maning0303", name = "MNImageBrowser", version.ref = "mnImageBrowser" }
 gsy-video-player = { group = "com.github.CarGuo.GSYVideoPlayer", name = "gsyVideoPlayer-java", version.ref = "gsyVideoPlayer" }
 
+# CameraX - Compatible with AGP 8.5.2
+camerax-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
+camerax-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
+camerax-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
+camerax-video = { group = "androidx.camera", name = "camera-video", version.ref = "camerax" }
+camerax-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
+camerax-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax" }
+
 # Shimmer GSR sensor integration
 # shimmer-android-api = { group = "com.shimmerresearch", name = "shimmer-android-api", version.ref = "shimmerAndroidApi" }
+
+# BLE - Nordic library compatible with Kotlin 2.0.21
+nordic-ble-ktx = { group = "no.nordicsemi.android", name = "ble-ktx", version.ref = "nordicBle" }
 
 # OpenGL
 opengl-android = { group = "org.khronos", name = "opengl-api", version.ref = "opengl" }
@@ -284,6 +301,8 @@ smart-refresh-v2 = ["refresh-layout-kernel", "refresh-header-classics", "refresh
 ui-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide"]
 # Thermal camera common dependencies 
 thermal-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide", "xxpermissions", "eventbus"]
+# CameraX bundle for camera functionality
+camerax = ["camerax-core", "camerax-camera2", "camerax-lifecycle", "camerax-video", "camerax-view", "camerax-extensions"]
 
 umeng = ["umeng-common", "umeng-asms", "umeng-analytics"]
 andromeda = ["andromeda-core", "andromeda-sense", "andromeda-views"]

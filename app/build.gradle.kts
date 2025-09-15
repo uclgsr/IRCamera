@@ -229,6 +229,9 @@ android {
 configurations.all {
     resolutionStrategy {
         force("com.google.guava:guava:31.1-android")
+        // Force androidx.core to compatible version for AGP 8.5.2
+        force("androidx.core:core:1.13.1")
+        force("androidx.core:core-ktx:1.13.1")
 
         eachDependency {
             if (requested.group == "it.gerdavax.easybluetooth") {
@@ -313,7 +316,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     implementation("no.nordicsemi.android:ble:2.11.0")
-    implementation("no.nordicsemi.android:ble-ktx:2.11.0")
+    implementation(libs.nordic.ble.ktx)
 
 
     // Shimmer GSR+ Sensor SDK - Updated to 3.2.4_beta for enhanced BLE stability
@@ -325,11 +328,8 @@ dependencies {
 
 
 
-    implementation("androidx.camera:camera-camera2:1.5.0")
-    implementation("androidx.camera:camera-lifecycle:1.5.0")
-    implementation("androidx.camera:camera-video:1.5.0")
-    implementation("androidx.camera:camera-view:1.5.0")
-    implementation("androidx.camera:camera-extensions:1.5.0")
+    // CameraX dependencies - Compatible with AGP 8.5.2
+    implementation(libs.bundles.camerax)
 
 
     testImplementation("junit:junit:4.13.2")

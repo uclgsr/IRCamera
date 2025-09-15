@@ -63,7 +63,7 @@ dependencies {
     api("com.elvishew:xlog:1.10.1")
 
     api("no.nordicsemi.android:ble:2.11.0")
-    api("no.nordicsemi.android:ble-ktx:2.11.0")
+    api(libs.nordic.ble.ktx)
 
     implementation(files("libs/ini4j-0.5.5.jar"))
 }
