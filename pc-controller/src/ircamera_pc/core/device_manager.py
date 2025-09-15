@@ -163,7 +163,7 @@ class DeviceRegistry:
             existing = self.devices[device_id]
             existing.ip_address = discovered_device.ip_address
             existing.port = discovered_device.port
-            existing.discovered_at = datetime.now()
+            existing.discovered_at = datetime.now(timezone.utc)
             existing.state = DeviceConnectionState.DISCOVERED
             logger.info(f"Updated existing device: {device_id}")
             self._notify_callbacks(device_id, existing, "updated")
