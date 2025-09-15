@@ -886,41 +886,40 @@ class RecordingService : LifecycleService() {
                 }
 
     private fun setupNetworkCommandHandlers() {
+        try {
+            networkClient.setMessageHandler("start_recording") { message ->
+                handleStartRecordingCommand(message)
+            }
 
-                    try {
-                        networkClient.setMessageHandler("start_recording") { message ->
-                            handleStartRecordingCommand(message)
-                        }
+            networkClient.setMessageHandler("stop_recording") { message ->
+                handleStopRecordingCommand(message)
+            }
 
-                        networkClient.setMessageHandler("stop_recording") { message ->
-                            handleStopRecordingCommand(message)
-                        }
+            networkClient.setMessageHandler("sync_flash") { message ->
+                handleSyncFlashCommand(message)
+            }
 
-                        networkClient.setMessageHandler("sync_flash") { message ->
-                            handleSyncFlashCommand(message)
-                        }
+            networkClient.setMessageHandler("query_capabilities") { message ->
+                handleQueryCapabilitiesCommand(message)
+            }
 
-                        networkClient.setMessageHandler("query_capabilities") { message ->
-                            handleQueryCapabilitiesCommand(message)
-                        }
-
-                        networkClient.setMessageHandler("query_status") { message ->
-                            handleQueryStatusCommand(message)
-                        }
-                    } catch (e: Exception) {
-                        Log.w(TAG, "Network client message handlers setup failed: ${e.message}")
-                    }
-                }
+            networkClient.setMessageHandler("query_status") { message ->
+                handleQueryStatusCommand(message)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Network client message handlers setup failed: ${e.message}")
+        }
+    }
 
     private fun startNetworkDiscovery() {
-                    lifecycleScope.launch {
-                        try {
-                            Log.i(TAG, "Network discovery started successfully")
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error starting network discovery", e)
-                        }
-                    }
-                }
+        lifecycleScope.launch {
+            try {
+                Log.i(TAG, "Network discovery started successfully")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error starting network discovery", e)
+            }
+        }
+    }
 
     private fun handleStartRecordingCommand(message: JSONObject) {
                     lifecycleScope.launch {
