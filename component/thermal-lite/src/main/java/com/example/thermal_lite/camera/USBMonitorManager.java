@@ -3,6 +3,7 @@ package com.example.thermal_lite.camera;
 import android.hardware.usb.UsbDevice;
 import android.util.Log;
 
+
 import com.blankj.utilcode.util.Utils;
 import com.energy.iruvccamera.usb.DeviceFilter;
 import com.energy.iruvccamera.usb.USBMonitor;

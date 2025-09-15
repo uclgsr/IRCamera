@@ -19,8 +19,8 @@ jobs:
         task: [
           'build',
           'assemble', 
-          'compileKotlin',
-          'compileJava'
+          'compileReleaseKotlin',
+          'compileReleaseJavaWithJavac'
         ]
     
     steps:

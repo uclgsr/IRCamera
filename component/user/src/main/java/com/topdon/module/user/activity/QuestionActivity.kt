@@ -70,13 +70,6 @@ class QuestionActivity : BaseActivity() {
             }
         }
 
-    itemQuestionInfo.text = questionList[position].question
-    itemQuestionLay.setOnClickListener {
-    onItemClickListener?.invoke(questionList[position])
-    }
-    }
-    }
-
-    private class ItemHolder(val rootView: View) : RecyclerView.ViewHolder(rootView)
+        private class ItemHolder(val rootView: View) : RecyclerView.ViewHolder(rootView)
     }
 }

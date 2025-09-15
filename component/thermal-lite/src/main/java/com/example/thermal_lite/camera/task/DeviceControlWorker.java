@@ -7,7 +7,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class DeviceControlWorker {
     private static final String TAG = "DeviceControlWorker";
     private Thread mThread;
-    private ArrayBlockingQueue<BaseTask> mEventQueue = new ArrayBlockingQueue<>(2);
+    private ArrayBlockingQueue<BaseTask> mEventQueue = new ArrayBlockingQueue(2);
     private DeviceState mDeviceState = DeviceState.NONE;
     private IDeviceConnectListener mDeviceControlCallback;
     private boolean isStartPreviewing = false;
@@ -43,7 +43,7 @@ public class DeviceControlWorker {
                     mDeviceState = task.getDeviceState();
                     Log.d(TAG, "DeviceControlWorker do state : " + mDeviceState);
                     if (mDeviceControlCallback != null) {
-//防止重复回调
+                        //防止重复回调
                         if (mDeviceState != previousState) {
                             if (mDeviceState == DeviceState.OPEN) {
                                 mDeviceControlCallback.onConnected();
@@ -64,7 +64,9 @@ public class DeviceControlWorker {
         }
     };
 
-
+    /**
+     * start worker thread
+     */
     public void startWork() {
         Log.d(TAG, "startWork");
         if (mThread == null) {
@@ -73,7 +75,9 @@ public class DeviceControlWorker {
         }
     }
 
-
+    /**
+     * stop worker thread
+     */
     public void stopWork() {
         Log.d(TAG, "stopWork");
         if (mThread != null) {
@@ -88,7 +92,11 @@ public class DeviceControlWorker {
         }
     }
 
-
+    /**
+     * add on task
+     *
+     * @param task a runnable extends BaseTask
+     */
     public void addTask(BaseTask task) {
         synchronized (mEventQueue) {
             if (mEventQueue.size() < 2) {

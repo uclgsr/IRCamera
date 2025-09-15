@@ -31,8 +31,6 @@ class ElectronicManualActivity : BaseActivity() {
 
         val productType = intent.getIntExtra(Constants.SETTING_TYPE, 0) // 0-电子说明书 1-FAQ
 
-    val productType = intent.getIntExtra(Constants.SETTING_TYPE, 0) //0-电子说明书 1-FAQ
-
         val adapter = MyAdapter(productType == 1)
         adapter.onPickListener = { isTS001 ->
             if (isTS001) {
@@ -53,28 +51,8 @@ class ElectronicManualActivity : BaseActivity() {
             }
         }
 
-    val adapter = MyAdapter(productType == 1)
-    adapter.onPickListener = { isTS001 ->
-    if (isTS001) {
-    if (productType == Constants.SETTING_BOOK) {
-    //电子说明书-TS001
-    } else {
-    //FAQ-TS001
-    NavigationManager.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", true).navigation(this)
-    }
-    } else {
-    if (productType == Constants.SETTING_BOOK) {
-    //电子说明书-TS004
-    NavigationManager.getInstance().build(RouterConfig.PDF).withBoolean("isTS001", false).navigation(this)
-    } else {
-    //FAQ-TS004
-    NavigationManager.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", false).navigation(this)
-    }
-    }
-    }
-
-    electronicManualRecycler.layoutManager = LinearLayoutManager(this)
-    electronicManualRecycler.adapter = adapter
+        electronicManualRecycler.layoutManager = LinearLayoutManager(this)
+        electronicManualRecycler.adapter = adapter
     }
 
     override fun initData() {
@@ -82,8 +60,7 @@ class ElectronicManualActivity : BaseActivity() {
 
     private class MyAdapter(private val isFAQ: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var onPickListener: ((isTS001: Boolean) -> Unit)? = null
-
-    private val optionList: ArrayList<String> = ArrayList(2)
+        private val optionList: ArrayList<String> = ArrayList(2)
 
         init {
 //由于 TC001 的说明书为旧版本 样式， 2024-4-9 产品决定先hide，只放 TS004 的说明书
@@ -115,15 +92,8 @@ class ElectronicManualActivity : BaseActivity() {
             }
         }
 
-    itemText.text = optionList[position]
-    itemLay.setOnClickListener {
-    onPickListener?.invoke(isFAQ && position == 0)
-    }
-    }
-    }
+        override fun getItemCount(): Int = optionList.size
 
-    override fun getItemCount(): Int = optionList.size
-
-    private class ItemViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView)
+        private class ItemViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView)
     }
 }
