@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.data;
 
 import android.annotation.TargetApi;
@@ -10,21 +9,13 @@ import com.github.mikephil.charting.utils.Utils;
 
 import java.util.List;
 
-
 public abstract class LineRadarDataSet<T extends Entry> extends LineScatterCandleRadarDataSet<T> implements ILineRadarDataSet<T> {
 
-
-    private int mFillColor = Color.rgb(140, 234, 255);
-
-
     protected Drawable mFillDrawable;
-
-
+    private int mFillColor = Color.rgb(140, 234, 255);
     private int mFillAlpha = 85;
 
-
     private float mLineWidth = 2.5f;
-
 
     private boolean mDrawFilled = false;
 
@@ -37,7 +28,6 @@ public abstract class LineRadarDataSet<T extends Entry> extends LineScatterCandl
         return mFillColor;
     }
 
-
     public void setFillColor(int color) {
         mFillColor = color;
         mFillDrawable = null;
@@ -47,7 +37,6 @@ public abstract class LineRadarDataSet<T extends Entry> extends LineScatterCandl
     public Drawable getFillDrawable() {
         return mFillDrawable;
     }
-
 
     @TargetApi(18)
     public void setFillDrawable(Drawable drawable) {
@@ -59,11 +48,14 @@ public abstract class LineRadarDataSet<T extends Entry> extends LineScatterCandl
         return mFillAlpha;
     }
 
-
     public void setFillAlpha(int alpha) {
         mFillAlpha = alpha;
     }
 
+    @Override
+    public float getLineWidth() {
+        return mLineWidth;
+    }
 
     public void setLineWidth(float width) {
 
@@ -72,11 +64,6 @@ public abstract class LineRadarDataSet<T extends Entry> extends LineScatterCandl
         if (width > 10.0f)
             width = 10.0f;
         mLineWidth = Utils.convertDpToPixel(width);
-    }
-
-    @Override
-    public float getLineWidth() {
-        return mLineWidth;
     }
 
     @Override

@@ -9,30 +9,24 @@ import com.blankj.utilcode.util.SizeUtils
 import kotlin.math.max
 import kotlin.math.min
 
-
 class TempDrawHelper {
     companion object {
 
         private val POINT_SIZE: Int = SizeUtils.dp2px(16f)
 
-
         private val CIRCLE_RADIUS: Int = SizeUtils.dp2px(3f)
 
-
         private val TEMP_TEXT_OFFSET = SizeUtils.dp2px(6f)
-
 
         fun Float.correctPoint(max: Int): Int =
             this.toInt()
                 .coerceAtLeast(POINT_SIZE / 2)
                 .coerceAtMost(max - POINT_SIZE / 2)
 
-
         fun Float.correct(max: Int): Int =
             this.toInt()
                 .coerceAtLeast(CIRCLE_RADIUS)
                 .coerceAtMost(max - CIRCLE_RADIUS)
-
 
         fun getRect(
             width: Int,
@@ -40,13 +34,11 @@ class TempDrawHelper {
         ): Rect = Rect(CIRCLE_RADIUS, CIRCLE_RADIUS, width - CIRCLE_RADIUS, height - CIRCLE_RADIUS)
     }
 
-
     var textSize: Int
         get() = textPaint.textSize.toInt()
         set(value) {
             textPaint.textSize = value.toFloat()
         }
-
 
     var textColor: Int
         @ColorInt get() = textPaint.color
@@ -56,15 +48,11 @@ class TempDrawHelper {
             textPaint.color = value
         }
 
-
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG)
-
 
     private val bluePaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-
     private val redPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -80,8 +68,6 @@ class TempDrawHelper {
         textPaint.color = Color.WHITE
     }
 
-    // ******************************************** Draw ********************************************
-
 
     fun drawPoint(
         canvas: Canvas,
@@ -96,7 +82,6 @@ class TempDrawHelper {
         canvas.drawLine(x.toFloat(), top, x.toFloat(), bottom, linePaint) // 画竖线
     }
 
-
     fun drawLine(
         canvas: Canvas,
         startX: Int,
@@ -104,9 +89,14 @@ class TempDrawHelper {
         stopX: Int,
         stopY: Int,
     ) {
-        canvas.drawLine(startX.toFloat(), startY.toFloat(), stopX.toFloat(), stopY.toFloat(), linePaint)
+        canvas.drawLine(
+            startX.toFloat(),
+            startY.toFloat(),
+            stopX.toFloat(),
+            stopY.toFloat(),
+            linePaint
+        )
     }
-
 
     fun drawRect(
         canvas: Canvas,
@@ -120,10 +110,26 @@ class TempDrawHelper {
         val rightF: Float = right.toFloat()
         val bottomF: Float = bottom.toFloat()
         val points =
-            floatArrayOf(leftF, topF, rightF, topF, rightF, topF, rightF, bottomF, rightF, bottomF, leftF, bottomF, leftF, bottomF, leftF, topF)
+            floatArrayOf(
+                leftF,
+                topF,
+                rightF,
+                topF,
+                rightF,
+                topF,
+                rightF,
+                bottomF,
+                rightF,
+                bottomF,
+                leftF,
+                bottomF,
+                leftF,
+                bottomF,
+                leftF,
+                topF
+            )
         canvas.drawLines(points, linePaint)
     }
-
 
     fun drawCircle(
         canvas: Canvas,
@@ -131,9 +137,13 @@ class TempDrawHelper {
         y: Int,
         isMax: Boolean,
     ) {
-        canvas.drawCircle(x.toFloat(), y.toFloat(), CIRCLE_RADIUS.toFloat(), if (isMax) redPaint else bluePaint)
+        canvas.drawCircle(
+            x.toFloat(),
+            y.toFloat(),
+            CIRCLE_RADIUS.toFloat(),
+            if (isMax) redPaint else bluePaint
+        )
     }
-
 
     fun drawTempText(
         canvas: Canvas,
@@ -157,7 +167,6 @@ class TempDrawHelper {
 
         canvas.drawText(text, textX, textY, textPaint)
     }
-
 
     fun drawTrendText(
         canvas: Canvas,
@@ -187,7 +196,6 @@ class TempDrawHelper {
         canvas.drawText("B", rightX, if (k >= 0) bottomY else topY, textPaint)
     }
 
-
     fun drawPointName(
         canvas: Canvas,
         name: String,
@@ -213,7 +221,6 @@ class TempDrawHelper {
         }
         canvas.drawText(name, textX, textY, textPaint)
     }
-
 
     fun drawPointRectName(
         canvas: Canvas,
@@ -250,5 +257,4 @@ class TempDrawHelper {
         canvas.drawText(name, textX, textY, textPaint)
     }
 
-    // ******************************************** Touch ********************************************
 }

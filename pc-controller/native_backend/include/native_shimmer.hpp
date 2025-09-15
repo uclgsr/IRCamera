@@ -12,111 +12,98 @@
 #include "thread_safe_queue.hpp"
 
 namespace ircamera {
-namespace sensors {
+    namespace sensors {
 
-struct ShimmerData {
-    uint64_t timestamp_ns;  // Nanosecond timestamp
-    uint16_t gsr_raw;       // Raw GSR value (12-bit ADC)
-    double gsr_microsiemens; // Converted GSR value
-    uint16_t ppg_raw;       // Raw PPG value
-    int16_t accel_x, accel_y, accel_z; // Accelerometer data
-    bool valid;             // Data validity flag
-};
+        struct ShimmerData {
+            uint64_t timestamp_ns;  // Nanosecond timestamp
+            uint16_t gsr_raw;       // Raw GSR value (12-bit ADC)
+            double gsr_microsiemens; // Converted GSR value
+            uint16_t ppg_raw;       // Raw PPG value
+            int16_t accel_x, accel_y, accel_z; // Accelerometer data
+            bool valid;             // Data validity flag
+        };
 
-class NativeShimmer {
-public:
-    NativeShimmer();
-    ~NativeShimmer();
+        class NativeShimmer {
+        public:
+            NativeShimmer();
 
-    // Non-copyable
-    NativeShimmer(const NativeShimmer&) = delete;
-    NativeShimmer& operator=(const NativeShimmer&) = delete;
+            ~NativeShimmer();
 
+            NativeShimmer(const NativeShimmer &) = delete;
 
-    bool connect(const std::string& port_name, int baud_rate = 115200);
+            NativeShimmer &operator=(const NativeShimmer &) = delete;
 
+            bool connect(const std::string &port_name, int baud_rate = 115200);
 
-    void disconnect();
+            void disconnect();
 
+            bool start_streaming(int sample_rate = 512);
 
-    bool start_streaming(int sample_rate = 512);
+            bool stop_streaming();
 
+            bool is_connected() const { return connected_.load(); }
 
-    bool stop_streaming();
+            bool is_streaming() const { return streaming_.load(); }
 
+            bool get_data(ShimmerData &data);
 
-    bool is_connected() const { return connected_.load(); }
+            size_t get_queue_size() const;
 
+            void clear_queue();
 
-    bool is_streaming() const { return streaming_.load(); }
+            std::string get_sensor_info() const;
 
+            void set_gsr_range(int range);
 
-    bool get_data(ShimmerData& data);
+            std::string get_last_error() const { return last_error_; }
 
+            struct Statistics {
+                uint64_t total_samples;
+                uint64_t dropped_samples;
+                double data_rate_hz;
+                uint64_t last_timestamp_ns;
+            };
 
-    size_t get_queue_size() const;
+            Statistics get_statistics() const;
 
+        private:
 
-    void clear_queue();
+            std::atomic<bool> connected_{false};
+            std::atomic<bool> streaming_{false};
+            std::atomic<bool> should_stop_{false};
 
+            int serial_fd_{-1};
+            std::string port_name_;
+            int baud_rate_;
 
-    std::string get_sensor_info() const;
+            std::unique_ptr <std::thread> reader_thread_;
 
+            std::unique_ptr <utils::ThreadSafeQueue<ShimmerData>> data_queue_;
 
-    void set_gsr_range(int range);
+            double gsr_uncal_limit_[5] = {40.5, 287.0, 1498.0, 2895.0, 3660.0};
+            double gsr_cal_limit_[5] = {0.1, 1.0, 10.0, 100.0, 1000.0};
+            int gsr_range_{4}; // Default to highest range
 
+            mutable std::atomic <uint64_t> total_samples_{0};
+            mutable std::atomic <uint64_t> dropped_samples_{0};
+            mutable std::atomic <uint64_t> last_timestamp_ns_{0};
 
-    std::string get_last_error() const { return last_error_; }
+            mutable std::string last_error_;
 
+            void reader_thread_func();
 
-    struct Statistics {
-        uint64_t total_samples;
-        uint64_t dropped_samples;
-        double data_rate_hz;
-        uint64_t last_timestamp_ns;
-    };
-    
-    Statistics get_statistics() const;
+            bool setup_serial_port();
 
-private:
-    // Connection state
-    std::atomic<bool> connected_{false};
-    std::atomic<bool> streaming_{false};
-    std::atomic<bool> should_stop_{false};
+            bool send_command(uint8_t command);
 
-    // Serial communication
-    int serial_fd_{-1};
-    std::string port_name_;
-    int baud_rate_;
+            bool parse_data_packet(const std::vector <uint8_t> &packet, ShimmerData &data);
 
-    // Data processing thread
-    std::unique_ptr<std::thread> reader_thread_;
-    
-    // Data queue
-    std::unique_ptr<utils::ThreadSafeQueue<ShimmerData>> data_queue_;
+            double convert_gsr_to_microsiemens(uint16_t raw_value);
 
-    // GSR calibration parameters
-    double gsr_uncal_limit_[5] = {40.5, 287.0, 1498.0, 2895.0, 3660.0};
-    double gsr_cal_limit_[5] = {0.1, 1.0, 10.0, 100.0, 1000.0};
-    int gsr_range_{4}; // Default to highest range
+            uint64_t get_current_timestamp_ns();
 
-    // Statistics
-    mutable std::atomic<uint64_t> total_samples_{0};
-    mutable std::atomic<uint64_t> dropped_samples_{0};
-    mutable std::atomic<uint64_t> last_timestamp_ns_{0};
+            void update_statistics();
+        };
 
-    // Error tracking
-    mutable std::string last_error_;
-
-    // Private methods
-    void reader_thread_func();
-    bool setup_serial_port();
-    bool send_command(uint8_t command);
-    bool parse_data_packet(const std::vector<uint8_t>& packet, ShimmerData& data);
-    double convert_gsr_to_microsiemens(uint16_t raw_value);
-    uint64_t get_current_timestamp_ns();
-    void update_statistics();
-};
-
-} // namespace sensors
+    } // namespace sensors
 } // namespace ircamera

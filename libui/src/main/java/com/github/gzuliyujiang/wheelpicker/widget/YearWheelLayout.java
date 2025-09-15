@@ -23,7 +23,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.github.gzuliyujiang.wheelpicker.annotation.DateMode;
-import com.github.gzuliyujiang.wheelpicker.annotation.TimeMode;
 import com.github.gzuliyujiang.wheelpicker.contract.DateFormatter;
 import com.github.gzuliyujiang.wheelpicker.entity.DatimeEntity;
 import com.github.gzuliyujiang.wheelpicker.impl.SimpleDateFormatter;
@@ -36,7 +35,6 @@ import com.topdon.lib.ui.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 @SuppressWarnings("unused")
 public class YearWheelLayout extends BaseWheelLayout {
@@ -81,7 +79,6 @@ public class YearWheelLayout extends BaseWheelLayout {
     protected void onInit(@NonNull Context context) {
         dateWheelLayout = findViewById(R.id.wheel_picker_date_wheel);
 
-        //初始color
         setCurtainEnabled(true);
         getMonthLabelView().setBackgroundColor(0x1A2B79D7);
         getYearLabelView().setBackgroundColor(0x1A2B79D7);
@@ -162,12 +159,10 @@ public class YearWheelLayout extends BaseWheelLayout {
         dateWheelLayout.setDateMode(dateMode);
     }
 
-    
     public void setRange(DatimeEntity startValue, DatimeEntity endValue) {
         setRange(startValue, endValue, null);
     }
 
-    
     public void setRange(DatimeEntity startValue, DatimeEntity endValue, DatimeEntity defaultValue) {
         if (startValue == null) {
             startValue = DatimeEntity.now();

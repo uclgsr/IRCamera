@@ -16,18 +16,14 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-
 abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
 
     private var _binding: B? = null
 
-
     protected val binding: B get() = _binding!!
-
 
     @LayoutRes
     protected abstract fun initContentLayoutId(): Int
-
 
     protected abstract fun initView(savedInstanceState: Bundle?)
 
@@ -86,16 +82,13 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
     protected open fun onSocketDisConnected(isTS004: Boolean) {
     }
 
-
     private var loadingDialog: LoadingDialog? = null
-
 
     fun showLoadingDialog(
         @StringRes resId: Int,
     ) {
         showLoadingDialog(getString(resId))
     }
-
 
     fun showLoadingDialog(text: CharSequence?) {
         if (loadingDialog == null) {
@@ -104,7 +97,6 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
         loadingDialog?.setTips(text)
         loadingDialog?.show()
     }
-
 
     fun dismissLoadingDialog() {
         loadingDialog?.dismiss()

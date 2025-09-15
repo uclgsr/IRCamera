@@ -16,8 +16,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="375:132"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Center button for start photo, taking photo, start video, stop video actions -->
@@ -25,66 +25,67 @@
             android:id="@+id/iv_action"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@drawable/svg_camera_photo_normal"
             android:contentDescription="@null"
-            app:layout_constraintWidth_percent="0.15"
+            android:src="@drawable/svg_camera_photo_normal"
+            app:layout_constraintBottom_toBottomOf="@id/view_pager2"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintVertical_bias="0.7"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/view_pager2"
-            app:layout_constraintBottom_toBottomOf="@id/view_pager2" />
+            app:layout_constraintVertical_bias="0.7"
+            app:layout_constraintWidth_percent="0.15" />
         <!-- Left side circular gallery library cover image -->
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/iv_gallery"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/shape_oval_33"
-            app:roundPercent="1"
-            app:layout_constraintWidth_percent="0.1"
+            app:layout_constraintBottom_toBottomOf="@id/iv_action"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/iv_action"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_action"
-            app:layout_constraintBottom_toBottomOf="@id/iv_action" />
+            app:layout_constraintWidth_percent="0.1"
+            app:roundPercent="1" />
         <!-- Right side more menu button -->
         <ImageView
             android:id="@+id/iv_more"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@drawable/svg_camera_more"
             android:contentDescription="@null"
-            app:layout_constraintWidth_percent="0.1"
+            android:src="@drawable/svg_camera_more"
+            app:layout_constraintBottom_toBottomOf="@id/iv_action"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintStart_toEndOf="@id/iv_action"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_action"
             app:layout_constraintTop_toTopOf="@id/iv_action"
-            app:layout_constraintBottom_toBottomOf="@id/iv_action" />
+            app:layout_constraintWidth_percent="0.1" />
 
         <!-- Photo/Video toggle and indicator text -->
         <TextView
             android:id="@+id/tv_photo"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:paddingHorizontal="14dp"
             android:gravity="center_vertical"
+            android:paddingHorizontal="14dp"
             android:text="@string/person_headshot_camera"
             android:textColor="@color/camera_text"
-            tools:textColor="#ffffff"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/iv_action"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/iv_action" />
+            tools:textColor="#ffffff" />
+
         <TextView
             android:id="@+id/tv_video"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:paddingHorizontal="14dp"
             android:gravity="center_vertical"
+            android:paddingHorizontal="14dp"
             android:text="@string/app_video"
             android:textColor="@color/camera_text"
+            app:layout_constraintBottom_toTopOf="@id/iv_action"
             app:layout_constraintStart_toEndOf="@id/tv_photo"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/iv_action" />
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

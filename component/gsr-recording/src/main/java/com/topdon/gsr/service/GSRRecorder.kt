@@ -22,13 +22,13 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.coroutines.coroutineContext
 
-
 class GSRRecorder(
     private val context: Context,
+    private val shimmerDeviceFactory: ShimmerDeviceFactory,
     private val samplingRateHz: Int = 128,
 ) {
     // Shimmer3 integration
-    private val shimmerRecorder = ShimmerGSRRecorder(context, samplingRateHz)
+    private val shimmerRecorder = ShimmerGSRRecorder(context, shimmerDeviceFactory, samplingRateHz)
     private val useShimmerDevice = true // Set to false for simulated data only
 
     companion object {
@@ -70,7 +70,6 @@ class GSRRecorder(
 
     private val listeners = mutableListOf<GSRRecordingListener>()
 
-
     interface GSRRecordingListener {
         fun onRecordingStarted(sessionInfo: SessionInfo)
 
@@ -90,7 +89,6 @@ class GSRRecorder(
     fun removeListener(listener: GSRRecordingListener) {
         listeners.remove(listener)
     }
-
 
     suspend fun initialize(): Boolean {
         return if (useShimmerDevice) {
@@ -143,7 +141,6 @@ class GSRRecorder(
             },
         )
     }
-
 
     suspend fun startRecording(
         sessionId: String,
@@ -206,7 +203,10 @@ class GSRRecorder(
                 listeners.forEach { it.onRecordingStarted(session) }
             }
 
-            Log.i(TAG, "Simulated GSR recording started: sessionId=$sessionId, samplingRate=${samplingRateHz}Hz")
+            Log.i(
+                TAG,
+                "Simulated GSR recording started: sessionId=$sessionId, samplingRate=${samplingRateHz}Hz"
+            )
             return true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start simulated recording", e)
@@ -238,10 +238,10 @@ class GSRRecorder(
                     // Simulate realistic GSR patterns (10-50 µS typical range)
                     val conductance =
                         20.0 +
-                            Math.sin(baseFreq) * 10.0 + // Slow drift
-                            Math.sin(breathingFreq) * 3.0 + // Breathing pattern
-                            Math.sin(noiseFreq) * 1.0 + // Fine noise
-                            Math.random() * 2.0 // Random variation
+                                Math.sin(baseFreq) * 10.0 + // Slow drift
+                                Math.sin(breathingFreq) * 3.0 + // Breathing pattern
+                                Math.sin(noiseFreq) * 1.0 + // Fine noise
+                                Math.random() * 2.0 // Random variation
 
                     // Ensure reasonable range and calculate resistance
                     val finalConductance = Math.max(5.0, Math.min(50.0, conductance))
@@ -277,7 +277,6 @@ class GSRRecorder(
         }
     }
 
-
     fun stopRecording(): SessionInfo? {
         if (!isRecording.get()) {
             Log.w(TAG, "No recording in progress")
@@ -305,7 +304,10 @@ class GSRRecorder(
             saveSessionMetadata(session)
 
             listeners.forEach { it.onRecordingStopped(session) }
-            Log.i(TAG, "Simulated GSR recording stopped: sessionId=${session.sessionId}, samples=${session.sampleCount}")
+            Log.i(
+                TAG,
+                "Simulated GSR recording stopped: sessionId=${session.sessionId}, samples=${session.sampleCount}"
+            )
         }
 
         cleanup()
@@ -313,7 +315,6 @@ class GSRRecorder(
         currentSession = null
         return completedSession
     }
-
 
     fun triggerSyncEvent(
         eventType: String,
@@ -440,7 +441,6 @@ class GSRRecorder(
         listeners.forEach { it.onError(error) }
     }
 
-
     fun disconnect() {
         if (useShimmerDevice) {
             shimmerRecorder.disconnect()
@@ -450,7 +450,6 @@ class GSRRecorder(
         }
     }
 
-
     fun isDeviceConnected(): Boolean {
         return if (useShimmerDevice) {
             shimmerRecorder.isDeviceConnected()
@@ -459,21 +458,17 @@ class GSRRecorder(
         }
     }
 
-
     fun isRecording(): Boolean {
         return isRecording.get()
     }
-
 
     fun getCurrentSession(): SessionInfo? {
         return currentSession
     }
 
-
     fun getSessionDirectory(): File? {
         return sessionDirectory
     }
-
 
     suspend fun addSyncMark(
         eventType: String,

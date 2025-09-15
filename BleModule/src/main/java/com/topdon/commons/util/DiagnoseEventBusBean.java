@@ -1,7 +1,6 @@
 package com.topdon.commons.util;
 
 
-
 public class DiagnoseEventBusBean {
     private int what;//1 语言  2 sn连接  3进入诊断或者百公里加速 4 诊断或者保养  5 Folder sn号路径   6 diagMenuMask
     private String language;

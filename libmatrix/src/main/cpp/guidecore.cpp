@@ -59,57 +59,93 @@ unsigned int gu32CrcTable[] =
 
 uint8_t gBGRA[IR_WIDTH * IR_HEIGHT * 4] = {};
 
-long long currentTimeMillis ()
-{
+long long currentTimeMillis() {
     struct timeval te{};
     gettimeofday(&te, nullptr);
-    long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000;
+    long long milliseconds = te.tv_sec * 1000LL + te.tv_usec / 1000;
     return milliseconds;
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_guide_zm04c_matrix_NativeGuideCore_toFloatTempMatrix(JNIEnv *env, jobject thiz, jfloatArray floats, jbyteArray bytes) {
-    jfloat* pTempFloat = env->GetFloatArrayElements(floats, JNI_FALSE);
-    jbyte* pTempByte = env->GetByteArrayElements(bytes, JNI_FALSE);
-    jsize len = env->GetArrayLength(bytes);
-    memcpy(pTempFloat, pTempByte, len);
-    env->ReleaseFloatArrayElements(floats, pTempFloat, JNI_FALSE);
-    env->ReleaseByteArrayElements(bytes, pTempByte, JNI_FALSE);
+Java_com_guide_zm04c_matrix_NativeGuideCore_toFloatTempMatrix(JNIEnv
+*env,
+jobject thiz, jfloatArray
+floats,
+jbyteArray bytes
+) {
+jfloat *pTempFloat = env->GetFloatArrayElements(floats, JNI_FALSE);
+jbyte *pTempByte = env->GetByteArrayElements(bytes, JNI_FALSE);
+jsize len = env->GetArrayLength(bytes);
+memcpy(pTempFloat, pTempByte, len
+);
+env->
+ReleaseFloatArrayElements(floats, pTempFloat, JNI_FALSE
+);
+env->
+ReleaseByteArrayElements(bytes, pTempByte, JNI_FALSE
+);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_guide_zm04c_matrix_NativeGuideCore_yuv2Bitmap(JNIEnv *env, jobject thiz, jobject jBitmap, jbyteArray yuv) {
-    jbyte* pYuv = env->GetByteArrayElements(yuv, JNI_FALSE);
-    uint8_t* rgba = nullptr;
-    if (AndroidBitmap_lockPixels(env, jBitmap, reinterpret_cast<void **>(&rgba)) == ANDROID_BITMAP_RESULT_SUCCESS) {
-        //yuv转换成bgra格式
-        libyuv::UYVYToARGB(reinterpret_cast<const uint8_t *>(pYuv),
-                           IR_WIDTH * 2, gBGRA, IR_WIDTH * 4, IR_WIDTH, IR_HEIGHT);
-        //bgra格式转rgba
-        for (int i = 0; i < IR_WIDTH * IR_HEIGHT; i++) {
-            rgba[i * 4] = gBGRA[i * 4 + 2];
-            rgba[i * 4 + 1] = gBGRA[i * 4 + 1];
-            rgba[i * 4 + 2] = gBGRA[i * 4];
-            rgba[i * 4 + 3] = gBGRA[i * 4 + 3];
-        }
-    }
-    AndroidBitmap_unlockPixels(env, jBitmap);
-    env->ReleaseByteArrayElements(yuv, pYuv, JNI_FALSE);
+Java_com_guide_zm04c_matrix_NativeGuideCore_yuv2Bitmap(JNIEnv
+*env,
+jobject thiz, jobject
+jBitmap,
+jbyteArray yuv
+) {
+jbyte *pYuv = env->GetByteArrayElements(yuv, JNI_FALSE);
+uint8_t *rgba = nullptr;
+if (
+AndroidBitmap_lockPixels(env, jBitmap,
+reinterpret_cast
+<void **>(&rgba)
+) == ANDROID_BITMAP_RESULT_SUCCESS) {
+
+libyuv::UYVYToARGB(reinterpret_cast
+<const uint8_t *>(pYuv),
+        IR_WIDTH
+* 2, gBGRA, IR_WIDTH * 4, IR_WIDTH, IR_HEIGHT);
+
+for (
+int i = 0;
+i<IR_WIDTH * IR_HEIGHT;
+i++) {
+rgba[i * 4] = gBGRA[i * 4 + 2];
+rgba[i * 4 + 1] = gBGRA[i * 4 + 1];
+rgba[i * 4 + 2] = gBGRA[i * 4];
+rgba[i * 4 + 3] = gBGRA[i * 4 + 3];
+}
+}
+AndroidBitmap_unlockPixels(env, jBitmap
+);
+env->
+ReleaseByteArrayElements(yuv, pYuv, JNI_FALSE
+);
 }
 
 extern "C"
-JNIEXPORT jint JNICALL
-Java_com_guide_zm04c_matrix_NativeGuideCore_crc(JNIEnv *env, jobject thiz, jbyteArray data) {
-    jbyte* pData = env->GetByteArrayElements(data, JNI_FALSE);
-    jsize len = env->GetArrayLength(data);
-    unsigned int val = 0;
-    unsigned int i = 0;
-    for (i = 0; i < len; i ++)
-    {
-        val = gu32CrcTable[(int)((val ^ pData[i]) & 0xff)] ^ (val >> 8);
-    }
-    env->ReleaseByteArrayElements(data, pData, JNI_FALSE);
-    return val;
+JNIEXPORT jint
+JNICALL
+        Java_com_guide_zm04c_matrix_NativeGuideCore_crc(JNIEnv * env, jobject
+thiz,
+jbyteArray data
+) {
+jbyte *pData = env->GetByteArrayElements(data, JNI_FALSE);
+jsize len = env->GetArrayLength(data);
+unsigned int val = 0;
+unsigned int i = 0;
+for (
+i = 0;
+i<len;
+i ++)
+{
+val = gu32CrcTable[(int) ((val ^ pData[i]) & 0xff)] ^ (val >> 8);
+}
+env->
+ReleaseByteArrayElements(data, pData, JNI_FALSE
+);
+return
+val;
 }

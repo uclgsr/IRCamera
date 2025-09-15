@@ -13,7 +13,6 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 
-
 class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     private lateinit var plotData: GSRDataViewActivity.GSRPlotData
 
@@ -22,7 +21,6 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Setup toolbar
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             title = "GSR Data Analysis"
@@ -43,7 +41,7 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     }
 
     private fun setupGSRChart() {
-        // Configure GSR chart
+
         binding.gsrChart.apply {
             description =
                 Description().apply {
@@ -51,7 +49,6 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
                     textSize = 12f
                 }
 
-            // Configure X-axis
             xAxis.apply {
                 position = XAxis.XAxisPosition.BOTTOM
                 valueFormatter = TimeFormatter()
@@ -59,21 +56,18 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
                 labelCount = 6
             }
 
-            // Configure Y-axis
             axisLeft.apply {
                 setDrawGridLines(true)
                 gridColor = Color.LTGRAY
             }
             axisRight.isEnabled = false
 
-            // Enable zoom and pan
             setTouchEnabled(true)
             isDragEnabled = true
             setScaleEnabled(true)
             setPinchZoom(true)
         }
 
-        // Create GSR data sets
         val gsrEntries =
             plotData.timestamps.mapIndexed { index, timestamp ->
                 Entry(timestamp.toFloat(), plotData.gsrValues[index].toFloat())
@@ -100,13 +94,12 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
                 setDrawValues(false)
             }
 
-        // Set data to chart
         binding.gsrChart.data = LineData(gsrDataSet, gsrAvgDataSet)
         binding.gsrChart.invalidate()
     }
 
     private fun setupPPGChart() {
-        // Configure PPG chart
+
         binding.ppgChart.apply {
             description =
                 Description().apply {
@@ -114,7 +107,6 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
                     textSize = 12f
                 }
 
-            // Configure X-axis
             xAxis.apply {
                 position = XAxis.XAxisPosition.BOTTOM
                 valueFormatter = TimeFormatter()
@@ -122,21 +114,18 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
                 labelCount = 6
             }
 
-            // Configure Y-axis
             axisLeft.apply {
                 setDrawGridLines(true)
                 gridColor = Color.LTGRAY
             }
             axisRight.isEnabled = false
 
-            // Enable zoom and pan
             setTouchEnabled(true)
             isDragEnabled = true
             setScaleEnabled(true)
             setPinchZoom(true)
         }
 
-        // Create PPG data sets
         val ppgEntries =
             plotData.timestamps.mapIndexed { index, timestamp ->
                 Entry(timestamp.toFloat(), plotData.ppgValues[index].toFloat())
@@ -163,7 +152,6 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
                 setDrawValues(false)
             }
 
-        // Set data to chart
         binding.ppgChart.data = LineData(ppgDataSet, ppgAvgDataSet)
         binding.ppgChart.invalidate()
     }
@@ -180,7 +168,6 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
         stats.appendLine("🔄 Sampling Rate: ${"%.1f".format(metadata.samplingRate)} Hz")
         stats.appendLine("")
 
-        // GSR Statistics
         val gsrMean = plotData.gsrValues.average()
         val gsrStdDev = calculateStandardDeviation(plotData.gsrValues)
         val gsrMin = plotData.gsrValues.minOrNull() ?: 0.0
@@ -194,7 +181,6 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
         stats.appendLine("Variation: ${"%.2f".format((gsrStdDev / gsrMean) * 100)}%")
         stats.appendLine("")
 
-        // PPG Statistics
         val ppgMean = plotData.ppgValues.average()
         val ppgStdDev = calculateStandardDeviation(plotData.ppgValues)
         val ppgMin = plotData.ppgValues.minOrNull() ?: 0.0
@@ -207,7 +193,6 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
         stats.appendLine("Range: ${"%.0f".format(ppgMin)} - ${"%.0f".format(ppgMax)}")
         stats.appendLine("")
 
-        // Events Analysis
         stats.appendLine("🎯 Events Detected")
         stats.appendLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
         val increases = plotData.gsrEvents.count { it.type == "INCREASE" }
@@ -237,10 +222,10 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
                 onBackPressedDispatcher.onBackPressed()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 
     private class TimeFormatter : ValueFormatter() {
         override fun getFormattedValue(value: Float): String {

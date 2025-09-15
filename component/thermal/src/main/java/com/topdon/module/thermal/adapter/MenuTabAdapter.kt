@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.module.thermal.R
 
-
 class MenuTabAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: OnItemClickListener? = null
@@ -29,14 +28,12 @@ class MenuTabAdapter(val context: Context) :
         notifyDataSetChanged()
     }
 
-//拍摄
     private val firstMenus =
         arrayListOf<Int>(
             com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg,
             com.topdon.lib.ui.R.drawable.ic_menu_thermal7002_svg,
         )
 
-//选框
     private val secondMenus =
         arrayListOf<Int>(
             com.topdon.lib.ui.R.drawable.ic_menu_thermal6001,
@@ -47,7 +44,6 @@ class MenuTabAdapter(val context: Context) :
             com.topdon.lib.ui.R.drawable.ic_menu_thermal7004,
         )
 
-//选框
     private val secondMenusStr =
         arrayListOf(
             "点",
@@ -58,7 +54,6 @@ class MenuTabAdapter(val context: Context) :
             "删除",
         )
 
-//选框
     private val fourthMenusStr =
         arrayListOf(
             "旋转",
@@ -67,7 +62,6 @@ class MenuTabAdapter(val context: Context) :
             "色带",
         )
 
-//色彩 - Using available resources as placeholders
     private val thirdMenus =
         arrayListOf<Int>(
             com.topdon.lib.ui.R.drawable.ic_menu_thermal5003,
@@ -82,7 +76,6 @@ class MenuTabAdapter(val context: Context) :
             com.topdon.lib.ui.R.drawable.ic_menu_thermal6003_svg,
         )
 
-//set - Using available resources as placeholders
     private val fourthMenus =
         arrayListOf<Int>(
             com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg,
@@ -146,7 +139,10 @@ class MenuTabAdapter(val context: Context) :
                     if (position == selected) {
                         ContextCompat.getColor(context, com.topdon.lib.core.R.color.white)
                     } else {
-                        ContextCompat.getColor(context, com.topdon.lib.core.R.color.font_third_color)
+                        ContextCompat.getColor(
+                            context,
+                            com.topdon.lib.core.R.color.font_third_color
+                        )
                     },
                 )
             }
@@ -165,7 +161,6 @@ class MenuTabAdapter(val context: Context) :
         }
     }
 
-
     open class BaseItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         lateinit var lay: View
         lateinit var img: ImageView
@@ -175,7 +170,8 @@ class MenuTabAdapter(val context: Context) :
         var name: TextView
 
         init {
-            lay = itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_menu_tab_lay)
+            lay =
+                itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_menu_tab_lay)
             img = itemView.findViewById<ImageView>(R.id.item_menu_tab_img)
             name = itemView.findViewById<TextView>(R.id.item_menu_tab_text)
         }
@@ -183,11 +179,11 @@ class MenuTabAdapter(val context: Context) :
 
     inner class ItemMoreView(itemView: View) : BaseItemView(itemView) {
         init {
-            lay = itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_menu_tab_more_lay)
+            lay =
+                itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_menu_tab_more_lay)
             img = itemView.findViewById<ImageView>(R.id.item_menu_tab_more_img)
         }
     }
-
 
     interface OnItemClickListener {
         fun onClick(index: Int)

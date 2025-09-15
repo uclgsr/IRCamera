@@ -10,29 +10,9 @@ import com.topdon.lib.core.utils.SingleLiveEvent
 class VersionViewModel : BaseViewModel() {
     val updateLiveData = SingleLiveEvent<VersionUpData>()
 
-
     fun checkVersion() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            try {
-//                if (TimeUtils.isToday(SharedManager.getVersionCheckDate())) {
-//                    Log.w("123", "今天已有版本update提示")
-//                    return@launch
-//                }
-//                val result: CheckVersionJson = LmsRepository.getVersionInfo() ?: return@launch
-//                /*if (result.googleVerCode > AppUtils.getAppVersionCode()) {
-//                    // google play需要升级
-//                    updateTip(result)
-//                    return@launch
-//                }*/
-//                if (VersionTool.checkVersion(remoteStr = result.versionNo ?: "1.0", localStr = AppUtils.getAppVersionName())) {
-//                    // google play检测不出时,官方升级,根据app情况跳转对应的升级渠道
-//                    updateTip(result)
-//                    return@launch
-//                }
-//            } catch (e: Exception) {
-//                XLog.e("检测异常: ${e.message}")
-//            }
-//        }
+
+
     }
 
     private fun updateTip(result: CheckVersionJson) {
@@ -53,7 +33,6 @@ class VersionViewModel : BaseViewModel() {
             )
         updateLiveData.postValue(versionUpData)
     }
-
 
     private fun getDescription(list: List<SoftConfigOtherTypeVO>?): String {
         list?.forEach {

@@ -32,13 +32,11 @@ import org.greenrobot.eventbus.ThreadMode
 import java.util.Calendar
 import androidx.recyclerview.widget.RecyclerView as AndroidRecyclerView
 
-
 class IRMonitorHistoryFragment : Fragment() {
     private val adapter = MyAdapter(ArrayList())
 
     private val viewModel: IRMonitorViewModel by viewModels()
 
-    // findViewById declarations
     private lateinit var recyclerView: AndroidRecyclerView
 
     override fun onCreateView(
@@ -57,7 +55,6 @@ class IRMonitorHistoryFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize findViewById
         recyclerView = view.findViewById(R.id.recycler_view)
 
         adapter.loadMoreModule.loadMoreView = CommLoadMoreView()
@@ -87,25 +84,22 @@ class IRMonitorHistoryFragment : Fragment() {
         adapter.isUseEmpty = true
         viewModel.recordListLD.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
-                if (!adapter.hasEmptyView())
-                    {
-                        adapter.setEmptyView(R.layout.layout_empty)
-                    }
+                if (!adapter.hasEmptyView()) {
+                    adapter.setEmptyView(R.layout.layout_empty)
+                }
                 withContext(Dispatchers.IO) {
                     var lastTime = 0L
                     val nowCalendar = Calendar.getInstance()
                     val lastCalendar = Calendar.getInstance()
                     for (tmp in it) {
-                        if (lastTime == 0L)
-                            {
-                                tmp.showTitle = true
-                            }
+                        if (lastTime == 0L) {
+                            tmp.showTitle = true
+                        }
                         nowCalendar.timeInMillis = tmp.startTime
                         lastCalendar.timeInMillis = lastTime
-                        if (nowCalendar.get(Calendar.MONTH) != lastCalendar.get(Calendar.MONTH))
-                            {
-                                tmp.showTitle = true
-                            }
+                        if (nowCalendar.get(Calendar.MONTH) != lastCalendar.get(Calendar.MONTH)) {
+                            tmp.showTitle = true
+                        }
                         lastTime = tmp.startTime
                     }
                 }
@@ -131,13 +125,12 @@ class IRMonitorHistoryFragment : Fragment() {
 
     private class MyAdapter(dataList: MutableList<ThermalDao.Record>?) :
         BaseQuickAdapter<
-            ThermalDao.Record,
-            BaseViewHolder,
-            >(R.layout.item_monitory_history, dataList),
+                ThermalDao.Record,
+                BaseViewHolder,
+                >(R.layout.item_monitory_history, dataList),
         LoadMoreModule {
 
         var onItemClickListener: ((position: Int) -> Unit)? = null
-
 
         var onItemLongClickListener: ((position: Int) -> Unit)? = null
 
@@ -153,7 +146,6 @@ class IRMonitorHistoryFragment : Fragment() {
             val month = calendar.get(Calendar.MONTH) + 1
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            // Use findViewById for views
             val groupTitle = holder.itemView.findViewById<View>(R.id.group_title)
             val viewLineTop = holder.itemView.findViewById<View>(R.id.view_line_top)
             val tvDate = holder.itemView.findViewById<View>(R.id.tv_date)
@@ -176,7 +168,8 @@ class IRMonitorHistoryFragment : Fragment() {
 
             (tvDate as? android.widget.TextView)?.text = "$year-$month"
             (tvTime as? android.widget.TextView)?.text = "$month-$day"
-            (tvDuration as? android.widget.TextView)?.text = TimeTool.showVideoTime(record.duration * 1000L)
+            (tvDuration as? android.widget.TextView)?.text =
+                TimeTool.showVideoTime(record.duration * 1000L)
             when (record.type) {
                 "point" -> (tvType as? android.widget.TextView)?.setText(R.string.thermal_point)
                 "line" -> (tvType as? android.widget.TextView)?.setText(R.string.thermal_line)

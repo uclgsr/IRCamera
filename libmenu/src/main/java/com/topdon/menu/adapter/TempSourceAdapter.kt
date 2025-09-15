@@ -6,7 +6,6 @@ import androidx.annotation.StringRes
 import com.topdon.lib.core.R
 import com.topdon.menu.R as MenuR
 
-
 @SuppressLint("NotifyDataSetChanged")
 internal class TempSourceAdapter : BaseMenuAdapter() {
 
@@ -18,14 +17,25 @@ internal class TempSourceAdapter : BaseMenuAdapter() {
             }
         }
 
-
     var onTempSourceListener: ((code: Int) -> Unit)? = null
 
     private val dataArray: Array<Data> =
         arrayOf(
-            Data(R.string.main_tab_second_dynamic_recognition, MenuR.drawable.selector_menu2_source_1_auto, 0),
-            Data(R.string.main_tab_second_high_temperature_source, MenuR.drawable.selector_menu2_source_2_high, 1),
-            Data(R.string.main_tab_second_low_temperature_source, MenuR.drawable.selector_menu2_source_3_low, 2),
+            Data(
+                R.string.main_tab_second_dynamic_recognition,
+                MenuR.drawable.selector_menu2_source_1_auto,
+                0
+            ),
+            Data(
+                R.string.main_tab_second_high_temperature_source,
+                MenuR.drawable.selector_menu2_source_2_high,
+                1
+            ),
+            Data(
+                R.string.main_tab_second_low_temperature_source,
+                MenuR.drawable.selector_menu2_source_3_low,
+                2
+            ),
         )
 
     override fun onBindViewHolder(
@@ -44,7 +54,6 @@ internal class TempSourceAdapter : BaseMenuAdapter() {
     }
 
     override fun getItemCount(): Int = dataArray.size
-
 
     data class Data(
         @StringRes val stringId: Int,

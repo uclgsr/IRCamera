@@ -26,7 +26,6 @@ import com.github.gzuliyujiang.wheelpicker.widget.NumberWheelLayout;
 import com.github.gzuliyujiang.wheelview.contract.WheelFormatter;
 import com.github.gzuliyujiang.wheelview.widget.WheelView;
 
-
 @SuppressWarnings("unused")
 public class NumberPicker extends ModalDialog {
     protected NumberWheelLayout wheelLayout;
@@ -98,4 +97,3 @@ public class NumberPicker extends ModalDialog {
     }
 
 }
-

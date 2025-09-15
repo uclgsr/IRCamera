@@ -31,7 +31,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-
 class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding>() {
     private lateinit var adapter: SessionAdapter
     private lateinit var sessionManager: SessionManager
@@ -62,7 +61,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
     }
 
     private fun initializeViews() {
-        // Setup toolbar
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Session Manager"
     }
@@ -86,7 +85,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
     }
 
     private fun setupSearchAndFilter() {
-        // Setup search functionality
+
         binding.searchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
@@ -101,7 +100,6 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             },
         )
 
-        // Setup filter spinner
         val filterOptions = arrayOf("All Sessions", "Recent", "Completed", "With Data")
         val spinnerAdapter =
             ArrayAdapter(
@@ -124,7 +122,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    // Do nothing
+
                 }
             }
     }
@@ -136,7 +134,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             try {
                 val loadedSessions =
                     withContext(Dispatchers.IO) {
-                        // Load from SessionManager and also scan for historical sessions
+
                         val activeSessions = sessionManager.getActiveSessions()
                         val historicalSessions = loadHistoricalSessions()
 
@@ -162,7 +160,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             val historicalSessions = mutableListOf<SessionInfo>()
 
             try {
-                // Scan for session directories in external storage
+
                 val baseDir = File(getExternalFilesDir(null), "recordings")
                 if (baseDir.exists() && baseDir.isDirectory) {
                     baseDir.listFiles()?.forEach { sessionDir ->
@@ -194,7 +192,6 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                 startTime = sessionDir.lastModified(),
             )
 
-        // Parse metadata if available
         if (metadataFile.exists()) {
             try {
                 metadataFile.readLines().forEach { line ->
@@ -206,7 +203,9 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                             "participantId" -> sessionInfo.participantId = value.trim()
                             "studyName" -> sessionInfo.studyName = value.trim()
                             "endTime" -> sessionInfo.endTime = value.trim().toLongOrNull()
-                            "sampleCount" -> sessionInfo.sampleCount = value.trim().toLongOrNull() ?: 0
+                            "sampleCount" -> sessionInfo.sampleCount =
+                                value.trim().toLongOrNull() ?: 0
+
                             else -> sessionInfo.metadata[key.trim()] = value.trim()
                         }
                     }
@@ -216,7 +215,6 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             }
         }
 
-        // Check for available data files
         sessionInfo.hasGSRData = File(sessionDir, "gsr_data.csv").exists()
         sessionInfo.hasRGBData = File(sessionDir, "rgb_video.mp4").exists()
         sessionInfo.hasThermalData = File(sessionDir, "thermal_video.mp4").exists()
@@ -233,8 +231,8 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             } else {
                 sessions.filter { session ->
                     session.sessionId.contains(query, ignoreCase = true) ||
-                        session.participantId?.contains(query, ignoreCase = true) == true ||
-                        session.studyName?.contains(query, ignoreCase = true) == true
+                            session.participantId?.contains(query, ignoreCase = true) == true ||
+                            session.studyName?.contains(query, ignoreCase = true) == true
                 }
             }
 
@@ -244,7 +242,8 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
     }
 
     private fun filterSessionsByType(filterIndex: Int) {
-        val baseList = if (binding.searchView.query.isNullOrEmpty()) sessions else filteredSessions.toList()
+        val baseList =
+            if (binding.searchView.query.isNullOrEmpty()) sessions else filteredSessions.toList()
 
         filteredSessions.clear()
 
@@ -286,8 +285,8 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             .setTitle("Delete Session")
             .setMessage(
                 "Are you sure you want to delete session '${session.sessionId}'?\n\n" +
-                    "This will permanently remove all associated data files including " +
-                    "GSR recordings, videos, and metadata.",
+                        "This will permanently remove all associated data files including " +
+                        "GSR recordings, videos, and metadata.",
             )
             .setPositiveButton("Delete") { _, _ ->
                 deleteSession(session)
@@ -305,18 +304,21 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                     }
 
                 if (success) {
-                    // Remove from active sessions if present
+
                     if (sessionManager.isSessionActive(session.sessionId)) {
                         sessionManager.completeSession(session.sessionId)
                     }
 
-                    // Remove from local lists
                     sessions.remove(session)
                     filteredSessions.remove(session)
                     adapter.notifyDataSetChanged()
                     updateEmptyView()
 
-                    Toast.makeText(this@SessionManagerActivity, "Session deleted successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@SessionManagerActivity,
+                        "Session deleted successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     Log.i(TAG, "Session deleted: ${session.sessionId}")
                 } else {
                     showError("Failed to delete session files")
@@ -331,13 +333,12 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
     private suspend fun deleteSessionFiles(session: SessionInfo): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                // Delete session directory and all contents
+
                 val sessionDir = File(getExternalFilesDir(null), "recordings/${session.sessionId}")
                 if (sessionDir.exists()) {
                     sessionDir.deleteRecursively()
                 }
 
-                // Also check alternative directory structures
                 val altSessionDir = File(getExternalFilesDir(null), session.sessionId)
                 if (altSessionDir.exists()) {
                     altSessionDir.deleteRecursively()
@@ -352,7 +353,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
     }
 
     private fun exportSession(session: SessionInfo) {
-        // Launch session export functionality
+
         SessionExportActivity.startActivity(this, session.sessionId)
     }
 
@@ -366,7 +367,6 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
         return true
     }
 }
-
 
 class SessionAdapter(
     private val context: Context,
@@ -401,15 +401,12 @@ class SessionAdapter(
     ) {
         val session = sessions[position]
 
-        // Title: Session ID or participant name
         holder.titleText.text = session.participantId ?: session.sessionId
 
-        // Subtitle: Study name and date
         val studyText = session.studyName ?: "Unnamed Study"
         val dateText = dateFormatter.format(Date(session.startTime))
         holder.subtitleText.text = "$studyText • $dateText"
 
-        // Status
         val statusText =
             if (session.isActive()) {
                 "🟢 Active"
@@ -426,7 +423,6 @@ class SessionAdapter(
             }
         holder.statusText.text = statusText
 
-        // Data types available
         val dataTypes = mutableListOf<String>()
         if (session.hasGSRData) dataTypes.add("GSR")
         if (session.hasRGBData) dataTypes.add("RGB")
@@ -439,7 +435,6 @@ class SessionAdapter(
                 "📊 No data files found"
             }
 
-        // Click handlers
         holder.cardView.setOnClickListener { onSessionClick(session) }
         holder.deleteButton.setOnClickListener { onSessionDelete(session) }
         holder.exportButton.setOnClickListener { onSessionExport(session) }

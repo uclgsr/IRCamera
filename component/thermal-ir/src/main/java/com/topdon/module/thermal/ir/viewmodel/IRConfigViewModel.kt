@@ -10,17 +10,14 @@ import com.topdon.module.thermal.ir.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 class IRConfigViewModel(application: Application) : AndroidViewModel(application) {
     val configLiveData = SingleLiveEvent<ModelBean>()
-
 
     fun getConfig(isTC007: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             configLiveData.postValue(ConfigRepository.read(isTC007))
         }
     }
-
 
     fun updateDefaultEnvironment(
         isTC007: Boolean,
@@ -34,7 +31,6 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-
     fun updateDefaultDistance(
         isTC007: Boolean,
         distance: Float,
@@ -47,7 +43,6 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-
     fun updateDefaultRadiation(
         isTC007: Boolean,
         radiation: Float,
@@ -59,7 +54,6 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
             configLiveData.postValue(modelBean)
         }
     }
-
 
     fun addConfig(isTC007: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -78,7 +72,10 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    /**
 
+
+     */
     fun checkConfig(
         isTC007: Boolean,
         id: Int,
@@ -94,7 +91,10 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    /**
 
+
+     */
     fun deleteConfig(
         isTC007: Boolean,
         id: Int,
@@ -114,7 +114,6 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
                 }
             }
 
-//BUG 28055 提的问题，删除后要把后面名称往前补，虽然实际使用非常怪，先按 BUG 改吧
             if (removeAt < modelBean.myselfModel.size) {
                 for (i in removeAt until modelBean.myselfModel.size) {
                     val dataBean = modelBean.myselfModel[i]
@@ -127,7 +126,6 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
             configLiveData.postValue(modelBean)
         }
     }
-
 
     fun updateCustom(
         isTC007: Boolean,

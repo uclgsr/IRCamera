@@ -17,17 +17,33 @@ import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.lib.core.tools.UnitTools
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.report.bean.*
+import com.topdon.module.thermal.ir.report.bean.ImageTempBean
+import com.topdon.module.thermal.ir.report.bean.ReportBean
+import com.topdon.module.thermal.ir.report.bean.ReportConditionBean
+import com.topdon.module.thermal.ir.report.bean.ReportIRBean
+import com.topdon.module.thermal.ir.report.bean.ReportInfoBean
+import com.topdon.module.thermal.ir.report.bean.ReportTempBean
+import com.topdon.module.thermal.ir.report.bean.SoftwareInfo
 import com.topdon.module.thermal.ir.report.view.ReportIRInputView
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+/**
 
-// Legacy ARouter route annotation - now using NavigationManager
+ *
+
+
+
+
+
+
+
+ */
+
 
 class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
-    // View references using findViewById with lazy initialization
+
     private val tvAddImage: TextView by lazy { findViewById(R.id.tv_add_image) }
     private val tvPreview: TextView by lazy { findViewById(R.id.tv_preview) }
     private val scrollView: ScrollView by lazy { findViewById(R.id.scroll_view) }
@@ -49,23 +65,21 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
     private val reportTempViewRect4: ReportIRInputView by lazy { findViewById(R.id.report_temp_view_rect4) }
     private val reportTempViewRect5: ReportIRInputView by lazy { findViewById(R.id.report_temp_view_rect5) }
 
-
     private var reportIRList: ArrayList<ReportIRBean> = ArrayList(0)
 
-
     private var currentFilePath: String = ""
-
 
     private var imageTempBean: ImageTempBean? = null
 
     override fun initContentView() = R.layout.activity_report_create_second
 
     override fun initView() {
-        // Views are now initialized using lazy properties - no manual findViewById needed
+
 
         currentFilePath = intent.getStringExtra(ExtraKeyConfig.FILE_ABSOLUTE_PATH)!!
         imageTempBean = intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN)
-        reportIRList = intent.getParcelableArrayListExtra(ExtraKeyConfig.REPORT_IR_LIST) ?: ArrayList(10)
+        reportIRList =
+            intent.getParcelableArrayListExtra(ExtraKeyConfig.REPORT_IR_LIST) ?: ArrayList(10)
 
         refreshImg(currentFilePath)
         refreshData(imageTempBean)
@@ -86,10 +100,13 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         lifecycleScope.launch {
             val drawable = GlideLoader.getDrawable(this@ReportCreateSecondActivity, absolutePath)
             val isLand = (drawable?.intrinsicWidth ?: 0) > (drawable?.intrinsicHeight ?: 0)
-            val width = (ScreenUtil.getScreenWidth(this@ReportCreateSecondActivity) * (if (isLand) 234 else 175) / 375f).toInt()
+            val width =
+                (ScreenUtil.getScreenWidth(this@ReportCreateSecondActivity) * (if (isLand) 234 else 175) / 375f).toInt()
             val layoutParams = ivImage.layoutParams
             layoutParams.width = width
-            layoutParams.height = (width * (drawable?.intrinsicHeight ?: 0).toFloat() / (drawable?.intrinsicWidth ?: 1)).toInt()
+            layoutParams.height =
+                (width * (drawable?.intrinsicHeight ?: 0).toFloat() / (drawable?.intrinsicWidth
+                    ?: 1)).toInt()
             ivImage.layoutParams = layoutParams
             ivImage.setImageDrawable(drawable)
         }
@@ -174,28 +191,44 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                 }
                 val reportIRBeanList = ArrayList<ReportIRBean>(reportIRList)
                 reportIRBeanList.add(buildReportIr(currentFilePath))
-                val reportInfo = intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
-                val reportCondition = intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
+                val reportInfo =
+                    intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
+                val reportCondition =
+                    intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
                 if (reportInfo != null && reportCondition != null) {
                     NavigationManager.getInstance()
                         .build(RouterConfig.REPORT_PICK_IMG)
-                        .withBoolean(ExtraKeyConfig.IS_TC007, intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false))
+                        .withBoolean(
+                            ExtraKeyConfig.IS_TC007,
+                            intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
+                        )
                         .withParcelable(ExtraKeyConfig.REPORT_INFO, reportInfo)
                         .withParcelable(ExtraKeyConfig.REPORT_CONDITION, reportCondition)
                         .withParcelableArrayList(ExtraKeyConfig.REPORT_IR_LIST, reportIRBeanList)
                         .navigation(this)
                 }
             }
+
             tvPreview -> { // 预览
                 val appLanguage = ConstantLanguages.ENGLISH
                 val sdkVersion = "1.2.8_23050619"
-                val reportInfoBean: ReportInfoBean? = intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO)
-                val conditionBean: ReportConditionBean? = intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION)
+                val reportInfoBean: ReportInfoBean? =
+                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO)
+                val conditionBean: ReportConditionBean? =
+                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION)
                 val reportIRBeanList = ArrayList<ReportIRBean>(reportIRList)
                 reportIRBeanList.add(buildReportIr(currentFilePath))
-                val reportBean = ReportBean(SoftwareInfo(appLanguage, sdkVersion), reportInfoBean!!, conditionBean!!, reportIRBeanList)
+                val reportBean = ReportBean(
+                    SoftwareInfo(appLanguage, sdkVersion),
+                    reportInfoBean!!,
+                    conditionBean!!,
+                    reportIRBeanList
+                )
                 NavigationManager.getInstance().build(RouterConfig.REPORT_PREVIEW_SECOND)
-                    .withBoolean(ExtraKeyConfig.IS_TC007, intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false))
+                    .withBoolean(
+                        ExtraKeyConfig.IS_TC007,
+                        intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
+                    )
                     .withParcelable(ExtraKeyConfig.REPORT_BEAN, reportBean)
                     .navigation(this)
             }
@@ -206,12 +239,22 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         val full: ReportTempBean? =
             if (imageTempBean?.full != null) {
                 ReportTempBean(
-                    if ((reportTempViewFull as? ReportIRInputView)?.getMaxInput()?.isNotEmpty() == true) (reportTempViewFull as ReportIRInputView).getMaxInput() + UnitTools.showUnit() else "",
-                    if ((reportTempViewFull as? ReportIRInputView)?.isSwitchMaxCheck() == true && (reportTempViewFull as ReportIRInputView).getMaxInput().isNotEmpty()) 1 else 0,
-                    if ((reportTempViewFull as? ReportIRInputView)?.getMinInput()?.isNotEmpty() == true) (reportTempViewFull as ReportIRInputView).getMinInput() + UnitTools.showUnit() else "",
-                    if ((reportTempViewFull as? ReportIRInputView)?.isSwitchMinCheck() == true && (reportTempViewFull as ReportIRInputView).getMinInput().isNotEmpty()) 1 else 0,
+                    if ((reportTempViewFull as? ReportIRInputView)?.getMaxInput()
+                            ?.isNotEmpty() == true
+                    ) (reportTempViewFull as ReportIRInputView).getMaxInput() + UnitTools.showUnit() else "",
+                    if ((reportTempViewFull as? ReportIRInputView)?.isSwitchMaxCheck() == true && (reportTempViewFull as ReportIRInputView).getMaxInput()
+                            .isNotEmpty()
+                    ) 1 else 0,
+                    if ((reportTempViewFull as? ReportIRInputView)?.getMinInput()
+                            ?.isNotEmpty() == true
+                    ) (reportTempViewFull as ReportIRInputView).getMinInput() + UnitTools.showUnit() else "",
+                    if ((reportTempViewFull as? ReportIRInputView)?.isSwitchMinCheck() == true && (reportTempViewFull as ReportIRInputView).getMinInput()
+                            .isNotEmpty()
+                    ) 1 else 0,
                     (reportTempViewFull as? ReportIRInputView)?.getExplainInput() ?: "",
-                    if ((reportTempViewFull as? ReportIRInputView)?.isSwitchExplainCheck() == true && (reportTempViewFull as ReportIRInputView).getExplainInput().isNotEmpty()) 1 else 0,
+                    if ((reportTempViewFull as? ReportIRInputView)?.isSwitchExplainCheck() == true && (reportTempViewFull as ReportIRInputView).getExplainInput()
+                            .isNotEmpty()
+                    ) 1 else 0,
                 )
             } else {
                 null
@@ -223,7 +266,10 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         return ReportIRBean("", filePath, full, pointList, lienList, rectList)
     }
 
+    /**
 
+
+     */
     private fun buildReportTempBeanList(type: Int): ArrayList<ReportTempBean> {
         val size =
             when (type) {
@@ -244,6 +290,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                             else -> reportTempViewPoint5
                         }
                     }
+
                     2 -> { // 线
                         when (i) {
                             0 -> reportTempViewLine1
@@ -253,6 +300,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                             else -> reportTempViewLine5
                         }
                     }
+
                     else -> { // 面
                         when (i) {
                             0 -> reportTempViewRect1
@@ -264,21 +312,41 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
             val reportTempBean =
                 if (type == 1) { // 点的数据封装不太一样
                     ReportTempBean(
-                        if ((reportTempView as? ReportIRInputView)?.getMaxInput()?.isNotEmpty() == true) (reportTempView as ReportIRInputView).getMaxInput() + UnitTools.showUnit() else "",
-                        if ((reportTempView as? ReportIRInputView)?.isSwitchMaxCheck() == true && (reportTempView as ReportIRInputView).getMaxInput().isNotEmpty()) 1 else 0,
+                        if ((reportTempView as? ReportIRInputView)?.getMaxInput()
+                                ?.isNotEmpty() == true
+                        ) (reportTempView as ReportIRInputView).getMaxInput() + UnitTools.showUnit() else "",
+                        if ((reportTempView as? ReportIRInputView)?.isSwitchMaxCheck() == true && (reportTempView as ReportIRInputView).getMaxInput()
+                                .isNotEmpty()
+                        ) 1 else 0,
                         (reportTempView as? ReportIRInputView)?.getExplainInput() ?: "",
-                        if ((reportTempView as? ReportIRInputView)?.isSwitchExplainCheck() == true && (reportTempView as ReportIRInputView).getExplainInput().isNotEmpty()) 1 else 0,
+                        if ((reportTempView as? ReportIRInputView)?.isSwitchExplainCheck() == true && (reportTempView as ReportIRInputView).getExplainInput()
+                                .isNotEmpty()
+                        ) 1 else 0,
                     )
                 } else {
                     ReportTempBean(
-                        if ((reportTempView as? ReportIRInputView)?.getMaxInput()?.isNotEmpty() == true) (reportTempView as ReportIRInputView).getMaxInput() + UnitTools.showUnit() else "",
-                        if ((reportTempView as? ReportIRInputView)?.isSwitchMaxCheck() == true && (reportTempView as ReportIRInputView).getMaxInput().isNotEmpty()) 1 else 0,
-                        if ((reportTempView as? ReportIRInputView)?.getMinInput()?.isNotEmpty() == true) (reportTempView as ReportIRInputView).getMinInput() + UnitTools.showUnit() else "",
-                        if ((reportTempView as? ReportIRInputView)?.isSwitchMinCheck() == true && (reportTempView as ReportIRInputView).getMinInput().isNotEmpty()) 1 else 0,
+                        if ((reportTempView as? ReportIRInputView)?.getMaxInput()
+                                ?.isNotEmpty() == true
+                        ) (reportTempView as ReportIRInputView).getMaxInput() + UnitTools.showUnit() else "",
+                        if ((reportTempView as? ReportIRInputView)?.isSwitchMaxCheck() == true && (reportTempView as ReportIRInputView).getMaxInput()
+                                .isNotEmpty()
+                        ) 1 else 0,
+                        if ((reportTempView as? ReportIRInputView)?.getMinInput()
+                                ?.isNotEmpty() == true
+                        ) (reportTempView as ReportIRInputView).getMinInput() + UnitTools.showUnit() else "",
+                        if ((reportTempView as? ReportIRInputView)?.isSwitchMinCheck() == true && (reportTempView as ReportIRInputView).getMinInput()
+                                .isNotEmpty()
+                        ) 1 else 0,
                         (reportTempView as? ReportIRInputView)?.getExplainInput() ?: "",
-                        if ((reportTempView as? ReportIRInputView)?.isSwitchExplainCheck() == true && (reportTempView as ReportIRInputView).getExplainInput().isNotEmpty()) 1 else 0,
-                        if ((reportTempView as? ReportIRInputView)?.getAverageInput()?.isNotEmpty() == true) (reportTempView as ReportIRInputView).getAverageInput() + UnitTools.showUnit() else "",
-                        if ((reportTempView as? ReportIRInputView)?.isSwitchAverageCheck() == true && (reportTempView as ReportIRInputView).getAverageInput().isNotEmpty()) 1 else 0,
+                        if ((reportTempView as? ReportIRInputView)?.isSwitchExplainCheck() == true && (reportTempView as ReportIRInputView).getExplainInput()
+                                .isNotEmpty()
+                        ) 1 else 0,
+                        if ((reportTempView as? ReportIRInputView)?.getAverageInput()
+                                ?.isNotEmpty() == true
+                        ) (reportTempView as ReportIRInputView).getAverageInput() + UnitTools.showUnit() else "",
+                        if ((reportTempView as? ReportIRInputView)?.isSwitchAverageCheck() == true && (reportTempView as ReportIRInputView).getAverageInput()
+                                .isNotEmpty()
+                        ) 1 else 0,
                     )
                 }
             resultList.add(reportTempBean)

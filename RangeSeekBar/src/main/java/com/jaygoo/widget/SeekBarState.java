@@ -1,6 +1,5 @@
 package com.jaygoo.widget;
 
-
 public class SeekBarState {
     public String indicatorText;
     public float value; //now progress value

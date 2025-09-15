@@ -13,22 +13,17 @@ import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
-
 public abstract class DataRenderer extends Renderer {
-
 
     protected ChartAnimator mAnimator;
 
-
     protected Paint mRenderPaint;
-
 
     protected Paint mHighlightPaint;
 
     protected Paint mHighlightDotPaint;
 
     protected Paint mDrawPaint;
-
 
     protected Paint mValuePaint;
 
@@ -58,26 +53,22 @@ public abstract class DataRenderer extends Renderer {
     }
 
     protected boolean isDrawingValuesAllowed(ChartInterface chart) {
-        //TODO Attempt to invoke virtual method 'int com.github.mikephil.charting.data.ChartData.getEntryCount()' on a null object reference
+
         return chart.getData().getEntryCount() < chart.getMaxVisibleCount()
                 * mViewPortHandler.getScaleX();
     }
-
 
     public Paint getPaintValues() {
         return mValuePaint;
     }
 
-
     public Paint getPaintHighlight() {
         return mHighlightPaint;
     }
 
-
     public Paint getPaintRender() {
         return mRenderPaint;
     }
-
 
     protected void applyValueTextStyle(IDataSet set) {
 
@@ -85,21 +76,15 @@ public abstract class DataRenderer extends Renderer {
         mValuePaint.setTextSize(set.getValueTextSize());
     }
 
-
     public abstract void initBuffers();
-
 
     public abstract void drawData(Canvas c);
 
-
     public abstract void drawValues(Canvas c);
-
 
     public abstract void drawValue(Canvas c, String valueText, float x, float y, int color);
 
-
     public abstract void drawExtras(Canvas c);
-
 
     public abstract void drawHighlighted(Canvas c, Highlight[] indices);
 }

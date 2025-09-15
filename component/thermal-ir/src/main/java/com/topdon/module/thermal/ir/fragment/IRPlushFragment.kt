@@ -2,17 +2,20 @@ package com.topdon.module.thermal.ir.fragment
 
 import android.graphics.Bitmap
 import android.view.SurfaceView
-import android.view.View
 import com.infisense.usbdual.Const
 import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi
 import com.infisense.usbir.view.TemperatureView
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.BaseIRPlushFragment
 
-
+/**
+ * des:
+ * author: CaiSongL
+ * date: 2024/9/3 11:43
+ **/
 
 class IRPlushFragment : BaseIRPlushFragment() {
-    // findViewById declarations using proper view reference in onViewCreated
+
     private lateinit var dualTextureViewNativeCamera: SurfaceView
     private lateinit var temperatureView: TemperatureView
 
@@ -21,7 +24,7 @@ class IRPlushFragment : BaseIRPlushFragment() {
         savedInstanceState: android.os.Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        // Initialize findViewById in onViewCreated
+
         dualTextureViewNativeCamera = view.findViewById(R.id.dualTextureViewNativeCamera)
         temperatureView = view.findViewById(R.id.temperature_view)
     }
@@ -64,7 +67,7 @@ class IRPlushFragment : BaseIRPlushFragment() {
         super.onDestroy()
     }
 
-    fun getBitmap(): Bitmap?  {
+    fun getBitmap(): Bitmap? {
         return dualView?.scaledBitmap
     }
 }

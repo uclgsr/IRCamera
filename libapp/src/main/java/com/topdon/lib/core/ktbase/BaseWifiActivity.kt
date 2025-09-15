@@ -27,7 +27,7 @@ abstract class BaseWifiActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (Build.VERSION.SDK_INT >= 29) {
-            // Android10 及以上
+
             NetWorkUtils.switchNetwork(true)
         }
         super.onCreate(savedInstanceState)

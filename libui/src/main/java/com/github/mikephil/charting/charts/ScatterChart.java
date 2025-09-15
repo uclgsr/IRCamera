@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.charts;
 
 import android.content.Context;
@@ -7,7 +6,6 @@ import android.util.AttributeSet;
 import com.github.mikephil.charting.data.ScatterData;
 import com.github.mikephil.charting.interfaces.dataprovider.ScatterDataProvider;
 import com.github.mikephil.charting.renderer.ScatterChartRenderer;
-
 
 public class ScatterChart extends BarLineChartBase<ScatterData> implements ScatterDataProvider {
 
@@ -38,7 +36,6 @@ public class ScatterChart extends BarLineChartBase<ScatterData> implements Scatt
         return mData;
     }
 
-
     public enum ScatterShape {
 
         SQUARE("SQUARE"),
@@ -55,13 +52,13 @@ public class ScatterChart extends BarLineChartBase<ScatterData> implements Scatt
             this.shapeIdentifier = shapeIdentifier;
         }
 
+        public static ScatterShape[] getAllDefaultShapes() {
+            return new ScatterShape[]{SQUARE, CIRCLE, TRIANGLE, CROSS, X, CHEVRON_UP, CHEVRON_DOWN};
+        }
+
         @Override
         public String toString() {
             return shapeIdentifier;
-        }
-
-        public static ScatterShape[] getAllDefaultShapes() {
-            return new ScatterShape[]{SQUARE, CIRCLE, TRIANGLE, CROSS, X, CHEVRON_UP, CHEVRON_DOWN};
         }
     }
 }

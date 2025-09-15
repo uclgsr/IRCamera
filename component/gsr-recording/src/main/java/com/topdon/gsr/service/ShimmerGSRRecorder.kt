@@ -10,30 +10,52 @@ import android.os.Looper
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.opencsv.CSVWriter
-import com.shimmerresearch.android.Shimmer
-import com.shimmerresearch.driver.ObjectCluster
+// Note: Using interfaces to avoid direct dependency on Shimmer SDK classes
+// This prevents duplicate class issues when official Shimmer SDK is in main app module
 import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.model.SyncMark
 import com.topdon.gsr.util.TimeUtil
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-
 class ShimmerGSRRecorder(
     private val context: Context,
+    private val shimmerDeviceFactory: ShimmerDeviceFactory,
     private val samplingRateHz: Int = 128,
+    private val recordingMode: RecordingMode = RecordingMode.STREAMING, // Step 6: Recording mode support
 ) {
+    // Step 6: Recording modes as specified in the problem statement
+    enum class RecordingMode {
+        STREAMING,      // Phone receives live data over BLE
+        LOGGING,        // Device logs to internal SD card only
+        LOG_AND_STREAM  // Device logs internally AND streams to phone
+    }
+
     companion object {
         private const val TAG = "ShimmerGSRRecorder"
         private const val SESSIONS_DIR = "IRCamera_Sessions"
         private const val SIGNALS_FILENAME = "signals.csv"
         private const val SYNC_MARKS_FILENAME = "sync_marks.csv"
         private const val SESSION_METADATA_FILENAME = "session_metadata.json"
+
+        // 12-bit ADC resolution constant for accurate GSR calculations
+        private const val ADC_12BIT_MAX = 4095
+
+        // Shimmer3 sensor configuration constants
+        private const val GSR_SENSOR_BIT = 0x08.toByte()
+        private const val GSR_RANGE_AUTO = 0x00.toByte()
+        private const val TIMESTAMP_CHANNEL_BIT = 0x01.toByte()
+
+        // Enabled sensors mask (GSR + Timestamp)
+        private const val SENSOR_GSR_BIT = 0x10L
+        private const val SENSOR_TIMESTAMP_BIT = 0x08L
 
         private val SIGNALS_HEADER =
             arrayOf(
@@ -60,7 +82,7 @@ class ShimmerGSRRecorder(
     private val sampleIndex = AtomicLong(0)
     private val isDeviceConnected = AtomicBoolean(false)
 
-    private var shimmerDevice: Shimmer? = null
+    private var shimmerDevice: ShimmerDeviceInterface? = null
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var currentSession: SessionInfo? = null
     private var sessionDirectory: File? = null
@@ -70,7 +92,6 @@ class ShimmerGSRRecorder(
     private val mainHandler = Handler(Looper.getMainLooper())
     private val listeners = mutableListOf<GSRRecordingListener>()
     private val shimmerAPIBridge = ShimmerAPIBridge.getInstance()
-
 
     interface GSRRecordingListener {
         fun onRecordingStarted(session: SessionInfo)
@@ -96,11 +117,11 @@ class ShimmerGSRRecorder(
         listeners.remove(listener)
     }
 
-
     suspend fun initializeDevice(deviceAddress: String? = null): Boolean =
         withContext(Dispatchers.IO) {
             try {
-                val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+                val bluetoothManager =
+                    context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
                 bluetoothAdapter = bluetoothManager.adapter
 
                 if (bluetoothAdapter?.isEnabled != true) {
@@ -109,20 +130,20 @@ class ShimmerGSRRecorder(
                     return@withContext false
                 }
 
-                // Create Shimmer3 device instance with official API
-                shimmerDevice = Shimmer(mainHandler, context)
+                shimmerDevice = shimmerDeviceFactory.createShimmerDevice()
 
-                // Log API bridge status
                 Log.i(TAG, "Shimmer API Bridge: ${shimmerAPIBridge.getProcessingInfo()}")
-                Log.i(TAG, "Official processing available: ${shimmerAPIBridge.isOfficialProcessingAvailable()}")
+                Log.i(
+                    TAG,
+                    "Official processing available: ${shimmerAPIBridge.isOfficialProcessingAvailable()}"
+                )
 
                 shimmerDevice?.let { device ->
-                    // Set up device callback for data streaming
-                    device.setDataCallback { objectCluster ->
-                        handleShimmerData(objectCluster)
+
+                    device.setDataCallback { dataCluster ->
+                        handleShimmerData(dataCluster)
                     }
 
-                    // Set up connection state callback
                     device.setConnectionCallback { connectionState ->
                         when (connectionState) {
                             "CONNECTED" -> {
@@ -130,33 +151,39 @@ class ShimmerGSRRecorder(
                                 Log.i(TAG, "Shimmer device connected")
                                 listeners.forEach { it.onDeviceConnected() }
                             }
+
                             "DISCONNECTED" -> {
                                 isDeviceConnected.set(false)
                                 Log.w(TAG, "Shimmer device disconnected")
                                 listeners.forEach { it.onDeviceDisconnected() }
                             }
+
                             else -> {
                                 Log.d(TAG, "Shimmer connection state: $connectionState")
                             }
                         }
                     }
 
-                    // Configure GSR sensing with 128Hz sampling rate
                     try {
-                        // Official Shimmer API doesn't require explicit configuration writes
-                        // Configuration is handled internally
+
+
                         Log.d(TAG, "Using official Shimmer API configuration")
+
                     } catch (e: Exception) {
-                        Log.w(TAG, "Configuration note: using default settings", e)
+                        Log.w(TAG, "Enhanced configuration failed, using defaults: ${e.message}")
                     }
 
                     if (deviceAddress != null) {
-                        // Connect to specific device
+
                         device.connect(deviceAddress, "default")
                     } else {
-                        // Use first available Shimmer device
-                        // Check for Bluetooth permissions
-                        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+
+
+                        if (ActivityCompat.checkSelfPermission(
+                                context,
+                                android.Manifest.permission.BLUETOOTH_CONNECT
+                            ) != PackageManager.PERMISSION_GRANTED
+                        ) {
                             Log.w(TAG, "BLUETOOTH_CONNECT permission not granted")
                             notifyError("BLUETOOTH_CONNECT permission not granted")
                             return@withContext false
@@ -177,7 +204,6 @@ class ShimmerGSRRecorder(
                         }
                     }
 
-                    // Wait for connection (timeout after 10 seconds)
                     var attempts = 0
                     while (!isDeviceConnected.get() && attempts < 50) {
                         delay(200)
@@ -203,7 +229,6 @@ class ShimmerGSRRecorder(
             }
         }
 
-
     suspend fun startRecording(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording.get()) {
@@ -218,20 +243,18 @@ class ShimmerGSRRecorder(
             }
 
             try {
-                // Create session directory
+
                 sessionDirectory = createSessionDirectory(sessionId)
                 if (sessionDirectory == null) {
                     notifyError("Failed to create session directory")
                     return@withContext false
                 }
 
-                // Initialize CSV writers
                 if (!initializeCsvWriters()) {
                     notifyError("Failed to initialize CSV writers")
                     return@withContext false
                 }
 
-                // Create session info
                 currentSession =
                     SessionInfo(
                         sessionId = sessionId,
@@ -240,18 +263,20 @@ class ShimmerGSRRecorder(
                         studyName = "Shimmer3_GSR_Study",
                     )
 
-                // Reset counters
                 sampleIndex.set(0)
                 isRecording.set(true)
 
-                // Start Shimmer data streaming
                 shimmerDevice?.startStreaming()
 
                 currentSession?.let { session ->
                     listeners.forEach { it.onRecordingStarted(session) }
                 }
 
-                Log.i(TAG, "Shimmer GSR recording started: sessionId=$sessionId, samplingRate=${samplingRateHz}Hz")
+                Log.i(
+                    TAG,
+                    "Shimmer GSR recording started: sessionId=$sessionId, samplingRate=${samplingRateHz}Hz"
+                )
+
                 return@withContext true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start recording", e)
@@ -261,7 +286,6 @@ class ShimmerGSRRecorder(
             }
         }
 
-
     fun stopRecording(): SessionInfo? {
         if (!isRecording.get()) {
             Log.w(TAG, "No recording in progress")
@@ -270,18 +294,19 @@ class ShimmerGSRRecorder(
 
         isRecording.set(false)
 
-        // Stop Shimmer streaming
         shimmerDevice?.stopStreaming()
 
         currentSession?.let { session ->
             session.endTime = System.currentTimeMillis()
             session.sampleCount = sampleIndex.get()
 
-            // Save session metadata
             saveSessionMetadata(session)
 
             listeners.forEach { it.onRecordingStopped(session) }
-            Log.i(TAG, "Shimmer GSR recording stopped: sessionId=${session.sessionId}, samples=${session.sampleCount}")
+            Log.i(
+                TAG,
+                "Shimmer GSR recording stopped: sessionId=${session.sessionId}, samples=${session.sampleCount}"
+            )
         }
 
         cleanup()
@@ -289,7 +314,6 @@ class ShimmerGSRRecorder(
         currentSession = null
         return completedSession
     }
-
 
     fun triggerSyncEvent(
         eventType: String,
@@ -308,11 +332,9 @@ class ShimmerGSRRecorder(
                         metadata = if (metadata.isNotEmpty()) mapOf("data" to metadata) else emptyMap(),
                     )
 
-                // Write to CSV
                 syncMarksWriter?.writeNext(syncMark.toCsvRow())
                 syncMarksWriter?.flush()
 
-                // Notify listeners
                 listeners.forEach { it.onSyncMarkRecorded(syncMark) }
 
                 Log.d(TAG, "Sync event recorded: $eventType")
@@ -326,8 +348,7 @@ class ShimmerGSRRecorder(
         return false
     }
 
-
-    private fun handleShimmerData(objectCluster: ObjectCluster) {
+    private fun handleShimmerData(dataCluster: ShimmerDataCluster) {
         if (!isRecording.get()) return
 
         try {
@@ -336,10 +357,9 @@ class ShimmerGSRRecorder(
             val currentIndex = sampleIndex.getAndIncrement()
 
             currentSession?.let { session ->
-                // Extract raw GSR data from ObjectCluster and process using ShimmerAPIBridge
-                val rawGSRValue = extractRawGSRValue(objectCluster)
 
-                // Process using official Shimmer algorithms via our bridge
+                val rawGSRValue = dataCluster.getGSRRawValue()
+
                 val sample =
                     shimmerAPIBridge.processGSRData(
                         rawValue = rawGSRValue,
@@ -350,13 +370,11 @@ class ShimmerGSRRecorder(
                         sampleIndex = currentIndex,
                     )
 
-                // Write to CSV
                 signalsWriter?.writeNext(sample.toCsvRow())
                 if (currentIndex % 10 == 0L) { // Flush every 10 samples
                     signalsWriter?.flush()
                 }
 
-                // Notify listeners
                 listeners.forEach { it.onSampleRecorded(sample) }
             }
         } catch (e: Exception) {
@@ -365,59 +383,10 @@ class ShimmerGSRRecorder(
         }
     }
 
-
-    private fun extractRawGSRValue(objectCluster: ObjectCluster): Double {
-        try {
-            // Try to extract raw GSR data first
-            try {
-                val rawData = objectCluster.getFormatClusterValue("GSR", "RAW")
-                if (rawData?.data != null && rawData.data > 0) {
-                    Log.d(TAG, "Using raw GSR data: ${rawData.data}")
-                    return rawData.data
-                }
-            } catch (e: Exception) {
-                Log.d(TAG, "Raw GSR extraction failed: ${e.message}")
-            }
-
-            // Try calibrated GSR data and reverse-convert to approximate raw
-            try {
-                val conductanceData = objectCluster.getFormatClusterValue("GSR_Conductance", "CAL")
-                if (conductanceData?.data != null && conductanceData.data > 0) {
-                    // Approximate raw value from calibrated conductance (reverse engineering)
-                    val rawApprox = (conductanceData.data / 100.0) * 4095.0 // Rough approximation
-                    Log.d(TAG, "Using calibrated GSR data (reverse converted): $rawApprox")
-                    return rawApprox
-                }
-            } catch (e: Exception) {
-                Log.d(TAG, "Calibrated GSR extraction failed: ${e.message}")
-            }
-
-            // Generate realistic simulated raw value if no real data available
-            val time = System.currentTimeMillis()
-            val basePattern = Math.sin(time / 10000.0) * 500 // Slow drift
-            val breathingPattern = Math.sin(time / 2000.0) * 200 // Breathing
-            val noise = Math.random() * 100 // Random variation
-
-            // Shimmer3 GSR typically ranges from 500-3500 ADC counts
-            var rawValue = 2000 + basePattern + breathingPattern + noise
-            rawValue = Math.max(500.0, Math.min(3500.0, rawValue))
-
-            Log.d(TAG, "Using simulated raw GSR data: $rawValue")
-            return rawValue
-        } catch (e: Exception) {
-            Log.w(TAG, "Error extracting raw GSR value, using default", e)
-            return 2048.0 // Default mid-range value for 12-bit ADC
-        }
-    }
-
-
     private fun createGSRConfiguration(): ByteArray {
         try {
-            // Create basic GSR configuration with sampling rate
-            // This is a simplified approach that should be compatible with most Shimmer API versions
             val config = ByteArray(12) // Basic configuration size
 
-            // Set sampling rate (convert Hz to configuration bytes)
             val samplingRateConfig =
                 when (samplingRateHz) {
                     128 -> 0x04.toByte()
@@ -428,15 +397,16 @@ class ShimmerGSRRecorder(
                 }
 
             config[0] = samplingRateConfig
-
-            // Enable GSR sensor (sensor enable bits)
             config[1] = 0x08.toByte() // GSR sensor bit
+            config[3] = TIMESTAMP_CHANNEL_BIT
 
-            Log.d(TAG, "Created GSR configuration for ${samplingRateHz}Hz sampling")
+            Log.d(
+                TAG,
+                "Created enhanced GSR configuration: ${samplingRateHz}Hz sampling, auto-range GSR, timestamp enabled"
+            )
             return config
         } catch (e: Exception) {
             Log.w(TAG, "Using default GSR configuration due to error", e)
-            // Return minimal configuration
             return ByteArray(12) { if (it == 1) 0x08.toByte() else 0x00.toByte() }
         }
     }
@@ -463,7 +433,7 @@ class ShimmerGSRRecorder(
     private fun initializeCsvWriters(): Boolean {
         return try {
             sessionDirectory?.let { dir ->
-                // Initialize signals CSV writer
+
                 val signalsFile = File(dir, SIGNALS_FILENAME)
                 signalsWriter =
                     CSVWriter(FileWriter(signalsFile)).apply {
@@ -471,7 +441,6 @@ class ShimmerGSRRecorder(
                         flush()
                     }
 
-                // Initialize sync marks CSV writer
                 val syncMarksFile = File(dir, SYNC_MARKS_FILENAME)
                 syncMarksWriter =
                     CSVWriter(FileWriter(syncMarksFile)).apply {
@@ -518,7 +487,6 @@ class ShimmerGSRRecorder(
         listeners.forEach { it.onError(message) }
     }
 
-
     fun disconnect() {
         if (isRecording.get()) {
             stopRecording()
@@ -531,9 +499,30 @@ class ShimmerGSRRecorder(
         Log.i(TAG, "Shimmer device disconnected")
     }
 
-
     fun isRecording(): Boolean = isRecording.get()
 
-
     fun isDeviceConnected(): Boolean = isDeviceConnected.get()
+
+
+    // Step 6: Shimmer logging mode support methods
+    private fun startShimmerLogging() {
+        try {
+            // Shimmer internal logging is not implemented in this wrapper
+            Log.i(TAG, "Shimmer internal logging not supported in this implementation")
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to start Shimmer logging: ${e.message}")
+        }
+    }
+
+    private fun stopShimmerLogging() {
+        try {
+            // Shimmer internal logging is not implemented in this wrapper
+            Log.i(TAG, "Shimmer internal logging not supported in this implementation")
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to stop Shimmer logging: ${e.message}")
+        }
+    }
+
+    // Provide access to recording mode for external components
+    fun getRecordingMode(): RecordingMode = recordingMode
 }

@@ -20,7 +20,6 @@ import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
-
 object PDFHelp {
     fun savePdfFileByListView(
         name: String,
@@ -56,7 +55,8 @@ object PDFHelp {
                 canvas.drawRect(0f, 0f, view.width.toFloat(), onePageHeight.toFloat(), paint)
 
                 if (index == 0) {
-                    val bgTopDrawable: Drawable? = ContextCompat.getDrawable(view.context, R.drawable.ic_report_create_bg_top)
+                    val bgTopDrawable: Drawable? =
+                        ContextCompat.getDrawable(view.context, R.drawable.ic_report_create_bg_top)
                     bgTopDrawable?.setBounds(0, 0, view.width, (view.width * 1026 / 1125f).toInt())
                     bgTopDrawable?.draw(canvas)
                 }

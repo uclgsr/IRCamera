@@ -1,11 +1,13 @@
 package com.topdon.tc001
+
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.text.*
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.style.UnderlineSpan
 import android.view.View
 import com.csl.irCamera.R
@@ -14,7 +16,6 @@ import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.utils.Constants
 
-// Legacy ARouter route annotation - now using NavigationManager
 class MoreHelpActivity : BaseBindingActivity<ActivityMoreHelpBinding>() {
     private var connectionType: Int = 0
     private lateinit var wifiManager: WifiManager
@@ -52,7 +53,12 @@ class MoreHelpActivity : BaseBindingActivity<ActivityMoreHelpBinding>() {
             binding.disconnectTip2.visibility = View.VISIBLE
             binding.ivTvSetting.visibility = View.VISIBLE
             val spannable = SpannableStringBuilder(getString(R.string.ts004_disconnect_tips4))
-            spannable.setSpan(UnderlineSpan(), 0, getString(R.string.ts004_disconnect_tips4).length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannable.setSpan(
+                UnderlineSpan(),
+                0,
+                getString(R.string.ts004_disconnect_tips4).length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
             binding.ivTvSetting.text = spannable
         }
     }

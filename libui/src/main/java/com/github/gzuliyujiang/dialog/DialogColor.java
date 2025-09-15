@@ -13,12 +13,9 @@
 
 package com.github.gzuliyujiang.dialog;
 
-import android.graphics.Color;
-
 import androidx.annotation.ColorInt;
 
 import java.io.Serializable;
-
 
 public class DialogColor implements Serializable {
     private int contentBackgroundColor = 0xff3b3e44;

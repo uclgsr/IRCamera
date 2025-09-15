@@ -8,15 +8,11 @@ import com.github.mikephil.charting.utils.MPPointF;
 
 public interface IMarker {
 
-
     MPPointF getOffset();
-
 
     MPPointF getOffsetForDrawingAtPoint(float posX, float posY);
 
-
     void refreshContent(Entry e, Highlight highlight);
-
 
     void draw(Canvas canvas, float posX, float posY);
 }

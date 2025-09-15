@@ -7,7 +7,7 @@ import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 import com.topdon.lib.core.config.FileConfig.lineIrGalleryDir
-import java.io.*
+import java.io.File
 
 object ImageUtils {
 
@@ -21,12 +21,11 @@ object ImageUtils {
         return file.absolutePath
     }
 
-
     fun save(
         bitmap: Bitmap,
         isTC007: Boolean = false,
     ): String {
-        // 存储目录，用户可以自定义
+
         val dicName = if (isTC007) "TC007" else CommUtils.getAppName()
         val fileName = "${dicName}_${System.currentTimeMillis()}.jpg"
         val saveFile = ImageUtils.save2Album(bitmap, dicName, Bitmap.CompressFormat.JPEG)
@@ -38,14 +37,12 @@ object ImageUtils {
         }
     }
 
-
     fun saveImageToApp(bitmap: Bitmap): String {
         val saveFile = File(Utils.getApp().cacheDir, "PinP_${System.currentTimeMillis()}.jpg")
         ImageUtils.save(bitmap, saveFile, Bitmap.CompressFormat.JPEG)
         return saveFile.absolutePath
     }
 
-    // savedlite模组的原始文件
     fun saveLiteFrame(
         bs: ByteArray,
         capital: ByteArray,
@@ -64,7 +61,6 @@ object ImageUtils {
         }
     }
 
-    // saved原始文件
     fun saveFrame(
         bs: ByteArray,
         capital: ByteArray,
@@ -81,7 +77,6 @@ object ImageUtils {
             XLog.e("一帧图像saved异常: ${e.message}")
         }
     }
-
 
     fun saveOneFrameAGRB(
         bs: ByteArray,

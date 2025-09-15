@@ -44,12 +44,22 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import com.topdon.lib.core.R as LibR
 
+/**
 
-// Legacy ARouter route annotation - now using NavigationManager
+ *
+
+
+ *
+ * Created by LCG on 2024/4/18.
+ */
+
 class IRMainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityIrMainBinding
 
+    /**
 
+
+     */
     private var isTC007 = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +91,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.clIconMonitor.setOnClickListener(this)
         binding.clIconGallery.setOnClickListener(this)
-        // view_main_thermal.setOnClickListener(this) // Not found in view declarations, likely unused
+
         binding.clIconReport.setOnClickListener(this)
         binding.clIconMine.setOnClickListener(this)
 
@@ -90,7 +100,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-//        DeviceTools.isConnect(true)
+
         if (isTC007) {
             if (WebSocketProxy.getInstance().isTC007Connect()) {
                 NetWorkUtils.switchNetwork(false)
@@ -99,7 +109,8 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                     TC007Repository.syncTime()
                 }
                 if (SharedManager.isConnect07AutoOpen) {
-                    NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07).navigation(this)
+                    NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07)
+                        .navigation(this)
                 }
             } else {
                 binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
@@ -145,12 +156,12 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             binding.clIconMonitor -> { // 监控
                 binding.viewPage.setCurrentItem(0, false)
             }
+
             binding.clIconGallery -> { // 图库
                 checkStoragePermission()
             }
-//view_main_thermal -> {//首页 - Commented out as not in view declarations
-            //     binding.viewPage.setCurrentItem(2, false)
-            // }
+
+
             binding.clIconReport -> { // 报告
                 if (LMS.getInstance().isLogin) {
                     binding.viewPage.setCurrentItem(3, false)
@@ -163,13 +174,17 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             }
+
             binding.clIconMine -> { // 我的
                 binding.viewPage.setCurrentItem(4, false)
             }
         }
     }
 
+    /**
 
+
+     */
     private fun refreshTabSelect(index: Int) {
         binding.ivIconMonitor.isSelected = false
         binding.tvIconMonitor.isSelected = false
@@ -184,21 +199,23 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.ivIconMonitor.isSelected = true
                 binding.tvIconMonitor.isSelected = true
             }
+
             1 -> {
                 binding.ivIconGallery.isSelected = true
                 binding.tvIconGallery.isSelected = true
             }
+
             3 -> {
                 binding.ivIconReport.isSelected = true
                 binding.tvIconReport.isSelected = true
             }
+
             4 -> {
                 binding.ivIconMine.isSelected = true
                 binding.tvIconMine.isSelected = true
             }
         }
     }
-
 
     private fun showGuideDialog() {
         if (SharedManager.homeGuideStep == 0) { // 已看过或不再提示
@@ -224,6 +241,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     SharedManager.homeGuideStep = 2
                 }
+
                 2 -> {
                     binding.viewPage.setCurrentItem(2, false)
                     if (Build.VERSION.SDK_INT < 31) {
@@ -234,6 +252,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     SharedManager.homeGuideStep = 3
                 }
+
                 3 -> {
                     SharedManager.homeGuideStep = 0
                 }
@@ -250,11 +269,17 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
         guideDialog.show()
 
         if (Build.VERSION.SDK_INT >= 31) {
-            window?.decorView?.setRenderEffect(RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.MIRROR))
+            window?.decorView?.setRenderEffect(
+                RenderEffect.createBlurEffect(
+                    20f,
+                    20f,
+                    Shader.TileMode.MIRROR
+                )
+            )
         } else {
             lifecycleScope.launch {
-//interface切换及temperature监控历史列表load均需要时间，所以需要等待1000毫秒再去刷新背景
-//而若等待1000毫秒太过久，interface会非模糊1000毫秒，所以先刷新一次背景占位
+
+
                 delay(100)
                 guideDialog.blurBg(binding.clRoot)
             }
@@ -263,21 +288,19 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun checkStoragePermission() {
         val permissionList: List<String> =
-            if (this.applicationInfo.targetSdkVersion >= 34)
-                {
-                    listOf(
-                        Permission.READ_MEDIA_VIDEO,
-                        Permission.READ_MEDIA_IMAGES,
-                        Permission.WRITE_EXTERNAL_STORAGE,
-                    )
-                } else if (this.applicationInfo.targetSdkVersion >= 34)
-                {
-                    listOf(
-                        Permission.READ_MEDIA_VIDEO,
-                        Permission.READ_MEDIA_IMAGES,
-                        Permission.WRITE_EXTERNAL_STORAGE,
-                    )
-                } else if (this.applicationInfo.targetSdkVersion == 33) {
+            if (this.applicationInfo.targetSdkVersion >= 34) {
+                listOf(
+                    Permission.READ_MEDIA_VIDEO,
+                    Permission.READ_MEDIA_IMAGES,
+                    Permission.WRITE_EXTERNAL_STORAGE,
+                )
+            } else if (this.applicationInfo.targetSdkVersion >= 34) {
+                listOf(
+                    Permission.READ_MEDIA_VIDEO,
+                    Permission.READ_MEDIA_IMAGES,
+                    Permission.WRITE_EXTERNAL_STORAGE,
+                )
+            } else if (this.applicationInfo.targetSdkVersion == 33) {
                 listOf(
                     Permission.READ_MEDIA_VIDEO,
                     Permission.READ_MEDIA_IMAGES,
@@ -290,7 +313,12 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
         if (!XXPermissions.isGranted(this, permissionList)) {
             if (BaseApplication.instance.isDomestic()) {
                 TipDialog.Builder(this)
-                    .setMessage(getString(LibR.string.permission_request_storage_app, CommUtils.getAppName()))
+                    .setMessage(
+                        getString(
+                            LibR.string.permission_request_storage_app,
+                            CommUtils.getAppName()
+                        )
+                    )
                     .setCancelListener(LibR.string.app_cancel)
                     .setPositiveListener(LibR.string.app_confirm) {
                         initStoragePermission(permissionList)
@@ -304,13 +332,11 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
     private fun initStoragePermission(permissionList: List<String>) {
-        if (PermissionUtils.isVisualUser())
-            {
-                binding.viewPage.setCurrentItem(1, false)
-                return
-            }
+        if (PermissionUtils.isVisualUser()) {
+            binding.viewPage.setCurrentItem(1, false)
+            return
+        }
         XXPermissions.with(this)
             .permission(permissionList)
             .request(
@@ -329,7 +355,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-//拒绝授权并且不再提醒
+
                             TipDialog.Builder(this@IRMainActivity)
                                 .setTitleMessage(getString(LibR.string.app_tip))
                                 .setMessage(getString(LibR.string.app_album_content))
@@ -346,7 +372,8 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             )
     }
 
-    private class ViewPagerAdapter(val activity: FragmentActivity, val isTC007: Boolean) : FragmentStateAdapter(activity) {
+    private class ViewPagerAdapter(val activity: FragmentActivity, val isTC007: Boolean) :
+        FragmentStateAdapter(activity) {
         override fun getItemCount() = 5
 
         override fun createFragment(position: Int): Fragment {
@@ -354,7 +381,8 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                 return IRGalleryTabFragment().apply {
                     arguments =
                         Bundle().also {
-                            val dirType = if (isTC007) DirType.TC007.ordinal else DirType.LINE.ordinal
+                            val dirType =
+                                if (isTC007) DirType.TC007.ordinal else DirType.LINE.ordinal
                             it.putBoolean(ExtraKeyConfig.CAN_SWITCH_DIR, false)
                             it.putBoolean(ExtraKeyConfig.HAS_BACK_ICON, false)
                             it.putInt(ExtraKeyConfig.DIR_TYPE, dirType)
@@ -368,7 +396,8 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                         3 -> PDFListFragment()
                         else -> MoreFragment()
                     }
-                fragment.arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
+                fragment.arguments =
+                    Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
                 return fragment
             }
         }

@@ -10,10 +10,9 @@ import com.topdon.lib.core.db.entity.DirReport
 import com.topdon.lib.core.db.entity.HouseReport
 import com.topdon.lib.core.db.entity.ItemReport
 
-
 @Dao
 abstract class HouseReportDao {
-    
+
     @Transaction
     open fun insert(houseReport: HouseReport): Long {
         houseReport.id = insertReport(houseReport)

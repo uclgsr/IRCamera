@@ -10,131 +10,117 @@ import com.topdon.ble.util.BluetoothPermissionUtils;
 
 import java.util.List;
 
-
 public class UnifiedBleExample {
     private static final String TAG = "UnifiedBleExample";
-    
+
     private final Context context;
     private UnifiedBleManager unifiedBleManager;
-    
-    // Connected devices
+
     private UnifiedDevice shimmerGSRDevice;
     private UnifiedDevice topdonThermalDevice;
-    
+
     public UnifiedBleExample(@NonNull Context context) {
         this.context = context;
     }
-    
 
     public void startComprehensiveExample() {
         Log.i(TAG, "Starting comprehensive Shimmer Nordic and Topdon BLE example");
-        
-        // Initialize unified BLE manager
+
         unifiedBleManager = UnifiedBleManager.getInstance(context);
         if (!unifiedBleManager.initialize()) {
             Log.e(TAG, "Failed to initialize unified BLE manager");
             return;
         }
-        
-        // Start device discovery
+
         startDeviceDiscovery();
     }
-    
 
     private void startDeviceDiscovery() {
         Log.i(TAG, "Starting unified device discovery");
-        
+
         unifiedBleManager.startUnifiedDeviceDiscovery(new UnifiedBleManager.UnifiedScanListener() {
             @Override
             public void onShimmerDeviceFound(BluetoothDevice device, UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord) {
                 String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
                 String deviceAddress = BluetoothPermissionUtils.getDeviceAddress(context, device);
                 Log.i(TAG, "Found Shimmer device: " + deviceName + " (" + deviceAddress + ") Type: " + type + " RSSI: " + rssi);
-                
-                // Connect to first GSR device found
+
                 if (type == UnifiedBleManager.DeviceType.SHIMMER_GSR && shimmerGSRDevice == null) {
                     connectToShimmerGSRDevice(device);
                 }
             }
-            
+
             @Override
             public void onTopdonDeviceFound(BluetoothDevice device, UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord) {
                 String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
                 String deviceAddress = BluetoothPermissionUtils.getDeviceAddress(context, device);
                 Log.i(TAG, "Found Topdon device: " + deviceName + " (" + deviceAddress + ") Type: " + type + " RSSI: " + rssi);
-                
-                // Connect to first thermal device found
+
                 if (type == UnifiedBleManager.DeviceType.TOPDON_THERMAL && topdonThermalDevice == null) {
                     connectToTopdonThermalDevice(device);
                 }
             }
-            
+
             @Override
             public void onUnknownDeviceFound(BluetoothDevice device, int rssi, byte[] scanRecord) {
                 String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
                 String deviceAddress = BluetoothPermissionUtils.getDeviceAddress(context, device);
                 Log.d(TAG, "Found unknown BLE device: " + deviceName + " (" + deviceAddress + ")");
             }
-            
+
             @Override
             public void onScanError(int errorCode, String message) {
                 Log.e(TAG, "Scan error: " + errorCode + " - " + message);
             }
-            
+
             @Override
             public void onScanComplete() {
                 Log.i(TAG, "Device discovery completed");
-                
-                // Check if we have all required devices
+
                 checkDeviceReadiness();
             }
         });
     }
-    
 
     private void connectToShimmerGSRDevice(BluetoothDevice device) {
         Log.i(TAG, "Connecting to Shimmer GSR device: " + device.getAddress());
-        
-        // Create optimal GSR configuration
+
         ShimmerDeviceConfig gsrConfig = ShimmerDeviceConfig.createDefaultGSRConfig();
-        
+
         shimmerGSRDevice = unifiedBleManager.connectToShimmerDevice(
-            device, 
-            gsrConfig, 
-            new UnifiedConnectionListener()
+                device,
+                gsrConfig,
+                new UnifiedConnectionListener()
         );
-        
+
         if (shimmerGSRDevice != null) {
             Log.i(TAG, "Shimmer GSR device connection initiated");
         }
     }
-    
 
     private void connectToTopdonThermalDevice(BluetoothDevice device) {
         Log.i(TAG, "Connecting to Topdon thermal device: " + device.getAddress());
-        
-        // Create optimal thermal configuration
+
         TopdonDeviceConfig thermalConfig = TopdonDeviceConfig.createDefaultThermalConfig();
-        
+
         topdonThermalDevice = unifiedBleManager.connectToTopdonDevice(
-            device,
-            thermalConfig,
-            new UnifiedConnectionListener()
+                device,
+                thermalConfig,
+                new UnifiedConnectionListener()
         );
-        
+
         if (topdonThermalDevice != null) {
             Log.i(TAG, "Topdon thermal device connection initiated");
         }
     }
-    
 
     private void checkDeviceReadiness() {
         List<UnifiedDevice> connectedDevices = unifiedBleManager.getConnectedDevices();
         Log.i(TAG, "Connected devices: " + connectedDevices.size());
-        
+
         boolean hasShimmerGSR = false;
         boolean hasTopdonThermal = false;
-        
+
         for (UnifiedDevice device : connectedDevices) {
             if (device.isConnected()) {
                 switch (device.getDeviceType()) {
@@ -147,7 +133,7 @@ public class UnifiedBleExample {
                 }
             }
         }
-        
+
         if (hasShimmerGSR && hasTopdonThermal) {
             Log.i(TAG, "All required devices connected - starting synchronized recording");
             startSynchronizedRecording();
@@ -155,65 +141,73 @@ public class UnifiedBleExample {
             Log.w(TAG, "Not all required devices connected. GSR: " + hasShimmerGSR + ", Thermal: " + hasTopdonThermal);
         }
     }
-    
 
     private void startSynchronizedRecording() {
         Log.i(TAG, "Starting synchronized multi-modal recording");
-        
-        // Start GSR data streaming
+
         if (shimmerGSRDevice != null && shimmerGSRDevice.isConnected()) {
             boolean gsrStarted = shimmerGSRDevice.startDataStreaming();
             Log.i(TAG, "GSR streaming started: " + gsrStarted);
         }
-        
-        // Start thermal data streaming
+
         if (topdonThermalDevice != null && topdonThermalDevice.isConnected()) {
             boolean thermalStarted = topdonThermalDevice.startDataStreaming();
             Log.i(TAG, "Thermal streaming started: " + thermalStarted);
         }
-        
+
         Log.i(TAG, "Synchronized multi-modal recording active");
     }
-    
 
     public void stopAndCleanup() {
         Log.i(TAG, "Stopping recording and cleaning up");
-        
-        // Stop data streaming
+
         if (shimmerGSRDevice != null) {
             shimmerGSRDevice.stopDataStreaming();
         }
-        
+
         if (topdonThermalDevice != null) {
             topdonThermalDevice.stopDataStreaming();
         }
-        
-        // Disconnect all devices
+
         if (unifiedBleManager != null) {
             unifiedBleManager.disconnectAllDevices();
             unifiedBleManager.cleanup();
         }
-        
+
         Log.i(TAG, "Cleanup completed");
     }
-    
+
+    private void handleGSRData(UnifiedDevice device, byte[] data) {
+
+
+        Log.d(TAG, "GSR data received: " + data.length + " bytes from " + device.getAddress());
+
+
+    }
+
+    private void handleThermalData(UnifiedDevice device, byte[] data) {
+
+        Log.d(TAG, "Thermal data received: " + data.length + " bytes from " + device.getAddress());
+
+
+    }
 
     private class UnifiedConnectionListener implements UnifiedBleManager.UnifiedConnectionListener {
         @Override
         public void onDeviceConnected(UnifiedDevice device) {
             Log.i(TAG, "Device connected: " + device.getName() + " (" + device.getDeviceType() + ")");
         }
-        
+
         @Override
         public void onDeviceDisconnected(UnifiedDevice device, int reason) {
             Log.i(TAG, "Device disconnected: " + device.getName() + " Reason: " + reason);
         }
-        
+
         @Override
         public void onConnectionError(UnifiedDevice device, int errorCode, String message) {
             Log.e(TAG, "Connection error for " + device.getName() + ": " + errorCode + " - " + message);
         }
-        
+
         @Override
         public void onDataReceived(UnifiedDevice device, byte[] data) {
             switch (device.getDeviceType()) {
@@ -228,30 +222,11 @@ public class UnifiedBleExample {
                     break;
             }
         }
-        
+
         @Override
         public void onDeviceReady(UnifiedDevice device) {
             Log.i(TAG, "Device ready: " + device.getName() + " (" + device.getDeviceType() + ")");
             checkDeviceReadiness();
         }
-    }
-    
-
-    private void handleGSRData(UnifiedDevice device, byte[] data) {
-        // Process GSR data with 12-bit ADC resolution (0-4095 range)
-        // Convert to microsiemens and log for research analysis
-        Log.d(TAG, "GSR data received: " + data.length + " bytes from " + device.getAddress());
-        
-        // TODO: Implement GSR data processing with proper 12-bit ADC conversion
-        // This is where real GSR values would be calculated and stored
-    }
-    
-
-    private void handleThermalData(UnifiedDevice device, byte[] data) {
-        // Process thermal frame data and temperature matrices
-        Log.d(TAG, "Thermal data received: " + data.length + " bytes from " + device.getAddress());
-        
-        // TODO: Implement thermal data processing with temperature calibration
-        // This is where thermal frames would be parsed and temperature values extracted
     }
 }

@@ -9,8 +9,6 @@ import androidx.core.view.isVisible
 import com.topdon.lib.ui.databinding.UiFooterViewBinding
 
 
-
-
 class LoadingFooter : LinearLayout {
     private val binding: UiFooterViewBinding
 

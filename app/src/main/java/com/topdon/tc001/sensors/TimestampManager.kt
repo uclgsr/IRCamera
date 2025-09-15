@@ -5,44 +5,35 @@ import android.util.Log
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.system.measureNanoTime
 
-
 object TimestampManager {
     private const val TAG = "TimestampManager"
 
-    // System boot time reference for consistent timestamps
     private val bootTimeReference = AtomicLong(0L)
 
-    // Cross-device clock offset for hub-spoke synchronization
     private val clockOffset = AtomicLong(0L)
 
-    // Session start time for relative timestamps
     private val sessionStartTime = AtomicLong(0L)
 
     init {
         initializeTimestampSystem()
     }
 
-
     private fun initializeTimestampSystem() {
         bootTimeReference.set(System.currentTimeMillis() - SystemClock.elapsedRealtime())
         Log.i(TAG, "Timestamp system initialized with boot reference: ${bootTimeReference.get()}")
     }
 
-
     fun getCurrentTimestampNanos(): Long {
         return System.nanoTime()
     }
-
 
     fun getCurrentElapsedRealtimeMs(): Long {
         return SystemClock.elapsedRealtime()
     }
 
-
     fun getDeviceTimestampMs(): Long {
         return bootTimeReference.get() + SystemClock.elapsedRealtime()
     }
-
 
     fun getSessionRelativeTimestampMs(): Long {
         val sessionStart = sessionStartTime.get()
@@ -53,14 +44,12 @@ object TimestampManager {
         return getCurrentElapsedRealtimeMs() - sessionStart
     }
 
-
     fun startSession(): Long {
         val sessionStart = getCurrentElapsedRealtimeMs()
         sessionStartTime.set(sessionStart)
         Log.i(TAG, "Session started at: $sessionStart ms")
         return sessionStart
     }
-
 
     fun endSession(): Long {
         val sessionEnd = getCurrentElapsedRealtimeMs()
@@ -70,17 +59,14 @@ object TimestampManager {
         return sessionDuration
     }
 
-
     fun setClockOffset(offsetMs: Long) {
         clockOffset.set(offsetMs)
         Log.i(TAG, "Clock offset set to: $offsetMs ms")
     }
 
-
     fun getSynchronizedTimestampMs(): Long {
         return getDeviceTimestampMs() + clockOffset.get()
     }
-
 
     fun createTimestampRecord(): TimestampRecord {
         val currentNanos = getCurrentTimestampNanos()
@@ -98,7 +84,6 @@ object TimestampManager {
         )
     }
 
-
     inline fun <T> measureExecutionTime(block: () -> T): Pair<T, Long> {
         val executionTime =
             measureNanoTime {
@@ -107,7 +92,6 @@ object TimestampManager {
         return Pair(block(), executionTime)
     }
 }
-
 
 data class TimestampRecord(
     val systemNanos: Long, // High-precision nanosecond timestamp (for GSR samples)
@@ -120,7 +104,6 @@ data class TimestampRecord(
     fun toCsvFormat(): String {
         return "$systemNanos,$elapsedRealtimeMs,$deviceTimestampMs,$sessionRelativeMs,$synchronizedTimestampMs"
     }
-
 
     companion object {
         fun getCsvHeader(): String {

@@ -9,12 +9,12 @@
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:titleText="@string/correction_title"
         app:isInitLeft="false"
-        app:leftDrawable="@drawable/ic_back_white_svg"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:leftDrawable="@drawable/ic_back_white_svg"
+        app:titleText="@string/correction_title" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view"

@@ -41,7 +41,6 @@ open class GalleryBean(
     )
 }
 
-
 class GalleryTitle(timeMillis: Long) : GalleryBean(
     id = 0,
     path = "",

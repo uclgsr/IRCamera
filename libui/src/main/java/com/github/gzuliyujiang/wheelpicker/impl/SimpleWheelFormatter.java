@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 
 import com.github.gzuliyujiang.wheelview.contract.WheelFormatter;
 
-
 public class SimpleWheelFormatter implements WheelFormatter {
 
     @Override

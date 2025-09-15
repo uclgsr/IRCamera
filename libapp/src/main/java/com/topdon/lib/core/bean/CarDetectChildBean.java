@@ -2,7 +2,6 @@ package com.topdon.lib.core.bean;
 
 import com.topdon.lib.core.utils.TemperatureUtil;
 
-
 public class CarDetectChildBean {
     public int type;
     public int pos;
@@ -11,7 +10,7 @@ public class CarDetectChildBean {
     public String temperature;
     public boolean isSelected;
 
-    public CarDetectChildBean(int type,int pos,String description, String item, String temperature) {
+    public CarDetectChildBean(int type, int pos, String description, String item, String temperature) {
         this.type = type;
         this.pos = pos;
         this.description = description;

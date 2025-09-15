@@ -16,23 +16,21 @@ import json
 import ssl
 import time
 import uuid
+import websockets
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Set
-
-import websockets
 
 try:
     from loguru import logger
 except ImportError:
     from ..utils.simple_logger import logger
 
-from ..core.config import config
-from ..sync import EnhancedTimeSyncServer
+# from ..sync import EnhancedTimeSyncServer  # TODO: Implement when needed
 from .discovery import NetworkDiscoveryService
 from .enhanced_security import AuthLevel, EnhancedSecurityManager
-from .protocol import create_message, get_protocol_manager, validate_message
+from .protocol import create_message, get_protocol_manager
 from .security import SecurityManager
 
 
@@ -328,8 +326,8 @@ class WebSocketServer:
 
             # Check authentication for protected messages
             if (
-                message_type not in ["protocol_handshake", "auth_request", "pong"]
-                and not client.authenticated
+                    message_type not in ["protocol_handshake", "auth_request", "pong"]
+                    and not client.authenticated
             ):
                 await self._send_error(
                     client_id, "authentication_required", "Authentication required"
@@ -620,10 +618,10 @@ class WebSocketServer:
         await self._send_message(client_id, error_msg)
 
     async def _broadcast_message(
-        self,
-        message: dict,
-        exclude_client: Optional[str] = None,
-        authenticated_only: bool = False,
+            self,
+            message: dict,
+            exclude_client: Optional[str] = None,
+            authenticated_only: bool = False,
     ):
         """Broadcast message to all connected clients"""
         json_message = json.dumps(message)
@@ -1012,7 +1010,7 @@ class WebSocketServer:
     # Helper methods for Phase 3 file transfer operations
 
     async def _write_chunk_to_transfer(
-        self, job_id: str, chunk_index: int, chunk_offset: int, chunk_data: bytes
+            self, job_id: str, chunk_index: int, chunk_offset: int, chunk_data: bytes
     ) -> bool:
         """Write chunk data to transfer job"""
         try:
@@ -1024,7 +1022,7 @@ class WebSocketServer:
             return False
 
     async def _verify_transfer_completion(
-        self, job_id: str, expected_size: int, expected_checksum: str
+            self, job_id: str, expected_size: int, expected_checksum: str
     ) -> dict:
         """Verify completed file transfer"""
         try:
@@ -1039,7 +1037,7 @@ class WebSocketServer:
             return {"success": False, "error": str(e)}
 
     async def _check_existing_partial_file(
-        self, job_id: str, file_name: str, session_id: str, device_id: str
+            self, job_id: str, file_name: str, session_id: str, device_id: str
     ) -> int:
         """Check for existing partial file and return its size"""
         try:
@@ -1050,7 +1048,7 @@ class WebSocketServer:
             return 0
 
     async def _export_session_data(
-        self, session_id: str, format: str, include_files: bool
+            self, session_id: str, format: str, include_files: bool
     ) -> str:
         """Export session data in specified format"""
         try:

@@ -10,8 +10,6 @@ import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.R as UiR
 
 
-
-
 class IndicateView : View {
     var itemCount: Int = 0
         set(value) {
@@ -40,9 +38,19 @@ class IndicateView : View {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
@@ -69,7 +77,15 @@ class IndicateView : View {
             val right = left + itemWidth
             val top = 0f
             val bottom = itemHeight.toFloat()
-            canvas.drawRoundRect(left, top, right, bottom, roundRadius, roundRadius, if (i == currentIndex) selectPaint else defaultPaint)
+            canvas.drawRoundRect(
+                left,
+                top,
+                right,
+                bottom,
+                roundRadius,
+                roundRadius,
+                if (i == currentIndex) selectPaint else defaultPaint
+            )
         }
     }
 }

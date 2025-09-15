@@ -9,11 +9,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-// Removed house module import - module removed as unused
-// import com.topdon.house.activity.ImagesDetailActivity
+
+
 import com.topdon.lib.core.bean.HouseRepPreviewAlbumItemBean
 import com.topdon.module.thermal.ir.R
-
 
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewAlbumAdapter(

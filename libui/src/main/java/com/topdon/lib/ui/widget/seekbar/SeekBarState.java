@@ -1,6 +1,5 @@
 package com.topdon.lib.ui.widget.seekbar;
 
-
 public class SeekBarState {
     public String indicatorText;
     public float value; //now progress value

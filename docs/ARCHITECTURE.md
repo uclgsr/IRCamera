@@ -6,7 +6,8 @@ Comprehensive system architecture documentation for the Multi-Modal Physiologica
 
 ### High-Level Architecture
 
-The MPDC4GSR platform implements a **Hub-and-Spoke** distributed architecture optimized for synchronized multi-modal data collection:
+The MPDC4GSR platform implements a **Hub-and-Spoke** distributed architecture optimized for
+synchronized multi-modal data collection:
 
 ```mermaid
 graph TB
@@ -49,15 +50,18 @@ graph TB
 ### Design Principles
 
 #### 1. Distributed Processing
+
 - **Hub (PC)**: Central coordination, data aggregation, real-time analysis
 - **Spoke (Android)**: Local sensor management, data capture, preprocessing
 
 #### 2. Fault Tolerance
+
 - **Graceful degradation**: System continues with available sensors
 - **Automatic recovery**: Reconnection handling for network/sensor failures
 - **Data preservation**: Local storage with sync-on-reconnect
 
 #### 3. Scalability
+
 - **Multiple devices**: Hub can manage multiple Android nodes simultaneously
 - **Sensor modularity**: New sensors integrate via common interfaces
 - **Performance isolation**: C++ backend for high-throughput operations
@@ -181,6 +185,7 @@ com.topdon.irCamera/
 ### Key Android Components
 
 #### Recording Service Architecture
+
 ```kotlin
 @HiltAndroidApp
 class RecordingService : Service() {
@@ -207,11 +212,9 @@ class RecordingService : Service() {
             try {
                 val config = intent.getParcelableExtra<SessionConfig>("config")
                 val session = recordingController.startRecording(config!!)
-                
-                // Notify PC Controller
+
                 networkClient.sendMessage(RecordingStartedMessage(session.id))
-                
-                // Start foreground notification
+
                 startForeground(NOTIFICATION_ID, createNotification(session))
                 
             } catch (e: Exception) {
@@ -224,6 +227,7 @@ class RecordingService : Service() {
 ```
 
 #### Sensor Recorder Interface
+
 ```kotlin
 interface SensorRecorder {
     suspend fun initialize(): Result<Unit>
@@ -235,8 +239,7 @@ interface SensorRecorder {
     fun getRecordingDuration(): Duration
     fun getCurrentSampleRate(): Float
     fun getDataQuality(): DataQuality
-    
-    // Real-time data streaming
+
     fun observeData(): Flow<SensorSample>
     fun observeStatus(): Flow<SensorStatus>
 }
@@ -300,6 +303,7 @@ graph TB
 ### Core Components
 
 #### Session Manager
+
 ```python
 class SessionManager:
     """Central coordinator for multi-device recording sessions"""
@@ -371,6 +375,7 @@ class SessionManager:
 ```
 
 #### Network Controller
+
 ```python
 class NetworkController(QThread):
     """Manages network communication with Android devices"""
@@ -461,35 +466,32 @@ class NetworkController(QThread):
 ```
 
 #### Native Backend Integration
+
 ```cpp
-// native_backend/shimmer_native.cpp
+
 class NativeShimmer {
 public:
     NativeShimmer(const std::string& port, int baud_rate = 115200) 
         : port_(port), baud_rate_(baud_rate) {
-        
-        // Initialize lock-free queue for real-time data
+
         sample_queue_ = std::make_unique<lockfree::spsc_queue<GSRSample>>(4096);
-        
-        // Pre-allocate buffer for samples
+
         sample_buffer_.reserve(1000);
     }
     
     bool connect() {
         try {
-            // Open serial connection
+
             serial_port_ = std::make_unique<boost::asio::serial_port>(io_context_);
             serial_port_->open(port_);
-            
-            // Configure serial parameters
+
             serial_port_->set_option(boost::asio::serial_port_base::baud_rate(baud_rate_));
             serial_port_->set_option(boost::asio::serial_port_base::character_size(8));
             serial_port_->set_option(boost::asio::serial_port_base::parity(
                 boost::asio::serial_port_base::parity::none));
             serial_port_->set_option(boost::asio::serial_port_base::stop_bits(
                 boost::asio::serial_port_base::stop_bits::one));
-                
-            // Start acquisition thread
+
             acquisition_thread_ = std::thread(&NativeShimmer::acquisition_loop, this);
             
             return true;
@@ -519,21 +521,20 @@ private:
         
         while (running_.load()) {
             try {
-                // Read data from serial port
+
                 size_t bytes_read = boost::asio::read(
                     *serial_port_,
                     boost::asio::buffer(read_buffer),
                     boost::asio::transfer_at_least(1)
                 );
-                
-                // Parse packets
+
                 auto packets = parser.parse_buffer(read_buffer.data(), bytes_read);
                 
                 for (const auto& packet : packets) {
                     if (auto gsr_sample = parse_gsr_packet(packet)) {
-                        // Push to lock-free queue
+
                         if (!sample_queue_->push(*gsr_sample)) {
-                            // Queue full - log warning but continue
+
                             std::cerr << "Sample queue overflow" << std::endl;
                         }
                     }
@@ -541,8 +542,7 @@ private:
                 
             } catch (const std::exception& e) {
                 std::cerr << "Acquisition error: " << e.what() << std::endl;
-                
-                // Attempt reconnection
+
                 if (!reconnect()) {
                     break;
                 }
@@ -559,7 +559,6 @@ private:
     int baud_rate_;
 };
 
-// Python bindings with PyBind11
 PYBIND11_MODULE(native_backend, m) {
     py::class_<GSRSample>(m, "GSRSample")
         .def_readonly("timestamp", &GSRSample::timestamp)
@@ -621,6 +620,7 @@ graph TB
 ### Message Format Specification
 
 #### Base Message Structure
+
 ```json
 {
     "message_id": "uuid-v4-string",
@@ -630,15 +630,16 @@ graph TB
     "message_type": "command|response|data|heartbeat|error",
     "sequence_number": 12345,
     "payload": {
-        // Message-specific content
+
     },
     "checksum": "sha256-hash"
 }
 ```
 
 #### Command Messages
+
 ```json
-// Start Recording Command
+
 {
     "message_type": "command",
     "payload": {
@@ -674,7 +675,6 @@ graph TB
     }
 }
 
-// Sync Flash Command
 {
     "message_type": "command",
     "payload": {
@@ -685,7 +685,6 @@ graph TB
     }
 }
 
-// Stop Recording Command
 {
     "message_type": "command",
     "payload": {
@@ -697,8 +696,9 @@ graph TB
 ```
 
 #### Data Streaming Messages
+
 ```json
-// Real-time GSR Data
+
 {
     "message_type": "data",
     "payload": {
@@ -717,7 +717,6 @@ graph TB
     }
 }
 
-// Video Frame Metadata
 {
     "message_type": "data",
     "payload": {
@@ -733,8 +732,9 @@ graph TB
 ```
 
 #### Response Messages
+
 ```json
-// Command Acknowledgment
+
 {
     "message_type": "response",
     "payload": {
@@ -752,7 +752,6 @@ graph TB
     }
 }
 
-// Error Response
 {
     "message_type": "error",
     "payload": {
@@ -771,6 +770,7 @@ graph TB
 ### Time Synchronization Protocol
 
 #### NTP-like Handshake
+
 ```python
 async def calculate_time_offset(device: Device) -> int:
     """Calculate time offset using NTP-like 4-timestamp method"""
@@ -889,6 +889,7 @@ IRCamera_Sessions/
 ### Data Export Formats
 
 #### HDF5 Scientific Format
+
 ```python
 import h5py
 import numpy as np
@@ -965,6 +966,7 @@ graph TB
 ```
 
 ### Certificate Management
+
 ```python
 class SecurityManager:
     """Manages TLS certificates and encryption"""
@@ -1004,20 +1006,21 @@ class SecurityManager:
 
 ### Performance Requirements
 
-| Component | Requirement | Target Performance |
-|-----------|-------------|-------------------|
-| GSR Sampling | 128 Hz continuous | <1ms jitter |
-| Video Recording | 4K60FPS | <5% frame drops |
-| RAW Capture | 30 FPS DNG | <100ms per frame |
-| Network Latency | PC ↔ Android | <20ms average |
-| Time Sync Accuracy | Cross-device | <5ms offset |
-| Data Throughput | Multi-stream | >50 MB/min |
+| Component          | Requirement       | Target Performance |
+|--------------------|-------------------|--------------------|
+| GSR Sampling       | 128 Hz continuous | <1ms jitter        |
+| Video Recording    | 4K60FPS           | <5% frame drops    |
+| RAW Capture        | 30 FPS DNG        | <100ms per frame   |
+| Network Latency    | PC ↔ Android      | <20ms average      |
+| Time Sync Accuracy | Cross-device      | <5ms offset        |
+| Data Throughput    | Multi-stream      | >50 MB/min         |
 
 ### Optimization Strategies
 
 #### Android Optimizations
+
 ```kotlin
-// Use dedicated threads for each sensor
+
 class OptimizedRecordingController {
     private val gsrExecutor = Executors.newSingleThreadExecutor { r ->
         Thread(r, "GSR-Recorder").apply {
@@ -1032,26 +1035,24 @@ class OptimizedRecordingController {
     }
     
     fun startRecording(config: SessionConfig) {
-        // Start GSR recording with highest priority
+
         gsrExecutor.execute {
             gsrRecorder.startRecording(config)
         }
-        
-        // Start video recording
+
         videoExecutor.execute {
             videoRecorder.startRecording(config)
         }
     }
 }
 
-// Memory optimization for large data streams
 class MemoryOptimizedDataBuffer<T> {
     private val ringBuffer = RingBuffer<T>(capacity = 1000)
     private val writeThread = Executors.newSingleThreadExecutor()
     
     fun addSample(sample: T) {
         if (ringBuffer.isFull()) {
-            // Flush buffer to disk asynchronously
+
             writeThread.execute {
                 flushToDisk(ringBuffer.drain())
             }
@@ -1062,6 +1063,7 @@ class MemoryOptimizedDataBuffer<T> {
 ```
 
 #### PC Controller Optimizations
+
 ```python
 # Use asyncio for concurrent device management
 class OptimizedNetworkController:
@@ -1104,8 +1106,9 @@ class OptimizedNetworkController:
 ```
 
 #### C++ Native Backend Optimizations
+
 ```cpp
-// Lock-free circular buffer for real-time data
+
 template<typename T, size_t N>
 class LockFreeRingBuffer {
 private:
@@ -1140,11 +1143,10 @@ public:
     }
 };
 
-// SIMD-optimized signal processing
 class OptimizedSignalProcessor {
 public:
     void filter_gsr_samples(const float* input, float* output, size_t count) {
-        // Use AVX2 for vectorized processing
+
         const __m256 filter_coeff = _mm256_set1_ps(0.9f);
         
         for (size_t i = 0; i < count; i += 8) {
@@ -1184,8 +1186,9 @@ graph TB
 ```
 
 ### Automated Testing Framework
+
 ```kotlin
-// Android integration tests
+
 @LargeTest
 class RecordingIntegrationTest {
     
@@ -1194,27 +1197,22 @@ class RecordingIntegrationTest {
     
     @Test
     fun testFullRecordingSession() = runTest {
-        // Setup mock sensors
+
         val mockGsrRecorder = MockGSRRecorder()
         val mockCameraRecorder = MockCameraRecorder()
-        
-        // Inject dependencies
+
         hiltRule.inject()
-        
-        // Start recording
+
         activityRule.scenario.onActivity { activity ->
             activity.startRecording(testSessionConfig)
         }
-        
-        // Verify recording state
+
         delay(1000)
         onView(withId(R.id.recording_status))
             .check(matches(withText("Recording")))
-        
-        // Stop recording
+
         onView(withId(R.id.stop_button)).perform(click())
-        
-        // Verify data output
+
         val sessionData = verifySessionData()
         assertThat(sessionData.gsrSamples).isNotEmpty()
         assertThat(sessionData.videoFiles).hasSize(1)
@@ -1269,4 +1267,6 @@ class TestSessionManagement:
 
 ---
 
-**This architecture guide provides the foundational design principles and implementation patterns for the MPDC4GSR platform. For specific implementation details, refer to the source code and API documentation.**
+**This architecture guide provides the foundational design principles and implementation patterns
+for the MPDC4GSR platform. For specific implementation details, refer to the source code and API
+documentation.**

@@ -4,14 +4,14 @@
 
     <item
         android:id="@+id/action_share"
-        android:title="Share"
         android:icon="@drawable/ic_share"
+        android:title="Share"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_info"
-        android:title="Video Info"
         android:icon="@drawable/ic_info"
+        android:title="Video Info"
         app:showAsAction="ifRoom" />
 
 </menu>

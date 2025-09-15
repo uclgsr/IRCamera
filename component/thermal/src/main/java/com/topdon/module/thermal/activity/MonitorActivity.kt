@@ -11,8 +11,6 @@ import com.topdon.lib.ui.dialog.MonitorSelectDialog
 import com.topdon.module.thermal.R
 import com.topdon.module.thermal.fragment.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
-import java.util.*
-
 
 class MonitorActivity : BaseActivity(), View.OnClickListener {
     companion object {
@@ -29,8 +27,9 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
     override fun initContentView() = R.layout.activity_monitor
 
     override fun initView() {
-        // Set toolbar title
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
+
+        val toolbar =
+            findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.main_thermal_motion)
 
         val blackColor = ContextCompat.getColor(this, com.topdon.lib.core.R.color.black)
@@ -40,11 +39,8 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
         findViewById<Button>(R.id.motion_log_btn).setOnClickListener(this)
         findViewById<Button>(R.id.motion_btn).setOnClickListener(this)
         findViewById<Button>(R.id.motion_start_btn).setOnClickListener(this)
-//        if (BaseApplication.instance.isConnected()) {
-//            mHandler.postDelayed({
-//                EventBus.getDefault().post(ThermalActionEvent(action = 2001))
-//            }, 300)
-//        }
+
+
     }
 
     override fun initData() {
@@ -55,6 +51,7 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
             findViewById<Button>(R.id.motion_log_btn) -> {
                 NavigationManager.getInstance().build(RouterConfig.LOG_MP_CHART).navigation(this)
             }
+
             findViewById<Button>(R.id.motion_btn) -> {
                 MonitorSelectDialog.Builder(this)
                     .setPositiveListener { select ->
@@ -69,6 +66,7 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
                     }
                     .create().show()
             }
+
             findViewById<Button>(R.id.motion_start_btn) -> {
                 NavigationManager.getInstance().build(RouterConfig.MONITOR_CHART)
                     .withInt("type", selectType)
@@ -97,7 +95,6 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
         motionBtn.visibility = View.GONE
     }
 
-//秒
     fun updateTime(time: Long) {
         val ss = time % 60
         val mm = time / 60 % 60

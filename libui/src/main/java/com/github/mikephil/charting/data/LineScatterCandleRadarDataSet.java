@@ -7,16 +7,19 @@ import com.github.mikephil.charting.utils.Utils;
 
 import java.util.List;
 
-
 public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends BarLineScatterCandleBubbleDataSet<T> implements ILineScatterCandleRadarDataSet<T> {
 
     protected boolean mDrawVerticalHighlightIndicator = true;
     protected boolean mDrawHorizontalHighlightIndicator = true;
 
-    //
+    /**
+     * the width of the highlight indicator lines
+     */
     protected float mHighlightLineWidth = 0.5f;
 
-    //
+    /**
+     * the path effect for dashed highlight-lines
+     */
     protected DashPathEffect mHighlightDashPathEffect = null;
 
     public LineScatterCandleRadarDataSet(List<T> yVals, String label) {
@@ -24,16 +27,13 @@ public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends Bar
         mHighlightLineWidth = Utils.convertDpToPixel(0.5f);
     }
 
-
     public void setDrawHorizontalHighlightIndicator(boolean enabled) {
         this.mDrawHorizontalHighlightIndicator = enabled;
     }
 
-
     public void setDrawVerticalHighlightIndicator(boolean enabled) {
         this.mDrawVerticalHighlightIndicator = enabled;
     }
-
 
     public void setDrawHighlightIndicators(boolean enabled) {
         setDrawVerticalHighlightIndicator(enabled);
@@ -50,28 +50,24 @@ public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends Bar
         return mDrawHorizontalHighlightIndicator;
     }
 
-
-    public void setHighlightLineWidth(float width) {
-        mHighlightLineWidth = Utils.convertDpToPixel(width);
-    }
-
     @Override
     public float getHighlightLineWidth() {
         return mHighlightLineWidth;
     }
 
+    public void setHighlightLineWidth(float width) {
+        mHighlightLineWidth = Utils.convertDpToPixel(width);
+    }
 
     public void enableDashedHighlightLine(float lineLength, float spaceLength, float phase) {
-        mHighlightDashPathEffect = new DashPathEffect(new float[] {
+        mHighlightDashPathEffect = new DashPathEffect(new float[]{
                 lineLength, spaceLength
         }, phase);
     }
 
-
     public void disableDashedHighlightLine() {
         mHighlightDashPathEffect = null;
     }
-
 
     public boolean isDashedHighlightLineEnabled() {
         return mHighlightDashPathEffect == null ? false : true;

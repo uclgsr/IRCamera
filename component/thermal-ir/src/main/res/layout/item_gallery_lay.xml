@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:padding="4dp">
 
     <ImageView
@@ -20,13 +20,13 @@
         android:id="@+id/iv_video_time"
         android:layout_width="20sp"
         android:layout_height="20sp"
-        android:src="@drawable/svg_gallery_video_time_icon"
         android:contentDescription="@null"
+        android:src="@drawable/svg_gallery_video_time_icon"
         android:visibility="gone"
-        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/item_gallery_text"
         app:layout_constraintStart_toStartOf="@id/item_gallery_img"
         app:layout_constraintTop_toTopOf="@+id/item_gallery_text"
-        app:layout_constraintBottom_toBottomOf="@+id/item_gallery_text" />
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/item_gallery_text"
@@ -35,9 +35,9 @@
         android:padding="4dp"
         android:textColor="@color/white"
         android:textSize="@dimen/app_smaller_font"
-        tools:text="00:15"
         app:layout_constraintBottom_toBottomOf="@id/item_gallery_img"
-        app:layout_constraintStart_toEndOf="@id/iv_video_time" />
+        app:layout_constraintStart_toEndOf="@id/iv_video_time"
+        tools:text="00:15" />
 
     <ImageView
         android:id="@+id/iv_check"
@@ -45,12 +45,12 @@
         android:layout_height="26dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
-        android:src="@drawable/selector_radio"
         android:contentDescription="@null"
+        android:src="@drawable/selector_radio"
         android:visibility="gone"
-        tools:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/iv_has_download"
@@ -58,10 +58,10 @@
         android:layout_height="26dp"
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
-        android:src="@drawable/svg_gallery_list_has_download"
         android:contentDescription="@null"
+        android:src="@drawable/svg_gallery_list_has_download"
         android:visibility="gone"
-        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

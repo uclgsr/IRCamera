@@ -173,7 +173,9 @@ public class HexDump {
         return value;
     }
 
-
+    /**
+     *
+     */
     public static byte[] intToBytes(int value) {
         byte[] src = new byte[4];
         src[3] = (byte) ((value >> 24) & 0xFF);
@@ -182,7 +184,6 @@ public class HexDump {
         src[0] = (byte) (value & 0xFF);
         return src;
     }
-
 
     public static byte[] intToBytes2(int value) {
         byte[] src = new byte[4];

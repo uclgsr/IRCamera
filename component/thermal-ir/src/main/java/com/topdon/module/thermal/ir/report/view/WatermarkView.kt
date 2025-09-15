@@ -7,7 +7,6 @@ import android.util.AttributeSet
 import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
-
 class WatermarkView : View {
 
     var watermarkText: String? = null
@@ -24,7 +23,11 @@ class WatermarkView : View {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         textPaint.isFakeBoldText = true
         textPaint.isAntiAlias = true
         textPaint.color = 0x082b79d8
@@ -39,7 +42,8 @@ class WatermarkView : View {
             while (hasUseHeight < height + marginTop) {
                 canvas?.save()
                 canvas?.rotate(15f)
-                val translateX = (width - textPaint.measureText(it)).coerceAtLeast(0f) / 2f + if (hasAddCount % 2 == 0) 100f else 0f
+                val translateX =
+                    (width - textPaint.measureText(it)).coerceAtLeast(0f) / 2f + if (hasAddCount % 2 == 0) 100f else 0f
                 canvas?.translate(translateX, 0f)
                 canvas?.drawText(it, 0f, 0f, textPaint)
                 canvas?.restore()

@@ -2,7 +2,6 @@ package com.topdon.libcom.util
 
 import com.blankj.utilcode.util.SizeUtils
 
-
 val Float.dp: Float
     get() = ColorUtils.dpToPxF(this)
 val Int.dp: Int

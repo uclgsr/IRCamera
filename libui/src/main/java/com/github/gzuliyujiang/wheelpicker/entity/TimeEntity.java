@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 import java.util.Calendar;
 
-
 @SuppressWarnings({"unused"})
 public class TimeEntity implements Serializable {
     private int hour;

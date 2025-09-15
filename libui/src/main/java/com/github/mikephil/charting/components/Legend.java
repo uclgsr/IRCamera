@@ -11,89 +11,33 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Legend extends ComponentBase {
 
-    public enum LegendForm {
-
-        NONE,
-
-
-        EMPTY,
-
-
-        DEFAULT,
-
-
-        SQUARE,
-
-
-        CIRCLE,
-
-
-        LINE
-    }
-
-    public enum LegendHorizontalAlignment {
-        LEFT, CENTER, RIGHT
-    }
-
-    public enum LegendVerticalAlignment {
-        TOP, CENTER, BOTTOM
-    }
-
-    public enum LegendOrientation {
-        HORIZONTAL, VERTICAL
-    }
-
-    public enum LegendDirection {
-        LEFT_TO_RIGHT, RIGHT_TO_LEFT
-    }
-
-
+    public float mNeededWidth = 0f;
+    public float mNeededHeight = 0f;
+    public float mTextHeightMax = 0f;
+    public float mTextWidthMax = 0f;
     private LegendEntry[] mEntries = new LegendEntry[]{};
-
-
     private LegendEntry[] mExtraEntries;
-
-
     private boolean mIsLegendCustom = false;
-
     private LegendHorizontalAlignment mHorizontalAlignment = LegendHorizontalAlignment.LEFT;
     private LegendVerticalAlignment mVerticalAlignment = LegendVerticalAlignment.BOTTOM;
     private LegendOrientation mOrientation = LegendOrientation.HORIZONTAL;
     private boolean mDrawInside = false;
-
-
     private LegendDirection mDirection = LegendDirection.LEFT_TO_RIGHT;
-
-
     private LegendForm mShape = LegendForm.SQUARE;
-
-
     private float mFormSize = 8f;
-
-
     private float mFormLineWidth = 3f;
-
-
     private DashPathEffect mFormLineDashEffect = null;
-
-
     private float mXEntrySpace = 6f;
-
-
     private float mYEntrySpace = 0f;
-
-
     private float mFormToTextSpace = 5f;
-
-
     private float mStackSpace = 3f;
-
-
     private float mMaxSizePercent = 0.95f;
-
+    private boolean mWordWrapEnabled = false;
+    private List<FSize> mCalculatedLabelSizes = new ArrayList<>(16);
+    private List<Boolean> mCalculatedLabelBreakPoints = new ArrayList<>(16);
+    private List<FSize> mCalculatedLineSizes = new ArrayList<>(16);
 
     public Legend() {
 
@@ -101,7 +45,6 @@ public class Legend extends ComponentBase {
         this.mXOffset = Utils.convertDpToPixel(5f);
         this.mYOffset = Utils.convertDpToPixel(3f); // 2
     }
-
 
     public Legend(LegendEntry[] entries) {
         this();
@@ -113,15 +56,13 @@ public class Legend extends ComponentBase {
         this.mEntries = entries;
     }
 
-
-    public void setEntries(List<LegendEntry> entries) {
-        mEntries = entries.toArray(new LegendEntry[entries.size()]);
-    }
-
     public LegendEntry[] getEntries() {
         return mEntries;
     }
 
+    public void setEntries(List<LegendEntry> entries) {
+        mEntries = entries.toArray(new LegendEntry[entries.size()]);
+    }
 
     public float getMaximumEntryWidth(Paint p) {
 
@@ -132,7 +73,7 @@ public class Legend extends ComponentBase {
         for (LegendEntry entry : mEntries) {
             final float formSize = Utils.convertDpToPixel(
                     Float.isNaN(entry.formSize)
-                    ? mFormSize : entry.formSize);
+                            ? mFormSize : entry.formSize);
             if (formSize > maxFormSize)
                 maxFormSize = formSize;
 
@@ -147,7 +88,6 @@ public class Legend extends ComponentBase {
 
         return max + maxFormSize + formToTextSpace;
     }
-
 
     public float getMaximumEntryHeight(Paint p) {
 
@@ -181,7 +121,6 @@ public class Legend extends ComponentBase {
         mExtraEntries = entries;
     }
 
-
     public void setExtra(int[] colors, String[] labels) {
 
         List<LegendEntry> entries = new ArrayList<>();
@@ -203,13 +142,11 @@ public class Legend extends ComponentBase {
         mExtraEntries = entries.toArray(new LegendEntry[entries.size()]);
     }
 
-
     public void setCustom(LegendEntry[] entries) {
 
         mEntries = entries;
         mIsLegendCustom = true;
     }
-
 
     public void setCustom(List<LegendEntry> entries) {
 
@@ -217,182 +154,133 @@ public class Legend extends ComponentBase {
         mIsLegendCustom = true;
     }
 
-
     public void resetCustom() {
         mIsLegendCustom = false;
     }
-
 
     public boolean isLegendCustom() {
         return mIsLegendCustom;
     }
 
-
     public LegendHorizontalAlignment getHorizontalAlignment() {
         return mHorizontalAlignment;
     }
-
 
     public void setHorizontalAlignment(LegendHorizontalAlignment value) {
         mHorizontalAlignment = value;
     }
 
-
     public LegendVerticalAlignment getVerticalAlignment() {
         return mVerticalAlignment;
     }
-
 
     public void setVerticalAlignment(LegendVerticalAlignment value) {
         mVerticalAlignment = value;
     }
 
-
     public LegendOrientation getOrientation() {
         return mOrientation;
     }
-
 
     public void setOrientation(LegendOrientation value) {
         mOrientation = value;
     }
 
-
     public boolean isDrawInsideEnabled() {
         return mDrawInside;
     }
-
 
     public void setDrawInside(boolean value) {
         mDrawInside = value;
     }
 
-
     public LegendDirection getDirection() {
         return mDirection;
     }
-
 
     public void setDirection(LegendDirection pos) {
         mDirection = pos;
     }
 
-
     public LegendForm getForm() {
         return mShape;
     }
-
 
     public void setForm(LegendForm shape) {
         mShape = shape;
     }
 
+    public float getFormSize() {
+        return mFormSize;
+    }
 
     public void setFormSize(float size) {
         mFormSize = size;
     }
 
-
-    public float getFormSize() {
-        return mFormSize;
+    public float getFormLineWidth() {
+        return mFormLineWidth;
     }
-
 
     public void setFormLineWidth(float size) {
         mFormLineWidth = size;
     }
 
-
-    public float getFormLineWidth() {
-        return mFormLineWidth;
+    public DashPathEffect getFormLineDashEffect() {
+        return mFormLineDashEffect;
     }
-
 
     public void setFormLineDashEffect(DashPathEffect dashPathEffect) {
         mFormLineDashEffect = dashPathEffect;
     }
 
-
-    public DashPathEffect getFormLineDashEffect() {
-        return mFormLineDashEffect;
-    }
-
-
     public float getXEntrySpace() {
         return mXEntrySpace;
     }
-
 
     public void setXEntrySpace(float space) {
         mXEntrySpace = space;
     }
 
-
     public float getYEntrySpace() {
         return mYEntrySpace;
     }
-
 
     public void setYEntrySpace(float space) {
         mYEntrySpace = space;
     }
 
-
     public float getFormToTextSpace() {
         return mFormToTextSpace;
     }
-
 
     public void setFormToTextSpace(float space) {
         this.mFormToTextSpace = space;
     }
 
-
     public float getStackSpace() {
         return mStackSpace;
     }
-
 
     public void setStackSpace(float space) {
         mStackSpace = space;
     }
 
-
-    public float mNeededWidth = 0f;
-
-
-    public float mNeededHeight = 0f;
-
-    public float mTextHeightMax = 0f;
-
-    public float mTextWidthMax = 0f;
-
-
-    private boolean mWordWrapEnabled = false;
-
+    public boolean isWordWrapEnabled() {
+        return mWordWrapEnabled;
+    }
 
     public void setWordWrapEnabled(boolean enabled) {
         mWordWrapEnabled = enabled;
     }
 
-
-    public boolean isWordWrapEnabled() {
-        return mWordWrapEnabled;
-    }
-
-
     public float getMaxSizePercent() {
         return mMaxSizePercent;
     }
 
-
     public void setMaxSizePercent(float maxSize) {
         mMaxSizePercent = maxSize;
     }
-
-    private List<FSize> mCalculatedLabelSizes = new ArrayList<>(16);
-    private List<Boolean> mCalculatedLabelBreakPoints = new ArrayList<>(16);
-    private List<FSize> mCalculatedLineSizes = new ArrayList<>(16);
 
     public List<FSize> getCalculatedLabelSizes() {
         return mCalculatedLabelSizes;
@@ -405,7 +293,6 @@ public class Legend extends ComponentBase {
     public List<FSize> getCalculatedLineSizes() {
         return mCalculatedLineSizes;
     }
-
 
     public void calculateDimensions(Paint labelpaint, ViewPortHandler viewPortHandler) {
 
@@ -446,10 +333,8 @@ public class Legend extends ComponentBase {
                         width += formSize;
                     }
 
-                    // grouped forms have null labels
                     if (label != null) {
 
-                        // make a step to the left
                         if (drawingForm && !wasStacked)
                             width += formToTextSpace;
                         else if (wasStacked) {
@@ -484,7 +369,6 @@ public class Legend extends ComponentBase {
                 float labelLineSpacing = Utils.getLineSpacing(labelpaint) + yEntrySpace;
                 float contentWidth = viewPortHandler.contentWidth() * mMaxSizePercent;
 
-                // Start calculating layout
                 float maxLineWidth = 0.f;
                 float currentLineWidth = 0.f;
                 float requiredWidth = 0.f;
@@ -506,15 +390,14 @@ public class Legend extends ComponentBase {
                     mCalculatedLabelBreakPoints.add(false);
 
                     if (stackedStartIndex == -1) {
-                        // we are not stacking, so required width is for this label
-                        // only
+
+
                         requiredWidth = 0.f;
                     } else {
-                        // add the spacing appropriate for stacked labels/forms
+
                         requiredWidth += stackSpace;
                     }
 
-                    // grouped forms have null labels
                     if (label != null) {
 
                         mCalculatedLabelSizes.add(Utils.calcTextSize(labelpaint, label));
@@ -526,7 +409,7 @@ public class Legend extends ComponentBase {
                         requiredWidth += drawingForm ? formSize : 0.f;
 
                         if (stackedStartIndex == -1) {
-                            // mark this index as we might want to break here later
+
                             stackedStartIndex = i;
                         }
                     }
@@ -536,20 +419,18 @@ public class Legend extends ComponentBase {
                         float requiredSpacing = currentLineWidth == 0.f ? 0.f : xEntrySpace;
 
                         if (!wordWrapEnabled // No word wrapping, it must fit.
-                                // The line is empty, it must fit
+
                                 || currentLineWidth == 0.f
-                                // It simply fits
+
                                 || (contentWidth - currentLineWidth >=
                                 requiredSpacing + requiredWidth)) {
-                            // Expand current line
+
                             currentLineWidth += requiredSpacing + requiredWidth;
                         } else { // It doesn't fit, we need to wrap a line
 
-                            // Add current line size to array
                             mCalculatedLineSizes.add(FSize.getInstance(currentLineWidth, labelLineHeight));
                             maxLineWidth = Math.max(maxLineWidth, currentLineWidth);
 
-                            // Start a new line
                             mCalculatedLabelBreakPoints.set(
                                     stackedStartIndex > -1 ? stackedStartIndex
                                             : i, true);
@@ -557,7 +438,7 @@ public class Legend extends ComponentBase {
                         }
 
                         if (i == entryCount - 1) {
-                            // Add last line size to array
+
                             mCalculatedLineSizes.add(FSize.getInstance(currentLineWidth, labelLineHeight));
                             maxLineWidth = Math.max(maxLineWidth, currentLineWidth);
                         }
@@ -580,5 +461,36 @@ public class Legend extends ComponentBase {
 
         mNeededHeight += mYOffset;
         mNeededWidth += mXOffset;
+    }
+
+    public enum LegendForm {
+
+        NONE,
+
+        EMPTY,
+
+        DEFAULT,
+
+        SQUARE,
+
+        CIRCLE,
+
+        LINE
+    }
+
+    public enum LegendHorizontalAlignment {
+        LEFT, CENTER, RIGHT
+    }
+
+    public enum LegendVerticalAlignment {
+        TOP, CENTER, BOTTOM
+    }
+
+    public enum LegendOrientation {
+        HORIZONTAL, VERTICAL
+    }
+
+    public enum LegendDirection {
+        LEFT_TO_RIGHT, RIGHT_TO_LEFT
     }
 }

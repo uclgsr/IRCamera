@@ -2,7 +2,6 @@ package com.topdon.lib.core.bean;
 
 import java.util.List;
 
-
 public class CarDetectBean {
     public String title;
     public List<CarDetectChildBean> detectChildBeans;

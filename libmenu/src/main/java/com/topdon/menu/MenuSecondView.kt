@@ -29,16 +29,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 @SuppressLint("NotifyDataSetChanged")
 class MenuSecondView : FrameLayout {
 
     private val menuType: MenuType
 
-    // View binding for improved type safety and performance
     private lateinit var binding: ViewMenuSecondBinding
-
-    // *********************************************  Public Methods  *********************************************
 
 
     fun selectPosition(position: Int) {
@@ -55,8 +51,6 @@ class MenuSecondView : FrameLayout {
         binding.recyclerSettingOb.isVisible = position == 15
     }
 
-    // *********************************************  Public Properties  *********************************************
-
 
     var onCameraClickListener: ((actionCode: Int) -> Unit)?
         get() = binding.cameraMenuView.onCameraClickListener
@@ -64,13 +58,11 @@ class MenuSecondView : FrameLayout {
             binding.cameraMenuView.onCameraClickListener = value
         }
 
-
     var onFenceListener: ((fenceType: FenceType, isSelected: Boolean) -> Unit)?
         get() = fenceAdapter.onFenceListener
         set(value) {
             fenceAdapter.onFenceListener = value
         }
-
 
     var onTwoLightListener: ((twoLightType: TwoLightType, isSelected: Boolean) -> Unit)?
         get() = twoLightAdapter.onTwoLightListener
@@ -78,13 +70,11 @@ class MenuSecondView : FrameLayout {
             twoLightAdapter.onTwoLightListener = value
         }
 
-
     var onColorListener: ((index: Int, code: Int, size: Int) -> Unit)?
         get() = colorAdapter.onColorListener
         set(value) {
             colorAdapter.onColorListener = value
         }
-
 
     var onSettingListener: ((type: SettingType, isSelected: Boolean) -> Unit)?
         get() = settingTeAdapter.onSettingListener
@@ -93,13 +83,11 @@ class MenuSecondView : FrameLayout {
             settingObAdapter.onSettingListener = value
         }
 
-
     var onTempLevelListener: ((code: Int) -> Unit)?
         get() = tempLevelAdapter.onTempLevelListener
         set(value) {
             tempLevelAdapter.onTempLevelListener = value
         }
-
 
     var onTempSourceListener: ((code: Int) -> Unit)?
         get() = tempSourceAdapter.onTempSourceListener
@@ -107,13 +95,11 @@ class MenuSecondView : FrameLayout {
             tempSourceAdapter.onTempSourceListener = value
         }
 
-
     var onTargetListener: ((targetType: TargetType) -> Unit)?
         get() = targetAdapter.onTargetListener
         set(value) {
             targetAdapter.onTargetListener = value
         }
-
 
     var onTempPointListener: ((type: TempPointType, isSelected: Boolean) -> Unit)?
         get() = tempPointAdapter.onTempPointListener
@@ -121,30 +107,21 @@ class MenuSecondView : FrameLayout {
             tempPointAdapter.onTempPointListener = value
         }
 
-
     private val fenceAdapter: FenceAdapter
-
 
     private val twoLightAdapter: TwoLightAdapter
 
-
     private val colorAdapter = ColorAdapter()
-
 
     private val settingTeAdapter: SettingAdapter
 
-
     private val tempLevelAdapter: TempLevelAdapter
-
 
     private val tempSourceAdapter = TempSourceAdapter()
 
-
     private val targetAdapter = TargetAdapter()
 
-
     private val tempPointAdapter = TempPointAdapter()
-
 
     private val settingObAdapter = SettingAdapter(isObserver = true)
 
@@ -152,15 +129,30 @@ class MenuSecondView : FrameLayout {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
         defStyleRes,
     ) {
-        val typedArray: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.MenuSecondView, defStyleAttr, defStyleRes)
+        val typedArray: TypedArray = context.obtainStyledAttributes(
+            attrs,
+            R.styleable.MenuSecondView,
+            defStyleAttr,
+            defStyleRes
+        )
         menuType =
             when (typedArray.getInt(R.styleable.MenuSecondView_deviceType, 0)) {
                 0 -> MenuType.SINGLE_LIGHT
@@ -178,54 +170,52 @@ class MenuSecondView : FrameLayout {
             settingTeAdapter = SettingAdapter(menuType)
             tempLevelAdapter = TempLevelAdapter(menuType)
         } else {
-            // Initialize view binding - replaces findViewById calls
+
             binding = ViewMenuSecondBinding.inflate(LayoutInflater.from(context), this, true)
 
             refreshImg(GalleryRepository.DirType.LINE)
 
-            // Initialize Temperature measurement mode - Menu 2 - Point/Line/Area menu
             fenceAdapter = FenceAdapter(menuType)
-            binding.recyclerFence.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            binding.recyclerFence.layoutManager =
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             binding.recyclerFence.adapter = fenceAdapter
 
-            // Initialize Temperature measurement mode - Menu 3 - Dual Light menu
             twoLightAdapter = TwoLightAdapter(menuType)
-            binding.recyclerTwoLight.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            binding.recyclerTwoLight.layoutManager =
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             binding.recyclerTwoLight.adapter = twoLightAdapter
 
-            // Initialize Temperature measurement mode - Menu 4 - Pseudo Color or Observation mode - Menu 3 - Pseudo Color menu
-            binding.recyclerColor.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            binding.recyclerColor.layoutManager =
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             binding.recyclerColor.adapter = colorAdapter
 
-            // Initialize Temperature measurement mode - Menu 5 - Settings menu
             settingTeAdapter = SettingAdapter(menuType)
-            binding.recyclerSettingTe.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            binding.recyclerSettingTe.layoutManager =
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             binding.recyclerSettingTe.adapter = settingTeAdapter
 
-            // Initialize Temperature measurement mode - Menu 6 - High/Low temperature level menu
             tempLevelAdapter = TempLevelAdapter(menuType)
-            binding.recyclerTempLevel.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            binding.recyclerTempLevel.layoutManager =
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             binding.recyclerTempLevel.adapter = tempLevelAdapter
 
-            // Initialize Observation mode - Menu 2 - High/Low temperature source menu
-            binding.recyclerTempSource.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            binding.recyclerTempSource.layoutManager =
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             binding.recyclerTempSource.adapter = tempSourceAdapter
 
-            // Initialize Observation mode - Menu 4 - Target menu
-            binding.recyclerTarget.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            binding.recyclerTarget.layoutManager =
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             binding.recyclerTarget.adapter = targetAdapter
 
-            // Initialize Observation mode - Menu 5 - High/Low temperature points menu
-            binding.recyclerTempPoint.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            binding.recyclerTempPoint.layoutManager =
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             binding.recyclerTempPoint.adapter = tempPointAdapter
 
-            // Initialize Observation mode - Menu 6 - Settings menu
-            binding.recyclerSettingOb.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            binding.recyclerSettingOb.layoutManager =
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             binding.recyclerSettingOb.adapter = settingObAdapter
         }
     }
-
-    // *********************************************  Menu 1 - Capture/Recording  *********************************************
 
 
     var isVideoMode: Boolean
@@ -234,13 +224,11 @@ class MenuSecondView : FrameLayout {
             binding.cameraMenuView.isVideoMode = value
         }
 
-
     fun switchToCamera() {
         binding.cameraMenuView.canSwitchMode = true
         binding.cameraMenuView.isVideoMode = false
         binding.cameraMenuView.setToNormal()
     }
-
 
     fun updateCameraModel() {
         binding.cameraMenuView.canSwitchMode = true
@@ -257,18 +245,14 @@ class MenuSecondView : FrameLayout {
         }
     }
 
-
     fun setToRecord(isDelay: Boolean) {
         binding.cameraMenuView.canSwitchMode = false
         binding.cameraMenuView.setToRecord(isDelay)
     }
 
-
     fun setToCamera() {
         binding.cameraMenuView.setToRecord(false)
     }
-
-    // *****************************************  temperature measurement模式-menu2-point/line/area  *****************************************
 
 
     var fenceSelectType: FenceType?
@@ -277,14 +261,12 @@ class MenuSecondView : FrameLayout {
             fenceAdapter.selectType = value
         }
 
-    // *****************************************  temperature measurement模式-menu3-dual light  *****************************************
 
     var twoLightType: TwoLightType
         get() = twoLightAdapter.twoLightType
         set(value) {
             twoLightAdapter.twoLightType = value
         }
-
 
     fun setTwoLightSelected(
         twoLightType: TwoLightType,
@@ -293,14 +275,10 @@ class MenuSecondView : FrameLayout {
         twoLightAdapter.setSelected(twoLightType, isSelected)
     }
 
-    // **********************************  temperature measurement模式-menu4-pseudo color/observation模式-menu3-pseudo color  **********************************
-
 
     fun setPseudoColor(code: Int) {
         colorAdapter.selectCode = code
     }
-
-    // **********************************  temperature measurement模式-menu5-settings or observation模式-menu6-settings  **********************************
 
 
     fun setSettingSelected(
@@ -311,13 +289,10 @@ class MenuSecondView : FrameLayout {
         settingObAdapter.setSelected(settingType, isSelected)
     }
 
-
     fun setSettingRotate(rotateAngle: Int) {
         settingTeAdapter.rotateAngle = rotateAngle
         settingObAdapter.rotateAngle = rotateAngle
     }
-
-    // *****************************************  temperature measurement模式-menu6-high/low temperature档  *****************************************
 
 
     var isUnitF: Boolean
@@ -326,19 +301,14 @@ class MenuSecondView : FrameLayout {
             tempLevelAdapter.isUnitF = value
         }
 
-
     fun setTempLevel(code: Int) {
         tempLevelAdapter.selectCode = code
     }
-
-    // *****************************************  observation模式-menu2-high/low temperature源  *****************************************
 
 
     fun setTempSource(code: Int) {
         tempSourceAdapter.selectCode = code
     }
-
-    // *****************************************  observation模式-menu4-target  *****************************************
 
 
     fun setTargetSelected(
@@ -348,12 +318,9 @@ class MenuSecondView : FrameLayout {
         targetAdapter.setSelected(targetType, isSelected)
     }
 
-
     fun setTargetMode(modeCode: Int) {
         targetAdapter.setTargetMode(modeCode)
     }
-
-    // *****************************************  observation模式-menu5-high/low temperature点  *****************************************
 
 
     fun setTempPointSelect(
@@ -362,7 +329,6 @@ class MenuSecondView : FrameLayout {
     ) {
         tempPointAdapter.setSelected(tempPointType, isSelected)
     }
-
 
     fun clearTempPointSelect() {
         tempPointAdapter.clearAllSelect()

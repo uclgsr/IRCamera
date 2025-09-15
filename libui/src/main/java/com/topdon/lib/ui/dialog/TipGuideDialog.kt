@@ -17,11 +17,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.topdon.lib.core.R
-import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.ui.databinding.DialogTipGuideBinding
 import com.topdon.lib.ui.widget.IndicateView
-import kotlin.collections.ArrayList
-
+import com.topdon.lib.ui.R as UiR
 
 
 class TipGuideDialog : DialogFragment() {
@@ -69,7 +67,6 @@ class TipGuideDialog : DialogFragment() {
                 UiR.drawable.target_guide_pic_4,
             )
 
-        // Initialize views using binding
         viewPager = binding.viewPager
         tvContent1 = binding.tvContent1
         tvContent2 = binding.tvContent2
@@ -103,7 +100,6 @@ class TipGuideDialog : DialogFragment() {
             },
         )
     }
-
 
     fun updateIndex(position: Int) {
         if (index == position) {

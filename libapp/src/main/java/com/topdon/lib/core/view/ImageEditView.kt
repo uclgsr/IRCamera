@@ -14,18 +14,14 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-
 class ImageEditView : View {
     companion object {
 
         private const val PAINT_WIDTH = 6
 
-
         private const val HALF_PAINT_WIDTH = 3
 
-
         private const val ARROW_WIDTH = 30
-
 
         private const val PAINT_COLOR = 0xffe22400.toInt()
     }
@@ -34,16 +30,12 @@ class ImageEditView : View {
 
         CIRCLE,
 
-
         RECT,
-
 
         ARROW,
     }
 
-
     var type: Type = Type.CIRCLE
-
 
     var color: Int
         get() = paint.color
@@ -51,7 +43,6 @@ class ImageEditView : View {
             paint.color = value
             invalidate()
         }
-
 
     var sourceBitmap: Bitmap? = null
         set(value) {
@@ -67,12 +58,9 @@ class ImageEditView : View {
             field = value
         }
 
-
     private var hasEditData = false
 
-
     private var bgBitmap: Bitmap? = null
-
 
     private var editBitmap: Bitmap? = null
 
@@ -80,16 +68,25 @@ class ImageEditView : View {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
 
-
     private val path = Path()
 
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
@@ -172,6 +169,7 @@ class ImageEditView : View {
                 val bottom = downY.coerceAtLeast(currentY).toFloat()
                 canvas?.drawOval(left, top, right, bottom, paint)
             }
+
             Type.RECT -> {
                 paint.style = Paint.Style.STROKE
                 val left = downX.coerceAtMost(currentX).toFloat()
@@ -180,6 +178,7 @@ class ImageEditView : View {
                 val bottom = downY.coerceAtLeast(currentY).toFloat()
                 canvas?.drawRect(left, top, right, bottom, paint)
             }
+
             Type.ARROW -> {
                 if (abs(downX - currentX) < ARROW_WIDTH && abs(downY - currentY) < ARROW_WIDTH) {
                     return
@@ -189,12 +188,20 @@ class ImageEditView : View {
                 path.reset()
 
                 if (downX == currentX) { // 垂直于X轴的直线
-                    // 由于直线有一定的宽度，而三角形顶点为一个点，此处绘制的直线往后退一点
-                    val endY = if (downY > currentY) currentY + PAINT_WIDTH else (currentY - PAINT_WIDTH)
-                    canvas?.drawLine(downX.toFloat(), downY.toFloat(), currentX.toFloat(), endY.toFloat(), paint)
+
+                    val endY =
+                        if (downY > currentY) currentY + PAINT_WIDTH else (currentY - PAINT_WIDTH)
+                    canvas?.drawLine(
+                        downX.toFloat(),
+                        downY.toFloat(),
+                        currentX.toFloat(),
+                        endY.toFloat(),
+                        paint
+                    )
 
                     val triangleH: Float = (ARROW_WIDTH / 2) * sqrt(3f)
-                    val y: Float = if (downY > currentY) currentY + triangleH else (currentY - triangleH)
+                    val y: Float =
+                        if (downY > currentY) currentY + triangleH else (currentY - triangleH)
 
                     val x1: Float = downX - (ARROW_WIDTH / 2f)
                     val x2: Float = downX + (ARROW_WIDTH / 2f)
@@ -205,12 +212,20 @@ class ImageEditView : View {
                     path.close()
                     canvas?.drawPath(path, paint)
                 } else if (downY == currentY) { // 垂直于Y轴的直线
-                    // 由于直线有一定的宽度，而三角形顶点为一个点，此处绘制的直线往后退一点
-                    val endX = if (downX > currentX) currentX + PAINT_WIDTH else (currentX - PAINT_WIDTH)
-                    canvas?.drawLine(downX.toFloat(), downY.toFloat(), endX.toFloat(), currentY.toFloat(), paint)
+
+                    val endX =
+                        if (downX > currentX) currentX + PAINT_WIDTH else (currentX - PAINT_WIDTH)
+                    canvas?.drawLine(
+                        downX.toFloat(),
+                        downY.toFloat(),
+                        endX.toFloat(),
+                        currentY.toFloat(),
+                        paint
+                    )
 
                     val triangleH: Float = (ARROW_WIDTH / 2) * sqrt(3f)
-                    val x: Float = if (downX > currentX) currentX + triangleH else (currentX - triangleH)
+                    val x: Float =
+                        if (downX > currentX) currentX + triangleH else (currentX - triangleH)
 
                     val y1: Float = downY - (ARROW_WIDTH / 2f)
                     val y2: Float = downY + (ARROW_WIDTH / 2f)
@@ -221,25 +236,25 @@ class ImageEditView : View {
                     path.close()
                     canvas?.drawPath(path, paint)
                 } else {
-                    // 有两条直线：
-                    // y = k1 * x + b1 是用户绘制的直线，称为直线1
-                    // y = k2 * x + b2 是垂直于直线1且过三角形交点的直线，称为直线2
+
+
                     val k1: Float = (downY - currentY).toFloat() / (downX - currentX).toFloat()
                     val b1: Float = downY - k1 * downX
                     val a1: Float = -b1 / k1
 
-                    // 由于直线有一定的宽度，而三角形顶点为一个点，此处绘制的直线往后退一点
                     val backWidth = PAINT_WIDTH
                     val endY: Float =
                         if (k1 > 0) {
-                            val hypotenuse: Float = sqrt((currentX - a1).pow(2) + currentY.toFloat().pow(2)) // 斜边长
+                            val hypotenuse: Float =
+                                sqrt((currentX - a1).pow(2) + currentY.toFloat().pow(2)) // 斜边长
                             if (currentX > downX) { // 左上到右下
                                 currentY * (hypotenuse - backWidth) / hypotenuse
                             } else { // 右下到左上
                                 currentY * (hypotenuse + backWidth) / hypotenuse
                             }
                         } else {
-                            val hypotenuse: Float = sqrt((a1 - currentX).pow(2) + currentY.toFloat().pow(2)) // 斜边长
+                            val hypotenuse: Float =
+                                sqrt((a1 - currentX).pow(2) + currentY.toFloat().pow(2)) // 斜边长
                             if (currentX > downX) { // 左下到右上
                                 currentY * (hypotenuse + backWidth) / hypotenuse
                             } else { // 右上到左下
@@ -249,18 +264,19 @@ class ImageEditView : View {
                     val endX = (endY - b1) / k1
                     canvas?.drawLine(downX.toFloat(), downY.toFloat(), endX, endY, paint)
 
-                    // 计算两条直线的交点 x,y
                     val triangleH: Float = (ARROW_WIDTH / 2) * sqrt(3f)
                     val y: Float =
                         if (k1 > 0) {
-                            val hypotenuse: Float = sqrt((currentX - a1).pow(2) + currentY.toFloat().pow(2)) // 斜边长
+                            val hypotenuse: Float =
+                                sqrt((currentX - a1).pow(2) + currentY.toFloat().pow(2)) // 斜边长
                             if (currentX > downX) { // 左上到右下
                                 currentY * (hypotenuse - triangleH) / hypotenuse
                             } else { // 右下到左上
                                 currentY * (hypotenuse + triangleH) / hypotenuse
                             }
                         } else {
-                            val hypotenuse: Float = sqrt((a1 - currentX).pow(2) + currentY.toFloat().pow(2)) // 斜边长
+                            val hypotenuse: Float =
+                                sqrt((a1 - currentX).pow(2) + currentY.toFloat().pow(2)) // 斜边长
                             if (currentX > downX) { // 左下到右上
                                 currentY * (hypotenuse + triangleH) / hypotenuse
                             } else { // 右上到左下
@@ -273,7 +289,8 @@ class ImageEditView : View {
                     val b2: Float = y - k2 * x
                     val a2: Float = -b2 / k2
 
-                    val hypotenuse2: Float = sqrt((if (k2 > 0) x - a2 else (a2 - x)).pow(2) + y.pow(2)) // 斜边长
+                    val hypotenuse2: Float =
+                        sqrt((if (k2 > 0) x - a2 else (a2 - x)).pow(2) + y.pow(2)) // 斜边长
                     val yLeft = y * (hypotenuse2 - ARROW_WIDTH / 2) / hypotenuse2
                     val yRight = y * (hypotenuse2 + ARROW_WIDTH / 2) / hypotenuse2
                     val xLeft = (yLeft - b2) / k2
@@ -299,16 +316,22 @@ class ImageEditView : View {
         if (event == null || !isEnabled) {
             return false
         }
-        currentX = event.x.toInt().coerceAtLeast(HALF_PAINT_WIDTH).coerceAtMost(width - HALF_PAINT_WIDTH)
-        currentY = event.y.toInt().coerceAtLeast(HALF_PAINT_WIDTH).coerceAtMost(height - HALF_PAINT_WIDTH)
+        currentX =
+            event.x.toInt().coerceAtLeast(HALF_PAINT_WIDTH).coerceAtMost(width - HALF_PAINT_WIDTH)
+        currentY =
+            event.y.toInt().coerceAtLeast(HALF_PAINT_WIDTH).coerceAtMost(height - HALF_PAINT_WIDTH)
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                downX = event.x.toInt().coerceAtLeast(HALF_PAINT_WIDTH).coerceAtMost(width - HALF_PAINT_WIDTH)
-                downY = event.y.toInt().coerceAtLeast(HALF_PAINT_WIDTH).coerceAtMost(height - HALF_PAINT_WIDTH)
+                downX = event.x.toInt().coerceAtLeast(HALF_PAINT_WIDTH)
+                    .coerceAtMost(width - HALF_PAINT_WIDTH)
+                downY = event.y.toInt().coerceAtLeast(HALF_PAINT_WIDTH)
+                    .coerceAtMost(height - HALF_PAINT_WIDTH)
             }
+
             MotionEvent.ACTION_MOVE -> {
                 invalidate()
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 drawEdit(canvas)
                 downX = 0

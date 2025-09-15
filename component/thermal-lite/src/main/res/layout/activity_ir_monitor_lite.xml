@@ -10,10 +10,10 @@
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:titleText="@string/main_thermal_motion"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleText="@string/main_thermal_motion" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/chart_lay"
@@ -31,28 +31,30 @@
             android:id="@+id/ll_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
+            android:background="@drawable/shape_corners50_solid_3b3e44"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:background="@drawable/shape_corners50_solid_3b3e44"
-            app:layout_constraintStart_toStartOf="parent"
+            android:paddingStart="12dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="4dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
             <View
                 android:layout_width="6sp"
                 android:layout_height="6sp"
                 android:background="@drawable/bg_oval_solid_ff4747" />
+
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
-                android:textSize="14sp"
+                android:text="00:00:00"
                 android:textColor="@color/white"
-                android:text="00:00:00" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,6 +69,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ll_time"
             app:layout_constraintWidth_percent="0.9">
+
             <ImageView
                 android:id="@+id/monitor_current_img"
                 android:layout_width="12dp"
@@ -128,18 +131,19 @@
         android:id="@+id/motion_action_lay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.15"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintHeight_percent="0.15"
+        app:layout_constraintStart_toStartOf="parent">
+
         <Button
             android:id="@+id/motion_btn"
             android:layout_width="0dp"
             android:layout_height="@dimen/app_btn_big_height"
-            android:text="@string/monitor_create_chart"
-            android:textSize="@dimen/app_small_font"
-            android:textColor="#55272F"
             android:background="@drawable/bg_corners05_solid_theme"
+            android:text="@string/monitor_create_chart"
+            android:textColor="#55272F"
+            android:textSize="@dimen/app_small_font"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -150,11 +154,11 @@
             android:id="@+id/motion_start_btn"
             android:layout_width="0dp"
             android:layout_height="@dimen/app_btn_big_height"
+            android:background="@drawable/bg_corners05_solid_theme"
             android:text="@string/monitor_start"
+            android:textColor="#55272F"
             android:textSize="@dimen/app_small_font"
             android:visibility="gone"
-            android:textColor="#55272F"
-            android:background="@drawable/bg_corners05_solid_theme"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -166,10 +170,10 @@
         android:id="@+id/thermal_fragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/motion_action_lay"
         app:layout_constraintDimensionRatio="192:256"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chart_lay"
-        app:layout_constraintBottom_toTopOf="@id/motion_action_lay" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chart_lay" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

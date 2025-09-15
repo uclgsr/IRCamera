@@ -29,11 +29,11 @@
         android:layout_marginTop="5dp"
         android:lineSpacingMultiplier="1.2"
         android:text="@string/app_tip"
-        android:textSize="@dimen/app_font"
         android:textColor="#ffffff"
+        android:textSize="@dimen/app_font"
         app:layout_constrainedWidth="true"
-        app:layout_constraintStart_toStartOf="@id/tip_start_line"
         app:layout_constraintEnd_toEndOf="@id/tip_end_line"
+        app:layout_constraintStart_toStartOf="@id/tip_start_line"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,8 +41,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="42dp"
-        app:layout_constraintStart_toStartOf="@id/tip_start_line"
         app:layout_constraintEnd_toEndOf="@id/tip_end_line"
+        app:layout_constraintStart_toStartOf="@id/tip_start_line"
         app:layout_constraintTop_toBottomOf="@id/dialog_tip_title_msg_text">
 
         <TextView
@@ -52,12 +52,12 @@
             android:gravity="start"
             android:lineSpacingMultiplier="1.2"
             android:text="@string/app_message"
-            android:textSize="@dimen/app_font"
             android:textColor="#ffffff"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="@dimen/app_font"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -67,13 +67,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:text="@string/ts004_store_reset"
-        android:textSize="12sp"
         android:textColor="#ccffffff"
+        android:textSize="12sp"
         android:visibility="gone"
-        tools:visibility="visible"
-        app:layout_constraintStart_toStartOf="@id/tip_start_line"
         app:layout_constraintEnd_toEndOf="@id/tip_end_line"
-        app:layout_constraintTop_toBottomOf="@id/dialog_tip_msg_lay" />
+        app:layout_constraintStart_toStartOf="@id/tip_start_line"
+        app:layout_constraintTop_toBottomOf="@id/dialog_tip_msg_lay"
+        tools:visibility="visible" />
 
     <Space
         android:id="@+id/space"
@@ -81,48 +81,48 @@
         android:layout_height="0dp"
         android:layout_marginTop="45dp"
         app:layout_constraintDimensionRatio="235:44"
-        app:layout_constraintStart_toStartOf="@id/tip_start_line"
         app:layout_constraintEnd_toEndOf="@id/tip_end_line"
+        app:layout_constraintStart_toStartOf="@id/tip_start_line"
         app:layout_constraintTop_toBottomOf="@id/tv_restart_tips" />
 
     <Button
         android:id="@+id/dialog_tip_cancel_btn"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@drawable/bg_corners05_solid_3b3e44_stroke_theme"
         android:gravity="center"
         android:text="@string/app_cancel"
-        android:textSize="@dimen/app_font"
-        android:textColor="#ffffff"
         android:textAllCaps="false"
-        android:background="@drawable/bg_corners05_solid_3b3e44_stroke_theme"
-        app:layout_constraintWidth_percent="0.38"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/app_font"
+        app:layout_constraintBottom_toBottomOf="@id/space"
         app:layout_constraintStart_toStartOf="@id/tip_start_line"
         app:layout_constraintTop_toTopOf="@id/space"
-        app:layout_constraintBottom_toBottomOf="@id/space" />
+        app:layout_constraintWidth_percent="0.38" />
 
     <Space
         android:id="@+id/space_margin"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintWidth_percent="0.08"
+        app:layout_constraintBottom_toBottomOf="@id/space"
         app:layout_constraintStart_toEndOf="@id/dialog_tip_cancel_btn"
         app:layout_constraintTop_toTopOf="@id/space"
-        app:layout_constraintBottom_toBottomOf="@id/space" />
+        app:layout_constraintWidth_percent="0.08" />
 
     <Button
         android:id="@+id/dialog_tip_success_btn"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@drawable/bg_corners05_solid_theme"
         android:gravity="center"
         android:text="@string/app_ok"
-        android:textSize="@dimen/app_font"
-        android:textColor="#55272F"
         android:textAllCaps="false"
-        android:background="@drawable/bg_corners05_solid_theme"
-        app:layout_constraintStart_toEndOf="@id/space_margin"
+        android:textColor="#55272F"
+        android:textSize="@dimen/app_font"
+        app:layout_constraintBottom_toBottomOf="@id/space"
         app:layout_constraintEnd_toEndOf="@id/tip_end_line"
-        app:layout_constraintTop_toTopOf="@id/space"
-        app:layout_constraintBottom_toBottomOf="@id/space" />
+        app:layout_constraintStart_toEndOf="@id/space_margin"
+        app:layout_constraintTop_toTopOf="@id/space" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,7 +34,6 @@ import androidx.annotation.StyleRes;
 
 import com.topdon.lib.ui.R;
 
-
 @SuppressWarnings("unused")
 public abstract class ModalDialog extends BottomDialog implements View.OnClickListener {
     protected View headerView;
@@ -195,21 +194,15 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
             cancelDrawable.setCornerRadius(okView.getResources().getDisplayMetrics().density * 999);
             cancelDrawable.setColor(DialogConfig.getDialogColor().cancelEllipseColor());
             cancelView.setBackground(cancelDrawable);
-//            if (ColorUtils.calculateLuminance(DialogConfig.getDialogColor().cancelEllipseColor()) < 0.5f) {
-//                cancelView.setTextColor(0xFFFFFFFF);
-//            } else {
-//                cancelView.setTextColor(0xFF666666);
-//            }
+
+
         }
         GradientDrawable okDrawable = new GradientDrawable();
         okDrawable.setCornerRadius(okView.getResources().getDisplayMetrics().density * 999);
         okDrawable.setColor(DialogConfig.getDialogColor().okEllipseColor());
         okView.setBackground(okDrawable);
-//        if (ColorUtils.calculateLuminance(DialogConfig.getDialogColor().okEllipseColor()) < 0.5f) {
-//            okView.setTextColor(0xFFFFFFFF);
-//        } else {
-//            okView.setTextColor(0xFF333333);
-//        }
+
+
     }
 
     @Override

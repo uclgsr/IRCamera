@@ -44,5 +44,7 @@
         vendor-id="9228" />
 
     <!-- 海康 256 -->
-    <usb-device product-id="258" vendor-id="11231" />
+    <usb-device
+        product-id="258"
+        vendor-id="11231" />
 </resources>

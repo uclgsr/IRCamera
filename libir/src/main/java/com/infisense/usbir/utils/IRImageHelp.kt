@@ -8,9 +8,8 @@ import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 import java.io.IOException
 
-
 class IRImageHelp {
-    // 自定义的color值
+
     @Volatile
     private var colorList: IntArray? = null
 
@@ -23,10 +22,9 @@ class IRImageHelp {
     private var maxRGB = IntArray(3)
     private var minRGB = IntArray(3)
 
-    fun getColorList(): IntArray?  {
+    fun getColorList(): IntArray? {
         return colorList
     }
-
 
     fun setColorList(
         colorList: IntArray?,
@@ -56,32 +54,31 @@ class IRImageHelp {
         }
     }
 
-
     fun customPseudoColor(
         imageDst: ByteArray,
         temperatureSrc: ByteArray,
         imageWidth: Int,
         imageHeight: Int,
-    ): ByteArray  {
+    ): ByteArray {
         try {
-            if (colorList != null && temperatureSrc != null) {
+            if (colorList != null) {
                 var j = 0
                 val imageDstLength: Int = imageWidth * imageHeight * 4
-                // 遍历像素点，过滤温度阈值
+
                 var index = 0
                 while (index < imageDstLength) {
-                    // 温度换算公式
+
                     var temperature0: Float =
                         (
-                            (temperatureSrc.get(j).toInt() and 0xff) + (
-                                temperatureSrc.get(j + 1)
-                                    .toInt() and 0xff
-                            ) * 256
-                        ).toFloat()
+                                (temperatureSrc.get(j).toInt() and 0xff) + (
+                                        temperatureSrc.get(j + 1)
+                                            .toInt() and 0xff
+                                        ) * 256
+                                ).toFloat()
                     temperature0 = (temperature0 / 64 - 273.15).toFloat()
                     if (temperature0 >= customMinTemp && temperature0 <= customMaxTemp) {
-                        // OpencvTools disabled due to missing AAR dependencies
-                        // Using simple fallback color logic
+
+
                         /*
                         val rgb = OpencvTools.getOneColorByTempUnif(
                             customMaxTemp,
@@ -96,8 +93,10 @@ class IRImageHelp {
                             imageDst[index + 2] = rgb[2].toByte()
                         }
                          */
-                        // Simple fallback: use temperature-based grayscale
-                        val intensity = ((temperature0 - customMinTemp) / (customMaxTemp - customMinTemp) * 255).toInt().coerceIn(0, 255)
+
+                        val intensity =
+                            ((temperature0 - customMinTemp) / (customMaxTemp - customMinTemp) * 255).toInt()
+                                .coerceIn(0, 255)
                         imageDst[index] = intensity.toByte()
                         imageDst[index + 1] = intensity.toByte()
                         imageDst[index + 2] = intensity.toByte()
@@ -120,7 +119,7 @@ class IRImageHelp {
                     index += 4
                     j += 2
                 }
-//                                        Log.w("测试上色耗时-总耗时", System.currentTimeMillis() - startTimeAll + "//");
+
             }
         } catch (exception: Exception) {
             Log.e("上色异常", exception.message!!)
@@ -129,7 +128,6 @@ class IRImageHelp {
         }
     }
 
-
     fun setPseudoColorMaxMin(
         imageDst: ByteArray?,
         temperatureSrc: ByteArray?,
@@ -137,31 +135,31 @@ class IRImageHelp {
         min: Float,
         imageWidth: Int,
         imageHeight: Int,
-    )  {
+    ) {
         if (temperatureSrc != null && (max != Float.MAX_VALUE || min != Float.MIN_VALUE)) {
             var j = 0
             val imageDstLength: Int = imageWidth * imageHeight * 4
             val biaochiMax: Float = max
             val biaochiMin: Float = min // 温度阈值设定
             val startTimeAll = System.currentTimeMillis()
-            // 遍历像素点，过滤温度阈值
+
             var index = 0
             while (index < imageDstLength) {
-                // 温度换算公式
+
                 var temperature0: Float =
                     (
-                        (temperatureSrc[j].toInt() and 0xff) + (
-                            temperatureSrc[j + 1]
-                                .toInt() and 0xff
-                        ) * 256
-                    ).toFloat()
+                            (temperatureSrc[j].toInt() and 0xff) + (
+                                    temperatureSrc[j + 1]
+                                        .toInt() and 0xff
+                                    ) * 256
+                            ).toFloat()
                 temperature0 = (temperature0 / 64 - 273.15).toFloat()
                 val y0: Int = imageDst!![j].toInt() and 0xff
                 if (temperature0 < biaochiMin || temperature0 > biaochiMax) {
                     val r: Int = imageDst!![index].toInt() and 0xff
                     val g: Int = imageDst!![index + 1].toInt() and 0xff
                     val b: Int = imageDst!![index + 2].toInt() and 0xff
-                    // 灰度
+
                     val grey = (r * 0.3f + g * 0.59f + b * 0.11f).toInt()
                     imageDst!![index] = grey.toByte()
                     imageDst!![index + 1] = grey.toByte()
@@ -174,19 +172,18 @@ class IRImageHelp {
         }
     }
 
-
     fun contourDetection(
         alarmBean: AlarmBean?,
         imageDst: ByteArray?,
         temperatureSrc: ByteArray?,
         imageWidth: Int,
         imageHeight: Int,
-    ): ByteArray?  {
+    ): ByteArray? {
         if (alarmBean != null && imageDst != null && temperatureSrc != null) {
             if (alarmBean.isMarkOpen && (
-                    (alarmBean.highTemp != Float.MAX_VALUE && alarmBean.isHighOpen) ||
-                        (alarmBean.isLowOpen && alarmBean.lowTemp != Float.MIN_VALUE)
-                )
+                        (alarmBean.highTemp != Float.MAX_VALUE && alarmBean.isHighOpen) ||
+                                (alarmBean.isLowOpen && alarmBean.lowTemp != Float.MIN_VALUE)
+                        )
             ) {
                 try {
                     val matByteArray =

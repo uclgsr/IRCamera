@@ -13,7 +13,6 @@
 
 package com.github.gzuliyujiang.wheelpicker.annotation;
 
-
 public @interface EthnicSpec {
     int DEFAULT = 1;
     int GB3304_91 = 2;

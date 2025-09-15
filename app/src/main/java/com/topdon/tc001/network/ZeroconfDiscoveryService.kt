@@ -4,9 +4,9 @@ import android.content.Context
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.concurrent.ConcurrentHashMap
-
 
 class ZeroconfDiscoveryService(private val context: Context) {
     companion object {
@@ -45,7 +45,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
         serviceListener = listener
     }
 
-
     suspend fun startDiscovery(): Boolean =
         withContext(Dispatchers.Main) {
             if (isDiscovering) {
@@ -55,7 +54,11 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
             try {
                 discoveryListener = createDiscoveryListener()
-                nsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, discoveryListener)
+                nsdManager.discoverServices(
+                    SERVICE_TYPE,
+                    NsdManager.PROTOCOL_DNS_SD,
+                    discoveryListener
+                )
                 isDiscovering = true
                 Log.i(TAG, "Started mDNS service discovery for type: $SERVICE_TYPE")
                 true
@@ -65,7 +68,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 false
             }
         }
-
 
     fun stopDiscovery() {
         if (!isDiscovering) return
@@ -79,7 +81,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
             Log.e(TAG, "Error stopping discovery", e)
         }
     }
-
 
     suspend fun registerService(
         deviceId: String,
@@ -104,7 +105,11 @@ class ZeroconfDiscoveryService(private val context: Context) {
                     }
 
                 registrationListener = createRegistrationListener()
-                nsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, registrationListener)
+                nsdManager.registerService(
+                    serviceInfo,
+                    NsdManager.PROTOCOL_DNS_SD,
+                    registrationListener
+                )
                 Log.i(TAG, "Registering service: ${serviceInfo.serviceName}")
                 true
             } catch (e: Exception) {
@@ -112,7 +117,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 false
             }
         }
-
 
     fun unregisterService() {
         if (!isRegistered) return
@@ -125,7 +129,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
             Log.e(TAG, "Error unregistering service", e)
         }
     }
-
 
     fun getDiscoveredControllers(): List<NetworkClient.ControllerInfo> {
         return discoveredServices.values.mapNotNull { serviceInfo ->
@@ -161,12 +164,10 @@ class ZeroconfDiscoveryService(private val context: Context) {
             override fun onServiceFound(service: NsdServiceInfo) {
                 Log.d(TAG, "Service discovery success: ${service.serviceName}")
 
-                // Don't discover our own service
                 if (service.serviceName.startsWith(SERVICE_NAME)) {
                     return
                 }
 
-                // Resolve the service to get detailed information
                 nsdManager.resolveService(service, createResolveListener())
             }
 
@@ -210,11 +211,13 @@ class ZeroconfDiscoveryService(private val context: Context) {
             }
 
             override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
-                Log.i(TAG, "Service resolved: ${serviceInfo.serviceName} at ${serviceInfo.host}:${serviceInfo.port}")
+                Log.i(
+                    TAG,
+                    "Service resolved: ${serviceInfo.serviceName} at ${serviceInfo.host}:${serviceInfo.port}"
+                )
 
                 discoveredServices[serviceInfo.serviceName] = serviceInfo
 
-                // Notify listener
                 try {
                     val host = serviceInfo.host?.hostAddress ?: return
                     val port = serviceInfo.port
@@ -253,7 +256,10 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 serviceInfo: NsdServiceInfo,
                 errorCode: Int,
             ) {
-                Log.e(TAG, "Service registration failed: ${serviceInfo.serviceName}, error: $errorCode")
+                Log.e(
+                    TAG,
+                    "Service registration failed: ${serviceInfo.serviceName}, error: $errorCode"
+                )
                 isRegistered = false
                 serviceListener?.onDiscoveryError(errorCode, "Registration failed")
             }
@@ -267,12 +273,14 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 serviceInfo: NsdServiceInfo,
                 errorCode: Int,
             ) {
-                Log.e(TAG, "Service unregistration failed: ${serviceInfo.serviceName}, error: $errorCode")
+                Log.e(
+                    TAG,
+                    "Service unregistration failed: ${serviceInfo.serviceName}, error: $errorCode"
+                )
                 serviceListener?.onDiscoveryError(errorCode, "Unregistration failed")
             }
         }
     }
-
 
     fun cleanup() {
         stopDiscovery()

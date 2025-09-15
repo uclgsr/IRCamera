@@ -6,7 +6,7 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 object Logger {
 
@@ -31,7 +31,6 @@ object Logger {
         }
     }
 
-
     @JvmStatic
     fun w(
         clazz: Class<*>,
@@ -51,7 +50,6 @@ object Logger {
             Log.w(tag, msg + "")
         }
     }
-
 
 
     @JvmStatic
@@ -75,7 +73,6 @@ object Logger {
     }
 
 
-
     @JvmStatic
     fun d(
         clazz: Class<*>,
@@ -95,7 +92,6 @@ object Logger {
             Log.d(tag, msg + "")
         }
     }
-
 
 
     @JvmStatic
@@ -124,7 +120,6 @@ object Logger {
     private val myLogSdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss") // 日志的输出格式
 
     private val logfile = SimpleDateFormat("yyyy-MM-dd") // 日志文件格式
-
 
     fun f(
         tag: String,

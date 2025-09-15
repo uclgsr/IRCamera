@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.buffer;
 
 import com.github.mikephil.charting.data.BarEntry;
@@ -20,7 +19,7 @@ public class HorizontalBarBuffer extends BarBuffer {
 
             BarEntry e = data.getEntryForIndex(i);
 
-            if(e == null)
+            if (e == null)
                 continue;
 
             float x = e.getX();
@@ -40,7 +39,6 @@ public class HorizontalBarBuffer extends BarBuffer {
                     left = y <= 0 ? y : 0;
                 }
 
-                // multiply the height of the rect with the phase
                 if (right > 0)
                     right *= phaseY;
                 else
@@ -54,7 +52,6 @@ public class HorizontalBarBuffer extends BarBuffer {
                 float negY = -e.getNegativeSum();
                 float yStart = 0f;
 
-                // fill the stack
                 for (int k = 0; k < vals.length; k++) {
 
                     float value = vals[k];
@@ -80,7 +77,6 @@ public class HorizontalBarBuffer extends BarBuffer {
                         left = y <= yStart ? y : yStart;
                     }
 
-                    // multiply the height of the rect with the phase
                     right *= phaseY;
                     left *= phaseY;
 

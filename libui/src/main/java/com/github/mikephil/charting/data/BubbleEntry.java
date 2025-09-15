@@ -1,35 +1,31 @@
-
 package com.github.mikephil.charting.data;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 
-
 @SuppressLint("ParcelCreator")
 public class BubbleEntry extends Entry {
 
-    //
+    /**
+     * size value
+     */
     private float mSize = 0f;
 
-    
     public BubbleEntry(float x, float y, float size) {
         super(x, y);
         this.mSize = size;
     }
 
-    
     public BubbleEntry(float x, float y, float size, Object data) {
         super(x, y, data);
         this.mSize = size;
     }
 
-    
     public BubbleEntry(float x, float y, float size, Drawable icon) {
         super(x, y, icon);
         this.mSize = size;
     }
 
-    
     public BubbleEntry(float x, float y, float size, Drawable icon, Object data) {
         super(x, y, icon, data);
         this.mSize = size;
@@ -41,7 +37,6 @@ public class BubbleEntry extends Entry {
         return c;
     }
 
-    
     public float getSize() {
         return mSize;
     }

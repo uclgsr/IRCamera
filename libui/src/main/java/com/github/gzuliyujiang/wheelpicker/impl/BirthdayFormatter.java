@@ -13,7 +13,6 @@
 
 package com.github.gzuliyujiang.wheelpicker.impl;
 
-
 public class BirthdayFormatter extends SimpleDateFormatter {
 
     @Override

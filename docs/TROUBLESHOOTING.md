@@ -7,13 +7,16 @@ Comprehensive troubleshooting guide for common issues and their solutions.
 ### Android App Issues
 
 #### ❌ App crashes on startup
+
 **Symptoms**: App closes immediately after launch
 **Possible Causes**:
+
 - Missing permissions
 - Corrupted installation
 - Incompatible Android version
 
 **Solutions**:
+
 ```bash
 # Check device compatibility
 adb shell getprop ro.build.version.sdk  # Should be ≥21
@@ -30,8 +33,10 @@ adb logcat | grep MPDC4GSR
 ```
 
 #### ❌ Shimmer3 GSR sensor not detected
+
 **Symptoms**: "GSR Disconnected" or simulated data only
 **Diagnostic Steps**:
+
 1. **Check Bluetooth pairing**:
    ```
    Android Settings → Bluetooth → Paired Devices
@@ -53,8 +58,9 @@ adb logcat | grep MPDC4GSR
    ```
 
 **Solutions**:
+
 ```kotlin
-// Reset Bluetooth connection
+
 1. Unpair Shimmer3 in Android Bluetooth settings
 2. Power cycle Shimmer3 device (off/on)
 3. Clear Bluetooth cache:
@@ -63,9 +69,11 @@ adb logcat | grep MPDC4GSR
 ```
 
 #### ❌ Camera permission denied
+
 **Symptoms**: Black screen or "Camera unavailable" message
 
 **Solutions**:
+
 ```bash
 # Grant permissions via ADB
 adb shell pm grant com.csl.irCamera android.permission.CAMERA
@@ -77,9 +85,11 @@ Settings → Apps → MPDC4GSR → Permissions → Enable all
 ```
 
 #### ❌ Recording stops unexpectedly
+
 **Symptoms**: Recording terminates before intended duration
 
 **Diagnostic Commands**:
+
 ```bash
 # Check available storage
 adb shell df /sdcard
@@ -92,6 +102,7 @@ adb shell cat /sys/class/thermal/thermal_zone*/temp
 ```
 
 **Solutions**:
+
 - Free up storage space (minimum 5GB recommended)
 - Close background apps to free memory
 - Allow device to cool down if overheating
@@ -100,9 +111,11 @@ adb shell cat /sys/class/thermal/thermal_zone*/temp
 ### PC Controller Issues
 
 #### ❌ "Failed to import PyQt6"
+
 **Symptoms**: PC Controller won't start, import error
 
 **Solutions**:
+
 ```bash
 # Windows
 pip uninstall PyQt6
@@ -121,9 +134,11 @@ python -c "import PyQt6; print('PyQt6 version:', PyQt6.QtCore.qVersion())"
 ```
 
 #### ❌ No Android devices discovered
+
 **Symptoms**: Device list remains empty
 
 **Diagnostic Steps**:
+
 ```bash
 # Check network connectivity
 ping [android-device-ip]
@@ -139,6 +154,7 @@ sudo ufw status | grep 8080
 ```
 
 **Solutions**:
+
 ```bash
 # Windows Firewall
 netsh advfirewall firewall add rule name="MPDC4GSR" dir=in action=allow protocol=TCP localport=8080
@@ -151,9 +167,11 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add /path/to/python
 ```
 
 #### ❌ Time synchronization failed
+
 **Symptoms**: Large timestamp differences between devices
 
 **Diagnostic Code**:
+
 ```python
 # Test time sync manually
 import asyncio
@@ -177,6 +195,7 @@ async def test_time_sync(device_ip):
 ```
 
 **Solutions**:
+
 - Ensure stable WiFi connection
 - Use 5GHz WiFi for better performance
 - Restart both applications
@@ -185,9 +204,11 @@ async def test_time_sync(device_ip):
 ### Network Issues
 
 #### ❌ Connection timeouts
+
 **Symptoms**: "Connection timeout" or "Device unreachable"
 
 **Network Diagnostics**:
+
 ```bash
 # Test basic connectivity
 ping [android-device-ip]
@@ -203,10 +224,11 @@ wireshark -i [interface] -f "port 8080"
 ```
 
 **Solutions**:
+
 1. **Check network configuration**:
-   - Both devices on same subnet (192.168.x.x)
-   - No VPN interference
-   - Router not blocking inter-device communication
+    - Both devices on same subnet (192.168.x.x)
+    - No VPN interference
+    - Router not blocking inter-device communication
 
 2. **Reset network settings**:
    ```bash
@@ -219,9 +241,11 @@ wireshark -i [interface] -f "port 8080"
    ```
 
 #### ❌ SSL/TLS handshake failed
+
 **Symptoms**: "SSL handshake failed" or certificate errors
 
 **Certificate Diagnostics**:
+
 ```bash
 # Check certificate validity
 openssl x509 -in certificate.crt -text -noout
@@ -231,6 +255,7 @@ openssl s_client -connect [device-ip]:8080 -verify_return_error
 ```
 
 **Solutions**:
+
 ```bash
 # Regenerate certificates
 ./scripts/generate_certificates.sh
@@ -243,11 +268,13 @@ update-ca-certificates
 ### Hardware Issues
 
 #### ❌ Shimmer3 battery drain
+
 **Symptoms**: Device disconnects frequently, low battery warnings
 
 **Battery Diagnostics**:
+
 ```kotlin
-// Monitor battery level
+
 val batteryLevel = shimmerDevice.getBatteryLevel()
 Log.i("MPDC4GSR", "Shimmer3 battery: ${batteryLevel}%")
 
@@ -257,15 +284,18 @@ if (batteryLevel < 20) {
 ```
 
 **Solutions**:
+
 - Replace batteries (2x AA recommended)
 - Use rechargeable batteries for extended sessions
 - Enable power saving mode during long recordings
 - Check for firmware updates
 
 #### ❌ Thermal camera not detected
+
 **Symptoms**: Thermal recording unavailable
 
 **USB Diagnostics**:
+
 ```bash
 # Check USB devices (Android)
 adb shell lsusb
@@ -275,6 +305,7 @@ adb shell pm list permissions | grep camera
 ```
 
 **Solutions**:
+
 - Use USB-C to USB-A adapter if needed
 - Grant camera permissions for external devices
 - Try different USB port
@@ -283,9 +314,11 @@ adb shell pm list permissions | grep camera
 ### Performance Issues
 
 #### ❌ High memory usage
+
 **Symptoms**: App becomes slow, system warnings
 
 **Memory Monitoring**:
+
 ```bash
 # Android memory usage
 adb shell dumpsys meminfo com.csl.irCamera
@@ -299,28 +332,29 @@ print(f'Memory: {process.memory_info().rss / 1024 / 1024:.1f} MB')
 ```
 
 **Solutions**:
+
 ```kotlin
-// Android optimization
+
 class MemoryOptimizedRecorder {
     private val memoryCache = LruCache<String, Bitmap>(50)
     
     fun optimizeMemory() {
-        // Clear unnecessary caches
+
         memoryCache.evictAll()
-        
-        // Force garbage collection
+
         System.gc()
-        
-        // Use smaller buffer sizes
+
         val bufferSize = min(DEFAULT_BUFFER_SIZE, availableMemory() / 4)
     }
 }
 ```
 
 #### ❌ Frame drops in video recording
+
 **Symptoms**: Choppy video, missing frames
 
 **Performance Monitoring**:
+
 ```kotlin
 class PerformanceMonitor {
     fun checkVideoPerformance() {
@@ -331,7 +365,7 @@ class PerformanceMonitor {
         
         if (dropPercentage > 5) {
             Log.w("MPDC4GSR", "Frame drop detected: ${dropPercentage}%")
-            // Reduce quality or frame rate
+
             adjustVideoQuality()
         }
     }
@@ -339,6 +373,7 @@ class PerformanceMonitor {
 ```
 
 **Solutions**:
+
 - Reduce video resolution (4K → 1080p)
 - Lower frame rate (60fps → 30fps)
 - Close background applications
@@ -349,6 +384,7 @@ class PerformanceMonitor {
 ### Android Debugging
 
 #### ADB Commands
+
 ```bash
 # Complete device info
 adb shell getprop
@@ -367,6 +403,7 @@ adb logcat -s MPDC4GSR:V
 ```
 
 #### Performance Profiling
+
 ```bash
 # CPU usage
 adb shell top -n 1 | grep com.csl.irCamera
@@ -381,6 +418,7 @@ adb shell dumpsys batterystats | grep com.csl.irCamera
 ### PC Controller Debugging
 
 #### Python Debugging
+
 ```python
 import logging
 
@@ -398,6 +436,7 @@ logger.info(f"Memory usage: {current / 1024 / 1024:.1f} MB (peak: {peak / 1024 /
 ```
 
 #### Network Debugging
+
 ```python
 import socket
 import time
@@ -429,6 +468,7 @@ def test_network_connectivity(host: str, port: int = 8080) -> bool:
 ### Data Validation
 
 #### Session Data Integrity
+
 ```python
 def validate_session_data(session_path: str) -> Dict[str, bool]:
     """Validate session data integrity"""
@@ -472,44 +512,48 @@ def validate_session_data(session_path: str) -> Dict[str, bool]:
 
 ### Android Error Codes
 
-| Code | Description | Solution |
-|------|-------------|----------|
-| `CAMERA_001` | Camera permission denied | Grant camera permissions |
-| `CAMERA_002` | Camera in use by another app | Close other camera apps |
-| `CAMERA_003` | Camera hardware failure | Restart device |
-| `GSR_001` | Shimmer3 not paired | Pair Bluetooth device |
-| `GSR_002` | Shimmer3 connection lost | Check battery and range |
-| `GSR_003` | GSR calibration failed | Check electrode connection |
-| `STORAGE_001` | Insufficient storage | Free up space |
-| `STORAGE_002` | Write permission denied | Grant storage permissions |
-| `NETWORK_001` | PC Controller not found | Check WiFi connection |
-| `NETWORK_002` | TLS handshake failed | Update certificates |
+| Code          | Description                  | Solution                   |
+|---------------|------------------------------|----------------------------|
+| `CAMERA_001`  | Camera permission denied     | Grant camera permissions   |
+| `CAMERA_002`  | Camera in use by another app | Close other camera apps    |
+| `CAMERA_003`  | Camera hardware failure      | Restart device             |
+| `GSR_001`     | Shimmer3 not paired          | Pair Bluetooth device      |
+| `GSR_002`     | Shimmer3 connection lost     | Check battery and range    |
+| `GSR_003`     | GSR calibration failed       | Check electrode connection |
+| `STORAGE_001` | Insufficient storage         | Free up space              |
+| `STORAGE_002` | Write permission denied      | Grant storage permissions  |
+| `NETWORK_001` | PC Controller not found      | Check WiFi connection      |
+| `NETWORK_002` | TLS handshake failed         | Update certificates        |
 
 ### PC Controller Error Codes
 
-| Code | Description | Solution |
-|------|-------------|----------|
-| `PC_001` | PyQt6 import failed | Install PyQt6 |
-| `PC_002` | Port 8080 in use | Kill existing process |
-| `PC_003` | Certificate not found | Generate certificates |
-| `PC_004` | Device timeout | Check network connection |
-| `PC_005` | Data aggregation failed | Check available memory |
+| Code     | Description             | Solution                 |
+|----------|-------------------------|--------------------------|
+| `PC_001` | PyQt6 import failed     | Install PyQt6            |
+| `PC_002` | Port 8080 in use        | Kill existing process    |
+| `PC_003` | Certificate not found   | Generate certificates    |
+| `PC_004` | Device timeout          | Check network connection |
+| `PC_005` | Data aggregation failed | Check available memory   |
 
 ## 🆘 Emergency Procedures
 
 ### Emergency Stop
+
 If recording must be stopped immediately:
 
 **Android Device**:
+
 1. Press volume down + power button simultaneously
 2. Or force close app: Settings → Apps → MPDC4GSR → Force Stop
 
 **PC Controller**:
+
 1. Click "Emergency Stop" button
 2. Or press Ctrl+C in terminal
 3. Or kill process: `pkill -f mpdc4gsr`
 
 ### Data Recovery
+
 If recording was interrupted:
 
 ```bash
@@ -526,10 +570,11 @@ python scripts/recover_session.py [session_path]
 ## 📞 Getting Help
 
 ### Self-Diagnosis Checklist
+
 Before reporting issues, try this checklist:
 
 - [ ] Both devices on same WiFi network
-- [ ] All permissions granted to MPDC4GSR app  
+- [ ] All permissions granted to MPDC4GSR app
 - [ ] Shimmer3 device powered on and paired
 - [ ] PC Controller firewall allows port 8080
 - [ ] Sufficient storage space (>5GB)
@@ -537,6 +582,7 @@ Before reporting issues, try this checklist:
 - [ ] Device compatibility confirmed
 
 ### Log Collection
+
 When reporting issues, collect these logs:
 
 ```bash
@@ -551,6 +597,7 @@ ping [device-ip] > network_test.txt
 ```
 
 ### Support Channels
+
 - **GitHub Issues**: For bug reports with logs
 - **Discussions**: For usage questions
 - **Documentation**: Check all guides first
@@ -558,4 +605,5 @@ ping [device-ip] > network_test.txt
 
 ---
 
-**Remember**: Most issues are resolved by checking network connectivity, permissions, and device pairing. When in doubt, restart both applications and devices.**
+**Remember**: Most issues are resolved by checking network connectivity, permissions, and device
+pairing. When in doubt, restart both applications and devices.**

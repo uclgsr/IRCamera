@@ -7,13 +7,11 @@ import androidx.annotation.NonNull;
 import java.util.Locale;
 import java.util.UUID;
 
-
 public class StringUtils {
 
     public static String randomUuid() {
         return UUID.randomUUID().toString().replace("-", "");
     }
-
 
     public static String fillZero(String src, int targetLen, boolean head) {
         if (src == null) return null;
@@ -28,31 +26,25 @@ public class StringUtils {
         return sb.toString();
     }
 
-
     public static String toHex(int num) {
         return fillZero(Integer.toHexString(num), 2, true);
     }
-
 
     public static String toHex(long num) {
         return fillZero(Long.toHexString(num), 2, true);
     }
 
-
     public static String toBinary(int num) {
         return fillZero(Integer.toBinaryString(num), 8, true);
     }
-
 
     public static String toBinary(long num) {
         return fillZero(Long.toBinaryString(num), 8, true);
     }
 
-
     public static String toHex(byte[] bytes) {
         return toHex(bytes, " ");
     }
-
 
     public static String toHex(byte[] bytes, String separator) {
         if (bytes == null) {
@@ -79,11 +71,9 @@ public class StringUtils {
         return s;
     }
 
-
     public static String toBinary(byte[] bytes) {
         return toBinary(bytes, " ");
     }
-
 
     public static String toBinary(byte[] bytes, String separator) {
         if (bytes == null) {
@@ -111,22 +101,19 @@ public class StringUtils {
         return s;
     }
 
-
     public static String subZeroAndDot(String number) {
         if (TextUtils.isEmpty(number)) return number;
         if (number.indexOf(".") > 0) {
-            number = number.replace("0+?$", "");//去掉多余的0  
-            number = number.replace("[.]$", "");//如最后一位是.则去掉  
+            number = number.replace("0+?$", "");//去掉多余的0
+            number = number.replace("[.]$", "");//如最后一位是.则去掉
         }
         return number;
     }
-
 
     @NonNull
     public static String toDuration(int duration) {
         return toDuration(duration, null);
     }
-
 
     @NonNull
     public static String toDuration(int duration, String format) {
@@ -136,7 +123,6 @@ public class StringUtils {
             return String.format(Locale.ENGLISH, "%02d:%02d:%02d", duration / 3600, duration % 3600 / 60, duration % 60);
         }
     }
-
 
     public static byte[] toByteArray(String hexStr, String separator) {
         String s = hexStr.replaceAll(separator, "");

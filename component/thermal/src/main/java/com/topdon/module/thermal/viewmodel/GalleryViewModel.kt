@@ -7,12 +7,10 @@ import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.ktbase.BaseViewModel
 import com.topdon.lib.core.utils.SingleLiveEvent
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.io.File
-
 
 class GalleryViewModel : BaseViewModel() {
     val galleryLiveData = SingleLiveEvent<ArrayList<String>>()

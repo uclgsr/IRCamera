@@ -21,63 +21,65 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:textSize="24sp"
             android:textColor="#ffffff"
-            tools:text="TCVIEW"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="TCVIEW" />
 
         <!-- 作者 -->
         <TextView
             android:id="@+id/tv_report_author"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
             android:textColor="#ffffff"
-            tools:text="This is name"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_report_name" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_report_name"
+            tools:text="This is name" />
 
         <!-- Time -->
         <TextView
             android:id="@+id/tv_report_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
             android:textColor="#ffffff"
-            tools:text="2013-11-08 14:15:30"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_report_author" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_report_author"
+            tools:text="2013-11-08 14:15:30" />
 
         <!-- Address -->
         <ImageView
             android:id="@+id/iv_report_place"
             android:layout_width="20sp"
             android:layout_height="20sp"
-            android:src="@drawable/svg_report_preview_location"
             android:contentDescription="@null"
+            android:src="@drawable/svg_report_preview_location"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_report_date" />
+
         <TextView
             android:id="@+id/tv_report_place"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
             android:textColor="#ffffff"
-            tools:text="深圳市南山区前海"
-            app:layout_constraintStart_toEndOf="@id/iv_report_place"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_report_date" />
+            app:layout_constraintStart_toEndOf="@id/iv_report_place"
+            app:layout_constraintTop_toBottomOf="@id/tv_report_date"
+            tools:text="深圳市南山区前海" />
+
         <androidx.constraintlayout.widget.Group
             android:id="@+id/group_report_place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            tools:visibility="visible"
-            app:constraint_referenced_ids="iv_report_place,tv_report_place" />
+            app:constraint_referenced_ids="iv_report_place,tv_report_place"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- 检测条件 -->
@@ -95,18 +97,18 @@
             android:id="@+id/tv_condition_title"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@drawable/bg_report_preview_title"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:gravity="center_vertical"
             android:text="@string/album_report_condition"
-            android:textSize="15sp"
             android:textColor="#ffffff"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:background="@drawable/bg_report_preview_title"
+            android:textSize="15sp"
             app:layout_constraintDimensionRatio="335:49"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- 环境温度 -->
@@ -114,36 +116,38 @@
             android:id="@+id/tv_ambient_temperature_title"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:gravity="center_vertical"
             android:text="@string/thermal_config_environment"
-            android:textSize="15sp"
             android:textColor="#e8e8e8"
-            android:maxLines="1"
-            android:ellipsize="end"
+            android:textSize="15sp"
             app:layout_constraintDimensionRatio="335:49"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_condition_title" />
+
         <TextView
             android:id="@+id/tv_ambient_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:textSize="15sp"
             android:textColor="#e8e8e8"
-            tools:text="26°C"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_ambient_temperature_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_ambient_temperature_title"
-            app:layout_constraintBottom_toBottomOf="@id/tv_ambient_temperature_title" />
+            tools:text="26°C" />
+
         <androidx.constraintlayout.widget.Group
             android:id="@+id/group_ambient_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            tools:visibility="visible"
-            app:constraint_referenced_ids="tv_ambient_temperature_title,tv_ambient_temperature" />
+            app:constraint_referenced_ids="tv_ambient_temperature_title,tv_ambient_temperature"
+            tools:visibility="visible" />
 
         <View
             android:id="@+id/view_line_1"
@@ -153,46 +157,48 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/shape_stroke_1_5b5961_dash_5"
             android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_ambient_temperature_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/tv_ambient_temperature_title" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible" />
 
         <!-- 环境湿度 -->
         <TextView
             android:id="@+id/tv_ambient_humidity_title"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:gravity="center_vertical"
             android:text="@string/album_report_ambient_humidity"
-            android:textSize="15sp"
             android:textColor="#e8e8e8"
-            android:maxLines="1"
-            android:ellipsize="end"
+            android:textSize="15sp"
             app:layout_constraintDimensionRatio="335:49"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_ambient_temperature_title" />
+
         <TextView
             android:id="@+id/tv_ambient_humidity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:textSize="15sp"
             android:textColor="#e8e8e8"
-            tools:text="50%"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_ambient_humidity_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_ambient_humidity_title"
-            app:layout_constraintBottom_toBottomOf="@id/tv_ambient_humidity_title" />
+            tools:text="50%" />
+
         <androidx.constraintlayout.widget.Group
             android:id="@+id/group_ambient_humidity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            tools:visibility="visible"
-            app:constraint_referenced_ids="tv_ambient_humidity_title,tv_ambient_humidity" />
+            app:constraint_referenced_ids="tv_ambient_humidity_title,tv_ambient_humidity"
+            tools:visibility="visible" />
 
         <View
             android:id="@+id/view_line_2"
@@ -202,46 +208,48 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/shape_stroke_1_5b5961_dash_5"
             android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_ambient_humidity_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/tv_ambient_humidity_title" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible" />
 
         <!-- TestDistance -->
         <TextView
             android:id="@+id/tv_test_distance_title"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:gravity="center_vertical"
             android:text="@string/album_report_test_distance"
-            android:textSize="15sp"
             android:textColor="#e8e8e8"
-            android:maxLines="1"
-            android:ellipsize="end"
+            android:textSize="15sp"
             app:layout_constraintDimensionRatio="335:49"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_ambient_humidity_title" />
+
         <TextView
             android:id="@+id/tv_test_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:textSize="15sp"
             android:textColor="#e8e8e8"
-            tools:text="0.5m"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_test_distance_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_test_distance_title"
-            app:layout_constraintBottom_toBottomOf="@id/tv_test_distance_title" />
+            tools:text="0.5m" />
+
         <androidx.constraintlayout.widget.Group
             android:id="@+id/group_test_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            tools:visibility="visible"
-            app:constraint_referenced_ids="tv_test_distance_title,tv_test_distance" />
+            app:constraint_referenced_ids="tv_test_distance_title,tv_test_distance"
+            tools:visibility="visible" />
 
         <View
             android:id="@+id/view_line_3"
@@ -251,46 +259,48 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/shape_stroke_1_5b5961_dash_5"
             android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_test_distance_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/tv_test_distance_title" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible" />
 
         <!-- 发射率 -->
         <TextView
             android:id="@+id/tv_emissivity_title"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:gravity="center_vertical"
             android:text="@string/album_report_emissivity"
-            android:textSize="15sp"
             android:textColor="#e8e8e8"
-            android:maxLines="1"
-            android:ellipsize="end"
+            android:textSize="15sp"
             app:layout_constraintDimensionRatio="335:49"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_test_distance_title" />
+
         <TextView
             android:id="@+id/tv_emissivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:textSize="15sp"
             android:textColor="#e8e8e8"
-            tools:text="ε=0.95"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_emissivity_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_emissivity_title"
-            app:layout_constraintBottom_toBottomOf="@id/tv_emissivity_title" />
+            tools:text="ε=0.95" />
+
         <androidx.constraintlayout.widget.Group
             android:id="@+id/group_emissivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            tools:visibility="visible"
-            app:constraint_referenced_ids="tv_emissivity_title,tv_emissivity" />
+            app:constraint_referenced_ids="tv_emissivity_title,tv_emissivity"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

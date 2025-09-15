@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 
 import java.lang.reflect.Method;
 
-
 public class MethodInfo {
     @NonNull
     private String name;
@@ -18,23 +17,20 @@ public class MethodInfo {
         this(name, name, parameters);
     }
 
-
     public MethodInfo(@NonNull String name, @NonNull String tag, @Nullable Parameter... parameters) {
         this.name = name;
         this.tag = tag;
         this.parameters = parameters;
     }
 
-
     public MethodInfo(@NonNull String name, @Nullable Class<?>[] parameterTypes) {
         this(name, name, parameterTypes);
     }
 
-
     public MethodInfo(@NonNull String name, @NonNull String tag, @Nullable Class<?>[] parameterTypes) {
         this(name, tag, toParameters(parameterTypes));
     }
-    
+
     public static MethodInfo valueOf(@NonNull Method method) {
         Tag annotation = method.getAnnotation(Tag.class);
         return new MethodInfo(method.getName(), annotation == null ? method.getName() : annotation.value(),
@@ -61,12 +57,10 @@ public class MethodInfo {
         this.name = name;
     }
 
-
     @NonNull
     public String getTag() {
         return tag;
     }
-
 
     public void setTag(@NonNull String tag) {
         this.tag = tag;

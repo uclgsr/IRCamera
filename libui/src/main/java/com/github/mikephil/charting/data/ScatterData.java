@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.data;
 
 import com.github.mikephil.charting.interfaces.datasets.IScatterDataSet;
@@ -18,7 +17,6 @@ public class ScatterData extends BarLineScatterCandleBubbleData<IScatterDataSet>
     public ScatterData(IScatterDataSet... dataSets) {
         super(dataSets);
     }
-
 
     public float getGreatestShapeSize() {
 

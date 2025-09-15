@@ -4,16 +4,17 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 import com.topdon.menu.constant.MenuType
 import com.topdon.menu.constant.SettingType
-
+import com.topdon.menu.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
-internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObserver: Boolean = false) : BaseMenuAdapter() {
+internal class SettingAdapter(
+    menuType: MenuType = MenuType.SINGLE_LIGHT,
+    isObserver: Boolean = false
+) : BaseMenuAdapter() {
 
     var onSettingListener: ((settingType: SettingType, isSelected: Boolean) -> Unit)? = null
-
 
     var rotateAngle: Int = 270
         set(value) {
@@ -22,7 +23,6 @@ internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObse
                 setSelected(SettingType.ROTATE, value != 270)
             }
         }
-
 
     fun setSelected(
         settingType: SettingType,
@@ -41,28 +41,112 @@ internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObse
 
     init {
         if (isObserver) {
-            dataList.add(Data(R.string.main_tab_second_compass, MenuR.drawable.selector_menu2_setting_8, SettingType.COMPASS))
-            dataList.add(Data(R.string.thermal_rotate, MenuR.drawable.selector_menu2_setting_4, SettingType.ROTATE))
-            dataList.add(Data(R.string.mirror, MenuR.drawable.selector_menu2_setting_5, SettingType.MIRROR))
-            dataList.add(Data(R.string.thermal_contrast, MenuR.drawable.selector_menu2_setting_2, SettingType.CONTRAST))
+            dataList.add(
+                Data(
+                    R.string.main_tab_second_compass,
+                    MenuR.drawable.selector_menu2_setting_8,
+                    SettingType.COMPASS
+                )
+            )
+            dataList.add(
+                Data(
+                    R.string.thermal_rotate,
+                    MenuR.drawable.selector_menu2_setting_4,
+                    SettingType.ROTATE
+                )
+            )
+            dataList.add(
+                Data(
+                    R.string.mirror,
+                    MenuR.drawable.selector_menu2_setting_5,
+                    SettingType.MIRROR
+                )
+            )
+            dataList.add(
+                Data(
+                    R.string.thermal_contrast,
+                    MenuR.drawable.selector_menu2_setting_2,
+                    SettingType.CONTRAST
+                )
+            )
         } else {
             if (menuType == MenuType.GALLERY_EDIT) { // 2D编辑
-                dataList.add(Data(R.string.temp_alarm_alarm, MenuR.drawable.selector_menu2_setting_6, SettingType.ALARM))
-                dataList.add(Data(R.string.menu_thermal_font, MenuR.drawable.selector_menu2_setting_7, SettingType.FONT))
-                dataList.add(Data(R.string.app_watemarking, MenuR.drawable.selector_menu2_setting_9, SettingType.WATERMARK))
+                dataList.add(
+                    Data(
+                        R.string.temp_alarm_alarm,
+                        MenuR.drawable.selector_menu2_setting_6,
+                        SettingType.ALARM
+                    )
+                )
+                dataList.add(
+                    Data(
+                        R.string.menu_thermal_font,
+                        MenuR.drawable.selector_menu2_setting_7,
+                        SettingType.FONT
+                    )
+                )
+                dataList.add(
+                    Data(
+                        R.string.app_watemarking,
+                        MenuR.drawable.selector_menu2_setting_9,
+                        SettingType.WATERMARK
+                    )
+                )
             } else {
-                dataList.add(Data(R.string.thermal_pseudo, MenuR.drawable.selector_menu2_setting_1, SettingType.PSEUDO_BAR))
-                dataList.add(Data(R.string.thermal_contrast, MenuR.drawable.selector_menu2_setting_2, SettingType.CONTRAST))
+                dataList.add(
+                    Data(
+                        R.string.thermal_pseudo,
+                        MenuR.drawable.selector_menu2_setting_1,
+                        SettingType.PSEUDO_BAR
+                    )
+                )
+                dataList.add(
+                    Data(
+                        R.string.thermal_contrast,
+                        MenuR.drawable.selector_menu2_setting_2,
+                        SettingType.CONTRAST
+                    )
+                )
                 if (menuType != MenuType.Lite) { // Lite 没有细节(锐度)
-                    dataList.add(Data(R.string.thermal_sharpen, MenuR.drawable.selector_menu2_setting_3, SettingType.DETAIL))
+                    dataList.add(
+                        Data(
+                            R.string.thermal_sharpen,
+                            MenuR.drawable.selector_menu2_setting_3,
+                            SettingType.DETAIL
+                        )
+                    )
                 }
-                dataList.add(Data(R.string.temp_alarm_alarm, MenuR.drawable.selector_menu2_setting_6, SettingType.ALARM))
+                dataList.add(
+                    Data(
+                        R.string.temp_alarm_alarm,
+                        MenuR.drawable.selector_menu2_setting_6,
+                        SettingType.ALARM
+                    )
+                )
                 if (menuType != MenuType.TC007) { // TC007 没有旋转
-                    dataList.add(Data(R.string.thermal_rotate, MenuR.drawable.selector_menu2_setting_4, SettingType.ROTATE))
+                    dataList.add(
+                        Data(
+                            R.string.thermal_rotate,
+                            MenuR.drawable.selector_menu2_setting_4,
+                            SettingType.ROTATE
+                        )
+                    )
                 }
-                dataList.add(Data(R.string.menu_thermal_font, MenuR.drawable.selector_menu2_setting_7, SettingType.FONT))
+                dataList.add(
+                    Data(
+                        R.string.menu_thermal_font,
+                        MenuR.drawable.selector_menu2_setting_7,
+                        SettingType.FONT
+                    )
+                )
                 if (menuType != MenuType.DOUBLE_LIGHT) { // TC001 Plus 没有镜像
-                    dataList.add(Data(R.string.mirror, MenuR.drawable.selector_menu2_setting_5, SettingType.MIRROR))
+                    dataList.add(
+                        Data(
+                            R.string.mirror,
+                            MenuR.drawable.selector_menu2_setting_5,
+                            SettingType.MIRROR
+                        )
+                    )
                 }
             }
         }
@@ -87,17 +171,13 @@ internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObse
         }
         holder.binding.tvText.isSelected = data.isSelected
         holder.binding.clRoot.setOnClickListener {
-            // warning、font、watermark是以effective才视为highlightselected的，Maintain original code logic here，
-            // menu的selectedrefreshleave to upper-layer listener to handle，consider changes later when time permits
-//            data.isSelected = !data.isSelected
-//            holder.binding.ivIcon.isSelected = data.isSelected
-//            holder.binding.tvText.isSelected = data.isSelected
+
+
             onSettingListener?.invoke(data.settingType, data.isSelected)
         }
     }
 
     override fun getItemCount(): Int = dataList.size
-
 
     data class Data(
         @StringRes val stringId: Int,

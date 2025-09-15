@@ -2,7 +2,10 @@
 
 ## 🛡️ Enterprise Security Overview
 
-The IRCamera platform implements **military-grade comprehensive security measures** to protect thermal imaging data, physiological measurements, system communications, cloud integrations, and enterprise deployments. This document outlines enterprise security architecture, implementation guidelines, compliance frameworks, threat modeling, and production security best practices.
+The IRCamera platform implements **military-grade comprehensive security measures** to protect
+thermal imaging data, physiological measurements, system communications, cloud integrations, and
+enterprise deployments. This document outlines enterprise security architecture, implementation
+guidelines, compliance frameworks, threat modeling, and production security best practices.
 
 ## 🏗️ Enterprise Multi-Layer Security Architecture
 
@@ -76,20 +79,21 @@ graph TB
 
 ### Security Threat Model
 
-| Threat Category | Risk Level | Mitigation Strategy |
-|----------------|------------|-------------------|
-| **Data Interception** | High | End-to-end encryption, TLS 1.3 |
-| **Unauthorized Access** | High | Multi-factor authentication, biometrics |
-| **Data Tampering** | Medium | Digital signatures, integrity checks |
-| **Device Compromise** | Medium | Hardware security modules, sandboxing |
-| **Network Attacks** | Medium | VPN tunneling, certificate pinning |
-| **Data Leakage** | High | Data classification, access controls |
+| Threat Category         | Risk Level | Mitigation Strategy                     |
+|-------------------------|------------|-----------------------------------------|
+| **Data Interception**   | High       | End-to-end encryption, TLS 1.3          |
+| **Unauthorized Access** | High       | Multi-factor authentication, biometrics |
+| **Data Tampering**      | Medium     | Digital signatures, integrity checks    |
+| **Device Compromise**   | Medium     | Hardware security modules, sandboxing   |
+| **Network Attacks**     | Medium     | VPN tunneling, certificate pinning      |
+| **Data Leakage**        | High       | Data classification, access controls    |
 
 ## 🔐 Authentication & Authorization
 
 ### Android Authentication Implementation
 
 #### Biometric Authentication
+
 ```kotlin
 class BiometricAuthManager(private val context: Context) {
     private val biometricPrompt by lazy {
@@ -113,13 +117,13 @@ class BiometricAuthManager(private val context: Context) {
     private val authenticationCallback = object : BiometricPrompt.AuthenticationCallback() {
         override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
             super.onAuthenticationSucceeded(result)
-            // Generate secure session token
+
             generateSecureSession()
         }
         
         override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
             super.onAuthenticationError(errorCode, errString)
-            // Handle authentication failure
+
             handleAuthenticationFailure(errorCode, errString.toString())
         }
     }
@@ -127,6 +131,7 @@ class BiometricAuthManager(private val context: Context) {
 ```
 
 #### Role-Based Access Control
+
 ```kotlin
 enum class UserRole(val permissions: Set<Permission>) {
     RESEARCHER(setOf(
@@ -161,6 +166,7 @@ class AccessControlManager {
 ### PC Controller Authentication
 
 #### Multi-Factor Authentication
+
 ```python
 import pyotp
 import qrcode
@@ -221,6 +227,7 @@ class MFAuthenticator:
 ### Android Data Encryption
 
 #### Thermal Data Encryption
+
 ```kotlin
 class ThermalDataEncryption {
     private val keyAlias = "IRCamera_Thermal_Key"
@@ -269,6 +276,7 @@ class ThermalDataEncryption {
 ```
 
 #### GSR Data Protection
+
 ```kotlin
 class GSRDataProtection {
     private val keyAlias = "IRCamera_GSR_Key"
@@ -292,7 +300,7 @@ class GSRDataProtection {
     }
     
     fun anonymizeGSRData(gsrData: GSRSample, participantId: String): GSRSample {
-        // Remove or hash identifying information
+
         val hashedId = MessageDigest.getInstance("SHA-256")
             .digest(participantId.toByteArray())
             .joinToString("") { "%02x".format(it) }
@@ -313,6 +321,7 @@ class GSRDataProtection {
 ### PC Controller Encryption
 
 #### File System Encryption
+
 ```python
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
@@ -399,6 +408,7 @@ class FileSystemEncryption:
 ### Secure Communication Protocol
 
 #### TLS Configuration
+
 ```python
 import ssl
 import socket
@@ -462,6 +472,7 @@ class SecureNetworkManager:
 ```
 
 #### Message Integrity
+
 ```python
 import hmac
 import hashlib
@@ -664,6 +675,7 @@ class IncidentResponseSystem:
 ## 📋 Security Configuration Checklist
 
 ### Android Security Checklist
+
 - [ ] Enable biometric authentication
 - [ ] Implement certificate pinning
 - [ ] Use Android Keystore for encryption keys
@@ -676,6 +688,7 @@ class IncidentResponseSystem:
 - [ ] Implement proper session management
 
 ### PC Controller Security Checklist
+
 - [ ] Enable multi-factor authentication
 - [ ] Implement file system encryption
 - [ ] Use secure password policies
@@ -688,6 +701,7 @@ class IncidentResponseSystem:
 - [ ] Enable network monitoring
 
 ### System-Wide Security Checklist
+
 - [ ] Regular security assessments
 - [ ] Penetration testing
 - [ ] Security training for users
@@ -702,6 +716,7 @@ class IncidentResponseSystem:
 ## 🔐 Security Best Practices
 
 ### Development Security Practices
+
 1. **Secure Coding Standards**: Follow OWASP secure coding guidelines
 2. **Code Review**: Mandatory security-focused code reviews
 3. **Static Analysis**: Use automated security scanning tools
@@ -710,6 +725,7 @@ class IncidentResponseSystem:
 6. **Testing**: Include security testing in CI/CD pipeline
 
 ### Deployment Security Practices
+
 1. **Infrastructure Security**: Secure server configurations
 2. **Network Security**: Proper firewall and network segmentation
 3. **Access Controls**: Principle of least privilege
@@ -717,4 +733,6 @@ class IncidentResponseSystem:
 5. **Incident Response**: Well-defined incident response procedures
 6. **Compliance**: Regular compliance audits and assessments
 
-This comprehensive security guide ensures the IRCamera platform maintains the highest security standards for protecting sensitive thermal imaging and physiological data across all components and deployment scenarios.
+This comprehensive security guide ensures the IRCamera platform maintains the highest security
+standards for protecting sensitive thermal imaging and physiological data across all components and
+deployment scenarios.

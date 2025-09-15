@@ -21,14 +21,21 @@ import org.greenrobot.eventbus.EventBus
 import com.topdon.lib.core.R as LibCoreR
 import com.topdon.lib.ui.R as UiR
 
+/**
 
+ *
+
+
+
+
+ *
+ * Created by chenggeng.lin on 2023/11/14.
+ */
 class IRGalleryTabFragment : BaseFragment() {
 
     private var hasBackIcon = false
 
-
     private var canSwitchDir = true
-
 
     private var currentDirType = DirType.LINE
 
@@ -36,7 +43,6 @@ class IRGalleryTabFragment : BaseFragment() {
 
     private var viewPagerAdapter: ViewPagerAdapter? = null
 
-    // View references - initialized in initView
     private lateinit var titleView: TitleView
     private lateinit var tvTitleDir: MyTextView
     private lateinit var tabLayout: TabLayout
@@ -45,7 +51,7 @@ class IRGalleryTabFragment : BaseFragment() {
     override fun initContentView(): Int = R.layout.fragment_gallery_tab
 
     override fun initView() {
-        // Initialize views with findViewById
+
         titleView = requireView().findViewById(R.id.title_view)
         tvTitleDir = requireView().findViewById(R.id.tv_title_dir)
         tabLayout = requireView().findViewById(R.id.tab_layout)
@@ -120,7 +126,12 @@ class IRGalleryTabFragment : BaseFragment() {
             tabLayout.isVisible = !isEditMode
             viewPager2.isUserInputEnabled = !isEditMode
             if (isEditMode) {
-                titleView.setTitleText(getString(R.string.chosen_item, viewModel.selectSizeLD.value))
+                titleView.setTitleText(
+                    getString(
+                        R.string.chosen_item,
+                        viewModel.selectSizeLD.value
+                    )
+                )
                 tvTitleDir.isVisible = false
             } else {
                 titleView.setTitleText(if (canSwitchDir) "" else getString(R.string.app_gallery))

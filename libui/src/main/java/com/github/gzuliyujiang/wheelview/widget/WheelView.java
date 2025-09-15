@@ -55,7 +55,6 @@ import com.topdon.lib.ui.R;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @SuppressWarnings({"unused"})
 public class WheelView extends View implements Runnable {
     @Deprecated
@@ -64,7 +63,21 @@ public class WheelView extends View implements Runnable {
     public static final int SCROLL_STATE_DRAGGING = ScrollState.DRAGGING;
     @Deprecated
     public static final int SCROLL_STATE_SCROLLING = ScrollState.SCROLLING;
-
+    private final Handler handler = new Handler();
+    private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.LINEAR_TEXT_FLAG);
+    private final Scroller scroller;
+    private final Rect rectDrawn = new Rect();
+    private final Rect rectIndicatorHead = new Rect();
+    private final Rect rectIndicatorFoot = new Rect();
+    private final Rect rectCurrentItem = new Rect();
+    private final Camera camera = new Camera();
+    private final Matrix matrixRotate = new Matrix();
+    private final Matrix matrixDepth = new Matrix();
+    private final int minimumVelocity;
+    private final int maximumVelocity;
+    private final int touchSlop;
+    private final AttributeSet attrs;
+    public int itemHeight, halfItemHeight;
     protected List<?> data = new ArrayList<>();
     protected WheelFormatter formatter;
     protected Object defaultItem;
@@ -90,24 +103,12 @@ public class WheelView extends View implements Runnable {
     protected boolean curvedEnabled;
     protected int curvedMaxAngle = 90;
     protected int curvedIndicatorSpace;
-
-    private final Handler handler = new Handler();
-    private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.LINEAR_TEXT_FLAG);
-    private final Scroller scroller;
     private VelocityTracker tracker;
     private OnWheelChangedListener onWheelChangedListener;
-    private final Rect rectDrawn = new Rect();
-    private final Rect rectIndicatorHead = new Rect();
-    private final Rect rectIndicatorFoot = new Rect();
-    private final Rect rectCurrentItem = new Rect();
-    private final Camera camera = new Camera();
-    private final Matrix matrixRotate = new Matrix();
-    private final Matrix matrixDepth = new Matrix();
     private int lastScrollPosition;
     private int drawnItemCount;
     private int halfDrawnItemCount;
     private int textMaxWidth, textMaxHeight;
-    public int itemHeight, halfItemHeight;
     private int halfWheelHeight;
     private int minFlingYCoordinate, maxFlingYCoordinate;
     private int wheelCenterXCoordinate, wheelCenterYCoordinate;
@@ -115,12 +116,8 @@ public class WheelView extends View implements Runnable {
     private int scrollOffsetYCoordinate;
     private int lastPointYCoordinate;
     private int downPointYCoordinate;
-    private final int minimumVelocity;
-    private final int maximumVelocity;
-    private final int touchSlop;
     private boolean isClick;
     private boolean isForceFinishScroll;
-    private final AttributeSet attrs;
 
     public WheelView(Context context) {
         this(context, null);
@@ -241,7 +238,7 @@ public class WheelView extends View implements Runnable {
         if (visibleItemCount < minCount) {
             throw new ArithmeticException("Visible item count can not be less than " + minCount);
         }
-        //Visible条目只能是奇数个，settingsVisible条目时偶数个将自动矫正为奇数个
+
         int evenNumberFlag = 2;
         if (visibleItemCount % evenNumberFlag == 0) {
             visibleItemCount += 1;
@@ -257,7 +254,7 @@ public class WheelView extends View implements Runnable {
         } else if (!TextUtils.isEmpty(maxWidthText)) {
             textMaxWidth = (int) paint.measureText(maxWidthText);
         } else {
-            // 未指定最宽的文本，须遍历测量查找最宽的作为基准
+
             int itemCount = getItemCount();
             for (int i = 0; i < itemCount; ++i) {
                 int width = (int) paint.measureText(formatItem(i));
@@ -279,7 +276,7 @@ public class WheelView extends View implements Runnable {
         }
         int index = (position + size) % size;
         if (index >= 0 && index <= size - 1) {
-            //noinspection unchecked
+
             return (T) data.get(index);
         }
         return null;
@@ -641,17 +638,17 @@ public class WheelView extends View implements Runnable {
         final int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
         final int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
         final int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
-        // Correct sizes of original content
+
         int resultWidth = textMaxWidth;
         int resultHeight = textMaxHeight * visibleItemCount + itemSpace * (visibleItemCount - 1);
-        // Correct view sizes again if curved is enable
+
         if (curvedEnabled) {
             resultHeight = (int) (2 * resultHeight / Math.PI);
         }
-        // Consideration padding influence the view sizes
+
         resultWidth += getPaddingLeft() + getPaddingRight();
         resultHeight += getPaddingTop() + getPaddingBottom();
-        // Consideration sizes of parent can influence the view sizes
+
         resultWidth = measureSize(modeWidth, sizeWidth, resultWidth);
         resultHeight = measureSize(modeHeight, sizeHeight, resultHeight);
         setMeasuredDimension(resultWidth, resultHeight);
@@ -672,22 +669,22 @@ public class WheelView extends View implements Runnable {
 
     @Override
     protected void onSizeChanged(int w, int h, int ow, int oh) {
-        // Set content region
+
         rectDrawn.set(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(),
                 getHeight() - getPaddingBottom());
-        // Get the center coordinates of content region
+
         wheelCenterXCoordinate = rectDrawn.centerX();
         wheelCenterYCoordinate = rectDrawn.centerY();
-        // Correct item drawn center
+
         computeDrawnCenterCoordinate();
         halfWheelHeight = rectDrawn.height() / 2;
         itemHeight = rectDrawn.height() / visibleItemCount;
         halfItemHeight = itemHeight / 2;
-        // Initialize fling max Y-coordinates
+
         computeFlingLimitYCoordinate();
-        // Correct region of indicator
+
         computeIndicatorRect();
-        // Correct region of current select item
+
         computeCurrentItemRect();
     }
 
@@ -763,7 +760,7 @@ public class WheelView extends View implements Runnable {
             int drawnItemCenterYCoordinate = drawnCenterYCoordinate + (drawnOffsetPos * itemHeight)
                     + scrollOffsetYCoordinate % itemHeight;
             int centerYCoordinateAbs = Math.abs(drawnCenterYCoordinate - drawnItemCenterYCoordinate);
-            // Correct ratio of item's drawn center to wheel center
+
             float ratio = (drawnCenterYCoordinate - centerYCoordinateAbs - rectDrawn.top) * 1f /
                     (drawnCenterYCoordinate - rectDrawn.top);
             float degree = computeDegree(drawnItemCenterYCoordinate, ratio);
@@ -801,7 +798,7 @@ public class WheelView extends View implements Runnable {
             }
 
             computeAndSetAtmospheric(centerYCoordinateAbs);
-            // Correct item's drawn center Y coordinate base on curved state
+
             float drawCenterYCoordinate = curvedEnabled ? drawnCenterYCoordinate - distanceToCenter
                     : drawnItemCenterYCoordinate;
             drawItemRect(canvas, drawnDataPosition, isCenterItem, drawCenterYCoordinate);
@@ -809,7 +806,7 @@ public class WheelView extends View implements Runnable {
     }
 
     private void drawItemRect(Canvas canvas, int dataPosition, boolean isCenterItem, float drawCenterYCoordinate) {
-        // Judges need to draw different color for current item or not
+
         if (selectedTextColor == -1) {
             canvas.save();
             canvas.clipRect(rectDrawn);
@@ -872,7 +869,7 @@ public class WheelView extends View implements Runnable {
         float ellipsisWidth = paint.measureText(ellipsis);
         String data = obtainItemText(dataPosition);
         while (paint.measureText(data) + ellipsisWidth - measuredWidth > 0) {
-            // 超出控件宽度则省略部分文字
+
             int length = data.length();
             if (length > 1) {
                 data = data.substring(0, length - 1);
@@ -886,7 +883,7 @@ public class WheelView extends View implements Runnable {
     }
 
     private float computeDegree(int drawnItemCenterYCoordinate, float ratio) {
-        // Correct unit
+
         int unit = 0;
         if (drawnItemCenterYCoordinate > drawnCenterYCoordinate) {
             unit = 1;
@@ -946,7 +943,7 @@ public class WheelView extends View implements Runnable {
     }
 
     private void drawCurtain(Canvas canvas) {
-        // Need to draw curtain or not
+
         if (!curtainEnabled) {
             return;
         }
@@ -998,7 +995,7 @@ public class WheelView extends View implements Runnable {
     }
 
     private void drawIndicator(Canvas canvas) {
-        // Need to draw indicator or not
+
         if (!indicatorEnabled) {
             return;
         }
@@ -1013,7 +1010,7 @@ public class WheelView extends View implements Runnable {
     }
 
     private float computeYCoordinateAtAngle(float degree) {
-        // Compute y-coordinate for item at degree.
+
         return sinDegree(degree) / sinDegree(curvedMaxAngle) * halfWheelHeight;
     }
 
@@ -1046,7 +1043,7 @@ public class WheelView extends View implements Runnable {
             }
         }
         if (isClick) {
-            //onTouchEvent should call performClick when a click is detected
+
             performClick();
         }
         return true;
@@ -1078,7 +1075,7 @@ public class WheelView extends View implements Runnable {
         if (null != onWheelChangedListener) {
             onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.DRAGGING);
         }
-        // Scroll WheelPicker's content
+
         float move = event.getY() - lastPointYCoordinate;
         if (Math.abs(move) < 1) {
             return;
@@ -1102,7 +1099,6 @@ public class WheelView extends View implements Runnable {
             yVelocity = (int) tracker.getYVelocity();
         }
 
-        // Judge scroll or fling base on current velocity
         isForceFinishScroll = false;
         if (Math.abs(yVelocity) > minimumVelocity) {
             scroller.fling(0, scrollOffsetYCoordinate, 0, yVelocity, 0,
@@ -1113,7 +1109,7 @@ public class WheelView extends View implements Runnable {
             int endPoint = computeDistanceToEndPoint(scrollOffsetYCoordinate % itemHeight);
             scroller.startScroll(0, scrollOffsetYCoordinate, 0, endPoint);
         }
-        // Correct coordinates
+
         if (!cyclicEnabled) {
             if (scroller.getFinalY() > maxFlingYCoordinate) {
                 scroller.setFinalY(maxFlingYCoordinate);
@@ -1187,7 +1183,7 @@ public class WheelView extends View implements Runnable {
             postInvalidate();
             return;
         }
-        // Scroll not finished
+
         if (scroller.computeScrollOffset()) {
             if (null != onWheelChangedListener) {
                 onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.SCROLLING);

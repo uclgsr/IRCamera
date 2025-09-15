@@ -27,7 +27,6 @@ import com.github.gzuliyujiang.wheelpicker.contract.OnLinkagePickedListener;
 import com.github.gzuliyujiang.wheelpicker.widget.LinkageWheelLayout;
 import com.github.gzuliyujiang.wheelview.widget.WheelView;
 
-
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class LinkagePicker extends ModalDialog {
     protected LinkageWheelLayout wheelLayout;

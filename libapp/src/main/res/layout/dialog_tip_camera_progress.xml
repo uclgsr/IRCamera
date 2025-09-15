@@ -4,8 +4,7 @@
     android:layout_width="360dp"
     android:layout_height="wrap_content"
     android:paddingTop="48dp"
-    android:paddingBottom="48dp"
-    >
+    android:paddingBottom="48dp">
 
     <ProgressBar
         android:id="@+id/dialog_tip_load"

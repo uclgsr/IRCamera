@@ -14,7 +14,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.hjq.permissions.XXPermissions
 
-
 object WifiUtil {
 
     fun ScanResult.getWifiName(): String =
@@ -27,7 +26,6 @@ object WifiUtil {
 
     fun WifiInfo.getWifiName(): String = removeQuotation(ssid)
 
-
     private fun removeQuotation(source: String): String {
         return if (source.length > 1 && source[0] == '\"' && source[source.length - 1] == '\"') {
             source.subSequence(1, source.length - 1).toString()
@@ -35,7 +33,6 @@ object WifiUtil {
             source
         }
     }
-
 
     fun getCurrentWifiSSID(context: Context): String? {
         if (!XXPermissions.isGranted(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -46,14 +43,12 @@ object WifiUtil {
         return wifiManager.connectionInfo?.getWifiName()
     }
 
-
     fun addWifiStateListener(
         activity: ComponentActivity,
         listener: ((isEnable: Boolean) -> Unit),
     ) {
         activity.lifecycle.addObserver(WifiStateObserver(activity, WifiStateReceiver(listener)))
     }
-
 
     fun addWifiScanListener(
         activity: ComponentActivity,
@@ -62,7 +57,8 @@ object WifiUtil {
         activity.lifecycle.addObserver(WifiScanObserver(activity, WifiScanReceiver(listener)))
     }
 
-    private class WifiStateObserver(val context: Context, val receiver: BroadcastReceiver) : DefaultLifecycleObserver {
+    private class WifiStateObserver(val context: Context, val receiver: BroadcastReceiver) :
+        DefaultLifecycleObserver {
         override fun onCreate(owner: LifecycleOwner) {
             context.registerReceiver(receiver, IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION))
         }
@@ -73,9 +69,13 @@ object WifiUtil {
         }
     }
 
-    private class WifiScanObserver(val context: Context, val receiver: BroadcastReceiver) : DefaultLifecycleObserver {
+    private class WifiScanObserver(val context: Context, val receiver: BroadcastReceiver) :
+        DefaultLifecycleObserver {
         override fun onCreate(owner: LifecycleOwner) {
-            context.registerReceiver(receiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
+            context.registerReceiver(
+                receiver,
+                IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
+            )
         }
 
         override fun onDestroy(owner: LifecycleOwner) {
@@ -84,26 +84,33 @@ object WifiUtil {
         }
     }
 
-
-    private class WifiStateReceiver(val listener: ((isEnable: Boolean) -> Unit)) : BroadcastReceiver() {
+    private class WifiStateReceiver(val listener: ((isEnable: Boolean) -> Unit)) :
+        BroadcastReceiver() {
         override fun onReceive(
             context: Context?,
             intent: Intent?,
         ) {
-            when (intent?.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)) {
+            when (intent?.getIntExtra(
+                WifiManager.EXTRA_WIFI_STATE,
+                WifiManager.WIFI_STATE_UNKNOWN
+            )) {
                 WifiManager.WIFI_STATE_ENABLED -> listener.invoke(true)
-                WifiManager.WIFI_STATE_DISABLED, WifiManager.WIFI_STATE_UNKNOWN -> listener.invoke(false)
+                WifiManager.WIFI_STATE_DISABLED, WifiManager.WIFI_STATE_UNKNOWN -> listener.invoke(
+                    false
+                )
             }
         }
     }
 
-
-    private class WifiScanReceiver(val listener: ((isSuccess: Boolean) -> Unit)) : BroadcastReceiver() {
+    private class WifiScanReceiver(val listener: ((isSuccess: Boolean) -> Unit)) :
+        BroadcastReceiver() {
         override fun onReceive(
             context: Context,
             intent: Intent?,
         ) {
-            listener.invoke(intent?.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false) ?: false)
+            listener.invoke(
+                intent?.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false) ?: false
+            )
         }
     }
 }

@@ -2,7 +2,12 @@ package com.topdon.tc001.camera.core
 
 import android.content.Context
 import android.graphics.ImageFormat
-import android.hardware.camera2.*
+import android.hardware.camera2.CameraAccessException
+import android.hardware.camera2.CameraCaptureSession
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraDevice
+import android.hardware.camera2.CameraManager
+import android.hardware.camera2.CaptureRequest
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
@@ -12,32 +17,27 @@ import android.view.Surface
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 
-
 class CameraController(private val context: Context) {
     companion object {
         private const val TAG = "CameraController"
         private const val CAMERA_OPEN_TIMEOUT_MS = 2500L
     }
 
-    // Camera state
     private var cameraDevice: CameraDevice? = null
     private var captureSession: CameraCaptureSession? = null
     private var currentCameraId: String = "0"
     private var deviceCaps: DeviceCaps? = null
 
-    // Background thread for camera operations
     private var backgroundThread: HandlerThread? = null
     private var backgroundHandler: Handler? = null
     private val cameraOpenCloseLock = Semaphore(1)
 
-    // State callbacks
     var onCameraOpened: ((DeviceCaps) -> Unit)? = null
     var onCameraError: ((String) -> Unit)? = null
 
     init {
         startBackgroundThread()
     }
-
 
     fun openCamera(cameraId: String = "0") {
         Log.i(TAG, "Opening camera $cameraId")
@@ -46,7 +46,6 @@ class CameraController(private val context: Context) {
             val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
             val characteristics = manager.getCameraCharacteristics(cameraId)
 
-            // Detect capabilities once at camera open (as specified)
             deviceCaps = detectCapabilities(characteristics)
             Log.i(TAG, "Device capabilities: $deviceCaps")
 
@@ -65,14 +64,13 @@ class CameraController(private val context: Context) {
         }
     }
 
-
     fun createCaptureSession(
         surfaces: List<Surface>,
         callback: CameraCaptureSession.StateCallback,
     ) {
         cameraDevice?.let { device ->
             try {
-                // Close previous session but keep camera device open
+
                 captureSession?.close()
                 captureSession = null
 
@@ -88,7 +86,6 @@ class CameraController(private val context: Context) {
         }
     }
 
-
     fun createCaptureRequest(template: Int): CaptureRequest.Builder? {
         return try {
             cameraDevice?.createCaptureRequest(template)
@@ -98,20 +95,15 @@ class CameraController(private val context: Context) {
         }
     }
 
-
     fun getDeviceCaps(): DeviceCaps? = deviceCaps
 
-
     fun isOpen(): Boolean = cameraDevice != null
-
 
     fun setCaptureSession(session: CameraCaptureSession) {
         captureSession = session
     }
 
-
     fun getCaptureSession(): CameraCaptureSession? = captureSession
-
 
     fun close() {
         try {
@@ -129,25 +121,24 @@ class CameraController(private val context: Context) {
         stopBackgroundThread()
     }
 
-
     private fun detectCapabilities(characteristics: CameraCharacteristics): DeviceCaps {
-        val capabilities = characteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES) ?: IntArray(0)
-        val supportsRaw = capabilities.contains(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_RAW)
+        val capabilities =
+            characteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES) ?: IntArray(0)
+        val supportsRaw =
+            capabilities.contains(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_RAW)
 
         val map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
 
-        // RAW sizes: from SCALER_STREAM_CONFIGURATION_MAP.getOutputSizes(RAW_SENSOR). Pick max.
         val rawSizes = map?.getOutputSizes(ImageFormat.RAW_SENSOR) ?: arrayOf(Size(0, 0))
         val rawSize = rawSizes.maxByOrNull { it.width * it.height } ?: Size(0, 0)
 
-        // High-speed: Check 3840×2160 with fpsRange including 60
         var supports4k60 = false
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                // Check high-speed video sizes and fps ranges directly from StreamConfigurationMap
+
                 map?.getHighSpeedVideoSizes()?.forEach { size ->
                     if (size.width == 3840 && size.height == 2160) {
-                        // Check if any fps range includes 60
+
                         map.getHighSpeedVideoFpsRangesFor(size)?.forEach { range ->
                             if (range.upper >= 60) {
                                 supports4k60 = true

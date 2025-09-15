@@ -9,11 +9,9 @@ object LanguageTool {
         return context.getString(R.string.english)
     }
 
-
     fun useLanguage(context: Context): String {
         return "en-WW"
     }
-
 
     fun useStatementLanguage(): String {
         return "EN"

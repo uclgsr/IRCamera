@@ -21,16 +21,16 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.Objects;
 
-
 public class PhoneCodeEntity implements TextProvider, Serializable {
     private static final boolean IS_CHINESE;
-    private String code;
-    private String name;
-    private String english;
 
     static {
         IS_CHINESE = Locale.getDefault().getDisplayLanguage().contains("中文");
     }
+
+    private String code;
+    private String name;
+    private String english;
 
     public String getCode() {
         return code;

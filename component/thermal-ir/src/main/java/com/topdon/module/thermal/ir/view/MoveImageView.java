@@ -14,6 +14,9 @@ import androidx.annotation.Nullable;
 public class MoveImageView extends ImageView {
 
     private static final String TAG = "MoveImageView";
+    private static final int MIN_CLICK_DELAY_TIME = 100;
+    private static long lastClickTime;
+    public OnMoveListener onMoveListener;
     private float mPreX;
     private float mPreY;
 
@@ -28,6 +31,19 @@ public class MoveImageView extends ImageView {
     public MoveImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+    }
+
+    public static boolean delayMoveTime() {
+        boolean flag = false;
+        long curClickTime = System.currentTimeMillis();
+        if ((curClickTime - lastClickTime) < MIN_CLICK_DELAY_TIME) {
+            flag = false;
+        } else {
+            flag = true;
+            lastClickTime = System.currentTimeMillis();
+        }
+        Log.d(TAG, "ACTION_MOVE isFastClick flag : " + flag);
+        return flag;
     }
 
     private void init() {
@@ -71,30 +87,12 @@ public class MoveImageView extends ImageView {
         }
         return true;
     }
-    private static final int MIN_CLICK_DELAY_TIME = 100;
-    private static long lastClickTime;
 
-//最多70毫秒执行一次move
-    public static boolean delayMoveTime() {
-        boolean flag = false;
-        long curClickTime = System.currentTimeMillis();
-        if ((curClickTime - lastClickTime) < MIN_CLICK_DELAY_TIME) {
-            flag = false;
-        } else {
-            flag = true;
-            lastClickTime = System.currentTimeMillis();
-        }
-        Log.d(TAG, "ACTION_MOVE isFastClick flag : " + flag);
-        return flag;
+    public void setOnMoveListener(OnMoveListener onMoveListener) {
+        this.onMoveListener = onMoveListener;
     }
 
     public interface OnMoveListener {
         void onMove(float preX, float preY, float curX, float curY);
-    }
-
-    public OnMoveListener onMoveListener;
-
-    public void setOnMoveListener(OnMoveListener onMoveListener) {
-        this.onMoveListener = onMoveListener;
     }
 }

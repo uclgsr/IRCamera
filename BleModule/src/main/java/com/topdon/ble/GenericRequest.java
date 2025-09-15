@@ -8,11 +8,9 @@ import com.topdon.ble.callback.RequestCallback;
 import java.util.Queue;
 import java.util.UUID;
 
-
-
 class GenericRequest implements Request, Comparable<GenericRequest> {
-    Device device;
     private final String tag;
+    Device device;
     RequestType type;
     UUID service;
     UUID characteristic;
@@ -22,10 +20,10 @@ class GenericRequest implements Request, Comparable<GenericRequest> {
     RequestCallback callback;
     WriteOptions writeOptions;
     byte[] descriptorTemp;//临时保存描述符的值
-    //---------  分包发送相关  ---------
+
     Queue<byte[]> remainQueue;
     byte[] sendingBytes;
-    //--------------------------------
+
 
     GenericRequest(RequestBuilder builder) {
         tag = builder.tag;
@@ -44,18 +42,15 @@ class GenericRequest implements Request, Comparable<GenericRequest> {
         return Integer.compare(other.priority, priority);
     }
 
-
     @NonNull
     public Device getDevice() {
         return device;
     }
 
-
     @NonNull
     public RequestType getType() {
         return type;
     }
-
 
     @Nullable
     public String getTag() {

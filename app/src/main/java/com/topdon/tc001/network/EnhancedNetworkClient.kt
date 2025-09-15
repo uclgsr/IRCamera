@@ -4,13 +4,29 @@ import android.content.Context
 import android.util.Log
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.utils.TimeManager
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import org.json.JSONObject
-import java.io.*
-import java.net.*
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.IOException
+import java.net.InetSocketAddress
+import java.net.Socket
 import java.util.concurrent.atomic.AtomicBoolean
-
 
 class EnhancedNetworkClient(
     private val context: Context,
@@ -26,19 +42,15 @@ class EnhancedNetworkClient(
         private const val STATUS_REPORT_INTERVAL_MS = 2000L
     }
 
-    // Network connection state
     private var socket: Socket? = null
     private var outputStream: DataOutputStream? = null
     private var inputStream: DataInputStream? = null
     private val isConnected = AtomicBoolean(false)
 
-    // Communication scope
     private val networkScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    // Time management
     private val timeManager = TimeManager.getInstance(context)
 
-    // Connection info
     private var connectedControllerInfo: NetworkClient.ControllerInfo? = null
     private var deviceId: String =
         android.provider.Settings.Secure.getString(
@@ -46,18 +58,15 @@ class EnhancedNetworkClient(
             android.provider.Settings.Secure.ANDROID_ID,
         )
 
-    // Data flows
     private val _connectionStateFlow = MutableStateFlow(ConnectionState.DISCONNECTED)
     val connectionStateFlow: StateFlow<ConnectionState> = _connectionStateFlow.asStateFlow()
 
     private val _messageFlow = MutableSharedFlow<NetworkMessage>()
     val messageFlow: SharedFlow<NetworkMessage> = _messageFlow.asSharedFlow()
 
-    // Background jobs
     private var heartbeatJob: Job? = null
     private var statusReportJob: Job? = null
     private var messageListenerJob: Job? = null
-
 
     suspend fun connectToController(
         ipAddress: String,
@@ -72,7 +81,6 @@ class EnhancedNetworkClient(
                 Log.i(TAG, "Connecting to PC Controller at $ipAddress:$port")
                 _connectionStateFlow.value = ConnectionState.CONNECTING
 
-                // Establish socket connection
                 socket =
                     Socket().apply {
                         connect(InetSocketAddress(ipAddress, port), CONNECTION_TIMEOUT_MS.toInt())
@@ -82,7 +90,6 @@ class EnhancedNetworkClient(
                 outputStream = DataOutputStream(socket!!.getOutputStream())
                 inputStream = DataInputStream(socket!!.getInputStream())
 
-                // Register device with enhanced capabilities
                 val registrationSuccess = registerEnhancedDevice()
                 if (!registrationSuccess) {
                     Log.e(TAG, "Device registration failed")
@@ -90,7 +97,6 @@ class EnhancedNetworkClient(
                     return@withContext false
                 }
 
-                // Perform time synchronization
                 val timeSyncSuccess = timeManager.synchronizeWithPC(ipAddress, TIME_SYNC_PORT)
                 if (!timeSyncSuccess) {
                     Log.w(TAG, "Time synchronization failed, continuing with local time")
@@ -107,7 +113,6 @@ class EnhancedNetworkClient(
                         capabilities = listOf("hub", "aggregation", "sync"),
                     )
 
-                // Start background communication tasks
                 startMessageListener()
                 startHeartbeat()
                 startStatusReporting()
@@ -123,7 +128,6 @@ class EnhancedNetworkClient(
         }
     }
 
-
     suspend fun disconnect() {
         withContext(Dispatchers.IO) {
             try {
@@ -132,12 +136,10 @@ class EnhancedNetworkClient(
                 isConnected.set(false)
                 _connectionStateFlow.value = ConnectionState.DISCONNECTING
 
-                // Cancel background jobs
                 heartbeatJob?.cancel()
                 statusReportJob?.cancel()
                 messageListenerJob?.cancel()
 
-                // Send disconnect message
                 if (outputStream != null) {
                     try {
                         val disconnectMessage = createMessage("device_disconnect")
@@ -147,7 +149,6 @@ class EnhancedNetworkClient(
                     }
                 }
 
-                // Close connections
                 outputStream?.close()
                 inputStream?.close()
                 socket?.close()
@@ -165,7 +166,6 @@ class EnhancedNetworkClient(
         }
     }
 
-
     suspend fun startCoordinatedSession(sessionDirectory: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -176,7 +176,6 @@ class EnhancedNetworkClient(
 
                 Log.i(TAG, "Starting coordinated recording session")
 
-                // Notify PC Controller of session start
                 val sessionStartMessage =
                     createMessage("session_start_request").apply {
                         put("session_directory", sessionDirectory)
@@ -186,19 +185,16 @@ class EnhancedNetworkClient(
 
                 sendMessage(sessionStartMessage)
 
-                // Wait for PC Controller confirmation
                 val response = receiveMessageWithTimeout(10000L)
                 if (response?.optString("message_type") != "session_start_confirmed") {
                     Log.e(TAG, "PC Controller did not confirm session start")
                     return@withContext false
                 }
 
-                // Start local recording
                 val recordingSuccess = recordingController.startRecording(sessionDirectory)
                 if (!recordingSuccess) {
                     Log.e(TAG, "Failed to start local recording")
 
-                    // Notify PC Controller of failure
                     val failureMessage =
                         createMessage("session_start_failed").apply {
                             put("reason", "Local recording failed to start")
@@ -207,7 +203,6 @@ class EnhancedNetworkClient(
                     return@withContext false
                 }
 
-                // Confirm session started successfully
                 val confirmMessage = createMessage("session_started")
                 sendMessage(confirmMessage)
 
@@ -220,7 +215,6 @@ class EnhancedNetworkClient(
         }
     }
 
-
     suspend fun stopCoordinatedSession(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -231,11 +225,9 @@ class EnhancedNetworkClient(
 
                 Log.i(TAG, "Stopping coordinated recording session")
 
-                // Add final sync marker
                 val finalSyncTimestamp = timeManager.getCurrentTimestampNs()
                 recordingController.addSyncMarker("session_end", finalSyncTimestamp)
 
-                // Notify PC Controller
                 val sessionStopMessage =
                     createMessage("session_stop_request").apply {
                         put("final_sync_timestamp", finalSyncTimestamp)
@@ -244,10 +236,8 @@ class EnhancedNetworkClient(
 
                 sendMessage(sessionStopMessage)
 
-                // Stop local recording
                 val recordingSuccess = recordingController.stopRecording()
 
-                // Report completion to PC Controller
                 val completionMessage =
                     createMessage("session_stopped").apply {
                         put("success", recordingSuccess)
@@ -264,7 +254,6 @@ class EnhancedNetworkClient(
         }
     }
 
-
     suspend fun distributeSyncMarker(
         markerType: String,
         metadata: Map<String, String> = emptyMap(),
@@ -273,10 +262,8 @@ class EnhancedNetworkClient(
             try {
                 val syncTimestamp = timeManager.getCurrentTimestampNs()
 
-                // Add sync marker locally
                 recordingController.addSyncMarker(markerType, syncTimestamp, metadata)
 
-                // Send sync marker to PC Controller for distribution
                 if (isConnected.get()) {
                     val syncMessage =
                         createMessage("sync_marker").apply {
@@ -371,7 +358,10 @@ class EnhancedNetworkClient(
                                 createMessage("recording_status").apply {
                                     put("session_stats", getSessionStatistics())
                                     put("sensor_status", getSensorStatusArray())
-                                    put("sync_events", recordingController.syncEventFlow.replayCache.size)
+                                    put(
+                                        "sync_events",
+                                        recordingController.syncEventFlow.replayCache.size
+                                    )
                                 }
 
                             sendMessage(statusMessage)
@@ -419,7 +409,7 @@ class EnhancedNetworkClient(
             }
 
             "time_sync_request" -> {
-                // Handle time sync requests
+
                 val syncResult = timeManager.getSyncQuality()
                 val response =
                     createMessage("time_sync_response").apply {
@@ -544,20 +534,16 @@ class EnhancedNetworkClient(
         }
     }
 
-
     suspend fun cleanup() {
         disconnect()
         networkScope.cancel()
         Log.i(TAG, "Enhanced network client cleaned up")
     }
 
-
     fun isConnected(): Boolean = isConnected.get()
-
 
     fun getConnectedController(): NetworkClient.ControllerInfo? = connectedControllerInfo
 }
-
 
 enum class ConnectionState {
     DISCONNECTED,
@@ -566,7 +552,6 @@ enum class ConnectionState {
     DISCONNECTING,
     ERROR,
 }
-
 
 data class NetworkMessage(
     val messageType: String,

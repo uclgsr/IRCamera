@@ -54,9 +54,7 @@ abstract class BaseApplication : Application() {
     var activitys = arrayListOf<Activity>()
     var hasOtgShow = false // otg提示只出现一次
 
-
     abstract fun getSoftWareCode(): String
-
 
     abstract fun isDomestic(): Boolean
 
@@ -75,7 +73,7 @@ abstract class BaseApplication : Application() {
 
     open fun initWebSocket() {
         connectWebSocket()
-        // 注册网络变更广播 - using modern network callback for Android 10+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkRequest =
@@ -97,7 +95,7 @@ abstract class BaseApplication : Application() {
                 },
             )
         } else {
-            // Fallback for older Android versions - use modern Intent filter approach
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 registerReceiver(
                     NetworkChangedReceiver(),
@@ -108,7 +106,10 @@ abstract class BaseApplication : Application() {
                 )
             } else {
                 @Suppress("DEPRECATION")
-                registerReceiver(NetworkChangedReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+                registerReceiver(
+                    NetworkChangedReceiver(),
+                    IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+                )
             }
         }
     }
@@ -131,7 +132,6 @@ abstract class BaseApplication : Application() {
         Log.i("WebSocket", "disconnectWebSocket()")
         WebSocketProxy.getInstance().stopWebSocket()
     }
-
 
     private fun parserSocketMessage(msgJson: String) {
         if (TextUtils.isEmpty(msgJson)) return
@@ -165,7 +165,12 @@ abstract class BaseApplication : Application() {
                 val url = "http://192.168.40.1:8080/DCIM/${fileBean.name}"
                 val file = File(FileConfig.ts004GalleryDir, fileBean.name)
                 TS004Repository.download(url, file)
-                MediaScannerConnection.scanFile(this@BaseApplication, arrayOf(FileConfig.ts004GalleryDir), null, null)
+                MediaScannerConnection.scanFile(
+                    this@BaseApplication,
+                    arrayOf(FileConfig.ts004GalleryDir),
+                    null,
+                    null
+                )
             }
         }
     }
@@ -176,9 +181,9 @@ abstract class BaseApplication : Application() {
             intent: Intent?,
         ) {
             if (intent?.action == "android.net.conn.CONNECTIVITY_CHANGE") {
-                val manager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val manager =
+                    context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-                // Use modern API for Android M+ (API 23+)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     val activeNetwork = manager.activeNetwork
                     val capabilities = manager.getNetworkCapabilities(activeNetwork)
@@ -189,7 +194,7 @@ abstract class BaseApplication : Application() {
                         Log.i("WebSocket", "WiFi network connected: $activeNetwork")
                     }
                 } else {
-                    // Fallback for API < 23 (Android 6.0)
+
                     @Suppress("DEPRECATION")
                     val activeNetwork = manager.activeNetworkInfo
                     @Suppress("DEPRECATION")
@@ -201,7 +206,6 @@ abstract class BaseApplication : Application() {
             }
         }
     }
-
 
     @RequiresApi(api = 28)
     open fun webviewSetPath(context: Context?) {
@@ -224,7 +228,6 @@ abstract class BaseApplication : Application() {
         return null
     }
 
-    // clear无用数据
     fun clearDb() {
         GlobalScope.launch(Dispatchers.Default) {
             try {
@@ -236,7 +239,7 @@ abstract class BaseApplication : Application() {
     }
 
     open fun onLanguageChange() {
-        // Always set and use English
+
         val locale = AppLanguageUtils.getLocaleByLanguage(ConstantLanguages.ENGLISH)
         LanguageUtils.applyLanguage(locale)
         SharedManager.setLanguage(baseContext, ConstantLanguages.ENGLISH)
@@ -246,7 +249,6 @@ abstract class BaseApplication : Application() {
     open fun getAppLanguage(context: Context): String? {
         return ConstantLanguages.ENGLISH
     }
-
 
     fun exitAll() {
         hasOtgShow = false

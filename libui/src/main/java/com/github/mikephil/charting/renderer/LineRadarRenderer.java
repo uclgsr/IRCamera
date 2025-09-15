@@ -9,13 +9,11 @@ import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
-
 public abstract class LineRadarRenderer extends LineScatterCandleRadarRenderer {
 
     public LineRadarRenderer(ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);
     }
-
 
     protected void drawFilledPath(Canvas c, Path filledPath, Drawable drawable) {
 
@@ -37,7 +35,6 @@ public abstract class LineRadarRenderer extends LineScatterCandleRadarRenderer {
         }
     }
 
-
     protected void drawFilledPath(Canvas c, Path filledPath, int fillColor, int fillAlpha) {
 
         int color = (fillAlpha << 24) | (fillColor & 0xffffff);
@@ -52,22 +49,18 @@ public abstract class LineRadarRenderer extends LineScatterCandleRadarRenderer {
             c.restoreToCount(save);
         } else {
 
-            // save
             Paint.Style previous = mRenderPaint.getStyle();
             int previousColor = mRenderPaint.getColor();
 
-            // set
             mRenderPaint.setStyle(Paint.Style.FILL);
             mRenderPaint.setColor(color);
 
             c.drawPath(filledPath, mRenderPaint);
 
-            // restore
             mRenderPaint.setColor(previousColor);
             mRenderPaint.setStyle(previous);
         }
     }
-
 
     private boolean clipPathSupported() {
         return Utils.getSDKInt() >= 18;

@@ -2,8 +2,8 @@ calibration:
   max_reprojection_error: 0.5
   min_images: 10
   pattern_size:
-  - 9
-  - 6
+    - 9
+    - 6
   pattern_type: checkerboard
   square_size: 25.0
 gsr:
@@ -16,8 +16,8 @@ gui:
   theme: default
   update_interval_ms: 100
   window_size:
-  - 1200
-  - 800
+    - 1200
+    - 800
 logging:
   console_output: true
   file_rotation: 1 MB

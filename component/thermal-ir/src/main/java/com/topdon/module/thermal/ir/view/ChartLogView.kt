@@ -28,7 +28,6 @@ import com.topdon.lib.core.R as LibR
 import com.topdon.lib.core.R as LibcoreR
 import com.topdon.module.thermal.R as ThermalR
 
-
 class ChartLogView : LineChart {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }
 
@@ -48,10 +47,14 @@ class ChartLogView : LineChart {
     }
 
     private val textColor by lazy { ContextCompat.getColor(context, LibcoreR.color.chart_text) }
-    private val axisChartColors by lazy { ContextCompat.getColor(context, LibcoreR.color.chart_axis) }
+    private val axisChartColors by lazy {
+        ContextCompat.getColor(
+            context,
+            LibcoreR.color.chart_axis
+        )
+    }
     private val axisLine by lazy { ContextCompat.getColor(context, LibcoreR.color.circle_white) }
 
-    // MPChart
     private fun initChart() {
         synchronized(this) {
             this.setTouchEnabled(true)
@@ -82,7 +85,7 @@ class ChartLogView : LineChart {
             l.form = Legend.LegendForm.CIRCLE
             l.textColor = textColor
             l.isEnabled = false // 隐藏曲线标签
-//x轴
+
             val xAxis = this.xAxis
             xAxis.textColor = textColor
             xAxis.setDrawGridLines(false) // 竖向格线
@@ -94,7 +97,7 @@ class ChartLogView : LineChart {
             xAxis.granularity = 1f
             xAxis.isGranularityEnabled = true // 重复值不显示
             xAxis.textSize = 8f
-//y轴
+
             val leftAxis = this.axisLeft
             leftAxis.textColor = textColor // y轴文本颜色
             leftAxis.axisLineColor = 0x00000000 // y轴颜色
@@ -130,7 +133,7 @@ class ChartLogView : LineChart {
                     val startTime = data[0].createTime / 1000 * 1000 // 毫秒 (毫秒归零,否则有可能x对应不上时间)
                     xAxis.valueFormatter = IRMyValueFormatter(startTime = startTime, type = type)
                     XLog.w("chart init startTime:$startTime")
-//                    data[0].type = "default"
+
                     when (data[0].type) {
                         "point" -> {
                             var set = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
@@ -152,6 +155,7 @@ class ChartLogView : LineChart {
                             }
                             XLog.w("DataSet:${set.entryCount}")
                         }
+
                         "line" -> {
                             var maxDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
                             if (maxDataSet == null) {
@@ -170,12 +174,12 @@ class ChartLogView : LineChart {
                                         startTime = startTime,
                                         type = type,
                                     ).toFloat()
-//                                Log.w("123", "x: $x")
-                                // max
+
+
                                 val entity = Entry(x, it.thermalMax)
                                 entity.data = it
                                 maxDataSet.addEntry(entity)
-                                // min
+
                                 val entityMin = Entry(x, it.thermalMin)
                                 entityMin.data = it
                                 minDataSet.addEntry(entityMin)
@@ -184,14 +188,15 @@ class ChartLogView : LineChart {
                             lineData.addDataSet(minDataSet)
                             XLog.w("DataSet:${maxDataSet.entryCount}")
                         }
+
                         else -> {
-                            // max
+
                             var maxTempDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
                             if (maxTempDataSet == null) {
                                 maxTempDataSet = createSet(0, "fence max temp")
                                 lineData.addDataSet(maxTempDataSet)
                             }
-                            // center
+
                             var centerTempDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
                             if (centerTempDataSet == null) {
                                 centerTempDataSet = createSet(1, "fence min temp")
@@ -205,11 +210,11 @@ class ChartLogView : LineChart {
                                         startTime = startTime,
                                         type = type,
                                     ).toFloat()
-                                // max
+
                                 val entityMax = Entry(x, it.thermalMax)
                                 entityMax.data = it
                                 maxTempDataSet.addEntry(entityMax)
-                                // min
+
                                 val entity = Entry(x, it.thermalMin)
                                 entity.data = it
                                 centerTempDataSet.addEntry(entity)
@@ -224,7 +229,7 @@ class ChartLogView : LineChart {
                     setVisibleXRangeMaximum(ChartTools.getMaximum(type = type)) // 设置显示X轴区间大小
                     zoom(1f, 1f, xChartMin, 0f) // 默认无缩放，全部显示
                     ChartTools.setX(this@ChartLogView, type)
-//                    ChartTools.setY(this@ChartTempView)
+
                 }
                 Log.w("chart", "update chart finish")
             }
@@ -250,7 +255,6 @@ class ChartLogView : LineChart {
             LibR.color.chart_point_min,
             LibR.color.chart_point_center,
         )
-
 
     private fun createSet(
         index: Int,

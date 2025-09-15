@@ -28,24 +28,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import kotlin.collections.ArrayList
 import com.topdon.lib.core.R as LibR
 
-// Legacy ARouter route annotation - now using NavigationManager
 
 class IRLogMPChartActivity : BaseActivity() {
     private val viewModel: IRMonitorViewModel by viewModels()
 
-
     private var startTime = 0L
 
     private val permissionList by lazy {
-        if (this.applicationInfo.targetSdkVersion >= 34)
-            {
-                listOf(
-                    Permission.WRITE_EXTERNAL_STORAGE,
-                )
-            } else if (this.applicationInfo.targetSdkVersion == 33) {
+        if (this.applicationInfo.targetSdkVersion >= 34) {
+            listOf(
+                Permission.WRITE_EXTERNAL_STORAGE,
+            )
+        } else if (this.applicationInfo.targetSdkVersion == 33) {
             mutableListOf(
                 Permission.WRITE_EXTERNAL_STORAGE,
             )
@@ -62,12 +58,16 @@ class IRLogMPChartActivity : BaseActivity() {
             dismissLoadingDialog()
 
             val isPoint = it?.isNotEmpty() == true && it.first().type == "point"
-            findViewById<TextView>(R.id.monitor_current_vol).text = getString(if (isPoint) LibR.string.chart_temperature else LibR.string.chart_temperature_high)
-            findViewById<TextView>(R.id.monitor_real_vol).visibility = if (isPoint) View.GONE else View.VISIBLE
-            findViewById<ImageView>(R.id.monitor_real_img).visibility = if (isPoint) View.GONE else View.VISIBLE
+            findViewById<TextView>(R.id.monitor_current_vol).text =
+                getString(if (isPoint) LibR.string.chart_temperature else LibR.string.chart_temperature_high)
+            findViewById<TextView>(R.id.monitor_real_vol).visibility =
+                if (isPoint) View.GONE else View.VISIBLE
+            findViewById<ImageView>(R.id.monitor_real_img).visibility =
+                if (isPoint) View.GONE else View.VISIBLE
 
             try {
-                val chartView = findViewById<com.topdon.module.thermal.ir.view.ChartLogView>(R.id.log_chart_time_chart)
+                val chartView =
+                    findViewById<com.topdon.module.thermal.ir.view.ChartLogView>(R.id.log_chart_time_chart)
                 chartView.initEntry(it as ArrayList<ThermalEntity>)
             } catch (e: Exception) {
                 XLog.e("刷新图表异常:${e.message}")
@@ -98,7 +98,10 @@ class IRLogMPChartActivity : BaseActivity() {
                                                 var filePath: String? = null
                                                 withContext(Dispatchers.IO) {
                                                     tempData?.get(0)?.let {
-                                                        filePath = ExcelUtil.exportExcel(tempData as java.util.ArrayList<ThermalEntity>?, "point" == it.type)
+                                                        filePath = ExcelUtil.exportExcel(
+                                                            tempData as java.util.ArrayList<ThermalEntity>?,
+                                                            "point" == it.type
+                                                        )
                                                     }
                                                 }
                                                 dismissLoadingDialog()
@@ -110,7 +113,12 @@ class IRLogMPChartActivity : BaseActivity() {
                                                     shareIntent.action = Intent.ACTION_SEND
                                                     shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
                                                     shareIntent.type = "application/xlsx"
-                                                    startActivity(Intent.createChooser(shareIntent, getString(LibR.string.battery_share)))
+                                                    startActivity(
+                                                        Intent.createChooser(
+                                                            shareIntent,
+                                                            getString(LibR.string.battery_share)
+                                                        )
+                                                    )
                                                 }
                                             }
                                         } else {
@@ -123,12 +131,11 @@ class IRLogMPChartActivity : BaseActivity() {
                                         doNotAskAgain: Boolean,
                                     ) {
                                         if (doNotAskAgain) {
-//拒绝授权并且不再提醒
-                                            if (BaseApplication.instance.isDomestic())
-                                                {
-                                                    ToastUtils.showShort(getString(LibR.string.app_storage_content))
-                                                    return
-                                                }
+
+                                            if (BaseApplication.instance.isDomestic()) {
+                                                ToastUtils.showShort(getString(LibR.string.app_storage_content))
+                                                return
+                                            }
                                             TipDialog.Builder(this@IRLogMPChartActivity)
                                                 .setTitleMessage(getString(LibR.string.app_tip))
                                                 .setMessage(getString(LibR.string.app_storage_content))
@@ -149,7 +156,8 @@ class IRLogMPChartActivity : BaseActivity() {
                 .setCanceled(true)
                 .create().show()
         }
-        findViewById<TextView>(R.id.tv_save_path)?.text = getString(LibR.string.temp_export_path) + ": " + FileConfig.excelDir
+        findViewById<TextView>(R.id.tv_save_path)?.text =
+            getString(LibR.string.temp_export_path) + ": " + FileConfig.excelDir
         viewModel.queryDetail(startTime)
     }
 

@@ -3,15 +3,12 @@ package com.topdon.tc001.config
 import android.util.Log
 import org.json.JSONObject
 
-
 object ProtocolVersion {
     private const val TAG = "ProtocolVersion"
 
-    // Protocol version constants
     const val CURRENT_VERSION = "v1"
     const val MIN_SUPPORTED_VERSION = "v1"
 
-    // Protocol capabilities for v1
     private val V1_CAPABILITIES =
         setOf(
             "session_start",
@@ -24,7 +21,6 @@ object ProtocolVersion {
             "basic_auth",
         )
 
-
     fun isVersionSupported(version: String): Boolean {
         return when (version) {
             "v1" -> true
@@ -32,14 +28,12 @@ object ProtocolVersion {
         }
     }
 
-
     fun getCapabilities(version: String): Set<String> {
         return when (version) {
             "v1" -> V1_CAPABILITIES
             else -> emptySet()
         }
     }
-
 
     fun createHandshakeMessage(deviceId: String): JSONObject {
         return JSONObject().apply {
@@ -53,12 +47,12 @@ object ProtocolVersion {
         }
     }
 
-
     fun validateHandshakeResponse(response: JSONObject): HandshakeResult {
         try {
             val remoteVersion = response.optString("protocol_version")
             val remoteMinVersion = response.optString("min_supported_version", remoteVersion)
-            val remoteCapabilities = response.optString("capabilities", "").split(",").filter { it.isNotEmpty() }.toSet()
+            val remoteCapabilities =
+                response.optString("capabilities", "").split(",").filter { it.isNotEmpty() }.toSet()
 
             if (!isVersionSupported(remoteVersion)) {
                 return HandshakeResult(
@@ -67,7 +61,6 @@ object ProtocolVersion {
                 )
             }
 
-            // Check version compatibility
             val isCompatible =
                 when {
                     remoteVersion == CURRENT_VERSION -> true
@@ -82,11 +75,13 @@ object ProtocolVersion {
                 )
             }
 
-            // Find common capabilities
             val localCapabilities = getCapabilities(CURRENT_VERSION)
             val commonCapabilities = localCapabilities.intersect(remoteCapabilities)
 
-            Log.i(TAG, "Protocol handshake successful: version=$remoteVersion, capabilities=${commonCapabilities.size}")
+            Log.i(
+                TAG,
+                "Protocol handshake successful: version=$remoteVersion, capabilities=${commonCapabilities.size}"
+            )
 
             return HandshakeResult(
                 success = true,
@@ -102,7 +97,6 @@ object ProtocolVersion {
         }
     }
 
-
     fun createProtocolMessage(
         messageType: String,
         content: JSONObject = JSONObject(),
@@ -112,13 +106,11 @@ object ProtocolVersion {
             put("message_type", messageType)
             put("timestamp", System.currentTimeMillis())
 
-            // Merge content
             content.keys().forEach { key ->
                 put(key, content.get(key))
             }
         }
     }
-
 
     fun validateMessageVersion(message: JSONObject): Boolean {
         val version = message.optString("protocol_version", CURRENT_VERSION)
@@ -131,7 +123,6 @@ object ProtocolVersion {
         return isValid
     }
 
-
     fun getProtocolInfo(): Map<String, Any> {
         return mapOf(
             "current_version" to CURRENT_VERSION,
@@ -140,7 +131,6 @@ object ProtocolVersion {
             "capabilities_count" to V1_CAPABILITIES.size,
         )
     }
-
 
     data class HandshakeResult(
         val success: Boolean,

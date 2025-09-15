@@ -13,8 +13,6 @@ import com.github.lzyzsd.jsbridge.BridgeWebViewClient
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 
-
-// Legacy ARouter route annotation - now using NavigationManager
 class WebViewActivity : BaseBindingActivity<ActivityWebViewBinding>() {
     override fun initContentLayoutId(): Int = R.layout.activity_web_view
 
@@ -25,7 +23,7 @@ class WebViewActivity : BaseBindingActivity<ActivityWebViewBinding>() {
     }
 
     private fun initView() {
-        // Views are now accessible via binding
+
     }
 
     @SuppressLint("SetJavaScriptEnabled")

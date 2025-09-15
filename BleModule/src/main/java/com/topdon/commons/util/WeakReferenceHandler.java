@@ -5,7 +5,6 @@ import android.os.Looper;
 
 import java.lang.ref.WeakReference;
 
-
 public class WeakReferenceHandler<T> extends Handler {
 
     private final WeakReference<T> mReference;

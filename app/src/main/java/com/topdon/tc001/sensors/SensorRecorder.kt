@@ -2,29 +2,21 @@ package com.topdon.tc001.sensors
 
 import kotlinx.coroutines.flow.Flow
 
-
 interface SensorRecorder {
 
     val sensorId: String
 
-
     val sensorType: String
-
 
     val isRecording: Boolean
 
-
     val samplingRate: Double
-
 
     suspend fun initialize(): Boolean
 
-
     suspend fun startRecording(sessionDirectory: String): Boolean
 
-
     suspend fun stopRecording(): Boolean
-
 
     suspend fun addSyncMarker(
         markerType: String,
@@ -32,19 +24,14 @@ interface SensorRecorder {
         metadata: Map<String, String> = emptyMap(),
     )
 
-
     suspend fun cleanup()
-
 
     fun getStatusFlow(): Flow<RecordingStatus>
 
-
     fun getErrorFlow(): Flow<SensorError>
-
 
     fun getRecordingStats(): RecordingStats
 }
-
 
 data class RecordingStatus(
     val sensorId: String,
@@ -56,7 +43,6 @@ data class RecordingStatus(
     val timestampNs: Long,
 )
 
-
 data class SensorError(
     val sensorId: String,
     val sensorType: String,
@@ -65,7 +51,6 @@ data class SensorError(
     val timestampNs: Long,
     val isRecoverable: Boolean = true,
 )
-
 
 enum class ErrorType {
     INITIALIZATION_FAILED,
@@ -79,7 +64,6 @@ enum class ErrorType {
     STORAGE_ERROR,
     UNKNOWN,
 }
-
 
 data class RecordingStats(
     val sensorId: String,

@@ -16,13 +16,12 @@ object VersionTool {
                 str.toFloat()
                 versionStr = str
             } catch (e: Exception) {
-                // str 不是1.01类型数据
+
             }
         }
 
         return versionStr
     }
-
 
     fun checkNewVersion(
         serverVersionStr: String,
@@ -32,13 +31,12 @@ object VersionTool {
             val serverV = getVersion(serverVersionStr)
             val localV = getVersion(localVersionStr)
             return serverV.toFloat() > localV.toFloat()
-//            return serverV.toFloat() != localV.toFloat()
+
         } catch (e: Exception) {
             XLog.e("对比固件版本异常: ${e.message}")
             return false
         }
     }
-
 
     fun checkVersion(
         remoteStr: String,

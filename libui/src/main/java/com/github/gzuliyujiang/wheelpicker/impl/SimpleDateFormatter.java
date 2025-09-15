@@ -15,7 +15,6 @@ package com.github.gzuliyujiang.wheelpicker.impl;
 
 import com.github.gzuliyujiang.wheelpicker.contract.DateFormatter;
 
-
 public class SimpleDateFormatter implements DateFormatter {
 
     @Override

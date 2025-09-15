@@ -5,7 +5,6 @@ import android.hardware.usb.UsbDevice;
 import com.energy.iruvc.ircmd.IRCMD;
 import com.energy.iruvc.usb.USBMonitor;
 
-
 public interface OnUSBConnectListener {
 
     void onAttach(UsbDevice device);

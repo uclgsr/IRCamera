@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 public class CarPlateProvider implements LinkageProvider {
     private static final String[] ABBREVIATIONS = {
             "京", "津", "冀", "晋", "蒙", "辽", "吉", "黑", "沪",
@@ -208,7 +207,7 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.remove("I");
                 break;
             case "云":
-                // “A-V”为昆明市东川区（原东川市）
+
                 letters.add("A-V");
                 for (char i = 'A'; i <= 'S'; i++) {
                     letters.add(String.valueOf(i));

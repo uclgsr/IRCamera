@@ -21,16 +21,16 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.Objects;
 
-
 public class SexEntity implements TextProvider, Serializable {
     private static final boolean IS_CHINESE;
-    private String id;
-    private String name;
-    private String english;
 
     static {
         IS_CHINESE = Locale.getDefault().getDisplayLanguage().contains("中文");
     }
+
+    private String id;
+    private String name;
+    private String english;
 
     public String getId() {
         return id;

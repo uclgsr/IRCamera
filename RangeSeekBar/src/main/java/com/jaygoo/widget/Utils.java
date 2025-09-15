@@ -16,7 +16,6 @@ import android.util.Log;
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
 
-
 public class Utils {
 
     private static final String TAG = "RangeSeekBar";
@@ -41,7 +40,6 @@ public class Utils {
             return Utils.drawableToBitmap(width, height, context.getResources().getDrawable(drawableId));
         }
     }
-
 
     public static Bitmap drawableToBitmap(int width, int height, Drawable drawable) {
         Bitmap bitmap = null;
@@ -68,7 +66,6 @@ public class Utils {
         return bitmap;
     }
 
-
     public static void drawNinePath(Canvas canvas, Bitmap bmp, Rect rect) {
         NinePatch.isNinePatchChunk(bmp.getNinePatchChunk());
         NinePatch patch = new NinePatch(bmp, bmp.getNinePatchChunk(), null);
@@ -92,7 +89,6 @@ public class Utils {
         return (int) (dpValue * scale + 0.5f);
     }
 
-
     public static int compareFloat(float a, float b) {
         int ta = Math.round(a * 1000000);
         int tb = Math.round(b * 1000000);
@@ -105,9 +101,8 @@ public class Utils {
         }
     }
 
-
     public static int compareFloat(float a, float b, int degree) {
-        if (Math.abs(a-b) < Math.pow(0.1, degree)) {
+        if (Math.abs(a - b) < Math.pow(0.1, degree)) {
             return 0;
         } else {
             if (a < b) {

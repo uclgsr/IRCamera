@@ -1,6 +1,5 @@
 package com.infisense.usbir.utils;
 
-
 public interface USBMonitorCallback {
 
     void onAttach();

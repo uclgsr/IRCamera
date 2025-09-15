@@ -3,30 +3,24 @@ package com.guide.zm04c.matrix
 class RingBuffer {
     private lateinit var byteArray: ByteArray
 
-    // 读取byte数组的位置
     private var mReadPositon = 0
 
-    // 未被读取数据的长度
     private var mUnReadLength = 0
 
-    
     constructor(size: Int) {
         byteArray = ByteArray(size)
     }
 
-    
     constructor(buffer: ByteArray) {
         byteArray = buffer
     }
 
-    
     constructor(buffer: ByteArray, tail: Int, length: Int) {
         byteArray = buffer
         mReadPositon = tail
         mUnReadLength = length
     }
 
-    
     fun write(
         buffer: ByteArray?,
         offset: Int,
@@ -38,27 +32,25 @@ class RingBuffer {
         synchronized(this) {
             head = (mReadPositon + mUnReadLength) % byteArray.size
             toEnd = byteArray.size - head
-            // if the request exceeds the free space, write as much as possible
+
             toWrite = Math.min(length, byteArray.size - mUnReadLength)
         }
         if (toWrite > 0) {
             if (toWrite > toEnd) {
-                // write from the head to the end
+
                 System.arraycopy(buffer!!, offset, byteArray, head, toEnd)
-                // write the remainder from the beginning
+
                 System.arraycopy(buffer!!, offset + toEnd, byteArray, 0, toWrite - toEnd)
             } else {
-                // write the whole thing at once
+
                 System.arraycopy(buffer!!, offset, byteArray, head, toWrite)
             }
 
-            // writing increases the length
             synchronized(this) { mUnReadLength += toWrite }
         }
         return toWrite
     }
 
-    
     fun read(
         buffer: ByteArray?,
         offset: Int,
@@ -68,20 +60,19 @@ class RingBuffer {
         var toRead: Int
         synchronized(this) {
             toEnd = byteArray.size - mReadPositon
-            // if the request exceeds the available data, read as much as is available
+
             toRead = Math.min(length, mUnReadLength)
         }
         if (toRead > toEnd) {
-            // read from the tail to the end
+
             System.arraycopy(byteArray, mReadPositon, buffer, offset, toEnd)
-            // read the requested remainder from the beginning
+
             System.arraycopy(byteArray, 0, buffer, offset + toEnd, toRead - toEnd)
         } else {
-            // read the whole requested thing at once
+
             System.arraycopy(byteArray, mReadPositon, buffer, offset, toRead)
         }
 
-        // reading moves the tail and decreases the length
         synchronized(this) {
             mReadPositon = (mReadPositon + toRead) % byteArray.size
             mUnReadLength -= toRead
@@ -89,7 +80,6 @@ class RingBuffer {
         return toRead
     }
 
-    // 向前移动length个字节
     fun moveForward(length: Int): Int {
         synchronized(this) {
             mReadPositon = (mReadPositon + length) % byteArray.size
@@ -98,7 +88,6 @@ class RingBuffer {
         return length
     }
 
-    // 向后移动length个字节
     fun moveBack(length: Int): Int {
         synchronized(this) {
             if (mReadPositon > length) {
@@ -111,27 +100,22 @@ class RingBuffer {
         return length
     }
 
-    
     fun getUnReadLength(): Int {
         return mUnReadLength
     }
 
-    
     fun getMaxLength(): Int {
         return byteArray.size
     }
 
-    
     fun getFreeSpace(): Int {
         return byteArray.size - mUnReadLength
     }
 
-    
     fun getByteArray(): ByteArray? {
         return byteArray
     }
 
-    
     fun getReadPositon(): Int {
         return mReadPositon
     }

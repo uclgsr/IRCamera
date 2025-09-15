@@ -36,7 +36,6 @@ object LmsRepository {
         return result
     }
 
-
     suspend fun getStatementUrl(type: String): StatementJson? {
         var result: StatementJson? = null
         val downLatch = CountDownLatch(1)

@@ -3,17 +3,15 @@ package com.topdon.menu.adapter
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.topdon.lib.core.R // Import R from libapp for strings
-import com.topdon.menu.R as MenuR // Import R from libmenu for drawables
+import com.topdon.lib.core.R
 import com.topdon.menu.constant.MenuType
 import com.topdon.menu.constant.TwoLightType
-
+import com.topdon.menu.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
 internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter() {
 
     var onTwoLightListener: ((twoLightType: TwoLightType, isSelected: Boolean) -> Unit)? = null
-
 
     var twoLightType: TwoLightType
         get() {
@@ -34,7 +32,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
             for (data in dataList) {
                 if (data.isSingle) {
                     if (menuType == MenuType.TC007 && value == TwoLightType.TWO_LIGHT_1) {
-                        // In TC007, both dual light1 and dual light2 are treated as dual light
+
                         data.isSelected = data.twoLightType == TwoLightType.TWO_LIGHT_2
                     } else {
                         data.isSelected = data.twoLightType == value
@@ -43,7 +41,6 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
             }
             notifyDataSetChanged()
         }
-
 
     fun setSelected(
         twoLightType: TwoLightType,
@@ -71,14 +68,56 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
     init {
         if (menuType == MenuType.DOUBLE_LIGHT || menuType == MenuType.TC007) {
             if (menuType == MenuType.DOUBLE_LIGHT) {
-                dataList.add(Data(R.string.dual_menu_1, MenuR.drawable.selector_menu2_two_light_1, TwoLightType.TWO_LIGHT_1, true))
-                dataList.add(Data(R.string.dual_menu_2, MenuR.drawable.selector_menu2_two_light_2, TwoLightType.TWO_LIGHT_2, true))
+                dataList.add(
+                    Data(
+                        R.string.dual_menu_1,
+                        MenuR.drawable.selector_menu2_two_light_1,
+                        TwoLightType.TWO_LIGHT_1,
+                        true
+                    )
+                )
+                dataList.add(
+                    Data(
+                        R.string.dual_menu_2,
+                        MenuR.drawable.selector_menu2_two_light_2,
+                        TwoLightType.TWO_LIGHT_2,
+                        true
+                    )
+                )
             } else {
-                dataList.add(Data(R.string.menu_thermal_merge, MenuR.drawable.selector_menu2_two_light_2, TwoLightType.TWO_LIGHT_2, true))
+                dataList.add(
+                    Data(
+                        R.string.menu_thermal_merge,
+                        MenuR.drawable.selector_menu2_two_light_2,
+                        TwoLightType.TWO_LIGHT_2,
+                        true
+                    )
+                )
             }
-            dataList.add(Data(R.string.menu_thermal_imaging, MenuR.drawable.selector_menu2_two_light_3, TwoLightType.IR, true))
-            dataList.add(Data(R.string.menu_thermal_visible_light, MenuR.drawable.selector_menu2_two_light_4, TwoLightType.LIGHT, true))
-            dataList.add(Data(R.string.menu_thermal_registration, MenuR.drawable.selector_menu2_two_light_5, TwoLightType.CORRECT, false))
+            dataList.add(
+                Data(
+                    R.string.menu_thermal_imaging,
+                    MenuR.drawable.selector_menu2_two_light_3,
+                    TwoLightType.IR,
+                    true
+                )
+            )
+            dataList.add(
+                Data(
+                    R.string.menu_thermal_visible_light,
+                    MenuR.drawable.selector_menu2_two_light_4,
+                    TwoLightType.LIGHT,
+                    true
+                )
+            )
+            dataList.add(
+                Data(
+                    R.string.menu_thermal_registration,
+                    MenuR.drawable.selector_menu2_two_light_5,
+                    TwoLightType.CORRECT,
+                    false
+                )
+            )
         }
         dataList.add(
             Data(
@@ -88,7 +127,14 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
                 menuType == MenuType.TC007,
             ),
         )
-        dataList.add(Data(R.string.ios_double_light, MenuR.drawable.selector_menu2_two_light_7, TwoLightType.BLEND_EXTENT, false))
+        dataList.add(
+            Data(
+                R.string.ios_double_light,
+                MenuR.drawable.selector_menu2_two_light_7,
+                TwoLightType.BLEND_EXTENT,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(
@@ -106,7 +152,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
                     twoLightType = data.twoLightType
                     onTwoLightListener?.invoke(data.twoLightType, true)
                 }
-            } else { 
+            } else {
                 data.isSelected = !data.isSelected
                 holder.binding.ivIcon.isSelected = data.isSelected
                 holder.binding.tvText.isSelected = data.isSelected
@@ -116,7 +162,6 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
     }
 
     override fun getItemCount(): Int = dataList.size
-
 
 
     data class Data(

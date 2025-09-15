@@ -4,8 +4,6 @@ import android.widget.TextView
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.module.user.R
 
-
-// Legacy ARouter route annotation - now using NavigationManager
 class QuestionDetailsActivity : BaseActivity() {
     private lateinit var questionDetailsTitle: TextView
     private lateinit var questionDetailsContent: TextView

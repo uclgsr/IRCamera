@@ -21,7 +21,6 @@ import androidx.annotation.NonNull;
 
 import com.github.gzuliyujiang.wheelpicker.impl.CarPlateProvider;
 
-
 public class CarPlateWheelLayout extends LinkageWheelLayout {
     private CarPlateProvider provider;
 

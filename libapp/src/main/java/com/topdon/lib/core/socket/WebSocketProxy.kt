@@ -27,13 +27,13 @@ import org.greenrobot.eventbus.EventBus
 
 class WebSocketProxy {
     companion object {
-        // TLS-enabled URLs (wss://) for secure communication
+
         private const val TS004_URL = "wss://192.168.40.1:888"
         private const val TC007_URL = "wss://192.168.40.1:63206/v1/thermal/temp/template/data"
 
-        // Fallback to plaintext for compatibility (can be disabled in production)
         private const val TS004_URL_FALLBACK = "ws://192.168.40.1:888"
-        private const val TC007_URL_FALLBACK = "ws://192.168.40.1:63206/v1/thermal/temp/template/data"
+        private const val TC007_URL_FALLBACK =
+            "ws://192.168.40.1:63206/v1/thermal/temp/template/data"
 
         @JvmStatic
         private var mWebSocketProxy: WebSocketProxy? = null
@@ -62,7 +62,8 @@ class WebSocketProxy {
         certificateManager = CertificateManager(context)
         val initialized = certificateManager?.initialize() ?: false
         if (!initialized) {
-            XLog.tag("WebSocket").w("Failed to initialize certificate manager, falling back to insecure connections")
+            XLog.tag("WebSocket")
+                .w("Failed to initialize certificate manager, falling back to insecure connections")
             useSecureConnection = false
         } else {
             XLog.tag("WebSocket").i("Certificate manager initialized successfully")
@@ -72,13 +73,12 @@ class WebSocketProxy {
     private fun getOKHttpClient(): OkHttpClient {
         val builder =
             OkHttpClient.Builder()
-                // .pingInterval(3, TimeUnit.SECONDS)
+
                 .addInterceptor(
                     Interceptor { chain ->
                         val originalRequest = chain.request()
                         val requestBuilder: Request.Builder = originalRequest.newBuilder()
 
-                        // Add authentication header if certificate manager is available
                         certificateManager?.let { certManager ->
                             val authToken = certManager.generateAuthToken()
                             requestBuilder.addHeader("Authorization", "Bearer $authToken")
@@ -91,7 +91,6 @@ class WebSocketProxy {
                 )
                 .retryOnConnectionFailure(true)
 
-        // Configure TLS/SSL if certificate manager is available and secure connection is enabled
         if (useSecureConnection && certificateManager != null) {
             try {
                 val sslSocketFactory = certificateManager?.createSSLSocketFactory()
@@ -103,16 +102,17 @@ class WebSocketProxy {
                     builder.hostnameVerifier(hostnameVerifier)
                     XLog.tag("WebSocket").d("Configured secure WebSocket connection")
                 } else {
-                    XLog.tag("WebSocket").w("SSL configuration incomplete, falling back to insecure connection")
+                    XLog.tag("WebSocket")
+                        .w("SSL configuration incomplete, falling back to insecure connection")
                     useSecureConnection = false
                 }
             } catch (e: Exception) {
-                XLog.tag("WebSocket").e("Failed to configure SSL, falling back to insecure connection", e)
+                XLog.tag("WebSocket")
+                    .e("Failed to configure SSL, falling back to insecure connection", e)
                 useSecureConnection = false
             }
         }
 
-        // Apply network-specific socket factory if available
         network?.socketFactory?.let {
             if (!useSecureConnection) { // Only apply if not using SSL
                 builder.socketFactory(it)
@@ -121,7 +121,6 @@ class WebSocketProxy {
 
         return builder.build()
     }
-
 
     private var onFrameListener: ((frame: SocketFrameBean) -> Unit)? = null
 
@@ -157,7 +156,8 @@ class WebSocketProxy {
         } else {
             XLog.tag("WebSocket").d("设备由 $currentSSID 切换到 $ssid，关闭旧连接")
             if (reconnectHandler.isReconnecting) {
-                EventBus.getDefault().post(SocketStateEvent(false, ssid.startsWith(DeviceConfig.TS004_NAME_START)))
+                EventBus.getDefault()
+                    .post(SocketStateEvent(false, ssid.startsWith(DeviceConfig.TS004_NAME_START)))
             }
             this.network = network
             currentSSID = ssid
@@ -182,7 +182,6 @@ class WebSocketProxy {
         mWsManager?.startConnect()
     }
 
-
     fun stopWebSocket() {
         XLog.tag("WebSocket").d("stopWebSocket()")
         webSocketListener?.isNeedReconnect = false
@@ -206,15 +205,14 @@ class WebSocketProxy {
         mWsManager?.sendMessage(cmd)
     }
 
-
     private fun getWebSocketUrl(ssid: String): String {
         val isTS004 = ssid.startsWith(DeviceConfig.TS004_NAME_START)
 
         return if (useSecureConnection) {
-            // Use secure WebSocket (wss://)
+
             if (isTS004) TS004_URL else TC007_URL
         } else {
-            // Fall back to plaintext WebSocket (ws://)
+
             XLog.tag("WebSocket").w("Using insecure WebSocket connection for $ssid")
             if (isTS004) TS004_URL_FALLBACK else TC007_URL_FALLBACK
         }
@@ -236,7 +234,8 @@ class WebSocketProxy {
             XLog.tag("WebSocket").d("$ssid Socket 连接成功")
             isNeedReconnect = true
             handler.reset()
-            EventBus.getDefault().post(SocketStateEvent(true, ssid.startsWith(DeviceConfig.TS004_NAME_START)))
+            EventBus.getDefault()
+                .post(SocketStateEvent(true, ssid.startsWith(DeviceConfig.TS004_NAME_START)))
         }
 
         override fun onMessage(
@@ -250,7 +249,6 @@ class WebSocketProxy {
             }
             onMessageListener?.invoke(text)
         }
-
 
         private var needPrint = false
 
@@ -289,7 +287,8 @@ class WebSocketProxy {
             } else {
                 XLog.tag("WebSocket").d("$ssid 连接已关闭，原因：$reason")
                 handler.reset()
-                EventBus.getDefault().post(SocketStateEvent(false, ssid.startsWith(DeviceConfig.TS004_NAME_START)))
+                EventBus.getDefault()
+                    .post(SocketStateEvent(false, ssid.startsWith(DeviceConfig.TS004_NAME_START)))
             }
             mWebSocketProxy?.currentSSID = ""
         }
@@ -304,30 +303,40 @@ class WebSocketProxy {
             if (checkNeedReconnect()) {
                 handler.handleFail(ssid)
                 if (!handler.isReconnecting) {
-                    EventBus.getDefault().post(SocketStateEvent(false, ssid.startsWith(DeviceConfig.TS004_NAME_START)))
+                    EventBus.getDefault().post(
+                        SocketStateEvent(
+                            false,
+                            ssid.startsWith(DeviceConfig.TS004_NAME_START)
+                        )
+                    )
                 }
             } else {
                 XLog.tag("WebSocket").w("主动断开连接")
                 handler.reset()
                 getInstance().stopWebSocket()
-                EventBus.getDefault().post(SocketStateEvent(false, ssid.startsWith(DeviceConfig.TS004_NAME_START)))
+                EventBus.getDefault()
+                    .post(SocketStateEvent(false, ssid.startsWith(DeviceConfig.TS004_NAME_START)))
             }
             mWebSocketProxy?.currentSSID = ""
         }
 
-        override fun onHeartBeat(): String? = SocketCmdUtil.getSocketCmd(WsCmdConstants.APP_EVENT_HEART_BEATS)
+        override fun onHeartBeat(): String? =
+            SocketCmdUtil.getSocketCmd(WsCmdConstants.APP_EVENT_HEART_BEATS)
 
         override fun onHeartBeatTimeout() {
             XLog.tag("WebSocket").w("心跳超时")
             handler.handleFail(ssid)
         }
 
-
         private fun checkNeedReconnect(): Boolean {
             if (!isNeedReconnect) {
                 return false
             }
-            if (!XXPermissions.isGranted(Utils.getApp(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (!XXPermissions.isGranted(
+                    Utils.getApp(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
                 return true
             }
             val wifiName: String = WifiUtil.getCurrentWifiSSID(Utils.getApp()) ?: return true
@@ -340,7 +349,6 @@ class WebSocketProxy {
         companion object {
 
             private const val MAX_RECONNECT_COUNT = 3
-
 
             private const val RECONNECT_MILLIS = 3000L
         }
@@ -364,7 +372,8 @@ class WebSocketProxy {
 
         fun handleFail(currentSSID: String) {
             if (this.currentSSID != currentSSID) {
-                XLog.tag("WebSocket").w("设备切换到 ${this.currentSSID} 后，丢弃 $currentSSID fail 处理")
+                XLog.tag("WebSocket")
+                    .w("设备切换到 ${this.currentSSID} 后，丢弃 $currentSSID fail 处理")
                 return
             }
             if (isReconnecting) {

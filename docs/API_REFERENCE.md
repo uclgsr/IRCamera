@@ -6,7 +6,8 @@ Complete API documentation for the Multi-Modal Physiological Sensing Platform.
 
 ### Protocol Overview
 
-The MPDC4GSR platform uses **JSON over TLS-secured TCP/IP** for all communication between the PC Controller (Hub) and Android devices (Spokes).
+The MPDC4GSR platform uses **JSON over TLS-secured TCP/IP** for all communication between the PC
+Controller (Hub) and Android devices (Spokes).
 
 - **Transport**: TCP/IP with TLS 1.2+ encryption
 - **Serialization**: JSON with UTF-8 encoding
@@ -26,7 +27,7 @@ All messages follow this structure:
     "message_type": "command|response|data|heartbeat|error",
     "sequence_number": 12345,
     "payload": {
-        // Message-specific content
+
     },
     "checksum": "sha256-hash-optional"
 }
@@ -34,22 +35,23 @@ All messages follow this structure:
 
 #### Field Descriptions
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `message_id` | string | ✅ | UUID v4 for message tracking |
-| `timestamp` | string | ✅ | ISO 8601 timestamp with microseconds |
-| `sender_id` | string | ✅ | Unique identifier of sending device |
-| `recipient_id` | string | ❌ | Target device (optional for broadcast) |
-| `message_type` | enum | ✅ | Message category |
-| `sequence_number` | integer | ❌ | For ordering and duplicate detection |
-| `payload` | object | ✅ | Message-specific data |
-| `checksum` | string | ❌ | SHA-256 hash for integrity verification |
+| Field             | Type    | Required | Description                             |
+|-------------------|---------|----------|-----------------------------------------|
+| `message_id`      | string  | ✅        | UUID v4 for message tracking            |
+| `timestamp`       | string  | ✅        | ISO 8601 timestamp with microseconds    |
+| `sender_id`       | string  | ✅        | Unique identifier of sending device     |
+| `recipient_id`    | string  | ❌        | Target device (optional for broadcast)  |
+| `message_type`    | enum    | ✅        | Message category                        |
+| `sequence_number` | integer | ❌        | For ordering and duplicate detection    |
+| `payload`         | object  | ✅        | Message-specific data                   |
+| `checksum`        | string  | ❌        | SHA-256 hash for integrity verification |
 
 ## 🎛️ Command Messages
 
 ### Device Discovery
 
 #### Discover Request (PC → Android)
+
 ```json
 {
     "message_type": "command",
@@ -65,6 +67,7 @@ All messages follow this structure:
 ```
 
 #### Discover Response (Android → PC)
+
 ```json
 {
     "message_type": "response",
@@ -86,6 +89,7 @@ All messages follow this structure:
 ### Authentication
 
 #### Authentication Request
+
 ```json
 {
     "message_type": "command", 
@@ -99,6 +103,7 @@ All messages follow this structure:
 ```
 
 #### Authentication Response
+
 ```json
 {
     "message_type": "response",
@@ -115,6 +120,7 @@ All messages follow this structure:
 ### Session Management
 
 #### Start Recording
+
 ```json
 {
     "message_type": "command",
@@ -160,6 +166,7 @@ All messages follow this structure:
 ```
 
 #### Start Recording Response
+
 ```json
 {
     "message_type": "response",
@@ -187,6 +194,7 @@ All messages follow this structure:
 ```
 
 #### Stop Recording
+
 ```json
 {
     "message_type": "command",
@@ -200,6 +208,7 @@ All messages follow this structure:
 ```
 
 #### Stop Recording Response
+
 ```json
 {
     "message_type": "response", 
@@ -231,6 +240,7 @@ All messages follow this structure:
 ### Synchronization Commands
 
 #### Sync Flash
+
 ```json
 {
     "message_type": "command",
@@ -248,6 +258,7 @@ All messages follow this structure:
 ```
 
 #### Time Sync Request
+
 ```json
 {
     "message_type": "command",
@@ -259,7 +270,8 @@ All messages follow this structure:
 }
 ```
 
-#### Time Sync Response  
+#### Time Sync Response
+
 ```json
 {
     "message_type": "response",
@@ -276,6 +288,7 @@ All messages follow this structure:
 ## 📊 Data Messages
 
 ### Real-time GSR Data
+
 ```json
 {
     "message_type": "data",
@@ -305,6 +318,7 @@ All messages follow this structure:
 ```
 
 ### Video Frame Metadata
+
 ```json
 {
     "message_type": "data",
@@ -329,6 +343,7 @@ All messages follow this structure:
 ```
 
 ### Sensor Status Updates
+
 ```json
 {
     "message_type": "data",
@@ -363,6 +378,7 @@ All messages follow this structure:
 ## 🔄 Response Messages
 
 ### Standard Response Format
+
 ```json
 {
     "message_type": "response",
@@ -372,13 +388,14 @@ All messages follow this structure:
         "message": "Human readable status message",
         "error_code": "ERROR_CODE_IF_APPLICABLE",
         "data": {
-            // Response-specific data
+
         }
     }
 }
 ```
 
 ### Error Response Format
+
 ```json
 {
     "message_type": "error", 
@@ -402,6 +419,7 @@ All messages follow this structure:
 ## 💓 Heartbeat Messages
 
 ### Heartbeat Request
+
 ```json
 {
     "message_type": "heartbeat",
@@ -420,6 +438,7 @@ All messages follow this structure:
 ```
 
 ### Heartbeat Response
+
 ```json
 {
     "message_type": "heartbeat",
@@ -442,12 +461,14 @@ All messages follow this structure:
 ### TLS Configuration
 
 #### Certificate Requirements
+
 - **Encryption**: RSA 2048-bit or ECDSA P-256
 - **Hash Algorithm**: SHA-256 or higher
 - **Validity**: Maximum 1 year
 - **Key Usage**: Digital Signature, Key Encipherment
 
 #### Cipher Suites (Ordered by preference)
+
 1. `TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384`
 2. `TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384`
 3. `TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256`
@@ -467,64 +488,56 @@ All messages follow this structure:
 ### Core Classes
 
 #### RecordingController
+
 ```kotlin
 class RecordingController @Inject constructor(
     private val gsrRecorder: GSRRecorder,
     private val cameraRecorder: CameraRecorder,
     private val networkClient: NetworkClient
 ) {
-    
+
     suspend fun startRecording(config: SessionConfig): Result<Session>
-    
-    
+
     suspend fun stopRecording(): Result<SessionData>
-    
-    
+
     suspend fun addSyncMarker(eventType: String, metadata: Map<String, Any> = emptyMap())
-    
-    
+
     fun getRecordingStatus(): RecordingStatus
 }
 ```
 
 #### GSRRecorder
+
 ```kotlin
 interface GSRRecorder {
-    
+
     suspend fun initialize(): Result<Unit>
-    
-    
+
     suspend fun startRecording(session: Session, syncTimeOffset: Long): Result<Unit>
-    
-    
+
     suspend fun stopRecording(): Result<GSRData>
-    
-    
+
     fun isDeviceConnected(): Boolean
-    
-    
+
     fun getCurrentSampleRate(): Float
-    
-    
+
     fun observeGSRData(): Flow<GSRSample>
 }
 ```
 
 #### NetworkClient
+
 ```kotlin
 class NetworkClient @Inject constructor(
     private val securityManager: SecurityManager
 ) {
-    
+
     suspend fun discoverPCControllers(timeoutMs: Long = 10000): List<PCController>
-    
-    
+
     suspend fun connect(controller: PCController): Result<Connection>
-    
-    
+
     suspend fun sendMessage(message: Message): Result<Message>
-    
-    
+
     fun observeMessages(): Flow<Message>
 }
 ```
@@ -532,6 +545,7 @@ class NetworkClient @Inject constructor(
 ### Data Models
 
 #### GSRSample
+
 ```kotlin
 @Parcelize
 data class GSRSample(
@@ -545,6 +559,7 @@ data class GSRSample(
 ```
 
 #### SessionConfig
+
 ```kotlin
 @Parcelize  
 data class SessionConfig(
@@ -560,6 +575,7 @@ data class SessionConfig(
 ```
 
 #### SyncEvent
+
 ```kotlin
 @Entity(tableName = "sync_events")
 data class SyncEvent(
@@ -576,6 +592,7 @@ data class SyncEvent(
 ### Core Classes
 
 #### SessionManager
+
 ```python
 class SessionManager:
     """Manages recording sessions across multiple devices"""
@@ -594,6 +611,7 @@ class SessionManager:
 ```
 
 #### NetworkController
+
 ```python
 class NetworkController(QThread):
     """Manages network communication with Android devices"""
@@ -615,6 +633,7 @@ class NetworkController(QThread):
 ```
 
 #### DataAggregator
+
 ```python
 class DataAggregator:
     """Aggregates and synchronizes data from multiple devices"""
@@ -632,6 +651,7 @@ class DataAggregator:
 ### Data Models
 
 #### Session
+
 ```python
 @dataclass
 class Session:
@@ -646,6 +666,7 @@ class Session:
 ```
 
 #### Device
+
 ```python
 @dataclass
 class Device:
@@ -664,21 +685,20 @@ class Device:
 ### Android Configuration
 
 #### Runtime Configuration
+
 ```kotlin
-// Application-level configuration
+
 object AppConfig {
     const val DEFAULT_GSR_SAMPLE_RATE = 128
     const val DEFAULT_VIDEO_BITRATE = 25_000_000
     const val MAX_SESSION_DURATION_MS = 3600_000L
     const val SYNC_TOLERANCE_MS = 5L
-    
-    // Network settings
+
     const val PC_DISCOVERY_PORT = 8080
     const val CONNECTION_TIMEOUT_MS = 10_000L
     const val HEARTBEAT_INTERVAL_MS = 30_000L
 }
 
-// Session-specific configuration
 @Parcelize
 data class SessionConfig(
     val sessionId: String,
@@ -686,21 +706,17 @@ data class SessionConfig(
     val studyProtocol: String,
     val durationMs: Long = 300_000L,
     val autoStop: Boolean = true,
-    
-    // Video configuration
+
     val videoResolution: VideoResolution = VideoResolution.UHD_4K,
     val videoFrameRate: Int = 60,
     val videoBitrate: Int = 25_000_000,
-    
-    // RAW capture configuration  
+
     val rawCaptureEnabled: Boolean = false,
     val rawFrameRate: Int = 30,
-    
-    // GSR configuration
+
     val gsrSampleRate: Int = 128,
     val gsrFilters: List<String> = listOf("lowpass_5hz"),
-    
-    // Sync configuration
+
     val syncFlashEnabled: Boolean = true,
     val syncEventTypes: List<String> = emptyList()
 ) : Parcelable
@@ -709,6 +725,7 @@ data class SessionConfig(
 ### PC Controller Configuration
 
 #### settings.json
+
 ```json
 {
     "network": {
@@ -746,20 +763,21 @@ data class SessionConfig(
 
 ### API Performance Targets
 
-| Operation | Target Latency | Throughput | Notes |
-|-----------|---------------|------------|-------|
-| Device Discovery | <5 seconds | N/A | Network dependent |
-| Connection Establishment | <2 seconds | N/A | Including TLS handshake |
-| Command Response | <100ms | N/A | Simple commands |
-| GSR Data Streaming | <10ms | 128 Hz | Real-time constraint |
-| Video Metadata | <50ms | 60 Hz | Frame metadata |
-| Sync Flash | <5ms | N/A | Critical timing |
-| Session Start | <3 seconds | N/A | All sensors initialized |
-| Session Stop | <5 seconds | N/A | Data finalization |
+| Operation                | Target Latency | Throughput | Notes                   |
+|--------------------------|----------------|------------|-------------------------|
+| Device Discovery         | <5 seconds     | N/A        | Network dependent       |
+| Connection Establishment | <2 seconds     | N/A        | Including TLS handshake |
+| Command Response         | <100ms         | N/A        | Simple commands         |
+| GSR Data Streaming       | <10ms          | 128 Hz     | Real-time constraint    |
+| Video Metadata           | <50ms          | 60 Hz      | Frame metadata          |
+| Sync Flash               | <5ms           | N/A        | Critical timing         |
+| Session Start            | <3 seconds     | N/A        | All sensors initialized |
+| Session Stop             | <5 seconds     | N/A        | Data finalization       |
 
 ### Error Handling
 
 #### Retry Policies
+
 ```python
 @retry(
     stop=stop_after_attempt(3),
@@ -772,6 +790,7 @@ async def send_command_with_retry(device: Device, command: dict) -> dict:
 ```
 
 #### Circuit Breaker Pattern
+
 ```kotlin
 class CircuitBreakerNetworkClient(
     private val failureThreshold: Int = 5,
@@ -791,10 +810,10 @@ class CircuitBreakerNetworkClient(
                 }
             }
             CircuitState.HALF_OPEN -> {
-                // Test with single request
+
             }
             CircuitState.CLOSED -> {
-                // Normal operation
+
             }
         }
         
@@ -812,4 +831,5 @@ class CircuitBreakerNetworkClient(
 
 ---
 
-**This API reference provides the complete interface specification for integrating with the MPDC4GSR platform. For implementation examples and tutorials, refer to the Developer Guide.**
+**This API reference provides the complete interface specification for integrating with the MPDC4GSR
+platform. For implementation examples and tutorials, refer to the Developer Guide.**

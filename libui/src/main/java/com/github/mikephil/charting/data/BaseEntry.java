@@ -2,16 +2,21 @@ package com.github.mikephil.charting.data;
 
 import android.graphics.drawable.Drawable;
 
-
 public abstract class BaseEntry {
 
-    //
+    /**
+     * the y value
+     */
     private float y = 0f;
 
-    //
+    /**
+     * optional spot for additional data this Entry represents
+     */
     private Object mData = null;
 
-    //
+    /**
+     * optional icon image
+     */
     private Drawable mIcon = null;
 
     public BaseEntry() {
@@ -38,32 +43,26 @@ public abstract class BaseEntry {
         this.mData = data;
     }
 
-    
     public float getY() {
         return y;
     }
 
-    
-    public void setIcon(Drawable icon) {
-        this.mIcon = icon;
-    }
-
-    
-    public Drawable getIcon() {
-        return mIcon;
-    }
-
-    
     public void setY(float y) {
         this.y = y;
     }
 
-    
+    public Drawable getIcon() {
+        return mIcon;
+    }
+
+    public void setIcon(Drawable icon) {
+        this.mIcon = icon;
+    }
+
     public Object getData() {
         return mData;
     }
 
-    
     public void setData(Object data) {
         this.mData = data;
     }

@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,8 +17,8 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.tc001.gsr.MultiModalRecordingActivity
 import kotlinx.coroutines.launch
 
-
-class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(), NetworkClient.NetworkEventListener {
+class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(),
+    NetworkClient.NetworkEventListener {
     companion object {
         private const val TAG = "DevicePairingActivity"
 
@@ -137,7 +139,6 @@ class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(
         networkClient.disconnect()
     }
 
-    // NetworkEventListener implementation
     override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
         runOnUiThread {
             if (!discoveredControllers.any { it.ipAddress == controller.ipAddress }) {
@@ -167,7 +168,7 @@ class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(
 
     override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
         runOnUiThread {
-            // Show dialog for remote measurement request
+
             androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Remote Measurement Request")
                 .setMessage(
@@ -177,7 +178,7 @@ class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(
                     startRemoteMeasurement(sessionInfo)
                 }
                 .setNegativeButton("Decline") { _, _ ->
-                    // Send decline response
+
                     Toast.makeText(this, "Measurement request declined", Toast.LENGTH_SHORT).show()
                 }
                 .setCancelable(false)
@@ -187,7 +188,7 @@ class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(
 
     override fun onSyncFlash(durationMs: Int) {
         runOnUiThread {
-            // Flash the screen for synchronization
+
             val flashView = binding.flashOverlay
             flashView.visibility = View.VISIBLE
             flashView.alpha = 1.0f
@@ -204,7 +205,8 @@ class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(
 
     override fun onTimeSynchronized(offsetNanoseconds: Long) {
         runOnUiThread {
-            binding.statusText.text = "Time synchronized (offset: ${offsetNanoseconds / 1_000_000}ms)"
+            binding.statusText.text =
+                "Time synchronized (offset: ${offsetNanoseconds / 1_000_000}ms)"
         }
     }
 
@@ -231,7 +233,7 @@ class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(
     }
 
     private fun startRemoteMeasurement(sessionInfo: SessionInfo) {
-        // Launch MultiModalRecordingActivity with remote session info
+
         val intent =
             Intent(this, MultiModalRecordingActivity::class.java).apply {
                 putExtra("session_id", sessionInfo.sessionId)
@@ -243,7 +245,6 @@ class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(
         Toast.makeText(this, "Starting remote measurement session", Toast.LENGTH_SHORT).show()
     }
 }
-
 
 class ControllersAdapter(
     private val controllers: List<NetworkClient.ControllerInfo>,

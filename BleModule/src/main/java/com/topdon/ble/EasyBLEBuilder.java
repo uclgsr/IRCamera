@@ -7,8 +7,6 @@ import com.topdon.commons.poster.ThreadMode;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
-
 public class EasyBLEBuilder {
     private final static ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newCachedThreadPool();
     BondController bondController;
@@ -25,13 +23,11 @@ public class EasyBLEBuilder {
     EasyBLEBuilder() {
     }
 
-
     public EasyBLEBuilder setScannerType(ScannerType scannerType) {
         Inspector.requireNonNull(scannerType, "scannerType can't be null");
         this.scannerType = scannerType;
         return this;
     }
-
 
     public EasyBLEBuilder setExecutorService(ExecutorService executorService) {
         Inspector.requireNonNull(executorService, "executorService can't be null");
@@ -39,13 +35,11 @@ public class EasyBLEBuilder {
         return this;
     }
 
-
     public EasyBLEBuilder setDeviceCreator(DeviceCreator deviceCreator) {
         Inspector.requireNonNull(deviceCreator, "deviceCreator can't be null");
         this.deviceCreator = deviceCreator;
         return this;
     }
-
 
     public EasyBLEBuilder setBondController(BondController bondController) {
         Inspector.requireNonNull(bondController, "bondController can't be null");
@@ -53,13 +47,11 @@ public class EasyBLEBuilder {
         return this;
     }
 
-
     public EasyBLEBuilder setMethodDefaultThreadMode(ThreadMode mode) {
         Inspector.requireNonNull(mode, "mode can't be null");
         methodDefaultThreadMode = mode;
         return this;
     }
-
 
     public EasyBLEBuilder setScanConfiguration(ScanConfiguration scanConfiguration) {
         Inspector.requireNonNull(scanConfiguration, "scanConfiguration can't be null");
@@ -67,13 +59,11 @@ public class EasyBLEBuilder {
         return this;
     }
 
-
     public EasyBLEBuilder setLogger(Logger logger) {
         Inspector.requireNonNull(logger, "logger can't be null");
         this.logger = logger;
         return this;
     }
-
 
     public EasyBLEBuilder setObservable(Observable observable) {
         Inspector.requireNonNull(observable, "observable can't be null");
@@ -81,18 +71,15 @@ public class EasyBLEBuilder {
         return this;
     }
 
-
     public EasyBLEBuilder setObserveAnnotationRequired(boolean observeAnnotationRequired) {
         isObserveAnnotationRequired = observeAnnotationRequired;
         return this;
     }
 
-
     public EasyBLEBuilder setUseNordicBleBackend(boolean useNordicBackend) {
         this.useNordicBleBackend = useNordicBackend;
         return this;
     }
-
 
     public EasyBLE build() {
         synchronized (EasyBLE.class) {

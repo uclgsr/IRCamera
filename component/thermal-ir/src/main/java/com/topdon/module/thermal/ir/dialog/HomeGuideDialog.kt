@@ -18,16 +18,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
 
+ *
+ * Created by LCG on 2024/4/8.
+ */
 
-class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(context, R.style.TransparentDialog) {
+class HomeGuideDialog(context: Context, private val currentStep: Int) :
+    Dialog(context, R.style.TransparentDialog) {
 
     var onNextClickListener: ((step: Int) -> Unit)? = null
 
-
     var onSkinClickListener: (() -> Unit)? = null
 
-    // Initialize view as class property for coroutine access
     private lateinit var ivBlurBg: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +39,6 @@ class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(c
         setCanceledOnTouchOutside(false)
         setContentView(LayoutInflater.from(context).inflate(R.layout.dialog_home_guide, null))
 
-        // Initialize views with findViewById
         ivBlurBg = findViewById(R.id.iv_blur_bg)
         val clGuide1: View = findViewById(R.id.cl_guide_1)
         val clGuide2: View = findViewById(R.id.cl_guide_2)
@@ -53,11 +55,13 @@ class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(c
                 clGuide2.isVisible = false
                 clGuide3.isVisible = false
             }
+
             2 -> {
                 clGuide1.isVisible = false
                 clGuide2.isVisible = true
                 clGuide3.isVisible = false
             }
+
             3 -> {
                 clGuide1.isVisible = false
                 clGuide2.isVisible = false
@@ -98,8 +102,10 @@ class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(c
     fun blurBg(rootView: View) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val sourceBitmap = Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
-                val outputBitmap = Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
+                val sourceBitmap =
+                    Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
+                val outputBitmap =
+                    Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
                 val canvas = Canvas(sourceBitmap)
                 rootView.draw(canvas)
 
@@ -107,7 +113,8 @@ class HomeGuideDialog(context: Context, private val currentStep: Int) : Dialog(c
                 val inputAllocation = Allocation.createFromBitmap(renderScript, sourceBitmap)
                 val outputAllocation = Allocation.createTyped(renderScript, inputAllocation.type)
 
-                val blurScript = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
+                val blurScript =
+                    ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
                 blurScript.setRadius(20f)
                 blurScript.setInput(inputAllocation)
                 blurScript.forEach(outputAllocation)

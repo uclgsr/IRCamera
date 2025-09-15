@@ -4,22 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_corners10_solid_3b3e44"
     android:paddingStart="20dp"
-    android:paddingEnd="20dp"
     android:paddingTop="24dp"
-    android:paddingBottom="28dp"
-    android:background="@drawable/bg_corners10_solid_3b3e44">
+    android:paddingEnd="20dp"
+    android:paddingBottom="28dp">
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ts004_download_doing"
-        android:textSize="16sp"
         android:textColor="@color/white"
+        android:textSize="16sp"
         app:layout_constrainedWidth="true"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -27,38 +27,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:textSize="12sp"
         android:textColor="@color/white"
-        tools:text="大小: 12.9MB/239.6MB"
+        android:textSize="12sp"
         app:layout_constrainedWidth="true"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:text="大小: 12.9MB/239.6MB" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="28dp"
         android:progressDrawable="@drawable/progress_theme_night"
-        style="?android:attr/progressBarStyleHorizontal"
-        tools:progress="78"
         app:layout_constraintDimensionRatio="235:30"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_size" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_size"
+        tools:progress="78" />
 
     <TextView
         android:id="@+id/tv_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
         android:textColor="@color/white"
-        tools:text="78%"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/progress_bar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/progress_bar"
-        app:layout_constraintBottom_toBottomOf="@id/progress_bar" />
+        tools:text="78%" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

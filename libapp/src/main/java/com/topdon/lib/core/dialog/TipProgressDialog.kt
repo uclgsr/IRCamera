@@ -13,7 +13,10 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogTipProgressBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-
+/**
+ * 提示窗
+ * create by fylder on 2018/6/15
+ **/
 class TipProgressDialog : Dialog {
     constructor(context: Context) : super(context)
 
@@ -70,17 +73,17 @@ class TipProgressDialog : Dialog {
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    // 竖屏
+
                     0.52
                 } else {
-                    // 横屏
+
                     0.35
                 }
             lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceleable)
-            // msg
+
             if (message != null) {
                 messageText?.visibility = View.VISIBLE
                 messageText?.setText(message, TextView.BufferType.NORMAL)
@@ -92,7 +95,6 @@ class TipProgressDialog : Dialog {
             return dialog as TipProgressDialog
         }
     }
-
 
     interface OnClickListener {
         fun onClick(dialog: DialogInterface)

@@ -19,7 +19,6 @@ import android.util.AttributeSet;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class NumberWheelView extends WheelView {
 
     public NumberWheelView(Context context) {
@@ -43,7 +42,6 @@ public class NumberWheelView extends WheelView {
         return data;
     }
 
-
     @Deprecated
     @Override
     public void setData(List<?> data) {
@@ -57,7 +55,7 @@ public class NumberWheelView extends WheelView {
     public void setRange(int min, int max, int step) {
         int minValue = Math.min(min, max);
         int maxValue = Math.max(min, max);
-        // 指定初始容量，避免OutOfMemory
+
         int capacity = (maxValue - minValue) / step;
         List<Integer> data = new ArrayList<>(capacity);
         for (int i = minValue; i <= maxValue; i = i + step) {
@@ -69,7 +67,7 @@ public class NumberWheelView extends WheelView {
     public void setRange(float min, float max, float step) {
         float minValue = Math.min(min, max);
         float maxValue = Math.max(min, max);
-        // 指定初始容量，避免OutOfMemory
+
         int capacity = (int) ((maxValue - minValue) / step);
         List<Float> data = new ArrayList<>(capacity);
         for (float i = minValue; i <= maxValue; i = i + step) {

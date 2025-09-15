@@ -1,6 +1,5 @@
 package com.topdon.gsr.model
 
-
 data class GSRSample(
     val timestamp: Long, // System timestamp in milliseconds
     val utcTimestamp: Long = timestamp, // UTC timestamp for synchronization (default to timestamp)
@@ -18,7 +17,7 @@ data class GSRSample(
             sampleIndex: Long,
             sessionId: String,
         ): GSRSample {
-            // Simulate realistic GSR values with some variation
+
             val baseConductance = 10.0 // Base conductance in microsiemens
             val variation = Math.sin(sampleIndex * 0.1) * 2.0 + Math.random() * 1.0
             val conductance = baseConductance + variation
@@ -37,7 +36,6 @@ data class GSRSample(
         }
     }
 
-
     fun toCsvRow(): Array<String> {
         return arrayOf(
             timestamp.toString(),
@@ -50,7 +48,6 @@ data class GSRSample(
         )
     }
 }
-
 
 data class SyncMark(
     val timestamp: Long,

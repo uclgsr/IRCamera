@@ -13,20 +13,22 @@ import com.topdon.lib.core.tools.UnitTools
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
-import java.lang.NumberFormatException
 
+/**
 
+ *
+ * Created by LCG on 2024/10/24.
+ */
 
-class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean) : Dialog(context, R.style.TextInputDialog) {
+class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean) :
+    Dialog(context, R.style.TextInputDialog) {
     private var value: Float? = null
     private var onConfirmListener: ((value: Float) -> Unit)? = null
-
 
     fun setInput(value: Float?): IRConfigInputDialog {
         this.value = value
         return this
     }
-
 
     fun setConfirmListener(l: (value: Float) -> Unit): IRConfigInputDialog {
         this.onConfirmListener = l
@@ -41,7 +43,6 @@ class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean
 
         setContentView(R.layout.dialog_ir_config_input)
 
-        // Initialize views with findViewById
         val tvTitle: TextView = findViewById(R.id.tv_title)
         val tvUnit: TextView = findViewById(R.id.tv_unit)
         val etInput: EditText = findViewById(R.id.et_input)
@@ -50,17 +51,26 @@ class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean
 
         when (type) {
             Type.TEMP -> {
-                tvTitle.text = "${context.getString(R.string.thermal_config_environment)} ${UnitTools.showConfigC(-10, if (isTC007) 50 else 55)}"
+                tvTitle.text = "${context.getString(R.string.thermal_config_environment)} ${
+                    UnitTools.showConfigC(
+                        -10,
+                        if (isTC007) 50 else 55
+                    )
+                }"
                 tvUnit.text = UnitTools.showUnit()
                 tvUnit.isVisible = true
             }
+
             Type.DIS -> {
-                tvTitle.text = "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)"
+                tvTitle.text =
+                    "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)"
                 tvUnit.text = "m"
                 tvUnit.isVisible = true
             }
+
             Type.EM -> {
-                tvTitle.text = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
+                tvTitle.text =
+                    "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)"
                 tvUnit.text = ""
                 tvUnit.isVisible = false
             }
@@ -75,7 +85,10 @@ class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean
                 val input: Float = etInput.text.toString().toFloat()
                 val isRight =
                     when (type) {
-                        Type.TEMP -> input in UnitTools.showUnitValue(-10f)..UnitTools.showUnitValue(if (isTC007) 50f else 55f)
+                        Type.TEMP -> input in UnitTools.showUnitValue(-10f)..UnitTools.showUnitValue(
+                            if (isTC007) 50f else 55f
+                        )
+
                         Type.DIS -> input in 0.2f..if (isTC007) 4f else 5f
                         Type.EM -> input in (if (isTC007) 0.1f else 0.01f)..1f
                     }
@@ -91,9 +104,11 @@ class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean
         }
 
         window?.let {
-            val isPortrait = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+            val isPortrait =
+                context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
             val layoutParams = it.attributes
-            layoutParams.width = (ScreenUtil.getScreenWidth(context) * if (isPortrait) 0.73f else 0.48f).toInt()
+            layoutParams.width =
+                (ScreenUtil.getScreenWidth(context) * if (isPortrait) 0.73f else 0.48f).toInt()
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }
@@ -103,9 +118,7 @@ class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean
 
         TEMP,
 
-
         DIS,
-
 
         EM,
     }

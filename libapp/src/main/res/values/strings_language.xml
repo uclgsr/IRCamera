@@ -477,8 +477,6 @@
     <string name="welcome_use_app">Welcome to %1$s</string>
 
 
-
-
     <string name="dual_light_correction">Dual Light Correction</string>
     <string name="dual_light_correction_tips_1">Since the focuses of the two cameras are not aligned, the images captured from different distances by the two cameras will not be aligned. \nThis function can help with the image alignment separately.</string>
     <string name="dual_light_correction_tips_2">1. Let a heat source (such as your palm) stay in the image with a distance of about 0.5 meter from the camera. \n2. Tap to take a photo.</string>

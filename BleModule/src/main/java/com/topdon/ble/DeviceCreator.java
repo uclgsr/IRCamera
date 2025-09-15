@@ -5,8 +5,6 @@ import android.bluetooth.le.ScanResult;
 
 import androidx.annotation.Nullable;
 
-
-
 public interface DeviceCreator {
 
     @Nullable

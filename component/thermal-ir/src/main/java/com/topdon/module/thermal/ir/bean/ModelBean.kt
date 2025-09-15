@@ -1,12 +1,9 @@
 package com.topdon.module.thermal.ir.bean
 
-
-
 data class ModelBean(
     var defaultModel: DataBean,
     var myselfModel: ArrayList<DataBean> = arrayListOf(),
 )
-
 
 data class DataBean(
     var id: Int = 1,

@@ -5,7 +5,6 @@ import android.util.Log
 import com.github.mikephil.charting.charts.LineChart
 import kotlin.math.abs
 
-
 object ChartTools {
     fun getLineTemps(
         point1: Point,
@@ -55,7 +54,8 @@ object ChartTools {
 
         pointList.forEach {
             val index = (it.y * width + it.x) * 2
-            val tempInt = (tempArray[index + 1].toInt() shl 8 and 0xff00) or (tempArray[index].toInt() and 0xff)
+            val tempInt =
+                (tempArray[index + 1].toInt() shl 8 and 0xff00) or (tempArray[index].toInt() and 0xff)
             val tempValue = tempInt / 64f - 273.15f
             tempList.add(tempValue)
         }
@@ -63,7 +63,6 @@ object ChartTools {
         return tempList
     }
 
-//X数值scaling
     fun scale(type: Int): Long {
         return when (type) {
             1 -> 1 * 1000 // s
@@ -74,7 +73,6 @@ object ChartTools {
         }
     }
 
-//getdisplay最小区间
     fun getMinimum(type: Int): Float {
         val min =
             when (type) {
@@ -87,11 +85,9 @@ object ChartTools {
         return min
     }
 
-//getdisplay最大区间，以最小区间的50倍
     fun getMaximum(type: Int): Float {
         return getMinimum(type) * 50f
     }
-
 
     fun setY(chart: LineChart) {
         var maxVol = 0f
@@ -102,12 +98,14 @@ object ChartTools {
                 maxVol = dataSet.yMax
                 minVol = dataSet.yMin
             }
+
             2 -> {
                 val dataSet1 = chart.data.getDataSetByIndex(0)
                 val dataSet2 = chart.data.getDataSetByIndex(1)
                 maxVol = if (dataSet1.yMax > dataSet2.yMax) dataSet1.yMax else dataSet2.yMax
                 minVol = if (dataSet1.yMin < dataSet2.yMin) dataSet1.yMin else dataSet2.yMin
             }
+
             3 -> {
                 val dataSet1 = chart.data.getDataSetByIndex(0)
                 val dataSet2 = chart.data.getDataSetByIndex(1)
@@ -118,6 +116,7 @@ object ChartTools {
                 maxVol = if (dataSet3.yMax > maxVol) dataSet3.yMax else maxVol
                 minVol = if (dataSet3.yMin < minVol) dataSet3.yMin else minVol
             }
+
             else -> {
                 return
             }
@@ -137,28 +136,26 @@ object ChartTools {
         Log.w("chart", "yAxis max:${chart.axisLeft.axisMaximum}, min:${chart.axisLeft.axisMinimum}")
     }
 
-
     fun setX(
         chart: LineChart,
         type: Int,
     ) {
-//true保证有刻度数量不变,滑动要false
+
         val xLen = chart.xChartMax - chart.xChartMin
-//        Log.w("chart", "xLen: $xLen")
-//        chart.xAxis.setLabelCount(getLabCount(xLen.toInt()), getLabCount(xLen.toInt()) < 3)
-//chart.xAxis.setLabelCount(5, false) // 3点 ok
-//        chart.xAxis.setLabelCount(5, true) //
+
+
+
+
         chart.xAxis.setLabelCount(getLabCount(xLen.toInt()), xLen <= 3)
     }
-
 
     private fun getLabCount(count: Int): Int {
         return when {
             count <= 2 -> 1
             count in 3..4 -> 2
             count in 5..7 -> 3
-//            count in 8..9 -> 4
-//            count >= 9 -> 5
+
+
             count >= 8 -> 4
             else -> count
         }

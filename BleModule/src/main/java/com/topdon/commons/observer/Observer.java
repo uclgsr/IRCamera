@@ -1,8 +1,8 @@
 package com.topdon.commons.observer;
 
-
 public interface Observer {
 
     @Observe
-    default void onChanged(Object o) {}
+    default void onChanged(Object o) {
+    }
 }

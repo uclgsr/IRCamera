@@ -14,7 +14,11 @@ import com.elvishew.xlog.XLog
 import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.repository.TS004Repository
 
-
+/**
+ * des:
+ * author: CaiSongL
+ * date: 2024/3/5 9:07
+ **/
 object NetWorkUtils {
     private var mNetworkCallback: ConnectivityManager.NetworkCallback? = null
     private var netWorkListener: ((network: Network?) -> Unit)? = null
@@ -25,16 +29,16 @@ object NetWorkUtils {
         BaseApplication.instance.getSystemService(Context.WIFI_SERVICE) as WifiManager
     }
 
-
     fun isWifiNameValid(
         context: Context,
         prefixes: List<String>,
     ): Boolean {
-        val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiManager =
+            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
         @Suppress("DEPRECATION")
         val wifiInfo = wifiManager.connectionInfo
-        val ssid = wifiInfo.ssid.replace("\"", "") 
+        val ssid = wifiInfo.ssid.replace("\"", "")
         for (prefix in prefixes) {
             if (ssid.startsWith(prefix)) {
                 return true
@@ -42,7 +46,6 @@ object NetWorkUtils {
         }
         return false
     }
-
 
     fun connectWifi(
         ssid: String,
@@ -163,7 +166,6 @@ object NetWorkUtils {
         }
     }
 
-
     fun switchNetwork(
         isWifi: Boolean,
         listener: ((network: Network?) -> Unit)? = null,
@@ -172,7 +174,8 @@ object NetWorkUtils {
             return
         }
         if (isWifi) {
-            val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.boundNetworkForProcess)
+            val networkCapabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.boundNetworkForProcess)
             if (networkCapabilities != null &&
                 networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
             ) {

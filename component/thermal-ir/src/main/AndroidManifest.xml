@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CONFIGURATION_CHANGED_ACTION" />
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
-
 
 
     <application>
@@ -19,8 +17,7 @@
             android:maxAspectRatio="2.4"
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="userPortrait"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".activity.IRCameraSettingActivity"
             android:launchMode="singleTop"
@@ -102,21 +99,24 @@
             android:name=".activity.IRCorrectionFourActivity"
             android:screenOrientation="userPortrait" />
 
-        <activity android:name=".activity.AlgorithmImageActivity"
-            android:screenOrientation="userPortrait"/>
-        <activity android:name=".activity.IRThermalPlusActivity"
+        <activity
+            android:name=".activity.AlgorithmImageActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activity.IRThermalPlusActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true"
             android:launchMode="singleTask"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:requestLegacyExternalStorage="true"
             android:maxAspectRatio="2.4"
+            android:requestLegacyExternalStorage="true"
             android:screenOrientation="userPortrait"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".activity.ManualStep1Activity"
-            android:screenOrientation="userPortrait"
-            />
-        <activity android:name=".activity.ManualStep2Activity"
-            android:screenOrientation="userPortrait"/>
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ManualStep1Activity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activity.ManualStep2Activity"
+            android:screenOrientation="userPortrait" />
 
         <activity
             android:name=".activity.MonitoryHomeActivity"
@@ -124,9 +124,11 @@
         <activity
             android:name=".activity.ReportPreviewActivity"
             android:screenOrientation="userPortrait" />
-        <activity android:name=".activity.ImagePickIRPlushActivity"
+        <activity
+            android:name=".activity.ImagePickIRPlushActivity"
             android:screenOrientation="userPortrait" />
-        <activity android:name=".activity.ImagePickIRActivity"
+        <activity
+            android:name=".activity.ImagePickIRActivity"
             android:screenOrientation="userPortrait" />
     </application>
 

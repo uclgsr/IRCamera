@@ -2,8 +2,8 @@ package com.example.thermal_lite.camera.task;
 
 import android.util.Log;
 
-import com.example.thermal_lite.camera.CameraPreviewManager;
 import com.energy.iruvccamera.usb.USBMonitor;
+import com.example.thermal_lite.camera.CameraPreviewManager;
 
 public class StartPreviewTask extends BaseTask {
     private IDeviceConnectListener mDeviceControlCallback;

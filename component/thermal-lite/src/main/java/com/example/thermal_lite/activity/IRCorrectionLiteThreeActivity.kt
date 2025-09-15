@@ -10,8 +10,13 @@ import com.topdon.lib.core.ktbase.BaseActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ *
 
-// Legacy ARouter route annotation - now using NavigationManager
+ * @author: CaiSongL
+ * @date: 2023/8/4 9:06
+ */
+
 class IRCorrectionLiteThreeActivity : BaseActivity() {
     private lateinit var binding: ActivityIrCorrectionLiteThreeBinding
 

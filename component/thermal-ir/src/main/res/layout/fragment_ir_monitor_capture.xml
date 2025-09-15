@@ -10,55 +10,56 @@
         android:id="@+id/iv_icon"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/ic_monitor_capture"
         android:contentDescription="@null"
-        app:layout_constraintWidth_percent="0.82"
+        android:src="@drawable/ic_monitor_capture"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="930:678"
-        app:layout_constraintVertical_bias="0.1"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintVertical_bias="0.1"
+        app:layout_constraintWidth_percent="0.82" />
 
     <View
         android:id="@+id/view_start"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/bg_corners10_solid_theme"
-        app:layout_constraintStart_toStartOf="@id/tv_start"
+        app:layout_constraintBottom_toBottomOf="@id/tv_start"
         app:layout_constraintEnd_toEndOf="@id/tv_start"
-        app:layout_constraintTop_toTopOf="@id/tv_start"
-        app:layout_constraintBottom_toBottomOf="@id/tv_start" />
+        app:layout_constraintStart_toStartOf="@id/tv_start"
+        app:layout_constraintTop_toTopOf="@id/tv_start" />
+
     <TextView
         android:id="@+id/tv_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
         android:paddingStart="30dp"
+        android:paddingTop="12dp"
         android:paddingEnd="30dp"
+        android:paddingBottom="12dp"
         android:text="@string/monitor_create_chart"
-        android:textSize="15sp"
         android:textColor="#55272F"
-        tools:drawableEnd="@drawable/svg_arrow_right_55272f"
+        android:textSize="15sp"
         app:drawableEndCompat="@drawable/svg_arrow_right_55272f"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_icon" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_icon"
+        tools:drawableEnd="@drawable/svg_arrow_right_55272f" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animation_view"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:lottie_imageAssetsFolder="images/"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
         app:lottie_fileName="TDAnimationJSON.json"
-        app:lottie_loop="true"
-        app:lottie_autoPlay="true" />
+        app:lottie_imageAssetsFolder="images/"
+        app:lottie_loop="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,5 @@
 package com.example.open3d
 
-
 object JNITool {
     init {
         System.loadLibrary("open3d")
@@ -56,7 +55,6 @@ object JNITool {
         height: Int,
         input: Double,
     ): ByteArray
-
 
     external fun draw_edge_from_temp_reigon_bitmap_argb_psd(
         image: ByteArray,

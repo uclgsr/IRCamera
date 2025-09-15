@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.example.thermal_lite.camera.CameraPreviewManager;
 
-
 public class PausePreviewTask extends BaseTask {
     public PausePreviewTask(DeviceState deviceState) {
         this.mDeviceState = deviceState;

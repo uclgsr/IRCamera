@@ -6,7 +6,9 @@ import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.LayoutParams
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.TextView
 import com.topdon.lib.core.R
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.RouterConfig
@@ -15,7 +17,6 @@ import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.tools.NumberTools
 import com.topdon.lib.core.tools.UnitTools
 import com.topdon.lib.core.utils.ScreenUtil
-
 
 class TipEmissivityDialog : Dialog {
     constructor(context: Context) : super(context)
@@ -93,8 +94,10 @@ class TipEmissivityDialog : Dialog {
 
             val binding = DialogTipEmissivityBinding.inflate(LayoutInflater.from(context!!))
 
-            binding.tvEnvironmentTitle.text = context!!.getString(R.string.thermal_config_environment) + ":"
-            binding.tvDistanceTitle.text = context!!.getString(R.string.thermal_config_distance) + ":"
+            binding.tvEnvironmentTitle.text =
+                context!!.getString(R.string.thermal_config_environment) + ":"
+            binding.tvDistanceTitle.text =
+                context!!.getString(R.string.thermal_config_distance) + ":"
 
             binding.dialogTipSuccessBtn.setOnClickListener {
                 dialog?.onDismissListener?.invoke(hasCheck)
@@ -122,10 +125,12 @@ class TipEmissivityDialog : Dialog {
                 tvEmissivityMaterials.visibility = View.GONE
             }
             tvEmissivity.text = "${context?.getString(R.string.thermal_config_radiation)}: ${
-                NumberTools.to02(radiation)}"
+                NumberTools.to02(radiation)
+            }"
             tvEnvironmentValue.text = UnitTools.showC(environment)
             tvDistanceValue.text = "${
-                NumberTools.to02(distance)}m"
+                NumberTools.to02(distance)
+            }m"
             titleText = binding.tvTitle
             messageText = binding.dialogTipMsgText
             checkBox = binding.dialogTipCheck
@@ -137,10 +142,10 @@ class TipEmissivityDialog : Dialog {
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    // 竖屏
+
                     0.75
                 } else {
-                    // 横屏
+
                     0.35
                 }
             lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
@@ -156,17 +161,17 @@ class TipEmissivityDialog : Dialog {
                 dismiss()
                 closeEvent?.invoke(hasCheck)
             }
-            // title
+
             if (title != null) {
                 titleText.setText(title, TextView.BufferType.NORMAL)
             }
-            // msg
-//            if (message != null) {
-//                messageText.visibility = View.VISIBLE
-//                messageText.setText(message, TextView.BufferType.NORMAL)
-//            } else {
-//                messageText.visibility = View.GONE
-//            }
+
+
+
+
+
+
+
             dialog!!.setContentView(binding.root)
             return dialog as TipEmissivityDialog
         }

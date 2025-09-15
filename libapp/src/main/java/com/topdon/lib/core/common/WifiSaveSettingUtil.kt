@@ -10,18 +10,15 @@ import com.topdon.lib.core.common.SaveSettingUtil.FusionTypeLPYFusion
 import com.topdon.lib.core.config.DeviceConfig
 import com.topdon.lib.core.utils.CommUtils
 
-
 object WifiSaveSettingUtil {
 
     private const val SP_NAME = "WifiSaveSettingUtil"
 
-
     const val TYPE_PLUG = 0
     const val TYPE_WIFI = 1
 
-
     fun reset() {
-        // 热成像temperature measurementobservation模式共有
+
         isMeasureTempMode = true
         isVideoMode = false
         isAutoShutter = true
@@ -32,7 +29,6 @@ object WifiSaveSettingUtil {
         pseudoColorMode = 3
         rotateAngle = DeviceConfig.S_ROTATE_ANGLE
 
-        // temperature measurement模式独有
         isOpenPseudoBar = true
         isOpenTwoLight = false
         twoLightAlpha = 50
@@ -41,7 +37,6 @@ object WifiSaveSettingUtil {
         temperatureMode = CameraItemBean.TYPE_TMP_C
         alarmBean = AlarmBean()
 
-        // observation模式独有
         isOpenCompass = false
         isOpenHighPoint = false
         isOpenLowPoint = false
@@ -70,11 +65,11 @@ object WifiSaveSettingUtil {
             SPUtils.getInstance(SP_NAME).put("registrationY", value)
         }
     var fusionType: Int
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("fusionType", FusionTypeIROnly) else FusionTypeIROnly
+        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
+            .getInt("fusionType", FusionTypeIROnly) else FusionTypeIROnly
         set(value) {
             SPUtils.getInstance(SP_NAME).put("fusionType", value)
         }
-
 
     var isSaveSetting: Boolean
         get() = SPUtils.getInstance(SP_NAME).getBoolean("isSaveSetting", true)
@@ -82,15 +77,14 @@ object WifiSaveSettingUtil {
             SPUtils.getInstance(SP_NAME).put("isSaveSetting", value)
         }
 
-
     var isMeasureTempMode: Boolean
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getBoolean("isMeasureTempMode", true) else true
+        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
+            .getBoolean("isMeasureTempMode", true) else true
         set(value) {
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isMeasureTempMode", value)
             }
         }
-
 
     var isVideoMode: Boolean
         get() =
@@ -106,7 +100,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var isAutoShutter: Boolean
         get() =
             if (isSaveSetting) {
@@ -120,7 +113,6 @@ object WifiSaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("isAutoShutter", value)
             }
         }
-
 
     var isRecordAudio: Boolean
         get() =
@@ -136,7 +128,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var isOpenMirror: Boolean
         get() =
             if (isSaveSetting) {
@@ -150,7 +141,6 @@ object WifiSaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("isOpenMirror", value)
             }
         }
-
 
     var delayCaptureSecond: Int
         get() =
@@ -166,7 +156,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var contrastValue: Int
         get() =
             if (isSaveSetting) {
@@ -181,7 +170,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var pseudoColorMode: Int
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("pseudoColorMode", 3) else 3
         set(value) {
@@ -189,7 +177,6 @@ object WifiSaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("pseudoColorMode", value)
             }
         }
-
 
     var rotateAngle: Int
         get() =
@@ -205,7 +192,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var isOpenPseudoBar: Boolean
         get() =
             if (isSaveSetting) {
@@ -219,7 +205,6 @@ object WifiSaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("isOpenPseudoBar", value)
             }
         }
-
 
     var isOpenTwoLight: Boolean
         get() =
@@ -235,7 +220,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var twoLightAlpha: Int
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("twoLightAlpha", 50) else 50
         set(value) {
@@ -244,7 +228,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var ddeConfig: Int
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("ddeConfig", 2) else 2
         set(value) {
@@ -252,7 +235,6 @@ object WifiSaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("ddeConfig", value)
             }
         }
-
 
     var tempTextColor: Int
         get() =
@@ -268,7 +250,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var tempTextSize: Int
         get() =
             if (isSaveSetting) {
@@ -282,7 +263,6 @@ object WifiSaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("tempTextSize", value)
             }
         }
-
 
     var temperatureMode: Int
         get() =
@@ -298,12 +278,14 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var alarmBean: AlarmBean
         get() =
             if (isSaveSetting) {
                 val json = SPUtils.getInstance(SP_NAME).getString("alarmBean", "")
-                if (json.isNullOrEmpty()) AlarmBean() else Gson().fromJson(json, AlarmBean::class.java)
+                if (json.isNullOrEmpty()) AlarmBean() else Gson().fromJson(
+                    json,
+                    AlarmBean::class.java
+                )
             } else {
                 AlarmBean()
             }
@@ -312,7 +294,6 @@ object WifiSaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("alarmBean", Gson().toJson(value))
             }
         }
-
 
     var isOpenCompass: Boolean
         get() =
@@ -328,7 +309,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var isOpenHighPoint: Boolean
         get() =
             if (isSaveSetting) {
@@ -342,7 +322,6 @@ object WifiSaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("isOpenHighPoint", value)
             }
         }
-
 
     var isOpenLowPoint: Boolean
         get() =
@@ -358,7 +337,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var aiTraceType: Int
         get() =
             if (isSaveSetting) {
@@ -373,7 +351,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var isOpenTarget: Boolean
         get() =
             if (isSaveSetting) {
@@ -387,7 +364,6 @@ object WifiSaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("isOpenTarget", value)
             }
         }
-
 
     var targetMeasureMode: Int
         get() =
@@ -405,7 +381,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var targetType: Int
         get() =
             if (isSaveSetting) {
@@ -421,7 +396,6 @@ object WifiSaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("targetType", value)
             }
         }
-
 
     var targetColorType: Int
         get() =
@@ -439,7 +413,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var reportAuthorName: String
         get() =
             if (isSaveSetting) {
@@ -454,7 +427,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-
     var reportWatermarkText: String
         get() =
             if (isSaveSetting) {
@@ -468,7 +440,6 @@ object WifiSaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("reportWatermarkText", value)
             }
         }
-
 
     var reportHumidity: Int
         get() =

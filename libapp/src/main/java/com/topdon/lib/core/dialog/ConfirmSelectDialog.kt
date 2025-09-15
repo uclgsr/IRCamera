@@ -12,11 +12,10 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogConfirmSelectBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-
-class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog), View.OnClickListener {
+class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog),
+    View.OnClickListener {
     var onConfirmClickListener: ((isSelect: Boolean) -> Unit)? = null
     private lateinit var binding: DialogConfirmSelectBinding
-
 
     fun setShowIcon(isShowIcon: Boolean) {
         binding.ivIcon.isVisible = isShowIcon
@@ -32,7 +31,6 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         binding.tvTitle.text = titleStr
     }
 
-
     fun setShowMessage(isShowMessage: Boolean) {
         binding.rlMessage.isVisible = isShowMessage
     }
@@ -43,18 +41,15 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         binding.tvMessage.setText(messageRes)
     }
 
-
     fun setShowCancel(isShowCancel: Boolean) {
         binding.tvCancel.isVisible = isShowCancel
     }
-
 
     fun setCancelText(
         @StringRes cancelRes: Int,
     ) {
         binding.tvCancel.setText(cancelRes)
     }
-
 
     fun setConfirmText(
         @StringRes confirmRes: Int,
@@ -87,9 +82,11 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
             binding.rlMessage -> { // 选中状态
                 binding.ivSelect.isSelected = !binding.ivSelect.isSelected
             }
+
             binding.tvCancel -> { // 取消
                 dismiss()
             }
+
             binding.tvConfirm -> { // 确认
                 dismiss()
                 onConfirmClickListener?.invoke(binding.ivSelect.isSelected)

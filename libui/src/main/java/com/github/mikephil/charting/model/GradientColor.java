@@ -4,7 +4,7 @@ public class GradientColor {
 
     private int startColor;
     private int endColor;
-    
+
     public GradientColor(int startColor, int endColor) {
         this.startColor = startColor;
         this.endColor = endColor;

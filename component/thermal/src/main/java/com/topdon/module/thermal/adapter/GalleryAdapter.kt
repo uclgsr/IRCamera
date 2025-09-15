@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.module.thermal.R
 
-
 class GalleryAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: OnItemClickListener? = null
@@ -59,7 +58,6 @@ class GalleryAdapter(val context: Context) :
         val lay = itemView.findViewById<ConstraintLayout>(R.id.item_gallery_lay)
         val img = itemView.findViewById<ImageView>(R.id.item_gallery_img)
     }
-
 
     interface OnItemClickListener {
         fun onClick(

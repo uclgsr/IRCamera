@@ -1,7 +1,5 @@
 package com.topdon.lib.core.repository
 
-// 这个文件用来放 TS004 接口返回 JSON 的封装
-
 
 data class TS004Response<T>(
     val command: Int,
@@ -14,42 +12,34 @@ data class TS004Response<T>(
     fun isSuccess(): Boolean = status == 0
 }
 
-
 data class PseudoColorBean(
     val enable: Boolean?,
     val mode: Int?,
 )
 
-
 data class RangeBean(
     val state: Int?,
 )
-
 
 data class PipBean(
     val enable: Boolean?,
 )
 
-
 data class BrightnessBean(
     val brightness: Int,
 )
-
 
 data class ZoomBean(
     val factor: Int?,
 )
 
-
 data class TISRBean(
     val enable: Int?,
 )
 
-
 data class VersionBean(
     val firmware: String?,
 )
-
 
 data class DeviceInfo(
     val code: String,
@@ -58,18 +48,15 @@ data class DeviceInfo(
     val uuid: String,
 )
 
-
 data class FileCountBean(
     val fileCount: Int,
 )
-
 
 data class FilePageBean(
     val current: Int,
     val total: Int,
     val filelist: List<FileBean>,
 )
-
 
 data class FileBean(
     val id: Int,
@@ -82,12 +69,10 @@ data class FileBean(
     val timezone: Int,
 )
 
-
 data class UpgradeStatus(
     val status: Int,
     val percent: Int,
 )
-
 
 data class FreeSpaceBean(
     val total: Long,
@@ -98,7 +83,6 @@ data class FreeSpaceBean(
 ) {
     fun hasUseSize(): Long = system + image_size + video_size
 }
-
 
 data class RecordStatusBean(
     val errCode: Int,

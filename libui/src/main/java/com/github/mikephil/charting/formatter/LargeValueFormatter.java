@@ -2,9 +2,7 @@ package com.github.mikephil.charting.formatter;
 
 import java.text.DecimalFormat;
 
-
-public class LargeValueFormatter extends ValueFormatter
-{
+public class LargeValueFormatter extends ValueFormatter {
 
     private String[] mSuffix = new String[]{
             "", "k", "m", "b", "t"
@@ -17,7 +15,6 @@ public class LargeValueFormatter extends ValueFormatter
         mFormat = new DecimalFormat("###E00");
     }
 
-    
     public LargeValueFormatter(String appendix) {
         this();
         mText = appendix;
@@ -28,12 +25,10 @@ public class LargeValueFormatter extends ValueFormatter
         return makePretty(value) + mText;
     }
 
-    
     public void setAppendix(String appendix) {
         this.mText = appendix;
     }
 
-    
     public void setSuffix(String[] suffix) {
         this.mSuffix = suffix;
     }
@@ -42,7 +37,6 @@ public class LargeValueFormatter extends ValueFormatter
         this.mMaxLength = maxLength;
     }
 
-    
     private String makePretty(double number) {
 
         String r = mFormat.format(number);

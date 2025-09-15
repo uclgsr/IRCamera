@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
-
 public class SharedPreferencesUtil {
 
     private static final String FILE_NAME = "usb_ir";
-
 
     public static void saveData(Context context, String key, Object data) {
         String type = data.getClass().getSimpleName();
@@ -30,7 +28,6 @@ public class SharedPreferencesUtil {
         editor.commit();
     }
 
-
     public static Object getData(Context context, String key, Object defValue) {
         String type = defValue.getClass().getSimpleName();
         SharedPreferences sharedPreferences = context.getSharedPreferences
@@ -50,7 +47,6 @@ public class SharedPreferencesUtil {
         return null;
     }
 
-
     public static void saveByteData(Context context, String key, byte[] data) {
         String type = data.getClass().getSimpleName();
         SharedPreferences sharedPreferences = context
@@ -62,7 +58,6 @@ public class SharedPreferencesUtil {
 
         editor.commit();
     }
-
 
     public static byte[] getByteData(Context context, String key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences

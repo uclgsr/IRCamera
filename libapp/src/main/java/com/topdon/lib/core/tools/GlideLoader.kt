@@ -15,7 +15,6 @@ import com.topdon.lib.core.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-
 object GlideLoader {
 
     private fun getPhotoOptions(): RequestOptions {
@@ -24,7 +23,6 @@ object GlideLoader {
             .bitmapTransform(multi)
             .error(R.mipmap.ic_default_head)
     }
-
 
     fun loadCircle(
         img: ImageView,
@@ -37,7 +35,6 @@ object GlideLoader {
             .into(img)
     }
 
-
     fun loadCircle(
         img: ImageView,
         url: String,
@@ -48,7 +45,6 @@ object GlideLoader {
             .apply(options)
             .into(img)
     }
-
 
     fun loadCircle(
         img: ImageView,
@@ -61,7 +57,6 @@ object GlideLoader {
             .into(img)
     }
 
-
     fun loadCircle(
         img: ImageView,
         uri: Uri,
@@ -72,7 +67,6 @@ object GlideLoader {
             .apply(options)
             .into(img)
     }
-
 
     fun loadCircle(
         img: ImageView,
@@ -88,7 +82,6 @@ object GlideLoader {
             .into(img)
     }
 
-
     fun loadRounded(
         img: ImageView,
         resourceId: Int,
@@ -98,7 +91,6 @@ object GlideLoader {
             .apply(getPhotoOptions())
             .into(img)
     }
-
 
     fun loadRounded(
         img: ImageView,
@@ -110,7 +102,6 @@ object GlideLoader {
             .into(img)
     }
 
-
     fun loadRounded(
         img: ImageView,
         drawable: Drawable,
@@ -121,7 +112,6 @@ object GlideLoader {
             .into(img)
     }
 
-
     fun loadRounded(
         img: ImageView,
         uri: Uri,
@@ -131,7 +121,6 @@ object GlideLoader {
             .apply(getPhotoOptions())
             .into(img)
     }
-
 
     fun load(
         img: ImageView,
@@ -152,7 +141,6 @@ object GlideLoader {
             .into(img)
     }
 
-
     fun loadGallery(
         img: ImageView,
         url: String?,
@@ -172,7 +160,6 @@ object GlideLoader {
             .into(img)
     }
 
-
     fun loadFit(
         img: ImageView,
         url: String?,
@@ -191,7 +178,6 @@ object GlideLoader {
             .apply(options)
             .into(img)
     }
-
 
     fun load(
         img: ImageView,

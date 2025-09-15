@@ -1,0 +1,738 @@
+
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                generated
+d-----        15/09/2025     13:54                intermediates
+d-----        15/09/2025     13:54                kotlin
+d-----        15/09/2025     13:54                outputs
+d-----        15/09/2025     13:54                tmp
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\generated
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                ap_generated_sources
+d-----        15/09/2025     13:54                res
+d-----        15/09/2025     13:54                updated_navigation_xml
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\generated
+    \ap_generated_sources
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\generated
+    \ap_generated_sources\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                out
+    Directory:
+    C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\generated\res
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                pngs
+d-----        15/09/2025     13:54                resValues
+    Directory:
+    C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\generated\res\pngs
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\generated
+    \res\resValues
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\generated
+    \updated_navigation_xml
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory:
+    C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermediates
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                aapt_friendly_merged_manifest
+                                                  s
+d-----        15/09/2025     13:54                aar_metadata
+d-----        15/09/2025     13:54                annotation_processor_list
+d-----        15/09/2025     13:54                compiled_local_resources
+d-----        15/09/2025     13:54                compile_library_classes_jar
+d-----        15/09/2025     13:54                compile_r_class_jar
+d-----        15/09/2025     13:54                compile_symbol_list
+d-----        15/09/2025     13:54                data_binding_layout_info_type
+                                                  _package
+d-----        15/09/2025     13:54                incremental
+d-----        15/09/2025     13:54                javac
+d-----        15/09/2025     13:54                local_only_symbol_list
+d-----        15/09/2025     13:54                manifest_merge_blame_file
+d-----        15/09/2025     13:54                merged_manifest
+d-----        15/09/2025     13:54                navigation_json
+d-----        15/09/2025     13:54                nested_resources_validation_r
+                                                  eport
+d-----        15/09/2025     13:54                packaged_res
+d-----        15/09/2025     13:54                public_res
+d-----        15/09/2025     13:54                symbol_list_with_package_name
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\aapt_friendly_merged_manifests
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\aapt_friendly_merged_manifests\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                processReleaseManifest
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\aapt_friendly_merged_manifests\release\processReleaseManifest
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                aapt
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\aapt_friendly_merged_manifests\release\processReleaseManifest\aapt
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54            204 AndroidManifest.xml
+-a----        15/09/2025     13:54            350 output-metadata.json
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\aar_metadata
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\aar_metadata\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                writeReleaseAarMetadata
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\aar_metadata\release\writeReleaseAarMetadata
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54            210 aar-metadata.properties
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\annotation_processor_list
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\annotation_processor_list\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                javaPreCompileRelease
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\annotation_processor_list\release\javaPreCompileRelease
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54              2 annotationProcessors.json
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\compiled_local_resources
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\compiled_local_resources\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                compileReleaseLibraryResource
+                                                  s
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\compiled_local_resources\release\compileReleaseLibraryResources
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                out
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\compiled_local_resources\release\compileReleaseLibraryResources\out
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54         127804 drawable-xxhdpi-v4_ic_ir_blue
+                                                  _bg.png.flat
+-a----        15/09/2025     13:54          56704 drawable-xxhdpi-v4_ic_ir_read
+                                                  _bg.png.flat
+-a----        15/09/2025     13:54         213768 drawable-xxhdpi-v4_ic_report_
+                                                  create_bg_top.png.flat
+-a----        15/09/2025     13:54            596 drawable_bg_color_select.xml.
+                                                  flat
+-a----        15/09/2025     13:54           1420 drawable_dialog_close.xml.fla
+                                                  t
+-a----        15/09/2025     13:54           1576 drawable_ic_color_select_svg.
+                                                  xml.flat
+-a----        15/09/2025     13:54           1040 drawable_ic_report_more.xml.f
+                                                  lat
+-a----        15/09/2025     13:54            616 drawable_selector_checkbox_al
+                                                  arm.xml.flat
+-a----        15/09/2025     13:54            900 drawable_step_blue_svg.xml.fl
+                                                  at
+-a----        15/09/2025     13:54            756 drawable_step_gray_svg.xml.fl
+                                                  at
+-a----        15/09/2025     13:54           1400 drawable_svg_circle_checkbox_
+                                                  check.xml.flat
+-a----        15/09/2025     13:54           1404 drawable_svg_circle_checkbox_
+                                                  uncheck.xml.flat
+-a----        15/09/2025     13:54           3096 drawable_svg_temperature_alar
+                                                  m_high.xml.flat
+-a----        15/09/2025     13:54           3032 drawable_svg_temperature_alar
+                                                  m_low.xml.flat
+-a----        15/09/2025     13:54           9548 drawable_svg_temperature_alar
+                                                  m_mark.xml.flat
+-a----        15/09/2025     13:54           3096 drawable_svg_temperature_alar
+                                                  m_ringtone.xml.flat
+-a----        15/09/2025     13:54          16480 layout_dialog_color_pick.xml.
+                                                  flat
+-a----        15/09/2025     13:54          45380 layout_dialog_temp_alarm_set.
+                                                  xml.flat
+-a----        15/09/2025     13:54           2360 layout_d_ui_item_color_select
+                                                  .xml.flat
+-a----        15/09/2025     13:54           5268 layout_layout_load_more_view.
+                                                  xml.flat
+-a----        15/09/2025     13:54            608 layout_layout_temp_bg.xml.fla
+                                                  t
+-a----        15/09/2025     13:54         131556 raw_ringtone1.mp3.flat
+-a----        15/09/2025     13:54         125100 raw_ringtone2.mp3.flat
+-a----        15/09/2025     13:54         292700 raw_ringtone3.mp3.flat
+-a----        15/09/2025     13:54         153592 raw_ringtone4.mp3.flat
+-a----        15/09/2025     13:54         184264 raw_ringtone5.mp3.flat
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\compile_library_classes_jar
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\compile_library_classes_jar\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                bundleLibCompileToJarRelease
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\compile_library_classes_jar\release\bundleLibCompileToJarRelease
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54         122174 classes.jar
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\compile_r_class_jar
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\compile_r_class_jar\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                generateReleaseRFile
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\compile_r_class_jar\release\generateReleaseRFile
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           6481 R.jar
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\compile_symbol_list
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\compile_symbol_list\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                generateReleaseRFile
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\compile_symbol_list\release\generateReleaseRFile
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           2767 R.txt
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\data_binding_layout_info_type_package
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\data_binding_layout_info_type_package\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                packageReleaseResources
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\data_binding_layout_info_type_package\release\packageReleaseResources
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                out
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\incremental
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\incremental\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                packageReleaseResources
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\incremental\release\packageReleaseResources
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                merged.dir
+d-----        15/09/2025     13:54                stripped.dir
+-a----        15/09/2025     13:54           5710 compile-file-map.properties
+-a----        15/09/2025     13:54           7525 merger.xml
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\incremental\release\packageReleaseResources\merged.dir
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                values
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\incremental\release\packageReleaseResources\merged.dir\values
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           1115 values.xml
+    Directory:
+    C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermediates\javac
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\javac\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                compileReleaseJavaWithJavac
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\javac\release\compileReleaseJavaWithJavac
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                classes
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\javac\release\compileReleaseJavaWithJavac\classes
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                com
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\javac\release\compileReleaseJavaWithJavac\classes\com
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                topdon
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\javac\release\compileReleaseJavaWithJavac\classes\com\topdon
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                libcom
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\javac\release\compileReleaseJavaWithJavac\classes\com\topdon\libcom
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                view
+-a----        15/09/2025     13:54            322 ExcelUtil$Callback.class
+-a----        15/09/2025     13:54           9401 ExcelUtil.class
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\javac\release\compileReleaseJavaWithJavac\classes\com\topdon\libcom\vi
+    ew
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           1184 BreatheInterpolator.class
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\local_only_symbol_list
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\local_only_symbol_list\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                parseReleaseLocalResources
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\local_only_symbol_list\release\parseReleaseLocalResources
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           2054 R-def.txt
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\manifest_merge_blame_file
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\manifest_merge_blame_file\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                processReleaseManifest
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\manifest_merge_blame_file\release\processReleaseManifest
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54            207 manifest-merger-blame-release
+                                                  -report.txt
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\merged_manifest
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\merged_manifest\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                processReleaseManifest
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\merged_manifest\release\processReleaseManifest
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54            204 AndroidManifest.xml
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\navigation_json
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\navigation_json\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                extractDeepLinksRelease
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\navigation_json\release\extractDeepLinksRelease
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54              2 navigation.json
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\nested_resources_validation_report
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\nested_resources_validation_report\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                generateReleaseResources
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\nested_resources_validation_report\release\generateReleaseResources
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54             15 nestedResourcesValidationRepo
+                                                  rt.txt
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\packaged_res
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\packaged_res\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                packageReleaseResources
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\packaged_res\release\packageReleaseResources
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                drawable
+d-----        15/09/2025     13:54                drawable-xxhdpi-v4
+d-----        15/09/2025     13:54                layout
+d-----        15/09/2025     13:54                raw
+d-----        15/09/2025     13:54                values
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\packaged_res\release\packageReleaseResources\drawable
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54            265 bg_color_select.xml
+-a----        15/09/2025     13:54            976 dialog_close.xml
+-a----        15/09/2025     13:54           1046 ic_color_select_svg.xml
+-a----        15/09/2025     13:54            459 ic_report_more.xml
+-a----        15/09/2025     13:54            296 selector_checkbox_alarm.xml
+-a----        15/09/2025     13:54            392 step_blue_svg.xml
+-a----        15/09/2025     13:54            320 step_gray_svg.xml
+-a----        15/09/2025     13:54            685 svg_circle_checkbox_check.xml
+-a----        15/09/2025     13:54            685 svg_circle_checkbox_uncheck.x
+                                                  ml
+-a----        15/09/2025     13:54           2626 svg_temperature_alarm_high.xm
+                                                  l
+-a----        15/09/2025     13:54           2564 svg_temperature_alarm_low.xml
+-a----        15/09/2025     13:54           8962 svg_temperature_alarm_mark.xm
+                                                  l
+-a----        15/09/2025     13:54           1900 svg_temperature_alarm_rington
+                                                  e.xml
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\packaged_res\release\packageReleaseResources\drawable-xxhdpi-v4
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54         169625 ic_ir_blue_bg.png
+-a----        15/09/2025     13:54         100084 ic_ir_read_bg.png
+-a----        15/09/2025     13:54         227967 ic_report_create_bg_top.png
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\packaged_res\release\packageReleaseResources\layout
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           9540 dialog_color_pick.xml
+-a----        15/09/2025     13:54          31681 dialog_temp_alarm_set.xml
+-a----        15/09/2025     13:54           1349 d_ui_item_color_select.xml
+-a----        15/09/2025     13:54           3144 layout_load_more_view.xml
+-a----        15/09/2025     13:54            277 layout_temp_bg.xml
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\packaged_res\release\packageReleaseResources\raw
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54         131367 ringtone1.mp3
+-a----        15/09/2025     13:54         124910 ringtone2.mp3
+-a----        15/09/2025     13:54         292512 ringtone3.mp3
+-a----        15/09/2025     13:54         153402 ringtone4.mp3
+-a----        15/09/2025     13:54         184076 ringtone5.mp3
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\packaged_res\release\packageReleaseResources\values
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           1115 values.xml
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\public_res
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\public_res\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                packageReleaseResources
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\symbol_list_with_package_name
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\symbol_list_with_package_name\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                generateReleaseRFile
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\intermedi
+    ates\symbol_list_with_package_name\release\generateReleaseRFile
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           2017 package-aware-r.txt
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\kotlin
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                compileReleaseKotlin
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\kotlin\co
+    mpileReleaseKotlin
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                cacheable
+d-----        15/09/2025     13:54                classpath-snapshot
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\kotlin\co
+    mpileReleaseKotlin\cacheable
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                caches-jvm
+-a----        15/09/2025     13:54             18 last-build.bin
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\kotlin\co
+    mpileReleaseKotlin\cacheable\caches-jvm
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                inputs
+d-----        15/09/2025     13:54                jvm
+d-----        15/09/2025     13:54                lookups
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\kotlin\co
+    mpileReleaseKotlin\cacheable\caches-jvm\inputs
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           4096 source-to-output.tab
+-a----        15/09/2025     13:54           4096 source-to-output.tab.keystrea
+                                                  m
+-a----        15/09/2025     13:54              8 source-to-output.tab.keystrea
+                                                  m.len
+-a----        15/09/2025     13:54              8 source-to-output.tab.len
+-a----        15/09/2025     13:54           4357 source-to-output.tab.values.a
+                                                  t
+-a----        15/09/2025     13:54          32768 source-to-output.tab_i
+-a----        15/09/2025     13:54              8 source-to-output.tab_i.len
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\kotlin\co
+    mpileReleaseKotlin\cacheable\caches-jvm\jvm
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                kotlin
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\kotlin\co
+    mpileReleaseKotlin\cacheable\caches-jvm\jvm\kotlin
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           4096 class-attributes.tab
+-a----        15/09/2025     13:54           4096 class-attributes.tab.keystrea
+                                                  m
+-a----        15/09/2025     13:54              8 class-attributes.tab.keystrea
+                                                  m.len
+-a----        15/09/2025     13:54              8 class-attributes.tab.len
+-a----        15/09/2025     13:54             91 class-attributes.tab.values.a
+                                                  t
+-a----        15/09/2025     13:54          32768 class-attributes.tab_i
+-a----        15/09/2025     13:54              8 class-attributes.tab_i.len
+-a----        15/09/2025     13:54           4096 class-fq-name-to-source.tab
+-a----        15/09/2025     13:54           4096 class-fq-name-to-source.tab.k
+                                                  eystream
+-a----        15/09/2025     13:54              8 class-fq-name-to-source.tab.k
+                                                  eystream.len
+-a----        15/09/2025     13:54              8 class-fq-name-to-source.tab.l
+                                                  en
+-a----        15/09/2025     13:54           1809 class-fq-name-to-source.tab.v
+                                                  alues.at
+-a----        15/09/2025     13:54          32768 class-fq-name-to-source.tab_i
+-a----        15/09/2025     13:54              8 class-fq-name-to-source.tab_i
+                                                  .len
+-a----        15/09/2025     13:54           4096 internal-name-to-source.tab
+-a----        15/09/2025     13:54           4096 internal-name-to-source.tab.k
+                                                  eystream
+-a----        15/09/2025     13:54              8 internal-name-to-source.tab.k
+                                                  eystream.len
+-a----        15/09/2025     13:54              8 internal-name-to-source.tab.l
+                                                  en
+-a----        15/09/2025     13:54           2285 internal-name-to-source.tab.v
+                                                  alues.at
+-a----        15/09/2025     13:54          32768 internal-name-to-source.tab_i
+-a----        15/09/2025     13:54              8 internal-name-to-source.tab_i
+                                                  .len
+-a----        15/09/2025     13:54           4096 package-parts.tab
+-a----        15/09/2025     13:54           4096 package-parts.tab.keystream
+-a----        15/09/2025     13:54              8 package-parts.tab.keystream.l
+                                                  en
+-a----        15/09/2025     13:54              8 package-parts.tab.len
+-a----        15/09/2025     13:54             52 package-parts.tab.values.at
+-a----        15/09/2025     13:54          32768 package-parts.tab_i
+-a----        15/09/2025     13:54              8 package-parts.tab_i.len
+-a----        15/09/2025     13:54           4096 proto.tab
+-a----        15/09/2025     13:54           4096 proto.tab.keystream
+-a----        15/09/2025     13:54              8 proto.tab.keystream.len
+-a----        15/09/2025     13:54              8 proto.tab.len
+-a----        15/09/2025     13:54          12810 proto.tab.values.at
+-a----        15/09/2025     13:54          32768 proto.tab_i
+-a----        15/09/2025     13:54              8 proto.tab_i.len
+-a----        15/09/2025     13:54           4096 source-to-classes.tab
+-a----        15/09/2025     13:54           4096 source-to-classes.tab.keystre
+                                                  am
+-a----        15/09/2025     13:54              8 source-to-classes.tab.keystre
+                                                  am.len
+-a----        15/09/2025     13:54              8 source-to-classes.tab.len
+-a----        15/09/2025     13:54           1961 source-to-classes.tab.values.
+                                                  at
+-a----        15/09/2025     13:54          32768 source-to-classes.tab_i
+-a----        15/09/2025     13:54              8 source-to-classes.tab_i.len
+-a----        15/09/2025     13:54           4096 subtypes.tab
+-a----        15/09/2025     13:54           4096 subtypes.tab.keystream
+-a----        15/09/2025     13:54              8 subtypes.tab.keystream.len
+-a----        15/09/2025     13:54              8 subtypes.tab.len
+-a----        15/09/2025     13:54            343 subtypes.tab.values.at
+-a----        15/09/2025     13:54          32768 subtypes.tab_i
+-a----        15/09/2025     13:54              8 subtypes.tab_i.len
+-a----        15/09/2025     13:54           4096 supertypes.tab
+-a----        15/09/2025     13:54           4096 supertypes.tab.keystream
+-a----        15/09/2025     13:54              8 supertypes.tab.keystream.len
+-a----        15/09/2025     13:54              8 supertypes.tab.len
+-a----        15/09/2025     13:54            308 supertypes.tab.values.at
+-a----        15/09/2025     13:54          32768 supertypes.tab_i
+-a----        15/09/2025     13:54              8 supertypes.tab_i.len
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\kotlin\co
+    mpileReleaseKotlin\cacheable\caches-jvm\lookups
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54              4 counters.tab
+-a----        15/09/2025     13:54           4096 file-to-id.tab
+-a----        15/09/2025     13:54           4096 file-to-id.tab.keystream
+-a----        15/09/2025     13:54              8 file-to-id.tab.keystream.len
+-a----        15/09/2025     13:54              8 file-to-id.tab.len
+-a----        15/09/2025     13:54            121 file-to-id.tab.values.at
+-a----        15/09/2025     13:54          32768 file-to-id.tab_i
+-a----        15/09/2025     13:54              8 file-to-id.tab_i.len
+-a----        15/09/2025     13:54           4096 id-to-file.tab
+-a----        15/09/2025     13:54           4096 id-to-file.tab.keystream
+-a----        15/09/2025     13:54              8 id-to-file.tab.keystream.len
+-a----        15/09/2025     13:54              8 id-to-file.tab.len
+-a----        15/09/2025     13:54            799 id-to-file.tab.values.at
+-a----        15/09/2025     13:54          32768 id-to-file.tab_i
+-a----        15/09/2025     13:54              8 id-to-file.tab_i.len
+-a----        15/09/2025     13:54           8192 lookups.tab
+-a----        15/09/2025     13:54          61440 lookups.tab.keystream
+-a----        15/09/2025     13:54              8 lookups.tab.keystream.len
+-a----        15/09/2025     13:54              8 lookups.tab.len
+-a----        15/09/2025     13:54           6533 lookups.tab.values.at
+-a----        15/09/2025     13:54          32768 lookups.tab_i
+-a----        15/09/2025     13:54              8 lookups.tab_i.len
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\kotlin\co
+    mpileReleaseKotlin\classpath-snapshot
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54          92068 shrunk-classpath-snapshot.bin
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\outputs
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                logs
+    Directory:
+    C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\outputs\logs
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54            898 manifest-merger-release-repor
+                                                  t.txt
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\tmp
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                compileReleaseJavaWithJavac
+d-----        15/09/2025     13:54                kotlin-classes
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\tmp\compi
+    leReleaseJavaWithJavac
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54         143318 previous-compilation-data.bin
+    Directory:
+    C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\tmp\kotlin-classes
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                release
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\tmp\kotli
+    n-classes\release
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                com
+d-----        15/09/2025     13:54                META-INF
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\tmp\kotli
+    n-classes\release\com
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                topdon
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\tmp\kotli
+    n-classes\release\com\topdon
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                libcom
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\tmp\kotli
+    n-classes\release\com\topdon\libcom
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        15/09/2025     13:54                bean
+d-----        15/09/2025     13:54                dialog
+d-----        15/09/2025     13:54                navigation
+d-----        15/09/2025     13:54                util
+d-----        15/09/2025     13:54                view
+-a----        15/09/2025     13:54           1553 AlarmHelp$Companion$1.class
+-a----        15/09/2025     13:54           1260 AlarmHelp$Companion.class
+-a----        15/09/2025     13:54           6344 AlarmHelp.class
+-a----        15/09/2025     13:54           6755 PDFHelp.class
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\tmp\kotli
+    n-classes\release\com\topdon\libcom\bean
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54          13949 SaveSettingBean.class
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\tmp\kotli
+    n-classes\release\com\topdon\libcom\dialog
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           2619 ColorPickDialog$onCreate$3.cl
+                                                  ass
+-a----        15/09/2025     13:54           9137 ColorPickDialog.class
+-a----        15/09/2025     13:54          21934 TempAlarmSetDialog.class
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\tmp\kotli
+    n-classes\release\com\topdon\libcom\navigation
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           5774 NavigationManager$NavigationB
+                                                  uilder.class
+-a----        15/09/2025     13:54           9153 NavigationManager.class
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\tmp\kotli
+    n-classes\release\com\topdon\libcom\util
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           1327 ARouterUtil.class
+-a----        15/09/2025     13:54           3272 ColorUtils.class
+-a----        15/09/2025     13:54           2035 SingletonHolder.class
+-a----        15/09/2025     13:54           1009 UtilsKtKt.class
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\tmp\kotli
+    n-classes\release\com\topdon\libcom\view
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54           2420 CommLoadMoreView.class
+-a----        15/09/2025     13:54           2312 TempLayout$animatorListener$1
+                                                  .class
+-a----        15/09/2025     13:54           1271 TempLayout$Companion.class
+-a----        15/09/2025     13:54           7951 TempLayout.class
+    Directory: C:\Users\duyan\Desktop\workspace\IRCamera\libcom\build\tmp\kotli
+    n-classes\release\META-INF
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/09/2025     13:54             61 libcom_release.kotlin_module

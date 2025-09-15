@@ -11,9 +11,9 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogLoadingBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-
 class LoadingDialog(context: Context) : Dialog(context, R.style.TransparentDialog) {
-    private val binding: DialogLoadingBinding = DialogLoadingBinding.inflate(LayoutInflater.from(context))
+    private val binding: DialogLoadingBinding =
+        DialogLoadingBinding.inflate(LayoutInflater.from(context))
 
     fun setTips(
         @StringRes resId: Int,
@@ -35,7 +35,8 @@ class LoadingDialog(context: Context) : Dialog(context, R.style.TransparentDialo
 
         window?.let {
             val layoutParams = it.attributes
-            layoutParams.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.3 else 0.15).toInt()
+            layoutParams.width =
+                (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.3 else 0.15).toInt()
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }

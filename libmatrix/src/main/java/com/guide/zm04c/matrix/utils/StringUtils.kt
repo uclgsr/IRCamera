@@ -4,7 +4,6 @@ import android.graphics.Paint
 import android.graphics.Rect
 
 
-
 class StringUtils {
     companion object {
         fun isBlank(str: String?): Boolean {
@@ -44,7 +43,6 @@ class StringUtils {
             }
             return false
         }
-
 
         public fun getStringSize(
             str: String,

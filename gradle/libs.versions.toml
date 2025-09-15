@@ -25,33 +25,41 @@ appsecretTopinfrared10 = "2870276D969B45C1B4A312B336274079"
 appsecretTopinfraredCn = "9D33C48FD7CE4440B7D922FBF9B6DE2A"
 appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
 
-# Kotlin and Core
-kotlin = "2.1.0"
-agp = "8.11.0"
-androidxCore = "1.12.0"
-androidxAppcompat = "1.6.1"
+# Kotlin and Core - Updated to latest versions
+kotlin = "2.2.0"
+agp = "8.13.0"
+# androidx.core - Updated to latest version compatible with AGP 8.13.0
+androidxCore = "1.16.0"
+androidxAppcompat = "1.7.0"
+androidxAppcompatLegacy = "1.6.1"
 fragmentKtx = "1.8.9"
 androidxPreference = "1.2.1"
 material = "1.13.0"
 multidex = "2.0.1"
 
-# Lifecycle
-lifecycle = "2.7.0"
+# Lifecycle - Updated versions
+lifecycle = "2.9.3"
 
-# Room
-room = "2.5.2"
+# Room - Compatible with Kotlin 2.2.0 and KSP
+room = "2.7.0"
 
-# Work Manager
+# Work Manager - Latest stable
 work = "2.10.4"
 
-# Coroutines
-coroutines = "1.7.3"
+# CameraX - Compatible with AGP 8.13.0
+camerax = "1.5.0-alpha01"
+
+# Coroutines - Compatible with Kotlin 2.2.0
+coroutines = "1.9.0"
+
+# Serialization - Compatible with Kotlin 1.9.25
+kotlinxSerialization = "1.6.3"
 
 # Networking
 fastjson2 = "2.0.58"
 jsbridge = "1.0.4"
 retrofit = "2.10.0"
-okhttp = "4.11.0"
+okhttp = "4.12.0"
 
 # RxJava
 rxjava = "2.2.21"
@@ -82,9 +90,13 @@ nifty = "2.4.0"
 glide = "4.15.1"
 mnImageBrowser = "V3.1.2X"
 gsyVideoPlayer = "v11.1.0"
+gsyVideoPlayerThermal = "v8.6.0-release-jitpack"
 
 # Shimmer GSR Sensor SDK
 shimmerAndroidApi = "1.0.0"
+
+# BLE - Latest version compatible with Kotlin 2.2.0
+nordicBle = "2.11.0"
 
 # OpenGL
 opengl = "2.0.0"
@@ -123,8 +135,44 @@ umengAnalytics = "9.8.8"
 
 # Testing
 junit = "4.13.2"
+junitJupiter = "5.13.4"
+hamcrest = "2.2"
+mockk = "1.14.5"
 testExtJunit = "1.1.5"
 testEspressoCore = "3.7.0"
+testRunner = "1.5.2"
+testRules = "1.5.0"
+testExtJunitKtx = "1.1.5"
+testEspressoContrib = "3.7.0"
+testEspressoIntents = "3.7.0"
+testUiautomator = "2.2.0"
+robolectric = "4.10.3"
+mockwebserver = "4.11.0"
+benchmark = "1.2.2"
+truth = "1.1.4"
+javafaker = "1.0.2"
+testCore = "1.5.0"
+
+# Additional dependencies found in build files
+guava = "31.1-android"
+guavaLegacy = "20.0"
+opencsv = "5.12.0"
+gson = "2.13.2"
+jmdns = "3.5.8"
+apachePoi = "5.4.0"
+xmlbeans = "3.1.0"
+staxApi = "1.0-2"
+aaltoXml = "1.3.3"
+coroutinesTest = "1.6.4"
+coroutinesLegacy = "1.6.4"
+vecmath = "1.3.1"
+commonsLang3 = "3.18.0"
+fastBle = "2.4.0"
+localbroadcastmanager = "1.1.0"
+easySwipeMenuLayout = "1.1.4"
+lifecycleService = "2.9.3"
+media3 = "1.3.1"
+refreshLayoutKernelLegacy = "2.1.1"
 
 # Google Services
 
@@ -132,14 +180,16 @@ testEspressoCore = "3.7.0"
 huaweiAgcp = "1.6.0.300"
 
 # Build Tools
-androidGradlePlugin = "8.11.0"
-kotlinGradlePlugin = "2.1.0"
+androidGradlePlugin = "8.13.0"
+kotlinGradlePlugin = "2.2.0"
+ksp = "2.2.0-2.0.2"
 desugarJdkLibs = "2.1.5"
 
 [libraries]
 # AndroidX Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
+androidx-appcompat-legacy = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompatLegacy" }
 fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "androidxPreference" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
@@ -161,6 +211,8 @@ work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 # Networking
 fastjson2 = { group = "com.alibaba.fastjson2", name = "fastjson2", version.ref = "fastjson2" }
@@ -168,6 +220,7 @@ jsbridge = { group = "com.github.lzyzsd", name = "jsbridge", version.ref = "jsbr
 retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 adapter-rxjava2 = { group = "com.squareup.retrofit2", name = "adapter-rxjava2", version.ref = "retrofit" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 
 # RxJava
@@ -207,8 +260,19 @@ glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", versi
 mn-image-browser = { group = "com.github.maning0303", name = "MNImageBrowser", version.ref = "mnImageBrowser" }
 gsy-video-player = { group = "com.github.CarGuo.GSYVideoPlayer", name = "gsyVideoPlayer-java", version.ref = "gsyVideoPlayer" }
 
+# CameraX - Compatible with AGP 8.5.2
+camerax-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
+camerax-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
+camerax-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
+camerax-video = { group = "androidx.camera", name = "camera-video", version.ref = "camerax" }
+camerax-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
+camerax-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax" }
+
 # Shimmer GSR sensor integration
 # shimmer-android-api = { group = "com.shimmerresearch", name = "shimmer-android-api", version.ref = "shimmerAndroidApi" }
+
+# BLE - Nordic library compatible with Kotlin 2.0.21
+nordic-ble-ktx = { group = "no.nordicsemi.android", name = "ble-ktx", version.ref = "nordicBle" }
 
 # OpenGL
 opengl-android = { group = "org.khronos", name = "opengl-api", version.ref = "opengl" }
@@ -256,12 +320,56 @@ umeng-analytics = { group = "com.umeng.umsdk", name = "analytics", version.ref =
 
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+hamcrest = { group = "org.hamcrest", name = "hamcrest", version.ref = "hamcrest" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
 test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "testExtJunit" }
 test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "testEspressoCore" }
+test-runner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
+test-rules = { group = "androidx.test", name = "rules", version.ref = "testRules" }
+test-ext-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "testExtJunitKtx" }
+test-espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "testEspressoContrib" }
+test-espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "testEspressoIntents" }
+test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "testUiautomator" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "mockwebserver" }
+benchmark-junit4 = { group = "androidx.benchmark", name = "benchmark-junit4", version.ref = "benchmark" }
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+test-core = { group = "androidx.test", name = "core", version.ref = "testCore" }
+javafaker = { group = "com.github.javafaker", name = "javafaker", version.ref = "javafaker" }
+
+# Additional dependencies
+guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
+guava-legacy = { group = "com.google.guava", name = "guava", version.ref = "guavaLegacy" }
+opencsv = { group = "com.opencsv", name = "opencsv", version.ref = "opencsv" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+jmdns = { group = "org.jmdns", name = "jmdns", version.ref = "jmdns" }
+nordic-ble = { group = "no.nordicsemi.android", name = "ble", version.ref = "nordicBle" }
+apache-poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "apachePoi" }
+xmlbeans = { group = "org.apache.xmlbeans", name = "xmlbeans", version.ref = "xmlbeans" }
+stax-api = { group = "javax.xml.stream", name = "stax-api", version.ref = "staxApi" }
+aalto-xml = { group = "com.fasterxml", name = "aalto-xml", version.ref = "aaltoXml" }
+coroutines-test-legacy = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+coroutines-core-legacy = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesLegacy" }
+coroutines-android-legacy = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesLegacy" }
+vecmath = { group = "java3d", name = "vecmath", version.ref = "vecmath" }
+commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commonsLang3" }
+fastble = { group = "com.github.Jasonchenlijian", name = "FastBle", version.ref = "fastBle" }
+localbroadcastmanager = { group = "androidx.localbroadcastmanager", name = "localbroadcastmanager", version.ref = "localbroadcastmanager" }
+easyswipemenulayout = { group = "com.github.anzaizai", name = "EasySwipeMenuLayout", version.ref = "easySwipeMenuLayout" }
+lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycleService" }
+gsy-video-player-thermal = { group = "com.github.CarGuo.GSYVideoPlayer", name = "gsyVideoPlayer-java", version.ref = "gsyVideoPlayerThermal" }
+media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
+media3-exoplayer-dash = { group = "androidx.media3", name = "media3-exoplayer-dash", version.ref = "media3" }
+media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
+refresh-layout-kernel-legacy = { group = "io.github.scwang90", name = "refresh-layout-kernel", version.ref = "refreshLayoutKernelLegacy" }
+refresh-header-classics-legacy = { group = "io.github.scwang90", name = "refresh-header-classics", version.ref = "refreshLayoutKernelLegacy" }
 
 # Build Tools (for buildscript classpath)
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
+ksp-gradle-plugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdkLibs" }
 
 
@@ -279,16 +387,23 @@ smart-refresh-v2 = ["refresh-layout-kernel", "refresh-header-classics", "refresh
 ui-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide"]
 # Thermal camera common dependencies 
 thermal-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide", "xxpermissions", "eventbus"]
+# CameraX bundle for camera functionality
+camerax = ["camerax-core", "camerax-camera2", "camerax-lifecycle", "camerax-video", "camerax-view", "camerax-extensions"]
 
 umeng = ["umeng-common", "umeng-asms", "umeng-analytics"]
 andromeda = ["andromeda-core", "andromeda-sense", "andromeda-views"]
 javacv-core = ["javacv", "javacpp"]
 ffmpeg-android = ["ffmpeg-android-arm64", "ffmpeg-android-arm", "ffmpeg-android-x86-64", "ffmpeg-android-x86"]
 
+# Testing bundles
+test-unit = ["junit", "junit-jupiter", "hamcrest", "mockk", "kotlinx-coroutines-test", "robolectric", "mockwebserver", "truth", "javafaker"]
+test-android = ["test-ext-junit", "test-espresso-core", "test-runner", "test-rules", "test-ext-junit-ktx", "test-espresso-contrib", "test-espresso-intents", "test-uiautomator", "benchmark-junit4", "truth"]
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 huawei-agconnect = { id = "com.huawei.agconnect", version.ref = "huaweiAgcp" }

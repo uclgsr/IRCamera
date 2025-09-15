@@ -13,7 +13,6 @@
 
 package com.github.gzuliyujiang.dialog;
 
-
 public final class DialogConfig {
     private static int dialogStyle = DialogStyle.Default;
     private static DialogColor dialogColor = new DialogColor();
@@ -22,17 +21,13 @@ public final class DialogConfig {
         super();
     }
 
-    public static void setDialogStyle(@DialogStyle int style) {
-        dialogStyle = style;
-    }
-
     @DialogStyle
     public static int getDialogStyle() {
         return dialogStyle;
     }
 
-    public static void setDialogColor(DialogColor color) {
-        dialogColor = color;
+    public static void setDialogStyle(@DialogStyle int style) {
+        dialogStyle = style;
     }
 
     public static DialogColor getDialogColor() {
@@ -40,6 +35,10 @@ public final class DialogConfig {
             dialogColor = new DialogColor();
         }
         return dialogColor;
+    }
+
+    public static void setDialogColor(DialogColor color) {
+        dialogColor = color;
     }
 
 }

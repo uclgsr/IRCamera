@@ -9,8 +9,6 @@ import android.widget.LinearLayout
 import com.topdon.lib.ui.databinding.UiSteeringWheelViewBinding
 
 
-
-
 class SteeringWheelView : LinearLayout, OnClickListener {
     var listener: ((action: Int, moveX: Int) -> Unit)? = null
     var moveX = 30
@@ -42,7 +40,6 @@ class SteeringWheelView : LinearLayout, OnClickListener {
         defStyleAttr,
     )
 
-
     private fun initView() {
         binding = UiSteeringWheelViewBinding.inflate(LayoutInflater.from(context), this, true)
 
@@ -67,9 +64,11 @@ class SteeringWheelView : LinearLayout, OnClickListener {
                 }
                 listener?.invoke(-1, moveX)
             }
+
             binding.steeringWheelCenterBtn -> {
                 listener?.invoke(0, moveX)
             }
+
             binding.steeringWheelEndBtn -> {
                 moveX -= 10
                 if (moveX < -20) {

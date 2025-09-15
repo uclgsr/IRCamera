@@ -6,10 +6,7 @@ import android.graphics.Paint;
 import com.github.mikephil.charting.interfaces.datasets.IScatterDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
-
-public interface IShapeRenderer
-{
-
+public interface IShapeRenderer {
 
     void renderShape(Canvas c, IScatterDataSet dataSet, ViewPortHandler viewPortHandler,
                      float posX, float posY, Paint renderPaint);

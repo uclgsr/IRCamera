@@ -106,15 +106,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="26dp"
-                        android:paddingHorizontal="16dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="4dp"
-                            android:src="@drawable/ic_report_address"/>
+                            android:src="@drawable/ic_report_address" />
 
                         <TextView
                             android:id="@+id/tv_address"
@@ -171,9 +171,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
+                                android:text="@string/inspector_name"
                                 android:textColor="@color/color_B3FFFFFF"
-                                android:textSize="13sp"
-                                android:text="@string/inspector_name" />
+                                android:textSize="13sp" />
 
                         </LinearLayout>
 
@@ -202,9 +202,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
+                                android:text="@string/year_built"
                                 android:textColor="@color/color_B3FFFFFF"
-                                android:textSize="13sp"
-                                android:text="@string/year_built" />
+                                android:textSize="13sp" />
 
                         </LinearLayout>
 
@@ -236,9 +236,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
+                                android:text="@string/area"
                                 android:textColor="@color/color_B3FFFFFF"
-                                android:textSize="13sp"
-                                android:text="@string/area" />
+                                android:textSize="13sp" />
 
                         </LinearLayout>
 
@@ -267,9 +267,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
+                                android:text="@string/detection_cost"
                                 android:textColor="@color/color_B3FFFFFF"
-                                android:textSize="13sp"
-                                android:text="@string/detection_cost" />
+                                android:textSize="13sp" />
 
                         </LinearLayout>
 
@@ -278,7 +278,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="16dp"
-                        android:background="@color/color_16131E"/>
+                        android:background="@color/color_16131E" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rcy_floor"
@@ -296,27 +296,30 @@
                         android:paddingTop="16dp"
                         android:paddingBottom="20dp"
                         app:layout_optimizationLevel="none">
+
                         <TextView
                             android:id="@+id/tv_sign_title_inspector"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="@string/inspector_signature"
-                            android:textSize="12sp"
                             android:textColor="@color/white"
-                            app:layout_constraintTop_toTopOf="parent"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_sign_title_owner"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/tv_sign_title_owner" />
+                            app:layout_constraintTop_toTopOf="parent" />
+
                         <TextView
                             android:id="@+id/tv_sign_title_owner"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:text="@string/house_owner_signature"
-                            android:textSize="12sp"
                             android:textColor="@color/white"
-                            app:layout_constraintTop_toTopOf="parent"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/tv_sign_title_inspector"
-                            app:layout_constraintEnd_toEndOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent" />
+
                         <androidx.constraintlayout.widget.Barrier
                             android:id="@+id/barrier_sign_title"
                             android:layout_width="wrap_content"
@@ -330,9 +333,10 @@
                             android:layout_height="100dp"
                             android:layout_marginTop="12dp"
                             android:background="@drawable/bg_corners06_solid_10_ff"
-                            app:layout_constraintStart_toStartOf="@id/tv_sign_title_inspector"
                             app:layout_constraintEnd_toEndOf="@id/tv_sign_title_inspector"
+                            app:layout_constraintStart_toStartOf="@id/tv_sign_title_inspector"
                             app:layout_constraintTop_toBottomOf="@id/barrier_sign_title">
+
                             <ImageView
                                 android:id="@+id/iv_inspector_signature"
                                 android:layout_width="wrap_content"
@@ -344,9 +348,10 @@
                             android:layout_width="0dp"
                             android:layout_height="100dp"
                             android:background="@drawable/bg_corners06_solid_10_ff"
-                            app:layout_constraintStart_toStartOf="@id/tv_sign_title_owner"
                             app:layout_constraintEnd_toEndOf="@id/tv_sign_title_owner"
+                            app:layout_constraintStart_toStartOf="@id/tv_sign_title_owner"
                             app:layout_constraintTop_toTopOf="@id/rly_inspector_signature">
+
                             <ImageView
                                 android:id="@+id/iv_house_owner_signature"
                                 android:layout_width="wrap_content"

@@ -16,13 +16,12 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class CombinedChartRenderer extends DataRenderer {
-
 
     protected List<DataRenderer> mRenderers = new ArrayList<DataRenderer>(5);
 
     protected WeakReference<Chart> mChart;
+    protected List<Highlight> mHighlightBuffer = new ArrayList<Highlight>();
 
     public CombinedChartRenderer(CombinedChart chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);
@@ -30,12 +29,11 @@ public class CombinedChartRenderer extends DataRenderer {
         createRenderers();
     }
 
-
     public void createRenderers() {
 
         mRenderers.clear();
 
-        CombinedChart chart = (CombinedChart)mChart.get();
+        CombinedChart chart = (CombinedChart) mChart.get();
         if (chart == null)
             return;
 
@@ -101,8 +99,6 @@ public class CombinedChartRenderer extends DataRenderer {
             renderer.drawExtras(c);
     }
 
-    protected List<Highlight> mHighlightBuffer = new ArrayList<Highlight>();
-
     @Override
     public void drawHighlighted(Canvas c, Highlight[] indices) {
 
@@ -113,18 +109,18 @@ public class CombinedChartRenderer extends DataRenderer {
             ChartData data = null;
 
             if (renderer instanceof BarChartRenderer)
-                data = ((BarChartRenderer)renderer).mChart.getBarData();
+                data = ((BarChartRenderer) renderer).mChart.getBarData();
             else if (renderer instanceof LineChartRenderer)
-                data = ((LineChartRenderer)renderer).mChart.getLineData();
+                data = ((LineChartRenderer) renderer).mChart.getLineData();
             else if (renderer instanceof CandleStickChartRenderer)
-                data = ((CandleStickChartRenderer)renderer).mChart.getCandleData();
+                data = ((CandleStickChartRenderer) renderer).mChart.getCandleData();
             else if (renderer instanceof ScatterChartRenderer)
-                data = ((ScatterChartRenderer)renderer).mChart.getScatterData();
+                data = ((ScatterChartRenderer) renderer).mChart.getScatterData();
             else if (renderer instanceof BubbleChartRenderer)
-                data = ((BubbleChartRenderer)renderer).mChart.getBubbleData();
+                data = ((BubbleChartRenderer) renderer).mChart.getBubbleData();
 
             int dataIndex = data == null ? -1
-                    : ((CombinedData)chart.getData()).getAllData().indexOf(data);
+                    : ((CombinedData) chart.getData()).getAllData().indexOf(data);
 
             mHighlightBuffer.clear();
 
@@ -137,14 +133,12 @@ public class CombinedChartRenderer extends DataRenderer {
         }
     }
 
-
     public DataRenderer getSubRenderer(int index) {
         if (index >= mRenderers.size() || index < 0)
             return null;
         else
             return mRenderers.get(index);
     }
-
 
     public List<DataRenderer> getSubRenderers() {
         return mRenderers;

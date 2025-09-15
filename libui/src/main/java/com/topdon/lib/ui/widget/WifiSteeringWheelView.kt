@@ -9,8 +9,6 @@ import android.widget.LinearLayout
 import com.topdon.lib.ui.databinding.UiWifiSteeringWheelViewBinding
 
 
-
-
 class WifiSteeringWheelView : LinearLayout, OnClickListener {
     private val binding: UiWifiSteeringWheelViewBinding
 
@@ -54,9 +52,8 @@ class WifiSteeringWheelView : LinearLayout, OnClickListener {
         initView()
     }
 
-
     private fun initView() {
-        // Views are already inflated via binding in constructor
+
         steeringWheelStartBtn.setOnClickListener(this)
         steeringWheelCenterBtn.setOnClickListener(this)
         steeringWheelEndBtn.setOnClickListener(this)
@@ -76,22 +73,26 @@ class WifiSteeringWheelView : LinearLayout, OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             steeringWheelStartBtn -> {
-//                moveY -= moveI
+
                 listener?.invoke(-1, moveX, moveY)
             }
+
             steeringWheelCenterBtn -> {
                 listener?.invoke(0, moveX, moveY)
             }
+
             steeringWheelTopBtn -> {
-//                moveX += moveI
+
                 listener?.invoke(2, moveX, moveY)
             }
+
             steeringWheelBottomBtn -> {
-//                moveX -= moveI
+
                 listener?.invoke(3, moveX, moveY)
             }
+
             steeringWheelEndBtn -> {
-//                moveY += moveI
+
                 listener?.invoke(1, moveX, moveY)
             }
         }

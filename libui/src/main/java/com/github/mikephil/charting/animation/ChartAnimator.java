@@ -2,25 +2,30 @@ package com.github.mikephil.charting.animation;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
+
 import androidx.annotation.RequiresApi;
 
 import com.github.mikephil.charting.animation.Easing.EasingFunction;
 
-
 public class ChartAnimator {
 
-    //
-    private AnimatorUpdateListener mListener;
-
-    //
+    /**
+     * The phase of drawn values on the y-axis. 0 - 1
+     */
     @SuppressWarnings("WeakerAccess")
     protected float mPhaseY = 1f;
-
-    //
+    /**
+     * The phase of drawn values on the x-axis. 0 - 1
+     */
     @SuppressWarnings("WeakerAccess")
     protected float mPhaseX = 1f;
+    /**
+     * object that is updated upon animation update
+     */
+    private AnimatorUpdateListener mListener;
 
-    public ChartAnimator() { }
+    public ChartAnimator() {
+    }
 
     @RequiresApi(11)
     public ChartAnimator(AnimatorUpdateListener listener) {
@@ -47,12 +52,10 @@ public class ChartAnimator {
         return animatorY;
     }
 
-
     @RequiresApi(11)
     public void animateX(int durationMillis) {
         animateX(durationMillis, Easing.Linear);
     }
-
 
     @RequiresApi(11)
     public void animateX(int durationMillis, EasingFunction easing) {
@@ -62,12 +65,10 @@ public class ChartAnimator {
         animatorX.start();
     }
 
-
     @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY) {
         animateXY(durationMillisX, durationMillisY, Easing.Linear, Easing.Linear);
     }
-
 
     @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, EasingFunction easing) {
@@ -84,7 +85,6 @@ public class ChartAnimator {
         xAnimator.start();
         yAnimator.start();
     }
-
 
     @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, EasingFunction easingX,
@@ -103,12 +103,10 @@ public class ChartAnimator {
         yAnimator.start();
     }
 
-
     @RequiresApi(11)
     public void animateY(int durationMillis) {
         animateY(durationMillis, Easing.Linear);
     }
-
 
     @RequiresApi(11)
     public void animateY(int durationMillis, EasingFunction easing) {
@@ -118,11 +116,9 @@ public class ChartAnimator {
         animatorY.start();
     }
 
-
     public float getPhaseY() {
         return mPhaseY;
     }
-
 
     public void setPhaseY(float phase) {
         if (phase > 1f) {
@@ -133,11 +129,9 @@ public class ChartAnimator {
         mPhaseY = phase;
     }
 
-
     public float getPhaseX() {
         return mPhaseX;
     }
-
 
     public void setPhaseX(float phase) {
         if (phase > 1f) {

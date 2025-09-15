@@ -7,7 +7,6 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivitySessionDetailBinding
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 
-
 class SessionDetailActivity : BaseBindingActivity<ActivitySessionDetailBinding>() {
     companion object {
         private const val EXTRA_SESSION_ID = "session_id"
@@ -34,9 +33,9 @@ class SessionDetailActivity : BaseBindingActivity<ActivitySessionDetailBinding>(
     private fun initView() {
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
 
-        // Set the content programmatically since we don't have a complex layout
         (binding.root as? android.widget.TextView)?.apply {
-            text = "Session Details\n\nSession ID: $sessionId\n\nDetailed session analysis coming soon..."
+            text =
+                "Session Details\n\nSession ID: $sessionId\n\nDetailed session analysis coming soon..."
             setPadding(32, 32, 32, 32)
             textSize = 16f
         }

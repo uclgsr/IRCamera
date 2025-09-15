@@ -1,5 +1,6 @@
 package com.topdon.module.user.fragment
 
+
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.text.TextUtils
@@ -13,8 +14,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.lib.core.R as LibAppR // Import libapp R class for resources
 import com.blankj.utilcode.util.CleanUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.request.RequestOptions
@@ -29,12 +28,10 @@ import com.topdon.lib.core.common.UserInfoManager
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.db.AppDatabase
-import com.topdon.lib.core.R as RCore
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseFragment
+import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.socket.WebSocketProxy
-// import com.topdon.lib.core.tools.AppLanguageUtils
-// import com.topdon.lib.core.tools.ConstantLanguages
 import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.lib.core.utils.Constants
 import com.topdon.lib.core.utils.NetWorkUtils
@@ -44,8 +41,6 @@ import com.topdon.lms.sdk.bean.CommonBean
 import com.topdon.lms.sdk.bean.FeedBackBean
 import com.topdon.lms.sdk.feedback.activity.FeedbackActivity
 import com.topdon.module.user.R
-import com.topdon.module.user.activity.MoreActivity
-// import com.zoho.salesiqembed.ZohoSalesIQ  // ZohoSalesIQ dependency not available
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -53,13 +48,20 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import com.topdon.lib.core.R as LibAppR
+import com.topdon.lib.core.R as RCore
+
+/**
 
 
+
+ *
+ * Created by LCG on 2024/4/19.
+ */
 class MineFragment : BaseFragment(), View.OnClickListener {
-    
+
     private var isNeedRefreshLogin = false
 
-    // View references
     private lateinit var ivWinter: ImageView
     private lateinit var settingItemVersion: View
     private lateinit var settingItemClear: View
@@ -76,7 +78,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
     override fun initContentView(): Int = R.layout.fragment_mine
 
     override fun initView() {
-        // Initialize views
+
         ivWinter = requireView().findViewById(R.id.iv_winter)
         settingItemVersion = requireView().findViewById(R.id.setting_item_version)
         settingItemClear = requireView().findViewById(R.id.setting_item_clear)
@@ -105,13 +107,13 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         viewWinterPoint.isVisible = !SharedManager.hasClickWinter
 
         if (BaseApplication.instance.isDomestic()) { // 国内版
-            // Language selection removed - English only
+
         }
 
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-//要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(false)
                     }
@@ -142,7 +144,6 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    // Language picker removed - English only app
 
     override fun onClick(v: View?) {
         when (v) {
@@ -154,7 +155,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                 val url =
                     if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
                         "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
-                            "languageId=1" // Fixed to English (languageId=1)
+                                "languageId=1" // Fixed to English (languageId=1)
                     } else {
                         "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
                     }
@@ -163,6 +164,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                     .withString(ExtraKeyConfig.URL, url)
                     .navigation(requireContext())
             }
+
             settingUserLay, settingUserImgNight -> {
                 if (UserInfoManager.getInstance().isLogin()) {
                     isNeedRefreshLogin = true
@@ -171,21 +173,27 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                     loginAction()
                 }
             }
+
             settingUserText -> {
                 if (!LMS.getInstance().isLogin) {
                     loginAction()
                 }
             }
+
             settingElectronicManual -> { // 电子说明书
                 NavigationManager.getInstance().build(
                     RouterConfig.ELECTRONIC_MANUAL,
-                ).withInt(Constants.SETTING_TYPE, Constants.SETTING_BOOK).navigation(requireContext())
+                ).withInt(Constants.SETTING_TYPE, Constants.SETTING_BOOK)
+                    .navigation(requireContext())
             }
+
             settingFaq -> { // FAQ
                 NavigationManager.getInstance().build(
                     RouterConfig.ELECTRONIC_MANUAL,
-                ).withInt(Constants.SETTING_TYPE, Constants.SETTING_FAQ).navigation(requireContext())
+                ).withInt(Constants.SETTING_TYPE, Constants.SETTING_FAQ)
+                    .navigation(requireContext())
             }
+
             settingFeedback -> { // 意见反馈
                 if (LMS.getInstance().isLogin) {
                     val devSn = SharedManager.getDeviceSn()
@@ -203,38 +211,47 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                     loginAction()
                 }
             }
+
             settingItemUnit -> { // 温度单位
-                NavigationManager.getInstance().build(RouterConfig.UNIT).navigation(requireContext())
+                NavigationManager.getInstance().build(RouterConfig.UNIT)
+                    .navigation(requireContext())
             }
+
             settingItemVersion -> { // 版本
-                NavigationManager.getInstance().build(RouterConfig.VERSION).navigation(requireContext())
+                NavigationManager.getInstance().build(RouterConfig.VERSION)
+                    .navigation(requireContext())
             }
+
             settingItemClear -> { // 清除缓存，实际已隐藏
                 clearCache()
             }
+
             dragCustomerView -> { // 客服
-//                ActivityUtil.goSystemCustomer(requireContext())
+
                 val sn = SharedManager.getDeviceSn()
-                // ZohoSalesIQ functionality disabled - dependency not available
+
                 if (!TextUtils.isEmpty(sn)) {
-                    // ZohoSalesIQ.Visitor.addInfo("SN", sn)
+
                 }
-                // ZohoSalesIQ.Visitor.addInfo("Model", "Topinfrared")
-                // ZohoSalesIQ.Chat.show()
+
+
             }
         }
     }
 
     private fun loginAction() {
         isNeedRefreshLogin = true
-//activityLogin()回调不可靠，但必然触发onResume()
-        val bgBitmap = BitmapFactory.decodeResource(resources, LibAppR.mipmap.ic_default_user_head) // Use available resource from libapp
+
+        val bgBitmap = BitmapFactory.decodeResource(
+            resources,
+            LibAppR.mipmap.ic_default_user_head
+        ) // Use available resource from libapp
         LMS.getInstance().activityLogin(null, null, false, null, bgBitmap)
     }
 
     private fun checkLoginResult() {
         if (LMS.getInstance().isLogin) {
-//登录successful
+
             LMS.getInstance().getUserInfo { userinfo: CommonBean ->
                 try {
                     val json = userinfo.data
@@ -248,14 +265,13 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                         headUrl = infoData.avatar,
                     )
 
-//updateui
                     changeLoginStyle()
                 } catch (e: Exception) {
                     XLog.e(" 登录异常: ${e.message}")
                 }
             }
         } else {
-//登录failed
+
             XLog.e(" 登录失败")
             changeLoginStyle()
             settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // 恢复默认头像
@@ -264,7 +280,8 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
     private fun changeLoginStyle() {
         if (LMS.getInstance().isLogin) {
-            val layoutParams = ConstraintLayout.LayoutParams(0, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+            val layoutParams =
+                ConstraintLayout.LayoutParams(0, ConstraintLayout.LayoutParams.WRAP_CONTENT)
             layoutParams.startToEnd = R.id.setting_user_img_night
             layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
             layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
@@ -298,12 +315,17 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             layoutParams.startToEnd = R.id.setting_user_img_night
             layoutParams.topToTop = R.id.setting_user_img_night
             layoutParams.bottomToBottom = R.id.setting_user_img_night
-            settingUserText.setPadding(SizeUtils.dp2px(16f), SizeUtils.dp2px(16f), SizeUtils.dp2px(16f), SizeUtils.dp2px(16f))
+            settingUserText.setPadding(
+                SizeUtils.dp2px(16f),
+                SizeUtils.dp2px(16f),
+                SizeUtils.dp2px(16f),
+                SizeUtils.dp2px(16f)
+            )
             settingUserText.gravity = Gravity.CENTER
             settingUserText.layoutParams = layoutParams
             settingUserText.setText(
-                // AppLanguageUtils.attachBaseContext(
-                // context, ConstantLanguages.ENGLISH).getString(RCore.string.app_sign_in))
+
+
                 context?.getString(RCore.string.app_sign_in) ?: "Sign In",
             )
             val drawable = ContextCompat.getDrawable(requireContext(), R.mipmap.ic_arrow_login)
@@ -316,7 +338,6 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    
     private fun clearCache() {
         lifecycleScope.launch {
             showLoadingDialog()

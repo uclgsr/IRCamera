@@ -4,18 +4,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.topdon.lib.core.ktbase.BaseFragment;
-import com.topdon.lib.ui.R;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.topdon.lib.core.ktbase.BaseFragment;
+import com.topdon.lib.ui.R;
 
 public class PageFragment extends BaseFragment {
 
     public static PageFragment newInstance(int res) {
         PageFragment fragmentFirst = new PageFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("res",res);
+        bundle.putInt("res", res);
         fragmentFirst.setArguments(bundle);
         return fragmentFirst;
     }

@@ -3,7 +3,6 @@ package com.topdon.gsr.service
 import android.util.Log
 import com.topdon.gsr.model.GSRSample
 
-
 class ShimmerAPIBridge private constructor() {
     companion object {
         private const val TAG = "ShimmerAPIBridge"
@@ -23,41 +22,18 @@ class ShimmerAPIBridge private constructor() {
         initializeShimmerProcessing()
     }
 
-
     private fun initializeShimmerProcessing() {
-        try {
-            // Try to load and instantiate GSRMetrics class from the official JAR
-            val gsrMetricsClass = Class.forName("com.shimmerresearch.biophysicalprocessing.GSRMetrics")
-            val gsrMetricsInstance = gsrMetricsClass.getDeclaredConstructor().newInstance()
-
-            if (gsrMetricsInstance != null) {
-                isOfficialAPIAvailable = true
-                processingMode = "OFFICIAL_SHIMMER_JAR"
-                Log.i(TAG, "Successfully initialized official Shimmer GSR processing from JAR")
-
-                // Log available methods for debugging
-                val methods = gsrMetricsClass.declaredMethods
-                Log.d(TAG, "Available GSRMetrics methods: ${methods.size}")
-                methods.take(5).forEach { method ->
-                    Log.d(TAG, "Method: ${method.name}")
-                }
-            }
-        } catch (classNotFoundException: ClassNotFoundException) {
-            Log.w(TAG, "GSRMetrics class not found in JAR, using enhanced fallback processing")
-            setupEnhancedFallback()
-        } catch (exception: Exception) {
-            Log.w(TAG, "Error initializing official Shimmer processing: ${exception.message}")
-            setupEnhancedFallback()
-        }
+        // Note: Official Shimmer processing is now handled by main app module
+        // This component uses fallback processing to avoid duplicate dependencies
+        Log.i(TAG, "Using fallback processing - official Shimmer SDK handled by main app module")
+        setupEnhancedFallback()
     }
-
 
     private fun setupEnhancedFallback() {
         isOfficialAPIAvailable = false
         processingMode = "ENHANCED_FALLBACK"
         Log.i(TAG, "Using enhanced fallback GSR processing with research-grade algorithms")
     }
-
 
     fun processGSRData(
         rawValue: Double,
@@ -71,14 +47,13 @@ class ShimmerAPIBridge private constructor() {
         }
     }
 
-
     private fun processWithOfficialAPI(
         rawValue: Double,
         timestamp: Long,
         sessionId: String,
     ): GSRSample {
         return try {
-            // Use reflection to safely call official API methods
+
             val conductance = convertToConductanceOfficial(rawValue)
             val resistance = convertToResistanceOfficial(conductance)
 
@@ -95,13 +70,12 @@ class ShimmerAPIBridge private constructor() {
         }
     }
 
-
     private fun processWithEnhancedFallback(
         rawValue: Double,
         timestamp: Long,
         sessionId: String,
     ): GSRSample {
-        // Enhanced GSR conversion based on Shimmer3 specifications
+
         val resistance = convertToResistanceShimmer3(rawValue)
         val conductance = if (resistance > 0) 1000000.0 / resistance else 0.0 // Convert to µS
 
@@ -114,11 +88,10 @@ class ShimmerAPIBridge private constructor() {
         )
     }
 
-
     private fun convertToConductanceOfficial(rawValue: Double): Double {
         return try {
-            // This would call official GSRMetrics methods via reflection
-            // For now, use enhanced fallback calculation
+
+
             val resistance = convertToResistanceShimmer3(rawValue)
             if (resistance > 0) 1000000.0 / resistance else 0.0
         } catch (e: Exception) {
@@ -127,10 +100,9 @@ class ShimmerAPIBridge private constructor() {
         }
     }
 
-
     private fun convertToResistanceOfficial(conductance: Double): Double {
         return try {
-            // This would call official GSRMetrics methods via reflection
+
             if (conductance > 0) 1000000.0 / conductance else Double.MAX_VALUE
         } catch (e: Exception) {
             Log.w(TAG, "Official resistance conversion failed: ${e.message}")
@@ -138,24 +110,19 @@ class ShimmerAPIBridge private constructor() {
         }
     }
 
-
     private fun convertToResistanceShimmer3(rawValue: Double): Double {
-        // Enhanced Shimmer3 GSR resistance calculation
-        // Uses the exact hardware specifications from Shimmer3 documentation
+
 
         val vRef = 3.0 // Reference voltage (3.0V)
         val rRef = 40200.0 // Reference resistor (40.2kΩ)
         val adcMax = 4095.0 // 12-bit ADC resolution
         val adcMin = 1.0 // Avoid division by zero
 
-        // Clamp raw value to valid ADC range
         val clampedRaw = rawValue.coerceIn(adcMin, adcMax)
 
-        // Convert ADC value to voltage
         val vOut = (clampedRaw / adcMax) * vRef
 
-        // Calculate GSR resistance using voltage divider formula
-        // R_gsr = R_ref * (V_ref - V_out) / V_out
+
         val denominator = vOut
         if (denominator <= 0.001) { // Avoid near-zero division
             return 10000.0 // Return high resistance value (10MΩ)
@@ -163,16 +130,12 @@ class ShimmerAPIBridge private constructor() {
 
         val resistance = rRef * (vRef - vOut) / denominator
 
-        // Convert to kΩ and apply physiological bounds
         val resistanceKohms = resistance / 1000.0
 
-        // Shimmer3 GSR valid range: 10kΩ to 4.7MΩ
         return resistanceKohms.coerceIn(10.0, 4700.0)
     }
 
-
     fun isOfficialProcessingAvailable(): Boolean = isOfficialAPIAvailable
-
 
     fun getProcessingInfo(): String =
         when (processingMode) {
@@ -180,7 +143,6 @@ class ShimmerAPIBridge private constructor() {
             "ENHANCED_FALLBACK" -> "Enhanced Fallback Processing (Research-grade algorithms)"
             else -> "Fallback GSR Processing"
         }
-
 
     fun getTechnicalSpecs(): Map<String, Any> =
         mapOf(

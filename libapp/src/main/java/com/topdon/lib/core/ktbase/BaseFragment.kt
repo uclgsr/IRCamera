@@ -14,7 +14,9 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-
+/**
+ * create by fylder on 2018/7/13
+ **/
 abstract class BaseFragment : Fragment() {
     val TAG = BaseFragment::class.java.simpleName
 
@@ -44,9 +46,9 @@ abstract class BaseFragment : Fragment() {
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (hidden) {
-            // 不在最前端显示 相当于调用了onPause();
+
         } else { // 在最前端显示 相当于调用了onResume();
-            // 网络数据刷新
+
             initData()
         }
     }
@@ -56,10 +58,8 @@ abstract class BaseFragment : Fragment() {
         EventBus.getDefault().unregister(this)
     }
 
-    
     private var loadingDialog: LoadingDialog? = null
 
-    
     fun showLoadingDialog(
         @StringRes resId: Int = 0,
     ) {
@@ -70,7 +70,6 @@ abstract class BaseFragment : Fragment() {
         loadingDialog?.show()
     }
 
-    
     fun showLoadingDialog(text: CharSequence) {
         if (loadingDialog == null) {
             loadingDialog = LoadingDialog(requireContext())
@@ -79,7 +78,6 @@ abstract class BaseFragment : Fragment() {
         loadingDialog?.show()
     }
 
-    
     fun dismissLoadingDialog() {
         loadingDialog?.dismiss()
     }

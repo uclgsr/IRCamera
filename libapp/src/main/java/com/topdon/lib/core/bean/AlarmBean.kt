@@ -2,7 +2,6 @@ package com.topdon.lib.core.bean
 
 import java.nio.ByteBuffer
 
-
 data class AlarmBean(
     var isHighOpen: Boolean = false,
     var isLowOpen: Boolean = false,
@@ -18,7 +17,6 @@ data class AlarmBean(
     companion object {
         const val TYPE_ALARM_MARK_STROKE = 1
         const val TYPE_ALARM_MARK_MATRIX = 2
-
 
         fun loadFromArray(data: ByteArray): AlarmBean {
             val buffer = ByteBuffer.wrap(data)
@@ -50,7 +48,6 @@ data class AlarmBean(
         }
     }
 
-
     fun toByteArray(): ByteArray =
         ByteBuffer.allocate(28)
             .put(if (isHighOpen) 1 else 0)
@@ -64,7 +61,6 @@ data class AlarmBean(
             .put(if (isRingtoneOpen) 1 else 0)
             .putInt(ringtoneType)
             .array()
-
 
     fun isOpen(): Boolean = isHighOpen || isLowOpen
 }

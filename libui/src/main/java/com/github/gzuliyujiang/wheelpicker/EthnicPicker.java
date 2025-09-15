@@ -28,7 +28,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class EthnicPicker extends OptionPicker {
     public static String JSON = "[{\"code\":\"01\",\"name\":\"汉族\",\"spelling\":\"Han\"}," +

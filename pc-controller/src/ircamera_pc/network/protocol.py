@@ -5,14 +5,13 @@ Manages JSON-based communication protocol definition and message validation.
 """
 
 import json
+import jsonschema
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum
+from loguru import logger
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-
-import jsonschema
-from loguru import logger
 
 
 class ValidationError(Exception):
@@ -188,7 +187,7 @@ class ProtocolManager:
                 return False
 
     def _get_validator(
-        self, message_type: str, schema: Dict[str, Any]
+            self, message_type: str, schema: Dict[str, Any]
     ) -> jsonschema.protocols.Validator:
         """Get cached validator for message type."""
         if message_type not in self._validator_cache:
@@ -232,8 +231,8 @@ class ProtocolManager:
 
         for field_name, field_def in common_fields.items():
             if (
-                field_def.get("required", False)
-                and field_name not in complete_schema["required"]
+                    field_def.get("required", False)
+                    and field_name not in complete_schema["required"]
             ):
                 complete_schema["required"].append(field_name)
 

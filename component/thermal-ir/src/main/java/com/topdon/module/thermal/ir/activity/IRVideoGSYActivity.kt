@@ -1,5 +1,6 @@
 package com.topdon.module.thermal.ir.activity
 
+
 import android.content.Intent
 import android.media.MediaScannerConnection
 import android.view.WindowManager
@@ -7,56 +8,49 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.BarUtils
-// Temporarily commented out GSY Video Player imports due to dependency resolution issues
-// import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
-// import com.shuyu.gsyvideoplayer.player.PlayerFactory
-// import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer
 import com.topdon.lib.core.bean.GalleryBean
+import com.topdon.lib.core.bean.event.GalleryDelEvent
 import com.topdon.lib.core.config.FileConfig
+import com.topdon.lib.core.dialog.ConfirmSelectDialog
+import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.repository.TS004Repository
 import com.topdon.lib.core.tools.FileTools
 import com.topdon.lib.core.tools.TimeTool
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.ui.R as UiR
-import com.topdon.lib.core.repository.TS004Repository
 import com.topdon.lib.core.tools.ToastTools
-import com.topdon.module.thermal.ir.R
-import com.topdon.lib.core.R as LibR
-import com.topdon.lib.core.dialog.ConfirmSelectDialog
-import com.topdon.lib.core.bean.event.GalleryDelEvent
 import com.topdon.lms.sdk.weiget.TToast
+import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.event.GalleryDownloadEvent
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
-// import com.shuyu.gsyvideoplayer.player.SystemPlayerManager
 import java.io.File
+import com.topdon.lib.core.R as LibR
+import com.topdon.lib.ui.R as UiR
 
-// Legacy ARouter route annotation - now using NavigationManager
 
 class IRVideoGSYActivity : BaseActivity() {
     private var isRemote = false
     private lateinit var data: GalleryBean
 
-    // View declarations
     private lateinit var titleView: com.topdon.lib.core.view.TitleView
     private lateinit var clBottom: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clDownload: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clShare: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clDelete: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var ivDownload: android.widget.ImageView
-    // private lateinit var gsyPlay: com.topdon.module.thermal.ir.view.MyGSYVideoPlayer
+
 
     override fun initContentView() = R.layout.activity_ir_video_gsy
 
     override fun initView() {
-        // Initialize views
+
         titleView = findViewById(R.id.title_view)
         clBottom = findViewById(R.id.cl_bottom)
         clDownload = findViewById(R.id.cl_download)
         clShare = findViewById(R.id.cl_share)
         clDelete = findViewById(R.id.cl_delete)
         ivDownload = findViewById(R.id.iv_download)
-        // gsyPlay = findViewById(R.id.gsy_play)
+
 
         BarUtils.setNavBarColor(this, ContextCompat.getColor(this, UiR.color.black))
 
@@ -101,8 +95,8 @@ class IRVideoGSYActivity : BaseActivity() {
         isRemote: Boolean,
         path: String,
     ) {
-        // Temporarily commented out GSY Video Player usage due to dependency resolution issues
-        // TODO: Re-enable with correct dependency once GSY Video Player is properly included
+
+
         /*
         PlayerFactory.setPlayManager(SystemPlayerManager::class.java)
         val url = if (isRemote) {
@@ -115,15 +109,14 @@ class IRVideoGSYActivity : BaseActivity() {
         GSYVideoOptionBuilder()
             .setUrl(url)
             .build(gsyPlay)
-//interfaceset
+
         gsyPlay.isNeedShowWifiTip = false //不显示消耗流量弹框
         gsyPlay.titleTextView.visibility = View.GONE
         gsyPlay.backButton.visibility = View.GONE
         gsyPlay.fullscreenButton.visibility = View.GONE
          */
 
-        // Placeholder implementation - shows path for now
-        // In production, implement with Media3 ExoPlayer as alternative
+
     }
 
     private fun actionDownload(isToShare: Boolean) {
@@ -136,8 +129,14 @@ class IRVideoGSYActivity : BaseActivity() {
         lifecycleScope.launch {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             showCameraLoading()
-            val isSuccess = TS004Repository.download(data.path, File(FileConfig.ts004GalleryDir, data.name))
-            MediaScannerConnection.scanFile(this@IRVideoGSYActivity, arrayOf(FileConfig.ts004GalleryDir), null, null)
+            val isSuccess =
+                TS004Repository.download(data.path, File(FileConfig.ts004GalleryDir, data.name))
+            MediaScannerConnection.scanFile(
+                this@IRVideoGSYActivity,
+                arrayOf(FileConfig.ts004GalleryDir),
+                null,
+                null
+            )
             dismissCameraLoading()
             if (isSuccess) {
                 ToastTools.showShort(R.string.tip_save_success)
@@ -160,7 +159,7 @@ class IRVideoGSYActivity : BaseActivity() {
         str.append(getString(R.string.detail_date)).append("\n")
         str.append(TimeTool.showDateType(data.timeMillis)).append("\n\n")
         str.append(getString(R.string.detail_info)).append("\n")
-//str.append("尺寸: ").append(whStr).append("\n")
+
         str.append("${getString(R.string.detail_len)}: ").append(sizeStr).append("\n")
         str.append("${getString(R.string.detail_path)}: ").append(data.path).append("\n")
         TipDialog.Builder(this)
@@ -198,7 +197,12 @@ class IRVideoGSYActivity : BaseActivity() {
                 if (isSuccess) {
                     if (isDelLocal) {
                         File(FileConfig.ts004GalleryDir, data.name).delete()
-                        MediaScannerConnection.scanFile(this@IRVideoGSYActivity, arrayOf(FileConfig.ts004GalleryDir), null, null)
+                        MediaScannerConnection.scanFile(
+                            this@IRVideoGSYActivity,
+                            arrayOf(FileConfig.ts004GalleryDir),
+                            null,
+                            null
+                        )
                     }
                     dismissCameraLoading()
                     ToastTools.showShort(R.string.test_results_delete_success)
@@ -206,7 +210,10 @@ class IRVideoGSYActivity : BaseActivity() {
                     finish()
                 } else {
                     dismissCameraLoading()
-                    TToast.shortToast(this@IRVideoGSYActivity, LibR.string.test_results_delete_failed)
+                    TToast.shortToast(
+                        this@IRVideoGSYActivity,
+                        LibR.string.test_results_delete_failed
+                    )
                 }
             }
         } else {
@@ -218,12 +225,12 @@ class IRVideoGSYActivity : BaseActivity() {
     }
 
     override fun onResume() {
-        // getCurPlay().onVideoResume(false)
+
         super.onResume()
     }
 
     override fun onPause() {
-        // getCurPlay().onVideoPause()
+
         super.onPause()
     }
 

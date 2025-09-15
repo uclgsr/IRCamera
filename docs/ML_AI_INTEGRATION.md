@@ -2,15 +2,22 @@
 
 ## 🧠 Overview
 
-This **comprehensive enterprise ML/AI integration guide** provides detailed strategies for integrating state-of-the-art machine learning and artificial intelligence capabilities into the IRCamera thermal imaging platform, enabling advanced analytics, pattern recognition, automated decision-making, predictive maintenance, and real-time intelligent processing at enterprise scale.
+This **comprehensive enterprise ML/AI integration guide** provides detailed strategies for
+integrating state-of-the-art machine learning and artificial intelligence capabilities into the
+IRCamera thermal imaging platform, enabling advanced analytics, pattern recognition, automated
+decision-making, predictive maintenance, and real-time intelligent processing at enterprise scale.
 
 ## 📋 Table of Contents
 
-1. [🏗️ Enterprise ML Architecture Overview](#enterprise-ml-architecture-overview) - Complete ML/AI infrastructure
-2. [🔥 Advanced Thermal Image Analysis](#advanced-thermal-image-analysis) - Deep learning for thermal processing
-3. [🧬 Intelligent Physiological Analytics](#intelligent-physiological-analytics) - AI-powered GSR and biometric analysis
+1. [🏗️ Enterprise ML Architecture Overview](#enterprise-ml-architecture-overview) - Complete ML/AI
+   infrastructure
+2. [🔥 Advanced Thermal Image Analysis](#advanced-thermal-image-analysis) - Deep learning for thermal
+   processing
+3. [🧬 Intelligent Physiological Analytics](#intelligent-physiological-analytics) - AI-powered GSR
+   and biometric analysis
 4. [⚡ Real-Time Inference Engine](#real-time-inference-engine) - Sub-millisecond ML inference
-5. [🚀 Enterprise Training Pipeline](#enterprise-training-pipeline) - Scalable model training infrastructure
+5. [🚀 Enterprise Training Pipeline](#enterprise-training-pipeline) - Scalable model training
+   infrastructure
 6. [🐳 Cloud Model Deployment](#cloud-model-deployment) - Production ML deployment strategies
 7. [📱 Edge Computing & Mobile AI](#edge-computing--mobile-ai) - On-device ML processing
 8. [🔄 Continuous Learning Systems](#continuous-learning-systems) - AutoML and adaptive models
@@ -796,4 +803,6 @@ class EmotionDetectionModel:
         }
 ```
 
-This comprehensive ML & AI integration guide provides detailed implementations for advanced thermal image analysis, physiological data processing, and multi-modal emotion detection using state-of-the-art machine learning techniques specifically designed for the IRCamera platform.
+This comprehensive ML & AI integration guide provides detailed implementations for advanced thermal
+image analysis, physiological data processing, and multi-modal emotion detection using
+state-of-the-art machine learning techniques specifically designed for the IRCamera platform.

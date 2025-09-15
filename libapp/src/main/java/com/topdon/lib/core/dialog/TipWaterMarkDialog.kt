@@ -20,15 +20,14 @@ import androidx.appcompat.widget.SwitchCompat
 import com.blankj.utilcode.util.ToastUtils
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.XXPermissions
-import com.topdon.lib.core.*
+import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.R
 import com.topdon.lib.core.bean.WatermarkBean
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.databinding.DialogTipWatermarkBinding
 import com.topdon.lib.core.utils.CommUtils
 import com.topdon.lib.core.utils.ScreenUtil
-import java.util.*
-
+import java.util.Locale
 
 class TipWaterMarkDialog : Dialog {
     constructor(context: Context) : super(context)
@@ -66,7 +65,8 @@ class TipWaterMarkDialog : Dialog {
             if (dialog == null) {
                 dialog = TipWaterMarkDialog(context!!, R.style.InfoDialog)
             }
-            val inflater = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater =
+                context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val binding = DialogTipWatermarkBinding.inflate(LayoutInflater.from(context!!))
             imgClose = binding.imgClose
             llWatermarkContent = binding.llWatermarkContent
@@ -107,10 +107,10 @@ class TipWaterMarkDialog : Dialog {
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    // 竖屏
+
                     0.85
                 } else {
-                    // 横屏
+
                     0.35
                 }
             lp.width = (ScreenUtil.getScreenWidth(context) * wRatio).toInt() // 设置宽度
@@ -119,14 +119,8 @@ class TipWaterMarkDialog : Dialog {
             dialog!!.setCanceledOnTouchOutside(canceled)
             imgClose.setOnClickListener {
                 dismiss()
-//              closeEvent?.invoke(
-//                    WatermarkBean(
-//                        binding.switchWatermark.isChecked,
-//                        binding.edTitle.text.toString(),
-//                        binding.edAddress.text.toString(),
-//                        binding.switchDateTime.isChecked,
-//                    )
-//                )
+
+
             }
             dialog!!.setContentView(binding.root)
             return dialog as TipWaterMarkDialog
@@ -163,7 +157,7 @@ class TipWaterMarkDialog : Dialog {
         }
 
         private fun initLocationPermission() {
-            // 定位
+
             XXPermissions.with(context)
                 .permission(
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -191,7 +185,7 @@ class TipWaterMarkDialog : Dialog {
                             never: Boolean,
                         ) {
                             if (never) {
-                                // 如果是被永久拒绝就跳转到应用权限系统设置页面
+
                                 if (BaseApplication.instance.isDomestic()) {
                                     ToastUtils.showShort(R.string.app_location_content)
                                     return
@@ -235,17 +229,17 @@ class TipWaterMarkDialog : Dialog {
 
         @SuppressLint("MissingPermission")
         private fun getLocation(): String? {
-            // 1.获取位置管理器
-            locationManager = context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-            // 2.获取位置提供器，GPS或是NetWork
+            locationManager =
+                context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
             val providers = locationManager?.getProviders(true)
             locationProvider =
                 if (providers!!.contains(LocationManager.GPS_PROVIDER)) {
-                    // 如果是GPS
+
                     LocationManager.GPS_PROVIDER
                 } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
-                    // 如果是Network
+
                     LocationManager.NETWORK_PROVIDER
                 } else {
                     return null
@@ -261,7 +255,6 @@ class TipWaterMarkDialog : Dialog {
             }
         }
 
-        // 获取地址信息:城市、街道等信息
         private fun getAddress(location: Location?): String {
             var result: List<Address?>? = null
             try {

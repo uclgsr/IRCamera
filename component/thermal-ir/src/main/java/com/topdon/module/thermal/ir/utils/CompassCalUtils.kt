@@ -4,7 +4,6 @@ import android.graphics.Paint
 import android.graphics.Rect
 import kotlin.math.roundToLong
 
-//get真实的x坐标
 fun realX(
     str: String,
     x: Float,
@@ -41,7 +40,6 @@ fun textDimensions(
     return measurementRect.width().toFloat() to measurementRect.height().toFloat()
 }
 
-
 fun getValuesBetween(
     min: Float,
     max: Float,
@@ -63,7 +61,6 @@ fun Float.roundNearest(nearest: Float): Float {
     return (this / nearest).roundToLong() * nearest
 }
 
-
 fun getPixelLinear(
     bearing: Float,
     azimuth: Float,
@@ -79,7 +76,7 @@ fun deltaAngle(
     angle1: Float,
     angle2: Float,
 ): Float {
-    // These will be at most 360 degrees apart, so normalize them to restrict that
+
     val a = normalizeAngle(angle1 - angle2)
     val b = normalizeAngle(angle2 - angle1)
     return if (a < b) {
@@ -106,7 +103,7 @@ fun wrap(
     min: Double,
     max: Double,
 ): Double {
-    // https://stackoverflow.com/questions/14415753/wrap-value-into-range-min-max-without-division
+
     val range = max - min
     if (value < min) {
         return max - (min - value) % range

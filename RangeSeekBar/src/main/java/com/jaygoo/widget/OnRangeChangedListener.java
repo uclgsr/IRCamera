@@ -1,6 +1,5 @@
 package com.jaygoo.widget;
 
-
 public interface OnRangeChangedListener {
     void onRangeChanged(DefRangeSeekBar view, float leftValue, float rightValue, boolean isFromUser);
 

@@ -10,11 +10,9 @@ import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.databinding.DialogProgressBinding
 
 
-
-
-
 class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
-    private val binding: DialogProgressBinding = DialogProgressBinding.inflate(LayoutInflater.from(context))
+    private val binding: DialogProgressBinding =
+        DialogProgressBinding.inflate(LayoutInflater.from(context))
 
     var max: Int = 100
         set(value) {
@@ -29,7 +27,7 @@ class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
         }
 
     init {
-        // Binding is initialized in constructor
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +38,8 @@ class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
 
         window?.let {
             val layoutParams = it.attributes
-            layoutParams.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.8 else 0.45).toInt()
+            layoutParams.width =
+                (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.8 else 0.45).toInt()
             layoutParams.height = LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }

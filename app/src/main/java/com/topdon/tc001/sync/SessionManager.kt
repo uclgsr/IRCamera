@@ -3,12 +3,25 @@ package com.topdon.tc001.sync
 import android.content.Context
 import android.util.Log
 import com.topdon.tc001.logging.StructuredLogger
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
-
 
 class SessionManager(
     private val context: Context,
@@ -81,7 +94,6 @@ class SessionManager(
         UNSTABLE, // Connection issues
     }
 
-
     fun start(
         onSessionStateChanged: (SessionState) -> Unit,
         onDeviceJoined: (DeviceInfo) -> Unit,
@@ -102,7 +114,12 @@ class SessionManager(
 
         sessionJob.set(
             GlobalScope.launch {
-                logger.log(StructuredLogger.LogLevel.INFO, "SessionManager", "service_started", emptyMap())
+                logger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "SessionManager",
+                    "service_started",
+                    emptyMap()
+                )
 
                 try {
                     // Session monitoring loop
@@ -132,7 +149,6 @@ class SessionManager(
         Log.i(TAG, "Session management service started")
     }
 
-
     fun stop() {
         if (!isRunning.get()) return
 
@@ -149,7 +165,6 @@ class SessionManager(
         logger.log(StructuredLogger.LogLevel.INFO, "SessionManager", "service_stopped", emptyMap())
         Log.i(TAG, "Session management service stopped")
     }
-
 
     fun createSession(metadata: Map<String, Any> = emptyMap()): String {
         val id = generateSessionId()
@@ -183,7 +198,6 @@ class SessionManager(
 
         return id
     }
-
 
     fun joinDevice(
         deviceId: String,
@@ -231,7 +245,6 @@ class SessionManager(
         return true
     }
 
-
     fun removeDevice(
         deviceId: String,
         reason: String = "Unknown",
@@ -253,7 +266,6 @@ class SessionManager(
             )
         }
     }
-
 
     fun startSyncRecording(): Boolean {
         val session = currentSession.get() ?: return false
@@ -303,7 +315,6 @@ class SessionManager(
         return true
     }
 
-
     fun stopSyncRecording() {
         val session = currentSession.get() ?: return
 
@@ -326,7 +337,6 @@ class SessionManager(
             ),
         )
     }
-
 
     fun endSession(
         sessionId: String,
@@ -353,9 +363,9 @@ class SessionManager(
                 participants = emptyList(),
             )
 
-        sessionHistory[sessionId] = endedSession
+        sessionHistory[session.id] = endedSession
         currentSession.set(null)
-        sessionId.set(null)
+        this.sessionId.set(null)
         sessionStartTime.set(0L)
 
         updateSessionState(SessionState.IDLE)
@@ -365,13 +375,12 @@ class SessionManager(
             "SessionManager",
             "session_ended",
             mapOf(
-                "session_id" to sessionId,
+                "session_id" to session.id,
                 "reason" to reason,
                 "duration_ms" to (endedSession.endTime - endedSession.startTime).toString(),
             ),
         )
     }
-
 
     fun updateDeviceHeartbeat(
         deviceId: String,
@@ -389,15 +398,11 @@ class SessionManager(
         }
     }
 
-
     fun getCurrentSession(): SessionInfo? = currentSession.get()
-
 
     fun getConnectedDevices(): List<DeviceInfo> = connectedDevices.values.toList()
 
-
     fun getSessionHistory(): List<SessionInfo> = sessionHistory.values.toList()
-
 
     fun getDiagnostics(): JSONObject {
         val session = currentSession.get()
@@ -406,7 +411,10 @@ class SessionManager(
             put("current_session_id", session?.id ?: "none")
             put("session_state", session?.state?.name ?: "IDLE")
             put("connected_devices", connectedDevices.size)
-            put("session_duration_ms", if (session != null) System.currentTimeMillis() - session.startTime else 0)
+            put(
+                "session_duration_ms",
+                if (session != null) System.currentTimeMillis() - session.startTime else 0
+            )
             put("total_sessions", sessionHistory.size)
             put("recording_active", session?.recordingActive ?: false)
         }
@@ -486,8 +494,8 @@ class SessionManager(
         val needsSync =
             devices.any { device ->
                 device.connectionQuality == ConnectionQuality.POOR ||
-                    device.connectionQuality == ConnectionQuality.UNSTABLE ||
-                    kotlin.math.abs(device.syncOffset) > 5_000_000L // 5ms threshold
+                        device.connectionQuality == ConnectionQuality.UNSTABLE ||
+                        kotlin.math.abs(device.syncOffset) > 5_000_000L // 5ms threshold
             }
 
         if (needsSync && session.state == SessionState.ACTIVE) {

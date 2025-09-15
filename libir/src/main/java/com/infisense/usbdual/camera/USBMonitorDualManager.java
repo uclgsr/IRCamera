@@ -20,31 +20,22 @@ import com.infisense.usbdual.inf.OnUSBConnectListener;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class USBMonitorDualManager {
 
     public static final String TAG = "USBMonitorDualManager";
+    private static USBMonitorDualManager mInstance;
     private USBMonitor mUSBMonitor;
-
     private IRCMD mIrcmd;
-
     private Object mSyncs = new Object();
-
     private List<OnUSBConnectListener> mOnUSBConnectListeners = new ArrayList<>();
-
     private UVCCamera mIrUvcCamera;
-
     private UVCCamera mVlUvcCamera;
-
     private boolean mIrOpened;
     private boolean mVlOpened;
-
     private IFrameCallback mVlIFrameCallback;
 
     private USBMonitorDualManager() {
     }
-
-    private static USBMonitorDualManager mInstance;
 
     public static synchronized USBMonitorDualManager getInstance() {
         if (mInstance == null) {
@@ -67,8 +58,8 @@ public class USBMonitorDualManager {
         if (mUSBMonitor == null) {
             mUSBMonitor = new USBMonitor(Utils.getApp(),
                     new USBMonitor.OnDeviceConnectListener() {
-                        // called by checking usb device
-                        // do request device permission
+
+
                         @Override
                         public void onAttach(UsbDevice device) {
                             Log.w(TAG, "USBMonitor-onAttach-getProductId = " + device.getProductId());
@@ -87,8 +78,7 @@ public class USBMonitorDualManager {
                             }
                         }
 
-                        // called by taking out usb device
-                        // do close camera
+
                         @Override
                         public void onDettach(UsbDevice device) {
                             Log.d(TAG, "USBMonitor-onDettach");
@@ -99,8 +89,7 @@ public class USBMonitorDualManager {
 
                         }
 
-                        // called by connect to usb camera
-                        // do open camera,start previewing
+
                         @Override
                         public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock,
                                               boolean createNew) {
@@ -120,8 +109,7 @@ public class USBMonitorDualManager {
                             }
                         }
 
-                        // called by disconnect to usb camera
-                        // do nothing
+
                         @Override
                         public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
                             Log.w(TAG, "USBMonitor-onDisconnect");
@@ -171,7 +159,7 @@ public class USBMonitorDualManager {
                         .build();
                 mIrUvcCamera.setDefaultBandwidth(irBandWidth);
                 mIrUvcCamera.setDefaultPreviewMaxFps(irFps);
-                // uvc开启
+
                 mIrUvcCamera.openUVCCamera(controlBlock);
 
 
@@ -188,7 +176,6 @@ public class USBMonitorDualManager {
 
     public void initIRCMD() {
 
-        // IRCMD init
         if (mIrUvcCamera != null) {
             ConcreteIRCMDBuilder concreteIRCMDBuilder = new ConcreteIRCMDBuilder();
             mIrcmd = concreteIRCMDBuilder
@@ -219,7 +206,7 @@ public class USBMonitorDualManager {
                 mVlUvcCamera.setDefaultPreviewMode(CommonParams.FRAMEFORMATType.FRAME_FORMAT_MJPEG);
                 mVlUvcCamera.setDefaultBandwidth(vlBandWidth);
                 mVlUvcCamera.setDefaultPreviewMaxFps(vlFps);
-                // uvc开启
+
                 mVlUvcCamera.openUVCCamera(controlBlock);
 
 

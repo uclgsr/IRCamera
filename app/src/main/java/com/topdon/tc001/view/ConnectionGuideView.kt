@@ -23,15 +23,18 @@ class ConnectionGuideView : LinearLayout {
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        val ta: TypedArray = context.obtainStyledAttributes(attrs, UiR.styleable.ConnectionGuideView)
+        val ta: TypedArray =
+            context.obtainStyledAttributes(attrs, UiR.styleable.ConnectionGuideView)
         for (i in 0 until ta.indexCount) {
             when (ta.getIndex(i)) {
                 UiR.styleable.ConnectionGuideView_guide_icon ->
                     iconRes =
                         ta.getResourceId(UiR.styleable.ConnectionGuideView_guide_icon, 0)
+
                 UiR.styleable.ConnectionGuideView_guide_text ->
                     contentStr =
                         ta.getString(UiR.styleable.ConnectionGuideView_guide_text).toString()
+
                 UiR.styleable.ConnectionGuideView_guide_icon_show ->
                     iconShow =
                         ta.getBoolean(UiR.styleable.ConnectionGuideView_guide_icon_show, false)
@@ -73,7 +76,12 @@ class ConnectionGuideView : LinearLayout {
         val spannableString = SpannableString(mContent)
         val drawable = context.getDrawable(UiR.drawable.ic_connection_press_tip)
         drawable!!.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-        spannableString.setSpan(ImageSpan(drawable), mContent.length - 1, mContent.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannableString.setSpan(
+            ImageSpan(drawable),
+            mContent.length - 1,
+            mContent.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
         binding.tvContent.text = spannableString
     }
 }

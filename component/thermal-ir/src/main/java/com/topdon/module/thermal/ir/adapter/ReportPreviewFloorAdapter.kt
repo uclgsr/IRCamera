@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.core.bean.HouseRepPreviewProjectItemBean
 import com.topdon.module.thermal.ir.R
 
-
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewFloorAdapter(
     val cxt: Context,

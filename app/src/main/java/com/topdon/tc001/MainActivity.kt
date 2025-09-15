@@ -1,9 +1,10 @@
 package com.topdon.tc001
 
+
 import android.Manifest
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ComponentName
 import android.content.ServiceConnection
 import android.net.Uri
 import android.os.Build
@@ -13,12 +14,11 @@ import android.util.Log
 import android.util.SparseArray
 import android.view.KeyEvent
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -26,21 +26,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.topdon.lib.core.navigation.NavigationManager
 import com.blankj.utilcode.util.AppUtils
-import com.elvishew.xlog.XLog
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-// Note: SupHelp library integration is not included in this build configuration
-import com.example.thermal_lite.activity.IRThermalLiteActivity
+import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
-import com.topdon.tc001.gsr.GSRQuickRecordingActivity
-import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
+import com.csl.irCamera.databinding.ActivityMainBinding
+import com.elvishew.xlog.XLog
+import com.example.thermal_lite.activity.IRThermalLiteActivity
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-// Note: HIK thermal camera activity implementation is module-specific
+import com.topdon.gsr.model.SessionInfo
 import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.bean.event.TS004ResetEvent
 import com.topdon.lib.core.bean.event.WinterClickEvent
@@ -53,10 +48,11 @@ import com.topdon.lib.core.dialog.FirmwareUpDialog
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.dialog.TipOtgDialog
 import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.repository.GalleryRepository
 import com.topdon.lib.core.socket.WebSocketProxy
-import com.topdon.lib.core.tools.DeviceTools
 import com.topdon.lib.core.tools.ConstantLanguages
+import com.topdon.lib.core.tools.DeviceTools
 import com.topdon.lib.core.utils.CommUtils
 import com.topdon.lib.core.utils.PermissionUtils
 import com.topdon.lib.core.viewmodel.VersionViewModel
@@ -66,25 +62,21 @@ import com.topdon.module.thermal.ir.activity.IRThermalPlusActivity
 import com.topdon.module.thermal.ir.fragment.IRGalleryTabFragment
 import com.topdon.module.user.fragment.MineFragment
 import com.topdon.tc001.app.App
+import com.topdon.tc001.config.FeatureFlags
+import com.topdon.tc001.config.ProtocolVersion
 import com.topdon.tc001.fragment.MainFragment
-import com.topdon.tc001.utils.AppVersionUtil
-import com.csl.irCamera.BuildConfig
-import com.csl.irCamera.databinding.ActivityMainBinding
-// Network integration imports - Enhanced JSON protocol
-import com.topdon.tc001.network.NetworkController
+import com.topdon.tc001.gsr.GSRQuickRecordingActivity
+import com.topdon.tc001.logging.StructuredLogger
+import com.topdon.tc001.network.NetworkClient
+import com.topdon.tc001.network.WebSocketClient
+import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import com.topdon.tc001.service.RecordingService
 import com.topdon.tc001.controller.RecordingController
-import com.topdon.gsr.model.SessionInfo
-// Phase 0 baseline imports
-import com.topdon.tc001.config.FeatureFlags
-import com.topdon.tc001.viewmodel.MainActivityViewModel
-import com.topdon.tc001.config.ProtocolVersion
-import com.topdon.tc001.logging.StructuredLogger
 import com.topdon.tc001.supervisor.CrashSafeSupervisor
-// Zoho dependencies commented out - not available in build
-// import com.zoho.commons.LauncherModes
-// import com.zoho.commons.LauncherProperties
-// import com.zoho.salesiqembed.ZohoSalesIQ
+import com.topdon.tc001.utils.AppVersionUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
@@ -92,86 +84,84 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
-// Legacy ARouter route annotation - now using NavigationManager
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
     private val versionViewModel: VersionViewModel by viewModels()
-    private val mainViewModel: MainActivityViewModel by viewModels()
 
     private var checkPermissionType: Int = -1 // 0 initData数据 1 图库  2 connect方法
-    
-    // PC-to-phone control networking - JSON protocol implementation
-    // NetworkController is managed by MainActivityViewModel
+
+    private var webSocketClient: WebSocketClient? = null
+    private var networkClient: NetworkClient? = null
     private var recordingService: RecordingService? = null
+    private var serviceBinder: RecordingService.RecordingServiceBinder? = null
     private var isServiceBound = false
-    
-    // UI elements for network status
+    private var connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
+
     private var networkStatusIndicator: ImageView? = null
     private var networkStatusText: TextView? = null
-    
-    // UI elements for GSR status
-    private var gsrStatusIndicator: ImageView? = null
-    private var gsrStatusText: TextView? = null
-    
-    // UI elements for session control
-    private var sessionControlButton: Button? = null
-    
-    // Phase 0 baseline components
+
     private lateinit var structuredLogger: StructuredLogger
     private lateinit var crashSafeSupervisor: CrashSafeSupervisor
-    
+
+    enum class ConnectionStatus {
+        DISCONNECTED,
+        DISCOVERING,
+        CONNECTING,
+        CONNECTED,
+        ERROR
+    }
+
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as RecordingService.RecordingServiceBinder
+            serviceBinder = binder
             recordingService = binder.getService()
+            networkClient = binder.getNetworkClient()
             isServiceBound = true
             Log.i(TAG, "Recording service connected")
-            
-            // Now that we have the service, we can set up remote control
+
             setupRemoteControl()
         }
-        
+
         override fun onServiceDisconnected(name: ComponentName?) {
+            serviceBinder = null
             recordingService = null
+            networkClient = null
             isServiceBound = false
             Log.i(TAG, "Recording service disconnected")
         }
     }
-    
 
     private fun setupRemoteControl() {
         Log.i(TAG, "Setting up enhanced remote control capabilities")
-        
+
         if (!isServiceBound || recordingService == null) {
             Log.w(TAG, "Recording service not available for remote control setup")
             return
         }
-        
+
         try {
-            // Enable automatic reconnection with exponential backoff
+
             enableAutoReconnection()
-            
-            // Start connection health monitoring
+
             startHeartbeat()
-            
-            // Set up UI click handlers for network status
+
             networkStatusIndicator?.setOnClickListener { handleNetworkStatusClick() }
             networkStatusText?.setOnClickListener { handleNetworkStatusClick() }
-            
+
             Log.i(TAG, "Enhanced remote control setup completed")
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Error setting up remote control", e)
             showNetworkError("Failed to setup remote control: ${e.message}")
         }
     }
-    
+
     override fun initContentLayoutId(): Int = R.layout.activity_main
-    
+
     companion object {
         private const val TAG = "MainActivity"
     }
 
-    // 记录设备信息
     private fun logInfo() {
         try {
             val str = StringBuilder()
@@ -195,26 +185,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        // Phase 0 - Initialize baseline components first
+
         initializePhase0Baseline()
-        
+
         initView()
         initData()
-        
-        // Initialize ViewModel and set up observers
-        setupViewModelObservers()
-        mainViewModel.initializeComponents()
-        
-        // Initialize PC-to-phone control networking via ViewModel
-        initNetworkingViaViewModel()
+
+        initNetworking()
     }
 
     private fun initView() {
-        // Check if clause needs to be shown (moved from SplashActivity)
+
         if (!SharedManager.getHasShowClause()) {
             NavigationManager.build(RouterConfig.CLAUSE).navigation(this)
             finish()
@@ -222,17 +206,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
 
         logInfo()
-        
-        // Initialize status UI elements
+
         networkStatusIndicator = binding.networkStatusIndicator
         networkStatusText = binding.networkStatusText
-        gsrStatusIndicator = binding.gsrStatusIndicator
-        gsrStatusText = binding.gsrStatusText
-        sessionControlButton = binding.sessionControlButton
-        
+
         lifecycleScope.launch(Dispatchers.IO) {
-            // Note: SupHelp AI upscaler integration is not included in this build
-            // SupHelp.getInstance().initAiUpScaler(Utils.getApp())
+
+
         }
         binding.viewPage.offscreenPageLimit = 3
         binding.viewPage.isUserInputEnabled = false
@@ -251,20 +231,16 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.clIconGallery.setOnClickListener(this)
         binding.viewMain.setOnClickListener(this)
         binding.clIconMine.setOnClickListener(this)
-        
-        // Add click listeners for status and control elements
+
         binding.networkStatusBar.setOnClickListener {
             handleNetworkStatusClick()
         }
-        
-        gsrStatusIndicator?.setOnClickListener {
-            handleGSRStatusClick()
+
+        binding.viewMain.setOnLongClickListener {
+            launchShimmerMvp()
+            true
         }
-        
-        sessionControlButton?.setOnClickListener {
-            handleSessionControlClick()
-        }
-        
+
         App.instance.initWebSocket()
         copyFile("SR.pb", File(filesDir, "SR.pb"))
         BaseApplication.instance.clearDb()
@@ -275,7 +251,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
 
         if (!SharedManager.hasTcLine && !SharedManager.hasTS004 && !SharedManager.hasTC007) {
-            // 仅当设备列表为空时，才执行自动跳转
+
             if (DeviceTools.isConnect()) {
                 if (!WebSocketProxy.getInstance().isConnected()) {
                     NavigationManager.build(RouterConfig.IR_MAIN)
@@ -302,13 +278,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         if (WebSocketProxy.getInstance().isTC007Connect()) {
             SharedManager.hasTC007 = true
         }
-//        initLauncher()
+
     }
 
     override fun onStart() {
         super.onStart()
 
-        // 版本下载
         versionViewModel.updateLiveData.observe(this) {
             FirmwareUpDialog(this).apply {
                 titleStr = getString(com.topdon.lib.core.R.string.update_new_version)
@@ -327,7 +302,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private fun updateApk(url: String) {
         if (applicationInfo.targetSdkVersion < Build.VERSION_CODES.P) {
-            // 目标版本27默认跳到官网下载
+
             val intent = Intent()
             intent.action = "android.intent.action.VIEW"
             intent.data = Uri.parse(url)
@@ -411,15 +386,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private fun initData() {
         checkPermissionType = 0
         checkCameraPermission()
-        
-        // Log that PC-to-Phone communication support is available
-        Log.i("MainActivity", "✅ PC-to-Phone communication integration available - RecordingService supports network control")
+
+        Log.i(
+            "MainActivity",
+            "✅ PC-to-Phone communication integration available - RecordingService supports network control"
+        )
     }
 
     override fun onResume() {
         super.onResume()
         LMS.getInstance().language = ConstantLanguages.ENGLISH
-//        DeviceTools.isConnect(true)
+
     }
 
     override fun onPause() {
@@ -432,9 +409,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 checkPermissionType = 1
                 checkStoragePermission()
             }
+
             binding.viewMain -> { // 首页
                 binding.viewPage.setCurrentItem(1, false)
             }
+
             binding.clIconMine -> { // 我的
                 binding.viewPage.setCurrentItem(2, false)
             }
@@ -469,7 +448,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.viewMinePoint.isVisible = false
     }
 
-
     private fun refreshTabSelect(index: Int) {
         binding.ivIconGallery.isSelected = false
         binding.tvIconGallery.isSelected = false
@@ -482,9 +460,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 binding.ivIconGallery.isSelected = true
                 binding.tvIconGallery.isSelected = true
             }
+
             1 -> {
                 binding.ivBottomMainBg.setImageResource(R.drawable.ic_main_bg_select)
             }
+
             2 -> { // 我的
                 binding.ivIconMine.isSelected = true
                 binding.tvIconMine.isSelected = true
@@ -505,7 +485,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         if (WebSocketProxy.getInstance().isTS004Connect()) {
             NavigationManager.build(RouterConfig.IR_MONOCULAR).navigation(this)
         }
-        // 无连接OTG提示
+
         if (tipOtgDialog != null && tipOtgDialog!!.isShowing) {
             return
         }
@@ -548,39 +528,45 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                             Bundle().also {
                                 it.putBoolean(ExtraKeyConfig.CAN_SWITCH_DIR, true)
                                 it.putBoolean(ExtraKeyConfig.HAS_BACK_ICON, false)
-                                it.putInt(ExtraKeyConfig.DIR_TYPE, GalleryRepository.DirType.LINE.ordinal)
+                                it.putInt(
+                                    ExtraKeyConfig.DIR_TYPE,
+                                    GalleryRepository.DirType.LINE.ordinal
+                                )
                             }
                     }
                 }
+
                 1 -> MainFragment()
                 else -> MineFragment()
             }
         }
     }
 
-
     private fun getNeedPermissionList(): SparseArray<List<String>> {
         val sparseArray = SparseArray<List<String>>()
-        sparseArray.append(R.string.permission_request_camera_app, listOf(Manifest.permission.CAMERA))
+        sparseArray.append(
+            R.string.permission_request_camera_app,
+            listOf(Manifest.permission.CAMERA)
+        )
         (
-            if (this.applicationInfo.targetSdkVersion >= 34) {
-                listOf(
-                    Permission.READ_MEDIA_VIDEO,
-                    Permission.READ_MEDIA_IMAGES,
-                    Permission.WRITE_EXTERNAL_STORAGE,
-                )
-            } else if (this.applicationInfo.targetSdkVersion == 33) {
-                listOf(
-                    Permission.READ_MEDIA_VIDEO,
-                    Permission.READ_MEDIA_IMAGES,
-                    Permission.WRITE_EXTERNAL_STORAGE,
-                )
-            } else {
-                listOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
+                if (this.applicationInfo.targetSdkVersion >= 34) {
+                    listOf(
+                        Permission.READ_MEDIA_VIDEO,
+                        Permission.READ_MEDIA_IMAGES,
+                        Permission.WRITE_EXTERNAL_STORAGE,
+                    )
+                } else if (this.applicationInfo.targetSdkVersion == 33) {
+                    listOf(
+                        Permission.READ_MEDIA_VIDEO,
+                        Permission.READ_MEDIA_IMAGES,
+                        Permission.WRITE_EXTERNAL_STORAGE,
+                    )
+                } else {
+                    listOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
+                }
+                ).let {
+                sparseArray.append(R.string.permission_request_storage_app, it)
             }
-        ).let {
-            sparseArray.append(R.string.permission_request_storage_app, it)
-        }
         return sparseArray
     }
 
@@ -593,11 +579,16 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         ) {
             if (BaseApplication.instance.isDomestic()) {
                 if (SharedManager.getMainPermissionsState()) {
-                    // 国内版拒绝授权之后就别再授权了华为上架不通过
+
                     return
                 }
                 TipDialog.Builder(this)
-                    .setMessage(getString(R.string.permission_request_camera_app, CommUtils.getAppName()))
+                    .setMessage(
+                        getString(
+                            R.string.permission_request_camera_app,
+                            CommUtils.getAppName()
+                        )
+                    )
                     .setCancelListener(R.string.app_cancel)
                     .setPositiveListener(R.string.app_confirm) {
                         initCameraPermission()
@@ -610,7 +601,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             initCameraPermission()
         }
     }
-
 
     private fun initCameraPermission() {
         XXPermissions.with(this)
@@ -634,7 +624,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                             SharedManager.setMainPermissionsState(true)
                         }
                         if (doNotAskAgain) {
-                            // 拒绝授权并且不再提醒
+
                             TipDialog.Builder(this@MainActivity)
                                 .setTitleMessage(getString(R.string.app_tip))
                                 .setMessage(
@@ -658,10 +648,19 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun checkStoragePermission() {
-        if (!XXPermissions.isGranted(this, getNeedPermissionList()[R.string.permission_request_storage_app])) {
+        if (!XXPermissions.isGranted(
+                this,
+                getNeedPermissionList()[R.string.permission_request_storage_app]
+            )
+        ) {
             if (BaseApplication.instance.isDomestic()) {
                 TipDialog.Builder(this)
-                    .setMessage(getString(R.string.permission_request_storage_app, CommUtils.getAppName()))
+                    .setMessage(
+                        getString(
+                            R.string.permission_request_storage_app,
+                            CommUtils.getAppName()
+                        )
+                    )
                     .setCancelListener(R.string.app_cancel)
                     .setPositiveListener(R.string.app_confirm) {
                         initStoragePermission()
@@ -674,7 +673,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             initStoragePermission()
         }
     }
-
 
     private fun initStoragePermission() {
         if (PermissionUtils.isVisualUser()) {
@@ -701,7 +699,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-                            // 拒绝授权并且不再提醒
+
                             TipDialog.Builder(this@MainActivity)
                                 .setTitleMessage(getString(R.string.app_tip))
                                 .setMessage(getString(R.string.app_album_content))
@@ -723,20 +721,22 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             0 -> {
                 DeviceTools.isConnect(isSendConnectEvent = true)
             }
+
             1 -> {
                 binding.viewPage.setCurrentItem(0, false)
             }
+
             2 -> {
                 if (DeviceTools.isTC001PlusConnect()) {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
-                    // Fixed: Replaced deprecated startActivityForResult with startActivity as no result processing is needed
+
                     startActivity(Intent(this@MainActivity, IRThermalPlusActivity::class.java))
                 } else if (DeviceTools.isTC001LiteConnect()) {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
                     startActivity(Intent(this@MainActivity, IRThermalLiteActivity::class.java))
                 } else if (DeviceTools.isHikConnect()) {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
-                    // Note: Using IRThermalNightActivity as fallback for HIK thermal devices
+
                     startActivity(Intent(this@MainActivity, IRThermalNightActivity::class.java))
                 } else {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
@@ -764,24 +764,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
         appVersionUtil?.checkVersion(isShow)
     }
-    
-    // ==================== PHASE 0 BASELINE & GUARDRAILS ====================
-    
+
+
     private fun initializePhase0Baseline() {
         Log.i(TAG, "Initializing Phase 0 baseline components")
-        
+
         try {
-            // 1. Initialize feature flags with defaults
+
             FeatureFlags.initialize(this)
-            
-            // 2. Initialize structured logging system
+
             structuredLogger = StructuredLogger.getInstance(this)
-            
-            // 3. Initialize crash-safe supervisor
+
             crashSafeSupervisor = CrashSafeSupervisor.getInstance(this)
             crashSafeSupervisor.initialize()
-            
-            // 4. Validate configuration
+
             val configWarnings = FeatureFlags.validateConfiguration()
             if (configWarnings.isNotEmpty()) {
                 structuredLogger.log(
@@ -791,8 +787,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     mapOf("warnings" to configWarnings.joinToString("; "))
                 )
             }
-            
-            // 5. Log protocol information
+
             val protocolInfo = ProtocolVersion.getProtocolInfo()
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
@@ -800,8 +795,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 "protocol_version_info",
                 protocolInfo
             )
-            
-            // 6. Log feature flags
+
             val featureFlags = FeatureFlags.getAllFlags()
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
@@ -809,427 +803,920 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 "feature_flags_initialized",
                 featureFlags
             )
-            
+
             Log.i(TAG, "Phase 0 baseline initialization completed successfully")
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize Phase 0 baseline components", e)
-            // Continue with app startup even if Phase 0 fails
+
         }
     }
-    
-    // ==================== PC-to-Phone Control Networking ====================
-    
 
-    private fun initNetworkingViaViewModel() {
-        Log.i(TAG, "Integrating PC-to-phone control via ViewModel NetworkController")
-        
+
+    private fun initNetworking() {
+        Log.i(TAG, "Initializing PC-to-phone control networking with Phase 0 baseline")
+
         structuredLogger.log(
             StructuredLogger.LogLevel.INFO,
             "MainActivity",
-            "networking_integration_started",
+            "networking_initialization_started",
             mapOf(
                 "feature_flags" to FeatureFlags.getAllFlags(),
                 "protocol_version" to ProtocolVersion.CURRENT_VERSION
             )
         )
-        
+
         try {
-            // NetworkController is initialized by MainActivityViewModel
-            // Set up additional observers for MainActivity integration
-            
-            // Network controller status is already handled by setupViewModelObservers()
-            // No additional setup needed as ViewModel observers handle UI updates
-            
-            // Observe session state changes for PC remote control commands
-            mainViewModel.sessionState.observe(this) { state ->
-                when (state) {
-                    MainActivityViewModel.SessionState.RECORDING -> {
-                        // Update UI to reflect recording state
-                        updateSessionStatusUI(state)
-                    }
-                    MainActivityViewModel.SessionState.IDLE -> {
-                        // Update UI to reflect idle state
-                        updateSessionStatusUI(state)
-                    }
-                    else -> {
-                        // Handle other states
-                        updateSessionStatusUI(state)
+
+            crashSafeSupervisor.registerJob(
+                id = "websocket_client",
+                name = "WebSocketClient",
+                critical = false,
+                restartable = true,
+                healthCheck = object : CrashSafeSupervisor.HealthCheck {
+                    override suspend fun checkHealth(): CrashSafeSupervisor.HealthStatus {
+                        val client = webSocketClient
+                        return if (client != null && client.isConnected()) {
+                            CrashSafeSupervisor.HealthStatus(
+                                isHealthy = true,
+                                message = "WebSocketClient connected and operational",
+                                details = mapOf(
+                                    "connection_status" to connectionStatus.name,
+                                    "authenticated" to client.isAuthenticated(),
+                                    "current_server" to (client.getCurrentServer()?.name ?: "none")
+                                )
+                            )
+                        } else {
+                            CrashSafeSupervisor.HealthStatus(
+                                isHealthy = false,
+                                message = "WebSocketClient not connected",
+                                details = mapOf("connection_status" to connectionStatus.name)
+                            )
+                        }
                     }
                 }
+            ) { stopToken ->
+                initializeWebSocketClientSupervised(stopToken)
             }
-            
-            // Bind to recording service for remote control capability
+
             bindRecordingService()
-            
-            // Start recording service with server socket automatically
+
             RecordingService.startServer(this)
-            
+
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
                 "MainActivity",
-                "networking_integration_completed"
+                "networking_initialization_completed"
             )
-            
+
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to integrate networking via ViewModel", e)
+            Log.e(TAG, "Failed to initialize networking", e)
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "MainActivity",
-                "networking_integration_failed",
-                mapOf("error" to e.message)
+                "networking_initialization_failed",
+                mapOf("error" to (e.message ?: "Unknown error"))
             )
-            showNetworkError("Network integration failed: ${e.message}")
+            updateConnectionStatus(ConnectionStatus.ERROR)
+            showNetworkError("Network initialization failed: ${e.message}")
         }
     }
-    
-    /**
-     * Bind to recording service for remote control capability
-     */
+
+    private suspend fun initializeWebSocketClientSupervised(stopToken: CrashSafeSupervisor.StopToken) {
+        while (!stopToken.isStopRequested()) {
+            try {
+
+                webSocketClient = WebSocketClient(this@MainActivity).apply {
+
+                    setEventListener(createWebSocketEventListener())
+
+                    start()
+                }
+
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "WebSocketClient",
+                    "initialized_successfully"
+                )
+
+                while (!stopToken.isStopRequested() && webSocketClient?.isConnected() != true) {
+                    kotlinx.coroutines.delay(1000)
+                }
+
+                if (webSocketClient?.isConnected() == true) {
+                    updateConnectionStatus(ConnectionStatus.CONNECTED)
+                }
+
+                while (!stopToken.isStopRequested() && webSocketClient?.isConnected() == true) {
+                    kotlinx.coroutines.delay(1000)
+                }
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Error in WebSocket client supervision", e)
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.ERROR,
+                    "WebSocketClient",
+                    "supervision_error",
+                    mapOf("error" to (e.message ?: "Unknown error"))
+                )
+
+                updateConnectionStatus(ConnectionStatus.ERROR)
+
+                kotlinx.coroutines.delay(5000)
+            }
+        }
+
+        webSocketClient?.stop()
+        webSocketClient = null
+    }
+
+    private fun createWebSocketEventListener(): WebSocketClient.WebSocketEventListener {
+        return object : WebSocketClient.WebSocketEventListener {
+            override fun onServerDiscovered(serverInfo: WebSocketClient.ServerInfo) {
+                structuredLogger.logConnection(
+                    "server_discovered",
+                    serverInfo.host,
+                    mapOf(
+                        "server_name" to serverInfo.name,
+                        "host" to serverInfo.host,
+                        "port" to serverInfo.port,
+                        "uses_tls" to serverInfo.usesTLS,
+                        "protocol_version" to serverInfo.protocolVersion
+                    )
+                )
+
+                runOnUiThread {
+                    updateConnectionStatus(ConnectionStatus.CONNECTING)
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Found PC Server: ${serverInfo.name}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onConnecting(serverInfo: WebSocketClient.ServerInfo) {
+                structuredLogger.logConnection(
+                    "connecting",
+                    serverInfo.host,
+                    mapOf(
+                        "server_name" to serverInfo.name,
+                        "host" to serverInfo.host,
+                        "port" to serverInfo.port
+                    )
+                )
+
+                runOnUiThread {
+                    updateConnectionStatus(ConnectionStatus.CONNECTING)
+                }
+            }
+
+            override fun onConnected(serverInfo: WebSocketClient.ServerInfo) {
+                structuredLogger.logConnection(
+                    "websocket_connected",
+                    serverInfo.host,
+                    mapOf(
+                        "server_name" to serverInfo.name,
+                        "uses_tls" to serverInfo.usesTLS,
+                        "protocol_version" to serverInfo.protocolVersion
+                    )
+                )
+
+                runOnUiThread {
+                    updateConnectionStatus(ConnectionStatus.CONNECTED)
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Connected to PC: ${serverInfo.name}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+
+            override fun onAuthenticated() {
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "WebSocketClient",
+                    "authenticated_successfully",
+                    emptyMap()
+                )
+
+                runOnUiThread {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Authenticated with PC controller",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onDisconnected(reason: String) {
+                structuredLogger.logConnection(
+                    "websocket_disconnected",
+                    "",
+                    mapOf("reason" to reason)
+                )
+
+                runOnUiThread {
+                    updateConnectionStatus(ConnectionStatus.DISCONNECTED)
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Disconnected from PC: $reason",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onMessage(messageType: String, message: org.json.JSONObject) {
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.DEBUG,
+                    "WebSocketClient",
+                    "message_received",
+                    mapOf("message_type" to messageType)
+                )
+
+                when (messageType) {
+                    "session_start_response" -> {
+                        val success = message.optBoolean("success", false)
+                        val sessionId = message.optString("session_id", "")
+
+                        if (success) {
+                            runOnUiThread {
+                                handleRemoteSessionStart(sessionId)
+                            }
+                        }
+                    }
+
+                    "session_stop_response" -> {
+                        val success = message.optBoolean("success", false)
+
+                        if (success) {
+                            runOnUiThread {
+                                handleRemoteSessionStop()
+                            }
+                        }
+                    }
+
+                    "sync_flash" -> {
+                        val durationMs = message.optInt("duration_ms", 500)
+                        runOnUiThread {
+                            performSyncFlash(durationMs)
+                        }
+                    }
+
+                    else -> {
+
+                        Log.d(TAG, "Received message type: $messageType")
+                    }
+                }
+            }
+
+            override fun onError(error: String, exception: Throwable?) {
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.ERROR,
+                    "WebSocketClient",
+                    "websocket_error",
+                    mapOf("error" to error)
+                )
+
+                runOnUiThread {
+                    updateConnectionStatus(ConnectionStatus.ERROR)
+                    showNetworkError("WebSocket error: $error")
+                }
+            }
+
+            override fun onHeartbeatReceived() {
+
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.DEBUG,
+                    "WebSocketClient",
+                    "heartbeat_received",
+                    emptyMap()
+                )
+            }
+        }
+    }
+
+    private fun handleRemoteSessionStart(sessionId: String) {
+        try {
+            structuredLogger.logSessionEvent(
+                "remote_session_start",
+                sessionId,
+                emptyMap()
+            )
+
+            lifecycleScope.launch {
+                val sessionDir = "${getExternalFilesDir("recordings")}/$sessionId"
+                serviceBinder?.getRecordingController()?.startRecording(sessionDir)
+            }
+
+            Toast.makeText(this, "Remote recording started: $sessionId", Toast.LENGTH_LONG).show()
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling remote session start", e)
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "RemoteControl",
+                "session_start_error",
+                mapOf("error" to (e.message ?: "Unknown error"))
+            )
+        }
+    }
+
+    private fun handleRemoteSessionStop() {
+        try {
+            structuredLogger.log(
+                StructuredLogger.LogLevel.INFO,
+                "RemoteControl",
+                "remote_session_stop",
+                emptyMap()
+            )
+
+            lifecycleScope.launch {
+                serviceBinder?.getRecordingController()?.stopRecording()
+            }
+
+            Toast.makeText(this, "Remote recording stopped", Toast.LENGTH_LONG).show()
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling remote session stop", e)
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "RemoteControl",
+                "session_stop_error",
+                mapOf("error" to (e.message ?: "Unknown error"))
+            )
+        }
+    }
+
     private fun bindRecordingService() {
         val intent = Intent(this, RecordingService::class.java)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
-    
-    /**
-     * Show network error dialog with options
-     */
+
+
+    private fun startNetworkDiscovery() {
+        Log.i(TAG, "Starting WebSocket discovery for PC servers")
+        updateConnectionStatus(ConnectionStatus.DISCOVERING)
+
+
+        structuredLogger.log(
+            StructuredLogger.LogLevel.INFO,
+            "WebSocketClient",
+            "discovery_started",
+            emptyMap()
+        )
+
+
+    }
+
+    private fun handleRemoteRecordingRequest(sessionInfo: SessionInfo) {
+        Log.i(TAG, "Processing remote recording request for session: ${sessionInfo.sessionId}")
+
+        if (!isServiceBound || recordingService == null) {
+            Log.e(TAG, "Recording service not available for remote request")
+            showNetworkError("Recording service not ready")
+            return
+        }
+
+        try {
+
+            val baseDir = File(getExternalFilesDir(null), "recordings")
+            val sessionDir = File(baseDir, sessionInfo.sessionId)
+
+            if (!sessionDir.exists()) {
+                sessionDir.mkdirs()
+            }
+
+            RecordingService.startRecording(this, sessionDir.absolutePath)
+
+            Toast.makeText(
+                this,
+                "Remote recording started: ${sessionInfo.studyName}",
+                Toast.LENGTH_LONG
+            ).show()
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start remote recording", e)
+            showNetworkError("Failed to start recording: ${e.message}")
+        }
+    }
+
+    private fun performSyncFlash(durationMs: Int) {
+        Log.i(TAG, "Performing sync flash for ${durationMs}ms")
+
+        val originalBackground = window.decorView.background
+
+        try {
+
+            window.decorView.setBackgroundColor(android.graphics.Color.WHITE)
+
+            lifecycleScope.launch {
+                serviceBinder?.getRecordingController()
+                    ?.addSyncMarker("pc_sync_flash", System.nanoTime())
+            }
+
+            window.decorView.postDelayed({
+                window.decorView.background = originalBackground
+            }, durationMs.toLong())
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to perform sync flash", e)
+
+            window.decorView.background = originalBackground
+        }
+    }
+
+    private fun updateConnectionStatus(status: ConnectionStatus) {
+        connectionStatus = status
+
+        networkStatusIndicator?.let { indicator ->
+            networkStatusText?.let { text ->
+                when (status) {
+                    ConnectionStatus.DISCONNECTED -> {
+                        indicator.setColorFilter(android.graphics.Color.GRAY)
+                        text.text = "PC: Disconnected"
+                    }
+
+                    ConnectionStatus.DISCOVERING -> {
+                        indicator.setColorFilter(android.graphics.Color.YELLOW)
+                        text.text = "PC: Discovering..."
+                    }
+
+                    ConnectionStatus.CONNECTING -> {
+                        indicator.setColorFilter(android.graphics.Color.YELLOW)
+                        text.text = "PC: Connecting..."
+                    }
+
+                    ConnectionStatus.CONNECTED -> {
+                        indicator.setColorFilter(android.graphics.Color.GREEN)
+                        text.text = "PC: Connected"
+                    }
+
+                    ConnectionStatus.ERROR -> {
+                        indicator.setColorFilter(android.graphics.Color.RED)
+                        text.text = "PC: Error"
+                    }
+                }
+            }
+        }
+    }
+
     private fun showNetworkError(message: String) {
         Log.e(TAG, "Network error: $message")
-        
+
         val builder = androidx.appcompat.app.AlertDialog.Builder(this)
         builder.setTitle("Network Error")
         builder.setMessage("$message\n\nWhat would you like to do?")
-        
+
         builder.setPositiveButton("Retry Discovery") { _, _ ->
-            mainViewModel.startNetworkDiscovery()
+            startNetworkDiscovery()
         }
-        
-        builder.setNegativeButton("Ignore") { _, _ ->
-            // Just dismiss - user can try again later
+
+        builder.setNegativeButton("Manual Connect") { _, _ ->
+            showManualConnectionDialog()
         }
-        
+
+        builder.setNeutralButton("Ignore") { _, _ ->
+
+        }
+
         builder.show()
     }
-    
 
-    
-    // Note: WebSocket client methods have been replaced by NetworkController in MainActivityViewModel
-    // The JSON-based PC remote control is now handled via the ViewModel pattern
-    
-    /**
-     * Set up observers for MainActivityViewModel to update UI based on state changes
-     */
-    private fun setupViewModelObservers() {
-        // GSR Connection State Observer
-        mainViewModel.gsrConnectionState.observe(this) { state ->
-            updateGSRStatusUI(state)
+    fun connectToPC(ipAddress: String, port: Int = 8080) {
+        if (networkClient == null) {
+            showNetworkError("Network client not initialized")
+            return
         }
-        
-        // Network Connection State Observer
-        mainViewModel.networkConnectionState.observe(this) { state ->
-            updateNetworkStatusUI(state)
-        }
-        
-        // Session State Observer
-        mainViewModel.sessionState.observe(this) { state ->
-            updateSessionStatusUI(state)
-        }
-        
-        // Status Message Observer
-        mainViewModel.statusMessage.observe(this) { message ->
-            message?.let {
-                showStatusMessage(it)
-                mainViewModel.clearStatusMessage()
-            }
-        }
-        
-        // Connected Controller Info Observer
-        mainViewModel.connectedControllerInfo.observe(this) { controller ->
-            updateNetworkConnectionInfo(controller)
-        }
-        
-        // Current Session Observer
-        mainViewModel.currentSession.observe(this) { session ->
-            updateCurrentSessionInfo(session)
-        }
-    }
-    
-    /**
-     * Update GSR sensor status in the UI
-     */
-    private fun updateGSRStatusUI(state: MainActivityViewModel.GSRConnectionState) {
-        runOnUiThread {
-            gsrStatusText?.text = when (state) {
-                MainActivityViewModel.GSRConnectionState.DISCONNECTED -> "GSR: Disconnected"
-                MainActivityViewModel.GSRConnectionState.DISCOVERING -> "GSR: Searching..."
-                MainActivityViewModel.GSRConnectionState.CONNECTING -> "GSR: Connecting..."
-                MainActivityViewModel.GSRConnectionState.CONNECTED -> "GSR: Connected"
-                MainActivityViewModel.GSRConnectionState.ERROR -> "GSR: Error"
-            }
-            
-            // Update indicator color
-            gsrStatusIndicator?.setImageResource(when (state) {
-                MainActivityViewModel.GSRConnectionState.CONNECTED -> android.R.drawable.presence_online
-                MainActivityViewModel.GSRConnectionState.CONNECTING,
-                MainActivityViewModel.GSRConnectionState.DISCOVERING -> android.R.drawable.presence_away
-                MainActivityViewModel.GSRConnectionState.ERROR -> android.R.drawable.presence_busy
-                MainActivityViewModel.GSRConnectionState.DISCONNECTED -> android.R.drawable.presence_invisible
-            })
-        }
-    }
-    
-    /**
-     * Update network connection status in the UI
-     */
-    private fun updateNetworkStatusUI(state: MainActivityViewModel.NetworkConnectionState) {
-        runOnUiThread {
-            networkStatusText?.text = when (state) {
-                MainActivityViewModel.NetworkConnectionState.DISCONNECTED -> "PC: Disconnected"
-                MainActivityViewModel.NetworkConnectionState.DISCOVERING -> "PC: Searching..."
-                MainActivityViewModel.NetworkConnectionState.CONNECTING -> "PC: Connecting..."
-                MainActivityViewModel.NetworkConnectionState.CONNECTED -> "PC: Connected"
-                MainActivityViewModel.NetworkConnectionState.ERROR -> "PC: Error"
-            }
-            
-            // Update indicator color
-            networkStatusIndicator?.setImageResource(when (state) {
-                MainActivityViewModel.NetworkConnectionState.CONNECTED -> android.R.drawable.presence_online
-                MainActivityViewModel.NetworkConnectionState.CONNECTING,
-                MainActivityViewModel.NetworkConnectionState.DISCOVERING -> android.R.drawable.presence_away
-                MainActivityViewModel.NetworkConnectionState.ERROR -> android.R.drawable.presence_busy
-                MainActivityViewModel.NetworkConnectionState.DISCONNECTED -> android.R.drawable.presence_invisible
-            })
-        }
-    }
-    
-    /**
-     * Update session status in the UI
-     */
-    private fun updateSessionStatusUI(state: MainActivityViewModel.SessionState) {
-        runOnUiThread {
-            sessionControlButton?.text = when (state) {
-                MainActivityViewModel.SessionState.IDLE -> "Start Recording"
-                MainActivityViewModel.SessionState.STARTING -> "Starting..."
-                MainActivityViewModel.SessionState.RECORDING -> "Stop Recording"
-                MainActivityViewModel.SessionState.STOPPING -> "Stopping..."
-                MainActivityViewModel.SessionState.PAUSED -> "Resume Recording"
-                MainActivityViewModel.SessionState.ERROR -> "Session Error"
-            }
-            
-            // Enable/disable button based on state
-            sessionControlButton?.isEnabled = when (state) {
-                MainActivityViewModel.SessionState.STARTING,
-                MainActivityViewModel.SessionState.STOPPING -> false
-                else -> true
-            }
-            
-            Log.d(TAG, "Session Status: $state")
-        }
-    }
-    
-    /**
-     * Show status message to user (Toast for now, can be enhanced with custom UI)
-     */
-    private fun showStatusMessage(message: MainActivityViewModel.StatusMessage) {
-        runOnUiThread {
-            val context = when (message.level) {
-                MainActivityViewModel.StatusMessage.Level.INFO -> this
-                MainActivityViewModel.StatusMessage.Level.WARNING -> this
-                MainActivityViewModel.StatusMessage.Level.ERROR -> this
-            }
-            Toast.makeText(context, message.message, Toast.LENGTH_SHORT).show()
-            Log.i(TAG, "Status: ${message.level.name} - ${message.message}")
-        }
-    }
-    
-    /**
-     * Update network connection information display
-     */
-    private fun updateNetworkConnectionInfo(controller: NetworkClient.ControllerInfo?) {
-        runOnUiThread {
-            if (controller != null) {
-                networkStatusText?.text = "PC: ${controller.deviceName}"
-                Log.i(TAG, "Connected to PC controller: ${controller.deviceName} (${controller.ipAddress})")
-            }
-        }
-    }
-    
-    /**
-     * Update current session information display
-     */
-    private fun updateCurrentSessionInfo(session: SessionInfo?) {
-        runOnUiThread {
-            if (session != null) {
-                Log.i(TAG, "Current session: ${session.sessionId}")
-                // TODO: Update session UI elements
-            } else {
-                Log.i(TAG, "No active session")
-            }
-        }
-    }
-    
 
+        Log.i(TAG, "Attempting connection to PC at $ipAddress:$port")
+        updateConnectionStatus(ConnectionStatus.CONNECTING)
 
+        lifecycleScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
 
-    /**
-     * Handle GSR status click - start connection or show details
-     */
-    private fun handleGSRStatusClick() {
-        when (mainViewModel.gsrConnectionState.value) {
-            MainActivityViewModel.GSRConnectionState.DISCONNECTED -> {
-                // Start GSR connection
-                mainViewModel.startGSRConnection()
-            }
-            MainActivityViewModel.GSRConnectionState.CONNECTED -> {
-                // Show GSR sensor details
-                Toast.makeText(this, "GSR sensor connected and streaming", Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-                // Show current status
-                Toast.makeText(this, "GSR status: ${mainViewModel.gsrConnectionState.value}", Toast.LENGTH_SHORT).show()
+                    var success = networkClient?.connectToController(ipAddress, port, true) ?: false
+
+                    if (!success) {
+                        Log.i(TAG, "Secure connection failed, trying non-secure...")
+                        success =
+                            networkClient?.connectToController(ipAddress, port, false) ?: false
+                    }
+
+                    withContext(Dispatchers.Main) {
+                        if (success) {
+                            Log.i(TAG, "Connection successful to $ipAddress:$port")
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Connected to PC at $ipAddress",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            Log.w(TAG, "Connection failed to $ipAddress:$port")
+                            updateConnectionStatus(ConnectionStatus.ERROR)
+                            showNetworkError("Failed to connect to PC at $ipAddress:$port")
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Connection error to $ipAddress:$port", e)
+                updateConnectionStatus(ConnectionStatus.ERROR)
+                showNetworkError("Connection error: ${e.message}")
             }
         }
-    }
-    
-    /**
-     * Handle session control button click - start/stop recording
-     */
-    private fun handleSessionControlClick() {
-        when (mainViewModel.sessionState.value) {
-            MainActivityViewModel.SessionState.IDLE -> {
-                // Start recording session
-                val config = MainActivityViewModel.SessionConfig(
-                    modalities = listOf("thermal", "GSR"),
-                    saveImages = true
-                )
-                mainViewModel.startRecordingSession(config)
-                
-                // Set up thermal camera integration after session starts
-                setupThermalCameraIntegration()
-            }
-            MainActivityViewModel.SessionState.RECORDING -> {
-                // Stop recording session
-                mainViewModel.stopRecordingSession()
-            }
-            MainActivityViewModel.SessionState.PAUSED -> {
-                // Resume recording (TODO: implement pause/resume functionality)
-                Toast.makeText(this, "Resume functionality coming soon", Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-                // Show current status
-                Toast.makeText(this, "Session status: ${mainViewModel.sessionState.value}", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-    
-    /**
-     * Set up thermal camera integration to work with our ThermalRecorder
-     * This method should be called when a recording session starts to hook into the existing camera system
-     */
-    private fun setupThermalCameraIntegration() {
-        // This is a placeholder for integration with the existing thermal camera system
-        // In a real implementation, this would hook into the UVCCamera callbacks
-        // and forward frame data to our ThermalRecorder
-        
-        Log.i(TAG, "Setting up thermal camera integration for multi-modal recording")
-        
-        // TODO: Hook into existing UVCCamera system to get frame callbacks
-        // This requires integration with the thermal camera hardware interface
-        // When integrated, frame callbacks should call: mainViewModel.processThermalFrame(frameData, width, height, minTemp, maxTemp)
     }
 
-    /**
-     * Enhanced network status click handler - integrates with ViewModel
-     */
+    fun getConnectionStatus(): ConnectionStatus = connectionStatus
+
+
+    fun getNetworkMetrics(): String {
+        val client = webSocketClient ?: return "WebSocket client not available"
+
+        return "Status: ${if (client.isConnected()) "Connected" else "Disconnected"}, " +
+                "Authenticated: ${client.isAuthenticated()}, " +
+                "Reconnecting: ${client.isReconnecting()}"
+    }
+
+    private fun enableAutoReconnection() {
+        lifecycleScope.launch {
+            var reconnectDelay = 5000L // Start with 5 seconds
+            val maxDelay = 60000L // Max 60 seconds
+
+            while (!isFinishing) {
+                if (connectionStatus == ConnectionStatus.ERROR ||
+                    connectionStatus == ConnectionStatus.DISCONNECTED
+                ) {
+
+                    Log.i(TAG, "Attempting auto-reconnection...")
+                    updateConnectionStatus(ConnectionStatus.CONNECTING)
+
+                    val success = tryReconnection()
+                    if (success) {
+                        Log.i(TAG, "Auto-reconnection successful")
+                        reconnectDelay = 5000L // Reset delay on success
+                    } else {
+                        Log.w(TAG, "Auto-reconnection failed, retrying in ${reconnectDelay}ms")
+                        kotlinx.coroutines.delay(reconnectDelay)
+                        reconnectDelay = minOf(reconnectDelay * 2, maxDelay) // Exponential backoff
+                    }
+                } else {
+                    kotlinx.coroutines.delay(10000L) // Check every 10 seconds when connected
+                }
+            }
+        }
+    }
+
+    private suspend fun tryReconnection(): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+
+                val controllers = networkClient?.getDiscoveredControllers()
+                if (!controllers.isNullOrEmpty()) {
+                    for (controller: NetworkClient.ControllerInfo in controllers) {
+                        Log.i(TAG, "Reconnection attempt to ${controller.ipAddress}")
+                        val success = networkClient?.connectToController(
+                            controller.ipAddress,
+                            controller.port
+                        ) ?: false
+
+                        if (success) {
+                            return@withContext true
+                        }
+                    }
+                }
+
+                networkClient?.startDiscovery { discoverySuccess: Boolean ->
+                    if (discoverySuccess) {
+                        val newControllers = networkClient?.getDiscoveredControllers()
+                        if (!newControllers.isNullOrEmpty()) {
+
+                            lifecycleScope.launch {
+                                val controller = newControllers.first()
+                                networkClient?.connectToController(
+                                    controller.ipAddress,
+                                    controller.port
+                                ) { connectSuccess: Boolean ->
+                                    if (!connectSuccess) {
+                                        updateConnectionStatus(ConnectionStatus.ERROR)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return@withContext false
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Error during reconnection attempt", e)
+                return@withContext false
+            }
+        }
+    }
+
+    private fun startHeartbeat() {
+        lifecycleScope.launch {
+            while (!isFinishing) {
+                if (connectionStatus == ConnectionStatus.CONNECTED) {
+                    try {
+
+
+                        webSocketClient?.sendStatusRequest()
+
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Status request exception", e)
+                        updateConnectionStatus(ConnectionStatus.ERROR)
+                    }
+                }
+
+                kotlinx.coroutines.delay(30000L) // Send status request every 30 seconds
+            }
+        }
+    }
+
+    fun getConnectionStatusReport(): String {
+        val sb = StringBuilder()
+        sb.append("=== PC-to-Phone Control Status ===\n")
+        sb.append("Connection Status: ${connectionStatus.name}\n")
+        sb.append("Network Metrics: ${getNetworkMetrics()}\n")
+
+        val servers = webSocketClient?.getDiscoveredServers()
+        sb.append("Discovered Servers: ${servers?.size ?: 0}\n")
+        servers?.forEach { (name, server) ->
+            sb.append("  - $name (${server.host}:${server.port}) TLS:${server.usesTLS}\n")
+        }
+
+        val currentServer = webSocketClient?.getCurrentServer()
+        if (currentServer != null) {
+            sb.append("Current Server: ${currentServer.name} (${currentServer.host}:${currentServer.port})\n")
+        }
+
+        sb.append("Service Bound: $isServiceBound\n")
+        if (isServiceBound && recordingService != null) {
+            try {
+                val recordingController = serviceBinder?.getRecordingController()
+                val summary = recordingController?.getSensorStatusSummary()
+                sb.append("Recording Status: ${summary ?: "N/A"}\n")
+
+                val serverStatus = serviceBinder?.getServerStatus()
+                sb.append("Server Socket: $serverStatus\n")
+
+                val connectedClients = serviceBinder?.getConnectedClients()
+                sb.append("Connected PC Clients: ${connectedClients?.size ?: 0}\n")
+                connectedClients?.forEach { client ->
+                    sb.append("  - $client\n")
+                }
+
+            } catch (e: Exception) {
+                sb.append("Recording Status: Error - ${e.message}\n")
+            }
+        } else {
+            sb.append("Recording Status: Service not available\n")
+        }
+
+        return sb.toString()
+    }
+
     private fun handleNetworkStatusClick() {
-        when (mainViewModel.networkConnectionState.value) {
-            MainActivityViewModel.NetworkConnectionState.DISCONNECTED,
-            MainActivityViewModel.NetworkConnectionState.ERROR -> {
-                // Start network discovery
-                mainViewModel.startNetworkDiscovery()
+        when (connectionStatus) {
+            ConnectionStatus.DISCONNECTED, ConnectionStatus.ERROR -> {
+
+                showConnectionOptionsDialog()
             }
-            MainActivityViewModel.NetworkConnectionState.DISCOVERING,
-            MainActivityViewModel.NetworkConnectionState.CONNECTING -> {
-                // Show discovery progress
+
+            ConnectionStatus.DISCOVERING, ConnectionStatus.CONNECTING -> {
+
                 Toast.makeText(this, "Connection in progress...", Toast.LENGTH_SHORT).show()
             }
-            MainActivityViewModel.NetworkConnectionState.CONNECTED -> {
-                // Show connection info
+
+            ConnectionStatus.CONNECTED -> {
+
                 showConnectionInfoDialog()
-            }
-            else -> {
-                // Show current status
-                Toast.makeText(this, "Network status: ${mainViewModel.networkConnectionState.value}", Toast.LENGTH_SHORT).show()
             }
         }
     }
-    
-    /**
-     * Show connection information from ViewModel state
-     */
-    private fun showConnectionInfoDialog() {
-        val connectionState = mainViewModel.networkConnectionState.value
-        val controllerInfo = mainViewModel.connectedControllerInfo.value
-        
-        val message = StringBuilder()
-        message.append("Connection Status: ${connectionState?.name ?: "Unknown"}\n\n")
-        
-        if (controllerInfo != null) {
-            message.append("Connected to:\n")
-            message.append("Device: ${controllerInfo.deviceName}\n")
-            message.append("Address: ${controllerInfo.ipAddress}:${controllerInfo.port}\n\n")
+
+    private fun showConnectionOptionsDialog() {
+        val options = arrayOf(
+            "Retry Discovery",
+            "Manual IP Connection",
+            "Connection Status Report",
+            "Cancel"
+        )
+
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("PC Connection Options")
+        builder.setItems(options) { _, which ->
+            when (which) {
+                0 -> {
+
+                    Log.i(TAG, "Retrying network discovery")
+                    startNetworkDiscovery()
+                }
+
+                1 -> {
+
+                    showManualConnectionDialog()
+                }
+
+                2 -> {
+
+                    showStatusReportDialog()
+                }
+
+                3 -> {
+
+                }
+            }
         }
-        
+        builder.show()
+    }
+
+    private fun showConnectionInfoDialog() {
+        val metrics = getNetworkMetrics()
+        val servers = webSocketClient?.getDiscoveredServers()
+        val currentServer = webSocketClient?.getCurrentServer()
+
+        val message = StringBuilder()
+        message.append("Connection Status: Connected\n\n")
+        message.append("Performance Metrics:\n$metrics\n\n")
+
+        if (currentServer != null) {
+            message.append("Connected to:\n")
+            message.append("Server: ${currentServer.name}\n")
+            message.append("Address: ${currentServer.host}:${currentServer.port}\n")
+            message.append("TLS: ${currentServer.usesTLS}\n")
+            message.append("Protocol: ${currentServer.protocolVersion}\n\n")
+        }
+
         message.append("Recording Service: ${if (isServiceBound) "Available" else "Not Available"}\n")
-        
+
         val builder = androidx.appcompat.app.AlertDialog.Builder(this)
         builder.setTitle("PC Connection Info")
         builder.setMessage(message.toString())
-        builder.setPositiveButton("Start Test Recording") { _, _ ->
-            // Test recording capability via ViewModel
-            val config = MainActivityViewModel.SessionConfig(
-                modalities = listOf("thermal", "GSR"),
-                saveImages = true
-            )
-            mainViewModel.startRecordingSession(config)
+        builder.setPositiveButton("Test Recording") { _, _ ->
+            testRemoteRecordingCapability()
         }
         builder.setNegativeButton("Close", null)
         builder.show()
     }
-    
+
+    private fun showStatusReportDialog() {
+        val statusReport = getConnectionStatusReport()
+
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("Detailed Status Report")
+        builder.setMessage(statusReport)
+        builder.setPositiveButton("Copy to Clipboard") { _, _ ->
+            val clipboard =
+                getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+            val clip = android.content.ClipData.newPlainText("Status Report", statusReport)
+            clipboard.setPrimaryClip(clip)
+            Toast.makeText(this, "Status report copied to clipboard", Toast.LENGTH_SHORT).show()
+        }
+        builder.setNegativeButton("Close", null)
+        builder.show()
+    }
+
+    private fun testRemoteRecordingCapability() {
+        if (!isServiceBound || recordingService == null) {
+            Toast.makeText(this, "Recording service not available", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        try {
+            val testSessionInfo = SessionInfo(
+                sessionId = "test_${System.currentTimeMillis()}",
+                startTime = System.currentTimeMillis(),
+                studyName = "Connection Test",
+                participantId = "test_participant"
+            )
+
+            Toast.makeText(this, "Testing remote recording capability...", Toast.LENGTH_SHORT)
+                .show()
+
+            handleRemoteRecordingRequest(testSessionInfo)
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error testing remote recording", e)
+            Toast.makeText(this, "Test failed: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun showManualConnectionDialog() {
+        val input = android.widget.EditText(this)
+        input.hint = "Enter PC IP address (e.g., 192.168.1.100)"
+        input.inputType = android.text.InputType.TYPE_CLASS_TEXT
+
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("Manual PC Connection")
+        builder.setMessage("Enter the IP address of your PC Controller:")
+        builder.setView(input)
+
+        builder.setPositiveButton("Connect") { _, _ ->
+            val ipAddress = input.text.toString().trim()
+            if (ipAddress.isNotEmpty()) {
+                connectToPC(ipAddress)
+            } else {
+
+                tryCommonIPAddresses()
+            }
+        }
+
+        builder.setNegativeButton("Try Defaults") { _, _ ->
+            tryCommonIPAddresses()
+        }
+
+        builder.setNeutralButton("Cancel", null)
+        builder.show()
+    }
+
+    private fun tryCommonIPAddresses() {
+        val commonIPs = listOf(
+            "192.168.1.100", "192.168.1.101", "192.168.1.102",
+            "192.168.0.100", "192.168.0.101", "192.168.0.102",
+            "10.0.0.100", "10.0.0.101", "10.0.0.102",
+            "127.0.0.1" // localhost for testing
+        )
+
+        Toast.makeText(this, "Trying common IP addresses...", Toast.LENGTH_SHORT).show()
+
+        lifecycleScope.launch {
+            var connected = false
+
+            for (ip in commonIPs) {
+                if (connected) break // Stop if we've already connected
+
+                Log.i(TAG, "Trying to connect to $ip")
+                updateConnectionStatus(ConnectionStatus.CONNECTING)
+
+                try {
+                    val success = withContext(Dispatchers.IO) {
+
+                        networkClient?.connectToController(ip, 8080, true) ?: false ||
+                                networkClient?.connectToController(ip, 8080, false) ?: false
+                    }
+
+                    if (success) {
+                        Log.i(TAG, "Successfully connected to $ip")
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Connected to PC at $ip",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        connected = true
+                        break
+                    } else {
+                        Log.w(TAG, "Failed to connect to $ip")
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Connection error to $ip: ${e.message}")
+                }
+            }
+
+            if (!connected) {
+                updateConnectionStatus(ConnectionStatus.DISCONNECTED)
+                Toast.makeText(
+                    this@MainActivity,
+                    "No PC found at common addresses. Restarting discovery...",
+                    Toast.LENGTH_LONG
+                ).show()
+                startNetworkDiscovery()
+            }
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        
+
         structuredLogger.log(
             StructuredLogger.LogLevel.INFO,
             "MainActivity",
             "activity_destroying"
         )
-        
-        // Cleanup NetworkController via ViewModel
+
         try {
-            // NetworkController cleanup is handled by MainActivityViewModel.onCleared()
-            
-            // Stop server socket via RecordingService
+            webSocketClient?.stop()
+            webSocketClient = null
+
             RecordingService.stopServer(this)
-            
+
             if (isServiceBound) {
                 unbindService(serviceConnection)
                 isServiceBound = false
             }
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Error during networking cleanup", e)
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "MainActivity",
                 "networking_cleanup_error",
-                mapOf("error" to e.message)
+                mapOf("error" to (e.message ?: "Unknown error"))
             )
         }
-        
-        // Cleanup Phase 0 components
+
         try {
             crashSafeSupervisor.shutdown()
             structuredLogger.cleanup()
@@ -1238,13 +1725,79 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
+    private fun launchShimmerMvp() {
+        try {
+            Log.i(TAG, "Showing developer sensor options")
+
+            val options = arrayOf(
+                "Shimmer GSR MVP",
+                "Shimmer3 GSR+ Integration (Comprehensive)",
+                "Unified Sensor Platform",
+                "Cancel"
+            )
+
+            AlertDialog.Builder(this)
+                .setTitle("Developer Sensor Access")
+                .setMessage(
+                    "Select sensor integration mode:\n\n" +
+                            "• MVP: Basic Shimmer GSR recording\n" +
+                            "• Comprehensive: Full integration plan implementation\n" +
+                            "• Unified Platform: Multi-modal sensor coordination"
+                )
+                .setItems(options) { _, which ->
+                    when (which) {
+                        0 -> {
+
+                            Toast.makeText(this, "Opening Shimmer GSR MVP", Toast.LENGTH_SHORT)
+                                .show()
+                            val intent = Intent(this, ShimmerMvpActivity::class.java)
+                            startActivity(intent)
+                        }
+
+                        1 -> {
+                            // Shimmer integration moved to GSR Settings Activity
+                            Toast.makeText(
+                                this,
+                                "GSR functionality available in GSR Settings",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            val intent = Intent(
+                                this,
+                                com.topdon.tc001.gsr.GSRSettingsActivity::class.java
+                            )
+                            startActivity(intent)
+                        }
+
+                        2 -> {
+
+                            Toast.makeText(
+                                this,
+                                "Opening Unified Sensor Platform",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            val intent = Intent(this, UnifiedSensorActivity::class.java)
+                            startActivity(intent)
+                        }
+
+                        3 -> {
+
+                        }
+                    }
+                }
+                .show()
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error launching sensor options: ${e.message}")
+            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
 
     fun launchGSRRecording() {
-        // Check GSR permissions first
+
         if (GSRSensorRecorder.hasRequiredPermissions(this)) {
             GSRQuickRecordingActivity.start(this)
         } else {
-            // Show permission explanation and launch settings if needed
+
             TipDialog.Builder(this)
                 .setTitleMessage("GSR Recording Permissions")
                 .setMessage("GSR recording requires Bluetooth and location permissions. Enable them in settings?")

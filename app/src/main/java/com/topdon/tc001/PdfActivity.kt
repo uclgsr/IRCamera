@@ -1,20 +1,20 @@
 package com.topdon.tc001
 
 import android.view.WindowManager
-// Note: PDFView library dependency not included in current build configuration
 import com.csl.irCamera.R
-
-import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.csl.irCamera.databinding.ActivityPdfBinding
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
+/**
+ * create by fylder on 2018/8/9
+ **/
 
-// Legacy ARouter route annotation - now using NavigationManager
 class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
-    // Note: Using TextView placeholder until PDFView library is integrated
+
     private val pdfView get() = binding.pdfView
 
     override fun initContentLayoutId() = R.layout.activity_pdf
@@ -26,11 +26,11 @@ class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
     }
 
     private fun initView() {
-        // Note: PDF functionality requires PDFView library integration
-        val pdfFileName = if (intent.getBooleanExtra("isTS001", false)) "TC001.pdf" else "TS004.pdf"
-        pdfView.text = "PDF functionality temporarily unavailable - $pdfFileName will be displayed here when PDF library is available"
 
-        // Note: PDF viewer method calls require PDFView library integration
+        val pdfFileName = if (intent.getBooleanExtra("isTS001", false)) "TC001.pdf" else "TS004.pdf"
+        pdfView.text =
+            "PDF functionality temporarily unavailable - $pdfFileName will be displayed here when PDF library is available"
+
         /*
         pdfView.fromAsset(pdfFileName)
         .enableSwipe(true) // allows to block changing pages using swipe
@@ -68,7 +68,6 @@ class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    // 复制assets文件
     @Throws(IOException::class)
     private fun copyBigDataToSD(
         assetsName: String,

@@ -2,7 +2,6 @@ package com.shuyu.gsyvideoplayer.builder
 
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer
 
-
 class GSYVideoOptionBuilder {
     fun setVideoAllCallBack(callback: Any?): GSYVideoOptionBuilder = this
 

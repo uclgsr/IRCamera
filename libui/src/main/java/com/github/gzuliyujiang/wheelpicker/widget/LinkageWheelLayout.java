@@ -33,7 +33,6 @@ import com.topdon.lib.ui.R;
 import java.util.Arrays;
 import java.util.List;
 
-
 @SuppressWarnings("unused")
 public class LinkageWheelLayout extends BaseWheelLayout {
     private WheelView firstWheelView, secondWheelView, thirdWheelView;

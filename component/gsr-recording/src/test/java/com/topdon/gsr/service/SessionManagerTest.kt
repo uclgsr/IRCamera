@@ -6,13 +6,17 @@ import androidx.test.core.app.ApplicationProvider
 import com.topdon.gsr.model.SessionInfo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
@@ -57,10 +61,8 @@ class SessionManagerTest {
         runTest {
             val sessionId = "active_session_test"
 
-            // Create session
             val session = sessionManager.createSession(sessionId, "participant", "study")
 
-            // Should now have active sessions
             val activeSessions = sessionManager.getActiveSessions()
             assertNotNull("Should have active sessions", activeSessions)
             assertTrue("Should have at least one active session", activeSessions.isNotEmpty())
@@ -75,11 +77,9 @@ class SessionManagerTest {
         runTest {
             val sessionId = "complete_session_test"
 
-            // Create session
             val session = sessionManager.createSession(sessionId, "participant", "study")
             assertTrue("Session should be active", session.isActive())
 
-            // Complete session
             val completedSession = sessionManager.completeSession(sessionId)
 
             assertNotNull("Completed session should be returned", completedSession)
@@ -87,10 +87,12 @@ class SessionManagerTest {
             assertNotNull("End time should be set", completedSession.endTime)
             assertTrue("Duration should be positive", completedSession.getDurationMs() >= 0)
 
-            // Should no longer have active session
             val activeSessionsAfter = sessionManager.getActiveSessions()
             val stillActiveSession = activeSessionsAfter.find { it.sessionId == sessionId }
-            assertTrue("Session should no longer be active", stillActiveSession == null || !stillActiveSession.isActive())
+            assertTrue(
+                "Session should no longer be active",
+                stillActiveSession == null || !stillActiveSession.isActive()
+            )
         }
 
     @Test
@@ -98,13 +100,10 @@ class SessionManagerTest {
         runTest {
             val sessionId = "info_session_test"
 
-            // No session initially
             assertNull("No session info initially", sessionManager.getSession(sessionId))
 
-            // Create session
             sessionManager.createSession(sessionId, "participant", "study")
 
-            // Should now have session info
             val sessionInfo = sessionManager.getSession(sessionId)
             assertNotNull("Should have session info", sessionInfo)
             assertEquals("Session ID should match", sessionId, sessionInfo?.sessionId)
@@ -136,31 +135,25 @@ class SessionManagerTest {
                         sessionId: String,
                         error: String,
                     ) {
-                        // Not tested in this scenario
+
                     }
                 }
 
             sessionManager.addSessionListener(listener)
 
-            // Create session
             val session = sessionManager.createSession(sessionId, "participant", "study")
 
-            // Update session metadata
-            // Note: updateSessionMetadata may not exist, so we test what's available
+
             val existingSession = sessionManager.getSession(sessionId)
             assertNotNull("Session should exist for metadata test", existingSession)
 
-            // Complete session
             sessionManager.completeSession(sessionId)
 
-            // Test that listener operations complete without errors
             assertTrue("Listener callbacks should work", true)
 
-            // Verify listener was called correctly - these may be null in test environment
-            // which is acceptable as we're testing the framework works
+
             assertTrue("Test completed successfully", true)
 
-            // Cleanup
             sessionManager.removeSessionListener(listener)
         }
 
@@ -169,31 +162,31 @@ class SessionManagerTest {
         runTest {
             val sessionId = "metadata_test_session"
 
-            // Create session
             val session = sessionManager.createSession(sessionId, "participant", "study")
 
-            // Verify session was created with basic info
             assertNotNull("Session should be created", session)
             assertEquals("Session ID should match", sessionId, session.sessionId)
             assertEquals("Participant ID should match", "participant", session.participantId)
             assertEquals("Study name should match", "study", session.studyName)
 
-            // Retrieve session and verify it exists
             val retrievedSession = sessionManager.getSession(sessionId)
             assertNotNull("Session should exist", retrievedSession)
-            assertEquals("Retrieved session should match created session", session.sessionId, retrievedSession?.sessionId)
+            assertEquals(
+                "Retrieved session should match created session",
+                session.sessionId,
+                retrievedSession?.sessionId
+            )
         }
 
     @Test
     fun testGetAllSessions() =
         runTest {
-            // Initially should have existing sessions or empty list
+
             val initialSessions = sessionManager.getActiveSessions()
             assertNotNull("Should have sessions list", initialSessions)
 
             val initialCount = initialSessions.size
 
-            // Create multiple sessions
             sessionManager.createSession("session_1", "participant_1", "study_1")
             sessionManager.createSession("session_2", "participant_2", "study_2")
 
@@ -208,7 +201,7 @@ class SessionManagerTest {
     @Test
     fun testSessionLifecycle() =
         runTest {
-            // Create and complete some sessions
+
             val session1 = sessionManager.createSession("lifecycle_1", "participant", "study")
             val session2 = sessionManager.createSession("lifecycle_2", "participant", "study")
 
@@ -217,10 +210,12 @@ class SessionManagerTest {
             assertTrue("Session 1 should be active", session1.isActive())
             assertTrue("Session 2 should be active", session2.isActive())
 
-            // Complete first session
             val completedSession = sessionManager.completeSession("lifecycle_1")
             assertNotNull("Completed session should be returned", completedSession)
-            assertFalse("Session should not be active after completion", completedSession!!.isActive())
+            assertFalse(
+                "Session should not be active after completion",
+                completedSession!!.isActive()
+            )
 
             val activeSessions = sessionManager.getActiveSessions()
             val activeSession1 = activeSessions.find { it.sessionId == "lifecycle_1" }

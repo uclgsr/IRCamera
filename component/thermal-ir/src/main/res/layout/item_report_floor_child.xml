@@ -63,7 +63,7 @@
                     android:paddingVertical="8dp"
                     android:text="@string/house_state_good"
                     android:textColor="@color/white"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
 
                 <ImageView
                     android:id="@+id/iv_problem"
@@ -71,7 +71,7 @@
                     android:layout_height="20dp"
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_room_detect_state_no_problem"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
@@ -95,8 +95,8 @@
                     android:paddingVertical="8dp"
                     android:text="@string/house_state_repair"
                     android:textColor="@color/white"
-                    android:visibility="gone"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/iv_repair"
@@ -128,7 +128,7 @@
                     android:text="@string/house_state_replace"
                     android:textColor="@color/white"
                     android:textSize="12sp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/iv_replace"

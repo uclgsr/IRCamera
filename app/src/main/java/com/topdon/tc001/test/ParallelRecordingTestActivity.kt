@@ -11,7 +11,6 @@ import com.topdon.tc001.controller.RecordingController
 import kotlinx.coroutines.launch
 import java.io.File
 
-
 class ParallelRecordingTestActivity : ComponentActivity() {
     companion object {
         private const val TAG = "ParallelRecordingTest"
@@ -28,10 +27,8 @@ class ParallelRecordingTestActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Create simple test UI programmatically (since we don't have layout files in this PR)
         createTestUI()
 
-        // Initialize recording controller
         recordingController = RecordingController(this, this)
 
         setupEventHandlers()
@@ -39,14 +36,13 @@ class ParallelRecordingTestActivity : ComponentActivity() {
     }
 
     private fun createTestUI() {
-        // Create simple vertical layout programmatically
+
         val layout =
             android.widget.LinearLayout(this).apply {
                 orientation = android.widget.LinearLayout.VERTICAL
                 setPadding(32, 32, 32, 32)
             }
 
-        // Title
         val titleText =
             TextView(this).apply {
                 text = "Parallel Recording Test"
@@ -55,11 +51,9 @@ class ParallelRecordingTestActivity : ComponentActivity() {
             }
         layout.addView(titleText)
 
-        // Status indicator
         statusIndicator = RecordingStatusIndicator(this)
         layout.addView(statusIndicator)
 
-        // Status text
         statusText =
             TextView(this).apply {
                 text = "Press 'Initialize Sensors' to begin"
@@ -67,7 +61,6 @@ class ParallelRecordingTestActivity : ComponentActivity() {
             }
         layout.addView(statusText)
 
-        // Buttons
         initializeButton =
             Button(this).apply {
                 text = "Initialize Sensors"
@@ -126,16 +119,19 @@ class ParallelRecordingTestActivity : ComponentActivity() {
 
                 if (success) {
                     val summary = recordingController.getSensorStatusSummary()
-                    statusText.text = "Initialization complete: ${summary.totalSensorsInitialized}/3 sensors available\n${summary.statusMessage}"
+                    statusText.text =
+                        "Initialization complete: ${summary.totalSensorsInitialized}/3 sensors available\n${summary.statusMessage}"
 
                     statusIndicator.updateWithSensorSummary(summary)
 
-                    // Enable controls
                     startButton.isEnabled = true
                     testButton.isEnabled = true
                     initializeButton.isEnabled = false
 
-                    Log.i(TAG, "Sensor initialization successful: ${summary.totalSensorsInitialized} sensors")
+                    Log.i(
+                        TAG,
+                        "Sensor initialization successful: ${summary.totalSensorsInitialized} sensors"
+                    )
                 } else {
                     statusText.text = "Sensor initialization failed - no sensors available"
                     Log.e(TAG, "All sensor initialization failed")
@@ -152,8 +148,8 @@ class ParallelRecordingTestActivity : ComponentActivity() {
             try {
                 statusText.text = "Starting recording..."
 
-                // Create session directory
-                val sessionDir = File(getExternalFilesDir(null), "test_session_${System.currentTimeMillis()}")
+                val sessionDir =
+                    File(getExternalFilesDir(null), "test_session_${System.currentTimeMillis()}")
 
                 val success = recordingController.startRecording(sessionDir.absolutePath)
 
@@ -163,7 +159,6 @@ class ParallelRecordingTestActivity : ComponentActivity() {
 
                     statusIndicator.updateWithSensorSummary(summary)
 
-                    // Update button states
                     startButton.isEnabled = false
                     stopButton.isEnabled = true
                     testButton.isEnabled = false
@@ -193,7 +188,6 @@ class ParallelRecordingTestActivity : ComponentActivity() {
 
                     statusIndicator.updateWithSensorSummary(summary)
 
-                    // Update button states
                     startButton.isEnabled = true
                     stopButton.isEnabled = false
                     testButton.isEnabled = true
@@ -236,14 +230,13 @@ class ParallelRecordingTestActivity : ComponentActivity() {
     }
 
     private fun updateUI() {
-        // Initial UI state
+
         statusIndicator.visibility = android.view.View.VISIBLE
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        // Clean up recording controller
         lifecycleScope.launch {
             try {
                 recordingController.cleanup()

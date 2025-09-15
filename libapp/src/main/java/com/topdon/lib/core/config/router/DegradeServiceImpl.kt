@@ -7,10 +7,9 @@ import com.elvishew.xlog.XLog
 
 class DegradeServiceImpl {
     fun init(context: Context?) {
-        // No longer needed with NavigationManager
+
     }
 
-    // Legacy method for handling navigation failures
     fun onLost(
         context: Context?,
         path: String?,

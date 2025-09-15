@@ -12,12 +12,12 @@ import com.csl.irCamera.databinding.ItemGsrRawImageFileBinding
 import com.csl.irCamera.databinding.ItemGsrVideoFileBinding
 import java.io.File
 
-
 class GSRDataAdapter(
     private val dataFiles: List<GSRDataFragment.GSRDataFile>,
     private val onItemClick: (GSRDataFragment.GSRDataFile) -> Unit,
 ) : RecyclerView.Adapter<GSRDataAdapter.ViewHolder>() {
-    class ViewHolder(private val binding: ItemGsrDataFileBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemGsrDataFileBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         val fileIcon = binding.fileIcon
         val fileName = binding.fileName
         val sessionInfo = binding.sessionInfo
@@ -47,7 +47,8 @@ class GSRDataAdapter(
         val dataFile = dataFiles[position]
 
         holder.fileName.text = dataFile.file.name
-        holder.sessionInfo.text = "Session: ${dataFile.sessionId} | Participant: ${dataFile.participantId}"
+        holder.sessionInfo.text =
+            "Session: ${dataFile.sessionId} | Participant: ${dataFile.participantId}"
         holder.fileSize.text = formatFileSize(dataFile.file.length())
         holder.sampleCount.text = "${dataFile.sampleCount} samples"
         holder.duration.text = formatDuration(dataFile.duration)
@@ -75,12 +76,12 @@ class GSRDataAdapter(
     }
 }
 
-
 class GSRVideoAdapter(
     private val videoFiles: List<File>,
     private val onItemClick: (File) -> Unit,
 ) : RecyclerView.Adapter<GSRVideoAdapter.ViewHolder>() {
-    class ViewHolder(private val binding: ItemGsrVideoFileBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemGsrVideoFileBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         val videoThumbnail = binding.videoThumbnail
         val fileName = binding.fileName
         val fileSize = binding.fileSize
@@ -111,7 +112,6 @@ class GSRVideoAdapter(
         holder.fileName.text = videoFile.name
         holder.fileSize.text = formatFileSize(videoFile.length())
 
-        // Parse video metadata from filename if available
         val filename = videoFile.nameWithoutExtension
         when {
             filename.contains("4K") -> holder.resolution.text = "4K UHD (3840×2160)"
@@ -126,8 +126,7 @@ class GSRVideoAdapter(
                 java.util.Locale.getDefault(),
             ).format(java.util.Date(videoFile.lastModified()))
 
-        // Note: Video duration extraction requires MediaMetadataRetriever implementation
-        // Set default duration for now (video duration extraction can be added later if needed)
+
         holder.duration.text = "Duration: Unknown"
 
         holder.itemView.setOnClickListener {
@@ -147,12 +146,12 @@ class GSRVideoAdapter(
     }
 }
 
-
 class GSRRawImageAdapter(
     private val rawImageFiles: List<File>,
     private val onItemClick: (File) -> Unit,
 ) : RecyclerView.Adapter<GSRRawImageAdapter.ViewHolder>() {
-    class ViewHolder(private val binding: ItemGsrRawImageFileBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemGsrRawImageFileBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         val imageThumbnail = binding.imageThumbnail
         val fileName = binding.fileName
         val fileSize = binding.fileSize
@@ -183,7 +182,6 @@ class GSRRawImageAdapter(
         holder.fileName.text = rawImageFile.name
         holder.fileSize.text = formatFileSize(rawImageFile.length())
 
-        // Parse RAW image metadata from filename
         val filename = rawImageFile.nameWithoutExtension
         holder.resolution.text = "4032×3024 (12MP)" // Samsung S22 sensor size
         holder.captureInfo.text = "DNG RAW • Level 3"
@@ -209,7 +207,6 @@ class GSRRawImageAdapter(
         }
     }
 }
-
 
 class GSRSessionAdapter(
     private val sessions: List<GSRSessionFragment.GSRSessionInfo>,
@@ -247,7 +244,6 @@ class GSRSessionAdapter(
         holder.startTime.text = session.startTime
         holder.duration.text = formatDuration(session.duration)
 
-        // Count available files
         val fileCount = mutableListOf<String>()
         if (session.gsrDataFile != null) fileCount.add("GSR Data")
         if (session.videoFile != null) fileCount.add("Video")

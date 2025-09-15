@@ -2,15 +2,25 @@ package com.topdon.tc001.logging
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.io.*
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileReader
+import java.io.FileWriter
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-
 
 class StructuredLogger private constructor(private val context: Context) {
     companion object {
@@ -29,7 +39,6 @@ class StructuredLogger private constructor(private val context: Context) {
             }
         }
 
-        // Convenience methods
         fun logInfo(
             component: String,
             event: String,
@@ -90,10 +99,8 @@ class StructuredLogger private constructor(private val context: Context) {
             timeZone = TimeZone.getTimeZone("UTC")
         }
 
-    // Message ID counter for tracking
     private var messageIdCounter = 0L
 
-    // Coroutine scope for periodic flushing
     private val logScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     init {
@@ -108,13 +115,10 @@ class StructuredLogger private constructor(private val context: Context) {
                 logDir.mkdirs()
             }
 
-            // Clean up old log files
             cleanupOldLogs(logDir)
 
-            // Create new log file
             createNewLogFile(logDir)
 
-            // Log initialization
             log(
                 LogLevel.INFO,
                 "StructuredLogger",
@@ -159,7 +163,6 @@ class StructuredLogger private constructor(private val context: Context) {
         }
     }
 
-
     fun log(
         level: LogLevel,
         component: String,
@@ -182,16 +185,13 @@ class StructuredLogger private constructor(private val context: Context) {
                     put("msg_id", msgId)
                     put("event", event)
 
-                    // Add details
                     details.forEach { (key, value) ->
                         put(key, value)
                     }
                 }
 
-            // Add to queue for async processing
             logQueue.offer(logEntry)
 
-            // Also log to Android logcat for immediate debugging
             val logMessage = "$component: $event ${if (details.isNotEmpty()) details else ""}"
             when (level) {
                 LogLevel.DEBUG -> Log.d(TAG, logMessage)
@@ -204,7 +204,6 @@ class StructuredLogger private constructor(private val context: Context) {
         }
     }
 
-
     fun logConnection(
         event: String,
         connectionId: String,
@@ -212,7 +211,6 @@ class StructuredLogger private constructor(private val context: Context) {
     ) {
         log(LogLevel.INFO, "NetworkConnection", event, details, connectionId)
     }
-
 
     fun logProtocolMessage(
         event: String,
@@ -223,14 +221,12 @@ class StructuredLogger private constructor(private val context: Context) {
         log(LogLevel.INFO, "ProtocolHandler", event, details, connectionId, messageId)
     }
 
-
     fun logServerEvent(
         event: String,
         details: Map<String, Any> = emptyMap(),
     ) {
         log(LogLevel.INFO, "ServerSocket", event, details)
     }
-
 
     fun logSensorEvent(
         event: String,
@@ -241,7 +237,6 @@ class StructuredLogger private constructor(private val context: Context) {
         sensorDetails["sensor_type"] = sensorType
         log(LogLevel.INFO, "SensorRecorder", event, sensorDetails)
     }
-
 
     fun logSessionEvent(
         event: String,
@@ -265,7 +260,6 @@ class StructuredLogger private constructor(private val context: Context) {
             }
         }
 
-        // Process logs in background thread
         logExecutor.execute {
             while (true) {
                 try {
@@ -292,7 +286,6 @@ class StructuredLogger private constructor(private val context: Context) {
                 writer.newLine()
                 currentLogSize += logEntry.toString().length + 1
 
-                // Check if we need to rotate log file
                 if (currentLogSize > MAX_LOG_SIZE_MB * 1024 * 1024) {
                     rotateLogFile()
                 }
@@ -332,11 +325,9 @@ class StructuredLogger private constructor(private val context: Context) {
         }
     }
 
-
     fun getCurrentLogFile(): String? {
         return currentLogFile?.absolutePath
     }
-
 
     fun getLogFiles(): List<String> {
         return try {
@@ -347,7 +338,6 @@ class StructuredLogger private constructor(private val context: Context) {
             emptyList()
         }
     }
-
 
     fun exportRecentLogs(maxLines: Int = 100): String {
         return try {
@@ -367,7 +357,6 @@ class StructuredLogger private constructor(private val context: Context) {
             "Error exporting logs: ${e.message}"
         }
     }
-
 
     fun cleanup() {
         try {

@@ -41,15 +41,14 @@ import com.topdon.lib.core.R as LibR
 import com.topdon.lib.ui.R as UiR
 
 
-// Legacy ARouter route annotation - now using NavigationManager
-
 class IRGalleryDetail04Activity : BaseActivity() {
+    /**
 
+
+     */
     private var isRemote = false
 
-
     private var position = 0
-
 
     private lateinit var dataList: ArrayList<GalleryBean>
 
@@ -105,7 +104,8 @@ class IRGalleryDetail04Activity : BaseActivity() {
                     super.onPageSelected(position)
                     this@IRGalleryDetail04Activity.position = position
                     findViewById<com.topdon.lib.core.view.TitleView>(R.id.title_view).setTitleText("${position + 1}/${dataList.size}")
-                    findViewById<ImageView>(R.id.iv_download).isSelected = dataList[position].hasDownload
+                    findViewById<ImageView>(R.id.iv_download).isSelected =
+                        dataList[position].hasDownload
                 }
             },
         )
@@ -166,7 +166,12 @@ class IRGalleryDetail04Activity : BaseActivity() {
                 if (isSuccess) {
                     if (isDelLocal) {
                         File(FileConfig.ts004GalleryDir, data.name).delete()
-                        MediaScannerConnection.scanFile(this@IRGalleryDetail04Activity, arrayOf(FileConfig.ts004GalleryDir), null, null)
+                        MediaScannerConnection.scanFile(
+                            this@IRGalleryDetail04Activity,
+                            arrayOf(FileConfig.ts004GalleryDir),
+                            null,
+                            null
+                        )
                     }
 
                     dismissCameraLoading()
@@ -183,7 +188,10 @@ class IRGalleryDetail04Activity : BaseActivity() {
                     }
                 } else {
                     dismissCameraLoading()
-                    TToast.shortToast(this@IRGalleryDetail04Activity, LibR.string.test_results_delete_failed)
+                    TToast.shortToast(
+                        this@IRGalleryDetail04Activity,
+                        LibR.string.test_results_delete_failed
+                    )
                 }
             }
         } else {
@@ -236,10 +244,16 @@ class IRGalleryDetail04Activity : BaseActivity() {
                     EventBus.getDefault().post(GalleryDownloadEvent(data.name))
                     dismissCameraLoading()
                     FileUtils.copy(resource, File(FileConfig.ts004GalleryDir, data.name))
-                    MediaScannerConnection.scanFile(this@IRGalleryDetail04Activity, arrayOf(FileConfig.ts004GalleryDir), null, null)
+                    MediaScannerConnection.scanFile(
+                        this@IRGalleryDetail04Activity,
+                        arrayOf(FileConfig.ts004GalleryDir),
+                        null,
+                        null
+                    )
                     ToastTools.showShort(LibR.string.tip_save_success)
                     data.hasDownload = true
-                    findViewById<ImageView>(R.id.iv_download).isSelected = dataList[position].hasDownload
+                    findViewById<ImageView>(R.id.iv_download).isSelected =
+                        dataList[position].hasDownload
                     if (isToShare) {
                         actionShare()
                     }

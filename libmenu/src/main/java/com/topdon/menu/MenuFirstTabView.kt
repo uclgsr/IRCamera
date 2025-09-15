@@ -8,8 +8,6 @@ import android.widget.FrameLayout
 import com.topdon.menu.databinding.ViewMenuFirstTabBinding
 
 
-
-
 class MenuFirstTabView : FrameLayout, View.OnClickListener {
 
     var selectPosition = -1
@@ -24,7 +22,6 @@ class MenuFirstTabView : FrameLayout, View.OnClickListener {
                 binding.ivMenu6.isSelected = value == 5
             }
         }
-
 
     var isObserveMode = false
         set(value) {
@@ -51,9 +48,19 @@ class MenuFirstTabView : FrameLayout, View.OnClickListener {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,

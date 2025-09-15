@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.data;
 
 import android.content.Context;
@@ -17,30 +16,24 @@ import java.util.List;
 
 public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet {
 
-
+    /**
+     * Drawing mode for this line dataset
+     **/
     private Mode mMode = Mode.LINEAR;
-
 
     private List<Integer> mCircleColors = null;
 
-
     private int mCircleHoleColor = Color.WHITE;
-
 
     private float mCircleRadius = 8f;
 
-
     private float mCircleHoleRadius = 4f;
-
 
     private float mCubicIntensity = 0.2f;
 
-
     private DashPathEffect mDashPathEffect = null;
 
-
     private IFillFormatter mFillFormatter = new DefaultFillFormatter();
-
 
     private boolean mDrawCircles = true;
 
@@ -49,17 +42,13 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     public LineDataSet(List<Entry> yVals, String label) {
         super(yVals, label);
 
-        // mCircleRadius = Utils.convertDpToPixel(4f);
-        // mLineWidth = Utils.convertDpToPixel(1f);
 
         if (mCircleColors == null) {
             mCircleColors = new ArrayList<Integer>();
         }
         mCircleColors.clear();
 
-        // default colors
-        // mColors.add(Color.rgb(192, 255, 140));
-        // mColors.add(Color.rgb(255, 247, 140));
+
         mCircleColors.add(Color.rgb(140, 234, 255));
     }
 
@@ -88,17 +77,19 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
         lineDataSet.mMode = mMode;
     }
 
-
     @Override
     public Mode getMode() {
         return mMode;
     }
 
-
     public void setMode(Mode mode) {
         mMode = mode;
     }
 
+    @Override
+    public float getCubicIntensity() {
+        return mCubicIntensity;
+    }
 
     public void setCubicIntensity(float intensity) {
 
@@ -111,10 +102,9 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     }
 
     @Override
-    public float getCubicIntensity() {
-        return mCubicIntensity;
+    public float getCircleRadius() {
+        return mCircleRadius;
     }
-
 
     public void setCircleRadius(float radius) {
 
@@ -126,10 +116,9 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     }
 
     @Override
-    public float getCircleRadius() {
-        return mCircleRadius;
+    public float getCircleHoleRadius() {
+        return mCircleHoleRadius;
     }
-
 
     public void setCircleHoleRadius(float holeRadius) {
 
@@ -140,30 +129,21 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
         }
     }
 
-    @Override
-    public float getCircleHoleRadius() {
-        return mCircleHoleRadius;
+    @Deprecated
+    public float getCircleSize() {
+        return getCircleRadius();
     }
-
 
     @Deprecated
     public void setCircleSize(float size) {
         setCircleRadius(size);
     }
 
-
-    @Deprecated
-    public float getCircleSize() {
-        return getCircleRadius();
-    }
-
-
     public void enableDashedLine(float lineLength, float spaceLength, float phase) {
         mDashPathEffect = new DashPathEffect(new float[]{
                 lineLength, spaceLength
         }, phase);
     }
-
 
     public void disableDashedLine() {
         mDashPathEffect = null;
@@ -178,7 +158,6 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     public DashPathEffect getDashPathEffect() {
         return mDashPathEffect;
     }
-
 
     public void setDrawCircles(boolean enabled) {
         this.mDrawCircles = enabled;
@@ -201,11 +180,20 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
         return mMode == Mode.STEPPED;
     }
 
-    //
-
+    /**
+     * ALL CODE BELOW RELATED TO CIRCLE-COLORS
+     */
 
     public List<Integer> getCircleColors() {
         return mCircleColors;
+    }
+
+    public void setCircleColors(List<Integer> colors) {
+        mCircleColors = colors;
+    }
+
+    public void setCircleColors(int... colors) {
+        this.mCircleColors = ColorTemplate.createColors(colors);
     }
 
     @Override
@@ -217,17 +205,6 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     public int getCircleColorCount() {
         return mCircleColors.size();
     }
-
-
-    public void setCircleColors(List<Integer> colors) {
-        mCircleColors = colors;
-    }
-
-
-    public void setCircleColors(int... colors) {
-        this.mCircleColors = ColorTemplate.createColors(colors);
-    }
-
 
     public void setCircleColors(int[] colors, Context c) {
 
@@ -244,12 +221,10 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
         mCircleColors = clrs;
     }
 
-
     public void setCircleColor(int color) {
         resetCircleColors();
         mCircleColors.add(color);
     }
-
 
     public void resetCircleColors() {
         if (mCircleColors == null) {
@@ -258,16 +233,14 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
         mCircleColors.clear();
     }
 
-
-    public void setCircleHoleColor(int color) {
-        mCircleHoleColor = color;
-    }
-
     @Override
     public int getCircleHoleColor() {
         return mCircleHoleColor;
     }
 
+    public void setCircleHoleColor(int color) {
+        mCircleHoleColor = color;
+    }
 
     public void setDrawCircleHole(boolean enabled) {
         mDrawCircleHole = enabled;
@@ -278,6 +251,10 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
         return mDrawCircleHole;
     }
 
+    @Override
+    public IFillFormatter getFillFormatter() {
+        return mFillFormatter;
+    }
 
     public void setFillFormatter(IFillFormatter formatter) {
 
@@ -285,11 +262,6 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
             mFillFormatter = new DefaultFillFormatter();
         else
             mFillFormatter = formatter;
-    }
-
-    @Override
-    public IFillFormatter getFillFormatter() {
-        return mFillFormatter;
     }
 
     public enum Mode {

@@ -3,12 +3,18 @@ package com.topdon.gsr.network
 import android.content.Context
 import android.util.Log
 import com.topdon.gsr.model.GSRSample
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
-
 
 class DataStreamingService(
     private val context: Context,
@@ -77,7 +83,6 @@ class DataStreamingService(
         eventListener = listener
     }
 
-
     suspend fun startStreaming(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
             if (isStreaming.get()) {
@@ -95,13 +100,10 @@ class DataStreamingService(
                 isStreaming.set(true)
                 isConnected.set(true)
 
-                // Clear any existing queued data
                 clearQueues()
 
-                // Start the batching and sending process
                 startBatchingProcess()
 
-                // Notify PC Controller that streaming started
                 val success = networkClient.startDataStreaming()
                 if (success) {
                     eventListener?.onStreamingStarted(sessionId)
@@ -118,7 +120,6 @@ class DataStreamingService(
             }
         }
 
-
     suspend fun stopStreaming(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isStreaming.get()) {
@@ -129,14 +130,11 @@ class DataStreamingService(
             try {
                 isStreaming.set(false)
 
-                // Stop batching process
                 batchingJob?.cancel()
                 batchingJob = null
 
-                // Send any remaining batched data
                 sendRemainingData()
 
-                // Notify PC Controller that streaming stopped
                 val success = networkClient.stopDataStreaming()
 
                 val sessionId = currentSessionId
@@ -154,12 +152,11 @@ class DataStreamingService(
             }
         }
 
-
     fun queueGSRSample(sample: GSRSample) {
         if (!isStreaming.get()) return
 
         if (gsrQueue.size >= MAX_QUEUE_SIZE) {
-            // Drop oldest samples to prevent memory overflow
+
             val dropped = minOf(BATCH_SIZE, gsrQueue.size / 2)
             repeat(dropped) { gsrQueue.poll() }
             eventListener?.onQueueFull("GSR", dropped)
@@ -168,7 +165,6 @@ class DataStreamingService(
 
         gsrQueue.offer(sample)
     }
-
 
     fun queueThermalSample(sample: ThermalSample) {
         if (!isStreaming.get()) return
@@ -182,7 +178,6 @@ class DataStreamingService(
 
         thermalQueue.offer(sample)
     }
-
 
     fun queueVideoMetadata(metadata: VideoMetadata) {
         if (!isStreaming.get()) return
@@ -202,17 +197,15 @@ class DataStreamingService(
             streamingScope.launch {
                 while (isStreaming.get() && isActive) {
                     try {
-                        // Process GSR batches
+
                         if (gsrQueue.size >= BATCH_SIZE) {
                             sendGSRBatch()
                         }
 
-                        // Process thermal batches
                         if (thermalQueue.size >= BATCH_SIZE) {
                             sendThermalBatch()
                         }
 
-                        // Process video metadata batches
                         if (videoMetadataQueue.size >= BATCH_SIZE) {
                             sendVideoMetadataBatch()
                         }
@@ -391,7 +384,6 @@ class DataStreamingService(
         videoMetadataQueue.clear()
     }
 
-
     fun getQueueSizes(): Map<String, Int> {
         return mapOf(
             "gsr" to gsrQueue.size,
@@ -400,9 +392,7 @@ class DataStreamingService(
         )
     }
 
-
     fun isStreamingActive(): Boolean = isStreaming.get()
-
 
     suspend fun cleanup() {
         // Stop streaming before cancelling jobs to ensure proper data flush

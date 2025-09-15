@@ -8,19 +8,18 @@ in the Multi-Modal Physiological Sensing Platform hub-and-spoke architecture.
 
 import asyncio
 import json
+import numpy as np
+import pandas as pd
 import sqlite3
 import struct
 import time
 from collections import deque
 from dataclasses import dataclass, field
+from loguru import logger
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
-import numpy as np
-import pandas as pd
-from loguru import logger
-
-from .gsr_analytics import GSRAnalysisReport, GSRAnalytics, GSRFeatures
+from .gsr_analytics import GSRAnalytics
 
 
 @dataclass
@@ -264,7 +263,7 @@ class GSRReceiver:
             return False
 
     async def process_gsr_batch(
-        self, device_id: str, session_id: str, samples_data: List[Dict]
+            self, device_id: str, session_id: str, samples_data: List[Dict]
     ) -> bool:
         """
         Process a batch of GSR samples from Android device
@@ -337,7 +336,7 @@ class GSRReceiver:
             return False
 
     async def handle_heartbeat(
-        self, device_id: str, session_id: str, heartbeat_data: Dict
+            self, device_id: str, session_id: str, heartbeat_data: Dict
     ) -> bool:
         """
         Handle heartbeat message from Android device
@@ -375,7 +374,7 @@ class GSRReceiver:
             return False
 
     async def handle_quality_metrics(
-        self, device_id: str, session_id: str, metrics_data: Dict
+            self, device_id: str, session_id: str, metrics_data: Dict
     ) -> bool:
         """
         Handle quality metrics from Android device
@@ -536,7 +535,7 @@ class GSRReceiver:
             # Check timestamp validity
             current_time = time.time()
             if (
-                abs(sample.timestamp - current_time) > 3600
+                    abs(sample.timestamp - current_time) > 3600
             ):  # More than 1 hour difference
                 logger.warning(f"Sample timestamp seems invalid: {sample.timestamp}")
                 return False
@@ -656,7 +655,7 @@ class GSRReceiver:
                 for session_key, session in self.active_sessions.items():
                     last_heartbeat = session.network_stats.get("last_heartbeat", 0)
                     if (
-                        current_time - last_heartbeat > 30
+                            current_time - last_heartbeat > 30
                     ):  # No heartbeat for 30 seconds
                         self.quality_alerts.add(
                             f"Stale session detected: {session_key}"
@@ -674,7 +673,7 @@ class GSRReceiver:
                 logger.error(f"Error in quality monitor: {e}")
 
     def get_session_stats(
-        self, device_id: str, session_id: str
+            self, device_id: str, session_id: str
     ) -> Optional[Dict[str, Any]]:
         """Get statistics for a specific session"""
         session_key = f"{device_id}_{session_id}"
@@ -702,7 +701,7 @@ class GSRReceiver:
         }
 
     def get_real_time_analytics(
-        self, device_id: str, session_id: str
+            self, device_id: str, session_id: str
     ) -> Optional[Dict[str, Any]]:
         """
         Get real-time analytics features for a session
@@ -787,7 +786,7 @@ class GSRReceiver:
         return alerts
 
     async def export_session_data(
-        self, device_id: str, session_id: str, format: str = "csv"
+            self, device_id: str, session_id: str, format: str = "csv"
     ) -> Optional[Path]:
         """
         Export session data to file

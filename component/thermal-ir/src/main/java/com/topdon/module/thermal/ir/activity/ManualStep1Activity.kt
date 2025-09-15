@@ -8,17 +8,20 @@ import com.topdon.module.thermal.ir.event.ManualFinishBean
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+/**
 
-// Legacy ARouter route annotation - now using NavigationManager
+ * Created by LCG on 2023/12/29.
+ */
+
 
 class ManualStep1Activity : BaseActivity() {
-    // View declarations
+
     private lateinit var tvManual: TextView
 
     override fun initContentView(): Int = R.layout.activity_manual_step1
 
     override fun initView() {
-        // Initialize views
+
         tvManual = findViewById(R.id.tv_manual)
 
         tvManual.setOnClickListener {

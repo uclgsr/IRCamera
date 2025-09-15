@@ -1,12 +1,7 @@
-
 package com.github.mikephil.charting.data;
 
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IPieDataSet;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class PieData extends ChartData<IPieDataSet> {
 
@@ -18,18 +13,15 @@ public class PieData extends ChartData<IPieDataSet> {
         super(dataSet);
     }
 
+    public IPieDataSet getDataSet() {
+        return mDataSets.get(0);
+    }
 
     public void setDataSet(IPieDataSet dataSet) {
         mDataSets.clear();
         mDataSets.add(dataSet);
         notifyDataChanged();
     }
-
-
-    public IPieDataSet getDataSet() {
-        return mDataSets.get(0);
-    }
-
 
     @Override
     public IPieDataSet getDataSetByIndex(int index) {
@@ -46,7 +38,6 @@ public class PieData extends ChartData<IPieDataSet> {
     public Entry getEntryForHighlight(Highlight highlight) {
         return getDataSet().getEntryForIndex((int) highlight.getX());
     }
-
 
     public float getYValueSum() {
 

@@ -23,6 +23,7 @@ import java.util.List;
 public class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
 
     protected ScatterDataProvider mChart;
+    float[] mPixelBuffer = new float[2];
 
     public ScatterChartRenderer(ScatterDataProvider chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);
@@ -45,8 +46,6 @@ public class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
         }
     }
 
-    float[] mPixelBuffer = new float[2];
-
     protected void drawDataSet(Canvas c, IScatterDataSet dataSet) {
 
         if (dataSet.getEntryCount() < 1)
@@ -64,9 +63,9 @@ public class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
             return;
         }
 
-        int max = (int)(Math.min(
-                Math.ceil((float)dataSet.getEntryCount() * mAnimator.getPhaseX()),
-                (float)dataSet.getEntryCount()));
+        int max = (int) (Math.min(
+                Math.ceil((float) dataSet.getEntryCount() * mAnimator.getPhaseX()),
+                (float) dataSet.getEntryCount()));
 
         for (int i = 0; i < max; i++) {
 
@@ -95,7 +94,6 @@ public class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
     @Override
     public void drawValues(Canvas c) {
 
-        // if values are drawn
         if (isDrawingValuesAllowed(mChart)) {
 
             List<IScatterDataSet> dataSets = mChart.getScatterData().getDataSets();
@@ -107,7 +105,6 @@ public class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
                 if (!shouldDrawValues(dataSet) || dataSet.getEntryCount() < 1)
                     continue;
 
-                // apply the text-styling defined by the DataSet
                 applyValueTextStyle(dataSet);
 
                 mXBounds.set(mChart, dataSet);
@@ -129,7 +126,6 @@ public class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
                     if (!mViewPortHandler.isInBoundsRight(positions[j]))
                         break;
 
-                    // make sure the lines don't do shitty things outside bounds
                     if ((!mViewPortHandler.isInBoundsLeft(positions[j])
                             || !mViewPortHandler.isInBoundsY(positions[j + 1])))
                         continue;
@@ -147,8 +143,8 @@ public class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
                         Utils.drawImage(
                                 c,
                                 icon,
-                                (int)(positions[j] + iconsOffset.x),
-                                (int)(positions[j + 1] + iconsOffset.y),
+                                (int) (positions[j] + iconsOffset.x),
+                                (int) (positions[j + 1] + iconsOffset.y),
                                 icon.getIntrinsicWidth(),
                                 icon.getIntrinsicHeight());
                     }
@@ -191,7 +187,6 @@ public class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
 
             high.setDraw((float) pix.x, (float) pix.y);
 
-            // draw the lines
             drawHighlightLines(c, (float) pix.x, (float) pix.y, set);
         }
     }

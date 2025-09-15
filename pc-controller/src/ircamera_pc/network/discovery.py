@@ -42,6 +42,7 @@ except ImportError:
             def error(self, msg) -> Any:
                 print(f"ERROR: {e}")
 
+
         logger = FallbackLogger()
 
 try:
@@ -55,6 +56,7 @@ except ImportError:
                 "version": "1.0.0",
             }
             return config_map.get(key, default)
+
 
     config = FallbackConfig()
 
@@ -181,7 +183,7 @@ class NetworkDiscoveryService:
         return list(self.discovered_devices.values())
 
     async def get_devices_by_type(
-        self, device_type: DeviceType
+            self, device_type: DeviceType
     ) -> List[DiscoveredDevice]:
         """Get discovered devices of a specific type."""
         return [
@@ -284,7 +286,7 @@ class NetworkDiscoveryService:
             return "127.0.0.1"
 
     def _determine_device_type(
-        self, service_type: str, properties: Dict[str, bytes]
+            self, service_type: str, properties: Dict[str, bytes]
     ) -> DeviceType:
         """Determine device type from service information."""
         try:
@@ -411,19 +413,19 @@ class ServiceBrowserHandler:
         self.service_type = service_type
 
     def add_service(
-        self, zc: None = Zeroconf, type_: None = str, name: None = str
+            self, zc: None = Zeroconf, type_: None = str, name: None = str
     ) -> None:
         """Called when a service is discovered."""
         asyncio.create_task(self._add_service_async(zc, type_, name))
 
     def remove_service(
-        self, zc: None = Zeroconf, type_: None = str, name: None = str
+            self, zc: None = Zeroconf, type_: None = str, name: None = str
     ) -> None:
         """Called when a service is removed."""
         asyncio.create_task(self.discovery_service._on_device_lost(name))
 
     def update_service(
-        self, zc: None = Zeroconf, type_: None = str, name: None = str
+            self, zc: None = Zeroconf, type_: None = str, name: None = str
     ) -> None:
         """Called when a service is updated."""
         # Treat updates as new discoveries

@@ -4,9 +4,8 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 import com.topdon.menu.constant.MenuType
-
+import com.topdon.menu.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
 internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
@@ -19,7 +18,6 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
             }
         }
 
-
     var selectCode: Int = 1
         set(value) {
             if (field != value) {
@@ -28,19 +26,45 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
             }
         }
 
-
     var onTempLevelListener: ((code: Int) -> Unit)? = null
 
     private val dataList: ArrayList<Data> = ArrayList(6)
 
     init {
-        dataList.add(Data(R.string.thermal_normal_temperature, MenuR.drawable.selector_menu2_temp_level_1, IntRange(-20, 150), 1))
+        dataList.add(
+            Data(
+                R.string.thermal_normal_temperature,
+                MenuR.drawable.selector_menu2_temp_level_1,
+                IntRange(-20, 150),
+                1
+            )
+        )
         if (menuType == MenuType.Lite) {
-            dataList.add(Data(R.string.thermal_high_temperature, MenuR.drawable.selector_menu2_temp_level_1, IntRange(150, 450), 0))
+            dataList.add(
+                Data(
+                    R.string.thermal_high_temperature,
+                    MenuR.drawable.selector_menu2_temp_level_1,
+                    IntRange(150, 450),
+                    0
+                )
+            )
         } else {
-            dataList.add(Data(R.string.thermal_high_temperature, MenuR.drawable.selector_menu2_temp_level_1, IntRange(150, 550), 0))
+            dataList.add(
+                Data(
+                    R.string.thermal_high_temperature,
+                    MenuR.drawable.selector_menu2_temp_level_1,
+                    IntRange(150, 550),
+                    0
+                )
+            )
         }
-        dataList.add(Data(R.string.thermal_automatic, MenuR.drawable.selector_menu2_temp_level_2, code = -1))
+        dataList.add(
+            Data(
+                R.string.thermal_automatic,
+                MenuR.drawable.selector_menu2_temp_level_2,
+                code = -1
+            )
+        )
     }
 
     override fun onBindViewHolder(
@@ -69,11 +93,9 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
             "${start}\n~\n$endInclusive°C"
         }
 
-
     private fun c2f(cValue: Int): Int = (cValue * 1.8f + 32).toInt()
 
     override fun getItemCount(): Int = dataList.size
-
 
     data class Data(
         @StringRes val stringId: Int,

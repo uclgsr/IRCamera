@@ -14,38 +14,33 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
-import com.topdon.menu.R as MenuR
 import com.topdon.menu.databinding.ViewCameraMenuBinding
-
-
-
+import com.topdon.menu.R as MenuR
 
 
 class CameraMenuView : FrameLayout, View.OnClickListener {
     companion object {
-        //
+        /** onCameraClickListener event code: photo/video capture */
         const val CODE_ACTION = 0
 
-        //
+        /** onCameraClickListener event code: gallery */
         const val CODE_GALLERY = 1
 
-        //
+        /** onCameraClickListener event code: more menu */
         const val CODE_MORE = 2
 
-        //
+        /** onCameraClickListener event code: switch to photo */
         const val CODE_TO_PHOTO = 3
 
-        //
+        /** onCameraClickListener event code: switch to video */
         const val CODE_TO_VIDEO = 4
     }
-
 
     var isVideoMode: Boolean
         get() = binding.viewPager2.currentItem == 1
         set(value) {
             binding.viewPager2.currentItem = if (value) 1 else 0
         }
-
 
     var canSwitchMode: Boolean
         get() = binding.viewPager2.isUserInputEnabled
@@ -55,9 +50,7 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
             binding.tvVideo.isVisible = value
         }
 
-
     var onCameraClickListener: ((actionCode: Int) -> Unit)? = null
-
 
     fun setToNormal() {
         if (isVideoMode) {
@@ -66,7 +59,6 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
             binding.ivAction.setImageResource(MenuR.drawable.svg_camera_photo_normal)
         }
     }
-
 
     fun setToRecord(isDelay: Boolean) {
         if (isVideoMode) {
@@ -79,7 +71,6 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
             }
         }
     }
-
 
     fun refreshGallery(path: String) {
         try {
@@ -101,9 +92,19 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
@@ -130,7 +131,6 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
         return super.dispatchTouchEvent(ev)
     }
 
-
     private var lastClickTime: Long = 0
 
     override fun onClick(v: View?) {
@@ -142,15 +142,19 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
                     onCameraClickListener?.invoke(CODE_ACTION)
                 }
             }
-            binding.ivGallery -> { 
+
+            binding.ivGallery -> {
                 onCameraClickListener?.invoke(CODE_GALLERY)
             }
+
             binding.ivMore -> { // More menu
                 onCameraClickListener?.invoke(CODE_MORE)
             }
+
             binding.tvPhoto -> { // Photo text
                 binding.viewPager2.currentItem = 0
             }
+
             binding.tvVideo -> { // Video text
                 binding.viewPager2.currentItem = 1
             }
@@ -184,16 +188,16 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
     }
 
 
-    
-
-
     class MenuCameraAdapter : RecyclerView.Adapter<MenuCameraAdapter.ViewHolder>() {
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
         ): ViewHolder {
             val view = View(parent.context)
-            view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            view.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
             return ViewHolder(view)
         }
 
@@ -204,8 +208,6 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
         }
 
         override fun getItemCount(): Int = 2
-
-
 
 
         class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)

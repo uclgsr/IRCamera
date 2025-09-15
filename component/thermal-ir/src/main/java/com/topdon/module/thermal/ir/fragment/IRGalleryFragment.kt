@@ -42,8 +42,6 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import com.topdon.lib.core.R as LibR
 
-
-
 class IRGalleryFragment : BaseFragment() {
 
     private var currentDirType = DirType.LINE
@@ -54,7 +52,6 @@ class IRGalleryFragment : BaseFragment() {
 
     private val adapter = GalleryAdapter()
 
-    // View references
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var clDownload: View
     private lateinit var clShare: View
@@ -62,13 +59,12 @@ class IRGalleryFragment : BaseFragment() {
     private lateinit var clBottom: View
     private lateinit var irGalleryRecycler: RecyclerView
 
-
     private var isVideo = false
 
     override fun initContentView() = R.layout.fragment_ir_gallery
 
     override fun initView() {
-        // Initialize views with findViewById
+
         refreshLayout = requireView().findViewById(R.id.refresh_layout)
         clDownload = requireView().findViewById(R.id.cl_download)
         clShare = requireView().findViewById(R.id.cl_share)
@@ -187,7 +183,7 @@ class IRGalleryFragment : BaseFragment() {
     private fun initRecycler() {
         val spanCount = 3
         val gridLayoutManager = GridLayoutManager(requireActivity(), spanCount)
-//动态setspan
+
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {

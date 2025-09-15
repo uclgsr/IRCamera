@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.menu.databinding.ItemMenuBinding
 
-
 internal abstract class BaseMenuAdapter : RecyclerView.Adapter<BaseMenuAdapter.ViewHolder>() {
     companion object {
         private const val VIEW_TYPE_DEFAULT = 0
@@ -27,13 +26,11 @@ internal abstract class BaseMenuAdapter : RecyclerView.Adapter<BaseMenuAdapter.V
         val binding = ItemMenuBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val widthPixels: Int = parent.context.resources.displayMetrics.widthPixels
 
-        // 计算及settings图标尺寸
         val iconSize: Int = (widthPixels * 62 / 375f).toInt() // 62、375 是按 UI 图比例
         val iconParams: ViewGroup.LayoutParams = binding.ivIcon.layoutParams
         iconParams.width = iconSize
         iconParams.height = iconSize
 
-        // 计算及settings整体尺寸
         if (itemCount <= 4) {
             binding.root.layoutParams.width = (widthPixels / itemCount.toFloat()).toInt()
         } else {
@@ -47,7 +44,6 @@ internal abstract class BaseMenuAdapter : RecyclerView.Adapter<BaseMenuAdapter.V
         }
         return ViewHolder(binding)
     }
-
 
 
     class ViewHolder(val binding: ItemMenuBinding) : RecyclerView.ViewHolder(binding.root)

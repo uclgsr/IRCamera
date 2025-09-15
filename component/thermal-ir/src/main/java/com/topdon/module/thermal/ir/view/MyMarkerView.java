@@ -2,7 +2,6 @@ package com.topdon.module.thermal.ir.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,7 +19,6 @@ import com.topdon.module.thermal.ir.R;
 
 import java.util.Locale;
 
-
 @SuppressLint("ViewConstructor")
 public class MyMarkerView extends MarkerView {
 
@@ -33,8 +31,7 @@ public class MyMarkerView extends MarkerView {
         timeText = findViewById(R.id.time_text);
     }
 
-    // runs every time the MarkerView is redrawn, can be used to update the
-    // content (user-interface)
+
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     @Override
     public void refreshContent(Entry e, Highlight highlight) {

@@ -17,20 +17,17 @@ import com.topdon.module.thermal.ir.report.bean.ReportData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 import java.util.concurrent.CountDownLatch
 import com.topdon.lib.core.R as LibR
-
 
 
 class PdfViewModel : BaseViewModel() {
     val listData = MutableLiveData<ReportData?>()
 
-//get报告列表
     fun getReportData(
         isTC007: Boolean,
         page: Int,
-    )  {
+    ) {
         if (!NetworkUtil.isConnected(Utils.getApp())) {
             TToast.shortToast(Utils.getApp(), LibR.string.http_code_z5004)
             listData.postValue(null)
@@ -54,20 +51,20 @@ class PdfViewModel : BaseViewModel() {
             object : IResponseCallback {
                 override fun onResponse(p0: String?) {
                     result = Gson().fromJson(p0, ReportData::class.java)
-//                val testData : MutableList<ReportData.Records?> = mutableListOf()
-//                var tmp = ReportData.Records()
-//                tmp.uploadTime = TimeTool.getNowTime()
-//                testData.add(tmp)
-//                tmp = ReportData.Records()
-//                tmp.uploadTime = TimeTool.getNowTime()
-//                testData.add(tmp)
-//                tmp = ReportData.Records()
-//                tmp.uploadTime = TimeTool.getNowTime()
-//                testData.add(tmp)
-//                tmp = ReportData.Records()
-//                tmp.uploadTime = "1992-12-30 11:11"
-//                testData.add(tmp)
-//                result?.data?.records = testData
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     downLatch.countDown()
                 }
 

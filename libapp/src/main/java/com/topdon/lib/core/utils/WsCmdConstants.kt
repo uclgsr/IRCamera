@@ -19,22 +19,28 @@ object WsCmdConstants {
     const val AR_COMMAND_TIMEZONE_GET: String = "AR_COMMAND_TIMEZONE_GET"
     const val AR_COMMAND_WIFI_AP_ONOFF_SET: String = "AR_COMMAND_WIFI_AP_ONOFF_SET" // 热点开关
     const val AR_COMMAND_WIFI_AP_ONOFF_GET: String = "AR_COMMAND_WIFI_AP_ONOFF_GET"
-    const val AR_COMMAND_WIFI_AP_CONFIG_SET: String = "AR_COMMAND_WIFI_AP_CONFIG_SET" // 热点configuration
+    const val AR_COMMAND_WIFI_AP_CONFIG_SET: String =
+        "AR_COMMAND_WIFI_AP_CONFIG_SET" // 热点configuration
     const val AR_COMMAND_WIFI_AP_CONFIG_GET: String = "AR_COMMAND_WIFI_AP_CONFIG_GET"
     const val AR_COMMAND_WIFI_AP_INFO_GET: String = "AR_COMMAND_WIFI_AP_INFO_GET"
     const val AR_COMMAND_STORAGE_FORMAT: String = "AR_COMMAND_STORAGE_FORMAT" // 格式化存储空间
     const val AR_COMMAND_STORAGE_DELETE_FILE: String = "AR_COMMAND_STORAGE_DELETE_FILE" // 删除文件
-    const val AR_COMMAND_STORAGE_GET_FILELIST: String = "AR_COMMAND_STORAGE_GET_FILELIST" // 获取文件list
+    const val AR_COMMAND_STORAGE_GET_FILELIST: String =
+        "AR_COMMAND_STORAGE_GET_FILELIST" // 获取文件list
     const val AR_COMMAND_STORAGE_GET_FILECNT: String = "AR_COMMAND_STORAGE_GET_FILECNT"
-    const val AR_COMMAND_STORAGE_GET_SPACEINFO: String = "AR_COMMAND_STORAGE_GET_SPACEINFO" // 获取存储空间信息
-    const val AR_COMMAND_SET_KEY_CAPTURE_FUNC: String = "AR_COMMAND_SET_KEY_CAPTURE_FUNC" // capture键长按功能
+    const val AR_COMMAND_STORAGE_GET_SPACEINFO: String =
+        "AR_COMMAND_STORAGE_GET_SPACEINFO" // 获取存储空间信息
+    const val AR_COMMAND_SET_KEY_CAPTURE_FUNC: String =
+        "AR_COMMAND_SET_KEY_CAPTURE_FUNC" // capture键长按功能
     const val AR_COMMAND_GET_KEY_CAPTURE_FUNC: String = "AR_COMMAND_GET_KEY_CAPTURE_FUNC"
-    const val AR_COMMAND_SET_CONTINUOUS_SHOOTING: String = "AR_COMMAND_SET_CONTINUOUS_SHOOTING" // settingscontinuouscapture
+    const val AR_COMMAND_SET_CONTINUOUS_SHOOTING: String =
+        "AR_COMMAND_SET_CONTINUOUS_SHOOTING" // settingscontinuouscapture
     const val AR_COMMAND_RETICLE_SET: Int = 101 // 十字标
     const val AR_COMMAND_RETICLE_GET: String = "AR_COMMAND_RETICLE_GET"
     const val AR_COMMAND_SNAPSHOT: Int = 103 // capture
     const val AR_COMMAND_VRECORD: Int = 104 // recording开始或结束
-    const val AR_COMMAND_RECORD_STATUS_GET: String = "AR_COMMAND_RECORD_STATUS_GET" // 获取recordingstate
+    const val AR_COMMAND_RECORD_STATUS_GET: String =
+        "AR_COMMAND_RECORD_STATUS_GET" // 获取recordingstate
     const val AR_COMMAND_LASER_SET: String = "AR_COMMAND_LASER_SET"
     const val AR_COMMAND_LASER_GET: String = "AR_COMMAND_LASER_GET"
     const val AR_COMMAND_PIP_SET: String = "AR_COMMAND_PIP_SET" // picture-in-picture
@@ -59,8 +65,7 @@ object WsCmdConstants {
     const val AR_COMMAND_TARGET_ZERO_SET: String = "AR_COMMAND_TARGET_ZERO_SET"
     const val AR_COMMAND_TARGET_ZERO_GET: String = "AR_COMMAND_TARGET_ZERO_GET"
 
-    // AR_COMMAND_SCALE_SET,
-    // AR_COMMAND_SCALE_GET,
+
     const val AR_COMMAND_IMG_SCENE_SET: Int = 201
     const val AR_COMMAND_IMG_SCENE_GET: String = "AR_COMMAND_IMG_SCENE_GET"
     const val AR_COMMAND_IR_IMG_SCENE_SET: String = "AR_COMMAND_IR_IMG_SCENE_SET"

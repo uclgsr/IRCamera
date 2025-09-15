@@ -2,13 +2,19 @@
 
 ## 🚀 Overview
 
-This **comprehensive enterprise real-time processing guide** provides detailed strategies for implementing ultra-low-latency processing and streaming capabilities in the IRCamera thermal imaging platform, enabling sub-millisecond data processing, enterprise-grade live streaming, real-time ML analytics, edge computing deployment, and massive scale streaming infrastructure.
+This **comprehensive enterprise real-time processing guide** provides detailed strategies for
+implementing ultra-low-latency processing and streaming capabilities in the IRCamera thermal imaging
+platform, enabling sub-millisecond data processing, enterprise-grade live streaming, real-time ML
+analytics, edge computing deployment, and massive scale streaming infrastructure.
 
 ## 📋 Table of Contents
 
-1. [🏗️ Enterprise Real-Time Architecture](#enterprise-real-time-architecture) - Complete real-time system design
-2. [📊 Advanced Stream Processing Pipeline](#advanced-stream-processing-pipeline) - High-throughput data processing
-3. [⚡ Ultra-Low-Latency Optimization](#ultra-low-latency-optimization) - Sub-millisecond processing strategies
+1. [🏗️ Enterprise Real-Time Architecture](#enterprise-real-time-architecture) - Complete real-time
+   system design
+2. [📊 Advanced Stream Processing Pipeline](#advanced-stream-processing-pipeline) - High-throughput
+   data processing
+3. [⚡ Ultra-Low-Latency Optimization](#ultra-low-latency-optimization) - Sub-millisecond processing
+   strategies
 4. [📡 Enterprise WebRTC Integration](#enterprise-webrtc-integration) - Scalable video streaming
 5. [🧠 Real-Time ML Analytics](#real-time-ml-analytics) - Live AI processing and inference
 6. [📱 Edge Computing & 5G](#edge-computing--5g) - Distributed edge processing
@@ -17,7 +23,8 @@ This **comprehensive enterprise real-time processing guide** provides detailed s
 9. [☁️ Cloud-Native Streaming](#cloud-native-streaming) - Enterprise cloud deployment
 10. [🛡️ Security & Compliance](#security--compliance) - Secure real-time processing
 11. [🌐 Global Distribution](#global-distribution) - Worldwide streaming infrastructure
-12. [📊 Enterprise Analytics Dashboard](#enterprise-analytics-dashboard) - Real-time business insights
+12. [📊 Enterprise Analytics Dashboard](#enterprise-analytics-dashboard) - Real-time business
+    insights
 
 ---
 
@@ -719,21 +726,18 @@ class IRCameraWebRTCClient {
     async initialize(videoElement, gsrDataCallback) {
         this.videoElement = videoElement;
         this.gsrDataCallback = gsrDataCallback;
-        
-        // Create peer connection
+
         this.peerConnection = new RTCPeerConnection({
             iceServers: [
                 { urls: 'stun:stun.l.google.com:19302' },
                 { urls: 'stun:stun1.l.google.com:19302' }
             ]
         });
-        
-        // Handle incoming streams
+
         this.peerConnection.ontrack = (event) => {
             this.videoElement.srcObject = event.streams[0];
         };
-        
-        // Handle data channels
+
         this.peerConnection.ondatachannel = (event) => {
             const channel = event.channel;
             if (channel.label === 'gsr_data') {
@@ -741,15 +745,12 @@ class IRCameraWebRTCClient {
                 this.setupGSRDataChannel();
             }
         };
-        
-        // Create offer
+
         const offer = await this.peerConnection.createOffer();
         await this.peerConnection.setLocalDescription(offer);
-        
-        // Send offer to server
+
         const answer = await this.sendOfferToServer(offer.sdp);
-        
-        // Set remote description
+
         await this.peerConnection.setRemoteDescription({
             type: 'answer',
             sdp: answer
@@ -794,7 +795,6 @@ class IRCameraWebRTCClient {
     }
 }
 
-// Usage example
 const client = new IRCameraWebRTCClient('http://localhost:8080');
 const videoElement = document.getElementById('thermal-video');
 
@@ -1157,4 +1157,6 @@ class RealTimeAnalyticsEngine:
         return 0.1  # Placeholder
 ```
 
-This comprehensive real-time processing and streaming guide provides detailed implementations for high-performance real-time thermal and GSR data processing, WebRTC streaming integration, and live analytics capabilities for the IRCamera platform.
+This comprehensive real-time processing and streaming guide provides detailed implementations for
+high-performance real-time thermal and GSR data processing, WebRTC streaming integration, and live
+analytics capabilities for the IRCamera platform.

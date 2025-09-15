@@ -32,12 +32,9 @@ import java.io.File
 import java.text.DecimalFormat
 import com.topdon.lib.core.R as RCore
 
-
-// Legacy ARouter route annotation - now using NavigationManager
 class MoreActivity : BaseActivity(), View.OnClickListener {
     private val firmwareViewModel: FirmwareViewModel by viewModels()
 
-    // View references
     private lateinit var settingDeviceInformation: View
     private lateinit var settingTisr: View
     private lateinit var settingStorageSpace: View
@@ -51,7 +48,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
     override fun initContentView() = R.layout.activity_more
 
     override fun initView() {
-        // Initialize views
+
         settingDeviceInformation = findViewById(R.id.setting_device_information)
         settingTisr = findViewById(R.id.setting_tisr)
         settingStorageSpace = findViewById(R.id.setting_storage_space)
@@ -70,6 +67,11 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         settingDisconnect.setOnClickListener(this)
         settingAutoSave.setOnClickListener(this)
 
+        /*if (Build.VERSION.SDK_INT < 29) {//Lower than Android 10
+            settingVersion.isVisible = false
+        }*/
+
+        settingVersion.isVisible = false
     }
 
     override fun initData() {
@@ -86,7 +88,10 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         }
         firmwareViewModel.failLD.observe(this) {
             dismissCameraLoading()
-            TToast.shortToast(this, if (it) RCore.string.upgrade_bind_error else RCore.string.operation_failed_tips)
+            TToast.shortToast(
+                this,
+                if (it) RCore.string.upgrade_bind_error else RCore.string.operation_failed_tips
+            )
             tvUpgradePoint.isVisible = false
         }
     }
@@ -99,18 +104,25 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
                     .withBoolean(ExtraKeyConfig.IS_TC007, false)
                     .navigation(this@MoreActivity)
             }
+
             settingTisr -> { // 设置超分
-                NavigationManager.getInstance().build(RouterConfig.TISR).navigation(this@MoreActivity)
+                NavigationManager.getInstance().build(RouterConfig.TISR)
+                    .navigation(this@MoreActivity)
             }
+
             settingAutoSave -> { // 自动保存到手机
-                NavigationManager.getInstance().build(RouterConfig.AUTO_SAVE).navigation(this@MoreActivity)
+                NavigationManager.getInstance().build(RouterConfig.AUTO_SAVE)
+                    .navigation(this@MoreActivity)
             }
+
             settingStorageSpace -> { // TS004储存空间
-                NavigationManager.getInstance().build(RouterConfig.STORAGE_SPACE).navigation(this@MoreActivity)
+                NavigationManager.getInstance().build(RouterConfig.STORAGE_SPACE)
+                    .navigation(this@MoreActivity)
             }
-            settingVersion -> { // 固件版本
-//由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释强制登录逻辑
-//                if (LMS.getInstance().isLogin) {
+
+            settingVersion -> { // Firmware version
+
+
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
@@ -119,13 +131,14 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
                     showCameraLoading()
                     firmwareViewModel.queryFirmware(true)
                 }
-//                } else {
-//                    LMS.getInstance().activityLogin()
-//                }
+
+
             }
+
             settingReset -> { // 恢复出厂设置
                 restoreFactory()
             }
+
             settingDisconnect -> { // 断开连接
                 NavigationManager.getInstance().build(RouterConfig.IR_MORE_HELP)
                     .withInt(Constants.SETTING_CONNECTION_TYPE, Constants.SETTING_DISCONNECTION)
@@ -134,14 +147,16 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-
     private fun showFirmwareUpDialog(firmwareData: FirmwareViewModel.FirmwareData) {
         val dialog = FirmwareUpDialog(this)
         dialog.titleStr = "${getString(RCore.string.update_new_version)} ${firmwareData.version}"
-        dialog.sizeStr = "${getString(RCore.string.detail_len)}: ${getFileSizeStr(firmwareData.size)}"
+        dialog.sizeStr =
+            "${getString(RCore.string.detail_len)}: ${getFileSizeStr(firmwareData.size)}"
         dialog.contentStr = firmwareData.updateStr
         dialog.isShowRestartTips = true
         dialog.onConfirmClickListener = {
+
+
             installFirmware(FileConfig.getFirmwareFile(firmwareData.downUrl))
         }
         dialog.show()
@@ -157,7 +172,6 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         } else {
             DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024 / 1024) + "GB"
         }
-
 
     private fun downloadFirmware(firmwareData: FirmwareViewModel.FirmwareData) {
         lifecycleScope.launch {
@@ -192,7 +206,8 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
             if (isSuccess) {
                 XLog.d("TS004 固件升级 - 固件升级包发送往 TS004 成功，即将断开连接")
                 (application as BaseApplication).disconnectWebSocket()
-                NavigationManager.getInstance().build(RouterConfig.MAIN).navigation(this@MoreActivity)
+                NavigationManager.getInstance().build(RouterConfig.MAIN)
+                    .navigation(this@MoreActivity)
                 finish()
             } else {
                 XLog.w("TS004 固件升级 - 固件升级包发送往 TS004 失败!")
@@ -229,7 +244,8 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         lifecycleScope.launch {
             val versionBean = TS004Repository.getVersion()
             if (versionBean?.isSuccess() == true) {
-                itemSettingBottomText.text = getString(RCore.string.setting_firmware_update_version) + "V" + versionBean.data?.firmware
+                itemSettingBottomText.text =
+                    getString(RCore.string.setting_firmware_update_version) + "V" + versionBean.data?.firmware
             } else {
                 TToast.shortToast(this@MoreActivity, RCore.string.operation_failed_tips)
             }
@@ -259,7 +275,8 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
                 TToast.shortToast(this@MoreActivity, RCore.string.ts004_reset_tip4)
                 (application as BaseApplication).disconnectWebSocket()
                 EventBus.getDefault().post(TS004ResetEvent())
-                NavigationManager.getInstance().build(RouterConfig.MAIN).navigation(this@MoreActivity)
+                NavigationManager.getInstance().build(RouterConfig.MAIN)
+                    .navigation(this@MoreActivity)
                 finish()
             } else {
                 TToast.shortToast(this@MoreActivity, RCore.string.operation_failed_tips)

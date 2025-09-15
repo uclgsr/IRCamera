@@ -7,17 +7,8 @@ import android.view.View;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.highlight.Highlight;
 
-
 public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDetector.SimpleOnGestureListener implements View.OnTouchListener {
 
-    public enum ChartGesture {
-        NONE, DRAG, X_ZOOM, Y_ZOOM, PINCH_ZOOM, ROTATE, SINGLE_TAP, DOUBLE_TAP, LONG_PRESS, FLING
-    }
-
-
-    protected ChartGesture mLastGesture = ChartGesture.NONE;
-
-    // states
     protected static final int NONE = 0;
     protected static final int DRAG = 1;
     protected static final int X_ZOOM = 2;
@@ -25,17 +16,13 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
     protected static final int PINCH_ZOOM = 4;
     protected static final int POST_ZOOM = 5;
     protected static final int ROTATE = 6;
-
-
+    /**
+     * the last touch gesture that has been performed
+     **/
+    protected ChartGesture mLastGesture = ChartGesture.NONE;
     protected int mTouchMode = NONE;
-
-
     protected Highlight mLastHighlighted;
-
-
     protected GestureDetector mGestureDetector;
-
-
     protected T mChart;
 
     public ChartTouchListener(T chart) {
@@ -44,6 +31,11 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
         mGestureDetector = new GestureDetector(chart.getContext(), this);
     }
 
+    protected static float distance(float eventX, float startX, float eventY, float startY) {
+        float dx = eventX - startX;
+        float dy = eventY - startY;
+        return (float) Math.sqrt(dx * dx + dy * dy);
+    }
 
     public void startAction(MotionEvent me) {
 
@@ -53,7 +45,6 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
             l.onChartGestureStart(me, mLastGesture);
     }
 
-
     public void endAction(MotionEvent me) {
 
         OnChartGestureListener l = mChart.getOnChartGestureListener();
@@ -62,21 +53,17 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
             l.onChartGestureEnd(me, mLastGesture);
     }
 
-
     public void setLastHighlighted(Highlight high) {
         mLastHighlighted = high;
     }
-
 
     public int getTouchMode() {
         return mTouchMode;
     }
 
-
     public ChartGesture getLastGesture() {
         return mLastGesture;
     }
-
 
     protected void performHighlight(Highlight h, MotionEvent e) {
 
@@ -89,10 +76,7 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
         }
     }
 
-
-    protected static float distance(float eventX, float startX, float eventY, float startY) {
-        float dx = eventX - startX;
-        float dy = eventY - startY;
-        return (float) Math.sqrt(dx * dx + dy * dy);
+    public enum ChartGesture {
+        NONE, DRAG, X_ZOOM, Y_ZOOM, PINCH_ZOOM, ROTATE, SINGLE_TAP, DOUBLE_TAP, LONG_PRESS, FLING
     }
 }

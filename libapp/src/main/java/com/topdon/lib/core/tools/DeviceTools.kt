@@ -18,9 +18,8 @@ import com.topdon.lib.core.utils.ByteUtils.toBytes
 import com.topdon.lib.core.utils.ByteUtils.toHexString
 import org.greenrobot.eventbus.EventBus
 
-
 object DeviceTools {
-    
+
     fun isConnect(
         isSendConnectEvent: Boolean = false,
         isAutoRequest: Boolean = true,
@@ -62,7 +61,6 @@ object DeviceTools {
         return null
     }
 
-    
     fun isTC001PlusConnect(): Boolean {
         val usbManager = Utils.getApp().getSystemService(Context.USB_SERVICE) as UsbManager
         val deviceList: HashMap<String, UsbDevice> = usbManager.deviceList
@@ -79,7 +77,6 @@ object DeviceTools {
         return isTcTsDev && usbCameraNumber > 1
     }
 
-    
     fun isTC001LiteConnect(): Boolean {
         val usbManager = Utils.getApp().getSystemService(Context.USB_SERVICE) as UsbManager
         val deviceList: HashMap<String, UsbDevice> = usbManager.deviceList
@@ -91,9 +88,9 @@ object DeviceTools {
         return false
     }
 
-    
     fun isHikConnect(): Boolean {
-        val usbManager: UsbManager = Utils.getApp().getSystemService(Context.USB_SERVICE) as UsbManager
+        val usbManager: UsbManager =
+            Utils.getApp().getSystemService(Context.USB_SERVICE) as UsbManager
         for (usbDevice in usbManager.deviceList.values) {
             if (usbDevice.isHik256()) {
                 return true
@@ -102,7 +99,6 @@ object DeviceTools {
         return false
     }
 
-    
     fun requestUsb(
         activity: Activity,
         requestCode: Int,

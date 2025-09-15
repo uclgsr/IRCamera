@@ -2,7 +2,6 @@ package com.topdon.tc001.utils
 
 import android.content.Context
 
-
 object VersionUtils {
 
     fun getCodeStr(context: Context): String {

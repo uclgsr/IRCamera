@@ -2,7 +2,6 @@ package com.topdon.module.thermal.tools
 
 import android.util.Log
 
-
 class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateType: Int = 0) {
     var scale = 0f
 
@@ -12,6 +11,7 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
                 w = 192
                 h = 256
             }
+
             else -> {
                 w = 256
                 h = 192
@@ -20,7 +20,6 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
         scale = w / srcRect[0].toFloat()
         Log.w("123", "scale: $scale")
     }
-
 
     fun getSinglePoint(start: IntArray): ArrayList<IntArray> {
         val startPoint: IntArray = start
@@ -33,12 +32,10 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
         return lineList
     }
 
-
     fun getPointIndex(start: IntArray): ArrayList<Int> {
         val lineList = getSinglePoint(start)
         return pointToIndex(lineList)
     }
-
 
     fun getLinePoint(
         start: IntArray,
@@ -72,7 +69,6 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
         return lineList
     }
 
-
     fun getLineIndex(
         start: IntArray,
         end: IntArray,
@@ -80,7 +76,6 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
         val lineList = getLinePoint(start, end)
         return pointToIndex(lineList)
     }
-
 
     fun getAreaPoint(
         start: IntArray,
@@ -98,7 +93,6 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
         }
         return lineList
     }
-
 
     fun getAreaIndex(
         start: IntArray,

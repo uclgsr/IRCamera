@@ -1,11 +1,14 @@
 package com.topdon.lib.core.bean
 
-
-data class ContinuousBean(var isOpen: Boolean = false, var continuaTime: Long = 1000, var count: Int = 3)
+data class ContinuousBean(
+    var isOpen: Boolean = false,
+    var continuaTime: Long = 1000,
+    var count: Int = 3
+)
 
 class ObserveBean {
     companion object {
-        // 动态追踪
+
         const val TYPE_NONE = -1 // 不开启dynamic recognition
         const val TYPE_DYN_R = 0 // dynamic recognition
         const val TYPE_TMP_H_S = 1 // high temperature source
@@ -63,7 +66,6 @@ data class CameraItemBean(
         const val DELAY_TIME_3 = 3 // delayed3秒
         const val DELAY_TIME_6 = 6 // delayed6秒
 
-        // 温度模式
         const val TYPE_TMP_ZD = -1 // 自动识别模式
         const val TYPE_TMP_C = 1 // normal temperature模式
         const val TYPE_TMP_H = 0 // 高温模式

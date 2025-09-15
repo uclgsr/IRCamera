@@ -19,7 +19,6 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import java.lang.ref.WeakReference
 
-
 class SpanBuilder : SpannableStringBuilder {
     constructor() : super()
 
@@ -35,7 +34,12 @@ class SpanBuilder : SpannableStringBuilder {
         this.append(" ")
         val oldLength = this.length
         this.append("a")
-        this.setSpan(MyImageSpan(context, resourceId, wantHeight), oldLength, this.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+        this.setSpan(
+            MyImageSpan(context, resourceId, wantHeight),
+            oldLength,
+            this.length,
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+        )
         this.append(" ")
         return this
     }
@@ -49,7 +53,12 @@ class SpanBuilder : SpannableStringBuilder {
         }
         val oldLength = this.length
         this.append(text)
-        this.setSpan(ForegroundColorSpan(color), oldLength, this.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+        this.setSpan(
+            ForegroundColorSpan(color),
+            oldLength,
+            this.length,
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+        )
         return this
     }
 
@@ -63,7 +72,12 @@ class SpanBuilder : SpannableStringBuilder {
         }
         val oldLength = this.length
         this.append(text)
-        this.setSpan(MyClickSpan(listener, color, false), oldLength, this.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+        this.setSpan(
+            MyClickSpan(listener, color, false),
+            oldLength,
+            this.length,
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+        )
         return this
     }
 
@@ -78,11 +92,20 @@ class SpanBuilder : SpannableStringBuilder {
         append(context.getString(resId, formatArg))
         val startIndex: Int = lastIndexOf(formatArg)
         val endIndex: Int = startIndex + formatArg.length
-        this.setSpan(MyClickSpan(listener, color, hasUnderLine), startIndex, endIndex, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+        this.setSpan(
+            MyClickSpan(listener, color, hasUnderLine),
+            startIndex,
+            endIndex,
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+        )
         return this
     }
 
-    private class MyClickSpan(val listener: OnClickListener, val color: Int, val hasUnderLine: Boolean) : ClickableSpan() {
+    private class MyClickSpan(
+        val listener: OnClickListener,
+        val color: Int,
+        val hasUnderLine: Boolean
+    ) : ClickableSpan() {
         override fun updateDrawState(ds: TextPaint) {
             ds.color = color
             ds.isUnderlineText = hasUnderLine
@@ -107,7 +130,12 @@ class SpanBuilder : SpannableStringBuilder {
             }
 
             val drawable: Drawable = ContextCompat.getDrawable(context, resourceId)!!
-            drawable.setBounds(0, 0, (drawable.intrinsicWidth * wantHeight * 1f / drawable.intrinsicHeight).toInt(), wantHeight)
+            drawable.setBounds(
+                0,
+                0,
+                (drawable.intrinsicWidth * wantHeight * 1f / drawable.intrinsicHeight).toInt(),
+                wantHeight
+            )
             weakReference = WeakReference(drawable)
 
             return drawable

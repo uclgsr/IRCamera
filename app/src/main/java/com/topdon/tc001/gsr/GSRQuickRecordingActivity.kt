@@ -15,8 +15,8 @@ import com.topdon.tc001.controller.RecordingController
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
-
+import java.util.Date
+import java.util.Locale
 
 class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingBinding>() {
     companion object {
@@ -66,14 +66,23 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                     binding.startRecordingButton.isEnabled = true
 
                     val availableSensors = recordingController.getAvailableSensors()
-                    val gsrSensor = availableSensors.find { it.sensorType.contains("GSR", ignoreCase = true) }
+                    val gsrSensor =
+                        availableSensors.find { it.sensorType.contains("GSR", ignoreCase = true) }
                     if (gsrSensor != null) {
                         binding.gsrStatusText.text = "GSR Sensor: ${gsrSensor.sensorId} - Ready"
-                        binding.gsrStatusText.setTextColor(ContextCompat.getColor(this@GSRQuickRecordingActivity, R.color.gsr_pulse_color))
+                        binding.gsrStatusText.setTextColor(
+                            ContextCompat.getColor(
+                                this@GSRQuickRecordingActivity,
+                                R.color.gsr_pulse_color
+                            )
+                        )
                     } else {
                         binding.gsrStatusText.text = "GSR Sensor: Not Available"
                         binding.gsrStatusText.setTextColor(
-                            ContextCompat.getColor(this@GSRQuickRecordingActivity, R.color.gsr_recording_active),
+                            ContextCompat.getColor(
+                                this@GSRQuickRecordingActivity,
+                                R.color.gsr_recording_active
+                            ),
                         )
                     }
                 } else {
@@ -93,15 +102,25 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                             binding.startRecordingButton.text = "Stop Recording"
                             binding.statusText.text = "Recording in progress..."
                             binding.statusText.setTextColor(
-                                ContextCompat.getColor(this@GSRQuickRecordingActivity, R.color.gsr_recording_active),
+                                ContextCompat.getColor(
+                                    this@GSRQuickRecordingActivity,
+                                    R.color.gsr_recording_active
+                                ),
                             )
                         }
+
                         com.topdon.tc001.controller.RecordingState.STOPPED -> {
                             isRecording = false
                             binding.startRecordingButton.text = "Start Recording"
                             binding.statusText.text = "Recording stopped"
-                            binding.statusText.setTextColor(ContextCompat.getColor(this@GSRQuickRecordingActivity, R.color.white))
+                            binding.statusText.setTextColor(
+                                ContextCompat.getColor(
+                                    this@GSRQuickRecordingActivity,
+                                    R.color.white
+                                )
+                            )
                         }
+
                         else -> {
                             binding.statusText.text = "State: $state"
                         }
@@ -114,7 +133,8 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         lifecycleScope.launch {
             recordingController.sensorStatusFlow.collect { statusList ->
                 runOnUiThread {
-                    val gsrStatus = statusList.find { it.sensorType.contains("GSR", ignoreCase = true) }
+                    val gsrStatus =
+                        statusList.find { it.sensorType.contains("GSR", ignoreCase = true) }
                     if (gsrStatus != null) {
                         binding.sensorDataText.text =
                             buildString {
@@ -145,20 +165,24 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         binding.viewSessionsButton.setOnClickListener {
             // Navigate to session manager
             try {
-                SessionManagerActivity.start(this)
+                val intent = Intent(this, SessionManagerActivity::class.java)
+                startActivity(intent)
             } catch (e: Exception) {
                 // Fallback to GSR Demo if SessionManagerActivity not available
-                GSRDemoActivity.start(this)
+                val intent = Intent(this, GSRDemoActivity::class.java)
+                startActivity(intent)
             }
         }
 
         binding.gsrSettingsButton.setOnClickListener {
             // Navigate to GSR settings
             try {
-                GSRSettingsActivity.start(this)
+                val intent = Intent(this, GSRSettingsActivity::class.java)
+                startActivity(intent)
             } catch (e: Exception) {
                 // Fallback to Multi-modal recording if GSRSettingsActivity not available
-                MultiModalRecordingActivity.start(this)
+                val intent = Intent(this, MultiModalRecordingActivity::class.java)
+                startActivity(intent)
             }
         }
     }
@@ -167,7 +191,10 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         // Check if all required permissions are granted
         val missingPermissions =
             REQUIRED_PERMISSIONS.filter {
-                ContextCompat.checkSelfPermission(this, it) != android.content.pm.PackageManager.PERMISSION_GRANTED
+                ContextCompat.checkSelfPermission(
+                    this,
+                    it
+                ) != android.content.pm.PackageManager.PERMISSION_GRANTED
             }
 
         if (missingPermissions.isNotEmpty()) {
@@ -179,7 +206,8 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         lifecycleScope.launch {
             try {
                 // Create session directory
-                val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+                val timestamp =
+                    SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
                 val sessionDir = File(filesDir, "gsr_sessions/session_$timestamp")
                 sessionDir.mkdirs()
 
@@ -190,15 +218,27 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
 
                 runOnUiThread {
                     if (success) {
-                        Toast.makeText(this@GSRQuickRecordingActivity, "Recording started", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@GSRQuickRecordingActivity,
+                            "Recording started",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        Toast.makeText(this@GSRQuickRecordingActivity, "Failed to start recording", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@GSRQuickRecordingActivity,
+                            "Failed to start recording",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error starting recording", e)
                 runOnUiThread {
-                    Toast.makeText(this@GSRQuickRecordingActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@GSRQuickRecordingActivity,
+                        "Error: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -211,20 +251,32 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
 
                 runOnUiThread {
                     if (success) {
-                        Toast.makeText(this@GSRQuickRecordingActivity, "Recording stopped", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@GSRQuickRecordingActivity,
+                            "Recording stopped",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
                         // Show session info
                         currentSessionDirectory?.let { sessionDir ->
                             binding.sessionInfoText.text = "Session saved to:\n$sessionDir"
                         }
                     } else {
-                        Toast.makeText(this@GSRQuickRecordingActivity, "Failed to stop recording", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@GSRQuickRecordingActivity,
+                            "Failed to stop recording",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error stopping recording", e)
                 runOnUiThread {
-                    Toast.makeText(this@GSRQuickRecordingActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@GSRQuickRecordingActivity,
+                        "Error: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -240,11 +292,16 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                 )
 
                 runOnUiThread {
-                    Toast.makeText(this@GSRQuickRecordingActivity, "Sync marker added", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@GSRQuickRecordingActivity,
+                        "Sync marker added",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         } else {
-            Toast.makeText(this, "Recording must be active to add sync markers", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Recording must be active to add sync markers", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -256,9 +313,14 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == REQUEST_PERMISSIONS) {
-            val allGranted = grantResults.all { it == android.content.pm.PackageManager.PERMISSION_GRANTED }
+            val allGranted =
+                grantResults.all { it == android.content.pm.PackageManager.PERMISSION_GRANTED }
             if (!allGranted) {
-                Toast.makeText(this, "Some permissions were denied. GSR functionality may be limited.", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "Some permissions were denied. GSR functionality may be limited.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }

@@ -10,8 +10,15 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.fragment.IRGalleryTabFragment
 import com.topdon.module.thermal.ir.viewmodel.IRGalleryTabViewModel
 
+/**
 
-// Legacy ARouter route annotation - now using NavigationManager
+ *
+
+
+ *
+ * Created by LCG on 2024/2/22.
+ */
+
 class IRGalleryHomeActivity : BaseActivity() {
     private var isTS004Remote = false
 
@@ -21,7 +28,8 @@ class IRGalleryHomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isTS004Remote = intent.getIntExtra(ExtraKeyConfig.DIR_TYPE, 0) == DirType.TS004_REMOTE.ordinal
+        isTS004Remote =
+            intent.getIntExtra(ExtraKeyConfig.DIR_TYPE, 0) == DirType.TS004_REMOTE.ordinal
 
         if (savedInstanceState == null) {
             val bundle = Bundle()

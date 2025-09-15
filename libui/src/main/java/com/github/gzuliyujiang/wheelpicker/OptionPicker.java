@@ -30,15 +30,14 @@ import com.topdon.lib.ui.R;
 import java.util.Arrays;
 import java.util.List;
 
-
 @SuppressWarnings({"unused"})
 public class OptionPicker extends ModalDialog {
     protected OptionWheelLayout wheelLayout;
+    protected int defaultPosition = -1;
     private OnOptionPickedListener onOptionPickedListener;
     private boolean initialized = false;
     private List<?> data;
     private Object defaultValue;
-    protected int defaultPosition = -1;
 
     public OptionPicker(@NonNull Activity activity) {
         super(activity);

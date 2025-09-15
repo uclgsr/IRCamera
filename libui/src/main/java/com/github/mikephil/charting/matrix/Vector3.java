@@ -1,22 +1,18 @@
-
 package com.github.mikephil.charting.matrix;
 
-
 public final class Vector3 {
-    public float x;
-    public float y;
-    public float z;
-
     public static final Vector3 ZERO = new Vector3(0, 0, 0);
     public static final Vector3 UNIT_X = new Vector3(1, 0, 0);
     public static final Vector3 UNIT_Y = new Vector3(0, 1, 0);
     public static final Vector3 UNIT_Z = new Vector3(0, 0, 1);
+    public float x;
+    public float y;
+    public float z;
 
     public Vector3() {
     }
 
-    public Vector3(float[] array)
-    {
+    public Vector3(float[] array) {
         set(array[0], array[1], array[2]);
     }
 
@@ -46,8 +42,7 @@ public final class Vector3 {
         z -= other.z;
     }
 
-    public final void subtractMultiple(Vector3 other, float multiplicator)
-    {
+    public final void subtractMultiple(Vector3 other, float multiplicator) {
         x -= other.x * multiplicator;
         y -= other.y * multiplicator;
         z -= other.z * multiplicator;
@@ -113,7 +108,6 @@ public final class Vector3 {
     public final float normalize() {
         final float magnitude = length();
 
-        // TODO: I'm choosing safety over speed here.
         if (magnitude != 0.0f) {
             x /= magnitude;
             y /= magnitude;

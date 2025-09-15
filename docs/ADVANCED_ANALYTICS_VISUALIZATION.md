@@ -2,7 +2,9 @@
 
 ## Overview
 
-This comprehensive guide provides advanced data analytics and visualization capabilities for the IRCamera thermal imaging platform, including statistical analysis, machine learning insights, interactive dashboards, and comprehensive reporting frameworks.
+This comprehensive guide provides advanced data analytics and visualization capabilities for the
+IRCamera thermal imaging platform, including statistical analysis, machine learning insights,
+interactive dashboards, and comprehensive reporting frameworks.
 
 ## Table of Contents
 
@@ -1046,4 +1048,6 @@ class MultiModalVisualizationEngine:
         return fig
 ```
 
-This comprehensive advanced data analytics and visualization guide provides sophisticated analysis capabilities, interactive visualizations, and multi-modal correlation analysis specifically designed for the IRCamera platform's thermal and physiological data integration.
+This comprehensive advanced data analytics and visualization guide provides sophisticated analysis
+capabilities, interactive visualizations, and multi-modal correlation analysis specifically designed
+for the IRCamera platform's thermal and physiological data integration.

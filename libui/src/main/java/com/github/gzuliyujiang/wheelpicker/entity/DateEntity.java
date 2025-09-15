@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Objects;
 
-
 @SuppressWarnings({"unused"})
 public class DateEntity implements Serializable {
     private int year;

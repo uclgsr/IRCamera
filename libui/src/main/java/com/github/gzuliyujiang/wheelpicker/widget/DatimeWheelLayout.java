@@ -40,7 +40,6 @@ import com.topdon.lib.ui.R;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @SuppressWarnings("unused")
 public class DatimeWheelLayout extends BaseWheelLayout {
     private DateWheelLayout dateWheelLayout;
@@ -88,7 +87,6 @@ public class DatimeWheelLayout extends BaseWheelLayout {
         dateWheelLayout = findViewById(R.id.wheel_picker_date_wheel);
         timeWheelLayout = findViewById(R.id.wheel_picker_time_wheel);
 
-        //初始color
         setCurtainEnabled(true);
         getMonthLabelView().setTextColor(0xffffffff);
         getYearLabelView().setTextColor(0xffffffff);
@@ -198,11 +196,9 @@ public class DatimeWheelLayout extends BaseWheelLayout {
         timeWheelLayout.setTimeMode(timeMode);
     }
 
-
     public void setRange(DatimeEntity startValue, DatimeEntity endValue) {
         setRange(startValue, endValue, null);
     }
-
 
     public void setRange(DatimeEntity startValue, DatimeEntity endValue, DatimeEntity defaultValue) {
         if (startValue == null) {

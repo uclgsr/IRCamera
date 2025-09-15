@@ -1,14 +1,21 @@
 package com.topdon.lib.core.sync
 
 import android.util.Log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.net.InetSocketAddress
 import java.net.Socket
 import kotlin.math.abs
-
 
 
 class TimeSyncService {
@@ -41,14 +48,11 @@ class TimeSyncService {
         val clockOffset: Long,
     )
 
-
     interface TimeSyncListener {
 
         fun onSyncCompleted(result: SyncResult)
 
-
         fun onSyncStarted(targetHost: String)
-
 
         fun onSyncError(error: String)
     }
@@ -58,7 +62,6 @@ class TimeSyncService {
     fun setListener(listener: TimeSyncListener?) {
         this.listener = listener
     }
-
 
     suspend fun synchronizeTime(
         targetHost: String,
@@ -71,20 +74,23 @@ class TimeSyncService {
             val samples = mutableListOf<SyncSample>()
             var lastError: String? = null
 
-            // Collect multiple samples for better accuracy
             repeat(MAX_SYNC_ATTEMPTS) { attempt ->
                 try {
                     val sample = performSyncRequest(targetHost, targetPort)
 
-                    // Only accept samples with reasonable round-trip delay
                     if (sample.roundTripDelay <= MAX_ACCEPTABLE_DELAY_MS) {
                         samples.add(sample)
-                        Log.d(TAG, "Sample ${attempt + 1}: offset=${sample.clockOffset}ms, delay=${sample.roundTripDelay}ms")
+                        Log.d(
+                            TAG,
+                            "Sample ${attempt + 1}: offset=${sample.clockOffset}ms, delay=${sample.roundTripDelay}ms"
+                        )
                     } else {
-                        Log.w(TAG, "Sample ${attempt + 1} rejected: delay too high (${sample.roundTripDelay}ms)")
+                        Log.w(
+                            TAG,
+                            "Sample ${attempt + 1} rejected: delay too high (${sample.roundTripDelay}ms)"
+                        )
                     }
 
-                    // Short delay between samples
                     if (attempt < MAX_SYNC_ATTEMPTS - 1) {
                         delay(100)
                     }
@@ -96,7 +102,8 @@ class TimeSyncService {
             }
 
             if (samples.size < MIN_SAMPLES) {
-                val error = "Insufficient samples for reliable sync (got ${samples.size}, need $MIN_SAMPLES)"
+                val error =
+                    "Insufficient samples for reliable sync (got ${samples.size}, need $MIN_SAMPLES)"
                 Log.e(TAG, error)
                 listener?.onSyncError(error)
                 return@withContext SyncResult(
@@ -105,15 +112,16 @@ class TimeSyncService {
                 )
             }
 
-            // Calculate final offset using median to reduce outlier impact
             val result = calculateSyncResult(samples)
 
-            Log.i(TAG, "Time sync completed: offset=${result.clockOffsetMs}ms, accuracy=±${result.accuracyMs}ms")
+            Log.i(
+                TAG,
+                "Time sync completed: offset=${result.clockOffsetMs}ms, accuracy=±${result.accuracyMs}ms"
+            )
             listener?.onSyncCompleted(result)
 
             result
         }
-
 
     fun startPeriodicSync(
         targetHost: String,
@@ -136,16 +144,17 @@ class TimeSyncService {
                 }
             }
 
-        Log.i(TAG, "Started periodic time sync with $targetHost:$targetPort (interval: ${intervalMs}ms)")
+        Log.i(
+            TAG,
+            "Started periodic time sync with $targetHost:$targetPort (interval: ${intervalMs}ms)"
+        )
     }
-
 
     fun stopPeriodicSync() {
         periodicSyncJob?.cancel()
         periodicSyncJob = null
         Log.i(TAG, "Stopped periodic time sync")
     }
-
 
     private suspend fun performSyncRequest(
         host: String,
@@ -160,10 +169,9 @@ class TimeSyncService {
             val input = DataInputStream(socket.getInputStream())
 
             try {
-                // T1: Client send time (high precision)
+
                 val t1 = getHighPrecisionTime()
 
-                // Send sync request
                 val request =
                     JSONObject().apply {
                         put("message_type", "time_sync_request")
@@ -176,12 +184,10 @@ class TimeSyncService {
                 output.write(requestData)
                 output.flush()
 
-                // Read response
                 val responseLength = input.readInt()
                 val responseData = ByteArray(responseLength)
                 input.readFully(responseData)
 
-                // T4: Client receive time (high precision)
                 val t4 = getHighPrecisionTime()
 
                 val response = JSONObject(String(responseData, Charsets.UTF_8))
@@ -190,15 +196,12 @@ class TimeSyncService {
                     throw IllegalStateException("Invalid sync response")
                 }
 
-                // Extract server timestamps
                 val t2 = response.getLong("server_receive_time") // Server receive time
                 val t3 = response.getLong("server_send_time") // Server send time
 
-                // Calculate round-trip delay and clock offset
-                // Round-trip delay: (T4 - T1) - (T3 - T2)
+
                 val roundTripDelay = (t4 - t1) - (t3 - t2)
 
-                // Clock offset: ((T2 - T1) + (T3 - T4)) / 2
                 val clockOffset = ((t2 - t1) + (t3 - t4)) / 2
 
                 SyncSample(t1, t2, t3, t4, roundTripDelay, clockOffset)
@@ -208,21 +211,17 @@ class TimeSyncService {
         }
     }
 
-
     private fun calculateSyncResult(samples: List<SyncSample>): SyncResult {
-        // Sort samples by round-trip delay (prefer lower delay samples)
+
         val sortedSamples = samples.sortedBy { it.roundTripDelay }
 
-        // Use median offset for robustness
         val offsets = sortedSamples.map { it.clockOffset }.sorted()
         val medianOffset = offsets[offsets.size / 2]
 
-        // Calculate accuracy as standard deviation
         val meanOffset = offsets.average()
         val variance = offsets.map { (it - meanOffset) * (it - meanOffset) }.average()
         val accuracy = kotlin.math.sqrt(variance).toLong()
 
-        // Use minimum round-trip delay as quality indicator
         val minDelay = sortedSamples.first().roundTripDelay
 
         return SyncResult(
@@ -233,19 +232,16 @@ class TimeSyncService {
         )
     }
 
-
     private fun getHighPrecisionTime(): Long {
-        // Use nanoTime for precision, but convert to wall-clock time
+
         val systemTime = System.currentTimeMillis()
         val nanoOffset = (System.nanoTime() % 1000000) / 1000 // microsecond precision
         return systemTime * 1000 + nanoOffset // Return in microseconds
     }
 
-
     fun getSynchronizedTime(clockOffsetMs: Long): Long {
         return getHighPrecisionTime() + (clockOffsetMs * 1000) // Convert offset to microseconds
     }
-
 
     fun validateSync(
         localTime: Long,
@@ -259,7 +255,6 @@ class TimeSyncService {
         return diff <= toleranceMs
     }
 
-
     fun createSyncPacket(): JSONObject {
         val currentTime = getHighPrecisionTime()
 
@@ -271,14 +266,12 @@ class TimeSyncService {
         }
     }
 
-
     fun processSyncPacket(packet: JSONObject): Long? {
         return try {
             if (packet.optString("message_type") == "time_sync_broadcast") {
                 val senderTime = packet.getLong("sender_time")
                 val receiveTime = getHighPrecisionTime()
 
-                // Simple offset calculation (assume minimal network delay)
                 senderTime - receiveTime
             } else {
                 null
@@ -288,7 +281,6 @@ class TimeSyncService {
             null
         }
     }
-
 
     fun cleanup() {
         stopPeriodicSync()

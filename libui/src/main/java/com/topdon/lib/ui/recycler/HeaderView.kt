@@ -6,8 +6,6 @@ import android.widget.LinearLayout
 import com.topdon.lib.ui.R as UiR
 
 
-
-
 class HeaderView : LinearLayout {
     constructor(context: Context) : this(context, null)
 

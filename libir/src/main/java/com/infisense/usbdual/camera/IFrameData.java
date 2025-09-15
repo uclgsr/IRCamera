@@ -1,9 +1,9 @@
 package com.infisense.usbdual.camera;
 
-import com.infisense.usbdual.Const;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.infisense.usbdual.Const;
 
 public class IFrameData {
 
@@ -19,9 +19,6 @@ public class IFrameData {
 
     public static int FRAME_LEN = FUSION_LEN + ORIGINAL_LEN + ORIGINAL_LEN + REMAP_TEMP_LEN + LIGHT_LEN + P_IN_P_LEN;
 
-
-
-
     public static byte[] readFusionData(@NonNull byte[] frame, @Nullable byte[] fusionData) {
         if (fusionData == null) {
             fusionData = new byte[FUSION_LEN];
@@ -29,7 +26,6 @@ public class IFrameData {
         System.arraycopy(frame, 0, fusionData, 0, fusionData.length);   //fusion图像数据，ARGB
         return fusionData;
     }
-
 
     public static byte[] readNorIRData(@NonNull byte[] frame, @Nullable byte[] irData) {
         if (irData == null) {
@@ -39,7 +35,6 @@ public class IFrameData {
         return irData;
     }
 
-
     public static byte[] readNorTempData(@NonNull byte[] frame, @Nullable byte[] norTempData) {
         if (norTempData == null) {
             norTempData = new byte[ORIGINAL_LEN];
@@ -47,7 +42,6 @@ public class IFrameData {
         System.arraycopy(frame, FUSION_LEN + ORIGINAL_LEN, norTempData, 0, norTempData.length); //原始温度数据，YUV-Y16
         return norTempData;
     }
-
 
     public static byte[] readRemapTempData(@NonNull byte[] frame, @Nullable byte[] remapTempData) {
         if (remapTempData == null) {

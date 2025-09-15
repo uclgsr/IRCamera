@@ -5,13 +5,15 @@ import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O], manifest = Config.NONE)
@@ -33,7 +35,7 @@ class ThermalModuleTest {
     @Test
     fun testThermalDataProcessing() =
         runTest {
-            // Test thermal data processing with mock temperature values
+
             val mockThermalData =
                 floatArrayOf(
                     20.5f, 21.0f, 22.3f, 25.7f, 28.1f,
@@ -43,7 +45,6 @@ class ThermalModuleTest {
 
             assertTrue("Thermal data should not be empty", mockThermalData.isNotEmpty())
 
-            // Test statistical processing
             val avgTemp = mockThermalData.average()
             val maxTemp = mockThermalData.maxOrNull() ?: 0f
             val minTemp = mockThermalData.minOrNull() ?: 0f
@@ -55,11 +56,9 @@ class ThermalModuleTest {
                 mockThermalData.all { it > -50 && it < 200 },
             )
 
-            // Test temperature range calculations
             val tempRange = maxTemp - minTemp
             assertTrue("Temperature range should be non-negative", tempRange >= 0)
 
-            // Test normalization
             mockThermalData.forEach { temp ->
                 val normalized = (temp - minTemp) / tempRange
                 assertTrue("Normalized value should be 0-1", normalized >= 0f && normalized <= 1f)
@@ -95,7 +94,10 @@ class ThermalModuleTest {
             testTemperatures.forEach { temp ->
                 // Normalize temperature
                 val normalized = ((temp - minTemp) / (maxTemp - minTemp)).coerceIn(0f, 1f)
-                assertTrue("Normalized temperature should be 0-1", normalized >= 0f && normalized <= 1f)
+                assertTrue(
+                    "Normalized temperature should be 0-1",
+                    normalized >= 0f && normalized <= 1f
+                )
 
                 // Test color mapping (HSV to RGB)
                 val hue = (1f - normalized) * 240f // Blue (cold) to Red (hot)
@@ -219,6 +221,10 @@ class ThermalModuleTest {
                     context.packageName
                 }
 
-            assertEquals("Async thermal operation should return correct value", context.packageName, result)
+            assertEquals(
+                "Async thermal operation should return correct value",
+                context.packageName,
+                result
+            )
         }
 }

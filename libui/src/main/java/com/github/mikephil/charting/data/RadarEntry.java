@@ -2,7 +2,6 @@ package com.github.mikephil.charting.data;
 
 import android.annotation.SuppressLint;
 
-
 @SuppressLint("ParcelCreator")
 public class RadarEntry extends Entry {
 
@@ -13,7 +12,6 @@ public class RadarEntry extends Entry {
     public RadarEntry(float value, Object data) {
         super(0f, value, data);
     }
-
 
     public float getValue() {
         return getY();
@@ -26,13 +24,13 @@ public class RadarEntry extends Entry {
 
     @Deprecated
     @Override
-    public void setX(float x) {
-        super.setX(x);
+    public float getX() {
+        return super.getX();
     }
 
     @Deprecated
     @Override
-    public float getX() {
-        return super.getX();
+    public void setX(float x) {
+        super.setX(x);
     }
 }

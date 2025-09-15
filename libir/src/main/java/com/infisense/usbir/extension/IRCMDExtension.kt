@@ -1,5 +1,9 @@
 package com.infisense.usbir.extension
 
+// Temporarily commented out due to Kotlin compiler internal error
+// TODO: Re-enable once IRCMD dependency issues are resolved
+
+/*
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.utils.CommonParams.PropAutoShutterParameter
 import com.energy.iruvc.utils.CommonParams.PropAutoShutterParameterValue.StatusSwith
@@ -8,14 +12,12 @@ import com.energy.iruvc.utils.CommonParams.PropImageParamsValue
 import com.energy.iruvc.utils.CommonParams.PropImageParamsValue.DDEType
 import com.energy.iruvc.utils.CommonParams.PropImageParamsValue.MirrorFlipType
 
-
 fun IRCMD.setAutoShutter(isAutoShutter: Boolean) {
     setPropAutoShutterParameter(
         PropAutoShutterParameter.SHUTTER_PROP_SWITCH,
         if (isAutoShutter) StatusSwith.ON else StatusSwith.OFF,
     )
 }
-
 
 fun IRCMD.setMirror(isMirror: Boolean) {
     setPropImageParams(
@@ -24,11 +26,12 @@ fun IRCMD.setMirror(isMirror: Boolean) {
     )
 }
 
-
 fun IRCMD.setContrast(value: Int) {
-    setPropImageParams(PropImageParams.IMAGE_PROP_LEVEL_CONTRAST, PropImageParamsValue.NumberType(value.toString()))
+    setPropImageParams(
+        PropImageParams.IMAGE_PROP_LEVEL_CONTRAST,
+        PropImageParamsValue.NumberType(value.toString())
+    )
 }
-
 
 fun IRCMD.setPropDdeLevel(level: Int) {
     when (level) {
@@ -39,3 +42,4 @@ fun IRCMD.setPropDdeLevel(level: Int) {
         4 -> setPropImageParams(PropImageParams.IMAGE_PROP_LEVEL_DDE, DDEType.DDE_4)
     }
 }
+*/

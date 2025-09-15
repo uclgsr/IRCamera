@@ -7,13 +7,16 @@ import androidx.test.core.app.ApplicationProvider
 import com.topdon.pseudo.bean.CustomPseudoBean
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O], manifest = Config.NONE)
@@ -34,28 +37,27 @@ class PseudoColorModuleTest {
 
     @Test
     fun testCustomPseudoBeanCreation() {
-        // Test CustomPseudoBean data class functionality
+
         try {
             val pseudoBean = CustomPseudoBean()
             assertNotNull("CustomPseudoBean should be created", pseudoBean)
         } catch (e: Exception) {
-            // Bean may require specific initialization
+
             assertTrue("CustomPseudoBean creation test attempted", true)
         }
     }
 
     @Test
     fun testColorRecommendConstants() {
-        // Test ColorRecommend constants are accessible
+
         try {
             val colorRecommendClass = Class.forName("com.topdon.pseudo.constant.ColorRecommend")
             assertNotNull("ColorRecommend class should be accessible", colorRecommendClass)
 
-            // Test that constants are defined
             val fields = colorRecommendClass.declaredFields
             assertTrue("ColorRecommend should have color constants", fields.isNotEmpty())
         } catch (e: ClassNotFoundException) {
-            // Constants may not be accessible in test environment
+
             assertTrue("ColorRecommend constants test attempted", true)
         }
     }
@@ -63,26 +65,30 @@ class PseudoColorModuleTest {
     @Test
     fun testPseudoColorProcessing() =
         runTest {
-            // Test pseudo color processing with mock temperature data
+
             val mockTemperatureRange = 20f..40f
             val temperatureSteps = 10
 
-            // Generate temperature test data
             val temperatures =
                 (0 until temperatureSteps).map { step ->
                     mockTemperatureRange.start + (mockTemperatureRange.endInclusive - mockTemperatureRange.start) * step / (temperatureSteps - 1)
                 }
 
             assertTrue("Temperature data should be generated", temperatures.isNotEmpty())
-            assertTrue("Temperature range should be valid", temperatures.first() <= temperatures.last())
+            assertTrue(
+                "Temperature range should be valid",
+                temperatures.first() <= temperatures.last()
+            )
 
-            // Test pseudo color mapping logic
             temperatures.forEach { temp ->
-                // Normalize temperature to 0-1 range
-                val normalized = (temp - mockTemperatureRange.start) / (mockTemperatureRange.endInclusive - mockTemperatureRange.start)
-                assertTrue("Normalized temperature should be 0-1", normalized >= 0f && normalized <= 1f)
 
-                // Test color mapping (pseudo HSV to RGB conversion)
+                val normalized =
+                    (temp - mockTemperatureRange.start) / (mockTemperatureRange.endInclusive - mockTemperatureRange.start)
+                assertTrue(
+                    "Normalized temperature should be 0-1",
+                    normalized >= 0f && normalized <= 1f
+                )
+
                 val hue = (1f - normalized) * 240f // Blue (cold) to Red (hot)
                 assertTrue("Hue should be valid HSV range", hue >= 0f && hue <= 360f)
             }
@@ -91,7 +97,7 @@ class PseudoColorModuleTest {
     @Test
     fun testPseudoColorConfigurations() =
         runTest {
-            // Test different pseudo color configurations
+
             val colorConfigurations =
                 listOf(
                     "rainbow",
@@ -103,15 +109,13 @@ class PseudoColorModuleTest {
                 )
 
             colorConfigurations.forEach { config ->
-                // Test configuration validation
+
                 assertFalse("Configuration should not be empty", config.isEmpty())
                 assertTrue("Configuration should be valid string", config.isNotBlank())
 
-                // Test configuration processing
                 val processedConfig = config.lowercase().trim()
                 assertEquals("Processed config should match expected", config, processedConfig)
 
-                // Test color palette generation for each configuration
                 val paletteSize = 256
                 val colorPalette =
                     (0 until paletteSize).map { index ->
@@ -119,38 +123,42 @@ class PseudoColorModuleTest {
                         generatePseudoColor(normalized, config)
                     }
 
-                assertEquals("Color palette should have correct size", paletteSize, colorPalette.size)
+                assertEquals(
+                    "Color palette should have correct size",
+                    paletteSize,
+                    colorPalette.size
+                )
                 assertTrue("All colors should be valid", colorPalette.all { it != 0 })
             }
         }
 
     @Test
     fun testPseudoActivityCreation() {
-        // Test pseudo activity classes can be referenced
+
         try {
             val pseudoSetActivity = Class.forName("com.topdon.pseudo.activity.PseudoSetActivity")
             assertNotNull("PseudoSetActivity should be accessible", pseudoSetActivity)
         } catch (e: ClassNotFoundException) {
-            // Activities may not be testable without full Android framework
+
             assertTrue("PseudoSetActivity accessibility test attempted", true)
         }
     }
 
     @Test
     fun testPseudoViewCreation() {
-        // Test pseudo view classes can be referenced
+
         try {
             val pseudoPickView = Class.forName("com.topdon.pseudo.view.PseudoPickView")
             assertNotNull("PseudoPickView should be accessible", pseudoPickView)
         } catch (e: ClassNotFoundException) {
-            // Views may not be testable without full Android framework
+
             assertTrue("PseudoPickView accessibility test attempted", true)
         }
     }
 
     @Test
     fun testColorConversions() {
-        // Test basic color conversion utilities
+
         val testColors =
             listOf(
                 Color.RED,
@@ -162,7 +170,7 @@ class PseudoColorModuleTest {
             )
 
         testColors.forEach { color ->
-            // Test color component extraction
+
             val red = Color.red(color)
             val green = Color.green(color)
             val blue = Color.blue(color)
@@ -171,7 +179,6 @@ class PseudoColorModuleTest {
             assertTrue("Green component should be valid", green >= 0 && green <= 255)
             assertTrue("Blue component should be valid", blue >= 0 && blue <= 255)
 
-            // Test color reconstruction
             val reconstructed = Color.rgb(red, green, blue)
             assertEquals("Color should be reconstructed correctly", color, reconstructed)
         }
@@ -190,7 +197,10 @@ class PseudoColorModuleTest {
             testTemperatures.forEach { temp ->
                 // Normalize temperature
                 val normalized = ((temp - minTemp) / tempRange).coerceIn(0f, 1f)
-                assertTrue("Normalized temperature should be in range", normalized >= 0f && normalized <= 1f)
+                assertTrue(
+                    "Normalized temperature should be in range",
+                    normalized >= 0f && normalized <= 1f
+                )
 
                 // Test color mapping
                 val colorHue = (1f - normalized) * 240f // Blue to red spectrum
@@ -229,7 +239,11 @@ class PseudoColorModuleTest {
                     Pair(temp, equalizedValue)
                 }
 
-            assertEquals("Equalized mapping should have same size", temperatureData.size, equalizedMapping.size)
+            assertEquals(
+                "Equalized mapping should have same size",
+                temperatureData.size,
+                equalizedMapping.size
+            )
             assertTrue(
                 "Equalized values should be in range",
                 equalizedMapping.all { it.second >= 0f && it.second <= 1f },
@@ -258,9 +272,18 @@ class PseudoColorModuleTest {
                 val interpolatedColor = Color.rgb(interpolatedR, interpolatedG, interpolatedB)
 
                 assertTrue("Interpolated color should be valid", interpolatedColor != 0)
-                assertTrue("Interpolated red should be in range", Color.red(interpolatedColor) in 0..255)
-                assertTrue("Interpolated green should be in range", Color.green(interpolatedColor) in 0..255)
-                assertTrue("Interpolated blue should be in range", Color.blue(interpolatedColor) in 0..255)
+                assertTrue(
+                    "Interpolated red should be in range",
+                    Color.red(interpolatedColor) in 0..255
+                )
+                assertTrue(
+                    "Interpolated green should be in range",
+                    Color.green(interpolatedColor) in 0..255
+                )
+                assertTrue(
+                    "Interpolated blue should be in range",
+                    Color.blue(interpolatedColor) in 0..255
+                )
             }
         }
 
@@ -294,7 +317,11 @@ class PseudoColorModuleTest {
                     context.packageName
                 }
 
-            assertEquals("Async pseudo operation should return correct value", context.packageName, result)
+            assertEquals(
+                "Async pseudo operation should return correct value",
+                context.packageName,
+                result
+            )
         }
 
     // Helper function to generate pseudo colors based on configuration
@@ -307,22 +334,27 @@ class PseudoColorModuleTest {
                 val hue = normalized * 360f
                 Color.HSVToColor(floatArrayOf(hue, 1f, 1f))
             }
+
             "iron" -> {
                 val r = (normalized * 255).toInt().coerceIn(0, 255)
                 val g = ((normalized - 0.5f).coerceAtLeast(0f) * 2f * 255).toInt().coerceIn(0, 255)
                 val b = ((normalized - 0.8f).coerceAtLeast(0f) * 5f * 255).toInt().coerceIn(0, 255)
                 Color.rgb(r, g, b)
             }
+
             "hot" -> {
                 val r = (normalized * 255).toInt().coerceIn(0, 255)
-                val g = ((normalized - 0.33f).coerceAtLeast(0f) * 1.5f * 255).toInt().coerceIn(0, 255)
+                val g =
+                    ((normalized - 0.33f).coerceAtLeast(0f) * 1.5f * 255).toInt().coerceIn(0, 255)
                 val b = ((normalized - 0.66f).coerceAtLeast(0f) * 3f * 255).toInt().coerceIn(0, 255)
                 Color.rgb(r, g, b)
             }
+
             "gray" -> {
                 val gray = (normalized * 255).toInt().coerceIn(0, 255)
                 Color.rgb(gray, gray, gray)
             }
+
             else -> {
                 // Default rainbow mapping
                 val hue = (1f - normalized) * 240f // Blue to red

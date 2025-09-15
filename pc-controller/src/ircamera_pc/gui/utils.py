@@ -5,12 +5,42 @@ Utility functions and classes for GUI components.
 """
 
 import sys
-
-from loguru import logger
-from PyQt6.QtCore import QObject, pyqtSignal
-
-from ..core.config import config
+import logging
 from typing import Any
+
+try:
+    from loguru import logger
+except ImportError:
+    # Fallback to standard logging if loguru is not available
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logger = logging.getLogger(__name__)
+
+try:
+    from ..core.config import config
+except ImportError:
+    # Mock config for headless mode
+    class MockConfig:
+        def __getattr__(self, name):
+            return "default"
+
+
+    config = MockConfig()
+
+try:
+    from PyQt6.QtCore import QObject, pyqtSignal
+
+    GUI_AVAILABLE = True
+except ImportError:
+    GUI_AVAILABLE = False
+
+
+    # Mock classes for headless mode
+    class QObject:
+        pass
+
+
+    def pyqtSignal(*args, **kwargs):
+        return None
 
 
 class LogHandler(QObject):
@@ -68,7 +98,7 @@ def setup_logging() -> LogHandler:
         "logs/ircamera_pc.log",
         level=log_level,
         format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8}"
-        "| {name}:{function}:{line} - {message}",
+               "| {name}:{function}:{line} - {message}",
         rotation=file_rotation,
         retention=retention,
         compression="zip",

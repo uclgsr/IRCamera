@@ -5,8 +5,12 @@ import com.topdon.lib.core.ktbase.BasePickImgActivity
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.fragment.IRMonitorThermalFragment
 
+/**
 
-// Legacy ARouter route annotation - now using NavigationManager
+ * author: CaiSongL
+ * date: 2024/8/24 18:10
+ **/
+
 
 class ImagePickIRActivity : BasePickImgActivity() {
     var irFragment: IRMonitorThermalFragment? = null

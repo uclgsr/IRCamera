@@ -6,7 +6,10 @@ import com.topdon.lib.core.utils.CommUtils
 import java.io.File
 import java.text.ParsePosition
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Formatter
+import java.util.Locale
+import java.util.TimeZone
 
 object TimeTool {
     fun formatDetectTime(timeMillis: Long): String {
@@ -20,30 +23,29 @@ object TimeTool {
         return dateFormat.format(date)
     }
 
-
     @SuppressLint("SimpleDateFormat")
     fun reportTime(time: Long): String {
         val date = Date(time)
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val timeZone = TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
+        val timeZone =
+            TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
         dateFormat.timeZone = timeZone
         return dateFormat.format(date)
     }
-
 
     @SuppressLint("SimpleDateFormat")
     fun strToTime(timeStr: String): Long {
         return try {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-            val timeZone = TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
+            val timeZone =
+                TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
             dateFormat.timeZone = timeZone
             dateFormat.parse(timeStr, ParsePosition(0))?.time ?: 1609430400000
         } catch (e: Exception) {
-            // 2021-01-01 00:00:00
+
             1609430400000
         }
     }
-
 
     @SuppressLint("SimpleDateFormat")
     fun showDateType(
@@ -51,7 +53,7 @@ object TimeTool {
         type: Int = 0,
     ): String {
         val date = Date(time)
-        // yyyy-MM-dd HH:mm:ss.SSS
+
         val pattern =
             when (type) {
                 1 -> "HH:mm:ss.SSS"
@@ -61,11 +63,11 @@ object TimeTool {
                 else -> "yyyy-MM-dd HH:mm:ss"
             }
         val dateFormat = SimpleDateFormat(pattern)
-        val timeZone = TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
+        val timeZone =
+            TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
         dateFormat.timeZone = timeZone
         return dateFormat.format(date)
     }
-
 
     @SuppressLint("SimpleDateFormat")
     fun timeToMinute(
@@ -85,12 +87,12 @@ object TimeTool {
         return strToTime(str)
     }
 
-
     @SuppressLint("SimpleDateFormat")
     fun showTimeSecond(time: Long): String {
         val date = Date(time)
         val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-        val timeZone = TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
+        val timeZone =
+            TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
         dateFormat.timeZone = timeZone
         return dateFormat.format(date)
     }
@@ -99,11 +101,11 @@ object TimeTool {
     fun showDateSecond(): String {
         val date = Date()
         val dateFormat = SimpleDateFormat("yyyyMMddHHmmss")
-        val timeZone = TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
+        val timeZone =
+            TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
         dateFormat.timeZone = timeZone
         return dateFormat.format(date)
     }
-
 
     @SuppressLint("SimpleDateFormat")
     fun showVideoTime(time: Long): String {
@@ -117,7 +119,6 @@ object TimeTool {
             Formatter().format("%02d:%02d", minutes, seconds).toString()
         }
     }
-
 
     @SuppressLint("SimpleDateFormat")
     fun showVideoLongTime(time: Long): String {

@@ -6,16 +6,13 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.UUID;
 
-
 public interface Connection {
     UUID clientCharacteristicConfig = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-
 
     int REQUEST_FAIL_TYPE_REQUEST_FAILED = 0;
     int REQUEST_FAIL_TYPE_CHARACTERISTIC_NOT_EXIST = 1;
@@ -30,14 +27,12 @@ public interface Connection {
     int REQUEST_FAIL_TYPE_CONNECTION_RELEASED = 9;
     int REQUEST_FAIL_TYPE_NO_PERMISSION = 10;
 
-    //----------连接超时类型---------
     int TIMEOUT_TYPE_CANNOT_DISCOVER_DEVICE = 0;
 
     int TIMEOUT_TYPE_CANNOT_CONNECT = 1;
 
     int TIMEOUT_TYPE_CANNOT_DISCOVER_SERVICES = 2;
 
-    //-------------连接失败类型-------------------
 
     int CONNECT_FAIL_TYPE_MAXIMUM_RECONNECTION = 1;
 
@@ -48,37 +43,27 @@ public interface Connection {
     @NonNull
     Device getDevice();
 
-
     int getMtu();
-
 
     void reconnect();
 
-
     void disconnect();
-
 
     void refresh();
 
-
     void release();
-
 
     void releaseNoEvent();
 
-
     @NonNull
     ConnectionState getConnectionState();
-
 
     boolean isAutoReconnectEnabled();
 
     @Nullable
     BluetoothGatt getGatt();
 
-
     void clearRequestQueue();
-
 
     void clearRequestQueueByType(RequestType type);
 
@@ -94,18 +79,13 @@ public interface Connection {
     @Nullable
     BluetoothGattDescriptor getDescriptor(UUID service, UUID characteristic, UUID descriptor);
 
-
     void execute(Request request);
-
 
     boolean isNotificationOrIndicationEnabled(BluetoothGattCharacteristic characteristic);
 
-
     boolean isNotificationOrIndicationEnabled(UUID service, UUID characteristic);
 
-
     void setBluetoothGattCallback(BluetoothGattCallback callback);
-
 
     boolean hasProperty(UUID service, UUID characteristic, int property);
 }

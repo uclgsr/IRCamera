@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 import java.util.Calendar;
 
-
 @SuppressWarnings({"unused"})
 public class DatimeEntity implements Serializable {
     private DateEntity date;

@@ -24,7 +24,6 @@ import com.github.gzuliyujiang.wheelpicker.contract.OnCarPlatePickedListener;
 import com.github.gzuliyujiang.wheelpicker.contract.OnLinkagePickedListener;
 import com.github.gzuliyujiang.wheelpicker.widget.CarPlateWheelLayout;
 
-
 @SuppressWarnings({"unused"})
 public class CarPlatePicker extends LinkagePicker {
     private OnCarPlatePickedListener onCarPlatePickedListener;

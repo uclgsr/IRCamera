@@ -21,14 +21,6 @@ android {
         }
     }
 
-    // Enable both debug and release variants for full build support
-    // androidComponents {
-    //     beforeVariants { variant ->
-    //         // Only enable release variants
-    //         variant.enable = variant.buildType == "release"
-    //     }
-    // }
-
     buildFeatures {
         buildConfig = true
     }
@@ -41,11 +33,21 @@ android {
 }
 
 dependencies {
-    // Core library desugaring support
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    // Compile-time access to LMS SDK for BleModule classes that directly import LMS classes
-    compileOnly(files("../shared/libs/lms_international-3.90.009.0.aar"))
+    val lmsAarCandidates = listOf(
+        file("../shared/libs/lms_international-3.90.009.0.aar"),
+        file("../app/libs/lms_international-3.90.009.0.aar"),
+        file("../libapp/libs/lms_international-3.90.009.0.aar")
+    )
+    val lmsAar = lmsAarCandidates.firstOrNull { it.exists() && it.length() > 0L }
+    if (lmsAar != null) {
+        compileOnly(files(lmsAar))
+        logger.lifecycle("BleModule: Using LMS AAR from ${lmsAar.absolutePath}")
+    } else {
+        logger.warn("BleModule: Skipping lms_international AAR because no valid file found in shared/app/libapp libs")
+    }
 
     api("androidx.appcompat:appcompat:1.2.0")
     api("org.greenrobot:eventbus:3.2.0")
@@ -53,13 +55,8 @@ dependencies {
     api("com.google.code.gson:gson:2.13.2")
     api("com.elvishew:xlog:1.10.1")
 
-    // Nordic BLE Library integration for enhanced reliability
     api("no.nordicsemi.android:ble:2.11.0")
-    api("no.nordicsemi.android:ble-ktx:2.11.0")
+    api(libs.nordic.ble.ktx)
 
-    // UMeng Analytics - now available via version catalog
-    // api(libs.umeng.analytics)
-    // FastJSON - testing dependency availability
-    // api("com.alibaba:fastjson:1.2.83")
     implementation(files("libs/ini4j-0.5.5.jar"))
 }

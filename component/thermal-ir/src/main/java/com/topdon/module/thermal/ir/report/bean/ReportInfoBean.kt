@@ -4,7 +4,11 @@ import android.os.Parcelable
 import com.topdon.lib.core.utils.CommUtils
 import kotlinx.android.parcel.Parcelize
 
+/**
 
+ *
+
+ */
 
 @Parcelize
 data class ReportInfoBean(
@@ -21,5 +25,6 @@ data class ReportInfoBean(
     val is_report_name: Int = 1 // 是否显示报告名称，0、不显示 1、显示
     val report_type: Int = 1 // 报告类型，1、点线面报告
     val report_version: String = "V1.00" // 报告版本，当前为 V1.00
-    val report_number: String = "${CommUtils.getAppName()}${System.currentTimeMillis()}" // 报告编号，APP名称 + 时间戳秒级
+    val report_number: String =
+        "${CommUtils.getAppName()}${System.currentTimeMillis()}" // 报告编号，APP名称 + 时间戳秒级
 }

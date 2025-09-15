@@ -16,7 +16,6 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.report.bean.ImageTempBean
 import com.topdon.lib.core.R as LibR
 
-
 class ReportIRInputView : LinearLayout {
     companion object {
         private const val TYPE_FULL = 0 // 全图
@@ -25,7 +24,6 @@ class ReportIRInputView : LinearLayout {
         private const val TYPE_RECT = 3 // 面
     }
 
-    // View references - migrated from synthetic views
     private lateinit var clTitle: View
     private lateinit var viewLine: View
     private lateinit var tvTitle: TextView
@@ -39,7 +37,11 @@ class ReportIRInputView : LinearLayout {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     @SuppressLint("SetTextI18n")
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         inflate(context, R.layout.view_report_ir_input, this)
         initViews()
 
@@ -97,34 +99,49 @@ class ReportIRInputView : LinearLayout {
                 tvTitle.setText(LibR.string.thermal_full_rect)
                 clMin.isVisible = true
                 clAverage.isVisible = false
-                tvMaxName.text = context.getString(LibR.string.chart_temperature_high) + " (${UnitTools.showUnit()})"
-                tvMinName.text = context.getString(LibR.string.chart_temperature_low) + " (${UnitTools.showUnit()})"
+                tvMaxName.text =
+                    context.getString(LibR.string.chart_temperature_high) + " (${UnitTools.showUnit()})"
+                tvMinName.text =
+                    context.getString(LibR.string.chart_temperature_low) + " (${UnitTools.showUnit()})"
                 tvExplainName.text = context.getString(LibR.string.album_report_comment)
             }
+
             TYPE_POINT -> {
                 tvTitle.text = context.getString(LibR.string.thermal_point) + "(P)"
                 clMin.isVisible = false
                 clAverage.isVisible = false
-                tvMaxName.text = "P${index + 1} " + context.getString(LibR.string.chart_temperature) + " (${UnitTools.showUnit()})"
-                tvExplainName.text = "P${index + 1} " + context.getString(LibR.string.album_report_comment)
+                tvMaxName.text =
+                    "P${index + 1} " + context.getString(LibR.string.chart_temperature) + " (${UnitTools.showUnit()})"
+                tvExplainName.text =
+                    "P${index + 1} " + context.getString(LibR.string.album_report_comment)
             }
+
             TYPE_LINE -> {
                 tvTitle.text = context.getString(LibR.string.thermal_line) + "(L)"
                 clMin.isVisible = true
                 clAverage.isVisible = true
-                tvMaxName.text = "L${index + 1} " + context.getString(LibR.string.chart_temperature_high) + " (${UnitTools.showUnit()})"
-                tvMinName.text = "L${index + 1} " + context.getString(LibR.string.chart_temperature_low) + " (${UnitTools.showUnit()})"
-                tvAverageName.text = "L${index + 1} " + context.getString(LibR.string.album_report_mean_temperature) + " (${UnitTools.showUnit()})"
-                tvExplainName.text = "L${index + 1} " + context.getString(LibR.string.album_report_comment)
+                tvMaxName.text =
+                    "L${index + 1} " + context.getString(LibR.string.chart_temperature_high) + " (${UnitTools.showUnit()})"
+                tvMinName.text =
+                    "L${index + 1} " + context.getString(LibR.string.chart_temperature_low) + " (${UnitTools.showUnit()})"
+                tvAverageName.text =
+                    "L${index + 1} " + context.getString(LibR.string.album_report_mean_temperature) + " (${UnitTools.showUnit()})"
+                tvExplainName.text =
+                    "L${index + 1} " + context.getString(LibR.string.album_report_comment)
             }
+
             TYPE_RECT -> {
                 tvTitle.text = context.getString(LibR.string.thermal_rect) + "(R)"
                 clMin.isVisible = true
                 clAverage.isVisible = true
-                tvMaxName.text = "R${index + 1} " + context.getString(LibR.string.chart_temperature_high) + " (${UnitTools.showUnit()})"
-                tvMinName.text = "R${index + 1} " + context.getString(LibR.string.chart_temperature_low) + " (${UnitTools.showUnit()})"
-                tvAverageName.text = "R${index + 1} " + context.getString(LibR.string.album_report_mean_temperature) + " (${UnitTools.showUnit()})"
-                tvExplainName.text = "R${index + 1} " + context.getString(LibR.string.album_report_comment)
+                tvMaxName.text =
+                    "R${index + 1} " + context.getString(LibR.string.chart_temperature_high) + " (${UnitTools.showUnit()})"
+                tvMinName.text =
+                    "R${index + 1} " + context.getString(LibR.string.chart_temperature_low) + " (${UnitTools.showUnit()})"
+                tvAverageName.text =
+                    "R${index + 1} " + context.getString(LibR.string.album_report_mean_temperature) + " (${UnitTools.showUnit()})"
+                tvExplainName.text =
+                    "R${index + 1} " + context.getString(LibR.string.album_report_comment)
             }
         }
     }

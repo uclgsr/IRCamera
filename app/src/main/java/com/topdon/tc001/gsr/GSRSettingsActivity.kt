@@ -8,8 +8,13 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.util.Log
-import android.widget.*
-import androidx.activity.OnBackPressedCallback
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText  
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -21,7 +26,6 @@ import com.topdon.ble.util.BluetoothPermissionUtils
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import kotlinx.coroutines.launch
-
 
 class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     companion object {
@@ -37,7 +41,6 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     private val availableDevices = mutableListOf<String>()
     private lateinit var deviceAdapter: ArrayAdapter<String>
 
-    // Runtime permission handling
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var pendingOperation: (() -> Unit)? = null
 
@@ -48,18 +51,20 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
-        // Initialize permission handling first
         setupPermissionHandling()
 
-        // Initialize GSR sensor recorder for device management
-        gsrSensorRecorder = GSRSensorRecorder(this)
+        gsrSensorRecorder = GSRSensorRecorder(
+            this,
+            "gsr_settings_1",
+            128,
+            com.topdon.tc001.controller.RecordingController(this, this)
+        )
 
         setupUI()
         loadCurrentSettings()
         setupListeners()
         setupDeviceManagement()
 
-        // Setup modern back handling
         onBackPressedDispatcher.addCallback(
             this,
             object : androidx.activity.OnBackPressedCallback(true) {
@@ -71,7 +76,6 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         )
     }
 
-
     private fun setupPermissionHandling() {
         permissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -80,18 +84,18 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
 
                 if (allGranted) {
                     Log.i(TAG, "All Bluetooth permissions granted")
-                    updatePermissionStatus("All Required Permissions Granted", android.graphics.Color.parseColor("#4caf50"))
+                    updatePermissionStatus(
+                        "All Required Permissions Granted",
+                        android.graphics.Color.parseColor("#4caf50")
+                    )
 
-                    // Execute pending operation if any
                     pendingOperation?.invoke()
                     pendingOperation = null
 
-                    // Enable device management UI
                     enableDeviceManagement(true)
                 } else {
                     Log.w(TAG, "Some Bluetooth permissions denied: $deniedPermissions")
 
-                    // Check if any permissions were permanently denied
                     val permanentlyDenied =
                         deniedPermissions.any { permission ->
                             !ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
@@ -103,12 +107,14 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                         showPermissionDeniedDialog(deniedPermissions.toList())
                     }
 
-                    updatePermissionStatus("Missing Required Permissions", android.graphics.Color.parseColor("#f44336"))
+                    updatePermissionStatus(
+                        "Missing Required Permissions",
+                        android.graphics.Color.parseColor("#f44336")
+                    )
                     enableDeviceManagement(false)
                 }
             }
     }
-
 
     private fun showPermissionDialog(missingPermissions: List<String>) {
         val permissionDescriptions =
@@ -125,13 +131,15 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                 requestMissingPermissions()
             }
             .setNegativeButton("Skip") { _, _ ->
-                updatePermissionStatus("Permissions Denied - Limited Functionality", android.graphics.Color.parseColor("#ff9800"))
+                updatePermissionStatus(
+                    "Permissions Denied - Limited Functionality",
+                    android.graphics.Color.parseColor("#ff9800")
+                )
                 enableDeviceManagement(false)
             }
             .setCancelable(false)
             .show()
     }
-
 
     private fun showPermissionDeniedDialog(deniedPermissions: List<String>) {
         val permissionDescriptions =
@@ -148,12 +156,14 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                 requestMissingPermissions()
             }
             .setNegativeButton("Continue Without") { _, _ ->
-                updatePermissionStatus("Limited Functionality - Permissions Denied", android.graphics.Color.parseColor("#ff9800"))
+                updatePermissionStatus(
+                    "Limited Functionality - Permissions Denied",
+                    android.graphics.Color.parseColor("#ff9800")
+                )
                 enableDeviceManagement(false)
             }
             .show()
     }
-
 
     private fun showPermissionPermanentlyDeniedDialog(deniedPermissions: List<String>) {
         val permissionDescriptions =
@@ -170,12 +180,14 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                 openAppSettings()
             }
             .setNegativeButton("Continue Without") { _, _ ->
-                updatePermissionStatus("GSR Disabled - Check App Settings", android.graphics.Color.parseColor("#f44336"))
+                updatePermissionStatus(
+                    "GSR Disabled - Check App Settings",
+                    android.graphics.Color.parseColor("#f44336")
+                )
                 enableDeviceManagement(false)
             }
             .show()
     }
-
 
     private fun openAppSettings() {
         try {
@@ -186,17 +198,23 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             startActivity(intent)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to open app settings", e)
-            Toast.makeText(this, "Please grant permissions in app settings manually", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                "Please grant permissions in app settings manually",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
-
 
     private fun requestMissingPermissions() {
         val missingPermissions = BluetoothPermissionUtils.getMissingPermissions(this)
 
         if (missingPermissions.isEmpty()) {
             Log.i(TAG, "All permissions already granted")
-            updatePermissionStatus("All Permissions Granted", android.graphics.Color.parseColor("#4caf50"))
+            updatePermissionStatus(
+                "All Permissions Granted",
+                android.graphics.Color.parseColor("#4caf50")
+            )
             enableDeviceManagement(true)
             return
         }
@@ -205,25 +223,24 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         permissionLauncher.launch(missingPermissions.toTypedArray())
     }
 
-
     private fun checkAndRequestPermissions(onPermissionsGranted: (() -> Unit)? = null) {
         val missingPermissions = BluetoothPermissionUtils.getMissingPermissions(this)
 
         if (missingPermissions.isEmpty()) {
             Log.i(TAG, "All required permissions already granted")
-            updatePermissionStatus("All Permissions Granted", android.graphics.Color.parseColor("#4caf50"))
+            updatePermissionStatus(
+                "All Permissions Granted",
+                android.graphics.Color.parseColor("#4caf50")
+            )
             enableDeviceManagement(true)
             onPermissionsGranted?.invoke()
             return
         }
 
-        // Store the callback for after permissions are granted
         pendingOperation = onPermissionsGranted
 
-        // Show explanation dialog first
         showPermissionDialog(missingPermissions)
     }
-
 
     private fun enableDeviceManagement(enabled: Boolean) {
         binding.scanDevicesButton.isEnabled = enabled
@@ -235,12 +252,11 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         }
     }
 
-
     private fun updatePermissionStatus(
         status: String,
         color: Int,
     ) {
-        // Update permission status in device info text if no specific device info
+
         if (binding.deviceInfoText.text.toString().contains("permission", ignoreCase = true) ||
             binding.deviceInfoText.text.toString().isEmpty()
         ) {
@@ -253,115 +269,133 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GSR Recording Settings"
 
-        // All UI components are now accessible via binding
-        // No findViewById calls needed - view binding provides type-safe access
+
 
         setupSpinners()
         setupDeviceSpinner()
     }
 
     private fun setupDeviceSpinner() {
-        // Initialize device list with empty state
+
         availableDevices.clear()
         availableDevices.add("No devices found")
 
         deviceAdapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, availableDevices).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, availableDevices).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
         binding.shimmerDeviceSpinner.adapter = deviceAdapter
 
-        // Update device status
         updateDeviceStatus()
     }
 
     private fun setupSpinners() {
-        // GSR Sampling Rate options
+
         val samplingRates = arrayOf("32 Hz", "64 Hz", "128 Hz", "256 Hz", "512 Hz")
         binding.gsrSamplingRateSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, samplingRates).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, samplingRates).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
-        // GSR Range options
         val gsrRanges = arrayOf("Auto Range", "40 kΩ - 4 MΩ", "10 kΩ - 1 MΩ", "4 kΩ - 400 kΩ")
         binding.gsrRangeSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, gsrRanges).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, gsrRanges).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
-        // Video Resolution options
-        val videoResolutions = arrayOf("4K UHD (3840×2160)", "Full HD (1920×1080)", "HD (1280×720)", "SD (720×480)")
+        val videoResolutions =
+            arrayOf("4K UHD (3840×2160)", "Full HD (1920×1080)", "HD (1280×720)", "SD (720×480)")
         binding.videoResolutionSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, videoResolutions).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, videoResolutions).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
-        // Video Frame Rate options
         val videoFrameRates = arrayOf("30 fps", "60 fps", "24 fps", "15 fps")
         binding.videoFrameRateSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, videoFrameRates).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, videoFrameRates).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
-        // RAW Frame Rate options
         val rawFrameRates = arrayOf("30 fps", "15 fps", "10 fps", "5 fps", "1 fps")
         binding.rawFrameRateSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, rawFrameRates).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, rawFrameRates).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
-        // RAW Quality options
         val rawQualities = arrayOf("Maximum (Level 3)", "High (Level 2)", "Standard (Level 1)")
         binding.rawQualitySpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, rawQualities).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, rawQualities).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
-        // Data Retention options
         val dataRetentions = arrayOf("Keep Forever", "30 Days", "7 Days", "24 Hours")
         binding.dataRetentionSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, dataRetentions).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dataRetentions).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
-        // Sync Tolerance options
         val syncTolerances = arrayOf("1 ms", "5 ms", "10 ms", "50 ms", "100 ms")
         binding.syncToleranceSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, syncTolerances).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, syncTolerances).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
     }
 
     private fun loadCurrentSettings() {
-        // Load GSR Settings
-        binding.gsrSamplingRateSpinner.setSelection(prefs.getInt("gsr_sampling_rate", 2)) // Default: 128 Hz
+
+        binding.gsrSamplingRateSpinner.setSelection(
+            prefs.getInt(
+                "gsr_sampling_rate",
+                2
+            )
+        ) // Default: 128 Hz
         binding.gsrRangeSpinner.setSelection(prefs.getInt("gsr_range", 0)) // Default: Auto Range
         binding.gsrCalibrationSwitch.isChecked = prefs.getBoolean("gsr_calibration", true)
 
-        // Load Video Settings
-        binding.videoResolutionSpinner.setSelection(prefs.getInt("video_resolution", 0)) // Default: 4K UHD
-        binding.videoFrameRateSpinner.setSelection(prefs.getInt("video_frame_rate", 0)) // Default: 30 fps
+        binding.videoResolutionSpinner.setSelection(
+            prefs.getInt(
+                "video_resolution",
+                0
+            )
+        ) // Default: 4K UHD
+        binding.videoFrameRateSpinner.setSelection(
+            prefs.getInt(
+                "video_frame_rate",
+                0
+            )
+        ) // Default: 30 fps
         binding.enableVideoSwitch.isChecked = prefs.getBoolean("enable_video", true)
         binding.enableStabilizationSwitch.isChecked = prefs.getBoolean("enable_stabilization", true)
 
-        // Load RAW Capture Settings
         binding.enableRawCaptureSwitch.isChecked = prefs.getBoolean("enable_raw_capture", false)
-        binding.rawFrameRateSpinner.setSelection(prefs.getInt("raw_frame_rate", 0)) // Default: 30 fps
+        binding.rawFrameRateSpinner.setSelection(
+            prefs.getInt(
+                "raw_frame_rate",
+                0
+            )
+        ) // Default: 30 fps
         binding.rawQualitySpinner.setSelection(prefs.getInt("raw_quality", 0)) // Default: Maximum
 
-        // Load Session Settings
         binding.autoExportSwitch.isChecked = prefs.getBoolean("auto_export", false)
-        binding.dataRetentionSpinner.setSelection(prefs.getInt("data_retention", 0)) // Default: Keep Forever
+        binding.dataRetentionSpinner.setSelection(
+            prefs.getInt(
+                "data_retention",
+                0
+            )
+        ) // Default: Keep Forever
         binding.sessionPrefixEdit.setText(prefs.getString("session_prefix", "GSR_Session"))
 
-        // Load Sync Settings
         binding.enableTimeSyncSwitch.isChecked = prefs.getBoolean("enable_time_sync", true)
-        binding.syncToleranceSpinner.setSelection(prefs.getInt("sync_tolerance", 1)) // Default: 5 ms
+        binding.syncToleranceSpinner.setSelection(
+            prefs.getInt(
+                "sync_tolerance",
+                1
+            )
+        ) // Default: 5 ms
     }
 
     private fun setupListeners() {
-        // Auto-save settings when changed
+
         val saveListener = { saveCurrentSettings() }
 
         binding.gsrSamplingRateSpinner.onItemSelectedListener =
@@ -385,13 +419,12 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     }
 
     private fun setupDeviceManagement() {
-        // Check permissions first before initializing GSR sensor recorder
+
         checkAndRequestPermissions {
-            // This callback runs only when permissions are granted
+
             initializeGSRSensorRecorder()
         }
 
-        // Setup device management button listeners
         binding.scanDevicesButton.setOnClickListener {
             if (BluetoothPermissionUtils.hasBleScanningPermissions(this)) {
                 scanForDevices()
@@ -412,12 +445,9 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             }
         }
 
-        // Add permission check button for manual verification
-        binding.checkPermissionsButton?.setOnClickListener {
-            checkAndRequestPermissions()
-        }
+        // Check permissions on activity start
+        checkAndRequestPermissions()
     }
-
 
     private fun initializeGSRSensorRecorder() {
         lifecycleScope.launch {
@@ -433,7 +463,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     }
 
     private fun scanForDevices() {
-        // Double-check permissions before scanning
+
         if (!BluetoothPermissionUtils.hasBleScanningPermissions(this)) {
             Log.w(TAG, "Missing BLE scanning permissions")
             binding.deviceInfoText.text = "Bluetooth permissions required for device scanning"
@@ -455,23 +485,29 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                 availableDevices.clear()
                 if (devices.isNotEmpty()) {
                     availableDevices.addAll(devices)
-                    binding.deviceInfoText.text = "Found ${devices.size} device(s). Select one and tap Connect."
+                    binding.deviceInfoText.text =
+                        "Found ${devices.size} device(s). Select one and tap Connect."
                     Log.i(TAG, "Found ${devices.size} Shimmer devices: $devices")
                 } else {
                     availableDevices.add("No devices found")
-                    binding.deviceInfoText.text = "No devices found. Ensure Shimmer device is powered on and Bluetooth is enabled."
+                    binding.deviceInfoText.text =
+                        "No devices found. Ensure Shimmer device is powered on and Bluetooth is enabled."
                     Log.w(TAG, "No Shimmer devices found during scan")
                 }
 
                 deviceAdapter.notifyDataSetChanged()
             } catch (e: SecurityException) {
-                Log.e(TAG, "SecurityException during device scan - permissions may have been revoked", e)
-                binding.deviceInfoText.text = "Permission error during scan. Please check app permissions."
+                Log.e(
+                    TAG,
+                    "SecurityException during device scan - permissions may have been revoked",
+                    e
+                )
+                binding.deviceInfoText.text =
+                    "Permission error during scan. Please check app permissions."
                 availableDevices.clear()
                 availableDevices.add("Permission error")
                 deviceAdapter.notifyDataSetChanged()
 
-                // Re-check permissions
                 checkAndRequestPermissions()
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to scan for devices", e)
@@ -493,7 +529,6 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             return
         }
 
-        // Double-check permissions before connecting
         if (!BluetoothPermissionUtils.hasBluetoothPermissions(this)) {
             Log.w(TAG, "Missing Bluetooth permissions for device connection")
             binding.deviceInfoText.text = "Bluetooth permissions required for device connection"
@@ -509,7 +544,6 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                 binding.connectDeviceButton.text = "Connecting..."
                 updateDeviceStatus("Connecting...")
 
-                // Extract device address from the selected device string (assumed format: "DeviceName (MAC)")
                 val deviceAddress =
                     if (selectedDevice.contains("(") && selectedDevice.contains(")")) {
                         selectedDevice.substringAfter("(").substringBefore(")")
@@ -517,7 +551,10 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                         selectedDevice // Use the full string as address if no parentheses
                     }
 
-                Log.i(TAG, "Attempting to connect to device: $selectedDevice with address: $deviceAddress")
+                Log.i(
+                    TAG,
+                    "Attempting to connect to device: $selectedDevice with address: $deviceAddress"
+                )
                 val success = gsrSensorRecorder?.connectToShimmerDevice(deviceAddress) ?: false
 
                 if (success) {
@@ -526,15 +563,20 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                     Log.i(TAG, "Successfully connected to Shimmer device: $selectedDevice")
                 } else {
                     updateDeviceStatus("Connection Failed")
-                    binding.deviceInfoText.text = "Failed to connect to: $selectedDevice. Check device pairing and permissions."
+                    binding.deviceInfoText.text =
+                        "Failed to connect to: $selectedDevice. Check device pairing and permissions."
                     Log.w(TAG, "Failed to connect to Shimmer device: $selectedDevice")
                 }
             } catch (e: SecurityException) {
-                Log.e(TAG, "SecurityException during device connection - permissions may have been revoked", e)
+                Log.e(
+                    TAG,
+                    "SecurityException during device connection - permissions may have been revoked",
+                    e
+                )
                 updateDeviceStatus("Permission Error")
-                binding.deviceInfoText.text = "Permission error during connection. Please check app permissions."
+                binding.deviceInfoText.text =
+                    "Permission error during connection. Please check app permissions."
 
-                // Re-check permissions
                 checkAndRequestPermissions()
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to connect to device", e)
@@ -552,12 +594,20 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
 
         binding.deviceStatusText.text = status
 
-        // Update color based on status
         val color =
             when {
-                status.contains("Connected", ignoreCase = true) -> android.graphics.Color.parseColor("#4caf50") // Green
-                status.contains("Connecting", ignoreCase = true) -> android.graphics.Color.parseColor("#ff9800") // Orange
-                status.contains("Failed", ignoreCase = true) || status.contains("Error", ignoreCase = true) ->
+                status.contains(
+                    "Connected",
+                    ignoreCase = true
+                ) -> android.graphics.Color.parseColor("#4caf50") // Green
+                status.contains(
+                    "Connecting",
+                    ignoreCase = true
+                ) -> android.graphics.Color.parseColor("#ff9800") // Orange
+                status.contains("Failed", ignoreCase = true) || status.contains(
+                    "Error",
+                    ignoreCase = true
+                ) ->
                     android.graphics.Color.parseColor(
                         "#f44336",
                     ) // Red
@@ -568,28 +618,24 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
 
     private fun saveCurrentSettings() {
         prefs.edit().apply {
-            // GSR Settings
+
             putInt("gsr_sampling_rate", binding.gsrSamplingRateSpinner.selectedItemPosition)
             putInt("gsr_range", binding.gsrRangeSpinner.selectedItemPosition)
             putBoolean("gsr_calibration", binding.gsrCalibrationSwitch.isChecked)
 
-            // Video Settings
             putInt("video_resolution", binding.videoResolutionSpinner.selectedItemPosition)
             putInt("video_frame_rate", binding.videoFrameRateSpinner.selectedItemPosition)
             putBoolean("enable_video", binding.enableVideoSwitch.isChecked)
             putBoolean("enable_stabilization", binding.enableStabilizationSwitch.isChecked)
 
-            // RAW Capture Settings
             putBoolean("enable_raw_capture", binding.enableRawCaptureSwitch.isChecked)
             putInt("raw_frame_rate", binding.rawFrameRateSpinner.selectedItemPosition)
             putInt("raw_quality", binding.rawQualitySpinner.selectedItemPosition)
 
-            // Session Settings
             putBoolean("auto_export", binding.autoExportSwitch.isChecked)
             putInt("data_retention", binding.dataRetentionSpinner.selectedItemPosition)
             putString("session_prefix", binding.sessionPrefixEdit.text.toString())
 
-            // Sync Settings
             putBoolean("enable_time_sync", binding.enableTimeSyncSwitch.isChecked)
             putInt("sync_tolerance", binding.syncToleranceSpinner.selectedItemPosition)
 
@@ -606,7 +652,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         // Handle via OnBackPressedCallback instead
-        onBackPressedDispatcher.onBackPressed()
+        super.onBackPressed()
     }
 
     override fun onDestroy() {

@@ -1,6 +1,7 @@
 package com.guide.zm04c.matrix.utils
 
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 object ByteUtils {
 
@@ -14,17 +15,14 @@ object ByteUtils {
         return count
     }
 
-
-//    @ExperimentalUnsignedTypes // just to make it clear that the experimental unsigned types are used
     fun ByteArray.toHexString() =
         asUByteArray().joinToString(" ") {
             it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
         }
 
-
     @ExperimentalUnsignedTypes
-    fun String.hexStringToByteArray() = ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
-
+    fun String.hexStringToByteArray() =
+        ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
 
     fun UUID.getTag() = toString().substring(4, 8)
 }

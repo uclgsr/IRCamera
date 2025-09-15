@@ -16,7 +16,6 @@ package com.github.gzuliyujiang.wheelpicker.annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-
 @Retention(RetentionPolicy.SOURCE)
 public @interface TimeMode {
 

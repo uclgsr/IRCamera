@@ -70,7 +70,13 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 import com.topdon.lib.core.R as LibcoreR
 
+/**
 
+ * bitmap -> mp4
+ *
+
+
+ */
 
 @SuppressLint("MissingPermission")
 class VideoRecordFFmpeg(
@@ -94,18 +100,17 @@ class VideoRecordFFmpeg(
         const val SAMPLE_AUDIO_RETE_INHZ = 44100
         const val AUDIO_CHANNELS = 1
 
-
         fun canStartVideoRecord(
             context: Context,
             videoFile: File? = null,
         ): Boolean {
             val canStart =
                 (
-                    SDCardUtils.getExternalAvailableSize() - (
-                        videoFile?.length()
-                            ?: 0
-                    )
-                ) > (500L * 1000 * 1000)
+                        SDCardUtils.getExternalAvailableSize() - (
+                                videoFile?.length()
+                                    ?: 0
+                                )
+                        ) > (500L * 1000 * 1000)
             if (!canStart) {
                 ThreadUtils.runOnUiThread {
                     TipDialog.Builder(context)
@@ -158,22 +163,7 @@ class VideoRecordFFmpeg(
     private val bufferRef: AtomicReference<ByteBuffer> =
         AtomicReference(ByteBuffer.allocate(pixArray.size))
 
-    //    fun readByteBuffer(): ByteBuffer? {
-//        synchronized(lock) {
-//            return pixels?.duplicate() as ByteBuffer?
-//        }
-//    }
-//
-//    fun setBitmap(bitmap: Bitmap) {
-//        synchronized(lock) {
-//            if (pixels == null || pixels?.capacity() != bitmap.byteCount) {
-//                pixels = ByteBuffer.allocate(bitmap.byteCount)
-//            }
-//            pixels?.position(0)
-//            bitmap.copyPixelsToBuffer(pixels)
-//            bitmap.recycle()
-//        }
-//    }
+
     private fun readByteBuffer(): ByteBuffer? {
         return bufferRef.get()?.duplicate()
     }
@@ -187,36 +177,20 @@ class VideoRecordFFmpeg(
         bufferRef.set(newPixels)
     }
 
-//    fun setBitmap(bitmap: Bitmap) {
-//        lockWriteLock.writeLock().lock()
-//        try {
-//            if (pixels == null || pixels?.capacity() != bitmap.byteCount) {
-//                pixels = ByteBuffer.allocate(bitmap.byteCount)
-//            }
-//            pixels?.position(0)
-//            bitmap.copyPixelsToBuffer(pixels)
-//            bitmap.recycle()
-//        } finally {
-//            lockWriteLock.writeLock().unlock()
-//        }
-//    }
-//
-//    fun readByteBuffer(): ByteBuffer? {
-//        lockWriteLock.readLock().lock()
-//        try {
-//            return pixels?.duplicate()
-//        } finally {
-//            lockWriteLock.readLock().unlock()
-//        }
-//    }
+
+    /**
+     *
 
 
+     *
+
+     */
     private fun getVideoCodec(): Int {
         return if (Build.BRAND == "motorola" && Build.MODEL == "XT2201-2") {
             XLog.i("使用视频编码AV_CODEC_ID_H264")
             avcodec.AV_CODEC_ID_H264
         } else {
-//默认类型
+
             XLog.i("使用视频编码AV_CODEC_ID_MPEG4")
             avcodec.AV_CODEC_ID_MPEG4
         }
@@ -224,17 +198,17 @@ class VideoRecordFFmpeg(
 
     init {
         if ((cameraView.parent as ViewGroup).height > (cameraView.parent as ViewGroup).width) {
-//竖屏
+
             width = 480
             height =
                 width * (cameraView.parent as ViewGroup).height / (cameraView.parent as ViewGroup).width
         } else {
-//横屏
+
             width = 640
             height =
                 width * (cameraView.parent as ViewGroup).height / (cameraView.parent as ViewGroup).width
         }
-//宽高不能出现奇数
+
         if (height % 2 == 1) {
             height -= 1
         }
@@ -276,13 +250,13 @@ class VideoRecordFFmpeg(
             recorder!!.format = FORMAT
             recorder!!.frameRate = RATE.toDouble()
             recorder!!.videoBitrate = VIDEO_BITRATE
-//            recorder!!.audioBitrate = VIDEO_BITRATE
+
             recorder!!.videoCodec = VIDEO_CODEC
-//            recorder!!.setAudioOption("itsoffset",(1000L * 200L).toString())
+
             recorder!!.sampleRate = SAMPLE_AUDIO_RETE_INHZ
-//            recorder!!.pixelFormat = avutil.AV_PIX_FMT_YUV420P
-//            recorder!!.audioChannels = 1
-//            recorder!!.setVideoOption("preset", "ultrafast")
+
+
+
             recorder!!.timestamp = 0L
             recorder!!.start()
             isRunning = true
@@ -336,7 +310,8 @@ class VideoRecordFFmpeg(
                     .subscribe(
                         Consumer {
                             try {
-                                val currentTimestamp = 1000L * (System.currentTimeMillis() - startTime)
+                                val currentTimestamp =
+                                    1000L * (System.currentTimeMillis() - startTime)
                                 val frame = Frame(width, height, Frame.DEPTH_BYTE, 4)
                                 frame.image[0] = readByteBuffer()
                                 val t = 1000L * (System.currentTimeMillis() - startTime)
@@ -346,18 +321,18 @@ class VideoRecordFFmpeg(
                                 recorder!!.record(frame)
                                 frame.close()
                                 if (System.currentTimeMillis() - queTime > 60 * 1000) {
-//间隔1分钟，校验下剩余空间
+
                                     if (!canStartVideoRecord(cameraView.context, exportedFile)) {
                                         exportDisposable?.dispose()
                                         stopVideoRecordListener?.invoke(false)
-//录制的视频超出大小容量限制
+
                                         return@Consumer
                                     }
                                     queTime = System.currentTimeMillis()
                                 }
                                 recorder?.timestamp?.let {
                                     if (it / 1000 > 60 * 60 * 1000) {
-//thermal imaging录像限制60分钟
+
                                         exportDisposable?.dispose()
                                         stopVideoRecordListener?.invoke(true)
                                         return@Consumer
@@ -369,7 +344,11 @@ class VideoRecordFFmpeg(
                                 val audioTime = System.currentTimeMillis()
                                 if (openAudioRecord) {
                                     bufferReadResult =
-                                        audioRecord?.read(audioData!!.array(), 0, audioData!!.capacity())
+                                        audioRecord?.read(
+                                            audioData!!.array(),
+                                            0,
+                                            audioData!!.capacity()
+                                        )
                                             ?: 0
                                     if (bufferReadResult > 0) {
                                         audioData?.limit(bufferReadResult)
@@ -385,7 +364,7 @@ class VideoRecordFFmpeg(
                                     for (i in 0 until tmpAudioData!!.capacity()) {
                                         tmpAudioData!!.put(i, 1.toShort())
                                     }
-//使用当前时间戳
+
                                     if (currentTimestamp > (recorder?.timestamp ?: 0)) {
                                         recorder!!.timestamp = currentTimestamp
                                     }
@@ -394,10 +373,8 @@ class VideoRecordFFmpeg(
                                         AUDIO_CHANNELS, tmpAudioData,
                                     )
                                 }
-//                        Log.w(
-//"image大小",
-//                            "${System.currentTimeMillis() - time}======${frame.image.size}//${bufferSize}//${(recorder?.timestamp!! / 1000000L)}"
-//                        )
+
+
                             } catch (e: Exception) {
                                 Log.e("图像录制", "Caught an exception: " + e.message)
                             }
@@ -407,7 +384,7 @@ class VideoRecordFFmpeg(
                         },
                     )
         } catch (e: Exception) {
-//            stopRecord()
+
             exportDisposable?.dispose()
             stopVideoRecordListener?.invoke(false)
             XLog.e("录制异常")
@@ -447,7 +424,7 @@ class VideoRecordFFmpeg(
             image: IplImage?,
             image2: IplImage?,
         ): IplImage? {
-//未使用
+
             return null
         }
     }
@@ -477,16 +454,15 @@ class VideoRecordFFmpeg(
         }
     }
 
-
     fun canStartVideoRecord(videoFile: File?): Boolean {
         val canStart =
             (
-                SDCardUtils.getExternalAvailableSize() - (
-                    videoFile?.length()
-                        ?: 0
-                )
-            ) > (500L * 1000 * 1000)
-//Log.w("本地可用空间","" + SDCardUtils.getExternalAvailableSize() / 1000 / 1000)
+                    SDCardUtils.getExternalAvailableSize() - (
+                            videoFile?.length()
+                                ?: 0
+                            )
+                    ) > (500L * 1000 * 1000)
+
         if (!canStart) {
             ThreadUtils.runOnUiThread {
                 TipDialog.Builder(cameraView.context)
@@ -529,7 +505,7 @@ class VideoRecordFFmpeg(
                                 it.dispose()
                             }
                         }
-//                        AudioRecordHelp.getInstance().stopAudioRecording()
+
                     }
                     bitmapExecutor.shutdown()
                     recordExecutor.shutdown()
@@ -576,43 +552,64 @@ class VideoRecordFFmpeg(
         }
     }
 
+    /**
 
+
+     */
     private fun createBitmapFromView(): Bitmap {
         var cameraViewBitmap: Bitmap
 
         when (cameraView) {
-            is CameraView -> cameraViewBitmap = if (dualView == null) cameraView.scaledBitmap else dualView.scaledBitmap
+            is CameraView -> cameraViewBitmap =
+                if (dualView == null) cameraView.scaledBitmap else dualView.scaledBitmap
+
             is TextureView -> {
-                cameraViewBitmap = Bitmap.createBitmap(cameraView.width, cameraView.height, Bitmap.Config.ARGB_8888)
+                cameraViewBitmap = Bitmap.createBitmap(
+                    cameraView.width,
+                    cameraView.height,
+                    Bitmap.Config.ARGB_8888
+                )
                 cameraView.getBitmap(cameraViewBitmap)
             }
+
             is LiteSurfaceView -> cameraViewBitmap = cameraView.scaleBitmap()
             is HikSurfaceView -> cameraViewBitmap = cameraView.getScaleBitmap()
-            else -> cameraViewBitmap = Bitmap.createBitmap(cameraView.width, cameraView.height, Bitmap.Config.ARGB_8888)
+            else -> cameraViewBitmap =
+                Bitmap.createBitmap(cameraView.width, cameraView.height, Bitmap.Config.ARGB_8888)
         }
 
         when (temperatureView) {
             is TemperatureView -> {
                 if (isRecordTemp) {
                     if (temperatureView.temperatureRegionMode != TemperatureView.REGION_MODE_CLEAN) {
-                        cameraViewBitmap = BitmapUtils.mergeBitmap(cameraViewBitmap, temperatureView.regionBitmap, 0, 0)
+                        cameraViewBitmap = BitmapUtils.mergeBitmap(
+                            cameraViewBitmap,
+                            temperatureView.regionBitmap,
+                            0,
+                            0
+                        )
                     }
                 } else {
                     if (temperatureView.temperatureRegionMode == TemperatureView.REGION_MODE_RESET) {
-                        cameraViewBitmap = BitmapUtils.mergeBitmap(cameraViewBitmap, temperatureView.regionBitmap, 0, 0)
+                        cameraViewBitmap = BitmapUtils.mergeBitmap(
+                            cameraViewBitmap,
+                            temperatureView.regionBitmap,
+                            0,
+                            0
+                        )
                     }
                 }
             }
+
             is TemperatureHikView -> {
                 temperatureView.draw(Canvas(cameraViewBitmap))
             }
         }
 
-//pseudo-color bar
         if (thermalPseudoBarView?.visibility == VISIBLE) {
             try {
                 thermalPseudoBarView?.viewBitmap?.let {
-//Log.w("image对象processing耗时-彩条大小",it.byteCount.toString())
+
                     cameraViewBitmap =
                         BitmapUtils.mergeBitmap(
                             cameraViewBitmap,
@@ -621,9 +618,9 @@ class VideoRecordFFmpeg(
                             (cameraViewBitmap!!.height - it.height) / 2,
                         )
                 }
-//Log.w("image对象processing耗时-彩条",""+(System.currentTimeMillis() - startTime))
+
             } catch (e: Exception) {
-//Log.e("image对象processing耗时-彩条",""+(System.currentTimeMillis() - startTime))
+
             }
         }
         if (true == tempBg?.isVisible) {
@@ -639,15 +636,14 @@ class VideoRecordFFmpeg(
                     0,
                 )
         }
-        if (carView?.isVisible == true)
-            {
-                cameraViewBitmap =
-                    BitmapUtils.mergeBitmap(
-                        cameraViewBitmap,
-                        carView?.drawToBitmap(), 0, 0,
-                    )
-            }
-//指南针
+        if (carView?.isVisible == true) {
+            cameraViewBitmap =
+                BitmapUtils.mergeBitmap(
+                    cameraViewBitmap,
+                    carView?.drawToBitmap(), 0, 0,
+                )
+        }
+
         compassView?.let {
             if (it.isVisible) {
                 try {
@@ -662,11 +658,10 @@ class VideoRecordFFmpeg(
                 } catch (e: Exception) {
                     Log.e(TAG, "图像对象处理异常 exception:${e.message}")
                 }
-//Log.w("image对象processing耗时-指南针", "${System.currentTimeMillis() - startTime}")
+
             }
         }
 
-//画中画
         cameraPreview?.let {
             if (it.isVisible) {
                 val newBitmap: Bitmap? =
@@ -688,12 +683,10 @@ class VideoRecordFFmpeg(
                 Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             }
 
-//添加watermark
         val watermarkBean =
-            if (isTC007)
-                {
-                    SharedManager.wifiWatermarkBean
-                } else {
+            if (isTC007) {
+                SharedManager.wifiWatermarkBean
+            } else {
                 SharedManager.watermarkBean
             }
         if (watermarkBean.isOpen) {
@@ -717,9 +710,9 @@ class VideoRecordFFmpeg(
         address: String,
         time: String?,
     ): Bitmap {
-//create一样大小的图片
+
         val newBmp = Bitmap.createBitmap(bmp.width, bmp.height, Bitmap.Config.ARGB_8888)
-//create画布
+
         val canvas = Canvas(newBmp)
         canvas.drawBitmap(bmp, 0f, 0f, null) // 绘制原始图片
         canvas.save()
@@ -735,7 +728,7 @@ class VideoRecordFFmpeg(
             val textHeight = (rectText.bottom - rectText.top)
             paint.getTextBounds(address, 0, address.length, rectText)
             if (rectText.width() > bmp.width - pix20) {
-//字符太长，进行换行processing
+
                 val staticLayout =
                     StaticLayout(
                         address,
@@ -761,7 +754,7 @@ class VideoRecordFFmpeg(
             val textHeight = rectText.bottom - rectText.top
             paint.getTextBounds(title, 0, title.length, rectText)
             if (rectText.width() > bmp.width - pix20) {
-//字符太长，进行换行processing
+
                 val staticLayout =
                     StaticLayout(
                         title,

@@ -10,22 +10,18 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Query
 
-
 interface TC007Service {
 
     @GET("/v1/system/product/info/dj")
     suspend fun getProductInfo(): TC007Response<ProductBean>
 
-
     @GET("/v1/system/local/battery")
     suspend fun getBatteryInfo(): TC007Response<BatteryInfo>
-
 
     @PUT("/v1/system/local/time")
     suspend fun syncTime(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
-
 
     @Multipart
     @POST("/v1/system/upgrade/package?reset=true")
@@ -37,28 +33,22 @@ interface TC007Service {
         @Part part: MultipartBody.Part,
     ): TC007Response<Any?>
 
-
     @GET("/v1/system/upgrade/status")
     suspend fun getUpgradeStatus(): TC007Response<TC07UpgradeStatus>
-
 
     @PUT("/v1/system/magic/factory")
     suspend fun resetToFactory(): TC007Response<Boolean>
 
-
     @PUT("/v1/camera/videoin/thermal/lid")
     suspend fun correction(): TC007Response<Any?>
 
-
     @GET("/v1/thermal/env/attribute?default=false")
     suspend fun getEnvAttr(): TC007Response<EnvAttr>
-
 
     @PUT("/v1/thermal/env/attribute?default=false")
     suspend fun setEnvAttr(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
-
 
     @PUT("/v1/thermal/env/target")
     suspend fun setIRConfig(
@@ -68,34 +58,28 @@ interface TC007Service {
     @GET("/v1/thermal/temp/frame")
     suspend fun getTempFrame(): TC007Response<TempFrameParam>
 
-
     @POST("/v1/thermal/temp/frame")
     suspend fun setTempFrame(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
-
 
     @POST("/v1/thermal/temp/point")
     suspend fun setTempPoint(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
 
-
     @POST("/v1/thermal/temp/line")
     suspend fun setTempLine(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
-
 
     @POST("/v1/thermal/temp/rectangle")
     suspend fun setTempRect(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
 
-
     @PUT("/v1/storage/picture/snap/manual")
     suspend fun getPhoto(): TC007Response<PhotoBean>
-
 
     @PUT("/v1/camera/videoin/mode")
     suspend fun setMode(
@@ -122,7 +106,6 @@ interface TC007Service {
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
 
-    // 双光配准
     @GET("/v1/camera/videoin/registration")
     suspend fun getRegistration(
         @Query("chn") mode: Int,
@@ -133,7 +116,6 @@ interface TC007Service {
     suspend fun setPallete(
         @Body requestBody: RequestBody,
     ): TC007Response<Any?>
-
 
     @GET("/v1/thermal/env/attribute")
     suspend fun getAttribute(

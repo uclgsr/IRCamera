@@ -24,7 +24,6 @@ import com.github.gzuliyujiang.wheelpicker.contract.OnTimeMeridiemPickedListener
 import com.github.gzuliyujiang.wheelpicker.contract.OnTimePickedListener;
 import com.github.gzuliyujiang.wheelpicker.widget.TimeWheelLayout;
 
-
 @SuppressWarnings("unused")
 public class TimePicker extends ModalDialog {
     protected TimeWheelLayout wheelLayout;

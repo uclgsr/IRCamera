@@ -7,8 +7,13 @@ import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.fragment.IRCorrectionFragment
 
+/**
+ *
 
-// Legacy ARouter route annotation - now using NavigationManager
+ * @author: CaiSongL
+ * @date: 2023/8/4 9:06
+ */
+
 
 class IRCorrectionThreeActivity : BaseActivity() {
     override fun initContentView(): Int = R.layout.activity_ir_correction_three

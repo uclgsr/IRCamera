@@ -19,12 +19,12 @@
 
     <!-- 圆角 ImageView -->
     <declare-styleable name="RoundImageView">
-        <attr name="round_radius" format="dimension"/>
+        <attr name="round_radius" format="dimension" />
         <attr name="round_position">
-            <flag name="leftTop" value="1"/>
-            <flag name="rightTop" value="2"/>
-            <flag name="leftBottom" value="4"/>
-            <flag name="rightBottom" value="8"/>
+            <flag name="leftTop" value="1" />
+            <flag name="rightTop" value="2" />
+            <flag name="leftBottom" value="4" />
+            <flag name="rightBottom" value="8" />
         </attr>
     </declare-styleable>
 
@@ -219,6 +219,6 @@
     </declare-styleable>
 
     <declare-styleable name="IndicateView">
-        <attr name="selectColor" format="color"/>
+        <attr name="selectColor" format="color" />
     </declare-styleable>
 </resources>

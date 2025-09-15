@@ -15,21 +15,16 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import com.topdon.lib.core.R
 
-
 abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment() {
 
     private var _binding: B? = null
 
-
     protected val binding: B get() = _binding!!
-
 
     @LayoutRes
     protected abstract fun initContentLayoutId(): Int
 
-
     protected abstract fun initView(savedInstanceState: Bundle?)
-
 
     var isCanceledOnTouchOutSide: Boolean = true
         set(value) {
@@ -37,10 +32,8 @@ abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment
             dialog?.setCanceledOnTouchOutside(value)
         }
 
-
     protected open fun afterDialogCreate(layoutParams: WindowManager.LayoutParams) {
     }
-
 
     @StyleRes
     protected open fun getDialogThemeResId(): Int = R.style.base_dialog

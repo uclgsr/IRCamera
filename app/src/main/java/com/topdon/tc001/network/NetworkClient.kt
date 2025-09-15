@@ -8,16 +8,28 @@ import com.topdon.lib.core.discovery.NetworkDiscoveryService
 import com.topdon.lib.core.messaging.ReliableMessageService
 import com.topdon.lib.core.security.CertificateManager
 import com.topdon.lib.core.sync.TimeSyncService
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.io.*
-import java.net.*
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.IOException
+import java.net.InetSocketAddress
+import java.net.Socket
+import java.net.SocketTimeoutException
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.ConcurrentHashMap
-import javax.net.ssl.*
-
+import javax.net.ssl.SSLException
+import javax.net.ssl.SSLSocket
 
 class NetworkClient(private val context: Context) {
     companion object {
@@ -49,10 +61,8 @@ class NetworkClient(private val context: Context) {
     private val messageHandlers = ConcurrentHashMap<String, (JSONObject) -> Unit>()
     private val discoveredControllers = ConcurrentHashMap<String, ControllerInfo>()
 
-    // Error recovery integration
     private lateinit var errorRecoveryManager: NetworkErrorRecoveryManager
 
-    // Enhanced networking services
     private val certificateManager = CertificateManager(context)
     private val discoveryService = NetworkDiscoveryService(context)
     private val timeSyncService = TimeSyncService()
@@ -92,21 +102,19 @@ class NetworkClient(private val context: Context) {
     private var eventListener: NetworkEventListener? = null
 
     init {
-        // Initialize error recovery manager
+
         errorRecoveryManager = NetworkErrorRecoveryManager(context, this)
         setupErrorRecoveryListener()
     }
 
-
     fun initialize(): Boolean {
         return try {
-            // Initialize certificate manager for secure connections
+
             val certInitialized = certificateManager.initialize()
             if (!certInitialized) {
                 Log.w(TAG, "Certificate manager initialization failed, using insecure connections")
             }
 
-            // Initialize discovery service
             discoveryService.setEventListener(
                 object : NetworkDiscoveryService.DiscoveryEventListener {
                     override fun onDeviceDiscovered(device: NetworkDiscoveryService.DiscoveredDevice) {
@@ -145,12 +153,11 @@ class NetworkClient(private val context: Context) {
                 },
             )
 
-            // Initialize time sync service
             timeSyncService.setListener(
                 object : TimeSyncService.TimeSyncListener {
                     override fun onSyncCompleted(result: TimeSyncService.SyncResult) {
                         if (result.isSuccess) {
-                            // Note: TimeSyncService provides offset in ms, we use ns internally
+
                             clockOffset = result.clockOffsetMs * 1_000_000
                             Log.i(TAG, "Time sync completed: offset=${result.clockOffsetMs}ms")
                             eventListener?.onTimeSynchronized(clockOffset)
@@ -168,7 +175,6 @@ class NetworkClient(private val context: Context) {
                 },
             )
 
-            // Initialize reliable messaging
             reliableMessaging.setTransport(
                 object : ReliableMessageService.MessageTransport {
                     override suspend fun sendMessage(
@@ -200,7 +206,6 @@ class NetworkClient(private val context: Context) {
     fun setEventListener(listener: NetworkEventListener?) {
         eventListener = listener
     }
-
 
     fun setMessageHandler(
         messageType: String,
@@ -246,20 +251,17 @@ class NetworkClient(private val context: Context) {
         )
     }
 
-
     suspend fun discoverControllers(): List<ControllerInfo> =
         withContext(Dispatchers.IO) {
             val controllers = mutableListOf<ControllerInfo>()
 
             try {
-                // Start mDNS service discovery
+
                 Log.i(TAG, "Starting enhanced controller discovery")
                 discoveryService.startDiscovery()
 
-                // Wait for discovery to find devices
                 delay(5000) // Give mDNS time to discover devices
 
-                // Get devices discovered via mDNS
                 val discoveredDevices =
                     discoveryService.getDiscoveredDevicesByType(
                         NetworkDiscoveryService.DeviceType.PC_CONTROLLER,
@@ -276,7 +278,6 @@ class NetworkClient(private val context: Context) {
                     controllers.add(controller)
                 }
 
-                // If mDNS didn't find anything, fall back to subnet scanning
                 if (controllers.isEmpty()) {
                     Log.i(TAG, "No controllers found via mDNS, falling back to subnet scan")
                     val scanResults = performSubnetScan()
@@ -292,13 +293,13 @@ class NetworkClient(private val context: Context) {
             controllers
         }
 
-
     private suspend fun performSubnetScan(): List<ControllerInfo> =
         withContext(Dispatchers.IO) {
             val controllers = mutableListOf<ControllerInfo>()
 
             try {
-                val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                val wifiManager =
+                    context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
                 val dhcpInfo = wifiManager.dhcpInfo
 
                 if (dhcpInfo.gateway == 0) {
@@ -311,7 +312,6 @@ class NetworkClient(private val context: Context) {
 
                 Log.i(TAG, "Scanning subnet: $subnet.x for PC Controllers")
 
-                // Parallel scan of subnet
                 val jobs =
                     (1..254).map { hostNum ->
                         async {
@@ -336,7 +336,6 @@ class NetworkClient(private val context: Context) {
                         }
                     }
 
-                // Wait for all scans to complete
                 jobs.awaitAll().filterNotNull().forEach { controllers.add(it) }
 
                 Log.i(TAG, "Subnet scan complete: found ${controllers.size} controllers")
@@ -346,7 +345,6 @@ class NetworkClient(private val context: Context) {
 
             controllers
         }
-
 
     suspend fun connectToController(
         ipAddress: String,
@@ -361,7 +359,6 @@ class NetworkClient(private val context: Context) {
 
                 Log.i(TAG, "Connecting to PC Controller at $ipAddress:$port (secure: $useSecure)")
 
-                // Try secure connection first
                 if (useSecure) {
                     val sslContext = certificateManager.createSSLContext()
                     if (sslContext != null) {
@@ -369,7 +366,6 @@ class NetworkClient(private val context: Context) {
                         sslSocket = sslSocketFactory.createSocket(ipAddress, port) as SSLSocket
                         sslSocket?.soTimeout = CONNECTION_TIMEOUT.toInt()
 
-                        // Perform SSL handshake
                         sslSocket?.startHandshake()
 
                         outputStream = DataOutputStream(sslSocket?.getOutputStream())
@@ -387,33 +383,27 @@ class NetworkClient(private val context: Context) {
 
                 isConnected = true
 
-                // Start message listening
                 startMessageListener()
 
-                // Send device registration with authentication
                 val registrationSuccess = registerDeviceSecure()
 
                 if (registrationSuccess) {
-                    // Perform time synchronization
+
                     val syncResult = timeSyncService.synchronizeTime(ipAddress, port)
                     if (syncResult.isSuccess) {
                         clockOffset = syncResult.clockOffsetMs * 1_000_000
 
-                        // Start periodic time sync
                         timeSyncService.startPeriodicSync(ipAddress, port)
                     }
 
-                    // Start heartbeat
                     startHeartbeat()
 
                     val controller =
                         discoveredControllers[ipAddress]
                             ?: ControllerInfo(ipAddress, port, "PC Controller", listOf("recording"))
 
-                    // Record successful connection for error recovery
                     errorRecoveryManager.recordSuccessfulConnection(controller)
 
-                    // Enable auto recovery
                     errorRecoveryManager.enableAutoRecovery()
 
                     eventListener?.onConnected(controller)
@@ -437,13 +427,12 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-
     private suspend fun connectPlaintext(
         ipAddress: String,
         port: Int,
     ): Boolean {
         return try {
-            // Create regular socket
+
             socket = Socket()
             socket?.connect(InetSocketAddress(ipAddress, port), CONNECTION_TIMEOUT.toInt())
             socket?.soTimeout = CONNECTION_TIMEOUT.toInt()
@@ -453,14 +442,12 @@ class NetworkClient(private val context: Context) {
             isSecureConnection = false
             isConnected = true
 
-            // Start message listening
             startMessageListener()
 
-            // Send device registration (original method)
             val registrationSuccess = registerDevice()
 
             if (registrationSuccess) {
-                // Start heartbeat
+
                 startHeartbeat()
 
                 val controller =
@@ -482,16 +469,13 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-
     fun disconnect() {
         isConnected = false
         heartbeatJob.cancel()
 
-        // Stop services
         timeSyncService.stopPeriodicSync()
         discoveryService.stopDiscovery()
 
-        // Disable auto recovery when manually disconnecting
         errorRecoveryManager.disableAutoRecovery()
 
         try {
@@ -513,7 +497,6 @@ class NetworkClient(private val context: Context) {
         Log.i(TAG, "Disconnected from PC Controller")
     }
 
-
     suspend fun sendMeasurementData(
         sessionId: String,
         data: JSONObject,
@@ -531,7 +514,7 @@ class NetworkClient(private val context: Context) {
                         put("data", data)
                     }
 
-                sendMessage(message)
+                sendMessageInternal(message)
                 true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to send measurement data", e)
@@ -540,7 +523,6 @@ class NetworkClient(private val context: Context) {
                 false
             }
         }
-
 
     suspend fun reportStatus(
         status: String,
@@ -556,10 +538,13 @@ class NetworkClient(private val context: Context) {
                         put("device_id", deviceId)
                         put("status", status)
                         batteryLevel?.let { put("battery_level", it) }
-                        put("timestamp", getCurrentTimestamp()) // Using system time for status reports
+                        put(
+                            "timestamp",
+                            getCurrentTimestamp()
+                        ) // Using system time for status reports
                     }
 
-                sendMessage(message)
+                sendMessageInternal(message)
                 true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to report status", e)
@@ -593,12 +578,11 @@ class NetworkClient(private val context: Context) {
                         put("timestamp", getSynchronizedTimestamp())
                     }
 
-                sendMessage(registrationMessage)
+                sendMessageInternal(registrationMessage)
 
-                // Wait for ACK
                 val response = receiveMessage(5000)
                 response?.optString("message_type") == "ack" &&
-                    response.optString("ack_for") == "device_register"
+                        response.optString("ack_for") == "device_register"
             } catch (e: Exception) {
                 Log.e(TAG, "Secure device registration failed", e)
                 false
@@ -624,15 +608,17 @@ class NetworkClient(private val context: Context) {
                         put("capabilities", org.json.JSONArray(capabilities))
                         put("ip_address", getLocalIpAddress())
                         put("port", PC_CONTROLLER_PORT)
-                        put("timestamp", getCurrentTimestamp()) // Using system time for non-secure registration
+                        put(
+                            "timestamp",
+                            getCurrentTimestamp()
+                        ) // Using system time for non-secure registration
                     }
 
-                sendMessage(registrationMessage)
+                sendMessageInternal(registrationMessage)
 
-                // Wait for ACK
                 val response = receiveMessage(5000)
                 response?.optString("message_type") == "ack" &&
-                    response.optString("ack_for") == "device_register"
+                        response.optString("ack_for") == "device_register"
             } catch (e: Exception) {
                 Log.e(TAG, "Device registration failed", e)
                 false
@@ -667,7 +653,7 @@ class NetworkClient(private val context: Context) {
                             put("timestamp", getSynchronizedTimestamp())
                         }
 
-                    sendMessage(heartbeatMessage)
+                    sendMessageInternal(heartbeatMessage)
                     delay(HEARTBEAT_INTERVAL)
                 } catch (e: Exception) {
                     if (isConnected) {
@@ -684,7 +670,6 @@ class NetworkClient(private val context: Context) {
 
         Log.d(TAG, "Received message: $messageType")
 
-        // First, call registered message handlers
         messageHandlers[messageType]?.let { handler ->
             try {
                 Log.d(TAG, "Calling registered handler for message type: $messageType")
@@ -694,7 +679,6 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-        // Then handle built-in message types
         when (messageType) {
             "session_start" -> {
                 val sessionId = message.optString("session_id")
@@ -717,7 +701,7 @@ class NetworkClient(private val context: Context) {
             }
 
             "session_stop" -> {
-                // Handle session stop request
+
                 Log.i(TAG, "Remote session stop requested")
             }
 
@@ -737,7 +721,7 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    private suspend fun sendMessage(message: JSONObject) =
+    private suspend fun sendMessageInternal(message: JSONObject) =
         withContext(Dispatchers.IO) {
             val output = outputStream ?: throw IOException("Not connected")
 
@@ -748,10 +732,8 @@ class NetworkClient(private val context: Context) {
             output.write(messageData)
             output.flush()
 
-            // Record data transfer for performance tracking
             errorRecoveryManager.recordDataTransfer(messageData.size.toLong() + 4) // +4 for length prefix
 
-            // Record latency if this is a ping-like message
             if (message.optString("message_type") == "device_heartbeat") {
                 val latency = System.currentTimeMillis() - startTime
                 errorRecoveryManager.recordLatency(latency)
@@ -785,11 +767,9 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-
     fun getSynchronizedTimestamp(): Long {
         return System.nanoTime() + clockOffset
     }
-
 
     suspend fun sendMessage(message: JSONObject): Boolean =
         withContext(Dispatchers.IO) {
@@ -799,8 +779,11 @@ class NetworkClient(private val context: Context) {
                     return@withContext false
                 }
 
-                sendMessage(message)
-                Log.d(TAG, "Message sent successfully: ${message.optString("message_type", "unknown")}")
+                sendMessageInternal(message)
+                Log.d(
+                    TAG,
+                    "Message sent successfully: ${message.optString("message_type", "unknown")}"
+                )
                 true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to send message", e)
@@ -808,7 +791,6 @@ class NetworkClient(private val context: Context) {
                 false
             }
         }
-
 
     suspend fun startDataStreaming(): Boolean =
         withContext(Dispatchers.IO) {
@@ -822,7 +804,7 @@ class NetworkClient(private val context: Context) {
                         put("timestamp", getSynchronizedTimestamp())
                     }
 
-                sendMessage(message)
+                sendMessageInternal(message)
                 eventListener?.onDataStreamingStarted()
                 Log.i(TAG, "Data streaming started")
                 true
@@ -831,7 +813,6 @@ class NetworkClient(private val context: Context) {
                 false
             }
         }
-
 
     suspend fun stopDataStreaming(): Boolean =
         withContext(Dispatchers.IO) {
@@ -845,7 +826,7 @@ class NetworkClient(private val context: Context) {
                         put("timestamp", getSynchronizedTimestamp())
                     }
 
-                sendMessage(message)
+                sendMessageInternal(message)
                 eventListener?.onDataStreamingStopped()
                 Log.i(TAG, "Data streaming stopped")
                 true
@@ -864,7 +845,6 @@ class NetworkClient(private val context: Context) {
                 val output = DataOutputStream(socket.getOutputStream())
                 val input = DataInputStream(socket.getInputStream())
 
-                // Send info query
                 val query =
                     JSONObject().apply {
                         put("message_type", "info_query")
@@ -876,7 +856,6 @@ class NetworkClient(private val context: Context) {
                 output.write(queryData)
                 output.flush()
 
-                // Read response
                 val responseLength = input.readInt()
                 val responseData = ByteArray(responseLength)
                 input.readFully(responseData)
@@ -922,11 +901,11 @@ class NetworkClient(private val context: Context) {
 
     private fun intToIp(ipAddress: Int): String {
         return (
-            (ipAddress and 0xFF).toString() + "." +
-                ((ipAddress shr 8) and 0xFF).toString() + "." +
-                ((ipAddress shr 16) and 0xFF).toString() + "." +
-                ((ipAddress shr 24) and 0xFF).toString()
-        )
+                (ipAddress and 0xFF).toString() + "." +
+                        ((ipAddress shr 8) and 0xFF).toString() + "." +
+                        ((ipAddress shr 16) and 0xFF).toString() + "." +
+                        ((ipAddress shr 24) and 0xFF).toString()
+                )
     }
 
     private fun getCurrentTimestamp(): String {
@@ -936,7 +915,8 @@ class NetworkClient(private val context: Context) {
 
     private fun getLocalIpAddress(): String {
         try {
-            val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val wifiManager =
+                context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val dhcpInfo = wifiManager.dhcpInfo
             return intToIp(dhcpInfo.ipAddress)
         } catch (e: Exception) {
@@ -946,7 +926,6 @@ class NetworkClient(private val context: Context) {
     }
 
     fun getDiscoveredControllers(): List<ControllerInfo> = discoveredControllers.values.toList()
-
 
     private suspend fun sendDirectMessage(message: JSONObject) =
         withContext(Dispatchers.IO) {
@@ -958,11 +937,9 @@ class NetworkClient(private val context: Context) {
             output.flush()
         }
 
-
     fun isSecureConnection(): Boolean = isSecureConnection
 
     fun isConnected(): Boolean = isConnected
-
 
     fun setSecureConnectionDefault(enabled: Boolean) {
         if (isConnected) {
@@ -973,9 +950,7 @@ class NetworkClient(private val context: Context) {
         Log.i(TAG, "Secure connection default ${if (enabled) "enabled" else "disabled"}")
     }
 
-
     fun getErrorRecoveryManager(): NetworkErrorRecoveryManager = errorRecoveryManager
-
 
     fun startDiscovery(callback: (Boolean) -> Unit) {
         heartbeatScope.launch {
@@ -988,7 +963,6 @@ class NetworkClient(private val context: Context) {
             }
         }
     }
-
 
     fun connectToController(
         address: String,
@@ -1006,16 +980,13 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-
     fun getLatencyMs(): Long {
         return errorRecoveryManager.getAverageLatency()
     }
 
-
     fun getThroughputKBps(): Double {
         return errorRecoveryManager.getThroughputKBps()
     }
-
 
     fun cleanup() {
         disconnect()

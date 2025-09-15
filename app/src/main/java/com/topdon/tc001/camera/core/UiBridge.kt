@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 
-
 class UiBridge(private val textureView: TextureView) {
     companion object {
         private const val TAG = "UiBridge"
@@ -14,7 +13,6 @@ class UiBridge(private val textureView: TextureView) {
     private var previewSurface: Surface? = null
     private var isTextureAvailable = false
 
-    // Callbacks to UI
     var onError: ((String) -> Unit)? = null
     var onProgress: ((String) -> Unit)? = null
     var onModeChanged: ((String) -> Unit)? = null
@@ -23,30 +21,24 @@ class UiBridge(private val textureView: TextureView) {
         setupTextureView()
     }
 
-
     fun getPreviewSurface(): Surface? = previewSurface
 
-
     fun isTextureReady(): Boolean = isTextureAvailable
-
 
     fun updateMode(mode: String) {
         Log.i(TAG, "Mode updated: $mode")
         onModeChanged?.invoke(mode)
     }
 
-
     fun reportError(error: String) {
         Log.e(TAG, "Error: $error")
         onError?.invoke(error)
     }
 
-
     fun reportProgress(message: String) {
         Log.i(TAG, "Progress: $message")
         onProgress?.invoke(message)
     }
-
 
     fun updatePreviewSize(
         width: Int,
@@ -55,7 +47,6 @@ class UiBridge(private val textureView: TextureView) {
         textureView.surfaceTexture?.setDefaultBufferSize(width, height)
         Log.d(TAG, "Preview size updated: ${width}x$height")
     }
-
 
     fun release() {
         previewSurface?.release()
@@ -98,7 +89,7 @@ class UiBridge(private val textureView: TextureView) {
                 }
 
                 override fun onSurfaceTextureUpdated(texture: SurfaceTexture) {
-                    // Frame updated - high frequency, no logging
+
                 }
             }
     }

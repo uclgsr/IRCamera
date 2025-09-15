@@ -28,7 +28,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @SuppressWarnings("unused")
 public class PhoneCodePicker extends OptionPicker {
     public static String JSON = "[{\"prefix\":\"1\",\"en\":\"USA\",\"cn\":\"美国\"},\n" +

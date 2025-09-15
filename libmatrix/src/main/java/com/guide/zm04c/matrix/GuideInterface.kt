@@ -33,13 +33,10 @@ class GuideInterface {
     private val mUsbReadbuffer = ByteArray(MAX_BULK_TRANSFER_SIZE)
     private val mFrame = ByteArray(FRAME_SIZE)
 
-    // 图像数据：YUV422(UYVY)
     private val mYuv = ByteArray(YUV_SIZE)
 
-    // 参数行数据
     private val mParam = ByteArray(PARAM_SIZE)
 
-    // 温度矩阵数据：
     private val mTempMatrixByte = ByteArray(TEMP_MATRIX_SIZE)
     private val mTempMatrixFloat = FloatArray(IR_SIZE)
     private var mIrDataCallback: IrDataCallback? = null
@@ -60,7 +57,6 @@ class GuideInterface {
         )
     }
 
-
     private fun startUsbBufferWriteThread() {
         mWriteThreadFlag = true
         mUsbBufferWriteThread =
@@ -71,7 +67,7 @@ class GuideInterface {
                     if (length > 0) {
                         mUsbBuffer!!.write(mUsbReadbuffer, 0, length)
                     } else {
-//                        Logger.d(TAG, "length < 0");
+
                         try {
                             Thread.sleep(10)
                         } catch (e: InterruptedException) {
@@ -85,7 +81,6 @@ class GuideInterface {
     }
 
     var startTime = 0L
-
 
     private fun startUsbBufferReadThread() {
         mReadThreadFlag = true
@@ -112,24 +107,17 @@ class GuideInterface {
                                 mTempMatrixByte.size,
                             )
                         }
-                        mNativeGuideCore!!.toFloatTempMatrix(mTempMatrixFloat, mTempMatrixByte) // 温度解析
-//                    if (startTime == 0L) {
-//                        startTime = System.currentTimeMillis()
-//                    }
-//                    if (System.currentTimeMillis() > startTime + 2000L) {
-//                        BaseApplication.instance.tempLog(
-//                            mFrame = mFrame,
-//                            yuvBytes = mYuv,
-//                            tempMatrix = mTempMatrixByte,
-//                            tempFloat = mTempMatrixFloat,
-//                            paramBytes = mParam,
-//                        )
-//                    }
+                        mNativeGuideCore!!.toFloatTempMatrix(
+                            mTempMatrixFloat,
+                            mTempMatrixByte
+                        ) // 温度解析
+
+
                         if (mIrDataCallback != null) {
                             mIrDataCallback!!.processIrData(mYuv, mTempMatrixFloat) // 回调图片信息和温度矩阵
                         }
                     } else {
-//                        Logger.d(TAG, "read Frame failed");
+
                     }
                 }
                 d(TAG, "read thread exit")
@@ -252,7 +240,6 @@ class GuideInterface {
         return getParam(PARAM_INDEX_DISTANCE * 2, 1, 0) * 1.0f / 10
     }
 
-
     fun setBright(bright: Int) {
         if (mGuideUsbManager == null) {
             return
@@ -270,7 +257,6 @@ class GuideInterface {
         val PARAM_INDEX_BRIGHT = 164
         return getParam(PARAM_INDEX_BRIGHT * 2, 1, 0).toInt()
     }
-
 
     fun setContrast(contrast: Int) {
         if (mGuideUsbManager == null) {
@@ -290,7 +276,6 @@ class GuideInterface {
         return getParam(PARAM_INDEX_CONTRAST * 2, 2, 1).toInt()
     }
 
-    //    int count = 0;
     fun yuv2Bitmap(
         bitmap: Bitmap?,
         yuv: ByteArray?,
@@ -299,15 +284,15 @@ class GuideInterface {
             return
         }
         mNativeGuideCore!!.yuv2Bitmap(bitmap!!, yuv!!)
-/*
-        long time = System.currentTimeMillis();
-        count++;
-        if(count >= 1000 && count< 1030) {
-            FileUtils.Companion.saveFile(mFrame, "/sdcard/frame/" + time + ".raw", false);
-            FileUtils.Companion.saveFile(mYuv, "/sdcard/yuv/" + time + ".yuv", false);
-            FileUtils.Companion.saveBitmap2JpegFile(bitmap, "/sdcard/yuv/" + time + ".jpg");
-        }
-*/
+        /*
+                long time = System.currentTimeMillis();
+                count++;
+                if(count >= 1000 && count< 1030) {
+                    FileUtils.Companion.saveFile(mFrame, "/sdcard/frame/" + time + ".raw", false);
+                    FileUtils.Companion.saveFile(mYuv, "/sdcard/yuv/" + time + ".yuv", false);
+                    FileUtils.Companion.saveBitmap2JpegFile(bitmap, "/sdcard/yuv/" + time + ".jpg");
+                }
+        */
     }
 
     fun saveTempMatrix(path: String?) {

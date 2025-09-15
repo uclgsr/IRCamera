@@ -4,21 +4,21 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
-import com.topdon.menu.constant.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O], manifest = Config.NONE)
 @OptIn(ExperimentalCoroutinesApi::class)
-
 
 class MenuModuleTest {
     private lateinit var context: Context
@@ -38,20 +38,18 @@ class MenuModuleTest {
     @Test
 
     fun testMenuTypeConstants() {
-        // Test MenuType enum accessibility
+
         try {
             val menuTypeClass = Class.forName("com.topdon.menu.constant.MenuType")
             assertNotNull("MenuType class should be accessible", menuTypeClass)
 
-            // Test that it's an enum
             assertTrue("MenuType should be an enum", menuTypeClass.isEnum)
 
-            // Test enum values exist
             val enumConstants = menuTypeClass.enumConstants
             assertNotNull("MenuType should have enum constants", enumConstants)
             assertTrue("MenuType should have at least one constant", enumConstants!!.isNotEmpty())
         } catch (e: ClassNotFoundException) {
-            // Constants may not be accessible in test environment
+
             assertTrue("MenuType constants test attempted", true)
         }
     }
@@ -108,7 +106,7 @@ class MenuModuleTest {
 
     fun testColorProcessing() =
         runTest {
-            // Test color processing functionality used in menu
+
             val testColors =
                 listOf(
                     Color.RED,
@@ -119,7 +117,7 @@ class MenuModuleTest {
                 )
 
             testColors.forEach { color ->
-                // Test color component extraction
+
                 val alpha = Color.alpha(color)
                 val red = Color.red(color)
                 val green = Color.green(color)
@@ -130,7 +128,6 @@ class MenuModuleTest {
                 assertTrue("Green component should be valid", green >= 0 && green <= 255)
                 assertTrue("Blue component should be valid", blue >= 0 && blue <= 255)
 
-                // Test color operations
                 val brightness = (red + green + blue) / 3
                 assertTrue("Brightness should be calculable", brightness >= 0 && brightness <= 255)
             }
@@ -140,7 +137,7 @@ class MenuModuleTest {
 
     fun testMenuConfigurationScenarios() =
         runTest {
-            // Test various menu configuration scenarios
+
             val configurationCases =
                 listOf(
                     "default",
@@ -151,20 +148,23 @@ class MenuModuleTest {
                 )
 
             configurationCases.forEach { config ->
-                // Test configuration string validation
+
                 assertFalse("Configuration should not be empty", config.isEmpty())
                 assertTrue("Configuration should be valid string", config.isNotBlank())
 
-                // Test configuration processing
                 val processedConfig = config.lowercase().trim()
-                assertEquals("Processed config should match expected", config.lowercase(), processedConfig)
+                assertEquals(
+                    "Processed config should match expected",
+                    config.lowercase(),
+                    processedConfig
+                )
             }
         }
 
     @Test
 
     fun testSystemServiceAccess() {
-        // Test system services that menu functionality might use
+
         val windowService = context.getSystemService(Context.WINDOW_SERVICE)
         assertNotNull("Window service should be available", windowService)
 
@@ -186,7 +186,7 @@ class MenuModuleTest {
     @Test
 
     fun testMenuAdapterFunctionality() {
-        // Test menu adapter related functionality
+
         try {
             val menuSixAdapterClass = Class.forName("com.topdon.menu.adapter.MenuSixAdapter")
             assertNotNull("MenuSixAdapter class should be accessible", menuSixAdapterClass)
@@ -199,13 +199,17 @@ class MenuModuleTest {
 
     fun testAsyncOperations() =
         runTest {
-            // Test that coroutines work with menu processing context
+
             val result =
                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-                    // Simulate menu processing operation
+
                     context.packageName
                 }
 
-            assertEquals("Async menu operation should return correct value", context.packageName, result)
+            assertEquals(
+                "Async menu operation should return correct value",
+                context.packageName,
+                result
+            )
         }
 }

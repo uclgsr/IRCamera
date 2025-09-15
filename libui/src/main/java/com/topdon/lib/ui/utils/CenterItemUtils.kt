@@ -1,11 +1,10 @@
 package com.topdon.lib.ui.utils
 
-
 internal object CenterItemUtils {
     fun getMinDifferItem(itemHeights: List<CenterViewItem>): CenterViewItem {
-        var minItem = itemHeights[0] 
+        var minItem = itemHeights[0]
         for (i in itemHeights.indices) {
-            // 遍历Get/Retrieve最小差值
+
             if (itemHeights[i].differ <= minItem.differ) {
                 minItem = itemHeights[i]
             }
@@ -13,11 +12,7 @@ internal object CenterItemUtils {
         return minItem
     }
 
-    
-
 
     class CenterViewItem
-    
-    
-    (var position: Int, var differ: Int)
+        (var position: Int, var differ: Int)
 }

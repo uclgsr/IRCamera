@@ -12,7 +12,6 @@ import com.topdon.lib.ui.databinding.UiItemMenuSecondViewBinding
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
-
 @Deprecated("旧的high/low temperature源menu，已重构过了")
 
 class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.ItemView>() {
@@ -24,7 +23,6 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
                 notifyDataSetChanged()
             }
         }
-
 
     var onTempSourceListener: ((code: Int) -> Unit)? = null
 
@@ -51,7 +49,8 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
         parent: ViewGroup,
         viewType: Int,
     ): ItemView {
-        val binding = UiItemMenuSecondViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            UiItemMenuSecondViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ItemView(binding)
     }
 
@@ -82,5 +81,6 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
         return secondBean.size
     }
 
-    inner class ItemView(val binding: UiItemMenuSecondViewBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ItemView(val binding: UiItemMenuSecondViewBinding) :
+        RecyclerView.ViewHolder(binding.root)
 }

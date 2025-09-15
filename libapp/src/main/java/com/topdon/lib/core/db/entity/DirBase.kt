@@ -8,31 +8,24 @@ import androidx.room.PrimaryKey
 import com.blankj.utilcode.util.Utils
 import com.topdon.lib.core.R
 
-
 open class DirBase {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 
-
     @ColumnInfo(index = true)
     open var parentId: Long = 0
-
 
     @ColumnInfo
     var position: Int = 0
 
-
     @ColumnInfo
     var dirName: String = ""
-
 
     @ColumnInfo
     var goodCount: Int = 0
 
-
     @ColumnInfo
     var warnCount: Int = 0
-
 
     @ColumnInfo
     var dangerCount: Int = 0
@@ -47,7 +40,6 @@ open class DirBase {
 
     fun getDangerCountStr(): String = if (dangerCount > 99) "99+" else dangerCount.toString()
 }
-
 
 @Entity(
     foreignKeys = [
@@ -68,26 +60,20 @@ class DirDetect() : DirBase() {
         this.dirName = dirName
     }
 
-
     @ColumnInfo(index = true)
     override var parentId: Long = 0
-
 
     @Ignore
     var hasSelect = false
 
-
     @Ignore
     var isExpand: Boolean = false
-
 
     @Ignore
     var houseDetect = HouseDetect()
 
-
     @Ignore
     var itemList: ArrayList<ItemDetect> = ArrayList()
-
 
     fun copyOne(): DirDetect {
         val newDirDetect = DirDetect()
@@ -108,7 +94,6 @@ class DirDetect() : DirBase() {
         newDirDetect.itemList = newItemList
         return newDirDetect
     }
-
 
     fun toDirReport(): DirReport {
         val dirReport = DirReport()
@@ -149,7 +134,6 @@ class DirDetect() : DirBase() {
     }
 }
 
-
 @Entity(
     foreignKeys = [
         ForeignKey(
@@ -165,7 +149,6 @@ class DirReport : DirBase() {
 
     @ColumnInfo(index = true)
     override var parentId: Long = 0
-
 
     @Ignore
     var itemList: ArrayList<ItemReport> = ArrayList()

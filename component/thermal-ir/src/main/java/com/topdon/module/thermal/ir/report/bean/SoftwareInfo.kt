@@ -6,7 +6,6 @@ import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.tools.AppLanguageUtils
 import kotlinx.android.parcel.Parcelize
 
-
 @Parcelize
 data class SoftwareInfo(
     val app_language: String, // APP语言

@@ -15,13 +15,15 @@ import com.csl.irCamera.databinding.ActivityGsrDataViewBinding
 import com.google.gson.Gson
 import com.opencsv.CSVWriter
 import com.topdon.lib.core.ktbase.BaseBindingActivity
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileWriter
 import java.io.Serializable
 import java.text.SimpleDateFormat
-import java.util.*
-
+import java.util.Date
+import java.util.Locale
 
 class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     companion object {
@@ -53,7 +55,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         val rowNumber: Int,
     )
 
-    // Extended data point for export functionality
     data class GSRDataPoint(
         val timestamp: Long, // nanoseconds
         val gsrValue: Double, // microsiemens
@@ -86,12 +87,10 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = file.name
 
-        // Use view binding instead of findViewById
         adapter = GSRDataRowAdapter(dataRows)
         binding.dataRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.dataRecyclerView.adapter = adapter
 
-        // Display basic file info
         val fileSize =
             if (file.length() >= 1024 * 1024) {
                 "%.1f MB".format(file.length() / (1024.0 * 1024.0))
@@ -104,7 +103,12 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             File: ${file.name}
             Size: $fileSize
             Path: ${file.absolutePath}
-            Modified: ${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date(file.lastModified()))}
+            Modified: ${
+                java.text.SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss",
+                    java.util.Locale.getDefault()
+                ).format(java.util.Date(file.lastModified()))
+            }
             """.trimIndent()
     }
 
@@ -117,7 +121,10 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
 
                 val rows =
                     dataLines.mapIndexed { index, line ->
-                        parseGSRDataRow(line, index + 2) // +2 because we skip header and 0-based index
+                        parseGSRDataRow(
+                            line,
+                            index + 2
+                        ) // +2 because we skip header and 0-based index
                     }.filterNotNull()
 
                 val statistics = calculateStatistics(rows)
@@ -143,11 +150,15 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                         • Max: %.1f kΩ
                         • Mean: %.1f kΩ
                         """.trimIndent().format(
-                            statistics.gsrMin, statistics.gsrMax, statistics.gsrMean, statistics.gsrStdDev,
-                            statistics.resistanceMin / 1000, statistics.resistanceMax / 1000, statistics.resistanceMean / 1000,
+                            statistics.gsrMin,
+                            statistics.gsrMax,
+                            statistics.gsrMean,
+                            statistics.gsrStdDev,
+                            statistics.resistanceMin / 1000,
+                            statistics.resistanceMax / 1000,
+                            statistics.resistanceMean / 1000,
                         )
 
-                    // Convert data for export functions
                     loadGSRDataPoints()
                 }
             } catch (e: Exception) {
@@ -232,18 +243,22 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                 onBackPressedDispatcher.onBackPressed()
                 true
             }
+
             R.id.action_export -> {
                 exportData()
                 true
             }
+
             R.id.action_share -> {
                 shareData()
                 true
             }
+
             R.id.action_plot -> {
                 plotData()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -259,7 +274,10 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                 if (exportResult.isSuccess) {
                     showExportSuccessDialog(exportResult.getOrNull())
                 } else {
-                    showErrorDialog("Export Failed", exportResult.exceptionOrNull()?.message ?: "Unknown error occurred")
+                    showErrorDialog(
+                        "Export Failed",
+                        exportResult.exceptionOrNull()?.message ?: "Unknown error occurred"
+                    )
                 }
             } catch (e: Exception) {
                 showErrorDialog("Export Error", "Failed to export data: ${e.message}")
@@ -270,32 +288,28 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     private fun exportGSRDataToFormats(): Result<ExportResult> {
         return try {
             val fileName = file.nameWithoutExtension
-            val exportDir = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "GSR_Exports")
+            val exportDir =
+                File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "GSR_Exports")
             if (!exportDir.exists()) {
                 exportDir.mkdirs()
             }
 
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
 
-            // Export to multiple formats
             val exportedFiles = mutableListOf<File>()
 
-            // 1. Enhanced CSV with statistics
             val enhancedCsvFile = File(exportDir, "${fileName}_enhanced_$timestamp.csv")
             exportEnhancedCSV(enhancedCsvFile)
             exportedFiles.add(enhancedCsvFile)
 
-            // 2. Excel-compatible format
             val excelFile = File(exportDir, "${fileName}_excel_$timestamp.csv")
             exportExcelCompatibleCSV(excelFile)
             exportedFiles.add(excelFile)
 
-            // 3. JSON format for web applications
             val jsonFile = File(exportDir, "${fileName}_data_$timestamp.json")
             exportJSONFormat(jsonFile)
             exportedFiles.add(jsonFile)
 
-            // 4. Statistical summary
             val summaryFile = File(exportDir, "${fileName}_summary_$timestamp.txt")
             exportStatisticalSummary(summaryFile)
             exportedFiles.add(summaryFile)
@@ -310,14 +324,21 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         val writer = FileWriter(outputFile)
         val csvWriter = CSVWriter(writer)
 
-        // Enhanced header with metadata
         csvWriter.writeNext(arrayOf("# GSR Data Export"))
         csvWriter.writeNext(arrayOf("# Source File: ${file.name}"))
-        csvWriter.writeNext(arrayOf("# Export Date: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())}"))
+        csvWriter.writeNext(
+            arrayOf(
+                "# Export Date: ${
+                    SimpleDateFormat(
+                        "yyyy-MM-dd HH:mm:ss",
+                        Locale.getDefault()
+                    ).format(Date())
+                }"
+            )
+        )
         csvWriter.writeNext(arrayOf("# Device: ${getDeviceInfo()}"))
         csvWriter.writeNext(arrayOf(""))
 
-        // Data header
         csvWriter.writeNext(
             arrayOf(
                 "timestamp_ns", "timestamp_ms", "timestamp_iso",
@@ -327,12 +348,13 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             ),
         )
 
-        // Process and export data with enhancements
         gsrDataPoints.forEachIndexed { index, dataPoint ->
             val timestampMs = dataPoint.timestamp / 1000000
-            val timestampIso = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).format(Date(timestampMs))
+            val timestampIso =
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).format(
+                    Date(timestampMs)
+                )
 
-            // Calculate additional metrics
             val normalizedGSR = normalizeGSRValue(dataPoint.gsrValue.toFloat())
             val normalizedPPG = normalizePPGValue(dataPoint.ppgValue)
             val qualityScore = calculateDataQuality(dataPoint, index)
@@ -361,7 +383,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         val writer = FileWriter(outputFile)
         val csvWriter = CSVWriter(writer)
 
-        // Excel-friendly header
         csvWriter.writeNext(
             arrayOf(
                 "Date",
@@ -402,43 +423,42 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     private fun exportJSONFormat(outputFile: File) {
         val jsonData = mutableMapOf<String, Any>()
 
-        // Metadata
         jsonData["metadata"] =
             mapOf(
                 "sourceFile" to file.name,
-                "exportDate" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(Date()),
+                "exportDate" to SimpleDateFormat(
+                    "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                    Locale.getDefault()
+                ).format(Date()),
                 "device" to getDeviceInfo(),
                 "dataPoints" to gsrDataPoints.size,
                 "duration" to calculateRecordingDuration(),
                 "samplingRate" to calculateSamplingRate(),
             )
 
-        // Statistical summary
         jsonData["statistics"] = calculateStatistics()
 
-        // Data points
         val dataArray =
             gsrDataPoints.map { dataPoint ->
                 mapOf(
                     "timestamp" to dataPoint.timestamp,
                     "gsr" to
-                        mapOf(
-                            "raw" to dataPoint.gsrRaw,
-                            "microsiemens" to dataPoint.gsrValue,
-                            "normalized" to normalizeGSRValue(dataPoint.gsrValue.toFloat()),
-                        ),
+                            mapOf(
+                                "raw" to dataPoint.gsrRaw,
+                                "microsiemens" to dataPoint.gsrValue,
+                                "normalized" to normalizeGSRValue(dataPoint.gsrValue.toFloat()),
+                            ),
                     "ppg" to
-                        mapOf(
-                            "raw" to dataPoint.ppgRaw,
-                            "value" to dataPoint.ppgValue,
-                        ),
+                            mapOf(
+                                "raw" to dataPoint.ppgRaw,
+                                "value" to dataPoint.ppgValue,
+                            ),
                     "syncMarker" to dataPoint.syncMarker,
                     "notes" to dataPoint.notes,
                 )
             }
         jsonData["data"] = dataArray
 
-        // Write JSON
         val gson = Gson()
         outputFile.writeText(gson.toJson(jsonData))
     }
@@ -450,7 +470,14 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         summary.appendLine("GSR Data Statistical Summary")
         summary.appendLine("=" + "=".repeat(40))
         summary.appendLine("Source File: ${file.name}")
-        summary.appendLine("Export Date: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())}")
+        summary.appendLine(
+            "Export Date: ${
+                SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss",
+                    Locale.getDefault()
+                ).format(Date())
+            }"
+        )
         summary.appendLine("Device: ${getDeviceInfo()}")
         summary.appendLine("")
 
@@ -538,11 +565,11 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     private fun plotData() {
         lifecycleScope.launch {
             try {
-                // Show loading dialog
-                val progressDialog = createProgressDialog("Generating Plot", "Preparing GSR data visualization...")
+
+                val progressDialog =
+                    createProgressDialog("Generating Plot", "Preparing GSR data visualization...")
                 progressDialog.show()
 
-                // Prepare plot data in background
                 val plotData =
                     withContext(Dispatchers.Default) {
                         preparePlotData()
@@ -550,7 +577,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
 
                 progressDialog.dismiss()
 
-                // Launch plotting activity
                 val intent =
                     Intent(this@GSRDataViewActivity, GSRPlotActivity::class.java).apply {
                         putExtra("plot_data", plotData)
@@ -565,20 +591,18 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     }
 
     private fun preparePlotData(): GSRPlotData {
-        // Prepare data for plotting
-        val timestamps = gsrDataPoints.map { (it.timestamp - gsrDataPoints.first().timestamp) / 1000000.0 } // Convert to seconds
+
+        val timestamps =
+            gsrDataPoints.map { (it.timestamp - gsrDataPoints.first().timestamp) / 1000000.0 } // Convert to seconds
         val gsrValues = gsrDataPoints.map { it.gsrValue.toDouble() }
         val ppgValues = gsrDataPoints.map { it.ppgValue.toDouble() }
 
-        // Calculate moving averages for trend analysis
         val windowSize = maxOf(1, gsrDataPoints.size / 100) // 1% of data or minimum 1
         val gsrMovingAvg = calculateMovingAverage(gsrValues, windowSize)
         val ppgMovingAvg = calculateMovingAverage(ppgValues, windowSize)
 
-        // Identify significant events (sudden GSR changes)
         val gsrEvents = detectGSREvents(gsrValues, timestamps)
 
-        // Calculate statistical windows
         val stats = calculateTimeWindowedStatistics(gsrValues, timestamps)
 
         return GSRPlotData(
@@ -661,7 +685,8 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
 
             if (windowValues.isNotEmpty()) {
                 val mean = windowValues.sum() / windowValues.size
-                val variance = windowValues.map { (it - mean) * (it - mean) }.sum() / windowValues.size
+                val variance =
+                    windowValues.map { (it - mean) * (it - mean) }.sum() / windowValues.size
                 val stdDev = kotlin.math.sqrt(variance)
 
                 stats.add(
@@ -694,16 +719,15 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             .create()
     }
 
-    // Helper functions for data analysis
     private fun normalizeGSRValue(gsrValue: Float): Double {
-        // Normalize GSR value to 0-1 range based on typical physiological range
+
         val minGSR = 0.1 // Minimum typical GSR in µS
         val maxGSR = 50.0 // Maximum typical GSR in µS
         return ((gsrValue - minGSR) / (maxGSR - minGSR)).coerceIn(0.0, 1.0)
     }
 
     private fun normalizePPGValue(ppgValue: Int): Double {
-        // Normalize PPG value based on typical ADC range
+
         val minPPG = 0
         val maxPPG = 4095 // 12-bit ADC range
         return (ppgValue.toDouble() / maxPPG).coerceIn(0.0, 1.0)
@@ -713,20 +737,17 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         dataPoint: GSRDataPoint,
         index: Int,
     ): Double {
-        // Simple quality score based on signal characteristics
+
         var quality = 100.0
 
-        // Check for unrealistic values
         if (dataPoint.gsrValue < 0.01 || dataPoint.gsrValue > 100.0) {
             quality -= 30.0
         }
 
-        // Check for PPG signal quality
         if (dataPoint.ppgValue < 100 || dataPoint.ppgValue > 3900) {
             quality -= 20.0
         }
 
-        // Check for rapid changes (potential artifacts)
         if (index > 0 && index < gsrDataPoints.size - 1) {
             val prevChange = kotlin.math.abs(dataPoint.gsrValue - gsrDataPoints[index - 1].gsrValue)
             val nextChange = kotlin.math.abs(gsrDataPoints[index + 1].gsrValue - dataPoint.gsrValue)
@@ -776,9 +797,9 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             "ppgMin" to (ppgValues.minOrNull() ?: 0.0),
             "ppgMax" to (ppgValues.maxOrNull() ?: 0.0),
             "averageQuality" to
-                gsrDataPoints.mapIndexed { index, point ->
-                    calculateDataQuality(point, index)
-                }.average(),
+                    gsrDataPoints.mapIndexed { index, point ->
+                        calculateDataQuality(point, index)
+                    }.average(),
             "syncMarkers" to gsrDataPoints.count { it.syncMarker }.toDouble(),
         )
     }
@@ -786,7 +807,6 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     private fun getDeviceInfo(): String {
         return "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL} (Android ${android.os.Build.VERSION.RELEASE})"
     }
-
 
     private fun showErrorDialog(
         title: String,
@@ -799,30 +819,30 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             .show()
     }
 
-
     private fun loadGSRDataPoints() {
         gsrDataPoints.clear()
         dataRows.forEachIndexed { index, row ->
             try {
-                // Convert timestamp string to nanoseconds
-                val timestampNs = System.nanoTime() // Placeholder - real implementation would parse timestamp
+
+                val timestampNs =
+                    System.nanoTime() // Placeholder - real implementation would parse timestamp
                 val gsrDataPoint =
                     GSRDataPoint(
                         timestamp = timestampNs,
                         gsrValue = row.gsrValue,
-                        gsrRaw = (row.gsrValue * 100).toInt().coerceIn(0, 4095), // Convert to ADC range
+                        gsrRaw = (row.gsrValue * 100).toInt()
+                            .coerceIn(0, 4095), // Convert to ADC range
                         resistance = row.resistance,
                         ppgValue = (Math.random() * 1000 + 1000).toInt(), // Placeholder PPG value
                         syncMarker = false,
                     )
                 gsrDataPoints.add(gsrDataPoint)
             } catch (e: Exception) {
-                // Skip malformed rows
+
             }
         }
     }
 
-    // Data classes for plotting
     data class GSRPlotData(
         val timestamps: List<Double>,
         val gsrValues: List<Double>,

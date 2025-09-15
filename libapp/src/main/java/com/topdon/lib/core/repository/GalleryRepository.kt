@@ -43,7 +43,7 @@ object GalleryRepository {
             if (!targetDir.exists()) {
                 targetDir.mkdirs()
             }
-            // 遍历要复制该目录下的全部文件
+
             fileList?.forEach {
                 val path = sourceDir.absolutePath + File.separator + it.name
                 copyPictureFile(path, targetDir.absolutePath + File.separator + it.name)
@@ -74,15 +74,15 @@ object GalleryRepository {
         }
     }
 
-
     fun readLatest(dirType: DirType): String {
         var firstPath = ""
         try {
-            val path = if (dirType == DirType.LINE) FileConfig.lineGalleryDir else FileConfig.tc007GalleryDir
+            val path =
+                if (dirType == DirType.LINE) FileConfig.lineGalleryDir else FileConfig.tc007GalleryDir
             val dirFile = File(path)
             if (dirFile.isDirectory) {
                 val files = dirFile.listFiles()!!
-                // 按时间倒序
+
                 files.sortByDescending {
                     it.lastModified()
                 }
@@ -98,7 +98,6 @@ object GalleryRepository {
         return firstPath
     }
 
-
     suspend fun loadByPage(
         isVideo: Boolean,
         dirType: DirType,
@@ -108,7 +107,9 @@ object GalleryRepository {
         return withContext(Dispatchers.IO) {
             val resultList: ArrayList<GalleryBean> = ArrayList()
             if (dirType == DirType.TS004_REMOTE) {
-                val pageList = TS004Repository.getFileByPage(if (isVideo) 1 else 0, pageNum, pageCount) ?: return@withContext null
+                val pageList =
+                    TS004Repository.getFileByPage(if (isVideo) 1 else 0, pageNum, pageCount)
+                        ?: return@withContext null
                 pageList.forEach {
                     resultList.add(GalleryBean(isVideo, it))
                 }
@@ -137,7 +138,6 @@ object GalleryRepository {
         }
     }
 
-
     suspend fun loadAllReportImg(dirType: DirType): ArrayList<GalleryBean> =
         withContext(Dispatchers.IO) {
             val resultList: ArrayList<GalleryBean> = ArrayList()
@@ -157,7 +157,6 @@ object GalleryRepository {
             return@withContext resultList
         }
 
-
     private fun loadAllLocale(
         isVideo: Boolean,
         dirType: DirType,
@@ -168,7 +167,12 @@ object GalleryRepository {
                 val isSuccess = copySourDir(sourFile, File(FileConfig.lineGalleryDir))
                 if (isSuccess) {
                     FileUtils.delete(sourFile)
-                    MediaScannerConnection.scanFile(Utils.getApp(), arrayOf(FileConfig.lineGalleryDir), null, null)
+                    MediaScannerConnection.scanFile(
+                        Utils.getApp(),
+                        arrayOf(FileConfig.lineGalleryDir),
+                        null,
+                        null
+                    )
                 }
             }
         }
@@ -189,22 +193,21 @@ object GalleryRepository {
                 resultList.add(it)
             }
         }
-        // 按时间倒序
+
         resultList.sortByDescending {
             it.lastModified()
         }
         return resultList
     }
 
-
     private fun loadAllLocaleByMediaStore(dirType: DirType): Array<out File> {
         val tc001Files: MutableList<File> = ArrayList()
-        // 定义查询的列
+
         val projection =
             arrayOf(
                 MediaStore.Images.Media.DATA,
             )
-        // 定义查询条件，指定目标文件夹路径
+
         val selection = MediaStore.Images.Media.DATA + " LIKE ?"
         val path =
             when (dirType) {
@@ -213,9 +216,9 @@ object GalleryRepository {
                 else -> "%DCIM/TS004%"
             }
         val selectionArgs = arrayOf(path)
-        // 获取MediaStore ContentResolver
+
         val contentResolver: ContentResolver = Utils.getApp().contentResolver
-        // 查询媒体库
+
         val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val cursor =
             contentResolver.query(

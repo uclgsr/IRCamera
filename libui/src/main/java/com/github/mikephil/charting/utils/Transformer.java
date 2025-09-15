@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.utils;
 
 import android.graphics.Matrix;
@@ -15,21 +14,25 @@ import com.github.mikephil.charting.interfaces.datasets.IScatterDataSet;
 
 import java.util.List;
 
-
 public class Transformer {
 
-
     protected Matrix mMatrixValueToPx = new Matrix();
-
 
     protected Matrix mMatrixOffset = new Matrix();
 
     protected ViewPortHandler mViewPortHandler;
+    protected float[] valuePointsForGenerateTransformedValuesScatter = new float[1];
+    protected float[] valuePointsForGenerateTransformedValuesBubble = new float[1];
+    protected float[] valuePointsForGenerateTransformedValuesLine = new float[1];
+    protected float[] valuePointsForGenerateTransformedValuesCandle = new float[1];
+    protected Matrix mPixelToValueMatrixBuffer = new Matrix();
+    float[] ptsBuffer = new float[2];
+    private Matrix mMBuffer1 = new Matrix();
+    private Matrix mMBuffer2 = new Matrix();
 
     public Transformer(ViewPortHandler viewPortHandler) {
         this.mViewPortHandler = viewPortHandler;
     }
-
 
     public void prepareMatrixValuePx(float xChartMin, float deltaX, float deltaY, float yChartMin) {
 
@@ -43,18 +46,15 @@ public class Transformer {
             scaleY = 0;
         }
 
-        // setup all matrices
         mMatrixValueToPx.reset();
         mMatrixValueToPx.postTranslate(-xChartMin, -yChartMin);
         mMatrixValueToPx.postScale(scaleX, -scaleY);
     }
 
-
     public void prepareMatrixOffset(boolean inverted) {
 
         mMatrixOffset.reset();
 
-        // offset.postTranslate(mOffsetLeft, getHeight() - mOffsetBottom);
 
         if (!inverted)
             mMatrixOffset.postTranslate(mViewPortHandler.offsetLeft(),
@@ -65,9 +65,6 @@ public class Transformer {
             mMatrixOffset.postScale(1.0f, -1.0f);
         }
     }
-
-    protected float[] valuePointsForGenerateTransformedValuesScatter = new float[1];
-
 
     public float[] generateTransformedValuesScatter(IScatterDataSet data, float phaseX,
                                                     float phaseY, int from, int to) {
@@ -97,9 +94,6 @@ public class Transformer {
         return valuePoints;
     }
 
-    protected float[] valuePointsForGenerateTransformedValuesBubble = new float[1];
-
-
     public float[] generateTransformedValuesBubble(IBubbleDataSet data, float phaseY, int from, int to) {
 
         final int count = (to - from + 1) * 2; // (int) Math.ceil((to - from) * phaseX) * 2;
@@ -127,13 +121,10 @@ public class Transformer {
         return valuePoints;
     }
 
-    protected float[] valuePointsForGenerateTransformedValuesLine = new float[1];
-
-
     public float[] generateTransformedValuesLine(ILineDataSet data,
                                                  float phaseX, float phaseY,
                                                  int min, int max) {
-        //TODO java.lang.NegativeArraySizeException: -434
+
         if (max < min) {
             XLog.w("generateTransformedValuesLine error: max:" + max + ", min:" + min + ", phaseX:" + phaseX);
             return new float[0];
@@ -163,9 +154,6 @@ public class Transformer {
         return valuePoints;
     }
 
-    protected float[] valuePointsForGenerateTransformedValuesCandle = new float[1];
-
-
     public float[] generateTransformedValuesCandle(ICandleDataSet data,
                                                    float phaseX, float phaseY, int from, int to) {
 
@@ -194,14 +182,12 @@ public class Transformer {
         return valuePoints;
     }
 
-
     public void pathValueToPixel(Path path) {
 
         path.transform(mMatrixValueToPx);
         path.transform(mViewPortHandler.getMatrixTouch());
         path.transform(mMatrixOffset);
     }
-
 
     public void pathValuesToPixel(List<Path> paths) {
 
@@ -210,14 +196,12 @@ public class Transformer {
         }
     }
 
-
     public void pointValuesToPixel(float[] pts) {
 
         mMatrixValueToPx.mapPoints(pts);
         mViewPortHandler.getMatrixTouch().mapPoints(pts);
         mMatrixOffset.mapPoints(pts);
     }
-
 
     public void rectValueToPixel(RectF r) {
 
@@ -226,10 +210,8 @@ public class Transformer {
         mMatrixOffset.mapRect(r);
     }
 
-
     public void rectToPixelPhase(RectF r, float phaseY) {
 
-        // multiply the height of the rect with the phase
         r.top *= phaseY;
         r.bottom *= phaseY;
 
@@ -240,7 +222,6 @@ public class Transformer {
 
     public void rectToPixelPhaseHorizontal(RectF r, float phaseY) {
 
-        // multiply the height of the rect with the phase
         r.left *= phaseY;
         r.right *= phaseY;
 
@@ -248,7 +229,6 @@ public class Transformer {
         mViewPortHandler.getMatrixTouch().mapRect(r);
         mMatrixOffset.mapRect(r);
     }
-
 
     public void rectValueToPixelHorizontal(RectF r) {
 
@@ -257,10 +237,8 @@ public class Transformer {
         mMatrixOffset.mapRect(r);
     }
 
-
     public void rectValueToPixelHorizontal(RectF r, float phaseY) {
 
-        // multiply the height of the rect with the phase
         r.left *= phaseY;
         r.right *= phaseY;
 
@@ -268,7 +246,6 @@ public class Transformer {
         mViewPortHandler.getMatrixTouch().mapRect(r);
         mMatrixOffset.mapRect(r);
     }
-
 
     public void rectValuesToPixel(List<RectF> rects) {
 
@@ -278,15 +255,11 @@ public class Transformer {
             m.mapRect(rects.get(i));
     }
 
-    protected Matrix mPixelToValueMatrixBuffer = new Matrix();
-
-
     public void pixelsToValue(float[] pixels) {
 
         Matrix tmp = mPixelToValueMatrixBuffer;
         tmp.reset();
 
-        // invert all matrixes to convert back to the original value
         mMatrixOffset.invert(tmp);
         tmp.mapPoints(pixels);
 
@@ -296,10 +269,6 @@ public class Transformer {
         mMatrixValueToPx.invert(tmp);
         tmp.mapPoints(pixels);
     }
-
-
-    float[] ptsBuffer = new float[2];
-
 
     public MPPointD getValuesByTouchPoint(float x, float y) {
 
@@ -318,7 +287,6 @@ public class Transformer {
         outputPoint.x = ptsBuffer[0];
         outputPoint.y = ptsBuffer[1];
     }
-
 
     public MPPointD getPixelForValues(float x, float y) {
 
@@ -341,16 +309,12 @@ public class Transformer {
         return mMatrixOffset;
     }
 
-    private Matrix mMBuffer1 = new Matrix();
-
     public Matrix getValueToPixelMatrix() {
         mMBuffer1.set(mMatrixValueToPx);
         mMBuffer1.postConcat(mViewPortHandler.mMatrixTouch);
         mMBuffer1.postConcat(mMatrixOffset);
         return mMBuffer1;
     }
-
-    private Matrix mMBuffer2 = new Matrix();
 
     public Matrix getPixelToValueMatrix() {
         getValueToPixelMatrix().invert(mMBuffer2);

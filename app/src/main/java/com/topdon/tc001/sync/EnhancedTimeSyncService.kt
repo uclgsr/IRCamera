@@ -3,13 +3,15 @@ package com.topdon.tc001.sync
 import android.content.Context
 import android.util.Log
 import com.topdon.tc001.logging.StructuredLogger
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.math.*
-
 
 class EnhancedTimeSyncService(
     private val context: Context,
@@ -71,7 +73,6 @@ class EnhancedTimeSyncService(
         UNKNOWN,
     }
 
-
     fun start(onSyncCompleted: (SyncResult) -> Unit) {
         if (isRunning.get()) {
             Log.w(TAG, "Time sync service already running")
@@ -83,7 +84,12 @@ class EnhancedTimeSyncService(
 
         syncJob.set(
             GlobalScope.launch {
-                logger.log(StructuredLogger.LogLevel.INFO, "EnhancedTimeSyncService", "service_started", emptyMap())
+                logger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "EnhancedTimeSyncService",
+                    "service_started",
+                    emptyMap()
+                )
 
                 try {
                     // Initial synchronization with more rounds for accuracy
@@ -115,6 +121,25 @@ class EnhancedTimeSyncService(
         Log.i(TAG, "Enhanced time synchronization service started")
     }
 
+    fun stop() {
+        if (!isRunning.get()) {
+            Log.w(TAG, "Time sync service not running")
+            return
+        }
+
+        isRunning.set(false)
+        syncJob.get()?.cancel()
+        syncJob.set(null)
+
+        logger.log(
+            StructuredLogger.LogLevel.INFO,
+            "EnhancedTimeSyncService",
+            "service_stopped",
+            emptyMap()
+        )
+
+        Log.i(TAG, "Enhanced time synchronization service stopped")
+    }
 
     fun getSynchronizedTime(): Long {
         val localTime = System.nanoTime()
@@ -124,6 +149,9 @@ class EnhancedTimeSyncService(
         return localTime + offset + drift
     }
 
+    fun getCurrentOffset(): Long {
+        return currentOffset.get()
+    }
 
     fun getDiagnostics(): JSONObject {
         return JSONObject().apply {
@@ -141,7 +169,8 @@ class EnhancedTimeSyncService(
     private suspend fun performSynchronization(
         rounds: Int,
         isInitial: Boolean,
-    ) { /* ... */ }
+    ) { /* ... */
+    }
 
     private fun calculateCurrentDrift(): Long = 0L
 }

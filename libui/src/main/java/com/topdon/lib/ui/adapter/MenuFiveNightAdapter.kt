@@ -17,14 +17,12 @@ import com.topdon.lib.ui.bean.TemperatureBean
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
-
 @Deprecated("旧的temperature levelmenu，已重构过了")
 
 class MenuFiveNightAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var onTempLevelListener: ((index: Int) -> Unit)? = null
 
     private var selectedCode = SaveSettingUtil.temperatureMode
-
 
     fun selected(code: Int) {
         selectedCode = code
@@ -76,7 +74,8 @@ class MenuFiveNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(UiR.layout.ui_item_menu_five_view, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(UiR.layout.ui_item_menu_five_view, parent, false)
         return ItemView(view)
     }
 
@@ -117,16 +116,8 @@ class MenuFiveNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        //        init {
-//            val canSeeCount = itemCount.toFloat() //一屏Visible的 item quantity，目前都是全都Show/Display完
-//            val with = (ScreenUtils.getScreenWidth() / canSeeCount).toInt()
-//            itemView.layoutParams = ViewGroup.LayoutParams(with, ViewGroup.LayoutParams.WRAP_CONTENT)
-//            val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()
-//            val layoutParams = itemView.item_menu_tab_fl.layoutParams
-//            layoutParams.width = imageSize
-//            layoutParams.height = imageSize
-//            itemView.item_menu_tab_fl.layoutParams = layoutParams
-//        }
+
+
         val lay: View = itemView.findViewById(UiR.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(UiR.id.item_menu_tab_img)
         val name: TextView = itemView.findViewById(UiR.id.item_menu_tab_text)

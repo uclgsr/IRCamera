@@ -15,7 +15,10 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogMsgBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-
+/**
+ * 消息提示窗
+ * create by fylder on 2018/6/15
+ **/
 class MsgDialog : Dialog {
     constructor(context: Context) : super(context)
 
@@ -81,10 +84,10 @@ class MsgDialog : Dialog {
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    // 竖屏
+
                     0.9
                 } else {
-                    // 横屏
+
                     0.3
                 }
             lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
@@ -97,14 +100,14 @@ class MsgDialog : Dialog {
                     positiveClickListener!!.onClick(dialog!!)
                 }
             }
-            // img
+
             if (imgRes != 0) {
                 tipImg?.visibility = View.VISIBLE
                 tipImg?.setImageResource(imgRes)
             } else {
                 tipImg?.visibility = View.GONE
             }
-            // msg
+
             if (message != null) {
                 messageText?.visibility = View.VISIBLE
                 messageText?.setText(message, TextView.BufferType.NORMAL)
@@ -116,7 +119,6 @@ class MsgDialog : Dialog {
             return dialog as MsgDialog
         }
     }
-
 
     interface OnClickListener {
         fun onClick(dialog: DialogInterface)

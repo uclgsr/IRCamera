@@ -17,11 +17,14 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.lib.core.R as LibR
 import com.topdon.module.thermal.R as ThermalR
 
-
 class ChartTrendView : LineChart {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    ) {
         val textColor: Int = ContextCompat.getColor(context, LibR.color.chart_text)
         val axisChartColors: Int = ContextCompat.getColor(context, LibR.color.chart_axis)
 
@@ -53,7 +56,6 @@ class ChartTrendView : LineChart {
         legend.textColor = textColor
         legend.isEnabled = false // 隐藏曲线标签
 
-//x轴
         val xAxis = this.xAxis
         xAxis.textColor = textColor
         xAxis.setDrawGridLines(false) // 竖向格线
@@ -81,7 +83,6 @@ class ChartTrendView : LineChart {
                 }
             }
 
-//y轴
         val leftAxis = this.axisLeft
         leftAxis.textColor = textColor // y轴文本颜色
         leftAxis.axisLineColor = 0x00000000 // y轴颜色
@@ -109,7 +110,10 @@ class ChartTrendView : LineChart {
         invalidate()
     }
 
+    /**
 
+
+     */
     fun refresh(tempList: List<Float>) {
         if (tempList.isEmpty()) {
             setToEmpty()
@@ -147,7 +151,8 @@ class ChartTrendView : LineChart {
         axisLeft.axisMinimum = (minUnit - (maxUnit - minUnit) / 3).coerceAtMost(minUnit - 0.3f)
         axisLeft.valueFormatter =
             object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String = "${String.format("%.1f", value)}${UnitTools.showUnit()}"
+                override fun getFormattedValue(value: Float): String =
+                    "${String.format("%.1f", value)}${UnitTools.showUnit()}"
             }
 
         val lineDataSet = LineDataSet(entryList, "point temp")

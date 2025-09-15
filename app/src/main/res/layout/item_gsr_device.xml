@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="2dp"
-    android:foreground="?android:attr/selectableItemBackground"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,9 +21,9 @@
             android:id="@+id/deviceIcon"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_device_type_shimmer_gsr"
+            android:layout_gravity="center_vertical"
             android:layout_marginEnd="16dp"
-            android:layout_gravity="center_vertical" />
+            android:src="@drawable/ic_device_type_shimmer_gsr" />
 
         <!-- Device Information -->
         <LinearLayout
@@ -36,9 +36,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="4dp"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="4dp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/deviceNameText"
@@ -46,16 +46,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Shimmer3 GSR+"
+                    android:textColor="@color/text_primary"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary" />
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/connectionStatusIcon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ic_bluetooth_searching"
-                    android:layout_marginStart="8dp" />
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_bluetooth_searching" />
             </LinearLayout>
 
             <!-- Device Address -->
@@ -63,27 +63,27 @@
                 android:id="@+id/deviceAddressText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="00:06:66:XX:XX:XX"
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="8dp"
                 android:fontFamily="monospace"
-                android:layout_marginBottom="8dp" />
+                android:text="00:06:66:XX:XX:XX"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
 
             <!-- Connection Status -->
             <TextView
                 android:id="@+id/connectionStatusText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Available"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@color/status_available"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/status_chip_background"
                 android:paddingStart="8dp"
-                android:paddingEnd="8dp"
                 android:paddingTop="2dp"
+                android:paddingEnd="8dp"
                 android:paddingBottom="2dp"
-                android:layout_marginBottom="8dp" />
+                android:text="Available"
+                android:textColor="@color/status_available"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <!-- Device Stats Row -->
             <LinearLayout
@@ -95,54 +95,54 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="8dp">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/signalStrengthText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Signal: 80%"
-                        android:textSize="10sp"
-                        android:textColor="@color/text_secondary" />
+                        android:textColor="@color/text_secondary"
+                        android:textSize="10sp" />
 
                     <ProgressBar
                         android:id="@+id/signalStrengthProgressBar"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
-                        android:progress="80"
+                        android:layout_marginTop="2dp"
                         android:max="100"
-                        android:progressTint="@color/signal_strength_color"
-                        android:layout_marginTop="2dp" />
+                        android:progress="80"
+                        android:progressTint="@color/signal_strength_color" />
                 </LinearLayout>
 
                 <!-- Battery Level -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="8dp">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/batteryLevelText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Battery: 85%"
-                        android:textSize="10sp"
-                        android:textColor="@color/text_secondary" />
+                        android:textColor="@color/text_secondary"
+                        android:textSize="10sp" />
 
                     <ProgressBar
                         android:id="@+id/batteryProgressBar"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
-                        android:progress="85"
+                        android:layout_marginTop="2dp"
                         android:max="100"
-                        android:progressTint="@color/battery_level_color"
-                        android:layout_marginTop="2dp" />
+                        android:progress="85"
+                        android:progressTint="@color/battery_level_color" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -151,10 +151,10 @@
                 android:id="@+id/firmwareVersionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="Firmware: 1.0.0"
-                android:textSize="10sp"
                 android:textColor="@color/text_hint"
-                android:layout_marginTop="4dp" />
+                android:textSize="10sp" />
         </LinearLayout>
     </LinearLayout>
 

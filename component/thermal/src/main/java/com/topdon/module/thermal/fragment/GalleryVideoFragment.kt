@@ -11,8 +11,6 @@ import com.topdon.module.thermal.R
 import com.topdon.module.thermal.adapter.GalleryAdapter
 import com.topdon.module.thermal.viewmodel.GalleryViewModel
 
-
-
 class GalleryVideoFragment : BaseViewModelFragment<GalleryViewModel>() {
     private val adapter by lazy { GalleryAdapter(requireContext()) }
 
@@ -22,7 +20,8 @@ class GalleryVideoFragment : BaseViewModelFragment<GalleryViewModel>() {
 
     override fun initView() {
         val span = if (ScreenUtils.isLandscape()) 6 else 3
-        val galleryVideoRecycler = requireView().findViewById<RecyclerView>(R.id.gallery_video_recycler)
+        val galleryVideoRecycler =
+            requireView().findViewById<RecyclerView>(R.id.gallery_video_recycler)
         galleryVideoRecycler.layoutManager = GridLayoutManager(requireContext(), span)
         galleryVideoRecycler.adapter = adapter
 
@@ -44,7 +43,7 @@ class GalleryVideoFragment : BaseViewModelFragment<GalleryViewModel>() {
                 ) {
                     TipDialog.Builder(requireContext()).setMessage("导出图片")
                         .setPositiveListener("分享") {
-//                            share(path)
+
                         }
                         .create().show()
                 }
@@ -59,14 +58,6 @@ class GalleryVideoFragment : BaseViewModelFragment<GalleryViewModel>() {
         viewModel.getVideoData()
     }
 
-//    fun previewVideo(path: String) {
-//        val imageEngine = GlideImageEngine()
-//        MNImageBrowser.with(context)
-//            .setCurrentPosition(0)
-//            .setImageEngine(imageEngine)
-//            .setImageUrl(path)
-//            .show()
-//    }
 
     fun openVideo(path: String) {
         NavigationManager.getInstance().build(RouterConfig.VIDEO).withString("video_path", path)

@@ -5,21 +5,17 @@ import android.view.animation.AlphaAnimation
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 
-
-fun View.gone()  {
+fun View.gone() {
     this.visibility = View.GONE
 }
 
-
-fun View.visible()  {
+fun View.visible() {
     this.visibility = View.VISIBLE
 }
 
-
-fun View.invisible()  {
+fun View.invisible() {
     this.visibility = View.INVISIBLE
 }
-
 
 fun View?.goneAlphaAnimation(duration: Long = 500L) {
     this?.visibility = View.GONE
@@ -31,7 +27,6 @@ fun View?.goneAlphaAnimation(duration: Long = 500L) {
     )
 }
 
-
 fun View?.invisibleAlphaAnimation(duration: Long = 500L) {
     this?.visibility = View.INVISIBLE
     this?.startAnimation(
@@ -42,7 +37,6 @@ fun View?.invisibleAlphaAnimation(duration: Long = 500L) {
     )
 }
 
-
 fun View?.visibleAlphaAnimation(duration: Long = 500L) {
     this?.visibility = View.VISIBLE
     this?.startAnimation(
@@ -52,7 +46,6 @@ fun View?.visibleAlphaAnimation(duration: Long = 500L) {
         },
     )
 }
-
 
 fun ViewPager2.reduceDragSensitivity() {
     val recyclerViewField = ViewPager2::class.java.getDeclaredField("mRecyclerView")

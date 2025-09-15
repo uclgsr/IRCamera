@@ -14,7 +14,6 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
-
 @ExperimentalCoroutinesApi
 class RGBCameraRecorderTest {
     @MockK
@@ -28,7 +27,7 @@ class RGBCameraRecorderTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        // Mock context and texture view behavior
+
         every { mockContext.packageName } returns "com.topdon.tc001.test"
         every { mockTextureView.isAvailable } returns true
 
@@ -37,7 +36,7 @@ class RGBCameraRecorderTest {
 
     @Test
     fun `test dual-mode initialization with default settings`() {
-        // Test default initialization
+
         val settings = RecordingSettings()
 
         assertEquals(CameraMode.VIDEO_4K, settings.mode)
@@ -49,7 +48,7 @@ class RGBCameraRecorderTest {
 
     @Test
     fun `test camera mode enum values`() {
-        // Test all camera modes are properly defined
+
         assertEquals("RAW 50MP", CameraMode.RAW_50MP.displayName)
         assertEquals("4K Video", CameraMode.VIDEO_4K.displayName)
         assertEquals("Preview", CameraMode.PREVIEW_ONLY.displayName)
@@ -61,7 +60,7 @@ class RGBCameraRecorderTest {
 
     @Test
     fun `test video resolution configurations`() {
-        // Test video resolution settings
+
         val uhd4k = VideoResolution.UHD_4K
         assertEquals(3840, uhd4k.width)
         assertEquals(2160, uhd4k.height)
@@ -75,7 +74,7 @@ class RGBCameraRecorderTest {
 
     @Test
     fun `test samsung s22 optimized settings`() {
-        // Test Samsung S22 specific settings
+
         val samsungSettings =
             RecordingSettings(
                 mode = CameraMode.RAW_50MP,
@@ -92,19 +91,18 @@ class RGBCameraRecorderTest {
     @Test
     fun `test mode switching validation`() =
         runTest {
-            // Test that mode switching validates properly
+
             val settings = RecordingSettings(mode = CameraMode.VIDEO_4K)
             cameraRecorder.configure(settings)
 
-            // This would test the actual mode switching logic
-            // In a real implementation, we'd mock the Camera2 API calls
+
             assertTrue("Mode switching should be supported", true)
         }
 
     @Test
     fun `test samsung device detection`() {
-        // Test Samsung device detection logic
-        // This would normally check Build.MANUFACTURER, Build.DEVICE, etc.
+
+
         val testDeviceNames = listOf("SM-S901U", "SM-S906U", "SM-S908U") // S22 variants
 
         testDeviceNames.forEach { deviceName ->
@@ -115,7 +113,7 @@ class RGBCameraRecorderTest {
 
     @Test
     fun `test error handling for unsupported configurations`() {
-        // Test error handling for invalid combinations
+
         val invalidSettings =
             RecordingSettings(
                 mode = CameraMode.RAW_50MP,
@@ -123,14 +121,13 @@ class RGBCameraRecorderTest {
                 frameRate = 120, // Unsupported RAW frame rate
             )
 
-        // This would test validation logic
         assertNotNull("Settings object should be created", invalidSettings)
         assertEquals(CameraMode.RAW_50MP, invalidSettings.mode)
     }
 
     @Test
     fun `test session switching performance requirements`() {
-        // Test that session switching meets performance requirements (~200ms)
+
         val switchDelay = 200L // TARGET_SESSION_SWITCH_DELAY_MS
 
         assertTrue("Session switch should be under 200ms target", switchDelay <= 200)
@@ -138,7 +135,7 @@ class RGBCameraRecorderTest {
 
     @Test
     fun `test raw capture buffer management`() {
-        // Test RAW capture buffer limits for Samsung devices
+
         val maxRawImages = 2 // Conservative Samsung setting
 
         assertTrue("RAW buffer should be limited for memory efficiency", maxRawImages <= 2)
@@ -146,7 +143,7 @@ class RGBCameraRecorderTest {
 
     @Test
     fun `test 4k video bitrate calculation`() {
-        // Test 4K video bitrate settings
+
         val settings =
             RecordingSettings(
                 mode = CameraMode.VIDEO_4K,
@@ -154,14 +151,13 @@ class RGBCameraRecorderTest {
                 bitRate = 10_000_000,
             )
 
-        // Bitrate should be appropriate for 4K video
         assertTrue("4K bitrate should be sufficient", settings.bitRate >= 8_000_000)
         assertTrue("4K bitrate should not be excessive", settings.bitRate <= 20_000_000)
     }
 
     @Test
     fun `test thermal throttling awareness`() {
-        // Test that system accounts for thermal considerations
+
         val conservativeSettings =
             RecordingSettings(
                 mode = CameraMode.VIDEO_4K,

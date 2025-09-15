@@ -13,7 +13,16 @@ import com.topdon.lib.core.db.dao.ThermalDao
 import com.topdon.lib.core.db.dao.ThermalDayDao
 import com.topdon.lib.core.db.dao.ThermalHourDao
 import com.topdon.lib.core.db.dao.ThermalMinuteDao
-import com.topdon.lib.core.db.entity.*
+import com.topdon.lib.core.db.entity.DirDetect
+import com.topdon.lib.core.db.entity.DirReport
+import com.topdon.lib.core.db.entity.HouseDetect
+import com.topdon.lib.core.db.entity.HouseReport
+import com.topdon.lib.core.db.entity.ItemDetect
+import com.topdon.lib.core.db.entity.ItemReport
+import com.topdon.lib.core.db.entity.ThermalDayEntity
+import com.topdon.lib.core.db.entity.ThermalEntity
+import com.topdon.lib.core.db.entity.ThermalHourEntity
+import com.topdon.lib.core.db.entity.ThermalMinuteEntity
 
 @Database(
     entities = [
@@ -93,7 +102,7 @@ abstract class AppDatabase : RoomDatabase() {
                 .addMigrations(
                     object : Migration(5, 6) {
                         override fun migrate(database: SupportSQLiteDatabase) {
-                            // Re-create thermal minute, hour, and day tables
+
                             database.execSQL(
                                 "CREATE TABLE IF NOT EXISTS `thermal_minute` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `thermal_id` TEXT NOT NULL, `user_id` TEXT NOT NULL, `thermal` REAL NOT NULL, `thermal_max` REAL NOT NULL, `thermal_min` REAL NOT NULL, `sn` TEXT NOT NULL, `info` TEXT NOT NULL, `type` TEXT NOT NULL, `start_time` INTEGER NOT NULL, `create_time` INTEGER NOT NULL, `update_time` INTEGER NOT NULL)",
                             )

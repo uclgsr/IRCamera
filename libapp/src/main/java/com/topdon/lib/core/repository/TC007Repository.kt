@@ -54,7 +54,6 @@ object TC007Repository {
             .build()
             .create(TC007Service::class.java)
 
-
     suspend fun getProductInfo(): ProductBean? =
         withContext(Dispatchers.IO) {
             try {
@@ -64,7 +63,6 @@ object TC007Repository {
             }
         }
 
-
     suspend fun getBatteryInfo(): BatteryInfo? =
         withContext(Dispatchers.IO) {
             try {
@@ -73,7 +71,6 @@ object TC007Repository {
                 null
             }
         }
-
 
     suspend fun syncTime(): Boolean =
         withContext(Dispatchers.IO) {
@@ -91,7 +88,6 @@ object TC007Repository {
                 false
             }
         }
-
 
     suspend fun updateFirmware(file: File): Boolean =
         withContext(Dispatchers.IO) {
@@ -124,7 +120,8 @@ object TC007Repository {
                 var packNum = 0
                 var hasReadCount = 0
                 var byteArray = ByteArray(pageSize) // 10M每包
-                val totalPackNum = (file.length() / (pageSize) + (if (file.length() % (pageSize) > 0) 1 else 0)).toInt()
+                val totalPackNum =
+                    (file.length() / (pageSize) + (if (file.length() % (pageSize) > 0) 1 else 0)).toInt()
                 val md5 = EncryptUtils.encryptMD5File2String(file).lowercase(Locale.ROOT)
 
                 var readCount = fileInputStream.read(byteArray)
@@ -132,9 +129,16 @@ object TC007Repository {
                     hasReadCount += readCount
                     if (hasReadCount == pageSize) {
                         packNum++
-                        val body = byteArray.toRequestBody("application/octet-stream".toMediaTypeOrNull())
+                        val body =
+                            byteArray.toRequestBody("application/octet-stream".toMediaTypeOrNull())
                         val part = MultipartBody.Part.createFormData("zipFile", "zipFile", body)
-                        val code = getTC007Service(30).sendUpgradeFile(file.name, packNum, totalPackNum, md5, part).Code
+                        val code = getTC007Service(30).sendUpgradeFile(
+                            file.name,
+                            packNum,
+                            totalPackNum,
+                            md5,
+                            part
+                        ).Code
                         if (code == 400805) { // 已在升级中
                             return@withContext true
                         }
@@ -144,16 +148,24 @@ object TC007Repository {
                         hasReadCount = 0
                         byteArray = ByteArray(pageSize) // 10M每包
                     }
-                    readCount = fileInputStream.read(byteArray, hasReadCount, byteArray.size - hasReadCount)
+                    readCount =
+                        fileInputStream.read(byteArray, hasReadCount, byteArray.size - hasReadCount)
                 }
 
                 if (hasReadCount > 0) {
                     packNum++
                     val lastArray = ByteArray(hasReadCount)
                     System.arraycopy(byteArray, 0, lastArray, 0, hasReadCount)
-                    val body = lastArray.toRequestBody("application/octet-stream".toMediaTypeOrNull())
+                    val body =
+                        lastArray.toRequestBody("application/octet-stream".toMediaTypeOrNull())
                     val part = MultipartBody.Part.createFormData("zipFile", "zipFile", body)
-                    val code = getTC007Service(30).sendUpgradeFile(file.name, packNum, totalPackNum, md5, part).Code
+                    val code = getTC007Service(30).sendUpgradeFile(
+                        file.name,
+                        packNum,
+                        totalPackNum,
+                        md5,
+                        part
+                    ).Code
                     if (code == 400805) { // 已在升级中
                         return@withContext true
                     }
@@ -170,7 +182,6 @@ object TC007Repository {
             }
         }
 
-
     suspend fun resetToFactory(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -179,7 +190,6 @@ object TC007Repository {
                 false
             }
         }
-
 
     suspend fun correction(): Boolean =
         withContext(Dispatchers.IO) {
@@ -190,7 +200,6 @@ object TC007Repository {
             }
         }
 
-
     suspend fun getEnvAttr(): EnvAttr? =
         withContext(Dispatchers.IO) {
             try {
@@ -199,7 +208,6 @@ object TC007Repository {
                 null
             }
         }
-
 
     suspend fun setEnvAttr(
         isCelsius: Boolean,
@@ -219,7 +227,6 @@ object TC007Repository {
             }
         }
 
-
     suspend fun setIRConfig(
         environment: Float,
         distance: Float,
@@ -231,14 +238,13 @@ object TC007Repository {
                 paramMap["AtmosphereTemp"] = ((environment + 273.15f) * 10).toInt()
                 paramMap["Distance"] = (distance * 100).toInt()
                 paramMap["Emissivity"] = (radiation * 10000).toInt()
-//            paramMap["ReflectedTemp"] = 2982
-//            paramMap["Transmittance"] = 10000
+
+
                 getTC007Service().setIRConfig(paramMap.toBody()).isSuccess()
             } catch (_: Exception) {
                 false
             }
         }
-
 
     suspend fun clearAllTemp(): Boolean =
         withContext(Dispatchers.IO) {
@@ -253,7 +259,6 @@ object TC007Repository {
             }
         }
 
-
     suspend fun getTempFrame(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -266,7 +271,6 @@ object TC007Repository {
                 false
             }
         }
-
 
     suspend fun setTempFrame(boolean: Boolean): Boolean =
         withContext(Dispatchers.IO) {
@@ -284,20 +288,23 @@ object TC007Repository {
             }
         }
 
-
     suspend fun setTempPointList(pointList: List<Point>): Boolean =
         withContext(Dispatchers.IO) {
             try {
                 val paramList = ArrayList<TempPointParam>(3)
                 for (i in 0 until 3) {
-                    paramList.add(TempPointParam(i + 1, if (i < pointList.size) pointList[i] else null))
+                    paramList.add(
+                        TempPointParam(
+                            i + 1,
+                            if (i < pointList.size) pointList[i] else null
+                        )
+                    )
                 }
                 getTC007Service().setTempPoint(paramList.toBody()).isSuccess()
             } catch (_: Exception) {
                 false
             }
         }
-
 
     suspend fun setTempLineList(lineList: List<Point>): Boolean =
         withContext(Dispatchers.IO) {
@@ -314,20 +321,23 @@ object TC007Repository {
             }
         }
 
-
     suspend fun setTempRectList(rectList: List<Rect>): Boolean =
         withContext(Dispatchers.IO) {
             try {
                 val paramList = ArrayList<TempRectParam>(3)
                 for (i in 0 until 3) {
-                    paramList.add(TempRectParam(i + 1, if (i < rectList.size) rectList[i] else null))
+                    paramList.add(
+                        TempRectParam(
+                            i + 1,
+                            if (i < rectList.size) rectList[i] else null
+                        )
+                    )
                 }
                 getTC007Service().setTempRect(paramList.toBody()).isSuccess()
             } catch (_: Exception) {
                 false
             }
         }
-
 
     suspend fun getPhoto(): TC007Response<PhotoBean>? =
         withContext(Dispatchers.IO) {
@@ -338,7 +348,6 @@ object TC007Repository {
                 null
             }
         }
-
 
     suspend fun setMode(mode: Int): TC007Response<Any?>? =
         withContext(Dispatchers.IO) {

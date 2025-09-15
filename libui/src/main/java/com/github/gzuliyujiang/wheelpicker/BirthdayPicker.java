@@ -24,7 +24,6 @@ import com.github.gzuliyujiang.wheelpicker.impl.BirthdayFormatter;
 
 import java.util.Calendar;
 
-
 @SuppressWarnings("unused")
 public class BirthdayPicker extends DatePicker {
     private static final int MAX_AGE = 100;

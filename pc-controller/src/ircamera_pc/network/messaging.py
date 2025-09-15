@@ -35,6 +35,7 @@ except ImportError:
             def error(self, msg) -> Any:
                 print(f"ERROR: {msg}")
 
+
         logger = FallbackLogger()
 
 try:
@@ -50,6 +51,7 @@ except ImportError:
                 "messaging.cleanup_interval": 60.0,
             }
             return config_map.get(key, default)
+
 
     config = FallbackConfig()
 
@@ -143,9 +145,9 @@ class ReliableMessageService:
         self.transport = transport
 
     def register_message_handler(
-        self,
-        message_type: Any = str,
-        handler: Any = Callable[[Dict[str, Any]], Optional[Dict[str, Any]]],
+            self,
+            message_type: Any = str,
+            handler: Any = Callable[[Dict[str, Any]], Optional[Dict[str, Any]]],
     ) -> Any:
         """
         Register a handler for incoming messages of a specific type.
@@ -226,15 +228,15 @@ class ReliableMessageService:
         logger.info("Reliable messaging service shutdown complete")
 
     async def send_message(
-        self,
-        target_host: str,
-        target_port: int,
-        message_type: str,
-        content: Dict[str, Any],
-        priority: MessagePriority = MessagePriority.NORMAL,
-        timeout_seconds: Optional[float] = None,
-        max_retries: int = 3,
-        callback: Optional[MessageCallback] = None,
+            self,
+            target_host: str,
+            target_port: int,
+            message_type: str,
+            content: Dict[str, Any],
+            priority: MessagePriority = MessagePriority.NORMAL,
+            timeout_seconds: Optional[float] = None,
+            max_retries: int = 3,
+            callback: Optional[MessageCallback] = None,
     ) -> str:
         """
         Send a reliable message with automatic retry logic.
@@ -293,7 +295,7 @@ class ReliableMessageService:
         return message_id
 
     async def handle_acknowledgment(
-        self, message_id: str, success: bool, error_message: Optional[str] = None
+            self, message_id: str, success: bool, error_message: Optional[str] = None
     ) -> None:
         """
         Handle an acknowledgment for a sent message.
@@ -323,7 +325,7 @@ class ReliableMessageService:
         self._remove_pending_message(message_id)
 
     async def handle_incoming_message(
-        self, message_data: Dict[str, Any], sender_info: Dict[str, Any] = None
+            self, message_data: Dict[str, Any], sender_info: Dict[str, Any] = None
     ) -> Optional[Dict[str, Any]]:
         """
         Handle an incoming message from a remote device.
@@ -434,7 +436,7 @@ class ReliableMessageService:
         # Check if we should retry yet (exponential backoff)
         if message.last_attempt:
             retry_delay = min(
-                self.base_retry_delay * (2**message.retry_count), self.max_retry_delay
+                self.base_retry_delay * (2 ** message.retry_count), self.max_retry_delay
             )
 
             if current_time - message.last_attempt < retry_delay:
@@ -545,11 +547,11 @@ class ReliableMessageService:
             await self.handle_acknowledgment(original_message_id, False, error_message)
 
     async def _send_acknowledgment(
-        self,
-        original_message: Dict[str, Any],
-        success: bool,
-        sender_info: Dict[str, Any] = None,
-        error_message: Optional[str] = None,
+            self,
+            original_message: Dict[str, Any],
+            success: bool,
+            sender_info: Dict[str, Any] = None,
+            error_message: Optional[str] = None,
     ):
         """Send acknowledgment for a received message."""
         if not self.transport or not sender_info:

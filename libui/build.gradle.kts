@@ -1,20 +1,14 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
-    id("kotlin-kapt")
-    id("kotlin-parcelize") // Use modern kotlin-parcelize instead of kotlin-android-extensions for Parcelable
+    kotlin("android") // Modern plugin ID format
+    id("com.google.devtools.ksp") // Use KSP plugin from classpath
+    id("kotlin-parcelize") // Correct plugin ID - Use modern kotlin-parcelize instead of kotlin-android-extensions for Parcelable
 }
 
-kapt {
-    arguments {
-        // Removed AROUTER_MODULE_NAME - migrating to NavigationManager
-        arg("room.schemaLocation", "$projectDir/schemas")
-        arg("room.incremental", "true")
-        arg("room.expandProjection", "true")
-    }
-    // Enable Kotlin 2.1.0 compatibility
-    correctErrorTypes = true
-    useBuildCache = true
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
+    arg("room.expandProjection", "true")
 }
 
 android {
@@ -23,7 +17,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        // targetSdk = libs.versions.targetSdk.get().toInt()  // Deprecated in library modules
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -35,15 +29,17 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
-    // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
-            // Only enable release variant for single-developer maintenance
-            variant.enable = variant.buildType == "release"
+
+            variant.enable = variant.buildType == "release" || variant.buildType == "debug"
         }
     }
 
@@ -52,39 +48,32 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-    kotlinOptions {
-        jvmTarget = "17"
-        freeCompilerArgs +=
-            listOf(
-                "-opt-in=kotlin.RequiresOptIn",
-                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                "-opt-in=kotlinx.coroutines.FlowPreview",
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            freeCompilerArgs.addAll(
+                listOf(
+                    "-opt-in=kotlin.RequiresOptIn",
+                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    "-opt-in=kotlinx.coroutines.FlowPreview",
+                )
             )
+        }
     }
 
     lint {
-        // Ignore errors in embedded third-party libraries
         disable += listOf("WrongThread")
-        // Set error threshold to warnings only to prevent build failures on third-party library issues
         abortOnError = false
         warningsAsErrors = false
     }
 }
 
 dependencies {
-    // Core library desugaring support
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
-    // Project dependencies
     implementation(project(":libapp"))
     implementation(project(":libmenu")) // Required for menu references in widget files
-
-    // Add unified BLE module for comprehensive Shimmer Nordic and Topdon BLE support
     implementation(project(":BleModule"))
-
-    // Use shared UI bundle instead of individual dependencies
     implementation(libs.bundles.ui.common)
-
-    // Smart Refresh Layout for LoadingFooter - temporarily commented out due to jitpack.io issues
-    // implementation(libs.bundles.smart.refresh)
 }

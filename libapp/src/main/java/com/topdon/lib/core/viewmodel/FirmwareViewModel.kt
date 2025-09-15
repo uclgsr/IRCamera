@@ -28,28 +28,21 @@ import kotlinx.coroutines.withContext
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-import java.lang.NumberFormatException
 import java.util.TimeZone
 import java.util.concurrent.CountDownLatch
-
 
 class FirmwareViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
 
         private const val TS004_SOFT_CODE = "TS004_FirmwareSW_Scope"
 
-
         private const val TC007_SOFT_CODE = "TC007_FirmwareSW_Wireless"
-
 
         private const val TS004_FIRMWARE_VERSION = "V1.70"
 
-
         private const val TS004_FIRMWARE_NAME = "TS004V1.70.zip"
 
-
         private const val TC007_FIRMWARE_VERSION = "V4.06"
-
 
         private const val TC007_FIRMWARE_NAME = "TC007V4.06.zip"
 
@@ -60,16 +53,12 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         private const val TC007_DEBUG_RANDOM_NUM = "EN6L6Q"
     }
 
-
     @Volatile
     private var isRequest = false
 
-
     val firmwareDataLD: MutableLiveData<FirmwareData?> = MutableLiveData()
 
-
     val failLD: MutableLiveData<Boolean> = MutableLiveData()
-
 
     data class FirmwareData(
         val version: String,
@@ -78,7 +67,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val size: Long,
     )
 
-
     fun queryFirmware(isTS004: Boolean) {
         if (isRequest) { // 别催别催，在查了
             return
@@ -86,9 +74,9 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         isRequest = true
 
         viewModelScope.launch(Dispatchers.IO) {
-            // 由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，以下使用网络的代码先注释
+
             /*if (isTS004) {
-                //从 TS004 中获取 SN、激活码
+
                 val deviceInfo: DeviceInfo? = TS004Repository.getDeviceInfo()?.data
                 if (deviceInfo == null) {
                     XLog.w("TS004 固件升级 - 从设备查询 SN、激活码 失败!")
@@ -97,7 +85,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                     return@launch
                 }
 
-                //从 TS004 中获取固件版本
                 val firmware: String? = TS004Repository.getVersion()?.data?.firmware
                 if (firmware == null) {
                     XLog.w("TS004 固件升级 - 从设备查询 固件版本 失败!")
@@ -110,7 +97,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 val randomNum: String = if (USE_DEBUG_SN) TS004_DEBUG_RANDOM_NUM else deviceInfo.code
                 getInfoFromNetwork(true, sn, randomNum, firmware)
             } else {
-                //从 TC007 中获取 SN、激活码
+
                 val productInfo: ProductBean? = TC007Repository.getProductInfo()
                 if (productInfo == null) {
                     XLog.w("TC007 固件升级 - 从设备查询 SN、激活码 失败!")
@@ -125,9 +112,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 getInfoFromNetwork(false, sn, randomNum, firmware)
             }*/
 
-            // 由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，以下为临时方案逻辑
             if (isTS004) {
-                // 从 TS004 中获取固件版本
+
                 val firmware: String? = TS004Repository.getVersion()?.data?.firmware
                 if (firmware == null) {
                     XLog.w("TS004 固件升级 - 从设备查询 固件版本 失败!")
@@ -138,7 +124,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
                 getInfoFromAssets(true, firmware)
             } else {
-                // 从 TC007 中获取固件版本
+
                 val productInfo: ProductBean? = TC007Repository.getProductInfo()
                 if (productInfo == null) {
                     XLog.w("TC007 固件升级 - 从设备查询 SN、激活码 失败!")
@@ -151,7 +137,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             }
         }
     }
-
 
     private fun getInfoFromAssets(
         isTS004: Boolean,
@@ -189,13 +174,18 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             return
         }
 
-        // 需求就是只需要中英两种语言，其他语言就使用英文。
         val tipsStr = getApplication<Application>().getString(R.string.fireware_update_tips)
 
-        firmwareDataLD.postValue(FirmwareData(apkVersionStr, tipsStr, apkFirmwareName, firmwareFile.length()))
+        firmwareDataLD.postValue(
+            FirmwareData(
+                apkVersionStr,
+                tipsStr,
+                apkFirmwareName,
+                firmwareFile.length()
+            )
+        )
         isRequest = false
     }
-
 
     private suspend fun getInfoFromNetwork(
         isTS004: Boolean,
@@ -203,7 +193,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         randomNum: String,
         firmware: String,
     ) {
-        // 绑定设备
+
         val bindCode = bindDevice(sn, randomNum)
         if (bindCode != LMS.SUCCESS && bindCode != 15109) {
             XLog.w("${if (isTS004) "TS004" else "TC007"} 固件升级 - 绑定设备失败! sn: $sn")
@@ -212,8 +202,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             return
         }
 
-        // 获取固件升级包list
-        val packageData: PackageData? = querySoftPackage(sn, if (isTS004) TS004_SOFT_CODE else TC007_SOFT_CODE)
+        val packageData: PackageData? =
+            querySoftPackage(sn, if (isTS004) TS004_SOFT_CODE else TC007_SOFT_CODE)
         if (packageData == null) {
             XLog.w("${if (isTS004) "TS004" else "TC007"} 固件升级 - 获取固件升级包信息失败!")
             failLD.postValue(false)
@@ -239,7 +229,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             return
         }
 
-        // 获取固件升级包下载地址
         val downloadData = queryDownloadUrl(sn, record.maxUpdateVersionSoftId)
         if (downloadData?.responseCode == LMS.SUCCESS) {
             firmwareDataLD.postValue(
@@ -257,7 +246,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         isRequest = false
     }
 
-
     private suspend fun bindDevice(
         sn: String,
         randomNum: String,
@@ -274,7 +262,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-
     private suspend fun querySoftPackage(
         sn: String,
         softCode: String,
@@ -287,11 +274,18 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             val params = RequestParams()
             params.addBodyParameter("sn", sn)
             params.addBodyParameter("softCode", softCode)
-            params.addBodyParameter("downloadLanguageId", LanguageUtil.getLanguageId(Utils.getApp()))
+            params.addBodyParameter(
+                "downloadLanguageId",
+                LanguageUtil.getLanguageId(Utils.getApp())
+            )
             params.addBodyParameter("downloadPlatformId", 2) // 1-IOS 2-APP 3-官网 4-PC 5-生产 6-其他
             params.addBodyParameter(
                 "queryTime",
-                DateUtils.format(System.currentTimeMillis(), "yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone("GMT")),
+                DateUtils.format(
+                    System.currentTimeMillis(),
+                    "yyyy-MM-dd HH:mm:ss",
+                    TimeZone.getTimeZone("GMT")
+                ),
             )
             HttpProxy.instant.post(
                 url,
@@ -299,7 +293,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 object : IResponseCallback {
                     override fun onResponse(response: String?) {
                         try {
-                            val commonBean: CommonBean = ResponseBean.convertCommonBean(response, null)
+                            val commonBean: CommonBean =
+                                ResponseBean.convertCommonBean(response, null)
                             packageData = Gson().fromJson(commonBean.data, PackageData::class.java)
                         } catch (_: Exception) {
                         }
@@ -315,7 +310,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             countDownLatch.await()
             return@withContext packageData
         }
-
 
     private suspend fun queryDownloadUrl(
         sn: String,
@@ -337,7 +331,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 object : IResponseCallback {
                     override fun onResponse(response: String?) {
                         try {
-                            val commonBean: CommonBean = ResponseBean.convertCommonBean(response, null)
+                            val commonBean: CommonBean =
+                                ResponseBean.convertCommonBean(response, null)
                             if (commonBean.code == LMS.SUCCESS) {
                                 result = Gson().fromJson(commonBean.data, DownloadData::class.java)
                                 result?.responseCode = commonBean.code
@@ -368,7 +363,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         } catch (e: NumberFormatException) {
             0.0
         }
-
 
     private class PackageData {
         var records: List<Record>? = null
@@ -402,7 +396,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             val textDescription: String?,
         )
     }
-
 
     private data class DownloadData(
         val downUrl: String?,

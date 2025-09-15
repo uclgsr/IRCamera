@@ -7,13 +7,11 @@ import com.github.mikephil.charting.interfaces.datasets.IScatterDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
-
-public class ChevronDownShapeRenderer implements IShapeRenderer
-{
+public class ChevronDownShapeRenderer implements IShapeRenderer {
 
     @Override
     public void renderShape(Canvas c, IScatterDataSet dataSet, ViewPortHandler viewPortHandler,
-                     float posX, float posY, Paint renderPaint) {
+                            float posX, float posY, Paint renderPaint) {
 
         final float shapeHalf = dataSet.getScatterShapeSize() / 2f;
 

@@ -17,6 +17,5 @@ object Constants {
     const val IR_TC007_MODE = 6 // TC007设备
     const val IR_TEMPERATURE_LITE = 7 // lite设备
 
-
     const val IS_REPORT_FIRST = "IS_REPORT_FIRST"
 }

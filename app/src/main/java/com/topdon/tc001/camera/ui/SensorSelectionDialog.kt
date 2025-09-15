@@ -7,13 +7,14 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.CompoundButton
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.csl.irCamera.R
-
-// Enhanced unified BLE integration for comprehensive sensor discovery
 import com.topdon.ble.UnifiedBleManager
-
 
 class SensorSelectionDialog(
     context: Context,
@@ -26,30 +27,28 @@ class SensorSelectionDialog(
         fun detectAvailableSensors(context: Context): Set<SensorType> {
             val available = mutableSetOf<SensorType>()
 
-            // Thermal camera is always available in this thermal camera app
             available.add(SensorType.THERMAL)
 
-            // Check RGB camera availability
             if (context.packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_CAMERA_ANY)) {
                 available.add(SensorType.RGB)
             }
 
-            // Enhanced GSR sensor detection using unified BLE system
             try {
                 val unifiedBleManager = UnifiedBleManager.getInstance(context)
-                // Quick check for any previously connected Shimmer devices
-                val hasConnectedShimmerDevices = unifiedBleManager.getConnectedShimmerDevices().isNotEmpty()
+
+                val hasConnectedShimmerDevices =
+                    unifiedBleManager.getConnectedShimmerDevices().isNotEmpty()
 
                 if (hasConnectedShimmerDevices) {
                     available.add(SensorType.GSR)
                     Log.d(TAG, "Connected Shimmer GSR devices found")
                 } else {
-                    // GSR sensor available with fallback to simulated data if no hardware present
+
                     available.add(SensorType.GSR)
                     Log.d(TAG, "GSR sensor available (will use simulation if no hardware found)")
                 }
             } catch (e: Exception) {
-                // Fallback - always make GSR available with simulated data option
+
                 available.add(SensorType.GSR)
                 Log.w(TAG, "BLE manager not available, GSR will use simulated data if needed", e)
             }
@@ -57,7 +56,6 @@ class SensorSelectionDialog(
             Log.d(TAG, "Detected available sensors: $available")
             return available
         }
-
 
         fun show(
             context: Context,
@@ -69,7 +67,10 @@ class SensorSelectionDialog(
     }
 
     enum class SensorType(val displayName: String, val description: String) {
-        THERMAL("🌡️ Thermal Camera", "Infrared thermal imaging with precise temperature measurement"),
+        THERMAL(
+            "🌡️ Thermal Camera",
+            "Infrared thermal imaging with precise temperature measurement"
+        ),
         RGB("📸 RGB Camera", "High-quality color video recording with Samsung camera features"),
         GSR("📊 GSR Sensor", "128Hz physiological data via Shimmer3 Bluetooth sensor"),
     }
@@ -85,17 +86,16 @@ class SensorSelectionDialog(
         super.onCreate(savedInstanceState)
         setTitle("Select Recording Sensors")
 
-        // Create layout
         val mainLayout =
             LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
                 setPadding(48, 32, 48, 32)
             }
 
-        // Title text with better formatting
         val titleText =
             TextView(context).apply {
-                text = "🚀 Parallel Multi-Modal Recording\nChoose sensors for synchronized research-grade recording:"
+                text =
+                    "🚀 Parallel Multi-Modal Recording\nChoose sensors for synchronized research-grade recording:"
                 textSize = 16f
                 setTextColor(ContextCompat.getColor(context, android.R.color.black))
                 setPadding(0, 0, 0, 24)
@@ -103,7 +103,6 @@ class SensorSelectionDialog(
             }
         mainLayout.addView(titleText)
 
-        // Sensor checkboxes with descriptions
         createSensorCheckBox(SensorType.THERMAL).let {
             thermalCheckBox = it.first
             mainLayout.addView(it.second)
@@ -119,7 +118,6 @@ class SensorSelectionDialog(
             mainLayout.addView(it.second)
         }
 
-        // Status text
         statusText =
             TextView(context).apply {
                 textSize = 12f
@@ -130,7 +128,6 @@ class SensorSelectionDialog(
         updateStatusText()
         mainLayout.addView(statusText)
 
-        // Buttons
         val buttonLayout =
             LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
@@ -163,12 +160,10 @@ class SensorSelectionDialog(
 
         mainLayout.addView(buttonLayout)
 
-        // Setup change listeners
         setupCheckBoxListeners()
 
         setContentView(mainLayout)
 
-        // Dialog properties
         window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -192,7 +187,6 @@ class SensorSelectionDialog(
                 textSize = 14f
                 isEnabled = availableSensors.contains(sensorType)
 
-                // Default selections based on availability
                 isChecked =
                     when (sensorType) {
                         SensorType.THERMAL -> availableSensors.contains(sensorType) // Always select thermal if available
@@ -240,7 +234,6 @@ class SensorSelectionDialog(
         rgbCheckBox.setOnCheckedChangeListener(listener)
         gsrCheckBox.setOnCheckedChangeListener(listener)
 
-        // Initial state
         startButton.isEnabled = getSelectedSensors().isNotEmpty()
     }
 
@@ -250,7 +243,10 @@ class SensorSelectionDialog(
             when (selectedSensors.size) {
                 0 -> "⚠️ Select at least one sensor to start recording"
                 1 -> "📱 Single-modal: ${selectedSensors.first().displayName} only"
-                2 -> "🔄 Dual-modal: ${selectedSensors.map { it.displayName }.joinToString(" + ")} synchronized"
+                2 -> "🔄 Dual-modal: ${
+                    selectedSensors.map { it.displayName }.joinToString(" + ")
+                } synchronized"
+
                 3 -> "🎯 Tri-modal: Complete physiological research setup"
                 else -> "📊 ${selectedSensors.size} sensors selected for parallel recording"
             }

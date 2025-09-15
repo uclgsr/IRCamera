@@ -15,10 +15,10 @@
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:contentDescription="@null"
-            tools:src="@drawable/selector_menu2_fence_point"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/selector_menu2_fence_point" />
 
         <!-- Temperature range text used only by temperature level menu -->
         <TextView
@@ -27,27 +27,27 @@
             android:layout_height="0dp"
             android:layout_margin="5dp"
             android:gravity="center_vertical"
-            android:textSize="12sp"
             android:textColor="@color/temp_level_text"
-            tools:text="-20\n~\n50°C"
-            app:layout_constraintStart_toStartOf="@id/iv_icon"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_icon"
             app:layout_constraintEnd_toEndOf="@id/iv_icon"
+            app:layout_constraintStart_toStartOf="@id/iv_icon"
             app:layout_constraintTop_toTopOf="@id/iv_icon"
-            app:layout_constraintBottom_toBottomOf="@id/iv_icon" />
+            tools:text="-20\n~\n50°C" />
 
         <TextView
             android:id="@+id/tv_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingVertical="4dp"
-            android:gravity="center_horizontal"
-            android:singleLine="true"
             android:ellipsize="end"
-            android:textSize="12sp"
+            android:gravity="center_horizontal"
+            android:paddingVertical="4dp"
+            android:singleLine="true"
             android:textColor="@color/second_menu_text"
-            tools:text="@string/thermal_point"
-            app:layout_constraintStart_toStartOf="@id/iv_icon"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@id/iv_icon"
-            app:layout_constraintTop_toBottomOf="@id/iv_icon" />
+            app:layout_constraintStart_toStartOf="@id/iv_icon"
+            app:layout_constraintTop_toBottomOf="@id/iv_icon"
+            tools:text="@string/thermal_point" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

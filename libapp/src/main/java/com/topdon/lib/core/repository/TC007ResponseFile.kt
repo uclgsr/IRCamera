@@ -2,9 +2,6 @@ package com.topdon.lib.core.repository
 
 import android.graphics.Point
 import android.graphics.Rect
-import java.lang.NumberFormatException
-
-// 这个文件用来放 TC007 接口返回 JSON 的封装
 
 
 data class TC007Response<T>(
@@ -18,7 +15,6 @@ data class TC007Response<T>(
     fun isSuccess(): Boolean = Code == 200
 }
 
-
 data class ProductBean(
     val ProductName: String,
     val ProductPN: String,
@@ -26,7 +22,8 @@ data class ProductBean(
     val Code: String,
     val SoftwareVersion: Version07Bean?,
 ) {
-    fun getVersionStr(): String = "${SoftwareVersion?.Major ?: "-"}.${SoftwareVersion?.Minor ?: "-"}${SoftwareVersion?.Build ?: "-"}"
+    fun getVersionStr(): String =
+        "${SoftwareVersion?.Major ?: "-"}.${SoftwareVersion?.Minor ?: "-"}${SoftwareVersion?.Build ?: "-"}"
 }
 
 data class Version07Bean(
@@ -34,7 +31,6 @@ data class Version07Bean(
     val Minor: String?,
     val Build: String?,
 )
-
 
 data class BatteryInfo(
     val Status: String?,
@@ -50,13 +46,11 @@ data class BatteryInfo(
         }
 }
 
-
 data class TC07UpgradeStatus(
     val Status: Int,
     val Percent: Int,
     val Code: Int,
 )
-
 
 data class EnvAttr(
     val Fps: Int,
@@ -91,7 +85,7 @@ data class TempFrameParam(
     val FrameLow: FrameParam,
     val FrameCenter: FrameParam,
 ) {
-//    constructor(isEnable: Boolean): this(FrameParam(isEnable), FrameParam(isEnable), FrameParam(isEnable))
+
 }
 
 internal data class PointParam(val X: Int, val Y: Int) {
@@ -149,7 +143,12 @@ internal data class TempRectParam(
         Target = TargetParam(true),
     )
 
-    data class RectParam(val Point0: PointParam, val Point1: PointParam, val Point2: PointParam, val Point3: PointParam) {
+    data class RectParam(
+        val Point0: PointParam,
+        val Point1: PointParam,
+        val Point2: PointParam,
+        val Point3: PointParam
+    ) {
         constructor(rect: Rect?) : this(
             Point0 = PointParam(rect?.left ?: 0, rect?.top ?: 0),
             Point1 = PointParam(rect?.right ?: 0, rect?.top ?: 0),
@@ -158,7 +157,6 @@ internal data class TempRectParam(
         )
     }
 }
-
 
 data class PhotoBean(
     val DCFile: String?,
@@ -171,7 +169,6 @@ data class AttributeBean(
     var TempUnit: Int?,
     var DistanceUnit: Int?,
 )
-
 
 data class WifiAttributeBean(
     var Ratio: Int? = null,

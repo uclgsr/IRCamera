@@ -17,7 +17,6 @@ abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-
     private fun initVM() {
         providerVMClass()?.let {
             viewModel = ViewModelProvider(this).get(it)

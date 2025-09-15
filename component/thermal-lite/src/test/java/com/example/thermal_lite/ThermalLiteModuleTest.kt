@@ -5,13 +5,14 @@ import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O], manifest = Config.NONE)
@@ -59,10 +60,12 @@ class ThermalLiteModuleTest {
     fun testThermalActivityCreation() {
         // Test thermal activity classes can be referenced
         try {
-            val thermalLiteActivity = Class.forName("com.example.thermal_lite.activity.IRThermalLiteActivity")
+            val thermalLiteActivity =
+                Class.forName("com.example.thermal_lite.activity.IRThermalLiteActivity")
             assertNotNull("IRThermalLiteActivity should be accessible", thermalLiteActivity)
 
-            val monitorActivity = Class.forName("com.example.thermal_lite.activity.IRMonitorLiteActivity")
+            val monitorActivity =
+                Class.forName("com.example.thermal_lite.activity.IRMonitorLiteActivity")
             assertNotNull("IRMonitorLiteActivity should be accessible", monitorActivity)
         } catch (e: ClassNotFoundException) {
             // Activities may not be testable without full Android framework
@@ -74,7 +77,8 @@ class ThermalLiteModuleTest {
     fun testThermalFragmentCreation() {
         // Test thermal fragment classes can be referenced
         try {
-            val monitorFragment = Class.forName("com.example.thermal_lite.fragment.IRMonitorLiteFragment")
+            val monitorFragment =
+                Class.forName("com.example.thermal_lite.fragment.IRMonitorLiteFragment")
             assertNotNull("IRMonitorLiteFragment should be accessible", monitorFragment)
         } catch (e: ClassNotFoundException) {
             // Fragments may not be testable without full Android framework
@@ -127,7 +131,9 @@ class ThermalLiteModuleTest {
 
                 // Basic validation
                 assertTrue("Temperature data should have values", mockTemperatureData.isNotEmpty())
-                assertTrue("All temperatures should be reasonable", mockTemperatureData.all { it > -50 && it < 200 })
+                assertTrue(
+                    "All temperatures should be reasonable",
+                    mockTemperatureData.all { it > -50 && it < 200 })
 
                 // Test statistical operations
                 val avgTemp = mockTemperatureData.average()
@@ -148,8 +154,14 @@ class ThermalLiteModuleTest {
             val mockThermalMatrix = Array(10) { FloatArray(10) { 25.0f + it * 0.5f } }
 
             // Test matrix operations
-            assertTrue("Thermal matrix should have correct dimensions", mockThermalMatrix.size == 10)
-            assertTrue("Thermal matrix rows should have correct length", mockThermalMatrix[0].size == 10)
+            assertTrue(
+                "Thermal matrix should have correct dimensions",
+                mockThermalMatrix.size == 10
+            )
+            assertTrue(
+                "Thermal matrix rows should have correct length",
+                mockThermalMatrix[0].size == 10
+            )
 
             // Test temperature range analysis
             val flatArray = mockThermalMatrix.flatMap { it.toList() }
@@ -171,8 +183,14 @@ class ThermalLiteModuleTest {
                     val horizontalGradient = kotlin.math.abs(rightNeighbor - current)
                     val verticalGradient = kotlin.math.abs(bottomNeighbor - current)
 
-                    assertTrue("Horizontal gradient should be reasonable", horizontalGradient >= 0f && horizontalGradient < 10f)
-                    assertTrue("Vertical gradient should be reasonable", verticalGradient >= 0f && verticalGradient < 10f)
+                    assertTrue(
+                        "Horizontal gradient should be reasonable",
+                        horizontalGradient >= 0f && horizontalGradient < 10f
+                    )
+                    assertTrue(
+                        "Vertical gradient should be reasonable",
+                        verticalGradient >= 0f && verticalGradient < 10f
+                    )
                 }
             }
         }
@@ -187,7 +205,10 @@ class ThermalLiteModuleTest {
 
             // Test calibration conversion
             val calibratedValue = (rawThermalValue * calibrationScale) - calibrationOffset
-            assertTrue("Calibrated value should be reasonable", calibratedValue > -300 && calibratedValue < 1000)
+            assertTrue(
+                "Calibrated value should be reasonable",
+                calibratedValue > -300 && calibratedValue < 1000
+            )
 
             // Test temperature unit conversions
             val celsius = 25.0
@@ -201,7 +222,12 @@ class ThermalLiteModuleTest {
             val celsiusFromFahrenheit = (fahrenheit - 32.0) * 5.0 / 9.0
             val celsiusFromKelvin = kelvin - 273.15
 
-            assertEquals("Celsius from Fahrenheit should be correct", celsius, celsiusFromFahrenheit, 0.001)
+            assertEquals(
+                "Celsius from Fahrenheit should be correct",
+                celsius,
+                celsiusFromFahrenheit,
+                0.001
+            )
             assertEquals("Celsius from Kelvin should be correct", celsius, celsiusFromKelvin, 0.001)
         }
 
@@ -215,6 +241,10 @@ class ThermalLiteModuleTest {
                     context.packageName
                 }
 
-            assertEquals("Async thermal operation should return correct value", context.packageName, result)
+            assertEquals(
+                "Async thermal operation should return correct value",
+                context.packageName,
+                result
+            )
         }
 }

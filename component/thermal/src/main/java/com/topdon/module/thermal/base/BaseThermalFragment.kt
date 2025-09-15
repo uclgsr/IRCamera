@@ -1,11 +1,14 @@
 package com.topdon.module.thermal.base
 
 import android.graphics.Bitmap
-import android.widget.*
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.topdon.lib.core.ktbase.BaseFragment
 import kotlinx.coroutines.Job
-
 
 open class BaseThermalFragment : BaseFragment() {
     var mIrBitmap: Bitmap? = null
@@ -13,7 +16,6 @@ open class BaseThermalFragment : BaseFragment() {
     val SRC_WIDTH = 192
     val SRC_HEIGHT = 256
 
-    // 0-9
     var paletteIndex = 0
     var irSurfaceViewLayoutParams: ConstraintLayout.LayoutParams? = null
     var displayViewLayoutParams: FrameLayout.LayoutParams? = null

@@ -1,54 +1,52 @@
 package com.topdon.gsr.util
 
-
 object TimeUtil {
     private const val TAG = "TimeUtil"
 
-    // PC time offset for synchronization (would be set via network communication in production)
     private var pcTimeOffset: Long = 0L
 
-    // Samsung S22 device ground truth timestamp base - established at system initialization
     private var deviceGroundTruthBase: Long = System.currentTimeMillis()
 
-    // Boot time reference for high-precision timing (Samsung S22 system uptime)
     private var bootTimeReference: Long = 0L
 
-    // Detected processor information for optimal timing configuration
     private var detectedProcessor: String = "Unknown"
     private var deviceModel: String = "Unknown"
 
-
     fun getUtcTimestamp(): Long {
-        // Use Samsung S22 device clock as authoritative ground truth reference
+
         val currentDeviceTime = System.currentTimeMillis()
         val deviceOffset = currentDeviceTime - deviceGroundTruthBase
         return deviceGroundTruthBase + deviceOffset + pcTimeOffset
     }
 
-
     fun initializeGroundTruthTiming() {
         deviceGroundTruthBase = System.currentTimeMillis()
 
-        // Detect Samsung S22 processor variant for optimal timing configuration
         detectSamsungS22Processor()
 
-        // Capture boot time reference for high-precision calculations
         try {
             bootTimeReference = System.nanoTime() / 1_000_000L // Convert to milliseconds
         } catch (e: Exception) {
             bootTimeReference = 0L
         }
 
-        // Only log if Android Log is available (not in unit tests)
         try {
-            android.util.Log.d(TAG, "Samsung S22 device ground truth timestamp initialized: $deviceGroundTruthBase")
-            android.util.Log.d(TAG, "Samsung S22 model: $deviceModel, processor: $detectedProcessor")
-            android.util.Log.d(TAG, "Samsung S22 boot reference: $bootTimeReference ($detectedProcessor timer)")
+            android.util.Log.d(
+                TAG,
+                "Samsung S22 device ground truth timestamp initialized: $deviceGroundTruthBase"
+            )
+            android.util.Log.d(
+                TAG,
+                "Samsung S22 model: $deviceModel, processor: $detectedProcessor"
+            )
+            android.util.Log.d(
+                TAG,
+                "Samsung S22 boot reference: $bootTimeReference ($detectedProcessor timer)"
+            )
         } catch (e: Exception) {
-            // Ignore - running in unit tests
+
         }
     }
-
 
     private fun detectSamsungS22Processor() {
         try {
@@ -63,33 +61,35 @@ object TimeUtil {
                 }
 
             when {
-                // SM-S901E (International) - typically Exynos 2200
+
                 deviceModel.contains("SM-S901E", ignoreCase = true) -> {
                     detectedProcessor = "Exynos_2200"
                 }
-                // SM-S901U/SM-S901W (US/Canada) - typically Snapdragon 8 Gen 1
+
                 deviceModel.contains("SM-S901U", ignoreCase = true) ||
-                    deviceModel.contains("SM-S901W", ignoreCase = true) -> {
+                        deviceModel.contains("SM-S901W", ignoreCase = true) -> {
                     detectedProcessor = "Snapdragon_8_Gen_1"
                 }
-                // SM-S901N (Korea) - typically Snapdragon 8 Gen 1
+
                 deviceModel.contains("SM-S901N", ignoreCase = true) -> {
                     detectedProcessor = "Snapdragon_8_Gen_1"
                 }
-                // Additional detection via hardware/SoC if available
+
                 hardware.contains("qcom", ignoreCase = true) ||
-                    soc.contains("qualcomm", ignoreCase = true) -> {
+                        soc.contains("qualcomm", ignoreCase = true) -> {
                     detectedProcessor = "Snapdragon_8_Gen_1"
                 }
+
                 hardware.contains("exynos", ignoreCase = true) ||
-                    soc.contains("samsung", ignoreCase = true) -> {
+                        soc.contains("samsung", ignoreCase = true) -> {
                     detectedProcessor = "Exynos_2200"
                 }
                 // Generic Samsung S22 detection
                 deviceBrand.contains("samsung", ignoreCase = true) &&
-                    deviceModel.contains("SM-S90", ignoreCase = true) -> {
+                        deviceModel.contains("SM-S90", ignoreCase = true) -> {
                     detectedProcessor = "Samsung_S22_Generic"
                 }
+
                 else -> {
                     detectedProcessor = "Generic_Android_Timer"
                 }
@@ -100,40 +100,39 @@ object TimeUtil {
         }
     }
 
-
     fun setPcTimeOffset(offset: Long) {
         pcTimeOffset = offset
         // Only log if Android Log is available (not in unit tests)
         try {
-            android.util.Log.d(TAG, "PC time offset set to: ${offset}ms from Samsung S22 ground truth")
-            android.util.Log.d(TAG, "Samsung S22 ($detectedProcessor) maintains authoritative timing with ${offset}ms PC coordination")
+            android.util.Log.d(
+                TAG,
+                "PC time offset set to: ${offset}ms from Samsung S22 ground truth"
+            )
+            android.util.Log.d(
+                TAG,
+                "Samsung S22 ($detectedProcessor) maintains authoritative timing with ${offset}ms PC coordination"
+            )
         } catch (e: Exception) {
             // Ignore - running in unit tests
         }
     }
 
-
     fun getPcTimeOffset(): Long = pcTimeOffset
 
-
     fun getGroundTruthBase(): Long = deviceGroundTruthBase
-
 
     fun systemToUtc(systemTime: Long): Long {
         val deviceOffset = systemTime - deviceGroundTruthBase
         return deviceGroundTruthBase + deviceOffset + pcTimeOffset
     }
 
-
     fun utcToSystem(utcTime: Long): Long {
         return utcTime - pcTimeOffset - (deviceGroundTruthBase - System.currentTimeMillis())
     }
 
-
     fun getSynchronizedTimestamp(): Long {
         return getUtcTimestamp()
     }
-
 
     fun getHighPrecisionTimestamp(): Long {
         return try {
@@ -146,7 +145,6 @@ object TimeUtil {
         }
     }
 
-
     fun formatTimestamp(timestamp: Long): String {
         return try {
             java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", java.util.Locale.US)
@@ -156,7 +154,6 @@ object TimeUtil {
             timestamp.toString()
         }
     }
-
 
     fun generateSessionId(prefix: String = "GSR"): String {
         return try {
@@ -169,7 +166,6 @@ object TimeUtil {
             "${prefix}_${getSynchronizedTimestamp()}"
         }
     }
-
 
     fun getTimingMetadata(): Map<String, String> {
         return mapOf(
@@ -184,7 +180,6 @@ object TimeUtil {
             "system_uptime_ms" to (System.nanoTime() / 1_000_000L).toString(),
         )
     }
-
 
     fun validateTimingSystem(): Map<String, Any> {
         val currentTime = System.currentTimeMillis()
@@ -206,13 +201,13 @@ object TimeUtil {
             "detected_processor" to detectedProcessor,
             "device_model" to deviceModel,
             "ntp_coordination" to (pcTimeOffset != 0L),
-            "processor_optimized" to (detectedProcessor.contains("Exynos") || detectedProcessor.contains("Snapdragon")),
+            "processor_optimized" to (detectedProcessor.contains("Exynos") || detectedProcessor.contains(
+                "Snapdragon"
+            )),
         )
     }
 
-
     fun getDetectedProcessor(): String = detectedProcessor
-
 
     fun getDeviceModel(): String = deviceModel
 }

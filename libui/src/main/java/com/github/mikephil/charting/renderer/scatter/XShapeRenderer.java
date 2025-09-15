@@ -7,9 +7,7 @@ import com.github.mikephil.charting.interfaces.datasets.IScatterDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
-
-public class XShapeRenderer implements IShapeRenderer
-{
+public class XShapeRenderer implements IShapeRenderer {
 
     @Override
     public void renderShape(Canvas c, IScatterDataSet dataSet, ViewPortHandler viewPortHandler,

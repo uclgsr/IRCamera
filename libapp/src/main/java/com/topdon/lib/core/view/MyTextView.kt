@@ -7,23 +7,17 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
 import com.topdon.lib.core.R
 
-
 class MyTextView : AppCompatTextView {
 
     private var topHeight = 0
 
-
     private var bottomHeight = 0
-
 
     private var startHeight = 0
 
-
     private var endHeight = 0
 
-
     private var leftHeight = 0
-
 
     private var rightHeight = 0
 
@@ -31,18 +25,31 @@ class MyTextView : AppCompatTextView {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.MyTextView, defStyleAttr, 0)
-        val drawableHeight = typedArray.getDimensionPixelSize(R.styleable.MyTextView_drawable_height, textSize.toInt())
-        topHeight = typedArray.getDimensionPixelSize(R.styleable.MyTextView_top_height, drawableHeight)
-        bottomHeight = typedArray.getDimensionPixelSize(R.styleable.MyTextView_bottom_height, drawableHeight)
-        startHeight = typedArray.getDimensionPixelSize(R.styleable.MyTextView_start_height, drawableHeight)
-        endHeight = typedArray.getDimensionPixelSize(R.styleable.MyTextView_end_height, drawableHeight)
-        leftHeight = typedArray.getDimensionPixelSize(R.styleable.MyTextView_left_height, drawableHeight)
-        rightHeight = typedArray.getDimensionPixelSize(R.styleable.MyTextView_right_height, drawableHeight)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        val typedArray =
+            context.obtainStyledAttributes(attrs, R.styleable.MyTextView, defStyleAttr, 0)
+        val drawableHeight = typedArray.getDimensionPixelSize(
+            R.styleable.MyTextView_drawable_height,
+            textSize.toInt()
+        )
+        topHeight =
+            typedArray.getDimensionPixelSize(R.styleable.MyTextView_top_height, drawableHeight)
+        bottomHeight =
+            typedArray.getDimensionPixelSize(R.styleable.MyTextView_bottom_height, drawableHeight)
+        startHeight =
+            typedArray.getDimensionPixelSize(R.styleable.MyTextView_start_height, drawableHeight)
+        endHeight =
+            typedArray.getDimensionPixelSize(R.styleable.MyTextView_end_height, drawableHeight)
+        leftHeight =
+            typedArray.getDimensionPixelSize(R.styleable.MyTextView_left_height, drawableHeight)
+        rightHeight =
+            typedArray.getDimensionPixelSize(R.styleable.MyTextView_right_height, drawableHeight)
         typedArray.recycle()
 
-        // 取出设置的各个Drawable
         val drawables = compoundDrawables
         val relativeDrawables = compoundDrawablesRelative
         val left = drawables[0]
@@ -103,7 +110,6 @@ class MyTextView : AppCompatTextView {
         setCompoundDrawablesRelative(start, top, end, bottom)
     }
 
-
     fun setDrawableHeightPx(pxHeight: Int) {
         topHeight = pxHeight
         bottomHeight = pxHeight
@@ -114,18 +120,15 @@ class MyTextView : AppCompatTextView {
         invalidate()
     }
 
-
     fun setOnlyDrawableStart(drawable: Drawable?) {
         setCompoundDrawablesRelative(drawable, null, null, null)
     }
-
 
     fun setOnlyDrawableStart(
         @DrawableRes start: Int,
     ) {
         setCompoundDrawablesRelativeWithIntrinsicBounds(start, 0, 0, 0)
     }
-
 
     fun hasAnyDrawable(): Boolean {
         for (drawable in compoundDrawables) {
@@ -141,13 +144,17 @@ class MyTextView : AppCompatTextView {
         return false
     }
 
-
     private fun setDrawableBounds(
         drawable: Drawable?,
         height: Int,
     ) {
         if (drawable != null && height > 0) {
-            drawable.setBounds(0, 0, (height * 1f * drawable.intrinsicWidth / drawable.intrinsicHeight).toInt(), height)
+            drawable.setBounds(
+                0,
+                0,
+                (height * 1f * drawable.intrinsicWidth / drawable.intrinsicHeight).toInt(),
+                height
+            )
         }
     }
 }

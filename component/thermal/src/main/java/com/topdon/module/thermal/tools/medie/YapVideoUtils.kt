@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.view.View
 
-
 @Suppress("DEPRECATION")
 object YapVideoUtils {
     fun convertViewToBitmap(view: View): Bitmap {

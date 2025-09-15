@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.charts;
 
 import android.content.Context;
@@ -19,24 +18,12 @@ import com.github.mikephil.charting.interfaces.dataprovider.CombinedDataProvider
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.renderer.CombinedChartRenderer;
 
-
 public class CombinedChart extends BarLineChartBase<CombinedData> implements CombinedDataProvider {
 
-
-    private boolean mDrawValueAboveBar = true;
-
-
     protected boolean mHighlightFullBarEnabled = false;
-
-
-    private boolean mDrawBarShadow = false;
-
     protected DrawOrder[] mDrawOrder;
-
-
-    public enum DrawOrder {
-        BAR, BUBBLE, LINE, CANDLE, SCATTER
-    }
+    private boolean mDrawValueAboveBar = true;
+    private boolean mDrawBarShadow = false;
 
     public CombinedChart(Context context) {
         super(context);
@@ -54,14 +41,12 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
     protected void init() {
         super.init();
 
-        // Default values are not ready here yet
         mDrawOrder = new DrawOrder[]{
                 DrawOrder.BAR, DrawOrder.BUBBLE, DrawOrder.LINE, DrawOrder.CANDLE, DrawOrder.SCATTER
         };
 
         setHighlighter(new CombinedHighlighter(this, this));
 
-        // Old default behaviour
         setHighlightFullBarEnabled(true);
 
         mRenderer = new CombinedChartRenderer(this, mAnimator, mViewPortHandler);
@@ -76,10 +61,9 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
     public void setData(CombinedData data) {
         super.setData(data);
         setHighlighter(new CombinedHighlighter(this, this));
-        ((CombinedChartRenderer)mRenderer).createRenderers();
+        ((CombinedChartRenderer) mRenderer).createRenderers();
         mRenderer.initBuffers();
     }
-
 
     @Override
     public Highlight getHighlightByTouchPoint(float x, float y) {
@@ -91,7 +75,6 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
             Highlight h = getHighlighter().getHighlight(x, y);
             if (h == null || !isHighlightFullBarEnabled()) return h;
 
-            // For isHighlightFullBarEnabled, remove stackIndex
             return new Highlight(h.getX(), h.getY(),
                     h.getXPx(), h.getYPx(),
                     h.getDataSetIndex(), -1, h.getAxis());
@@ -143,32 +126,26 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
         return mDrawValueAboveBar;
     }
 
-
     public void setDrawValueAboveBar(boolean enabled) {
         mDrawValueAboveBar = enabled;
     }
 
-
     public void setDrawBarShadow(boolean enabled) {
         mDrawBarShadow = enabled;
     }
-
-
-    public void setHighlightFullBarEnabled(boolean enabled) {
-        mHighlightFullBarEnabled = enabled;
-    }
-
 
     @Override
     public boolean isHighlightFullBarEnabled() {
         return mHighlightFullBarEnabled;
     }
 
+    public void setHighlightFullBarEnabled(boolean enabled) {
+        mHighlightFullBarEnabled = enabled;
+    }
 
     public DrawOrder[] getDrawOrder() {
         return mDrawOrder;
     }
-
 
     public void setDrawOrder(DrawOrder[] order) {
         if (order == null || order.length <= 0)
@@ -176,10 +153,8 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
         mDrawOrder = order;
     }
 
-
     protected void drawMarkers(Canvas canvas) {
 
-        // if there is no marker view or drawing marker is disabled
         if (mMarker == null || !isDrawMarkersEnabled() || !valuesToHighlight())
             return;
 
@@ -195,22 +170,22 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
 
             int entryIndex = set.getEntryIndex(e);
 
-            // make sure entry not null
             if (entryIndex > set.getEntryCount() * mAnimator.getPhaseX())
                 continue;
 
             float[] pos = getMarkerPosition(highlight);
 
-            // check bounds
             if (!mViewPortHandler.isInBounds(pos[0], pos[1]))
                 continue;
 
-            // callbacks to update the content
             mMarker.refreshContent(e, highlight);
 
-            // draw the marker
             mMarker.draw(canvas, pos[0], pos[1]);
         }
+    }
+
+    public enum DrawOrder {
+        BAR, BUBBLE, LINE, CANDLE, SCATTER
     }
 
 }

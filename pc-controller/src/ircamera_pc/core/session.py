@@ -249,7 +249,7 @@ class SessionManager:
         logger.debug(f"File added to session: {file_info.get('filename', 'unknown')}")
 
     def add_sync_event(
-        self, event_type: str, event_data: Dict[str, Any] = None
+            self, event_type: str, event_data: Dict[str, Any] = None
     ) -> None:
         """
         Add synchronization event to current session.
@@ -303,8 +303,8 @@ class SessionManager:
             return
 
         metadata_file = (
-            self._get_session_directory(self._current_session.session_id)
-            / "metadata.json"
+                self._get_session_directory(self._current_session.session_id)
+                / "metadata.json"
         )
 
         try:

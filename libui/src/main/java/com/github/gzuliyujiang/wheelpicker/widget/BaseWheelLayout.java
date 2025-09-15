@@ -38,7 +38,6 @@ import com.topdon.lib.ui.R;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @SuppressWarnings("unused")
 public abstract class BaseWheelLayout extends LinearLayout implements OnWheelChangedListener {
     private final List<WheelView> wheelViews = new ArrayList<>();

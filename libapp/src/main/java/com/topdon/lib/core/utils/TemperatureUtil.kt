@@ -2,7 +2,6 @@ package com.topdon.lib.core.utils
 
 import com.topdon.lib.core.common.SharedManager
 
-
 object TemperatureUtil {
     fun getTempStr(
         min: Int,

@@ -2,22 +2,34 @@
 
 ## 🎯 Overview
 
-This **comprehensive enterprise integration guide** provides detailed strategies, patterns, and implementations for integrating the IRCamera thermal imaging platform into large-scale enterprise environments, including advanced cloud infrastructure, microservices architectures, enterprise data pipelines, AI/ML integration, real-time processing, and mission-critical deployment patterns.
+This **comprehensive enterprise integration guide** provides detailed strategies, patterns, and
+implementations for integrating the IRCamera thermal imaging platform into large-scale enterprise
+environments, including advanced cloud infrastructure, microservices architectures, enterprise data
+pipelines, AI/ML integration, real-time processing, and mission-critical deployment patterns.
 
 ## 📋 Table of Contents
 
-1. [🏗️ Enterprise Architecture Patterns](#enterprise-architecture-patterns) - Advanced enterprise design patterns
-2. [☁️ Cloud Integration Strategies](#cloud-integration-strategies) - AWS, Azure, GCP deployment patterns
-3. [🔧 Microservices Integration](#microservices-integration) - Container-based microservices architecture
-4. [📊 Enterprise Data Pipeline](#enterprise-data-pipeline) - Big data and real-time processing pipelines
+1. [🏗️ Enterprise Architecture Patterns](#enterprise-architecture-patterns) - Advanced enterprise
+   design patterns
+2. [☁️ Cloud Integration Strategies](#cloud-integration-strategies) - AWS, Azure, GCP deployment
+   patterns
+3. [🔧 Microservices Integration](#microservices-integration) - Container-based microservices
+   architecture
+4. [📊 Enterprise Data Pipeline](#enterprise-data-pipeline) - Big data and real-time processing
+   pipelines
 5. [🛡️ Security & Compliance](#security--compliance) - Enterprise security and regulatory compliance
 6. [📈 Monitoring & Observability](#monitoring--observability) - Enterprise monitoring and alerting
-7. [⚡ Scalability & Performance](#scalability--performance) - Auto-scaling and performance optimization
+7. [⚡ Scalability & Performance](#scalability--performance) - Auto-scaling and performance
+   optimization
 8. [🔄 Disaster Recovery](#disaster-recovery) - Business continuity and disaster recovery
-9. [🤖 AI/ML Enterprise Integration](#ai-ml-enterprise-integration) - Machine learning at enterprise scale
-10. [📡 Real-Time Processing Integration](#real-time-processing-integration) - Stream processing and edge computing
-11. [🏢 Enterprise Service Integration](#enterprise-service-integration) - ERP, CRM, and business system integration
-12. [📊 Enterprise Analytics & BI](#enterprise-analytics--bi) - Business intelligence and advanced analytics
+9. [🤖 AI/ML Enterprise Integration](#ai-ml-enterprise-integration) - Machine learning at enterprise
+   scale
+10. [📡 Real-Time Processing Integration](#real-time-processing-integration) - Stream processing and
+    edge computing
+11. [🏢 Enterprise Service Integration](#enterprise-service-integration) - ERP, CRM, and business
+    system integration
+12. [📊 Enterprise Analytics & BI](#enterprise-analytics--bi) - Business intelligence and advanced
+    analytics
 
 ---
 
@@ -1076,4 +1088,6 @@ async def health_check():
     }
 ```
 
-This comprehensive enterprise integration guide provides detailed patterns, implementations, and strategies for deploying the IRCamera platform in enterprise environments with full cloud integration, microservices architecture, and enterprise-grade security and compliance features.
+This comprehensive enterprise integration guide provides detailed patterns, implementations, and
+strategies for deploying the IRCamera platform in enterprise environments with full cloud
+integration, microservices architecture, and enterprise-grade security and compliance features.

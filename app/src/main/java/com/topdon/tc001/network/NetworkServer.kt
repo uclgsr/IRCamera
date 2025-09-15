@@ -2,13 +2,27 @@ package com.topdon.tc001.network
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.io.*
-import java.net.*
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.net.ServerSocket
+import java.net.Socket
+import java.net.SocketException
 import java.util.concurrent.atomic.AtomicBoolean
-
 
 class NetworkServer(
     private val context: Context,
@@ -28,17 +42,14 @@ class NetworkServer(
     private val isClientConnected = AtomicBoolean(false)
     private val serverScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    // Flow for incoming messages
     private val _messageFlow = MutableSharedFlow<JSONObject>()
     val messageFlow: SharedFlow<JSONObject> = _messageFlow.asSharedFlow()
 
-    // Flow for connection state
     private val _connectionStateFlow = MutableStateFlow(false)
     val connectionStateFlow: StateFlow<Boolean> = _connectionStateFlow.asStateFlow()
 
     private var serverJob: Job? = null
     private var messageListenerJob: Job? = null
-
 
     suspend fun start(): Boolean {
         return withContext(Dispatchers.IO) {
@@ -53,7 +64,6 @@ class NetworkServer(
                 serverSocket = ServerSocket(port)
                 isRunning.set(true)
 
-                // Start server job to accept connections
                 serverJob =
                     serverScope.launch {
                         acceptConnections()
@@ -69,7 +79,6 @@ class NetworkServer(
         }
     }
 
-
     suspend fun stop() {
         withContext(Dispatchers.IO) {
             try {
@@ -79,16 +88,13 @@ class NetworkServer(
                 isClientConnected.set(false)
                 _connectionStateFlow.value = false
 
-                // Cancel jobs
                 serverJob?.cancel()
                 messageListenerJob?.cancel()
 
-                // Close client connection
                 outputStream?.close()
                 inputStream?.close()
                 clientSocket?.close()
 
-                // Close server socket
                 serverSocket?.close()
 
                 outputStream = null
@@ -103,7 +109,6 @@ class NetworkServer(
         }
     }
 
-
     suspend fun sendMessage(message: JSONObject): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -114,7 +119,6 @@ class NetworkServer(
 
                 val messageData = message.toString().toByteArray(Charsets.UTF_8)
 
-                // Send length first (4 bytes, big-endian) then message
                 outputStream!!.writeInt(messageData.size)
                 outputStream!!.write(messageData)
                 outputStream!!.flush()
@@ -123,13 +127,12 @@ class NetworkServer(
                 return@withContext true
             } catch (e: Exception) {
                 Log.e(TAG, "Error sending message to PC", e)
-                // Connection might be broken, disconnect client
+
                 disconnectClient()
                 return@withContext false
             }
         }
     }
-
 
     private suspend fun acceptConnections() {
         while (isRunning.get() && !serverJob?.isCancelled!!) {
@@ -140,10 +143,8 @@ class NetworkServer(
                 if (socket != null && isRunning.get()) {
                     Log.i(TAG, "PC Controller connected from ${socket.remoteSocketAddress}")
 
-                    // Disconnect any existing client first
                     disconnectClient()
 
-                    // Setup new client connection
                     clientSocket = socket
                     outputStream = DataOutputStream(socket.getOutputStream())
                     inputStream = DataInputStream(socket.getInputStream())
@@ -151,7 +152,6 @@ class NetworkServer(
                     isClientConnected.set(true)
                     _connectionStateFlow.value = true
 
-                    // Start message listener for this client
                     messageListenerJob =
                         serverScope.launch {
                             listenForMessages()
@@ -171,7 +171,6 @@ class NetworkServer(
         }
     }
 
-
     private suspend fun listenForMessages() {
         while (isClientConnected.get() && isRunning.get() && !messageListenerJob?.isCancelled!!) {
             try {
@@ -179,7 +178,7 @@ class NetworkServer(
                 if (message != null) {
                     _messageFlow.emit(message)
                 } else {
-                    // Connection lost
+
                     break
                 }
             } catch (e: SocketException) {
@@ -191,17 +190,14 @@ class NetworkServer(
             }
         }
 
-        // Clean up client connection
         disconnectClient()
     }
-
 
     private suspend fun receiveMessage(): JSONObject? {
         return withContext(Dispatchers.IO) {
             try {
                 val input = inputStream ?: return@withContext null
 
-                // Read message length (4 bytes, big-endian)
                 val messageLength = input.readInt()
 
                 if (messageLength <= 0 || messageLength > MAX_MESSAGE_SIZE) {
@@ -209,7 +205,6 @@ class NetworkServer(
                     return@withContext null
                 }
 
-                // Read the message data
                 val messageData = ByteArray(messageLength)
                 input.readFully(messageData)
 
@@ -224,7 +219,6 @@ class NetworkServer(
             }
         }
     }
-
 
     private fun disconnectClient() {
         if (isClientConnected.get()) {
@@ -249,12 +243,9 @@ class NetworkServer(
         }
     }
 
-
     fun isRunning(): Boolean = isRunning.get()
 
-
     fun isClientConnected(): Boolean = isClientConnected.get()
-
 
     suspend fun cleanup() {
         stop()

@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.data;
 
 import com.github.mikephil.charting.interfaces.datasets.IPieDataSet;
@@ -9,11 +8,9 @@ import java.util.List;
 
 public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
 
-    
     private float mSliceSpace = 0f;
     private boolean mAutomaticallyDisableSliceSpacing;
 
-    
     private float mShift = 18f;
 
     private ValuePosition mXValuePosition = ValuePosition.INSIDE_SLICE;
@@ -28,7 +25,7 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
 
     public PieDataSet(List<PieEntry> yVals, String label) {
         super(yVals, label);
-//        mShift = Utils.convertDpToPixel(12f);
+
     }
 
     @Override
@@ -55,7 +52,11 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
         calcMinMaxY(e);
     }
 
-    
+    @Override
+    public float getSliceSpace() {
+        return mSliceSpace;
+    }
+
     public void setSliceSpace(float spaceDp) {
 
         if (spaceDp > 20)
@@ -66,30 +67,22 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
         mSliceSpace = Utils.convertDpToPixel(spaceDp);
     }
 
-    @Override
-    public float getSliceSpace() {
-        return mSliceSpace;
-    }
-
-    
     public void setAutomaticallyDisableSliceSpacing(boolean autoDisable) {
         mAutomaticallyDisableSliceSpacing = autoDisable;
     }
 
-    
     @Override
     public boolean isAutomaticallyDisableSliceSpacingEnabled() {
         return mAutomaticallyDisableSliceSpacing;
     }
 
-    
-    public void setSelectionShift(float shift) {
-        mShift = Utils.convertDpToPixel(shift);
-    }
-
     @Override
     public float getSelectionShift() {
         return mShift;
+    }
+
+    public void setSelectionShift(float shift) {
+        mShift = Utils.convertDpToPixel(shift);
     }
 
     @Override
@@ -110,7 +103,6 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
         this.mYValuePosition = yValuePosition;
     }
 
-    
     @Override
     public boolean isUsingSliceColorAsValueLineColor() {
         return mUsingSliceColorAsValueLineColor;
@@ -120,7 +112,6 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
         this.mUsingSliceColorAsValueLineColor = usingSliceColorAsValueLineColor;
     }
 
-    
     @Override
     public int getValueLineColor() {
         return mValueLineColor;
@@ -130,7 +121,6 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
         this.mValueLineColor = valueLineColor;
     }
 
-    
     @Override
     public float getValueLineWidth() {
         return mValueLineWidth;
@@ -140,7 +130,6 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
         this.mValueLineWidth = valueLineWidth;
     }
 
-    
     @Override
     public float getValueLinePart1OffsetPercentage() {
         return mValueLinePart1OffsetPercentage;
@@ -150,7 +139,6 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
         this.mValueLinePart1OffsetPercentage = valueLinePart1OffsetPercentage;
     }
 
-    
     @Override
     public float getValueLinePart1Length() {
         return mValueLinePart1Length;
@@ -160,7 +148,6 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
         this.mValueLinePart1Length = valueLinePart1Length;
     }
 
-    
     @Override
     public float getValueLinePart2Length() {
         return mValueLinePart2Length;
@@ -170,7 +157,6 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
         this.mValueLinePart2Length = valueLinePart2Length;
     }
 
-    
     @Override
     public boolean isValueLineVariableLength() {
         return mValueLineVariableLength;

@@ -38,7 +38,6 @@ import com.topdon.lib.ui.R;
 import java.util.Arrays;
 import java.util.List;
 
-
 @SuppressWarnings("unused")
 public class TimeWheelLayout extends BaseWheelLayout {
     private NumberWheelView hourWheelView;
@@ -105,7 +104,6 @@ public class TimeWheelLayout extends BaseWheelLayout {
         meridiemWheelView = findViewById(R.id.wheel_picker_time_meridiem_wheel);
         spaceEndView = findViewById(R.id.wheel_picker_time_end_view);
 
-        //settings高度
         post(new Runnable() {
             @Override
             public void run() {
@@ -262,11 +260,9 @@ public class TimeWheelLayout extends BaseWheelLayout {
                 || timeMode == TimeMode.HOUR_12_HAS_SECOND;
     }
 
-
     public void setRange(TimeEntity startValue, TimeEntity endValue) {
         setRange(startValue, endValue, null);
     }
-
 
     public void setRange(TimeEntity startValue, TimeEntity endValue, TimeEntity defaultValue) {
         if (startValue == null) {
@@ -443,18 +439,14 @@ public class TimeWheelLayout extends BaseWheelLayout {
 
     private void changeMinute(int hour) {
         final int min, max;
-        //开始时及结束时相同情况
+
         if (hour == startValue.getHour() && hour == endValue.getHour()) {
             min = startValue.getMinute();
             max = endValue.getMinute();
-        }
-        //开始时相同情况
-        else if (hour == startValue.getHour()) {
+        } else if (hour == startValue.getHour()) {
             min = startValue.getMinute();
             max = 59;
-        }
-        //结束时相同情况
-        else if (hour == endValue.getHour()) {
+        } else if (hour == endValue.getHour()) {
             min = 0;
             max = endValue.getMinute();
         } else {

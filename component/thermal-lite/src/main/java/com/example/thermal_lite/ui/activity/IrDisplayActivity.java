@@ -1,6 +1,6 @@
 package com.example.thermal_lite.ui.activity;
 
-public class IrDisplayActivity{
+public class IrDisplayActivity {
     public static final int SHOW_LOADING = 1001;
     public static final int HIDE_LOADING = 1002;
     public static final int HANDLE_INIT_FAIL = 1003;

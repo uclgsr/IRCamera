@@ -2,10 +2,16 @@ package com.topdon.gsr.network
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
-
 
 class NetworkErrorRecoveryManager(
     private val context: Context,
@@ -55,7 +61,6 @@ class NetworkErrorRecoveryManager(
         eventListener = listener
     }
 
-
     fun enableAutoRecovery() {
         if (isRecoveryActive.get()) {
             Log.w(TAG, "Auto recovery already enabled")
@@ -66,7 +71,6 @@ class NetworkErrorRecoveryManager(
         startHealthMonitoring()
         Log.i(TAG, "Network error recovery enabled")
     }
-
 
     fun disableAutoRecovery() {
         if (!isRecoveryActive.get()) {
@@ -79,7 +83,6 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Network error recovery disabled")
     }
 
-
     suspend fun triggerRecovery(reason: String): Boolean {
         if (isRecoveryActive.get() && reconnectionAttempts.get() > 0) {
             Log.w(TAG, "Recovery already in progress")
@@ -89,14 +92,12 @@ class NetworkErrorRecoveryManager(
         return performRecovery(reason)
     }
 
-
     fun recordSuccessfulConnection(controller: NetworkClient.ControllerInfo) {
         lastKnownGoodController = controller
         reconnectionAttempts.set(0)
         rapidFailureCount.set(0)
         Log.i(TAG, "Recorded successful connection: ${controller.deviceName}")
     }
-
 
     fun handleNetworkError(
         operation: String,
@@ -231,7 +232,10 @@ class NetworkErrorRecoveryManager(
 
     private suspend fun attemptReconnection(controller: NetworkClient.ControllerInfo): Boolean {
         return try {
-            Log.d(TAG, "Attempting reconnection to ${controller.deviceName} at ${controller.ipAddress}")
+            Log.d(
+                TAG,
+                "Attempting reconnection to ${controller.deviceName} at ${controller.ipAddress}"
+            )
 
             // Disconnect first to clean up any existing connection
             networkClient.disconnect()
@@ -279,7 +283,6 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-
     private fun calculateRetryDelay(attempt: Int): Long {
         // Exponential backoff with jitter
         val baseDelay = INITIAL_RETRY_DELAY_MS * (1L shl (attempt - 1))
@@ -287,7 +290,6 @@ class NetworkErrorRecoveryManager(
         val jitter = (Math.random() * 0.1 * cappedDelay).toLong()
         return cappedDelay + jitter
     }
-
 
     private fun isRapidFailure(): Boolean {
         val currentTime = System.currentTimeMillis()
@@ -303,14 +305,12 @@ class NetworkErrorRecoveryManager(
         return rapidFailureCount.get() >= RAPID_FAILURE_THRESHOLD
     }
 
-
     fun resetRecoveryState() {
         reconnectionAttempts.set(0)
         rapidFailureCount.set(0)
         lastFailureTime = 0L
         Log.i(TAG, "Recovery state reset")
     }
-
 
     fun getRecoveryStats(): Map<String, Any> {
         return mapOf(
@@ -321,7 +321,6 @@ class NetworkErrorRecoveryManager(
             "has_known_good_controller" to (lastKnownGoodController != null),
         )
     }
-
 
     fun cleanup() {
         disableAutoRecovery()

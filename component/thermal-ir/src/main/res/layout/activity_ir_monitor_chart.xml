@@ -11,11 +11,11 @@
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:titleText="@string/main_thermal_motion"
-        app:rightText="@string/monitor_finish"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:rightText="@string/monitor_finish"
+        app:titleText="@string/main_thermal_motion" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/chart_lay"
@@ -32,28 +32,30 @@
             android:id="@+id/ll_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
+            android:background="@drawable/shape_corners50_solid_3b3e44"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:background="@drawable/shape_corners50_solid_3b3e44"
-            app:layout_constraintStart_toStartOf="parent"
+            android:paddingStart="12dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="4dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
             <View
                 android:layout_width="6sp"
                 android:layout_height="6sp"
                 android:background="@drawable/bg_oval_solid_ff4747" />
+
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
-                android:textSize="14sp"
+                android:text="00:00:00"
                 android:textColor="@color/white"
-                android:text="00:00:00" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,6 +70,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ll_time"
             app:layout_constraintWidth_percent="0.9">
+
             <ImageView
                 android:id="@+id/monitor_current_img"
                 android:layout_width="12dp"
@@ -130,10 +133,10 @@
         android:id="@+id/thermal_lay"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chart_lay"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chart_lay">
 
         <!-- 红外出图图层 -->
         <com.infisense.usbir.view.CameraView

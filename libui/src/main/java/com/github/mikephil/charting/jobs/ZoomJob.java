@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.jobs;
 
 import android.graphics.Matrix;
@@ -10,7 +9,6 @@ import com.github.mikephil.charting.utils.ObjectPool;
 import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
-
 public class ZoomJob extends ViewPortJob {
 
     private static ObjectPool<ZoomJob> pool;
@@ -18,6 +16,20 @@ public class ZoomJob extends ViewPortJob {
     static {
         pool = ObjectPool.create(1, new ZoomJob(null, 0, 0, 0, 0, null, null, null));
         pool.setReplenishPercentage(0.5f);
+    }
+
+    protected float scaleX;
+    protected float scaleY;
+    protected YAxis.AxisDependency axisDependency;
+    protected Matrix mRunMatrixBuffer = new Matrix();
+
+    public ZoomJob(ViewPortHandler viewPortHandler, float scaleX, float scaleY, float xValue, float yValue, Transformer trans,
+                   YAxis.AxisDependency axis, View v) {
+        super(viewPortHandler, xValue, yValue, trans, v);
+
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+        this.axisDependency = axis;
     }
 
     public static ZoomJob getInstance(ViewPortHandler viewPortHandler, float scaleX, float scaleY, float xValue, float yValue,
@@ -37,22 +49,6 @@ public class ZoomJob extends ViewPortJob {
     public static void recycleInstance(ZoomJob instance) {
         pool.recycle(instance);
     }
-
-    protected float scaleX;
-    protected float scaleY;
-
-    protected YAxis.AxisDependency axisDependency;
-
-    public ZoomJob(ViewPortHandler viewPortHandler, float scaleX, float scaleY, float xValue, float yValue, Transformer trans,
-                   YAxis.AxisDependency axis, View v) {
-        super(viewPortHandler, xValue, yValue, trans, v);
-
-        this.scaleX = scaleX;
-        this.scaleY = scaleY;
-        this.axisDependency = axis;
-    }
-
-    protected Matrix mRunMatrixBuffer = new Matrix();
 
     @Override
     public void run() {

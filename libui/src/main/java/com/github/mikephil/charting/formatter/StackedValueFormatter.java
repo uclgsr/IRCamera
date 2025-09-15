@@ -4,19 +4,14 @@ import com.github.mikephil.charting.data.BarEntry;
 
 import java.text.DecimalFormat;
 
+public class StackedValueFormatter extends ValueFormatter {
 
-public class StackedValueFormatter extends ValueFormatter
-{
-
-    
     private boolean mDrawWholeStack;
 
-    
     private String mSuffix;
 
     private DecimalFormat mFormat;
 
-    
     public StackedValueFormatter(boolean drawWholeStack, String suffix, int decimals) {
         this.mDrawWholeStack = drawWholeStack;
         this.mSuffix = suffix;
@@ -39,10 +34,8 @@ public class StackedValueFormatter extends ValueFormatter
 
             if (vals != null) {
 
-                // find out if we are on top of the stack
                 if (vals[vals.length - 1] == value) {
 
-                    // return the "sum" across all stack values
                     return mFormat.format(entry.getY()) + mSuffix;
                 } else {
                     return ""; // return empty
@@ -50,7 +43,6 @@ public class StackedValueFormatter extends ValueFormatter
             }
         }
 
-        // return the "proposed" value
         return mFormat.format(value) + mSuffix;
     }
 }

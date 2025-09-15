@@ -1,6 +1,5 @@
 package com.topdon.gsr.model
 
-
 data class SessionInfo(
     val sessionId: String,
     val startTime: Long,
@@ -10,7 +9,7 @@ data class SessionInfo(
     var sampleCount: Long = 0,
     val metadata: MutableMap<String, String> = mutableMapOf(),
     val syncMarks: MutableList<SyncMark> = mutableListOf(),
-    // Data availability flags for UI display
+
     var hasGSRData: Boolean = false,
     var hasRGBData: Boolean = false,
     var hasThermalData: Boolean = false,
@@ -18,12 +17,10 @@ data class SessionInfo(
 
     fun isActive(): Boolean = endTime == null
 
-
     fun getDurationMs(): Long {
         val end = endTime ?: System.currentTimeMillis()
         return end - startTime
     }
-
 
     fun getDurationFormatted(): String {
         val durationMs = getDurationMs()
@@ -38,11 +35,9 @@ data class SessionInfo(
         }
     }
 
-
     fun addSyncMark(mark: SyncMark) {
         syncMarks.add(mark)
     }
-
 
     fun getDataTypeSummary(): String {
         val types = mutableListOf<String>()

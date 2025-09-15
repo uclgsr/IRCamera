@@ -13,7 +13,6 @@ import com.topdon.module.thermal.R
 import java.io.File
 import com.topdon.lib.core.R as LibR
 
-// Legacy ARouter route annotation - now using NavigationManager
 
 class VideoActivity : BaseActivity() {
     companion object {
@@ -25,8 +24,9 @@ class VideoActivity : BaseActivity() {
     override fun initContentView() = R.layout.activity_video
 
     override fun initView() {
-        // Set toolbar title
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
+
+        val toolbar =
+            findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.video)
 
         BarUtils.setNavBarColor(this, ContextCompat.getColor(this, LibR.color.black))

@@ -3,9 +3,8 @@ package com.guide.zm04c.matrix.utils
 import com.guide.zm04c.matrix.Logger
 import java.text.DecimalFormat
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 import kotlin.experimental.and
-
 
 class BaseDataTypeConvertUtils private constructor() {
     companion object {
@@ -64,7 +63,6 @@ class BaseDataTypeConvertUtils private constructor() {
             return (value * 100).toInt() / 100.0f
         }
 
-
         fun float2StrWithOneDecimal(number: Float): String {
             try {
                 val pattern = "0.0"
@@ -82,7 +80,6 @@ class BaseDataTypeConvertUtils private constructor() {
             }
         }
 
-
         fun float2StrWithTwoDecimal(number: Float): String {
             try {
                 val pattern = "0.00"
@@ -99,7 +96,6 @@ class BaseDataTypeConvertUtils private constructor() {
                 return str
             }
         }
-
 
         fun float2Str(
             number: Float,

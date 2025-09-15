@@ -12,7 +12,6 @@ import com.topdon.lib.core.databinding.DialogColorSelectBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
 
-
 class ColorSelectDialog(
     context: Context,
     @ColorInt private var color: Int,

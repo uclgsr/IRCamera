@@ -17,10 +17,15 @@ import com.topdon.libcom.bean.SaveSettingBean
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.databinding.PopCameraItemBinding
 
+/**
 
+ *
+ * Created by LCG on 2025/1/3.
+ */
 
 @SuppressLint("SetTextI18n")
-class CameraItemPopup(val context: Context, private val saveSetBean: SaveSettingBean) : PopupWindow(), View.OnClickListener {
+class CameraItemPopup(val context: Context, private val saveSetBean: SaveSettingBean) :
+    PopupWindow(), View.OnClickListener {
 
     var isShutterSelect: Boolean
         get() = binding.ivShutter.isSelected
@@ -28,30 +33,32 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
             binding.ivShutter.isSelected = value
         }
 
-
     var isAudioSelect: Boolean
         get() = binding.ivAudio.isSelected
         set(value) {
             binding.ivAudio.isSelected = value
         }
 
-
     var onDelayClickListener: (() -> Boolean)? = null
-
 
     var onAutoCLickListener: ((isOpen: Boolean) -> Unit)? = null
 
-
     var onShutterClickListener: (() -> Unit)? = null
-
 
     var onAudioCLickListener: (() -> Unit)? = null
 
-    private val binding: PopCameraItemBinding = PopCameraItemBinding.inflate(LayoutInflater.from(context))
+    private val binding: PopCameraItemBinding =
+        PopCameraItemBinding.inflate(LayoutInflater.from(context))
 
     init {
-        val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(context.resources.displayMetrics.widthPixels, View.MeasureSpec.EXACTLY)
-        val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(context.resources.displayMetrics.heightPixels, View.MeasureSpec.AT_MOST)
+        val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+            context.resources.displayMetrics.widthPixels,
+            View.MeasureSpec.EXACTLY
+        )
+        val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+            context.resources.displayMetrics.heightPixels,
+            View.MeasureSpec.AT_MOST
+        )
         binding.root.measure(widthMeasureSpec, heightMeasureSpec)
 
         contentView = binding.root
@@ -61,7 +68,8 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
 
         binding.ivDelay.setImageLevel(saveSetBean.delayCaptureSecond)
         binding.ivAuto.isSelected = saveSetBean.isAutoShutter
-        binding.ivAudio.isSelected = saveSetBean.isRecordAudio && XXPermissions.isGranted(context, Permission.RECORD_AUDIO)
+        binding.ivAudio.isSelected =
+            saveSetBean.isRecordAudio && XXPermissions.isGranted(context, Permission.RECORD_AUDIO)
 
         binding.clDelay.setOnClickListener(this)
         binding.clAuto.setOnClickListener(this)
@@ -79,10 +87,12 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
                             saveSetBean.delayCaptureSecond = 3
                             ToastUtils.showShort(R.string.seconds_dalay_3)
                         }
+
                         3 -> {
                             saveSetBean.delayCaptureSecond = 6
                             ToastUtils.showShort(R.string.seconds_dalay_6)
                         }
+
                         6 -> {
                             saveSetBean.delayCaptureSecond = 0
                             ToastUtils.showShort(R.string.off_photography)
@@ -90,6 +100,7 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
                     }
                     binding.ivDelay.setImageLevel(saveSetBean.delayCaptureSecond)
                 }
+
             binding.clAuto -> { // 自动快门
                 saveSetBean.isAutoShutter = !saveSetBean.isAutoShutter
                 binding.ivAuto.isSelected = saveSetBean.isAutoShutter
@@ -103,12 +114,15 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
                 }
                 onAutoCLickListener?.invoke(saveSetBean.isAutoShutter)
             }
+
             binding.clShutter ->
                 if (!binding.ivShutter.isSelected) {
                     onShutterClickListener?.invoke()
                 }
+
             binding.clAudio -> onAudioCLickListener?.invoke()
-            binding.clSetting -> NavigationManager.getInstance().build(RouterConfig.IR_CAMERA_SETTING).navigation(context)
+            binding.clSetting -> NavigationManager.getInstance()
+                .build(RouterConfig.IR_CAMERA_SETTING).navigation(context)
         }
     }
 

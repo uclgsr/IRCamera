@@ -2,13 +2,20 @@ package com.topdon.gsr.network
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 import org.json.JSONObject
-import java.io.*
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.security.MessageDigest
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
-
 
 class FileTransferProtocol(
     private val context: Context,
@@ -74,7 +81,6 @@ class FileTransferProtocol(
         CANCELLED,
     }
 
-
     suspend fun queueFileTransfer(
         filePath: String,
         priority: TransferPriority = TransferPriority.NORMAL,
@@ -108,13 +114,11 @@ class FileTransferProtocol(
             transferId
         }
 
-
     private fun processTransferQueue() {
         transferScope.launch {
             processTransferQueueAsync()
         }
     }
-
 
     private suspend fun processTransferQueueAsync(): Unit =
         withContext(Dispatchers.IO) {
@@ -129,7 +133,6 @@ class FileTransferProtocol(
             }
         }
 
-
     private suspend fun startFileTransfer(request: TransferRequest): Unit =
         withContext(Dispatchers.IO) {
             val session =
@@ -141,17 +144,14 @@ class FileTransferProtocol(
             activeTransfers[request.transferId] = session
 
             try {
-                // Check if transfer can be resumed
+
                 val resumeOffset = checkResumeCapability(request.transferId)
                 session.resumeOffset = resumeOffset
 
-                // Initialize transfer with PC Controller
                 initializeTransfer(session)
 
-                // Start chunked transfer
                 transferFileInChunks(session)
 
-                // Verify transfer integrity
                 verifyTransferIntegrity(session)
 
                 Log.d(TAG, "Transfer completed: ${request.transferId}")
@@ -160,13 +160,12 @@ class FileTransferProtocol(
                 handleTransferError(session, e)
             } finally {
                 activeTransfers.remove(request.transferId)
-                // Process next queued transfer asynchronously to avoid recursion
+
                 transferScope.launch {
                     processTransferQueueAsync()
                 }
             }
         }
-
 
     private suspend fun initializeTransfer(session: TransferSession) {
         val initMessage =
@@ -189,7 +188,6 @@ class FileTransferProtocol(
             throw IOException("PC Controller not ready for transfer")
         }
     }
-
 
     private suspend fun transferFileInChunks(session: TransferSession): Unit =
         withContext(Dispatchers.IO) {
@@ -243,7 +241,6 @@ class FileTransferProtocol(
             }
         }
 
-
     private suspend fun sendFileChunk(
         session: TransferSession,
         chunkIndex: Int,
@@ -270,7 +267,6 @@ class FileTransferProtocol(
         }
     }
 
-
     private suspend fun verifyTransferIntegrity(session: TransferSession) {
         val calculatedChecksum = session.checksumAccumulator.digest()
         val checksumHex = calculatedChecksum.joinToString("") { "%02x".format(it) }
@@ -291,7 +287,6 @@ class FileTransferProtocol(
         }
     }
 
-
     private suspend fun checkResumeCapability(transferId: String): Long {
         val resumeQuery =
             JSONObject().apply {
@@ -310,12 +305,10 @@ class FileTransferProtocol(
         }
     }
 
-
     private suspend fun verifyPartialIntegrity(session: TransferSession) {
         // Implementation for periodic checksum verification
         Log.d(TAG, "Partial integrity check at ${session.bytesTransferred.get()} bytes")
     }
-
 
     private suspend fun handleTransferError(
         session: TransferSession,
@@ -331,7 +324,6 @@ class FileTransferProtocol(
             }
         }
     }
-
 
     fun getTransferProgress(): List<TransferProgress> {
         return activeTransfers.values.map { session ->
@@ -361,7 +353,6 @@ class FileTransferProtocol(
         }
     }
 
-
     suspend fun cancelTransfer(transferId: String): Boolean {
         val session = activeTransfers[transferId] ?: return false
 
@@ -378,7 +369,6 @@ class FileTransferProtocol(
         return true
     }
 
-
     private fun generateTransferId(
         filePath: String,
         sessionId: String,
@@ -387,7 +377,6 @@ class FileTransferProtocol(
         val timestamp = System.currentTimeMillis()
         return "${sessionId}_${fileName}_$timestamp"
     }
-
 
     fun getTransferStatistics(): TransferStatistics {
         return TransferStatistics(
@@ -404,7 +393,6 @@ class FileTransferProtocol(
         val activeTransfers: Int,
         val queuedTransfers: Int,
     )
-
 
     fun cleanup() {
         transferJob.cancel()

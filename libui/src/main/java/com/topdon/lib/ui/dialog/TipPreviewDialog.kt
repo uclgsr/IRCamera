@@ -19,13 +19,11 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.topdon.lib.core.R
-import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.ui.databinding.DialogTipPreviewBinding
 import com.topdon.lib.ui.widget.IndicateView
 import io.reactivex.disposables.Disposable
 import java.util.Timer
-import kotlin.collections.ArrayList
-
+import com.topdon.lib.ui.R as UiR
 
 
 class TipPreviewDialog : DialogFragment() {
@@ -74,7 +72,6 @@ class TipPreviewDialog : DialogFragment() {
                 getString(R.string.preview_step_2),
             )
 
-        // Initialize views using binding
         checkBox = binding.dialogTipCheck
         imgClose = binding.imgClose
         viewPager = binding.viewPager
@@ -114,7 +111,6 @@ class TipPreviewDialog : DialogFragment() {
             },
         )
     }
-
 
     fun updateIndex(position: Int) {
         if (index == position) {
@@ -179,9 +175,11 @@ class TipPreviewDialog : DialogFragment() {
                 0 -> {
                     PageFragment.newInstance(UiR.drawable.preview_step_1)
                 }
+
                 1 -> {
                     PageFragment.newInstance(UiR.drawable.preview_step_2)
                 }
+
                 else -> {
                     PageFragment.newInstance(UiR.drawable.preview_step_3)
                 }

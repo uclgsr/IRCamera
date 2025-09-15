@@ -8,9 +8,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
-
-public class CircleShapeRenderer implements IShapeRenderer
-{
+public class CircleShapeRenderer implements IShapeRenderer {
 
     @Override
     public void renderShape(Canvas c, IScatterDataSet dataSet, ViewPortHandler viewPortHandler,

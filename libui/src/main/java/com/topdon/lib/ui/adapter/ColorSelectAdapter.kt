@@ -11,13 +11,12 @@ import com.topdon.lib.ui.databinding.UiItemColorSelectBinding
 import com.topdon.lib.ui.R as UiR
 
 
-
-class ColorSelectAdapter(val context: Context) : RecyclerView.Adapter<ColorSelectAdapter.ItemView>() {
+class ColorSelectAdapter(val context: Context) :
+    RecyclerView.Adapter<ColorSelectAdapter.ItemView>() {
     var listener: ((code: Int, color: Int) -> Unit)? = null
     private var type = 0
     private var selected = -1
 
-    
     fun selected(index: Int) {
         selected = index
         notifyDataSetChanged()
@@ -65,5 +64,6 @@ class ColorSelectAdapter(val context: Context) : RecyclerView.Adapter<ColorSelec
         return colorBean.size
     }
 
-    inner class ItemView(val binding: UiItemColorSelectBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ItemView(val binding: UiItemColorSelectBinding) :
+        RecyclerView.ViewHolder(binding.root)
 }

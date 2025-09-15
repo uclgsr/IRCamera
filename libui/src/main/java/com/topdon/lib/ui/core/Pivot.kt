@@ -4,8 +4,6 @@ import android.view.View
 import androidx.annotation.IntDef
 
 
-
-
 class Pivot(
     @get:Axis
     @param:Axis val axis: Int,
@@ -29,7 +27,6 @@ class Pivot(
         }
     }
 
-
     enum class X {
         LEFT {
             override fun create(): Pivot {
@@ -49,7 +46,6 @@ class Pivot(
 
         abstract fun create(): Pivot
     }
-
 
     enum class Y {
         TOP {

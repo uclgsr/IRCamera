@@ -4,15 +4,13 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 import com.topdon.menu.constant.TargetType
-
+import com.topdon.menu.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
 internal class TargetAdapter : BaseMenuAdapter() {
 
     var onTargetListener: ((targetType: TargetType) -> Unit)? = null
-
 
     fun setSelected(
         targetType: TargetType,
@@ -26,7 +24,6 @@ internal class TargetAdapter : BaseMenuAdapter() {
             }
         }
     }
-
 
     fun setTargetMode(modeCode: Int) {
         for (i in dataArray.indices) {
@@ -46,11 +43,27 @@ internal class TargetAdapter : BaseMenuAdapter() {
 
     private val dataArray: Array<Data> =
         arrayOf(
-            Data(R.string.main_tab_second_measure_mode, MenuR.drawable.selector_menu2_target_1_person, TargetType.MODE),
-            Data(R.string.main_tab_first_target, MenuR.drawable.selector_menu2_target_2_style, TargetType.STYLE),
-            Data(R.string.main_tab_second_target_color, MenuR.drawable.selector_menu2_target_3_color, TargetType.COLOR),
+            Data(
+                R.string.main_tab_second_measure_mode,
+                MenuR.drawable.selector_menu2_target_1_person,
+                TargetType.MODE
+            ),
+            Data(
+                R.string.main_tab_first_target,
+                MenuR.drawable.selector_menu2_target_2_style,
+                TargetType.STYLE
+            ),
+            Data(
+                R.string.main_tab_second_target_color,
+                MenuR.drawable.selector_menu2_target_3_color,
+                TargetType.COLOR
+            ),
             Data(R.string.thermal_delete, MenuR.drawable.selector_menu2_del, TargetType.DELETE),
-            Data(R.string.main_tab_second_target_help, MenuR.drawable.selector_menu2_target_4_help, TargetType.HELP),
+            Data(
+                R.string.main_tab_second_target_help,
+                MenuR.drawable.selector_menu2_target_4_help,
+                TargetType.HELP
+            ),
         )
 
     override fun onBindViewHolder(
@@ -63,17 +76,13 @@ internal class TargetAdapter : BaseMenuAdapter() {
         holder.binding.ivIcon.isSelected = data.isSelected
         holder.binding.tvText.isSelected = data.isSelected
         holder.binding.clRoot.setOnClickListener {
-            // targetcolor以effective才视为highlightselected的，Maintain original code logic here，
-            // menu的selectedrefreshleave to upper-layer listener to handle，consider changes later when time permits
-//            data.isSelected = !data.isSelected
-//            holder.binding.ivIcon.isSelected = data.isSelected
-//            holder.binding.tvText.isSelected = data.isSelected
+
+
             onTargetListener?.invoke(data.targetType)
         }
     }
 
     override fun getItemCount(): Int = dataArray.size
-
 
     data class Data(
         @StringRes val stringId: Int,

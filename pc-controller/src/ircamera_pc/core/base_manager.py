@@ -17,8 +17,10 @@ try:
 
     PYQT_AVAILABLE = True
 
+
     class QObjectMeta(type(QtQObject), ABCMeta):
         """Metaclass to resolve conflict between QObject and ABC"""
+
 
     class BaseManager(QtQObject, ABC, metaclass=QObjectMeta):
         """
@@ -35,6 +37,7 @@ try:
         status_changed = pyqtSignal(str, dict)  # status_name, details
         error_occurred = pyqtSignal(str, str)  # error_type, message
         operation_completed = pyqtSignal(str, bool, str)  # operation,
+
         # success, message
 
         def __init__(self, name: str, parent: Optional[QtQObject] = None):
@@ -52,6 +55,7 @@ try:
 except ImportError:
     PYQT_AVAILABLE = False
 
+
     def pyqtSignal(*args, **kwargs) -> Any:
         """Mock pyqtSignal decorator"""
 
@@ -59,6 +63,7 @@ except ImportError:
             return func
 
         return decorator
+
 
     class BaseManager(ABC):
         """
@@ -88,30 +93,36 @@ except ImportError:
             self._state: Dict[str, Any] = {}
             self._last_error: Optional[str] = None
 
+
     @property
     def name(self) -> str:
         """Get manager name."""
         return self._name
+
 
     @property
     def logger(self) -> logging.Logger:
         """Get logger instance."""
         return self._logger
 
+
     @property
     def is_initialized(self) -> bool:
         """Check if manager is initialized."""
         return self._is_initialized
+
 
     @property
     def state(self) -> Dict[str, Any]:
         """Get current state dictionary."""
         return self._state.copy()
 
+
     @property
     def last_error(self) -> Optional[str]:
         """Get last error message."""
         return self._last_error
+
 
     @abstractmethod
     async def initialize(self) -> bool:
@@ -122,9 +133,11 @@ except ImportError:
             True if initialization successful, False otherwise
         """
 
+
     @abstractmethod
     async def cleanup(self) -> None:
         """Clean up manager resources."""
+
 
     def _set_state(self, key: str, value: Any) -> None:
         """
@@ -140,11 +153,12 @@ except ImportError:
         if old_value != value and PYQT_AVAILABLE:
             self.status_changed.emit(key, {key: value})
 
+
     def _handle_error(
-        self,
-        error_type: str,
-        message: str,
-        exception: Optional[Exception] = None,
+            self,
+            error_type: str,
+            message: str,
+            exception: Optional[Exception] = None,
     ) -> None:
         """
         Handle error with logging and signal emission.
@@ -164,8 +178,9 @@ except ImportError:
         if PYQT_AVAILABLE:
             self.error_occurred.emit(error_type, message)
 
+
     def _emit_operation_result(
-        self, operation: str, success: bool, message: str = ""
+            self, operation: str, success: bool, message: str = ""
     ) -> None:
         """
         Emit operation completion signal.
@@ -185,6 +200,7 @@ except ImportError:
         if PYQT_AVAILABLE:
             self.operation_completed.emit(operation, success, message)
 
+
     def _validate_state(self, required_keys: list) -> bool:
         """
         Validate that required state keys are present.
@@ -203,6 +219,7 @@ except ImportError:
             )
             return False
         return True
+
 
     def reset_state(self) -> None:
         """Reset manager state."""

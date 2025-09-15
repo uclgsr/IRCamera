@@ -9,8 +9,6 @@ import java.io.Reader;
 
 public class UTF8StringUtils {
 
-
-
     public static String readByUtf8WithBom(String path) {
         File file = new File(path);
         FileInputStream in;
@@ -37,7 +35,6 @@ public class UTF8StringUtils {
         }
         return "";
     }
-
 
     public static String readByUtf8WithOutBom(String path) {
         File file = new File(path);

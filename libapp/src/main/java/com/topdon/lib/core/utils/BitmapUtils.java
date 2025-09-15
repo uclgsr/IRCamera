@@ -1,6 +1,5 @@
 package com.topdon.lib.core.utils;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.media.MediaScannerConnection;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -18,8 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.SizeUtils;
-import com.blankj.utilcode.util.ToastUtils;
-import com.topdon.lib.core.config.FileConfig;
 import com.topdon.lib.core.listener.BitmapViewListener;
 
 import java.io.ByteArrayOutputStream;
@@ -40,11 +36,10 @@ public class BitmapUtils {
     public static Bitmap rotateBitmap(Bitmap bm, int degree) {
         Bitmap returnBm = null;
 
-        // 根据rotation angle，生成旋转矩阵
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
         try {
-            // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
+
             returnBm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
         } catch (OutOfMemoryError e) {
         }
@@ -56,7 +51,6 @@ public class BitmapUtils {
         }
         return returnBm;
     }
-
 
     public static byte[] bitmapToBytes(Bitmap bitmap, int quality) {
         if (bitmap == null) {
@@ -73,7 +67,6 @@ public class BitmapUtils {
             return null;
         }
     }
-
 
     public static boolean saveBitmap(Bitmap bitmap, File file, File path) {
         boolean success = false;
@@ -101,20 +94,25 @@ public class BitmapUtils {
         return success;
     }
 
-
     public static Bitmap imageZoom(Bitmap bitmap, double width) {
-        // 将bitmap放至array中，意在获得bitmap的大小（与实际读取的原文件要大）
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        // 格式、质量、输出流
+
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
         byte[] b = baos.toByteArray();
         Bitmap newBitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-        // 获取bitmap大小 是允许最大大小的多少倍
+
         return scaleWithWH(newBitmap, width,
                 width * newBitmap.getHeight() / newBitmap.getWidth());
     }
 
-
+    /***
+     * 图片缩放
+     *@param bitmap 位图
+     * @param w 新的宽度
+     * @param h 新的高度
+     * @return Bitmap
+     */
     public static Bitmap scaleWithWH(Bitmap bitmap, double w, double h) {
         if (w == 0 || h == 0 || bitmap == null) {
             return bitmap;
@@ -131,7 +129,6 @@ public class BitmapUtils {
                     matrix, true);
         }
     }
-
 
     public static boolean saveFile(String file, Bitmap bmp) {
         if (TextUtils.isEmpty(file) || bmp == null) return false;
@@ -157,7 +154,6 @@ public class BitmapUtils {
         return true;
     }
 
-
     public static Bitmap mergeBitmap(Bitmap backBitmap, Bitmap frontBitmap, int leftFront, int topFront) {
         if (backBitmap == null || backBitmap.isRecycled()
                 || frontBitmap == null || frontBitmap.isRecycled()) {
@@ -167,12 +163,12 @@ public class BitmapUtils {
         Canvas canvas = new Canvas(bitmap);
         canvas.drawBitmap(backBitmap, 0, 0, null);
         canvas.drawBitmap(frontBitmap, leftFront, topFront, null);
-//        if (!frontBitmap.isRecycled()){
-//            frontBitmap.recycle();
-//        }
+
+
         return bitmap;
     }
-    public static Bitmap mergeBitmapAlpha(Bitmap backBitmap, Bitmap frontBitmap,Paint paint, int leftFront, int topFront) {
+
+    public static Bitmap mergeBitmapAlpha(Bitmap backBitmap, Bitmap frontBitmap, Paint paint, int leftFront, int topFront) {
         if (backBitmap == null || backBitmap.isRecycled()
                 || frontBitmap == null || frontBitmap.isRecycled()) {
             return null;
@@ -181,9 +177,8 @@ public class BitmapUtils {
         Canvas canvas = new Canvas(bitmap);
         canvas.drawBitmap(backBitmap, 0, 0, null);
         canvas.drawBitmap(frontBitmap, leftFront, topFront, paint);
-//        if (!frontBitmap.isRecycled()){
-//            frontBitmap.recycle();
-//        }
+
+
         return bitmap;
     }
 
@@ -198,10 +193,10 @@ public class BitmapUtils {
         Bitmap bitmap = backBitmap.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(bitmap);
         canvas.drawBitmap(backBitmap, 0, 0, null);
-        if (view.getViewScale() != 1){
-            frontBitmap = scaleWithWH(frontBitmap,view.getViewWidth(),view.getViewHeight());
+        if (view.getViewScale() != 1) {
+            frontBitmap = scaleWithWH(frontBitmap, view.getViewWidth(), view.getViewHeight());
         }
-        canvas.drawBitmap(frontBitmap, view.getViewX(),view.getViewY(), paint);
+        canvas.drawBitmap(frontBitmap, view.getViewX(), view.getViewY(), paint);
         frontBitmap.recycle();
         return bitmap;
     }
@@ -223,28 +218,25 @@ public class BitmapUtils {
         Paint paint = new Paint();
         paint.setAlpha((int) (view.getViewAlpha() * 255));
 
-        if (view.getViewScale() != 1){
-            frontBitmap = scaleWithWH(frontBitmap,view.getViewWidth(),view.getViewHeight());
+        if (view.getViewScale() != 1) {
+            frontBitmap = scaleWithWH(frontBitmap, view.getViewWidth(), view.getViewHeight());
         }
-        canvas.drawBitmap(frontBitmap, view.getViewX(),view.getViewY(), paint);
+        canvas.drawBitmap(frontBitmap, view.getViewX(), view.getViewY(), paint);
         frontBitmap.recycle();
         return bitmap;
     }
 
-    public static void mergeBitmapByView(Bitmap frontBitmap, BitmapViewListener view,Canvas canvas) {
+    public static void mergeBitmapByView(Bitmap frontBitmap, BitmapViewListener view, Canvas canvas) {
         if (frontBitmap == null || frontBitmap.isRecycled()) {
             return;
         }
         Paint paint = new Paint();
         paint.setAlpha((int) (view.getViewAlpha() * 255));
-        if (view.getViewScale() != 1){
-            frontBitmap = scaleWithWH(frontBitmap,view.getViewWidth(),view.getViewHeight());
+        if (view.getViewScale() != 1) {
+            frontBitmap = scaleWithWH(frontBitmap, view.getViewWidth(), view.getViewHeight());
         }
-        canvas.drawBitmap(frontBitmap, view.getViewX(),view.getViewY(), paint);
+        canvas.drawBitmap(frontBitmap, view.getViewX(), view.getViewY(), paint);
     }
-
-
-
 
     public static void savaRawFile(byte[] bytes, byte[] bytes2) {
         try {
@@ -264,11 +256,10 @@ public class BitmapUtils {
         }
     }
 
+    public static Bitmap drawCenterLable(Bitmap bmp, String title, String address, String time, int seekBarWidth) {
 
-    public static Bitmap drawCenterLable(Bitmap bmp, String title,String address,String time,int seekBarWidth) {
-        //创建一样大小的图片
         Bitmap newBmp = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), Bitmap.Config.ARGB_8888);
-        //创建画布
+
         Canvas canvas = new Canvas(newBmp);
         canvas.drawBitmap(bmp, 0, 0, null);  //绘制原始图片
         canvas.save();
@@ -278,50 +269,50 @@ public class BitmapUtils {
         paint.setDither(true);
         paint.setFilterBitmap(true);
         Rect rectText = new Rect();  //得到text占用宽高， 单位：像素
-        paint.getTextBounds("占位高度文本", 0,"占位高度文本".length(), rectText);
+        paint.getTextBounds("占位高度文本", 0, "占位高度文本".length(), rectText);
         double beginX = SizeUtils.dp2px(10);  //45度角度值是1.414
         double beginY = bmp.getHeight() - SizeUtils.dp2px(10);
-        if (!TextUtils.isEmpty(time)){
+        if (!TextUtils.isEmpty(time)) {
             beginY = beginY - (rectText.bottom - rectText.top);
-            canvas.drawText(time, (int)beginX, (int)beginY, paint);
+            canvas.drawText(time, (int) beginX, (int) beginY, paint);
             beginY -= SizeUtils.dp2px(6);
         }
         int lineWidth = bmp.getWidth() - SizeUtils.dp2px(20) - seekBarWidth;//一行的可显示内容宽度
-        if (!TextUtils.isEmpty(address)){
+        if (!TextUtils.isEmpty(address)) {
             int textHeight = (rectText.bottom - rectText.top);
-            paint.getTextBounds(address, 0,address.length(), rectText);
-            if (rectText.width() > lineWidth){
-                //字符太长，进行换行处理
+            paint.getTextBounds(address, 0, address.length(), rectText);
+            if (rectText.width() > lineWidth) {
+
                 StaticLayout staticLayout = new StaticLayout(address,
                         paint, lineWidth,
                         Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-                beginY = beginY - (textHeight+SizeUtils.dp2px(1f))*staticLayout.getLineCount();
+                beginY = beginY - (textHeight + SizeUtils.dp2px(1f)) * staticLayout.getLineCount();
                 canvas.save();
-                canvas.translate( (int)beginX, (int)beginY - textHeight);
+                canvas.translate((int) beginX, (int) beginY - textHeight);
                 staticLayout.draw(canvas);
                 canvas.restore();
-            }else {
+            } else {
                 beginY = beginY - textHeight;
-                canvas.drawText(address, (int)beginX, (int)beginY, paint);
+                canvas.drawText(address, (int) beginX, (int) beginY, paint);
             }
             beginY -= SizeUtils.dp2px(6);
         }
-        if (!TextUtils.isEmpty(title)){
+        if (!TextUtils.isEmpty(title)) {
             int textHeight = (rectText.bottom - rectText.top);
-            paint.getTextBounds(title, 0,title.length(), rectText);
-            if (rectText.width() > lineWidth){
-                //字符太长，进行换行处理
+            paint.getTextBounds(title, 0, title.length(), rectText);
+            if (rectText.width() > lineWidth) {
+
                 StaticLayout staticLayout = new StaticLayout(title,
                         paint, lineWidth,
                         Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-                beginY = beginY - textHeight*staticLayout.getLineCount();
+                beginY = beginY - textHeight * staticLayout.getLineCount();
                 canvas.save();
-                canvas.translate( (int)beginX, (int)beginY - textHeight);
+                canvas.translate((int) beginX, (int) beginY - textHeight);
                 staticLayout.draw(canvas);
                 canvas.restore();
-            }else {
+            } else {
                 beginY = beginY - textHeight;
-                canvas.drawText(title, (int)beginX, (int)beginY, paint);
+                canvas.drawText(title, (int) beginX, (int) beginY, paint);
             }
             beginY -= SizeUtils.dp2px(6);
         }

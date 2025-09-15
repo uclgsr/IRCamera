@@ -21,18 +21,18 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.Objects;
 
-
 public class ConstellationEntity implements TextProvider, Serializable {
     private static final boolean IS_CHINESE;
+
+    static {
+        IS_CHINESE = Locale.getDefault().getDisplayLanguage().contains("中文");
+    }
+
     private String id;
     private String startDate;
     private String endDate;
     private String name;
     private String english;
-
-    static {
-        IS_CHINESE = Locale.getDefault().getDisplayLanguage().contains("中文");
-    }
 
     public String getId() {
         return id;

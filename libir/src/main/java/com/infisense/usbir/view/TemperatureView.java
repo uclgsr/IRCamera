@@ -40,7 +40,6 @@ import com.topdon.lib.core.tools.UnitTools;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,454 +54,76 @@ import java.util.List;
 public class TemperatureView extends SurfaceView implements SurfaceHolder.Callback,
         View.OnTouchListener, BaseDualView.OnFrameCallback {
 
+    public static final int REGION_MODE_RESET = -1;
+    public static final int REGION_MODE_POINT = 0;
+    public static final int REGION_MODE_LINE = 1;
+    public static final int REGION_MODE_RECTANGLE = 2;
+    public static final int REGION_MODE_CENTER = 3;
+    public static final int REGION_NODE_TREND = 4;
+    public static final int REGION_MODE_CLEAN = 5;
     private static final String TAG = "TemperatureView";
-
-
-
     private static final int TOUCH_TOLERANCE = SizeUtils.sp2px(7f);
-
-
-    private int drawCount = 3;
-
     private final int POINT_MAX_COUNT;
     private final int LINE_MAX_COUNT;
     private final int RECTANGLE_MAX_COUNT;
-
-
-
-    @Nullable
-    private LibIRTemp irtemp;
-
-
-    private float xScale = 0;
-
-    private float yScale = 0;
-
-    private int viewWidth = 0;
-
-    private int viewHeight = 0;
-
-    private int temperatureWidth;
-
-    private int temperatureHeight;
-
-
     private final TempDrawHelper helper = new TempDrawHelper();
-
-
-
-
-    public static final int REGION_MODE_RESET = -1;
-
-    public static final int REGION_MODE_POINT = 0;
-
-    public static final int REGION_MODE_LINE = 1;
-
-    public static final int REGION_MODE_RECTANGLE = 2;
-
-    public static final int REGION_MODE_CENTER = 3;
-
-    public static final int REGION_NODE_TREND = 4;
-
-    public static final int REGION_MODE_CLEAN = 5;
-
-    @IntDef({REGION_MODE_RESET, REGION_MODE_POINT, REGION_MODE_LINE, REGION_MODE_RECTANGLE, REGION_MODE_CENTER, REGION_NODE_TREND, REGION_MODE_CLEAN})
-    @Retention(RetentionPolicy.SOURCE)
-    private @interface RegionMode {
-    }
-
-
-    @RegionMode
-    private int temperatureRegionMode = REGION_MODE_CLEAN;
-    @RegionMode
-    public int getTemperatureRegionMode() {
-        return this.temperatureRegionMode;
-    }
-    public void setTemperatureRegionMode(@RegionMode int temperatureRegionMode) {
-        this.temperatureRegionMode = temperatureRegionMode;
-        if (temperatureRegionMode == REGION_MODE_CENTER) {
-            isShowFull = true;
-        } else if (temperatureRegionMode == REGION_MODE_CLEAN) {
-            isShowFull = false;
-        }
-    }
-
-
-    private boolean isShowFull;
-    public boolean isShowFull() {
-        return isShowFull;
-    }
-    public void setShowFull(boolean showFull) {
-        isShowFull = showFull;
-        if (temperatureRegionMode == REGION_MODE_CLEAN) {
-            temperatureRegionMode = REGION_MODE_CENTER;
-        }
-    }
-
-
-    public void setTextSize(int textSize){
-        helper.setTextSize(textSize);
-        refreshRegion();
-    }
-
-    public void setLinePaintColor(@ColorInt int color) {
-        helper.setTextColor(color);
-        refreshRegion();
-    }
-
-    private void refreshRegion() {
-        Canvas surfaceViewCanvas = getHolder().lockCanvas();
-        if (surfaceViewCanvas != null) {
-            surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            setBitmap();
-            surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-            getHolder().unlockCanvasAndPost(surfaceViewCanvas);
-        }
-    }
-
-
-    @Nullable
-    private OnTrendChangeListener onTrendChangeListener = null;
-
-    public void setOnTrendChangeListener(@Nullable OnTrendChangeListener onTrendChangeListener) {
-        this.onTrendChangeListener = onTrendChangeListener;
-    }
-
-    @Nullable
-    private Runnable onTrendAddListener = null;
-
-    public void setOnTrendAddListener(@Nullable Runnable onTrendAddListener) {
-        this.onTrendAddListener = onTrendAddListener;
-    }
-
-    @Nullable
-    private Runnable onTrendRemoveListener = null;
-
-    public void setOnTrendRemoveListener(@Nullable Runnable onTrendRemoveListener) {
-        this.onTrendRemoveListener = onTrendRemoveListener;
-    }
-
-    private ILiteListener iLiteListener = null;
-    public void setiLiteListener(ILiteListener iLiteListener) {
-        this.iLiteListener = iLiteListener;
-    }
-
-
-
-    private TempListener listener;
-    public TempListener getListener() {
-        return listener;
-    }
-    public void setListener(TempListener listener) {
-        this.listener = listener;
-    }
-
-
-    private boolean isMonitor = false;//如果是温度监控，则进行实时校验point/line/area的比例
-    public void setMonitor(boolean monitor) {
-        isMonitor = monitor;
-    }
-
-
-
-    private boolean isUserHighTemp = false;
-    public boolean isUserHighTemp() {
-        return isUserHighTemp;
-    }
-    public void setUserHighTemp(boolean isUserHighTemp) {
-        this.isUserHighTemp = isUserHighTemp;
-    }
-
-
-    private boolean isUserLowTemp = false;
-    public boolean isUserLowTemp() {
-        return isUserLowTemp;
-    }
-    public void setUserLowTemp(boolean isUserLowTemp) {
-        this.isUserLowTemp = isUserLowTemp;
-    }
-
-
-    private SynchronizedBitmap syncimage;
-    public void setSyncimage(SynchronizedBitmap syncimage) {
-        this.syncimage = syncimage;
-    }
-
-
-    private  byte[] temperature;
-    public void setTemperature(byte[] temperature) {
-        this.temperature = temperature;
-    }
-
-
-    private void setDefPoint(Point point) {
-        if (point.x > temperatureWidth && point.x > 0) {
-            point.x = temperatureWidth;
-        }
-        if (point.x <= 0) {
-            point.x = 0;
-        }
-        if (point.y > temperatureHeight) {
-            point.y = temperatureHeight;
-        }
-        if (point.y < 0) {
-            point.y = 0;
-        }
-    }
-    public LibIRTemp.TemperatureSampleResult getPointTemp(Point point) {
-        if (irtemp == null) {
-            return null;
-        } else {
-            setDefPoint(point);
-            return irtemp.getTemperatureOfPoint(point);
-        }
-    }
-    public LibIRTemp.TemperatureSampleResult getLineTemp(Line line) {
-        if (irtemp == null) {
-            return null;
-        } else {
-            setDefPoint(line.start);
-            setDefPoint(line.end);
-            return irtemp.getTemperatureOfLine(line);
-        }
-    }
-    public LibIRTemp.TemperatureSampleResult getRectTemp(Rect rect) {
-        if (irtemp == null) {
-            return null;
-        } else {
-            if (rect.top < 0) {
-                rect.top = 0;
-            }
-            if (rect.bottom > temperatureHeight) {
-                rect.bottom = temperatureHeight;
-            }
-            if (rect.left < 0) {
-                rect.left = 0;
-            }
-            if (rect.right > temperatureWidth) {
-                rect.right = temperatureWidth;
-            }
-            return irtemp.getTemperatureOfRect(rect);
-        }
-    }
-
-
-
-    public int productType = Const.TYPE_IR;
-
-
-
-    @Nullable
-    private Line trendLine;
-
     private final ArrayList<Point> pointList = new ArrayList<>();
-
     private final ArrayList<Line> lineList = new ArrayList<>();
-
     private final ArrayList<Rect> rectList = new ArrayList<>();
-
     private final ArrayList<LibIRTemp.TemperatureSampleResult> pointResultList = new ArrayList<>(3);
     private final ArrayList<LibIRTemp.TemperatureSampleResult> lineResultList = new ArrayList<>(3);
     private final ArrayList<LibIRTemp.TemperatureSampleResult> rectangleResultList = new ArrayList<>(3);
-
-
-
-
-    private Bitmap regionBitmap;
-
-    private Bitmap regionAndValueBitmap;
-    public Bitmap getRegionBitmap() {
-        return regionAndValueBitmap;
-    }
-    public Bitmap getRegionAndValueBitmap() {
-        synchronized (regionLock) {
-            return regionAndValueBitmap;
-        }
-    }
-
-
     private final Runnable runnable;
-    private Thread temperatureThread;
     private final Object regionLock = new Object();
-    private volatile boolean runflag = false;
-
-
     private final boolean isShowC = SharedManager.INSTANCE.getTemperature() == 1;
-
+    public int productType = Const.TYPE_IR;
+    private int drawCount = 3;
+    @Nullable
+    private LibIRTemp irtemp;
+    private float xScale = 0;
+    private float yScale = 0;
+    private int viewWidth = 0;
+    private int viewHeight = 0;
+    private int temperatureWidth;
+    private int temperatureHeight;
+    @RegionMode
+    private int temperatureRegionMode = REGION_MODE_CLEAN;
+    private boolean isShowFull;
+    @Nullable
+    private OnTrendChangeListener onTrendChangeListener = null;
+    @Nullable
+    private Runnable onTrendAddListener = null;
+    @Nullable
+    private Runnable onTrendRemoveListener = null;
+    private ILiteListener iLiteListener = null;
+    private TempListener listener;
+    private boolean isMonitor = false;//如果是温度监控，则进行实时校验point/line/area的比例
+    private boolean isUserHighTemp = false;
+    private boolean isUserLowTemp = false;
+    private SynchronizedBitmap syncimage;
+    private byte[] temperature;
+    @Nullable
+    private Line trendLine;
+    private Bitmap regionBitmap;
+    private Bitmap regionAndValueBitmap;
+    private Thread temperatureThread;
+    private volatile boolean runflag = false;
     private WeakReference<ITsTempListener> iTsTempListenerWeakReference;
-
-    public void setImageSize(int imageWidth, int imageHeight, ITsTempListener iTsTempListener) {
-        if (iTsTempListener != null) {
-            iTsTempListenerWeakReference = new WeakReference<>(iTsTempListener);
-        }
-        this.temperatureWidth = imageWidth;
-        this.temperatureHeight = imageHeight;
-        if (viewWidth == 0) {
-            viewWidth = getMeasuredWidth();
-        }
-        if (viewHeight == 0) {
-            viewHeight = getMeasuredHeight();
-        }
-        xScale = (float) viewWidth / (float) imageWidth;
-        yScale = (float) viewHeight / (float) imageHeight;
-        irtemp = new LibIRTemp(imageWidth, imageHeight);
-        llTempData = new byte[imageHeight * imageWidth * 2];
-        for (int i = 0; i < drawCount; i++) {
-            pointResultList.add(irtemp.new TemperatureSampleResult());
-            lineResultList.add(irtemp.new TemperatureSampleResult());
-            rectangleResultList.add(irtemp.new TemperatureSampleResult());
-        }
-    }
-
-    public void restView(){
-        viewWidth = 0;
-        viewHeight = 0;
-        viewWidth = getMeasuredWidth();
-        xScale = (float) viewWidth / (float) temperatureWidth;
-        viewHeight = getMeasuredHeight();
-        yScale = (float) viewHeight / (float) temperatureHeight;
-    }
-
     private boolean isShow = false;
-
-    public void start() {
-        if (!runflag){
-            runflag = true;
-            temperatureThread = new Thread(runnable);
-            if (isShow) {
-                setVisibility(VISIBLE);
-            } else {
-                setVisibility(INVISIBLE);
-            }
-            temperatureThread.start();
-        }
-    }
-
-    public void stop() {
-        runflag = false;
-        isShow = getVisibility() == View.VISIBLE;
-        try {
-            if (temperatureThread != null) {
-                temperatureThread.interrupt();
-                temperatureThread.join();
-                temperatureThread = null;
-            }
-        } catch (InterruptedException ignored) {
-
-        }
-    }
-
-    public void clear() {
-        if (onTrendRemoveListener != null) {
-            onTrendRemoveListener.run();
-        }
-        trendLine = null;
-        pointList.clear();
-        lineList.clear();
-        rectList.clear();
-        if (regionBitmap != null) {
-            regionBitmap.eraseColor(0);
-        }
-        Canvas surfaceViewCanvas = getHolder().lockCanvas();
-        if (surfaceViewCanvas != null) {
-            surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-            getHolder().unlockCanvasAndPost(surfaceViewCanvas);
-        }
-        for (int i = 0; i < pointResultList.size(); i++) {
-            pointResultList.get(i).index = 0;
-        }
-        for (int i = 0; i < lineResultList.size(); i++) {
-            lineResultList.get(i).index = 0;
-        }
-        for (int i = 0; i < rectangleResultList.size(); i++) {
-            rectangleResultList.get(i).index = 0;
-        }
-    }
-
-    public void addScalePoint(Point point) {
-        float sx = getMeasuredWidth() / (float) temperatureWidth;
-        float sy = getMeasuredHeight() / (float) temperatureHeight;
-        int viewX = TempDrawHelper.Companion.correctPoint(point.x * sx, getMeasuredWidth());
-        int viewY = TempDrawHelper.Companion.correctPoint(point.y * sy, getMeasuredHeight());
-        if (pointList.size() == POINT_MAX_COUNT) {
-            pointList.remove(0);
-        }
-        pointList.add(new Point(viewX, viewY));
-    }
-
-    public void addScaleLine(Line l) {
-        float sx = getMeasuredWidth() / (float) temperatureWidth;
-        float sy = getMeasuredHeight() / (float) temperatureHeight;
-        Line line = new Line(new Point(), new Point());
-        line.start.x = TempDrawHelper.Companion.correct(l.start.x * sx, getMeasuredWidth());
-        line.start.y = TempDrawHelper.Companion.correct(l.start.y * sy, getMeasuredHeight());
-        line.end.x = TempDrawHelper.Companion.correct(l.end.x * sx, getMeasuredWidth());
-        line.end.y = TempDrawHelper.Companion.correct(l.end.y * sy, getMeasuredHeight());
-        if (pointList.size() == POINT_MAX_COUNT) {
-            pointList.remove(0);
-        }
-        lineList.add(line);
-    }
-
-    public void addScaleRectangle(Rect r) {
-        float sx = getMeasuredWidth() / (float) temperatureWidth;
-        float sy = getMeasuredHeight() / (float) temperatureHeight;
-        Rect rectangle = new Rect();
-        rectangle.left = (int) (r.left * sx);
-        rectangle.top = (int) (r.top * sy);
-        rectangle.right = (int) (r.right * sx);
-        rectangle.bottom = (int) (r.bottom * sy);
-        if (rectList.size() < RECTANGLE_MAX_COUNT) {
-            rectList.add(rectangle);
-        } else {
-            for (int index = 0; index < rectList.size() - 1; index++) {
-                Rect tempRectangle = rectList.get(index + 1);
-                rectList.set(index, tempRectangle);
-            }
-            rectList.set(rectList.size() - 1, rectangle);
-        }
-    }
-
-    public Point getPoint() {
-        if (pointList.isEmpty()) {
-            return null;
-        }
-        return new Point((int) (pointList.get(0).x / xScale), (int) (pointList.get(0).y / yScale));
-    }
-
-    public Line getLine() {
-        if (!lineList.isEmpty()) {
-            Line line = new Line(new Point(), new Point());
-            line.start.x = (int) (lineList.get(0).start.x / xScale);
-            line.start.y = (int) (lineList.get(0).start.y / yScale);
-            line.end.x = (int) (lineList.get(0).end.x / xScale);
-            line.end.y = (int) (lineList.get(0).end.y / yScale);
-            return line;
-        } else {
-            return null;
-        }
-    }
-
-    public Rect getRectangle() {
-        if (!rectList.isEmpty()) {
-            Rect rect = new Rect();
-            rect.left = (int) (rectList.get(0).left / xScale);
-            rect.top = (int) (rectList.get(0).top / yScale);
-            rect.right = (int) (rectList.get(0).right / xScale);
-            rect.bottom = (int) (rectList.get(0).bottom / yScale);
-            return rect;
-        } else {
-            return null;
-        }
-    }
-
-    public void drawLine() {
-        setBitmap();
-    }
-
-
-
+    private boolean isAddAction = true;
+    private int downX = 0;
+    private int downY = 0;
+    private Line movingLine;
+    private LineMoveType lineMoveType = LineMoveType.ALL;
+    /* **************************************** 面 **************************************** */
+    private Rect movingRect;
+    private RectMoveType rectMoveType = RectMoveType.ALL;
+    private RectMoveEdge rectMoveEdge = RectMoveEdge.LEFT;
+    private RectMoveCorner rectMoveCorner = RectMoveCorner.LT;
+    private DualCameraParams.FusionType mCurrentFusionType;
+    private byte[] remapTempData;
+    private DualUVCCamera dualUVCCamera;
+    private byte[] llTempData;
 
     public TemperatureView(final Context context) {
         this(context, null, 0);
@@ -514,7 +135,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
     public TemperatureView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        // 注意这个方法尽早执行(可以在构造方法里面执行)，解决在小米mix2(Android7.0)上出现的surfaceView内容不展示问题
+
         setZOrderOnTop(true);
 
         getHolder().addCallback(this);
@@ -524,7 +145,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         try {
             drawCount = ta.getInteger(R.styleable.TemperatureView_temperature_count, 3);
         } catch (Exception e) {
-            // ignored
+
         } finally {
             ta.recycle();
         }
@@ -536,13 +157,13 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         runnable = () -> {
             while (!temperatureThread.isInterrupted() && runflag) {
                 byte[] tempArray;
-                if (productType == Const.TYPE_IR_DUAL){
+                if (productType == Const.TYPE_IR_DUAL) {
                     try {
                         if (remapTempData == null) {
                             Log.d(TAG, "remapTempData == NULL");
                             if (dualUVCCamera != null && llTempData != null
                                     && dualUVCCamera.getTempData(llTempData) != 0) {
-                                //获取映射后的温度数据失败
+
                                 Log.d(TAG, "--------error----------");
                                 SystemClock.sleep(1000);
                                 continue;
@@ -552,46 +173,46 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                             System.arraycopy(remapTempData, 0, llTempData, 0,
                                     temperatureHeight * temperatureWidth * 2);
                         }
-                        if (llTempData == null){
+                        if (llTempData == null) {
                             continue;
-                        }else {
+                        } else {
                             tempArray = llTempData;
                             irtemp.setTempData(llTempData);
                         }
-                    }catch (Exception e){
-                        Log.d(TAG, "remapTempData != NULL"+e.getMessage());
+                    } catch (Exception e) {
+                        Log.d(TAG, "remapTempData != NULL" + e.getMessage());
                         continue;
                     }
-                }else {
+                } else {
                     try {
                         synchronized (syncimage.dataLock) {
-                            // 用来关联温度数据和TemperatureView,方便后面的点线框temperature measurement
+
                             irtemp.setTempData(temperature);
                             if (syncimage.type == 1) irtemp.setScale(16);
                         }
-                    }catch (Exception e){
-                        Log.d(TAG, "syncimage != NULL"+e.getMessage());
+                    } catch (Exception e) {
+                        Log.d(TAG, "syncimage != NULL" + e.getMessage());
                     }
                     tempArray = temperature;
                 }
                 try {
-                    if (iLiteListener != null){
+                    if (iLiteListener != null) {
                         iLiteListener.getDeltaNucAndVTemp();
                     }
-                    if (isMonitor && (viewWidth != getMeasuredWidth() || viewHeight != getMeasuredHeight())){
+                    if (isMonitor && (viewWidth != getMeasuredWidth() || viewHeight != getMeasuredHeight())) {
                         viewWidth = getMeasuredWidth();
                         xScale = (float) viewWidth / (float) temperatureWidth;
                         viewHeight = getMeasuredHeight();
                         yScale = (float) viewHeight / (float) temperatureHeight;
                     }
                     LibIRTemp.TemperatureSampleResult temperatureSampleResult = irtemp.getTemperatureOfRect(new Rect(0, 0, temperatureWidth / 2, temperatureHeight - 1));
-                    // 点线框
+
                     if (regionAndValueBitmap != null) {
                         synchronized (regionLock) {
                             Canvas canvas = new Canvas(regionAndValueBitmap);
                             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                             canvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-                            // 获取最高温和最低温的数据
+
                             float fullMaxTemp;
                             float fullMinTemp;
                             LibIRTemp.TemperatureSampleResult fullResult = irtemp.getTemperatureOfRect(new Rect(0, 0, temperatureWidth - 1, temperatureHeight - 1));
@@ -601,7 +222,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                                 listener.getTemp((int) (fullMaxTemp * 100) / 100f, (int) (fullMinTemp * 100) / 100f, temperature);
                             }
 
-                            // 最低温
                             if (isShowFull) {
                                 String minTem = UnitTools.showC(fullMinTemp, isShowC);
                                 int x = TempDrawHelper.Companion.correct(fullResult.minTemperaturePixel.x * xScale, getWidth());
@@ -616,7 +236,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                                 drawCircle(canvas, x, y, false);
                             }
 
-                            // 最高温
                             if (isShowFull) {
                                 String maxTem = UnitTools.showC(fullMaxTemp, isShowC);
                                 int x = TempDrawHelper.Companion.correct(fullResult.maxTemperaturePixel.x * xScale, getWidth());
@@ -631,7 +250,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                                 drawCircle(canvas, x, y, true);
                             }
 
-                            //趋势图
                             Line trendLine = this.trendLine;
                             if (trendLine != null) {
                                 int startX = (int) (trendLine.start.x / xScale);
@@ -705,7 +323,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                                     drawTempText(canvas, max, point.x, point.y);
                                 }
                             }
-                            //中心温度
+
                             if (isShowFull || (!lineList.isEmpty() || !pointList.isEmpty() || !rectList.isEmpty())) {
                                 drawPoint(canvas, getWidth() / 2, getHeight() / 2);
                                 temperatureSampleResult = irtemp.getTemperatureOfPoint(new Point(temperatureWidth / 2, temperatureHeight / 2));
@@ -733,6 +351,352 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
             }
             Log.d(TAG, "temperatureThread exit");
         };
+    }
+
+    private static boolean isLineConcat(@NonNull Line line, int x, int y) {
+        int tempDistance = ((line.end.y - line.start.y) * x - (line.end.x - line.start.x) * y + line.end.x * line.start.y - line.start.x * line.end.y);
+        tempDistance = (int) (tempDistance / Math.sqrt(Math.pow(line.end.y - line.start.y, 2) + Math.pow(line.end.x - line.start.x, 2)));
+        return Math.abs(tempDistance) < TOUCH_TOLERANCE && x > Math.min(line.start.x, line.end.x) - TOUCH_TOLERANCE && x < Math.max(line.start.x, line.end.x) + TOUCH_TOLERANCE;
+    }
+
+    @RegionMode
+    public int getTemperatureRegionMode() {
+        return this.temperatureRegionMode;
+    }
+
+    public void setTemperatureRegionMode(@RegionMode int temperatureRegionMode) {
+        this.temperatureRegionMode = temperatureRegionMode;
+        if (temperatureRegionMode == REGION_MODE_CENTER) {
+            isShowFull = true;
+        } else if (temperatureRegionMode == REGION_MODE_CLEAN) {
+            isShowFull = false;
+        }
+    }
+
+    public boolean isShowFull() {
+        return isShowFull;
+    }
+
+    public void setShowFull(boolean showFull) {
+        isShowFull = showFull;
+        if (temperatureRegionMode == REGION_MODE_CLEAN) {
+            temperatureRegionMode = REGION_MODE_CENTER;
+        }
+    }
+
+    public void setTextSize(int textSize) {
+        helper.setTextSize(textSize);
+        refreshRegion();
+    }
+
+    public void setLinePaintColor(@ColorInt int color) {
+        helper.setTextColor(color);
+        refreshRegion();
+    }
+
+    private void refreshRegion() {
+        Canvas surfaceViewCanvas = getHolder().lockCanvas();
+        if (surfaceViewCanvas != null) {
+            surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            setBitmap();
+            surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
+            getHolder().unlockCanvasAndPost(surfaceViewCanvas);
+        }
+    }
+
+    public void setOnTrendChangeListener(@Nullable OnTrendChangeListener onTrendChangeListener) {
+        this.onTrendChangeListener = onTrendChangeListener;
+    }
+
+    public void setOnTrendAddListener(@Nullable Runnable onTrendAddListener) {
+        this.onTrendAddListener = onTrendAddListener;
+    }
+
+    public void setOnTrendRemoveListener(@Nullable Runnable onTrendRemoveListener) {
+        this.onTrendRemoveListener = onTrendRemoveListener;
+    }
+
+    public void setiLiteListener(ILiteListener iLiteListener) {
+        this.iLiteListener = iLiteListener;
+    }
+
+    public TempListener getListener() {
+        return listener;
+    }
+
+    public void setListener(TempListener listener) {
+        this.listener = listener;
+    }
+
+    public void setMonitor(boolean monitor) {
+        isMonitor = monitor;
+    }
+
+    public boolean isUserHighTemp() {
+        return isUserHighTemp;
+    }
+
+    public void setUserHighTemp(boolean isUserHighTemp) {
+        this.isUserHighTemp = isUserHighTemp;
+    }
+
+    public boolean isUserLowTemp() {
+        return isUserLowTemp;
+    }
+
+    public void setUserLowTemp(boolean isUserLowTemp) {
+        this.isUserLowTemp = isUserLowTemp;
+    }
+
+    public void setSyncimage(SynchronizedBitmap syncimage) {
+        this.syncimage = syncimage;
+    }
+
+    public void setTemperature(byte[] temperature) {
+        this.temperature = temperature;
+    }
+
+    private void setDefPoint(Point point) {
+        if (point.x > temperatureWidth && point.x > 0) {
+            point.x = temperatureWidth;
+        }
+        if (point.x <= 0) {
+            point.x = 0;
+        }
+        if (point.y > temperatureHeight) {
+            point.y = temperatureHeight;
+        }
+        if (point.y < 0) {
+            point.y = 0;
+        }
+    }
+
+    public LibIRTemp.TemperatureSampleResult getPointTemp(Point point) {
+        if (irtemp == null) {
+            return null;
+        } else {
+            setDefPoint(point);
+            return irtemp.getTemperatureOfPoint(point);
+        }
+    }
+
+    public LibIRTemp.TemperatureSampleResult getLineTemp(Line line) {
+        if (irtemp == null) {
+            return null;
+        } else {
+            setDefPoint(line.start);
+            setDefPoint(line.end);
+            return irtemp.getTemperatureOfLine(line);
+        }
+    }
+
+    public LibIRTemp.TemperatureSampleResult getRectTemp(Rect rect) {
+        if (irtemp == null) {
+            return null;
+        } else {
+            if (rect.top < 0) {
+                rect.top = 0;
+            }
+            if (rect.bottom > temperatureHeight) {
+                rect.bottom = temperatureHeight;
+            }
+            if (rect.left < 0) {
+                rect.left = 0;
+            }
+            if (rect.right > temperatureWidth) {
+                rect.right = temperatureWidth;
+            }
+            return irtemp.getTemperatureOfRect(rect);
+        }
+    }
+
+    public Bitmap getRegionBitmap() {
+        return regionAndValueBitmap;
+    }
+
+    public Bitmap getRegionAndValueBitmap() {
+        synchronized (regionLock) {
+            return regionAndValueBitmap;
+        }
+    }
+
+    public void setImageSize(int imageWidth, int imageHeight, ITsTempListener iTsTempListener) {
+        if (iTsTempListener != null) {
+            iTsTempListenerWeakReference = new WeakReference<>(iTsTempListener);
+        }
+        this.temperatureWidth = imageWidth;
+        this.temperatureHeight = imageHeight;
+        if (viewWidth == 0) {
+            viewWidth = getMeasuredWidth();
+        }
+        if (viewHeight == 0) {
+            viewHeight = getMeasuredHeight();
+        }
+        xScale = (float) viewWidth / (float) imageWidth;
+        yScale = (float) viewHeight / (float) imageHeight;
+        irtemp = new LibIRTemp(imageWidth, imageHeight);
+        llTempData = new byte[imageHeight * imageWidth * 2];
+        for (int i = 0; i < drawCount; i++) {
+            pointResultList.add(irtemp.new TemperatureSampleResult());
+            lineResultList.add(irtemp.new TemperatureSampleResult());
+            rectangleResultList.add(irtemp.new TemperatureSampleResult());
+        }
+    }
+
+    public void restView() {
+        viewWidth = 0;
+        viewHeight = 0;
+        viewWidth = getMeasuredWidth();
+        xScale = (float) viewWidth / (float) temperatureWidth;
+        viewHeight = getMeasuredHeight();
+        yScale = (float) viewHeight / (float) temperatureHeight;
+    }
+
+    public void start() {
+        if (!runflag) {
+            runflag = true;
+            temperatureThread = new Thread(runnable);
+            if (isShow) {
+                setVisibility(VISIBLE);
+            } else {
+                setVisibility(INVISIBLE);
+            }
+            temperatureThread.start();
+        }
+    }
+
+
+
+
+
+    /* **************************************** Touch **************************************** */
+
+    public void stop() {
+        runflag = false;
+        isShow = getVisibility() == View.VISIBLE;
+        try {
+            if (temperatureThread != null) {
+                temperatureThread.interrupt();
+                temperatureThread.join();
+                temperatureThread = null;
+            }
+        } catch (InterruptedException ignored) {
+
+        }
+    }
+
+    public void clear() {
+        if (onTrendRemoveListener != null) {
+            onTrendRemoveListener.run();
+        }
+        trendLine = null;
+        pointList.clear();
+        lineList.clear();
+        rectList.clear();
+        if (regionBitmap != null) {
+            regionBitmap.eraseColor(0);
+        }
+        Canvas surfaceViewCanvas = getHolder().lockCanvas();
+        if (surfaceViewCanvas != null) {
+            surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
+            getHolder().unlockCanvasAndPost(surfaceViewCanvas);
+        }
+        for (int i = 0; i < pointResultList.size(); i++) {
+            pointResultList.get(i).index = 0;
+        }
+        for (int i = 0; i < lineResultList.size(); i++) {
+            lineResultList.get(i).index = 0;
+        }
+        for (int i = 0; i < rectangleResultList.size(); i++) {
+            rectangleResultList.get(i).index = 0;
+        }
+    }
+
+    public void addScalePoint(Point point) {
+        float sx = getMeasuredWidth() / (float) temperatureWidth;
+        float sy = getMeasuredHeight() / (float) temperatureHeight;
+        int viewX = TempDrawHelper.Companion.correctPoint(point.x * sx, getMeasuredWidth());
+        int viewY = TempDrawHelper.Companion.correctPoint(point.y * sy, getMeasuredHeight());
+        if (pointList.size() == POINT_MAX_COUNT) {
+            pointList.remove(0);
+        }
+        pointList.add(new Point(viewX, viewY));
+    }
+
+    public void addScaleLine(Line l) {
+        float sx = getMeasuredWidth() / (float) temperatureWidth;
+        float sy = getMeasuredHeight() / (float) temperatureHeight;
+        Line line = new Line(new Point(), new Point());
+        line.start.x = TempDrawHelper.Companion.correct(l.start.x * sx, getMeasuredWidth());
+        line.start.y = TempDrawHelper.Companion.correct(l.start.y * sy, getMeasuredHeight());
+        line.end.x = TempDrawHelper.Companion.correct(l.end.x * sx, getMeasuredWidth());
+        line.end.y = TempDrawHelper.Companion.correct(l.end.y * sy, getMeasuredHeight());
+        if (pointList.size() == POINT_MAX_COUNT) {
+            pointList.remove(0);
+        }
+        lineList.add(line);
+    }
+
+    /* **************************************** 点 **************************************** */
+
+    public void addScaleRectangle(Rect r) {
+        float sx = getMeasuredWidth() / (float) temperatureWidth;
+        float sy = getMeasuredHeight() / (float) temperatureHeight;
+        Rect rectangle = new Rect();
+        rectangle.left = (int) (r.left * sx);
+        rectangle.top = (int) (r.top * sy);
+        rectangle.right = (int) (r.right * sx);
+        rectangle.bottom = (int) (r.bottom * sy);
+        if (rectList.size() < RECTANGLE_MAX_COUNT) {
+            rectList.add(rectangle);
+        } else {
+            for (int index = 0; index < rectList.size() - 1; index++) {
+                Rect tempRectangle = rectList.get(index + 1);
+                rectList.set(index, tempRectangle);
+            }
+            rectList.set(rectList.size() - 1, rectangle);
+        }
+    }
+
+    public Point getPoint() {
+        if (pointList.isEmpty()) {
+            return null;
+        }
+        return new Point((int) (pointList.get(0).x / xScale), (int) (pointList.get(0).y / yScale));
+    }
+
+
+    /* **************************************** 线 **************************************** */
+
+    public Line getLine() {
+        if (!lineList.isEmpty()) {
+            Line line = new Line(new Point(), new Point());
+            line.start.x = (int) (lineList.get(0).start.x / xScale);
+            line.start.y = (int) (lineList.get(0).start.y / yScale);
+            line.end.x = (int) (lineList.get(0).end.x / xScale);
+            line.end.y = (int) (lineList.get(0).end.y / yScale);
+            return line;
+        } else {
+            return null;
+        }
+    }
+
+    public Rect getRectangle() {
+        if (!rectList.isEmpty()) {
+            Rect rect = new Rect();
+            rect.left = (int) (rectList.get(0).left / xScale);
+            rect.top = (int) (rectList.get(0).top / yScale);
+            rect.right = (int) (rectList.get(0).right / xScale);
+            rect.bottom = (int) (rectList.get(0).bottom / yScale);
+            return rect;
+        } else {
+            return null;
+        }
+    }
+
+    public void drawLine() {
+        setBitmap();
     }
 
     @Override
@@ -764,18 +728,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         regionAndValueBitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_4444);
     }
 
-
-
-
-
-    /* **************************************** Touch **************************************** */
-
-    private boolean isAddAction = true;
-
-
-    private int downX = 0;
-    private int downY = 0;
-
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (temperatureRegionMode) {
@@ -791,8 +743,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                 return false;
         }
     }
-
-    /* **************************************** 点 **************************************** */
 
     private boolean handleTouchPoint(MotionEvent event) {
         switch (event.getAction()) {
@@ -880,15 +830,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         return null;
     }
 
-
-    /* **************************************** 线 **************************************** */
-
-    private Line movingLine;
-
-    private enum LineMoveType { ALL, START, END }
-
-    private LineMoveType lineMoveType = LineMoveType.ALL;
-
     private boolean handleTouchLine(MotionEvent event, boolean isTrend) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
@@ -916,7 +857,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                         }
                     } else {
                         synchronized (regionLock) {
-                            // 真是醉了，Line 没有重写 equals 方法，不过好在这个 line 本来就是从 lineList 里取出来的，所以 remove 没问题
+
                             lineList.remove(line);
                         }
                     }
@@ -1002,7 +943,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                     Canvas bitmapCanvas = new Canvas(regionBitmap);
 
-                    // TODO: 2024/12/13 这里有legacy问题，拖动的时候可以把直线拖成点
                     if (Math.abs(x - downX) > TOUCH_TOLERANCE || Math.abs(y - downY) > TOUCH_TOLERANCE) {
                         Point start = new Point();
                         Point end = new Point();
@@ -1055,13 +995,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         }
     }
 
-
-    private static boolean isLineConcat(@NonNull Line line, int x, int y) {
-        int tempDistance = ((line.end.y - line.start.y) * x - (line.end.x - line.start.x) * y + line.end.x * line.start.y - line.start.x * line.end.y);
-        tempDistance = (int) (tempDistance / Math.sqrt(Math.pow(line.end.y - line.start.y, 2) + Math.pow(line.end.x - line.start.x, 2)));
-        return Math.abs(tempDistance) < TOUCH_TOLERANCE && x > Math.min(line.start.x, line.end.x) - TOUCH_TOLERANCE && x < Math.max(line.start.x, line.end.x) + TOUCH_TOLERANCE;
-    }
-
     @Nullable
     private Line getLine(int x, int y, boolean isTrend) {
         if (isTrend) {
@@ -1078,26 +1011,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         }
         return null;
     }
-
-
-    /* **************************************** 面 **************************************** */
-    private Rect movingRect;
-
-
-    private enum RectMoveType { ALL, EDGE, CORNER }
-
-    private RectMoveType rectMoveType = RectMoveType.ALL;
-
-
-    private enum RectMoveEdge { LEFT, TOP, RIGHT, BOTTOM }
-
-    private RectMoveEdge rectMoveEdge = RectMoveEdge.LEFT;
-
-
-    private enum RectMoveCorner { LT, RT, RB, LB }
-
-    private RectMoveCorner rectMoveCorner = RectMoveCorner.LT;
-
 
     private boolean handleTouchRect(MotionEvent event) {
         switch (event.getAction()) {
@@ -1232,7 +1145,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                     Canvas bitmapCanvas = new Canvas(regionBitmap);
-                    // TODO: 2024/12/13 这里有legacy问题，拖动的时候可以把矩形拖成直线
+
                     if (Math.abs(x - downX) > TOUCH_TOLERANCE || Math.abs(y - downY) > TOUCH_TOLERANCE) {
                         switch (rectMoveType) {
                             case ALL:
@@ -1325,20 +1238,18 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         return a > b - TOUCH_TOLERANCE && a < b + TOUCH_TOLERANCE;
     }
 
-
-
-
-    /* **************************************** Draw **************************************** */
-
-
     private void drawPoint(Canvas canvas, int x, int y) {
         helper.drawPoint(canvas, x, y);
     }
 
 
+
+
+    /* **************************************** Draw **************************************** */
+
     private void drawLine(Canvas canvas, int x1, int y1, int x2, int y2, boolean isTrend) {
-        // 由于线段与实心点的的绘制是分开的，线段使用current View 坐标，而实心点使用温度(192x256)坐标转换为 View 坐标
-        // 故而这里需要把current的坐标，尽量贴近温度坐标的整数倍，否则会出现实心圆偏离直线太远的情况
+
+
         int startX = (int) ((int) (x1 / xScale) * xScale);
         int startY = (int) ((int) (y1 / yScale) * yScale);
         int stopX = (int) ((int) (x2 / xScale) * xScale);
@@ -1350,7 +1261,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         }
     }
 
-
     private void drawRect(Canvas canvas, float x1, float y1, float x2, float y2) {
         int left = (int) ((int) (x1 / xScale) * xScale);
         int top = (int) ((int) (y1 / yScale) * yScale);
@@ -1359,20 +1269,16 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         helper.drawRect(canvas, left, top, right, bottom);
     }
 
-
     private void drawCircle(Canvas canvas, int x, int y, boolean isMax) {
         helper.drawCircle(canvas, x, y, isMax);
     }
 
-
     private void drawDot(Canvas canvas, Point point, boolean isMax) {
-        //这里的 (x,y) 是通过温度坐标转换来的，所以已经是温度坐标的整数倍
+
         int x = TempDrawHelper.Companion.correct(point.x * xScale, getWidth());
         int y = TempDrawHelper.Companion.correct(point.y * yScale, getHeight());
         helper.drawCircle(canvas, x, y, isMax);
     }
-
-
 
     private void drawTempText(Canvas canvas, String text, int x, int y) {
         helper.drawTempText(canvas, text, getWidth(), x, y);
@@ -1383,8 +1289,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         int y = TempDrawHelper.Companion.correct(point.y * yScale, getHeight());
         helper.drawTempText(canvas, text, getWidth(), x, y);
     }
-
-
 
     private void setBitmap() {
         regionBitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
@@ -1403,20 +1307,10 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         }
     }
 
-
-
-    public interface OnTrendChangeListener {
-        void onChange(List<Float> temps);
-    }
-
-    public interface TempListener {
-        void getTemp(float max, float min, byte[] tempData);
-    }
-
-    public float getCompensateTemp(float temp){
-        if (iLiteListener != null){
+    public float getCompensateTemp(float temp) {
+        if (iLiteListener != null) {
             return iLiteListener.compensateTemp(temp);
-        }else {
+        } else {
             return temp;
         }
     }
@@ -1428,8 +1322,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
             return getCompensateTemp(temp);
         }
     }
-
-
 
     public void setUseIRISP(boolean useIRISP) {
         if (irtemp != null) {
@@ -1445,14 +1337,10 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         this.dualUVCCamera = dualUVCCamera;
 
     }
-    private DualCameraParams.FusionType mCurrentFusionType;
-    private byte[] remapTempData;
-    private DualUVCCamera dualUVCCamera;
-    private byte[] llTempData;
 
     @Override
     public void onFame(byte[] mixData, byte[] tempData, double fpsText) {
-        if (Const.TYPE_IR_DUAL == productType){
+        if (Const.TYPE_IR_DUAL == productType) {
             if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
                 if (this.remapTempData == null) {
                     this.remapTempData = new byte[Const.IR_WIDTH * Const.IR_HEIGHT * 2];
@@ -1465,5 +1353,26 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                 System.arraycopy(tempData, 0, this.remapTempData, 0, Const.DUAL_WIDTH * Const.DUAL_HEIGHT * 2);
             }
         }
+    }
+
+    private enum LineMoveType {ALL, START, END}
+
+    private enum RectMoveType {ALL, EDGE, CORNER}
+
+    private enum RectMoveEdge {LEFT, TOP, RIGHT, BOTTOM}
+
+    private enum RectMoveCorner {LT, RT, RB, LB}
+
+    @IntDef({REGION_MODE_RESET, REGION_MODE_POINT, REGION_MODE_LINE, REGION_MODE_RECTANGLE, REGION_MODE_CENTER, REGION_NODE_TREND, REGION_MODE_CLEAN})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface RegionMode {
+    }
+
+    public interface OnTrendChangeListener {
+        void onChange(List<Float> temps);
+    }
+
+    public interface TempListener {
+        void getTemp(float max, float min, byte[] tempData);
     }
 }

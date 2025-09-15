@@ -6,15 +6,12 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-
 
 public class MathUtils {
 
     public static double setDoubleAccuracy(double num, int scale) {
         return ((int) (num * Math.pow(10, scale))) / Math.pow(10, scale);
     }
-
 
     public static float[] getPercents(int scale, @NonNull float... values) {
         float total = 0;
@@ -38,14 +35,13 @@ public class MathUtils {
             if (i == list.size() - 1) {
                 fs[index] = 1 - sum;
             } else {
-                //先强转int不进行4舍5入，再转为float计算
+
                 fs[index] = (int) (values[index] / total * sc) / (float) sc;
                 sum += fs[index];
             }
         }
         return fs;
     }
-
 
     @NonNull
     public static byte[] numberToBytes(boolean bigEndian, long value, int len) {
@@ -61,14 +57,13 @@ public class MathUtils {
         }
     }
 
-
     @SuppressWarnings("unchecked")
     public static <T> T bytesToNumber(boolean bigEndian, Class<T> cls, @NonNull byte... src) {
         int len = Math.min(8, src.length);
         byte[] bs = new byte[8];
         System.arraycopy(src, 0, bs, bigEndian ? 8 - len : 0, len);
         long value = 0;
-        // 循环读取每个字节通过移位运算完成long的8个字节拼装
+
         for (int i = 0; i < 8; i++) {
             int shift = (bigEndian ? 7 - i : i) << 3;
             value = value | ((long) 0xff << shift & ((long) bs[i] << shift));
@@ -90,15 +85,14 @@ public class MathUtils {
         throw new IllegalArgumentException("cls must be one of short, int and long");
     }
 
-
     public static byte[] reverseBitAndByte(byte[] src) {
         if (src == null || src.length == 0) {
             return null;
         }
         byte[] target = new byte[src.length];
-        //翻转byte同时翻转bit
+
         for (int i = 0; i < src.length; i++) {
-            //翻转bit
+
             int value = 0;
             int tmp = src[src.length - 1 - i];
             for (int j = 7; j >= 0; j--) {
@@ -109,7 +103,6 @@ public class MathUtils {
         }
         return target;
     }
-
 
     @NonNull
     public static List<byte[]> splitPackage(@NonNull byte[] src, int size) {
@@ -123,7 +116,6 @@ public class MathUtils {
         return list;
     }
 
-
     @NonNull
     public static byte[] joinPackage(@NonNull byte[]... src) {
         byte[] bytes = new byte[0];
@@ -133,7 +125,6 @@ public class MathUtils {
         }
         return bytes;
     }
-
 
     public static int calcCrc8(byte[] bytes) {
         int crc = 0;
@@ -150,7 +141,6 @@ public class MathUtils {
         return crc & 0xff;
     }
 
-
     public static int calcCRC16_Modbus(byte[] data) {
         int crc = 0xffff;//16位
         for (byte b : data) {
@@ -164,13 +154,12 @@ public class MathUtils {
                     crc >>= 1; // Shift right and XOR 0xA001
                     crc ^= 0xA001;
                 } else
-                    // Else LSB is not set
+
                     crc >>= 1; // Just shift right
             }
         }
         return crc & 0xffff;
     }
-
 
     public static int calcCRC_CCITT_XModem(byte[] bytes) {
         int crc = 0;          // initial value
@@ -185,7 +174,6 @@ public class MathUtils {
         }
         return crc & 0xffff;
     }
-
 
     public static int calcCRC_CCITT_XModem(byte[] bytes, int offset, int len) {
         int crc = 0;          // initial value
@@ -202,7 +190,6 @@ public class MathUtils {
         return crc & 0xffff;
     }
 
-
     public static int calcCRC_CCITT_0xFFFF(byte[] bytes) {
         int crc = 0xffff; // initial value
         int polynomial = 0x1021; // poly value
@@ -216,7 +203,6 @@ public class MathUtils {
         }
         return crc & 0xffff;
     }
-
 
     public static int calcCRC_CCITT_0xFFFF(byte[] bytes, int offset, int len) {
         int crc = 0xffff; // initial value

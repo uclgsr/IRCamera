@@ -6,14 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityResearchTemplateBinding
 import com.topdon.gsr.model.ResearchTemplate
 import com.topdon.lib.core.ktbase.BaseBindingActivity
-
 
 class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBinding>() {
     private lateinit var templateAdapter: TemplateAdapter
@@ -53,12 +54,11 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
     private fun setupCategoryFilter() {
         val categories =
             listOf("All Templates") +
-                ResearchTemplate.TemplateCategory.values().map {
-                    it.name.replace("_", " ").lowercase().replaceFirstChar {
-                            char ->
-                        char.uppercase()
+                    ResearchTemplate.TemplateCategory.values().map {
+                        it.name.replace("_", " ").lowercase().replaceFirstChar { char ->
+                            char.uppercase()
+                        }
                     }
-                }
 
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -137,8 +137,22 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
             // Format template details
             val details =
                 buildString {
-                    append("🎯 Category: ${template.category.name.replace("_", " ").lowercase().replaceFirstChar { it.uppercase() }}\n")
-                    append("🔧 Sensors: ${template.sensors.joinToString(", ") { it.name.replace("_", " ") }}\n")
+                    append(
+                        "🎯 Category: ${
+                            template.category.name.replace("_", " ").lowercase()
+                                .replaceFirstChar { it.uppercase() }
+                        }\n"
+                    )
+                    append(
+                        "🔧 Sensors: ${
+                            template.sensors.joinToString(", ") {
+                                it.name.replace(
+                                    "_",
+                                    " "
+                                )
+                            }
+                        }\n"
+                    )
 
                     if (template.duration != null) {
                         val durationMs = template.duration!!
@@ -172,7 +186,8 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
 
     private fun updateEmptyView() {
         binding.emptyView.visibility = if (filteredTemplates.isEmpty()) View.VISIBLE else View.GONE
-        binding.templatesRecyclerView.visibility = if (filteredTemplates.isEmpty()) View.GONE else View.VISIBLE
+        binding.templatesRecyclerView.visibility =
+            if (filteredTemplates.isEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun startRecordingWithTemplate(template: ResearchTemplate) {
@@ -200,7 +215,6 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
         return true
     }
 }
-
 
 class TemplateAdapter(
     private val context: Context,
@@ -237,7 +251,8 @@ class TemplateAdapter(
         // Template info
         holder.iconText.text = template.icon ?: "📊"
         holder.nameText.text = template.name
-        holder.categoryText.text = template.category.name.replace("_", " ").lowercase().replaceFirstChar { it.uppercase() }
+        holder.categoryText.text =
+            template.category.name.replace("_", " ").lowercase().replaceFirstChar { it.uppercase() }
 
         // Sensors
         val sensorIcons =

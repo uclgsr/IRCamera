@@ -6,55 +6,42 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.blankj.utilcode.util.TimeUtils
 
-
 open class HouseBase {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 
-
     @ColumnInfo
     var name: String = ""
-
 
     @ColumnInfo
     var inspectorName: String = ""
 
-
     @ColumnInfo
     var address: String = ""
-
 
     @ColumnInfo
     var imagePath: String = ""
 
-
     @ColumnInfo
     var year: Int? = null
-
 
     @ColumnInfo
     var houseSpace: String = ""
 
-
     @ColumnInfo
     var houseSpaceUnit: Int = 0
-
 
     @ColumnInfo
     var cost: String = ""
 
-
     @ColumnInfo
     var costUnit: Int = 0
-
 
     @ColumnInfo
     var detectTime: Long = 0
 
-
     @ColumnInfo
     var createTime: Long = 0
-
 
     @ColumnInfo
     var updateTime: Long = 0
@@ -63,14 +50,12 @@ open class HouseBase {
 
     override fun hashCode(): Int = id.toInt()
 
-
     fun getSpaceUnitStr(): String =
         when (houseSpaceUnit) {
             0 -> "ac"
             1 -> "m²"
             else -> "ha"
         }
-
 
     fun getCostUnitStr(): String =
         when (costUnit) {
@@ -85,17 +70,15 @@ open class HouseBase {
             else -> "USD" // 美元USD
         }
 
-
-    fun getPdfFileName(): String = "TC_${TimeUtils.millis2String(createTime, "yyyyMMdd_HHmmss")}.pdf"
+    fun getPdfFileName(): String =
+        "TC_${TimeUtils.millis2String(createTime, "yyyyMMdd_HHmmss")}.pdf"
 }
-
 
 @Entity
 class HouseDetect : HouseBase() {
 
     @Ignore
     var dirList: ArrayList<DirDetect> = ArrayList()
-
 
     fun copyOne(): HouseDetect {
         val newDetect = HouseDetect()
@@ -145,25 +128,20 @@ class HouseDetect : HouseBase() {
     }
 }
 
-
 @Entity
 class HouseReport : HouseBase() {
 
     @ColumnInfo
     var inspectorWhitePath: String = ""
 
-
     @ColumnInfo
     var inspectorBlackPath: String = ""
-
 
     @ColumnInfo
     var houseOwnerWhitePath: String = ""
 
-
     @ColumnInfo
     var houseOwnerBlackPath: String = ""
-
 
     @Ignore
     var dirList: ArrayList<DirReport> = ArrayList()

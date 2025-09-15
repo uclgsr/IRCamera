@@ -1,6 +1,5 @@
 package com.topdon.ble;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -12,123 +11,47 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-
 public class UnifiedBleManager {
     private static final String TAG = "UnifiedBleManager";
-    
-    // Singleton instance
+
     private static volatile UnifiedBleManager instance;
-    
-    // Core components
+
     private final Context context;
     private final BluetoothManager bluetoothManager;
     private final BluetoothAdapter bluetoothAdapter;
-    
-    // Connection monitoring and statistics (consolidated from EnhancedBleManager)
+
     private final ConcurrentHashMap<String, ConnectionMetrics> deviceMetrics = new ConcurrentHashMap<>();
     private final AtomicBoolean multiDeviceMode = new AtomicBoolean(false);
     private final AtomicInteger activeConnections = new AtomicInteger(0);
-    
-    // Advanced features (consolidated from multiple managers)
+
     private final AtomicBoolean enhancedErrorRecovery = new AtomicBoolean(true);
     private final AtomicBoolean connectionOptimization = new AtomicBoolean(true);
     private final AtomicBoolean dataLossDetection = new AtomicBoolean(true);
-    
-    // Enhanced BLE managers for different device types  
+
     private final ShimmerBleController shimmerController;
     private final TopdonBleController topdonController;
-    
-    // Core EasyBLE instance with Nordic backend
-    private EasyBLE easyBLE;
-    
-    // Connection tracking and state management
     private final ConcurrentHashMap<String, UnifiedDevice> connectedDevices = new ConcurrentHashMap<>();
-    private final AtomicBoolean isInitialized = new AtomicBoolean(false);  
+    private final AtomicBoolean isInitialized = new AtomicBoolean(false);
     private final AtomicBoolean isScanning = new AtomicBoolean(false);
-    
-    // GSR sensor tracking for enhanced handling
     private final ConcurrentHashMap<String, Boolean> gsrDevices = new ConcurrentHashMap<>();
-    
-    // Device type identification
-    public enum DeviceType {
-        SHIMMER_GSR,        // Shimmer3 GSR+ sensors
-        SHIMMER_PPG,        // Shimmer PPG sensors  
-        SHIMMER_IMU,        // Shimmer IMU sensors
-        TOPDON_THERMAL,     // Topdon thermal cameras with BLE
-        TOPDON_ENV,         // Topdon environmental sensors
-        TOPDON_MULTI,       // Topdon multi-sensor devices
-        UNKNOWN             // Unknown or generic BLE device
-    }
-    
-
-    public interface UnifiedScanListener {
-        void onShimmerDeviceFound(BluetoothDevice device, DeviceType type, int rssi, byte[] scanRecord);
-        void onTopdonDeviceFound(BluetoothDevice device, DeviceType type, int rssi, byte[] scanRecord);
-        void onUnknownDeviceFound(BluetoothDevice device, int rssi, byte[] scanRecord);
-        void onScanError(int errorCode, String message);
-        void onScanComplete();
-    }
-    
-
-    public interface UnifiedConnectionListener {
-        void onDeviceConnected(UnifiedDevice device);
-        void onDeviceDisconnected(UnifiedDevice device, int reason);
-        void onConnectionError(UnifiedDevice device, int errorCode, String message);
-        void onDataReceived(UnifiedDevice device, byte[] data);
-        void onDeviceReady(UnifiedDevice device);
-    }
-    
-
-    public static class ConnectionMetrics {
-        public final AtomicLong connectAttempts = new AtomicLong(0);
-        public final AtomicLong successfulConnections = new AtomicLong(0);
-        public final AtomicLong disconnections = new AtomicLong(0);
-        public final AtomicLong dataPacketsReceived = new AtomicLong(0);
-        public final AtomicLong lastConnectionTime = new AtomicLong(0);
-        
-        public double getReliabilityScore() {
-            long attempts = connectAttempts.get();
-            return attempts > 0 ? (double) successfulConnections.get() / attempts : 0.0;
-        }
-    }
-    
-
-    public static class SystemBleStatus {
-        public final int activeConnections;
-        public final boolean multiDeviceMode;
-        public final boolean enhancedErrorRecovery;
-        public final long totalDevicesConnected;
-        
-        public SystemBleStatus(int activeConnections, boolean multiDeviceMode, 
-                             boolean enhancedErrorRecovery, long totalDevicesConnected) {
-            this.activeConnections = activeConnections;
-            this.multiDeviceMode = multiDeviceMode;
-            this.enhancedErrorRecovery = enhancedErrorRecovery;
-            this.totalDevicesConnected = totalDevicesConnected;
-        }
-    }
-    
+    private EasyBLE easyBLE;
 
     private UnifiedBleManager(@NonNull Context context) {
         this.context = context.getApplicationContext();
         this.bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         this.bluetoothAdapter = bluetoothManager != null ? bluetoothManager.getAdapter() : null;
-        
-        // Note: Consolidated functionality from multiple managers into this unified manager
-        
-        // Initialize device controllers
+
+
         this.shimmerController = new ShimmerBleController(context, this);
         this.topdonController = new TopdonBleController(context, this);
-        
+
         Log.i(TAG, "UnifiedBleManager initialized with comprehensive BLE support and cross-modal coordination");
     }
-    
 
     public static UnifiedBleManager getInstance(@NonNull Context context) {
         if (instance == null) {
@@ -140,106 +63,97 @@ public class UnifiedBleManager {
         }
         return instance;
     }
-    
 
     public boolean initialize() {
         if (isInitialized.get()) {
             return true;
         }
-        
+
         try {
             if (bluetoothAdapter == null) {
                 Log.e(TAG, "Bluetooth adapter not available");
                 return false;
             }
-            
+
             if (!bluetoothAdapter.isEnabled()) {
                 Log.w(TAG, "Bluetooth is not enabled");
                 return false;
             }
-            
-            // Initialize EasyBLE for basic BLE operations
+
             this.easyBLE = EasyBLE.getBuilder().setUseNordicBleBackend(true).build();
-            
-            // Initialize device controllers
+
             shimmerController.initialize();
             topdonController.initialize();
-            
-            // Initialize cross-modal synchronization integration
+
             try {
                 CrossModalSyncManager syncManager = CrossModalSyncManager.getInstance(context);
                 Log.i(TAG, "Cross-modal synchronization manager initialized for unified BLE coordination");
             } catch (Exception e) {
                 Log.w(TAG, "Cross-modal sync manager initialization failed, continuing without sync", e);
             }
-            
+
             isInitialized.set(true);
             Log.i(TAG, "Unified BLE Manager initialized successfully with cross-modal capabilities");
             return true;
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Failed to initialize Unified BLE Manager", e);
             return false;
         }
     }
-    
 
     public boolean startUnifiedDeviceDiscovery(@NonNull UnifiedScanListener listener) {
         if (!isInitialized.get()) {
             Log.e(TAG, "Manager not initialized");
             return false;
         }
-        
+
         if (isScanning.get()) {
             Log.w(TAG, "Scanning already in progress");
             return false;
         }
-        
+
         try {
             isScanning.set(true);
-            
-            // Start Shimmer device discovery
+
             shimmerController.startDeviceDiscovery(new ShimmerScanAdapter(listener));
-            
-            // Start Topdon device discovery  
+
             topdonController.startDeviceDiscovery(new TopdonScanAdapter(listener));
-            
+
             Log.i(TAG, "Started unified device discovery for Shimmer and Topdon devices");
             return true;
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Failed to start unified device discovery", e);
             isScanning.set(false);
             return false;
         }
     }
-    
 
     public void stopUnifiedDeviceDiscovery() {
         if (!isScanning.get()) {
             return;
         }
-        
+
         try {
             shimmerController.stopDeviceDiscovery();
             topdonController.stopDeviceDiscovery();
             isScanning.set(false);
-            
+
             Log.i(TAG, "Stopped unified device discovery");
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Error stopping unified device discovery", e);
         }
     }
-    
 
-    public UnifiedDevice connectToShimmerDevice(@NonNull BluetoothDevice device, 
-                                               @NonNull ShimmerDeviceConfig config,
-                                               @NonNull UnifiedConnectionListener listener) {
+    public UnifiedDevice connectToShimmerDevice(@NonNull BluetoothDevice device,
+                                                @NonNull ShimmerDeviceConfig config,
+                                                @NonNull UnifiedConnectionListener listener) {
         if (!isInitialized.get()) {
             throw new IllegalStateException("Manager not initialized");
         }
-        
+
         try {
             UnifiedDevice unifiedDevice = shimmerController.connectDevice(device, config, listener);
             if (unifiedDevice != null) {
@@ -247,21 +161,20 @@ public class UnifiedBleManager {
                 Log.i(TAG, "Connected to Shimmer device: " + device.getAddress());
             }
             return unifiedDevice;
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Failed to connect to Shimmer device", e);
             return null;
         }
     }
-    
 
     public UnifiedDevice connectToTopdonDevice(@NonNull BluetoothDevice device,
-                                             @NonNull TopdonDeviceConfig config,
-                                             @NonNull UnifiedConnectionListener listener) {
+                                               @NonNull TopdonDeviceConfig config,
+                                               @NonNull UnifiedConnectionListener listener) {
         if (!isInitialized.get()) {
             throw new IllegalStateException("Manager not initialized");
         }
-        
+
         try {
             UnifiedDevice unifiedDevice = topdonController.connectDevice(device, config, listener);
             if (unifiedDevice != null) {
@@ -269,18 +182,16 @@ public class UnifiedBleManager {
                 Log.i(TAG, "Connected to Topdon device: " + device.getAddress());
             }
             return unifiedDevice;
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Failed to connect to Topdon device", e);
             return null;
         }
     }
-    
 
     public List<UnifiedDevice> getConnectedDevices() {
         return new ArrayList<>(connectedDevices.values());
     }
-    
 
     public List<UnifiedDevice> getConnectedDevicesByType(DeviceType type) {
         List<UnifiedDevice> devices = new ArrayList<>();
@@ -291,7 +202,6 @@ public class UnifiedBleManager {
         }
         return devices;
     }
-    
 
     public void disconnectDevice(@NonNull String address) {
         UnifiedDevice device = connectedDevices.get(address);
@@ -301,7 +211,6 @@ public class UnifiedBleManager {
             Log.i(TAG, "Disconnected device: " + address);
         }
     }
-    
 
     public void disconnectAllDevices() {
         for (UnifiedDevice device : connectedDevices.values()) {
@@ -310,143 +219,83 @@ public class UnifiedBleManager {
         connectedDevices.clear();
         Log.i(TAG, "Disconnected all devices");
     }
-    
 
     public void cleanup() {
         try {
             stopUnifiedDeviceDiscovery();
             disconnectAllDevices();
-            
+
             shimmerController.cleanup();
             topdonController.cleanup();
-            
+
             isInitialized.set(false);
             Log.i(TAG, "UnifiedBleManager cleaned up");
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Error during cleanup", e);
         }
     }
-    
-    // Adapter classes for scan listeners
-    private static class ShimmerScanAdapter implements ShimmerBleController.ShimmerScanListener {
-        private final UnifiedScanListener unifiedListener;
-        
-        public ShimmerScanAdapter(UnifiedScanListener listener) {
-            this.unifiedListener = listener;
-        }
-        
-        @Override
-        public void onShimmerDeviceFound(BluetoothDevice device, DeviceType type, int rssi, byte[] scanRecord) {
-            unifiedListener.onShimmerDeviceFound(device, type, rssi, scanRecord);
-        }
-        
-        @Override
-        public void onScanError(int errorCode, String message) {
-            unifiedListener.onScanError(errorCode, message);
-        }
-        
-        @Override
-        public void onScanComplete() {
-            unifiedListener.onScanComplete();
-        }
-    }
-    
-    private static class TopdonScanAdapter implements TopdonBleController.TopdonScanListener {
-        private final UnifiedScanListener unifiedListener;
-        
-        public TopdonScanAdapter(UnifiedScanListener listener) {
-            this.unifiedListener = listener;
-        }
-        
-        @Override
-        public void onTopdonDeviceFound(BluetoothDevice device, DeviceType type, int rssi, byte[] scanRecord) {
-            unifiedListener.onTopdonDeviceFound(device, type, rssi, scanRecord);
-        }
-        
-        @Override
-        public void onScanError(int errorCode, String message) {
-            unifiedListener.onScanError(errorCode, message);
-        }
-        
-        @Override
-        public void onScanComplete() {
-            unifiedListener.onScanComplete();
-        }
-    }
-    
-    // Consolidated methods from EnhancedBleManager to eliminate duplication
-    
 
     public boolean initialize(@NonNull Context context, boolean enableMultiDevice) {
         if (isInitialized.get()) {
             return true;
         }
-        
+
         this.multiDeviceMode.set(enableMultiDevice);
         return initialize();
     }
-    
 
     public void enableMultiDeviceMode(boolean enabled) {
         this.multiDeviceMode.set(enabled);
         Log.i(TAG, "Multi-device mode " + (enabled ? "enabled" : "disabled"));
     }
-    
 
     public SystemBleStatus getSystemStatus() {
         return new SystemBleStatus(
-            activeConnections.get(),
-            multiDeviceMode.get(),
-            enhancedErrorRecovery.get(),
-            deviceMetrics.size()
+                activeConnections.get(),
+                multiDeviceMode.get(),
+                enhancedErrorRecovery.get(),
+                deviceMetrics.size()
         );
     }
-    
 
     public void markAsGsrSensor(@NonNull String deviceAddress) {
         gsrDevices.put(deviceAddress, true);
         Log.i(TAG, "Device " + deviceAddress + " marked as GSR sensor");
     }
-    
 
     @NonNull
     public List<UnifiedDevice> getConnectedShimmerDevices() {
-        // Placeholder implementation - would be implemented by ShimmerBleController
+
         return new ArrayList<>();
     }
-    
 
     @NonNull
     public List<UnifiedDevice> getConnectedTopdonDevices() {
-        // Placeholder implementation - would be implemented by TopdonBleController
+
         return new ArrayList<>();
     }
-    
 
     @NonNull
     public SystemBleStatus getSystemBleStatus() {
         return new SystemBleStatus(
-            activeConnections.get(),
-            true, // multiDeviceMode
-            true, // enhancedErrorRecovery
-            connectedDevices.size()
+                activeConnections.get(),
+                true, // multiDeviceMode
+                true, // enhancedErrorRecovery
+                connectedDevices.size()
         );
     }
-    
 
     @Nullable
     public Connection connectWithEnhancements(@NonNull String deviceAddress) {
         Log.i(TAG, "Enhanced connection attempt for device: " + deviceAddress);
-        
-        // Initialize metrics for this device
-        ConnectionMetrics metrics = deviceMetrics.computeIfAbsent(deviceAddress, 
-            k -> new ConnectionMetrics());
+
+        ConnectionMetrics metrics = deviceMetrics.computeIfAbsent(deviceAddress,
+                k -> new ConnectionMetrics());
         metrics.connectAttempts.incrementAndGet();
-        
-        // Use EasyBLE with Nordic backend for connection
+
         Connection connection = easyBLE.connect(deviceAddress);
-        
+
         if (connection != null) {
             activeConnections.incrementAndGet();
             metrics.lastConnectionTime.set(System.currentTimeMillis());
@@ -455,98 +304,197 @@ public class UnifiedBleManager {
         } else {
             Log.w(TAG, "Enhanced connection failed for device: " + deviceAddress);
         }
-        
+
         return connection;
     }
-    
-    // ========== Cross-Modal Synchronization Integration ==========
-    
 
     public boolean registerDevicesForCrossModalSync() {
         try {
             CrossModalSyncManager syncManager = CrossModalSyncManager.getInstance(context);
-            
-            // Register all connected Shimmer devices
+
             List<UnifiedDevice> shimmerDevices = getConnectedShimmerDevices();
             for (UnifiedDevice device : shimmerDevices) {
-                CrossModalSyncManager.DeviceCapabilities capabilities = 
-                    new CrossModalSyncManager.DeviceCapabilities(
-                        true,  // supportsHardwareSync
-                        true,  // supportsTimestampGeneration
-                        128,   // maxSamplingRateHz (for GSR)
-                        1000   // syncAccuracyMicros (1ms)
-                    );
-                
+                CrossModalSyncManager.DeviceCapabilities capabilities =
+                        new CrossModalSyncManager.DeviceCapabilities(
+                                true,  // supportsHardwareSync
+                                true,  // supportsTimestampGeneration
+                                128,   // maxSamplingRateHz (for GSR)
+                                1000   // syncAccuracyMicros (1ms)
+                        );
+
                 syncManager.registerDevice(
-                    device.getDeviceId(),
-                    device.getDeviceName(),
-                    CrossModalSyncManager.DeviceCategory.BLE_SENSOR,
-                    device,
-                    capabilities
+                        device.getDeviceId(),
+                        device.getDeviceName(),
+                        CrossModalSyncManager.DeviceCategory.BLE_SENSOR,
+                        device,
+                        capabilities
                 );
             }
-            
-            // Register all connected Topdon devices
+
             List<UnifiedDevice> topdonDevices = getConnectedTopdonDevices();
             for (UnifiedDevice device : topdonDevices) {
-                CrossModalSyncManager.DeviceCapabilities capabilities = 
-                    new CrossModalSyncManager.DeviceCapabilities(
-                        true,  // supportsHardwareSync
-                        true,  // supportsTimestampGeneration
-                        30,    // maxSamplingRateHz (for thermal)
-                        5000   // syncAccuracyMicros (5ms)
-                    );
-                
+                CrossModalSyncManager.DeviceCapabilities capabilities =
+                        new CrossModalSyncManager.DeviceCapabilities(
+                                true,  // supportsHardwareSync
+                                true,  // supportsTimestampGeneration
+                                30,    // maxSamplingRateHz (for thermal)
+                                5000   // syncAccuracyMicros (5ms)
+                        );
+
                 syncManager.registerDevice(
-                    device.getDeviceId(),
-                    device.getDeviceName(),
-                    CrossModalSyncManager.DeviceCategory.BLE_SENSOR,
-                    device,
-                    capabilities
+                        device.getDeviceId(),
+                        device.getDeviceName(),
+                        CrossModalSyncManager.DeviceCategory.BLE_SENSOR,
+                        device,
+                        capabilities
                 );
             }
-            
-            Log.i(TAG, "Registered " + (shimmerDevices.size() + topdonDevices.size()) + 
-                      " BLE devices for cross-modal synchronization");
+
+            Log.i(TAG, "Registered " + (shimmerDevices.size() + topdonDevices.size()) +
+                    " BLE devices for cross-modal synchronization");
             return true;
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Failed to register devices for cross-modal sync", e);
             return false;
         }
     }
-    
 
     public boolean startCrossModalRecording() {
         try {
-            // Register devices first
+
             registerDevicesForCrossModalSync();
-            
-            // Start synchronized recording
+
             CrossModalSyncManager syncManager = CrossModalSyncManager.getInstance(context);
             return syncManager.startSynchronizedRecording();
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Failed to start cross-modal recording", e);
             return false;
         }
     }
-    
 
     public boolean stopCrossModalRecording() {
         try {
             CrossModalSyncManager syncManager = CrossModalSyncManager.getInstance(context);
             return syncManager.stopSynchronizedRecording();
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Failed to stop cross-modal recording", e);
             return false;
         }
     }
-    
 
     @NonNull
     public CrossModalSyncManager getCrossModalSyncManager() {
         return CrossModalSyncManager.getInstance(context);
+    }
+
+    public enum DeviceType {
+        SHIMMER_GSR,        // Shimmer3 GSR+ sensors
+        SHIMMER_PPG,        // Shimmer PPG sensors
+        SHIMMER_IMU,        // Shimmer IMU sensors
+        TOPDON_THERMAL,     // Topdon thermal cameras with BLE
+        TOPDON_ENV,         // Topdon environmental sensors
+        TOPDON_MULTI,       // Topdon multi-sensor devices
+        UNKNOWN             // Unknown or generic BLE device
+    }
+
+    public interface UnifiedScanListener {
+        void onShimmerDeviceFound(BluetoothDevice device, DeviceType type, int rssi, byte[] scanRecord);
+
+        void onTopdonDeviceFound(BluetoothDevice device, DeviceType type, int rssi, byte[] scanRecord);
+
+        void onUnknownDeviceFound(BluetoothDevice device, int rssi, byte[] scanRecord);
+
+        void onScanError(int errorCode, String message);
+
+        void onScanComplete();
+    }
+
+    public interface UnifiedConnectionListener {
+        void onDeviceConnected(UnifiedDevice device);
+
+        void onDeviceDisconnected(UnifiedDevice device, int reason);
+
+        void onConnectionError(UnifiedDevice device, int errorCode, String message);
+
+        void onDataReceived(UnifiedDevice device, byte[] data);
+
+        void onDeviceReady(UnifiedDevice device);
+    }
+
+    public static class ConnectionMetrics {
+        public final AtomicLong connectAttempts = new AtomicLong(0);
+        public final AtomicLong successfulConnections = new AtomicLong(0);
+        public final AtomicLong disconnections = new AtomicLong(0);
+        public final AtomicLong dataPacketsReceived = new AtomicLong(0);
+        public final AtomicLong lastConnectionTime = new AtomicLong(0);
+
+        public double getReliabilityScore() {
+            long attempts = connectAttempts.get();
+            return attempts > 0 ? (double) successfulConnections.get() / attempts : 0.0;
+        }
+    }
+
+    public static class SystemBleStatus {
+        public final int activeConnections;
+        public final boolean multiDeviceMode;
+        public final boolean enhancedErrorRecovery;
+        public final long totalDevicesConnected;
+
+        public SystemBleStatus(int activeConnections, boolean multiDeviceMode,
+                               boolean enhancedErrorRecovery, long totalDevicesConnected) {
+            this.activeConnections = activeConnections;
+            this.multiDeviceMode = multiDeviceMode;
+            this.enhancedErrorRecovery = enhancedErrorRecovery;
+            this.totalDevicesConnected = totalDevicesConnected;
+        }
+    }
+
+    private static class ShimmerScanAdapter implements ShimmerBleController.ShimmerScanListener {
+        private final UnifiedScanListener unifiedListener;
+
+        public ShimmerScanAdapter(UnifiedScanListener listener) {
+            this.unifiedListener = listener;
+        }
+
+        @Override
+        public void onShimmerDeviceFound(BluetoothDevice device, DeviceType type, int rssi, byte[] scanRecord) {
+            unifiedListener.onShimmerDeviceFound(device, type, rssi, scanRecord);
+        }
+
+        @Override
+        public void onScanError(int errorCode, String message) {
+            unifiedListener.onScanError(errorCode, message);
+        }
+
+        @Override
+        public void onScanComplete() {
+            unifiedListener.onScanComplete();
+        }
+    }
+
+    private static class TopdonScanAdapter implements TopdonBleController.TopdonScanListener {
+        private final UnifiedScanListener unifiedListener;
+
+        public TopdonScanAdapter(UnifiedScanListener listener) {
+            this.unifiedListener = listener;
+        }
+
+        @Override
+        public void onTopdonDeviceFound(BluetoothDevice device, DeviceType type, int rssi, byte[] scanRecord) {
+            unifiedListener.onTopdonDeviceFound(device, type, rssi, scanRecord);
+        }
+
+        @Override
+        public void onScanError(int errorCode, String message) {
+            unifiedListener.onScanError(errorCode, message);
+        }
+
+        @Override
+        public void onScanComplete() {
+            unifiedListener.onScanComplete();
+        }
     }
 }

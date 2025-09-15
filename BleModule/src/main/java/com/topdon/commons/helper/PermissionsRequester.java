@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -16,12 +17,11 @@ import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class PermissionsRequester {
     private static final int PERMISSION_REQUEST_CODE = 10;
     private static final int REQUEST_CODE_WRITE_SETTINGS = 11;
     private static final int REQUEST_CODE_UNKNOWN_APP_SOURCES = 12;
-    
+
     private final List<String> allPermissions = new ArrayList<>();
     private final List<String> refusedPermissions = new ArrayList<>();
     private Callback callback;
@@ -32,15 +32,14 @@ public class PermissionsRequester {
     public PermissionsRequester(@NonNull Activity activity) {
         this.activity = activity;
     }
-    
+
     public PermissionsRequester(@NonNull Fragment fragment) {
         this.fragment = fragment;
     }
-    
+
     public void setCallback(Callback callback) {
         this.callback = callback;
     }
-
 
     public void checkAndRequest(@NonNull List<String> permissions) {
         if (checking) {
@@ -55,7 +54,7 @@ public class PermissionsRequester {
     public boolean hasPermissions(@NonNull List<String> permissions) {
         return checkPermissions(permissions, true);
     }
-    
+
     @SuppressWarnings("all")
     private boolean checkPermissions(List<String> permissions, boolean onlyCheck) {
         Context context = activity != null ? activity : fragment.getContext();
@@ -108,7 +107,6 @@ public class PermissionsRequester {
         }
     }
 
-    //获取权限集中需要申请权限的列表
     private List<String> findDeniedPermissions(List<String> permissions) {
         List<String> needRequestPermissionList = new ArrayList<>();
         Activity activity = this.activity != null ? this.activity : fragment.getActivity();
@@ -154,7 +152,7 @@ public class PermissionsRequester {
             checking = false;
         }
     }
-    
+
     public interface Callback {
 
         void onRequestResult(List<String> refusedPermissions);

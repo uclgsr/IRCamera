@@ -1,15 +1,11 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp") // Use KSP plugin from classpath
     id("kotlin-parcelize")
 }
 
-kapt {
-    // Support for Kotlin 2.0+ in kapt
-    correctErrorTypes = true
-    useBuildCache = true
-    includeCompileClasspath = false
+ksp {
 }
 
 android {
@@ -23,15 +19,17 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
-    // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
-            // Only enable release variant for single-developer maintenance
-            variant.enable = variant.buildType == "release"
+
+            variant.enable = variant.buildType == "release" || variant.buildType == "debug"
         }
     }
     compileOptions {
@@ -39,8 +37,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+        }
     }
     buildFeatures {
         dataBinding = true
@@ -49,18 +51,11 @@ android {
 }
 
 dependencies {
-    // Core library desugaring support
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.material) // Requires ConstraintLayout, ViewPager2
-
     implementation(libs.glide)
-
     implementation(project(":libapp")) // Requires string resources
-
-    // Add unified BLE module for comprehensive Shimmer Nordic and Topdon BLE support
     implementation(project(":BleModule"))
-
-    // Testing dependencies - using Robolectric for context-based testing
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:baselineAligned="false"
+        android:orientation="horizontal"
         tools:background="#16131e">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,29 +18,31 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingVertical="8dp">
+
             <ImageView
                 android:id="@+id/iv_menu1"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/selector_menu_first_2_5"
                 android:contentDescription="@null"
-                app:layout_constraintWidth_percent="0.24"
+                android:src="@drawable/selector_menu_first_2_5"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.24" />
+
             <TextView
                 android:id="@+id/tv_menu1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/menu_3d_calibrate"
-                android:textSize="13sp"
-                android:textColor="@color/second_menu_text"
-                android:maxLines="1"
                 android:ellipsize="end"
-                app:layout_constraintStart_toStartOf="parent"
+                android:gravity="center_horizontal"
+                android:maxLines="1"
+                android:text="@string/menu_3d_calibrate"
+                android:textColor="@color/second_menu_text"
+                android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_menu1" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -50,29 +52,31 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingVertical="8dp">
+
             <ImageView
                 android:id="@+id/iv_menu2"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/selector_menu_first_4_3"
                 android:contentDescription="@null"
-                app:layout_constraintWidth_percent="0.24"
+                android:src="@drawable/selector_menu_first_4_3"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.24" />
+
             <TextView
                 android:id="@+id/tv_menu2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/thermal_false_color"
-                android:textSize="13sp"
-                android:textColor="@color/second_menu_text"
-                android:maxLines="1"
                 android:ellipsize="end"
-                app:layout_constraintStart_toStartOf="parent"
+                android:gravity="center_horizontal"
+                android:maxLines="1"
+                android:text="@string/thermal_false_color"
+                android:textColor="@color/second_menu_text"
+                android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_menu2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -82,29 +86,31 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingVertical="8dp">
+
             <ImageView
                 android:id="@+id/iv_menu3"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/selector_menu_first_5_6"
                 android:contentDescription="@null"
-                app:layout_constraintWidth_percent="0.24"
+                android:src="@drawable/selector_menu_first_5_6"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.24" />
+
             <TextView
                 android:id="@+id/tv_menu3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/app_setting"
-                android:textSize="13sp"
-                android:textColor="@color/second_menu_text"
-                android:maxLines="1"
                 android:ellipsize="end"
-                app:layout_constraintStart_toStartOf="parent"
+                android:gravity="center_horizontal"
+                android:maxLines="1"
+                android:text="@string/app_setting"
+                android:textColor="@color/second_menu_text"
+                android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_menu3" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -114,29 +120,31 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingVertical="8dp">
+
             <ImageView
                 android:id="@+id/iv_menu4"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/selector_menu_first_edit_4"
                 android:contentDescription="@null"
-                app:layout_constraintWidth_percent="0.24"
+                android:src="@drawable/selector_menu_first_edit_4"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.24" />
+
             <TextView
                 android:id="@+id/tv_menu4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/func_temper_ruler"
-                android:textSize="13sp"
-                android:textColor="@color/second_menu_text"
-                android:maxLines="1"
                 android:ellipsize="end"
-                app:layout_constraintStart_toStartOf="parent"
+                android:gravity="center_horizontal"
+                android:maxLines="1"
+                android:text="@string/func_temper_ruler"
+                android:textColor="@color/second_menu_text"
+                android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_menu4" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>

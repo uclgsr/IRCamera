@@ -11,18 +11,22 @@ import com.topdon.lib.core.bean.ContinuousBean
 import com.topdon.lib.core.bean.WatermarkBean
 import com.topdon.lib.core.dialog.CarDetectDialog
 
-
+/**
+ * current类封装不受“savedsettings开关”影响的configuration项，
+ *
+ * [SaveSettingUtil] saved受“savedsettings开关”影响的configuration项.
+ *
+ * create by fylder on 2018/6/14
+ **/
 object SharedManager {
 
     var hasClickWinter: Boolean
         get() = SPUtils.getInstance().getBoolean("hasClickWinter", false)
         set(value) = SPUtils.getInstance().put("hasClickWinter", value)
 
-
     var isNeedShowTrendTips: Boolean
         get() = SPUtils.getInstance().getBoolean("isNeedShowTrendTips", true)
         set(value) = SPUtils.getInstance().put("isNeedShowTrendTips", value)
-
 
     var houseSpaceUnit: Int
         get() = SPUtils.getInstance().getInt("houseSpaceUnit", 0)
@@ -30,13 +34,11 @@ object SharedManager {
             SPUtils.getInstance().put("houseSpaceUnit", value)
         }
 
-
     var costUnit: Int
         get() = SPUtils.getInstance().getInt("costUnit", 0)
         set(value) {
             SPUtils.getInstance().put("costUnit", value)
         }
-
 
     var hasTcLine: Boolean
         get() = SPUtils.getInstance().getBoolean("hasConnectTcLine", false)
@@ -44,13 +46,11 @@ object SharedManager {
             SPUtils.getInstance().put("hasConnectTcLine", value)
         }
 
-
     var hasTS004: Boolean
         get() = SPUtils.getInstance().getBoolean("hasConnectTS004", false)
         set(value) {
             SPUtils.getInstance().put("hasConnectTS004", value)
         }
-
 
     var hasTC007: Boolean
         get() = SPUtils.getInstance().getBoolean("hasConnectTC007", false)
@@ -58,13 +58,11 @@ object SharedManager {
             SPUtils.getInstance().put("hasConnectTC007", value)
         }
 
-
     var irConfigJsonTC007: String
         get() = SPUtils.getInstance().getString("irConfigJsonTC007")
         set(value) {
             SPUtils.getInstance().put("irConfigJsonTC007", value)
         }
-
 
     var homeGuideStep: Int
         get() {
@@ -75,11 +73,9 @@ object SharedManager {
             SPUtils.getInstance().put("homeGuideStep", value)
         }
 
-
     var configGuideStep: Int
         get() = SPUtils.getInstance().getInt("configGuideStep", 1)
         set(value) = SPUtils.getInstance().put("configGuideStep", value)
-
 
     var isHideEmissivityTips: Boolean
         get() = SPUtils.getInstance().getBoolean("isHideEmissivityTips", false)
@@ -87,13 +83,11 @@ object SharedManager {
             SPUtils.getInstance().put("isHideEmissivityTips", value)
         }
 
-
     var is07HideEmissivityTips: Boolean
         get() = SPUtils.getInstance().getBoolean("is07HideEmissivityTips", false)
         set(value) {
             SPUtils.getInstance().put("is07HideEmissivityTips", value)
         }
-
 
     var is04TISR: Boolean
         get() = SPUtils.getInstance().getBoolean("is04TISR", false)
@@ -101,13 +95,11 @@ object SharedManager {
             SPUtils.getInstance().put("is04TISR", value)
         }
 
-
     var is04AutoSync: Boolean
         get() = SPUtils.getInstance().getBoolean("is04AutoSync", false)
         set(value) {
             SPUtils.getInstance().put("is04AutoSync", value)
         }
-
 
     fun getManualAngle(sId: String): Int {
         return SPUtils.getInstance().getInt("manualAngle_$sId", 1000)
@@ -120,11 +112,10 @@ object SharedManager {
         SPUtils.getInstance().put("manualAngle_$sId", value)
     }
 
-
     fun getManualData(sId: String): ByteArray {
         val strValue = SPUtils.getInstance().getString("manualData_$sId")
         return if (strValue.isNullOrEmpty()) {
-            // 对应 1,0,0,0,1,0 6个 float，该值为默认值
+
             byteArrayOf(
                 0,
                 0,
@@ -166,13 +157,11 @@ object SharedManager {
         }
     }
 
-
     var isConnectAutoOpen: Boolean
         get() = SPUtils.getInstance().getBoolean("isConnectAutoOpen", false)
         set(value) {
             SPUtils.getInstance().put("isConnectAutoOpen", value)
         }
-
 
     var isConnect07AutoOpen: Boolean
         get() = SPUtils.getInstance().getBoolean("isConnect07AutoOpen", false)
@@ -180,13 +169,11 @@ object SharedManager {
             SPUtils.getInstance().put("isConnect07AutoOpen", value)
         }
 
-
     var isTipOTG: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipOTG", true)
         set(value) {
             SPUtils.getInstance().put("isTipOTG", value)
         }
-
 
     var isTipShutter: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipShutter", true)
@@ -194,13 +181,11 @@ object SharedManager {
             SPUtils.getInstance().put("isTipShutter", value)
         }
 
-
     var isTipHighTemp: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipHighTemp", true)
         set(value) {
             SPUtils.getInstance().put("isTipHighTemp", value)
         }
-
 
     var isTipPinP: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipPinP", true)
@@ -208,13 +193,11 @@ object SharedManager {
             SPUtils.getInstance().put("isTipPinP", value)
         }
 
-
     var isTipCoordinate: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipCoordinate", true)
         set(value) {
             SPUtils.getInstance().put("isTipCoordinate", value)
         }
-
 
     var isTipAIRecognition: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipAIRecognition", true)
@@ -222,13 +205,11 @@ object SharedManager {
             SPUtils.getInstance().put("isTipAIRecognition", value)
         }
 
-
     var isTipObservePhoto: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipObservePhoto", true)
         set(value) {
             SPUtils.getInstance().put("isTipObservePhoto", value)
         }
-
 
     var continuousBean: ContinuousBean
         get() {
@@ -246,7 +227,6 @@ object SharedManager {
             SPUtils.getInstance().put("continuousBean", Gson().toJson(value))
         }
 
-
     var wifiWatermarkBean: WatermarkBean
         get() {
             val json = SPUtils.getInstance().getString("wifiWatermarkBean", "")
@@ -262,7 +242,6 @@ object SharedManager {
         set(value) {
             SPUtils.getInstance().put("watermarkBean", Gson().toJson(value))
         }
-
 
     var watermarkBean: WatermarkBean
         get() {
@@ -280,13 +259,11 @@ object SharedManager {
             SPUtils.getInstance().put("watermarkBean", Gson().toJson(value))
         }
 
-
     var isTipChangeDevice: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipChangeDevice", true)
         set(value) {
             SPUtils.getInstance().put("isTipChangeDevice", value)
         }
-
 
     var isChangeDevice: Boolean
         get() = SPUtils.getInstance().getBoolean("isChangeDevice", false)
@@ -317,7 +294,7 @@ object SharedManager {
     private const val SP_SETTING_IS_PUSH = "sp_setting_is_push" // 推送开关
     private const val SP_SETTING_IS_RECOMMEND = "sp_setting_is_recommend"
 
-    //
+    /************************TS004************************************/
     private const val SP_HOT_MODE = "sp_hot_mode" // white hot
     private const val SP_CHANGE_DEVICE = "sp_change_device" // ts001与ts004相互switch
     private const val SP_TC007_CUSTOM_PSEUDO = "sp_tc007_custom_pseudo" // tc007自定义pseudo color条
@@ -380,7 +357,6 @@ object SharedManager {
             .edit().putString(LANGUAGE, language).apply()
     }
 
-    // 在Application上使用applicationContext会为空，需要传递context
     fun getLanguage(context: Context): String {
         return PreferenceManager.getDefaultSharedPreferences(context).getString(LANGUAGE, "")!!
     }
@@ -405,7 +381,6 @@ object SharedManager {
         return SPUtils.getInstance().put(TEMPERATURE_UNIT, value)
     }
 
-    // 1: Celsius    0: Fahrenheit
     fun getTemperature(): Int {
         return SPUtils.getInstance().getInt(TEMPERATURE_UNIT, 1)
     }
@@ -450,7 +425,6 @@ object SharedManager {
         return SPUtils.getInstance().getString(SP_TC007_CUSTOM_PSEUDO, "")
     }
 
-
     fun getTargetPop(): Boolean {
         return SPUtils.getInstance().getBoolean(SP_TARGET_POP, false)
     }
@@ -478,7 +452,6 @@ object SharedManager {
         return SPUtils.getInstance().getBoolean(SP_SETTING_IS_RECOMMEND, true)
     }
 
-
     fun getMainPermissionsState(): Boolean {
         return SPUtils.getInstance().getBoolean("main_permissions_state", false)
     }
@@ -494,8 +467,8 @@ object SharedManager {
     fun setImagePermissionsState(value: Boolean) {
         return SPUtils.getInstance().put("storage_permissions_state", value)
     }
-    //
 
+    /************************TS004************************************/
 
     fun getHotMode(): Int {
         return SPUtils.getInstance().getInt(SP_HOT_MODE, 1)
@@ -504,7 +477,6 @@ object SharedManager {
     fun saveHotMode(hotMode: Int) {
         SPUtils.getInstance().put(SP_HOT_MODE, hotMode)
     }
-
 
     fun getChangeDevice(): Int {
         return SPUtils.getInstance().getInt(SP_CHANGE_DEVICE, 0)

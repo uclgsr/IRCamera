@@ -14,15 +14,11 @@ import com.github.mikephil.charting.interfaces.dataprovider.BarDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.renderer.BarChartRenderer;
 
-
 public class BarChart extends BarLineChartBase<BarData> implements BarDataProvider {
-
 
     protected boolean mHighlightFullBarEnabled = false;
 
-
     private boolean mDrawValueAboveBar = true;
-
 
     private boolean mDrawBarShadow = false;
 
@@ -61,12 +57,10 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
             mXAxis.calculate(mData.getXMin(), mData.getXMax());
         }
 
-        // calculate axis range (min / max) according to provided data
         mAxisLeft.calculate(mData.getYMin(YAxis.AxisDependency.LEFT), mData.getYMax(YAxis.AxisDependency.LEFT));
         mAxisRight.calculate(mData.getYMin(YAxis.AxisDependency.RIGHT), mData.getYMax(YAxis.AxisDependency
                 .RIGHT));
     }
-
 
     @Override
     public Highlight getHighlightByTouchPoint(float x, float y) {
@@ -78,13 +72,11 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
             Highlight h = getHighlighter().getHighlight(x, y);
             if (h == null || !isHighlightFullBarEnabled()) return h;
 
-            // For isHighlightFullBarEnabled, remove stackIndex
             return new Highlight(h.getX(), h.getY(),
                     h.getXPx(), h.getYPx(),
                     h.getDataSetIndex(), -1, h.getAxis());
         }
     }
-
 
     public RectF getBarBounds(BarEntry e) {
 
@@ -93,7 +85,6 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
 
         return bounds;
     }
-
 
     public void getBarBounds(BarEntry e, RectF outputRect) {
 
@@ -121,37 +112,30 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
         getTransformer(set.getAxisDependency()).rectValueToPixel(outputRect);
     }
 
-
     public void setDrawValueAboveBar(boolean enabled) {
         mDrawValueAboveBar = enabled;
     }
-
 
     public boolean isDrawValueAboveBarEnabled() {
         return mDrawValueAboveBar;
     }
 
-
     public void setDrawBarShadow(boolean enabled) {
         mDrawBarShadow = enabled;
     }
 
-
     public boolean isDrawBarShadowEnabled() {
         return mDrawBarShadow;
     }
-
-
-    public void setHighlightFullBarEnabled(boolean enabled) {
-        mHighlightFullBarEnabled = enabled;
-    }
-
 
     @Override
     public boolean isHighlightFullBarEnabled() {
         return mHighlightFullBarEnabled;
     }
 
+    public void setHighlightFullBarEnabled(boolean enabled) {
+        mHighlightFullBarEnabled = enabled;
+    }
 
     public void highlightValue(float x, int dataSetIndex, int stackIndex) {
         highlightValue(new Highlight(x, dataSetIndex, stackIndex), false);
@@ -162,11 +146,9 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
         return mData;
     }
 
-
     public void setFitBars(boolean enabled) {
         mFitBars = enabled;
     }
-
 
     public void groupBars(float fromX, float groupSpace, float barSpace) {
 

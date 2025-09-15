@@ -16,9 +16,8 @@ import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.UrlConstant
 import com.topdon.tc001.utils.AppVersionUtil
 import com.topdon.tc001.utils.VersionUtils
-import java.util.*
+import java.util.Calendar
 
-// Legacy ARouter route annotation - now using NavigationManager
 class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnClickListener {
     override fun initContentLayoutId(): Int = R.layout.activity_version
 
@@ -29,8 +28,9 @@ class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnCl
     }
 
     private fun initView() {
-        // Set up views using binding
-        binding.versionCodeText.text = "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
+
+        binding.versionCodeText.text =
+            "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
         val year = Calendar.getInstance().get(Calendar.YEAR)
         binding.versionYearTxt.text = getString(R.string.version_year, "2023-$year")
         binding.versionStatementPrivateTxt.setOnClickListener(this)
@@ -68,11 +68,13 @@ class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnCl
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 1)
                     .navigation(this)
             }
+
             binding.versionStatementPolicyTxt -> {
                 NavigationManager.build(RouterConfig.POLICY)
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 2)
                     .navigation(this)
             }
+
             binding.versionStatementCopyrightTxt -> {
                 NavigationManager.build(RouterConfig.POLICY)
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 3)

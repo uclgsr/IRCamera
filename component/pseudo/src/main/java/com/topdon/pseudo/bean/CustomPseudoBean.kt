@@ -7,7 +7,6 @@ import com.topdon.pseudo.constant.ColorRecommend
 import kotlinx.android.parcel.Parcelize
 import java.nio.ByteBuffer
 
-
 @Parcelize
 data class CustomPseudoBean(
     var selectIndex: Int = 0, // 当前选中色块在列表中 index
@@ -26,7 +25,8 @@ data class CustomPseudoBean(
 ) : Parcelable {
     companion object {
         fun loadFromShared(isTC007: Boolean = false): CustomPseudoBean {
-            val json = if (isTC007) SharedManager.getTC0007CustomPseudo() else SharedManager.getCustomPseudo()
+            val json =
+                if (isTC007) SharedManager.getTC0007CustomPseudo() else SharedManager.getCustomPseudo()
             return if (json.isNotEmpty()) {
                 Gson().fromJson(json, CustomPseudoBean::class.java)
             } else {
@@ -72,15 +72,14 @@ data class CustomPseudoBean(
             var customMaxColor = buffer.int
             val customRecommendIndex = buffer.int
             val isUseGray = buffer.get() == 0.toByte()
-            if (customMinColor == 0 && customMiddleColor == 0 && customMaxColor == 0)
-                {
-                    maxTemp = 50f
-                    minTemp = 0f
-                    isColorCustom = true
-                    customMinColor = 0xff0000FF.toInt()
-                    customMiddleColor = 0xFFFF0000.toInt()
-                    customMaxColor = 0xFFFFFF00.toInt()
-                }
+            if (customMinColor == 0 && customMiddleColor == 0 && customMaxColor == 0) {
+                maxTemp = 50f
+                minTemp = 0f
+                isColorCustom = true
+                customMinColor = 0xff0000FF.toInt()
+                customMiddleColor = 0xFFFF0000.toInt()
+                customMaxColor = 0xFFFFFF00.toInt()
+            }
 
             return CustomPseudoBean(
                 selectIndex = byteArray[1].toInt() and 0xff,
@@ -109,7 +108,7 @@ data class CustomPseudoBean(
     }
 
     fun getColorList(isTC007: Boolean = false): IntArray? {
-        // Note: Synchronization of places calculation required across all usage locations
+
         if (!isUseCustomPseudo) { // 都没开自定义渲染
             return null
         }

@@ -10,11 +10,10 @@ import com.topdon.lib.core.common.SaveSettingUtil
 import com.topdon.lib.core.config.DeviceConfig
 import com.topdon.lib.core.utils.CommUtils
 
-
 class SaveSettingBean(private val isWifi: Boolean = false) {
 
-    private fun getSPUtils(): SPUtils = SPUtils.getInstance(if (isWifi) "WifiSaveSettingUtil" else "SaveSettingUtil")
-
+    private fun getSPUtils(): SPUtils =
+        SPUtils.getInstance(if (isWifi) "WifiSaveSettingUtil" else "SaveSettingUtil")
 
     var isSaveSetting: Boolean = getSPUtils().getBoolean("isSaveSetting", true)
         set(value) {
@@ -22,8 +21,8 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             getSPUtils().put("isSaveSetting", value)
         }
 
-
-    var isMeasureTempMode: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isMeasureTempMode", true) else true
+    var isMeasureTempMode: Boolean =
+        if (isSaveSetting) getSPUtils().getBoolean("isMeasureTempMode", true) else true
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -31,8 +30,8 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var isOpenAmplify: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenAmplify", false) else false
+    var isOpenAmplify: Boolean =
+        if (isSaveSetting) getSPUtils().getBoolean("isOpenAmplify", false) else false
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -40,8 +39,8 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var isVideoMode: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isVideoMode", false) else false
+    var isVideoMode: Boolean =
+        if (isSaveSetting) getSPUtils().getBoolean("isVideoMode", false) else false
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -49,8 +48,8 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var isAutoShutter: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isAutoShutter", true) else true
+    var isAutoShutter: Boolean =
+        if (isSaveSetting) getSPUtils().getBoolean("isAutoShutter", true) else true
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -58,8 +57,8 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var isRecordAudio: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isRecordAudio", false) else false
+    var isRecordAudio: Boolean =
+        if (isSaveSetting) getSPUtils().getBoolean("isRecordAudio", false) else false
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -67,8 +66,8 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var delayCaptureSecond: Int = if (isSaveSetting) getSPUtils().getInt("delayCaptureSecond", 0) else 0
+    var delayCaptureSecond: Int =
+        if (isSaveSetting) getSPUtils().getInt("delayCaptureSecond", 0) else 0
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -92,15 +91,14 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var isOpenTwoLight: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenTwoLight", false) else false
+    var isOpenTwoLight: Boolean =
+        if (isSaveSetting) getSPUtils().getBoolean("isOpenTwoLight", false) else false
         set(value) {
             field = value
             if (isSaveSetting) {
                 getSPUtils().put("isOpenTwoLight", value)
             }
         }
-
 
     var twoLightAlpha: Int = if (isSaveSetting) getSPUtils().getInt("twoLightAlpha", 50) else 50
         set(value) {
@@ -110,7 +108,6 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
     var pseudoColorMode: Int = if (isSaveSetting) getSPUtils().getInt("pseudoColorMode", 3) else 3
         set(value) {
             field = value
@@ -119,15 +116,14 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var isOpenPseudoBar: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenPseudoBar", true) else true
+    var isOpenPseudoBar: Boolean =
+        if (isSaveSetting) getSPUtils().getBoolean("isOpenPseudoBar", true) else true
         set(value) {
             field = value
             if (isSaveSetting) {
                 getSPUtils().put("isOpenPseudoBar", value)
             }
         }
-
 
     var contrastValue: Int = if (isSaveSetting) getSPUtils().getInt("contrastValue", 128) else 128
         set(value) {
@@ -137,7 +133,6 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
     var ddeConfig: Int = if (isSaveSetting) getSPUtils().getInt("ddeConfig", 2) else 2
         set(value) {
             field = value
@@ -145,7 +140,6 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
                 getSPUtils().put("ddeConfig", value)
             }
         }
-
 
     var alarmBean: AlarmBean =
         if (isSaveSetting) {
@@ -160,7 +154,6 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
                 getSPUtils().put("alarmBean", Gson().toJson(value))
             }
         }
-
 
     var rotateAngle: Int =
         if (isSaveSetting) {
@@ -178,11 +171,10 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
     fun isRotatePortrait(): Boolean = rotateAngle == 90 || rotateAngle == 270
 
-
-    var isOpenMirror: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenMirror", false) else false
+    var isOpenMirror: Boolean =
+        if (isSaveSetting) getSPUtils().getBoolean("isOpenMirror", false) else false
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -190,8 +182,8 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var isOpenCompass: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenCompass", false) else false
+    var isOpenCompass: Boolean =
+        if (isSaveSetting) getSPUtils().getBoolean("isOpenCompass", false) else false
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -199,8 +191,10 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var tempTextColor: Int = if (isSaveSetting) getSPUtils().getInt("tempTextColor", 0xffffffff.toInt()) else 0xffffffff.toInt()
+    var tempTextColor: Int = if (isSaveSetting) getSPUtils().getInt(
+        "tempTextColor",
+        0xffffffff.toInt()
+    ) else 0xffffffff.toInt()
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -208,8 +202,10 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var tempTextSize: Int = if (isSaveSetting) getSPUtils().getInt("tempTextSize", SizeUtils.sp2px(14f)) else SizeUtils.sp2px(14f)
+    var tempTextSize: Int = if (isSaveSetting) getSPUtils().getInt(
+        "tempTextSize",
+        SizeUtils.sp2px(14f)
+    ) else SizeUtils.sp2px(14f)
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -217,9 +213,8 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    fun isTempTextDefault(): Boolean = tempTextColor == 0xffffffff.toInt() && tempTextSize == SizeUtils.sp2px(14f)
-
+    fun isTempTextDefault(): Boolean =
+        tempTextColor == 0xffffffff.toInt() && tempTextSize == SizeUtils.sp2px(14f)
 
     var temperatureMode: Int =
         if (isSaveSetting) {
@@ -237,8 +232,8 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var isOpenHighPoint: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenHighPoint", false) else false
+    var isOpenHighPoint: Boolean =
+        if (isSaveSetting) getSPUtils().getBoolean("isOpenHighPoint", false) else false
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -246,8 +241,8 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var isOpenLowPoint: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenLowPoint", false) else false
+    var isOpenLowPoint: Boolean =
+        if (isSaveSetting) getSPUtils().getBoolean("isOpenLowPoint", false) else false
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -255,8 +250,10 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var aiTraceType: Int = if (isSaveSetting) getSPUtils().getInt("aiTraceType", ObserveBean.TYPE_NONE) else ObserveBean.TYPE_NONE
+    var aiTraceType: Int = if (isSaveSetting) getSPUtils().getInt(
+        "aiTraceType",
+        ObserveBean.TYPE_NONE
+    ) else ObserveBean.TYPE_NONE
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -264,15 +261,14 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
-    var isOpenTarget: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenTarget", false) else false
+    var isOpenTarget: Boolean =
+        if (isSaveSetting) getSPUtils().getBoolean("isOpenTarget", false) else false
         set(value) {
             field = value
             if (isSaveSetting) {
                 getSPUtils().put("isOpenTarget", value)
             }
         }
-
 
     var targetMeasureMode: Int =
         if (isSaveSetting) {
@@ -290,7 +286,6 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
     var targetType: Int =
         if (isSaveSetting) {
             getSPUtils().getInt(
@@ -306,7 +301,6 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
                 getSPUtils().put("targetType", value)
             }
         }
-
 
     var targetColorType: Int =
         if (isSaveSetting) {
@@ -324,7 +318,6 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
     var reportAuthorName: String =
         if (isSaveSetting) {
             getSPUtils().getString(
@@ -341,7 +334,6 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-
     var reportWatermarkText: String =
         if (isSaveSetting) {
             getSPUtils().getString(
@@ -357,7 +349,6 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
                 getSPUtils().put("reportWatermarkText", value)
             }
         }
-
 
     var reportHumidity: Int = if (isSaveSetting) getSPUtils().getInt("reportHumidity", 500) else 500
         set(value) {

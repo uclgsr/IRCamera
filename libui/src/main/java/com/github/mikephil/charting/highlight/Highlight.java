@@ -1,38 +1,26 @@
-
 package com.github.mikephil.charting.highlight;
 
 import com.github.mikephil.charting.components.YAxis;
 
-
 public class Highlight {
-
 
     private float mX = Float.NaN;
 
-
     private float mY = Float.NaN;
-
 
     private float mXPx;
 
-
     private float mYPx;
-
 
     private int mDataIndex = -1;
 
-
     private int mDataSetIndex;
-
 
     private int mStackIndex = -1;
 
-
     private YAxis.AxisDependency axis;
 
-
     private float mDrawX;
-
 
     private float mDrawY;
 
@@ -47,7 +35,6 @@ public class Highlight {
         this.mStackIndex = stackIndex;
     }
 
-
     public Highlight(float x, float y, float xPx, float yPx, int dataSetIndex, YAxis.AxisDependency axis) {
         this.mX = x;
         this.mY = y;
@@ -57,32 +44,26 @@ public class Highlight {
         this.axis = axis;
     }
 
-
     public Highlight(float x, float y, float xPx, float yPx, int dataSetIndex, int stackIndex, YAxis.AxisDependency axis) {
         this(x, y, xPx, yPx, dataSetIndex, axis);
         this.mStackIndex = stackIndex;
     }
 
-
     public float getX() {
         return mX;
     }
-
 
     public float getY() {
         return mY;
     }
 
-
     public float getXPx() {
         return mXPx;
     }
 
-
     public float getYPx() {
         return mYPx;
     }
-
 
     public int getDataIndex() {
         return mDataIndex;
@@ -92,11 +73,9 @@ public class Highlight {
         this.mDataIndex = mDataIndex;
     }
 
-
     public int getDataSetIndex() {
         return mDataSetIndex;
     }
-
 
     public int getStackIndex() {
         return mStackIndex;
@@ -106,27 +85,22 @@ public class Highlight {
         return mStackIndex >= 0;
     }
 
-
     public YAxis.AxisDependency getAxis() {
         return axis;
     }
-
 
     public void setDraw(float x, float y) {
         this.mDrawX = x;
         this.mDrawY = y;
     }
 
-
     public float getDrawX() {
         return mDrawX;
     }
 
-
     public float getDrawY() {
         return mDrawY;
     }
-
 
     public boolean equalTo(Highlight h) {
 

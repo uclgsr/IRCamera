@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.data;
 
 import android.graphics.Color;
@@ -10,9 +9,7 @@ import java.util.List;
 
 public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> implements IBarDataSet {
 
-
     private int mStackSize = 1;
-
 
     private int mBarShadowColor = Color.rgb(215, 215, 215);
 
@@ -20,12 +17,9 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
 
     private int mBarBorderColor = Color.BLACK;
 
-
     private int mHighLightAlpha = 120;
 
-
     private int mEntryCountStacks = 0;
-
 
     private String[] mStackLabels = new String[]{
             "Stack"
@@ -60,7 +54,6 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
         barDataSet.mHighLightAlpha = mHighLightAlpha;
     }
 
-
     private void calcEntryCountIncludingStacks(List<BarEntry> yVals) {
 
         mEntryCountStacks = 0;
@@ -75,7 +68,6 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
                 mEntryCountStacks += vals.length;
         }
     }
-
 
     private void calcStackSize(List<BarEntry> yVals) {
 
@@ -123,14 +115,8 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
         return mStackSize > 1 ? true : false;
     }
 
-
     public int getEntryCountStacks() {
         return mEntryCountStacks;
-    }
-
-
-    public void setBarShadowColor(int color) {
-        mBarShadowColor = color;
     }
 
     @Override
@@ -138,31 +124,26 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
         return mBarShadowColor;
     }
 
-
-    public void setBarBorderWidth(float width) {
-        mBarBorderWidth = width;
+    public void setBarShadowColor(int color) {
+        mBarShadowColor = color;
     }
-
 
     @Override
     public float getBarBorderWidth() {
         return mBarBorderWidth;
     }
 
-
-    public void setBarBorderColor(int color) {
-        mBarBorderColor = color;
+    public void setBarBorderWidth(float width) {
+        mBarBorderWidth = width;
     }
-
 
     @Override
     public int getBarBorderColor() {
         return mBarBorderColor;
     }
 
-
-    public void setHighLightAlpha(int alpha) {
-        mHighLightAlpha = alpha;
+    public void setBarBorderColor(int color) {
+        mBarBorderColor = color;
     }
 
     @Override
@@ -170,13 +151,16 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
         return mHighLightAlpha;
     }
 
-
-    public void setStackLabels(String[] labels) {
-        mStackLabels = labels;
+    public void setHighLightAlpha(int alpha) {
+        mHighLightAlpha = alpha;
     }
 
     @Override
     public String[] getStackLabels() {
         return mStackLabels;
+    }
+
+    public void setStackLabels(String[] labels) {
+        mStackLabels = labels;
     }
 }

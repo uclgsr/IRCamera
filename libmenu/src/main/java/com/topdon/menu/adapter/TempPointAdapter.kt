@@ -4,15 +4,13 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 import com.topdon.menu.constant.TempPointType
-
+import com.topdon.menu.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
 internal class TempPointAdapter : BaseMenuAdapter() {
 
     var onTempPointListener: ((type: TempPointType, isSelected: Boolean) -> Unit)? = null
-
 
     fun setSelected(
         tempPointType: TempPointType,
@@ -27,7 +25,6 @@ internal class TempPointAdapter : BaseMenuAdapter() {
         }
     }
 
-
     fun clearAllSelect() {
         for (data in dataArray) {
             data.isSelected = false
@@ -37,8 +34,16 @@ internal class TempPointAdapter : BaseMenuAdapter() {
 
     private val dataArray: Array<Data> =
         arrayOf(
-            Data(R.string.main_tab_second_high_temperature_point, MenuR.drawable.selector_menu2_temp_point_1, TempPointType.HIGH),
-            Data(R.string.main_tab_second_low_temperature_point, MenuR.drawable.selector_menu2_temp_point_2, TempPointType.LOW),
+            Data(
+                R.string.main_tab_second_high_temperature_point,
+                MenuR.drawable.selector_menu2_temp_point_1,
+                TempPointType.HIGH
+            ),
+            Data(
+                R.string.main_tab_second_low_temperature_point,
+                MenuR.drawable.selector_menu2_temp_point_2,
+                TempPointType.LOW
+            ),
             Data(R.string.thermal_delete, MenuR.drawable.selector_menu2_del, TempPointType.DELETE),
         )
 
@@ -78,7 +83,6 @@ internal class TempPointAdapter : BaseMenuAdapter() {
     }
 
     override fun getItemCount(): Int = dataArray.size
-
 
     data class Data(
         @StringRes val stringId: Int,

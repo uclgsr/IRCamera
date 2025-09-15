@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-  <usb>
+<usb>
     <usb-device class="14" />
     <usb-device
         class="239"
@@ -33,7 +33,7 @@
     <usb-device
         product-id="258"
         vendor-id="9228" />
-  <usb-device
-      product-id="17185"
-      vendor-id="13428" />
+    <usb-device
+        product-id="17185"
+        vendor-id="13428" />
 </usb>

@@ -6,7 +6,6 @@ import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.util.TimeUtil
 import java.util.concurrent.ConcurrentHashMap
 
-
 class SessionManager private constructor(context: Context) {
     companion object {
         private const val TAG = "SessionManager"
@@ -21,7 +20,6 @@ class SessionManager private constructor(context: Context) {
         }
     }
 
-    // Use application context to prevent memory leaks
     private val appContext = context.applicationContext
 
     private val activeSessions = ConcurrentHashMap<String, SessionInfo>()
@@ -48,7 +46,6 @@ class SessionManager private constructor(context: Context) {
         sessionListeners.remove(listener)
     }
 
-
     fun createSession(
         sessionId: String? = null,
         participantId: String? = null,
@@ -74,16 +71,13 @@ class SessionManager private constructor(context: Context) {
         return session
     }
 
-
     fun getSession(sessionId: String): SessionInfo? {
         return activeSessions[sessionId]
     }
 
-
     fun getActiveSessions(): List<SessionInfo> {
         return activeSessions.values.toList()
     }
-
 
     fun updateSession(
         sessionId: String,
@@ -98,7 +92,6 @@ class SessionManager private constructor(context: Context) {
         return true
     }
 
-
     fun completeSession(sessionId: String): SessionInfo? {
         val session = activeSessions.remove(sessionId) ?: return null
 
@@ -108,7 +101,6 @@ class SessionManager private constructor(context: Context) {
         Log.i(TAG, "Session completed: $sessionId, duration: ${session.getDurationMs()}ms")
         return session
     }
-
 
     fun completeAllSessions(): List<SessionInfo> {
         val completed = mutableListOf<SessionInfo>()
@@ -120,11 +112,9 @@ class SessionManager private constructor(context: Context) {
         return completed
     }
 
-
     fun isSessionActive(sessionId: String): Boolean {
         return activeSessions.containsKey(sessionId)
     }
-
 
     fun getSessionStats(sessionId: String): SessionStats? {
         val session = activeSessions[sessionId] ?: return null
@@ -137,7 +127,6 @@ class SessionManager private constructor(context: Context) {
             isActive = session.isActive(),
         )
     }
-
 
     fun reportSessionError(
         sessionId: String,

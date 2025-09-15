@@ -45,15 +45,14 @@ import java.io.File
 import com.topdon.lib.core.R as LibR
 
 
-// Legacy ARouter route annotation - now using NavigationManager
-
 class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
+    /**
 
+
+     */
     private var isTC007 = false
 
-
     private var position = 0
-
 
     private lateinit var dataList: ArrayList<GalleryBean>
 
@@ -109,7 +108,12 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                     shareIntent.action = Intent.ACTION_SEND
                     shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
                     shareIntent.type = "application/xlsx"
-                    startActivity(Intent.createChooser(shareIntent, getString(LibR.string.battery_share)))
+                    startActivity(
+                        Intent.createChooser(
+                            shareIntent,
+                            getString(LibR.string.battery_share)
+                        )
+                    )
                 }
             }
         }
@@ -129,7 +133,9 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                     this@IRGalleryDetail01Activity.position = position
                     findViewById<TitleView>(R.id.title_view).setTitleText("${position + 1}/${dataList.size}")
 
-                    irPath = "${FileConfig.lineIrGalleryDir}/${dataList[position].name.substringBeforeLast(".")}.ir"
+                    irPath = "${FileConfig.lineIrGalleryDir}/${
+                        dataList[position].name.substringBeforeLast(".")
+                    }.ir"
                     val hasIrData = File(irPath!!).exists()
                     findViewById<LinearLayout>(R.id.ll_ir_edit_3D)?.isVisible = hasIrData
                     findViewById<LinearLayout>(R.id.ll_ir_report)?.isVisible = hasIrData
@@ -196,7 +202,6 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
             .show()
     }
 
-
     private var progressDialog: ProgressDialog? = null
     private var excelName: String = ""
 
@@ -219,12 +224,12 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             findViewById<LinearLayout>(R.id.ll_ir_edit_2D) -> {
-//2d编辑
+
                 actionEditOrReport(false)
             }
 
             findViewById<LinearLayout>(R.id.ll_ir_edit_3D) -> {
-//跳转到3D
+
                 val data = dataList[position]
                 val fileName = data.name.substringBeforeLast(".")
                 val irPath = "${FileConfig.lineIrGalleryDir}/$fileName.ir"
@@ -235,7 +240,7 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                 var tempHigh = 0f
                 var tempLow = 0f
                 lifecycleScope.launch {
-//                    showLoading()
+
                     withContext(Dispatchers.IO) {
                         val file = File(irPath)
                         if (!file.exists()) {
@@ -255,22 +260,25 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                         tempHigh = frameTool.getSrcTemp().maxTemperature
                         tempLow = frameTool.getSrcTemp().minTemperature
                     }
-//                    dismissLoading()
-                    NavigationManager.getInstance().build(RouterConfig.IR_GALLERY_3D).withString(ExtraKeyConfig.IR_PATH, irPath)
-                        .withFloat(ExtraKeyConfig.TEMP_HIGH, tempHigh).withFloat(ExtraKeyConfig.TEMP_LOW, tempLow)
+
+                    NavigationManager.getInstance().build(RouterConfig.IR_GALLERY_3D)
+                        .withString(ExtraKeyConfig.IR_PATH, irPath)
+                        .withFloat(ExtraKeyConfig.TEMP_HIGH, tempHigh)
+                        .withFloat(ExtraKeyConfig.TEMP_LOW, tempLow)
                         .navigation(this@IRGalleryDetail01Activity)
                 }
             }
 
             findViewById<LinearLayout>(R.id.ll_ir_report) -> {
-//报告
+
                 actionEditOrReport(true)
             }
 
             findViewById<LinearLayout>(R.id.ll_ir_ex) -> {
-                TipDialog.Builder(this).setMessage(LibR.string.tip_album_temp_exportfile).setPositiveListener(LibR.string.app_confirm) {
-                    actionExcel()
-                }.setCancelListener(LibR.string.app_cancel) {}.setCanceled(true).create().show()
+                TipDialog.Builder(this).setMessage(LibR.string.tip_album_temp_exportfile)
+                    .setPositiveListener(LibR.string.app_confirm) {
+                        actionExcel()
+                    }.setCancelListener(LibR.string.app_cancel) {}.setCanceled(true).create().show()
             }
         }
     }

@@ -32,7 +32,6 @@ import com.topdon.lib.ui.R;
 import java.util.Collections;
 import java.util.List;
 
-
 @SuppressWarnings("unused")
 public class OptionWheelLayout extends BaseWheelLayout {
     private WheelView wheelView;

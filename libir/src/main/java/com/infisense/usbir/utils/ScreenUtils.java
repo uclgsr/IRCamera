@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 
-
 import com.energy.iruvc.utils.CommonParams;
 
 import java.lang.reflect.Method;
@@ -25,7 +24,6 @@ public class ScreenUtils {
         throw new UnsupportedOperationException("cannot be instantiated");
     }
 
-
     public static int getScreenWidth(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
@@ -34,7 +32,6 @@ public class ScreenUtils {
         return outMetrics.widthPixels;
     }
 
-
     public static int getScreenHeight(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
@@ -42,7 +39,6 @@ public class ScreenUtils {
         wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics.heightPixels;
     }
-
 
     public static int getStatusHeight(Context context) {
 
@@ -59,7 +55,6 @@ public class ScreenUtils {
         return statusHeight;
     }
 
-
     public static Bitmap snapShotWithStatusBar(Activity activity) {
         View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
@@ -74,11 +69,9 @@ public class ScreenUtils {
 
     }
 
-
     public static int getScreenDensityDpi(Context context) {
         return context.getResources().getDisplayMetrics().densityDpi;
     }
-
 
     public static Bitmap snapShotWithoutStatusBar(Activity activity) {
         View view = activity.getWindow().getDecorView();
@@ -99,7 +92,6 @@ public class ScreenUtils {
 
     }
 
-
     public static int getBottomStatusHeight(Context context) {
         int totalHeight = getDpi(context);
 
@@ -108,7 +100,6 @@ public class ScreenUtils {
         return totalHeight - contentHeight;
     }
 
-    //获取屏幕原始尺寸高度，包括虚拟功能键高度
     public static int getDpi(Context context) {
         int dpi = 0;
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -128,17 +119,14 @@ public class ScreenUtils {
         return dpi;
     }
 
-
     public static int dip2px(Context context, float dpValue) {
         float scale = getScreenDendity(context);
         return (int) ((dpValue * scale) + 0.5f);
     }
 
-
     public static float getScreenDendity(Context context) {
         return context.getResources().getDisplayMetrics().density;//3
     }
-
 
     public static Dialog showNormalDialog(Context context, String info, PopupWindow.OnDismissListener dismissListener) {
         final AlertDialog.Builder normalDialog =
@@ -150,14 +138,13 @@ public class ScreenUtils {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //...To-do
+
                         dismissListener.onDismiss();
                     }
                 });
-        // 显示
+
         return normalDialog.show();
     }
-
 
     public static int getPreviewFPSByDataFlowMode(CommonParams.DataFlowMode defaultDataFlowMode) {
         if (defaultDataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {

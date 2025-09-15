@@ -11,9 +11,8 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import java.io.File
-import java.util.*
+import java.util.Date
 import java.util.concurrent.TimeUnit
-
 
 class VideoRecordMedia(
     private var cameraView: CameraView,
@@ -30,7 +29,7 @@ class VideoRecordMedia(
         encoder.setFrameDelay(25)
         width = 480
         height = width * cameraView.height / cameraView.width
-//宽高不能出现奇数
+
         if (height % 2 == 1) {
             height -= 1
         }
@@ -43,14 +42,14 @@ class VideoRecordMedia(
             exportedFile.delete()
         }
         encoder.setOutputFilePath(exportedFile.path)
-//        if (bitmap == null) {
-//Log.w("123", "录制准备failed")
-//            return
-//        }
+
+
+
+
         encoder.setOutputSize(width, height)
         encoder.startEncode()
         isRunning = true
-//默认frame率20,间隔50ms一frame
+
         exportDisposable =
             Observable.interval(50, TimeUnit.MILLISECONDS)
                 .map {
@@ -74,13 +73,13 @@ class VideoRecordMedia(
     }
 
     override fun updateAudioState(audioRecord: Boolean) {
-        // Note: Audio state update functionality not yet implemented
+
     }
 
     private fun createBitmapFromView(): Bitmap {
         var cameraViewBitmap = cameraView.bitmap
         if (temperatureView.temperatureRegionMode != TemperatureView.REGION_MODE_CLEAN) {
-//gettemperature图层的data，包括点线框，temperature值等，重新合成bitmap
+
             cameraViewBitmap =
                 BitmapUtils.mergeBitmap(
                     cameraViewBitmap,

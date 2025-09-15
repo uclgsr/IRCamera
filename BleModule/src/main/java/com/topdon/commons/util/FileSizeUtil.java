@@ -10,7 +10,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 
-
 public class FileSizeUtil {
     public static final int SIZETYPE_B = 1;//获取文件大小单位为B的double值
     public static final int SIZETYPE_KB = 2;//获取文件大小单位为KB的double值
@@ -34,7 +33,6 @@ public class FileSizeUtil {
         return FormetFileSize(blockSize, sizeType);
     }
 
-
     public static String getUnit(int sizeType) {
         String memoryUnit;
         if (sizeType == SIZETYPE_B) {
@@ -49,7 +47,6 @@ public class FileSizeUtil {
         return memoryUnit;
     }
 
-
     public static long getFilesSize(String filePath) {
         File file = new File(filePath);
         long blockSize = 0;
@@ -62,11 +59,10 @@ public class FileSizeUtil {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("bcf获取文件大小--getFilesSize-2-获取失败!");
-//            Log.e("获取文件大小", "getFilesSize-2-获取失败!");
+
         }
         return blockSize;
     }
-
 
     public static String getAutoFileOrFilesSize(String filePath, int sizeType) {
         File file = new File(filePath);
@@ -84,8 +80,6 @@ public class FileSizeUtil {
         return FormetFileSize(blockSize, sizeType) + getUnit(sizeType);
     }
 
-
-
     public static String getAutoFileOrFilesSize(String filePath) {
         File file = new File(filePath);
         long blockSize = 0;
@@ -102,7 +96,6 @@ public class FileSizeUtil {
         return FormetFileSize(blockSize);
     }
 
-
     private static long getFileSize(File file) throws Exception {
         FileChannel fc = null;
         try {
@@ -115,7 +108,7 @@ public class FileSizeUtil {
             }
         } catch (Exception e) {
             System.out.println("bcf获取文件大小--getFilesSize-5-获取失败!");
-//            Log.e("获取文件大小", "getFileSize-5-获取失败!");
+
             e.printStackTrace();
         } finally {
             if (fc != null) {
@@ -124,7 +117,6 @@ public class FileSizeUtil {
         }
         return 0;
     }
-
 
     private static long getFileSizes(File f) throws Exception {
         long size = 0;
@@ -138,7 +130,6 @@ public class FileSizeUtil {
         }
         return size;
     }
-
 
     public static String FormetFileSize(long fileS) {
         DecimalFormat df = new DecimalFormat("#.00");
@@ -158,7 +149,6 @@ public class FileSizeUtil {
         }
         return fileSizeString;
     }
-
 
     public static double FormetFileSize(long fileS, int sizeType) {
         Locale enlocale = new Locale("en", "US");
@@ -183,8 +173,6 @@ public class FileSizeUtil {
         }
         return fileSizeLong;
     }
-
-
 
     public static long getFileSizeByWriteLog(String filename) {
         try {

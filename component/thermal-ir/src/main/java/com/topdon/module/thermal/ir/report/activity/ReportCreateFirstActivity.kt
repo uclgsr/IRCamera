@@ -43,18 +43,28 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.text.ParsePosition
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 import com.topdon.lib.core.R as LibR
 
+/**
 
-// Legacy ARouter route annotation - now using NavigationManager
+ *
+
+
+
+
+ */
+
 class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
+    /**
 
+
+     */
     private var isTC007 = false
     private var locationManager: LocationManager? = null
     private var locationProvider: String? = null
 
-    // Views - using findViewById pattern
     private val etReportName: android.widget.EditText by lazy { findViewById(R.id.et_report_name) }
     private val etReportAuthor: android.widget.EditText by lazy { findViewById(R.id.et_report_author) }
     private val switchReportAuthor: android.widget.Switch by lazy { findViewById(R.id.switch_report_author) }
@@ -73,8 +83,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     private val etTestDistance: android.widget.EditText by lazy { findViewById(R.id.et_test_distance) }
     private val switchTestDistance: android.widget.Switch by lazy { findViewById(R.id.switch_test_distance) }
 
-    // Chart start time view not found in current layout - commented out for now
-    // private val chartStartTime: android.widget.TextView by lazy { findViewById(R.id.chart_start_time) }
+
     private val tvAmbientTemperature: android.widget.TextView by lazy { findViewById(R.id.tv_ambient_temperature) }
     private val tvEmissivity: android.widget.TextView by lazy { findViewById(R.id.tv_emissivity) }
 
@@ -90,11 +99,19 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     override fun initView() {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
-        etReportName.setText("TC${TimeUtils.millis2String(System.currentTimeMillis(), "yyyyMMdd_HHmm")}")
+        etReportName.setText(
+            "TC${
+                TimeUtils.millis2String(
+                    System.currentTimeMillis(),
+                    "yyyyMMdd_HHmm"
+                )
+            }"
+        )
         etReportAuthor.setText(SaveSettingUtil.reportAuthorName)
         tvReportDate.text = TimeUtils.millis2String(System.currentTimeMillis(), "yyyy.MM.dd HH:mm")
         etReportWatermark.setText(SaveSettingUtil.reportWatermarkText)
-        tvAmbientTemperature.text = getString(R.string.thermal_config_environment) + "(${UnitTools.showUnit()})"
+        tvAmbientTemperature.text =
+            getString(R.string.thermal_config_environment) + "(${UnitTools.showUnit()})"
         tvEmissivity.text = getString(R.string.album_report_emissivity) + "(0~1)"
 
         etReportAuthor.addTextChangedListener {
@@ -178,6 +195,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             R.id.tv_report_date -> { // 报告日期
                 selectTime()
             }
+
             R.id.tv_preview -> { // 预览
                 val reportInfoBean = buildReportInfo()
                 val reportConditionBean = buildReportCondition()
@@ -186,10 +204,12 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                     .withParcelable(ExtraKeyConfig.REPORT_CONDITION, reportConditionBean)
                     .navigation(this)
             }
+
             R.id.tv_next -> { // 下一步
                 val reportInfoBean = buildReportInfo()
                 val reportConditionBean = buildReportCondition()
-                val imageTempBean: ImageTempBean? = intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN)
+                val imageTempBean: ImageTempBean? =
+                    intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN)
                 val fileAbsolutePath = intent.getStringExtra(ExtraKeyConfig.FILE_ABSOLUTE_PATH)
                 if (fileAbsolutePath != null && imageTempBean != null) {
                     NavigationManager.getInstance().build(RouterConfig.REPORT_CREATE_SECOND)
@@ -201,6 +221,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                         .navigation(this)
                 }
             }
+
             R.id.img_location -> {
                 checkLocationPermission()
             }
@@ -209,36 +230,31 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
 
     @SuppressLint("MissingPermission")
     private fun getLocation(): String? {
-//1.get位置管理器
+
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
-//2.get位置提供器，GPS或是NetWork
         val providers = locationManager?.getProviders(true)
         locationProvider =
             if (providers!!.contains(LocationManager.GPS_PROVIDER)) {
-//如果是GPS
+
                 LocationManager.GPS_PROVIDER
             } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
-//如果是Network
+
                 LocationManager.NETWORK_PROVIDER
             } else {
                 return null
             }
         var location = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        if (location == null)
-            {
-                location = locationManager?.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-            }
-        return if (location == null)
-            {
-                null
-            } else
-            {
-                getAddress(location)
-            }
+        if (location == null) {
+            location = locationManager?.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+        }
+        return if (location == null) {
+            null
+        } else {
+            getAddress(location)
+        }
     }
 
-//getaddress信息:城市、街道等信息
     private fun getAddress(location: Location?): String {
         var result: List<Address?>? = null
         try {
@@ -255,35 +271,29 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             e.printStackTrace()
         }
         var str = ""
-        if (result != null && result.isNotEmpty())
-            {
-                result?.get(0)?.let {
-                    str += getNullString(it.adminArea)
-                    if (TextUtils.isEmpty(it.subLocality) && !str.contains(getNullString(it.subAdminArea)))
-                        {
-                            str += getNullString(it.subAdminArea)
-                        }
-                    if (!str.contains(getNullString(it.locality)))
-                        {
-                            str += getNullString(it.locality)
-                        }
-                    if (!str.contains(getNullString(it.subLocality)))
-                        {
-                            str += getNullString(it.subLocality)
-                        }
+        if (result != null && result.isNotEmpty()) {
+            result?.get(0)?.let {
+                str += getNullString(it.adminArea)
+                if (TextUtils.isEmpty(it.subLocality) && !str.contains(getNullString(it.subAdminArea))) {
+                    str += getNullString(it.subAdminArea)
+                }
+                if (!str.contains(getNullString(it.locality))) {
+                    str += getNullString(it.locality)
+                }
+                if (!str.contains(getNullString(it.subLocality))) {
+                    str += getNullString(it.subLocality)
                 }
             }
+        }
         return str
     }
 
-    private fun getNullString(str: String?): String  {
-        return if (str.isNullOrEmpty())
-            {
-                ""
-            } else
-            {
-                str
-            }
+    private fun getNullString(str: String?): String {
+        return if (str.isNullOrEmpty()) {
+            ""
+        } else {
+            str
+        }
     }
 
     private fun buildReportInfo(): ReportInfoBean =
@@ -318,9 +328,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
         )
     }
 
-
     private var startTime = 0L
-
 
     private fun selectTime() {
         val picker = DatimePicker(this)
@@ -328,7 +336,8 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
         picker.setOnDatimePickedListener { year, month, day, hour, minute, second ->
             val timeStr = "$year-$month-$day $hour:$minute:$second"
             val pattern = "yyyy-MM-dd HH:mm:ss"
-            val time: Long = SimpleDateFormat(pattern, Locale.getDefault()).parse(timeStr, ParsePosition(0)).time
+            val time: Long =
+                SimpleDateFormat(pattern, Locale.getDefault()).parse(timeStr, ParsePosition(0)).time
             tvReportDate.text = TimeUtils.millis2String(time, "yyyy.MM.dd HH:mm")
             startTime = time
         }
@@ -339,10 +348,10 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
 
         val endTimeEntity = DatimeEntity.yearOnFuture(10)
         if (startTime == 0L) {
-//set当前时间
+
             picker.wheelLayout.setRange(startTimeEntity, endTimeEntity, DatimeEntity.now())
         } else {
-//set上一次选中时间
+
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = startTime
             val year = calendar.get(Calendar.YEAR)
@@ -363,7 +372,12 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
         if (!XXPermissions.isGranted(this, permissionList)) {
             if (BaseApplication.instance.isDomestic()) {
                 TipDialog.Builder(this)
-                    .setMessage(getString(R.string.permission_request_location_app, CommUtils.getAppName()))
+                    .setMessage(
+                        getString(
+                            R.string.permission_request_location_app,
+                            CommUtils.getAppName()
+                        )
+                    )
                     .setCancelListener(R.string.app_cancel)
                     .setPositiveListener(R.string.app_confirm) {
                         initLocationPermission()
@@ -378,7 +392,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun initLocationPermission() {
-//定位
+
         XXPermissions.with(this@ReportCreateFirstActivity)
             .permission(
                 permissionList,
@@ -388,31 +402,27 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                         permissions: MutableList<String>,
                         all: Boolean,
                     ) {
-                        if (all)
-                            {
-                                showLoadingDialog(R.string.get_current_address)
-                                lifecycleScope.launch {
-                                    var addressText: String? = ""
-                                    withContext(Dispatchers.IO) {
-                                        addressText = getLocation()
-                                    }
-                                    dismissLoadingDialog()
-                                    if (addressText == null)
-                                        {
-                                            TipDialog.Builder(this@ReportCreateFirstActivity)
-                                                .setMessage(LibR.string.get_Location_failed)
-                                                .setPositiveListener(R.string.app_ok)
-                                                .setCanceled(false)
-                                                .create().show()
-                                        } else
-                                        {
-                                            etReportPlace.setText(addressText)
-                                        }
+                        if (all) {
+                            showLoadingDialog(R.string.get_current_address)
+                            lifecycleScope.launch {
+                                var addressText: String? = ""
+                                withContext(Dispatchers.IO) {
+                                    addressText = getLocation()
                                 }
-                            } else
-                            {
-                                ToastUtils.showShort(R.string.scan_ble_tip_authorize)
+                                dismissLoadingDialog()
+                                if (addressText == null) {
+                                    TipDialog.Builder(this@ReportCreateFirstActivity)
+                                        .setMessage(LibR.string.get_Location_failed)
+                                        .setPositiveListener(R.string.app_ok)
+                                        .setCanceled(false)
+                                        .create().show()
+                                } else {
+                                    etReportPlace.setText(addressText)
+                                }
                             }
+                        } else {
+                            ToastUtils.showShort(R.string.scan_ble_tip_authorize)
+                        }
                     }
 
                     override fun onDenied(
@@ -420,17 +430,19 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                         never: Boolean,
                     ) {
                         if (never) {
-//如果是被永久拒绝就跳转到应用权限系统set页面
-                            if (BaseApplication.instance.isDomestic())
-                                {
-                                    ToastUtils.showShort(getString(R.string.app_location_content))
-                                    return
-                                }
+
+                            if (BaseApplication.instance.isDomestic()) {
+                                ToastUtils.showShort(getString(R.string.app_location_content))
+                                return
+                            }
                             TipDialog.Builder(this@ReportCreateFirstActivity)
                                 .setTitleMessage(getString(R.string.app_tip))
                                 .setMessage(getString(R.string.app_location_content))
                                 .setPositiveListener(R.string.app_open) {
-                                    XXPermissions.startPermissionActivity(this@ReportCreateFirstActivity, permissions)
+                                    XXPermissions.startPermissionActivity(
+                                        this@ReportCreateFirstActivity,
+                                        permissions
+                                    )
                                 }
                                 .setCancelListener(R.string.app_cancel) {
                                 }

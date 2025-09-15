@@ -10,14 +10,13 @@ import ipaddress
 import secrets
 import ssl
 import time
-from datetime import datetime, timedelta
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Any
-
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.x509.oid import NameOID
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple, Any
 
 try:
     from loguru import logger
@@ -39,6 +38,7 @@ except ImportError:
             def error(self, msg) -> Any:
                 print(f"ERROR: {msg}")
 
+
         logger = FallbackLogger()
 
 try:
@@ -51,6 +51,7 @@ except ImportError:
                 "security.cert_directory": "certificates",
             }
             return config_map.get(key, default)
+
 
     config = FallbackConfig()
 
@@ -134,7 +135,7 @@ class SecurityManager:
         return context
 
     def validate_device_certificate(
-        self, cert_data: bytes
+            self, cert_data: bytes
     ) -> Tuple[bool, Optional[str]]:
         """
         Validate a device certificate for known Topdon devices.
@@ -209,7 +210,7 @@ class SecurityManager:
         return token
 
     def validate_auth_token(
-        self, token: str, max_age_seconds: int = 300
+            self, token: str, max_age_seconds: int = 300
     ) -> Tuple[bool, Optional[str]]:
         """
         Validate an authentication token.

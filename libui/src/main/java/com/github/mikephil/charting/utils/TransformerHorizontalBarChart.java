@@ -1,6 +1,4 @@
-
 package com.github.mikephil.charting.utils;
-
 
 public class TransformerHorizontalBarChart extends Transformer {
 
@@ -8,12 +6,10 @@ public class TransformerHorizontalBarChart extends Transformer {
         super(viewPortHandler);
     }
 
-
     public void prepareMatrixOffset(boolean inverted) {
 
         mMatrixOffset.reset();
 
-        // offset.postTranslate(mOffsetLeft, getHeight() - mOffsetBottom);
 
         if (!inverted)
             mMatrixOffset.postTranslate(mViewPortHandler.offsetLeft(),
@@ -26,11 +22,6 @@ public class TransformerHorizontalBarChart extends Transformer {
             mMatrixOffset.postScale(-1.0f, 1.0f);
         }
 
-        // mMatrixOffset.set(offset);
 
-        // mMatrixOffset.reset();
-        //
-        // mMatrixOffset.postTranslate(mOffsetLeft, getHeight() -
-        // mOffsetBottom);
     }
 }

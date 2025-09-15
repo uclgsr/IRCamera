@@ -5,8 +5,8 @@ import com.topdon.lib.core.utils.CommUtils
 
 data class WatermarkBean(
     var isOpen: Boolean = false,
-    var title: String = CommUtils.getAppName(), 
-    var address: String = "", 
+    var title: String = CommUtils.getAppName(),
+    var address: String = "",
     var isAddTime: Boolean = false,
 ) {
     companion object {
@@ -28,7 +28,6 @@ data class WatermarkBean(
             )
         }
     }
-
 
     fun toByteArray(): ByteArray {
         val result = ByteArray(450)

@@ -8,25 +8,24 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.topdon.lib.ui.R as UiR
 
 
-
 class RoundImageView : AppCompatImageView {
     companion object {
-        //
+        /** 圆角位置 - 左上.  */
         const val LEFT_TOP = 1
 
-        //
+        /** 圆角位置 - 右上.  */
         const val RIGHT_TOP = 2
 
-        //
+        /** 圆角位置 - 左下.  */
         const val LEFT_BOTTOM = 4
 
-        //
+        /** 圆角位置 - 右下.  */
         const val RIGHT_BOTTOM = 8
 
-        //
+        /** 默认圆角半径 - 10dp  */
         private const val DEFAULT_RADIUS = 10f
 
-        //
+        /** 默认圆角位置 - 4个角均圆角  */
         private const val DEFAULT_POSITION = 15
     }
 
@@ -46,11 +45,19 @@ class RoundImageView : AppCompatImageView {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         density = context.resources.displayMetrics.density
 
-        val typedArray = context.obtainStyledAttributes(attrs, UiR.styleable.RoundImageView, defStyleAttr, 0)
-        radius = typedArray.getDimensionPixelSize(UiR.styleable.RoundImageView_round_radius, dp2px(DEFAULT_RADIUS))
+        val typedArray =
+            context.obtainStyledAttributes(attrs, UiR.styleable.RoundImageView, defStyleAttr, 0)
+        radius = typedArray.getDimensionPixelSize(
+            UiR.styleable.RoundImageView_round_radius,
+            dp2px(DEFAULT_RADIUS)
+        )
         position = typedArray.getInt(UiR.styleable.RoundImageView_round_position, DEFAULT_POSITION)
         typedArray.recycle()
     }
@@ -71,7 +78,12 @@ class RoundImageView : AppCompatImageView {
 
         if (position and RIGHT_BOTTOM == RIGHT_BOTTOM) {
             path.lineTo(width.toFloat(), (height - radius).toFloat())
-            path.quadTo(width.toFloat(), height.toFloat(), (width - radius).toFloat(), height.toFloat())
+            path.quadTo(
+                width.toFloat(),
+                height.toFloat(),
+                (width - radius).toFloat(),
+                height.toFloat()
+            )
         } else {
             path.lineTo(width.toFloat(), height.toFloat())
         }
@@ -93,7 +105,6 @@ class RoundImageView : AppCompatImageView {
         canvas.clipPath(path)
         super.onDraw(canvas)
     }
-
 
     fun setRadius(radius: Float) {
         if (this.radius != dp2px(radius)) {

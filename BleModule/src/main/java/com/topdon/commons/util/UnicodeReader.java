@@ -6,15 +6,12 @@ import java.io.InputStreamReader;
 import java.io.PushbackInputStream;
 import java.io.Reader;
 
-
 public class UnicodeReader extends Reader {
+    private static final int BOM_SIZE = 4;
     PushbackInputStream internalIn;
     InputStreamReader internalIn2 = null;
     String defaultEnc;
 
-    private static final int BOM_SIZE = 4;
-
-    
     UnicodeReader(InputStream in, String defaultEnc) {
         internalIn = new PushbackInputStream(in, BOM_SIZE);
         this.defaultEnc = defaultEnc;
@@ -24,14 +21,12 @@ public class UnicodeReader extends Reader {
         return defaultEnc;
     }
 
-    
     public String getEncoding() {
         if (internalIn2 == null)
             return null;
         return internalIn2.getEncoding();
     }
 
-    
     protected void init() throws IOException {
         if (internalIn2 != null)
             return;
@@ -60,16 +55,15 @@ public class UnicodeReader extends Reader {
             encoding = "UTF-16LE";
             unread = n - 2;
         } else {
-            // Unicode BOM mark not found, unread all bytes
+
             encoding = defaultEnc;
             unread = n;
         }
-        // System.out.println("read=" + n + ", unread=" + unread);
+
 
         if (unread > 0)
             internalIn.unread(bom, (n - unread), unread);
 
-        // Use given encoding
         if (encoding == null) {
             internalIn2 = new InputStreamReader(internalIn);
         } else {

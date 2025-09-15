@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.data;
 
 import com.github.mikephil.charting.interfaces.datasets.IBubbleDataSet;
@@ -19,13 +18,13 @@ public class BubbleDataSet extends BarLineScatterCandleBubbleDataSet<BubbleEntry
     }
 
     @Override
-    public void setHighlightCircleWidth(float width) {
-        mHighlightCircleWidth = Utils.convertDpToPixel(width);
+    public float getHighlightCircleWidth() {
+        return mHighlightCircleWidth;
     }
 
     @Override
-    public float getHighlightCircleWidth() {
-        return mHighlightCircleWidth;
+    public void setHighlightCircleWidth(float width) {
+        mHighlightCircleWidth = Utils.convertDpToPixel(width);
     }
 
     @Override

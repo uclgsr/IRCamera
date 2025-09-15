@@ -10,12 +10,10 @@ import com.topdon.lib.core.utils.ByteUtils.toBytes
 import com.topdon.pseudo.bean.CustomPseudoBean
 
 
-
 class FrameStruct() {
     companion object {
 
         private const val SIZE = 1024
-
 
         fun toCode(
             name: String,
@@ -42,11 +40,9 @@ class FrameStruct() {
             resultArray[0] = (SIZE ushr 8).toByte()
             resultArray[1] = SIZE.toByte()
 
-            // [2,18)
             val nameBytes = name.toBytes(16)
             System.arraycopy(nameBytes, 0, resultArray, 2, nameBytes.size)
 
-            // [18,26)
             val verBytes = AppUtils.getAppVersionName().toBytes(8)
             System.arraycopy(verBytes, 0, resultArray, 18, verBytes.size)
 
@@ -68,7 +64,6 @@ class FrameStruct() {
             resultArray[36] = (correctRotate ushr 8).toByte()
             resultArray[37] = correctRotate.toByte()
 
-            // [81,173)
             val customPseudoArray = customPseudoBean.toByteArray()
             System.arraycopy(customPseudoArray, 0, resultArray, 81, customPseudoArray.size)
 
@@ -89,12 +84,10 @@ class FrameStruct() {
             resultArray[658] = (textSize ushr 8).toByte()
             resultArray[659] = textSize.toByte()
 
-//将 Float conversion为 4 字节
             val envBytes = java.nio.ByteBuffer.allocate(4).putFloat(environment).array()
             val distanceBytes = java.nio.ByteBuffer.allocate(4).putFloat(distance).array()
             val radiationBytes = java.nio.ByteBuffer.allocate(4).putFloat(radiation).array()
 
-//存储在 resultArray 中，[660, 663)是ambient temperature，[664, 667)是距离，[668, 671)是emissivity
             System.arraycopy(envBytes, 0, resultArray, 660, 4)
             System.arraycopy(distanceBytes, 0, resultArray, 664, 4)
             System.arraycopy(radiationBytes, 0, resultArray, 668, 4)
@@ -128,7 +121,6 @@ class FrameStruct() {
     constructor(data: ByteArray) : this() {
         len = (data[0].toInt() and 0xff shl 8) or (data[1].toInt() and 0xff)
 
-        // [2,18)
         var nameEndIndex = 17
         for (i in 17 downTo 2) {
             if (data[i].toInt() != 0) {
@@ -140,7 +132,6 @@ class FrameStruct() {
         System.arraycopy(data, 2, nameBytes, 0, nameBytes.size)
         name = String(nameBytes)
 
-        // [18,26)
         val verBytes = ByteArray(8)
         System.arraycopy(data, 18, verBytes, 0, verBytes.size)
         ver = String(verBytes)
@@ -152,7 +143,6 @@ class FrameStruct() {
         initRotate = (data[34].toInt() and 0xff shl 8) or (data[35].toInt() and 0xff)
         correctRotate = (data[36].toInt() and 0xff shl 8) or (data[37].toInt() and 0xff)
 
-        // [81,173)
         val customPseudoArray = ByteArray(92)
         System.arraycopy(data, 81, customPseudoArray, 0, customPseudoArray.size)
         customPseudoBean = CustomPseudoBean.toCustomPseudoBean(customPseudoArray)
@@ -173,10 +163,9 @@ class FrameStruct() {
         alarmBean = AlarmBean.loadFromArray(alarmArray)
         gainStatus = data[657].toInt()
         val tmpTextSize = (data[658].toInt() and 0xff shl 8) or (data[659].toInt() and 0xff)
-        if (tmpTextSize >= SizeUtils.sp2px(14f))
-            {
-                textSize = tmpTextSize
-            }
+        if (tmpTextSize >= SizeUtils.sp2px(14f)) {
+            textSize = tmpTextSize
+        }
 
         val envBytes = data.copyOfRange(660, 664)
         val distanceBytes = data.copyOfRange(664, 668)

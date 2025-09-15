@@ -12,12 +12,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.CollectionUtils
-// Removed house module import - module removed as unused
-// import com.topdon.house.activity.ImagesDetailActivity
+
+
 import com.topdon.lib.core.bean.HouseRepPreviewItemBean
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
-
 
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRepPreviewItemBean>) :
@@ -64,17 +63,8 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
                 val albumAdapter = ReportPreviewAlbumAdapter(cxt, data.albumItemBeans)
                 holder.rcyAlbum.adapter = albumAdapter
                 albumAdapter.jumpListener = { _, position ->
-                    // Disabled - ImagesDetailActivity from removed house module
-                    // var intent = Intent(cxt, ImagesDetailActivity::class.java)
-                    // var photos = ArrayList<String>()
-                    // data.albumItemBeans.forEach {
-                    //     photos.add(it.photoPath)
-                    // }
-                    // intent.putExtra(ExtraKeyConfig.IMAGE_PATH_LIST, photos)
-                    // intent.putExtra(ExtraKeyConfig.CURRENT_ITEM, position)
-                    // cxt.startActivity(intent)
 
-                    // Temporary stub - show toast instead of navigating
+
                     TToast.shortToast(cxt, "Image detail view disabled - house module removed")
                 }
             } else {
@@ -83,38 +73,37 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
 
             holder.hsvReport.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_UP) {
-                    // Generic view doesn't have startScrollerTask method
-                    // holder.hsvReport.startScrollerTask()
+
+
                 }
                 false
             }
 
-            // Scroll listener commented out due to type issues - would need proper MHorizontalScrollView import
-        /*
-        holder.hsvReport.setOnScrollStopListner(object : OnScrollStopListner {
-            override fun onScrollToRightEdge() {
-                holder.viewCategoryMask.visibility = View.VISIBLE
-            }
-
-            override fun onScrollToMiddle() {
-                holder.viewCategoryMask.visibility = View.VISIBLE
-            }
-
-            override fun onScrollToLeftEdge() {
-                holder.viewCategoryMask.visibility = View.GONE
-            }
-
-            override fun onScrollStoped() {
-            }
-
-            override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
-                if (holder.viewCategoryMask.visibility == View.VISIBLE) {
-                    return
+            /*
+            holder.hsvReport.setOnScrollStopListner(object : OnScrollStopListner {
+                override fun onScrollToRightEdge() {
+                    holder.viewCategoryMask.visibility = View.VISIBLE
                 }
-                holder.viewCategoryMask.visibility = View.VISIBLE
-            }
-        })
-         */
+
+                override fun onScrollToMiddle() {
+                    holder.viewCategoryMask.visibility = View.VISIBLE
+                }
+
+                override fun onScrollToLeftEdge() {
+                    holder.viewCategoryMask.visibility = View.GONE
+                }
+
+                override fun onScrollStoped() {
+                }
+
+                override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
+                    if (holder.viewCategoryMask.visibility == View.VISIBLE) {
+                        return
+                    }
+                    holder.viewCategoryMask.visibility = View.VISIBLE
+                }
+            })
+             */
         } // End of if (holder is ItemView) block
     }
 

@@ -1,6 +1,5 @@
 package com.infisense.usbir.bean;
 
-
 public class ColorRGB {
     private int r;
     private int g;

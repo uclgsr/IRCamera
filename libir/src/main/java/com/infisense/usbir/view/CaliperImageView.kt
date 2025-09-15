@@ -11,7 +11,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.infisense.usbir.R
 
 
-
 class CaliperImageView : AppCompatImageView {
     private var showBitmapWidth: Float = 0f
     private var showBitmapHeight: Float = 0F
@@ -42,9 +41,11 @@ class CaliperImageView : AppCompatImageView {
         defStyleAttr,
     )
 
-
     private fun initView() {
-        originalBitmap = (androidx.core.content.ContextCompat.getDrawable(context, R.drawable.svg_ic_target_horizontal_person_green) as? BitmapDrawable)?.bitmap
+        originalBitmap = (androidx.core.content.ContextCompat.getDrawable(
+            context,
+            R.drawable.svg_ic_target_horizontal_person_green
+        ) as? BitmapDrawable)?.bitmap
         originalBitmapWidth = originalBitmap?.width?.toFloat() ?: 0f
         originalBitmapHeight = originalBitmap?.height?.toFloat() ?: 0f
         visibility = View.GONE
@@ -58,20 +59,16 @@ class CaliperImageView : AppCompatImageView {
     ) {
         this.imageWidth = imageWidth
         this.imageHeight = imageHeight
-        if (parentViewWidth > 0)
-            {
-                this.parentViewWidth = parentViewWidth.toFloat()
-            } else
-            {
-                this.parentViewWidth = (parent as ViewGroup).measuredWidth.toFloat()
-            }
-        if (parentViewHeight > 0)
-            {
-                this.parentViewHeight = parentViewHeight.toFloat()
-            } else
-            {
-                this.parentViewHeight = (parent as ViewGroup).measuredHeight.toFloat()
-            }
+        if (parentViewWidth > 0) {
+            this.parentViewWidth = parentViewWidth.toFloat()
+        } else {
+            this.parentViewWidth = (parent as ViewGroup).measuredWidth.toFloat()
+        }
+        if (parentViewHeight > 0) {
+            this.parentViewHeight = parentViewHeight.toFloat()
+        } else {
+            this.parentViewHeight = (parent as ViewGroup).measuredHeight.toFloat()
+        }
         if (parentViewWidth > 0) {
             xscale = parentViewWidth.toFloat() / imageWidth.toFloat()
         }
@@ -85,13 +82,12 @@ class CaliperImageView : AppCompatImageView {
         layoutParams.width = showBitmapWidth.toInt()
         layoutParams.height = showBitmapHeight.toInt()
         this.layoutParams = layoutParams
-        if (l == 0 && t == 0 && r == 0 && b == 0)
-            {
-                l = (parentViewWidth / 2 - showBitmapWidth / 2).toInt()
-                r = (parentViewWidth / 2 + showBitmapWidth / 2).toInt()
-                t = (parentViewHeight / 2 - showBitmapHeight / 2).toInt()
-                b = (parentViewHeight / 2 + showBitmapHeight / 2).toInt()
-            }
+        if (l == 0 && t == 0 && r == 0 && b == 0) {
+            l = (parentViewWidth / 2 - showBitmapWidth / 2).toInt()
+            r = (parentViewWidth / 2 + showBitmapWidth / 2).toInt()
+            t = (parentViewHeight / 2 - showBitmapHeight / 2).toInt()
+            b = (parentViewHeight / 2 + showBitmapHeight / 2).toInt()
+        }
         layout(l, t, r, b)
         requestLayout()
     }
@@ -118,6 +114,7 @@ class CaliperImageView : AppCompatImageView {
                     downX = event.getX()
                     downY = event.getY()
                 }
+
                 MotionEvent.ACTION_MOVE -> {
                     val xDistance: Float = event.getX() - downX
                     val yDistance: Float = event.getY() - downY
@@ -129,6 +126,7 @@ class CaliperImageView : AppCompatImageView {
                         layout(l, t, r, b)
                     }
                 }
+
                 MotionEvent.ACTION_UP -> isPressed = false
                 MotionEvent.ACTION_CANCEL -> isPressed = false
                 else -> {}

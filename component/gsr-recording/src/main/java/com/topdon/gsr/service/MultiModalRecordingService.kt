@@ -17,7 +17,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 class MultiModalRecordingService : Service() {
     companion object {
         private const val TAG = "MultiModalService"
@@ -94,7 +93,7 @@ class MultiModalRecordingService : Service() {
             }
 
             override fun onSampleRecorded(sample: GSRSample) {
-                // Optionally update notification with sample count periodically
+
                 if (sample.sampleIndex % 1280 == 0L) { // Every 10 seconds at 128Hz
                     updateNotification("Recording... ${sample.sampleIndex} samples")
                 }
@@ -106,13 +105,13 @@ class MultiModalRecordingService : Service() {
 
             override fun onError(error: String) {
                 Log.e(TAG, "GSR recording error: $error")
-                // Handle error - could show notification or broadcast
+
             }
         }
 
     override fun onCreate() {
         super.onCreate()
-        gsrRecorder = GSRRecorder(this)
+        gsrRecorder = GSRRecorder(this, MockShimmerDeviceFactory())
         sessionManager = SessionManager.getInstance(this)
         gsrRecorder.addListener(gsrListener)
         createNotificationChannel()
@@ -158,13 +157,10 @@ class MultiModalRecordingService : Service() {
             return
         }
 
-        // Create session
         sessionManager.createSession(sessionId, participantId, studyName)
 
-        // Start foreground service
         startForeground(NOTIFICATION_ID, createNotification("Starting recording..."))
 
-        // Start GSR recording in coroutine
         CoroutineScope(Dispatchers.IO).launch {
             if (gsrRecorder.startRecording(sessionId, participantId, studyName)) {
                 isRecording = true
@@ -183,7 +179,6 @@ class MultiModalRecordingService : Service() {
             return
         }
 
-        // Stop GSR recording
         val session = gsrRecorder.stopRecording()
         session?.let {
             sessionManager.completeSession(it.sessionId)

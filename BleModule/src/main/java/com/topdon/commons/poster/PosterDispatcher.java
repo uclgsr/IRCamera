@@ -7,7 +7,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ExecutorService;
 
-
 public class PosterDispatcher {
     private final ThreadMode defaultMode;
     private final Poster backgroundPoster;
@@ -23,23 +22,19 @@ public class PosterDispatcher {
         asyncPoster = new AsyncPoster(executorService);
     }
 
-
     public ThreadMode getDefaultMode() {
         return defaultMode;
     }
 
-
     public ExecutorService getExecutorService() {
         return executorService;
     }
-
 
     public void clearTasks() {
         backgroundPoster.clear();
         mainThreadPoster.clear();
         asyncPoster.clear();
     }
-
 
     public void post(@Nullable Method method, @NonNull Runnable runnable) {
         if (method != null) {
@@ -51,7 +46,6 @@ public class PosterDispatcher {
             post(mode, runnable);
         }
     }
-
 
     public void post(@NonNull ThreadMode mode, @NonNull Runnable runnable) {
         if (mode == ThreadMode.UNSPECIFIED) {
@@ -72,7 +66,6 @@ public class PosterDispatcher {
                 break;
         }
     }
-
 
     public void post(@NonNull Object owner, @NonNull String methodName, @NonNull String tag,
                      @Nullable MethodInfo.Parameter... parameters) {
@@ -132,11 +125,9 @@ public class PosterDispatcher {
         return false;
     }
 
-
     public void post(@NonNull final Object owner, @NonNull String methodName, @Nullable MethodInfo.Parameter... parameters) {
         post(owner, methodName, "", parameters);
     }
-
 
     public void post(@NonNull Object owner, @NonNull MethodInfo methodInfo) {
         post(owner, methodInfo.getName(), methodInfo.getTag(), methodInfo.getParameters());

@@ -16,7 +16,6 @@ package com.github.gzuliyujiang.wheelpicker.impl;
 import com.github.gzuliyujiang.wheelpicker.contract.TimeFormatter;
 import com.github.gzuliyujiang.wheelpicker.widget.TimeWheelLayout;
 
-
 public class SimpleTimeFormatter implements TimeFormatter {
     private final TimeWheelLayout wheelLayout;
 

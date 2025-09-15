@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.data;
 
 import android.util.Log;
@@ -8,7 +7,6 @@ import com.github.mikephil.charting.interfaces.datasets.IBarLineScatterCandleBub
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatterCandleBubbleDataSet<? extends Entry>> {
 
@@ -50,7 +48,7 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
     @Override
     public void calcMinMax() {
 
-        if(mDataSets == null){
+        if (mDataSets == null) {
             mDataSets = new ArrayList<>();
         }
         mDataSets.clear();
@@ -121,7 +119,6 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
         return mCandleData;
     }
 
-
     public List<BarLineScatterCandleBubbleData> getAllData() {
 
         List<BarLineScatterCandleBubbleData> data = new ArrayList<BarLineScatterCandleBubbleData>();
@@ -159,7 +156,6 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
         calcMinMax(); // recalculate everything
     }
 
-
     @Override
     public Entry getEntryForHighlight(Highlight highlight) {
 
@@ -171,8 +167,6 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
         if (highlight.getDataSetIndex() >= data.getDataSetCount())
             return null;
 
-        // The value of the highlighted entry could be NaN -
-        //   if we are not interested in highlighting a specific value.
 
         List<Entry> entries = data.getDataSetByIndex(highlight.getDataSetIndex())
                 .getEntriesForXValue(highlight.getX());
@@ -183,7 +177,6 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
 
         return null;
     }
-
 
     public IBarLineScatterCandleBubbleDataSet<? extends Entry> getDataSetByHighlight(Highlight highlight) {
         if (highlight.getDataIndex() >= getAllData().size())

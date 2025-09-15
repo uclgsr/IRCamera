@@ -1,20 +1,19 @@
 package com.jaygoo.widget;
 
+import static com.jaygoo.widget.VerticalRangeSeekBar.DIRECTION_LEFT;
+import static com.jaygoo.widget.VerticalRangeSeekBar.DIRECTION_RIGHT;
+import static com.jaygoo.widget.VerticalRangeSeekBar.TEXT_DIRECTION_VERTICAL;
+
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 
-import static com.jaygoo.widget.VerticalRangeSeekBar.DIRECTION_LEFT;
-import static com.jaygoo.widget.VerticalRangeSeekBar.DIRECTION_RIGHT;
-import static com.jaygoo.widget.VerticalRangeSeekBar.TEXT_DIRECTION_VERTICAL;
-
-
 public class VerticalSeekBar extends SeekBar {
 
-    private int indicatorTextOrientation;
     VerticalRangeSeekBar verticalSeekBar;
+    private int indicatorTextOrientation;
 
     public VerticalSeekBar(DefRangeSeekBar defRangeSeekBar, AttributeSet attrs, boolean isLeft) {
         super(defRangeSeekBar, attrs, isLeft);
@@ -35,7 +34,7 @@ public class VerticalSeekBar extends SeekBar {
     @Override
     protected void onDrawIndicator(Canvas canvas, Paint paint, String text2Draw) {
         if (text2Draw == null) return;
-        //draw indicator
+
         if (indicatorTextOrientation == TEXT_DIRECTION_VERTICAL) {
             drawVerticalIndicator(canvas, paint, text2Draw);
         } else {
@@ -44,7 +43,7 @@ public class VerticalSeekBar extends SeekBar {
     }
 
     protected void drawVerticalIndicator(Canvas canvas, Paint paint, String text2Draw) {
-        //measure indicator text
+
         paint.setTextSize(getIndicatorTextSize());
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(getIndicatorBackgroundColor());
@@ -65,11 +64,9 @@ public class VerticalSeekBar extends SeekBar {
         indicatorRect.right = indicatorRect.left + realIndicatorWidth;
         indicatorRect.bottom = indicatorRect.top + realIndicatorHeight;
 
-        //draw default indicator arrow
         if (indicatorBitmap == null) {
-            //arrow three point
-            //  b   c
-            //    a
+
+
             int ax = scaleThumbWidth / 2;
             int ay = indicatorRect.bottom;
             int bx = ax - getIndicatorArrowSize();
@@ -96,7 +93,6 @@ public class VerticalSeekBar extends SeekBar {
             indicatorRect.right -= rightOffset;
         }
 
-        //draw indicator background
         if (indicatorBitmap != null) {
             Utils.drawBitmap(canvas, paint, indicatorBitmap, indicatorRect);
         } else if (getIndicatorRadius() > 0f) {
@@ -105,11 +101,9 @@ public class VerticalSeekBar extends SeekBar {
             canvas.drawRect(indicatorRect, paint);
         }
 
-        //draw indicator content text
         int tx = indicatorRect.left + (indicatorRect.width() - indicatorTextRect.width()) / 2 + getIndicatorPaddingLeft() - getIndicatorPaddingRight();
         int ty = indicatorRect.bottom - (indicatorRect.height() - indicatorTextRect.height()) / 2 + getIndicatorPaddingTop() - getIndicatorPaddingBottom();
 
-        //draw indicator text
         paint.setColor(getIndicatorTextColor());
 
         int degrees = 0;

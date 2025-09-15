@@ -2,7 +2,6 @@ package com.topdon.tc001.camera.core
 
 import android.util.Log
 
-
 class ModeManager {
     companion object {
         private const val TAG = "ModeManager"
@@ -26,16 +25,13 @@ class ModeManager {
     private var currentState = State.IDLE
     private var deviceCaps: DeviceCaps? = null
 
-    // State change callbacks
     var onModeChanged: ((CameraMode, State) -> Unit)? = null
     var onError: ((String) -> Unit)? = null
-
 
     fun initialize(caps: DeviceCaps) {
         deviceCaps = caps
         Log.i(TAG, "Mode manager initialized with device capabilities")
     }
-
 
     fun requestModeSwitch(targetMode: CameraMode): Boolean {
         if (currentState == State.SWITCHING) {
@@ -48,7 +44,6 @@ class ModeManager {
             return true
         }
 
-        // Validate mode is supported
         if (!isModeSupported(targetMode)) {
             val error = "Mode $targetMode not supported on this device"
             Log.e(TAG, error)
@@ -56,7 +51,6 @@ class ModeManager {
             return false
         }
 
-        // Start switching
         currentState = State.SWITCHING
         val previousMode = currentMode
         currentMode = targetMode
@@ -66,7 +60,6 @@ class ModeManager {
 
         return true
     }
-
 
     fun confirmModeSwitch() {
         if (currentState != State.SWITCHING) {
@@ -85,7 +78,6 @@ class ModeManager {
         onModeChanged?.invoke(currentMode, currentState)
     }
 
-
     fun reportModeSwitchFailed(error: String) {
         if (currentState != State.SWITCHING) {
             Log.w(TAG, "No mode switch in progress to fail")
@@ -94,17 +86,13 @@ class ModeManager {
 
         Log.e(TAG, "Mode switch failed: $error")
 
-        // Revert to previous state
         currentState = State.IDLE
         onError?.invoke("Mode switch failed: $error")
     }
 
-
     fun getCurrentMode(): CameraMode = currentMode
 
-
     fun getCurrentState(): State = currentState
-
 
     fun isModeSupported(mode: CameraMode): Boolean {
         val caps = deviceCaps ?: return false
@@ -116,7 +104,6 @@ class ModeManager {
         }
     }
 
-
     fun getAvailableModes(): List<CameraMode> {
         val modes = mutableListOf(CameraMode.PREVIEW_ONLY, CameraMode.VIDEO_4K)
 
@@ -127,14 +114,11 @@ class ModeManager {
         return modes
     }
 
-
     fun isSwitching(): Boolean = currentState == State.SWITCHING
-
 
     fun canSwitchMode(): Boolean {
         return currentState != State.SWITCHING
     }
-
 
     fun getRecommendedFrameRate(): Int {
         val caps = deviceCaps ?: return 30

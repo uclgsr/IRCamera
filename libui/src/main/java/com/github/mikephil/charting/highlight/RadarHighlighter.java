@@ -8,7 +8,6 @@ import com.github.mikephil.charting.utils.Utils;
 
 import java.util.List;
 
-
 public class RadarHighlighter extends PieRadarHighlighter<RadarChart> {
 
     public RadarHighlighter(RadarChart chart) {
@@ -38,7 +37,7 @@ public class RadarHighlighter extends PieRadarHighlighter<RadarChart> {
 
         return closest;
     }
-    
+
     protected List<Highlight> getHighlightsAtIndex(int index) {
 
         mHighlightBuffer.clear();
@@ -48,7 +47,7 @@ public class RadarHighlighter extends PieRadarHighlighter<RadarChart> {
         float sliceangle = mChart.getSliceAngle();
         float factor = mChart.getFactor();
 
-        MPPointF pOut = MPPointF.getInstance(0,0);
+        MPPointF pOut = MPPointF.getInstance(0, 0);
         for (int i = 0; i < mChart.getData().getDataSetCount(); i++) {
 
             IDataSet<?> dataSet = mChart.getData().getDataSetByIndex(i);

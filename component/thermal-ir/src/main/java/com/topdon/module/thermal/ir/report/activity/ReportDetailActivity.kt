@@ -25,27 +25,30 @@ import java.io.File
 import com.topdon.lib.core.R as LibCoreR
 import com.topdon.lib.ui.R as UiR
 
+/**
 
-// Legacy ARouter route annotation - now using NavigationManager
+ *
+
+
+ */
+
 
 class ReportDetailActivity : BaseActivity() {
-    // View declarations
+
     private lateinit var titleView: TitleView
     private lateinit var scrollView: ScrollView
     private lateinit var reportInfoView: ReportInfoView
     private lateinit var llContent: LinearLayout
     private lateinit var watermarkView: WatermarkView
 
-
     private var reportBean: ReportBean? = null
-
 
     private var pdfFilePath: String? = null
 
     override fun initContentView() = R.layout.activity_report_detail
 
     override fun initView() {
-        // Initialize views
+
         titleView = findViewById(R.id.title_view)
         scrollView = findViewById(R.id.scroll_view)
         reportInfoView = findViewById(R.id.report_info_view)
@@ -77,10 +80,15 @@ class ReportDetailActivity : BaseActivity() {
                 val reportShowView = ReportIRShowView(this)
                 reportShowView.refreshData(i == 0, i == irList.size - 1, irList[i])
                 lifecycleScope.launch {
-                    val drawable = GlideLoader.getDrawable(this@ReportDetailActivity, irList[i].picture_url)
+                    val drawable =
+                        GlideLoader.getDrawable(this@ReportDetailActivity, irList[i].picture_url)
                     reportShowView.setImageDrawable(drawable)
                 }
-                llContent.addView(reportShowView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                llContent.addView(
+                    reportShowView,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
             }
         }
     }
@@ -128,7 +136,10 @@ class ReportDetailActivity : BaseActivity() {
         startActivity(Intent.createChooser(shareIntent, getString(LibCoreR.string.battery_share)))
     }
 
+    /**
 
+
+     */
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
         result.add(reportInfoView)

@@ -23,7 +23,6 @@ import com.github.gzuliyujiang.dialog.ModalDialog;
 import com.github.gzuliyujiang.wheelpicker.contract.OnDatePickedListener;
 import com.github.gzuliyujiang.wheelpicker.widget.DateWheelLayout;
 
-
 @SuppressWarnings("unused")
 public class DatePicker extends ModalDialog {
     protected DateWheelLayout wheelLayout;

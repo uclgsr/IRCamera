@@ -8,17 +8,17 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class Encoder {
-    private static final String TAG = Encoder.class.getSimpleName();
     protected static final int STATE_IDLE = 0;
     protected static final int STATE_RECORDING = 1;
     protected static final int STATE_RECORDING_UNTIL_LAST_FRAME = 2;
+    private static final String TAG = Encoder.class.getSimpleName();
+    protected String outputFilePath = null;
     private List<Bitmap> bitmapQueue;
     private EncodeFinishListener encodeFinishListener;
     private EncodingOptions encodingOptions;
     private Thread encodingThread;
     private int frameDelay = 50;
     private int height;
-    protected String outputFilePath = null;
     private int state = STATE_IDLE;
     private int width;
 
@@ -54,10 +54,6 @@ public abstract class Encoder {
         }
     };
 
-    public interface EncodeFinishListener {
-        void onEncodeFinished();
-    }
-
     public Encoder() {
         setDefaultEncodingOptions();
         init();
@@ -89,11 +85,6 @@ public abstract class Encoder {
     public void setOutputSize(int width, int height) {
         this.width = width;
         this.height = height;
-    }
-
-
-    public void setFrameDelay(int delay) {
-        frameDelay = delay;
     }
 
     public void startEncode() {
@@ -130,7 +121,6 @@ public abstract class Encoder {
         encodeFinishListener = listener;
     }
 
-
     public void notifyLastFrameAdded() {
         setState(STATE_RECORDING_UNTIL_LAST_FRAME);
     }
@@ -151,6 +141,10 @@ public abstract class Encoder {
         return frameDelay;
     }
 
+    public void setFrameDelay(int delay) {
+        frameDelay = delay;
+    }
+
     protected int getHeight() {
         return height;
     }
@@ -161,5 +155,9 @@ public abstract class Encoder {
 
     protected EncodingOptions getEncodingOptions() {
         return encodingOptions;
+    }
+
+    public interface EncodeFinishListener {
+        void onEncodeFinished();
     }
 }

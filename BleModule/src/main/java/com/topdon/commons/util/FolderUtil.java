@@ -2,10 +2,10 @@ package com.topdon.commons.util;
 
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.topdon.lms.sdk.LMS;
 
 import java.io.File;
-
 
 
 public class FolderUtil {
@@ -14,11 +14,9 @@ public class FolderUtil {
     public static String fileName; //在APPlication 传入文件名路径 区分APP
     public static String tdartsSn;
 
-
     public static String getFileName() {
         return fileName;
     }
-
 
     public static void setFileName(String mfileName) {
         fileName = mfileName;
@@ -50,7 +48,6 @@ public class FolderUtil {
             }
         }
     }
-
 
     public static void initFilePath() {
         String basePath = Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName;
@@ -198,28 +195,26 @@ public class FolderUtil {
 
             File log6File = new File(mPath + fileName + "666666/");
             if (!log6File.exists()) {
-//                log6File.mkdirs();
+
             }
             File log7File = new File(mPath + fileName + "777777/");
             if (!log7File.exists()) {
-//                log7File.mkdirs();
+
             }
             File log8File = new File(mPath + fileName + "888888/");
             if (!log8File.exists()) {
-//                log8File.mkdirs();
+
             }
             File log9File = new File(mPath + fileName + "999999/");
             if (!log9File.exists()) {
-//                log9File.mkdirs();
+
             }
 
-            //上传反馈日志
             File feedbackLog = new File(mPath + fileName + mUserId + "/FeedbackLog/");
             if (!feedbackLog.exists()) {
                 feedbackLog.mkdirs();
             }
 
-            //autovin临时路径
             File autovinLog = new File(mPath + fileName + mUserId + "/autovinLog/");
             if (!autovinLog.exists()) {
                 autovinLog.mkdirs();
@@ -237,7 +232,6 @@ public class FolderUtil {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName;
     }
 
-
     public static String getTDartsRootPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + tdartsSn + "/";
     }
@@ -253,7 +247,6 @@ public class FolderUtil {
     public static String getImmoPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + mUserId + "/Immo/";
     }
-
 
     public static String getRfidTopScanPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + tdartsSn + "/RFID/";
@@ -345,7 +338,6 @@ public class FolderUtil {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + mUserId + "/DataLog/IMMO/";
     }
 
-
     public static String getFeedbackLogPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + mUserId + "/FeedbackLog/";
     }
@@ -366,11 +358,9 @@ public class FolderUtil {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + "UserData/RFID/";
     }
 
-
     public static String getSoftDownPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + "Download/";
     }
-
 
     public static String getAutoVinLogPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + mUserId + "/autovinLog/";

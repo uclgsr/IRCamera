@@ -6,12 +6,9 @@ import com.github.mikephil.charting.charts.PieRadarChartBase;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public abstract class PieRadarHighlighter<T extends PieRadarChartBase> implements IHighlighter
-{
+public abstract class PieRadarHighlighter<T extends PieRadarChartBase> implements IHighlighter {
 
     protected T mChart;
-
 
     protected List<Highlight> mHighlightBuffer = new ArrayList<Highlight>();
 
@@ -24,10 +21,8 @@ public abstract class PieRadarHighlighter<T extends PieRadarChartBase> implement
 
         float touchDistanceToCenter = mChart.distanceToCenter(x, y);
 
-        // check if a slice was touched
         if (touchDistanceToCenter > mChart.getRadius()) {
 
-            // if no slice was touched, highlight nothing
             return null;
 
         } else {
@@ -40,7 +35,6 @@ public abstract class PieRadarHighlighter<T extends PieRadarChartBase> implement
 
             int index = mChart.getIndexForAngle(angle);
 
-            // check if the index could be found
             if (index < 0 || index >= mChart.getData().getMaxEntryCountSet().getEntryCount()) {
                 return null;
 
@@ -49,7 +43,6 @@ public abstract class PieRadarHighlighter<T extends PieRadarChartBase> implement
             }
         }
     }
-
 
     protected abstract Highlight getClosestHighlight(int index, float x, float y);
 }

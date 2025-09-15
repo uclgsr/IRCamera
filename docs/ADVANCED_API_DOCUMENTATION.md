@@ -2,18 +2,25 @@
 
 ## 🎯 Overview
 
-This document provides **comprehensive enterprise-grade API documentation** for the IRCamera platform, including detailed code examples, enterprise integration patterns, advanced usage scenarios, cloud deployment strategies, ML/AI integration, and production-ready implementation guides for all components and libraries.
+This document provides **comprehensive enterprise-grade API documentation** for the IRCamera
+platform, including detailed code examples, enterprise integration patterns, advanced usage
+scenarios, cloud deployment strategies, ML/AI integration, and production-ready implementation
+guides for all components and libraries.
 
 ## 📋 Table of Contents
 
-1. [📱 Android Enterprise Application API](#android-enterprise-application-api) - Complete Android API with enterprise features
-2. [🖥️ PC Controller Enterprise API](#pc-controller-enterprise-api) - Python-based enterprise hub API
+1. [📱 Android Enterprise Application API](#android-enterprise-application-api) - Complete Android
+   API with enterprise features
+2. [🖥️ PC Controller Enterprise API](#pc-controller-enterprise-api) - Python-based enterprise hub
+   API
 3. [🔧 Core Libraries Enterprise API](#core-libraries-enterprise-api) - Advanced library integration
-4. [🌐 Network Protocol Enterprise API](#network-protocol-enterprise-api) - Secure networking and cloud integration
+4. [🌐 Network Protocol Enterprise API](#network-protocol-enterprise-api) - Secure networking and
+   cloud integration
 5. [☁️ Cloud Integration API](#cloud-integration-api) - AWS, Azure, GCP enterprise patterns
 6. [🤖 ML/AI Integration API](#ml-ai-integration-api) - Machine learning and AI capabilities
 7. [📡 Real-Time Streaming API](#real-time-streaming-api) - WebRTC and live analytics
-8. [🔄 Enterprise Integration Examples](#enterprise-integration-examples) - Production deployment patterns
+8. [🔄 Enterprise Integration Examples](#enterprise-integration-examples) - Production deployment
+   patterns
 9. [🛡️ Security & Error Handling](#security-error-handling) - Enterprise security patterns
 10. [⚡ Performance Optimization](#performance-optimization) - Enterprise optimization strategies
 
@@ -24,34 +31,31 @@ This document provides **comprehensive enterprise-grade API documentation** for 
 ### 🔥 Thermal-IR Module Enterprise API
 
 #### Enterprise Core Thermal Processing Interface
+
 ```kotlin
 interface EnterpriseThermalProcessingAPI {
-    
+
     suspend fun initializeThermalCamera(
         deviceType: ThermalDeviceType,
         config: ThermalCameraConfig
     ): Result<ThermalCameraHandle>
-    
-    
+
     suspend fun startThermalCapture(
         handle: ThermalCameraHandle,
         captureConfig: CaptureConfiguration
     ): Result<ThermalCaptureSession>
-    
-    
+
     suspend fun processThermalFrame(
         rawFrame: RawThermalFrame,
         processingConfig: ThermalProcessingConfig
     ): ProcessedThermalFrame
-    
-    
+
     fun extractTemperatureData(
         frame: ThermalFrame,
         region: Rectangle,
         analysisType: TemperatureAnalysisType
     ): TemperatureAnalysisResult
-    
-    
+
     fun applyPseudoColorMapping(
         temperatureData: FloatArray,
         palette: ColorPalette,
@@ -61,10 +65,10 @@ interface EnterpriseThermalProcessingAPI {
 ```
 
 #### Advanced Thermal Analysis
+
 ```kotlin
 class AdvancedThermalAnalyzer {
-    
-    
+
     suspend fun analyzeTemporalThermalSequence(
         frames: List<ThermalFrame>,
         analysisConfig: TemporalAnalysisConfig
@@ -84,8 +88,7 @@ class AdvancedThermalAnalyzer {
             )
         }
     }
-    
-    
+
     suspend fun detectThermalAnomalies(
         frame: ThermalFrame,
         model: AnomalyDetectionModel,
@@ -106,8 +109,7 @@ class AdvancedThermalAnalyzer {
                 )
             }
     }
-    
-    
+
     suspend fun generateThermalReport(
         session: ThermalCaptureSession,
         reportConfig: ThermalReportConfig
@@ -127,6 +129,7 @@ class AdvancedThermalAnalyzer {
 ```
 
 #### Thermal Data Structures
+
 ```kotlin
 
 data class ThermalFrame(
@@ -140,15 +143,14 @@ data class ThermalFrame(
     val qualityMetrics: FrameQualityMetrics, // Frame quality assessment
     val metadata: FrameMetadata             // Additional frame metadata
 ) {
-    
+
     fun getTemperatureAt(x: Int, y: Int): Float {
         require(x in 0 until resolution.width && y in 0 until resolution.height) {
             "Coordinates ($x, $y) out of bounds for resolution $resolution"
         }
         return temperatureData[y][x]
     }
-    
-    
+
     fun getRegionStatistics(region: Rectangle): TemperatureStatistics {
         val regionTemperatures = mutableListOf<Float>()
         
@@ -162,8 +164,7 @@ data class ThermalFrame(
         
         return TemperatureStatistics.calculate(regionTemperatures)
     }
-    
-    
+
     fun findHotSpots(threshold: Float, minSize: Int = 1): List<HotSpot> {
         val hotSpots = mutableListOf<HotSpot>()
         val visited = Array(resolution.height) { BooleanArray(resolution.width) }
@@ -183,7 +184,6 @@ data class ThermalFrame(
     }
 }
 
-
 data class ProcessedThermalFrame(
     val originalFrame: ThermalFrame,
     val processedImage: Bitmap,
@@ -198,36 +198,32 @@ data class ProcessedThermalFrame(
 ### GSR Recording Module API
 
 #### Core GSR Interface
+
 ```kotlin
 interface GSRRecordingAPI {
-    
+
     suspend fun discoverGSRDevices(
         scanDuration: Duration = Duration.ofSeconds(10),
         deviceFilter: GSRDeviceFilter? = null
     ): List<DiscoveredGSRDevice>
-    
-    
+
     suspend fun connectToGSRDevice(
         device: DiscoveredGSRDevice,
         connectionConfig: GSRConnectionConfig
     ): Result<GSRDeviceConnection>
-    
-    
+
     suspend fun configureGSRSensor(
         connection: GSRDeviceConnection,
         sensorConfig: GSRSensorConfig
     ): Result<Unit>
-    
-    
+
     suspend fun startGSRRecording(
         connection: GSRDeviceConnection,
         recordingConfig: GSRRecordingConfig
     ): Result<GSRRecordingSession>
-    
-    
+
     fun getGSRDataStream(session: GSRRecordingSession): Flow<GSRDataPoint>
-    
-    
+
     suspend fun processGSRData(
         rawData: RawGSRData,
         processingConfig: GSRProcessingConfig
@@ -236,10 +232,10 @@ interface GSRRecordingAPI {
 ```
 
 #### Advanced GSR Analysis
+
 ```kotlin
 class PhysiologicalAnalyzer {
-    
-    
+
     suspend fun extractPhysiologicalFeatures(
         gsrData: List<GSRDataPoint>,
         analysisWindow: Duration,
@@ -259,8 +255,7 @@ class PhysiologicalAnalyzer {
             )
         }
     }
-    
-    
+
     fun detectSkinConductanceResponses(
         gsrData: List<GSRDataPoint>,
         detectionConfig: SCRDetectionConfig
@@ -288,8 +283,7 @@ class PhysiologicalAnalyzer {
             )
         }
     }
-    
-    
+
     suspend fun analyzeStressAndEmotion(
         gsrData: List<GSRDataPoint>,
         contextData: EmotionalContextData,
@@ -318,6 +312,7 @@ class PhysiologicalAnalyzer {
 ```
 
 #### GSR Data Structures
+
 ```kotlin
 
 data class GSRDataPoint(
@@ -330,7 +325,7 @@ data class GSRDataPoint(
     val deviceStatus: DeviceStatus,         // Device status at time of measurement
     val environmentalData: EnvironmentalData? = null // Optional environmental context
 ) {
-    
+
     fun toConductanceUnits(unit: ConductanceUnit): Double {
         return when (unit) {
             ConductanceUnit.MICROSIEMENS -> conductance
@@ -338,18 +333,15 @@ data class GSRDataPoint(
             ConductanceUnit.SIEMENS -> conductance / 1_000_000.0
         }
     }
-    
-    
+
     fun calculateBaseline(window: List<GSRDataPoint>): Double {
         return window.map { it.conductance }.sorted().take(window.size / 4).average()
     }
-    
-    
+
     fun isSignificantResponse(baseline: Double, threshold: Double = 0.05): Boolean {
         return (conductance - baseline) > threshold
     }
 }
-
 
 data class ProcessedGSRData(
     val originalData: GSRDataPoint,
@@ -361,7 +353,6 @@ data class ProcessedGSRData(
     val artifactFlags: Set<ArtifactFlag>
 )
 
-
 data class SkinConductanceResponse(
     val onset: GSRDataPoint,               // Response onset point
     val peak: GSRDataPoint,                // Response peak point
@@ -372,7 +363,7 @@ data class SkinConductanceResponse(
     val riseTime: Duration,                // Rise time from onset to peak
     val confidence: Float                  // Detection confidence (0-1)
 ) {
-    
+
     fun getMagnitudeClassification(): ResponseMagnitude {
         return when {
             amplitude < 0.01 -> ResponseMagnitude.VERY_SMALL
@@ -388,26 +379,24 @@ data class SkinConductanceResponse(
 ### Data Synchronization API
 
 #### Multi-Modal Synchronization
+
 ```kotlin
 interface DataSynchronizationAPI {
-    
+
     fun createSynchronizedStream(
         dataSources: Map<String, Flow<TimestampedData>>,
         syncConfig: SynchronizationConfig
     ): Flow<SynchronizedDataPoint>
-    
-    
+
     suspend fun alignTimestamps(
         streams: List<TimestampedDataStream>,
         alignmentMethod: TimestampAlignmentMethod
     ): List<AlignedDataStream>
-    
-    
+
     fun calculateSynchronizationQuality(
         synchronizedData: List<SynchronizedDataPoint>
     ): SynchronizationQualityMetrics
-    
-    
+
     suspend fun interpolateMissingData(
         dataStream: TimestampedDataStream,
         interpolationMethod: InterpolationMethod
@@ -415,8 +404,7 @@ interface DataSynchronizationAPI {
 }
 
 class AdvancedSynchronizer {
-    
-    
+
     suspend fun crossCorrelationSync(
         primaryStream: Flow<GSRDataPoint>,
         secondaryStream: Flow<ThermalFrame>,
@@ -424,18 +412,16 @@ class AdvancedSynchronizer {
     ): Flow<SynchronizedDataPoint> = flow {
         val primaryBuffer = mutableListOf<GSRDataPoint>()
         val secondaryBuffer = mutableListOf<ThermalFrame>()
-        
-        // Collect data in buffers
+
         combine(primaryStream, secondaryStream) { gsr, thermal ->
             primaryBuffer.add(gsr)
             secondaryBuffer.add(thermal)
             
             if (primaryBuffer.size >= correlationConfig.bufferSize) {
-                // Perform cross-correlation analysis
+
                 val correlation = calculateCrossCorrelation(primaryBuffer, secondaryBuffer)
                 val optimalOffset = findOptimalOffset(correlation)
-                
-                // Create synchronized pairs
+
                 val synchronizedPairs = createSynchronizedPairs(
                     primaryBuffer, 
                     secondaryBuffer, 
@@ -443,15 +429,13 @@ class AdvancedSynchronizer {
                 )
                 
                 synchronizedPairs.forEach { emit(it) }
-                
-                // Maintain sliding window
+
                 primaryBuffer.removeFirstN(correlationConfig.slideSize)
                 secondaryBuffer.removeFirstN(correlationConfig.slideSize)
             }
         }.collect()
     }
-    
-    
+
     suspend fun performTemporalInterpolation(
         gsrData: List<GSRDataPoint>,
         thermalFrames: List<ThermalFrame>,
@@ -479,6 +463,7 @@ class AdvancedSynchronizer {
 ### Session Management API
 
 #### Core Session Interface
+
 ```python
 from typing import List, Dict, Optional, AsyncIterator
 from dataclasses import dataclass
@@ -737,6 +722,7 @@ class AdvancedSessionAnalyzer:
 ### Real-time Data Processing API
 
 #### Advanced Real-time Pipeline
+
 ```python
 class RealtimeProcessingAPI:
     """
@@ -964,39 +950,36 @@ class MultiModalRealTimeAnalyzer:
 ### LibIR Advanced Processing API
 
 #### High-Performance Image Processing
+
 ```kotlin
 interface LibIRAdvancedAPI {
-    
+
     suspend fun processFrameGPU(
         rawFrame: ByteArray,
         width: Int,
         height: Int,
         processingConfig: GPUProcessingConfig
     ): ProcessedFrame
-    
-    
+
     suspend fun analyzeFrameML(
         frame: ThermalFrame,
         mlModel: ThermalAnalysisModel,
         confidence_threshold: Float = 0.8f
     ): MLAnalysisResult
-    
-    
+
     fun applyAdaptiveNoiseReduction(
         thermalData: FloatArray,
         width: Int,
         height: Int,
         adaptiveConfig: AdaptiveNoiseConfig
     ): FloatArray
-    
-    
+
     suspend fun enhanceResolution(
         lowResFrame: ThermalFrame,
         enhancementModel: SuperResolutionModel,
         targetResolution: Resolution
     ): HighResolutionThermalFrame
-    
-    
+
     suspend fun processHDRThermal(
         frames: List<ThermalFrame>,
         hdrConfig: HDRProcessingConfig
@@ -1004,7 +987,7 @@ interface LibIRAdvancedAPI {
 }
 
 class ThermalImageProcessor {
-    
+
     fun detectThermalEdges(
         thermalData: FloatArray,
         width: Int,
@@ -1015,14 +998,11 @@ class ThermalImageProcessor {
         val gradientY = calculateGradientY(thermalData, width, height)
         val magnitude = calculateGradientMagnitude(gradientX, gradientY)
         val direction = calculateGradientDirection(gradientX, gradientY)
-        
-        // Apply non-maximum suppression
+
         val suppressed = applyNonMaximumSuppression(magnitude, direction)
-        
-        // Apply double threshold
+
         val edges = applyDoubleThreshold(suppressed, edgeConfig.lowThreshold, edgeConfig.highThreshold)
-        
-        // Apply edge tracking by hysteresis
+
         val finalEdges = applyHysteresis(edges)
         
         return EdgeMap(
@@ -1033,24 +1013,20 @@ class ThermalImageProcessor {
             height = height
         )
     }
-    
-    
+
     fun segmentThermalObjects(
         thermalData: FloatArray,
         width: Int,
         height: Int,
         segmentationConfig: SegmentationConfig
     ): SegmentationResult {
-        // Pre-processing
+
         val preprocessed = preprocessForSegmentation(thermalData, segmentationConfig)
-        
-        // Calculate distance transform
+
         val distanceTransform = calculateDistanceTransform(preprocessed, width, height)
-        
-        // Find local maxima as seeds
+
         val seeds = findLocalMaxima(distanceTransform, segmentationConfig.seedThreshold)
-        
-        // Apply watershed algorithm
+
         val watershedResult = applyWatershedAlgorithm(
             preprocessed, 
             distanceTransform, 
@@ -1058,8 +1034,7 @@ class ThermalImageProcessor {
             width, 
             height
         )
-        
-        // Post-process segments
+
         val segments = postProcessSegments(watershedResult, segmentationConfig)
         
         return SegmentationResult(
@@ -1073,8 +1048,7 @@ class ThermalImageProcessor {
             )
         )
     }
-    
-    
+
     fun recognizeThermalPatterns(
         thermalData: FloatArray,
         width: Int,
@@ -1119,35 +1093,32 @@ class ThermalImageProcessor {
 ### LibCom Network API
 
 #### Advanced Network Communication
+
 ```kotlin
 interface LibComAdvancedAPI {
-    
+
     suspend fun establishSecureConnection(
         endpoint: NetworkEndpoint,
         securityConfig: SecurityConfiguration,
         connectionTimeout: Duration = Duration.ofSeconds(30)
     ): Result<SecureConnection>
-    
-    
+
     suspend fun createDataChannel(
         connection: SecureConnection,
         channelConfig: DataChannelConfiguration
     ): Result<DataChannel>
-    
-    
+
     suspend fun enableAdaptiveQoS(
         connection: SecureConnection,
         qosConfig: QoSConfiguration
     ): Result<QoSManager>
-    
-    
+
     suspend fun multicastData(
         data: ByteArray,
         recipients: List<NetworkEndpoint>,
         multicastConfig: MulticastConfiguration
     ): Result<MulticastResult>
-    
-    
+
     suspend fun sendDataReliable(
         connection: SecureConnection,
         data: ByteArray,
@@ -1156,27 +1127,23 @@ interface LibComAdvancedAPI {
 }
 
 class AdvancedNetworkManager {
-    
+
     suspend fun discoverNetworkTopology(
         discoveryConfig: TopologyDiscoveryConfig
     ): NetworkTopology {
         val discoveredDevices = mutableListOf<NetworkDevice>()
         val connectionMap = mutableMapOf<String, List<String>>()
-        
-        // Perform device discovery
+
         val devices = performDeviceDiscovery(discoveryConfig.discoveryMethods)
         discoveredDevices.addAll(devices)
-        
-        // Analyze network connectivity
+
         devices.forEach { device ->
             val connections = analyzeDeviceConnectivity(device, devices)
             connectionMap[device.id] = connections
         }
-        
-        // Calculate network metrics
+
         val metrics = calculateNetworkMetrics(discoveredDevices, connectionMap)
-        
-        // Optimize network configuration
+
         val optimizedConfig = optimizeNetworkConfiguration(
             discoveredDevices, 
             connectionMap, 
@@ -1192,35 +1159,30 @@ class AdvancedNetworkManager {
             discoveryTimestamp = System.currentTimeMillis()
         )
     }
-    
-    
+
     suspend fun routeDataIntelligently(
         data: ByteArray,
         destination: NetworkEndpoint,
         routingConfig: IntelligentRoutingConfig
     ): Result<RoutingResult> {
-        // Analyze current network conditions
+
         val networkConditions = analyzeNetworkConditions()
-        
-        // Calculate optimal route
+
         val optimalRoute = calculateOptimalRoute(
             destination,
             networkConditions,
             routingConfig.routingCriteria
         )
-        
-        // Implement load balancing if multiple routes available
+
         val selectedRoute = if (optimalRoute.alternativeRoutes.isNotEmpty()) {
             selectRouteWithLoadBalancing(optimalRoute, routingConfig.loadBalancingStrategy)
         } else {
             optimalRoute.primaryRoute
         }
-        
-        // Send data via selected route
+
         return try {
             val transmissionResult = transmitDataViaRoute(data, selectedRoute)
-            
-            // Update routing metrics
+
             updateRoutingMetrics(selectedRoute, transmissionResult)
             
             Result.success(
@@ -1232,12 +1194,11 @@ class AdvancedNetworkManager {
                 )
             )
         } catch (e: Exception) {
-            // Attempt fallback routing
+
             attemptFallbackRouting(data, destination, e)
         }
     }
-    
-    
+
     suspend fun monitorNetworkPerformance(
         monitoringConfig: NetworkMonitoringConfig
     ): Flow<NetworkPerformanceMetrics> = flow {
@@ -1254,12 +1215,11 @@ class AdvancedNetworkManager {
                 connectionQuality = assessConnectionQuality(metrics),
                 networkHealth = assessOverallNetworkHealth(metrics)
             )
-            
-            // Check for performance anomalies
+
             val anomalies = detectPerformanceAnomalies(performanceMetrics, monitoringConfig)
             if (anomalies.isNotEmpty()) {
                 performanceMetrics.anomalies = anomalies
-                // Trigger alerts if necessary
+
                 triggerPerformanceAlerts(anomalies, monitoringConfig.alertConfig)
             }
             
@@ -1277,6 +1237,7 @@ class AdvancedNetworkManager {
 ### Complete Multi-Modal Recording Session
 
 #### Android Side Implementation
+
 ```kotlin
 class MultiModalRecordingSession {
     private val thermalController = ThermalController()
@@ -1288,7 +1249,7 @@ class MultiModalRecordingSession {
         sessionConfig: MultiModalSessionConfig
     ): Result<RecordingSession> {
         return try {
-            // Initialize thermal camera
+
             val thermalResult = thermalController.initializeCamera(
                 deviceType = sessionConfig.thermalConfig.deviceType,
                 config = sessionConfig.thermalConfig.cameraConfig
@@ -1297,8 +1258,7 @@ class MultiModalRecordingSession {
             if (thermalResult.isFailure) {
                 return Result.failure(Exception("Failed to initialize thermal camera"))
             }
-            
-            // Initialize GSR sensor
+
             val gsrResult = gsrController.connectToDevice(
                 deviceAddress = sessionConfig.gsrConfig.deviceAddress,
                 config = sessionConfig.gsrConfig.connectionConfig
@@ -1307,8 +1267,7 @@ class MultiModalRecordingSession {
             if (gsrResult.isFailure) {
                 return Result.failure(Exception("Failed to connect to GSR sensor"))
             }
-            
-            // Establish connection with PC controller
+
             val pcConnection = networkClient.connectToPCController(
                 endpoint = sessionConfig.pcControllerEndpoint,
                 securityConfig = sessionConfig.securityConfig
@@ -1317,8 +1276,7 @@ class MultiModalRecordingSession {
             if (pcConnection.isFailure) {
                 return Result.failure(Exception("Failed to connect to PC controller"))
             }
-            
-            // Create synchronized data streams
+
             val thermalStream = thermalController.getThermalStream()
             val gsrStream = gsrController.getGSRStream()
             
@@ -1329,27 +1287,23 @@ class MultiModalRecordingSession {
                 ),
                 sessionConfig.synchronizationConfig
             )
-            
-            // Start recording session
+
             val session = RecordingSession(
                 id = generateSessionId(),
                 config = sessionConfig,
                 startTime = System.currentTimeMillis()
             )
-            
-            // Begin data collection and transmission
+
             val collectionJob = launch {
                 synchronizedStream.collect { synchronizedData ->
-                    // Process data locally
+
                     val processedData = processMultiModalData(synchronizedData)
-                    
-                    // Send to PC controller
+
                     networkClient.sendData(
                         pcConnection.getOrThrow(),
                         processedData.toNetworkPacket()
                     )
-                    
-                    // Store locally
+
                     session.addDataPoint(processedData)
                 }
             }
@@ -1366,19 +1320,17 @@ class MultiModalRecordingSession {
     private suspend fun processMultiModalData(
         synchronizedData: SynchronizedDataPoint
     ): ProcessedMultiModalData {
-        // Process thermal data
+
         val processedThermal = thermalController.processFrame(
             synchronizedData.thermalFrame,
             thermalProcessingConfig
         )
-        
-        // Process GSR data
+
         val processedGSR = gsrController.processGSRData(
             synchronizedData.gsrData,
             gsrProcessingConfig
         )
-        
-        // Perform cross-modal analysis
+
         val crossModalFeatures = extractCrossModalFeatures(
             processedThermal,
             processedGSR
@@ -1396,6 +1348,7 @@ class MultiModalRecordingSession {
 ```
 
 #### PC Controller Side Implementation
+
 ```python
 class MultiModalSessionController:
     def __init__(self):
@@ -1556,4 +1509,7 @@ class AdvancedMultiModalAnalyzer:
 
 ---
 
-This comprehensive API documentation provides detailed interfaces, implementation examples, and advanced usage patterns for the IRCamera platform. The documentation covers real-time processing, machine learning integration, advanced analysis techniques, and complete end-to-end workflows for multi-modal data collection and analysis.
+This comprehensive API documentation provides detailed interfaces, implementation examples, and
+advanced usage patterns for the IRCamera platform. The documentation covers real-time processing,
+machine learning integration, advanced analysis techniques, and complete end-to-end workflows for
+multi-modal data collection and analysis.

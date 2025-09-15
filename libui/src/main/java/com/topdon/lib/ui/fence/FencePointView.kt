@@ -15,7 +15,6 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.ui.R as UiR
 
 
-
 class FencePointView : View {
     var listener: CallBack? = null
     private val iconSize = SizeUtils.dp2px(32f)
@@ -108,12 +107,14 @@ class FencePointView : View {
                 startPoint[1] = mY.toInt()
                 invalidate()
             }
+
             MotionEvent.ACTION_UP -> {
-//                Log.i("123", "onTouchEvent: ACTION_UP")
+
                 startPoint[0] = mX.toInt()
                 startPoint[1] = mY.toInt()
                 result()
             }
+
             MotionEvent.ACTION_MOVE -> {
                 startPoint[0] = mX.toInt()
                 startPoint[1] = mY.toInt()
@@ -123,23 +124,22 @@ class FencePointView : View {
         return true
     }
 
-
     private fun result() {
         val point1 = intArrayOf(startPoint[0], startPoint[1])
         if (startPoint[0] - destW / 2 < 0) {
-            
+
             point1[0] = destW / 2
         }
         if (startPoint[0] + destW / 2 > width) {
-            
+
             point1[0] = width - destW / 2
         }
         if (startPoint[1] - destW / 2 < 0) {
-            
+
             point1[1] = destH / 2
         }
         if (startPoint[1] + destW / 2 > height) {
-            
+
             point1[1] = height - destH / 2
         }
         Log.w("123", "坐标 point:${point1.contentToString()}")
@@ -148,14 +148,11 @@ class FencePointView : View {
         }
     }
 
-
     fun clear() {
         startPoint = intArrayOf(0, 0)
         result()
         invalidate()
     }
-
-    
 
 
     interface CallBack {

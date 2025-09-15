@@ -8,9 +8,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarLineScatterCandleBub
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
-
 public abstract class BarLineScatterCandleBubbleRenderer extends DataRenderer {
-
 
     protected XBounds mXBounds = new XBounds();
 
@@ -18,11 +16,9 @@ public abstract class BarLineScatterCandleBubbleRenderer extends DataRenderer {
         super(animator, viewPortHandler);
     }
 
-
     protected boolean shouldDrawValues(IDataSet set) {
         return set.isVisible() && (set.isDrawValuesEnabled() || set.isDrawIconsEnabled());
     }
-
 
     protected boolean isInBoundsX(Entry e, IBarLineScatterCandleBubbleDataSet set) {
 
@@ -38,18 +34,13 @@ public abstract class BarLineScatterCandleBubbleRenderer extends DataRenderer {
         }
     }
 
-
     protected class XBounds {
-
 
         public int min;
 
-
         public int max;
 
-
         public int range;
-
 
         public void set(BarLineScatterCandleBubbleDataProvider chart, IBarLineScatterCandleBubbleDataSet dataSet) {
             float phaseX = Math.max(0.f, Math.min(1.f, mAnimator.getPhaseX()));

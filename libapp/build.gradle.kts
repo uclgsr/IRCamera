@@ -1,22 +1,14 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
-    id("kotlin-parcelize")
-    id("kotlin-kapt")
+    kotlin("android") // Modern plugin ID format
+    id("kotlin-parcelize") // Correct plugin ID for Parcelize
+    id("com.google.devtools.ksp") // Use KSP plugin from classpath
 }
 
-kapt {
-    arguments {
-        // Remove unrecognized AROUTER arguments to fix kapt warnings
-        arg("room.schemaLocation", "$projectDir/schemas")
-        arg("room.incremental", "true")
-        arg("room.expandProjection", "true")
-    }
-    // Enable Kotlin 2.1.0 compatibility
-    correctErrorTypes = true
-    useBuildCache = true
-    // Support for Kotlin 2.0+ in kapt
-    includeCompileClasspath = false
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
+    arg("room.expandProjection", "true")
 }
 
 android {
@@ -33,15 +25,16 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
-    // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
-            // Only enable release variant for single-developer maintenance
-            variant.enable = variant.buildType == "release"
+            variant.enable = variant.buildType == "release" || variant.buildType == "debug"
         }
     }
 
@@ -50,14 +43,19 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-    kotlinOptions {
-        jvmTarget = "17"
-        freeCompilerArgs +=
-            listOf(
-                "-opt-in=kotlin.RequiresOptIn",
-                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                "-opt-in=kotlinx.coroutines.FlowPreview",
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            freeCompilerArgs.addAll(
+                listOf(
+                    "-opt-in=kotlin.RequiresOptIn",
+                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    "-opt-in=kotlinx.coroutines.FlowPreview",
+                )
             )
+        }
     }
 
     java {
@@ -79,9 +77,7 @@ android {
 
     packaging {
         jniLibs {
-            // Enhanced native library conflict resolution
             pickFirsts += listOf("**/libc++_shared.so")
-            // Exclude FFmpeg and other libraries that cause stripping issues
             excludes +=
                 listOf(
                     "**/libavcodec.so", // FFmpeg libraries with stripping issues
@@ -99,7 +95,7 @@ android {
                     "**/libswresample.so",
                     "**/libswscale.so",
                 )
-            // Keep debug symbols for remaining libraries
+
             keepDebugSymbols += listOf("**/*.so")
         }
         resources {
@@ -115,95 +111,65 @@ android {
     }
 }
 
-// kotlin {
-//    experimental {
-//        coroutines 'enable'
-//    }
-// }
+configurations.all {
+    resolutionStrategy {
+        force("org.jetbrains.kotlin:kotlin-stdlib:${libs.versions.kotlin.get()}")
+        force("org.jetbrains.kotlin:kotlin-stdlib-common:${libs.versions.kotlin.get()}")
+        force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${libs.versions.kotlin.get()}")
+        force("org.jetbrains.kotlinx:kotlinx-coroutines-core:${libs.versions.coroutines.get()}")
+        force("org.jetbrains.kotlinx:kotlinx-coroutines-android:${libs.versions.coroutines.get()}")
+    }
+}
 
 dependencies {
-    // Core library desugaring support
+    // Force consistent Kotlin stdlib version
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    // Using only JAR files to avoid AGP 8.0+ AAR dependency issues
     api(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
-    // Note: AAR dependencies moved to app module to avoid AGP 8.0+ issues
     api(libs.androidx.appcompat)
     api(libs.androidx.preference)
     api(libs.fragment.ktx)
     api(libs.material)
-
     api(libs.lifecycle.runtime.ktx)
     api(libs.lifecycle.viewmodel.ktx)
     api(libs.lifecycle.livedata.ktx)
-
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler) // Migrated from kapt to KSP
     api(libs.room.ktx)
-
     api(libs.work.runtime.ktx)
-
     api(libs.retrofit2)
     api(libs.converter.gson)
     api(libs.adapter.rxjava2)
-
     api(libs.eventbus)
-
     api(libs.glide)
-    kapt(libs.glide.compiler)
-
+    ksp(libs.glide.compiler) // Migrated from kapt to KSP
     api(libs.rxjava2)
     api(libs.rxandroid)
-    // Commented out problematic RxLifecycle dependencies to identify actual compilation issues
-    // api(libs.rxpermissions)
-    // api(libs.rxlifecycle)
-    // api(libs.rxlifecycle.android)
-    // api(libs.rxlifecycle.components)
-    // api(libs.rxlifecycle.ktx)
-    // api(libs.rxlifecycle.android.lifecycle.ktx)
-
     api(libs.utilcode)
     api(libs.xxpermissions)
     api(libs.xlog)
     api(libs.photoview)
-    // api(libs.android.pdf.viewr) // Temporary comment out due to dependency resolution issues
     api(libs.lottie)
-
     api(libs.brvah)
-    // Commented out problematic refresh layout dependency
-    // api(libs.refresh.layout.kernel)
-    // api(libs.refresh.header.classics) // Temporary comment out
-    // api(libs.refresh.header.material) // Temporary comment out
-
     api(libs.logging.interceptor)
     api(libs.colorpickerview)
     api(libs.nifty)
-    // api(libs.nifty.effect) // Temporary comment out
-
-//    "devApi"(libs.lms2.user)
-//    "betaApi"(libs.lms2.user)
-//    "prodApi"(libs.lms2.user)
-//    "prodTopdonApi"(libs.lms2.user)
-//    "insideChinaApi"(libs.lms3.user)
-//    "prodTopdonInsideChinaApi"(libs.lms3.user)
-
-    // JavaCV
     api(libs.javacv)
     api(libs.javacpp)
-
-    // Add unified BLE module for comprehensive Shimmer Nordic and Topdon BLE support
     api(project(":BleModule"))
 
-    // Compile-time access to LMS SDK classes without packaging in AAR
-    // The app module provides the actual implementation
-    compileOnly(files("../shared/libs/lms_international-3.90.009.0.aar"))
-
-    // NOTE: All local AAR dependencies MUST be handled at the app level due to AGP 8.0+ restrictions
-    // Library modules cannot include local AAR files when building AARs
-    // Classes from LMS SDK and other AARs will be available transitively from the app module
-
-    // The following dependencies are now handled by the app module:
-    // - lms_international-3.90.009.0.aar (LMS SDK) - using compileOnly above for compilation
-    // - abtest-1.0.1.aar
-    // - auth-number-2.13.2.1.aar
-    // - logger-2.2.1-release.aar
-    // - main-2.2.1-release.aar
+    val lmsAarCandidates = listOf(
+        file("libs/lms_international-3.90.009.0.aar"),
+        file("../app/libs/lms_international-3.90.009.0.aar"),
+        file("../shared/libs/lms_international-3.90.009.0.aar")
+    )
+    val lmsAar = lmsAarCandidates.firstOrNull { it.exists() && it.length() > 0L }
+    if (lmsAar != null) {
+        compileOnly(files(lmsAar))
+        logger.lifecycle("libapp: Using LMS AAR from ${lmsAar.absolutePath}")
+    } else {
+        logger.warn("libapp: Skipping lms_international AAR because no valid file found in libapp/app/shared libs")
+    }
 }

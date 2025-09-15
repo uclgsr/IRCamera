@@ -11,11 +11,10 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogFirmwareUpBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-
-class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), View.OnClickListener {
+class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog),
+    View.OnClickListener {
     private var _binding: DialogFirmwareUpBinding? = null
     private val binding get() = _binding!!
-
 
     var titleStr: CharSequence?
         get() = binding.tvTitle.text
@@ -23,13 +22,11 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), 
             binding.tvTitle.text = value
         }
 
-
     var sizeStr: CharSequence?
         get() = binding.tvSize.text
         set(value) {
             binding.tvSize.text = value
         }
-
 
     var contentStr: CharSequence?
         get() = binding.tvContent.text
@@ -37,13 +34,11 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), 
             binding.tvContent.text = value
         }
 
-
     var isShowRestartTips: Boolean
         get() = binding.tvRestartTips.isVisible
         set(value) {
             binding.tvRestartTips.isVisible = value
         }
-
 
     var isShowCancel: Boolean
         get() = binding.tvCancel.isVisible
@@ -51,9 +46,7 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), 
             binding.tvCancel.isVisible = value
         }
 
-
     var onCancelClickListener: (() -> Unit)? = null
-
 
     var onConfirmClickListener: (() -> Unit)? = null
 
@@ -81,6 +74,7 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), 
                 dismiss()
                 onCancelClickListener?.invoke()
             }
+
             binding.tvConfirm -> { // 确认
                 dismiss()
                 onConfirmClickListener?.invoke()

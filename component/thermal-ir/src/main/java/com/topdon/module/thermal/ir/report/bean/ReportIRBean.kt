@@ -3,8 +3,6 @@ package com.topdon.module.thermal.ir.report.bean
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-
-
 @Parcelize
 data class ReportIRBean(
     var picture_id: String, // 上传服务器后接口返回的图片Id

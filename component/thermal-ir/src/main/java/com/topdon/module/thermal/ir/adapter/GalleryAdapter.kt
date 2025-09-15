@@ -14,8 +14,6 @@ import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.lib.core.tools.TimeTool
 import com.topdon.module.thermal.ir.R
 
-
-
 @SuppressLint("NotifyDataSetChanged")
 class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
@@ -23,12 +21,9 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private const val TYPE_DATA = 1
     }
 
-
     val dataList: ArrayList<GalleryBean> = ArrayList()
 
-
     val selectList: ArrayList<Int> = ArrayList()
-
 
     var isTS004Remote = false
         set(value) {
@@ -37,7 +32,6 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 notifyDataSetChanged()
             }
         }
-
 
     var isEditMode = false
         set(value) {
@@ -51,12 +45,13 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
         }
 
-
     var onLongEditListener: (() -> Unit)? = null
 
+    /**
 
+
+     */
     var selectCallback: ((data: ArrayList<Int>) -> Unit)? = null
-
 
     var itemClickCallback: ((position: Int) -> Unit)? = null
 
@@ -108,9 +103,15 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         viewType: Int,
     ): RecyclerView.ViewHolder {
         return if (viewType == TYPE_HEAD) {
-            ItemHeadView(LayoutInflater.from(parent.context).inflate(R.layout.item_gallery_head_lay, parent, false))
+            ItemHeadView(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_gallery_head_lay, parent, false)
+            )
         } else {
-            ItemView(LayoutInflater.from(parent.context).inflate(R.layout.item_gallery_lay, parent, false))
+            ItemView(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_gallery_lay, parent, false)
+            )
         }
     }
 

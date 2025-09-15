@@ -1,11 +1,9 @@
-
 package com.github.mikephil.charting.data.filter;
 
 import android.annotation.TargetApi;
 import android.os.Build;
 
 import java.util.Arrays;
-
 
 public class Approximator {
 
@@ -41,7 +39,6 @@ public class Approximator {
             return line.getPoints();
         }
     }
-
 
     float[] concat(float[]... arrays) {
         int length = 0;

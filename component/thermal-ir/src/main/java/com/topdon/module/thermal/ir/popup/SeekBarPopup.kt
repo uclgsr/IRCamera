@@ -10,7 +10,15 @@ import android.widget.SeekBar
 import androidx.core.view.isVisible
 import com.topdon.module.thermal.ir.databinding.PopSeekBarBinding
 
+/**
 
+ *
+
+ *
+ * Created by LCG on 2024/12/3.
+ *
+
+ */
 @SuppressLint("SetTextI18n")
 class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() {
     var progress: Int
@@ -25,17 +33,26 @@ class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() 
             binding.seekBar.max = value
         }
 
-    
+    /**
+
+     *
+
+     */
     var isRealTimeTrigger = false
 
-    
     var onValuePickListener: ((progress: Int) -> Unit)? = null
 
     private val binding: PopSeekBarBinding = PopSeekBarBinding.inflate(LayoutInflater.from(context))
 
     init {
-        val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(context.resources.displayMetrics.widthPixels, View.MeasureSpec.EXACTLY)
-        val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(context.resources.displayMetrics.heightPixels, View.MeasureSpec.AT_MOST)
+        val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+            context.resources.displayMetrics.widthPixels,
+            View.MeasureSpec.EXACTLY
+        )
+        val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+            context.resources.displayMetrics.heightPixels,
+            View.MeasureSpec.AT_MOST
+        )
         binding.tvTitle.isVisible = hasTitle
         binding.root.measure(widthMeasureSpec, heightMeasureSpec)
         binding.tvValue.text = "$progress%"
@@ -67,7 +84,6 @@ class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() 
         isOutsideTouchable = false
     }
 
-    
     fun show(
         anchor: View,
         isDropDown: Boolean,

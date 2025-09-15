@@ -1,13 +1,10 @@
-
 package com.github.mikephil.charting.data;
 
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.List;
 
-
 public class BarData extends BarLineScatterCandleBubbleData<IBarDataSet> {
-
 
     private float mBarWidth = 0.85f;
 
@@ -23,15 +20,13 @@ public class BarData extends BarLineScatterCandleBubbleData<IBarDataSet> {
         super(dataSets);
     }
 
-
-    public void setBarWidth(float mBarWidth) {
-        this.mBarWidth = mBarWidth;
-    }
-
     public float getBarWidth() {
         return mBarWidth;
     }
 
+    public void setBarWidth(float mBarWidth) {
+        this.mBarWidth = mBarWidth;
+    }
 
     public void groupBars(float fromX, float groupSpace, float barSpace) {
 
@@ -77,7 +72,6 @@ public class BarData extends BarLineScatterCandleBubbleData<IBarDataSet> {
             float innerInterval = end - start;
             float diff = interval - innerInterval;
 
-            // correct rounding errors
             if (diff > 0 || diff < 0) {
                 fromX += diff;
             }
@@ -85,7 +79,6 @@ public class BarData extends BarLineScatterCandleBubbleData<IBarDataSet> {
 
         notifyDataChanged();
     }
-
 
     public float getGroupWidth(float groupSpace, float barSpace) {
         return mDataSets.size() * (mBarWidth + barSpace) + groupSpace;

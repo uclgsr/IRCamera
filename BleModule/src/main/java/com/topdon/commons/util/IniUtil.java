@@ -15,15 +15,14 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
-
 public class IniUtil {
-    private static String NAME = "Link";
     private static final String LINK = "link";
     private static final String LINK_NAME = "name";
     private static final String LANGUAGE = "language";
     private static final String VERSION = "version";
     private static final String MAINTENANCE = "maintenance";
     private static final String SYSTEM = "system";
+    private static String NAME = "Link";
 
     public static String getLink(String path) {
         File file = new File(path + "/Diag.ini");
@@ -47,22 +46,19 @@ public class IniUtil {
         }
     }
 
-
     public static String getVehicleName(String path) {
         File file = new File(path + "/Diag.ini");
         if (!file.exists()) {
             return "INI_LOST";
         }
-//        return UTF8StringUtils.readByUtf8WithOutBom(path + "/Diag.ini");
+
         return readFileInfo(path + "/Diag.ini");
     }
-
-
 
     private static String readFileInfo(String path) {
         String name = "";
         File file = new File(path);
-        //如果path是传递过来的参数，可以做一个非目录的判断
+
         if (file.isDirectory()) {
             LLog.d("TestFile", "The File doesn't not exist.");
         } else {
@@ -71,7 +67,7 @@ public class IniUtil {
                 InputStreamReader inputreader = new InputStreamReader(instream);
                 BufferedReader buffreader = new BufferedReader(inputreader);
                 String line;
-                //分行读取
+
                 while ((line = buffreader.readLine()) != null) {
                     LLog.e("TestFile", "ReadTxtFile: " + line);
                     name = line;
@@ -130,13 +126,11 @@ public class IniUtil {
                 return "";
             return languageSection.get(language.toLowerCase());
         } catch (Exception e) {
-//            e.printStackTrace();
+
             LLog.e("bcf", "INI: error: " + e.getMessage());
         }
         return "";
     }
-
-
 
     public static HashMap<String, String> getMaintenance(String path, String name) {
         HashMap<String, String> hashMap = new HashMap<>();
@@ -289,8 +283,6 @@ public class IniUtil {
             return hashMap;
         }
     }
-
-
 
     public static HashMap<String, String> getIniSysTem(String path, String name) {
         HashMap<String, String> hashMap = new HashMap<>();

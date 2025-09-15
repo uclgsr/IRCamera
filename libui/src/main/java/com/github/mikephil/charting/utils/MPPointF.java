@@ -5,18 +5,29 @@ import android.os.Parcelable;
 
 import java.util.List;
 
-
 public class MPPointF extends ObjectPool.Poolable {
 
+    public static final Parcelable.Creator<MPPointF> CREATOR = new Parcelable.Creator<MPPointF>() {
+
+        public MPPointF createFromParcel(Parcel in) {
+            MPPointF r = new MPPointF(0, 0);
+            r.my_readFromParcel(in);
+            return r;
+        }
+
+        public MPPointF[] newArray(int size) {
+            return new MPPointF[size];
+        }
+    };
     private static ObjectPool<MPPointF> pool;
+
+    static {
+        pool = ObjectPool.create(32, new MPPointF(0, 0));
+        pool.setReplenishPercentage(0.5f);
+    }
 
     public float x;
     public float y;
-
-    static {
-        pool = ObjectPool.create(32, new MPPointF(0,0));
-        pool.setReplenishPercentage(0.5f);
-    }
 
     public MPPointF() {
     }
@@ -44,44 +55,29 @@ public class MPPointF extends ObjectPool.Poolable {
         return result;
     }
 
-    public static void recycleInstance(MPPointF instance){
+    public static void recycleInstance(MPPointF instance) {
         pool.recycle(instance);
     }
 
-    public static void recycleInstances(List<MPPointF> instances){
+    public static void recycleInstances(List<MPPointF> instances) {
         pool.recycle(instances);
     }
-
-    public static final Parcelable.Creator<MPPointF> CREATOR = new Parcelable.Creator<MPPointF>() {
-
-        public MPPointF createFromParcel(Parcel in) {
-            MPPointF r = new MPPointF(0,0);
-            r.my_readFromParcel(in);
-            return r;
-        }
-
-
-        public MPPointF[] newArray(int size) {
-            return new MPPointF[size];
-        }
-    };
-
 
     public void my_readFromParcel(Parcel in) {
         x = in.readFloat();
         y = in.readFloat();
     }
 
-    public float getX(){
+    public float getX() {
         return this.x;
     }
 
-    public float getY(){
+    public float getY() {
         return this.y;
     }
 
     @Override
     protected ObjectPool.Poolable instantiate() {
-        return new MPPointF(0,0);
+        return new MPPointF(0, 0);
     }
 }

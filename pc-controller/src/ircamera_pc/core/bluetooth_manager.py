@@ -31,7 +31,6 @@ except ImportError:
 
     PYQT_AVAILABLE = False
 
-
 try:
     from bleak import BleakClient, BleakGATTCharacteristic, BleakScanner
     from bleak.backends.device import BLEDevice
@@ -199,7 +198,7 @@ class BluetoothManager(BaseManager):
             discovered_count = 0
             for device in devices:
                 if device.address not in self._devices or self._should_update_device(
-                    device
+                        device
                 ):
                     bt_device = self._create_bluetooth_device(device)
                     self._devices[device.address] = bt_device
@@ -245,7 +244,7 @@ class BluetoothManager(BaseManager):
         existing = self._devices[device.address]
         # Update if RSSI changed significantly or name became available
         return abs(existing.rssi - (device.rssi or -100)) > 10 or (
-            not existing.name and device.name
+                not existing.name and device.name
         )
 
     def _create_bluetooth_device(self, device: BLEDevice) -> BluetoothDevice:
@@ -420,7 +419,7 @@ class BluetoothManager(BaseManager):
             logger.error(f"Failed to enable IRCamera notifications: {e}")
 
     def _handle_ircamera_notification(
-        self, sender: BleakGATTCharacteristic, data: bytearray
+            self, sender: BleakGATTCharacteristic, data: bytearray
     ) -> None:
         """Handle incoming data from IRCamera device."""
         try:

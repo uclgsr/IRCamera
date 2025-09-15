@@ -1,6 +1,5 @@
 package com.topdon.ble;
 
-
 final class Inspector {
 
     static <T> T requireNonNull(T obj, String message) {

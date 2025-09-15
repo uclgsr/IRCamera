@@ -12,7 +12,6 @@ import com.csl.irCamera.databinding.ActivityGsrGalleryBinding
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.tools.PermissionTool
 
-
 class GSRGalleryActivity : BaseBindingActivity<ActivityGsrGalleryBinding>() {
     companion object {
         private const val TAG = "GSRGalleryActivity"
@@ -62,7 +61,7 @@ class GSRGalleryActivity : BaseBindingActivity<ActivityGsrGalleryBinding>() {
 
     private fun requestPermissions() {
         PermissionTool.requestFile(this) {
-            // Permission granted, gallery can now access media files
+
         }
     }
 

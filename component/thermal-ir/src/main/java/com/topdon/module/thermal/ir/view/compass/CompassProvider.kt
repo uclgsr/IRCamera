@@ -3,13 +3,12 @@ package com.topdon.module.thermal.ir.view.compass
 import android.content.Context
 import android.hardware.Sensor
 import com.kylecorry.andromeda.sense.Sensors
-// import com.kylecorry.andromeda.sense.compass.FilterCompassWrapper // Temporarily disabled
-// import com.kylecorry.andromeda.sense.compass.GravityCompensatedCompass // Temporarily disabled
+
+
 import com.kylecorry.andromeda.sense.compass.ICompass
 import com.kylecorry.andromeda.sense.compass.LegacyCompass
 import com.kylecorry.andromeda.sense.orientation.GeomagneticRotationSensor
 import com.kylecorry.andromeda.sense.orientation.RotationSensor
-
 
 class CompassProvider(private val context: Context) {
     fun get(): ICompass {
@@ -18,14 +17,11 @@ class CompassProvider(private val context: Context) {
 
         var source = CompassSource.RotationVector
 
-        // Handle if the available sources have changed (not likely)
         val allSources = getAvailableSources(context)
 
-        // There were no compass sensors found
-        if (allSources.isEmpty())
-            {
-                return NullCompass()
-            }
+        if (allSources.isEmpty()) {
+            return NullCompass()
+        }
 
         if (!allSources.contains(source)) {
             source = allSources.firstOrNull() ?: CompassSource.CustomMagnetometer
@@ -42,7 +38,7 @@ class CompassProvider(private val context: Context) {
                 }
 
                 CompassSource.CustomMagnetometer -> {
-                    // GravityCompensatedCompass(context, useTrueNorth, SensorService.MOTION_SENSOR_DELAY)
+
                     RotationSensor(context, SensorService.MOTION_SENSOR_DELAY) // Fallback
                 }
 
@@ -54,36 +50,6 @@ class CompassProvider(private val context: Context) {
         return compass as ICompass // Cast to ICompass for compatibility
     }
 
-//    fun getOrientationSensor(): IOrientationSensor? {
-//        // Note: This isn't used by the actual orientation sensors (they should use it)
-//        val useTrueNorth = prefs.useTrueNorth
-//
-//        var source = prefs.source
-//
-//        // Handle if the available sources have changed (not likely)
-//        val allSources = getAvailableSources(context)
-//
-//        // There were no compass sensors found
-//        if (allSources.isEmpty()){
-//            return NullOrientationSensor()
-//        }
-//
-//        if (!allSources.contains(source)) {
-//            source = allSources.firstOrNull() ?: CompassSource.CustomMagnetometer
-//        }
-//
-//        // Note: Apply the smoothing / quality to the orientation sensor
-//        if (source == CompassSource.RotationVector){
-//            return RotationSensor(context, useTrueNorth, SensorService.MOTION_SENSOR_DELAY)
-//        }
-//
-//        if (source == CompassSource.GeomagneticRotationVector){
-//            return GeomagneticRotationSensor(context, useTrueNorth, SensorService.MOTION_SENSOR_DELAY)
-//        }
-//
-//        // Note: Construct this from existing sensors
-//        return null
-//    }
 
     companion object {
 

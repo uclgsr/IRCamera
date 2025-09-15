@@ -12,7 +12,6 @@ import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
 
-
 class FenceLineView : View {
     var listener: CallBack? = null
 
@@ -40,7 +39,7 @@ class FenceLineView : View {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-//        canvas.drawRect(rect, mPaint)
+
         canvas.drawLine(
             startPoint[0].toFloat(),
             startPoint[1].toFloat(),
@@ -73,6 +72,7 @@ class FenceLineView : View {
                 endPoint[0] = mX.toInt()
                 endPoint[1] = mY.toInt()
             }
+
             MotionEvent.ACTION_UP -> {
                 var x = mX.toInt()
                 var y = mY.toInt()
@@ -112,6 +112,7 @@ class FenceLineView : View {
                 invalidate() // Invalidate entire view
                 result()
             }
+
             MotionEvent.ACTION_MOVE -> {
                 old =
                     Rect(
@@ -146,7 +147,6 @@ class FenceLineView : View {
         result()
         invalidate()
     }
-
 
 
     interface CallBack {

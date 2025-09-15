@@ -5,19 +5,17 @@ import android.content.ContextWrapper;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.NonNull;
+
 import java.io.File;
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
-
-
 public class DatabaseContext extends ContextWrapper {
     private File dbDir;
-    
-    
+
     public DatabaseContext(Context base, @NonNull File dbDir) {
         super(base);
-        Objects.requireNonNull(dbDir, "dbDir is null");   
+        Objects.requireNonNull(dbDir, "dbDir is null");
         this.dbDir = dbDir;
     }
 
@@ -25,7 +23,7 @@ public class DatabaseContext extends ContextWrapper {
     public File getDatabasePath(String name) {
         if (!dbDir.exists()) {
             dbDir.mkdirs();
-        }        
+        }
         return new File(dbDir, name);
     }
 

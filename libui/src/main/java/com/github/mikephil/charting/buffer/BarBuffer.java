@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.buffer;
 
 import com.github.mikephil.charting.data.BarEntry;
@@ -11,7 +10,9 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
     protected boolean mContainsStacks = false;
     protected boolean mInverted = false;
 
-    //
+    /**
+     * width of the bar on the x-axis, in values (not pixels)
+     */
     protected float mBarWidth = 1f;
 
     public BarBuffer(int size, int dataSetCount, boolean containsStacks) {
@@ -50,7 +51,7 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
 
             BarEntry e = data.getEntryForIndex(i);
 
-            if(e == null)
+            if (e == null)
                 continue;
 
             float x = e.getX();
@@ -71,7 +72,6 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
                     bottom = y <= 0 ? y : 0;
                 }
 
-                // multiply the height of the rect with the phase
                 if (top > 0)
                     top *= phaseY;
                 else
@@ -85,13 +85,12 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
                 float negY = -e.getNegativeSum();
                 float yStart = 0f;
 
-                // fill the stack
                 for (int k = 0; k < vals.length; k++) {
 
                     float value = vals[k];
 
                     if (value == 0.0f && (posY == 0.0f || negY == 0.0f)) {
-                        // Take care of the situation of a 0.0 value, which overlaps a non-zero bar
+
                         y = value;
                         yStart = y;
                     } else if (value >= 0.0f) {
@@ -116,7 +115,6 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
                         bottom = y <= yStart ? y : yStart;
                     }
 
-                    // multiply the height of the rect with the phase
                     top *= phaseY;
                     bottom *= phaseY;
 

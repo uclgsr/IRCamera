@@ -1,17 +1,11 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
-    id("kotlin-parcelize")
-    id("kotlin-kapt")
+    kotlin("android") // Modern plugin ID format
+    id("kotlin-parcelize") // Correct plugin ID for Parcelize
+    id("com.google.devtools.ksp") // Use KSP plugin from classpath
 }
 
-kapt {
-    arguments {
-        // arg("AROUTER_MODULE_NAME", project.name)  // Removed for NavigationManager migration
-    }
-    // Enable Kotlin 2.1.0 compatibility
-    correctErrorTypes = true
-    useBuildCache = true
+ksp {
 }
 
 android {
@@ -20,7 +14,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        // targetSdk = libs.versions.targetSdk.get().toInt()  // Deprecated in library modules
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -29,15 +23,17 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
-    // Configure single release variant for easier maintenance
     androidComponents {
         beforeVariants { variant ->
-            // Only enable release variant for single-developer maintenance
-            variant.enable = variant.buildType == "release"
+
+            variant.enable = variant.buildType == "release" || variant.buildType == "debug"
         }
     }
 
@@ -46,32 +42,31 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+        }
     }
 }
 
 dependencies {
-    // Core library desugaring support
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
     implementation(project(":libui"))
-
     api(libs.colorpickerview)
     implementation(libs.brvah)
-
-    implementation("org.apache.poi:poi-ooxml:5.4.0")
-    implementation("org.apache.xmlbeans:xmlbeans:3.1.0")
-    implementation("javax.xml.stream:stax-api:1.0-2")
-    implementation("com.fasterxml:aalto-xml:1.3.3")
+    implementation(libs.apache.poi.ooxml)
+    implementation(libs.xmlbeans)
+    implementation(libs.stax.api)
+    implementation(libs.aalto.xml)
     implementation(project(":RangeSeekBar"))
-
-    // Test dependencies - using Robolectric for context-based testing
     testImplementation(libs.junit)
-    testImplementation("org.robolectric:robolectric:4.10.3")
-    testImplementation("androidx.test:core:1.5.0")
-    testImplementation("androidx.test.ext:junit:1.1.5")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation(libs.robolectric)
+    testImplementation(libs.test.core)
+    testImplementation(libs.test.ext.junit)
+    testImplementation(libs.coroutines.test.legacy)
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
 }

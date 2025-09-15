@@ -15,7 +15,6 @@ package com.github.gzuliyujiang.wheelpicker.impl;
 
 import com.github.gzuliyujiang.wheelpicker.contract.TimeFormatter;
 
-
 public class UnitTimeFormatter implements TimeFormatter {
 
     @Override
@@ -34,4 +33,3 @@ public class UnitTimeFormatter implements TimeFormatter {
     }
 
 }
-

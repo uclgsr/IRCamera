@@ -22,10 +22,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 
-
 abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
     protected lateinit var binding: B
-
 
     @LayoutRes
     protected abstract fun initContentLayoutId(): Int
@@ -45,7 +43,12 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
     }
 
     override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(AppLanguageUtils.attachBaseContext(newBase, ConstantLanguages.ENGLISH))
+        super.attachBaseContext(
+            AppLanguageUtils.attachBaseContext(
+                newBase,
+                ConstantLanguages.ENGLISH
+            )
+        )
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -78,16 +81,13 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
     protected open fun onSocketDisConnected(isTS004: Boolean) {
     }
 
-
     private var loadingDialog: LoadingDialog? = null
-
 
     fun showLoadingDialog(
         @StringRes resId: Int = R.string.tip_loading,
     ) {
         showLoadingDialog(getString(resId))
     }
-
 
     fun showLoadingDialog(text: CharSequence?) {
         if (loadingDialog == null) {
@@ -96,7 +96,6 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
         loadingDialog?.setTips(text)
         loadingDialog?.show()
     }
-
 
     fun dismissLoadingDialog() {
         loadingDialog?.dismiss()
@@ -110,7 +109,8 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
             input: File,
         ): Intent {
             file = input
-            val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+            val uri =
+                FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
             return Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
         }
 

@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="20dp"
-    android:layout_marginEnd="20dp"
     android:layout_marginTop="20dp"
+    android:layout_marginEnd="20dp"
     android:background="@drawable/bg_corners06_solid_10_ff">
 
     <ImageView
@@ -14,11 +14,11 @@
         android:layout_width="14dp"
         android:layout_height="14dp"
         android:layout_marginEnd="20dp"
-        android:src="@drawable/ic_more_svg"
         android:contentDescription="@null"
+        android:src="@drawable/ic_more_svg"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/item_question_info"
@@ -30,10 +30,10 @@
         android:paddingBottom="14dp"
         android:textColor="@color/white"
         android:textSize="@dimen/app_font_15"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/item_question_end_image"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/item_question_end_image" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

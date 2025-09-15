@@ -6,23 +6,17 @@ import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.MPPointF;
 
-
 public interface ChartInterface {
 
-
     float getXChartMin();
-
 
     float getXChartMax();
 
     float getXRange();
 
-
     float getYChartMin();
 
-
     float getYChartMax();
-
 
     float getMaxHighlightDistance();
 

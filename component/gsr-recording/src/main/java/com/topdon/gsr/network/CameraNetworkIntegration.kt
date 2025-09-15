@@ -2,14 +2,19 @@ package com.topdon.gsr.network
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
-
 
 class CameraNetworkIntegration(
     private val context: Context,
@@ -76,7 +81,6 @@ class CameraNetworkIntegration(
         val avgLatency: Long,
     )
 
-
     suspend fun initializeCameraStreaming(sessionId: String) =
         withContext(Dispatchers.IO) {
             currentSessionId = sessionId
@@ -100,7 +104,6 @@ class CameraNetworkIntegration(
 
             networkClient.sendMessage(initMessage)
         }
-
 
     suspend fun startRgbStreaming() =
         withContext(Dispatchers.IO) {
@@ -131,7 +134,6 @@ class CameraNetworkIntegration(
             networkClient.sendMessage(startMessage)
         }
 
-
     suspend fun startThermalStreaming() =
         withContext(Dispatchers.IO) {
             if (isThermalStreamingActive.getAndSet(true)) {
@@ -160,7 +162,6 @@ class CameraNetworkIntegration(
 
             networkClient.sendMessage(startMessage)
         }
-
 
     fun processRgbFrame(
         frameData: ByteArray,
@@ -202,7 +203,6 @@ class CameraNetworkIntegration(
         }
     }
 
-
     fun processThermalFrame(
         thermalData: FloatArray,
         width: Int,
@@ -243,7 +243,6 @@ class CameraNetworkIntegration(
         }
     }
 
-
     private fun determineJpegQuality(): Int {
         val networkMetrics = qosManager.getNetworkQualityMetrics()
 
@@ -255,7 +254,6 @@ class CameraNetworkIntegration(
             QualityOfServiceManager.NetworkTier.POOR -> JPEG_QUALITY_LOW
         }
     }
-
 
     private suspend fun processRgbFrameQueue() {
         val frame = rgbFrameQueue.poll() ?: return
@@ -296,7 +294,6 @@ class CameraNetworkIntegration(
             Log.e(TAG, "Error sending RGB frame", e)
         }
     }
-
 
     private fun compressThermalData(thermalData: FloatArray): ByteArray {
         return try {
@@ -354,7 +351,6 @@ class CameraNetworkIntegration(
         }
     }
 
-
     private suspend fun processThermalFrameQueue() {
         val frame = thermalFrameQueue.poll() ?: return
 
@@ -398,7 +394,6 @@ class CameraNetworkIntegration(
         }
     }
 
-
     private fun serializeThermalData(thermalData: FloatArray): ByteArray {
         // Convert float array to byte array for transmission
         val byteBuffer = ByteBuffer.allocate(thermalData.size * 4)
@@ -408,7 +403,6 @@ class CameraNetworkIntegration(
 
         return byteBuffer.array()
     }
-
 
     suspend fun stopRgbStreaming() =
         withContext(Dispatchers.IO) {
@@ -434,7 +428,6 @@ class CameraNetworkIntegration(
             networkClient.sendMessage(stopMessage)
         }
 
-
     suspend fun stopThermalStreaming() =
         withContext(Dispatchers.IO) {
             if (!isThermalStreamingActive.getAndSet(false)) {
@@ -458,7 +451,6 @@ class CameraNetworkIntegration(
 
             networkClient.sendMessage(stopMessage)
         }
-
 
     fun getStreamingMetrics(): List<StreamMetrics> {
         val metrics = mutableListOf<StreamMetrics>()
@@ -492,13 +484,11 @@ class CameraNetworkIntegration(
         return metrics
     }
 
-
     private fun calculateFrameRate(frameCount: Long): Float {
         // This would track timing over a window
         // For now, return a placeholder value
         return if (frameCount > 0) 30.0f else 0.0f
     }
-
 
     suspend fun stopAllStreaming() =
         withContext(Dispatchers.IO) {

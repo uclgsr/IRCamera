@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.module.thermal.R
 
-
 class SettingCheckAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var datas = arrayOf("1s", "5s", "10s", "30s", "1min", "5min")
@@ -41,10 +40,20 @@ class SettingCheckAdapter(val context: Context) :
             holder.btn.text = datas[position]
             if (position == selectTime) {
                 holder.btn.setBackgroundResource(com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg)
-                holder.btn.setTextColor(ContextCompat.getColor(context, com.topdon.lib.core.R.color.white))
+                holder.btn.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        com.topdon.lib.core.R.color.white
+                    )
+                )
             } else {
                 holder.btn.setBackgroundResource(com.topdon.lib.ui.R.drawable.ic_menu_thermal7002_svg)
-                holder.btn.setTextColor(ContextCompat.getColor(context, com.topdon.lib.core.R.color.font_third_color))
+                holder.btn.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        com.topdon.lib.core.R.color.font_third_color
+                    )
+                )
             }
             holder.btn.setOnClickListener {
                 Log.w("123", "文件: ${datas[position]}")
@@ -60,7 +69,6 @@ class SettingCheckAdapter(val context: Context) :
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val btn: Button = itemView.findViewById(R.id.item_setting_check_btn)
     }
-
 
     interface OnItemClickListener {
         fun onClick(

@@ -34,9 +34,8 @@ public class MP4Encoder extends Encoder {
     private static final String TAG = MP4Encoder.class.getSimpleName();
     private static final int TIMEOUT_US = 10000;
     private int addedFrameCount;
-    // Fixed: Use dynamic buffer sizing to prevent BufferOverflowException on high Android versions
-    // Audio processing disabled - adaptive buffer size based on codec capabilities
-    // private byte[] audioArray = new byte[getOptimalBufferSize()];
+
+
     private MediaCodec audioCodec;
     private int audioTrackIndex;
     private BufferInfo bufferInfo;
@@ -47,6 +46,10 @@ public class MP4Encoder extends Encoder {
     private int trackCount = 0;
     private MediaCodec videoCodec;
     private int videoTrackIndex;
+
+    private static long getPresentationTimeUsec(int frameIndex) {
+        return (((long) frameIndex) * ONE_SEC) / 20;
+    }
 
     @Override
     protected void onInit() {
@@ -127,7 +130,7 @@ public class MP4Encoder extends Encoder {
         } else {
             int inputBufIndex = videoCodec.dequeueInputBuffer(TIMEOUT_US);
             if (inputBufIndex >= 0) {
-//                byte[] input = getNV12(bitmap.getWidth(), bitmap.getHeight(), bitmap);
+
                 byte[] input = EncodeYuvTools.INSTANCE.getNV12(bitmap.getWidth(), bitmap.getHeight(), bitmap, getColorFormat());
                 ByteBuffer inputBuffer = videoCodec.getInputBuffer(inputBufIndex);
                 inputBuffer.clear();
@@ -137,11 +140,8 @@ public class MP4Encoder extends Encoder {
             }
             int audioInputBufferIndex = audioCodec.dequeueInputBuffer(TIMEOUT_US);
             if (audioInputBufferIndex >= -1) {
-//                ByteBuffer encoderInputBuffer = audioCodec.getInputBuffer(audioInputBufferIndex);
-//                encoderInputBuffer.clear();
-//                encoderInputBuffer.put(audioArray);
-//                audioCodec.queueInputBuffer(audioInputBufferIndex, 0, audioArray.length,
-//                        getPresentationTimeUsec(addedFrameCount), 0);
+
+
             }
             addedFrameCount++;
             while (addedFrameCount > encodedFrameCount) {
@@ -216,11 +216,9 @@ public class MP4Encoder extends Encoder {
         }
     }
 
-    private static long getPresentationTimeUsec(int frameIndex) {
-        return (((long) frameIndex) * ONE_SEC) / 20;
-    }
-
-
+    /**
+     *
+     */
     private int getColorFormat() {
         if ("GOOGLE".equalsIgnoreCase(Build.BRAND) && "PIXEL 4".equalsIgnoreCase(Build.MODEL)) {
             return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar;

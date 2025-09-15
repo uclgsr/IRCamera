@@ -1,8 +1,7 @@
 package com.topdon.lib.core.socket
 
-
 data class SocketFrameBean(
-    // 整帧测温结果
+
     val isMaxShow: Boolean,
     val isMinShow: Boolean,
     val isCenterShow: Boolean,
@@ -18,7 +17,7 @@ data class SocketFrameBean(
     val isMaxWarn: Boolean,
     val isMinWarn: Boolean,
     val isCenterWarn: Boolean,
-    // 点测温结果
+
     val isP1Show: Boolean,
     val p1X: Int,
     val p1Y: Int,
@@ -40,7 +39,7 @@ data class SocketFrameBean(
     val isP3MaxWarn: Boolean,
     val isP3MinWarn: Boolean,
     val isP3CenterWarn: Boolean,
-    // 线测温结果
+
     val isL1Show: Boolean,
     val l1StartX: Int,
     val l1StartY: Int,
@@ -86,7 +85,7 @@ data class SocketFrameBean(
     val isL3MaxWarn: Boolean,
     val isL3MinWarn: Boolean,
     val isL3CenterWarn: Boolean,
-    // 区域测温结果
+
     val isR1Show: Boolean,
     val r1StartX: Int,
     val r1StartY: Int,
@@ -265,7 +264,8 @@ data class SocketFrameBean(
     companion object {
         private fun Boolean.openText(): String = if (this) "开启" else "关闭"
 
-        private fun Int.toCStr(): String = "${this / 10}${if (this % 10 == 0) "" else ".${this % 10}"}°C"
+        private fun Int.toCStr(): String =
+            "${this / 10}${if (this % 10 == 0) "" else ".${this % 10}"}°C"
     }
 
     override fun toString(): String {

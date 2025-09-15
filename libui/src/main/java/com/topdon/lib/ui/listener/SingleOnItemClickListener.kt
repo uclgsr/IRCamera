@@ -5,7 +5,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.listener.OnItemClickListener
 
 
-
 abstract class SingleOnItemClickListener : OnItemClickListener {
     private var mLastClickTime: Long = 0
     private var timeInterval = 500L

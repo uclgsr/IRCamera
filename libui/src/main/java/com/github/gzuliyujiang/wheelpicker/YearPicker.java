@@ -29,7 +29,6 @@ import com.topdon.lib.ui.R;
 
 import java.util.Calendar;
 
-
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class YearPicker extends ModalDialog {
     protected YearWheelLayout wheelLayout;
@@ -38,7 +37,6 @@ public class YearPicker extends ModalDialog {
     public YearPicker(@NonNull Activity activity, @Nullable Integer year) {
         super(activity);
 
-        //initialize年份range及currentselected年份
         int nowYear = Calendar.getInstance().get(Calendar.YEAR);
         DatimeEntity startTimeEntity = new DatimeEntity();
         startTimeEntity.setDate(DateEntity.target(nowYear - 1000, 1, 1));

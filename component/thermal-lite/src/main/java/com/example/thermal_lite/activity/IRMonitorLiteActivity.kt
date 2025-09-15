@@ -42,8 +42,6 @@ import org.greenrobot.eventbus.EventBus
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-
-// Legacy ARouter route annotation - now using NavigationManager
 open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTempListener {
     private lateinit var binding: ActivityIrMonitorLiteBinding
     private var selectIndex: SelectPositionBean? = null // 选取点
@@ -66,7 +64,8 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                             when (it) {
                                 1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
                                 2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
-                                else -> EventBus.getDefault().post(ThermalActionEvent(action = 2003))
+                                else -> EventBus.getDefault()
+                                    .post(ThermalActionEvent(action = 2003))
                             }
                         }
                         .create().show()
@@ -76,11 +75,10 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
         binding.motionStartBtn.setOnClickListener(this)
     }
 
-    private fun startChart()  {
-        if (selectIndex == null)
-            {
-                return
-            }
+    private fun startChart() {
+        if (selectIndex == null) {
+            return
+        }
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         selectBean = selectIndex!!
         if (showTask != null && showTask!!.isActive) {
@@ -101,44 +99,56 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                 var errorReadCount = 0
                 while (true) {
                     delay(1000)
-                    if (irMonitorLiteFragment != null)
-                        {
-                            val result: LibIRTemp.TemperatureSampleResult =
-                                when (selectBean.type) {
-                                    1 -> irMonitorLiteFragment!!.temperatureView.getPointTemp(selectBean.startPosition)
-                                    2 -> irMonitorLiteFragment!!.temperatureView.getLineTemp(Line(selectBean.startPosition, selectBean.endPosition))
-                                    else -> irMonitorLiteFragment!!.temperatureView.getRectTemp(selectBean.getRect())
-                                } ?: continue
-                            if (isFirstRead) {
-                                if (result.maxTemperature > 200f || result.minTemperature < -200f) {
-                                    errorReadCount++
-                                    XLog.w("第 $errorReadCount 次读取到异常数据，max = ${result.maxTemperature} min = ${result.minTemperature}")
-                                    if (errorReadCount > 10) {
-                                        XLog.i("连续10次获取到异常数据，认为温度区域稳定")
-                                        isFirstRead = false
-                                    }
-                                    continue
-                                } else {
+                    @Suppress("SENSELESS_COMPARISON")
+                    if (irMonitorLiteFragment != null) {
+                        val result: LibIRTemp.TemperatureSampleResult =
+                            when (selectBean.type) {
+                                1 -> irMonitorLiteFragment!!.temperatureView.getPointTemp(selectBean.startPosition)
+                                2 -> irMonitorLiteFragment!!.temperatureView.getLineTemp(
+                                    Line(
+                                        selectBean.startPosition,
+                                        selectBean.endPosition
+                                    )
+                                )
+
+                                else -> irMonitorLiteFragment!!.temperatureView.getRectTemp(
+                                    selectBean.getRect()
+                                )
+                            } ?: continue
+                        if (isFirstRead) {
+                            if (result.maxTemperature > 200f || result.minTemperature < -200f) {
+                                errorReadCount++
+                                XLog.w("第 $errorReadCount 次读取到异常数据，max = ${result.maxTemperature} min = ${result.minTemperature}")
+                                if (errorReadCount > 10) {
+                                    XLog.i("连续10次获取到异常数据，认为温度区域稳定")
                                     isFirstRead = false
-                                    lifecycleScope.launch(Dispatchers.Main) {
-                                        binding.llTime.isVisible = true
-                                    }
+                                }
+                                continue
+                            } else {
+                                isFirstRead = false
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    binding.llTime.isVisible = true
                                 }
                             }
-                            if (result.maxTemperature >= -270f) {
-                                val maxBigDecimal = BigDecimal.valueOf(tempCorrectByTs(result.maxTemperature).toDouble())
-                                val minBigDecimal = BigDecimal.valueOf(tempCorrectByTs(result.minTemperature).toDouble())
-                                bean.centerTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
-                                bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
-                                bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
-                                bean.createTime = System.currentTimeMillis()
-                                canUpdate = true // 可以开始更新记录
-                            }
                         }
+                        if (result.maxTemperature >= -270f) {
+                            val maxBigDecimal =
+                                BigDecimal.valueOf(tempCorrectByTs(result.maxTemperature).toDouble())
+                            val minBigDecimal =
+                                BigDecimal.valueOf(tempCorrectByTs(result.minTemperature).toDouble())
+                            bean.centerTemp =
+                                maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
+                            bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
+                            bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
+                            bean.createTime = System.currentTimeMillis()
+                            canUpdate = true // 可以开始更新记录
+                        }
+                    }
                 }
             }
 
-        binding.monitorCurrentVol.text = getString(if (selectIndex!!.type == 1) R.string.chart_temperature else R.string.chart_temperature_high)
+        binding.monitorCurrentVol.text =
+            getString(if (selectIndex!!.type == 1) R.string.chart_temperature else R.string.chart_temperature_high)
         binding.monitorRealVol.visibility = if (selectIndex!!.type == 1) View.GONE else View.VISIBLE
         binding.monitorRealImg.visibility = if (selectIndex!!.type == 1) View.GONE else View.VISIBLE
         recordThermal() // 开始记录
@@ -151,7 +161,6 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
     private var canUpdate = false
 
     private var recordJob: Job? = null
-
 
     private fun recordThermal() {
         recordJob =
@@ -180,14 +189,18 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                         AppDatabase.getInstance().thermalDao().insert(entity)
                         time++
                         launch(Dispatchers.Main) {
-                            binding.mpChartView.addPointToChart(bean = entity, selectType = selectBean.type)
+                            binding.mpChartView.addPointToChart(
+                                bean = entity,
+                                selectType = selectBean.type
+                            )
                         }
                         delay(timeMillis)
                     } else {
                         delay(100)
                     }
                     lifecycleScope.launch(Dispatchers.Main) {
-                        binding.tvTime.text = TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
+                        binding.tvTime.text =
+                            TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
                     }
                 }
                 XLog.w("停止记录, 数据量:$time")
@@ -196,7 +209,8 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportFragmentManager.beginTransaction().add(R.id.thermal_fragment, irMonitorLiteFragment).commit()
+        supportFragmentManager.beginTransaction().add(R.id.thermal_fragment, irMonitorLiteFragment)
+            .commit()
     }
 
     override fun initData() {
@@ -212,7 +226,8 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                             when (it) {
                                 1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
                                 2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
-                                else -> EventBus.getDefault().post(ThermalActionEvent(action = 2003))
+                                else -> EventBus.getDefault()
+                                    .post(ThermalActionEvent(action = 2003))
                             }
                         }
                         .create().show()
@@ -221,20 +236,20 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                 lifecycleScope.launch {
                     if (irMonitorLiteFragment.frameReady) {
                         lifecycleScope.launch {
-                            if (selectIndex == null)
-                                {
-                                    return@launch
-                                }
+                            if (selectIndex == null) {
+                                return@launch
+                            }
                             irMonitorLiteFragment?.stopTask()
                             binding.thermalFragment.getViewTreeObserver().addOnGlobalLayoutListener(
                                 object :
                                     ViewTreeObserver.OnGlobalLayoutListener {
                                     override fun onGlobalLayout() {
-//移除监听器以避免重复调用
-                                        binding.thermalFragment.getViewTreeObserver().removeOnGlobalLayoutListener(this)
+
+                                        binding.thermalFragment.getViewTreeObserver()
+                                            .removeOnGlobalLayoutListener(this)
                                         irMonitorLiteFragment?.restTempView()
                                         irMonitorLiteFragment?.addTempLine(selectIndex!!)
-//进行需要的操作
+
                                     }
                                 },
                             )
@@ -273,31 +288,27 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
     override fun tempCorrectByTs(temp: Float?): Float {
         var tempNew = temp
         try {
-            if (config == null)
-                {
-                    config = ConfigRepository.readConfig(false)
-                }
+            if (config == null) {
+                config = ConfigRepository.readConfig(false)
+            }
             val defModel = DataBean()
             if (config!!.radiation == defModel.radiation &&
                 defModel.environment == config!!.environment &&
                 defModel.distance == config!!.distance
-            )
-                {
-                    return temp!!
-                }
+            ) {
+                return temp!!
+            }
 
-//getgain状态 PASS
-            if (System.currentTimeMillis() - basicGainGetTime > 5000L)
-                {
-                    try {
-                        val basicGainGet: IrcmdError? =
-                            DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
-                                ?.basicGainGet(basicGainGetValue)
-                    } catch (e: Exception) {
-                        XLog.e("增益获取失败")
-                    }
-                    basicGainGetTime = System.currentTimeMillis()
+            if (System.currentTimeMillis() - basicGainGetTime > 5000L) {
+                try {
+                    val basicGainGet: IrcmdError? =
+                        DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
+                            ?.basicGainGet(basicGainGetValue)
+                } catch (e: Exception) {
+                    XLog.e("增益获取失败")
                 }
+                basicGainGetTime = System.currentTimeMillis()
+            }
             val params_array =
                 floatArrayOf(
                     temp!!,
@@ -323,8 +334,8 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
             Log.i(
                 TAG,
                 "temp correct,${basicGainGetValue[0]} oldTemp = " + params_array[0] + "newtemp = " + tempNew +
-                    " ems = " + params_array[1] + " ta = " + params_array[2] + " " +
-                    "distance = " + params_array[4] + " hum = " + params_array[5],
+                        " ems = " + params_array[1] + " ta = " + params_array[2] + " " +
+                        "distance = " + params_array[4] + " hum = " + params_array[5],
             )
         } catch (e: Exception) {
             XLog.e("$TAG--温度修正异常：${e.message}")
@@ -335,10 +346,9 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
 
     override fun finish() {
         super.finish()
-        if (isRecord)
-            {
-                EventBus.getDefault().post(MonitorSaveEvent())
-            }
+        if (isRecord) {
+            EventBus.getDefault().post(MonitorSaveEvent())
+        }
     }
 
     override fun onDestroy() {

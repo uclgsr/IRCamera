@@ -14,30 +14,25 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 public class PreUtil {
-    private WeakReference<Context> mContext;
-    private SharedPreferences preferences;
+    private static String SHARE_NAME = "ad900_data";
+    private static PreUtil instance;
     private final String DATA_URL = "/data/data/";
     private final String SHARED_PREFS = "/shared_prefs";
-    private static String SHARE_NAME = "ad900_data";
-
-    private static PreUtil instance;
-
+    private WeakReference<Context> mContext;
+    private SharedPreferences preferences;
 
     private PreUtil(Context context) {
         this(context, SHARE_NAME);
     }
-
 
     private PreUtil(Context context, String shareName) {
         mContext = new WeakReference<>(context);
         preferences = context.getSharedPreferences(shareName, Context.MODE_PRIVATE);
     }
 
-
     public static PreUtil getInstance(Context context) {
         return getInstance(context, SHARE_NAME);
     }
-
 
     public static PreUtil getInstance(Context context,
                                       String shareName) {
@@ -116,7 +111,6 @@ public class PreUtil {
             edit.commit();
         }
     }
-
 
     @SuppressWarnings("rawtypes")
     public <T> void put(T t) {
@@ -232,7 +226,6 @@ public class PreUtil {
         }
         return null;
     }
-
 
     public <T> Object get(Class<T> cls) {
         Object obj = null;

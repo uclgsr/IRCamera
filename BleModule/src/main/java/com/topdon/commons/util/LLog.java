@@ -5,41 +5,33 @@ import android.util.Log;
 import com.elvishew.xlog.XLog;
 import com.topdon.ble.BuildConfig;
 
-
 public class LLog {
+    public final static int MAX_LENGTH = 2000;
     private static boolean isDebug = BuildConfig.DEBUG;
 
     public static void d(String tag, String value) {
         XLog.tag(tag).d(value);
-//        if (isDebug) {
-//            Log.d(tag, value);
-//        }
+
+
     }
 
     public static void i(String tag, String value) {
         XLog.tag(tag).i(value);
-//        if (isDebug) {
-//            Log.i(tag, value);
-//        }
+
+
     }
 
     public static void w(String tag, String value) {
         XLog.tag(tag).w(value);
-//        if (isDebug) {
-//            Log.w(tag, value);
-//        }
+
+
     }
 
     public static void e(String tag, String value) {
         XLog.tag(tag).e(value);
-//        if (isDebug) {
-//            Log.e(tag, value);
-//        }
+
+
     }
-
-
-    public final static int MAX_LENGTH = 2000;
-
 
     public static void LogMaxPrint(String tag, String msg) {
         if (msg.length() > MAX_LENGTH) {

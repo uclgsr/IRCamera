@@ -27,6 +27,7 @@ except ImportError:
 
     PYQT_AVAILABLE = False
 
+
     # Mock classes for when PyQt6 is not available
     class QMessageBox:
         StandardButton = type(
@@ -43,11 +44,11 @@ except ImportError:
         def warning(*args, **kwargs) -> Any:
             pass
 
+
     class QApplication:
         @staticmethod
         def quit() -> Any:
             pass
-
 
 from loguru import logger
 
@@ -765,7 +766,7 @@ class AdminPrivilegesManager(BaseManager):
             return None
 
     def _manage_windows_firewall_rule(
-        self, rule_name: str, action: str, **kwargs
+            self, rule_name: str, action: str, **kwargs
     ) -> bool:
         """Manage Windows Firewall rules."""
         try:

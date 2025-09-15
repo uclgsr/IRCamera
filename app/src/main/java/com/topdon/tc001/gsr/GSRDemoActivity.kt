@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-// Removed ARouter import - using NavigationManager instead
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrDemoBinding
 import com.topdon.gsr.model.GSRSample
@@ -16,7 +14,7 @@ import com.topdon.gsr.model.SyncMark
 import com.topdon.gsr.service.GSRRecorder
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.lib.core.ktbase.BaseBindingActivity
-
+import kotlinx.coroutines.launch
 
 class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
     companion object {
@@ -49,21 +47,21 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
                 runOnUiThread {
                     isRecording = false
                     updateButtonStates()
-                    binding.statusText.text = "Recording stopped. ${sessionInfo.sampleCount} samples recorded."
+                    binding.statusText.text =
+                        "Recording stopped. ${sessionInfo.sampleCount} samples recorded."
 
                     val sessionDir = gsrRecorder.getSessionDirectory()?.absolutePath
                     binding.dataText.text = "Session saved to:\n$sessionDir\n\n" +
-                        "Files created:\n" +
-                        "- signals.csv (GSR data)\n" +
-                        "- sync_marks.csv (sync events)\n" +
-                        "- session_metadata.json (metadata)"
+                            "Files created:\n" +
+                            "- signals.csv (GSR data)\n" +
+                            "- sync_marks.csv (sync events)\n" +
+                            "- session_metadata.json (metadata)"
                 }
             }
 
             override fun onSampleRecorded(sample: GSRSample) {
                 lastSample = sample
 
-                // Update display every 32 samples (4 times per second at 128Hz)
                 if (sample.sampleIndex % 32 == 0L) {
                     runOnUiThread {
                         binding.dataText.text =
@@ -76,9 +74,10 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
 
                                 val duration =
                                     (
-                                        System.currentTimeMillis() -
-                                            (gsrRecorder.getCurrentSession()?.startTime ?: System.currentTimeMillis())
-                                    ) / 1000
+                                            System.currentTimeMillis() -
+                                                    (gsrRecorder.getCurrentSession()?.startTime
+                                                        ?: System.currentTimeMillis())
+                                            ) / 1000
                                 append("Recording Duration: ${duration}s")
                             }
                     }
@@ -109,7 +108,7 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
     }
 
     private fun initView() {
-        // Setup click listeners
+
         binding.startButton.setOnClickListener { startRecording() }
         binding.stopButton.setOnClickListener { stopRecording() }
         binding.syncButton.setOnClickListener { triggerSyncEvent() }
@@ -123,12 +122,15 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
         val sessionId = TimeUtil.generateSessionId("GSRDemo")
 
         lifecycleScope.launch {
-            val success = gsrRecorder.startRecording(sessionId, "demo_participant", "GSR_Demo_Study")
+            val success =
+                gsrRecorder.startRecording(sessionId, "demo_participant", "GSR_Demo_Study")
 
             if (success) {
-                Toast.makeText(this@GSRDemoActivity, "GSR recording started", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@GSRDemoActivity, "GSR recording started", Toast.LENGTH_SHORT)
+                    .show()
             } else {
-                Toast.makeText(this@GSRDemoActivity, "Failed to start recording", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@GSRDemoActivity, "Failed to start recording", Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }
@@ -149,7 +151,7 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
             val success = gsrRecorder.addSyncMark("DEMO_SYNC_EVENT", metadataJson)
 
             if (success) {
-                // Success feedback is handled in the listener
+
                 Log.d(TAG, "Demo sync event triggered successfully")
             } else {
                 Log.w(TAG, "Failed to trigger demo sync event")

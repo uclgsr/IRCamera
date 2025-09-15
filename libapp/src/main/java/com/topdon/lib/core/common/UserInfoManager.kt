@@ -2,7 +2,9 @@ package com.topdon.lib.core.common
 
 import android.text.TextUtils
 
-
+/**
+ * create by fylder on 2018/6/14
+ **/
 
 class UserInfoManager {
     companion object {
@@ -21,17 +23,15 @@ class UserInfoManager {
         }
     }
 
-
     fun isLogin(): Boolean {
         val token = SharedManager.getToken()
         return if (TextUtils.equals("-1", token)) {
-            // 游客模式认为没有登录
+
             false
         } else {
             !TextUtils.isEmpty(token)
         }
     }
-
 
     fun login(
         token: String,
@@ -42,12 +42,13 @@ class UserInfoManager {
         headUrl: String?,
     ) {
         SharedManager.setUserId(userId)
-        SharedManager.setUsername(if (getMaskPhone(phone)?.isNotEmpty() == true) getMaskPhone(phone) ?: "" else email)
+        SharedManager.setUsername(
+            if (getMaskPhone(phone)?.isNotEmpty() == true) getMaskPhone(phone) ?: "" else email
+        )
         SharedManager.setNickname(nickname)
         SharedManager.setHeadIcon(headUrl ?: "12345")
         SharedManager.setToken(token)
     }
-
 
     fun logout() {
         SharedManager.setToken("")

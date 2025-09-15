@@ -5,7 +5,6 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.csl.irCamera.databinding.ActivityRawCaptureTestBinding
 
-
 class RAWCaptureTestActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRawCaptureTestBinding
 

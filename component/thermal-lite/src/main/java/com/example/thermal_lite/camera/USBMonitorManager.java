@@ -13,16 +13,14 @@ import java.util.Map;
 
 public class USBMonitorManager {
     public static final String TAG = "USBMonitorManager";
+    private static USBMonitorManager mInstance;
     private USBMonitor mUSBMonitor;
     private boolean mDeviceConnected = false;
-
     private HashMap<String, OnUSBConnectListener> mOnUSBConnectListeners = new HashMap<>();
 
     private USBMonitorManager() {
 
     }
-
-    private static USBMonitorManager mInstance;
 
     public static synchronized USBMonitorManager getInstance() {
         if (mInstance == null) {
@@ -44,69 +42,65 @@ public class USBMonitorManager {
             mUSBMonitor = new USBMonitor(Utils.getApp().getApplicationContext(),
                     new USBMonitor.OnDeviceConnectListener() {
 
-                // called by checking usb device
-                // do request device permission
-                @Override
-                public void onAttach(UsbDevice device) {
-                    Log.w(TAG, "onAttach" + device.getProductId());
-                    mUSBMonitor.requestPermission(device);
-                    for (Map.Entry<String, OnUSBConnectListener> entry: mOnUSBConnectListeners.entrySet()) {
-                        entry.getValue().onAttach(device);
-                    }
-                }
 
-                @Override
-                public void onGranted(UsbDevice usbDevice, boolean granted) {
-                    Log.d(TAG, "onGranted");
-                    for (Map.Entry<String, OnUSBConnectListener> entry: mOnUSBConnectListeners.entrySet()) {
-                        entry.getValue().onGranted(usbDevice, granted);
-                    }
-                }
-
-                // called by taking out usb device
-                // do close camera
-                @Override
-                public void onDetach(UsbDevice device) {
-                    Log.d(TAG, "onDetach");
-                    mDeviceConnected = false;
-                    for (Map.Entry<String, OnUSBConnectListener> entry: mOnUSBConnectListeners.entrySet()) {
-                        entry.getValue().onDetach(device);
-                    }
-                }
-
-                // called by connect to usb camera
-                // do open camera,start previewing
-                @Override
-                public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
-                    if (createNew) {
-                        mDeviceConnected = true;
-                        Log.w(TAG, "onConnect");
-                        for (Map.Entry<String, OnUSBConnectListener> entry: mOnUSBConnectListeners.entrySet()) {
-                            entry.getValue().onConnect(device, ctrlBlock, createNew);
+                        @Override
+                        public void onAttach(UsbDevice device) {
+                            Log.w(TAG, "onAttach" + device.getProductId());
+                            mUSBMonitor.requestPermission(device);
+                            for (Map.Entry<String, OnUSBConnectListener> entry : mOnUSBConnectListeners.entrySet()) {
+                                entry.getValue().onAttach(device);
+                            }
                         }
-                    }
-                }
 
-                // called by disconnect to usb camera
-                // do nothing
-                @Override
-                public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
-                    Log.w(TAG, "onDisconnect");
-                    mDeviceConnected = false;
-                    for (Map.Entry<String, OnUSBConnectListener> entry: mOnUSBConnectListeners.entrySet()) {
-                        entry.getValue().onDisconnect(device, ctrlBlock);
-                    }
-                }
+                        @Override
+                        public void onGranted(UsbDevice usbDevice, boolean granted) {
+                            Log.d(TAG, "onGranted");
+                            for (Map.Entry<String, OnUSBConnectListener> entry : mOnUSBConnectListeners.entrySet()) {
+                                entry.getValue().onGranted(usbDevice, granted);
+                            }
+                        }
 
-                @Override
-                public void onCancel(UsbDevice device) {
-                    Log.d(TAG, "onCancel");
-                    mDeviceConnected = false;
-                    for (Map.Entry<String, OnUSBConnectListener> entry: mOnUSBConnectListeners.entrySet()) {
-                        entry.getValue().onCancel(device);
-                    }
-                }
-            });
+
+                        @Override
+                        public void onDetach(UsbDevice device) {
+                            Log.d(TAG, "onDetach");
+                            mDeviceConnected = false;
+                            for (Map.Entry<String, OnUSBConnectListener> entry : mOnUSBConnectListeners.entrySet()) {
+                                entry.getValue().onDetach(device);
+                            }
+                        }
+
+
+                        @Override
+                        public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
+                            if (createNew) {
+                                mDeviceConnected = true;
+                                Log.w(TAG, "onConnect");
+                                for (Map.Entry<String, OnUSBConnectListener> entry : mOnUSBConnectListeners.entrySet()) {
+                                    entry.getValue().onConnect(device, ctrlBlock, createNew);
+                                }
+                            }
+                        }
+
+
+                        @Override
+                        public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
+                            Log.w(TAG, "onDisconnect");
+                            mDeviceConnected = false;
+                            for (Map.Entry<String, OnUSBConnectListener> entry : mOnUSBConnectListeners.entrySet()) {
+                                entry.getValue().onDisconnect(device, ctrlBlock);
+                            }
+                        }
+
+                        @Override
+                        public void onCancel(UsbDevice device) {
+                            Log.d(TAG, "onCancel");
+                            mDeviceConnected = false;
+                            for (Map.Entry<String, OnUSBConnectListener> entry : mOnUSBConnectListeners.entrySet()) {
+                                entry.getValue().onCancel(device);
+                            }
+                        }
+                    });
         }
 
     }

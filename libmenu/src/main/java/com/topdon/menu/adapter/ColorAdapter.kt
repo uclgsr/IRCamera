@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.topdon.menu.util.PseudoColorConfig
 import com.topdon.menu.view.ColorView
 
-
 @SuppressLint("NotifyDataSetChanged")
 internal class ColorAdapter : RecyclerView.Adapter<ColorAdapter.ViewHolder>() {
 
@@ -18,9 +17,7 @@ internal class ColorAdapter : RecyclerView.Adapter<ColorAdapter.ViewHolder>() {
             }
         }
 
-
     var onColorListener: ((index: Int, code: Int, size: Int) -> Unit)? = null
-
 
     private val colorCodeArray: IntArray = intArrayOf(1, 3, 4, 5, 6, 7, 8, 9, 10, 11)
 
@@ -28,7 +25,7 @@ internal class ColorAdapter : RecyclerView.Adapter<ColorAdapter.ViewHolder>() {
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        // 按照UI图，宽度与屏幕宽度比例为 62:375
+
         val width: Int = (parent.context.resources.displayMetrics.widthPixels * 62f / 375).toInt()
         val colorView = ColorView(parent.context)
         colorView.layoutParams = ViewGroup.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -42,7 +39,10 @@ internal class ColorAdapter : RecyclerView.Adapter<ColorAdapter.ViewHolder>() {
     ) {
         val code: Int = colorCodeArray[position]
         holder.colorView.isSelected = code == selectCode
-        holder.colorView.refreshColor(PseudoColorConfig.getColors(code), PseudoColorConfig.getPositions(code))
+        holder.colorView.refreshColor(
+            PseudoColorConfig.getColors(code),
+            PseudoColorConfig.getPositions(code)
+        )
         holder.colorView.setOnClickListener {
             if (selectCode != code) {
                 selectCode = code
@@ -53,7 +53,6 @@ internal class ColorAdapter : RecyclerView.Adapter<ColorAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int = colorCodeArray.size
-
 
 
     class ViewHolder(val colorView: ColorView) : RecyclerView.ViewHolder(colorView)

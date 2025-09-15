@@ -9,23 +9,17 @@ import com.topdon.lib.core.bean.ObserveBean
 import com.topdon.lib.core.config.DeviceConfig
 import com.topdon.lib.core.utils.CommUtils
 
-
 object SaveSettingUtil {
 
     private const val SP_NAME = "SaveSettingUtil"
 
-
     const val FusionTypeLPYFusion = 4
-
 
     const val FusionTypeMeanFusion = 2
 
-
     const val FusionTypeIROnly = 1 // 单独infrared
 
-
     const val FusionTypeVLOnly = 0 // 单独visible light
-
 
     const val FusionTypeTC007Fusion = 7 // tc007的picture-in-picture
 
@@ -33,9 +27,8 @@ object SaveSettingUtil {
     const val FusionTypeScreenFusion = 5
     const val FusionTypeIROnlyNoFusion = 6
 
-
     fun reset() {
-        // 热成像temperature measurementobservation模式共有
+
         isMeasureTempMode = true
         isVideoMode = false
         isAutoShutter = true
@@ -46,7 +39,6 @@ object SaveSettingUtil {
         pseudoColorMode = 3
         rotateAngle = DeviceConfig.S_ROTATE_ANGLE
 
-        // temperature measurement模式独有
         isOpenPseudoBar = true
         isOpenTwoLight = false
         twoLightAlpha = 50
@@ -55,7 +47,6 @@ object SaveSettingUtil {
         temperatureMode = CameraItemBean.TYPE_TMP_C
         alarmBean = AlarmBean()
 
-        // observation模式独有
         isOpenCompass = false
         isOpenHighPoint = false
         isOpenLowPoint = false
@@ -72,29 +63,27 @@ object SaveSettingUtil {
         isOpenAmplify = false
     }
 
-
     var isSaveSetting: Boolean
         get() = SPUtils.getInstance(SP_NAME).getBoolean("isSaveSetting", true)
         set(value) {
             SPUtils.getInstance(SP_NAME).put("isSaveSetting", value)
         }
 
-
     var isMeasureTempMode: Boolean
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getBoolean("isMeasureTempMode", true) else true
+        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
+            .getBoolean("isMeasureTempMode", true) else true
         set(value) {
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isMeasureTempMode", value)
             }
         }
 
-
     var isOpenAmplify: Boolean
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getBoolean("isOpenAmplify", false) else false
+        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
+            .getBoolean("isOpenAmplify", false) else false
         set(value) {
             SPUtils.getInstance(SP_NAME).put("isOpenAmplify", value)
         }
-
 
     var isVideoMode: Boolean
         get() =
@@ -110,7 +99,6 @@ object SaveSettingUtil {
             }
         }
 
-
     var isAutoShutter: Boolean
         get() =
             if (isSaveSetting) {
@@ -125,7 +113,6 @@ object SaveSettingUtil {
             }
         }
 
-
     var isRecordAudio: Boolean
         get() =
             if (isSaveSetting) {
@@ -139,7 +126,6 @@ object SaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("isRecordAudio", value)
             }
         }
-
 
     var delayCaptureSecond: Int
         get() =
@@ -156,20 +142,20 @@ object SaveSettingUtil {
         }
 
     var fusionType: Int
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("fusionType", FusionTypeLPYFusion) else FusionTypeLPYFusion
+        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
+            .getInt("fusionType", FusionTypeLPYFusion) else FusionTypeLPYFusion
         set(value) {
             SPUtils.getInstance(SP_NAME).put("fusionType", value)
         }
 
-
     var isOpenTwoLight: Boolean
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getBoolean("isOpenTwoLight", false) else false
+        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
+            .getBoolean("isOpenTwoLight", false) else false
         set(value) {
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isOpenTwoLight", value)
             }
         }
-
 
     var twoLightAlpha: Int
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("twoLightAlpha", 50) else 50
@@ -179,7 +165,6 @@ object SaveSettingUtil {
             }
         }
 
-
     var pseudoColorMode: Int
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("pseudoColorMode", 3) else 3
         set(value) {
@@ -187,7 +172,6 @@ object SaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("pseudoColorMode", value)
             }
         }
-
 
     var isOpenPseudoBar: Boolean
         get() =
@@ -203,7 +187,6 @@ object SaveSettingUtil {
             }
         }
 
-
     var contrastValue: Int
         get() =
             if (isSaveSetting) {
@@ -218,7 +201,6 @@ object SaveSettingUtil {
             }
         }
 
-
     var ddeConfig: Int
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("ddeConfig", 2) else 2
         set(value) {
@@ -227,12 +209,14 @@ object SaveSettingUtil {
             }
         }
 
-
     var alarmBean: AlarmBean
         get() =
             if (isSaveSetting) {
                 val json = SPUtils.getInstance(SP_NAME).getString("alarmBean", "")
-                if (json.isNullOrEmpty()) AlarmBean() else Gson().fromJson(json, AlarmBean::class.java)
+                if (json.isNullOrEmpty()) AlarmBean() else Gson().fromJson(
+                    json,
+                    AlarmBean::class.java
+                )
             } else {
                 AlarmBean()
             }
@@ -241,7 +225,6 @@ object SaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("alarmBean", Gson().toJson(value))
             }
         }
-
 
     var rotateAngle: Int
         get() =
@@ -257,7 +240,6 @@ object SaveSettingUtil {
             }
         }
 
-
     var isOpenMirror: Boolean
         get() =
             if (isSaveSetting) {
@@ -271,7 +253,6 @@ object SaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("isOpenMirror", value)
             }
         }
-
 
     var isOpenCompass: Boolean
         get() =
@@ -287,7 +268,6 @@ object SaveSettingUtil {
             }
         }
 
-
     var tempTextColor: Int
         get() =
             if (isSaveSetting) {
@@ -301,7 +281,6 @@ object SaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("tempTextColor", value)
             }
         }
-
 
     var tempTextSize: Int
         get() =
@@ -317,7 +296,6 @@ object SaveSettingUtil {
             }
         }
 
-
     var temperatureMode: Int
         get() =
             if (isSaveSetting) {
@@ -331,7 +309,6 @@ object SaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("temperatureMode", value)
             }
         }
-
 
     var isOpenHighPoint: Boolean
         get() =
@@ -347,7 +324,6 @@ object SaveSettingUtil {
             }
         }
 
-
     var isOpenLowPoint: Boolean
         get() =
             if (isSaveSetting) {
@@ -361,7 +337,6 @@ object SaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("isOpenLowPoint", value)
             }
         }
-
 
     var aiTraceType: Int
         get() =
@@ -377,7 +352,6 @@ object SaveSettingUtil {
             }
         }
 
-
     var isOpenTarget: Boolean
         get() =
             if (isSaveSetting) {
@@ -391,7 +365,6 @@ object SaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("isOpenTarget", value)
             }
         }
-
 
     var targetMeasureMode: Int
         get() =
@@ -409,7 +382,6 @@ object SaveSettingUtil {
             }
         }
 
-
     var targetType: Int
         get() =
             if (isSaveSetting) {
@@ -425,7 +397,6 @@ object SaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("targetType", value)
             }
         }
-
 
     var targetColorType: Int
         get() =
@@ -443,7 +414,6 @@ object SaveSettingUtil {
             }
         }
 
-
     var reportAuthorName: String
         get() =
             if (isSaveSetting) {
@@ -458,7 +428,6 @@ object SaveSettingUtil {
             }
         }
 
-
     var reportWatermarkText: String
         get() =
             if (isSaveSetting) {
@@ -472,7 +441,6 @@ object SaveSettingUtil {
                 SPUtils.getInstance(SP_NAME).put("reportWatermarkText", value)
             }
         }
-
 
     var reportHumidity: Int
         get() =

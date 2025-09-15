@@ -2,20 +2,15 @@ package com.github.mikephil.charting.formatter;
 
 import java.text.DecimalFormat;
 
-
-public class DefaultValueFormatter extends ValueFormatter
-{
-
+public class DefaultValueFormatter extends ValueFormatter {
 
     protected DecimalFormat mFormat;
 
     protected int mDecimalDigits;
 
-
     public DefaultValueFormatter(int digits) {
         setup(digits);
     }
-
 
     public void setup(int digits) {
 
@@ -34,12 +29,9 @@ public class DefaultValueFormatter extends ValueFormatter
     @Override
     public String getFormattedValue(float value) {
 
-        // put more logic here ...
-        // avoid memory allocations here (for performance reasons)
 
         return mFormat.format(value);
     }
-
 
     public int getDecimalDigits() {
         return mDecimalDigits;

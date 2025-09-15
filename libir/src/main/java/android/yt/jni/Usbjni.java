@@ -2,7 +2,6 @@ package android.yt.jni;
 
 import android.util.Log;
 
-
 public class Usbjni {
 
     static {

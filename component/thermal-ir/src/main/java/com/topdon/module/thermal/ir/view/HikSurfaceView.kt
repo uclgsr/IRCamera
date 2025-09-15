@@ -14,18 +14,21 @@ import com.infisense.usbir.utils.IRImageHelp
 import com.infisense.usbir.utils.OpencvTools
 import com.infisense.usbir.utils.PseudocodeUtils
 import com.topdon.lib.core.bean.AlarmBean
-// import com.topdon.pseudo.bean.CustomPseudoBean  // Temporarily disabled - pseudo component dependency
+
 import com.topdon.module.thermal.ir.bean.DataBean // Use local data bean instead
 import java.nio.ByteBuffer
 
+/**
 
+ *
+ * Created by LCG on 2024/11/30.
+ */
 
 class HikSurfaceView : SurfaceView {
     companion object {
 
         private const val MULTIPLE = 2
     }
-
 
     var isOpenAmplify: Boolean = false
         set(value) {
@@ -35,7 +38,6 @@ class HikSurfaceView : SurfaceView {
             val height = (if (isPortrait) 256 else 192) * (if (value) MULTIPLE else 1)
             bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         }
-
 
     @Volatile
     var rotateAngle: Int = 270
@@ -47,48 +49,40 @@ class HikSurfaceView : SurfaceView {
             bitmap.reconfigure(width, height, bitmap.config ?: Bitmap.Config.ARGB_8888)
         }
 
-
     var alarmBean = AlarmBean()
-
 
     var limitTempMin = Float.MIN_VALUE
 
-
     var limitTempMax = Float.MAX_VALUE
-
 
     private val irImageHelp = IRImageHelp()
 
-
     fun refreshCustomPseudo(it: DataBean) {
-        // Temporarily disabled - pseudo component dependency
-        // irImageHelp.setColorList(it.getColorList(), it.getPlaceList(), it.isUseGray, it.maxTemp, it.minTemp)
-    }
 
+
+    }
 
     @Volatile
     private var pseudoType: PseudoColorType = PseudoColorType.PSEUDO_3
 
+    /**
 
+     *
+
+     */
     fun setPseudoCode(code: Int) {
         pseudoType = PseudocodeUtils.changePseudocodeModeByOld(code)
     }
 
-
     private val imageRes = ImageRes_t()
-
 
     private var bitmap: Bitmap = Bitmap.createBitmap(192, 256, Bitmap.Config.ARGB_8888)
 
-
     private val sourceArgbArray = ByteArray(256 * 192 * 4)
-
 
     private val rotateArgbArray = ByteArray(256 * 192 * 4)
 
-
     private val amplifyArray = ByteArray(256 * MULTIPLE * 192 * MULTIPLE * 4)
-
 
     private val tempArray = ByteArray(256 * 192 * 2)
 
@@ -96,9 +90,19 @@ class HikSurfaceView : SurfaceView {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
@@ -108,43 +112,79 @@ class HikSurfaceView : SurfaceView {
         imageRes.height = 192.toChar()
     }
 
-
     fun getScaleBitmap(): Bitmap =
         synchronized(this) {
             Bitmap.createScaledBitmap(bitmap, width, height, true)
         }
 
-
     fun refresh(
         yuvArray: ByteArray,
         newTempArray: ByteArray,
     ) {
-//raw data的宽高，即不应用rotation的宽高
+
         val sourceWidth = 256
         val sourceHeight = 192
 
         System.arraycopy(newTempArray, 0, tempArray, 0, tempArray.size)
 
-//自定义rendering时使用白热pseudo-color，当置灰模式时范围外直接不用改
-        val pseudo: PseudoColorType = if (irImageHelp.getColorList() == null) pseudoType else PseudoColorType.PSEUDO_1
-        LibIRProcess.convertYuyvMapToARGBPseudocolor(yuvArray, (sourceWidth * sourceHeight).toLong(), pseudo, sourceArgbArray)
-//自定义rendering
+        val pseudo: PseudoColorType =
+            if (irImageHelp.getColorList() == null) pseudoType else PseudoColorType.PSEUDO_1
+        LibIRProcess.convertYuyvMapToARGBPseudocolor(
+            yuvArray,
+            (sourceWidth * sourceHeight).toLong(),
+            pseudo,
+            sourceArgbArray
+        )
+
         irImageHelp.customPseudoColor(sourceArgbArray, tempArray, sourceWidth, sourceHeight)
-//等温尺
-        irImageHelp.setPseudoColorMaxMin(sourceArgbArray, tempArray, limitTempMax, limitTempMin, sourceWidth, sourceHeight)
-//temperature报警outline或矩形
-        val newArray = irImageHelp.contourDetection(alarmBean, sourceArgbArray, tempArray, sourceWidth, sourceHeight) ?: sourceArgbArray
-//rotation
+
+        irImageHelp.setPseudoColorMaxMin(
+            sourceArgbArray,
+            tempArray,
+            limitTempMax,
+            limitTempMin,
+            sourceWidth,
+            sourceHeight
+        )
+
+        val newArray = irImageHelp.contourDetection(
+            alarmBean,
+            sourceArgbArray,
+            tempArray,
+            sourceWidth,
+            sourceHeight
+        ) ?: sourceArgbArray
+
         when (rotateAngle) {
-            90 -> LibIRProcess.rotateLeft90(newArray, imageRes, IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888, rotateArgbArray)
-            180 -> LibIRProcess.rotate180(newArray, imageRes, IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888, rotateArgbArray)
-            270 -> LibIRProcess.rotateRight90(newArray, imageRes, IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888, rotateArgbArray)
+            90 -> LibIRProcess.rotateLeft90(
+                newArray,
+                imageRes,
+                IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
+                rotateArgbArray
+            )
+
+            180 -> LibIRProcess.rotate180(
+                newArray,
+                imageRes,
+                IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
+                rotateArgbArray
+            )
+
+            270 -> LibIRProcess.rotateRight90(
+                newArray,
+                imageRes,
+                IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
+                rotateArgbArray
+            )
+
             else -> System.arraycopy(newArray, 0, rotateArgbArray, 0, rotateArgbArray.size)
         }
-//超分
+
         if (isOpenAmplify) {
-            val width: Int = if (rotateAngle == 90 || rotateAngle == 270) sourceWidth else sourceHeight
-            val height: Int = if (rotateAngle == 90 || rotateAngle == 270) sourceHeight else sourceWidth
+            val width: Int =
+                if (rotateAngle == 90 || rotateAngle == 270) sourceWidth else sourceHeight
+            val height: Int =
+                if (rotateAngle == 90 || rotateAngle == 270) sourceHeight else sourceWidth
             OpencvTools.supImage(rotateArgbArray, width, height, amplifyArray)
         }
 

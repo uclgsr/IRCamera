@@ -26,6 +26,7 @@ except ImportError as e:
     logger.warning(f"GUI libraries not available, running in headless mode: {e}")
     GUI_AVAILABLE = False
 
+
     # Mock classes for headless mode
     class QApplication:
         def __init__(self, *args):
@@ -43,6 +44,7 @@ except ImportError as e:
         def exec(self) -> Any:
             return 0
 
+
     class QTimer:
         def __init__(self):
             self.timeout_func = None
@@ -58,7 +60,6 @@ except ImportError as e:
 
         def stop(self) -> Any:
             pass
-
 
 from ..core import SessionManager, config
 from ..core.admin_privileges import AdminPrivilegesManager
@@ -124,7 +125,7 @@ class IRCameraApp:
         self._timer: Optional[QTimer] = None
 
         logger.info(
-            "IRCamera Application initialized" "with system integration features"
+            "IRCamera Application initialized with system integration features"
         )
         components = [
             "Session Manager",

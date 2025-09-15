@@ -8,8 +8,6 @@ import android.widget.FrameLayout
 import com.topdon.menu.databinding.ViewMenuEditBinding
 
 
-
-
 class MenuEditView : FrameLayout, View.OnClickListener {
 
     var isBarSelect: Boolean
@@ -19,9 +17,7 @@ class MenuEditView : FrameLayout, View.OnClickListener {
             binding.tvMenu4.isSelected = value
         }
 
-
     var onTabClickListener: ((selectPosition: Int) -> Unit)? = null
-
 
     var onBarClickListener: ((isBarSelect: Boolean) -> Unit)? = null
 
@@ -31,9 +27,19 @@ class MenuEditView : FrameLayout, View.OnClickListener {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
@@ -49,7 +55,6 @@ class MenuEditView : FrameLayout, View.OnClickListener {
             binding.clMenu4.setOnClickListener(this)
         }
     }
-
 
     private var selectPosition = -1
         set(value) {

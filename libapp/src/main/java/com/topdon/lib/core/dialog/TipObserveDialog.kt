@@ -6,11 +6,12 @@ import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.LayoutParams
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.TextView
 import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogTipObserveBinding
 import com.topdon.lib.core.utils.ScreenUtil
-
 
 class TipObserveDialog : Dialog {
     constructor(context: Context) : super(context)
@@ -83,10 +84,10 @@ class TipObserveDialog : Dialog {
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    // 竖屏
+
                     0.75
                 } else {
-                    // 横屏
+
                     0.35
                 }
             lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
@@ -102,11 +103,11 @@ class TipObserveDialog : Dialog {
                 dismiss()
                 closeEvent?.invoke(hasCheck)
             }
-            // title
+
             if (title != null) {
                 titleText.setText(title, TextView.BufferType.NORMAL)
             }
-            // msg
+
             if (message != null) {
                 messageText.visibility = View.VISIBLE
                 messageText.setText(message, TextView.BufferType.NORMAL)

@@ -11,18 +11,13 @@ import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public abstract class ChartData<T extends IDataSet<? extends Entry>> {
-
 
     protected float mYMax = -Float.MAX_VALUE;
 
-
     protected float mYMin = Float.MAX_VALUE;
 
-
     protected float mXMax = -Float.MAX_VALUE;
-
 
     protected float mXMin = Float.MAX_VALUE;
 
@@ -34,20 +29,21 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
     protected float mRightAxisMin = Float.MAX_VALUE;
 
-
     protected List<T> mDataSets;
-
 
     public ChartData() {
         mDataSets = new ArrayList<T>();
     }
-
 
     public ChartData(T... dataSets) {
         mDataSets = arrayToList(dataSets);
         notifyDataChanged();
     }
 
+    public ChartData(List<T> sets) {
+        this.mDataSets = sets;
+        notifyDataChanged();
+    }
 
     private List<T> arrayToList(T[] array) {
 
@@ -60,17 +56,9 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         return list;
     }
 
-
-    public ChartData(List<T> sets) {
-        this.mDataSets = sets;
-        notifyDataChanged();
-    }
-
-
     public void notifyDataChanged() {
         calcMinMax();
     }
-
 
     public void calcMinMaxY(float fromX, float toX) {
 
@@ -78,10 +66,8 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
             set.calcMinMaxY(fromX, toX);
         }
 
-        // apply the new data
         calcMinMax();
     }
-
 
     protected void calcMinMax() {
 
@@ -102,7 +88,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         mRightAxisMax = -Float.MAX_VALUE;
         mRightAxisMin = Float.MAX_VALUE;
 
-        // left axis
         T firstLeft = getFirstLeft(mDataSets);
 
         if (firstLeft != null) {
@@ -121,7 +106,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
             }
         }
 
-        // right axis
         T firstRight = getFirstRight(mDataSets);
 
         if (firstRight != null) {
@@ -141,8 +125,9 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         }
     }
 
-    //
-
+    /**
+     * ONLY GETTERS AND SETTERS BELOW THIS
+     */
 
     public int getDataSetCount() {
         if (mDataSets == null)
@@ -150,11 +135,9 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         return mDataSets.size();
     }
 
-
     public float getYMin() {
         return mYMin;
     }
-
 
     public float getYMin(AxisDependency axis) {
         if (axis == AxisDependency.LEFT) {
@@ -171,11 +154,9 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         }
     }
 
-
     public float getYMax() {
         return mYMax;
     }
-
 
     public float getYMax(AxisDependency axis) {
         if (axis == AxisDependency.LEFT) {
@@ -192,21 +173,17 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         }
     }
 
-
     public float getXMin() {
         return mXMin;
     }
-
 
     public float getXMax() {
         return mXMax;
     }
 
-
     public List<T> getDataSets() {
         return mDataSets;
     }
-
 
     protected int getDataSetIndexByLabel(List<T> dataSets, String label,
                                          boolean ignorecase) {
@@ -224,7 +201,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         return -1;
     }
 
-
     public String[] getDataSetLabels() {
 
         String[] types = new String[mDataSets.size()];
@@ -236,7 +212,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         return types;
     }
 
-
     public Entry getEntryForHighlight(Highlight highlight) {
         if (highlight.getDataSetIndex() >= mDataSets.size())
             return null;
@@ -244,7 +219,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
             return mDataSets.get(highlight.getDataSetIndex()).getEntryForXValue(highlight.getX(), highlight.getY());
         }
     }
-
 
     public T getDataSetByLabel(String label, boolean ignorecase) {
 
@@ -264,7 +238,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         return mDataSets.get(index);
     }
 
-
     public void addDataSet(T d) {
 
         if (d == null)
@@ -275,7 +248,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         mDataSets.add(d);
     }
 
-
     public boolean removeDataSet(T d) {
 
         if (d == null)
@@ -283,14 +255,12 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
         boolean removed = mDataSets.remove(d);
 
-        // if a DataSet was removed
         if (removed) {
             calcMinMax();
         }
 
         return removed;
     }
-
 
     public boolean removeDataSet(int index) {
 
@@ -301,13 +271,12 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         return removeDataSet(set);
     }
 
-
     public void addEntry(Entry e, int dataSetIndex) {
 
         if (mDataSets.size() > dataSetIndex && dataSetIndex >= 0) {
 
             IDataSet set = mDataSets.get(dataSetIndex);
-            // add the entry to the dataset
+
             if (!set.addEntry(e))
                 return;
 
@@ -317,7 +286,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
             Log.e("addEntry", "Cannot add Entry because dataSetIndex too high or too low.");
         }
     }
-
 
     protected void calcMinMax(Entry e, AxisDependency axis) {
 
@@ -345,7 +313,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         }
     }
 
-
     protected void calcMinMax(T d) {
 
         if (mYMax < d.getYMax())
@@ -372,17 +339,15 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         }
     }
 
-
     public boolean removeEntry(Entry e, int dataSetIndex) {
 
-        // entry null, outofbounds
         if (e == null || dataSetIndex >= mDataSets.size())
             return false;
 
         IDataSet set = mDataSets.get(dataSetIndex);
 
         if (set != null) {
-            // remove the entry from the dataset
+
             boolean removed = set.removeEntry(e);
 
             if (removed) {
@@ -393,7 +358,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         } else
             return false;
     }
-
 
     public boolean removeEntry(float xValue, int dataSetIndex) {
 
@@ -408,7 +372,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
         return removeEntry(e, dataSetIndex);
     }
-
 
     public T getDataSetForEntry(Entry e) {
 
@@ -427,7 +390,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
         return null;
     }
-
 
     public int[] getColors() {
 
@@ -456,11 +418,9 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         return colors;
     }
 
-
     public int getIndexOfDataSet(T dataSet) {
         return mDataSets.indexOf(dataSet);
     }
-
 
     protected T getFirstLeft(List<T> sets) {
         for (T dataSet : sets) {
@@ -470,7 +430,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         return null;
     }
 
-
     public T getFirstRight(List<T> sets) {
         for (T dataSet : sets) {
             if (dataSet.getAxisDependency() == AxisDependency.RIGHT)
@@ -478,7 +437,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         }
         return null;
     }
-
 
     public void setValueFormatter(ValueFormatter f) {
         if (f == null)
@@ -490,13 +448,11 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         }
     }
 
-
     public void setValueTextColor(int color) {
         for (IDataSet set : mDataSets) {
             set.setValueTextColor(color);
         }
     }
-
 
     public void setValueTextColors(List<Integer> colors) {
         for (IDataSet set : mDataSets) {
@@ -504,13 +460,11 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         }
     }
 
-
     public void setValueTypeface(Typeface tf) {
         for (IDataSet set : mDataSets) {
             set.setValueTypeface(tf);
         }
     }
-
 
     public void setValueTextSize(float size) {
         for (IDataSet set : mDataSets) {
@@ -518,20 +472,11 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         }
     }
 
-
     public void setDrawValues(boolean enabled) {
         for (IDataSet set : mDataSets) {
             set.setDrawValues(enabled);
         }
     }
-
-
-    public void setHighlightEnabled(boolean enabled) {
-        for (IDataSet set : mDataSets) {
-            set.setHighlightEnabled(enabled);
-        }
-    }
-
 
     public boolean isHighlightEnabled() {
         for (IDataSet set : mDataSets) {
@@ -541,6 +486,11 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         return true;
     }
 
+    public void setHighlightEnabled(boolean enabled) {
+        for (IDataSet set : mDataSets) {
+            set.setHighlightEnabled(enabled);
+        }
+    }
 
     public void clearValues() {
         if (mDataSets != null) {
@@ -548,7 +498,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         }
         notifyDataChanged();
     }
-
 
     public boolean contains(T dataSet) {
 
@@ -560,7 +509,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         return false;
     }
 
-
     public int getEntryCount() {
 
         int count = 0;
@@ -571,7 +519,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
         return count;
     }
-
 
     public T getMaxEntryCountSet() {
 

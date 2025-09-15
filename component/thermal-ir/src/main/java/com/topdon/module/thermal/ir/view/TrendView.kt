@@ -11,7 +11,11 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.databinding.ViewTrendBinding
 import kotlin.math.min
 
+/**
 
+ *
+ * Created by LCG on 2024/12/31.
+ */
 
 class TrendView : FrameLayout {
 
@@ -20,19 +24,20 @@ class TrendView : FrameLayout {
         binding.llClose.isVisible = false
     }
 
-
     fun close() {
         binding.clOpen.isVisible = false
         binding.llClose.isVisible = true
     }
 
+    /**
 
+
+     */
     fun refreshChart(tempList: List<Float>) {
         if (isVisible && binding.clOpen.isVisible) {
             binding.viewChartTrend.refresh(tempList)
         }
     }
-
 
     fun setToEmpty() {
         binding.viewChartTrend.setToEmpty()
@@ -44,9 +49,19 @@ class TrendView : FrameLayout {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(
         context,
         attrs,
         defStyleAttr,
@@ -83,7 +98,6 @@ class TrendView : FrameLayout {
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
 
-//宽度为 UNSPECIFIED 的情况目前不存在，不考虑
         val wantHeight: Int = SizeUtils.dp2px(34f) + (widthSize * 158 / 264f).toInt()
         val height =
             when (heightMode) {

@@ -6,7 +6,6 @@ import androidx.core.view.isVisible
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.module.user.databinding.ActivityUnitBinding
 
-
 class UnitActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUnitBinding
 

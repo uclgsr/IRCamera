@@ -6,19 +6,18 @@ data streams from multiple sensors according to the Hub-and-Spoke architecture.
 """
 
 import asyncio
+import h5py
 import json
+import numpy as np
+import pandas as pd
 import threading
 import time
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
+from loguru import logger
 from pathlib import Path
 from queue import Empty, Queue
 from typing import Any, Dict, List, Optional, Tuple, Union
-
-import h5py
-import numpy as np
-import pandas as pd
-from loguru import logger
 
 
 @dataclass
@@ -237,11 +236,11 @@ class DataAggregationEngine:
         return True
 
     def add_sync_event(
-        self,
-        event_type: str,
-        source_device: str,
-        timestamp_ns: Optional[int] = None,
-        metadata: Optional[Dict] = None,
+            self,
+            event_type: str,
+            source_device: str,
+            timestamp_ns: Optional[int] = None,
+            metadata: Optional[Dict] = None,
     ) -> None:
         """
         Add synchronization event.
@@ -275,7 +274,7 @@ class DataAggregationEngine:
         return self.stats
 
     def get_stream_data(
-        self, stream_id: str, last_n: int = 1000
+            self, stream_id: str, last_n: int = 1000
     ) -> List[Tuple[int, Any]]:
         """
         Get recent data from a stream.
@@ -483,8 +482,8 @@ class DataAggregationEngine:
         max_buffer_size = len(self.streams) * 100000  # Assuming max 100k per stream
         if max_buffer_size > 0:
             self.stats.buffer_usage_percent = (
-                total_buffer_size / max_buffer_size
-            ) * 100
+                                                      total_buffer_size / max_buffer_size
+                                              ) * 100
 
         # Dropped frames
         self.stats.dropped_frames_total = sum(
@@ -684,7 +683,7 @@ class DataAggregationEngine:
 
 
 def calculate_temporal_alignment(
-    sync_events: List[SyncEvent], tolerance_ms: float = 5.0
+        sync_events: List[SyncEvent], tolerance_ms: float = 5.0
 ) -> Dict[str, float]:
     """
     Calculate temporal alignment offsets for devices based on sync events.
@@ -731,7 +730,7 @@ def calculate_temporal_alignment(
 
 
 def validate_data_synchronization(
-    streams: Dict[str, DataStream], tolerance_ms: float = 5.0
+        streams: Dict[str, DataStream], tolerance_ms: float = 5.0
 ) -> Dict[str, Any]:
     """
     Validate synchronization quality across data streams.

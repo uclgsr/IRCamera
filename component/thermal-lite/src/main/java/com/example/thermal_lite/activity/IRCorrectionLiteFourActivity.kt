@@ -1,6 +1,7 @@
 package com.example.thermal_lite.activity
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
 import com.example.thermal_lite.R
@@ -15,8 +16,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
+/**
+ *
 
-// Legacy ARouter route annotation - now using NavigationManager
+ * @author: CaiSongL
+ * @date: 2023/8/4 9:06
+ */
+
 class IRCorrectionLiteFourActivity : BaseActivity() {
     private lateinit var binding: ActivityIrCorrectionLiteFourBinding
     val time = 60
@@ -26,6 +32,21 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Handle back press with modern approach
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                TipDialog.Builder(this@IRCorrectionLiteFourActivity)
+                    .setTitleMessage(getString(R.string.app_tip))
+                    .setMessage(R.string.tips_cancel_correction)
+                    .setPositiveListener(R.string.app_yes) {
+                        EventBus.getDefault().post(CorrectionFinishEvent())
+                        finish()
+                    }.setCancelListener(R.string.app_no) {
+                    }
+                    .create().show()
+            }
+        })
 
         binding.titleView.setLeftClickListener {
             TipDialog.Builder(this)
@@ -56,46 +77,42 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
         }
 
         binding.timeDownView.postDelayed({
-//开始矫正
-            if (binding.timeDownView.downTimeWatcher == null)
-                {
-                    binding.timeDownView.setOnTimeDownListener(
-                        object : TimeDownView.DownTimeWatcher {
-                            override fun onTime(num: Int) {
-                                if (num == 35)
-                                    {
-                                        lifecycleScope.launch(Dispatchers.IO) {
-                                            result = irFragment.autoStart()
-                                        }
-                                    }
-                            }
 
-                            override fun onLastTime(num: Int) {
-                            }
-
-                            override fun onLastTimeFinish(num: Int) {
-                                try {
-                                    if (!result)
-                                        {
-                                            ToastUtils.showShort("标定保存失败，请重新标定")
-                                            return
-                                        }
-                                    if (!this@IRCorrectionLiteFourActivity.isFinishing)
-                                        {
-                                            TipDialog.Builder(this@IRCorrectionLiteFourActivity)
-                                                .setMessage(R.string.correction_complete)
-                                                .setPositiveListener(R.string.app_confirm) {
-                                                    EventBus.getDefault().post(CorrectionFinishEvent())
-                                                    finish()
-                                                }
-                                                .create().show()
-                                        }
-                                } catch (e: Exception) {
+            if (binding.timeDownView.downTimeWatcher == null) {
+                binding.timeDownView.setOnTimeDownListener(
+                    object : TimeDownView.DownTimeWatcher {
+                        override fun onTime(num: Int) {
+                            if (num == 35) {
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    result = irFragment.autoStart()
                                 }
                             }
-                        },
-                    )
-                }
+                        }
+
+                        override fun onLastTime(num: Int) {
+                        }
+
+                        override fun onLastTimeFinish(num: Int) {
+                            try {
+                                if (!result) {
+                                    ToastUtils.showShort("标定保存失败，请重新标定")
+                                    return
+                                }
+                                if (!this@IRCorrectionLiteFourActivity.isFinishing) {
+                                    TipDialog.Builder(this@IRCorrectionLiteFourActivity)
+                                        .setMessage(R.string.correction_complete)
+                                        .setPositiveListener(R.string.app_confirm) {
+                                            EventBus.getDefault().post(CorrectionFinishEvent())
+                                            finish()
+                                        }
+                                        .create().show()
+                                }
+                            } catch (e: Exception) {
+                            }
+                        }
+                    },
+                )
+            }
             binding.timeDownView.downSecond(time, false)
         }, 2000)
     }
@@ -105,17 +122,6 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
         setContentView(binding.root)
     }
 
-    override fun onBackPressed() {
-        TipDialog.Builder(this)
-            .setTitleMessage(getString(R.string.app_tip))
-            .setMessage(R.string.tips_cancel_correction)
-            .setPositiveListener(R.string.app_yes) {
-                EventBus.getDefault().post(CorrectionFinishEvent())
-                super.onBackPressed()
-            }.setCancelListener(R.string.app_no) {
-            }
-            .create().show()
-    }
 
     override fun disConnected() {
         super.disConnected()

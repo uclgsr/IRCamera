@@ -14,7 +14,6 @@ import com.topdon.lib.ui.listener.SingleClickListener
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
-
 @Deprecated("看起来是旧版 2D 编辑的menu，根本没使用了")
 class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
@@ -46,16 +45,29 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
 
     private val fourBean =
         arrayListOf(
-            ColorBean(MenuR.drawable.selector_menu2_setting_1, context.getString(R.string.thermal_pseudo), 1),
-            ColorBean(MenuR.drawable.selector_menu2_setting_2, context.getString(R.string.thermal_contrast), 2),
-            ColorBean(MenuR.drawable.selector_menu2_setting_3, context.getString(R.string.thermal_sharpen), 3),
+            ColorBean(
+                MenuR.drawable.selector_menu2_setting_1,
+                context.getString(R.string.thermal_pseudo),
+                1
+            ),
+            ColorBean(
+                MenuR.drawable.selector_menu2_setting_2,
+                context.getString(R.string.thermal_contrast),
+                2
+            ),
+            ColorBean(
+                MenuR.drawable.selector_menu2_setting_3,
+                context.getString(R.string.thermal_sharpen),
+                3
+            ),
         )
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(UiR.layout.ui_item_menu_four_view, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(UiR.layout.ui_item_menu_four_view, parent, false)
         return ItemView(view)
     }
 
@@ -70,7 +82,7 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
             holder.lay.setOnClickListener(
                 object : SingleClickListener() {
                     override fun onSingleClick() {
-                        val adapterPosition = holder.adapterPosition
+                        val adapterPosition = holder.bindingAdapterPosition
                         if (adapterPosition != RecyclerView.NO_POSITION) {
                             listener?.invoke(adapterPosition, bean.code)
                             selected(bean.code)
@@ -82,12 +94,15 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
                 1 -> {
                     iconUI(colorEnable, holder.img, holder.name)
                 }
+
                 2 -> {
                     iconUI(contrastEnable, holder.img, holder.name)
                 }
+
                 3 -> {
                     iconUI(ddeEnable, holder.img, holder.name)
                 }
+
                 else -> {
                     iconUI(bean.code == selected, holder.img, holder.name)
                 }
@@ -95,7 +110,6 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    // state变化
     private fun iconUI(
         isActive: Boolean,
         img: ImageView,

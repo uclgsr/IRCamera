@@ -19,24 +19,20 @@ object PermissionTool {
         callback: () -> Unit,
     ) = request(context, Type.RECORD_AUDIO, callback)
 
-
     fun requestCamera(
         context: Context,
         callback: () -> Unit,
     ) = request(context, Type.CAMERA, callback)
-
 
     fun requestLocation(
         context: Context,
         callback: () -> Unit,
     ) = request(context, Type.LOCATION, callback)
 
-
     fun requestImageRead(
         context: Context,
         callback: () -> Unit,
     ) = request(context, Type.IMAGE, callback)
-
 
     fun requestFile(
         context: Context,
@@ -54,11 +50,16 @@ object PermissionTool {
             when (type) {
                 Type.RECORD_AUDIO -> listOf(Permission.RECORD_AUDIO)
                 Type.CAMERA -> listOf(Permission.CAMERA)
-                Type.LOCATION -> listOf(Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION)
+                Type.LOCATION -> listOf(
+                    Permission.ACCESS_COARSE_LOCATION,
+                    Permission.ACCESS_FINE_LOCATION
+                )
+
                 Type.IMAGE ->
                     listOf(
                         if (context.applicationInfo.targetSdkVersion < 33) Permission.READ_EXTERNAL_STORAGE else Permission.READ_MEDIA_IMAGES,
                     )
+
                 Type.FILE ->
                     if (context.applicationInfo.targetSdkVersion < 30) { // Android 10及以下
                         listOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
@@ -119,15 +120,18 @@ object PermissionTool {
             )
     }
 
-
     fun hasBtPermission(context: Context): Boolean {
         return if (Build.VERSION.SDK_INT < 31) { // 低于 Android12
             XXPermissions.isGranted(context, Permission.ACCESS_FINE_LOCATION)
         } else {
-            XXPermissions.isGranted(context, Permission.ACCESS_FINE_LOCATION, Permission.BLUETOOTH_SCAN, Permission.BLUETOOTH_CONNECT)
+            XXPermissions.isGranted(
+                context,
+                Permission.ACCESS_FINE_LOCATION,
+                Permission.BLUETOOTH_SCAN,
+                Permission.BLUETOOTH_CONNECT
+            )
         }
     }
-
 
     fun requestBluetooth(
         context: Context,
@@ -174,7 +178,7 @@ object PermissionTool {
                                     isLocationNever = true
                                 }
                             }
-                            // 如果是被永久拒绝就跳转到应用权限系统设置页面
+
                             TipDialog.Builder(context)
                                 .setTitleMessage(context.getString(R.string.app_tip))
                                 .setMessage(
@@ -200,7 +204,6 @@ object PermissionTool {
     interface Callback {
 
         fun onResult(allGranted: Boolean)
-
 
         fun onNever(isJump: Boolean)
     }
