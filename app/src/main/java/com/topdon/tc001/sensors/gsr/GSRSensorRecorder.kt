@@ -4,8 +4,13 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.content.ContextCompat
+import com.shimmerresearch.android.Shimmer
+import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
+import com.shimmerresearch.driver.ObjectCluster
+import com.shimmerresearch.driver.ShimmerDevice
+import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
 import com.topdon.ble.ShimmerBleController
-import com.topdon.ble.ShimmerDevice
+import com.topdon.ble.ShimmerDevice as CustomShimmerDevice
 import com.topdon.ble.UnifiedBleManager
 import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.service.ShimmerGSRRecorder

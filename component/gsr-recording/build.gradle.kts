@@ -76,6 +76,11 @@ dependencies {
     implementation("java3d:vecmath:1.3.1")
     implementation("org.apache.commons:commons-lang3:3.18.0")
     implementation("com.github.Jasonchenlijian:FastBle:2.4.0")
+    
+    // Shimmer GSR+ Sensor SDK - Official Shimmer Research Libraries
+    implementation(files("libs/ShimmerBiophysicalProcessingLibrary_Rev_0_11.jar"))
+    // AndroidBluetoothLibrary.jar is included in the main AAR - removing to prevent duplicates
+    implementation(files("libs/androidplot-core-0.5.0-release.jar"))
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")
