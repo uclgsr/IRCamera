@@ -11,7 +11,7 @@ class RoleBasedAccessControl(
     private val logger: StructuredLogger,
 ) {
     companion object {
-        private const val TAG = "RBAC"
+        const val TAG = "RBAC"
 
         const val PERM_VIEW_STATUS = "view_status"
         const val PERM_VIEW_SESSIONS = "view_sessions"

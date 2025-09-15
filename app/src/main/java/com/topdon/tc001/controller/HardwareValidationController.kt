@@ -223,7 +223,12 @@ class HardwareValidationController(
                 return
             }
 
-            val gsrRecorder = GSRSensorRecorder(context, "gsr_validation_1")
+            val gsrRecorder = GSRSensorRecorder(
+                context,
+                "gsr_validation_1",
+                128,
+                RecordingController(context, lifecycleOwner)
+            )
 
 
 

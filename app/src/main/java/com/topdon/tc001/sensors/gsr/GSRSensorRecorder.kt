@@ -12,17 +12,26 @@ import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
 import com.topdon.ble.ShimmerBleController
 import com.topdon.ble.ShimmerDevice as CustomShimmerDevice
 import com.topdon.ble.UnifiedBleManager
+import com.topdon.ble.util.BluetoothPermissionUtils
 import com.topdon.gsr.model.GSRSample
+import com.topdon.gsr.model.SessionInfo
+import com.topdon.gsr.model.SyncMark
 import com.topdon.gsr.service.ShimmerGSRRecorder
 import com.topdon.tc001.sensors.SensorRecorder
-import com.topdon.tc001.sensors.SensorStatus
-import com.topdon.tc001.sensors.SensorCapabilities
+import com.topdon.tc001.sensors.RecordingStatus
+import com.topdon.tc001.sensors.SensorError
+import com.topdon.tc001.sensors.ErrorType
+import com.topdon.tc001.sensors.RecordingStats
+import com.topdon.tc001.sensors.TimestampManager
+import com.topdon.tc001.controller.RecordingController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -36,6 +45,7 @@ class GSRSensorRecorder(
     private val context: Context,
     override val sensorId: String = "gsr_shimmer_1",
     private val samplingRateHz: Int = 128,
+    private val recordingController: RecordingController
 ) : SensorRecorder {
     companion object {
         private const val TAG = "GSRSensorRecorder"
@@ -427,7 +437,8 @@ class GSRSensorRecorder(
 
                     if (isNetworkStreamingEnabled) {
                         try {
-                            gsrNetworkStreamer = GSRNetworkStreamer(context, currentSessionId!!)
+                            gsrNetworkStreamer =
+                                GSRNetworkStreamer(context, currentSessionId!!, recordingController)
                             val networkInitialized = gsrNetworkStreamer?.initialize() ?: false
 
                             if (networkInitialized) {
@@ -712,14 +723,14 @@ class GSRSensorRecorder(
             val gsrSampleData =
                 GSRSampleData(
                     rawValue = sample.rawValue,
-                    microsiemens = sample.gsrValue,
-                    resistanceKohm = calculateResistanceFromGSR(sample.gsrValue),
-                    ppgRawValue = sample.ppgRawValue ?: 0,
-                    ppgFiltered = sample.ppgFiltered ?: 0.0,
-                    heartRateBpm = sample.heartRateBpm ?: 0,
-                    deviceId = sample.deviceId ?: sensorId,
-                    batteryLevel = sample.batteryLevel ?: 100,
-                    signalQuality = sample.signalQuality ?: 100,
+                    microsiemens = sample.conductance,
+                    resistanceKohm = sample.resistance,
+                    ppgRawValue = 0,
+                    ppgFiltered = 0.0,
+                    heartRateBpm = 0,
+                    deviceId = sensorId,
+                    batteryLevel = 100,
+                    signalQuality = 100,
                     samplingRateHz = samplingRateHz,
                     packetSequence = currentSequence,
                     participantId = "participant_$currentSessionId",
@@ -737,7 +748,7 @@ class GSRSensorRecorder(
             if (currentCount % 100 == 0L) {
                 Log.d(
                     TAG,
-                    "GSR sample processed: ${sample.gsrValue} µS, Resistance: ${gsrSampleData.resistanceKohm} kΩ ($currentCount total)",
+                    "GSR sample processed: ${sample.conductance} µS, Resistance: ${gsrSampleData.resistanceKohm} kΩ ($currentCount total)",
                 )
 
                 gsrDataPersistence?.getStatistics()?.let { stats ->
@@ -772,13 +783,29 @@ class GSRSensorRecorder(
     private fun setupGSRSampleCallback() {
         try {
 
-            realShimmerGSRRecorder?.setDataCallback { sample ->
-                onGSRSampleReceived(sample)
-            }
+            realShimmerGSRRecorder?.addListener(object : ShimmerGSRRecorder.GSRRecordingListener {
+                override fun onSampleRecorded(sample: GSRSample) {
+                    onGSRSampleReceived(sample)
+                }
 
-            legacyGSRRecorder?.setDataCallback { sample ->
-                onGSRSampleReceived(sample)
-            }
+                override fun onRecordingStarted(session: SessionInfo) {}
+                override fun onRecordingStopped(session: SessionInfo) {}
+                override fun onSyncMarkRecorded(syncMark: SyncMark) {}
+                override fun onError(error: String) {}
+                override fun onDeviceConnected() {}
+                override fun onDeviceDisconnected() {}
+            })
+
+            legacyGSRRecorder?.addListener(object : LegacyGSRRecorder.GSRRecordingListener {
+                override fun onSampleRecorded(sample: GSRSample) {
+                    onGSRSampleReceived(sample)
+                }
+
+                override fun onRecordingStarted(sessionInfo: SessionInfo) {}
+                override fun onRecordingStopped(sessionInfo: SessionInfo) {}
+                override fun onSyncMarkAdded(syncMark: SyncMark) {}
+                override fun onError(error: String) {}
+            })
 
             Log.i(TAG, "GSR sample callbacks configured for real-time streaming")
         } catch (e: Exception) {
@@ -932,11 +959,10 @@ class GSRSensorRecorder(
                 }
 
                 val unifiedBle = unifiedBleManager
-                if (unifiedBle != null && unifiedBle.isEnabled()) {
-
+                if (unifiedBle != null) {
                     val connectedDevices = unifiedBle.getConnectedShimmerDevices()
                     connectedDevices.map { device ->
-                        "${device.deviceName} (${device.deviceAddress})"
+                        "${device.getName()} (${device.getAddress()})"
                     }
                 } else {
                     Log.w(TAG, "Unified BLE manager not available for device discovery")

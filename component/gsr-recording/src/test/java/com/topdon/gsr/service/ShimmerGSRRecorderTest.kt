@@ -182,59 +182,71 @@ class ShimmerGSRRecorderTest {
     fun testRecordingModeConfiguration() {
         // Test Step 6: Recording mode support
         val streamingRecorder = ShimmerGSRRecorder(
-            context, 
-            samplingRateHz = 128, 
+            context,
+            samplingRateHz = 128,
             recordingMode = ShimmerGSRRecorder.RecordingMode.STREAMING
         )
-        
+
         val loggingRecorder = ShimmerGSRRecorder(
-            context, 
-            samplingRateHz = 128, 
+            context,
+            samplingRateHz = 128,
             recordingMode = ShimmerGSRRecorder.RecordingMode.LOGGING
         )
-        
+
         val logAndStreamRecorder = ShimmerGSRRecorder(
-            context, 
-            samplingRateHz = 128, 
+            context,
+            samplingRateHz = 128,
             recordingMode = ShimmerGSRRecorder.RecordingMode.LOG_AND_STREAM
         )
 
         // Verify mode configuration
-        assertEquals("Should be streaming mode", 
-            ShimmerGSRRecorder.RecordingMode.STREAMING, 
-            streamingRecorder.getRecordingMode())
-            
-        assertEquals("Should be logging mode", 
-            ShimmerGSRRecorder.RecordingMode.LOGGING, 
-            loggingRecorder.getRecordingMode())
-            
-        assertEquals("Should be log-and-stream mode", 
-            ShimmerGSRRecorder.RecordingMode.LOG_AND_STREAM, 
-            logAndStreamRecorder.getRecordingMode())
+        assertEquals(
+            "Should be streaming mode",
+            ShimmerGSRRecorder.RecordingMode.STREAMING,
+            streamingRecorder.getRecordingMode()
+        )
+
+        assertEquals(
+            "Should be logging mode",
+            ShimmerGSRRecorder.RecordingMode.LOGGING,
+            loggingRecorder.getRecordingMode()
+        )
+
+        assertEquals(
+            "Should be log-and-stream mode",
+            ShimmerGSRRecorder.RecordingMode.LOG_AND_STREAM,
+            logAndStreamRecorder.getRecordingMode()
+        )
     }
 
     @Test
     fun testGSRDataProcessingAccuracy() {
         // Test Step 7: 12-bit ADC processing accuracy
         val apisBridge = ShimmerAPIBridge.getInstance()
-        
+
         // Test with various raw ADC values within 12-bit range (0-4095)
         val testValues = arrayOf(0.0, 1024.0, 2048.0, 3072.0, 4095.0)
-        
+
         for (rawValue in testValues) {
             val sample = apisBridge.processGSRData(
                 rawValue = rawValue,
                 timestamp = System.currentTimeMillis(),
                 sessionId = "test_session"
             )
-            
+
             // Verify values are within expected ranges
-            assertTrue("Raw value should be preserved: $rawValue", 
-                sample.rawValue.toDouble() == rawValue)
-            assertTrue("Conductance should be positive", 
-                sample.conductance >= 0.0)
-            assertTrue("Resistance should be positive", 
-                sample.resistance >= 0.0)
+            assertTrue(
+                "Raw value should be preserved: $rawValue",
+                sample.rawValue.toDouble() == rawValue
+            )
+            assertTrue(
+                "Conductance should be positive",
+                sample.conductance >= 0.0
+            )
+            assertTrue(
+                "Resistance should be positive",
+                sample.resistance >= 0.0
+            )
         }
     }
 }

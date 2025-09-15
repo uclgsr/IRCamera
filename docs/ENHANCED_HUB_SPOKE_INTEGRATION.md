@@ -1,10 +1,12 @@
 # Enhanced Hub-Spoke Architecture Implementation
 
-This document describes the enhanced PC Controller (Hub) integration and NTP-like time synchronization protocol implemented for the Multi-Modal Physiological Sensing Platform.
+This document describes the enhanced PC Controller (Hub) integration and NTP-like time
+synchronization protocol implemented for the Multi-Modal Physiological Sensing Platform.
 
 ## Overview
 
 The system implements a complete Hub-and-Spoke architecture where:
+
 - **Hub (PC Controller)**: Central coordinator managing sessions, time sync, and data aggregation
 - **Spokes (Android Devices)**: Sensor nodes handling hardware interface and local recording
 
@@ -15,6 +17,7 @@ The system implements a complete Hub-and-Spoke architecture where:
 **Location**: `pc-controller/src/ircamera_pc/sync/enhanced_timesync.py`
 
 **Features**:
+
 - **NTP-like Protocol**: Full 4-timestamp synchronization (t1, t2, t3, t4)
 - **Clock Offset Calculation**: Precise offset measurement using NTP algorithm
 - **Quality Assessment**: Real-time sync quality monitoring (EXCELLENT, GOOD, FAIR, POOR)
@@ -22,6 +25,7 @@ The system implements a complete Hub-and-Spoke architecture where:
 - **Target Accuracy**: <5ms synchronization tolerance as required
 
 **Protocol Flow**:
+
 ```
 Android (t1) ---> PC Controller (t2)
              <--- Response (t3) <--- PC Controller  
@@ -37,6 +41,7 @@ Network Delay = RTT / 2
 **Location**: `pc-controller/src/ircamera_pc/core/hub_coordinator.py`
 
 **Features**:
+
 - **Session Management**: Start/stop coordinated recording sessions
 - **Device Orchestration**: Manage multiple Android devices simultaneously
 - **Sync Markers**: Create temporal alignment markers across all devices
@@ -44,6 +49,7 @@ Network Delay = RTT / 2
 - **Flash Synchronization**: Visual sync signals for temporal verification
 
 **Key Methods**:
+
 - `start_recording_session()`: Begin synchronized recording across devices
 - `stop_recording_session()`: End session with proper cleanup
 - `create_sync_marker()`: Create temporal alignment points
@@ -55,8 +61,9 @@ Network Delay = RTT / 2
 **Location**: `pc-controller/src/ircamera_pc/network/server.py`
 
 **Enhancements**:
+
 - Integrated enhanced time sync service into network server
-- Removed duplicate/outdated time sync handlers  
+- Removed duplicate/outdated time sync handlers
 - Added proper NTP-like protocol support
 - Enhanced device synchronization monitoring
 
@@ -65,6 +72,7 @@ Network Delay = RTT / 2
 **Location**: `app/src/main/java/com/topdon/tc001/utils/TimeManager.kt`
 
 **Updates**:
+
 - Enhanced protocol compatibility with PC Controller
 - Support for new message format with `server_receive_time`/`server_send_time`
 - Backward compatibility with legacy protocol
@@ -132,6 +140,7 @@ python -m ircamera_pc.examples.hub_spoke_demo
 ```
 
 The demo will:
+
 1. Start the Hub Coordinator
 2. Wait for Android device connections
 3. Monitor device synchronization quality
@@ -146,10 +155,10 @@ The system meets the FR3 requirements:
 
 - **Target Accuracy**: ≤5ms median offset
 - **Quality Levels**:
-  - EXCELLENT: ≤2ms offset
-  - GOOD: ≤5ms offset  
-  - FAIR: ≤10ms offset
-  - POOR: >10ms offset
+    - EXCELLENT: ≤2ms offset
+    - GOOD: ≤5ms offset
+    - FAIR: ≤10ms offset
+    - POOR: >10ms offset
 
 - **Monitoring**: Continuous sync quality assessment
 - **Statistics**: Median, P95, stability tracking
@@ -158,18 +167,21 @@ The system meets the FR3 requirements:
 ## Architecture Benefits
 
 ### Hub-and-Spoke Design
+
 - **Centralized Control**: Single point of session coordination
-- **Scalability**: Support multiple Android devices simultaneously  
+- **Scalability**: Support multiple Android devices simultaneously
 - **Synchronization**: Precise temporal alignment across all nodes
 - **Monitoring**: Real-time quality assessment and alerting
 
 ### NTP-like Time Protocol
+
 - **High Precision**: 4-timestamp algorithm for accurate sync
 - **Network Compensation**: Accounts for variable network delays
 - **Quality Assessment**: Continuous monitoring of sync accuracy
 - **Robustness**: Handles network jitter and clock drift
 
 ### Session Management
+
 - **Coordinated Recording**: Synchronized start/stop across devices
 - **Temporal Markers**: Precise event alignment for analysis
 - **Quality Assurance**: Ensures sync requirements before recording
@@ -178,18 +190,21 @@ The system meets the FR3 requirements:
 ## Testing and Validation
 
 ### Sync Accuracy Verification
+
 1. Use flash sync commands to generate visual markers
 2. Analyze recorded video timestamps across devices
 3. Verify alignment within 5ms tolerance
 4. Check P95 percentile compliance
 
 ### Session Coordination Testing
+
 1. Start multi-device recording sessions
 2. Create sync markers at known intervals
 3. Verify marker timestamps in recorded data
 4. Test device disconnect/reconnect scenarios
 
 ### Quality Monitoring
+
 1. Monitor sync quality during long sessions
 2. Test network instability scenarios
 3. Verify automatic quality degradation alerts
@@ -198,10 +213,12 @@ The system meets the FR3 requirements:
 ## Future Enhancements
 
 The architecture supports easy extension for:
+
 - LSL (Lab Streaming Layer) integration for real-time streaming
 - AES256-GCM encryption via Android Keystore
 - Native C++ backend optimization with PyBind11
 - Enhanced data export and analysis pipelines
 - Advanced quality metrics and alerting
 
-This implementation provides a solid foundation for research-grade physiological data collection with precise temporal synchronization across multiple sensor modalities.
+This implementation provides a solid foundation for research-grade physiological data collection
+with precise temporal synchronization across multiple sensor modalities.

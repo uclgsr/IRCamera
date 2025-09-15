@@ -243,7 +243,7 @@ public class ShimmerBleController {
             Log.e(TAG, "Error during Shimmer controller cleanup", e);
         }
     }
-  
+
     private boolean isShimmerDevice(String deviceName) {
         if (deviceName == null) return false;
 
@@ -252,7 +252,7 @@ public class ShimmerBleController {
                 return true;
             }
         }
-        
+
         return false;
     }
 

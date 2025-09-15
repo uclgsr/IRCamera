@@ -329,7 +329,7 @@ abstract class AbstractScanner implements Scanner {
             }
         }
         return false;
-    }    private final Runnable stopScanRunnable = () -> stopScan(false);
+    }
 
     @Override
     public void onBluetoothOff() {
@@ -337,7 +337,7 @@ abstract class AbstractScanner implements Scanner {
             isScanning = false;
         }
         handleScanCallback(false, null, false, -1, "");
-    }
+    }    private final Runnable stopScanRunnable = () -> stopScan(false);
 
     @Override
     public void release() {
@@ -350,6 +350,8 @@ abstract class AbstractScanner implements Scanner {
     protected abstract void performStartScan();
 
     protected abstract void performStopScan();
+
+
 
 
 }

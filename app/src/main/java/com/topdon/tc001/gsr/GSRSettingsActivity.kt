@@ -47,7 +47,12 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
 
         setupPermissionHandling()
 
-        gsrSensorRecorder = GSRSensorRecorder(this)
+        gsrSensorRecorder = GSRSensorRecorder(
+            this,
+            "gsr_settings_1",
+            128,
+            com.topdon.tc001.controller.RecordingController(this, this)
+        )
 
         setupUI()
         loadCurrentSettings()
@@ -641,7 +646,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         // Handle via OnBackPressedCallback instead
-        onBackPressedDispatcher.onBackPressed()
+        super.onBackPressed()
     }
 
     override fun onDestroy() {

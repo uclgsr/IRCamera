@@ -207,8 +207,9 @@ class TimeManager(
 
                     // Send request to PC Controller with length prefix as expected by server
                     val requestBytes = requestJson.toByteArray(Charsets.UTF_8)
-                    val lengthBytes = java.nio.ByteBuffer.allocate(4).putInt(requestBytes.size).array()
-                    
+                    val lengthBytes =
+                        java.nio.ByteBuffer.allocate(4).putInt(requestBytes.size).array()
+
                     outputStream.write(lengthBytes)
                     outputStream.write(requestBytes)
                     outputStream.flush()
@@ -217,9 +218,9 @@ class TimeManager(
                     // First read 4-byte length header
                     val lengthBuffer = ByteArray(4)
                     inputStream.read(lengthBuffer, 0, 4)
-                    
+
                     val responseLength = java.nio.ByteBuffer.wrap(lengthBuffer).getInt()
-                    
+
                     // Then read the actual response data
                     val responseBuffer = ByteArray(responseLength)
                     inputStream.read(responseBuffer, 0, responseLength)
@@ -244,7 +245,7 @@ class TimeManager(
         return try {
             // Parse enhanced JSON response from PC Controller
             // Expected format: {"message_type": "time_sync_response", "server_receive_time": ..., "server_send_time": ...}
-            
+
             // Use proper JSON parsing for robustness
             var serverReceiveTime: Long? = null
             var serverSendTime: Long? = null
@@ -263,7 +264,7 @@ class TimeManager(
             } catch (e: org.json.JSONException) {
                 Log.w(TAG, "Could not parse as JSON, will attempt legacy parsing: $e")
             }
-            
+
             // Fallback to legacy protocol for compatibility
             val lines = responseJson.split(",")
             var pcReceiveTime: Long? = null

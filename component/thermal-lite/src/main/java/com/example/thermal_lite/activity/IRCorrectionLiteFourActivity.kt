@@ -1,6 +1,7 @@
 package com.example.thermal_lite.activity
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
 import com.example.thermal_lite.R
@@ -31,6 +32,21 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Handle back press with modern approach
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                TipDialog.Builder(this@IRCorrectionLiteFourActivity)
+                    .setTitleMessage(getString(R.string.app_tip))
+                    .setMessage(R.string.tips_cancel_correction)
+                    .setPositiveListener(R.string.app_yes) {
+                        EventBus.getDefault().post(CorrectionFinishEvent())
+                        finish()
+                    }.setCancelListener(R.string.app_no) {
+                    }
+                    .create().show()
+            }
+        })
 
         binding.titleView.setLeftClickListener {
             TipDialog.Builder(this)
@@ -106,17 +122,6 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
         setContentView(binding.root)
     }
 
-    override fun onBackPressed() {
-        TipDialog.Builder(this)
-            .setTitleMessage(getString(R.string.app_tip))
-            .setMessage(R.string.tips_cancel_correction)
-            .setPositiveListener(R.string.app_yes) {
-                EventBus.getDefault().post(CorrectionFinishEvent())
-                super.onBackPressed()
-            }.setCancelListener(R.string.app_no) {
-            }
-            .create().show()
-    }
 
     override fun disConnected() {
         super.disConnected()

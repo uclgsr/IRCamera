@@ -514,7 +514,7 @@ class NetworkClient(private val context: Context) {
                         put("data", data)
                     }
 
-                sendMessage(message)
+                sendMessageInternal(message)
                 true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to send measurement data", e)
@@ -544,7 +544,7 @@ class NetworkClient(private val context: Context) {
                         ) // Using system time for status reports
                     }
 
-                sendMessage(message)
+                sendMessageInternal(message)
                 true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to report status", e)
@@ -578,7 +578,7 @@ class NetworkClient(private val context: Context) {
                         put("timestamp", getSynchronizedTimestamp())
                     }
 
-                sendMessage(registrationMessage)
+                sendMessageInternal(registrationMessage)
 
                 val response = receiveMessage(5000)
                 response?.optString("message_type") == "ack" &&
@@ -614,7 +614,7 @@ class NetworkClient(private val context: Context) {
                         ) // Using system time for non-secure registration
                     }
 
-                sendMessage(registrationMessage)
+                sendMessageInternal(registrationMessage)
 
                 val response = receiveMessage(5000)
                 response?.optString("message_type") == "ack" &&
@@ -653,7 +653,7 @@ class NetworkClient(private val context: Context) {
                             put("timestamp", getSynchronizedTimestamp())
                         }
 
-                    sendMessage(heartbeatMessage)
+                    sendMessageInternal(heartbeatMessage)
                     delay(HEARTBEAT_INTERVAL)
                 } catch (e: Exception) {
                     if (isConnected) {
@@ -721,7 +721,7 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    private suspend fun sendMessage(message: JSONObject) =
+    private suspend fun sendMessageInternal(message: JSONObject) =
         withContext(Dispatchers.IO) {
             val output = outputStream ?: throw IOException("Not connected")
 
@@ -779,7 +779,7 @@ class NetworkClient(private val context: Context) {
                     return@withContext false
                 }
 
-                sendMessage(message)
+                sendMessageInternal(message)
                 Log.d(
                     TAG,
                     "Message sent successfully: ${message.optString("message_type", "unknown")}"
@@ -804,7 +804,7 @@ class NetworkClient(private val context: Context) {
                         put("timestamp", getSynchronizedTimestamp())
                     }
 
-                sendMessage(message)
+                sendMessageInternal(message)
                 eventListener?.onDataStreamingStarted()
                 Log.i(TAG, "Data streaming started")
                 true
@@ -826,7 +826,7 @@ class NetworkClient(private val context: Context) {
                         put("timestamp", getSynchronizedTimestamp())
                     }
 
-                sendMessage(message)
+                sendMessageInternal(message)
                 eventListener?.onDataStreamingStopped()
                 Log.i(TAG, "Data streaming stopped")
                 true

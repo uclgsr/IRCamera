@@ -20,7 +20,6 @@ import com.example.thermal_lite.fragment.IRMonitorLiteFragment
 import com.example.thermal_lite.util.CommonUtil
 import com.infisense.usbir.view.ITsTempListener
 import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.bean.event.device.DeviceCameraEvent
 import com.topdon.lib.core.bean.tools.ThermalBean
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.db.AppDatabase
@@ -58,7 +57,12 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        selectBean = intent.getParcelableExtra("select")!!
+        selectBean = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("select", SelectPositionBean::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra("select")!!
+        }
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 if (BaseApplication.instance.tau_data_H == null) {
@@ -242,20 +246,6 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
             }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun cameraEvent(event: DeviceCameraEvent) {
-        when (event.action) {
-            100 -> {
-
-                showCameraLoading()
-            }
-
-            101 -> {
-
-                dismissCameraLoading()
-            }
-        }
-    }
 
     var config: DataBean? = null
     val basicGainGetValue = IntArray(1)

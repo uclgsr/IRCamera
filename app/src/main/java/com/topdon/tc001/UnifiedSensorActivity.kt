@@ -24,6 +24,8 @@ import com.topdon.tc001.sensors.unified.model.DeviceInfo
 import com.topdon.tc001.sensors.unified.model.GSRSample
 import com.topdon.tc001.sensors.unified.model.PCControllerInfo
 import com.topdon.tc001.sensors.unified.model.SessionConfig
+import com.topdon.tc001.sensors.unified.model.SessionStatus
+import com.topdon.tc001.sensors.unified.model.SessionQuality
 import com.topdon.tc001.sensors.unified.model.SessionType
 import kotlinx.coroutines.launch
 

@@ -26,6 +26,7 @@ public class DefVerticalRangeSeekBar extends RangeSeekBar {
     private int orientation = DIRECTION_LEFT;
     private int tickMarkDirection = TEXT_DIRECTION_VERTICAL;
     private int maxTickMarkWidth;
+
     public DefVerticalRangeSeekBar(Context context) {
         this(context, null);
     }

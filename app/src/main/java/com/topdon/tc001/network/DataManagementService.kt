@@ -133,9 +133,11 @@ class DataManagementService(private val context: Context) {
         isInitialized.set(true)
 
         // Log service initialization 
-        logger.info(
+        logger.log(
+            StructuredLogger.LogLevel.INFO,
+            TAG,
             "service_initialized",
-            mapOf(
+            details = mapOf(
                 "base_directory" to baseDirectory.absolutePath,
                 "existing_sessions" to activeSessions.size,
                 "registered_files" to fileRegistry.size,
@@ -174,9 +176,11 @@ class DataManagementService(private val context: Context) {
         saveSessionMetadata(session)
         activeSessions[sessionId] = session
 
-        logger.info(
+        logger.log(
+            StructuredLogger.LogLevel.INFO,
+            TAG,
             "session_created",
-            mapOf(
+            details = mapOf(
                 "session_id" to sessionId,
                 "device_id" to deviceId,
                 "participant_id" to (participantId ?: "anonymous"),
@@ -221,7 +225,7 @@ class DataManagementService(private val context: Context) {
             val file = File(filePath)
             if (!file.exists()) {
                 logger.log(
-                    StructuredLogger.LogLevel.WARN,
+                    StructuredLogger.LogLevel.WARNING,
                     TAG,
                     "file_registration_error",
                     details = mapOf(
@@ -295,13 +299,14 @@ class DataManagementService(private val context: Context) {
             }
             try {
                 // Map file extension to FileUploadService.FileType
-                val uploadFileType = when (fileMetadata.fileName.substringAfterLast(".", "").lowercase()) {
-                    "mp4" -> FileUploadService.FileType.VISUAL_VIDEO
-                    "csv" -> FileUploadService.FileType.GSR_DATA
-                    "json" -> FileUploadService.FileType.METADATA
-                    "wav" -> FileUploadService.FileType.AUDIO
-                    else -> FileUploadService.FileType.METADATA
-                }
+                val uploadFileType =
+                    when (fileMetadata.fileName.substringAfterLast(".", "").lowercase()) {
+                        "mp4" -> FileUploadService.FileType.VISUAL_VIDEO
+                        "csv" -> FileUploadService.FileType.GSR_DATA
+                        "json" -> FileUploadService.FileType.METADATA
+                        "wav" -> FileUploadService.FileType.AUDIO
+                        else -> FileUploadService.FileType.METADATA
+                    }
                 val jobId =
                     uploadService.queueUpload(
                         filePath = fileMetadata.filePath,
@@ -709,7 +714,12 @@ class DataManagementService(private val context: Context) {
                                 put("mime_type", file.mimeType)
 
                                 val metadataJson = JSONObject()
-                                file.metadata.forEach { (key, value) -> metadataJson.put(key, value) }
+                                file.metadata.forEach { (key, value) ->
+                                    metadataJson.put(
+                                        key,
+                                        value
+                                    )
+                                }
                                 put("metadata", metadataJson)
                             }
                         filesJson.put(fileJson)

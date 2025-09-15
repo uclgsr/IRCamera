@@ -8,6 +8,8 @@ import android.util.Log
 import com.topdon.tc001.config.FeatureFlags
 import com.topdon.tc001.config.ProtocolVersion
 import com.topdon.tc001.logging.StructuredLogger
+import com.topdon.tc001.network.DataManagementService
+import com.topdon.tc001.network.FileUploadService
 import com.topdon.tc001.security.AdvancedAuthenticationManager
 import com.topdon.tc001.sync.EnhancedTimeSyncService
 import com.topdon.tc001.sync.SessionManager
@@ -288,7 +290,7 @@ class WebSocketClient(private val context: Context) {
                     logger.log(
                         StructuredLogger.LogLevel.ERROR, "WebSocketClient", "discovery_error",
                         mapOf(
-                            "error" to e.message,
+                            "error" to e.message.orEmpty(),
                         ),
                     )
                 }
@@ -492,7 +494,7 @@ class WebSocketClient(private val context: Context) {
                 "WebSocketClient",
                 "handshake_error",
                 mapOf(
-                    "error" to e.message,
+                    "error" to e.message.orEmpty(),
                 ),
             )
         }
@@ -527,7 +529,7 @@ class WebSocketClient(private val context: Context) {
                 "WebSocketClient",
                 "auth_error",
                 mapOf(
-                    "error" to e.message,
+                    "error" to e.message.orEmpty(),
                 ),
             )
         }
@@ -566,7 +568,7 @@ class WebSocketClient(private val context: Context) {
                 "WebSocketClient",
                 "message_error",
                 mapOf(
-                    "error" to e.message,
+                    "error" to e.message.orEmpty(),
                 ),
             )
         }
@@ -813,7 +815,7 @@ class WebSocketClient(private val context: Context) {
                 "WebSocketClient",
                 "send_error",
                 mapOf(
-                    "error" to e.message,
+                    "error" to e.message.orEmpty(),
                 ),
             )
         }
@@ -1167,10 +1169,20 @@ class WebSocketClient(private val context: Context) {
 
     suspend fun exportSession(
         sessionId: String,
-        format: DataManagementService.ExportFormat,
+        format: String,
         includeFiles: Boolean = false,
     ): String? {
-        return dataManagementService?.exportSession(sessionId, format, includeFiles)
+        return try {
+            val exportFormat = DataManagementService.Companion.ExportFormat.valueOf(format.uppercase())
+            dataManagementService?.exportSession(sessionId, exportFormat, includeFiles)
+        } catch (e: IllegalArgumentException) {
+            Log.w(TAG, "Invalid export format: $format, defaulting to JSON")
+            dataManagementService?.exportSession(
+                sessionId,
+                DataManagementService.Companion.ExportFormat.JSON,
+                includeFiles
+            )
+        }
     }
 
     fun getSession(sessionId: String): DataManagementService.SessionData? {

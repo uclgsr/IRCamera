@@ -121,12 +121,36 @@ class EnhancedTimeSyncService(
         Log.i(TAG, "Enhanced time synchronization service started")
     }
 
+    fun stop() {
+        if (!isRunning.get()) {
+            Log.w(TAG, "Time sync service not running")
+            return
+        }
+
+        isRunning.set(false)
+        syncJob.get()?.cancel()
+        syncJob.set(null)
+
+        logger.log(
+            StructuredLogger.LogLevel.INFO,
+            "EnhancedTimeSyncService",
+            "service_stopped",
+            emptyMap()
+        )
+
+        Log.i(TAG, "Enhanced time synchronization service stopped")
+    }
+
     fun getSynchronizedTime(): Long {
         val localTime = System.nanoTime()
         val offset = currentOffset.get()
         val drift = calculateCurrentDrift()
 
         return localTime + offset + drift
+    }
+
+    fun getCurrentOffset(): Long {
+        return currentOffset.get()
     }
 
     fun getDiagnostics(): JSONObject {

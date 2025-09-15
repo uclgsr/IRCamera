@@ -104,9 +104,11 @@ public class RangeSeekBar extends View {
     private int[] colorList;
     @Nullable
     private float[] places;
+
     public RangeSeekBar(Context context) {
         this(context, null);
     }
+
     public RangeSeekBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         initAttrs(attrs);

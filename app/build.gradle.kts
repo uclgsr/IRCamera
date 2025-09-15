@@ -89,6 +89,18 @@ android {
         additionalParameters += listOf("--allow-reserved-package-id", "--auto-add-overlay")
     }
 
+    packaging {
+        resources {
+            excludes += listOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt"
+            )
+        }
+    }
+
     androidComponents {
         beforeVariants { variant ->
             // Enable both debug and release builds for CI/CD compatibility
@@ -303,6 +315,9 @@ dependencies {
     implementation("com.opencsv:opencsv:5.12.0")
     implementation("com.google.code.gson:gson:2.13.2")
 
+    // JmDNS dependency for network service discovery
+    implementation("org.jmdns:jmdns:3.5.8")
+
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
@@ -317,8 +332,6 @@ dependencies {
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))
     implementation(files("libs/shimmerdriverpc-0.11.5_beta.jar"))
     implementation(files("libs/shimmerbluetoothmanager-0.11.5_beta.jar"))
-
-
 
 
     // CameraX dependencies - Compatible with AGP 8.5.2

@@ -492,7 +492,11 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             startActivity(intent)
         } catch (e: Exception) {
 
-            Toast.makeText(requireContext(), "Launching dual-mode camera integration example...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Launching dual-mode camera integration example...",
+                Toast.LENGTH_SHORT
+            ).show()
 
             showDualModeIntegrationExample()
         }

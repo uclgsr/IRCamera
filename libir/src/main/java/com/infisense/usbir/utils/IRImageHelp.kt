@@ -61,7 +61,7 @@ class IRImageHelp {
         imageHeight: Int,
     ): ByteArray {
         try {
-            if (colorList != null && temperatureSrc != null) {
+            if (colorList != null) {
                 var j = 0
                 val imageDstLength: Int = imageWidth * imageHeight * 4
 

@@ -44,11 +44,13 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private var connectedBLEDevices = mutableListOf<Device>()
 
     private var recordingService: RecordingService? = null
+    private var recordingServiceBinder: RecordingService.RecordingServiceBinder? = null
     private var isServiceBound = false
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as RecordingService.RecordingServiceBinder
+            recordingServiceBinder = binder
             recordingService = binder.getService()
             recordingController = binder.getService().getRecordingController()
             isServiceBound = true
@@ -61,6 +63,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
 
         override fun onServiceDisconnected(name: ComponentName?) {
             recordingService = null
+            recordingServiceBinder = null
             isServiceBound = false
             Log.i(TAG, "Disconnected from RecordingService")
         }
@@ -232,7 +235,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
 
 
                     val hasActiveDevices = systemStatus.activeConnections > 0
-                    val networkConnected = recordingService?.isConnectedToPC() ?: false
+                    val networkConnected = recordingServiceBinder?.isConnectedToPC() ?: false
                     binding.connectButton.isEnabled = !networkConnected
 
                     Log.d(TAG, "BLE Status UI updated: $statusText")
@@ -373,278 +376,285 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             }
         }
     }
-}
 
-private fun startCoordinatedRecording() {
-    val sessionDirectory = binding.sessionDirectoryEditText.text.toString().trim()
-    if (sessionDirectory.isEmpty()) {
-        android.widget.Toast.makeText(
-            this,
-            "Please enter session directory",
-            android.widget.Toast.LENGTH_SHORT
-        ).show()
-        return
-    }
-
-    lifecycleScope.launch {
-        try {
-            binding.progressBar.visibility = View.VISIBLE
-            binding.statusTextView.text = "Starting coordinated recording session..."
-
-            val sessionDir = File(sessionDirectory)
-            if (!sessionDir.exists()) {
-                sessionDir.mkdirs()
-            }
-
-            val success = if (recordingService?.isConnectedToPC() == true) {
-
-                RecordingService.startRecording(this@HubSpokeIntegrationActivity, sessionDirectory)
-                true // The service handles the coordination
-            } else {
-
-                recordingController.startRecording(sessionDirectory)
-            }
-
-            if (success) {
-                binding.statusTextView.text = "Coordinated recording session started"
-                android.widget.Toast.makeText(
-                    this@HubSpokeIntegrationActivity,
-                    "Recording started",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                binding.statusTextView.text = "Failed to start recording session"
-                android.widget.Toast.makeText(
-                    this@HubSpokeIntegrationActivity,
-                    "Recording failed to start",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            }
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Recording start error", e)
-            binding.statusTextView.text = "Recording start error: ${e.message}"
+    private fun startCoordinatedRecording() {
+        val sessionDirectory = binding.sessionDirectoryEditText.text.toString().trim()
+        if (sessionDirectory.isEmpty()) {
             android.widget.Toast.makeText(
-                this@HubSpokeIntegrationActivity,
-                "Recording error",
+                this,
+                "Please enter session directory",
                 android.widget.Toast.LENGTH_SHORT
             ).show()
-        } finally {
-            binding.progressBar.visibility = View.GONE
-            updateUI()
+            return
         }
-    }
-}
 
-private fun stopCoordinatedRecording() {
-    lifecycleScope.launch {
-        try {
-            binding.progressBar.visibility = View.VISIBLE
-            binding.statusTextView.text = "Stopping coordinated recording session..."
+        lifecycleScope.launch {
+            try {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.statusTextView.text = "Starting coordinated recording session..."
 
-            val success = if (recordingService?.isConnectedToPC() == true) {
-
-                RecordingService.stopRecording(this@HubSpokeIntegrationActivity)
-                true // The service handles the coordination
-            } else {
-
-                recordingController.stopRecording()
-            }
-
-            if (success) {
-                binding.statusTextView.text = "Coordinated recording session stopped"
-                android.widget.Toast.makeText(
-                    this@HubSpokeIntegrationActivity,
-                    "Recording stopped",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                binding.statusTextView.text = "Failed to stop recording session"
-                android.widget.Toast.makeText(
-                    this@HubSpokeIntegrationActivity,
-                    "Recording stop failed",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            }
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Recording stop error", e)
-            binding.statusTextView.text = "Recording stop error: ${e.message}"
-        } finally {
-            binding.progressBar.visibility = View.GONE
-            updateUI()
-        }
-    }
-}
-
-private fun addSyncMarker() {
-    lifecycleScope.launch {
-        try {
-            val markerType = "manual_sync_${System.currentTimeMillis()}"
-            val metadata = mapOf(
-                "source" to "HubSpokeIntegrationActivity",
-                "user_initiated" to "true"
-            )
-
-            if (recordingService?.isConnectedToPC() == true) {
-
-                RecordingService.addSyncMarker(
-                    this@HubSpokeIntegrationActivity,
-                    markerType,
-                    System.nanoTime()
-                )
-            } else {
-
-                val timestampNs = timeManager.getCurrentTimestampNs()
-                recordingController.addSyncMarker(markerType, timestampNs, metadata)
-            }
-
-            android.widget.Toast.makeText(
-                this@HubSpokeIntegrationActivity,
-                "Sync marker added",
-                android.widget.Toast.LENGTH_SHORT
-            ).show()
-            Log.i(TAG, "Sync marker added: $markerType")
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Sync marker error", e)
-            android.widget.Toast.makeText(
-                this@HubSpokeIntegrationActivity,
-                "Sync marker failed",
-                android.widget.Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-}
-
-private fun setupRecordingMonitoring() {
-    if (!::recordingController.isInitialized) return
-
-    recordingController.recordingStateFlow
-        .onEach { state ->
-            runOnUiThread {
-                when (state) {
-                    RecordingState.STARTING -> binding.statusTextView.text = "Starting sensors..."
-                    RecordingState.RECORDING -> binding.statusTextView.text =
-                        "Recording in progress"
-
-                    RecordingState.STOPPING -> binding.statusTextView.text = "Stopping sensors..."
-                    RecordingState.STOPPED -> binding.statusTextView.text = "Recording stopped"
-                    RecordingState.ERROR -> binding.statusTextView.text = "Recording error"
+                val sessionDir = File(sessionDirectory)
+                if (!sessionDir.exists()) {
+                    sessionDir.mkdirs()
                 }
+
+                val success = if (recordingServiceBinder?.isConnectedToPC() == true) {
+
+                    RecordingService.startRecording(
+                        this@HubSpokeIntegrationActivity,
+                        sessionDirectory
+                    )
+                    true // The service handles the coordination
+                } else {
+
+                    recordingController.startRecording(sessionDirectory)
+                }
+
+                if (success) {
+                    binding.statusTextView.text = "Coordinated recording session started"
+                    android.widget.Toast.makeText(
+                        this@HubSpokeIntegrationActivity,
+                        "Recording started",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    binding.statusTextView.text = "Failed to start recording session"
+                    android.widget.Toast.makeText(
+                        this@HubSpokeIntegrationActivity,
+                        "Recording failed to start",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Recording start error", e)
+                binding.statusTextView.text = "Recording start error: ${e.message}"
+                android.widget.Toast.makeText(
+                    this@HubSpokeIntegrationActivity,
+                    "Recording error",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            } finally {
+                binding.progressBar.visibility = View.GONE
                 updateUI()
             }
         }
-        .launchIn(lifecycleScope)
+    }
 
-    recordingController.sensorStatusFlow
-        .onEach { statusList ->
-            runOnUiThread {
-                val statusText = buildString {
-                    statusList.forEach { status ->
-                        append("${status.sensorType}: ")
-                        append(if (status.isRecording) "Recording" else "Stopped")
-                        append(" (${status.samplesRecorded} samples, ")
-                        append("${String.format("%.1f", status.storageUsedMB)}MB)\n")
-                    }
+    private fun stopCoordinatedRecording() {
+        lifecycleScope.launch {
+            try {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.statusTextView.text = "Stopping coordinated recording session..."
+
+                val success = if (recordingServiceBinder?.isConnectedToPC() == true) {
+
+                    RecordingService.stopRecording(this@HubSpokeIntegrationActivity)
+                    true // The service handles the coordination
+                } else {
+
+                    recordingController.stopRecording()
                 }
-                binding.sensorStatusTextView.text = statusText.trim()
+
+                if (success) {
+                    binding.statusTextView.text = "Coordinated recording session stopped"
+                    android.widget.Toast.makeText(
+                        this@HubSpokeIntegrationActivity,
+                        "Recording stopped",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    binding.statusTextView.text = "Failed to stop recording session"
+                    android.widget.Toast.makeText(
+                        this@HubSpokeIntegrationActivity,
+                        "Recording stop failed",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Recording stop error", e)
+                binding.statusTextView.text = "Recording stop error: ${e.message}"
+            } finally {
+                binding.progressBar.visibility = View.GONE
+                updateUI()
             }
         }
-        .launchIn(lifecycleScope)
-}
+    }
 
-private fun setupNetworkMonitoring() {
-
-    lifecycleScope.launch {
-        while (!isDestroyed) {
+    private fun addSyncMarker() {
+        lifecycleScope.launch {
             try {
-                val isConnected = recordingService?.isConnectedToPC() ?: false
+                val markerType = "manual_sync_${System.currentTimeMillis()}"
+                val metadata = mapOf(
+                    "source" to "HubSpokeIntegrationActivity",
+                    "user_initiated" to "true"
+                )
+
+                if (recordingServiceBinder?.isConnectedToPC() == true) {
+
+                    RecordingService.addSyncMarker(
+                        this@HubSpokeIntegrationActivity,
+                        markerType,
+                        System.nanoTime()
+                    )
+                } else {
+
+                    val timestampNs = timeManager.getCurrentTimestampNs()
+                    recordingController.addSyncMarker(markerType, timestampNs, metadata)
+                }
+
+                android.widget.Toast.makeText(
+                    this@HubSpokeIntegrationActivity,
+                    "Sync marker added",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+                Log.i(TAG, "Sync marker added: $markerType")
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Sync marker error", e)
+                android.widget.Toast.makeText(
+                    this@HubSpokeIntegrationActivity,
+                    "Sync marker failed",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun setupRecordingMonitoring() {
+        if (!::recordingController.isInitialized) return
+
+        recordingController.recordingStateFlow
+            .onEach { state ->
                 runOnUiThread {
-                    binding.connectionStatusTextView.text =
-                        "Connection: ${if (isConnected) "Connected" else "Waiting for PC"}"
+                    when (state) {
+                        RecordingState.STARTING -> binding.statusTextView.text =
+                            "Starting sensors..."
+
+                        RecordingState.RECORDING -> binding.statusTextView.text =
+                            "Recording in progress"
+
+                        RecordingState.STOPPING -> binding.statusTextView.text =
+                            "Stopping sensors..."
+
+                        RecordingState.STOPPED -> binding.statusTextView.text = "Recording stopped"
+                        RecordingState.ERROR -> binding.statusTextView.text = "Recording error"
+                    }
                     updateUI()
                 }
+            }
+            .launchIn(lifecycleScope)
 
-                if (isConnected) {
-                    val syncQuality = timeManager.getSyncQuality()
-                    runOnUiThread {
-                        binding.syncQualityTextView.text = buildString {
-                            append("Sync: ${syncQuality.level}")
-                            syncQuality.qualityMs?.let { append(" (${it}ms)") }
-                            syncQuality.timeSinceSyncMs?.let { append(" - ${it / 1000}s ago") }
+        recordingController.sensorStatusFlow
+            .onEach { statusList ->
+                runOnUiThread {
+                    val statusText = buildString {
+                        statusList.forEach { status ->
+                            append("${status.sensorType}: ")
+                            append(if (status.isRecording) "Recording" else "Stopped")
+                            append(" (${status.samplesRecorded} samples, ")
+                            append("${String.format("%.1f", status.storageUsedMB)}MB)\n")
                         }
                     }
-                } else {
+                    binding.sensorStatusTextView.text = statusText.trim()
+                }
+            }
+            .launchIn(lifecycleScope)
+    }
+
+    private fun setupNetworkMonitoring() {
+
+        lifecycleScope.launch {
+            while (!isDestroyed) {
+                try {
+                    val isConnected = recordingServiceBinder?.isConnectedToPC() ?: false
                     runOnUiThread {
-                        binding.syncQualityTextView.text = "Sync: Not Available"
+                        binding.connectionStatusTextView.text =
+                            "Connection: ${if (isConnected) "Connected" else "Waiting for PC"}"
+                        updateUI()
+                    }
+
+                    if (isConnected) {
+                        val syncQuality = timeManager.getSyncQuality()
+                        runOnUiThread {
+                            binding.syncQualityTextView.text = buildString {
+                                append("Sync: ${syncQuality.level}")
+                                syncQuality.qualityMs?.let { append(" (${it}ms)") }
+                                syncQuality.timeSinceSyncMs?.let { append(" - ${it / 1000}s ago") }
+                            }
+                        }
+                    } else {
+                        runOnUiThread {
+                            binding.syncQualityTextView.text = "Sync: Not Available"
+                        }
+                    }
+
+                    kotlinx.coroutines.delay(2000) // Update every 2 seconds
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error in network monitoring", e)
+                    break
+                }
+            }
+        }
+    }
+
+    private fun updateUI() {
+        val isConnected = recordingServiceBinder?.isConnectedToPC() ?: false
+        val isRecording = ::recordingController.isInitialized && recordingController.isRecording
+
+        binding.connectButton.isEnabled = !isConnected
+        binding.disconnectButton.isEnabled = isConnected
+        binding.startRecordingButton.isEnabled = !isRecording
+        binding.stopRecordingButton.isEnabled = isRecording
+        binding.addSyncMarkerButton.isEnabled = isRecording
+
+        binding.pcAddressEditText.isEnabled = !isConnected
+        binding.sessionDirectoryEditText.isEnabled = !isRecording
+
+        if (!isConnected) {
+            binding.connectionStatusTextView.text = "Connection: Waiting for PC Controller"
+            binding.syncQualityTextView.text = "Sync: Not Available"
+        }
+
+        if (!isRecording) {
+            binding.sensorStatusTextView.text = "Sensors: Idle"
+        }
+
+        updateBLEDeviceStatus()
+    }
+
+    private fun updateBLEDeviceStatus() {
+        if (::enhancedBLE.isInitialized) {
+            val bleDeviceCount = connectedBLEDevices.size
+            val statusText = if (bleDeviceCount > 0) {
+                "BLE Devices: $bleDeviceCount connected (Enhanced Nordic Backend)"
+            } else {
+                "BLE Devices: Scanning for devices..."
+            }
+
+            if (binding.sensorStatusTextView.text.toString().startsWith("Sensors: Idle")) {
+                binding.sensorStatusTextView.text = "Sensors: Idle | $statusText"
+            }
+        }
+    }
+
+    private fun getLocalIPAddress(): String {
+        try {
+            val interfaces = java.net.NetworkInterface.getNetworkInterfaces()
+            while (interfaces.hasMoreElements()) {
+                val networkInterface = interfaces.nextElement()
+                val addresses = networkInterface.inetAddresses
+                while (addresses.hasMoreElements()) {
+                    val address = addresses.nextElement()
+                    if (!address.isLoopbackAddress && address is java.net.Inet4Address) {
+                        return address.hostAddress ?: "Unknown"
                     }
                 }
-
-                kotlinx.coroutines.delay(2000) // Update every 2 seconds
-            } catch (e: Exception) {
-                Log.e(TAG, "Error in network monitoring", e)
-                break
             }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting local IP address", e)
         }
+        return "Unknown IP"
     }
-}
-
-private fun updateUI() {
-    val isConnected = recordingService?.isConnectedToPC() ?: false
-    val isRecording = ::recordingController.isInitialized && recordingController.isRecording
-
-    binding.connectButton.isEnabled = !isConnected
-    binding.disconnectButton.isEnabled = isConnected
-    binding.startRecordingButton.isEnabled = !isRecording
-    binding.stopRecordingButton.isEnabled = isRecording
-    binding.addSyncMarkerButton.isEnabled = isRecording
-
-    binding.pcAddressEditText.isEnabled = !isConnected
-    binding.sessionDirectoryEditText.isEnabled = !isRecording
-
-    if (!isConnected) {
-        binding.connectionStatusTextView.text = "Connection: Waiting for PC Controller"
-        binding.syncQualityTextView.text = "Sync: Not Available"
-    }
-
-    if (!isRecording) {
-        binding.sensorStatusTextView.text = "Sensors: Idle"
-    }
-
-    updateBLEDeviceStatus()
-}
-
-private fun updateBLEDeviceStatus() {
-    if (::enhancedBLE.isInitialized) {
-        val bleDeviceCount = connectedBLEDevices.size
-        val statusText = if (bleDeviceCount > 0) {
-            "BLE Devices: $bleDeviceCount connected (Enhanced Nordic Backend)"
-        } else {
-            "BLE Devices: Scanning for devices..."
-        }
-
-        if (binding.sensorStatusTextView.text.toString().startsWith("Sensors: Idle")) {
-            binding.sensorStatusTextView.text = "Sensors: Idle | $statusText"
-        }
-    }
-}
-
-private fun getLocalIPAddress(): String {
-    try {
-        val interfaces = java.net.NetworkInterface.getNetworkInterfaces()
-        while (interfaces.hasMoreElements()) {
-            val networkInterface = interfaces.nextElement()
-            val addresses = networkInterface.inetAddresses
-            while (addresses.hasMoreElements()) {
-                val address = addresses.nextElement()
-                if (!address.isLoopbackAddress && address is java.net.Inet4Address) {
-                    return address.hostAddress ?: "Unknown"
-                }
-            }
-        }
-    } catch (e: Exception) {
-        Log.e(TAG, "Error getting local IP address", e)
-    }
-    return "Unknown IP"
 }

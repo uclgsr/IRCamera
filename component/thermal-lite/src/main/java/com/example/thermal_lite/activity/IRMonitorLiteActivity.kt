@@ -99,6 +99,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                 var errorReadCount = 0
                 while (true) {
                     delay(1000)
+                    @Suppress("SENSELESS_COMPARISON")
                     if (irMonitorLiteFragment != null) {
                         val result: LibIRTemp.TemperatureSampleResult =
                             when (selectBean.type) {

@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.opencsv.CSVWriter
 import com.topdon.tc001.sensors.*
+import com.topdon.tc001.sensors.RecordingStats
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File
@@ -488,7 +489,7 @@ class RgbCameraRecorder(
             } else 0.0,
             droppedSamples = droppedFrames.get(),
             storageUsedMB = calculateStorageUsed(),
-            syncMarkersCount = syncMarkersRecorded.get(),
+            syncMarkersCount = syncMarkersRecorded.get().toInt(),
             lastSampleTimestampNs = lastFrameTime.get()
         )
     }
@@ -544,22 +545,24 @@ class RgbCameraRecorder(
      */
     suspend fun recordSyncMarker(markerType: String = "SYNC") {
         if (!isRecording) return
-        
+
         val timestamp = System.nanoTime()
         recordingScope.launch {
             csvWriter?.let { writer ->
                 try {
-                    writer.writeNext(arrayOf(
-                        timestamp.toString(),
-                        "SYNC_MARKER",
-                        markerType,
-                        System.currentTimeMillis().toString(),
-                        "0", // frame_number
-                        "0"  // file_size
-                    ))
+                    writer.writeNext(
+                        arrayOf(
+                            timestamp.toString(),
+                            "SYNC_MARKER",
+                            markerType,
+                            System.currentTimeMillis().toString(),
+                            "0", // frame_number
+                            "0"  // file_size
+                        )
+                    )
                     writer.flush()
                     syncMarkersRecorded.incrementAndGet()
-                    
+
                     Log.d(TAG, "Sync marker recorded: $markerType at $timestamp")
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to record sync marker", e)

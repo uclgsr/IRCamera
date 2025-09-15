@@ -36,13 +36,14 @@ class ShimmerGSRRecorder(
         LOGGING,        // Device logs to internal SD card only
         LOG_AND_STREAM  // Device logs internally AND streams to phone
     }
+
     companion object {
         private const val TAG = "ShimmerGSRRecorder"
         private const val SESSIONS_DIR = "IRCamera_Sessions"
         private const val SIGNALS_FILENAME = "signals.csv"
         private const val SYNC_MARKS_FILENAME = "sync_marks.csv"
         private const val SESSION_METADATA_FILENAME = "session_metadata.json"
-        
+
         // 12-bit ADC resolution constant for accurate GSR calculations
         private const val ADC_12BIT_MAX = 4095
 
@@ -440,7 +441,10 @@ class ShimmerGSRRecorder(
             config[1] = 0x08.toByte() // GSR sensor bit
             config[3] = TIMESTAMP_CHANNEL_BIT
 
-            Log.d(TAG, "Created enhanced GSR configuration: ${samplingRateHz}Hz sampling, auto-range GSR, timestamp enabled")
+            Log.d(
+                TAG,
+                "Created enhanced GSR configuration: ${samplingRateHz}Hz sampling, auto-range GSR, timestamp enabled"
+            )
             return config
         } catch (e: Exception) {
             Log.w(TAG, "Using default GSR configuration due to error", e)
@@ -540,7 +544,7 @@ class ShimmerGSRRecorder(
 
     fun isDeviceConnected(): Boolean = isDeviceConnected.get()
 
-    
+
     // Step 6: Shimmer logging mode support methods
     private fun startShimmerLogging() {
         try {

@@ -157,8 +157,12 @@ class UnifiedNetworkController(
                         host = serviceInfo.hostAddresses?.firstOrNull() ?: serviceInfo.server,
                         port = serviceInfo.port,
                         type = serviceInfo.type,
-                        properties = serviceInfo.propertyNames?.associateWith {
-                            serviceInfo.getPropertyString(it)
+                        properties = serviceInfo.propertyNames?.let { names ->
+                            val propertiesMap = mutableMapOf<String, String>()
+                            for (name in names) {
+                                propertiesMap[name] = serviceInfo.getPropertyString(name)
+                            }
+                            propertiesMap.toMap()
                         } ?: emptyMap()
                     )
 

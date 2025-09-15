@@ -60,7 +60,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private var currentSession: SessionInfo? = null
     private var sampleCount = 0L
     private var syncMarkCount = 0
-    
+
     // Session information
     private var sessionId: String = ""
     private var participantId: String? = null
@@ -731,18 +731,19 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 if (videoStopped) {
                     recordingInfo.add("Video recording completed")
                 }
-            rgbCameraRecorder?.getRawImagesDirectory()?.let { dir ->
-                val rawCount = rgbCameraRecorder?.getRawCaptureCount() ?: 0
-                recordingInfo.add("RAW images: $rawCount in ${dir.name}")
-            }
-            recordingInfo.add("GSR samples: ${it.sampleCount}")
+                rgbCameraRecorder?.getRawImagesDirectory()?.let { dir ->
+                    val rawCount = rgbCameraRecorder?.getRawCaptureCount() ?: 0
+                    recordingInfo.add("RAW images: $rawCount in ${dir.name}")
+                }
+                recordingInfo.add("GSR samples: ${it.sampleCount}")
 
-            runOnUiThread {
-                binding.statusText.text = "Recording completed. ${recordingInfo.joinToString(", ")}"
-                isRecording = false
-                updateUI()
+                runOnUiThread {
+                    binding.statusText.text =
+                        "Recording completed. ${recordingInfo.joinToString(", ")}"
+                    isRecording = false
+                    updateUI()
+                }
             }
-        }
 
         }
 

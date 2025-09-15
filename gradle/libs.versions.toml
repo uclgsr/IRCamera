@@ -26,7 +26,7 @@ appsecretTopinfraredCn = "9D33C48FD7CE4440B7D922FBF9B6DE2A"
 appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
 
 # Kotlin and Core - Updated to latest versions
-kotlin = "2.2.0" 
+kotlin = "2.2.0"
 agp = "8.13.0"
 # androidx.core - Updated to latest version compatible with AGP 8.13.0
 androidxCore = "1.16.0"

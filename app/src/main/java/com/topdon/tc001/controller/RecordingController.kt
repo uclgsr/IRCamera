@@ -20,6 +20,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -77,7 +78,8 @@ class RecordingController(
                 val dummyTextureView = TextureView(context)
                 val rgbCamera = RgbCameraRecorder(context, lifecycleOwner)
                 val thermalCamera = ThermalCameraRecorder(context, "thermal_camera_1")
-                val gsrSensor = GSRSensorRecorder(context, "gsr_shimmer_1")
+                val gsrSensor =
+                    GSRSensorRecorder(context, "gsr_shimmer_1", 128, this@RecordingController)
 
                 val initJobs = listOf(
                     async {

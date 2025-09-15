@@ -128,9 +128,11 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     public TemperatureView(final Context context) {
         this(context, null, 0);
     }
+
     public TemperatureView(final Context context, final AttributeSet attrs) {
         this(context, attrs, 0);
     }
+
     public TemperatureView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
 
@@ -1358,11 +1360,14 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private enum RectMoveType {ALL, EDGE, CORNER}
 
     private enum RectMoveEdge {LEFT, TOP, RIGHT, BOTTOM}
+
     private enum RectMoveCorner {LT, RT, RB, LB}
+
     @IntDef({REGION_MODE_RESET, REGION_MODE_POINT, REGION_MODE_LINE, REGION_MODE_RECTANGLE, REGION_MODE_CENTER, REGION_NODE_TREND, REGION_MODE_CLEAN})
     @Retention(RetentionPolicy.SOURCE)
     private @interface RegionMode {
     }
+
     public interface OnTrendChangeListener {
         void onChange(List<Float> temps);
     }

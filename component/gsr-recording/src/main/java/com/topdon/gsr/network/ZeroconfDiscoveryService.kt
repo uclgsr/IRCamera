@@ -128,6 +128,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
         }
     }
 
+    @Suppress("DEPRECATION")
     fun getDiscoveredControllers(): List<NetworkClient.ControllerInfo> {
         return discoveredServices.values.mapNotNull { serviceInfo ->
             try {
@@ -164,6 +165,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 }
 
                 // Resolve the service to get detailed information
+                @Suppress("DEPRECATION")
                 nsdManager.resolveService(service, createResolveListener())
             }
 
@@ -197,6 +199,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun createResolveListener(): NsdManager.ResolveListener {
         return object : NsdManager.ResolveListener {
             override fun onResolveFailed(

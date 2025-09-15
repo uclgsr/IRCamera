@@ -426,7 +426,9 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         return mDragDecelerationEnabled;
     }
 
-    /** CODE BELOW FOR PREDEFINED EASING OPTIONS */
+    /**
+     * CODE BELOW FOR PREDEFINED EASING OPTIONS
+     */
 
     public void setDragDecelerationEnabled(boolean enabled) {
         mDragDecelerationEnabled = enabled;

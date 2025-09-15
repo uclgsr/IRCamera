@@ -163,6 +163,7 @@ class QualityOfServiceManager(
             }
         }
 
+    @Suppress("DEPRECATION")
     private fun measureWiFiBandwidth(): Long {
         val wifiManager =
             context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager

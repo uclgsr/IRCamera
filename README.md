@@ -1148,7 +1148,9 @@ documents** with:
 
 ## 🎯 Multi-Modal Recording Integration
 
-The IRCamera app now supports comprehensive multi-modal recording combining thermal imaging, GSR (Galvanic Skin Response), and PC remote orchestration for advanced research and analysis applications.
+The IRCamera app now supports comprehensive multi-modal recording combining thermal imaging, GSR (
+Galvanic Skin Response), and PC remote orchestration for advanced research and analysis
+applications.
 
 ### 📊 Supported Modalities
 
@@ -1160,16 +1162,19 @@ The IRCamera app now supports comprehensive multi-modal recording combining ther
 ### 🚀 Key Features
 
 #### Real-Time Data Synchronization
+
 - **Nanosecond Precision**: All sensors timestamped with unified clock
 - **Cross-Modal Alignment**: Automatic data alignment across thermal, GSR, and video streams
 - **Session Management**: Unified session folders with metadata and configuration
 
 #### PC Remote Orchestration
+
 - **JSON Command Protocol**: Simple REST-like commands for remote control
 - **Network Discovery**: Automatic PC controller discovery via mDNS
 - **Secure Communication**: TLS-encrypted command channels
 
 #### Enhanced UI Integration
+
 - **Live Status Indicators**: Real-time GSR sensor and network connection status
 - **Session Controls**: Start/stop recording with modality selection
 - **Error Management**: Comprehensive error handling and user feedback
@@ -1179,6 +1184,7 @@ The IRCamera app now supports comprehensive multi-modal recording combining ther
 The app listens on port 8080 for JSON commands from PC controllers:
 
 #### Start Recording
+
 ```json
 {
   "command": "start_recording",
@@ -1191,6 +1197,7 @@ The app listens on port 8080 for JSON commands from PC controllers:
 ```
 
 #### Stop Recording
+
 ```json
 {
   "command": "stop_recording"
@@ -1198,6 +1205,7 @@ The app listens on port 8080 for JSON commands from PC controllers:
 ```
 
 #### Response Format
+
 ```json
 {
   "status": "recording_started",
@@ -1285,7 +1293,9 @@ The MainActivity now includes:
 4. **Recording**: Synchronized multi-modal data capture
 5. **Completion**: Orderly shutdown, data finalization, and cleanup
 
-This multi-modal integration transforms the IRCamera app into a comprehensive research platform capable of synchronized physiological and thermal data collection with enterprise-grade remote coordination capabilities.
+This multi-modal integration transforms the IRCamera app into a comprehensive research platform
+capable of synchronized physiological and thermal data collection with enterprise-grade remote
+coordination capabilities.
 
 ## 🤝 Contributing
 

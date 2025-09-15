@@ -164,6 +164,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
     private var mPreviewHeight = 192
     private var mPreviewLayoutParams: RelativeLayout.LayoutParams? = null
     private var mOnUSBConnectListener: OnUSBConnectListener? = null
+    @Suppress("DEPRECATION")
     private var mProgressDialog: ProgressDialog? = null
 
     private var pseudoColorMode = SaveSettingUtil.pseudoColorMode
@@ -705,10 +706,13 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
     private val pseudoSetResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
-                updateImageAndSeekbarColorList(
+                val customBean = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    it.data?.getParcelableExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN, CustomPseudoBean::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
                     it.data?.getParcelableExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN)
-                        ?: CustomPseudoBean(),
-                )
+                }
+                updateImageAndSeekbarColorList(customBean ?: CustomPseudoBean())
                 customPseudoBean.saveToShared()
             }
         }
@@ -1282,6 +1286,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             .addOnUSBConnectListener(IRThermalLiteActivity::class.java.name, mOnUSBConnectListener)
     }
 
+    @Suppress("DEPRECATION")
     private fun showLoadingDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = ProgressDialog(this@IRThermalLiteActivity)
@@ -1294,6 +1299,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun hideLoadingDialog() {
         if (mProgressDialog != null) {
             mProgressDialog?.dismiss()

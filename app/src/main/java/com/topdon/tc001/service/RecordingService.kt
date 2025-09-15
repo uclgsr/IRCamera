@@ -26,7 +26,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.launchIn
@@ -171,7 +173,7 @@ class RecordingService : LifecycleService() {
         fun getService(): RecordingService = this@RecordingService
         fun getRecordingController(): RecordingController = recordingController
         fun getNetworkServer(): NetworkServer = networkServer
-        fun isConnectedToPC(): Boolean = isConnectedToPC
+        fun isConnectedToPC(): Boolean = this@RecordingService.isConnectedToPC
         fun getServerStatus(): String {
             return if (isServerRunning.get()) {
                 "Running on port $SERVER_PORT (${activeConnections.size} clients)"
@@ -292,6 +294,7 @@ class RecordingService : LifecycleService() {
                     Log.e(TAG, "No session directory provided for recording")
                 }
             }
+
             ACTION_STOP_RECORDING -> stopRecordingSession()
             ACTION_START_SERVER -> startServerSocket()
             ACTION_STOP_SERVER -> stopServerSocket()
@@ -302,6 +305,7 @@ class RecordingService : LifecycleService() {
                     addSyncMarker(markerType, timestampNs)
                 }
             }
+
             ACTION_CONNECT_PC -> {
                 val ipAddress = intent.getStringExtra(EXTRA_PC_IP)
                 val port = intent.getIntExtra(EXTRA_PC_PORT, 8080)
@@ -309,6 +313,7 @@ class RecordingService : LifecycleService() {
                     connectToPC(ipAddress, port)
                 }
             }
+
             ACTION_DISCONNECT_PC -> disconnectFromPC()
             ACTION_START_DISCOVERY -> startPCDiscovery()
         }
@@ -617,7 +622,8 @@ class RecordingService : LifecycleService() {
                         serverSocket?.accept()
                     }
                     if (clientSocket != null && isServerRunning.get()) {
-                        val clientId = "${clientSocket.inetAddress.hostAddress}:${clientSocket.port}"
+                        val clientId =
+                            "${clientSocket.inetAddress.hostAddress}:${clientSocket.port}"
                         structuredLogger.logConnection(
                             "pc_client_connected",
                             clientId,
@@ -709,7 +715,8 @@ class RecordingService : LifecycleService() {
                 try {
                     val clientSocket = serverSocket?.accept()
                     if (clientSocket != null && isServerRunning.get()) {
-                        val clientId = "${clientSocket.inetAddress.hostAddress}:${clientSocket.port}"
+                        val clientId =
+                            "${clientSocket.inetAddress.hostAddress}:${clientSocket.port}"
                         Log.i(TAG, "PC client connected: $clientId")
                         handleNewClientConnection(clientSocket, clientId)
                         withContext(Dispatchers.Main) {
@@ -949,7 +956,8 @@ class RecordingService : LifecycleService() {
                         structuredLogger.logProtocolMessage(
                             "handshake_success", messageId, clientId,
                             mapOf(
-                                "negotiated_version" to (handshakeResult.negotiatedVersion ?: "unknown"),
+                                "negotiated_version" to (handshakeResult.negotiatedVersion
+                                    ?: "unknown"),
                                 "capabilities" to handshakeResult.commonCapabilities.joinToString(",")
                             )
                         )
@@ -968,8 +976,10 @@ class RecordingService : LifecycleService() {
                         sendError(outputStream, handshakeResult.error ?: "Handshake failed")
                     }
                 }
+
                 "session_start" -> {
-                    val sessionId = message.optString("session_id", "remote_${System.currentTimeMillis()}")
+                    val sessionId =
+                        message.optString("session_id", "remote_${System.currentTimeMillis()}")
                     val sessionName = message.optString("session_name", "PC Remote Session")
                     structuredLogger.logSessionEvent(
                         "remote_session_start_request", sessionId,
@@ -989,6 +999,7 @@ class RecordingService : LifecycleService() {
                         })
                     sendMessage(outputStream, ackMessage)
                 }
+
                 "session_stop" -> {
                     structuredLogger.logSessionEvent(
                         "remote_session_stop_request", "current", mapOf("client_id" to clientId)
@@ -1004,6 +1015,7 @@ class RecordingService : LifecycleService() {
                         })
                     sendMessage(outputStream, ackMessage)
                 }
+
                 "sync_flash" -> {
                     val durationMs = message.optInt("duration_ms", 100)
                     structuredLogger.log(
@@ -1021,10 +1033,16 @@ class RecordingService : LifecycleService() {
                         })
                     sendMessage(outputStream, ackMessage)
                 }
+
                 "status_request" -> {
-                    structuredLogger.logProtocolMessage("status_request_received", messageId, clientId)
+                    structuredLogger.logProtocolMessage(
+                        "status_request_received",
+                        messageId,
+                        clientId
+                    )
                     sendStatusResponse(outputStream)
                 }
+
                 "heartbeat" -> {
                     structuredLogger.logProtocolMessage(
                         "heartbeat_received", messageId, clientId,
@@ -1038,9 +1056,13 @@ class RecordingService : LifecycleService() {
                         })
                     sendMessage(outputStream, ackMessage)
                 }
+
                 else -> {
                     structuredLogger.logProtocolMessage(
-                        "unknown_message_type", messageId, clientId, mapOf("message_type" to messageType)
+                        "unknown_message_type",
+                        messageId,
+                        clientId,
+                        mapOf("message_type" to messageType)
                     )
                     val errorMessage = ProtocolVersion.createProtocolMessage(
                         "error",
@@ -1053,7 +1075,10 @@ class RecordingService : LifecycleService() {
         } catch (e: Exception) {
             structuredLogger.logProtocolMessage(
                 "message_processing_error", messageId, clientId,
-                mapOf<String, Any>("message_type" to messageType, "error" to (e.message ?: "Unknown error"))
+                mapOf<String, Any>(
+                    "message_type" to messageType,
+                    "error" to (e.message ?: "Unknown error")
+                )
             )
             val errorMessage = ProtocolVersion.createProtocolMessage(
                 "error",
@@ -1180,10 +1205,14 @@ class RecordingService : LifecycleService() {
                             })
                         })
                 }
+
                 "session_start_command" -> {
                     val sessionDirectory = message.optString("session_directory")
                     if (sessionDirectory.isNotEmpty()) {
-                        Log.i(TAG, "Received remote start command from PC for session: $sessionDirectory")
+                        Log.i(
+                            TAG,
+                            "Received remote start command from PC for session: $sessionDirectory"
+                        )
                         startRecordingSession(sessionDirectory)
                         sendResponseToPC(
                             "session_start_response",
@@ -1193,6 +1222,7 @@ class RecordingService : LifecycleService() {
                             })
                     }
                 }
+
                 "session_stop_command" -> {
                     Log.i(TAG, "Received remote stop command from PC")
                     stopRecordingSession()
@@ -1202,6 +1232,7 @@ class RecordingService : LifecycleService() {
                             put("status", "stopped")
                         })
                 }
+
                 "sync_marker_command" -> {
                     val markerType = message.optString("marker_type")
                     val timestampNs = message.optLong("timestamp_ns", System.nanoTime())
@@ -1216,16 +1247,19 @@ class RecordingService : LifecycleService() {
                             })
                     }
                 }
+
                 "ping" -> {
                     Log.d(TAG, "Received ping from PC Controller")
                     sendResponseToPC("pong", JSONObject().apply {
                         put("timestamp_ns", System.nanoTime())
                     })
                 }
+
                 "status_request" -> {
                     Log.d(TAG, "PC Controller requested status")
                     sendStatusToPC()
                 }
+
                 else -> {
                     Log.w(TAG, "Unknown command from PC Controller: $messageType")
                     sendResponseToPC("error", JSONObject().apply {
@@ -1289,7 +1323,8 @@ class RecordingService : LifecycleService() {
     fun handleStartRecordingCommand(message: JSONObject) {
         lifecycleScope.launch {
             try {
-                val sessionId = message.optString("session_id", "session_${System.currentTimeMillis()}")
+                val sessionId =
+                    message.optString("session_id", "session_${System.currentTimeMillis()}")
                 val sessionDirectory = "/storage/emulated/0/IRCamera_Sessions/$sessionId"
                 Log.i(TAG, "Received start recording command from PC Controller")
                 startRecordingSession(sessionDirectory)
@@ -1341,16 +1376,25 @@ class RecordingService : LifecycleService() {
                         isServiceRegistered = true
                     }
 
-                    override fun onRegistrationFailed(failedServiceInfo: NsdServiceInfo?, errorCode: Int) {
+                    override fun onRegistrationFailed(
+                        failedServiceInfo: NsdServiceInfo?,
+                        errorCode: Int
+                    ) {
                         Log.e(TAG, "NSD service registration failed: $errorCode")
                     }
 
                     override fun onServiceUnregistered(unregisteredServiceInfo: NsdServiceInfo?) {
-                        Log.i(TAG, "NSD service unregistered: ${unregisteredServiceInfo?.serviceName}")
+                        Log.i(
+                            TAG,
+                            "NSD service unregistered: ${unregisteredServiceInfo?.serviceName}"
+                        )
                         isServiceRegistered = false
                     }
 
-                    override fun onUnregistrationFailed(failedServiceInfo: NsdServiceInfo?, errorCode: Int) {
+                    override fun onUnregistrationFailed(
+                        failedServiceInfo: NsdServiceInfo?,
+                        errorCode: Int
+                    ) {
                         Log.e(TAG, "NSD service unregistration failed: $errorCode")
                     }
                 })
@@ -1372,6 +1416,7 @@ class RecordingService : LifecycleService() {
                     isServiceRegistered = false
                     nsdServiceInfo = null
                 }
+
                 override fun onUnregistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
                     Log.e(TAG, "NSD service unregistration failed: $errorCode")
                 }

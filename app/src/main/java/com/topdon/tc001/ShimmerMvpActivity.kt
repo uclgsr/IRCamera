@@ -175,7 +175,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 Log.i(TAG, "Initializing Shimmer Bluetooth Manager")
 
                 // Simplified Shimmer initialization to avoid API compatibility issues
-                shimmerBluetoothManager = ShimmerBluetoothManagerAndroid(this@ShimmerMvpActivity, android.os.Handler())
+                shimmerBluetoothManager =
+                    ShimmerBluetoothManagerAndroid(this@ShimmerMvpActivity, android.os.Handler())
                 Log.i(TAG, "Shimmer manager initialized - API compatibility mode")
                 updateConnectionStatus("Shimmer manager ready")
                 binding.connectButton.isEnabled = true
@@ -262,10 +263,10 @@ class ShimmerMvpActivity : AppCompatActivity() {
         shimmerDevice?.let { shimmer ->
             try {
                 Log.i(TAG, "Configuring Shimmer3 GSR+ for recording (compatibility mode)")
-                
+
                 // Using basic configuration to avoid API compatibility issues
                 // Advanced configuration will be implemented once API compatibility is resolved
-                
+
                 Log.i(TAG, "Shimmer3 GSR+ configuration complete - Basic settings applied")
                 updateConnectionStatus("GSR+ Configured - Ready for recording")
                 binding.startRecordingButton.isEnabled = true
@@ -339,11 +340,12 @@ class ShimmerMvpActivity : AppCompatActivity() {
     private fun processShimmerData(objectCluster: ObjectCluster) {
         try {
             val timestamp = System.currentTimeMillis()
-            
+
             // Extract GSR data from ObjectCluster using proper Shimmer SDK methods
             val gsrRawData = objectCluster.getFormatClusterValue("CAL", "GSR")
-            val rawValue = (gsrRawData as? Double)?.toInt() ?: 2048 // Default to middle 12-bit range if null
-            
+            val rawValue =
+                (gsrRawData as? Double)?.toInt() ?: 2048 // Default to middle 12-bit range if null
+
             // Calculate GSR value in microsiemens using proper 12-bit ADC conversion (0-4095 range)
             val gsrValue = if (rawValue > 0 && rawValue <= 4095) {
                 // Convert raw 12-bit ADC value to GSR in microsiemens
@@ -353,7 +355,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
             } else {
                 4.5 // Default fallback value
             }
-            
+
             val resistance = 1000000.0 / gsrValue
 
             if (rawValue in 0..4095 && gsrValue > 0.1 && gsrValue < 100.0) {

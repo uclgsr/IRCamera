@@ -98,7 +98,15 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     private fun initializeGSRComponents() {
         lifecycleScope.launch {
             try {
-                gsrSensorRecorder = GSRSensorRecorder(this@GSRDeviceManagementActivity)
+                gsrSensorRecorder = GSRSensorRecorder(
+                    this@GSRDeviceManagementActivity,
+                    "gsr_management_1",
+                    128,
+                    com.topdon.tc001.controller.RecordingController(
+                        this@GSRDeviceManagementActivity,
+                        this@GSRDeviceManagementActivity
+                    )
+                )
                 val initialized = gsrSensorRecorder?.initialize() ?: false
 
                 if (initialized) {
@@ -311,10 +319,13 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun updateScanningState(scanning: Boolean) {
-        findViewById<View>(R.id.scanningIndicator)?.visibility = if (scanning) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.scanningIndicator)?.visibility =
+            if (scanning) View.VISIBLE else View.GONE
         findViewById<Button>(R.id.scanDevicesButton)?.isEnabled = !scanning
-        findViewById<View>(R.id.stopScanButton)?.visibility = if (scanning) View.VISIBLE else View.GONE
-        findViewById<TextView>(R.id.scanProgressText)?.text = if (scanning) "Scanning for devices..." else ""
+        findViewById<View>(R.id.stopScanButton)?.visibility =
+            if (scanning) View.VISIBLE else View.GONE
+        findViewById<TextView>(R.id.scanProgressText)?.text =
+            if (scanning) "Scanning for devices..." else ""
     }
 
     private fun updateConnectionStatus(status: String) {
@@ -346,7 +357,8 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
             findViewById<TextView>(R.id.emptyStateText)?.visibility = View.GONE
         }
 
-        findViewById<TextView>(R.id.deviceCountText)?.text = "${discoveredDevices.size} device(s) found"
+        findViewById<TextView>(R.id.deviceCountText)?.text =
+            "${discoveredDevices.size} device(s) found"
     }
 
     private fun enableDeviceOperations(enabled: Boolean) {

@@ -462,6 +462,7 @@ public class Legend extends ComponentBase {
         mNeededHeight += mYOffset;
         mNeededWidth += mXOffset;
     }
+
     public enum LegendForm {
 
         NONE,

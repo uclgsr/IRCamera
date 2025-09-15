@@ -197,6 +197,7 @@ object IRTool {
         var newTemp = temp
 
         try {
+            @Suppress("SENSELESS_COMPARISON")
             if (tau_data_H == null || tau_data_L == null) return temp
             newTemp =
                 LibIRTempAC020.temperatureCorrection(

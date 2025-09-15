@@ -156,11 +156,17 @@ class EnhancedBLEHarmonizationTest {
 
             // Test reliability calculation
             val reliabilityScore = metrics.reliabilityScore
-            assertTrue("Reliability score should be valid", reliabilityScore >= 0.0 && reliabilityScore <= 1.0)
+            assertTrue(
+                "Reliability score should be valid",
+                reliabilityScore >= 0.0 && reliabilityScore <= 1.0
+            )
 
             // Test data integrity calculation
             val dataIntegrity = metrics.dataIntegrity
-            assertTrue("Data integrity should be valid", dataIntegrity >= 0.0 && dataIntegrity <= 1.0)
+            assertTrue(
+                "Data integrity should be valid",
+                dataIntegrity >= 0.0 && dataIntegrity <= 1.0
+            )
 
             println("✅ Connection metrics and reliability: PASSED")
         }
@@ -216,7 +222,11 @@ class EnhancedBLEHarmonizationTest {
             )
 
         assertNotNull("GSR recorder should be created with enhanced BLE", gsrRecorder)
-        assertEquals("GSR recorder should have correct sensor ID", "test_gsr_enhanced", gsrRecorder.sensorId)
+        assertEquals(
+            "GSR recorder should have correct sensor ID",
+            "test_gsr_enhanced",
+            gsrRecorder.sensorId
+        )
 
         println("✅ GSR sensor recorder integration: PASSED")
     }
@@ -331,8 +341,14 @@ class EnhancedBLEHarmonizationTest {
             assertNotNull("Fusion manager should be available", fusionManager)
 
             // Test sensor registration
-            fusionManager.registerSensorStream("GSR_01", AdvancedSensorFusionManager.SensorType.GSR_PHYSIOLOGICAL)
-            fusionManager.registerSensorStream("THERMAL_01", AdvancedSensorFusionManager.SensorType.THERMAL_INFRARED)
+            fusionManager.registerSensorStream(
+                "GSR_01",
+                AdvancedSensorFusionManager.SensorType.GSR_PHYSIOLOGICAL
+            )
+            fusionManager.registerSensorStream(
+                "THERMAL_01",
+                AdvancedSensorFusionManager.SensorType.THERMAL_INFRARED
+            )
 
             // Test data point processing
             val gsrData =
@@ -406,7 +422,12 @@ class EnhancedBLEHarmonizationTest {
             // Test device registration
             val capabilities = ResearchGradeBleManager.DeviceCapabilities()
             val qualityProfile = ResearchGradeBleManager.DataQualityProfile()
-            researchManager.registerResearchDevice("RESEARCH_GSR_01", "GSR", capabilities, qualityProfile)
+            researchManager.registerResearchDevice(
+                "RESEARCH_GSR_01",
+                "GSR",
+                capabilities,
+                qualityProfile
+            )
 
             // Test research data point
             val researchData =
@@ -448,7 +469,8 @@ class EnhancedBLEHarmonizationTest {
             secureManager.registerSecureDevice("SECURE_GSR_01", SecureBleManager.SecurityLevel.HIGH)
 
             // Test authentication
-            val session = secureManager.authenticateDevice("SECURE_GSR_01", "AUTH_RESPONSE_SECURE_GSR_01")
+            val session =
+                secureManager.authenticateDevice("SECURE_GSR_01", "AUTH_RESPONSE_SECURE_GSR_01")
             assertNotNull("Secure session should be created", session)
 
             // Test data encryption
@@ -492,7 +514,11 @@ class EnhancedBLEHarmonizationTest {
 
             // Initialize all systems
             predictiveManager.initialize(context)
-            secureManager.initialize(context, SecureBleManager.SecurityLevel.RESEARCH, SecureBleManager.ComplianceMode.GDPR)
+            secureManager.initialize(
+                context,
+                SecureBleManager.SecurityLevel.RESEARCH,
+                SecureBleManager.ComplianceMode.GDPR
+            )
 
             // Start research session
             val session =
@@ -518,7 +544,10 @@ class EnhancedBLEHarmonizationTest {
             researchManager.registerResearchDevice(deviceId, "GSR", capabilities, qualityProfile)
 
             // Fusion registration
-            fusionManager.registerSensorStream(deviceId, AdvancedSensorFusionManager.SensorType.GSR_PHYSIOLOGICAL)
+            fusionManager.registerSensorStream(
+                deviceId,
+                AdvancedSensorFusionManager.SensorType.GSR_PHYSIOLOGICAL
+            )
 
             // Test integrated data flow
             val rawData = doubleArrayOf(478.2, 0.85)
@@ -569,9 +598,18 @@ class EnhancedBLEHarmonizationTest {
             val securityMetrics = secureManager.getSecurityMetrics()
             val fusionMetrics = fusionManager.getFusionMetrics()
 
-            assertTrue("Research data should be processed", researchMetrics.totalDataPoints.get() > 0)
-            assertTrue("Security operations should be recorded", securityMetrics.totalEncryptions.get() > 0)
-            assertTrue("Fusion should have processed data", fusionMetrics.fusedDataPoints.get() >= 0)
+            assertTrue(
+                "Research data should be processed",
+                researchMetrics.totalDataPoints.get() > 0
+            )
+            assertTrue(
+                "Security operations should be recorded",
+                securityMetrics.totalEncryptions.get() > 0
+            )
+            assertTrue(
+                "Fusion should have processed data",
+                fusionMetrics.fusedDataPoints.get() >= 0
+            )
 
             println("✅ Advanced Multi-Modal Sensor Integration: PASSED")
         }
@@ -637,7 +675,10 @@ class EnhancedBLEHarmonizationTest {
                 }
 
             researchManager.registerResearchDevice(deviceId, "GSR", capabilities, qualityProfile)
-            fusionManager.registerSensorStream(deviceId, AdvancedSensorFusionManager.SensorType.GSR_PHYSIOLOGICAL)
+            fusionManager.registerSensorStream(
+                deviceId,
+                AdvancedSensorFusionManager.SensorType.GSR_PHYSIOLOGICAL
+            )
 
             // Test high-quality data point
             val highQualityData =
@@ -667,7 +708,10 @@ class EnhancedBLEHarmonizationTest {
 
             // Verify quality metrics
             val metrics = researchManager.getResearchMetrics()
-            assertTrue("Should have processed quality test data", metrics.totalDataPoints.get() >= 2)
+            assertTrue(
+                "Should have processed quality test data",
+                metrics.totalDataPoints.get() >= 2
+            )
 
             // Test fusion quality filtering
             val fusionMetrics = fusionManager.getFusionMetrics()

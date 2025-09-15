@@ -84,7 +84,10 @@ class Shimmer(private val handler: Handler, private val context: Context) {
         address: String,
         name: String = "Shimmer3_GSR",
     ) {
-        Log.i(TAG, "Attempting to connect to Shimmer device: $address (attempt ${connectionRetryCount + 1})")
+        Log.i(
+            TAG,
+            "Attempting to connect to Shimmer device: $address (attempt ${connectionRetryCount + 1})"
+        )
         deviceAddress = address
         deviceName = name
 
@@ -109,7 +112,7 @@ class Shimmer(private val handler: Handler, private val context: Context) {
 
         handler.postDelayed({
             handler.removeCallbacks(connectionTimeout)
-            
+
             if (connectionState == STATE_CONNECTING) {
                 isConnected.set(true)
                 connectionState = STATE_CONNECTED
@@ -171,20 +174,20 @@ class Shimmer(private val handler: Handler, private val context: Context) {
     fun disconnect() {
         // Step 9: Enhanced resource cleanup
         Log.i(TAG, "Disconnecting Shimmer device...")
-        
+
         // Cancel any ongoing reconnection attempts
         reconnectionJob?.cancel()
         reconnectionJob = null
-        
+
         // Cancel all coroutines in the scope for proper cleanup
         coroutineScope.coroutineContext[Job]?.cancel()
-        
+
         // Recreate coroutine scope for future use (allows reconnection)
         coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-        
+
         // Stop streaming first if active
         stopStreaming()
-        
+
         // Reset connection state
         isConnected.set(false)
         connectionState = STATE_NONE

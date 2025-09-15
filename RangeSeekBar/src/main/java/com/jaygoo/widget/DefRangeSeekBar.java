@@ -88,9 +88,11 @@ public class DefRangeSeekBar extends View {
     private boolean isEnable = true;
     private int progressPaddingRight;
     private OnRangeChangedListener callback;
+
     public DefRangeSeekBar(Context context) {
         this(context, null);
     }
+
     public DefRangeSeekBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         initAttrs(attrs);

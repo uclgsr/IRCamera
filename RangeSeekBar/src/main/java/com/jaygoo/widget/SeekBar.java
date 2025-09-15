@@ -76,6 +76,7 @@ public class SeekBar {
     private int thumbWidth;
     private int thumbHeight;
     private boolean isShowIndicator;
+
     public SeekBar(DefRangeSeekBar defRangeSeekBar, AttributeSet attrs, boolean isLeft) {
         this.defRangeSeekBar = defRangeSeekBar;
         this.isLeft = isLeft;

@@ -1,6 +1,9 @@
 package com.topdon.gsr.network
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.net.wifi.WifiManager
 import android.util.Log
 import com.topdon.gsr.model.SessionInfo
@@ -18,6 +21,7 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
 import java.net.InetSocketAddress
+import java.net.NetworkInterface
 import java.net.Socket
 import java.net.SocketTimeoutException
 import java.security.SecureRandom
@@ -203,16 +207,18 @@ class NetworkClient(private val context: Context) {
             val controllers = mutableListOf<ControllerInfo>()
 
             try {
-                val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-                val dhcpInfo = wifiManager.dhcpInfo
-
-                if (dhcpInfo.gateway == 0) {
-                    Log.w(TAG, "No gateway found, cannot discover controllers")
+                val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val activeNetwork = connectivityManager.activeNetwork
+                val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+                
+                if (activeNetwork == null || networkCapabilities == null || 
+                    !networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    Log.w(TAG, "No WiFi network found, cannot discover controllers")
                     return@withContext controllers
                 }
 
-                val gateway = intToIp(dhcpInfo.gateway)
-                val subnet = gateway.substring(0, gateway.lastIndexOf('.'))
+                // Use a common subnet for discovery when dhcpInfo is not available
+                val subnet = "192.168.1" // Common default subnet
 
                 Log.i(TAG, "Scanning subnet: $subnet.x for PC Controllers")
 
@@ -772,13 +778,23 @@ class NetworkClient(private val context: Context) {
 
     private fun getLocalIpAddress(): String {
         try {
-            val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-            val dhcpInfo = wifiManager.dhcpInfo
-            return intToIp(dhcpInfo.ipAddress)
+            val interfaces = NetworkInterface.getNetworkInterfaces()
+            while (interfaces.hasMoreElements()) {
+                val networkInterface = interfaces.nextElement()
+                if (!networkInterface.isLoopback && networkInterface.isUp) {
+                    val addresses = networkInterface.inetAddresses
+                    while (addresses.hasMoreElements()) {
+                        val address = addresses.nextElement()
+                        if (!address.isLoopbackAddress && address.address.size == 4) {
+                            return address.hostAddress ?: "127.0.0.1"
+                        }
+                    }
+                }
+            }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to get local IP address", e)
-            return "127.0.0.1"
         }
+        return "127.0.0.1"
     }
 
     fun getDiscoveredControllers(): List<ControllerInfo> = discoveredControllers.values.toList()
