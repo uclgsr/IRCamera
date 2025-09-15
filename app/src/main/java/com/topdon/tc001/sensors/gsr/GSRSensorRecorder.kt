@@ -14,9 +14,20 @@ import com.topdon.ble.ShimmerDevice as CustomShimmerDevice
 import com.topdon.ble.UnifiedBleManager
 import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.service.ShimmerGSRRecorder
-import com.topdon.tc001.sensors.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import com.topdon.tc001.sensors.SensorRecorder
+import com.topdon.tc001.sensors.SensorStatus
+import com.topdon.tc001.sensors.SensorCapabilities
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import com.topdon.gsr.service.GSRRecorder as LegacyGSRRecorder

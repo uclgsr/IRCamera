@@ -2,12 +2,19 @@ package com.topdon.tc001.network
 
 import android.content.Context
 import com.topdon.tc001.logging.StructuredLogger
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.UUID
+import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -125,12 +132,10 @@ class DataManagementService(private val context: Context) {
         loadExistingSessions()
         isInitialized.set(true)
 
-        // Corrected: Assumed a log method on the logger instance.
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            TAG,
+        // Log service initialization 
+        logger.info(
             "service_initialized",
-            details = mapOf(
+            mapOf(
                 "base_directory" to baseDirectory.absolutePath,
                 "existing_sessions" to activeSessions.size,
                 "registered_files" to fileRegistry.size,
@@ -169,18 +174,15 @@ class DataManagementService(private val context: Context) {
         saveSessionMetadata(session)
         activeSessions[sessionId] = session
 
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            TAG,
+        logger.info(
             "session_created",
-            details = mapOf(
+            mapOf(
                 "session_id" to sessionId,
                 "device_id" to deviceId,
-                // Corrected: Redundant 'as String' casts removed
                 "participant_id" to (participantId ?: "anonymous"),
                 "study_id" to (studyId ?: "default"),
                 "conditions" to conditions.joinToString(","),
-            ),
+            )
         )
         return session
     }
