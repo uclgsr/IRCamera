@@ -333,4 +333,3 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             recordingController.cleanup()
         }
     }
-}
