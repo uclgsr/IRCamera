@@ -1,0 +1,145 @@
+name: Gradle Build Check
+
+on:
+  push:
+    branches: [ main, develop, 'copilot/**' ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run build check every day at 6:00 AM UTC
+    - cron: '0 6 * * *'
+
+jobs:
+  gradle-build-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    strategy:
+      matrix:
+        task: [
+          'build',
+          'assemble', 
+          'compileKotlin',
+          'compileJava'
+        ]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      
+      - name: Grant execute permissions
+        run: chmod +x gradlew
+      
+      - name: Validate Gradle configuration
+        run: |
+          ./gradlew projects
+          ./gradlew dependencies --configuration implementation | head -20
+      
+      - name: Run gradle task - ${{ matrix.task }}
+        run: |
+          echo "Running gradle task: ${{ matrix.task }}"
+          ./gradlew ${{ matrix.task }} --no-daemon --parallel --info
+        env:
+          GRADLE_OPTS: -Xmx4g -XX:MaxMetaspaceSize=1g
+      
+      - name: Upload build reports for failed builds
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-build-reports-${{ matrix.task }}
+          path: |
+            **/build/reports/
+            **/build/outputs/logs/
+          retention-days: 3
+
+  gradle-lint-analysis:
+    runs-on: ubuntu-latest
+    needs: gradle-build-validation
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      
+      - name: Grant execute permissions
+        run: chmod +x gradlew
+      
+      - name: Run Android Lint
+        run: |
+          ./gradlew lint --no-daemon
+        continue-on-error: true
+      
+      - name: Run Detekt (Kotlin static analysis)
+        run: |
+          ./gradlew detekt --no-daemon
+        continue-on-error: true
+      
+      - name: Generate lint summary
+        if: always()
+        run: |
+          echo "## Lint Analysis Summary" > lint-summary.md
+          echo "**Generated**: $(date)" >> lint-summary.md
+          echo "" >> lint-summary.md
+          
+          # Find lint reports
+          find . -name "lint-results*.html" -o -name "lint-results*.xml" | while read -r file; do
+            echo "- Found lint report: $file" >> lint-summary.md
+          done
+          
+          # Count issues if XML reports exist
+          if ls **/build/reports/lint-results*.xml 1> /dev/null 2>&1; then
+            total_issues=$(grep -c "<issue" **/build/reports/lint-results*.xml || echo "0")
+            echo "- **Total Issues Found**: $total_issues" >> lint-summary.md
+          fi
+          
+          echo "" >> lint-summary.md
+          echo "Review detailed reports in the artifacts." >> lint-summary.md
+      
+      - name: Upload lint reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gradle-lint-reports
+          path: |
+            **/build/reports/lint-results*.html
+            **/build/reports/lint-results*.xml
+            **/build/reports/detekt/
+            lint-summary.md
+          retention-days: 14

@@ -1,13 +1,13 @@
-name: CI
+name: CI - Build and Code Quality
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, 'copilot/**' ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 jobs:
-  validate:
+  build-and-validate:
     runs-on: ubuntu-latest
     
     steps:
@@ -37,27 +37,61 @@ jobs:
         chmod +x gradlew
         chmod +x dev.sh
     
-    - name: Install development tools
+    - name: Install linting tools
       run: |
         # Install Python tools for linting
         pip install black flake8 yamllint
         
-        # Install shellcheck
+        # Install shellcheck and XML tools
         sudo apt-get update
         sudo apt-get install -y shellcheck xmllint
+        
+        # Install ktlint for Kotlin
+        curl -sSLO https://github.com/pinterest/ktlint/releases/download/1.0.1/ktlint && \
+        chmod a+x ktlint && \
+        sudo mv ktlint /usr/local/bin/
     
-    - name: Run code formatting
+    - name: Run code formatting check
       run: ./dev.sh format
     
-    - name: Run linting
+    - name: Run linting (ktlint, checkstyle, etc.)
       run: ./dev.sh lint
     
-    - name: Build project
-      run: timeout 600 ./dev.sh build
+    - name: Run static analysis
+      run: ./dev.sh static
     
-    - name: Run tests
-      run: ./dev.sh test
+    - name: Quick build validation
+      run: ./dev.sh build-check
+    
+    - name: Full gradle build
+      run: |
+        timeout 600 ./gradlew build -x test --no-daemon --parallel
+      env:
+        GRADLE_OPTS: -Xmx4g -XX:MaxMetaspaceSize=1g
+    
+    - name: Run unit tests
+      run: ./gradlew testDebugUnitTest --continue
       continue-on-error: true
+    
+    - name: Generate build report
+      if: always()
+      run: |
+        echo "## Build Summary" > build-summary.md
+        echo "- **Gradle Version**: $(./gradlew --version | grep Gradle | head -1)" >> build-summary.md
+        echo "- **Java Version**: $(java -version 2>&1 | head -1)" >> build-summary.md
+        echo "- **Kotlin Files**: $(find . -name "*.kt" -not -path "./build/*" | wc -l)" >> build-summary.md
+        echo "- **Java Files**: $(find . -name "*.java" -not -path "./build/*" | wc -l)" >> build-summary.md
+        echo "- **Build Status**: ${{ job.status }}" >> build-summary.md
+    
+    - name: Upload lint reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: lint-reports
+        path: |
+          **/build/reports/lint-results*.html
+          **/build/reports/lint-results*.xml
+        retention-days: 7
     
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
@@ -67,6 +101,8 @@ jobs:
         path: |
           **/build/reports/
           **/build/outputs/logs/
+          build-summary.md
+        retention-days: 7
     
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -76,3 +112,4 @@ jobs:
         path: |
           **/build/test-results/
           **/build/reports/tests/
+        retention-days: 7

@@ -19,29 +19,19 @@ show_help() {
     echo ""
     echo "Commands:"
     echo "  format      - Format all code files"
-    echo "  lint        - Run linting checks"
-    echo "  build       - Build the project"
+    echo "  lint        - Run linting checks (ktlint, checkstyle)"
+    echo "  static      - Run static analysis"
+    echo "  build       - Build the project (full gradle build)"
+    echo "  build-check - Quick build validation"
     echo "  test        - Run tests"
-    echo "  validate    - Run all checks (format + lint + build)"
+    echo "  validate    - Run all checks (format + lint + static + build)"
     echo "  clean       - Clean build artifacts"
     echo "  setup       - Setup development environment"
-    echo "  monitor     - Launch quality monitor"
-    echo "  analyze     - Run performance analysis"
     echo "  health      - Quick health check"
-    echo "  security    - Run security analysis"
-    echo "  codeql      - Run CodeQL security analysis"
     echo "  docs        - Generate documentation"
-    echo "  test-suite  - Run advanced testing suite"
-    echo "  release     - Manage releases and versioning"
     echo "  help        - Show this help"
     echo ""
     echo -e "${CYAN}Advanced Tools:${NC}"
-    echo "  ./tools/quality-monitor.sh     - Real-time quality monitoring"
-    echo "  ./tools/performance-analyzer.sh - Performance and optimization analysis"
-    echo "  ./tools/security-scanner.sh    - Comprehensive security analysis"
-    echo "  ./tools/advanced-testing.sh    - Advanced testing with coverage"
-    echo "  ./tools/doc-generator.sh       - Automated documentation generation"
-    echo "  ./tools/release-manager.sh     - Release management and versioning"
     echo "  ./status.sh                    - Project status overview"
 }
 
@@ -146,13 +136,40 @@ run_lint() {
     
     local errors=0
     
-    # Kotlin lint
+    # Kotlin lint with ktlint
     if command -v ktlint &> /dev/null; then
-        if ! find . -name "*.kt" -not -path "./build/*" -print0 | xargs -0 ktlint 2>/dev/null; then
+        print_status "Running ktlint on Kotlin files..."
+        if ! find . -name "*.kt" -not -path "./build/*" -not -path "./.gradle/*" -exec ktlint {} + 2>/dev/null; then
             errors=$((errors + 1))
             print_error "Kotlin linting issues found"
         else
             print_status "Kotlin linting passed"
+        fi
+    else
+        print_warning "ktlint not available. Install with: brew install ktlint (macOS) or download from GitHub"
+    fi
+    
+    # Java lint with checkstyle
+    if [ -f "checkstyle.xml" ] && command -v checkstyle &> /dev/null; then
+        print_status "Running checkstyle on Java files..."
+        if ! find . -name "*.java" -not -path "./build/*" -not -path "./.gradle/*" -exec checkstyle -c checkstyle.xml {} + 2>/dev/null; then
+            errors=$((errors + 1))
+            print_error "Java checkstyle issues found"
+        else
+            print_status "Java checkstyle passed"
+        fi
+    else
+        print_warning "checkstyle not available or checkstyle.xml missing"
+    fi
+    
+    # Gradle lint
+    if [ -f "./gradlew" ]; then
+        print_status "Running gradle lint..."
+        if ! ./gradlew lint --quiet 2>/dev/null; then
+            errors=$((errors + 1))
+            print_error "Gradle lint issues found"
+        else
+            print_status "Gradle lint passed"
         fi
     fi
     
@@ -194,16 +211,104 @@ run_lint() {
     fi
 }
 
+run_static_analysis() {
+    print_status "Running static analysis..."
+    
+    local errors=0
+    
+    # Run Android lint for detailed analysis
+    if [ -f "./gradlew" ]; then
+        print_status "Running Android lint analysis..."
+        ./gradlew lint --quiet || {
+            errors=$((errors + 1))
+            print_error "Android lint found issues"
+        }
+        
+        # Run detekt for Kotlin static analysis if available
+        print_status "Running detekt for Kotlin analysis..."
+        ./gradlew detekt --quiet 2>/dev/null || {
+            print_warning "Detekt not configured or failed"
+        }
+        
+        # Run spotbugs for Java static analysis if available
+        print_status "Running SpotBugs for Java analysis..."
+        ./gradlew spotbugsMain --quiet 2>/dev/null || {
+            print_warning "SpotBugs not configured or failed"
+        }
+    fi
+    
+    # PMD analysis if available
+    if command -v pmd &> /dev/null; then
+        print_status "Running PMD analysis..."
+        pmd check -R rulesets/java/quickstart.xml -d . -f text 2>/dev/null || {
+            print_warning "PMD analysis completed with issues"
+        }
+    fi
+    
+    if [ $errors -eq 0 ]; then
+        print_status "Static analysis completed successfully"
+    else
+        print_error "Static analysis found $errors critical issues"
+        return 1
+    fi
+}
+
 build_project() {
-    print_status "Building project..."
+    print_status "Building project (full gradle build)..."
     
     if [ -f "./gradlew" ]; then
-        if ./gradlew :app:assemble --quiet; then
-            print_status "Build completed successfully"
+        # Clean first to ensure fresh build
+        print_status "Cleaning previous build artifacts..."
+        ./gradlew clean --quiet
+        
+        # Full build with all modules
+        print_status "Running full gradle build..."
+        if ./gradlew build --quiet; then
+            print_status "Full build completed successfully"
         else
             print_error "Build failed"
+            print_status "Running build with more verbose output for debugging..."
+            ./gradlew build --info | tail -20
             return 1
         fi
+    else
+        print_error "No gradlew found"
+        return 1
+    fi
+}
+
+build_check() {
+    print_status "Running quick build validation..."
+    
+    if [ -f "./gradlew" ]; then
+        # Quick assembly check without tests
+        print_status "Validating gradle configuration..."
+        if ! ./gradlew tasks --quiet >/dev/null 2>&1; then
+            print_error "Gradle configuration has issues"
+            return 1
+        fi
+        
+        print_status "Running quick build check..."
+        if ./gradlew :app:assemble --quiet; then
+            print_status "Quick build check passed"
+        else
+            print_error "Quick build check failed"
+            return 1
+        fi
+        
+        # Check for common build issues
+        print_status "Checking for common issues..."
+        if [ ! -f "gradle/libs.versions.toml" ]; then
+            print_warning "Version catalog missing"
+        fi
+        
+        # Verify key directories exist
+        if [ ! -d "app/src/main" ]; then
+            print_error "Main app source directory missing"
+            return 1
+        fi
+        
+        print_status "Build validation completed successfully"
     else
         print_error "No gradlew found"
         return 1
@@ -235,7 +340,8 @@ validate_all() {
     # Run all validation steps
     format_code
     run_lint
-    build_project
+    run_static_analysis
+    build_check
     
     local end_time
     end_time=$(date +%s)
@@ -302,76 +408,26 @@ clean_artifacts() {
     print_status "Clean completed"
 }
 
-run_codeql_analysis() {
-    print_status "Running CodeQL security analysis..."
+generate_docs() {
+    print_status "Generating documentation..."
     
-    # Check if CodeQL CLI is available
-    if ! command -v codeql &> /dev/null; then
-        print_warning "CodeQL CLI not found locally. Analysis will run in GitHub Actions."
-        echo ""
-        echo -e "${YELLOW}To run CodeQL locally:${NC}"
-        echo "1. Download CodeQL CLI from: https://github.com/github/codeql-cli-binaries"
-        echo "2. Add to PATH"
-        echo "3. Run: codeql database create --language=java,kotlin --source-root=. ./codeql-db"
-        echo "4. Run: codeql database analyze ./codeql-db --format=sarif-latest --output=results.sarif"
-        echo ""
-        echo -e "${BLUE}Alternatively, push changes to trigger GitHub Actions CodeQL analysis${NC}"
-        return 0
+    # Generate Javadoc for Java files
+    if [ -f "./gradlew" ]; then
+        print_status "Generating Javadoc..."
+        ./gradlew javadoc --quiet 2>/dev/null || {
+            print_warning "Javadoc generation failed or not configured"
+        }
     fi
     
-    # Create CodeQL database
-    local db_path="./codeql-database"
-    local results_path="./codeql-results.sarif"
-    
-    print_status "Creating CodeQL database..."
-    if [ -d "$db_path" ]; then
-        rm -rf "$db_path"
+    # Generate KDoc for Kotlin files
+    if [ -f "./gradlew" ]; then
+        print_status "Generating KDoc..."
+        ./gradlew dokkaHtml --quiet 2>/dev/null || {
+            print_warning "KDoc generation failed or not configured"
+        }
     fi
     
-    # Build project first to ensure all code is compiled
-    print_status "Building project for CodeQL analysis..."
-    ./gradlew build -x test --quiet || {
-        print_warning "Build failed, but continuing with CodeQL analysis"
-    }
-    
-    # Create database
-    codeql database create \
-        --language=java,kotlin \
-        --source-root=. \
-        --command="./gradlew build -x test --quiet" \
-        "$db_path" || {
-        print_error "Failed to create CodeQL database"
-        return 1
-    }
-    
-    # Run analysis
-    print_status "Running CodeQL analysis..."
-    codeql database analyze \
-        "$db_path" \
-        --format=sarif-latest \
-        --output="$results_path" \
-        --download || {
-        print_error "CodeQL analysis failed"
-        return 1
-    }
-    
-    # Show summary
-    if [ -f "$results_path" ]; then
-        local issues
-        issues=$(jq '.runs[0].results | length' "$results_path" 2>/dev/null || echo "unknown")
-        print_status "CodeQL analysis complete. Found $issues potential issues."
-        print_status "Results saved to: $results_path"
-        
-        # Show high-severity issues if any
-        if command -v jq &> /dev/null && [ "$issues" != "0" ] && [ "$issues" != "unknown" ]; then
-            echo ""
-            echo -e "${YELLOW}High-severity issues:${NC}"
-            jq -r '.runs[0].results[] | select(.level == "error" or .ruleId | contains("security")) | "- \(.message.text) (\(.ruleId))"' "$results_path" 2>/dev/null | head -5
-        fi
-    fi
-    
-    echo ""
-    print_status "CodeQL analysis completed. View detailed results in GitHub Security tab or $results_path"
+    print_status "Documentation generation completed"
 }
 
 # Main command handler
@@ -382,8 +438,14 @@ case "${1:-help}" in
     "lint")
         run_lint
         ;;
+    "static")
+        run_static_analysis
+        ;;
     "build")
         build_project
+        ;;
+    "build-check")
+        build_check
         ;;
     "test")
         run_tests
@@ -397,53 +459,11 @@ case "${1:-help}" in
     "setup")
         setup_dev_environment
         ;;
-    "monitor")
-        if [ -x "./tools/quality-monitor.sh" ]; then
-            ./tools/quality-monitor.sh
-        else
-            print_error "Quality monitor not found or not executable"
-        fi
-        ;;
-    "analyze")
-        if [ -x "./tools/performance-analyzer.sh" ]; then
-            ./tools/performance-analyzer.sh
-        else
-            print_error "Performance analyzer not found or not executable"
-        fi
-        ;;
     "health")
         quick_health_check
         ;;
-    "security")
-        if [ -x "./tools/security-scanner.sh" ]; then
-            ./tools/security-scanner.sh
-        else
-            print_error "Security scanner not found or not executable"
-        fi
-        ;;
-    "codeql")
-        run_codeql_analysis
-        ;;
     "docs")
-        if [ -x "./tools/doc-generator.sh" ]; then
-            ./tools/doc-generator.sh
-        else
-            print_error "Documentation generator not found or not executable"
-        fi
-        ;;
-    "test-suite")
-        if [ -x "./tools/advanced-testing.sh" ]; then
-            ./tools/advanced-testing.sh
-        else
-            print_error "Advanced testing suite not found or not executable"
-        fi
-        ;;
-    "release")
-        if [ -x "./tools/release-manager.sh" ]; then
-            ./tools/release-manager.sh "${@:2}"
-        else
-            print_error "Release manager not found or not executable"
-        fi
+        generate_docs
         ;;
     "help"|*)
         show_help
