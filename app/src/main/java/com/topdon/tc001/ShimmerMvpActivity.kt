@@ -78,9 +78,12 @@ class ShimmerMvpActivity : AppCompatActivity() {
     ) { permissions ->
         val allGranted = permissions.all { it.value }
         if (allGranted) {
+            Log.i(TAG, "All permissions granted, initializing Shimmer")
             initializeShimmer()
         } else {
-            showToast("Bluetooth permissions required for Shimmer connection")
+            val deniedPermissions = permissions.filter { !it.value }.keys
+            Log.w(TAG, "Permissions denied: ${deniedPermissions.joinToString()}")
+            showPermissionDeniedDialog(deniedPermissions.toList())
         }
     }
 
@@ -208,8 +211,12 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 }
 
                 val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-                if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-                    showToast("Bluetooth is not available or enabled")
+                if (bluetoothAdapter == null) {
+                    showBluetoothNotSupportedDialog()
+                    binding.connectButton.isEnabled = true
+                    return@launch
+                } else if (!bluetoothAdapter.isEnabled) {
+                    showBluetoothDisabledDialog()
                     binding.connectButton.isEnabled = true
                     return@launch
                 }
@@ -235,13 +242,14 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     connectToShimmerDevice(discoveredShimmers.first())
                 } else {
                     updateConnectionStatus("No Shimmer3 GSR+ devices found")
-                    showToast("No Shimmer devices found.\n\nTroubleshooting:\n1. Ensure your Shimmer device is powered on\n2. Move closer to the device\n3. Try pairing manually in Bluetooth settings")
+                    showDeviceNotFoundDialog()
                     binding.connectButton.isEnabled = true
                 }
 
             } catch (e: Exception) {
                 Log.e(TAG, "Error scanning for Shimmer3 GSR+ devices", e)
                 updateConnectionStatus("Device scan failed: ${e.message}")
+                showScanErrorDialog(e)
                 binding.connectButton.isEnabled = true
             }
         }
@@ -629,6 +637,136 @@ class ShimmerMvpActivity : AppCompatActivity() {
         binding.gsrValueText.text = "GSR: -- µS"
         binding.sampleCountText.text = "Samples: 0"
         updateConnectionStatus("Initializing...")
+    }
+
+    private fun showPermissionDeniedDialog(deniedPermissions: List<String>) {
+        val permissionNames = deniedPermissions.map { permission ->
+            when (permission) {
+                Manifest.permission.BLUETOOTH_SCAN -> "Bluetooth Scanning"
+                Manifest.permission.BLUETOOTH_CONNECT -> "Bluetooth Connection"  
+                Manifest.permission.ACCESS_FINE_LOCATION -> "Fine Location"
+                Manifest.permission.ACCESS_COARSE_LOCATION -> "Coarse Location"
+                Manifest.permission.BLUETOOTH -> "Bluetooth (Legacy)"
+                Manifest.permission.BLUETOOTH_ADMIN -> "Bluetooth Admin (Legacy)"
+                else -> permission
+            }
+        }
+
+        val message = """
+            The following permissions are required for Shimmer GSR device functionality:
+            
+            ${permissionNames.joinToString("\n• ", "• ")}
+            
+            Without these permissions, you cannot:
+            • Discover nearby Shimmer devices
+            • Connect to your Shimmer GSR sensor
+            • Record physiological data
+            
+            Please grant these permissions to continue.
+        """.trimIndent()
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Permissions Required")
+            .setMessage(message)
+            .setPositiveButton("Grant Permissions") { _, _ ->
+                // Re-request permissions
+                val missingPermissions = getMissingPermissions()
+                if (missingPermissions.isNotEmpty()) {
+                    permissionLauncher.launch(missingPermissions)
+                }
+            }
+            .setNegativeButton("Settings") { _, _ ->
+                // Open app settings
+                val intent = android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = android.net.Uri.parse("package:$packageName")
+                startActivity(intent)
+            }
+            .setNeutralButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+                showToast("Shimmer functionality requires permissions")
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun showBluetoothNotSupportedDialog() {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Bluetooth Not Supported")
+            .setMessage("This device does not support Bluetooth, which is required for Shimmer GSR sensor communication.")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun showBluetoothDisabledDialog() {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Bluetooth Disabled")
+            .setMessage("Bluetooth must be enabled to connect to Shimmer devices. Would you like to enable it now?")
+            .setPositiveButton("Enable Bluetooth") { _, _ ->
+                val enableBtIntent = android.content.Intent(android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                bluetoothLauncher.launch(enableBtIntent)
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+                showToast("Bluetooth is required for Shimmer connection")
+            }
+            .show()
+    }
+
+    private fun showDeviceNotFoundDialog() {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("No Shimmer Devices Found")
+            .setMessage("""
+                No Shimmer3 GSR+ devices were discovered during scanning.
+                
+                Troubleshooting steps:
+                • Ensure your Shimmer device is powered on
+                • Move closer to the device (within 10 meters)
+                • Check that the device is not connected to another app
+                • Try pairing manually in Bluetooth settings first
+                
+                Common device names: Shimmer3 GSR+, RN4x, or devices starting with "GSR"
+            """.trimIndent())
+            .setPositiveButton("Retry Scan") { _, _ ->
+                scanForShimmerDevices()
+            }
+            .setNegativeButton("Bluetooth Settings") { _, _ ->
+                val intent = android.content.Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS)
+                startActivity(intent)
+            }
+            .setNeutralButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun showScanErrorDialog(error: Exception) {
+        val errorMessage = when {
+            error is SecurityException -> "Permission error during BLE scan. Please check Bluetooth permissions."
+            error.message?.contains("bluetooth", true) == true -> "Bluetooth error: ${error.message}"
+            else -> "Scan failed: ${error.message}"
+        }
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Scan Error")
+            .setMessage("""
+                $errorMessage
+                
+                This could be due to:
+                • Missing Bluetooth permissions
+                • Bluetooth adapter issues
+                • System resource constraints
+                
+                Try restarting Bluetooth or the app if the problem persists.
+            """.trimIndent())
+            .setPositiveButton("Retry") { _, _ ->
+                scanForShimmerDevices()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun showToast(message: String) {
