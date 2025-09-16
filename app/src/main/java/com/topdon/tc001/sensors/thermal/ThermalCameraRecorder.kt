@@ -16,6 +16,9 @@ import com.topdon.tc001.sensors.RecordingStats
 import com.topdon.tc001.sensors.RecordingStatus
 import com.topdon.tc001.sensors.SensorError
 import com.topdon.tc001.sensors.SensorRecorder
+import com.topdon.tc001.util.BufferedDataWriter
+import com.topdon.tc001.util.CSVBufferedWriter
+import com.topdon.tc001.util.SessionDirectoryManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -75,8 +78,8 @@ class ThermalCameraRecorder(
 
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private var csvWriter: CSVWriter? = null
-    private var framesCsvWriter: CSVWriter? = null
+    private var thermalDataWriter: CSVBufferedWriter? = null
+    private var thermalFramesWriter: BufferedDataWriter? = null
 
     private val _statusFlow = MutableSharedFlow<RecordingStatus>()
     private val _errorFlow = MutableSharedFlow<SensorError>()
@@ -438,23 +441,21 @@ class ThermalCameraRecorder(
                     "%.3f".format(thermalData.emissivity),
                     "%.2f".format(thermalData.reflectedTemperature)
                 )
-                csvWriter?.writeNext(summaryData)
+                thermalDataWriter?.writeRow(summaryData.toList())
 
-                val frameData = mutableListOf<String>().apply {
-                    add(timestamp.toString())
-                    add(frameNumber.toString())
+                val frameData = mutableListOf<Any>().apply {
+                    add(timestamp)
+                    add(frameNumber)
                     thermalData.temperatureMatrix.forEach { row ->
                         row.forEach { temp ->
-                            add("%.2f".format(temp))
+                            add(String.format("%.2f", temp))
                         }
                     }
                 }
-                framesCsvWriter?.writeNext(frameData.toTypedArray())
-
-                if (frameNumber % 30 == 0L) { // Every 30 frames (~3 seconds at 9 FPS)
-                    csvWriter?.flush()
-                    framesCsvWriter?.flush()
-                }
+                
+                // Convert frame data to CSV line
+                val frameDataLine = frameData.joinToString(",")
+                thermalFramesWriter?.writeLine(frameDataLine)
                 Unit // Explicitly return Unit to make this not an expression
 
             } catch (e: Exception) {
@@ -782,10 +783,11 @@ class ThermalCameraRecorder(
 
             _isRecording.set(false)
 
-            csvWriter?.close()
-            framesCsvWriter?.close()
-            csvWriter = null
-            framesCsvWriter = null
+            // Stop and cleanup buffered writers
+            thermalDataWriter?.stop()
+            thermalFramesWriter?.stop()
+            thermalDataWriter = null
+            thermalFramesWriter = null
 
             Log.i(TAG, "Real IR thermal camera recording stopped")
             emitStatus()
@@ -813,29 +815,47 @@ class ThermalCameraRecorder(
     }
 
     private suspend fun setupOutputFiles() {
+        // Use standard file paths from SessionDirectoryManager
+        val thermalDir = File(sessionDirectory, "Thermal")
+        thermalDir.mkdirs()
+        
+        thermalDataFile = File(thermalDir, SessionDirectoryManager.THERMAL_METADATA_FILE.replace(".csv", "_data.csv"))
+        thermalFramesFile = File(thermalDir, SessionDirectoryManager.THERMAL_FRAMES_FILE.replace(".raw", ".csv"))
 
-        thermalDataFile = File(sessionDirectory, THERMAL_DATA_FILENAME)
-        csvWriter = CSVWriter(FileWriter(thermalDataFile))
-
-        val header = arrayOf(
+        // Setup buffered CSV writer for thermal data
+        val thermalDataHeaders = listOf(
             "timestamp_ns",
-            "frame_number",
+            "frame_number", 
             "min_temp_c",
             "max_temp_c",
             "avg_temp_c",
             "center_temp_c",
-            "ambient_temp_c",
+            "ambient_temp_c", 
             "emissivity",
             "reflected_temp_c"
         )
-        csvWriter?.writeNext(header)
+        
+        thermalDataWriter = CSVBufferedWriter(
+            thermalDataFile!!,
+            thermalDataHeaders,
+            bufferSize = 4096,
+            flushIntervalMs = 500L // Flush every 500ms for thermal data
+        )
+        thermalDataWriter?.startWithHeaders()
 
-        thermalFramesFile = File(sessionDirectory, THERMAL_FRAMES_FILENAME)
-        framesCsvWriter = CSVWriter(FileWriter(thermalFramesFile))
+        // Setup buffered writer for frame data (high volume)
+        thermalFramesWriter = BufferedDataWriter(
+            thermalFramesFile!!,
+            bufferSize = 16384, // Larger buffer for frame data
+            flushIntervalMs = 1000L, // Flush every second
+            maxQueueSize = 5000
+        )
+        thermalFramesWriter?.start()
 
-        val framesHeader = listOf("timestamp_ns", "frame_number") +
-                (0 until thermalResolution.first * thermalResolution.second).map { "temp_$it" }
-        framesCsvWriter?.writeNext(framesHeader.toTypedArray())
+        // Write header for frames file
+        val framesHeader = "timestamp_ns,frame_number," +
+                (0 until thermalResolution.first * thermalResolution.second).joinToString(",") { "temp_$it" }
+        thermalFramesWriter?.writeLine(framesHeader)
 
         writeThermalCalibration()
     }
@@ -901,8 +921,7 @@ class ThermalCameraRecorder(
                 emissivity.toString(),
                 reflectedTemperature.toString()
             )
-            csvWriter?.writeNext(syncRow)
-            csvWriter?.flush()
+            thermalDataWriter?.writeRow(syncRow.toList())
 
             Log.i(TAG, "IR thermal sync marker added: $markerType at $timestampNs")
 

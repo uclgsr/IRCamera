@@ -21,6 +21,7 @@ import com.csl.irCamera.databinding.ActivitySessionManagerBinding
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.service.SessionManager
 import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.topdon.tc001.util.SessionDirectoryManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -34,6 +35,7 @@ import java.util.Locale
 class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding>() {
     private lateinit var adapter: SessionAdapter
     private lateinit var sessionManager: SessionManager
+    private lateinit var sessionDirectoryManager: SessionDirectoryManager
 
     private val sessions = mutableListOf<SessionInfo>()
     private val filteredSessions = mutableListOf<SessionInfo>()
@@ -68,6 +70,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
 
     private fun setupSessionManager() {
         sessionManager = SessionManager.getInstance(this)
+        sessionDirectoryManager = SessionDirectoryManager(this)
     }
 
     private fun setupRecyclerView() {
@@ -132,6 +135,23 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
 
         scope.launch {
             try {
+                // Display storage information
+                displayStorageInfo()
+                
+                // Clean up failed sessions
+                val cleanedSessions = withContext(Dispatchers.IO) {
+                    sessionDirectoryManager.cleanupFailedSessions()
+                }
+                
+                if (cleanedSessions.isNotEmpty()) {
+                    Log.i(TAG, "Cleaned up ${cleanedSessions.size} failed sessions")
+                    Toast.makeText(
+                        this@SessionManagerActivity,
+                        "Cleaned up ${cleanedSessions.size} failed sessions",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
                 val loadedSessions =
                     withContext(Dispatchers.IO) {
 
@@ -152,6 +172,26 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             } finally {
                 showLoading(false)
             }
+        }
+    }
+    
+    private suspend fun displayStorageInfo() {
+        try {
+            val storageStatus = sessionDirectoryManager.checkStorageSpace()
+            runOnUiThread {
+                val storageText = "Storage: ${storageStatus.formattedAvailable} available (${100 - storageStatus.usagePercentage}% free)"
+                supportActionBar?.subtitle = storageText
+                
+                if (storageStatus.isLowStorage) {
+                    Toast.makeText(
+                        this@SessionManagerActivity,
+                        "Warning: Low storage space! Only ${storageStatus.formattedAvailable} available.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to get storage info", e)
         }
     }
 
