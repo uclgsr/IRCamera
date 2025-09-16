@@ -308,8 +308,19 @@ public class UnifiedBleManager {
 
     @NonNull
     public List<UnifiedDevice> getConnectedTopdonDevices() {
-
-        return new ArrayList<>();
+        List<UnifiedDevice> topdonDevices = new ArrayList<>();
+        
+        // Return actual connected Topdon devices from topdonController  
+        if (topdonController != null) {
+            try {
+                topdonDevices.addAll(topdonController.getConnectedDevices());
+                Log.d(TAG, "Found " + topdonDevices.size() + " connected Topdon devices");
+            } catch (Exception e) {
+                Log.e(TAG, "Error getting connected Topdon devices", e);
+            }
+        }
+        
+        return topdonDevices;
     }
 
     @NonNull
