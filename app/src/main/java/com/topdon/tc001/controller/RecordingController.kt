@@ -14,7 +14,7 @@ import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import com.topdon.tc001.sensors.thermal.ThermalCameraRecorder
 import com.topdon.tc001.util.SessionDirectoryManager
 import com.topdon.tc001.util.SessionDirectory
-import com.topdon.tc001.util.SessionMetadata
+import com.topdon.tc001.data.SessionMetadata
 import com.topdon.tc001.util.StorageStatus
 
 import kotlinx.coroutines.CoroutineScope
@@ -34,6 +34,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.coroutineScope
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -226,25 +227,28 @@ class RecordingController(
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 
                 // Create session metadata
-                val metadata = SessionMetadata(
-                    startTime = System.currentTimeMillis(),
+                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
+                
+                // Create the util.SessionMetadata for SessionDirectoryManager (legacy compatibility)
+                val utilMetadata = com.topdon.tc001.util.SessionMetadata(
+                    startTime = sessionMetadata!!.sessionStartTimestampMs,
                     enabledSensors = enabledSensors,
                     participantId = participantId,
                     studyName = studyName
                 )
-                sessionDirectoryManager.createSessionMetadata(sessionDir, metadata)
+                sessionDirectoryManager.createSessionMetadata(sessionDir, utilMetadata)
 
-                currentSessionDirectory = sessionDirectory
+                currentSessionDirectory = sessionDir
                 
                 // Capture common timestamp reference for all sensors
-                sessionStartTimestampMs = System.currentTimeMillis()
-                sessionStartTimestampNs = System.nanoTime()
+                sessionStartTimestampMs = sessionMetadata!!.sessionStartTimestampMs
+                sessionStartTimestampNs = sessionMetadata!!.sessionStartMonotonicNs
                 recordingStartTime = sessionStartTimestampNs
 
                 Log.i(TAG, "Session reference timestamps: ${sessionStartTimestampMs}ms, ${sessionStartTimestampNs}ns")
 
                 // Create session metadata file with reference timing
-                createSessionMetadata(sessionDir)
+                createSessionMetadata(sessionDir.rootDir)
 
                 // Clear previous active recorder tracking
                 activeRecorders.clear()
@@ -256,7 +260,7 @@ class RecordingController(
                             Log.i(TAG, "Starting sensor: $sensorName")
                             
                             // Create sensor-specific subdirectory  
-                            val sensorDir = File(sessionDir, sensorName.lowercase())
+                            val sensorDir = File(sessionDir.rootDir, sensorName.lowercase())
                             sensorDir.mkdirs()
                             
                             val success = sensor.startRecording(sensorDir.absolutePath)
@@ -415,8 +419,11 @@ class RecordingController(
 
                 currentSessionDirectory = sessionDirWrapper
                 recordingStartTime = System.nanoTime()
+                
+                // Create session metadata for timing synchronization
+                sessionMetadata = SessionMetadata.createSessionStart(sessionDir.name)
 
-                Log.i(TAG, "Session created: $finalSessionId")
+                Log.i(TAG, "Session created: ${sessionDir.name}")
                 Log.i(TAG, "Session start time: ${sessionMetadata!!.sessionStartIso}")
                 Log.i(TAG, "Wall clock: ${sessionMetadata!!.sessionStartTimestampMs}ms")
                 Log.i(TAG, "Monotonic: ${sessionMetadata!!.sessionStartMonotonicNs}ns")
@@ -544,11 +551,6 @@ class RecordingController(
         }
     }
 
-    // Legacy method for backward compatibility
-    suspend fun startRecording(sessionDirectory: String): Boolean {
-        return startSession(sessionDirectory)
-    }
-
     suspend fun stopSession(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -584,7 +586,7 @@ class RecordingController(
 
                 // Update session metadata with completion info
                 currentSessionDirectory?.let { sessionDir ->
-                    updateSessionMetadata(File(sessionDir), stopResult)
+                    updateSessionMetadata(sessionDir.rootDir, stopResult)
                 }
 
                 // Reset session state for next session
@@ -593,22 +595,6 @@ class RecordingController(
                 sessionStartTimestampNs = 0
                 currentSessionDirectory = null
 
-                val sessionDuration = (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
-                
-                // Update session metadata with completion information
-                currentSessionDirectory?.let { sessionDir ->
-                    val status = if (failedStops.isEmpty()) "COMPLETED" else "COMPLETED_WITH_ERRORS"
-                    val errors = failedStops.associate { 
-                        it.first to (it.third?.message ?: "Failed to stop cleanly")
-                    }
-                    sessionDirectoryManager.updateSessionMetadata(
-                        sessionDir,
-                        System.currentTimeMillis(),
-                        status,
-                        errors
-                    )
-                }
-                
                 Log.i(TAG, "Multi-modal recording stopped (duration: ${sessionDuration}s)")
 
                 true
@@ -647,7 +633,7 @@ class RecordingController(
     /**
      * Safely stop all active recorders, only attempting to stop those that started successfully
      */
-    private suspend fun safeStopAll(): Map<String, Boolean> {
+    private suspend fun safeStopAll(): Map<String, Boolean> = coroutineScope {
         val stopResults = mutableMapOf<String, Boolean>()
         
         // Only stop recorders that are marked as active
@@ -657,7 +643,7 @@ class RecordingController(
 
         if (activeRecordersList.isEmpty()) {
             Log.i(TAG, "No active recorders to stop")
-            return stopResults
+            return@coroutineScope stopResults
         }
 
         val stopJobs = activeRecordersList.map { (sensorName, sensor) ->
@@ -698,7 +684,7 @@ class RecordingController(
         val totalCount = stopResults.size
         Log.i(TAG, "Stop operation complete: $successCount/$totalCount sensors stopped cleanly")
 
-        return stopResults
+        return@coroutineScope stopResults
     }
 
     private fun createSessionMetadata(sessionDir: File) {
@@ -934,7 +920,7 @@ class RecordingController(
         return SessionDiagnostics(
             isRecording = _isRecording.get(),
             sessionState = _recordingStateFlow.value,
-            sessionDirectory = currentSessionDirectory,
+            sessionDirectory = currentSessionDirectory?.rootDir?.absolutePath,
             sessionDurationMs = sessionDuration,
             sessionStartTimestamp = sessionStartTimestampMs,
             referenceTimestampNs = sessionStartTimestampNs,
@@ -983,7 +969,7 @@ class RecordingController(
 
         // Check metadata file existence
         if (_isRecording.get() && currentSessionDirectory != null) {
-            val metadataFile = File(currentSessionDirectory!!, "session_metadata.json")
+            val metadataFile = File(currentSessionDirectory!!.rootDir, "session_metadata.json")
             if (!metadataFile.exists()) {
                 warnings.add("Session metadata file not found")
             }
@@ -995,54 +981,6 @@ class RecordingController(
             warnings = warnings,
             checkedAt = System.currentTimeMillis()
         )
-    }
-
-    private fun createSessionMetadata(sessionDir: File) {
-        try {
-            val metadataFile = File(sessionDir, "session_metadata.json")
-            val metadata = mapOf(
-                "session_id" to sessionDir.name,
-                "start_timestamp_ms" to sessionStartTimestampMs,
-                "start_timestamp_ns" to sessionStartTimestampNs,
-                "available_sensors" to sensorRecorders.keys.toList(),
-                "expected_sensors" to listOf("RGB", "Thermal", "Shimmer"),
-                "recording_controller_version" to "2.0.0",
-                "created_at" to java.time.Instant.now().toString()
-            )
-            
-            val jsonString = org.json.JSONObject(metadata).toString(2)
-            metadataFile.writeText(jsonString)
-            Log.i(TAG, "Session metadata created: ${metadataFile.absolutePath}")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to create session metadata", e)
-        }
-    }
-
-    private fun updateSessionMetadata(sessionDir: File, stopResults: Map<String, Boolean>) {
-        try {
-            val metadataFile = File(sessionDir, "session_metadata.json")
-            if (!metadataFile.exists()) {
-                Log.w(TAG, "Session metadata file not found for update")
-                return
-            }
-
-            val existingContent = metadataFile.readText()
-            val existingJson = org.json.JSONObject(existingContent)
-            
-            // Add completion information
-            existingJson.put("end_timestamp_ms", System.currentTimeMillis())
-            existingJson.put("end_timestamp_ns", System.nanoTime())
-            existingJson.put("session_duration_ms", System.currentTimeMillis() - sessionStartTimestampMs)
-            existingJson.put("active_sensors", activeRecorders.keys.toList())
-            existingJson.put("stop_results", org.json.JSONObject(stopResults))
-            existingJson.put("completed_successfully", stopResults.isNotEmpty() && stopResults.values.any { it })
-            existingJson.put("updated_at", java.time.Instant.now().toString())
-
-            metadataFile.writeText(existingJson.toString(2))
-            Log.i(TAG, "Session metadata updated with completion info")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to update session metadata", e)
-        }
     }
 
     suspend fun cleanup() {
@@ -1318,7 +1256,6 @@ class RecordingController(
      * Get current session directory info
      */
     fun getCurrentSessionDirectory(): SessionDirectory? = currentSessionDirectory
-}
 }
 
 enum class RecordingState {

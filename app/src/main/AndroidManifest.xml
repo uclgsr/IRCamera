@@ -42,6 +42,10 @@
     <!-- Camera permissions for RGB video recording -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- USB permissions for thermal camera integration -->
+    <uses-permission android:name="android.permission.USB_PERMISSION" />
+    <uses-permission android:name="android.permission.ACCESS_USB_ACCESSORY" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -61,6 +65,9 @@
 
     <uses-feature
         android:name="android.hardware.usb.host"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.usb.accessory"
         android:required="false" />
 
     <application

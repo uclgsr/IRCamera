@@ -268,7 +268,6 @@ class RecordingService : LifecycleService() {
                             "initialization_failed",
                             mapOf("reason" to "no_sensors_available")
                         )
-                        )
                         stopSelf()
                     }
                 } catch (e: Exception) {

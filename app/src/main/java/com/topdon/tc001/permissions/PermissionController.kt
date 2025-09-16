@@ -69,6 +69,16 @@ class PermissionController(
             } else {
                 emptyArray()
             }
+
+        // USB permissions for thermal camera integration
+        private val USB_PERMISSIONS = arrayOf(
+            "android.permission.USB_PERMISSION",
+            "android.permission.ACCESS_USB_ACCESSORY"
+        )
+
+        // Thermal camera device identifiers
+        private const val TOPDON_VENDOR_ID = 16902
+        private const val TC001_PRODUCT_ID = 14082
     }
 
     private val isInitialized = AtomicBoolean(false)
@@ -93,7 +103,99 @@ class PermissionController(
                 hasBluetoothPermissions() &&
                 hasStoragePermissions() &&
                 hasForegroundServicePermissions() &&
-                hasNotificationPermissions()
+                hasNotificationPermissions() &&
+                hasUsbPermissions()
+    }
+
+    /**
+     * Check if USB permissions are granted for thermal camera integration
+     */
+    fun hasUsbPermissions(): Boolean {
+        return usbManager?.deviceList?.values?.any { device ->
+            device.vendorId == TOPDON_VENDOR_ID && device.productId == TC001_PRODUCT_ID
+        } ?: false || hasManualUsbPermissions()
+    }
+
+    private fun hasManualUsbPermissions(): Boolean {
+        // Check if we have at least USB host permissions
+        return activity.packageManager.hasSystemFeature(PackageManager.FEATURE_USB_HOST)
+    }
+
+    /**
+     * Request USB permission for a specific thermal camera device
+     */
+    fun requestUsbPermission(device: UsbDevice, callback: (Boolean, UsbDevice?) -> Unit) {
+        usbPermissionCallback = callback
+        
+        if (usbManager?.hasPermission(device) == true) {
+            Log.i(TAG, "USB permission already granted for device: ${device.deviceName}")
+            callback(true, device)
+            return
+        }
+
+        Log.i(TAG, "Requesting USB permission for device: ${device.deviceName}")
+        
+        val permissionIntent = Intent("com.topdon.tc001.USB_PERMISSION").apply {
+            setPackage(activity.packageName)
+        }
+        
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            android.app.PendingIntent.getBroadcast(
+                activity,
+                REQUEST_USB_PERMISSION,
+                permissionIntent,
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+            )
+        } else {
+            android.app.PendingIntent.getBroadcast(
+                activity,
+                REQUEST_USB_PERMISSION,
+                permissionIntent,
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+        
+        usbManager?.requestPermission(device, pendingIntent)
+    }
+
+    /**
+     * Check for connected thermal camera devices and request permissions
+     */
+    fun checkAndRequestThermalCameraPermissions(callback: (Boolean, List<UsbDevice>) -> Unit) {
+        val thermalDevices = usbManager?.deviceList?.values?.filter { device ->
+            device.vendorId == TOPDON_VENDOR_ID && device.productId == TC001_PRODUCT_ID
+        } ?: emptyList()
+
+        if (thermalDevices.isEmpty()) {
+            Log.w(TAG, "No Topdon TC001 thermal camera devices found")
+            callback(false, emptyList())
+            return
+        }
+
+        val devicesWithPermission = mutableListOf<UsbDevice>()
+        val devicesNeedingPermission = mutableListOf<UsbDevice>()
+
+        for (device in thermalDevices) {
+            if (usbManager?.hasPermission(device) == true) {
+                devicesWithPermission.add(device)
+            } else {
+                devicesNeedingPermission.add(device)
+            }
+        }
+
+        if (devicesNeedingPermission.isEmpty()) {
+            Log.i(TAG, "All thermal camera devices have permissions")
+            callback(true, devicesWithPermission)
+            return
+        }
+
+        // Request permission for the first device needing it
+        requestUsbPermission(devicesNeedingPermission.first()) { granted, device ->
+            if (granted && device != null) {
+                devicesWithPermission.add(device)  
+            }
+            callback(granted, devicesWithPermission)
+        }
     }
 
     /**

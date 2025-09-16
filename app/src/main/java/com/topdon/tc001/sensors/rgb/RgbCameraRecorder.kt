@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.topdon.tc001.sensors.*
 import com.topdon.tc001.sensors.RecordingStats
+import com.topdon.tc001.sensors.ErrorType
 import com.topdon.tc001.util.CSVBufferedWriter
 import com.topdon.tc001.util.SessionDirectoryManager
 import kotlinx.coroutines.*
@@ -37,12 +38,12 @@ class RgbCameraRecorder(
     companion object {
         private const val TAG = "RgbCameraRecorder"
         
-        // 4K recording constants as per requirements
+        // 4K60fps recording constants as per requirements
         private const val VIDEO_WIDTH = 3840  // 4K UHD width
         private const val VIDEO_HEIGHT = 2160 // 4K UHD height  
-        private const val VIDEO_FPS = 30
-        private const val VIDEO_BITRATE = 20_000_000  // 20 Mbps for 4K quality
-        private const val AUDIO_BITRATE = 128_000     // 128 kbps for audio
+        private const val VIDEO_FPS = 60      // Enhanced to 60fps capability
+        private const val VIDEO_BITRATE = 50_000_000  // 50 Mbps for 4K60 quality
+        private const val AUDIO_BITRATE = 256_000     // 256 kbps for high-quality audio
     }
 
     override val sensorId: String = "rgb_camera_${System.currentTimeMillis()}"
@@ -268,13 +269,18 @@ class RgbCameraRecorder(
     private suspend fun startDualOutputRecording(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                Log.i(TAG, "Starting dual output recording (4K video + RAW capture)")
+                Log.i(TAG, "Starting dual output recording (4K60fps video + RAW capture)")
                 
-                // Start with VIDEO_4K mode which can capture both video and trigger RAW captures
-                val success = camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)
+                // Start with VIDEO_4K60 mode which can capture both video and trigger RAW captures
+                val success = camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K60)
                 if (!success) {
-                    Log.e(TAG, "Failed to switch to 4K video mode for dual output")
-                    return@withContext false
+                    Log.w(TAG, "4K60fps not supported, falling back to VIDEO_4K")
+                    // Fallback to regular 4K if 60fps not supported
+                    val fallbackSuccess = camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)
+                    if (!fallbackSuccess) {
+                        Log.e(TAG, "Failed to switch to any 4K video mode for dual output")
+                        return@withContext false
+                    }
                 }
                 
                 // Start recording session
@@ -302,12 +308,17 @@ class RgbCameraRecorder(
     private suspend fun startVideoOnlyRecording(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                Log.i(TAG, "Starting 4K video-only recording")
+                Log.i(TAG, "Starting 4K60fps video-only recording")
                 
-                val success = camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)
+                // Try 4K60fps first, fallback to 4K30fps if not supported
+                var success = camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K60)
                 if (!success) {
-                    Log.e(TAG, "Failed to switch to 4K video mode")
-                    return@withContext false
+                    Log.w(TAG, "4K60fps not supported, falling back to 4K30fps")
+                    success = camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)
+                    if (!success) {
+                        Log.e(TAG, "Failed to switch to any 4K video mode")
+                        return@withContext false
+                    }
                 }
                 
                 val sessionId = "session_${System.currentTimeMillis()}"
@@ -361,8 +372,13 @@ class RgbCameraRecorder(
                         
                         logRawCapture(timestamp)
                         
-                        // Switch back to video mode
-                        camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)
+                        // Switch back to the appropriate video mode (60fps if supported)
+                        val videoMode = if (deviceCaps?.supports4k60 == true) {
+                            ModeManager.CameraMode.VIDEO_4K60
+                        } else {
+                            ModeManager.CameraMode.VIDEO_4K
+                        }
+                        camera2System.switchMode(videoMode)
                         delay(100) // Brief pause for mode switch back
                     }
                     
@@ -394,8 +410,7 @@ class RgbCameraRecorder(
                     )
                     flush()
                 }
-            }
-            Log.d(TAG, "CSV writer initialized for Camera2 dual output tracking")
+                
                 val headers = listOf(
                     "timestamp_ns",
                     "frame_number", 
@@ -437,15 +452,7 @@ class RgbCameraRecorder(
                         "raw_capture",
                         "filename=$filename,mode=dual_output"
                     )
-
-                val row = listOf(
-                    timestampNs,
-                    samplesRecorded.get(),
-                    sessionTimeMs,
-                    "image_capture",
-                    "filename=$filename"
                 )
-                writer.writeRow(row)
             }
             
             Log.d(TAG, "RAW capture logged: ${rawCapturesRecorded.get()}")
@@ -640,7 +647,20 @@ class RgbCameraRecorder(
                 // Switch back to previous mode
                 if (currentRecordingMode == RecordingMode.DUAL_OUTPUT) {
                     camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)
-                    
+                }
+                
+                Log.d(TAG, "Manual RAW capture completed")
+                true
+            } else {
+                Log.e(TAG, "Failed to switch to RAW mode for manual capture")
+                false
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during manual RAW capture", e)
+            false
+        }
+    }
+
     suspend fun recordSyncMarker(markerType: String = "SYNC") {
         if (!isRecording) return
 
@@ -663,16 +683,7 @@ class RgbCameraRecorder(
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to record sync marker", e)
                 }
-                
-                Log.d(TAG, "Manual RAW capture completed")
-                true
-            } else {
-                Log.e(TAG, "Failed to switch to RAW mode for manual capture")
-                false
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during manual RAW capture", e)
-            false
         }
     }
 

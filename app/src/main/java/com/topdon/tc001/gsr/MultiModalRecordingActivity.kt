@@ -463,12 +463,12 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private fun updateUIForPermissionState(allPermissionsGranted: Boolean) {
         // Enable/disable recording button based on camera permission
         val canRecord = permissionController.canStartRecording()
-        binding.recordButton.isEnabled = canRecord
+        binding.startButton.isEnabled = canRecord
         
         if (!canRecord) {
-            binding.recordButton.text = "Camera Permission Required"
+            binding.startButton.text = "Camera Permission Required"
         } else {
-            binding.recordButton.text = if (isRecording) "Stop Recording" else "Start Recording"
+            binding.startButton.text = if (isRecording) "Stop Recording" else "Start Recording"
         }
     }
 
@@ -477,10 +477,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         val canRecord = permissionController.canStartRecording()
         val canConnectShimmer = permissionController.canConnectToShimmer()
         
-        binding.recordButton.isEnabled = canRecord
+        binding.startButton.isEnabled = canRecord
         
         if (!canRecord) {
-            binding.recordButton.text = "Camera Permission Required"
+            binding.startButton.text = "Camera Permission Required"
         }
         
         // Show specific warnings for missing functionality

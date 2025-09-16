@@ -149,7 +149,7 @@ class PreviewDataAdapter(
             val recordingController = recordingService.getRecordingController()
             val status = when {
                 recordingController.isRecording -> "RECORDING"
-                recordingService.isConnectedToPC() -> "CONNECTED"
+                recordingService.isConnectedToPC -> "CONNECTED"
                 else -> "IDLE"
             }
             

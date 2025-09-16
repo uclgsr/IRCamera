@@ -136,7 +136,7 @@ class ThermalCameraRecorder(
 
     override suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
         try {
-            Log.i(TAG, "Initializing thermal camera for sensor $sensorId")
+            Log.i(TAG, "Initializing thermal camera for sensor $sensorId with USB permission handling")
 
             if (!EventBus.getDefault().isRegistered(this@ThermalCameraRecorder)) {
                 EventBus.getDefault().register(this@ThermalCameraRecorder)
@@ -144,10 +144,11 @@ class ThermalCameraRecorder(
 
             usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
 
-            val deviceFound = scanForThermalCameraDevices()
+            // Enhanced USB device discovery with permission checking
+            val deviceFound = scanForThermalCameraDevicesWithPermissions()
 
             if (!deviceFound) {
-                Log.w(TAG, "No thermal cameras found, enabling simulation mode")
+                Log.w(TAG, "No thermal cameras found or permission denied, enabling simulation mode")
                 isSimulationMode = true
                 emitError(
                     ErrorType.DEVICE_ERROR,
@@ -245,6 +246,136 @@ class ThermalCameraRecorder(
                 "Thermal camera initialization failed: ${e.message} - using simulation mode"
             )
             return@withContext true // Allow simulation mode for development
+        }
+    }
+
+    /**
+     * Enhanced thermal camera device scanning with USB permission handling
+     */
+    private suspend fun scanForThermalCameraDevicesWithPermissions(): Boolean = withContext(Dispatchers.IO) {
+        try {
+            Log.i(TAG, "Scanning for thermal camera devices with permission checking")
+
+            val manager = usbManager ?: return@withContext false
+            val deviceList = manager.deviceList
+
+            Log.i(TAG, "Found ${deviceList.size} USB devices, scanning for thermal cameras")
+
+            var foundDevice: UsbDevice? = null
+            
+            for (device in deviceList.values) {
+                Log.d(
+                    TAG,
+                    "Checking device: VID=${device.vendorId.toString(16)}, PID=${
+                        device.productId.toString(16)
+                    }, Name=${device.productName}"
+                )
+
+                if (device.isTcTsDevice()) {
+                    Log.i(
+                        TAG,
+                        "Found thermal camera device: ${device.productName} (VID=${
+                            device.vendorId.toString(16)
+                        }, PID=${device.productId.toString(16)})"
+                    )
+                    foundDevice = device
+                    break
+                }
+            }
+
+            if (foundDevice == null) {
+                Log.w(TAG, "No thermal camera devices found")
+                return@withContext false
+            }
+
+            // Check USB permissions
+            if (manager.hasPermission(foundDevice)) {
+                Log.i(TAG, "USB permission already granted for thermal camera")
+                thermalCameraDevice = foundDevice
+                return@withContext true
+            } else {
+                Log.i(TAG, "USB permission required for thermal camera, requesting...")
+                
+                // Request permission and wait for result
+                val permissionGranted = requestUsbPermissionWithCallback(foundDevice)
+                
+                if (permissionGranted) {
+                    thermalCameraDevice = foundDevice
+                    Log.i(TAG, "USB permission granted, thermal camera ready")
+                    return@withContext true
+                } else {
+                    Log.w(TAG, "USB permission denied for thermal camera")
+                    return@withContext false
+                }
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error scanning for thermal camera devices with permissions", e)
+            return@withContext false
+        }
+    }
+
+    /**
+     * Request USB permission with callback handling
+     */
+    private suspend fun requestUsbPermissionWithCallback(device: UsbDevice): Boolean = withContext(Dispatchers.IO) {
+        return@withContext try {
+            var permissionResult = false
+            val resultReceived = kotlinx.coroutines.CompletableDeferred<Boolean>()
+
+            // Setup temporary broadcast receiver for USB permission result
+            val permissionReceiver = object : android.content.BroadcastReceiver() {
+                override fun onReceive(context: android.content.Context?, intent: android.content.Intent?) {
+                    if ("com.topdon.tc001.USB_PERMISSION" == intent?.action) {
+                        val device = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                            intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
+                        } else {
+                            @Suppress("DEPRECATION")
+                            intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
+                        }
+                        
+                        val granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
+                        
+                        Log.i(TAG, "USB permission result: granted=$granted for device=${device?.productName}")
+                        
+                        try {
+                            context?.unregisterReceiver(this)
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Error unregistering USB permission receiver", e)
+                        }
+                        
+                        resultReceived.complete(granted)
+                    }
+                }
+            }
+
+            // Register receiver
+            val filter = android.content.IntentFilter("com.topdon.tc001.USB_PERMISSION")
+            context.registerReceiver(permissionReceiver, filter)
+
+            // Request permission
+            requestUsbPermission(device)
+
+            // Wait for result with timeout
+            try {
+                permissionResult = kotlinx.coroutines.withTimeout(10000L) { // 10 second timeout
+                    resultReceived.await()
+                }
+            } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
+                Log.w(TAG, "USB permission request timed out")
+                try {
+                    context.unregisterReceiver(permissionReceiver)
+                } catch (ex: Exception) {
+                    Log.w(TAG, "Error unregistering receiver after timeout", ex)
+                }
+                permissionResult = false
+            }
+
+            permissionResult
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error requesting USB permission with callback", e)
+            false
         }
     }
 

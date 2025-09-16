@@ -252,10 +252,10 @@ class SynchronizationTestActivity : ComponentActivity() {
                 
                 val report = buildString {
                     appendLine("=== Synchronization Test Report ===")
-                    appendLine("Test Duration: ${stats.sessionDurationSeconds:.1f}s")
+                    appendLine("Test Duration: ${"%.1f".format(stats.sessionDurationSeconds)}s")
                     appendLine("Active Sensors: ${stats.activeSensors}")
                     appendLine("Total Samples: ${stats.totalSamplesRecorded}")
-                    appendLine("Storage Used: ${stats.totalStorageUsedMB:.2f}MB")
+                    appendLine("Storage Used: ${"%.2f".format(stats.totalStorageUsedMB)}MB")
                     appendLine()
                     appendLine("Sensor Details:")
                     stats.sensorStatistics.forEach { sensor ->

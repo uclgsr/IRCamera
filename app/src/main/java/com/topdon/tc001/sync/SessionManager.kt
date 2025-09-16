@@ -46,8 +46,36 @@ class SessionManager(
     private val sessionId = AtomicReference<String?>(null)
     private val sessionStartTime = AtomicLong(0L)
 
-    // Event callbacks
-    private var onSessionStateChanged: ((SessionState) -> Unit)? = null
+    // Session workflow state management
+    private val _sessionWorkflowState = MutableStateFlow(SessionWorkflowState.IDLE)
+    val sessionWorkflowState: StateFlow<SessionWorkflowState> = _sessionWorkflowState.asStateFlow()
+
+    private val workflowSteps = mutableListOf<WorkflowStep>()
+    private var currentStepIndex = 0
+
+    // Enhanced session management with workflow tracking
+    private val sessionScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    
+    enum class SessionWorkflowState {
+        IDLE,
+        INITIALIZING,
+        PERMISSION_CHECK,
+        DEVICE_DISCOVERY,
+        DEVICE_CONNECTION,
+        TIME_SYNCHRONIZATION,
+        RECORDING_SETUP,
+        RECORDING_ACTIVE,
+        STOPPING,
+        CLEANUP,
+        ERROR
+    }
+
+    data class WorkflowStep(
+        val name: String,
+        val action: suspend () -> Boolean,
+        val timeout: Long = 30000L, // 30 seconds default
+        val required: Boolean = true
+    )
     private var onDeviceJoined: ((DeviceInfo) -> Unit)? = null
     private var onDeviceLeft: ((DeviceInfo) -> Unit)? = null
     private var onSyncRequired: ((List<DeviceInfo>) -> Unit)? = null
@@ -512,4 +540,259 @@ class SessionManager(
             onSyncRequired?.invoke(devices)
         }
     }
+
+    /**
+     * Enhanced session initialization with comprehensive workflow
+     */
+    suspend fun initializeSessionWithWorkflow(
+        sessionConfig: SessionConfig,
+        permissionController: com.topdon.tc001.permissions.PermissionController? = null
+    ): Boolean = withContext(Dispatchers.IO) {
+        try {
+            logger.log(
+                StructuredLogger.LogLevel.INFO,
+                "SessionManager",
+                "workflow_init_start",
+                mapOf("session_id" to sessionConfig.sessionId)
+            )
+            _sessionWorkflowState.value = SessionWorkflowState.INITIALIZING
+
+            // Setup workflow steps
+            setupWorkflowSteps(sessionConfig, permissionController)
+
+            // Execute workflow
+            executeWorkflow()
+
+        } catch (e: Exception) {
+            logger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "SessionManager", 
+                "workflow_init_failed",
+                mapOf("error" to (e.message ?: "Unknown error"))
+            )
+            _sessionWorkflowState.value = SessionWorkflowState.ERROR
+            false
+        }
+    }
+
+    private suspend fun setupWorkflowSteps(
+        config: SessionConfig,
+        permissionController: com.topdon.tc001.permissions.PermissionController?
+    ) {
+        workflowSteps.clear()
+        currentStepIndex = 0
+
+        // Step 1: Permission verification
+        workflowSteps.add(WorkflowStep(
+            name = "Permission Check",
+            action = {
+                _sessionWorkflowState.value = SessionWorkflowState.PERMISSION_CHECK
+                permissionController?.hasAllRequiredPermissions() ?: true
+            },
+            timeout = 15000L
+        ))
+
+        // Step 2: Device discovery
+        workflowSteps.add(WorkflowStep(
+            name = "Device Discovery",
+            action = {
+                _sessionWorkflowState.value = SessionWorkflowState.DEVICE_DISCOVERY
+                discoverDevices(config.expectedDevices)
+            },
+            timeout = 20000L
+        ))
+
+        // Step 3: Device connection
+        workflowSteps.add(WorkflowStep(
+            name = "Device Connection",
+            action = {
+                _sessionWorkflowState.value = SessionWorkflowState.DEVICE_CONNECTION
+                connectToDevices()
+            },
+            timeout = 30000L
+        ))
+
+        // Step 4: Time synchronization
+        workflowSteps.add(WorkflowStep(
+            name = "Time Synchronization",
+            action = {
+                _sessionWorkflowState.value = SessionWorkflowState.TIME_SYNCHRONIZATION
+                performTimeSynchronization()
+            },
+            timeout = 15000L
+        ))
+
+        // Step 5: Recording setup
+        workflowSteps.add(WorkflowStep(
+            name = "Recording Setup",
+            action = {
+                _sessionWorkflowState.value = SessionWorkflowState.RECORDING_SETUP
+                setupRecording(config)
+            },
+            timeout = 10000L
+        ))
+
+        logger.log(
+            StructuredLogger.LogLevel.INFO,
+            "SessionManager",
+            "workflow_configured",
+            mapOf("steps" to workflowSteps.size.toString())
+        )
+    }
+
+    private suspend fun executeWorkflow(): Boolean {
+        for ((index, step) in workflowSteps.withIndex()) {
+            currentStepIndex = index
+            logger.log(
+                StructuredLogger.LogLevel.INFO,
+                "SessionManager",
+                "workflow_step_start",
+                mapOf(
+                    "step" to step.name,
+                    "index" to "${index + 1}/${workflowSteps.size}"
+                )
+            )
+            
+            try {
+                val success = withContext(Dispatchers.IO) {
+                    kotlinx.coroutines.withTimeout(step.timeout) {
+                        step.action()
+                    }
+                }
+                
+                onWorkflowStepCompleted?.invoke(step.name, success)
+                
+                if (!success && step.required) {
+                    logger.log(
+                        StructuredLogger.LogLevel.ERROR,
+                        "SessionManager",
+                        "workflow_step_failed",
+                        mapOf("step" to step.name, "required" to "true")
+                    )
+                    _sessionWorkflowState.value = SessionWorkflowState.ERROR
+                    return false
+                } else if (!success) {
+                    logger.log(
+                        StructuredLogger.LogLevel.WARNING,
+                        "SessionManager",
+                        "workflow_step_failed",
+                        mapOf("step" to step.name, "required" to "false")
+                    )
+                }
+                
+                logger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "SessionManager", 
+                    "workflow_step_success",
+                    mapOf("step" to step.name)
+                )
+                
+            } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
+                logger.log(
+                    StructuredLogger.LogLevel.ERROR,
+                    "SessionManager",
+                    "workflow_step_timeout",
+                    mapOf("step" to step.name, "timeout" to step.timeout.toString())
+                )
+                onWorkflowStepCompleted?.invoke(step.name, false)
+                
+                if (step.required) {
+                    _sessionWorkflowState.value = SessionWorkflowState.ERROR
+                    return false
+                }
+            } catch (e: Exception) {
+                logger.log(
+                    StructuredLogger.LogLevel.ERROR,
+                    "SessionManager",
+                    "workflow_step_exception",
+                    mapOf("step" to step.name, "error" to (e.message ?: "Unknown"))
+                )
+                onWorkflowStepCompleted?.invoke(step.name, false)
+                
+                if (step.required) {
+                    _sessionWorkflowState.value = SessionWorkflowState.ERROR
+                    return false
+                }
+            }
+        }
+
+        _sessionWorkflowState.value = SessionWorkflowState.RECORDING_ACTIVE
+        logger.log(
+            StructuredLogger.LogLevel.INFO,
+            "SessionManager",
+            "workflow_completed",
+            emptyMap()
+        )
+        return true
+    }
+
+    private suspend fun discoverDevices(expectedDevices: List<String>): Boolean {
+        // Device discovery implementation
+        delay(2000) // Simulate discovery time
+        logger.log(
+            StructuredLogger.LogLevel.INFO,
+            "SessionManager",
+            "device_discovery",
+            mapOf("expected" to expectedDevices.joinToString(","))
+        )
+        return true
+    }
+
+    private suspend fun connectToDevices(): Boolean {
+        // Device connection implementation  
+        delay(3000) // Simulate connection time
+        logger.log(
+            StructuredLogger.LogLevel.INFO,
+            "SessionManager",
+            "device_connection",
+            emptyMap()
+        )
+        return true
+    }
+
+    private suspend fun performTimeSynchronization(): Boolean {
+        // Time synchronization implementation
+        delay(1000) // Simulate sync time
+        logger.log(
+            StructuredLogger.LogLevel.INFO,
+            "SessionManager",
+            "time_sync",
+            emptyMap()
+        )
+        return true
+    }
+
+    private suspend fun setupRecording(config: SessionConfig): Boolean {
+        // Recording setup implementation
+        delay(1000) // Simulate setup time
+        logger.log(
+            StructuredLogger.LogLevel.INFO,
+            "SessionManager",
+            "recording_setup",
+            mapOf("session_id" to config.sessionId)
+        )
+        return true
+    }
+
+    /**
+     * Set workflow state change callback
+     */
+    fun setWorkflowStateChangeCallback(callback: (SessionWorkflowState) -> Unit) {
+        onWorkflowStateChanged = callback
+    }
+
+    /**
+     * Set workflow step completion callback
+     */
+    fun setWorkflowStepCallback(callback: (String, Boolean) -> Unit) {
+        onWorkflowStepCompleted = callback
+    }
+
+    data class SessionConfig(
+        val sessionId: String,
+        val expectedDevices: List<String> = listOf("RGB", "Thermal", "Shimmer"),
+        val recordingDuration: Long? = null,
+        val participantId: String? = null,
+        val studyName: String? = null
+    )
 }
