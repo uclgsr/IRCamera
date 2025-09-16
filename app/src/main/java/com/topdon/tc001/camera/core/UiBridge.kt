@@ -16,6 +16,10 @@ class UiBridge(private val textureView: TextureView) {
     var onError: ((String) -> Unit)? = null
     var onProgress: ((String) -> Unit)? = null
     var onModeChanged: ((String) -> Unit)? = null
+    var onRecordingStateChanged: ((Boolean, String) -> Unit)? = null // Recording state and mode
+    
+    private var isRecording = false
+    private var currentMode = "PREVIEW"
 
     init {
         setupTextureView()
@@ -26,8 +30,26 @@ class UiBridge(private val textureView: TextureView) {
     fun isTextureReady(): Boolean = isTextureAvailable
 
     fun updateMode(mode: String) {
+        currentMode = mode
         Log.i(TAG, "Mode updated: $mode")
         onModeChanged?.invoke(mode)
+        // Update recording state callback with current info
+        onRecordingStateChanged?.invoke(isRecording, mode)
+    }
+
+    fun updateRecordingState(recording: Boolean, additionalInfo: String = "") {
+        isRecording = recording
+        val status = if (recording) "● REC" else "○ STOPPED"
+        val fullInfo = if (additionalInfo.isNotEmpty()) "$currentMode - $additionalInfo" else currentMode
+        
+        Log.i(TAG, "Recording state: $status ($fullInfo)")
+        onRecordingStateChanged?.invoke(recording, fullInfo)
+        
+        if (recording) {
+            reportProgress("🔴 Recording $currentMode mode")
+        } else {
+            reportProgress("⚫ Recording stopped")
+        }
     }
 
     fun reportError(error: String) {

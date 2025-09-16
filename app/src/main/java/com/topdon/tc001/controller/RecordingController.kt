@@ -76,7 +76,7 @@ class RecordingController(
 
                 // Create a dummy TextureView for the RGB camera recorder
                 val dummyTextureView = TextureView(context)
-                val rgbCamera = RgbCameraRecorder(context, lifecycleOwner)
+                val rgbCamera = RgbCameraRecorder(context, dummyTextureView)
                 val thermalCamera = ThermalCameraRecorder(context, "thermal_camera_1")
                 val gsrSensor =
                     GSRSensorRecorder(context, "gsr_shimmer_1", 128, this@RecordingController)

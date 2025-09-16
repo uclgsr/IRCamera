@@ -7,7 +7,9 @@ import android.hardware.camera2.CaptureRequest
 import android.hardware.camera2.TotalCaptureResult
 import android.util.Log
 import android.util.Size
+import android.view.Surface
 import android.view.TextureView
+import android.view.WindowManager
 import com.topdon.tc001.camera.core.CameraController
 import com.topdon.tc001.camera.core.DeviceCaps
 import com.topdon.tc001.camera.core.ModeManager
@@ -133,7 +135,7 @@ class Camera2System(
                 if (success) {
                     isRecording = true
                     onRecordingStarted?.invoke()
-                    uiBridge.reportProgress("Recording started")
+                    uiBridge.updateRecordingState(true, modeManager.getCurrentMode().name)
                     Log.i(TAG, "Recording started in ${modeManager.getCurrentMode()}")
                 }
 
@@ -162,7 +164,7 @@ class Camera2System(
 
                 isRecording = false
                 onRecordingStopped?.invoke()
-                uiBridge.reportProgress("Recording stopped")
+                uiBridge.updateRecordingState(false)
                 Log.i(TAG, "Recording stopped")
 
                 return@withContext true
@@ -386,10 +388,20 @@ class Camera2System(
                 val videoFile = createVideoFile()
                 val videoSize = Size(3840, 2160)
                 val frameRate = if (caps.supports4k60) 60 else 30
+                
+                // Calculate proper orientation hint for video
+                val orientationHint = calculateOrientationHint(caps.sensorOrientation)
 
                 val recorderSurface =
-                    videoEngine.prepare(videoFile, videoSize, frameRate, DEFAULT_BITRATE, true)
-                        ?: return@withContext false
+                    videoEngine.prepare(
+                        videoFile, 
+                        videoSize, 
+                        frameRate, 
+                        DEFAULT_BITRATE, 
+                        true,
+                        orientationHint,
+                        enableStabilization = true
+                    ) ?: return@withContext false
 
                 val previewSurface = uiBridge.getPreviewSurface() ?: return@withContext false
                 val surfaces = listOf(previewSurface, recorderSurface)
@@ -493,5 +505,29 @@ class Camera2System(
         val timestamp = System.currentTimeMillis()
         val filename = "Video_${currentSessionId}_$timestamp.mp4"
         return File(outputDirectory, filename)
+    }
+    
+    /**
+     * Calculate proper orientation hint for video recording
+     */
+    private fun calculateOrientationHint(sensorOrientation: Int): Int {
+        return try {
+            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
+            val deviceRotation = when (windowManager.defaultDisplay.rotation) {
+                android.view.Surface.ROTATION_0 -> 0
+                android.view.Surface.ROTATION_90 -> 90
+                android.view.Surface.ROTATION_180 -> 180
+                android.view.Surface.ROTATION_270 -> 270
+                else -> 0
+            }
+            
+            // For back camera, calculate proper orientation
+            val orientationHint = (sensorOrientation - deviceRotation + 360) % 360
+            Log.d(TAG, "Orientation calculation: device=$deviceRotation, sensor=$sensorOrientation, hint=$orientationHint")
+            orientationHint
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to calculate orientation hint", e)
+            90 // Default to 90 degrees for most devices
+        }
     }
 }
