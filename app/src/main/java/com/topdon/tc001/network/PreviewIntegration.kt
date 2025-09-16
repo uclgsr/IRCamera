@@ -130,12 +130,12 @@ object PreviewIntegration {
     
     private fun getPreviewDataAdapter(context: Context): PreviewDataAdapter? {
         val service = getRecordingService(context)
-        return service?.getPreviewDataAdapter()
+        return service?.previewDataAdapter
     }
     
     private fun getPreviewStreamer(context: Context): PreviewStreamer? {
         val service = getRecordingService(context)
-        return service?.getPreviewStreamer()
+        return service?.previewStreamer
     }
     
     private fun getRecordingService(context: Context): RecordingService? {
