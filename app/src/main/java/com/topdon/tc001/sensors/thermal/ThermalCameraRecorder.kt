@@ -18,6 +18,10 @@ import com.topdon.tc001.sensors.RecordingStats
 import com.topdon.tc001.sensors.RecordingStatus
 import com.topdon.tc001.sensors.SensorError
 import com.topdon.tc001.sensors.SensorRecorder
+import com.topdon.tc001.network.NetworkServer
+import org.json.JSONObject
+import java.util.Base64
+import java.io.ByteArrayOutputStream
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -93,6 +97,12 @@ class ThermalCameraRecorder(
     private var emissivity = 0.95 // Default emissivity
     private var reflectedTemperature = 23.0 // Default reflected temperature
 
+    // Network streaming support
+    private var networkServer: NetworkServer? = null
+    private var enableNetworkStreaming = false
+    private var networkFrameCounter = 0
+    private val networkStreamingInterval = 5 // Send every 5th frame (~2 FPS at 9 FPS capture rate)
+
     // Thermal preview callback interface
     interface ThermalPreviewCallback {
         fun onThermalFrame(bitmap: Bitmap?, temperatureData: ThermalFrameData?)
@@ -102,6 +112,25 @@ class ThermalCameraRecorder(
     
     fun setThermalPreviewCallback(callback: ThermalPreviewCallback?) {
         this.previewCallback = callback
+    }
+    
+    /**
+     * Enable network streaming of thermal frames to connected PC clients
+     * @param networkServer The network server instance to use for streaming
+     */
+    fun enableNetworkStreaming(networkServer: NetworkServer) {
+        this.networkServer = networkServer
+        this.enableNetworkStreaming = true
+        Log.i(TAG, "Thermal network streaming enabled")
+    }
+    
+    /**
+     * Disable network streaming of thermal frames
+     */
+    fun disableNetworkStreaming() {
+        this.networkServer = null
+        this.enableNetworkStreaming = false
+        Log.i(TAG, "Thermal network streaming disabled")
     }
 
     override suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
@@ -452,6 +481,15 @@ class ThermalCameraRecorder(
                 // Notify preview callback
                 previewCallback?.onThermalFrame(previewBitmap, thermalData)
 
+                // Send thermal frame over network if enabled (at reduced frame rate)
+                if (enableNetworkStreaming && networkServer != null) {
+                    networkFrameCounter++
+                    if (networkFrameCounter >= networkStreamingInterval) {
+                        networkFrameCounter = 0
+                        sendThermalFrameOverNetwork(previewBitmap, thermalData, frameNumber)
+                    }
+                }
+
                 // Update status periodically
                 if (frameNumber % 10 == 0L) {
                     emitStatus()
@@ -626,6 +664,54 @@ class ThermalCameraRecorder(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to generate thermal preview bitmap", e)
             null
+        }
+    }
+
+    /**
+     * Send thermal frame over network to connected PC clients
+     */
+    private suspend fun sendThermalFrameOverNetwork(
+        bitmap: Bitmap?,
+        thermalData: ThermalFrameData,
+        frameNumber: Long
+    ) {
+        try {
+            if (bitmap == null || networkServer == null) return
+
+            // Convert bitmap to JPEG bytes for efficient network transmission
+            val outputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 75, outputStream) // 75% quality for balance of size/quality
+            val imageBytes = outputStream.toByteArray()
+            val base64Image = Base64.getEncoder().encodeToString(imageBytes)
+
+            // Create JSON message with thermal data and image
+            val thermalMessage = JSONObject().apply {
+                put("type", "thermal_frame")
+                put("sensor_id", sensorId)
+                put("frame_number", frameNumber)
+                put("timestamp_ms", System.currentTimeMillis())
+                put("width", thermalResolution.first)
+                put("height", thermalResolution.second)
+                put("min_temp_c", String.format("%.2f", thermalData.minTemperature))
+                put("max_temp_c", String.format("%.2f", thermalData.maxTemperature))
+                put("avg_temp_c", String.format("%.2f", thermalData.avgTemperature))
+                put("center_temp_c", String.format("%.2f", thermalData.centerTemperature))
+                put("image_jpeg_base64", base64Image)
+                put("simulation_mode", isSimulationMode)
+            }
+
+            // Send over network (async to avoid blocking thermal processing)
+            recordingScope.launch {
+                val success = networkServer?.sendMessage(thermalMessage) ?: false
+                if (success) {
+                    Log.d(TAG, "Thermal frame #$frameNumber sent over network (${imageBytes.size} bytes)")
+                } else {
+                    Log.w(TAG, "Failed to send thermal frame #$frameNumber over network")
+                }
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error sending thermal frame over network", e)
         }
     }
 
@@ -829,6 +915,21 @@ class ThermalCameraRecorder(
         )
 
         saveRealIRThermalData(timestamp, frameNumber, thermalData)
+
+        // Generate preview bitmap for simulation mode
+        val previewBitmap = generateThermalPreviewBitmap(thermalData, thermalResolution.first, thermalResolution.second)
+        
+        // Notify preview callback
+        previewCallback?.onThermalFrame(previewBitmap, thermalData)
+
+        // Send thermal frame over network if enabled (at reduced frame rate)
+        if (enableNetworkStreaming && networkServer != null) {
+            networkFrameCounter++
+            if (networkFrameCounter >= networkStreamingInterval) {
+                networkFrameCounter = 0
+                sendThermalFrameOverNetwork(previewBitmap, thermalData, frameNumber)
+            }
+        }
 
         if (frameNumber % 30 == 0L) {
             Log.d(

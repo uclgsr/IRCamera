@@ -12,6 +12,7 @@ The original implementation had the following issues:
 3. **No Hot-plug Support**: Device disconnection during recording was not handled gracefully
 4. **Missing Frame Processing**: No actual thermal data capture or processing implementation
 5. **No Preview Functionality**: No way to preview thermal frames on the device
+6. **No Network Streaming**: No way to stream thermal data to PC for real-time monitoring
 
 ## Solution Implementation
 
@@ -210,10 +211,57 @@ fun onDeviceConnectEvent(event: DeviceConnectEvent) {
    }
    ```
 
+### 7. Network Streaming Integration
+
+#### Real-time Thermal Streaming to PC:
+
+```kotlin
+// Enable network streaming
+val networkServer = NetworkServer(context, 8080)
+networkServer.start()
+thermalRecorder.enableNetworkStreaming(networkServer)
+
+// Thermal frames are automatically sent to connected PC clients
+// at ~2 FPS (every 5th frame) as JSON messages with base64-encoded JPEG images
+```
+
+#### Network Message Format:
+
+```json
+{
+  "type": "thermal_frame",
+  "sensor_id": "thermal_camera_1", 
+  "frame_number": 12345,
+  "timestamp_ms": 1640995200000,
+  "width": 256,
+  "height": 192,
+  "min_temp_c": "23.45",
+  "max_temp_c": "45.67", 
+  "avg_temp_c": "34.56",
+  "center_temp_c": "35.12",
+  "image_jpeg_base64": "/9j/4AAQSkZJRgABAQEAYABgAAD...",
+  "simulation_mode": false
+}
+```
+
+#### PC Client Implementation:
+
+A Python client (`pc-thermal-viewer.py`) connects to the Android app and displays live thermal frames:
+
+```python
+# Connect to Android app
+viewer = ThermalViewer(android_ip="192.168.1.2", android_port=8080)
+viewer.start()
+
+# Receives thermal frames and displays them with OpenCV
+# Shows temperature range, frame number, and real/simulation mode
+```
+
 ## Usage Example
 
 ```kotlin
 val thermalRecorder = ThermalCameraRecorder(context)
+val networkServer = NetworkServer(context, 8080)
 
 // Set up preview callback
 thermalRecorder.setThermalPreviewCallback { bitmap, temperatureData ->
@@ -221,12 +269,23 @@ thermalRecorder.setThermalPreviewCallback { bitmap, temperatureData ->
     thermalImageView.setImageBitmap(bitmap)
 }
 
+// Enable network streaming for PC clients
+networkServer.start()
+thermalRecorder.enableNetworkStreaming(networkServer)
+
 // Initialize (handles USB permission automatically)
 val success = thermalRecorder.initialize()
 
 // Start recording
 val sessionDir = File(context.filesDir, "thermal_session_${System.currentTimeMillis()}")
 thermalRecorder.startRecording(sessionDir.absolutePath)
+
+// Monitor network connections
+networkServer.connectionStateFlow.collect { connected ->
+    if (connected) {
+        Log.i(TAG, "PC client connected - streaming thermal data")
+    }
+}
 
 // Monitor status
 thermalRecorder.getStatusFlow().collect { status ->
@@ -248,6 +307,7 @@ The implementation includes comprehensive tests covering:
 3. **Hot-plug Support**: Device disconnection and reconnection during recording
 4. **Thermal Preview**: Bitmap generation and color mapping
 5. **Data Integrity**: CSV file creation and thermal calibration
+6. **Network Streaming**: PC client connection and thermal frame transmission
 
 ## Key Benefits
 
@@ -257,13 +317,18 @@ The implementation includes comprehensive tests covering:
 4. **Hot-plug Resilience**: Continues operation even if device is disconnected during recording
 5. **Real-time Preview**: Live thermal preview with color mapping for user feedback
 6. **Comprehensive Data Capture**: Full temperature matrices with frame-level statistics
+7. **Network Streaming**: Real-time thermal data streaming to PC clients at ~2 FPS with temperature overlay
+8. **Cross-platform Integration**: Works with both real hardware and simulation mode
 
 ## Dependencies
 
 - **IRUVCTC SDK**: Topdon's thermal camera SDK (included as .aar)
 - **DeviceTools**: Existing USB permission utility
 - **EventBus**: For USB device connection/permission events
+- **NetworkServer**: TCP server for PC client communication
 - **Coroutines**: For asynchronous operations and background processing
+- **JSON**: For network message formatting
+- **Base64**: For image encoding in network messages
 
 ## Device Compatibility
 
