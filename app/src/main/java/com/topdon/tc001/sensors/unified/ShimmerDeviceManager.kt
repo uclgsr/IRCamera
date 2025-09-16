@@ -12,10 +12,8 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.ObjectCluster
-import com.shimmerresearch.driver.ShimmerDevice
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
 import com.topdon.tc001.sensors.unified.model.DeviceInfo
 import kotlinx.coroutines.*
