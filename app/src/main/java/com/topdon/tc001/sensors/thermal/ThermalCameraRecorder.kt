@@ -5,6 +5,7 @@ import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.util.Log
 import android.graphics.Bitmap
+import com.energy.iruvc.uvc.UVCCamera
 import com.infisense.usbir.camera.IRUVCTC
 import com.opencsv.CSVWriter
 import com.topdon.lib.core.bean.event.device.DeviceConnectEvent
@@ -825,8 +826,7 @@ class ThermalCameraRecorder(
                         Log.d(
                             TAG,
                             "Simulation mode: generated ${frameCount.get()} thermal frames (${
-                                String.format(
-                                    "%.1f",
+                                "%.1f".format(
                                     frameCount.get() / (thermalFrameRate * (System.nanoTime() - recordingStartTime) / 1_000_000_000.0)
                                 )
                             }s)"
