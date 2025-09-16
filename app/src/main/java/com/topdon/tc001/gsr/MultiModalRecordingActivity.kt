@@ -884,6 +884,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 true
             }
 
+            R.id.action_sync_test -> {
+                openSynchronizationTest()
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -898,6 +903,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     private fun openSessionManager() {
         SessionManagerActivity.startActivity(this)
+    }
+
+    private fun openSynchronizationTest() {
+        val intent = Intent(this, com.topdon.tc001.test.SynchronizationTestActivity::class.java)
+        startActivity(intent)
     }
 
     // Network status UI update method

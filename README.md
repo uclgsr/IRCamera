@@ -53,6 +53,18 @@ and environments.
 - **🚀 Production-Ready Deployment**: Docker containerization, monitoring, auto-scaling, and
   enterprise infrastructure
 
+### 🔄 Multi-Modal Synchronization System
+
+The IRCamera platform features a **research-grade synchronization system** for precise timestamp alignment across thermal, GSR, and RGB video modalities:
+
+- **⏱️ Nanosecond Precision**: Common session start time with monotonic clock protection against system time adjustments
+- **📊 Enhanced Data Formats**: All sensor outputs include wall clock, relative, and monotonic timestamps for precise alignment  
+- **🧪 Validation Testing**: Built-in Flash Sync test creates simultaneous events across all modalities for accuracy verification
+- **🐍 Post-Processing Tools**: Automated Python script (`sync_data_streams.py`) for data alignment and quality reporting
+- **📄 Comprehensive Documentation**: Complete synchronization guide (`SYNCHRONIZATION_GUIDE.md`) with examples and best practices
+
+**Access the synchronization test**: Multi-Modal Recording → Menu → Synchronization Test
+
 ## 🏗️ Enterprise System Architecture
 
 The IRCamera platform uses a **microservices-based, enterprise-grade architecture** designed for
