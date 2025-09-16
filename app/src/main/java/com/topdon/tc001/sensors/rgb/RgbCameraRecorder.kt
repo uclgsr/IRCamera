@@ -1,7 +1,6 @@
 package com.topdon.tc001.sensors.rgb
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.util.Log
 import android.util.Size
 import androidx.camera.core.*
@@ -20,7 +19,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File
 import java.io.FileWriter
-import java.io.FileOutputStream
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
