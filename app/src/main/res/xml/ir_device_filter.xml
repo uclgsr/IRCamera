@@ -47,4 +47,9 @@
     <usb-device
         product-id="258"
         vendor-id="11231" />
+    
+    <!-- Topdon TC001 Thermal Camera -->
+    <usb-device
+        product-id="14082"
+        vendor-id="16902" />
 </resources>
