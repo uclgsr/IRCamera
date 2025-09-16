@@ -48,7 +48,15 @@
         product-id="258"
         vendor-id="11231" />
     
-    <!-- Topdon TC001 Thermal Camera -->
+    <!-- Topdon TC001 Thermal Camera - Updated with correct VID/PID -->
+    <usb-device
+        product-id="0x0001"
+        vendor-id="0x2744" />
+    <!-- Topdon TC001 Thermal Camera - Alternative format -->
+    <usb-device
+        product-id="1"
+        vendor-id="10052" />
+    <!-- Legacy Topdon device identifiers for compatibility -->
     <usb-device
         product-id="14082"
         vendor-id="16902" />

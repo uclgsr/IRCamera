@@ -137,6 +137,20 @@
                 android:resource="@xml/ir_device_filter" />
         </activity>
 
+        <!-- USB Device Hotplug Management for Topdon TC001 -->
+        <receiver
+            android:name="com.topdon.tc001.thermal.ThermalUsbReceiver"
+            android:exported="true">
+            <intent-filter android:priority="1000">
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
+                <action android:name="com.topdon.tc001.USB_PERMISSION" />
+            </intent-filter>
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/ir_device_filter" />
+        </receiver>
+
         <activity
             android:name="com.topdon.tc001.MainActivity"
             android:exported="true"
