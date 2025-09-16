@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CompletableDeferred
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import com.topdon.gsr.service.GSRRecorder as LegacyGSRRecorder
@@ -972,10 +973,45 @@ class GSRSensorRecorder(
 
                 val unifiedBle = unifiedBleManager
                 if (unifiedBle != null) {
+                    // First get already connected devices
                     val connectedDevices = unifiedBle.getConnectedShimmerDevices()
-                    connectedDevices.map { device ->
-                        "${device.getName()} (${device.getAddress()})"
+                    val deviceList = mutableListOf<String>()
+                    
+                    // Add connected devices
+                    connectedDevices.forEach { device ->
+                        deviceList.add("${device.getName()} (${device.getAddress()}) - Connected")
                     }
+
+                    // Now scan for nearby devices
+                    val scanResultDeferred = CompletableDeferred<List<String>>()
+                    
+                    unifiedBle.scanForShimmerDevices(10000L, object : UnifiedBleManager.ShimmerScanCallback {
+                        override fun onDeviceFound(device: UnifiedDevice) {
+                            val deviceAddress = device.getAddress()
+                            // Only add if not already connected
+                            val isAlreadyConnected = connectedDevices.any { it.getAddress() == deviceAddress }
+                            if (!isAlreadyConnected) {
+                                val deviceEntry = "${device.getName()} (${deviceAddress}) - Available"
+                                if (!deviceList.contains(deviceEntry)) {
+                                    deviceList.add(deviceEntry)
+                                }
+                                Log.d(TAG, "Found nearby Shimmer device: ${device.getName()} at $deviceAddress")
+                            }
+                        }
+
+                        override fun onScanComplete(foundDevices: List<UnifiedDevice>) {
+                            Log.i(TAG, "Shimmer device scan completed. Total devices found: ${deviceList.size}")
+                            scanResultDeferred.complete(deviceList.toList())
+                        }
+
+                        override fun onScanFailed(error: String) {
+                            Log.e(TAG, "Shimmer device scan failed: $error")
+                            // Still return connected devices even if scan fails
+                            scanResultDeferred.complete(deviceList.toList())
+                        }
+                    })
+
+                    scanResultDeferred.await()
                 } else {
                     Log.w(TAG, "Unified BLE manager not available for device discovery")
                     emptyList()
@@ -1001,21 +1037,68 @@ class GSRSensorRecorder(
 
                 Log.i(TAG, "Attempting to connect to Shimmer device: $deviceAddress")
 
-                val shimmerRecorder = realShimmerGSRRecorder
-                if (shimmerRecorder != null) {
+                // Use UnifiedBleManager to connect to the specific device
+                val unifiedBle = unifiedBleManager
+                if (unifiedBle != null) {
+                    // Try to find the device in connected devices first
+                    val connectedShimmerDevices = unifiedBle.getConnectedShimmerDevices()
+                    val alreadyConnected = connectedShimmerDevices.any { it.getAddress() == deviceAddress }
+                    
+                    if (alreadyConnected) {
+                        Log.i(TAG, "Device $deviceAddress is already connected")
+                        isShimmerConnected = true
+                        return@withContext true
+                    }
 
+                    // Device not connected, attempt connection via scan and connect
+                    Log.i(TAG, "Scanning for device $deviceAddress to establish connection")
+                    
+                    var connectionSuccess = false
+                    val connectionCompleted = CompletableDeferred<Boolean>()
 
-                    val success = shimmerRecorder.initializeDevice()
-                    if (success) {
+                    unifiedBle.scanForShimmerDevices(5000L, object : UnifiedBleManager.ShimmerScanCallback {
+                        override fun onDeviceFound(device: UnifiedDevice) {
+                            if (device.getAddress() == deviceAddress) {
+                                Log.i(TAG, "Found target device $deviceAddress, attempting connection")
+                                // Here we would normally initiate connection to the specific device
+                                // For now, we'll use the existing shimmer recorder initialization
+                                val shimmerRecorder = realShimmerGSRRecorder
+                                if (shimmerRecorder != null) {
+                                    val success = shimmerRecorder.initializeDevice()
+                                    connectionCompleted.complete(success)
+                                } else {
+                                    connectionCompleted.complete(false)
+                                }
+                            }
+                        }
+
+                        override fun onScanComplete(foundDevices: List<UnifiedDevice>) {
+                            if (!connectionCompleted.isCompleted) {
+                                Log.w(TAG, "Device $deviceAddress not found during scan")
+                                connectionCompleted.complete(false)
+                            }
+                        }
+
+                        override fun onScanFailed(error: String) {
+                            Log.e(TAG, "Scan failed while looking for device $deviceAddress: $error")
+                            if (!connectionCompleted.isCompleted) {
+                                connectionCompleted.complete(false)
+                            }
+                        }
+                    })
+
+                    connectionSuccess = connectionCompleted.await()
+                    
+                    if (connectionSuccess) {
                         Log.i(TAG, "Successfully connected to Shimmer device: $deviceAddress")
                         isShimmerConnected = true
                     } else {
                         Log.w(TAG, "Failed to connect to Shimmer device: $deviceAddress")
                         isShimmerConnected = false
                     }
-                    success
+                    connectionSuccess
                 } else {
-                    Log.e(TAG, "Shimmer recorder not initialized")
+                    Log.e(TAG, "UnifiedBleManager not available for device connection")
                     false
                 }
             } catch (e: Exception) {

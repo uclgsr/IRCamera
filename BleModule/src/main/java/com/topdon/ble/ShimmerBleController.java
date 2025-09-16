@@ -228,6 +228,79 @@ public class ShimmerBleController {
         return new ArrayList<>(connectedShimmerDevices);
     }
 
+    /**
+     * Scan for nearby Shimmer devices for the specified duration
+     * @param scanDurationMs Duration of scan in milliseconds
+     * @param callback Callback to receive discovered devices
+     */
+    public void scanForDevices(long scanDurationMs, UnifiedBleManager.ShimmerScanCallback callback) {
+        if (callback == null) {
+            Log.e(TAG, "Scan callback cannot be null");
+            return;
+        }
+
+        List<UnifiedDevice> foundDevices = new ArrayList<>();
+
+        ShimmerScanListener scanListener = new ShimmerScanListener() {
+            @Override
+            public void onShimmerDeviceFound(BluetoothDevice device, UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord) {
+                try {
+                    // Create UnifiedDevice from BluetoothDevice
+                    UnifiedDevice unifiedDevice = createUnifiedDeviceFromBluetooth(device, type, rssi, scanRecord);
+                    foundDevices.add(unifiedDevice);
+                    callback.onDeviceFound(unifiedDevice);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error creating unified device from scan result", e);
+                }
+            }
+
+            @Override
+            public void onScanError(int errorCode, String message) {
+                callback.onScanFailed(message);
+            }
+
+            @Override
+            public void onScanComplete() {
+                callback.onScanComplete(foundDevices);
+            }
+        };
+
+        // Start scanning with the specified duration
+        if (startDeviceDiscovery(scanListener)) {
+            // Schedule scan stop after specified duration
+            mainHandler.postDelayed(() -> {
+                if (isScanning.get()) {
+                    stopDeviceDiscovery();
+                    scanListener.onScanComplete();
+                }
+            }, scanDurationMs);
+        } else {
+            callback.onScanFailed("Failed to start BLE scan");
+        }
+    }
+
+    /**
+     * Create a UnifiedDevice from BluetoothDevice scan result
+     */
+    private UnifiedDevice createUnifiedDeviceFromBluetooth(BluetoothDevice device, UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord) {
+        try {
+            String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
+            
+            // Create ShimmerDevice as UnifiedDevice
+            ShimmerDeviceConfig config = new ShimmerDeviceConfig.Builder()
+                    .setDeviceType(type)
+                    .setSamplingRate(128) // Default GSR sampling rate
+                    .setConnectionTimeout(15000)
+                    .build();
+
+            return new ShimmerDevice(device, config, null);
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error creating UnifiedDevice from BluetoothDevice", e);
+            return null;
+        }
+    }
+
     public void cleanup() {
         try {
             stopDeviceDiscovery();
