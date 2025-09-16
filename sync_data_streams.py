@@ -248,7 +248,7 @@ class MultiModalSynchronizer:
             time_diffs = [event['time_diff_ms'] for event in simultaneous]
             report.append(f"Average time difference: {np.mean(time_diffs):.2f}ms")
             report.append(f"Max time difference: {np.max(time_diffs):.2f}ms")
-            report.append(f"Sync quality: {'EXCELLENT' if np.max(time_diffs) < 5 else 'GOOD' if np.max(time_diffs) < 50 else 'FAIR'}")
+            report.append(f"Sync quality: {'EXCELLENT' if np.max(time_diffs) < 5 else 'GOOD' if np.max(time_diffs) < 50 else 'ACCEPTABLE' if np.max(time_diffs) < 100 else 'POOR'}")
         
         return "\n".join(report)
     
