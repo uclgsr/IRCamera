@@ -269,10 +269,11 @@ class PermissionController(
                             try {
                                 val fallbackIntent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
                                 activity.startActivity(fallbackIntent)
+                                // Since we can't get a result from the fallback, invoke the callback with false
+                                callback(false)
                             } catch (fallbackException: Exception) {
                                 Log.e(TAG, "Failed to open fallback battery optimization settings", fallbackException)
                                 callback(false)
-                            }
                         }
                     } else {
                         Log.w(TAG, "User declined battery optimization exemption")
