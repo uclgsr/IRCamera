@@ -1,5 +1,6 @@
 package com.topdon.tc001.sensors
 
+import com.topdon.tc001.data.SessionMetadata
 import kotlinx.coroutines.flow.Flow
 
 interface SensorRecorder {
@@ -15,6 +16,14 @@ interface SensorRecorder {
     suspend fun initialize(): Boolean
 
     suspend fun startRecording(sessionDirectory: String): Boolean
+    
+    /**
+     * Enhanced startRecording method with session metadata for precise synchronization
+     */
+    suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean {
+        // Default implementation delegates to original method for backward compatibility
+        return startRecording(sessionDirectory)
+    }
 
     suspend fun stopRecording(): Boolean
 

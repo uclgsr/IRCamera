@@ -3,6 +3,7 @@ package com.topdon.tc001.sensors.thermal
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
+import com.topdon.tc001.data.SessionMetadata
 import kotlinx.coroutines.*
 import java.io.*
 import java.nio.ByteBuffer
@@ -33,6 +34,7 @@ class ThermalRecorder(private val context: Context) {
     private var sessionDirectory: File? = null
     private var csvWriter: FileWriter? = null
     private var saveImages = false
+    private var sessionMetadata: SessionMetadata? = null
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -62,7 +64,66 @@ class ThermalRecorder(private val context: Context) {
     }
 
     /**
-     * Start thermal recording to the specified session directory
+     * Enhanced start recording with session metadata for precise synchronization
+     */
+    suspend fun startRecording(sessionDir: String, sessionMetadata: SessionMetadata, saveImages: Boolean = false): Boolean =
+        withContext(Dispatchers.IO) {
+            if (isRecording.get()) {
+                Log.w(TAG, "Thermal recording already in progress")
+                return@withContext false
+            }
+
+            try {
+                this@ThermalRecorder.saveImages = saveImages
+                this@ThermalRecorder.sessionMetadata = sessionMetadata
+                sessionDirectory = File(sessionDir)
+
+                if (!sessionDirectory!!.exists()) {
+                    sessionDirectory!!.mkdirs()
+                }
+
+                // Create thermal stats CSV file with session timestamp
+                val csvFile = File(sessionDirectory, "thermal_stats_${sessionMetadata.sessionId}.csv")
+                csvWriter = FileWriter(csvFile, false)
+
+                // Write comprehensive timing header
+                csvWriter?.write(sessionMetadata.createTimingHeader())
+                csvWriter?.write("# THERMAL FRAME DATA - Temperatures in Celsius\n")
+                csvWriter?.write("# Frame timestamps include:\n")
+                csvWriter?.write("#   timestamp_wall_ms: Wall clock time (UTC)\n") 
+                csvWriter?.write("#   timestamp_relative_ms: Milliseconds since session start (monotonic)\n")
+                csvWriter?.write("#   timestamp_monotonic_ns: Raw monotonic nanoseconds for precise intervals\n")
+                csvWriter?.write("#\n")
+                
+                // Enhanced CSV header with session timing
+                csvWriter?.write("timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,frame_sequence,min_temp_c,avg_temp_c,max_temp_c,pixel_count\n")
+                csvWriter?.flush()
+
+                // Reset counters
+                frameSequence.set(0)
+
+                isRecording.set(true)
+                Log.i(TAG, "Thermal recording started with session timing: ${csvFile.absolutePath}")
+                Log.i(TAG, "Session start: ${sessionMetadata.sessionStartIso}")
+
+                if (saveImages) {
+                    Log.i(
+                        TAG,
+                        "Thermal frame images will be saved to: ${sessionDirectory!!.absolutePath}"
+                    )
+                }
+
+                return@withContext true
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start thermal recording", e)
+                frameListener?.onError("Failed to start thermal recording: ${e.message}")
+                return@withContext false
+            }
+        }
+
+    /**
+     * Legacy start recording method for backward compatibility
      */
     suspend fun startRecording(sessionDir: String, saveImages: Boolean = false): Boolean =
         withContext(Dispatchers.IO) {
@@ -85,7 +146,8 @@ class ThermalRecorder(private val context: Context) {
                 val csvFile = File(sessionDirectory, "thermal_stats_$timestamp.csv")
                 csvWriter = FileWriter(csvFile, false)
 
-                // Write CSV header
+                // Write CSV header (legacy format)
+                csvWriter?.write("# Legacy thermal recording - no session synchronization metadata\n")
                 csvWriter?.write(CSV_HEADER)
                 csvWriter?.write("\n")
                 csvWriter?.flush()
@@ -94,7 +156,7 @@ class ThermalRecorder(private val context: Context) {
                 frameSequence.set(0)
 
                 isRecording.set(true)
-                Log.i(TAG, "Thermal recording started: ${csvFile.absolutePath}")
+                Log.i(TAG, "Thermal recording started (legacy mode): ${csvFile.absolutePath}")
 
                 if (saveImages) {
                     Log.i(
@@ -300,24 +362,49 @@ class ThermalRecorder(private val context: Context) {
     }
 
     /**
-     * Log frame statistics to CSV
+     * Log frame statistics to CSV with enhanced timing information
      */
     private suspend fun logFrameStats(stats: ThermalFrameStats) = withContext(Dispatchers.IO) {
         try {
             csvWriter?.let { writer ->
-                val csvLine = StringBuilder().apply {
-                    append(stats.timestampNs)
-                    append(',')
-                    append(stats.frameSequence)
-                    append(',')
-                    append("%.3f".format(Locale.US, stats.minTemp))
-                    append(',')
-                    append("%.3f".format(Locale.US, stats.avgTemp))
-                    append(',')
-                    append("%.3f".format(Locale.US, stats.maxTemp))
-                    append(',')
-                    append(stats.pixelCount)
-                }.toString()
+                val csvLine = if (sessionMetadata != null) {
+                    // Enhanced format with session timing
+                    val wallClockMs = sessionMetadata!!.monotonicToWallClock(stats.timestampNs)
+                    val relativeMs = (stats.timestampNs - sessionMetadata!!.sessionStartMonotonicNs) / 1_000_000L
+                    
+                    StringBuilder().apply {
+                        append(wallClockMs)
+                        append(',')
+                        append(relativeMs)
+                        append(',')
+                        append(stats.timestampNs)
+                        append(',')
+                        append(stats.frameSequence)
+                        append(',')
+                        append("%.3f".format(Locale.US, stats.minTemp))
+                        append(',')
+                        append("%.3f".format(Locale.US, stats.avgTemp))
+                        append(',')
+                        append("%.3f".format(Locale.US, stats.maxTemp))
+                        append(',')
+                        append(stats.pixelCount)
+                    }.toString()
+                } else {
+                    // Legacy format
+                    StringBuilder().apply {
+                        append(stats.timestampNs)
+                        append(',')
+                        append(stats.frameSequence)
+                        append(',')
+                        append("%.3f".format(Locale.US, stats.minTemp))
+                        append(',')
+                        append("%.3f".format(Locale.US, stats.avgTemp))
+                        append(',')
+                        append("%.3f".format(Locale.US, stats.maxTemp))
+                        append(',')
+                        append(stats.pixelCount)
+                    }.toString()
+                }
 
                 writer.write(csvLine)
                 writer.write("\n")

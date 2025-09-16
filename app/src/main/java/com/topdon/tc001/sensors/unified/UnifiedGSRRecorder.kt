@@ -23,6 +23,7 @@ import com.topdon.tc001.sensors.SensorError
 import com.topdon.tc001.sensors.RecordingStats
 import com.topdon.tc001.sensors.unified.model.DeviceInfo
 import com.topdon.tc001.sensors.unified.model.GSRSample
+import com.topdon.tc001.data.SessionMetadata
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -113,6 +114,7 @@ class UnifiedGSRRecorder(
     private var recordingJob: Job? = null
     private var sessionDirectory: File? = null
     private var csvWriter: FileWriter? = null
+    private var sessionMetadata: SessionMetadata? = null
     private val recordedSamples = AtomicLong(0)
     private var recordingStartTime: Long = 0
 
@@ -260,9 +262,78 @@ class UnifiedGSRRecorder(
         }
     }
 
+    /**
+     * Enhanced startRecording with session metadata for precise synchronization
+     */
+    override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean =
+        withContext(Dispatchers.IO) {
+            Log.i(TAG, "Starting GSR recording session with metadata: ${sessionMetadata.sessionId}")
+
+            val shimmer = connectedShimmer
+            if (shimmer == null) {
+                Log.e(TAG, "No Shimmer device connected for recording")
+                return@withContext false
+            }
+
+            if (_isRecording.get()) {
+                Log.w(TAG, "Recording already in progress")
+                return@withContext true
+            }
+
+            try {
+                this@UnifiedGSRRecorder.sessionMetadata = sessionMetadata
+                this@UnifiedGSRRecorder.sessionDirectory = File(sessionDirectory)
+                this@UnifiedGSRRecorder.sessionDirectory?.mkdirs()
+
+                val csvFile = File(this@UnifiedGSRRecorder.sessionDirectory, "gsr_data_${sessionMetadata.sessionId}.csv")
+                csvWriter = FileWriter(csvFile)
+
+                // Write comprehensive timing header
+                csvWriter?.write(sessionMetadata.createTimingHeader())
+                csvWriter?.write("# GSR Recording Session with Synchronized Timing\n")
+                csvWriter?.write("# Device: ${selectedDevice?.name} (${selectedDevice?.address})\n")
+                csvWriter?.write("# Sampling Rate: ${samplingRate}Hz\n") 
+                csvWriter?.write("# ADC Resolution: 12-bit (0-${ADC_RESOLUTION_12BIT.toInt()})\n")
+                csvWriter?.write("# Session Start: ${sessionMetadata.sessionStartIso}\n")
+                csvWriter?.write("#\n")
+                csvWriter?.write("# GSR Data Columns:\n")
+                csvWriter?.write("#   timestamp_wall_ms: Wall clock time (UTC)\n")
+                csvWriter?.write("#   timestamp_relative_ms: Milliseconds since session start (monotonic)\n") 
+                csvWriter?.write("#   timestamp_monotonic_ns: Raw monotonic nanoseconds for precise intervals\n")
+                csvWriter?.write("#   gsr_microsiemens: Galvanic skin response in microsiemens\n")
+                csvWriter?.write("#   gsr_raw_12bit: Raw ADC value (0-4095)\n")
+                csvWriter?.write("#   ppg_raw: Raw PPG sensor value\n")
+                csvWriter?.write("#   quality_score: Connection quality (0.0-1.0)\n")
+                csvWriter?.write("#   connection_rssi: Bluetooth RSSI in dBm\n")
+                csvWriter?.write("#\n")
+                csvWriter?.write("timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,gsr_microsiemens,gsr_raw_12bit,ppg_raw,quality_score,connection_rssi\n")
+                csvWriter?.flush()
+
+                recordedSamples.set(0)
+                recordingStartTime = sessionMetadata.sessionStartMonotonicNs
+
+                shimmer.startStreaming()
+
+                _isRecording.set(true)
+                _deviceStatus.value = "Recording..."
+
+                recordingJob = lifecycleOwner.lifecycleScope.launch {
+                    processRecordingData()
+                }
+
+                Log.i(TAG, "GSR recording started successfully with session synchronization")
+                return@withContext true
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start GSR recording with session metadata", e)
+                _deviceStatus.value = "Recording Failed"
+                return@withContext false
+            }
+        }
+
     override suspend fun startRecording(sessionDirectory: String): Boolean =
         withContext(Dispatchers.IO) {
-            Log.i(TAG, "Starting GSR recording session")
+            Log.i(TAG, "Starting GSR recording session (legacy mode)")
 
             val shimmer = connectedShimmer
             if (shimmer == null) {
@@ -284,7 +355,7 @@ class UnifiedGSRRecorder(
                 csvWriter = FileWriter(csvFile)
 
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
-                csvWriter?.write("# GSR Recording Session\n")
+                csvWriter?.write("# GSR Recording Session (Legacy - No Session Synchronization)\n")
                 csvWriter?.write("# Device: ${selectedDevice?.name} (${selectedDevice?.address})\n")
                 csvWriter?.write("# Sampling Rate: ${samplingRate}Hz\n")
                 csvWriter?.write("# ADC Resolution: 12-bit (0-${ADC_RESOLUTION_12BIT.toInt()})\n")
@@ -304,7 +375,7 @@ class UnifiedGSRRecorder(
                     processRecordingData()
                 }
 
-                Log.i(TAG, "GSR recording started successfully")
+                Log.i(TAG, "GSR recording started successfully (legacy mode)")
                 return@withContext true
 
             } catch (e: Exception) {
@@ -522,9 +593,14 @@ class UnifiedGSRRecorder(
         if (!_isRecording.get()) return
 
         try {
-            val timestamp = System.nanoTime()
-            val iso =
-                SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(Date())
+            val monotonicNs = android.os.SystemClock.elapsedRealtimeNanos()
+            val wallClockMs = System.currentTimeMillis()
+            val iso = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(Date(wallClockMs))
+
+            // Calculate relative timestamp from session start if available
+            val relativeMs = sessionMetadata?.let { metadata ->
+                (monotonicNs - metadata.sessionStartMonotonicNs) / 1_000_000L
+            } ?: 0L
 
             // Generate realistic GSR simulation data for testing
             val time = System.currentTimeMillis()
@@ -532,7 +608,7 @@ class UnifiedGSRRecorder(
             val variation = Math.sin(time / 5000.0) * 3.0 + Math.random() * 2.0 - 1.0
             val gsrMicrosiemens = baseGSR + variation
 
-            // Simulate 12-bit ADC raw value (0-4095 range)
+            // Simulate 12-bit ADC raw value (0-4095 range) - CRITICAL: Use 12-bit resolution as specified
             val gsrRaw = (gsrMicrosiemens * 4095.0 / 100.0).coerceIn(0.0, 4095.0)
 
             // Simulate PPG data
@@ -546,7 +622,7 @@ class UnifiedGSRRecorder(
             }
 
             val gsrSample = GSRSample(
-                timestamp = timestamp,
+                timestamp = monotonicNs,
                 timestampIso = iso,
                 gsrMicrosiemens = gsrMicrosiemens,
                 gsrRaw = gsrRawInt,
@@ -557,7 +633,15 @@ class UnifiedGSRRecorder(
 
             gsrDataFlow.tryEmit(gsrSample)
 
-            csvWriter?.write("${timestamp},${iso},${gsrMicrosiemens},${gsrRawInt},${ppgRaw.toInt()},${qualityScore},-50\n")
+            // Write GSR data with enhanced timing format
+            if (sessionMetadata != null) {
+                // Enhanced format with session timing
+                csvWriter?.write("${wallClockMs},${relativeMs},${monotonicNs},${gsrMicrosiemens},${gsrRawInt},${ppgRaw.toInt()},${qualityScore},-50\n")
+            } else {
+                // Legacy format
+                csvWriter?.write("${monotonicNs},${iso},${gsrMicrosiemens},${gsrRawInt},${ppgRaw.toInt()},${qualityScore},-50\n")
+            }
+            
             if (recordedSamples.incrementAndGet() % 100 == 0L) {
                 csvWriter?.flush()  // Flush every 100 samples
             }
