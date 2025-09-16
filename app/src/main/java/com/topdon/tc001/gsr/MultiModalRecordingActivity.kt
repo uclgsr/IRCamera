@@ -20,6 +20,7 @@ import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.model.SyncMark
 import com.topdon.gsr.service.GSRRecorder
+import com.topdon.gsr.service.MockShimmerDeviceFactory
 import com.topdon.gsr.service.SessionManager
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.lib.core.ktbase.BaseBindingActivity
@@ -207,7 +208,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         permissionController.initialize()
 
         // Initialize recording components
-        gsrRecorder = GSRRecorder(this)
+        gsrRecorder = GSRRecorder(this, MockShimmerDeviceFactory())
         sessionManager = SessionManager.getInstance(this)
 
         // Set up view references using binding
