@@ -55,7 +55,7 @@ class ThermalCameraDemo : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Note: You would need to create activity_thermal_demo.xml layout
+        // Note: Layout would need to be created for full UI functionality
         // setContentView(R.layout.activity_thermal_demo)
 
         requestPermissions()
