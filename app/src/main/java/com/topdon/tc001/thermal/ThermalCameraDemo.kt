@@ -55,10 +55,37 @@ class ThermalCameraDemo : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Note: Layout would need to be created for full UI functionality
-        // setContentView(R.layout.activity_thermal_demo)
+        setContentView(R.layout.activity_thermal_demo)
+        
+        // Initialize UI components
+        statusText = findViewById(R.id.statusText)
+        thermalPreview = findViewById(R.id.thermalPreview)
+        startButton = findViewById(R.id.startButton)
+        stopButton = findViewById(R.id.stopButton)
+        networkButton = findViewById(R.id.networkButton)
+
+        // Set up button click listeners
+        setupButtonListeners()
 
         requestPermissions()
+    }
+    
+    private fun setupButtonListeners() {
+        startButton.setOnClickListener {
+            lifecycleScope.launch {
+                startThermalRecording()
+            }
+        }
+        
+        stopButton.setOnClickListener {
+            lifecycleScope.launch {
+                stopThermalRecording()
+            }
+        }
+        
+        networkButton.setOnClickListener {
+            toggleNetworkStreaming()
+        }
     }
 
     private fun requestPermissions() {
@@ -101,8 +128,15 @@ class ThermalCameraDemo : AppCompatActivity() {
                             // Update UI with thermal preview
                             bitmap?.let {
                                 Log.d(TAG, "Thermal frame received: ${it.width}x${it.height}")
-                                // In a real app, you would update an ImageView here
-                                // thermalPreview.setImageBitmap(it)
+                                thermalPreview.setImageBitmap(it)
+                            }
+                            
+                            // Update temperature display
+                            temperatureData?.let { data ->
+                                findViewById<TextView>(R.id.minTempText)?.text = 
+                                    String.format("%.1f°C", data.minTemperature)
+                                findViewById<TextView>(R.id.maxTempText)?.text = 
+                                    String.format("%.1f°C", data.maxTemperature)
                             }
                         }
                     }
@@ -112,6 +146,12 @@ class ThermalCameraDemo : AppCompatActivity() {
 
                 if (success) {
                     updateStatus("✅ Thermal camera ready. Plug in TC001 for hardware mode or use simulation.")
+                    
+                    // Enable UI controls
+                    runOnUiThread {
+                        startButton.isEnabled = true
+                        networkButton.isEnabled = true
+                    }
                     
                     // Start network server
                     networkServer.start()
@@ -152,9 +192,6 @@ class ThermalCameraDemo : AppCompatActivity() {
                         }
                     }
 
-                    // Start thermal recording demo
-                    startThermalDemo()
-
                 } else {
                     updateStatus("❌ Failed to initialize thermal camera")
                 }
@@ -170,59 +207,85 @@ class ThermalCameraDemo : AppCompatActivity() {
         thermalRecorder.enableNetworkStreaming(networkServer)
         isNetworkEnabled = true
         updateStatus("🌐 Thermal network streaming enabled (~2 FPS)")
+        runOnUiThread {
+            networkButton.text = "Disable Network Streaming"
+        }
     }
 
     private fun disableNetworkStreaming() {
         thermalRecorder.disableNetworkStreaming()
         isNetworkEnabled = false
         updateStatus("🌐 Thermal network streaming disabled")
+        runOnUiThread {
+            networkButton.text = "Enable Network Streaming"
+        }
     }
+    
+    private fun toggleNetworkStreaming() {
+        if (isNetworkEnabled) {
+            disableNetworkStreaming()
+        } else {
+            enableNetworkStreaming()
+        }
+    }
+    
+    private suspend fun startThermalRecording() {
+        try {
+            val sessionDir = File(filesDir, "thermal_demo_${System.currentTimeMillis()}")
+            sessionDir.mkdirs()
 
-    private fun startThermalDemo() {
-        lifecycleScope.launch {
-            try {
-                val sessionDir = File(filesDir, "thermal_demo_${System.currentTimeMillis()}")
-                sessionDir.mkdirs()
+            updateStatus("🚀 Starting thermal recording...")
+            val success = thermalRecorder.startRecording(sessionDir.absolutePath)
 
-                updateStatus("🚀 Starting thermal recording demo...")
-                val success = thermalRecorder.startRecording(sessionDir.absolutePath)
-
-                if (success) {
-                    updateStatus("🔴 Thermal recording started - generating frames...")
-                    
-                    // Let it record for 30 seconds in demo mode
-                    kotlinx.coroutines.delay(30000)
-                    
-                    val stopSuccess = thermalRecorder.stopRecording()
-                    if (stopSuccess) {
-                        val stats = thermalRecorder.getRecordingStats()
-                        updateStatus("✅ Demo completed! Recorded ${stats.totalSamplesRecorded} thermal frames")
-                        Toast.makeText(
-                            this@ThermalCameraDemo,
-                            "Thermal Demo Complete!\n" +
-                            "Frames: ${stats.totalSamplesRecorded}\n" +
-                            "Data Rate: ${String.format("%.1f", stats.averageDataRate)} FPS\n" +
-                            "Storage: ${String.format("%.2f", stats.storageUsedMB)} MB",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                } else {
-                    updateStatus("❌ Failed to start thermal recording")
+            if (success) {
+                updateStatus("🔴 Thermal recording started - generating frames...")
+                runOnUiThread {
+                    startButton.isEnabled = false
+                    stopButton.isEnabled = true
                 }
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to run thermal demo", e)
-                updateStatus("❌ Demo failed: ${e.message}")
+            } else {
+                updateStatus("❌ Failed to start thermal recording")
             }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start recording", e)
+            updateStatus("❌ Recording failed: ${e.message}")
+        }
+    }
+    
+    private suspend fun stopThermalRecording() {
+        try {
+            val stopSuccess = thermalRecorder.stopRecording()
+            if (stopSuccess) {
+                val stats = thermalRecorder.getRecordingStats()
+                updateStatus("✅ Recording stopped! Recorded ${stats.totalSamplesRecorded} thermal frames")
+                
+                runOnUiThread {
+                    startButton.isEnabled = true
+                    stopButton.isEnabled = false
+                }
+                
+                Toast.makeText(
+                    this@ThermalCameraDemo,
+                    "Recording Complete!\n" +
+                    "Frames: ${stats.totalSamplesRecorded}\n" +
+                    "Data Rate: ${String.format("%.1f", stats.averageDataRate)} FPS\n" +
+                    "Storage: ${String.format("%.2f", stats.storageUsedMB)} MB",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                updateStatus("❌ Failed to stop recording")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to stop recording", e)
+            updateStatus("❌ Stop recording failed: ${e.message}")
         }
     }
 
     private fun updateStatus(message: String) {
         Log.i(TAG, message)
         runOnUiThread {
-            // In a real app, you would update a TextView here
-            // statusText.text = message
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            statusText.text = message
         }
     }
 
