@@ -71,6 +71,7 @@ import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.supervisor.CrashSafeSupervisor
 import com.topdon.tc001.utils.AppVersionUtil
 import com.topdon.tc001.permissions.PermissionController
+import com.topdon.tc001.thermal.ThermalCameraDemo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -234,6 +235,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.networkStatusBar.setOnClickListener {
             handleNetworkStatusClick()
         }
+        
+        // Thermal Camera Quick Access
+        binding.thermalQuickAccess.setOnClickListener {
+            launchThermalCamera()
+        }
 
         binding.viewMain.setOnLongClickListener {
             launchShimmerMvp()
@@ -379,6 +385,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             outputStream.close()
         } catch (e: IOException) {
             e.printStackTrace()
+        }
+    }
+    
+    /**
+     * Launch the thermal camera demo interface
+     */
+    private fun launchThermalCamera() {
+        try {
+            Log.i(TAG, "Launching thermal camera interface")
+            val intent = Intent(this, ThermalCameraDemo::class.java)
+            startActivity(intent)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to launch thermal camera", e)
+            Toast.makeText(this, "Thermal camera not available", Toast.LENGTH_SHORT).show()
         }
     }
 

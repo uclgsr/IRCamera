@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/black"
+    tools:context=".thermal.ThermalCameraDemo">
+
+    <!-- Status Text -->
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Initializing thermal camera..."
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:padding="12dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Thermal Preview -->
+    <ImageView
+        android:id="@+id/thermalPreview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scaleType="centerInside"
+        android:background="@android:color/darker_gray"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Thermal camera preview" />
+
+    <!-- Control Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/startButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Start Recording"
+            android:layout_marginEnd="4dp"
+            android:enabled="false" />
+
+        <Button
+            android:id="@+id/stopButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Stop Recording"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:enabled="false" />
+
+        <Button
+            android:id="@+id/configButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Config"
+            android:layout_marginStart="4dp"
+            android:enabled="false" />
+
+    </LinearLayout>
+
+    <!-- Secondary Controls -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/networkButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Enable Network Streaming"
+            android:layout_marginEnd="4dp"
+            android:enabled="false" />
+
+        <Button
+            android:id="@+id/exportButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Export Data"
+            android:layout_marginStart="4dp"
+            android:enabled="false" />
+
+    </LinearLayout>
+
+    <!-- Temperature Info -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Min Temp:"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/minTempText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="--°C"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Max Temp:"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/maxTempText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="--°C"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:gravity="end" />
+
+    </LinearLayout>
+
+    <!-- Performance Metrics -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="FPS:"
+            android:textColor="@android:color/white"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/fpsText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="--"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="CPU:"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/cpuText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="--%"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            android:gravity="end" />
+
+    </LinearLayout>
+
+</LinearLayout>
