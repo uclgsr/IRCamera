@@ -728,8 +728,8 @@ class RecordingController(
     }
 
     private fun generateSessionId(): String {
-        val formatter = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
-        return "Session_${formatter.format(Date())}"
+        val formatter = java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss", java.util.Locale.US)
+        return "Session_${java.time.LocalDateTime.now().format(formatter)}"
     }
 }
 
