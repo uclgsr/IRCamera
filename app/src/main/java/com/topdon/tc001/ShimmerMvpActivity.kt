@@ -3,6 +3,8 @@ package com.topdon.tc001
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -21,6 +23,7 @@ import com.shimmerresearch.driver.CallbackObject
 import com.shimmerresearch.driver.ObjectCluster
 import com.shimmerresearch.driver.ShimmerDevice
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
@@ -194,39 +197,104 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 updateConnectionStatus("Scanning for Shimmer3 GSR+ devices...")
                 binding.connectButton.isEnabled = false
 
-                if (ActivityCompat.checkSelfPermission(
-                        this@ShimmerMvpActivity,
-                        Manifest.permission.BLUETOOTH_CONNECT
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    showToast("Bluetooth connect permission required")
-                    return@launch
-                }
-
-                val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-                val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
-
-                val shimmerDevices = pairedDevices?.filter { device ->
-                    val deviceName = device.name?.lowercase() ?: ""
-                    val deviceAddress = device.address?.lowercase() ?: ""
-
-                    deviceName.contains("shimmer", ignoreCase = true) ||
-                            deviceName.startsWith("rn4") || // RN4x Shimmer modules
-                            deviceName.startsWith("shimmer3") ||
-                            deviceAddress.startsWith("00:06:66") || // Shimmer Research MAC prefix
-                            deviceAddress.startsWith("d0:39:72") || // Alternative Shimmer MAC prefix
-                            deviceName.contains("gsr", ignoreCase = true)
-                } ?: emptyList()
-
-                if (shimmerDevices.isEmpty()) {
-                    updateConnectionStatus("No paired Shimmer3 GSR+ devices found")
-                    showToast("Please pair your Shimmer3 GSR+ device in Bluetooth settings:\n1. Go to Settings > Bluetooth\n2. Pair your Shimmer device\n3. Return to this app")
+                // Check for required permissions first
+                if (!hasAllRequiredPermissions()) {
+                    val missingPermissions = getMissingPermissions()
+                    Log.w(TAG, "Missing permissions: ${missingPermissions.joinToString()}")
+                    showToast("Missing required permissions. Please grant permissions and try again.")
+                    permissionLauncher.launch(missingPermissions.toTypedArray())
                     binding.connectButton.isEnabled = true
                     return@launch
                 }
 
-                val prioritizedDevices = shimmerDevices.sortedByDescending { device ->
-                    val name = device.name?.lowercase() ?: ""
+                val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+                if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
+                    showToast("Bluetooth is not available or enabled")
+                    binding.connectButton.isEnabled = true
+                    return@launch
+                }
+
+                // Start with paired devices first (for better UX)
+                val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter.bondedDevices
+                val pairedShimmers = pairedDevices?.filter { isValidShimmerDevice(it) } ?: emptyList()
+
+                if (pairedShimmers.isNotEmpty()) {
+                    Log.i(TAG, "Found ${pairedShimmers.size} paired Shimmer devices")
+                    connectToShimmerDevice(pairedShimmers.first())
+                    return@launch
+                }
+
+                // If no paired devices, perform actual BLE scanning
+                Log.i(TAG, "No paired Shimmer devices found. Starting BLE discovery...")
+                updateConnectionStatus("Scanning nearby Shimmer devices...")
+                
+                val discoveredShimmers = performBluetoothLeScanning()
+                if (discoveredShimmers.isNotEmpty()) {
+                    Log.i(TAG, "Found ${discoveredShimmers.size} Shimmer devices during scan")
+                    // Attempt to connect to the first discovered device
+                    connectToShimmerDevice(discoveredShimmers.first())
+                } else {
+                    updateConnectionStatus("No Shimmer3 GSR+ devices found")
+                    showToast("No Shimmer devices found.\n\nTroubleshooting:\n1. Ensure your Shimmer device is powered on\n2. Move closer to the device\n3. Try pairing manually in Bluetooth settings")
+                    binding.connectButton.isEnabled = true
+                }
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Error scanning for Shimmer3 GSR+ devices", e)
+                updateConnectionStatus("Device scan failed: ${e.message}")
+                binding.connectButton.isEnabled = true
+            }
+        }
+    }
+
+    private suspend fun performBluetoothLeScanning(): List<BluetoothDevice> = withContext(Dispatchers.IO) {
+        val discoveredDevices = mutableListOf<BluetoothDevice>()
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
+        
+        if (bluetoothLeScanner == null) {
+            Log.w(TAG, "BLE Scanner not available")
+            return@withContext discoveredDevices
+        }
+
+        val scanCallback = object : ScanCallback() {
+            override fun onScanResult(callbackType: Int, result: ScanResult) {
+                val device = result.device
+                if (isValidShimmerDevice(device) && !discoveredDevices.contains(device)) {
+                    Log.d(TAG, "Discovered Shimmer device: ${device.name} (${device.address})")
+                    discoveredDevices.add(device)
+                }
+            }
+
+            override fun onScanFailed(errorCode: Int) {
+                Log.e(TAG, "BLE scan failed with error code: $errorCode")
+            }
+        }
+
+        try {
+            Log.i(TAG, "Starting BLE scan for Shimmer devices...")
+            bluetoothLeScanner.startScan(scanCallback)
+            
+            // Scan for 10 seconds
+            delay(10000)
+            
+            bluetoothLeScanner.stopScan(scanCallback)
+            Log.i(TAG, "BLE scan completed. Found ${discoveredDevices.size} devices")
+            
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Security exception during BLE scan", e)
+        } catch (e: Exception) {
+            Log.e(TAG, "Exception during BLE scan", e)
+        }
+
+        return@withContext discoveredDevices
+    }
+
+    private fun connectToShimmerDevice(device: BluetoothDevice) {
+        lifecycleScope.launch {
+            try {
+                val prioritizedDevices = listOf(device).sortedByDescending { dev ->
+                    val name = dev.name?.lowercase() ?: ""
                     when {
                         name.contains("gsr") -> 100 // Highest priority for GSR-specific devices
                         name.contains("shimmer3") -> 90
@@ -237,10 +305,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 }
 
                 val targetDevice = prioritizedDevices.first()
-                Log.i(
-                    TAG,
-                    "Connecting to Shimmer3 GSR+: ${targetDevice.name} (${targetDevice.address})"
-                )
+                Log.i(TAG, "Connecting to Shimmer3 GSR+: ${targetDevice.name} (${targetDevice.address})")
                 updateConnectionStatus("Connecting to ${targetDevice.name}...")
 
                 shimmerBluetoothManager?.connectShimmerThroughBTAddress(targetDevice.address)
@@ -257,6 +322,53 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 binding.connectButton.isEnabled = true
             }
         }
+    }
+
+    private fun hasAllRequiredPermissions(): Boolean {
+        return REQUIRED_PERMISSIONS.all { permission ->
+            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun getMissingPermissions(): Array<String> {
+        return REQUIRED_PERMISSIONS.filter { permission ->
+            ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED
+        }.toTypedArray()
+    }
+
+    private fun isValidShimmerDevice(device: BluetoothDevice): Boolean {
+        val address = device.address
+        val name = if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            device.name
+        } else {
+            null
+        }
+
+        // Check MAC address prefix
+        val shimmerMacPrefixes = listOf("00:06:66", "d0:39:72", "00:80:98")
+        val hasValidPrefix = shimmerMacPrefixes.any { prefix ->
+            address.startsWith(prefix, ignoreCase = true)
+        }
+
+        // Check device name pattern
+        val shimmerNamePatterns = listOf("shimmer", "gsr", "rn4", "shimmer3")
+        val hasValidName = name?.let { deviceName ->
+            shimmerNamePatterns.any { pattern ->
+                deviceName.contains(pattern, ignoreCase = true)
+            }
+        } ?: false
+
+        val isValid = hasValidPrefix || hasValidName
+
+        if (isValid) {
+            Log.d(TAG, "Valid Shimmer device detected: $name ($address)")
+        }
+
+        return isValid
     }
 
     private fun setupShimmerConfiguration() {

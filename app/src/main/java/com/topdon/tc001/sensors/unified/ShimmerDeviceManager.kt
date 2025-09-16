@@ -126,7 +126,7 @@ class ShimmerDeviceManager(
     }
 
     suspend fun startDeviceScanning(): Boolean = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Starting Shimmer device discovery with MAC filtering")
+        Log.i(TAG, "Starting Shimmer device discovery with BLE scanning")
 
         if (isScanning.get()) {
             Log.w(TAG, "Device scanning already in progress")
@@ -138,56 +138,49 @@ class ShimmerDeviceManager(
             return@withContext false
         }
 
+        if (!hasRequiredPermissions()) {
+            Log.e(TAG, "Missing required permissions for BLE scanning")
+            return@withContext false
+        }
+
         try {
             discoveredDevices.clear()
             isScanning.set(true)
 
-            // Use standard Bluetooth scanning - Shimmer-specific scanning not available
-            // shimmerMgr.startScanBtDevices() // Method doesn't exist
+            // Start with paired devices for better UX
+            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            val pairedDevices = if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                bluetoothAdapter?.bondedDevices ?: emptySet()
+            } else {
+                emptySet()
+            }
 
-            // Start discovery monitoring job
+            // Add paired Shimmer devices first
+            val pairedShimmers = pairedDevices.mapNotNull { btDevice ->
+                if (isValidShimmerDevice(btDevice)) {
+                    DeviceInfo(
+                        address = btDevice.address,
+                        name = btDevice.name ?: "Unknown Shimmer",
+                        rssi = -50, // Default RSSI for paired devices
+                        deviceType = "Shimmer3 GSR+",
+                        isGSRCapable = true
+                    )
+                } else null
+            }
+
+            pairedShimmers.forEach { device ->
+                discoveredDevices[device.address] = device
+            }
+
+            Log.i(TAG, "Found ${pairedShimmers.size} paired Shimmer devices")
+
+            // Perform actual BLE scanning for nearby devices
             scanJob = lifecycleOwner.lifecycleScope.launch {
-                var scanTime = 0L
-                while (isScanning.get() && scanTime < SCAN_TIMEOUT_MS) {
-                    delay(1000)
-                    scanTime += 1000
-
-                    // Get discovered devices from Bluetooth adapter
-                    val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-                    val pairedDevices = if (ActivityCompat.checkSelfPermission(
-                            context,
-                            Manifest.permission.BLUETOOTH_CONNECT
-                        ) == PackageManager.PERMISSION_GRANTED
-                    ) {
-                        bluetoothAdapter?.bondedDevices ?: emptySet()
-                    } else {
-                        emptySet()
-                    }
-
-                    val detectedDevices = pairedDevices.mapNotNull { btDevice ->
-                        if (isValidShimmerDevice(btDevice)) {
-                            DeviceInfo(
-                                address = btDevice.address,
-                                name = btDevice.name ?: "Unknown Shimmer",
-                                rssi = -50, // Default RSSI - actual value from scan callback
-                                deviceType = "Shimmer3 GSR+",
-                                isGSRCapable = true
-                            )
-                        } else null
-                    }
-
-                    // Update discovered devices map
-                    detectedDevices.forEach { device ->
-                        discoveredDevices[device.address] = device
-                    }
-
-                    // Emit current results
-                    _scanResults.emit(discoveredDevices.values.toList())
-
-                    Log.d(TAG, "Scan progress: ${discoveredDevices.size} Shimmer devices found")
-                }
-
-                stopDeviceScanning()
+                performBluetoothLeScanning()
             }
 
             return@withContext true
@@ -196,6 +189,72 @@ class ShimmerDeviceManager(
             Log.e(TAG, "Error starting device scan", e)
             isScanning.set(false)
             return@withContext false
+        }
+    }
+
+    private suspend fun performBluetoothLeScanning() {
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
+
+        if (bluetoothLeScanner == null) {
+            Log.w(TAG, "BLE Scanner not available")
+            return
+        }
+
+        val scanCallback = object : android.bluetooth.le.ScanCallback() {
+            override fun onScanResult(callbackType: Int, result: android.bluetooth.le.ScanResult) {
+                val device = result.device
+                val rssi = result.rssi
+                
+                if (isValidShimmerDevice(device) && !discoveredDevices.containsKey(device.address)) {
+                    Log.d(TAG, "Discovered new Shimmer device: ${device.name} (${device.address}) RSSI: $rssi")
+                    
+                    val deviceInfo = DeviceInfo(
+                        address = device.address,
+                        name = device.name ?: "Unknown Shimmer",
+                        rssi = rssi,
+                        deviceType = "Shimmer3 GSR+",
+                        isGSRCapable = true
+                    )
+                    
+                    discoveredDevices[device.address] = deviceInfo
+                    
+                    // Emit updated results
+                    lifecycleOwner.lifecycleScope.launch {
+                        _scanResults.emit(discoveredDevices.values.toList())
+                    }
+                }
+            }
+
+            override fun onScanFailed(errorCode: Int) {
+                Log.e(TAG, "BLE scan failed with error code: $errorCode")
+            }
+        }
+
+        try {
+            Log.i(TAG, "Starting BLE scan for nearby Shimmer devices...")
+            bluetoothLeScanner.startScan(scanCallback)
+
+            // Scan for specified timeout period with periodic updates
+            var scanTime = 0L
+            while (isScanning.get() && scanTime < SCAN_TIMEOUT_MS) {
+                delay(1000)
+                scanTime += 1000
+
+                // Emit current results every second
+                _scanResults.emit(discoveredDevices.values.toList())
+                Log.d(TAG, "Scan progress: ${discoveredDevices.size} Shimmer devices found")
+            }
+
+            bluetoothLeScanner.stopScan(scanCallback)
+            Log.i(TAG, "BLE scan completed. Total ${discoveredDevices.size} Shimmer devices found")
+
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Security exception during BLE scan", e)
+        } catch (e: Exception) {
+            Log.e(TAG, "Exception during BLE scan", e)
+        } finally {
+            stopDeviceScanning()
         }
     }
 
