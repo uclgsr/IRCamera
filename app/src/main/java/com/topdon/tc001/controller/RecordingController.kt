@@ -12,6 +12,7 @@ import com.topdon.tc001.sensors.ErrorType
 import com.topdon.tc001.sensors.RecordingStats
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import com.topdon.tc001.sensors.thermal.ThermalCameraRecorder
+import com.topdon.tc001.data.SessionMetadata
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -30,6 +31,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -50,6 +54,7 @@ class RecordingController(
     val isRecording: Boolean get() = _isRecording.get()
 
     private var currentSessionDirectory: String? = null
+    private var sessionMetadata: SessionMetadata? = null
     private var recordingStartTime: Long = 0
 
     private val controllerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -157,7 +162,7 @@ class RecordingController(
         }
     }
 
-    suspend fun startRecording(sessionDirectory: String): Boolean {
+    suspend fun startRecording(sessionDirectory: String, sessionId: String? = null): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 if (_isRecording.get()) {
@@ -173,13 +178,23 @@ class RecordingController(
                     sessionDir.mkdirs()
                 }
 
+                // Create session metadata with synchronized timing
+                val finalSessionId = sessionId ?: generateSessionId()
+                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
+                
                 currentSessionDirectory = sessionDirectory
-                recordingStartTime = System.nanoTime()
+                recordingStartTime = sessionMetadata!!.sessionStartMonotonicNs
+
+                Log.i(TAG, "Session created: $finalSessionId")
+                Log.i(TAG, "Session start time: ${sessionMetadata!!.sessionStartIso}")
+                Log.i(TAG, "Wall clock: ${sessionMetadata!!.sessionStartTimestampMs}ms")
+                Log.i(TAG, "Monotonic: ${sessionMetadata!!.sessionStartMonotonicNs}ns")
 
                 val startJobs = sensorRecorders.values.map { sensor ->
                     async {
                         try {
-                            val success = sensor.startRecording(sessionDirectory)
+                            // Pass session metadata to sensors for consistent timing
+                            val success = sensor.startRecording(sessionDirectory, sessionMetadata!!)
                             Triple(sensor.sensorId, success, null)
                         } catch (e: Exception) {
                             Log.w(TAG, "Exception starting sensor ${sensor.sensorId}", e)
@@ -240,6 +255,13 @@ class RecordingController(
                     _isRecording.set(true)
                     _recordingStateFlow.value = RecordingState.RECORDING
 
+                    // Add session start sync marker with session metadata
+                    sessionMetadata?.addSyncEvent("session_start", mapOf(
+                        "total_sensors" to startResults.size.toString(),
+                        "successful_sensors" to successfulStarts.size.toString(),
+                        "failed_sensors" to failedStarts.size.toString()
+                    ))
+                    
                     addSyncMarker("session_start", recordingStartTime)
 
                     val totalSensors = startResults.size
@@ -302,6 +324,14 @@ class RecordingController(
                 Log.i(TAG, "Stopping multi-modal recording")
                 _recordingStateFlow.value = RecordingState.STOPPING
 
+                // Add session end sync marker and finalize session metadata
+                sessionMetadata?.let { metadata ->
+                    metadata.addSyncEvent("session_end", mapOf(
+                        "recording_duration_ms" to metadata.getRelativeTimestamp().toString()
+                    ))
+                    sessionMetadata = metadata.markSessionEnd()
+                }
+
                 addSyncMarker("session_end", System.nanoTime())
 
                 delay(SYNC_MARKER_DISTRIBUTION_DELAY_MS)
@@ -338,8 +368,13 @@ class RecordingController(
                 _isRecording.set(false)
                 _recordingStateFlow.value = RecordingState.STOPPED
 
-                val sessionDuration = (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
-                Log.i(TAG, "Multi-modal recording stopped (duration: ${sessionDuration}s)")
+                // Save session metadata to file
+                currentSessionDirectory?.let { sessionDir ->
+                    sessionMetadata?.saveToFile(File(sessionDir))
+                }
+
+                val sessionDuration = sessionMetadata?.recordingDurationMs ?: 0L
+                Log.i(TAG, "Multi-modal recording stopped (duration: ${sessionDuration}ms)")
 
                 true
 
@@ -712,6 +747,11 @@ class RecordingController(
 
     private suspend fun emitError(error: RecordingControllerError) {
         _errorFlow.emit(error)
+    }
+
+    private fun generateSessionId(): String {
+        val formatter = java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss", java.util.Locale.US)
+        return "Session_${java.time.LocalDateTime.now().format(formatter)}"
     }
 }
 

@@ -181,6 +181,55 @@ object TimeUtil {
         )
     }
 
+    /**
+     * Gets monotonic elapsed time since boot in nanoseconds.
+     * Use this for measuring intervals to avoid clock adjustments.
+     */
+    fun getMonotonicTimestampNs(): Long {
+        return try {
+            android.os.SystemClock.elapsedRealtimeNanos()
+        } catch (e: Exception) {
+            // Fallback to System.nanoTime() if SystemClock not available (tests)
+            System.nanoTime()
+        }
+    }
+
+    /**
+     * Gets monotonic elapsed time since boot in milliseconds.
+     * Use this for measuring intervals to avoid clock adjustments.
+     */
+    fun getMonotonicTimestampMs(): Long {
+        return getMonotonicTimestampNs() / 1_000_000L
+    }
+
+    /**
+     * Calculates elapsed time from a monotonic start timestamp.
+     * Use this to measure recording duration without clock drift issues.
+     */
+    fun getElapsedTimeMs(startMonotonicNs: Long): Long {
+        return (getMonotonicTimestampNs() - startMonotonicNs) / 1_000_000L
+    }
+
+    /**
+     * Creates session timing metadata with both wall clock and monotonic references
+     */
+    fun createSessionTimingMetadata(sessionId: String): Map<String, Any> {
+        val wallClockMs = getSynchronizedTimestamp()
+        val monotonicNs = getMonotonicTimestampNs()
+        
+        return mapOf(
+            "session_id" to sessionId,
+            "wall_clock_start_ms" to wallClockMs,
+            "monotonic_start_ns" to monotonicNs,
+            "device_ground_truth_base" to deviceGroundTruthBase,
+            "pc_time_offset_ms" to pcTimeOffset,
+            "timing_source" to "samsung_s22_ground_truth_with_monotonic",
+            "device_model" to deviceModel,
+            "detected_processor" to detectedProcessor,
+            "session_start_iso" to formatTimestamp(wallClockMs)
+        )
+    }
+
     fun validateTimingSystem(): Map<String, Any> {
         val currentTime = System.currentTimeMillis()
         val syncTime = getSynchronizedTimestamp()

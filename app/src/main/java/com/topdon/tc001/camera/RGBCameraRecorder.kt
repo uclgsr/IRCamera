@@ -9,6 +9,7 @@ import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.topdon.tc001.camera.core.DeviceCaps
 import com.topdon.tc001.camera.core.ModeManager
+import com.topdon.tc001.data.SessionMetadata
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -66,6 +67,7 @@ class RGBCameraRecorder(
     private var currentCameraFacing = CameraFacing.BACK
     private var recordingSettings = RecordingSettings()
     private var sessionId: String = ""
+    private var sessionMetadata: SessionMetadata? = null
 
     var onError: ((String) -> Unit)? = null
     var onCameraSwitched: ((CameraFacing, String) -> Unit)? = null
@@ -112,13 +114,38 @@ class RGBCameraRecorder(
         return camera2System.switchMode(systemMode)
     }
 
+    /**
+     * Enhanced startRecording with session metadata for precise timing synchronization
+     */
+    suspend fun startRecording(
+        outputDir: File,
+        sessionMetadata: SessionMetadata,
+    ): Boolean {
+        this.sessionId = sessionMetadata.sessionId
+        this.sessionMetadata = sessionMetadata
+
+        Log.i(TAG, "Starting RGB video recording with session timing")
+        Log.i(TAG, "Session: ${sessionMetadata.sessionId}")
+        Log.i(TAG, "Start time: ${sessionMetadata.sessionStartIso}")
+
+        // Create video filename with session information
+        val videoFileName = "rgb_video_${sessionMetadata.sessionId}.mp4"
+        sessionMetadata.addModalityFile("rgb_video", videoFileName)
+
+        // TODO: Pass session timing metadata to Camera2System for embedding in video metadata
+        // This would require extending Camera2System to support metadata embedding
+        
+        return camera2System.startRecording(sessionMetadata.sessionId)
+    }
+
     suspend fun startRecording(
         outputDir: File,
         sessionId: String,
     ): Boolean {
         this.sessionId = sessionId
 
-
+        Log.i(TAG, "Starting RGB video recording (legacy mode)")
+        
         return camera2System.startRecording(sessionId)
     }
 
