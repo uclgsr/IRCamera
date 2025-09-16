@@ -24,12 +24,14 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+import com.topdon.tc001.permissions.EnhancedPermissionManager
 
 class RgbCameraRecorder(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
     private val previewView: PreviewView? = null,
-    private val useFrontCamera: Boolean = false
+    private val useFrontCamera: Boolean = false,
+    private val enhancedPermissionManager: EnhancedPermissionManager? = null
 ) : SensorRecorder {
 
     companion object {
@@ -107,11 +109,40 @@ class RgbCameraRecorder(
         try {
             Log.d(TAG, "Initializing CameraX for RGB recording (${if (useFrontCamera) "front" else "back"} camera)")
             
-            // Check camera permission first
+            // Enhanced permission checking with user guidance
             if (!hasCameraPermission()) {
                 _cameraStatus.value = "Camera Permission Required"
-                emitError(ErrorType.PERMISSION_DENIED, "Camera permission is required for RGB recording")
-                return@withContext false
+                
+                // Try to request permissions using enhanced permission manager
+                enhancedPermissionManager?.let { permissionManager ->
+                    Log.i(TAG, "Requesting camera permissions with enhanced user guidance...")
+                    
+                    return@withContext try {
+                        val granted = permissionManager.requestCameraPermissions()
+                        if (granted) {
+                            Log.i(TAG, "Camera permissions granted, proceeding with initialization")
+                            _cameraStatus.value = "Permissions Granted - Initializing..."
+                        } else {
+                            Log.w(TAG, "Camera permissions denied by user")
+                            _cameraStatus.value = "Camera Permission Denied"
+                            emitError(ErrorType.PERMISSION_DENIED, "Camera permission denied by user. RGB recording disabled.")
+                            return@withContext false
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error requesting camera permissions", e)
+                        _cameraStatus.value = "Permission Request Failed"
+                        emitError(ErrorType.PERMISSION_DENIED, "Failed to request camera permissions: ${e.message}")
+                        return@withContext false
+                    }
+                } ?: run {
+                    // Fallback when no enhanced permission manager is available
+                    Log.w(TAG, "No enhanced permission manager available - provide user guidance")
+                    _cameraStatus.value = "Camera Permission Required - Check Settings"
+                    emitError(ErrorType.PERMISSION_DENIED, 
+                        "Camera permission is required for RGB recording. " +
+                        "Please grant Camera permission in Settings > Apps > IRCamera > Permissions")
+                    return@withContext false
+                }
             }
             
             _cameraStatus.value = "Initializing..."

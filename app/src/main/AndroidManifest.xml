@@ -285,6 +285,11 @@
             android:exported="false"
             android:label="RGB Camera Enhanced Test"
             android:screenOrientation="userPortrait" />
+        <activity
+            android:name="com.topdon.tc001.permissions.PermissionRequestActivity"
+            android:exported="false"
+            android:label="Enhanced Permission System Test"
+            android:screenOrientation="userPortrait" />
 
         <!-- Multi-Modal Recording Service -->
         <service

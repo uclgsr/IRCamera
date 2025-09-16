@@ -12,6 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import com.topdon.tc001.camera.ui.CameraStatusWidget
 import kotlinx.coroutines.launch
 import java.io.File
+import com.topdon.tc001.permissions.PermissionController
+import com.topdon.tc001.permissions.EnhancedPermissionManager
 
 /**
  * Test activity to demonstrate the enhanced RGB camera functionality including:
@@ -42,6 +44,10 @@ class RGBCameraEnhancedTestActivity : AppCompatActivity() {
     private lateinit var startRecordingButton: Button
     private lateinit var stopRecordingButton: Button
     private lateinit var clearLogsButton: Button
+    
+    // Enhanced permission system
+    private lateinit var permissionController: PermissionController
+    private lateinit var enhancedPermissionManager: EnhancedPermissionManager
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -190,14 +196,20 @@ class RGBCameraEnhancedTestActivity : AppCompatActivity() {
     }
 
     private fun initializeCameras() {
+        // Initialize enhanced permission system
+        permissionController = PermissionController(this)
+        permissionController.initialize()
+        enhancedPermissionManager = EnhancedPermissionManager(this, permissionController)
+        
         lifecycleScope.launch {
             try {
-                addLog("Initializing cameras with enhanced functionality...")
+                addLog("Initializing cameras with enhanced permission system...")
                 
-                // Initialize back camera
+                // Initialize back camera with enhanced permission support
                 cameraWidget.initializeWithCamera(
                     lifecycleOwner = this@RGBCameraEnhancedTestActivity,
-                    useFrontCamera = false
+                    useFrontCamera = false,
+                    enhancedPermissionManager = enhancedPermissionManager
                 )
                 addLog("✅ Back camera initialized with enhanced features:")
                 addLog("  - 4K@60fps video recording capability")
@@ -205,16 +217,18 @@ class RGBCameraEnhancedTestActivity : AppCompatActivity() {
                 addLog("  - Enhanced error handling and recovery")
                 addLog("  - Real-time frame drop detection")
                 addLog("  - Live preview display")
+                addLog("  - Enhanced permission request system")
                 
-                // Initialize front camera
+                // Initialize front camera with enhanced permission support
                 frontCameraWidget.initializeWithCamera(
                     lifecycleOwner = this@RGBCameraEnhancedTestActivity,
-                    useFrontCamera = true
+                    useFrontCamera = true,
+                    enhancedPermissionManager = enhancedPermissionManager
                 )
-                addLog("✅ Front camera initialized with same enhanced features")
+                addLog("✅ Front camera initialized with enhanced permission system")
                 
                 startRecordingButton.isEnabled = true
-                addLog("Cameras ready for recording!")
+                addLog("📱 Cameras ready for recording with enhanced permission management!")
                 
             } catch (e: Exception) {
                 addLog("❌ Camera initialization failed: ${e.message}")

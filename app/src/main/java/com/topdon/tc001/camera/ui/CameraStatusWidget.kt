@@ -11,6 +11,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.topdon.tc001.sensors.rgb.RgbCameraRecorder
+import com.topdon.tc001.permissions.PermissionController
+import com.topdon.tc001.permissions.EnhancedPermissionManager
 import kotlinx.coroutines.launch
 
 /**
@@ -73,19 +75,22 @@ class CameraStatusWidget @JvmOverloads constructor(
     }
 
     /**
-     * Initialize the widget with a camera recorder
+     * Initialize the widget with a camera recorder and enhanced permission system
      */
     fun initializeWithCamera(
         lifecycleOwner: LifecycleOwner,
-        useFrontCamera: Boolean = false
+        useFrontCamera: Boolean = false,
+        enhancedPermissionManager: EnhancedPermissionManager? = null
     ) {
         try {
-            // Create camera recorder with preview support
+            // Create camera recorder with preview support and enhanced permission system
             cameraRecorder = RgbCameraRecorder(
                 context = context,
                 lifecycleOwner = lifecycleOwner,
                 previewView = previewView,
-                useFrontCamera = useFrontCamera
+                useFrontCamera = useFrontCamera,
+                enhancedPermissionManager = enhancedPermissionManager
+            )
             )
 
             // Start monitoring camera status
