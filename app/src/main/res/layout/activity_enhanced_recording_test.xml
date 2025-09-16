@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enhanced Recording Session Controller Test"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Status Display -->
+    <TextView
+        android:id="@+id/statusDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Idle - Ready to start recording"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="#E3F2FD"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Sensor Selection -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Sensors:"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <CheckBox
+            android:id="@+id/checkboxRgb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="RGB Camera"
+            android:checked="true" />
+
+        <CheckBox
+            android:id="@+id/checkboxThermal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Thermal Camera"
+            android:checked="true" />
+
+        <CheckBox
+            android:id="@+id/checkboxGsr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="GSR Sensor"
+            android:checked="true" />
+
+    </LinearLayout>
+
+    <!-- Options -->
+    <CheckBox
+        android:id="@+id/checkboxAllowPartial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Allow Partial Start (continue even if some sensors fail)"
+        android:checked="true"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Control Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/buttonStartSession"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Start Session"
+            android:backgroundTint="#4CAF50"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/buttonStopSession"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Stop Session"
+            android:backgroundTint="#F44336"
+            android:enabled="false" />
+
+    </LinearLayout>
+
+    <!-- Secondary Control Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/buttonAddSyncMarker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add Sync Marker"
+            android:backgroundTint="#FF9800"
+            android:enabled="false"
+            android:layout_marginEnd="4dp" />
+
+        <Button
+            android:id="@+id/buttonSessionStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Session Status"
+            android:backgroundTint="#2196F3"
+            android:layout_marginStart="4dp" />
+
+    </LinearLayout>
+
+    <!-- Recovery and Utility Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/buttonCheckCrashRecovery"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Check Crash Recovery"
+            android:backgroundTint="#9C27B0"
+            android:layout_marginEnd="4dp" />
+
+        <Button
+            android:id="@+id/buttonClearLogs"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Clear Logs"
+            android:backgroundTint="#607D8B"
+            android:layout_marginStart="4dp" />
+
+    </LinearLayout>
+
+    <!-- Log Output -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Activity Log:"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#F5F5F5"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/logOutput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:textColor="#333333" />
+
+    </ScrollView>
+
+</LinearLayout>

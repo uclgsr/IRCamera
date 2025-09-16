@@ -187,6 +187,19 @@
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
+        <!-- Enhanced Recording Session Test Activity -->
+        <activity
+            android:name="com.topdon.tc001.test.EnhancedRecordingSessionTestActivity"
+            android:exported="true"
+            android:label="Enhanced Recording Session Test"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name="com.topdon.tc001.ClauseActivity"
             android:screenOrientation="userPortrait" />
