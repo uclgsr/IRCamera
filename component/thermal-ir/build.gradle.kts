@@ -94,13 +94,14 @@ dependencies {
     implementation(libs.lottie)
     implementation(libs.easyswipemenulayout)
     implementation(libs.mn.image.browser)
-    implementation(libs.gsy.video.player.thermal) {
-        exclude(group = "androidx.media3", module = "media3-cast")
-        exclude(group = "androidx.media3", module = "media3-session")
-        exclude(group = "androidx.media3", module = "media3-ui")
-        exclude(group = "com.google.android.gms", module = "play-services-cast-framework")
-        exclude(group = "com.aliyun.sdk.android", module = "AliyunPlayer")
-    }
+    // Temporarily commented out to fix build issues - GSY video player not available in repos
+    // implementation(libs.gsy.video.player.thermal) {
+    //     exclude(group = "androidx.media3", module = "media3-cast")
+    //     exclude(group = "androidx.media3", module = "media3-session")
+    //     exclude(group = "androidx.media3", module = "media3-ui")
+    //     exclude(group = "com.google.android.gms", module = "play-services-cast-framework")
+    //     exclude(group = "com.aliyun.sdk.android", module = "AliyunPlayer")
+    // }
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.exoplayer.dash)
     implementation(libs.media3.ui)
