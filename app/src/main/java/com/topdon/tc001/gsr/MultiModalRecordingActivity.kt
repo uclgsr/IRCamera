@@ -24,7 +24,7 @@ import com.topdon.gsr.service.MockShimmerDeviceFactory
 import com.topdon.gsr.service.SessionManager
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.lib.core.ktbase.BaseBindingActivity
-import com.topdon.tc001.camera.RGBCameraRecorder
+import com.topdon.tc001.sensors.rgb.RgbCameraRecorder
 import com.topdon.tc001.permissions.PermissionController
 import kotlinx.coroutines.launch
 
@@ -54,7 +54,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     // Recording components
     private lateinit var gsrRecorder: GSRRecorder
     private lateinit var sessionManager: SessionManager
-    private var rgbCameraRecorder: RGBCameraRecorder? = null
+    private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var networkClient: com.topdon.gsr.network.NetworkClient? = null
     private var isRecording = false
     private var isStartingRecording = false // Guard against double taps
@@ -410,13 +410,15 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 )
             }
 
-        // Initialize RGB camera recorder
-        // Camera preview not available in this layout - skip RGBCameraRecorder initialization
-        rgbCameraRecorder = null
-        Log.i(TAG, "RGBCameraRecorder skipped - no preview available in this layout")
+        // Initialize RGB camera recorder with CameraX
+        // PreviewView can be null - the camera will work without preview for background recording
+        rgbCameraRecorder = RgbCameraRecorder(this, this, null)
+        Log.i(TAG, "RgbCameraRecorder initialized with CameraX (no preview)")
 
         // Initialize camera
-        // rgbCameraRecorder?.initialize() // Skipped since rgbCameraRecorder is null
+        lifecycleScope.launch {
+            rgbCameraRecorder?.initialize()
+        }
         gsrRecorder.addListener(gsrListener)
 
         // Check permissions using new PermissionController
@@ -567,37 +569,19 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
         // Start RGB camera recording if enabled
         if (binding.enableVideoSwitch.isChecked) {
-            val resolution =
-                if (binding.enable4kSwitch.isChecked) {
-                    RGBCameraRecorder.VideoResolution.UHD_4K
-                } else {
-                    RGBCameraRecorder.VideoResolution.HD_1080P
-                }
-
-            val rawFrameRate =
-                when (binding.rawFrameRateSpinner.selectedItemPosition) {
-                    0 -> 30
-                    1 -> 15
-                    2 -> 10
-                    3 -> 5
-                    else -> 30
-                }
-
-            val cameraSettings =
-                RGBCameraRecorder.RecordingSettings(
-                    resolution = resolution,
-                    frameRate = 60, // Video frame rate
-                    bitRate = if (resolution == RGBCameraRecorder.VideoResolution.UHD_4K) 12_000_000 else 8_000_000,
-                    enableStabilization = true,
-                    enableFlash = false,
-                    audioEnabled = true,
-                    rawCaptureFrameRate = rawFrameRate,
-                )
-
-            rgbCameraRecorder?.updateSettings(cameraSettings)
+            Log.i(TAG, "Starting RGB camera recording with CameraX")
+            // Note: CameraX implementation handles 4K quality selection and fallback automatically
+            // The frame rate for JPEG capture is configured in the RgbCameraRecorder (30fps)
 
             lifecycleScope.launch {
-                val cameraStarted = rgbCameraRecorder?.startRecording(sessionId) ?: false
+                // Get the session directory from GSR recorder for consistent file organization
+                val sessionDir = gsrRecorder.getSessionDirectory()?.absolutePath
+                if (sessionDir == null) {
+                    Log.e(TAG, "No session directory available for RGB camera recording")
+                    return@launch
+                }
+                
+                val cameraStarted = rgbCameraRecorder?.startRecording(sessionDir) ?: false
                 if (!cameraStarted) {
                     // Reset guard flags on failure
                     runOnUiThread {
