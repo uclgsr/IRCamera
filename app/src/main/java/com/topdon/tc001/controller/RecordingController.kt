@@ -2,7 +2,6 @@ package com.topdon.tc001.controller
 
 import android.content.Context
 import android.util.Log
-import android.view.TextureView
 import androidx.lifecycle.LifecycleOwner
 import com.topdon.tc001.sensors.rgb.RgbCameraRecorder
 import com.topdon.tc001.sensors.SensorRecorder
@@ -96,9 +95,8 @@ class RecordingController(
             try {
                 Log.i(TAG, "Initializing sensor recorders with robust error handling")
 
-                // Create a dummy TextureView for the RGB camera recorder
-                val dummyTextureView = TextureView(context)
-                val rgbCamera = RgbCameraRecorder(context, dummyTextureView)
+                // Create RGB camera recorder with CameraX integration
+                val rgbCamera = RgbCameraRecorder(context, lifecycleOwner, null)
                 val thermalCamera = ThermalCameraRecorder(context, "thermal_camera_1")
                 val gsrSensor = GSRSensorRecorder(context, "gsr_shimmer_1", 128, this@RecordingController)
 
