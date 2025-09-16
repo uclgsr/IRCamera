@@ -286,35 +286,3 @@ data class WriteStats(
             else -> "$bytesWritten bytes"
         }
 }
-
-/**
- * CSV-specific buffered writer with header support
- */
-class CSVBufferedWriter(
-    outputFile: File,
-    private val headers: List<String>,
-    bufferSize: Int = 8192,
-    flushIntervalMs: Long = 1000L
-) : BufferedDataWriter(outputFile, bufferSize, flushIntervalMs) {
-    
-    private val headerWritten = AtomicBoolean(false)
-    
-    suspend fun startWithHeaders(): Boolean {
-        val started = start()
-        if (started && !headerWritten.getAndSet(true)) {
-            val headerLine = headers.joinToString(",")
-            writeLine(headerLine)
-        }
-        return started
-    }
-    
-    fun writeRow(values: List<Any>): Boolean {
-        val csvLine = values.joinToString(",") { value ->
-            when (value) {
-                is String -> "\"${value.replace("\"", "\"\"")}\""
-                else -> value.toString()
-            }
-        }
-        return writeLine(csvLine)
-    }
-}

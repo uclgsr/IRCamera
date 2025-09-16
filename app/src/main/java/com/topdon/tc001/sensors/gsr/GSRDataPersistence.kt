@@ -90,8 +90,9 @@ class GSRDataPersistence(
 
     private fun createCsvHeaders(): List<String> {
         return listOf(
-            // Timestamp fields
-            "timestamp_ns", "timestamp_ms", "timestamp_iso",
+            // Timestamp fields (matching TimestampRecord properties)
+            "system_nanos", "elapsed_realtime_ms", "device_timestamp_ms", 
+            "session_relative_ms", "synchronized_timestamp_ms",
             
             // GSR data fields
             "gsr_raw_value", "gsr_microsiemens", "gsr_resistance_kohm",
@@ -221,7 +222,6 @@ class GSRDataPersistence(
         )
     }
 }
-}
 
 data class GSRDataRecord(
     val timestamp: TimestampRecord,
@@ -245,10 +245,12 @@ data class GSRDataRecord(
      */
     fun toCsvRow(): List<Any> {
         return listOf(
-            // Timestamp fields
-            timestamp.timestampNs,
-            timestamp.timestampMs,
-            timestamp.timestampIso,
+            // Timestamp fields (using actual TimestampRecord properties)
+            timestamp.systemNanos,
+            timestamp.elapsedRealtimeMs,
+            timestamp.deviceTimestampMs,
+            timestamp.sessionRelativeMs,
+            timestamp.synchronizedTimestampMs,
             
             // GSR data fields
             gsrRawValue,
