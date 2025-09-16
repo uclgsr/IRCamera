@@ -21,13 +21,15 @@ import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 class RgbCameraRecorder(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
-    private val previewView: PreviewView? = null
+    private val previewView: PreviewView? = null,
+    private val useFrontCamera: Boolean = false
 ) : SensorRecorder {
 
     companion object {
@@ -43,6 +45,10 @@ class RgbCameraRecorder(
         // Image capture constants
         private const val JPEG_QUALITY = 100   // Maximum quality for analysis frames
         private const val CAPTURE_FPS = 30     // ~30 FPS still frame capture
+        
+        // Error tracking constants
+        private const val MAX_CONSECUTIVE_FRAME_ERRORS = 10
+        private const val FRAME_ERROR_RESET_INTERVAL = 30000L // 30 seconds
     }
 
     override val sensorId: String = "rgb_camera_${System.currentTimeMillis()}"
@@ -78,6 +84,19 @@ class RgbCameraRecorder(
     private var droppedFrames = AtomicLong(0)
     private val syncMarkersRecorded = AtomicLong(0)
     private val framesCaptured = AtomicLong(0)
+    
+    // Enhanced error tracking
+    private val consecutiveFrameErrors = AtomicLong(0)
+    private var lastFrameErrorTime = AtomicLong(0)
+    private val _cameraStatus = MutableStateFlow("Uninitialized")
+    val cameraStatus: StateFlow<String> = _cameraStatus.asStateFlow()
+    
+    // Camera selection
+    private val cameraSelector = if (useFrontCamera) {
+        CameraSelector.DEFAULT_FRONT_CAMERA
+    } else {
+        CameraSelector.DEFAULT_BACK_CAMERA
+    }
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     
@@ -86,18 +105,30 @@ class RgbCameraRecorder(
 
     override suspend fun initialize(): Boolean = withContext(Dispatchers.Main) {
         try {
-            Log.d(TAG, "Initializing CameraX for RGB recording")
+            Log.d(TAG, "Initializing CameraX for RGB recording (${if (useFrontCamera) "front" else "back"} camera)")
+            
+            // Check camera permission first
+            if (!hasCameraPermission()) {
+                _cameraStatus.value = "Camera Permission Required"
+                emitError(ErrorType.PERMISSION_DENIED, "Camera permission is required for RGB recording")
+                return@withContext false
+            }
+            
+            _cameraStatus.value = "Initializing..."
 
             val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
             cameraProvider = cameraProviderFuture.get()
             
-            // Check if we have a back camera
-            if (!cameraProvider!!.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)) {
-                emitError(ErrorType.INITIALIZATION_FAILED, "Back camera not available")
+            // Check if the selected camera is available
+            if (!cameraProvider!!.hasCamera(cameraSelector)) {
+                val cameraType = if (useFrontCamera) "Front" else "Back"
+                _cameraStatus.value = "$cameraType Camera Not Available"
+                emitError(ErrorType.INITIALIZATION_FAILED, "$cameraType camera not available on this device")
                 return@withContext false
             }
 
             Log.i(TAG, "CameraX provider initialized successfully")
+            _cameraStatus.value = "Initialized"
             updateStatus(isInitialized = true)
             true
         } catch (e: Exception) {
@@ -150,7 +181,7 @@ class RgbCameraRecorder(
 
             camera = cameraProvider?.bindToLifecycle(
                 lifecycleOwner,
-                CameraSelector.DEFAULT_BACK_CAMERA,
+                cameraSelector,
                 *useCases.toTypedArray()
             )
 
@@ -305,14 +336,14 @@ class RgbCameraRecorder(
                         cameraExecutor,
                         object : ImageCapture.OnImageSavedCallback {
                             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                                resetFrameErrorTracking()
                                 recordingScope.launch {
                                     logFrameCapture(timestamp, frameNumber, outputFile)
                                 }
                             }
                             
                             override fun onError(exception: ImageCaptureException) {
-                                Log.w(TAG, "Frame capture failed: ${exception.message}")
-                                droppedFrames.incrementAndGet()
+                                handleFrameCaptureError(exception)
                             }
                         }
                     )
@@ -395,6 +426,55 @@ class RgbCameraRecorder(
         }
     }
 
+    /**
+     * Handle frame capture errors with enhanced tracking and user feedback
+     */
+    private fun handleFrameCaptureError(exception: ImageCaptureException) {
+        val currentTime = System.currentTimeMillis()
+        val errorCount = consecutiveFrameErrors.incrementAndGet()
+        droppedFrames.incrementAndGet()
+        
+        Log.w(TAG, "Frame capture failed (error $errorCount): ${exception.message}", exception)
+        
+        // Check if errors are happening too frequently
+        if (errorCount >= MAX_CONSECUTIVE_FRAME_ERRORS) {
+            val timeSinceLastError = currentTime - lastFrameErrorTime.get()
+            
+            if (timeSinceLastError < FRAME_ERROR_RESET_INTERVAL) {
+                // Too many errors in a short time period - this indicates a serious problem
+                Log.e(TAG, "Too many consecutive frame capture errors ($errorCount), camera may be failing")
+                _cameraStatus.value = "Camera Error - Frame Capture Failing"
+                
+                recordingScope.launch {
+                    emitError(
+                        ErrorType.DEVICE_ERROR, 
+                        "Camera frame capture is failing repeatedly. Check camera hardware and permissions."
+                    )
+                }
+            } else {
+                // Reset error count if enough time has passed
+                consecutiveFrameErrors.set(1)
+            }
+        }
+        
+        lastFrameErrorTime.set(currentTime)
+        
+        // Update status to reflect capture issues if needed
+        if (errorCount > 3) {
+            _cameraStatus.value = "Recording (Frame Capture Issues: $errorCount errors)"
+        }
+    }
+    
+    /**
+     * Reset frame error tracking (called on successful captures)
+     */
+    private fun resetFrameErrorTracking() {
+        if (consecutiveFrameErrors.get() > 0) {
+            consecutiveFrameErrors.set(0)
+            _cameraStatus.value = "Recording (${framesCaptured.get()} frames)"
+        }
+    }
+
     override suspend fun stopRecording(): Boolean {
         return try {
             if (!_isRecording.get()) {
@@ -461,24 +541,69 @@ class RgbCameraRecorder(
 
     override suspend fun cleanup() {
         try {
+            Log.i(TAG, "Starting RGB CameraX recorder cleanup")
+            _cameraStatus.value = "Cleaning up..."
+            
             // Stop recording if in progress
             if (_isRecording.get()) {
+                Log.d(TAG, "Stopping active recording during cleanup")
                 stopRecording()
             }
+            
+            // Cancel frame capture job
+            frameCaptureJob?.cancel()
+            frameCaptureJob = null
+            
+            // Stop active recording
+            activeRecording?.stop()
+            activeRecording = null
+            
+            // Close writers
+            csvWriter?.close()
+            csvWriter = null
+            csvBufferedWriter?.stop()
+            csvBufferedWriter = null
 
-            // Unbind all use cases
-            cameraProvider?.unbindAll()
+            // Unbind all use cases from lifecycle
+            withContext(Dispatchers.Main) {
+                try {
+                    cameraProvider?.unbindAll()
+                    Log.d(TAG, "Camera use cases unbound")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error unbinding camera use cases", e)
+                }
+            }
+            
+            // Clear camera references
+            camera = null
+            preview = null
+            videoCapture = null
+            imageCapture = null
             cameraProvider = null
             
-            // Shutdown camera executor
-            cameraExecutor.shutdown()
+            // Shutdown camera executor with timeout
+            try {
+                cameraExecutor.shutdown()
+                if (!cameraExecutor.awaitTermination(2, TimeUnit.SECONDS)) {
+                    Log.w(TAG, "Camera executor did not terminate gracefully, forcing shutdown")
+                    cameraExecutor.shutdownNow()
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Error shutting down camera executor", e)
+            }
             
             // Cancel coroutine scope
             recordingScope.cancel()
+            
+            // Reset status tracking
+            consecutiveFrameErrors.set(0)
+            lastFrameErrorTime.set(0)
+            _cameraStatus.value = "Cleaned up"
 
-            Log.i(TAG, "RGB CameraX recorder cleanup completed")
+            Log.i(TAG, "RGB CameraX recorder cleanup completed successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Error during CameraX cleanup", e)
+            _cameraStatus.value = "Cleanup Failed"
         }
     }
 
@@ -598,11 +723,33 @@ class RgbCameraRecorder(
      * Get current recording status text for UI feedback
      */
     fun getStatusText(): String {
-        return when {
-            !hasCameraPermission() -> "Camera Permission Required"
-            cameraProvider == null -> "Camera Not Initialized"
-            _isRecording.get() -> "Recording (${framesCaptured.get()} frames)"
-            else -> "Ready"
-        }
+        return _cameraStatus.value
+    }
+    
+    /**
+     * Get camera type being used
+     */
+    fun getCameraType(): String {
+        return if (useFrontCamera) "Front Camera" else "Back Camera"
+    }
+    
+    /**
+     * Check if front camera is being used
+     */
+    fun isUsingFrontCamera(): Boolean = useFrontCamera
+    
+    /**
+     * Get current frame capture statistics
+     */
+    fun getFrameCaptureStats(): Map<String, Any> {
+        return mapOf(
+            "frames_captured" to framesCaptured.get(),
+            "frames_dropped" to droppedFrames.get(),
+            "consecutive_errors" to consecutiveFrameErrors.get(),
+            "camera_type" to getCameraType(),
+            "capture_fps" to CAPTURE_FPS,
+            "video_resolution" to "${VIDEO_WIDTH}x${VIDEO_HEIGHT}",
+            "has_preview" to (previewView != null)
+        )
     }
 }
