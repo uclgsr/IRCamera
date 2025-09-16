@@ -36,17 +36,13 @@ class RgbCameraRecorder(
 
     companion object {
         private const val TAG = "RgbCameraRecorder"
-        
-        // 4K60fps recording constants as per requirements
-        private const val VIDEO_WIDTH = 3840  // 4K UHD width
-        private const val VIDEO_HEIGHT = 2160 // 4K UHD height  
-        private const val VIDEO_FPS = 60      // Enhanced to 60fps capability
-        private const val VIDEO_BITRATE = 50_000_000  // 50 Mbps for 4K60 quality
-        private const val AUDIO_BITRATE = 256_000     // 256 kbps for high-quality audio
-        
-        // Image capture constants
-        private const val JPEG_QUALITY = 100   // Maximum quality for analysis frames
-        private const val CAPTURE_FPS = 30     // ~30 FPS still frame capture
+        private const val VIDEO_WIDTH = 3840
+        private const val VIDEO_HEIGHT = 2160
+        private const val VIDEO_FPS = 60
+        private const val VIDEO_BITRATE = 50_000_000
+        private const val AUDIO_BITRATE = 256_000
+        private const val JPEG_QUALITY = 100
+        private const val CAPTURE_FPS = 30
         
         // Error tracking constants
         private const val MAX_CONSECUTIVE_FRAME_ERRORS = 10
@@ -60,7 +56,6 @@ class RgbCameraRecorder(
     private val _isRecording = AtomicBoolean(false)
     override val isRecording: Boolean get() = _isRecording.get()
 
-    // CameraX components
     private var cameraProvider: ProcessCameraProvider? = null
     private var preview: Preview? = null
     private var videoCapture: VideoCapture<Recorder>? = null
@@ -68,7 +63,6 @@ class RgbCameraRecorder(
     private var camera: Camera? = null
     private var activeRecording: Recording? = null
     
-    // Executor for camera operations
     private val cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     private val statusFlow = MutableStateFlow(createInitialStatus())
@@ -87,13 +81,11 @@ class RgbCameraRecorder(
     private val syncMarkersRecorded = AtomicLong(0)
     private val framesCaptured = AtomicLong(0)
     
-    // Enhanced error tracking
     private val consecutiveFrameErrors = AtomicLong(0)
     private var lastFrameErrorTime = AtomicLong(0)
     private val _cameraStatus = MutableStateFlow("Uninitialized")
     val cameraStatus: StateFlow<String> = _cameraStatus.asStateFlow()
     
-    // Camera selection
     private val cameraSelector = if (useFrontCamera) {
         CameraSelector.DEFAULT_FRONT_CAMERA
     } else {
@@ -107,55 +99,62 @@ class RgbCameraRecorder(
 
     override suspend fun initialize(): Boolean = withContext(Dispatchers.Main) {
         try {
-            Log.d(TAG, "Initializing CameraX for RGB recording (${if (useFrontCamera) "front" else "back"} camera)")
+            Log.d(TAG, "Initializing ${if (useFrontCamera) "front" else "back"} camera")
             
-            // Enhanced permission checking with user guidance
-            if (!hasCameraPermission()) {
-                _cameraStatus.value = "Camera Permission Required"
-                
-                // Try to request permissions using enhanced permission manager
-                enhancedPermissionManager?.let { permissionManager ->
-                    Log.i(TAG, "Requesting camera permissions with enhanced user guidance...")
-                    
-                    return@withContext try {
-                        val granted = permissionManager.requestCameraPermissions()
-                        if (granted) {
-                            Log.i(TAG, "Camera permissions granted, proceeding with initialization")
-                            _cameraStatus.value = "Permissions Granted - Initializing..."
-                        } else {
-                            Log.w(TAG, "Camera permissions denied by user")
-                            _cameraStatus.value = "Camera Permission Denied"
-                            emitError(ErrorType.PERMISSION_DENIED, "Camera permission denied by user. RGB recording disabled.")
-                            return@withContext false
-                        }
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Error requesting camera permissions", e)
-                        _cameraStatus.value = "Permission Request Failed"
-                        emitError(ErrorType.PERMISSION_DENIED, "Failed to request camera permissions: ${e.message}")
-                        return@withContext false
-                    }
-                } ?: run {
-                    // Fallback when no enhanced permission manager is available
-                    Log.w(TAG, "No enhanced permission manager available - provide user guidance")
-                    _cameraStatus.value = "Camera Permission Required - Check Settings"
-                    emitError(ErrorType.PERMISSION_DENIED, 
-                        "Camera permission is required for RGB recording. " +
-                        "Please grant Camera permission in Settings > Apps > IRCamera > Permissions")
-                    return@withContext false
-                }
-            }
+            if (!checkAndRequestPermissions()) return@withContext false
             
             _cameraStatus.value = "Initializing..."
-
-            val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-            cameraProvider = cameraProviderFuture.get()
+            cameraProvider = ProcessCameraProvider.getInstance(context).get()
             
-            // Check if the selected camera is available
             if (!cameraProvider!!.hasCamera(cameraSelector)) {
                 val cameraType = if (useFrontCamera) "Front" else "Back"
                 _cameraStatus.value = "$cameraType Camera Not Available"
-                emitError(ErrorType.INITIALIZATION_FAILED, "$cameraType camera not available on this device")
+                emitError(ErrorType.INITIALIZATION_FAILED, "$cameraType camera not available")
                 return@withContext false
+            }
+
+            setupCameraUseCases()
+            bindUseCases()
+            
+            _cameraStatus.value = "Ready"
+            Log.i(TAG, "CameraX initialized successfully")
+            return@withContext true
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Camera initialization failed", e)
+            _cameraStatus.value = "Initialization Failed"
+            emitError(ErrorType.INITIALIZATION_FAILED, "Camera initialization failed: ${e.message}")
+            return@withContext false
+        }
+    }
+
+    private suspend fun checkAndRequestPermissions(): Boolean {
+        if (hasCameraPermission()) return true
+        
+        _cameraStatus.value = "Camera Permission Required"
+        
+        return enhancedPermissionManager?.let { permissionManager ->
+            try {
+                val granted = permissionManager.requestCameraPermissions()
+                if (granted) {
+                    _cameraStatus.value = "Permissions Granted"
+                    true
+                } else {
+                    _cameraStatus.value = "Camera Permission Denied"
+                    emitError(ErrorType.PERMISSION_DENIED, "Camera permission denied")
+                    false
+                }
+            } catch (e: Exception) {
+                _cameraStatus.value = "Permission Request Failed"
+                emitError(ErrorType.PERMISSION_DENIED, "Permission request failed: ${e.message}")
+                false
+            }
+        } ?: run {
+            _cameraStatus.value = "Permission Required - Check Settings"
+            emitError(ErrorType.PERMISSION_DENIED, "Camera permission required")
+            false
+        }
+    }
             }
 
             Log.i(TAG, "CameraX provider initialized successfully")
