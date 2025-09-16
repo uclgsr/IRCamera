@@ -58,7 +58,25 @@ class ThermalCameraDemo : AppCompatActivity() {
         // Note: You would need to create activity_thermal_demo.xml layout
         // setContentView(R.layout.activity_thermal_demo)
 
-        initializeThermalCamera() // Direct initialization for demo
+        requestPermissions()
+    }
+
+    private fun requestPermissions() {
+        val permissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+
+        val missingPermissions = permissions.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
+
+        if (missingPermissions.isNotEmpty()) {
+            permissionLauncher.launch(missingPermissions.toTypedArray())
+        } else {
+            initializeThermalCamera()
+        }
     }
 
     private fun initializeThermalCamera() {

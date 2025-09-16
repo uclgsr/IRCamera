@@ -82,19 +82,23 @@ class ThermalCameraUSBPermissionTest {
         // Arrange
         `when`(mockUsbManager.deviceList).thenReturn(hashMapOf())
         thermalRecorder.initialize()
+        val tempDir = java.nio.file.Files.createTempDirectory("thermal_test").toFile()
 
-        // Act
-        val sessionDir = "/tmp/test_thermal_session"
-        val recordingStarted = thermalRecorder.startRecording(sessionDir)
+        try {
+            // Act
+            val recordingStarted = thermalRecorder.startRecording(tempDir.absolutePath)
 
-        // Assert
-        assertTrue("Recording should start in simulation mode", recordingStarted)
-        assertTrue("Should be recording", thermalRecorder.isRecording)
+            // Assert
+            assertTrue("Recording should start in simulation mode", recordingStarted)
+            assertTrue("Should be recording", thermalRecorder.isRecording)
 
-        // Stop recording
-        val recordingStopped = thermalRecorder.stopRecording()
-        assertTrue("Recording should stop successfully", recordingStopped)
-        assertFalse("Should not be recording after stop", thermalRecorder.isRecording)
+            // Stop recording
+            val recordingStopped = thermalRecorder.stopRecording()
+            assertTrue("Recording should stop successfully", recordingStopped)
+            assertFalse("Should not be recording after stop", thermalRecorder.isRecording)
+        } finally {
+            tempDir.deleteRecursively()
+        }
     }
 
     @Test

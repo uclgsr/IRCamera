@@ -230,13 +230,13 @@ thermalRecorder.enableNetworkStreaming(networkServer)
 ```json
 {
   "type": "thermal_frame",
-  "sensor_id": "thermal_camera_1", 
+  "sensor_id": "thermal_camera_1",
   "frame_number": 12345,
   "timestamp_ms": 1640995200000,
   "width": 256,
   "height": 192,
   "min_temp_c": "23.45",
-  "max_temp_c": "45.67", 
+  "max_temp_c": "45.67",
   "avg_temp_c": "34.56",
   "center_temp_c": "35.12",
   "image_jpeg_base64": "/9j/4AAQSkZJRgABAQEAYABgAAD...",

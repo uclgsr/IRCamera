@@ -38,30 +38,37 @@ class ThermalViewer:
         if not self.socket:
             print("❌ Not connected to Android app")
             return
-            
+
         self.running = True
-        buffer = b""
-        
+
         while self.running:
             try:
-                # Receive data
-                data = self.socket.recv(4096)
-                if not data:
-                    print("❌ Connection closed by Android app")
+                # Read message length (4-byte big-endian integer)
+                header = self.socket.recv(4)
+                if not header or len(header) < 4:
+                    print("❌ Connection closed by Android app or invalid header")
                     break
-                    
-                buffer += data
-                
-                # Look for complete JSON messages (assuming newline-delimited)
-                while b'\n' in buffer:
-                    line, buffer = buffer.split(b'\n', 1)
-                    if line.strip():
-                        self.process_message(line.decode('utf-8'))
-                        
+
+                msg_len = int.from_bytes(header, 'big')
+
+                # Read the full message payload
+                data = b""
+                while len(data) < msg_len:
+                    packet = self.socket.recv(msg_len - len(data))
+                    if not packet:
+                        break # Connection broken
+                    data += packet
+
+                if len(data) == msg_len:
+                    self.process_message(data.decode('utf-8'))
+                else:
+                    print(f"❌ Incomplete message received. Expected {msg_len}, got {len(data)}")
+                    break
+
             except Exception as e:
                 print(f"❌ Error receiving data: {e}")
                 break
-                
+
         self.running = False
     
     def process_message(self, message_str):
