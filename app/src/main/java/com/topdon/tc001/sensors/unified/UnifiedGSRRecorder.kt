@@ -608,7 +608,7 @@ class UnifiedGSRRecorder(
             val variation = Math.sin(time / 5000.0) * 3.0 + Math.random() * 2.0 - 1.0
             val gsrMicrosiemens = baseGSR + variation
 
-            // Simulate 12-bit ADC raw value (0-4095 range) - CRITICAL: Use 12-bit resolution as specified
+            // Simulate 12-bit ADC raw value (0-4095 range). CRITICAL: Use 12-bit resolution as specified.
             val gsrRaw = (gsrMicrosiemens * 4095.0 / 100.0).coerceIn(0.0, 4095.0)
 
             // Simulate PPG data
