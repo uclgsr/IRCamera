@@ -505,6 +505,13 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        // Delegate to permission controller for battery optimization results
+        permissionController.onActivityResult(requestCode, resultCode)
+    }
+
     private fun toggleRecording() {
         // Check specific permissions needed for recording
         if (!permissionController.canStartRecording()) {

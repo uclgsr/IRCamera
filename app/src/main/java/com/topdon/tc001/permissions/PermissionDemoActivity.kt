@@ -242,6 +242,16 @@ class PermissionDemoActivity : AppCompatActivity() {
         updatePermissionStatus()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        // Delegate to permission controller for battery optimization results
+        permissionController.onActivityResult(requestCode, resultCode)
+        
+        // Update UI after activity result
+        updatePermissionStatus()
+    }
+
     override fun onResume() {
         super.onResume()
         // Update permission status when returning from settings

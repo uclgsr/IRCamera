@@ -155,6 +155,20 @@ class PermissionController(
         }
     }
 
+    fun onActivityResult(requestCode: Int, resultCode: Int) {
+        when (requestCode) {
+            REQUEST_BATTERY_OPTIMIZATION -> {
+                // Check if battery optimization is now disabled
+                val isBatteryOptimizationDisabled = isBatteryOptimizationDisabled()
+                Log.i(TAG, "Battery optimization result: disabled=$isBatteryOptimizationDisabled")
+                
+                // Note: We can't reliably get a callback here since the battery optimization
+                // request flow doesn't provide a direct way to get the callback reference.
+                // The calling code should re-check isBatteryOptimizationDisabled() after this.
+            }
+        }
+    }
+
     fun requestUsbPermission(device: UsbDevice, callback: (Boolean, UsbDevice?) -> Unit) {
         usbPermissionCallback = callback
 
