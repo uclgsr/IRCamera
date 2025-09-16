@@ -440,11 +440,35 @@ class UnifiedGSRRecorder(
     private suspend fun processRecordingData() = withContext(Dispatchers.IO) {
         Log.i(TAG, "Starting real-time GSR data processing")
 
-
         while (_isRecording.get()) {
-            delay(100)  // Update connection quality every 100ms
-            updateConnectionQuality()
+            try {
+                // Process GSR data from the connected Shimmer device
+                val shimmer = connectedShimmer
+                if (shimmer != null && shimmer.isStreaming()) {
+                    // Create a mock ObjectCluster for simulation
+                    // In a real implementation, this would come from Shimmer callback
+                    val objectCluster = createMockObjectCluster()
+                    processGSRData(shimmer, objectCluster)
+                }
+                
+                // Update connection quality
+                updateConnectionQuality()
+                
+                // Process at ~10Hz (100ms intervals) for reasonable data rate
+                delay(100)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error in GSR data processing loop", e)
+                delay(100) // Continue processing even if there's an error
+            }
         }
+        
+        Log.i(TAG, "GSR data processing stopped")
+    }
+
+    private fun createMockObjectCluster(): ObjectCluster {
+        // Create a mock ObjectCluster for testing purposes
+        // In a real implementation, this would come from the Shimmer SDK callbacks
+        return ObjectCluster()
     }
 
     private fun updateConnectionQuality() {
