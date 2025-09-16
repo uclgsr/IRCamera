@@ -11,12 +11,21 @@ import com.opencsv.CSVWriter
 import com.topdon.tc001.camera.Camera2System
 import com.topdon.tc001.camera.core.DeviceCaps
 import com.topdon.tc001.camera.core.ModeManager
+import androidx.camera.core.*
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.video.*
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import com.topdon.tc001.sensors.*
 import com.topdon.tc001.sensors.RecordingStats
+import com.topdon.tc001.util.CSVBufferedWriter
+import com.topdon.tc001.util.SessionDirectoryManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File
 import java.io.FileWriter
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
@@ -53,6 +62,8 @@ class RgbCameraRecorder(
 
     private var sessionDirectory: String = ""
     private var csvWriter: CSVWriter? = null
+    private var videoFile: File? = null
+    private var csvBufferedWriter: CSVBufferedWriter? = null
     private var csvFile: File? = null
 
     private val samplesRecorded = AtomicLong(0)
@@ -206,7 +217,12 @@ class RgbCameraRecorder(
             }
 
             setupOutputFiles()
-            initializeCsvWriter()
+            startVideoRecording()
+
+            // Initialize CSV writer asynchronously
+            recordingScope.launch {
+                initializeCsvWriter()
+            }
 
             // Determine recording mode based on capabilities and start appropriate Camera2 mode
             val success = when (currentRecordingMode) {
@@ -235,8 +251,15 @@ class RgbCameraRecorder(
     }
 
     private fun setupOutputFiles() {
-        val timestamp = System.currentTimeMillis()
-        csvFile = File(sessionDirectory, "rgb_camera2_${timestamp}.csv")
+        // Use standard directory structure
+        val rgbDir = File(sessionDirectory, "RGB")
+        if (!rgbDir.exists()) {
+            rgbDir.mkdirs()
+        }
+        
+        // Use standard file names from SessionDirectoryManager
+        videoFile = File(rgbDir, SessionDirectoryManager.RGB_VIDEO_FILE)
+        csvFile = File(rgbDir, "rgb_timestamps.csv")
     }
 
     /**
@@ -355,7 +378,7 @@ class RgbCameraRecorder(
         }
     }
 
-    private fun initializeCsvWriter() {
+    private suspend fun initializeCsvWriter() {
         try {
             csvFile?.let { file ->
                 csvWriter = CSVWriter(FileWriter(file)).apply {
@@ -373,6 +396,24 @@ class RgbCameraRecorder(
                 }
             }
             Log.d(TAG, "CSV writer initialized for Camera2 dual output tracking")
+                val headers = listOf(
+                    "timestamp_ns",
+                    "frame_number", 
+                    "session_time_ms",
+                    "sync_marker",
+                    "metadata"
+                )
+                
+                csvBufferedWriter = CSVBufferedWriter(
+                    outputFile = file,
+                    headers = headers,
+                    bufferSize = 4096,
+                    flushIntervalMs = 1000L  // 1 second flush for video metadata
+                )
+                
+                csvBufferedWriter?.startWithHeaders()
+            }
+            Log.d(TAG, "Buffered CSV writer initialized for frame timestamps")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize CSV writer", e)
             throw e
@@ -384,7 +425,7 @@ class RgbCameraRecorder(
      */
     private fun logRawCapture(timestampNs: Long) {
         try {
-            csvWriter?.let { writer ->
+            csvBufferedWriter?.let { writer ->
                 val sessionTimeMs = (timestampNs - sessionStartTime.get()) / 1_000_000
                 val filename = "raw_${timestampNs}.dng"
                 
@@ -396,8 +437,15 @@ class RgbCameraRecorder(
                         "raw_capture",
                         "filename=$filename,mode=dual_output"
                     )
+
+                val row = listOf(
+                    timestampNs,
+                    samplesRecorded.get(),
+                    sessionTimeMs,
+                    "image_capture",
+                    "filename=$filename"
                 )
-                writer.flush()
+                writer.writeRow(row)
             }
             
             Log.d(TAG, "RAW capture logged: ${rawCapturesRecorded.get()}")
@@ -421,6 +469,12 @@ class RgbCameraRecorder(
             // Close CSV writer
             csvWriter?.close()
             csvWriter = null
+            activeRecording?.stop()
+            activeRecording = null
+
+            // Stop buffered writer properly
+            csvBufferedWriter?.stop()
+            csvBufferedWriter = null
 
             if (success) {
                 Log.i(TAG, "RGB Camera2 recording stopped successfully")
@@ -444,20 +498,18 @@ class RgbCameraRecorder(
         metadata: Map<String, String>
     ) {
         try {
-            csvWriter?.let { writer ->
+            csvBufferedWriter?.let { writer ->
                 val sessionTimeMs = (timestampNs - sessionStartTime.get()) / 1_000_000
                 val metadataStr = metadata.entries.joinToString(",") { "${it.key}=${it.value}" }
 
-                writer.writeNext(
-                    arrayOf(
-                        timestampNs.toString(),
-                        samplesRecorded.get().toString(),
-                        sessionTimeMs.toString(),
-                        markerType,
-                        metadataStr
-                    )
+                val row = listOf(
+                    timestampNs,
+                    samplesRecorded.get(),
+                    sessionTimeMs,
+                    markerType,
+                    metadataStr
                 )
-                writer.flush()
+                writer.writeRow(row)
             }
 
             Log.d(TAG, "Sync marker added: $markerType at $timestampNs ns")
@@ -569,6 +621,7 @@ class RgbCameraRecorder(
     /**
      * Provides a method to manually capture a RAW image on demand
      */
+
     suspend fun captureRawImage(): Boolean {
         if (!isRecording || deviceCaps?.supportsRaw != true) {
             Log.w(TAG, "Cannot capture RAW - not recording or device doesn't support RAW")
@@ -587,6 +640,28 @@ class RgbCameraRecorder(
                 // Switch back to previous mode
                 if (currentRecordingMode == RecordingMode.DUAL_OUTPUT) {
                     camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)
+                    
+    suspend fun recordSyncMarker(markerType: String = "SYNC") {
+        if (!isRecording) return
+
+        val timestamp = System.nanoTime()
+        recordingScope.launch {
+            csvBufferedWriter?.let { writer ->
+                try {
+                    val row = listOf(
+                        timestamp,
+                        "SYNC_MARKER",
+                        markerType,
+                        System.currentTimeMillis(),
+                        0, // frame_number
+                        0  // file_size
+                    )
+                    writer.writeRow(row)
+                    syncMarkersRecorded.incrementAndGet()
+
+                    Log.d(TAG, "Sync marker recorded: $markerType at $timestamp")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to record sync marker", e)
                 }
                 
                 Log.d(TAG, "Manual RAW capture completed")
