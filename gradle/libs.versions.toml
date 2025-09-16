@@ -41,7 +41,7 @@ multidex = "2.0.1"
 lifecycle = "2.9.3"
 
 # Room - Compatible with Kotlin 2.2.0 and KSP
-room = "2.7.0"
+room = "2.8.0"
 
 # Work Manager - Latest stable
 work = "2.10.4"
