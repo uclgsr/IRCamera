@@ -122,10 +122,11 @@ class PermissionController(
         }
     }
 
-    fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
-        // Legacy method - delegates to ensureAll for consistency
-        ensureAll(callback)
-    }
+@Deprecated("Use ensureAll() for better clarity and future compatibility.", ReplaceWith("ensureAll(callback)"))
+fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
+    // Legacy method - delegates to ensureAll for consistency
+    ensureAll(callback)
+}
 
     fun onRequestPermissionsResult(
         requestCode: Int,
