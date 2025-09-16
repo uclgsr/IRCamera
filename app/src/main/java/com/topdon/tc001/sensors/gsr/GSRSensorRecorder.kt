@@ -16,6 +16,7 @@ import com.topdon.ble.util.BluetoothPermissionUtils
 import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.model.SyncMark
+import com.topdon.gsr.service.MockShimmerDeviceFactory
 import com.topdon.gsr.service.ShimmerGSRRecorder
 import com.topdon.tc001.sensors.SensorRecorder
 import com.topdon.tc001.sensors.RecordingStatus
@@ -160,7 +161,7 @@ class GSRSensorRecorder(
                     Log.i(TAG, "Unified BLE manager initialized successfully")
                 }
 
-                realShimmerGSRRecorder = ShimmerGSRRecorder(context, samplingRateHz)
+                realShimmerGSRRecorder = ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz)
 
                 val shimmerRecorder = realShimmerGSRRecorder
                 if (shimmerRecorder != null) {
@@ -186,7 +187,7 @@ class GSRSensorRecorder(
                     }
                 }
 
-                legacyGSRRecorder = LegacyGSRRecorder(context, samplingRateHz)
+                legacyGSRRecorder = LegacyGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz)
 
                 if (isNetworkStreamingEnabled) {
                     try {
