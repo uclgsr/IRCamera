@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CompletableDeferred
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import com.topdon.gsr.service.GSRRecorder as LegacyGSRRecorder
@@ -972,10 +973,45 @@ class GSRSensorRecorder(
 
                 val unifiedBle = unifiedBleManager
                 if (unifiedBle != null) {
+                    // First get already connected devices
                     val connectedDevices = unifiedBle.getConnectedShimmerDevices()
-                    connectedDevices.map { device ->
-                        "${device.getName()} (${device.getAddress()})"
+                    val deviceList = mutableListOf<String>()
+                    
+                    // Add connected devices
+                    connectedDevices.forEach { device ->
+                        deviceList.add("${device.getName()} (${device.getAddress()}) - Connected")
                     }
+
+                    // Now scan for nearby devices
+                    val scanResultDeferred = CompletableDeferred<List<String>>()
+                    
+                    unifiedBle.scanForShimmerDevices(10000L, object : UnifiedBleManager.ShimmerScanCallback {
+                        override fun onDeviceFound(device: UnifiedDevice) {
+                            val deviceAddress = device.getAddress()
+                            // Only add if not already connected
+                            val isAlreadyConnected = connectedDevices.any { it.getAddress() == deviceAddress }
+                            if (!isAlreadyConnected) {
+                                val deviceEntry = "${device.getName()} (${deviceAddress}) - Available"
+                                if (!deviceList.contains(deviceEntry)) {
+                                    deviceList.add(deviceEntry)
+                                }
+                                Log.d(TAG, "Found nearby Shimmer device: ${device.getName()} at $deviceAddress")
+                            }
+                        }
+
+                        override fun onScanComplete(foundDevices: List<UnifiedDevice>) {
+                            Log.i(TAG, "Shimmer device scan completed. Total devices found: ${deviceList.size}")
+                            scanResultDeferred.complete(deviceList.toList())
+                        }
+
+                        override fun onScanFailed(error: String) {
+                            Log.e(TAG, "Shimmer device scan failed: $error")
+                            // Still return connected devices even if scan fails
+                            scanResultDeferred.complete(deviceList.toList())
+                        }
+                    })
+
+                    scanResultDeferred.await()
                 } else {
                     Log.w(TAG, "Unified BLE manager not available for device discovery")
                     emptyList()

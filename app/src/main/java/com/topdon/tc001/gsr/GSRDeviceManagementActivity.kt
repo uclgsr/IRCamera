@@ -3,6 +3,9 @@ package com.topdon.tc001.gsr
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,6 +14,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,6 +38,10 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var deviceAdapter: GSRDeviceAdapter
     private val discoveredDevices = mutableListOf<GSRDeviceInfo>()
 
+    // Bluetooth components
+    private var bluetoothAdapter: BluetoothAdapter? = null
+    private var bluetoothManager: BluetoothManager? = null
+
     // Permission handling
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var pendingOperation: (() -> Unit)? = null
@@ -47,6 +55,22 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_gsr_device_management)
 
         prefs = getSharedPreferences("gsr_device_prefs", Context.MODE_PRIVATE)
+        
+        // Initialize Bluetooth components
+        bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?
+        bluetoothAdapter = bluetoothManager?.adapter
+
+        if (bluetoothAdapter == null) {
+            Log.e(TAG, "Bluetooth not supported on this device")
+            showErrorMessage("Bluetooth not supported on this device")
+            finish()
+            return
+        }
+
+        if (!bluetoothAdapter!!.isEnabled) {
+            Log.w(TAG, "Bluetooth is disabled. User should enable it.")
+            showBluetoothEnableDialog()
+        }
 
         initializeUI()
         setupPermissionHandling()
@@ -264,6 +288,11 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
             return
         }
 
+        // Check if device needs pairing first
+        checkDevicePairingStatus(device)
+    }
+
+    private fun performActualConnection(device: GSRDeviceInfo) {
         lifecycleScope.launch {
             try {
                 isConnecting = true
@@ -299,6 +328,117 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
                 isConnecting = false
             }
         }
+    }
+
+    private fun showBluetoothEnableDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Bluetooth Required")
+            .setMessage("Bluetooth must be enabled to discover and connect to Shimmer GSR devices. Please enable Bluetooth in Settings.")
+            .setPositiveButton("Enable") { _, _ ->
+                try {
+                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                    startActivity(enableBtIntent)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to start Bluetooth enable intent", e)
+                    showErrorMessage("Could not open Bluetooth settings")
+                }
+            }
+            .setNegativeButton("Cancel") { _, _ ->
+                showErrorMessage("Bluetooth is required for GSR device functionality")
+                finish()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun checkDevicePairingStatus(device: GSRDeviceInfo) {
+        try {
+            if (!BluetoothPermissionUtils.hasBluetoothPermissions(this)) {
+                Log.w(TAG, "Cannot check pairing status without Bluetooth permissions")
+                return
+            }
+
+            val bluetoothDevice = bluetoothAdapter?.getRemoteDevice(device.address)
+            if (bluetoothDevice == null) {
+                Log.w(TAG, "Could not get Bluetooth device for address: ${device.address}")
+                return
+            }
+
+            val isPaired = bluetoothDevice.bondState == BluetoothDevice.BOND_BONDED
+            Log.d(TAG, "Device ${device.name} pairing status: ${if (isPaired) "Paired" else "Not paired"}")
+            
+            if (!isPaired) {
+                showPairingDialog(device, bluetoothDevice)
+            } else {
+                // Device is already paired, proceed with connection
+                proceedWithConnection(device)
+            }
+            
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Security exception checking device pairing status", e)
+            showErrorMessage("Bluetooth permissions required to check device pairing")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking device pairing status", e)
+            showErrorMessage("Error checking device pairing status")
+        }
+    }
+
+    private fun showPairingDialog(deviceInfo: GSRDeviceInfo, bluetoothDevice: BluetoothDevice) {
+        AlertDialog.Builder(this)
+            .setTitle("Device Pairing Required")
+            .setMessage("The Shimmer device '${deviceInfo.name}' needs to be paired before connection. Would you like to pair it now?")
+            .setPositiveButton("Pair") { _, _ ->
+                initiateDevicePairing(deviceInfo, bluetoothDevice)
+            }
+            .setNegativeButton("Cancel") { _, _ ->
+                showErrorMessage("Device pairing is required for connection")
+            }
+            .show()
+    }
+
+    private fun initiateDevicePairing(deviceInfo: GSRDeviceInfo, bluetoothDevice: BluetoothDevice) {
+        try {
+            if (!BluetoothPermissionUtils.hasBluetoothPermissions(this)) {
+                requestRequiredPermissions {
+                    initiateDevicePairing(deviceInfo, bluetoothDevice)
+                }
+                return
+            }
+
+            Log.i(TAG, "Initiating pairing for device: ${deviceInfo.name}")
+            
+            val pairingResult = bluetoothDevice.createBond()
+            if (pairingResult) {
+                showToast("Pairing request sent. Please confirm on the device.")
+                Log.i(TAG, "Pairing request sent for ${deviceInfo.name}")
+                
+                // Monitor pairing result (simplified - in real app you'd register a BroadcastReceiver)
+                lifecycleScope.launch {
+                    delay(5000) // Wait 5 seconds for pairing to complete
+                    if (bluetoothDevice.bondState == BluetoothDevice.BOND_BONDED) {
+                        showToast("Device paired successfully!")
+                        proceedWithConnection(deviceInfo)
+                    } else {
+                        showErrorMessage("Device pairing failed. Please try again.")
+                    }
+                }
+            } else {
+                showErrorMessage("Failed to initiate device pairing")
+                Log.w(TAG, "Failed to create bond for device: ${deviceInfo.name}")
+            }
+
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Security exception during device pairing", e)
+            showErrorMessage("Bluetooth permissions required for device pairing")  
+        } catch (e: Exception) {
+            Log.e(TAG, "Error initiating device pairing", e)
+            showErrorMessage("Error during device pairing: ${e.message}")
+        }
+    }
+
+    private fun proceedWithConnection(device: GSRDeviceInfo) {
+        // Device is paired, proceed with actual connection logic
+        performActualConnection(device)
     }
 
     private fun openGSRSettings() {

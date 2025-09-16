@@ -266,8 +266,44 @@ public class UnifiedBleManager {
 
     @NonNull
     public List<UnifiedDevice> getConnectedShimmerDevices() {
+        List<UnifiedDevice> shimmerDevices = new ArrayList<>();
+        
+        // Return actual connected Shimmer devices from shimmerController
+        if (shimmerController != null) {
+            try {
+                shimmerDevices.addAll(shimmerController.getConnectedDevices());
+                Log.d(TAG, "Found " + shimmerDevices.size() + " connected Shimmer devices");
+            } catch (Exception e) {
+                Log.e(TAG, "Error getting connected Shimmer devices", e);
+            }
+        }
+        
+        return shimmerDevices;
+    }
 
-        return new ArrayList<>();
+    /**
+     * Scan for nearby Shimmer devices using BLE discovery
+     * @param scanDurationMs Duration of scan in milliseconds
+     * @param callback Callback to receive discovered devices
+     */
+    public void scanForShimmerDevices(long scanDurationMs, ShimmerScanCallback callback) {
+        if (shimmerController != null) {
+            shimmerController.scanForDevices(scanDurationMs, callback);
+        } else {
+            Log.e(TAG, "Shimmer controller not initialized for scanning");
+            if (callback != null) {
+                callback.onScanFailed("Shimmer controller not available");
+            }
+        }
+    }
+
+    /**
+     * Interface for Shimmer device scan callbacks
+     */
+    public interface ShimmerScanCallback {
+        void onDeviceFound(UnifiedDevice device);
+        void onScanComplete(List<UnifiedDevice> foundDevices);
+        void onScanFailed(String error);
     }
 
     @NonNull
