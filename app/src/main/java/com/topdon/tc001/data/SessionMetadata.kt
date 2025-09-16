@@ -127,7 +127,7 @@ data class SessionMetadata(
      * Calculates timestamp relative to session start using monotonic clock
      */
     fun getRelativeTimestamp(): Long {
-        val currentMonotonicNs = SystemClock.elapsedRealtimeNs()
+        val currentMonotonicNs = SystemClock.elapsedRealtimeNanos()
         return (currentMonotonicNs - sessionStartMonotonicNs) / 1_000_000L // Convert to milliseconds
     }
     
