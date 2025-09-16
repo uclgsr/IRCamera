@@ -45,8 +45,13 @@ class ShimmerDeviceManager(
 
     // Manager instances
     private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
-    private var bluetoothManager: BluetoothManager? = null
+    var bluetoothManager: BluetoothManager? = null
+        private set
     private var bluetoothAdapter: BluetoothAdapter? = null
+    
+    // Expose shimmer manager for data callbacks (read-only access)
+    val shimmerBluetoothManager: ShimmerBluetoothManagerAndroid?
+        get() = shimmerManager
 
     // Device tracking
     private val connectedDevices = ConcurrentHashMap<String, Shimmer>()
