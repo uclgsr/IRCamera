@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.tc001.R
-import com.topdon.tc001.databinding.ActivityShimmerConfigBinding
+// import com.topdon.tc001.databinding.ActivityShimmerConfigBinding
 import com.topdon.tc001.sensors.unified.ShimmerDeviceManager
 import com.topdon.tc001.sensors.unified.model.DeviceInfo
 import kotlinx.coroutines.flow.collectLatest
@@ -50,7 +50,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
         }
     }
     
-    private lateinit var binding: ActivityShimmerConfigBinding
+    // private lateinit var binding: ActivityShimmerConfigBinding
     private lateinit var deviceAdapter: ShimmerDeviceAdapter
     private var shimmerDeviceManager: ShimmerDeviceManager? = null
     private var isScanning = false
@@ -73,16 +73,19 @@ class ShimmerConfigActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityShimmerConfigBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        // TODO: Use View.inflate or setContentView with layout resource when DataBinding is available
+        // binding = ActivityShimmerConfigBinding.inflate(layoutInflater)
+        // setContentView(binding.root)
+        setContentView(R.layout.activity_shimmer_config)
         
         setupUI()
         checkPermissionsAndInitialize()
     }
     
     private fun setupUI() {
+        // TODO: Replace with DataBinding references when available
         // Set up toolbar
-        setSupportActionBar(binding.toolbar)
+        // setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Shimmer GSR Configuration"
         
@@ -91,13 +94,14 @@ class ShimmerConfigActivity : AppCompatActivity() {
             onDeviceSelected(device)
         }
         
-        binding.recyclerViewDevices.apply {
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewDevices)
+        recyclerView?.apply {
             layoutManager = LinearLayoutManager(this@ShimmerConfigActivity)
             adapter = deviceAdapter
         }
         
         // Set up button listeners
-        binding.buttonScan.setOnClickListener {
+        findViewById<android.widget.Button>(R.id.buttonScan)?.setOnClickListener {
             if (isScanning) {
                 stopDeviceScanning()
             } else {
@@ -105,11 +109,11 @@ class ShimmerConfigActivity : AppCompatActivity() {
             }
         }
         
-        binding.buttonTestConnection.setOnClickListener {
+        findViewById<android.widget.Button>(R.id.buttonTestConnection)?.setOnClickListener {
             testSelectedDeviceConnection()
         }
         
-        binding.buttonDisconnect.setOnClickListener {
+        findViewById<android.widget.Button>(R.id.buttonDisconnect)?.setOnClickListener {
             disconnectCurrentDevice()
         }
         
@@ -179,7 +183,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
                 when (event.state) {
                     ShimmerDeviceManager.ConnectionState.CONNECTING -> {
                         updateUI("Connecting to Shimmer device...")
-                        binding.progressBar.visibility = View.VISIBLE
+                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.VISIBLE
                     }
                     
                     ShimmerDeviceManager.ConnectionState.CONNECTED -> {
@@ -187,7 +191,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
                         connectedDevice = device
                         updateConnectionStatus(device)
                         updateUI("Successfully connected to ${device?.name ?: event.deviceAddress}")
-                        binding.progressBar.visibility = View.GONE
+                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.GONE
                         Toast.makeText(this@ShimmerConfigActivity, "Connected to Shimmer device!", Toast.LENGTH_SHORT).show()
                     }
                     
@@ -195,18 +199,18 @@ class ShimmerConfigActivity : AppCompatActivity() {
                         connectedDevice = null
                         updateConnectionStatus(null)
                         updateUI("Shimmer device disconnected")
-                        binding.progressBar.visibility = View.GONE
+                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.GONE
                     }
                     
                     ShimmerDeviceManager.ConnectionState.FAILED -> {
                         updateUI("Connection failed: ${event.message ?: "Unknown error"}")
-                        binding.progressBar.visibility = View.GONE
+                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.GONE
                         Toast.makeText(this@ShimmerConfigActivity, "Connection failed", Toast.LENGTH_LONG).show()
                     }
                     
                     ShimmerDeviceManager.ConnectionState.TIMEOUT -> {
                         updateUI("Connection timeout - device may be out of range or not responding")
-                        binding.progressBar.visibility = View.GONE
+                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.GONE
                         Toast.makeText(this@ShimmerConfigActivity, "Connection timeout", Toast.LENGTH_LONG).show()
                     }
                 }
@@ -285,7 +289,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 updateUI("Connecting to ${device.name}...")
-                binding.progressBar.visibility = View.VISIBLE
+                findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.VISIBLE
                 
                 val connected = manager.connectToDevice(device)
                 if (!connected) {
@@ -295,7 +299,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e(TAG, "Error connecting to device", e)
                 updateUI("Connection error: ${e.message}")
-                binding.progressBar.visibility = View.GONE
+                findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.GONE
             }
         }
     }
@@ -310,19 +314,19 @@ class ShimmerConfigActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 updateUI("Testing connection to ${device.name}...")
-                binding.progressBar.visibility = View.VISIBLE
+                findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.VISIBLE
                 
                 // Simple connection test - try to get device info
                 kotlinx.coroutines.delay(1000)
                 
                 updateUI("Connection test successful - device is responsive")
-                binding.progressBar.visibility = View.GONE
+                findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.GONE
                 Toast.makeText(this@ShimmerConfigActivity, "Device connection test passed!", Toast.LENGTH_SHORT).show()
                 
             } catch (e: Exception) {
                 Log.e(TAG, "Connection test failed", e)
                 updateUI("Connection test failed: ${e.message}")
-                binding.progressBar.visibility = View.GONE
+                findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.GONE
                 Toast.makeText(this@ShimmerConfigActivity, "Connection test failed", Toast.LENGTH_LONG).show()
             }
         }
@@ -354,35 +358,42 @@ class ShimmerConfigActivity : AppCompatActivity() {
     
     private fun updateUI(message: String) {
         runOnUiThread {
-            binding.textViewStatus.text = message
+            findViewById<android.widget.TextView>(R.id.textViewStatus)?.text = message
             Log.d(TAG, "UI Status: $message")
         }
     }
     
     private fun updateScanButton(isScanning: Boolean) {
         runOnUiThread {
+            val scanButton = findViewById<android.widget.Button>(R.id.buttonScan)
+            val progressBar = findViewById<android.widget.ProgressBar>(R.id.progressBar)
+            
             if (isScanning) {
-                binding.buttonScan.text = "Stop Scan"
-                binding.progressBar.visibility = View.VISIBLE
+                scanButton?.text = "Stop Scan"
+                progressBar?.visibility = View.VISIBLE
             } else {
-                binding.buttonScan.text = "Start Scan"
-                binding.progressBar.visibility = View.GONE
+                scanButton?.text = "Start Scan"
+                progressBar?.visibility = View.GONE
             }
         }
     }
     
     private fun updateConnectionStatus(device: DeviceInfo?) {
         runOnUiThread {
+            val statusView = findViewById<android.widget.TextView>(R.id.textViewConnectionStatus)
+            val testButton = findViewById<android.widget.Button>(R.id.buttonTestConnection)
+            val disconnectButton = findViewById<android.widget.Button>(R.id.buttonDisconnect)
+            
             if (device != null) {
-                binding.textViewConnectionStatus.text = "Connected: ${device.name}"
-                binding.textViewConnectionStatus.setTextColor(getColor(android.R.color.holo_green_dark))
-                binding.buttonTestConnection.isEnabled = true
-                binding.buttonDisconnect.isEnabled = true
+                statusView?.text = "Connected: ${device.name}"
+                statusView?.setTextColor(getColor(android.R.color.holo_green_dark))
+                testButton?.isEnabled = true
+                disconnectButton?.isEnabled = true
             } else {
-                binding.textViewConnectionStatus.text = "Not Connected"
-                binding.textViewConnectionStatus.setTextColor(getColor(android.R.color.holo_red_dark))
-                binding.buttonTestConnection.isEnabled = false
-                binding.buttonDisconnect.isEnabled = false
+                statusView?.text = "Not Connected"
+                statusView?.setTextColor(getColor(android.R.color.holo_red_dark))
+                testButton?.isEnabled = false
+                disconnectButton?.isEnabled = false
             }
         }
     }
