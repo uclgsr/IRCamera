@@ -1,21 +1,16 @@
 package com.topdon.tc001.sensors.rgb
 
 import android.content.Context
-import android.hardware.camera2.CameraCharacteristics
-import android.hardware.camera2.CameraManager
-import android.hardware.camera2.CameraMetadata
+import android.graphics.Bitmap
 import android.util.Log
-import android.view.TextureView
-import android.view.WindowManager
-import com.opencsv.CSVWriter
-import com.topdon.tc001.camera.Camera2System
-import com.topdon.tc001.camera.core.DeviceCaps
-import com.topdon.tc001.camera.core.ModeManager
+import android.util.Size
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.*
+import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.opencsv.CSVWriter
 import com.topdon.tc001.sensors.*
 import com.topdon.tc001.sensors.RecordingStats
 import com.topdon.tc001.sensors.ErrorType
@@ -25,6 +20,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File
 import java.io.FileWriter
+import java.io.FileOutputStream
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
@@ -32,7 +28,8 @@ import java.util.concurrent.atomic.AtomicLong
 
 class RgbCameraRecorder(
     private val context: Context,
-    private val textureView: TextureView
+    private val lifecycleOwner: LifecycleOwner,
+    private val previewView: PreviewView? = null
 ) : SensorRecorder {
 
     companion object {
@@ -44,19 +41,29 @@ class RgbCameraRecorder(
         private const val VIDEO_FPS = 60      // Enhanced to 60fps capability
         private const val VIDEO_BITRATE = 50_000_000  // 50 Mbps for 4K60 quality
         private const val AUDIO_BITRATE = 256_000     // 256 kbps for high-quality audio
+        
+        // Image capture constants
+        private const val JPEG_QUALITY = 100   // Maximum quality for analysis frames
+        private const val CAPTURE_FPS = 30     // ~30 FPS still frame capture
     }
 
     override val sensorId: String = "rgb_camera_${System.currentTimeMillis()}"
-    override val sensorType: String = "RGB_Camera_Dual_Output"
+    override val sensorType: String = "RGB_Camera_CameraX"
     override val samplingRate: Double = VIDEO_FPS.toDouble()
 
     private val _isRecording = AtomicBoolean(false)
     override val isRecording: Boolean get() = _isRecording.get()
 
-    // Camera2 System for dual output (4K video + RAW capture)
-    private val camera2System = Camera2System(context, textureView)
-    private var selectedCameraId: String = "0"
-    private var deviceCaps: DeviceCaps? = null
+    // CameraX components
+    private var cameraProvider: ProcessCameraProvider? = null
+    private var preview: Preview? = null
+    private var videoCapture: VideoCapture<Recorder>? = null
+    private var imageCapture: ImageCapture? = null
+    private var camera: Camera? = null
+    private var activeRecording: Recording? = null
+    
+    // Executor for camera operations
+    private val cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     private val statusFlow = MutableStateFlow(createInitialStatus())
     private val errorFlow = MutableSharedFlow<SensorError>()
@@ -72,134 +79,89 @@ class RgbCameraRecorder(
     private val lastFrameTime = AtomicLong(0)
     private var droppedFrames = AtomicLong(0)
     private val syncMarkersRecorded = AtomicLong(0)
-    private val rawCapturesRecorded = AtomicLong(0)
+    private val framesCaptured = AtomicLong(0)
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
-    // Dual-output recording mode
-    private var currentRecordingMode: RecordingMode = RecordingMode.DUAL_OUTPUT
     
-    enum class RecordingMode {
-        DUAL_OUTPUT,  // 4K video + RAW capture (default)
-        VIDEO_ONLY,   // 4K video only
-        RAW_ONLY      // RAW capture only
-    }
+    // Frame capture job for continuous JPEG frames
+    private var frameCaptureJob: Job? = null
 
-    override suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
+    override suspend fun initialize(): Boolean = withContext(Dispatchers.Main) {
         try {
-            Log.d(TAG, "Initializing RGB Camera2 recorder with dual output capability")
+            Log.d(TAG, "Initializing CameraX for RGB recording")
 
-            // Select camera with RAW_SENSOR capability
-            selectedCameraId = selectCameraWithRawSupport()
-            Log.i(TAG, "Selected camera ID: $selectedCameraId")
-
-            // Setup Camera2System callbacks
-            setupCamera2Callbacks()
-
-            // Initialize Camera2 system
-            val success = camera2System.initialize(selectedCameraId)
-            if (!success) {
-                emitError(ErrorType.INITIALIZATION_FAILED, "Camera2System initialization failed")
+            val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+            cameraProvider = cameraProviderFuture.get()
+            
+            // Check if we have a back camera
+            if (!cameraProvider!!.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)) {
+                emitError(ErrorType.INITIALIZATION_FAILED, "Back camera not available")
                 return@withContext false
             }
 
-            // Wait for device capabilities to be detected
-            var retryCount = 0
-            while (deviceCaps == null && retryCount < 10) {
-                delay(100)
-                deviceCaps = camera2System.getDeviceCaps()
-                retryCount++
-            }
-
-            deviceCaps?.let { caps ->
-                Log.i(TAG, "Device capabilities: RAW=${caps.supportsRaw}, 4K60=${caps.supports4k60}")
-                if (!caps.supportsRaw) {
-                    Log.w(TAG, "Device does not support RAW capture - falling back to video-only mode")
-                    currentRecordingMode = RecordingMode.VIDEO_ONLY
-                }
-            } ?: run {
-                Log.w(TAG, "Could not detect device capabilities - using video-only mode")
-                currentRecordingMode = RecordingMode.VIDEO_ONLY
-            }
-
-            Log.i(TAG, "RGB Camera2 recorder initialized successfully with mode: $currentRecordingMode")
+            Log.i(TAG, "CameraX provider initialized successfully")
             updateStatus(isInitialized = true)
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize RGB Camera2 recorder", e)
-            emitError(ErrorType.INITIALIZATION_FAILED, "Camera2 initialization failed: ${e.message}")
+            Log.e(TAG, "Failed to initialize CameraX", e)
+            emitError(ErrorType.INITIALIZATION_FAILED, "CameraX initialization failed: ${e.message}")
             false
         }
     }
-
+    
     /**
-     * Select camera that supports RAW_SENSOR capability for dual output
+     * Initialize CameraX with preview, video and image capture use cases
      */
-    private fun selectCameraWithRawSupport(): String {
+    private suspend fun initializeCameraX(): Boolean = withContext(Dispatchers.Main) {
         try {
-            val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-            
-            for (cameraId in cameraManager.cameraIdList) {
-                val characteristics = cameraManager.getCameraCharacteristics(cameraId)
-                
-                // Check if this is back camera
-                val facing = characteristics.get(CameraCharacteristics.LENS_FACING)
-                if (facing != CameraCharacteristics.LENS_FACING_BACK) {
-                    continue
-                }
-                
-                // Check if camera supports RAW_SENSOR capability
-                val capabilities = characteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES)
-                val supportsRaw = capabilities?.contains(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_RAW) == true
-                
-                Log.d(TAG, "Camera $cameraId: facing=$facing, supportsRaw=$supportsRaw")
-                
-                if (supportsRaw) {
-                    Log.i(TAG, "Found camera with RAW support: $cameraId")
-                    return cameraId
-                }
-            }
-            
-            // Fallback to default back camera if no RAW support found
-            Log.w(TAG, "No camera with RAW support found, using default back camera")
-            return "0"
-        } catch (e: Exception) {
-            Log.e(TAG, "Error selecting camera with RAW support", e)
-            return "0"
-        }
-    }
+            cameraProvider?.unbindAll()
 
-    /**
-     * Setup callbacks for Camera2System integration
-     */
-    private fun setupCamera2Callbacks() {
-        camera2System.onError = { error ->
-            recordingScope.launch {
-                emitError(ErrorType.HARDWARE_DISCONNECTED, error)
+            // Preview use case - bind to PreviewView if available
+            preview = Preview.Builder()
+                .setTargetResolution(Size(1920, 1080)) // 1080p preview for performance
+                .build()
+
+            // Video capture use case - 4K recording with high quality
+            val recorder = Recorder.Builder()
+                .setQualitySelector(
+                    QualitySelector.from(
+                        Quality.UHD, // 4K quality
+                        FallbackStrategy.lowerQualityOrHigherThan(Quality.FHD) // Fallback to 1080p
+                    )
+                )
+                .build()
+
+            videoCapture = VideoCapture.withOutput(recorder)
+
+            // Image capture use case - high resolution JPEG frames
+            imageCapture = ImageCapture.Builder()
+                .setTargetResolution(Size(VIDEO_WIDTH, VIDEO_HEIGHT)) // Match video resolution
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY) // Fast capture for 30fps
+                .setJpegQuality(JPEG_QUALITY)
+                .build()
+
+            // Bind use cases to lifecycle
+            val useCases = mutableListOf<UseCase>(videoCapture!!, imageCapture!!)
+            
+            // Add preview if PreviewView is available
+            previewView?.let { 
+                preview?.setSurfaceProvider(it.surfaceProvider)
+                useCases.add(preview!!)
+                Log.d(TAG, "Preview bound to PreviewView")
             }
-        }
-        
-        camera2System.onProgress = { message ->
-            Log.d(TAG, "Camera2System progress: $message")
-        }
-        
-        camera2System.onModeChanged = { mode ->
-            Log.i(TAG, "Camera mode changed to: $mode")
-        }
-        
-        camera2System.onRecordingStarted = {
-            Log.i(TAG, "Camera2System recording started")
-            recordingScope.launch {
-                samplesRecorded.incrementAndGet()
-                updateStatus(isRecording = true)
-            }
-        }
-        
-        camera2System.onRecordingStopped = {
-            Log.i(TAG, "Camera2System recording stopped") 
-            recordingScope.launch {
-                updateStatus(isRecording = false)
-            }
+
+            camera = cameraProvider?.bindToLifecycle(
+                lifecycleOwner,
+                CameraSelector.DEFAULT_BACK_CAMERA,
+                *useCases.toTypedArray()
+            )
+
+            Log.i(TAG, "CameraX use cases bound successfully")
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize CameraX use cases", e)
+            emitError(ErrorType.INITIALIZATION_FAILED, "Failed to bind camera use cases: ${e.message}")
+            false
         }
     }
 
@@ -217,35 +179,40 @@ class RgbCameraRecorder(
                 sessionDir.mkdirs()
             }
 
+            // Initialize CameraX use cases
+            if (!initializeCameraX()) {
+                Log.e(TAG, "Failed to initialize CameraX")
+                return false
+            }
+
             setupOutputFiles()
-            startVideoRecording()
+            
+            // Start video recording
+            val videoRecordingStarted = startVideoRecording()
+            if (!videoRecordingStarted) {
+                Log.e(TAG, "Failed to start video recording")
+                return false
+            }
 
             // Initialize CSV writer asynchronously
             recordingScope.launch {
                 initializeCsvWriter()
             }
 
-            // Determine recording mode based on capabilities and start appropriate Camera2 mode
-            val success = when (currentRecordingMode) {
-                RecordingMode.DUAL_OUTPUT -> startDualOutputRecording()
-                RecordingMode.VIDEO_ONLY -> startVideoOnlyRecording()
-                RecordingMode.RAW_ONLY -> startRawOnlyRecording()
-            }
+            // Start continuous frame capture
+            startFrameCapture()
 
-            if (success) {
-                _isRecording.set(true)
-                sessionStartTime.set(System.nanoTime())
-                samplesRecorded.set(0)
-                droppedFrames.set(0)
-                rawCapturesRecorded.set(0)
+            _isRecording.set(true)
+            sessionStartTime.set(System.nanoTime())
+            samplesRecorded.set(0)
+            droppedFrames.set(0)
+            framesCaptured.set(0)
 
-                Log.i(TAG, "RGB Camera2 recording started in: $sessionDirectory with mode: $currentRecordingMode")
-                updateStatus(isRecording = true)
-            }
-
-            success
+            Log.i(TAG, "RGB CameraX recording started in: $sessionDirectory")
+            updateStatus(isRecording = true)
+            true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start RGB Camera2 recording", e)
+            Log.e(TAG, "Failed to start RGB CameraX recording", e)
             emitError(ErrorType.RECORDING_FAILED, "Failed to start recording: ${e.message}")
             false
         }
@@ -258,139 +225,134 @@ class RgbCameraRecorder(
             rgbDir.mkdirs()
         }
         
+        // Create frames subdirectory for JPEG captures
+        val framesDir = File(rgbDir, "frames")
+        if (!framesDir.exists()) {
+            framesDir.mkdirs()
+        }
+        
         // Use standard file names from SessionDirectoryManager
         videoFile = File(rgbDir, SessionDirectoryManager.RGB_VIDEO_FILE)
         csvFile = File(rgbDir, "rgb_timestamps.csv")
     }
 
     /**
-     * Start dual output recording (4K video + RAW capture)
+     * Start CameraX video recording
      */
-    private suspend fun startDualOutputRecording(): Boolean {
-        return withContext(Dispatchers.IO) {
-            try {
-                Log.i(TAG, "Starting dual output recording (4K60fps video + RAW capture)")
-                
-                // Start with VIDEO_4K60 mode which can capture both video and trigger RAW captures
-                val success = camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K60)
-                if (!success) {
-                    Log.w(TAG, "4K60fps not supported, falling back to VIDEO_4K")
-                    // Fallback to regular 4K if 60fps not supported
-                    val fallbackSuccess = camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)
-                    if (!fallbackSuccess) {
-                        Log.e(TAG, "Failed to switch to any 4K video mode for dual output")
-                        return@withContext false
-                    }
-                }
-                
-                // Start recording session
-                val sessionId = "session_${System.currentTimeMillis()}"
-                val recordingSuccess = camera2System.startRecording(sessionId)
-                if (!recordingSuccess) {
-                    Log.e(TAG, "Failed to start Camera2System recording")
-                    return@withContext false
-                }
-                
-                // Start periodic RAW capture alongside video recording
-                startPeriodicRawCapture()
-                
-                true
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start dual output recording", e)
-                false
-            }
-        }
-    }
+    private fun startVideoRecording(): Boolean {
+        return try {
+            val videoCapture = this.videoCapture ?: return false
+            val outputFile = videoFile ?: return false
 
-    /**
-     * Start video-only recording (4K)
-     */
-    private suspend fun startVideoOnlyRecording(): Boolean {
-        return withContext(Dispatchers.IO) {
-            try {
-                Log.i(TAG, "Starting 4K60fps video-only recording")
-                
-                // Try 4K60fps first, fallback to 4K30fps if not supported
-                var success = camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K60)
-                if (!success) {
-                    Log.w(TAG, "4K60fps not supported, falling back to 4K30fps")
-                    success = camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)
-                    if (!success) {
-                        Log.e(TAG, "Failed to switch to any 4K video mode")
-                        return@withContext false
-                    }
-                }
-                
-                val sessionId = "session_${System.currentTimeMillis()}"
-                camera2System.startRecording(sessionId)
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start video-only recording", e)
-                false
-            }
-        }
-    }
-
-    /**
-     * Start RAW-only recording (50MP RAW capture)
-     */
-    private suspend fun startRawOnlyRecording(): Boolean {
-        return withContext(Dispatchers.IO) {
-            try {
-                Log.i(TAG, "Starting RAW-only recording (50MP)")
-                
-                val success = camera2System.switchMode(ModeManager.CameraMode.RAW_50MP)
-                if (!success) {
-                    Log.e(TAG, "Failed to switch to RAW 50MP mode")
-                    return@withContext false
-                }
-                
-                val sessionId = "session_${System.currentTimeMillis()}"
-                camera2System.startRecording(sessionId)
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start RAW-only recording", e)
-                false
-            }
-        }
-    }
-
-    /**
-     * Start periodic RAW capture for dual-output mode
-     */
-    private fun startPeriodicRawCapture() {
-        recordingScope.launch {
-            Log.i(TAG, "Starting periodic RAW capture for dual output")
+            val mediaStoreOutput = FileOutputOptions.Builder(outputFile).build()
             
-            while (_isRecording.get() && currentRecordingMode == RecordingMode.DUAL_OUTPUT) {
-                try {
-                    // Switch to RAW mode briefly to capture one RAW image
-                    if (camera2System.switchMode(ModeManager.CameraMode.RAW_50MP)) {
-                        delay(100) // Brief pause for mode switch
-                        
-                        // Capture timestamp and log the RAW capture
-                        val timestamp = System.nanoTime()
-                        rawCapturesRecorded.incrementAndGet()
-                        
-                        logRawCapture(timestamp)
-                        
-                        // Switch back to the appropriate video mode (60fps if supported)
-                        val videoMode = if (deviceCaps?.supports4k60 == true) {
-                            ModeManager.CameraMode.VIDEO_4K60
-                        } else {
-                            ModeManager.CameraMode.VIDEO_4K
+            activeRecording = videoCapture.output
+                .prepareRecording(context, mediaStoreOutput)
+                .apply {
+                    // Enable audio recording if permission is available
+                    if (context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == 
+                        android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                        withAudioEnabled()
+                    }
+                }
+                .start(ContextCompat.getMainExecutor(context)) { recordEvent ->
+                    when (recordEvent) {
+                        is VideoRecordEvent.Start -> {
+                            Log.i(TAG, "Video recording started")
+                            recordingScope.launch {
+                                updateStatus(isRecording = true)
+                            }
                         }
-                        camera2System.switchMode(videoMode)
-                        delay(100) // Brief pause for mode switch back
+                        is VideoRecordEvent.Finalize -> {
+                            if (!recordEvent.hasError()) {
+                                Log.i(TAG, "Video recording saved: ${outputFile.absolutePath}")
+                            } else {
+                                Log.e(TAG, "Video recording error: ${recordEvent.error}")
+                                recordingScope.launch {
+                                    emitError(ErrorType.RECORDING_FAILED, "Video recording failed: ${recordEvent.error}")
+                                }
+                            }
+                        }
                     }
+                }
+
+            Log.d(TAG, "Video recording started to: ${outputFile.absolutePath}")
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start video recording", e)
+            false
+        }
+    }
+
+    /**
+     * Start continuous frame capture at ~30 FPS
+     */
+    private fun startFrameCapture() {
+        frameCaptureJob = recordingScope.launch {
+            val framesDir = File(sessionDirectory, "RGB/frames")
+            val captureInterval = 1000L / CAPTURE_FPS // ~33ms for 30fps
+            
+            Log.i(TAG, "Starting continuous frame capture at ${CAPTURE_FPS} FPS")
+            
+            while (_isRecording.get()) {
+                try {
+                    val timestamp = System.nanoTime()
+                    val frameNumber = framesCaptured.incrementAndGet()
+                    val outputFile = File(framesDir, "frame_${timestamp}.jpg")
                     
-                    // Capture RAW images every 2 seconds for analysis while maintaining 4K video
-                    delay(2000)
+                    val outputOptions = ImageCapture.OutputFileOptions.Builder(outputFile).build()
+                    
+                    imageCapture?.takePicture(
+                        outputOptions,
+                        cameraExecutor,
+                        object : ImageCapture.OnImageSavedCallback {
+                            override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                                recordingScope.launch {
+                                    logFrameCapture(timestamp, frameNumber, outputFile)
+                                }
+                            }
+                            
+                            override fun onError(exception: ImageCaptureException) {
+                                Log.w(TAG, "Frame capture failed: ${exception.message}")
+                                droppedFrames.incrementAndGet()
+                            }
+                        }
+                    )
+                    
+                    delay(captureInterval)
                 } catch (e: Exception) {
-                    Log.w(TAG, "Failed during periodic RAW capture", e)
-                    delay(2000) // Continue trying after error
+                    Log.w(TAG, "Error during frame capture", e)
+                    delay(captureInterval)
                 }
             }
             
-            Log.i(TAG, "Periodic RAW capture stopped")
+            Log.i(TAG, "Frame capture stopped")
+        }
+    }
+
+    /**
+     * Log frame capture event to CSV
+     */
+    private fun logFrameCapture(timestampNs: Long, frameNumber: Long, outputFile: File) {
+        try {
+            csvBufferedWriter?.let { writer ->
+                val sessionTimeMs = (timestampNs - sessionStartTime.get()) / 1_000_000
+                
+                writer.writeNext(
+                    arrayOf(
+                        timestampNs.toString(),
+                        frameNumber.toString(),
+                        sessionTimeMs.toString(),
+                        "frame_capture",
+                        "filename=${outputFile.name},size=${outputFile.length()}"
+                    )
+                )
+            }
+            
+            samplesRecorded.incrementAndGet()
+            lastFrameTime.set(timestampNs)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to log frame capture", e)
         }
     }
 
@@ -398,14 +360,14 @@ class RgbCameraRecorder(
         try {
             csvFile?.let { file ->
                 csvWriter = CSVWriter(FileWriter(file)).apply {
-                    // Enhanced CSV header for dual output tracking
+                    // Enhanced CSV header for frame tracking
                     writeNext(
                         arrayOf(
                             "timestamp_ns",
                             "sample_number", 
                             "session_time_ms",
-                            "event_type",      // video_frame, raw_capture, sync_marker
-                            "metadata"         // Additional info like filename, mode, etc.
+                            "event_type",      // frame_capture, video_start, video_stop, sync_marker
+                            "metadata"         // Additional info like filename, size, etc.
                         )
                     )
                     flush()
@@ -423,7 +385,7 @@ class RgbCameraRecorder(
                     outputFile = file,
                     headers = headers,
                     bufferSize = 4096,
-                    flushIntervalMs = 1000L  // 1 second flush for video metadata
+                    flushIntervalMs = 500L  // 0.5 second flush for video metadata
                 )
                 
                 csvBufferedWriter?.startWithHeaders()
@@ -435,32 +397,6 @@ class RgbCameraRecorder(
         }
     }
 
-    /**
-     * Log RAW image capture event
-     */
-    private fun logRawCapture(timestampNs: Long) {
-        try {
-            csvBufferedWriter?.let { writer ->
-                val sessionTimeMs = (timestampNs - sessionStartTime.get()) / 1_000_000
-                val filename = "raw_${timestampNs}.dng"
-                
-                writer.writeNext(
-                    arrayOf(
-                        timestampNs.toString(),
-                        rawCapturesRecorded.get().toString(),
-                        sessionTimeMs.toString(),
-                        "raw_capture",
-                        "filename=$filename,mode=dual_output"
-                    )
-                )
-            }
-            
-            Log.d(TAG, "RAW capture logged: ${rawCapturesRecorded.get()}")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to log RAW capture", e)
-        }
-    }
-
     override suspend fun stopRecording(): Boolean {
         return try {
             if (!_isRecording.get()) {
@@ -469,31 +405,30 @@ class RgbCameraRecorder(
             }
 
             _isRecording.set(false)
-
-            // Stop Camera2System recording
-            val success = camera2System.stopRecording()
+            
+            // Stop frame capture job
+            frameCaptureJob?.cancel()
+            frameCaptureJob = null
+            
+            // Stop video recording
+            activeRecording?.stop()
+            activeRecording = null
             
             // Close CSV writer
             csvWriter?.close()
             csvWriter = null
-            activeRecording?.stop()
-            activeRecording = null
-
+            
             // Stop buffered writer properly
             csvBufferedWriter?.stop()
             csvBufferedWriter = null
 
-            if (success) {
-                Log.i(TAG, "RGB Camera2 recording stopped successfully")
-                Log.i(TAG, "Session stats - Video frames: ${samplesRecorded.get()}, RAW captures: ${rawCapturesRecorded.get()}")
-            } else {
-                Log.w(TAG, "Camera2System stop returned false, but continuing cleanup")
-            }
+            Log.i(TAG, "RGB CameraX recording stopped successfully")
+            Log.i(TAG, "Session stats - Frames captured: ${framesCaptured.get()}, Dropped frames: ${droppedFrames.get()}")
             
             updateStatus(isRecording = false)
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop RGB Camera2 recording", e)
+            Log.e(TAG, "Failed to stop RGB CameraX recording", e)
             emitError(ErrorType.RECORDING_FAILED, "Failed to stop recording: ${e.message}")
             false
         }
@@ -533,15 +468,19 @@ class RgbCameraRecorder(
                 stopRecording()
             }
 
-            // Release Camera2System resources
-            camera2System.release()
+            // Unbind all use cases
+            cameraProvider?.unbindAll()
+            cameraProvider = null
+            
+            // Shutdown camera executor
+            cameraExecutor.shutdown()
             
             // Cancel coroutine scope
             recordingScope.cancel()
 
-            Log.i(TAG, "RGB Camera2 recorder cleanup completed")
+            Log.i(TAG, "RGB CameraX recorder cleanup completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Error during Camera2 cleanup", e)
+            Log.e(TAG, "Error during CameraX cleanup", e)
         }
     }
 
@@ -555,12 +494,12 @@ class RgbCameraRecorder(
             (currentTime - sessionStartTime.get()) / 1_000_000
         } else 0L
 
-        // Calculate combined data rate (video + RAW captures)
-        val totalSamples = samplesRecorded.get() + rawCapturesRecorded.get()
+        // Calculate total samples (frames captured)
+        val totalSamples = framesCaptured.get()
         
         return RecordingStats(
             sensorId = sensorId,
-            sensorType = "$sensorType (${currentRecordingMode.name})",
+            sensorType = sensorType,
             sessionDurationMs = sessionDuration,
             totalSamplesRecorded = totalSamples,
             averageDataRate = if (sessionDuration > 0) {
@@ -569,14 +508,14 @@ class RgbCameraRecorder(
             droppedSamples = droppedFrames.get(),
             storageUsedMB = calculateStorageUsed(),
             syncMarkersCount = syncMarkersRecorded.get().toInt(),
-            lastSampleTimestampNs = currentTime
+            lastSampleTimestampNs = lastFrameTime.get()
         )
     }
 
     private fun calculateStorageUsed(): Double {
         var totalBytes = 0L
 
-        // Calculate storage from session directory (includes video and RAW files)
+        // Calculate storage from session directory (includes video and frame files)
         if (sessionDirectory.isNotEmpty()) {
             val sessionDir = File(sessionDirectory)
             if (sessionDir.exists()) {
@@ -599,7 +538,7 @@ class RgbCameraRecorder(
 
     private fun createInitialStatus() = RecordingStatus(
         sensorId = sensorId,
-        sensorType = "$sensorType (Camera2_Dual_Output)",
+        sensorType = sensorType,
         isRecording = false,
         samplesRecorded = 0,
         currentDataRate = 0.0,
@@ -625,101 +564,6 @@ class RgbCameraRecorder(
         statusFlow.emit(status)
     }
 
-    /**
-     * Provides a method to manually capture a RAW image on demand
-     */
-
-    suspend fun captureRawImage(): Boolean {
-        if (!isRecording || deviceCaps?.supportsRaw != true) {
-            Log.w(TAG, "Cannot capture RAW - not recording or device doesn't support RAW")
-            return false
-        }
-        
-        return try {
-            // Temporarily switch to RAW mode
-            val success = camera2System.switchMode(ModeManager.CameraMode.RAW_50MP)
-            if (success) {
-                delay(200) // Allow time for capture
-                val timestamp = System.nanoTime()
-                rawCapturesRecorded.incrementAndGet()
-                logRawCapture(timestamp)
-                
-                // Switch back to previous mode
-                if (currentRecordingMode == RecordingMode.DUAL_OUTPUT) {
-                    camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)
-                }
-                
-                Log.d(TAG, "Manual RAW capture completed")
-                true
-            } else {
-                Log.e(TAG, "Failed to switch to RAW mode for manual capture")
-                false
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during manual RAW capture", e)
-            false
-        }
-    }
-
-    suspend fun recordSyncMarker(markerType: String = "SYNC") {
-        if (!isRecording) return
-
-        val timestamp = System.nanoTime()
-        recordingScope.launch {
-            csvBufferedWriter?.let { writer ->
-                try {
-                    val row = listOf(
-                        timestamp,
-                        "SYNC_MARKER",
-                        markerType,
-                        System.currentTimeMillis(),
-                        0, // frame_number
-                        0  // file_size
-                    )
-                    writer.writeRow(row)
-                    syncMarkersRecorded.incrementAndGet()
-
-                    Log.d(TAG, "Sync marker recorded: $markerType at $timestamp")
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to record sync marker", e)
-                }
-            }
-        }
-    }
-
-    /**
-     * Get device orientation for proper video recording orientation
-     */
-    private fun getDeviceRotation(): Int {
-        return try {
-            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
-            when (windowManager.defaultDisplay.rotation) {
-                android.view.Surface.ROTATION_0 -> 0
-                android.view.Surface.ROTATION_90 -> 90
-                android.view.Surface.ROTATION_180 -> 180
-                android.view.Surface.ROTATION_270 -> 270
-                else -> 0
-            }
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to get device rotation", e)
-            0
-        }
-    }
-
-    /**
-     * Calculate proper video orientation hint based on device and camera orientation
-     */
-    private fun calculateOrientationHint(): Int {
-        val deviceRotation = getDeviceRotation()
-        val sensorOrientation = deviceCaps?.sensorOrientation ?: 90
-        
-        // For back camera, calculate proper orientation
-        val orientationHint = (sensorOrientation - deviceRotation + 360) % 360
-        
-        Log.d(TAG, "Orientation calculation: device=$deviceRotation, sensor=$sensorOrientation, hint=$orientationHint")
-        return orientationHint
-    }
-
     private suspend fun emitError(errorType: ErrorType, message: String) {
         val error = SensorError(
             sensorId = sensorId,
@@ -731,5 +575,36 @@ class RgbCameraRecorder(
         )
 
         errorFlow.emit(error)
+    }
+    
+    /**
+     * Check if camera permission is granted
+     */
+    fun hasCameraPermission(): Boolean {
+        return context.checkSelfPermission(android.Manifest.permission.CAMERA) == 
+            android.content.pm.PackageManager.PERMISSION_GRANTED
+    }
+    
+    /**
+     * Get camera capabilities
+     */
+    fun supportsHighResolution(): Boolean {
+        return try {
+            cameraProvider?.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA) == true
+        } catch (e: Exception) {
+            false
+        }
+    }
+    
+    /**
+     * Get current recording status text for UI feedback
+     */
+    fun getStatusText(): String {
+        return when {
+            !hasCameraPermission() -> "Camera Permission Required"
+            cameraProvider == null -> "Camera Not Initialized"
+            _isRecording.get() -> "Recording (${framesCaptured.get()} frames)"
+            else -> "Ready"
+        }
     }
 }
