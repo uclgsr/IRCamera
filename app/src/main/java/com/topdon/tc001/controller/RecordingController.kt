@@ -162,6 +162,9 @@ class RecordingController(
         }
     }
 
+    /**
+     * Start recording with enhanced session management (new API)
+     */
     suspend fun startRecording(
         sessionId: String? = null,
         participantId: String? = null,
@@ -328,6 +331,131 @@ class RecordingController(
                     )
                 }
                 
+                emitError(
+                    RecordingControllerError(
+                        errorType = "START_FAILED",
+                        message = "Failed to start recording: ${e.message}",
+                        isRecoverable = true
+                    )
+                )
+                false
+            }
+        }
+    }
+
+    /**
+     * Start recording with legacy API (backward compatibility)
+     * @param sessionDirectory The directory path where session data should be stored
+     */
+    suspend fun startRecording(sessionDirectory: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                if (_isRecording.get()) {
+                    Log.w(TAG, "Recording already in progress")
+                    return@withContext true
+                }
+
+                Log.i(TAG, "Starting recording with legacy API")
+                _recordingStateFlow.value = RecordingState.STARTING
+
+                // Create session directory if it doesn't exist
+                val sessionDir = File(sessionDirectory)
+                if (!sessionDir.exists()) {
+                    sessionDir.mkdirs()
+                }
+
+                // Create a simple SessionDirectory wrapper for the provided path
+                val sessionDirWrapper = SessionDirectory(
+                    sessionId = sessionDir.name,
+                    rootDir = sessionDir,
+                    rgbDir = sessionDir,  // Legacy: use same directory for all sensors
+                    thermalDir = sessionDir,
+                    shimmerDir = sessionDir
+                )
+
+                currentSessionDirectory = sessionDirWrapper
+                recordingStartTime = System.nanoTime()
+
+                val startJobs = sensorRecorders.values.map { sensor ->
+                    async {
+                        try {
+                            val success = sensor.startRecording(sessionDirectory)
+                            Triple(sensor.sensorId, success, null)
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Exception starting sensor ${sensor.sensorId}", e)
+                            emitError(
+                                RecordingControllerError(
+                                    errorType = "SENSOR_START_EXCEPTION",
+                                    message = "Sensor ${sensor.sensorId} threw exception during start: ${e.message}",
+                                    sensorId = sensor.sensorId,
+                                    isRecoverable = true
+                                )
+                            )
+                            Triple(sensor.sensorId, false, e)
+                        }
+                    }
+                }
+
+                val startResults = startJobs.awaitAll()
+                val successfulStarts = startResults.filter { it.second }
+                val failedStarts = startResults.filter { !it.second }
+
+                successfulStarts.forEach { (sensorId, _, _) ->
+                    Log.i(TAG, "Sensor $sensorId started successfully")
+                }
+
+                failedStarts.forEach { (sensorId, _, exception) ->
+                    val errorDetails = if (exception != null) {
+                        " (Exception: ${exception.message})"
+                    } else {
+                        " (Returned false)"
+                    }
+                    Log.w(TAG, "Sensor $sensorId failed to start$errorDetails")
+                    emitError(
+                        RecordingControllerError(
+                            errorType = "SENSOR_START_FAILED",
+                            message = "Failed to start sensor: $sensorId$errorDetails",
+                            sensorId = sensorId,
+                            isRecoverable = true
+                        )
+                    )
+                }
+
+                if (successfulStarts.isNotEmpty()) {
+                    _isRecording.set(true)
+                    _recordingStateFlow.value = RecordingState.RECORDING
+
+                    addSyncMarker("session_start", recordingStartTime)
+
+                    val totalSensors = startResults.size
+                    val successCount = successfulStarts.size
+
+                    Log.i(
+                        TAG,
+                        "Recording started with legacy API: $successCount/$totalSensors sensors " +
+                                "(successful: ${successfulStarts.map { it.first }}, " +
+                                "failed: ${failedStarts.map { it.first }})"
+                    )
+                    true
+                } else {
+                    _recordingStateFlow.value = RecordingState.ERROR
+                    Log.e(
+                        TAG,
+                        "All ${startResults.size} sensors failed to start - cannot begin session"
+                    )
+                    emitError(
+                        RecordingControllerError(
+                            errorType = "ALL_SENSORS_FAILED",
+                            message = "All sensors failed to start: ${failedStarts.joinToString(", ") { it.first }}",
+                            isRecoverable = true
+                        )
+                    )
+                    false
+                }
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start recording with legacy API", e)
+                _recordingStateFlow.value = RecordingState.ERROR
                 emitError(
                     RecordingControllerError(
                         errorType = "START_FAILED",
