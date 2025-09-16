@@ -123,7 +123,7 @@ class BasicRobolectricTest {
             val sessionManager = SessionManager.getInstance(context)
             assertNotNull("SessionManager should be created with context", sessionManager)
 
-            val shimmerRecorder = ShimmerGSRRecorder(context, 128)
+            val shimmerRecorder = ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), 128)
             assertNotNull("ShimmerGSRRecorder should be created with context", shimmerRecorder)
         } catch (e: Exception) {
 

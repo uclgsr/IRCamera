@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.service.GSRRecorder
+import com.topdon.gsr.service.MockShimmerDeviceFactory
 import com.topdon.gsr.service.SessionManager
 import com.topdon.gsr.util.TimeUtil
 import kotlinx.coroutines.GlobalScope
@@ -62,7 +63,7 @@ class EnhancedThermalRecorder private constructor(
         }
     }
 
-    private val gsrRecorder: GSRRecorder = GSRRecorder(context)
+    private val gsrRecorder: GSRRecorder = GSRRecorder(context, MockShimmerDeviceFactory())
     private val sessionManager: SessionManager = SessionManager.getInstance(context)
 
     private var currentSession: SessionInfo? = null
