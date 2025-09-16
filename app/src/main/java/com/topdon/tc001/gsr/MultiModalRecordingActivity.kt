@@ -20,6 +20,7 @@ import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.model.SyncMark
 import com.topdon.gsr.service.GSRRecorder
+import com.topdon.gsr.service.MockShimmerDeviceFactory
 import com.topdon.gsr.service.SessionManager
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.lib.core.ktbase.BaseBindingActivity
@@ -207,7 +208,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         permissionController.initialize()
 
         // Initialize recording components
-        gsrRecorder = GSRRecorder(this)
+        gsrRecorder = GSRRecorder(this, MockShimmerDeviceFactory())
         sessionManager = SessionManager.getInstance(this)
 
         // Set up view references using binding
@@ -424,17 +425,28 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     private fun checkAndRequestPermissions() {
         if (!permissionController.hasAllRequiredPermissions()) {
-            permissionController.requestAllPermissions { allGranted, deniedPermissions ->
+            Log.i(TAG, "Not all permissions granted, requesting permissions...")
+            
+            // Use the new ensureAll() method for better UX
+            permissionController.ensureAll { allGranted, deniedPermissions ->
                 if (allGranted) {
                     binding.statusText.text =
                         "All permissions granted. Multi-sensor recording ready."
                     Log.i(TAG, "All permissions granted successfully")
+                    
+                    // Update UI to enable recording functionality
+                    updateUIForPermissionState(true)
+                    
                 } else {
                     val permissionNames = permissionController.getPermissionNames(deniedPermissions)
-                    binding.statusText.text =
-                        "Some permissions denied. Limited functionality available."
-
+                    val statusMessage = permissionController.getPermissionStatusMessage()
+                    
+                    binding.statusText.text = "Limited functionality: Some permissions missing"
                     Log.w(TAG, "Some permissions denied: ${deniedPermissions.joinToString(", ")}")
+                    
+                    // Update UI based on which permissions are available
+                    updateUIForPartialPermissions(deniedPermissions)
+                    
                     Toast.makeText(
                         this,
                         "Missing permissions: ${permissionNames.joinToString(", ")}",
@@ -444,6 +456,44 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             }
         } else {
             binding.statusText.text = "All permissions granted. Multi-sensor recording ready."
+            updateUIForPermissionState(true)
+        }
+    }
+
+    private fun updateUIForPermissionState(allPermissionsGranted: Boolean) {
+        // Enable/disable recording button based on camera permission
+        val canRecord = permissionController.canStartRecording()
+        binding.recordButton.isEnabled = canRecord
+        
+        if (!canRecord) {
+            binding.recordButton.text = "Camera Permission Required"
+        } else {
+            binding.recordButton.text = if (isRecording) "Stop Recording" else "Start Recording"
+        }
+    }
+
+    private fun updateUIForPartialPermissions(deniedPermissions: List<String>) {
+        // Check what functionality can still be available
+        val canRecord = permissionController.canStartRecording()
+        val canConnectShimmer = permissionController.canConnectToShimmer()
+        
+        binding.recordButton.isEnabled = canRecord
+        
+        if (!canRecord) {
+            binding.recordButton.text = "Camera Permission Required"
+        }
+        
+        // Show specific warnings for missing functionality
+        val warnings = mutableListOf<String>()
+        if (!canRecord) {
+            warnings.add("Video recording disabled")
+        }
+        if (!canConnectShimmer) {
+            warnings.add("GSR sensor disabled")
+        }
+        
+        if (warnings.isNotEmpty()) {
+            binding.statusText.text = "Limited functionality: ${warnings.joinToString(", ")}"
         }
     }
 
@@ -456,8 +506,17 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        // Delegate to permission controller for battery optimization results
+        permissionController.onActivityResult(requestCode, resultCode)
+    }
+
     private fun toggleRecording() {
-        if (!permissionController.hasAllRequiredPermissions()) {
+        // Check specific permissions needed for recording
+        if (!permissionController.canStartRecording()) {
+            Log.w(TAG, "Cannot start recording - missing camera or storage permissions")
             checkAndRequestPermissions()
             return
         }
@@ -826,6 +885,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 true
             }
 
+            R.id.action_sync_test -> {
+                openSynchronizationTest()
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -840,6 +904,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     private fun openSessionManager() {
         SessionManagerActivity.startActivity(this)
+    }
+
+    private fun openSynchronizationTest() {
+        val intent = Intent(this, com.topdon.tc001.test.SynchronizationTestActivity::class.java)
+        startActivity(intent)
     }
 
     // Network status UI update method

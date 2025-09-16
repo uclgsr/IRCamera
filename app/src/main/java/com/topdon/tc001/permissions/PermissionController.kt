@@ -74,6 +74,10 @@ class PermissionController(
     private val isInitialized = AtomicBoolean(false)
     private var permissionCallback: ((Boolean, List<String>) -> Unit)? = null
     private var usbPermissionCallback: ((Boolean, UsbDevice?) -> Unit)? = null
+    
+    // Track remaining permission groups for sequential processing
+    private var remainingPermissionGroups: MutableList<List<String>> = mutableListOf()
+    private var allRequestedPermissions: List<String> = emptyList()
 
     private var usbManager: UsbManager? = null
 
@@ -92,25 +96,41 @@ class PermissionController(
                 hasNotificationPermissions()
     }
 
-    fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
+    /**
+     * Centralized method to ensure all required permissions are granted before starting a session.
+     * This groups required permissions logically and requests them together in a single system prompt,
+     * rather than truly sequencing prompts one-by-one. Handles user responses gracefully.
+     *
+     * @param callback Called with (success, deniedPermissions) when permission check completes
+     */
+    fun ensureAll(callback: (Boolean, List<String>) -> Unit) {
         permissionCallback = callback
 
         val missingPermissions = getMissingPermissions()
         if (missingPermissions.isEmpty()) {
+            Log.i(TAG, "All permissions already granted")
             callback(true, emptyList())
             return
         }
 
-        Log.i(TAG, "Requesting ${missingPermissions.size} missing permissions")
+        Log.i(TAG, "Requesting ${missingPermissions.size} missing permissions: ${missingPermissions.joinToString(", ")}")
 
-        showPermissionExplanationDialog(missingPermissions) { userAccepted ->
+        // Show rationale first, then request permissions
+        showPermissionRationaleDialog(missingPermissions) { userAccepted ->
             if (userAccepted) {
-                activity.requestPermissions(missingPermissions.toTypedArray(), REQUEST_PERMISSIONS)
+                requestPermissionsSequentially(missingPermissions)
             } else {
+                Log.w(TAG, "User declined permission rationale")
                 callback(false, missingPermissions)
             }
         }
     }
+
+@Deprecated("Use ensureAll() for better clarity and future compatibility.", ReplaceWith("ensureAll(callback)"))
+fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
+    // Legacy method - delegates to ensureAll for consistency
+    ensureAll(callback)
+}
 
     fun onRequestPermissionsResult(
         requestCode: Int,
@@ -127,16 +147,38 @@ class PermissionController(
                     }
                 }
 
-                val allGranted = deniedPermissions.isEmpty()
-
-                if (allGranted) {
-                    Log.i(TAG, "All requested permissions granted")
-                    permissionCallback?.invoke(true, emptyList())
+                Log.i(TAG, "Permission result: granted=${permissions.size - deniedPermissions.size}, denied=${deniedPermissions.size}")
+                
+                // Continue processing remaining permission groups
+                if (remainingPermissionGroups.isNotEmpty()) {
+                    Log.i(TAG, "Continuing with next permission group (${remainingPermissionGroups.size} groups remaining)")
+                    requestNextPermissionGroup()
                 } else {
-                    Log.w(TAG, "Some permissions denied: ${deniedPermissions.joinToString(", ")}")
-                    handleDeniedPermissions(deniedPermissions)
-                    permissionCallback?.invoke(false, deniedPermissions)
+                    // All groups processed, evaluate final result
+                    val stillMissingPermissions = allRequestedPermissions.filter { !isPermissionGranted(it) }
+                    if (stillMissingPermissions.isEmpty()) {
+                        Log.i(TAG, "All permissions successfully granted")
+                        permissionCallback?.invoke(true, emptyList())
+                    } else {
+                        Log.w(TAG, "Some permissions still denied: ${stillMissingPermissions.joinToString(", ")}")
+                        handleDeniedPermissions(stillMissingPermissions)
+                        permissionCallback?.invoke(false, stillMissingPermissions)
+                    }
                 }
+            }
+        }
+    }
+
+    fun onActivityResult(requestCode: Int, resultCode: Int) {
+        when (requestCode) {
+            REQUEST_BATTERY_OPTIMIZATION -> {
+                // Check if battery optimization is now disabled
+                val isBatteryOptimizationDisabled = isBatteryOptimizationDisabled()
+                Log.i(TAG, "Battery optimization result: disabled=$isBatteryOptimizationDisabled")
+                
+                // Note: We can't reliably get a callback here since the battery optimization
+                // request flow doesn't provide a direct way to get the callback reference.
+                // The calling code should re-check isBatteryOptimizationDisabled() after this.
             }
         }
     }
@@ -164,20 +206,57 @@ class PermissionController(
             }, PID=${device.productId.toString(16)})"
         )
 
-        try {
-            val permissionIntent = android.app.PendingIntent.getBroadcast(
-                activity,
-                REQUEST_USB_PERMISSION,
-                Intent("com.topdon.topInfrared.USB_PERMISSION"),
-                android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
-            )
+        // Show rationale for USB permission
+        showUsbPermissionRationaleDialog(device) { userAccepted ->
+            if (userAccepted) {
+                try {
+                    val permissionIntent = android.app.PendingIntent.getBroadcast(
+                        activity,
+                        REQUEST_USB_PERMISSION,
+                        Intent("com.topdon.topInfrared.USB_PERMISSION"),
+                        android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+                    )
 
-            manager.requestPermission(device, permissionIntent)
+                    manager.requestPermission(device, permissionIntent)
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to request USB permission", e)
-            callback(false, null)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to request USB permission", e)
+                    callback(false, null)
+                }
+            } else {
+                Log.w(TAG, "User declined USB permission rationale")
+                callback(false, null)
+            }
         }
+    }
+
+    private fun showUsbPermissionRationaleDialog(device: UsbDevice, callback: (Boolean) -> Unit) {
+        val message = buildString {
+            appendLine("USB Device Permission Required")
+            appendLine()
+            appendLine("Device: ${device.productName ?: "Unknown Device"}")
+            appendLine("Vendor ID: 0x${device.vendorId.toString(16).uppercase()}")
+            appendLine("Product ID: 0x${device.productId.toString(16).uppercase()}")
+            appendLine()
+            appendLine("This permission is required to:")
+            appendLine("• Connect to the thermal camera")
+            appendLine("• Capture thermal imaging data")
+            appendLine("• Perform real-time thermal analysis")
+            appendLine()
+            appendLine("The permission is granted on a per-device basis and is safe.")
+        }
+
+        AlertDialog.Builder(activity)
+            .setTitle("Thermal Camera Access")
+            .setMessage(message)
+            .setPositiveButton("Allow Access") { _, _ ->
+                callback(true)
+            }
+            .setNegativeButton("Deny") { _, _ ->
+                callback(false)
+            }
+            .setCancelable(false)
+            .show()
     }
 
     fun requestBatteryOptimizationExemption(callback: (Boolean) -> Unit) {
@@ -189,10 +268,8 @@ class PermissionController(
             if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
                 Log.i(TAG, "Requesting battery optimization exemption")
 
-                AlertDialog.Builder(activity)
-                    .setTitle("Battery Optimization")
-                    .setMessage("For reliable multi-sensor recording, please disable battery optimization for this app. This ensures continuous recording operation.")
-                    .setPositiveButton("Allow") { _, _ ->
+                showBatteryOptimizationRationaleDialog { userAccepted ->
+                    if (userAccepted) {
                         try {
                             val intent =
                                 Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
@@ -201,20 +278,72 @@ class PermissionController(
                             activity.startActivityForResult(intent, REQUEST_BATTERY_OPTIMIZATION)
                         } catch (e: Exception) {
                             Log.e(TAG, "Failed to open battery optimization settings", e)
-                            callback(false)
+                            // Fallback to general battery optimization settings
+                            try {
+                                val fallbackIntent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                                activity.startActivity(fallbackIntent)
+                                // Since we can't get a result from the fallback, invoke the callback with false
+                                Log.w(TAG, "Fallback battery optimization settings opened - treating as not granted")
+                                callback(false)
+                            } catch (fallbackException: Exception) {
+                                Log.e(TAG, "Failed to open fallback battery optimization settings", fallbackException)
+                                callback(false)
+                            }
                         }
-                    }
-                    .setNegativeButton("Skip") { _, _ ->
+                    } else {
+                        Log.w(TAG, "User declined battery optimization exemption")
                         callback(false)
                     }
-                    .show()
+                }
             } else {
                 Log.i(TAG, "Battery optimization already disabled")
                 callback(true)
             }
         } else {
-
+            // Not needed on older Android versions
             callback(true)
+        }
+    }
+
+    private fun showBatteryOptimizationRationaleDialog(callback: (Boolean) -> Unit) {
+        val message = buildString {
+            appendLine("Battery Optimization Exemption")
+            appendLine()
+            appendLine("For reliable multi-sensor recording, this app needs to run continuously in the background.")
+            appendLine()
+            appendLine("Please disable battery optimization to ensure:")
+            appendLine("• Uninterrupted video recording")
+            appendLine("• Continuous GSR sensor data collection")
+            appendLine("• Reliable thermal imaging capture")
+            appendLine("• Stable network communication with PC")
+            appendLine()
+            appendLine("This setting allows the app to run efficiently without being killed by the system during long recording sessions.")
+            appendLine()
+            appendLine("You can always change this setting later in your device's battery settings.")
+        }
+
+        AlertDialog.Builder(activity)
+            .setTitle("Background Operation Required")
+            .setMessage(message)
+            .setPositiveButton("Allow") { _, _ ->
+                callback(true)
+            }
+            .setNegativeButton("Skip") { _, _ ->
+                callback(false)
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    /**
+     * Check if battery optimization is disabled for this app
+     */
+    fun isBatteryOptimizationDisabled(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val powerManager = activity.getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+            powerManager.isIgnoringBatteryOptimizations(activity.packageName)
+        } else {
+            true // Not applicable on older versions
         }
     }
 
@@ -311,6 +440,56 @@ class PermissionController(
                 isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
+    /**
+     * Check if all permissions required for recording are granted
+     */
+    fun canStartRecording(): Boolean {
+        return hasCameraPermission() && hasStoragePermissions()
+    }
+
+    /**
+     * Check if all permissions required for Shimmer GSR connection are granted
+     */
+    fun canConnectToShimmer(): Boolean {
+        return hasBluetoothPermissions() && hasLocationPermission()
+    }
+
+    /**
+     * Check if notification permissions are granted (Android 13+)
+     */
+    fun canShowNotifications(): Boolean {
+        return hasNotificationPermissions()
+    }
+
+    /**
+     * Get status message for permission categories
+     */
+    fun getPermissionStatusMessage(): String {
+        val status = mutableListOf<String>()
+        
+        if (!hasCameraPermission()) {
+            status.add("Camera permission required for video recording")
+        }
+        if (!hasBluetoothPermissions()) {
+            status.add("Bluetooth permissions required for GSR sensor")
+        }
+        if (!hasLocationPermission()) {
+            status.add("Location permission required for Bluetooth scanning")
+        }
+        if (!hasStoragePermissions()) {
+            status.add("Storage permissions required for saving recordings")
+        }
+        if (!hasNotificationPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            status.add("Notification permission required for recording status")
+        }
+
+        return if (status.isEmpty()) {
+            "All permissions granted"
+        } else {
+            "Missing permissions:\n• ${status.joinToString("\n• ")}"
+        }
+    }
+
 
     private fun hasBasicPermissions(): Boolean {
         return CAMERA_PERMISSIONS.all { isPermissionGranted(it) }
@@ -344,11 +523,128 @@ class PermissionController(
         return FOREGROUND_SERVICE_PERMISSIONS.all { isPermissionGranted(it) }
     }
 
+    private fun requestPermissionsSequentially(missingPermissions: List<String>) {
+        // Group permissions logically for better user experience
+        val permissionGroups = groupPermissionsLogically(missingPermissions)
+        
+        if (permissionGroups.isEmpty()) {
+            permissionCallback?.invoke(true, emptyList())
+            return
+        }
+
+        // Store all permission groups and track original request
+        remainingPermissionGroups = permissionGroups.toMutableList()
+        allRequestedPermissions = missingPermissions
+        
+        // Request the first group of permissions
+        requestNextPermissionGroup()
+    }
+    
+    private fun requestNextPermissionGroup() {
+        if (remainingPermissionGroups.isEmpty()) {
+            // All groups processed, check final results
+            val stillMissingPermissions = allRequestedPermissions.filter { !isPermissionGranted(it) }
+            if (stillMissingPermissions.isEmpty()) {
+                Log.i(TAG, "All permission groups successfully granted")
+                permissionCallback?.invoke(true, emptyList())
+            } else {
+                Log.w(TAG, "Some permissions still missing after all groups: ${stillMissingPermissions.joinToString(", ")}")
+                handleDeniedPermissions(stillMissingPermissions)
+                permissionCallback?.invoke(false, stillMissingPermissions)
+            }
+            return
+        }
+        
+        val nextGroup = remainingPermissionGroups.removeAt(0)
+        Log.i(TAG, "Requesting permission group: ${nextGroup.joinToString(", ")}")
+        activity.requestPermissions(nextGroup.toTypedArray(), REQUEST_PERMISSIONS)
+    }
+
+    private fun groupPermissionsLogically(permissions: List<String>): List<List<String>> {
+        val groups = mutableListOf<List<String>>()
+        
+        // Group 1: Camera and Audio (if recording with sound)
+        val cameraGroup = permissions.filter { it in CAMERA_PERMISSIONS }
+        if (cameraGroup.isNotEmpty()) {
+            groups.add(cameraGroup)
+        }
+
+        // Group 2: Bluetooth and Location (needed together for BLE)
+        val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            BLUETOOTH_PERMISSIONS_ANDROID_12
+        } else {
+            BLUETOOTH_PERMISSIONS_LEGACY
+        }
+        
+        val bluetoothGroup = permissions.filter { it in bluetoothPermissions }
+        if (bluetoothGroup.isNotEmpty()) {
+            groups.add(bluetoothGroup)
+        }
+
+        // Group 3: Storage permissions
+        val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            STORAGE_PERMISSIONS_ANDROID_13
+        } else {
+            STORAGE_PERMISSIONS_LEGACY
+        }
+        
+        val storageGroup = permissions.filter { it in storagePermissions }
+        if (storageGroup.isNotEmpty()) {
+            groups.add(storageGroup)
+        }
+
+        // Group 4: Notifications and Foreground Service
+        val notificationGroup = permissions.filter { 
+            it in NOTIFICATION_PERMISSIONS || it in FOREGROUND_SERVICE_PERMISSIONS 
+        }
+        if (notificationGroup.isNotEmpty()) {
+            groups.add(notificationGroup)
+        }
+
+        return groups
+    }
+
     private fun isPermissionGranted(permission: String): Boolean {
         return ContextCompat.checkSelfPermission(
             activity,
             permission
         ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun showPermissionRationaleDialog(
+        missingPermissions: List<String>,
+        callback: (Boolean) -> Unit
+    ) {
+        val permissionNames = getPermissionNames(missingPermissions)
+
+        val message = buildString {
+            appendLine("This app requires the following permissions for multi-sensor recording:")
+            appendLine()
+            permissionNames.forEach { name ->
+                appendLine("• $name")
+            }
+            appendLine()
+            appendLine("These permissions are essential for:")
+            appendLine("• Recording high-quality RGB video")
+            appendLine("• Connecting to Shimmer GSR sensors via Bluetooth")
+            appendLine("• Interfacing with thermal cameras via USB")
+            appendLine("• Saving and managing recording data")
+            appendLine("• Running continuous background recording")
+            appendLine()
+            appendLine("The app will not function properly without these permissions.")
+        }
+
+        AlertDialog.Builder(activity)
+            .setTitle("Permissions Required")
+            .setMessage(message)
+            .setPositiveButton("Grant Permissions") { _, _ ->
+                callback(true)
+            }
+            .setNegativeButton("Cancel") { _, _ ->
+                callback(false)
+            }
+            .setCancelable(false)
+            .show()
     }
 
     private fun showPermissionExplanationDialog(
@@ -386,34 +682,116 @@ class PermissionController(
     }
 
     private fun handleDeniedPermissions(deniedPermissions: List<String>) {
-        val criticalPermissions = deniedPermissions.filter { permission ->
-            permission in CAMERA_PERMISSIONS ||
-                    permission == Manifest.permission.ACCESS_FINE_LOCATION ||
-                    permission == Manifest.permission.ACCESS_COARSE_LOCATION
+        // Check if any permissions were permanently denied
+        val permanentlyDeniedPermissions = deniedPermissions.filter { permission ->
+            !activity.shouldShowRequestPermissionRationale(permission)
         }
 
-        if (criticalPermissions.isNotEmpty()) {
-            val message = buildString {
-                appendLine("Some critical permissions were denied:")
-                appendLine()
-                getPermissionNames(criticalPermissions).forEach { name ->
-                    appendLine("• $name")
-                }
-                appendLine()
-                appendLine("Without these permissions, the app cannot function properly.")
-                appendLine("Please grant these permissions in Settings > Apps > IRCamera > Permissions")
+        if (permanentlyDeniedPermissions.isNotEmpty()) {
+            showPermanentlyDeniedDialog(permanentlyDeniedPermissions, deniedPermissions)
+        } else {
+            showDeniedPermissionsDialog(deniedPermissions)
+        }
+    }
+
+    private fun showPermanentlyDeniedDialog(
+        permanentlyDenied: List<String>,
+        allDenied: List<String>
+    ) {
+        val criticalPermissions = getCriticalPermissions(allDenied)
+        val permissionNames = getPermissionNames(permanentlyDenied)
+
+        val message = buildString {
+            appendLine("Some permissions have been permanently denied:")
+            appendLine()
+            permissionNames.forEach { name ->
+                appendLine("• $name")
             }
-
-            AlertDialog.Builder(activity)
-                .setTitle("Critical Permissions Denied")
-                .setMessage(message)
-                .setPositiveButton("Open Settings") { _, _ ->
-                    openAppSettings()
+            appendLine()
+            if (criticalPermissions.isNotEmpty()) {
+                appendLine("These are critical permissions required for:")
+                if (criticalPermissions.any { it in CAMERA_PERMISSIONS }) {
+                    appendLine("• Video recording functionality")
                 }
-                .setNegativeButton("Continue Limited") { _, _ ->
-
+                if (criticalPermissions.any { it in getBluetoothPermissions() }) {
+                    appendLine("• Shimmer GSR sensor connection")
                 }
-                .show()
+                if (criticalPermissions.any { it == Manifest.permission.ACCESS_FINE_LOCATION || it == Manifest.permission.ACCESS_COARSE_LOCATION }) {
+                    appendLine("• Bluetooth device scanning")
+                }
+                appendLine()
+                appendLine("The app cannot function properly without these permissions.")
+                appendLine("Please enable them in Settings > Apps > IRCamera > Permissions")
+            } else {
+                appendLine("You can continue with limited functionality, but some features may not work properly.")
+            }
+        }
+
+        AlertDialog.Builder(activity)
+            .setTitle("Permissions Required")
+            .setMessage(message)
+            .setPositiveButton("Open Settings") { _, _ ->
+                openAppSettings()
+            }
+            .setNegativeButton(if (criticalPermissions.isEmpty()) "Continue Limited" else "Exit") { _, _ ->
+                if (criticalPermissions.isNotEmpty()) {
+                    // Exit app if critical permissions are denied
+                    activity.finish()
+                }
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun showDeniedPermissionsDialog(deniedPermissions: List<String>) {
+        val criticalPermissions = getCriticalPermissions(deniedPermissions)
+        val permissionNames = getPermissionNames(deniedPermissions)
+
+        val message = buildString {
+            appendLine("The following permissions were denied:")
+            appendLine()
+            permissionNames.forEach { name ->
+                appendLine("• $name")
+            }
+            appendLine()
+            if (criticalPermissions.isNotEmpty()) {
+                appendLine("These permissions are required for core functionality.")
+                appendLine("Would you like to try granting them again?")
+            } else {
+                appendLine("You can continue with limited functionality.")
+            }
+        }
+
+        AlertDialog.Builder(activity)
+            .setTitle("Permissions Denied")
+            .setMessage(message)
+            .setPositiveButton(if (criticalPermissions.isNotEmpty()) "Try Again" else "OK") { _, _ ->
+                if (criticalPermissions.isNotEmpty()) {
+                    // Retry permission request for critical permissions
+                    ensureAll(permissionCallback ?: { _, _ -> })
+                }
+            }
+            .setNegativeButton(if (criticalPermissions.isNotEmpty()) "Continue Limited" else null) { _, _ ->
+                // Continue with limited functionality
+            }
+            .show()
+    }
+
+    private fun getCriticalPermissions(permissions: List<String>): List<String> {
+        return permissions.filter { permission ->
+            permission in CAMERA_PERMISSIONS ||
+            permission == Manifest.permission.ACCESS_FINE_LOCATION ||
+            permission == Manifest.permission.ACCESS_COARSE_LOCATION ||
+            permission == Manifest.permission.BLUETOOTH_SCAN ||
+            permission == Manifest.permission.BLUETOOTH_CONNECT
+        }
+    }
+
+    private fun getBluetoothPermissions(): Array<String> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            BLUETOOTH_PERMISSIONS_ANDROID_12
+        } else {
+            BLUETOOTH_PERMISSIONS_LEGACY
         }
     }
 

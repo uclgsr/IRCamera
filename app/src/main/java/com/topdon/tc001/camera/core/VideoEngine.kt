@@ -20,6 +20,8 @@ class VideoEngine {
         frameRate: Int,
         bitRate: Int,
         audioEnabled: Boolean,
+        orientationHint: Int = 0,
+        enableStabilization: Boolean = true
     ): android.view.Surface? {
         try {
             release() // Clean up any existing recorder
@@ -36,6 +38,10 @@ class VideoEngine {
                     setVideoFrameRate(frameRate)
                     setVideoSize(videoSize.width, videoSize.height)
                     setVideoEncoder(MediaRecorder.VideoEncoder.H264)
+                    
+                    // Set orientation hint for proper video orientation
+                    setOrientationHint(orientationHint)
+                    Log.d(TAG, "Video orientation hint set to: $orientationHint degrees")
 
                     if (audioEnabled) {
                         setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
@@ -49,7 +55,7 @@ class VideoEngine {
             isPrepared = true
             Log.i(
                 TAG,
-                "MediaRecorder prepared for ${videoSize.width}x${videoSize.height}@${frameRate}fps"
+                "MediaRecorder prepared for ${videoSize.width}x${videoSize.height}@${frameRate}fps, orientation=$orientationHint°"
             )
 
             return mediaRecorder?.surface

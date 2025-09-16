@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-import android.util.SparseArray
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
@@ -32,9 +31,6 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMainBinding
 import com.elvishew.xlog.XLog
 import com.example.thermal_lite.activity.IRThermalLiteActivity
-import com.hjq.permissions.OnPermissionCallback
-import com.hjq.permissions.Permission
-import com.hjq.permissions.XXPermissions
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.bean.event.TS004ResetEvent
@@ -74,6 +70,7 @@ import com.topdon.tc001.service.RecordingService
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.supervisor.CrashSafeSupervisor
 import com.topdon.tc001.utils.AppVersionUtil
+import com.topdon.tc001.permissions.PermissionController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -85,9 +82,11 @@ import java.io.IOException
 import java.io.OutputStream
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
+    companion object {
+        private const val TAG = "MainActivity"
+    }
+    
     private val versionViewModel: VersionViewModel by viewModels()
-
-    private var checkPermissionType: Int = -1 // 0 initData数据 1 图库  2 connect方法
 
     private var webSocketClient: WebSocketClient? = null
     private var networkClient: NetworkClient? = null
@@ -101,6 +100,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private lateinit var structuredLogger: StructuredLogger
     private lateinit var crashSafeSupervisor: CrashSafeSupervisor
+    private lateinit var permissionController: PermissionController
 
     enum class ConnectionStatus {
         DISCONNECTED,
@@ -158,10 +158,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     override fun initContentLayoutId(): Int = R.layout.activity_main
 
-    companion object {
-        private const val TAG = "MainActivity"
-    }
-
     private fun logInfo() {
         try {
             val str = StringBuilder()
@@ -198,6 +194,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun initView() {
+        // Initialize permission controller
+        permissionController = PermissionController(this)
+        permissionController.initialize()
 
         if (!SharedManager.getHasShowClause()) {
             NavigationManager.build(RouterConfig.CLAUSE).navigation(this)
@@ -384,13 +383,44 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun initData() {
-        checkPermissionType = 0
-        checkCameraPermission()
+        // Request all permissions using the new PermissionController
+        requestAllPermissions()
 
         Log.i(
             "MainActivity",
             "✅ PC-to-Phone communication integration available - RecordingService supports network control"
         )
+    }
+
+    private fun requestAllPermissions() {
+        permissionController.ensureAll { allGranted, deniedPermissions ->
+            if (allGranted) {
+                Log.i(TAG, "All permissions granted - full functionality enabled")
+                // Continue with normal app flow
+                onAllPermissionsGranted()
+            } else {
+                Log.w(TAG, "Some permissions denied: ${deniedPermissions.joinToString(", ")}")
+                // Handle partial functionality gracefully
+                onPartialPermissions(deniedPermissions)
+            }
+        }
+    }
+
+    private fun onAllPermissionsGranted() {
+        // All permissions are available - enable full functionality
+        Log.i(TAG, "Full multi-sensor recording functionality available")
+        // The app can now proceed with all features enabled
+    }
+
+    private fun onPartialPermissions(deniedPermissions: List<String>) {
+        // Handle partial functionality based on what's available
+        val permissionNames = permissionController.getPermissionNames(deniedPermissions)
+        
+        // Show user what functionality might be limited
+        val message = "Some features may be limited due to missing permissions: ${permissionNames.joinToString(", ")}"
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        
+        Log.w(TAG, "Running with limited functionality: $message")
     }
 
     override fun onResume() {
@@ -403,11 +433,29 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         super.onPause()
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        
+        // Delegate to permission controller
+        permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        // Delegate to permission controller for battery optimization results
+        permissionController.onActivityResult(requestCode, resultCode)
+    }
+
     override fun onClick(v: View?) {
         when (v) {
             binding.clIconGallery -> { // 图库
-                checkPermissionType = 1
-                checkStoragePermission()
+                // Navigate to gallery tab
+                binding.viewPage.setCurrentItem(0, false)
             }
 
             binding.viewMain -> { // 首页
@@ -474,8 +522,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     override fun connected() {
         if (SharedManager.isConnectAutoOpen) {
-            checkPermissionType = 2
-            checkCameraPermission()
+            // Check camera permissions when device connects
+            if (permissionController.canStartRecording()) {
+                Log.i(TAG, "Camera permissions available - device connected and ready for recording")
+                // Proceed with camera functionality
+            } else {
+                Log.w(TAG, "Camera permissions missing - requesting permissions")
+                permissionController.ensureAll { granted, _ ->
+                    if (granted && permissionController.canStartRecording()) {
+                        Log.i(TAG, "Camera permissions granted after device connection")
+                    }
+                }
+            }
         }
     }
 
@@ -542,205 +600,38 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
-    private fun getNeedPermissionList(): SparseArray<List<String>> {
-        val sparseArray = SparseArray<List<String>>()
-        sparseArray.append(
-            R.string.permission_request_camera_app,
-            listOf(Manifest.permission.CAMERA)
-        )
-        (
-                if (this.applicationInfo.targetSdkVersion >= 34) {
-                    listOf(
-                        Permission.READ_MEDIA_VIDEO,
-                        Permission.READ_MEDIA_IMAGES,
-                        Permission.WRITE_EXTERNAL_STORAGE,
-                    )
-                } else if (this.applicationInfo.targetSdkVersion == 33) {
-                    listOf(
-                        Permission.READ_MEDIA_VIDEO,
-                        Permission.READ_MEDIA_IMAGES,
-                        Permission.WRITE_EXTERNAL_STORAGE,
-                    )
-                } else {
-                    listOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
-                }
-                ).let {
-                sparseArray.append(R.string.permission_request_storage_app, it)
-            }
-        return sparseArray
-    }
 
-    private fun checkCameraPermission() {
-        if (!PermissionUtils.isVisualUser() &&
-            !XXPermissions.isGranted(
-                this,
-                getNeedPermissionList()[R.string.permission_request_camera_app],
-            )
-        ) {
-            if (BaseApplication.instance.isDomestic()) {
-                if (SharedManager.getMainPermissionsState()) {
 
-                    return
-                }
-                TipDialog.Builder(this)
-                    .setMessage(
-                        getString(
-                            R.string.permission_request_camera_app,
-                            CommUtils.getAppName()
-                        )
-                    )
-                    .setCancelListener(R.string.app_cancel)
-                    .setPositiveListener(R.string.app_confirm) {
-                        initCameraPermission()
-                    }
-                    .create().show()
-            } else {
-                initCameraPermission()
-            }
-        } else {
-            initCameraPermission()
-        }
-    }
-
-    private fun initCameraPermission() {
-        XXPermissions.with(this)
-            .permission(getNeedPermissionList()[R.string.permission_request_camera_app])
-            .request(
-                object : OnPermissionCallback {
-                    override fun onGranted(
-                        permissions: MutableList<String>,
-                        allGranted: Boolean,
-                    ) {
-                        if (allGranted) {
-                            checkStoragePermission()
-                        }
-                    }
-
-                    override fun onDenied(
-                        permissions: MutableList<String>,
-                        doNotAskAgain: Boolean,
-                    ) {
-                        if (BaseApplication.instance.isDomestic()) {
-                            SharedManager.setMainPermissionsState(true)
-                        }
-                        if (doNotAskAgain) {
-
-                            TipDialog.Builder(this@MainActivity)
-                                .setTitleMessage(getString(R.string.app_tip))
-                                .setMessage(
-                                    if (PermissionUtils.hasCameraPermission()) {
-                                        getString(R.string.app_album_content)
-                                    } else {
-                                        getString(R.string.app_camera_content)
-                                    },
-                                )
-                                .setPositiveListener(R.string.app_open) {
-                                    AppUtils.launchAppDetailsSettings()
-                                }
-                                .setCancelListener(R.string.app_cancel) {
-                                }
-                                .setCanceled(true)
-                                .create().show()
-                        }
-                    }
-                },
-            )
-    }
-
-    private fun checkStoragePermission() {
-        if (!XXPermissions.isGranted(
-                this,
-                getNeedPermissionList()[R.string.permission_request_storage_app]
-            )
-        ) {
-            if (BaseApplication.instance.isDomestic()) {
-                TipDialog.Builder(this)
-                    .setMessage(
-                        getString(
-                            R.string.permission_request_storage_app,
-                            CommUtils.getAppName()
-                        )
-                    )
-                    .setCancelListener(R.string.app_cancel)
-                    .setPositiveListener(R.string.app_confirm) {
-                        initStoragePermission()
-                    }
-                    .create().show()
-            } else {
-                initStoragePermission()
-            }
-        } else {
-            initStoragePermission()
-        }
-    }
-
-    private fun initStoragePermission() {
-        if (PermissionUtils.isVisualUser()) {
-            jumpIRActivity()
-            return
-        }
-        XXPermissions.with(this)
-            .permission(
-                getNeedPermissionList()[R.string.permission_request_storage_app],
-            )
-            .request(
-                object : OnPermissionCallback {
-                    override fun onGranted(
-                        permissions: MutableList<String>,
-                        allGranted: Boolean,
-                    ) {
-                        if (allGranted) {
-                            jumpIRActivity()
-                        }
-                    }
-
-                    override fun onDenied(
-                        permissions: MutableList<String>,
-                        doNotAskAgain: Boolean,
-                    ) {
-                        if (doNotAskAgain) {
-
-                            TipDialog.Builder(this@MainActivity)
-                                .setTitleMessage(getString(R.string.app_tip))
-                                .setMessage(getString(R.string.app_album_content))
-                                .setPositiveListener(R.string.app_open) {
-                                    AppUtils.launchAppDetailsSettings()
-                                }
-                                .setCancelListener(R.string.app_cancel) {
-                                }
-                                .setCanceled(true)
-                                .create().show()
-                        }
-                    }
-                },
-            )
-    }
 
     fun jumpIRActivity() {
-        when (checkPermissionType) {
-            0 -> {
-                DeviceTools.isConnect(isSendConnectEvent = true)
-            }
-
-            1 -> {
-                binding.viewPage.setCurrentItem(0, false)
-            }
-
-            2 -> {
-                if (DeviceTools.isTC001PlusConnect()) {
+        // Updated to work with new permission system
+        // Check permissions before proceeding with thermal imaging activities
+        if (permissionController.canStartRecording()) {
+            // Determine which thermal activity to launch
+            when {
+                DeviceTools.isTC001PlusConnect() -> {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
-
                     startActivity(Intent(this@MainActivity, IRThermalPlusActivity::class.java))
-                } else if (DeviceTools.isTC001LiteConnect()) {
+                }
+                DeviceTools.isTC001LiteConnect() -> {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
                     startActivity(Intent(this@MainActivity, IRThermalLiteActivity::class.java))
-                } else if (DeviceTools.isHikConnect()) {
-                    NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
-
-                    startActivity(Intent(this@MainActivity, IRThermalNightActivity::class.java))
-                } else {
+                }
+                DeviceTools.isHikConnect() -> {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
                     startActivity(Intent(this@MainActivity, IRThermalNightActivity::class.java))
+                }
+                else -> {
+                    NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
+                    startActivity(Intent(this@MainActivity, IRThermalNightActivity::class.java))
+                }
+            }
+        } else {
+            // Request permissions if not available
+            Toast.makeText(this, "Camera permission required for thermal imaging", Toast.LENGTH_SHORT).show()
+            permissionController.ensureAll { granted, _ ->
+                if (granted && permissionController.canStartRecording()) {
+                    jumpIRActivity() // Retry after permissions granted
                 }
             }
         }

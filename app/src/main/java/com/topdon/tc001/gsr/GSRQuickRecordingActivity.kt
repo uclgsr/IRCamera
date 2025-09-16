@@ -205,24 +205,52 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     private fun startRecording() {
         lifecycleScope.launch {
             try {
-                // Create session directory
-                val timestamp =
-                    SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-                val sessionDir = File(filesDir, "gsr_sessions/session_$timestamp")
-                sessionDir.mkdirs()
+                // Check storage before starting
+                val storageStatus = recordingController.getStorageStatus()
+                if (storageStatus.isLowStorage) {
+                    runOnUiThread {
+                        Toast.makeText(
+                            this@GSRQuickRecordingActivity,
+                            "Insufficient storage: ${storageStatus.formattedAvailable} available. Need at least 500MB.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    return@launch
+                }
+                
+                if (storageStatus.shouldWarn) {
+                    runOnUiThread {
+                        Toast.makeText(
+                            this@GSRQuickRecordingActivity,
+                            "Storage warning: Only ${storageStatus.formattedAvailable} available",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
 
-                currentSessionDirectory = sessionDir.absolutePath
-                Log.i(TAG, "Starting recording in: $currentSessionDirectory")
+                Log.i(TAG, "Starting recording with improved session management")
 
-                val success = recordingController.startRecording(currentSessionDirectory!!)
+                // Start recording with default parameters - the controller will handle session creation
+                val success = recordingController.startRecording(
+                    participantId = "QuickRecording",
+                    studyName = "GSR Quick Test"
+                )
 
                 runOnUiThread {
                     if (success) {
+                        val sessionDir = recordingController.getCurrentSessionDirectory()
+                        currentSessionDirectory = sessionDir?.rootDir?.absolutePath
+                        
                         Toast.makeText(
                             this@GSRQuickRecordingActivity,
                             "Recording started",
                             Toast.LENGTH_SHORT
                         ).show()
+                        
+                        // Show session info
+                        currentSessionDirectory?.let { sessionDirPath ->
+                            binding.sessionInfoText.text = "Session saved to:\n$sessionDirPath"
+                        }
                     } else {
                         Toast.makeText(
                             this@GSRQuickRecordingActivity,

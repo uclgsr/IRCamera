@@ -61,7 +61,7 @@
 
     <uses-feature
         android:name="android.hardware.usb.host"
-        android:required="true" />
+        android:required="false" />
 
     <application
         android:name="com.topdon.tc001.app.App"
@@ -235,6 +235,24 @@
             android:name="com.topdon.tc001.network.DevicePairingActivity"
             android:exported="false"
             android:label="Device Pairing"
+            android:screenOrientation="userPortrait" />
+
+        <!-- Testing Activities -->
+        <activity
+            android:name="com.topdon.tc001.test.SynchronizationTestActivity"
+            android:exported="false"
+            android:label="Synchronization Test"
+            android:screenOrientation="userPortrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+        <activity
+            android:name="com.topdon.tc001.test.ParallelRecordingTestActivity"
+            android:exported="false"
+            android:label="Parallel Recording Test"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name="com.topdon.tc001.test.RAWCaptureTestActivity"
+            android:exported="false"
+            android:label="RAW Capture Test"
             android:screenOrientation="userPortrait" />
 
         <!-- Multi-Modal Recording Service -->

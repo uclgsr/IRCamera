@@ -12,6 +12,11 @@ import com.topdon.tc001.sensors.ErrorType
 import com.topdon.tc001.sensors.RecordingStats
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import com.topdon.tc001.sensors.thermal.ThermalCameraRecorder
+import com.topdon.tc001.util.SessionDirectoryManager
+import com.topdon.tc001.util.SessionDirectory
+import com.topdon.tc001.util.SessionMetadata
+import com.topdon.tc001.util.StorageStatus
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -30,6 +35,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -45,11 +53,14 @@ class RecordingController(
     }
 
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
+    private val sessionDirectoryManager = SessionDirectoryManager(context)
 
     private var _isRecording = AtomicBoolean(false)
     val isRecording: Boolean get() = _isRecording.get()
 
-    private var currentSessionDirectory: String? = null
+
+    private var currentSessionDirectory: SessionDirectory? = null
+    private var sessionMetadata: SessionMetadata? = null
     private var recordingStartTime: Long = 0
 
     private val controllerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -84,8 +95,9 @@ class RecordingController(
             try {
                 Log.i(TAG, "Initializing sensor recorders with robust error handling")
 
-                // Create sensor instances
-                val rgbCamera = RgbCameraRecorder(context, lifecycleOwner)
+                // Create a dummy TextureView for the RGB camera recorder
+                val dummyTextureView = TextureView(context)
+                val rgbCamera = RgbCameraRecorder(context, dummyTextureView)
                 val thermalCamera = ThermalCameraRecorder(context, "thermal_camera_1")
                 val gsrSensor = GSRSensorRecorder(context, "gsr_shimmer_1", 128, this@RecordingController)
 
@@ -165,8 +177,13 @@ class RecordingController(
     // Store session start timestamp for synchronization
     private var sessionStartTimestampMs: Long = 0
     private var sessionStartTimestampNs: Long = 0
+    suspend fun startRecording(
+        sessionId: String? = null,
+        participantId: String? = null,
+        studyName: String? = null,
+        enabledSensors: List<String> = listOf("RGB", "Thermal", "Shimmer")
+    ): Boolean {
 
-    suspend fun startSession(sessionDirectory: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 if (_isRecording.get()) {
@@ -174,13 +191,48 @@ class RecordingController(
                     return@withContext true
                 }
 
-                Log.i(TAG, "Starting multi-modal recording session")
+
+                // Check storage space before starting
+                val storageStatus = sessionDirectoryManager.checkStorageSpace()
+                if (storageStatus.isLowStorage) {
+                    Log.e(TAG, "Insufficient storage space: ${storageStatus.formattedAvailable} available")
+                    emitError(
+                        RecordingControllerError(
+                            errorType = "STORAGE_FULL",
+                            message = "Insufficient storage space. Only ${storageStatus.formattedAvailable} available. Need at least 500MB free.",
+                            isRecoverable = false
+                        )
+                    )
+                    return@withContext false
+                }
+
+                if (storageStatus.shouldWarn) {
+                    Log.w(TAG, "Low storage warning: ${storageStatus.formattedAvailable} available")
+                    emitError(
+                        RecordingControllerError(
+                            errorType = "STORAGE_WARNING",
+                            message = "Storage space low: ${storageStatus.formattedAvailable} available",
+                            isRecoverable = true
+                        )
+                    )
+                }
+
+                Log.i(TAG, "Starting multi-modal recording")
+
                 _recordingStateFlow.value = RecordingState.STARTING
 
-                val sessionDir = File(sessionDirectory)
-                if (!sessionDir.exists()) {
-                    sessionDir.mkdirs()
-                }
+                // Generate session ID and create directory structure
+                val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
+                val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
+                
+                // Create session metadata
+                val metadata = SessionMetadata(
+                    startTime = System.currentTimeMillis(),
+                    enabledSensors = enabledSensors,
+                    participantId = participantId,
+                    studyName = studyName
+                )
+                sessionDirectoryManager.createSessionMetadata(sessionDir, metadata)
 
                 currentSessionDirectory = sessionDirectory
                 
@@ -215,6 +267,7 @@ class RecordingController(
                                 Log.w(TAG, "Sensor $sensorName returned false on start")
                             }
                             Triple(sensorName, success, null)
+
                         } catch (e: Exception) {
                             Log.w(TAG, "Exception starting sensor $sensorName", e)
                             emitError(
@@ -279,7 +332,21 @@ class RecordingController(
                     true
                 } else {
                     _recordingStateFlow.value = RecordingState.ERROR
-                    Log.e(TAG, "✗ All ${startResults.size} sensors failed to start - session cannot begin")
+                    
+                    // Update session metadata to mark as failed
+                    currentSessionDirectory?.let { sessionDir ->
+                        sessionDirectoryManager.updateSessionMetadata(
+                            sessionDir,
+                            System.currentTimeMillis(),
+                            "FAILED",
+                            failedStarts.associate { it.first to (it.third?.message ?: "Unknown error") }
+                        )
+                    }
+                    
+                    Log.e(
+                        TAG,
+                        "All ${startResults.size} sensors failed to start - cannot begin session"
+                    )
                     emitError(
                         RecordingControllerError(
                             errorType = "ALL_SENSORS_FAILED",
@@ -293,6 +360,176 @@ class RecordingController(
 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start recording session", e)
+                _recordingStateFlow.value = RecordingState.ERROR
+                
+                // Update session metadata to mark as failed
+                currentSessionDirectory?.let { sessionDir ->
+                    sessionDirectoryManager.updateSessionMetadata(
+                        sessionDir,
+                        System.currentTimeMillis(),
+                        "ERROR",
+                        mapOf("error" to (e.message ?: "Unknown exception"))
+                    )
+                }
+                
+                emitError(
+                    RecordingControllerError(
+                        errorType = "START_FAILED",
+                        message = "Failed to start recording: ${e.message}",
+                        isRecoverable = true
+                    )
+                )
+                false
+            }
+        }
+    }
+
+    /**
+     * Start recording with legacy API (backward compatibility)
+     * @param sessionDirectory The directory path where session data should be stored
+     */
+    suspend fun startRecording(sessionDirectory: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                if (_isRecording.get()) {
+                    Log.w(TAG, "Recording already in progress")
+                    return@withContext true
+                }
+
+                Log.i(TAG, "Starting recording with legacy API")
+                _recordingStateFlow.value = RecordingState.STARTING
+
+                // Create session directory if it doesn't exist
+                val sessionDir = File(sessionDirectory)
+                if (!sessionDir.exists()) {
+                    sessionDir.mkdirs()
+                }
+                // Create a simple SessionDirectory wrapper for the provided path
+                val sessionDirWrapper = SessionDirectory(
+                    sessionId = sessionDir.name,
+                    rootDir = sessionDir,
+                    rgbDir = sessionDir,  // Legacy: use same directory for all sensors
+                    thermalDir = sessionDir,
+                    shimmerDir = sessionDir
+                )
+
+                currentSessionDirectory = sessionDirWrapper
+                recordingStartTime = System.nanoTime()
+
+                Log.i(TAG, "Session created: $finalSessionId")
+                Log.i(TAG, "Session start time: ${sessionMetadata!!.sessionStartIso}")
+                Log.i(TAG, "Wall clock: ${sessionMetadata!!.sessionStartTimestampMs}ms")
+                Log.i(TAG, "Monotonic: ${sessionMetadata!!.sessionStartMonotonicNs}ns")
+
+                val startJobs = sensorRecorders.values.map { sensor ->
+                    async {
+                        try {
+                            // Pass session metadata to sensors for consistent timing
+                            val success = sensor.startRecording(sessionDirectory, sessionMetadata!!)
+                            Triple(sensor.sensorId, success, null)
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Exception starting sensor ${sensor.sensorId}", e)
+                            emitError(
+                                RecordingControllerError(
+                                    errorType = "SENSOR_START_EXCEPTION",
+                                    message = "Sensor ${sensor.sensorId} threw exception during start: ${e.message}",
+                                    sensorId = sensor.sensorId,
+                                    isRecoverable = true
+                                )
+                            )
+                            Triple(sensor.sensorId, false, e)
+                        }
+                    }
+                }
+
+                val startResults = startJobs.awaitAll()
+                val successfulStarts = startResults.filter { it.second }
+                val failedStarts = startResults.filter { !it.second }
+
+                successfulStarts.forEach { (sensorId, _, _) ->
+                    Log.i(TAG, "Sensor $sensorId started successfully")
+                }
+
+                failedStarts.forEach { (sensorId, _, exception) ->
+                    val errorDetails = if (exception != null) {
+                        " (Exception: ${exception.message})"
+                    } else {
+                        " (Returned false)"
+                    }
+                    
+                    // Special handling for GSR sensor - don't treat as critical failure
+                    if (sensorId.contains("gsr", ignoreCase = true)) {
+                        Log.w(TAG, "GSR sensor $sensorId failed to start$errorDetails - session will continue without GSR data")
+                        emitError(
+                            RecordingControllerError(
+                                errorType = "GSR_SENSOR_UNAVAILABLE",
+                                message = "GSR sensor unavailable: $sensorId$errorDetails - check device pairing and proximity",
+                                sensorId = sensorId,
+                                isRecoverable = true
+                            )
+                        )
+                    } else {
+                        Log.w(TAG, "Sensor $sensorId failed to start$errorDetails")
+                        emitError(
+                            RecordingControllerError(
+                                errorType = "SENSOR_START_FAILED",
+                                message = "Failed to start sensor: $sensorId$errorDetails",
+                                sensorId = sensorId,
+                                isRecoverable = true
+                            )
+                        )
+                    }
+                }
+
+                // Allow session to start even if some sensors fail (graceful degradation)
+                if (successfulStarts.isNotEmpty()) {
+                    _isRecording.set(true)
+                    _recordingStateFlow.value = RecordingState.RECORDING
+
+                    // Add session start sync marker with session metadata
+                    sessionMetadata?.addSyncEvent("session_start", mapOf(
+                        "total_sensors" to startResults.size.toString(),
+                        "successful_sensors" to successfulStarts.size.toString(),
+                        "failed_sensors" to failedStarts.size.toString()
+                    ))
+                    
+                    addSyncMarker("session_start", recordingStartTime)
+
+                    val totalSensors = startResults.size
+                    val successCount = successfulStarts.size
+
+                    val gsrFailed = failedStarts.any { it.first.contains("gsr", ignoreCase = true) }
+                    val statusMessage = if (gsrFailed && successCount > 0) {
+                        "Multi-modal recording started with $successCount/$totalSensors sensors (GSR unavailable - check Shimmer device)"
+                    } else {
+                        "Multi-modal recording started with $successCount/$totalSensors sensors"
+                    }
+
+                    Log.i(
+                        TAG,
+                        "Recording started with legacy API: $successCount/$totalSensors sensors " +
+                                "(successful: ${successfulStarts.map { it.first }}, " +
+                                "failed: ${failedStarts.map { it.first }})"
+                    )
+                    true
+                } else {
+                    _recordingStateFlow.value = RecordingState.ERROR
+                    Log.e(
+                        TAG,
+                        "All ${startResults.size} sensors failed to start - cannot begin session"
+                    )
+                    emitError(
+                        RecordingControllerError(
+                            errorType = "ALL_SENSORS_FAILED",
+                            message = "All sensors failed to start: ${failedStarts.joinToString(", ") { it.first }}",
+                            isRecoverable = true
+                        )
+                    )
+                    false
+                }
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start recording with legacy API", e)
                 _recordingStateFlow.value = RecordingState.ERROR
                 emitError(
                     RecordingControllerError(
@@ -323,7 +560,14 @@ class RecordingController(
                 Log.i(TAG, "Stopping multi-modal recording session")
                 _recordingStateFlow.value = RecordingState.STOPPING
 
-                // Add session end sync marker before stopping sensors
+                // Add session end sync marker and finalize session metadata
+                sessionMetadata?.let { metadata ->
+                    metadata.addSyncEvent("session_end", mapOf(
+                        "recording_duration_ms" to metadata.getRelativeTimestamp().toString()
+                    ))
+                    sessionMetadata = metadata.markSessionEnd()
+                }
+
                 addSyncMarker("session_end", System.nanoTime())
 
                 // Allow sync marker to propagate
@@ -349,13 +593,40 @@ class RecordingController(
                 sessionStartTimestampNs = 0
                 currentSessionDirectory = null
 
-                Log.i(TAG, "✓ Multi-modal recording session stopped (duration: ${String.format("%.1f", sessionDuration)}s)")
+                val sessionDuration = (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
+                
+                // Update session metadata with completion information
+                currentSessionDirectory?.let { sessionDir ->
+                    val status = if (failedStops.isEmpty()) "COMPLETED" else "COMPLETED_WITH_ERRORS"
+                    val errors = failedStops.associate { 
+                        it.first to (it.third?.message ?: "Failed to stop cleanly")
+                    }
+                    sessionDirectoryManager.updateSessionMetadata(
+                        sessionDir,
+                        System.currentTimeMillis(),
+                        status,
+                        errors
+                    )
+                }
+                
+                Log.i(TAG, "Multi-modal recording stopped (duration: ${sessionDuration}s)")
 
                 true
 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to stop recording session", e)
                 _recordingStateFlow.value = RecordingState.ERROR
+                
+                // Update session metadata to mark error during stop
+                currentSessionDirectory?.let { sessionDir ->
+                    sessionDirectoryManager.updateSessionMetadata(
+                        sessionDir,
+                        System.currentTimeMillis(),
+                        "STOP_ERROR",
+                        mapOf("stop_error" to (e.message ?: "Unknown exception"))
+                    )
+                }
+                
                 emitError(
                     RecordingControllerError(
                         errorType = "SESSION_STOP_FAILED",
@@ -940,7 +1211,7 @@ class RecordingController(
 
                     if (_isRecording.get() && currentSessionDirectory != null) {
                         try {
-                            val restartSuccess = sensor.startRecording(currentSessionDirectory!!)
+                            val restartSuccess = sensor.startRecording(currentSessionDirectory!!.rootDir.absolutePath)
                             if (restartSuccess) {
                                 Log.i(
                                     TAG,
@@ -1001,7 +1272,7 @@ class RecordingController(
                     return@withContext false
                 }
 
-                val startSuccess = sensor.startRecording(currentSessionDirectory!!)
+                val startSuccess = sensor.startRecording(currentSessionDirectory!!.rootDir.absolutePath)
                 if (startSuccess) {
                     Log.i(TAG, "Sensor $sensorId successfully restarted during session")
                     emitError(
@@ -1028,6 +1299,26 @@ class RecordingController(
     private suspend fun emitError(error: RecordingControllerError) {
         _errorFlow.emit(error)
     }
+
+    /**
+     * Get current storage status
+     */
+    fun getStorageStatus(): StorageStatus {
+        return sessionDirectoryManager.checkStorageSpace()
+    }
+    
+    /**
+     * Clean up failed sessions
+     */
+    suspend fun cleanupFailedSessions(): List<String> = withContext(Dispatchers.IO) {
+        sessionDirectoryManager.cleanupFailedSessions()
+    }
+    
+    /**
+     * Get current session directory info
+     */
+    fun getCurrentSessionDirectory(): SessionDirectory? = currentSessionDirectory
+}
 }
 
 enum class RecordingState {
