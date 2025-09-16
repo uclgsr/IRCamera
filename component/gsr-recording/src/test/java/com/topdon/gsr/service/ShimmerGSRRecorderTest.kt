@@ -97,7 +97,7 @@ class ShimmerGSRRecorderTest {
     @Test
     fun testSensorConfiguration() {
 
-        val customRecorder = ShimmerGSRRecorder(context, samplingRateHz = 256)
+        val customRecorder = ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz = 256)
         assertNotNull("Custom recorder should be created", customRecorder)
 
         assertNotNull("Default recorder should have context", recorder)
