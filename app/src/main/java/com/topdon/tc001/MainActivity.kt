@@ -70,6 +70,7 @@ import com.topdon.tc001.service.RecordingService
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.supervisor.CrashSafeSupervisor
 import com.topdon.tc001.utils.AppVersionUtil
+import com.topdon.tc001.permissions.PermissionController
 import com.topdon.tc001.thermal.ThermalCameraDemo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
