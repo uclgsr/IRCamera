@@ -26,12 +26,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#AA000000"
-            android:gravity="end"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <!-- Thermal Camera Quick Access -->
+            <ImageButton
+                android:id="@+id/thermal_quick_access"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Thermal Camera"
+                android:src="@android:drawable/ic_search_category_default"
+                android:tint="#FF6B35" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
 
             <ImageView
                 android:id="@+id/network_status_indicator"
