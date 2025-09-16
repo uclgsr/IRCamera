@@ -24,6 +24,8 @@ import com.topdon.tc001.controller.RecordingState
 import com.topdon.tc001.logging.StructuredLogger
 import com.topdon.tc001.network.NetworkClient
 import com.topdon.tc001.network.NetworkServer
+import com.topdon.tc001.network.PreviewStreamer
+import com.topdon.tc001.network.PreviewDataAdapter
 import com.topdon.tc001.supervisor.CrashSafeSupervisor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -145,6 +147,8 @@ class RecordingService : LifecycleService() {
 
     private lateinit var networkClient: NetworkClient
     private lateinit var networkServer: NetworkServer
+    private lateinit var previewStreamer: PreviewStreamer
+    private lateinit var previewDataAdapter: PreviewDataAdapter
     private var isNetworkInitialized = false
     private var isConnectedToPC = false
 
@@ -177,6 +181,8 @@ class RecordingService : LifecycleService() {
         fun getService(): RecordingService = this@RecordingService
         fun getRecordingController(): RecordingController = recordingController
         fun getNetworkServer(): NetworkServer = networkServer
+        fun getPreviewStreamer(): PreviewStreamer = previewStreamer
+        fun getPreviewDataAdapter(): PreviewDataAdapter = previewDataAdapter
         fun isConnectedToPC(): Boolean = this@RecordingService.isConnectedToPC
         fun getServerStatus(): String {
             return if (isServerRunning.get()) {
@@ -206,6 +212,8 @@ class RecordingService : LifecycleService() {
         recordingController = RecordingController(this, this)
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
+        previewStreamer = PreviewStreamer(networkServer)
+        previewDataAdapter = PreviewDataAdapter(previewStreamer, this)
 
         crashSafeSupervisor.registerJob(
             id = "recording_service_init",
@@ -343,6 +351,14 @@ class RecordingService : LifecycleService() {
             stopServerSocket()
             if (isNetworkInitialized) {
                 networkClient.disconnect()
+            }
+            // Cleanup preview streamer
+            if (::previewStreamer.isInitialized) {
+                previewStreamer.cleanup()
+            }
+            // Cleanup preview data adapter
+            if (::previewDataAdapter.isInitialized) {
+                previewDataAdapter.cleanup()
             }
             lifecycleScope.launch {
                 recordingController.cleanup()
@@ -876,9 +892,15 @@ class RecordingService : LifecycleService() {
                 if (connected) {
                     Log.i(TAG, "PC Controller connected to network server")
                     updateNotification("PC Controller connected")
+                    // Start preview streaming when PC connects
+                    previewStreamer.startStreaming()
+                    previewDataAdapter.startDataPolling()
                 } else {
                     Log.i(TAG, "PC Controller disconnected, still listening on port 8080")
                     updateNotification("Listening for PC Controller on port 8080")
+                    // Stop preview streaming when PC disconnects
+                    previewDataAdapter.stopDataPolling()
+                    previewStreamer.stopStreaming()
                 }
             }
         }
@@ -1262,6 +1284,47 @@ class RecordingService : LifecycleService() {
                 "status_request" -> {
                     Log.d(TAG, "PC Controller requested status")
                     sendStatusToPC()
+                }
+
+                "start_preview_streaming" -> {
+                    Log.i(TAG, "PC Controller requested to start preview streaming")
+                    lifecycleScope.launch {
+                        val success = previewStreamer.startStreaming()
+                        sendResponseToPC("preview_streaming_response", JSONObject().apply {
+                            put("status", if (success) "started" else "failed")
+                            put("message", if (success) "Preview streaming started" else "Failed to start preview streaming")
+                        })
+                    }
+                }
+
+                "stop_preview_streaming" -> {
+                    Log.i(TAG, "PC Controller requested to stop preview streaming")
+                    lifecycleScope.launch {
+                        previewStreamer.stopStreaming()
+                        sendResponseToPC("preview_streaming_response", JSONObject().apply {
+                            put("status", "stopped")
+                            put("message", "Preview streaming stopped")
+                        })
+                    }
+                }
+
+                "configure_preview_streaming" -> {
+                    Log.i(TAG, "PC Controller requested to configure preview streaming")
+                    val frameInterval = message.optLong("frame_interval_ms", 1000L)
+                    val sensorInterval = message.optLong("sensor_interval_ms", 1000L) 
+                    val previewWidth = message.optInt("preview_width", 320)
+                    val previewHeight = message.optInt("preview_height", 240)
+                    val jpegQuality = message.optInt("jpeg_quality", 70)
+                    
+                    previewStreamer.configure(frameInterval, sensorInterval, previewWidth, previewHeight, jpegQuality)
+                    sendResponseToPC("preview_config_response", JSONObject().apply {
+                        put("status", "configured")
+                        put("frame_interval_ms", frameInterval)
+                        put("sensor_interval_ms", sensorInterval)
+                        put("preview_width", previewWidth)
+                        put("preview_height", previewHeight)
+                        put("jpeg_quality", jpegQuality)
+                    })
                 }
 
                 else -> {
