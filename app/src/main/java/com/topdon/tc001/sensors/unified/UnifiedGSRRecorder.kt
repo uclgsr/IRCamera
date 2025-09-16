@@ -102,6 +102,9 @@ class UnifiedGSRRecorder(
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
     private var connectedShimmer: Shimmer? = null
+    
+    // Enhanced BLE device manager for improved scanning
+    private var shimmerDeviceManager: ShimmerDeviceManager? = null
 
     private val discoveredDevices = mutableListOf<DeviceInfo>()
     private var selectedDevice: DeviceInfo? = null
@@ -152,6 +155,16 @@ class UnifiedGSRRecorder(
             }
 
             shimmerManager = ShimmerBluetoothManagerAndroid(context, mainHandler)
+            
+            // Initialize enhanced device manager for improved BLE scanning
+            shimmerDeviceManager = ShimmerDeviceManager(context, lifecycleOwner)
+            val deviceManagerInitialized = shimmerDeviceManager?.initialize() ?: false
+            
+            if (!deviceManagerInitialized) {
+                Log.w(TAG, "Enhanced device manager initialization failed, using basic mode")
+            } else {
+                Log.i(TAG, "Enhanced BLE device manager initialized successfully")
+            }
 
             _deviceStatus.value = "Initialized"
             Log.i(TAG, "GSR Recorder initialization completed successfully")
@@ -165,7 +178,7 @@ class UnifiedGSRRecorder(
     }
 
     suspend fun startDeviceDiscovery(): Boolean = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Starting Shimmer3 GSR+ device discovery with MAC filtering")
+        Log.i(TAG, "Starting enhanced Shimmer3 GSR+ device discovery with BLE scanning")
 
         if (shimmerManager == null) {
             Log.e(TAG, "Shimmer manager not initialized")
@@ -176,8 +189,33 @@ class UnifiedGSRRecorder(
             _deviceStatus.value = "Discovering..."
             discoveredDevices.clear()
 
-            // Simplified device discovery - add default GSR device
-            // In a real implementation, this would use BluetoothAdapter to scan for devices
+            // Use enhanced device manager if available, otherwise fall back to simplified discovery
+            val deviceManager = shimmerDeviceManager
+            if (deviceManager != null) {
+                Log.i(TAG, "Using enhanced BLE scanning for device discovery")
+                
+                val scanSuccess = deviceManager.startDeviceScanning()
+                if (scanSuccess) {
+                    // Collect scan results for a reasonable time period
+                    delay(10000) // 10 seconds of scanning
+                    
+                    val scanResults = deviceManager.scanResults.value
+                    discoveredDevices.clear()
+                    discoveredDevices.addAll(scanResults)
+                    
+                    deviceManager.stopDeviceScanning()
+                    
+                    Log.i(TAG, "Enhanced BLE scan completed: found ${discoveredDevices.size} devices")
+                    
+                    if (discoveredDevices.isNotEmpty()) {
+                        _deviceStatus.value = "Found ${discoveredDevices.size} Shimmer devices"
+                        return@withContext true
+                    }
+                }
+            }
+            
+            // Fallback to simplified discovery if enhanced scanning failed or is unavailable
+            Log.i(TAG, "Using fallback device discovery method")
             val defaultDevice = DeviceInfo(
                 address = "00:06:66:00:00:00", // Example Shimmer MAC
                 name = "Shimmer3 GSR+",
@@ -198,7 +236,7 @@ class UnifiedGSRRecorder(
             }
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error during device discovery", e)
+            Log.e(TAG, "Error during enhanced device discovery", e)
             _deviceStatus.value = "Discovery Failed"
             return@withContext false
         }
@@ -598,6 +636,10 @@ class UnifiedGSRRecorder(
             }
 
             disconnectDevice()
+
+            // Clean up enhanced device manager
+            shimmerDeviceManager?.release()
+            shimmerDeviceManager = null
 
             shimmerManager = null
 

@@ -275,6 +275,11 @@
             android:exported="false"
             android:label="RAW Capture Test"
             android:screenOrientation="userPortrait" />
+        <activity
+            android:name="com.topdon.tc001.test.BLEIntegrationTestActivity"
+            android:exported="false"
+            android:label="BLE Integration Test"
+            android:screenOrientation="userPortrait" />
 
         <!-- Multi-Modal Recording Service -->
         <service
