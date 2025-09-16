@@ -95,7 +95,7 @@ class ThermalCameraDemo : AppCompatActivity() {
                     ThermalCameraRecorder.ThermalPreviewCallback {
                     override fun onThermalFrame(
                         bitmap: Bitmap?,
-                        temperatureData: ThermalFrameData?
+                        temperatureData: ThermalCameraRecorder.ThermalFrameData?
                     ) {
                         runOnUiThread {
                             // Update UI with thermal preview
