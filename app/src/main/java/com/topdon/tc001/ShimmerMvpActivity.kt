@@ -202,7 +202,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     val missingPermissions = getMissingPermissions()
                     Log.w(TAG, "Missing permissions: ${missingPermissions.joinToString()}")
                     showToast("Missing required permissions. Please grant permissions and try again.")
-                    permissionLauncher.launch(missingPermissions.toTypedArray())
+                    permissionLauncher.launch(missingPermissions)
                     binding.connectButton.isEnabled = true
                     return@launch
                 }
