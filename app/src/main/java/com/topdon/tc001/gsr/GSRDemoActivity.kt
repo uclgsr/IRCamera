@@ -12,6 +12,7 @@ import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.model.SyncMark
 import com.topdon.gsr.service.GSRRecorder
+import com.topdon.gsr.service.MockShimmerDeviceFactory
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
@@ -113,7 +114,7 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
         binding.stopButton.setOnClickListener { stopRecording() }
         binding.syncButton.setOnClickListener { triggerSyncEvent() }
 
-        gsrRecorder = GSRRecorder(this)
+        gsrRecorder = GSRRecorder(this, MockShimmerDeviceFactory())
         gsrRecorder.addListener(gsrListener)
         updateButtonStates()
     }

@@ -27,7 +27,7 @@ appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
 
 # Kotlin and Core - Updated to latest versions
 kotlin = "2.2.0"
-agp = "8.13.0"
+agp = "8.11.0"
 # androidx.core - Updated to latest version compatible with AGP 8.13.0
 androidxCore = "1.16.0"
 androidxAppcompat = "1.7.0"
@@ -89,8 +89,8 @@ nifty = "2.4.0"
 # Image Loading
 glide = "5.0.5"
 mnImageBrowser = "V3.1.2X"
-gsyVideoPlayer = "v11.1.0"
-gsyVideoPlayerThermal = "v11.1.0"
+gsyVideoPlayer = "v8.6.0-release-jitpack"
+gsyVideoPlayerThermal = "v8.6.0-release-jitpack"
 
 # Shimmer GSR Sensor SDK
 shimmerAndroidApi = "1.0.0"
@@ -180,7 +180,7 @@ refreshLayoutKernelLegacy = "2.1.1"
 huaweiAgcp = "1.6.0.300"
 
 # Build Tools
-androidGradlePlugin = "8.13.0"
+androidGradlePlugin = "8.11.0"
 kotlinGradlePlugin = "2.2.0"
 ksp = "2.2.20-2.0.3"
 desugarJdkLibs = "2.1.5"
