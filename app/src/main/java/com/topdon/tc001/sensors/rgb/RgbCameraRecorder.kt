@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.topdon.tc001.sensors.*
 import com.topdon.tc001.sensors.RecordingStats
+import com.topdon.tc001.sensors.ErrorType
 import com.topdon.tc001.util.CSVBufferedWriter
 import com.topdon.tc001.util.SessionDirectoryManager
 import kotlinx.coroutines.*
@@ -394,8 +395,7 @@ class RgbCameraRecorder(
                     )
                     flush()
                 }
-            }
-            Log.d(TAG, "CSV writer initialized for Camera2 dual output tracking")
+                
                 val headers = listOf(
                     "timestamp_ns",
                     "frame_number", 
@@ -437,15 +437,7 @@ class RgbCameraRecorder(
                         "raw_capture",
                         "filename=$filename,mode=dual_output"
                     )
-
-                val row = listOf(
-                    timestampNs,
-                    samplesRecorded.get(),
-                    sessionTimeMs,
-                    "image_capture",
-                    "filename=$filename"
                 )
-                writer.writeRow(row)
             }
             
             Log.d(TAG, "RAW capture logged: ${rawCapturesRecorded.get()}")
@@ -640,7 +632,20 @@ class RgbCameraRecorder(
                 // Switch back to previous mode
                 if (currentRecordingMode == RecordingMode.DUAL_OUTPUT) {
                     camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)
-                    
+                }
+                
+                Log.d(TAG, "Manual RAW capture completed")
+                true
+            } else {
+                Log.e(TAG, "Failed to switch to RAW mode for manual capture")
+                false
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during manual RAW capture", e)
+            false
+        }
+    }
+
     suspend fun recordSyncMarker(markerType: String = "SYNC") {
         if (!isRecording) return
 
@@ -663,16 +668,7 @@ class RgbCameraRecorder(
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to record sync marker", e)
                 }
-                
-                Log.d(TAG, "Manual RAW capture completed")
-                true
-            } else {
-                Log.e(TAG, "Failed to switch to RAW mode for manual capture")
-                false
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during manual RAW capture", e)
-            false
         }
     }
 

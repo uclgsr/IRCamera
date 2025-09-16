@@ -1319,7 +1319,6 @@ class RecordingController(
      */
     fun getCurrentSessionDirectory(): SessionDirectory? = currentSessionDirectory
 }
-}
 
 enum class RecordingState {
     STOPPED,
