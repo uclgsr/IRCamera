@@ -3,6 +3,7 @@ package com.topdon.tc001.data
 import android.os.SystemClock
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.topdon.tc001.sensors.RecordingStats
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,6 +40,12 @@ data class SessionMetadata(
 
     // Sync event timestamps for alignment verification
     val syncEvents: MutableList<SyncEvent> = mutableListOf(),
+
+    // Sensor lifecycle summaries keyed by logical sensor name
+    val sensorSummaries: MutableMap<String, SensorSummary> = mutableMapOf(),
+
+    // Stop results per sensor for quick lookup
+    val stopResults: MutableMap<String, Boolean> = mutableMapOf(),
 
     // Session statistics
     val recordingDurationMs: Long? = null
@@ -123,6 +130,81 @@ data class SessionMetadata(
         )
     }
 
+    private fun relativeMillis(monotonicNs: Long): Long {
+        return (monotonicNs - sessionStartMonotonicNs) / 1_000_000L
+    }
+
+    /**
+     * Records that a sensor successfully started capturing data.
+     */
+    fun markSensorStart(
+        sensorName: String,
+        sensorId: String,
+        sensorType: String,
+        startMonotonicNs: Long,
+        metadata: Map<String, String> = emptyMap()
+    ) {
+        val summary = SensorSummary(
+            sensorId = sensorId,
+            sensorType = sensorType,
+            startTimestampNs = startMonotonicNs,
+            startTimestampMs = monotonicToWallClock(startMonotonicNs),
+            relativeStartMs = relativeMillis(startMonotonicNs)
+        )
+        summary.metadata.putAll(metadata)
+        sensorSummaries[sensorName] = summary
+    }
+
+    /**
+     * Updates the sensor summary with stop timing and performance data.
+     */
+    fun markSensorStop(
+        sensorName: String,
+        stopMonotonicNs: Long,
+        success: Boolean,
+        stats: RecordingStats? = null,
+        metadata: Map<String, String> = emptyMap(),
+        errorMessage: String? = null,
+        sensorId: String? = null,
+        sensorType: String? = null
+    ) {
+        val summary = sensorSummaries[sensorName] ?: SensorSummary(
+            sensorId = sensorId ?: sensorName,
+            sensorType = sensorType ?: "unknown",
+            startTimestampNs = sessionStartMonotonicNs,
+            startTimestampMs = sessionStartTimestampMs,
+            relativeStartMs = 0L
+        )
+
+        summary.stopTimestampNs = stopMonotonicNs
+        summary.stopTimestampMs = monotonicToWallClock(stopMonotonicNs)
+        summary.relativeStopMs = relativeMillis(stopMonotonicNs)
+        summary.status = if (success) "COMPLETED" else "FAILED"
+        summary.metadata.putAll(metadata)
+
+        stats?.let {
+            summary.samplesRecorded = it.totalSamplesRecorded
+            summary.averageDataRate = it.averageDataRate
+            summary.droppedSamples = it.droppedSamples
+            summary.syncMarkers = it.syncMarkersCount
+            summary.storageUsedMb = it.storageUsedMB
+        }
+
+        if (!success && errorMessage != null) {
+            summary.errors.add(errorMessage)
+        }
+
+        sensorSummaries[sensorName] = summary
+    }
+
+    /**
+     * Stores the final stop results for each sensor.
+     */
+    fun recordStopResults(results: Map<String, Boolean>) {
+        stopResults.clear()
+        stopResults.putAll(results)
+    }
+
     /**
      * Calculates timestamp relative to session start using monotonic clock
      */
@@ -185,4 +267,23 @@ data class SyncEvent(
     val timestampMs: Long,
     val monotonicOffsetNs: Long,
     val metadata: Map<String, String> = emptyMap()
+)
+
+data class SensorSummary(
+    val sensorId: String,
+    val sensorType: String,
+    val startTimestampNs: Long,
+    val startTimestampMs: Long,
+    val relativeStartMs: Long,
+    var stopTimestampNs: Long? = null,
+    var stopTimestampMs: Long? = null,
+    var relativeStopMs: Long? = null,
+    var status: String = "ACTIVE",
+    val errors: MutableList<String> = mutableListOf(),
+    var samplesRecorded: Long? = null,
+    var averageDataRate: Double? = null,
+    var droppedSamples: Long? = null,
+    var syncMarkers: Int? = null,
+    var storageUsedMb: Double? = null,
+    val metadata: MutableMap<String, String> = mutableMapOf()
 )

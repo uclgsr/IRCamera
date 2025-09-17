@@ -1,6 +1,7 @@
 package com.topdon.tc001.controller
 
 import android.content.Context
+import android.os.SystemClock
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.topdon.tc001.sensors.rgb.RgbCameraRecorder
@@ -61,6 +62,7 @@ class RecordingController(
 
     private var currentSessionDirectory: SessionDirectory? = null
     private var sessionMetadata: SessionMetadata? = null
+    private val sessionMetadataLock = Any()
     private var recordingStartTime: Long = 0
 
     private val controllerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -247,6 +249,7 @@ class RecordingController(
                 sessionDirectoryManager.createSessionMetadata(sessionDir, utilMetadata)
 
                 currentSessionDirectory = sessionDir
+                persistSessionMetadata()
 
                 // Capture common timestamp reference for all sensors
                 sessionStartTimestampMs = sessionMetadata!!.sessionStartTimestampMs
@@ -258,9 +261,6 @@ class RecordingController(
                     "Session reference timestamps: ${sessionStartTimestampMs}ms, ${sessionStartTimestampNs}ns"
                 )
 
-                // Create session metadata file with reference timing
-                createSessionMetadata(sessionDir.rootDir)
-
                 // Clear previous active recorder tracking
                 activeRecorders.clear()
 
@@ -270,14 +270,51 @@ class RecordingController(
                         try {
                             Log.i(TAG, "Starting sensor: $sensorName")
 
-                            // Create sensor-specific subdirectory  
-                            val sensorDir = File(sessionDir.rootDir, sensorName.lowercase())
+                            // Resolve sensor-specific directory within the session structure
+                            val sensorDir = resolveSensorDirectory(sessionDir, sensorName)
                             sensorDir.mkdirs()
 
-                            val success = sensor.startRecording(sensorDir.absolutePath)
+                            val sensorStartReference = SystemClock.elapsedRealtimeNanos()
+                            val success = sensor.startRecording(
+                                sensorDir.absolutePath,
+                                sessionMetadata!!
+                            )
                             if (success) {
                                 activeRecorders[sensorName] = true
                                 Log.i(TAG, "Sensor $sensorName started successfully")
+
+                                val relativePath = runCatching {
+                                    sensorDir.relativeTo(sessionDir.rootDir).path
+                                }.getOrElse { sensorDir.name }
+
+                                updateSessionMetadata {
+                                    markSensorStart(
+                                        sensorName = sensorName,
+                                        sensorId = sensor.sensorId,
+                                        sensorType = sensor.sensorType,
+                                        startMonotonicNs = sensorStartReference,
+                                        metadata = mapOf(
+                                            "directory" to relativePath
+                                        )
+                                    )
+
+                                    when (sensorName.lowercase()) {
+                                        "rgb", "camera", "rgbcamera" -> addModalityFile(
+                                            "rgb_video",
+                                            "$relativePath/${SessionDirectoryManager.RGB_VIDEO_FILE}"
+                                        )
+
+                                        "thermal", "thermalcamera" -> addModalityFile(
+                                            "thermal_frames",
+                                            "$relativePath/${SessionDirectoryManager.THERMAL_FRAMES_FILE}"
+                                        )
+
+                                        "shimmer", "gsr", "gsrsensor" -> addModalityFile(
+                                            "shimmer_data",
+                                            "$relativePath/${SessionDirectoryManager.SHIMMER_DATA_FILE}"
+                                        )
+                                    }
+                                }
                             } else {
                                 Log.w(TAG, "Sensor $sensorName returned false on start")
                             }
@@ -586,14 +623,13 @@ class RecordingController(
                 Log.i(TAG, "Stopping multi-modal recording session")
                 _recordingStateFlow.value = RecordingState.STOPPING
 
-                // Add session end sync marker and finalize session metadata
+                // Add session end sync marker for downstream alignment
                 sessionMetadata?.let { metadata ->
                     metadata.addSyncEvent(
                         "session_end", mapOf(
                             "recording_duration_ms" to metadata.getRelativeTimestamp().toString()
                         )
                     )
-                    sessionMetadata = metadata.markSessionEnd()
                 }
 
                 addSyncMarker("session_end", System.nanoTime())
@@ -610,9 +646,23 @@ class RecordingController(
                     (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
                 } else 0.0
 
-                // Update session metadata with completion info
+                finalizeSessionMetadata(stopResult)
+
                 currentSessionDirectory?.let { sessionDir ->
-                    updateSessionMetadata(sessionDir.rootDir, stopResult)
+                    val stopErrors = stopResult.filterValues { success -> !success }
+                        .mapValues { "STOP_FAILED" }
+                    val status = when {
+                        stopResult.isEmpty() -> "COMPLETED"
+                        stopErrors.isEmpty() -> "COMPLETED"
+                        stopErrors.size == stopResult.size -> "FAILED"
+                        else -> "PARTIAL"
+                    }
+                    sessionDirectoryManager.updateSessionMetadata(
+                        sessionDir,
+                        System.currentTimeMillis(),
+                        status,
+                        stopErrors
+                    )
                 }
 
                 // Reset session state for next session
@@ -702,6 +752,21 @@ class RecordingController(
                 }
                 Log.w(TAG, "Sensor $sensorName failed to stop cleanly$errorDetails")
             }
+            val stopTimestampNs = SystemClock.elapsedRealtimeNanos()
+            val sensor = sensorRecorders[sensorName]
+            val stats = runCatching { sensor?.getRecordingStats() }.getOrNull()
+            updateSessionMetadata {
+                markSensorStop(
+                    sensorName = sensorName,
+                    stopMonotonicNs = stopTimestampNs,
+                    success = success,
+                    stats = stats,
+                    metadata = mapOf("stop_success" to success.toString()),
+                    errorMessage = exception?.message,
+                    sensorId = sensor?.sensorId,
+                    sensorType = sensor?.sensorType
+                )
+            }
             // Remove from active recorders regardless of stop result
             activeRecorders.remove(sensorName)
         }
@@ -713,56 +778,42 @@ class RecordingController(
         return@coroutineScope stopResults
     }
 
-    private fun createSessionMetadata(sessionDir: File) {
-        try {
-            val metadataFile = File(sessionDir, "session_metadata.json")
-            val metadata = mapOf(
-                "session_id" to sessionDir.name,
-                "start_timestamp_ms" to sessionStartTimestampMs,
-                "start_timestamp_ns" to sessionStartTimestampNs,
-                "available_sensors" to sensorRecorders.keys.toList(),
-                "expected_sensors" to listOf("RGB", "Thermal", "Shimmer"),
-                "recording_controller_version" to "2.0.0",
-                "created_at" to java.time.Instant.now().toString()
-            )
-
-            val jsonString = org.json.JSONObject(metadata).toString(2)
-            metadataFile.writeText(jsonString)
-            Log.i(TAG, "Session metadata created: ${metadataFile.absolutePath}")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to create session metadata", e)
+    private fun resolveSensorDirectory(
+        sessionDir: SessionDirectory,
+        sensorName: String
+    ): File {
+        return when (sensorName.lowercase()) {
+            "rgb", "camera", "rgbcamera" -> sessionDir.rgbDir
+            "thermal", "thermalcamera" -> sessionDir.thermalDir
+            "shimmer", "gsr", "gsrsensor" -> sessionDir.shimmerDir
+            else -> File(sessionDir.rootDir, sensorName.lowercase())
         }
     }
 
-    private fun updateSessionMetadata(sessionDir: File, stopResults: Map<String, Boolean>) {
-        try {
-            val metadataFile = File(sessionDir, "session_metadata.json")
-            if (!metadataFile.exists()) {
-                Log.w(TAG, "Session metadata file not found for update")
-                return
-            }
+    private fun persistSessionMetadata() {
+        val metadata = sessionMetadata ?: return
+        val sessionDir = currentSessionDirectory ?: return
+        synchronized(sessionMetadataLock) {
+            metadata.saveToFile(sessionDir.rootDir)
+        }
+    }
 
-            val existingContent = metadataFile.readText()
-            val existingJson = org.json.JSONObject(existingContent)
+    private fun updateSessionMetadata(block: SessionMetadata.() -> Unit) {
+        val metadata = sessionMetadata ?: return
+        val sessionDir = currentSessionDirectory ?: return
+        synchronized(sessionMetadataLock) {
+            metadata.block()
+            metadata.saveToFile(sessionDir.rootDir)
+        }
+    }
 
-            // Add completion information
-            existingJson.put("end_timestamp_ms", System.currentTimeMillis())
-            existingJson.put("end_timestamp_ns", System.nanoTime())
-            existingJson.put(
-                "session_duration_ms",
-                System.currentTimeMillis() - sessionStartTimestampMs
-            )
-            existingJson.put("active_sensors", activeRecorders.keys.toList())
-            existingJson.put("stop_results", org.json.JSONObject(stopResults))
-            existingJson.put(
-                "completed_successfully",
-                stopResults.isNotEmpty() && stopResults.values.any { it })
-            existingJson.put("updated_at", java.time.Instant.now().toString())
-
-            metadataFile.writeText(existingJson.toString(2))
-            Log.i(TAG, "Session metadata updated with completion info")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to update session metadata", e)
+    private fun finalizeSessionMetadata(stopResults: Map<String, Boolean>) {
+        val sessionDir = currentSessionDirectory ?: return
+        synchronized(sessionMetadataLock) {
+            val metadata = sessionMetadata ?: return
+            metadata.recordStopResults(stopResults)
+            sessionMetadata = metadata.markSessionEnd()
+            sessionMetadata?.saveToFile(sessionDir.rootDir)
         }
     }
 
