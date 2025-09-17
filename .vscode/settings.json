@@ -13,7 +13,7 @@
         "gradle": true
     },
     "github.copilot.advanced": {
-        "secret_key": "github.copilot.enable",
+        "config_key": "github.copilot.enable",
         "length": 500,
         "temperature": "",
         "top_p": "",
