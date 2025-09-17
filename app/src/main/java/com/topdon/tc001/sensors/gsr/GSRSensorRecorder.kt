@@ -1281,7 +1281,7 @@ class GSRSensorRecorder(
     private suspend fun startShimmerStreaming(device: Shimmer): Boolean {
         return try {
             // Configure GSR sensor
-            device.setGSRRange(GSR_RANGE_AUTO)
+            device.setGSRRange(Shimmer.GSR_RANGE_AUTO)
             device.enableGSRSensor(true)
             
             // Configure sampling rate
