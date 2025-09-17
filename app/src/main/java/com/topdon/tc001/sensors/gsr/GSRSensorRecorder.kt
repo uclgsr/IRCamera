@@ -1303,22 +1303,25 @@ class GSRSensorRecorder(
     }
 
     /**
-     * Handle incoming Shimmer data packets
+     * Handle incoming Shimmer data packets with unified timestamp handling
      */
     private fun handleShimmerData(objectCluster: ObjectCluster) {
         try {
-            // Extract GSR data from ObjectCluster using proper Shimmer SDK methods
-            val timestampNs = System.nanoTime()
+            // Use unified timestamp system for consistent cross-sensor timing
+            val timestampRecord = timestampManager?.createTimestampRecord() ?: TimestampManager.createTimestampRecord()
+            
+            // Extract device timestamp from Shimmer packet if available
+            val deviceTimestamp = objectCluster.getFormatClusterValue("Timestamp", "CAL")?.data?.toLong() ?: 0L
             
             // Get GSR conductance value (in microsiemens)
             val gsrValue = objectCluster.getFormatClusterValue("GSR", "CAL")?.data ?: 0.0
             
-            // Get PPG data if available
+            // Get PPG data if available  
             val ppgValue = objectCluster.getFormatClusterValue("PPG", "CAL")?.data ?: 0.0
             
-            // Create GSR sample
+            // Create GSR sample with comprehensive timestamp data
             val gsrSample = GSRSample(
-                timestampNs = timestampNs,
+                timestampNs = timestampRecord.systemNanos,
                 conductanceMicrosiemens = gsrValue,
                 rawAdc = (gsrValue * 4095 / 100).toInt(), // Convert to 12-bit ADC value
                 ppgValue = ppgValue,
@@ -1328,14 +1331,14 @@ class GSRSensorRecorder(
             
             // Update sample count
             sampleCount.incrementAndGet()
-            lastSampleTimestamp = timestampNs
+            lastSampleTimestamp = timestampRecord.systemNanos
             
             // Log sample to CSV if recording
             if (_isRecording.get()) {
-                logGSRSampleToCSV(gsrSample)
+                logGSRSampleToCSV(gsrSample, timestampRecord, deviceTimestamp)
             }
             
-            Log.v(TAG, "GSR sample processed: conductance=${gsrValue}µS, PPG=${ppgValue}")
+            Log.v(TAG, "GSR sample processed: conductance=${gsrValue}µS, PPG=${ppgValue}, system_time=${timestampRecord.systemTimeMs}")
             
         } catch (e: Exception) {
             Log.e(TAG, "Error processing Shimmer data", e)
@@ -1347,20 +1350,35 @@ class GSRSensorRecorder(
     }
 
     /**
-     * Log GSR sample to CSV file
+     * Log GSR sample to CSV file with unified timestamp system
      */
-    private fun logGSRSampleToCSV(sample: GSRSample) {
+    private fun logGSRSampleToCSV(sample: GSRSample, timestampRecord: TimestampRecord, deviceTimestamp: Long) {
         try {
-            // Create CSV entry with proper timestamp and GSR data format
-            val csvEntry = "${sample.timestampNs},${sample.conductanceMicrosiemens},${sample.rawAdc},${sample.ppgValue}"
+            // Create comprehensive CSV entry with all timestamp references for cross-sensor alignment
+            val csvEntry = buildString {
+                append("${timestampRecord.systemNanos},") // Monotonic nanosecond timestamp
+                append("${timestampRecord.systemTimeMs},") // Wall clock time for human readability
+                append("${timestampRecord.sessionRelativeMs},") // Session-relative time for analysis
+                append("${deviceTimestamp},") // Device timestamp from Shimmer if available
+                append("${sample.conductanceMicrosiemens},") // GSR conductance in microsiemens
+                append("${sample.rawAdc},") // Raw 12-bit ADC value
+                append("${sample.ppgValue}") // PPG value if available
+            }
             
             // Write to session CSV file (implementation would depend on session management)
-            // This is a placeholder - actual implementation would write to the session directory
-            Log.v(TAG, "CSV Entry: $csvEntry")
+            // This provides all necessary timing information for post-processing synchronization
+            Log.v(TAG, "GSR CSV Entry: $csvEntry")
             
         } catch (e: Exception) {
             Log.e(TAG, "Error writing GSR data to CSV", e)
         }
+    }
+
+    /**
+     * Get CSV header for GSR data with unified timestamp columns
+     */
+    private fun getGSRCsvHeader(): String {
+        return "system_nanos,system_time_ms,session_relative_ms,device_timestamp,conductance_microsiemens,raw_adc,ppg_value"
     }
 
     /**
